@@ -1,5 +1,6 @@
 ﻿using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Core.Settings
 {
@@ -21,7 +22,22 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// </summary>
         /// <param name="entity"></param>
 		void RemoveEntitySettings(Entity entity);
-		SettingEntry GetSettingByName(string name);
+        /// <summary>
+        /// Load and populate settings values for user
+        /// </summary>
+        /// <param name="user"></param>
+		void LoadUserSettingsValues(ApplicationUserExtended user);
+        /// <summary>
+        /// Ssave user settings values
+        /// </summary>
+        /// <param name="user"></param>
+        void SaveUserSettingsValues(ApplicationUserExtended user);
+        /// <summary>
+        /// Remove user settings values
+        /// </summary>
+        /// <param name="user"></param>
+		void RemoveUserSettings(ApplicationUserExtended user);
+        SettingEntry GetSettingByName(string name);
 		SettingEntry[] GetModuleSettings(string moduleId);
 		void SaveSettings(SettingEntry[] settings);
         /// <summary>

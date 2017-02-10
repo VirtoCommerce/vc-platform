@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -23,10 +24,13 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly ICacheManager<object> _cacheManager;
         private readonly IModuleCatalog _moduleCatalog;
         private readonly IPermissionScopeService _permissionScopeService;
+        private readonly ISettingsManager _settingManager;
+
+        private const string LanguageSetting = "VirtoCommerce.Core.General.Language";
 
         [CLSCompliant(false)]
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
-                               IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager)
+                               IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ISettingsManager settingManager, ICacheManager<object> cacheManager)
         {
             _platformRepository = platformRepository;
             _userManagerFactory = userManagerFactory;
@@ -34,6 +38,7 @@ namespace VirtoCommerce.Platform.Data.Security
             _cacheManager = cacheManager;
             _moduleCatalog = moduleCatalog;
             _permissionScopeService = permissionScopeService;
+            _settingManager = settingManager;
         }
 
         #region ISecurityService Members
@@ -109,6 +114,8 @@ namespace VirtoCommerce.Platform.Data.Security
                     repository.Add(dbAcount);
                     repository.UnitOfWork.Commit();
                 }
+
+                _settingManager.SaveUserSettingsValues(user);
             }
 
             return result.ToCoreModel();
@@ -162,8 +169,10 @@ namespace VirtoCommerce.Platform.Data.Security
                         using (var changeTracker = GetChangeTracker(repository))
                         {
                             changeTracker.Attach(targetDbAcount);
-
                             changedDbAccount.Patch(targetDbAcount);
+
+                            _settingManager.SaveUserSettingsValues(user);
+
                             repository.UnitOfWork.Commit();
                         }
                     }
@@ -183,6 +192,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     if (dbUser != null)
                     {
+
                         await userManager.DeleteAsync(dbUser);
 
                         using (var repository = _platformRepository())
@@ -190,6 +200,8 @@ namespace VirtoCommerce.Platform.Data.Security
                             var account = repository.GetAccountByName(name, UserDetails.Reduced);
                             if (account != null)
                             {
+                                _settingManager.RemoveUserSettings(dbUser.ToCoreModel(account, _permissionScopeService));
+
                                 repository.Remove(account);
                                 repository.UnitOfWork.Commit();
                             }
@@ -485,6 +497,10 @@ namespace VirtoCommerce.Platform.Data.Security
                         retVal.PasswordHash = null;
                         retVal.SecurityStamp = null;
                     }
+
+                    retVal.Settings = new[] {_settingManager.GetSettingByName(LanguageSetting)};
+                    _settingManager.LoadUserSettingsValues(retVal);
+
                     return retVal;
                 });
             }
