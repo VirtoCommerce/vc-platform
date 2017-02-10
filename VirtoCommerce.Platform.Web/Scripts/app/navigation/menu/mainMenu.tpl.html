@@ -27,7 +27,11 @@
                 </div>
             </div>
         </div>
-        <div class="__logo static">
+        <div class="__logo" style="bottom:40px;">
+            <a href="" ng-click="showLicense()" ng-if="!license">{{'platform.templates.licensing.license-absent' | translate}}</a>
+            <a href="" ng-click="showLicense()" ng-if="license" ng-style="!license.hasExpired ? {color: '#54a954'} : {}">{{'platform.templates.licensing.license-present' | translate: license}}</a>
+        </div>
+        <div class="__logo">
             <span class="logo-version">{{platformVersion}}</span>
         </div>
     </div>

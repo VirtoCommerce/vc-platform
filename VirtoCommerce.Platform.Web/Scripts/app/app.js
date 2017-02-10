@@ -66,6 +66,22 @@ angular.module('platformWebApp', AppDependencies).
           }
       });
 
+      $scope.$on('loginStatusChanged', function (event, authContext) {
+          $scope.isAuthenticated = authContext.isAuthenticated;
+      });
+
+      // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION
+      $scope.initExpiration = function (x) {
+          if (x && x.expirationDate) {
+              x.hasExpired = new Date(x.expirationDate) < new Date();
+          }
+          return x;
+      };
+
+      $scope.showLicense = function () {
+          $state.go('workspace.appLicense');
+      };
+
   }])
 // Specify SignalR server URL (application URL)
 .factory('platformWebApp.signalRServerName', ['$location', function ($location) {

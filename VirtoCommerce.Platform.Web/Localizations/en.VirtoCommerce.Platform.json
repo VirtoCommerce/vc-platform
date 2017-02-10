@@ -523,6 +523,33 @@
                     "log-in": "Log in"
                 }
             },
+            "license": {
+                "title": "Current license",
+                "title-new": "New license activation",
+                "license-info": "License information",
+                "license-activation": "License activation",
+                "labels": {
+                    "info-running-no-license": "This instance of Virto Commerce is running on",
+                    "info-open-source-license": "Open Source Community license.",
+                    "info0": "Acquiring or renewing the license:",
+                    "info1": "Submit the ",
+                    "info2": "We'll process your request and should contact you soon.",
+                    "info3": "Once you receive the \"Activation Code\" and / or the License file, fill one of the activation fields below.",
+                    "info4": "The system will display you the new license information. Review it and click \"Activate\" to confirm.",
+                    "customer": "License issued to",
+                    "type": "Type",
+                    "expiration": "Expiration",
+                    "email": "Customer email",
+                    "request-license": "License request form.",
+                    "code-descr": "Enter the received license \"Activation Code\" and hit [Enter]. This is the quickest license activation method. (Requires internet connection)",
+                    "file-descr": "Optionally, provide the received License file. (Off-line activation)",
+                    "upload-progress": "Upload progress",
+                    "errors": "Activation error"
+                },
+                "placeholders": {
+                    "code": "Enter activation code"
+                }
+            },
             "new-account-wizard": {
                 "labels": {
                     "login": "Login",
@@ -587,6 +614,12 @@
                     "start": "Start",
                     "end": "End"
                 }
+            },
+            "licensing": {
+                "license-absent": "Community license",
+                "license-present": "{{type}} license",
+                "community": "Running community edition, click to request a commercial license.",
+                "expired": "You license has expired on {{expirationDate | date}}, please renew."
             },
             "modulesAutoInstallation": {
                 "labels": {

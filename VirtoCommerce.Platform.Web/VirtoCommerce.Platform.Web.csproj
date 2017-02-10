@@ -348,6 +348,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="Controllers\AiHandleErrorAttribute.cs" />
+    <Compile Include="Controllers\Api\LicensingController.cs" />
     <Compile Include="Converters\Modularity\ModuleDescriptorConverter.cs" />
     <Compile Include="Hangfire\HangfireLauncher.cs" />
     <Compile Include="App_Start\OwinConfig.cs" />
@@ -359,6 +360,7 @@
     <Compile Include="Converters\ExportImport\ExportImportRequestConverter.cs" />
     <Compile Include="Hangfire\HangfireOptions.cs" />
     <Compile Include="HttpContextLifetimeManager.cs" />
+    <Compile Include="Licensing\License.cs" />
     <Compile Include="Model\Asset\AssetListItem.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
     <Compile Include="Model\ExportImport\SampleDataInfo.cs" />
@@ -386,6 +388,8 @@
     <Content Include="Content\themes\main\images\grid.png" />
     <Content Include="Scripts\ai.0.22.19-build00125.js" />
     <Content Include="Scripts\ai.0.22.19-build00125.min.js" />
+    <Content Include="Scripts\app\licensing\license-detail.js" />
+    <Content Include="Scripts\app\licensing\license-detail.tpl.html" />
     <Content Include="Scripts\common\directives\metaform.js" />
     <Content Include="Scripts\common\directives\metaform.tpl.html" />
     <Content Include="Scripts\app\setup\templates\setupWizard.tpl.html" />
