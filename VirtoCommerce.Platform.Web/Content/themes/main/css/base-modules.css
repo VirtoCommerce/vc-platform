@@ -4756,6 +4756,10 @@ tags-input .tags .tag-item {
                 background: #434343;
             }
 
+        .nav-bar.__collapsed .menu.items.favorites .inner-wrapper:hover .menu-link {
+            padding: 10px 0;
+        }
+
         .nav-bar .menu.items.favorites .inner-wrapper {
             -ms-scrollbar-arrow-color: #545454;
             -ms-scrollbar-face-color: #434343;
@@ -4848,16 +4852,20 @@ tags-input .tags .tag-item {
         width: 10px;
     }
 
-    .nav-bar .menu.items.favorites .menu-item:not(.list) .menu-link {
+    .nav-bar .menu.items.favorites .menu-item .menu-link {
         padding: 10px 20px 10px 0;
     }
 
-    .nav-bar .menu.items.favorites .menu-item:not(.list) .drag-and-drop {
+    .nav-bar .menu.items.favorites .menu-item .drag-and-drop {
         visibility: hidden;
     }
 
-    .nav-bar .menu.items.favorites .menu-item:not(.list):hover .drag-and-drop {
+    .nav-bar .menu.items.favorites .menu-item:hover .drag-and-drop {
         visibility: visible;
+    }
+
+    .nav-bar .menu.items.favorites .menu-item.list .drag-and-drop {
+        visibility: hidden;
     }
 
     .nav-bar .menu-ico {
