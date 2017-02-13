@@ -16,7 +16,7 @@
     "angular-ui-grid": "4.0.1",
     "ui-grid-draggable-rows": "0.3.2",
     "angular-ui-router": "0.2.15",
-    "angular-ui-select": "0.12.1",
+    "angular-ui-select": "0.19.6",
     "angular-ui-sortable": "0.13.4",
     "angular-ui-utils": "3.0.0",
     "angular-google-chart": "0.0.11",
