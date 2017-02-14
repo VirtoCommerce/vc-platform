@@ -76,9 +76,9 @@
 .factory('platformWebApp.pushNotificationService', ['$rootScope', 'platformWebApp.signalRHubProxy', '$timeout', '$interval', '$state', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.pushNotifications', 'platformWebApp.signalRServerName',
     function ($rootScope, signalRHubProxy, $timeout, $interval, $state, mainMenuService, eventTemplateResolver, notifications, signalRServerName) {
 
+        var notifyMenu = {};
         var clientPushHubProxy = signalRHubProxy(signalRServerName, 'clientPushHub', { logging: true });
-        clientPushHubProxy.on('notification', function (data) {
-            var notifyMenu = mainMenuService.findByPath('pushNotifications');
+        clientPushHubProxy.on('notification', function (data) {;
             var notificationTemplate = eventTemplateResolver.resolve(data, 'menu');
             //broadcast event
             $rootScope.$broadcast("new-notification-event", data);
@@ -113,7 +113,6 @@
         });
 
         function animateNotify() {
-            var notifyMenu = mainMenuService.findByPath('pushNotifications');
             notifyMenu.incremented = true;
 
             $timeout(function () {
@@ -122,7 +121,6 @@
         }
 
         function markAllAsRead() {
-            var notifyMenu = mainMenuService.findByPath('pushNotifications');
             if (angular.isDefined(notifyMenu.intervalPromise)) {
                 $interval.cancel(notifyMenu.intervalPromise);
             }
@@ -138,30 +136,27 @@
         var retVal = {
             run: function () {
                 if (!this.running) {
-                    var notifyMenu = mainMenuService.findByPath('pushNotifications');
-                    if (!angular.isDefined(notifyMenu)) {
-                        notifyMenu = {
+                    if (!angular.isDefined(notifyMenu.path)) {
+                        angular.extend(notifyMenu, {
                             path: 'pushNotifications',
                             icon: 'fa fa-bell-o',
                             title: 'platform.menu.notifications',
-                            priority: 2,
-                            dynamic: false,
+                            priority: 0,
                             permission: '',
                             headerTemplate: '$(Platform)/Scripts/app/pushNotifications/menuHeader.tpl.html',
-                            listTemplate: '$(Platform)/Scripts/app/pushNotifications/menuList.tpl.html',
                             template: '$(Platform)/Scripts/app/pushNotifications/menu.tpl.html',
                             action: function () { markAllAsRead(); if (this.children.length == 0) { this.showHistory(); } },
                             showHistory: function () { $state.go('pushNotificationsHistory'); },
                             clearRecent: function () { notifyMenu.children.splice(0, notifyMenu.children.length); },
                             children: [],
                             newCount: 0
-                        };
-                        mainMenuService.addMenuItem(notifyMenu);
+                        });
                     }
                     this.running = true;
                 };
             },
-            running: false
+            running: false,
+            menuItem: notifyMenu
         };
         return retVal;
 

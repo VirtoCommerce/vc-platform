@@ -1,141 +1,87 @@
 ﻿angular.module('platformWebApp')
-.factory('platformWebApp.mainMenuService', ['$filter', function ($filter) {
+.factory('platformWebApp.mainMenuService', [function () {
 
     var menuItems = [];
     var dynamicMenuItems = [];
-    var staticMenuItems = [];
-
-    // do not compare priority by substraction! "more" item has value as max integer
-    function compare(a, b) {
-        if (a < b) {
-            return -1;
-        }
-        if (a === b) {
-            return 0;
-        }
-        if (a > b) {
-            return 1;
-        }
-        return null;
-    }
-
-    function sortByPriority(a, b) {
-        if (angular.isDefined(a.priority) && angular.isDefined(b.priority)) {
-            return compare(a.priority, b.priority);
-        }
-        return -1;
-    };
 
     function sortMenuItem(a, b) {
-        var result;
-        if (a.parent === b.parent) {
-            result = compare(a.priority, b.priority);
-            return result;
+        var result = 0;
+        if (a.group === b.group) {
+            result = a.priority - b.priority;
         }
-        var maximalParentNestingDepth = getParentNestingLevel(a) - getParentNestingLevel(b);
-        if (maximalParentNestingDepth === 0) {
-            result = compare(a.parent.priority, b.parent.priority);
-            return result;
+        else if (a.group == null && b.group != null) {
+            result = a === b.group ? -1 : a.priority - b.group.priority;
         }
-        var original = maximalParentNestingDepth > 0 ? b : a;
-        var nestedParent = getParentAtLevel(maximalParentNestingDepth > 0 ? a : b, Math.abs(maximalParentNestingDepth));
-        if (original === nestedParent) {
-            result = maximalParentNestingDepth;
-            return result;
+        else if (a.group != null && b.group == null) {
+            result = a.group === b ? 1 : a.group.priority - b.priority;
         }
-        result = compare(nestedParent.priority, original.priority) * maximalParentNestingDepth;
+        else if (a.group !== b.group) {
+            result = a.group.priority - b.group.priority;
+        }
         return result;
-    }
+    };
 
-    function getParentNestingLevel(menuItem) {
-        if (menuItem.parent == null) {
-            return 0;
-        }
-        var parentNestingLevel = getParentNestingLevel(menuItem.parent);
-        parentNestingLevel++;
-        return parentNestingLevel;
-    }
-
-   function getParentAtLevel(menuItem, depth) {
-       var result = menuItem;
-       for (var i = 0; i < depth; i++) {
-           result = result.parent;
-       }
-       return result;
-   }
-
-    function constructTree() {
-        //console.log('------------------constructTree---------------------');
+    function constructList() {
         angular.forEach(menuItems, function (menuItem) {
-            //console.log(menuItem.path);
-            if (menuItem.parent == null) {
+            if (menuItem.group == null) {
                 var pathParts = menuItem.path.split('/');
-                var parentPath = null;
-                // we want to check menuItem for null or undefined, so use '== null'
-                if (pathParts.length === 1 && menuItem.dynamic == null) {
-                    parentPath = "more";
-                }
-                if (pathParts.length > 1 && menuItem.dynamic == null) {
+                var groupPath = null;
+                if (pathParts.length > 1) {
                     pathParts.pop();
-                    parentPath = pathParts.join('/');
+                    groupPath = pathParts.join('/');
                 }
-                var parent = _.find(menuItems, function(currentMenuItem) { return currentMenuItem.path === parentPath });
-                if (angular.isDefined(parent)) {
-                    menuItem.parent = parent;
-                    parent.children.push(menuItem);
-                    parent.children.sort(sortByPriority);
+                var group = _.find(menuItems, function (menuItem) { return menuItem.path === groupPath });
+                if (angular.isDefined(group)) {
+                    menuItem.group = group;
                 }
             }
         });
-        // sort tree items
         menuItems.sort(sortMenuItem);
-        var i;
-        dynamicMenuItems.length = 0;
-        for (i = 0; i < menuItems.length; i++) {
-            if (menuItems[i].dynamic === true || menuItems[i].dynamic === 'list') {
-                dynamicMenuItems.push(menuItems[i]);
-            }
-        }
-        staticMenuItems.length = 0;
-        for (i = 0; i < menuItems.length; i++) {
-            if (menuItems[i].dynamic === false) {
-                staticMenuItems.push(menuItems[i]);
-            }
-        }
     };
 
-    function findByPath(path) {
-        return _.find(menuItems, function (menuItem) { return menuItem.path === path && menuItem.dynamic !== true; });
-    };
+    function addMenuItem(menuItem, isDynamic) {
+        patchMenuItem(menuItem);
+        if (!isDynamic) {
+            menuItems.push(menuItem);
+            constructList();
+        } else {
+            dynamicMenuItems.push(menuItem);
+        }
+    }
 
-    function addMenuItem(menuItem) {
-        // place it there, because we may need access to this properties BEFORE tree will be constructed
-        menuItem.parent = null;
-        menuItem.children = [];
+    function patchMenuItem(menuItem) {
+        if (!angular.isDefined(menuItem.priority)) {
+            menuItem.priority = Number.NaN;
+        }
         if (!angular.isDefined(menuItem.favorite)) {
             menuItem.favorite = false;
         }
-        menuItems.push(menuItem);
-        constructTree();
+        if (!angular.isDefined(menuItem.group)) {
+            menuItem.group = null;
+        }
     }
 
-    function removeMenuItem(menuItem) {
-        var index = menuItems.indexOf(menuItem);
-        menuItems.splice(index, 1);
-        constructTree();
+    function removeMenuItem(menuItem, isDynamic) {
+        var list = !isDynamic ? menuItems : dynamicMenuItems;
+        var index = list.indexOf(menuItem);
+        list.splice(index, 1);
+        if (!isDynamic) constructList();
     }
+
+    function findByPath(path, isDynamic) {
+        return _.find(!isDynamic ? menuItems : dynamicMenuItems, function (menuItem) { return menuItem.path === path });
+    };
 
     var retVal = {
         menuItems: menuItems,
         dynamicMenuItems: dynamicMenuItems,
-        staticMenuItems: staticMenuItems,
         addMenuItem: addMenuItem,
         removeMenuItem: removeMenuItem,
         findByPath: findByPath
     };
     return retVal;
 }])
-.directive('vaMainMenu', ['$compile', '$filter', '$state', '$translate', 'platformWebApp.mainMenuService', function ($compile, $filter, $state, $translate, mainMenuService) {
+.directive('vaMainMenu', ['$compile', '$filter', '$state', '$translate', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', function ($compile, $filter, $state, $translate, mainMenuService, pushNotificationService) {
 
     return {
         restrict: 'E',
@@ -144,29 +90,18 @@
         link: function (scope, element, attr) {
 
             scope.currentMenuItem = undefined;
-            // keep for backward compatibility
             scope.menuItems = mainMenuService.menuItems;
             scope.dynamicMenuItems = mainMenuService.dynamicMenuItems;
-            scope.staticMenuItems = mainMenuService.staticMenuItems;
+            scope.notificationMenuItem = pushNotificationService.menuItem;
             scope.search = {
                 searchMenuItems: [],
                 searchText : ""
             };
 
-            scope.toggleSize = function() {
-                $('.nav-bar').toggleClass('__collapsed');
-            };
-
             scope.selectMenuItem = function (menuItem) {
-                if (scope.showSubMenu && scope.currentMenuItem === menuItem) {
-                    scope.showSubMenu = false;
-                } else {
-                    scope.currentMenuItem = menuItem;
-
-                    // notifications should always open, even if nothing is there
-                    scope.showSubMenu = menuItem.children.length > 0 || menuItem.path === 'notification';
-                }
-
+                scope.currentMenuItem = menuItem;
+                scope.showMenuItemList = false;
+                scope.showSubMenu = false;
                 //run action
                 if (angular.isDefined(menuItem.action)) {
                     menuItem.action();
@@ -175,32 +110,20 @@
 
             scope.toggleFavorite = function(menuItem) {
                 menuItem.favorite = !menuItem.favorite;
-                var dynamicMenuItem;
                 if (menuItem.favorite) {
-                    var lastMenuBarItem = mainMenuService.dynamicMenuItems[mainMenuService.dynamicMenuItems.length - 2];
-                    if (lastMenuBarItem == null) {
-                        lastMenuBarItem = mainMenuService.staticMenuItems[mainMenuService.staticMenuItems.length - 1];
-                    }
-                    dynamicMenuItem = angular.extend({}, menuItem, { priority: lastMenuBarItem.priority + 1, dynamic: true });
-                    mainMenuService.addMenuItem(dynamicMenuItem);
+                    mainMenuService.addMenuItem(menuItem, true);
                 } else {
-                    dynamicMenuItem = _.find(mainMenuService.menuItems, function(currentMenuItem) { return currentMenuItem.path === menuItem.path && currentMenuItem.dynamic === true; });
-                    mainMenuService.removeMenuItem(dynamicMenuItem);
+                    mainMenuService.removeMenuItem(menuItem, true);
                 }
             };
 
-            scope.searchMenuItem = function (menuItems) {
+            scope.searchMenuItem = function(menuItems) {
                 scope.search.searchMenuItems.length = 0;
-                var searchMenuItemImpl = function(menuItems) {
-                    for (var i = 0; i < menuItems.length; i++) {
-                        if (menuItems[i].children.length > 0) {
-                            searchMenuItemImpl(menuItems[i].children);
-                        } else if ($translate.instant(menuItems[i].title).search(new RegExp(scope.search.searchText, "i")) > -1) {
-                            scope.search.searchMenuItems.push(menuItems[i]);
-                        }
+                scope.menuItems.forEach(function(menuItem) {
+                    if (menuItem.group != null && $translate.instant(menuItem.title).search(new RegExp(scope.search.searchText, "i")) > -1) {
+                        scope.search.searchMenuItems.push(menuItem);
                     }
-                };
-                searchMenuItemImpl(menuItems);
+                });
             };
 
             scope.sortableOptions = {
@@ -209,16 +132,8 @@
                 // bug in ui-sortable: always use container with tolerance
                 // because otherwise draggable item can't replace top item:
                 // where is no space between top item and container top border
-                containment: ".favorites",
-                items: "li:not(.list)",
-                tolerance: "pointer",
-                stop: function (e, ui) {
-                    var lastStaticMenuBarItem = mainMenuService.staticMenuItems[mainMenuService.staticMenuItems.length - 1];
-                    var priorityShift = lastStaticMenuBarItem.priority;
-                    for (var i = 0; i < mainMenuService.dynamicMenuItems.length - 2; i++) {
-                        mainMenuService.dynamicMenuItems[i].priority = priorityShift + i + 1;
-                    }
-                }
+                containment: ".menu.items ul",
+                tolerance: "pointer"
             };
         }
     }

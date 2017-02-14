@@ -162,17 +162,6 @@ angular.module('platformWebApp', AppDependencies).
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
 
-        var homeMenuItem = {
-            path: 'home',
-            title: 'platform.menu.home',
-            icon: 'fa fa-home',
-            action: function () { $state.go('workspace'); },
-            // this item must always be at the top
-            priority: 0,
-            dynamic: false
-        };
-        mainMenuService.addMenuItem(homeMenuItem);
-
         var browseMenuItem = {
             path: 'browse',
             icon: 'fa fa-search',
@@ -188,17 +177,6 @@ angular.module('platformWebApp', AppDependencies).
             priority: 1
         };
         mainMenuService.addMenuItem(cfgMenuItem);
-
-        var moreMenuItem = {
-            path: 'more',
-            icon: 'fa fa-folder-open',
-            title: 'platform.menu.more',
-            // this item must always be at the bottom, so
-            // don't use just 99 number: we have INFINITE list
-            priority: 9007199254740991,// Number.MAX_SAFE_INTEGER,
-            dynamic: "list"
-        };
-        mainMenuService.addMenuItem(moreMenuItem);
 
         $rootScope.$on('unauthorized', function (event, rejection) {
             if (!authService.isAuthenticated) {
@@ -222,7 +200,7 @@ angular.module('platformWebApp', AppDependencies).
             $timeout(function () {
                 if (authContext.isAuthenticated) {
                     if (!$state.current.name || $state.current.name == 'loginDialog') {
-                        homeMenuItem.action();
+                        $state.go('workspace');
                     }
                 }
                 else {

@@ -1,94 +1,102 @@
-﻿<nav class="nav-bar">
+﻿<nav class="nav-bar" ng-class="{'__collapsed': collapsed}">
     <div class="bar">
-        <a class="menu-link" ng-click="toggleSize()">
-            <i  class="menu-ico fa fa-bars"></i>
-        </a>
-        <ul class="menu items">
-            <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu, '__animated': menuItem.incremented}" ng-repeat="menuItem in staticMenuItems" ng-click="selectMenuItem(menuItem)">
-                <a class="menu-link" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
-                    <i class="menu-ico" ng-class="menuItem.icon"></i>
-                    <span class="name">{{menuItem.title | translate}}</span>
-                </a>
-                <ng-include src='menuItem.template'> </ng-include>
-            </li>
-        </ul>
-        <div class="menu items favorites">
+        <div class="menu-item" ng-click="collapsed = !collapsed">
+            <a class="menu-link">
+                <i class="menu-ico fa fa-bars"></i>
+            </a>
+        </div>
+        <div class="menu-item" ng-click="currentMenuItem = null; showMenuItemList = false; showNotificationDropdown = false; $state.go('workspace');">
+            <a class="menu-link" href="">
+                <i class="menu-ico fa fa-home"></i>
+                <span class="name">{{'platform.menu.home' | translate}}</span>
+            </a>
+        </div>
+        <div class="menu">
             <div class="outer-wrapper">
                 <div class="inner-wrapper">
-                    <ul class="content" ng-model="dynamicMenuItems" ui-sortable="sortableOptions">
-                        <li class="menu-item" ng-class="{'__selected': currentMenuItem === menuItem && showSubMenu, '__animated': menuItem.incremented, 'list': menuItem.dynamic === 'list'}" ng-repeat="menuItem in dynamicMenuItems" ng-click="selectMenuItem(menuItem)">
-                            <a class="menu-link" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
-                                <i class="drag-and-drop fa fa-ellipsis-v"></i><i class="menu-ico" ng-class="menuItem.icon"></i>
-                                <span class="name">{{menuItem.title | translate}}</span>
+                    <div class="content">
+                        <div class="menu-item" ng-class="{'__selected': showNotificationDropdown, '__animated': notificationMenuItem.incremented}" ng-click="currentMenuItem = notificationMenuItem; showNotificationDropdown = !showNotificationDropdown; notificationMenuItem.action();">
+                            <a class="menu-link" href="">
+                                <i class="menu-ico" ng-class="notificationMenuItem.icon"></i>
+                                <span class="name">{{notificationMenuItem.title | translate}}</span>
+                                <span class="menu-count" ng-if="notificationMenuItem.newCount > 0" ng-bind="notificationMenuItem.newCount"></span>
                             </a>
-                            <ng-include src='menuItem.template'> </ng-include>
-                        </li>
-                    </ul>
+                        </div>
+                        <ul ng-model="dynamicMenuItems" ui-sortable="sortableOptions">
+                            <li class="menu-item __movable" ng-class="{'__selected': currentMenuItem.path === menuItem.path}" ng-repeat="menuItem in dynamicMenuItems" ng-click="selectMenuItem(menuItem)">
+                                <a class="menu-link" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
+                                    <i class="drag-and-drop fa fa-ellipsis-v"></i><i class="menu-ico" ng-class="menuItem.icon"></i>
+                                    <span class="name">{{menuItem.title | translate}}</span>
+                                </a>
+                                <ng-include src='menuItem.template'> </ng-include>
+                            </li>
+                        </ul>
+                        <div class="menu-item" ng-class="{'__selected': showMenuItemList}" ng-click="currentMenuItem = null; showMenuItemList = !showMenuItemList">
+                            <a class="menu-link" href="">
+                                <i class="menu-ico fa fa-folder-open"></i>
+                                <span class="name">{{'platform.menu.more' | translate}}</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="__logo" style="bottom:40px;">
-            <a href="" ng-click="showLicense()" ng-if="!license">{{'platform.templates.licensing.license-absent' | translate}}</a>
-            <a href="" ng-click="showLicense()" ng-if="license" ng-style="!license.hasExpired ? {color: '#54a954'} : {}">{{'platform.templates.licensing.license-present' | translate: license}}</a>
+        <div class="info">
+            <a ng-if="!license" href="" ng-click="showLicense()">{{'platform.templates.licensing.license-absent' | translate}}</a>
+            <a ng-if="license" href="" ng-click="showLicense()" ng-class="{'info-license __valid': !license.hasExpired}">{{'platform.templates.licensing.license-present' | translate: license}}</a>
         </div>
-        <div class="__logo">
-            <span class="logo-version">{{platformVersion}}</span>
+        <div class="info">
+            <span class="info-version">{{platformVersion}}</span>
         </div>
     </div>
-    <div class="dropdown" ng-class="{'__opened': showSubMenu}">
-        <a class="dropdown-close" ng-click="showSubMenu = false">×</a>
-        <div class="dropdown-head" ng-if="!currentMenuItem.headerTemplate">
+    <div class="menu dropdown" ng-class="{'__opened': showMenuItemList}">
+        <a class="menu dropdown-close" ng-click="showMenuItemList = false">×</a>
+        <div class="menu dropdown-head">
             <div class="form-group">
                 <div class="form-hint">{{'platform.menu.toggle-favorites' | translate }}</div>
                 <div class="form-input __search">
                     <input placeholder="{{'platform.placeholders.search-keyword' | translate }}" ng-model="search.searchText" ng-change="searchMenuItem(currentMenuItem.children)">
                     <button class="btn __other">
-                        <i class="btn-ico fa fa-remove" title="Clear" ng-click="search.searchText=''"></i>
+                        <i class="btn-ico fa fa-remove" title="{{'platform.commands.clear' | translate}}" ng-click="search.searchText=''"></i>
                     </button>
                 </div>
             </div>
         </div>
+        <div class="menu dropdown-content">
+            <ul class="list" va-favorites>
+                <li class="list-item" ng-repeat="menuItem in {true: menuItems, false: search.searchMenuItems}[search.searchText==='']" va-permission="{{menuItem.permission}}">
+                    <div class="list-fav" ng-if="menuItem.group" ng-click="toggleFavorite(menuItem)">
+                        <i class="list-ico {{menuItem.favorite ? 'fa fa-star' : 'fa fa-star-o'}}"></i>
+                    </div>
+                    <div class="list-group" ng-if="!menuItem.group">
+                        {{menuItem.title | translate}}
+                    </div>
+                    <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="menuItem.group" href="" ng-click="selectMenuItem(menuItem)">
+                        <i class="list-ico" ng-class="menuItem.icon">
+                            <i ng-if="menuItem.icon == 'fa fa-user'"></i>
+                        </i>
+                        {{menuItem.title | translate}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="notifications dropdown" ng-class="{'__opened': showNotificationDropdown}">
+        <a class="notifications dropdown-close" ng-click="showNotificationDropdown = false">×</a>
+        <div class="notifications dropdown-head" ng-if="!currentMenuItem.headerTemplate"></div>
         <ng-include src='currentMenuItem.headerTemplate'> </ng-include>
-        <div class="dropdown-content">
-            <ul class="list" ng-if="search.searchText == ''" va-favorites>
-                <li class="list-item" ng-repeat="menuItem in currentMenuItem.children" ng-include="'menuItemTemplate.html'" va-permission="{{menuItem.permission}}">
+        <div class="notifications dropdown-content">
+            <ul class="list">
+                <li class="list-item" ng-repeat="menuItem in currentMenuItem.children" ng-click="selectMenuItem(menuItem)" va-permission="{{menuItem.permission}}">
+                    <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template" href="">
+                        <i class="list-ico" ng-class="menuItem.icon">
+                            <i ng-if="menuItem.icon == 'fa fa-user'"></i>
+                        </i>
+                        {{menuItem.title | translate}}
+                    </a>
+                    <ng-include src='menuItem.template'> </ng-include>
                 </li>
             </ul>
-            <ul class="list" ng-if="search.searchText != ''" va-favorites>
-                <li class="list-item" ng-repeat="menuItem in search.searchMenuItems" ng-include="'searchMenuItemTemplate.html'" va-permission="{{menuItem.permission}}">
-                </li>
-            </ul>
-            <script type="text/ng-template" id="menuItemTemplate.html">
-                <div class="list-fav" ng-if="menuItem.children.length == 0" ng-click="toggleFavorite(menuItem)">
-                    <i class="list-ico {{menuItem.favorite ? 'fa fa-star' : 'fa fa-star-o'}}"></i>
-                </div>
-                <div class="list-group {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template && menuItem.children.length > 0">
-                    {{menuItem.title | translate}}
-                </div>
-                <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template && menuItem.children.length == 0" href="" ng-click="selectMenuItem(menuItem)">
-                    <i class="list-ico" ng-class="menuItem.icon">
-                        <i ng-if="menuItem.icon == 'fa fa-user'"></i>
-                    </i>
-                    {{menuItem.title | translate}}
-                </a>
-                <ng-include src='menuItem.template'> </ng-include>
-                <ul class="list" ng-if="menuItem.children">
-                    <li class="list-item" ng-repeat="menuItem in menuItem.children" va-permission="{{menuItem.permission}}" ng-include="'menuItemTemplate.html'">
-                    </li>
-                </ul>
-            </script>
-            <script type="text/ng-template" id="searchMenuItemTemplate.html">
-                <div class="list-fav" ng-click="toggleFavorite(menuItem)">
-                    <i class="list-ico {{menuItem.favorite ? 'fa fa-star' : 'fa fa-star-o'}}"></i>
-                </div>
-                <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template" href="" ng-click="selectMenuItem(menuItem)">
-                    <i class="list-ico" ng-class="menuItem.icon">
-                        <i ng-if="menuItem.icon == 'fa fa-user'"></i>
-                    </i>
-                    {{menuItem.title | translate}}
-                </a>
-                <ng-include src='menuItem.template'> </ng-include>
-            </script>
         </div>
     </div>
 </nav>
