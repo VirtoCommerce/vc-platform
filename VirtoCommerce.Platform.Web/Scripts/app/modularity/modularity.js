@@ -74,7 +74,7 @@
 	   	priority: 900,
 	   	satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'ModulePushNotification'; },
 	   	template: '$(Platform)/Scripts/app/modularity/notifications/menu.tpl.html',
-	   	action: function (notify) { $state.go('pushNotificationsHistory', notify); }
+	   	action: function (notify) { $state.go('workspace.pushNotificationsHistory', notify); }
       });
 
   	var historyExportImportTemplate =

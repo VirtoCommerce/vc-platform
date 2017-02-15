@@ -101,7 +101,7 @@
             scope.selectMenuItem = function (menuItem) {
                 scope.currentMenuItem = menuItem;
                 scope.showMenuItemList = false;
-                scope.showSubMenu = false;
+                scope.showNotificationDropdown = false;
                 //run action
                 if (angular.isDefined(menuItem.action)) {
                     menuItem.action();
@@ -132,7 +132,7 @@
                 // bug in ui-sortable: always use container with tolerance
                 // because otherwise draggable item can't replace top item:
                 // where is no space between top item and container top border
-                containment: ".menu.items ul",
+                containment: ".menu ul",
                 tolerance: "pointer"
             };
         }

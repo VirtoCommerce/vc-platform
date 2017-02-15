@@ -2,7 +2,7 @@
 .config(
   ['$stateProvider', function ($stateProvider) {
       $stateProvider
-          .state('pushNotificationsHistory', {
+          .state('workspace.pushNotificationsHistory', {
               url: '/events',
               templateUrl: '$(Platform)/Scripts/app/pushNotifications/notification.tpl.html',
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
@@ -44,7 +44,7 @@
 		    //template for display that notification in menu and list
 		    template: '$(Platform)/Scripts/app/pushNotifications/menuDefault.tpl.html',
 		    //action executed when notification selected
-		    action: function (notify) { $state.go('pushNotificationsHistory', notify) }
+		    action: function (notify) { $state.go('workspace.pushNotificationsHistory', notify) }
 		};
 
     //In history list notification template (error, info, debug)
@@ -146,7 +146,7 @@
                             headerTemplate: '$(Platform)/Scripts/app/pushNotifications/menuHeader.tpl.html',
                             template: '$(Platform)/Scripts/app/pushNotifications/menu.tpl.html',
                             action: function () { markAllAsRead(); if (this.children.length == 0) { this.showHistory(); } },
-                            showHistory: function () { $state.go('pushNotificationsHistory'); },
+                            showHistory: function () { $state.go('workspace.pushNotificationsHistory'); },
                             clearRecent: function () { notifyMenu.children.splice(0, notifyMenu.children.length); },
                             children: [],
                             newCount: 0
