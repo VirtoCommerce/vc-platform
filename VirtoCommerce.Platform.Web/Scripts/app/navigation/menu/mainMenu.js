@@ -4,21 +4,11 @@
     var menuItems = [];
     var dynamicMenuItems = [];
 
-    function sortMenuItem(a, b) {
-        var result = 0;
-        if (a.group === b.group) {
-            result = a.priority - b.priority;
+    function sortByPriority(a, b) {
+        if (angular.isDefined(a.priority) && angular.isDefined(b.priority)) {
+            return a.priority - b.priority;
         }
-        else if (a.group == null && b.group != null) {
-            result = a === b.group ? -1 : a.priority - b.group.priority;
-        }
-        else if (a.group != null && b.group == null) {
-            result = a.group === b ? 1 : a.group.priority - b.priority;
-        }
-        else if (a.group !== b.group) {
-            result = a.group.priority - b.group.priority;
-        }
-        return result;
+        return -1;
     };
 
     function constructList() {
@@ -36,7 +26,7 @@
                 }
             }
         });
-        menuItems.sort(sortMenuItem);
+        menuItems.sort(sortByPriority);
     };
 
     function addMenuItem(menuItem, isDynamic) {
@@ -56,9 +46,6 @@
         if (!angular.isDefined(menuItem.favorite)) {
             menuItem.favorite = false;
         }
-        //if (!angular.isDefined(menuItem.group)) {
-        //    menuItem.group = null;
-        //}
     }
 
     function removeMenuItem(menuItem, isDynamic) {

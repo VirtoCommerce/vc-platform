@@ -4796,6 +4796,12 @@ tags-input .tags .tag-item {
             color: #fff;
             cursor: pointer;
         }
+
+    .nav-bar .bar .separator {
+        border-bottom: 1px solid #606060;
+        height: 0;
+        margin: 0px 20px;
+    }
         
     .nav-bar .bar .menu-link:hover {
         background-color: #383838;
