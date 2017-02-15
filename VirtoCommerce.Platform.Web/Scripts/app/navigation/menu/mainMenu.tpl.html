@@ -23,17 +23,17 @@
                                 <span class="menu-count" ng-if="notificationMenuItem.newCount > 0" ng-bind="notificationMenuItem.newCount"></span>
                             </a>
                         </div>
-                        <div class="menu-item" ng-class="{'__selected': showMenuItemList}" ng-click="currentMenuItem = null; showNotificationDropdown = false; showMenuItemList = !showMenuItemList">
+                        <div class="menu-item __expandable" ng-class="{'__selected': showMenuItemList}" ng-click="currentMenuItem = null; showNotificationDropdown = false; showMenuItemList = !showMenuItemList">
                             <a class="menu-link" href="">
-                                <i class="menu-ico fa fa-folder-open"></i>
+                                <i class="menu-ico" ng-class="{'fa fa-angle-right': collapsed}"></i>
                                 <span class="name">{{'platform.menu.more' | translate}}</span>
                             </a>
                         </div>
-                        <div class="separator"></div>
+                        <div class="divider"></div>
                         <ul ng-model="dynamicMenuItems" ui-sortable="sortableOptions">
                             <li class="menu-item __movable" ng-class="{'__selected': currentMenuItem.path === menuItem.path}" ng-repeat="menuItem in dynamicMenuItems" ng-click="selectMenuItem(menuItem)">
                                 <a class="menu-link" ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
-                                    <i class="drag-and-drop fa fa-ellipsis-v"></i><i class="menu-ico" ng-class="menuItem.icon"></i>
+                                    <i class="menu-ico" ng-class="menuItem.icon"></i>
                                     <span class="name">{{menuItem.title | translate}}</span>
                                 </a>
                                 <ng-include src='menuItem.template'> </ng-include>
@@ -52,7 +52,7 @@
         </div>
     </div>
     <div class="menu dropdown" ng-class="{'__opened': showMenuItemList}">
-        <div class="menu dropdown-head">
+        <div class="dropdown-head">
             <div class="form-group">
                 <div class="form-hint">{{'platform.menu.toggle-favorites' | translate }}</div>
                 <div class="form-input __search">
@@ -63,8 +63,8 @@
                 </div>
             </div>
         </div>
-        <a class="menu dropdown-close" ng-click="showMenuItemList = false">×</a>
-        <div class="menu dropdown-content">
+        <a class="dropdown-close" ng-click="showMenuItemList = false">×</a>
+        <div class="dropdown-content">
             <ul class="list" va-favorites>
                 <li class="list-item" ng-if="search.searchText===''" ng-repeat="(group, groupMenuItems) in menuItems | omit: 'group == null' | groupBy: 'group.path'">
                     <div class="list-group">
@@ -92,7 +92,7 @@
         </div>
     </div>
     <div class="notifications dropdown" ng-class="{'__opened': showNotificationDropdown}">
-        <a class="notifications dropdown-close" ng-click="showNotificationDropdown = false">×</a>
+        <a class="dropdown-close" ng-click="showNotificationDropdown = false">×</a>
         <div class="dropdown-head">
             <ul class="menu __inline">
                 <li class="menu-item">
@@ -109,7 +109,7 @@
                 </li>
             </ul>
         </div>
-        <div class="notifications dropdown-content">
+        <div class="dropdown-content">
             <ul class="list">
                 <li class="list-item" ng-repeat="menuItem in currentMenuItem.children" ng-click="selectMenuItem(menuItem)" va-permission="{{menuItem.permission}}">
                     <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="!menuItem.template" href="">
