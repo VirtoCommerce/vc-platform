@@ -4848,6 +4848,7 @@ tags-input .tags .tag-item {
         position: relative;
         top: 2px;
         width: 32px;
+        text-align: center;
     }
 
     .nav-bar .bar .menu-count {
