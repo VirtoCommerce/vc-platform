@@ -496,7 +496,7 @@ namespace VirtoCommerce.Platform.Data.Security
                         retVal.SecurityStamp = null;
                     }
 
-                    retVal.Settings = new List<SettingEntry>();
+                    retVal.Settings = _settingManager.GetModuleSettings("VirtoCommerce.Platform");
                     _settingManager.LoadEntitySettingsValues(retVal);
 
                     return retVal;
