@@ -6,7 +6,6 @@ using System.Linq;
 using CacheManager.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Model;
@@ -63,7 +62,18 @@ namespace VirtoCommerce.Platform.Data.Settings
             if (entity.IsTransient())
                 throw new ArgumentException("entity transistent");
 
-            var storedSettings = LoadObjectSettingsValues(entity.Id, entity.GetType().Name);
+            var storedSettings = new List<SettingEntry>();
+            var entityType = entity.GetType().Name;
+            using (var repository = _repositoryFactory())
+            {
+                var settings = repository.Settings
+                    .Include(s => s.SettingValues)
+                    .Where(x => x.ObjectId == entity.Id && x.ObjectType == entityType)
+                    .OrderBy(x => x.Name)
+                    .ToList();
+
+                storedSettings.AddRange(settings.Select(x => x.ToModel()));
+            }
 
             //Deep load settings values for all object contains settings
             var haveSettingsObjects = entity.GetFlatObjectsListWithInterface<IHaveSettings>();
@@ -72,63 +82,34 @@ namespace VirtoCommerce.Platform.Data.Settings
                 // Replace settings values with stored in database
                 if (haveSettingsObject.Settings != null)
                 {
-                    PatchObjectSettingsValues(haveSettingsObject, storedSettings);
-                }
-            }
-        }
+                    //Need clone settings entry because it may be shared for multiple instances
+                    haveSettingsObject.Settings = haveSettingsObject.Settings.Select(x => (SettingEntry)x.Clone()).ToList();
 
-        public void LoadUserSettingsValues(ApplicationUserExtended user)
-        {
-            if (user == null)
-                throw new ArgumentNullException("user");
-
-            var storedSettings = LoadObjectSettingsValues(user.Id, user.GetType().Name);
-            PatchObjectSettingsValues(user, storedSettings);
-        }
-
-        private ICollection<SettingEntry> LoadObjectSettingsValues(string id, string objectType)
-        {
-            var storedSettings = new List<SettingEntry>();
-            using (var repository = _repositoryFactory())
-            {
-                var settings = repository.Settings
-                    .Include(setting => setting.SettingValues)
-                    .Where(setting => setting.ObjectId == id && setting.ObjectType == objectType)
-                    .OrderBy(setting => setting.Name)
-                    .ToList();
-
-                storedSettings.AddRange(settings.Select(setting => setting.ToModel()));
-            }
-            return storedSettings;
-        }
-
-        private void PatchObjectSettingsValues(IHaveSettings haveSettingsObject, ICollection<SettingEntry> storedSettings)
-        {
-            //Need clone settings entry because it may be shared for multiple instances
-            haveSettingsObject.Settings = haveSettingsObject.Settings.Select(x => (SettingEntry)x.Clone()).ToList();
-
-            foreach (var setting in haveSettingsObject.Settings)
-            {
-                var storedSetting = storedSettings.FirstOrDefault(x => String.Equals(x.Name, setting.Name, StringComparison.InvariantCultureIgnoreCase));
-                //First try to used stored object setting values
-                if (storedSetting != null)
-                {
-                    setting.Value = storedSetting.Value;
-                    setting.ArrayValues = storedSetting.ArrayValues;
-                }
-                else if(setting.Value == null && setting.ArrayValues == null)
-                {
-                    //try to use global setting value
-                    var globalSetting = GetSettingByName(setting.Name);
-                    if (setting.IsArray)
+                    foreach (var setting in haveSettingsObject.Settings)
                     {
-                        setting.ArrayValues = globalSetting.ArrayValues ?? new[] { globalSetting.DefaultValue };
-                    }
-                    else
-                    {
-                        setting.Value = globalSetting.Value ?? globalSetting.DefaultValue;
-                    }
+                        var storedSetting = storedSettings.FirstOrDefault(x => String.Equals(x.Name, setting.Name, StringComparison.InvariantCultureIgnoreCase));
+                        //First try to used stored object setting values
+                        if (storedSetting != null)
+                        {
+                            setting.Value = storedSetting.Value;
+                            setting.ArrayValues = storedSetting.ArrayValues;
+                        }
+                        else if(setting.Value == null && setting.ArrayValues == null)
+                        {
+                            //try to use global setting value
+                            var globalSetting = GetSettingByName(setting.Name);
+                            if (setting.IsArray)
+                            {
+                                setting.ArrayValues = globalSetting.ArrayValues ?? new[] { globalSetting.DefaultValue };
+                            }
+                            else
+                            {
+                                setting.Value = globalSetting.Value ?? globalSetting.DefaultValue;
+                            }
 
+                        }
+
+                    }
                 }
             }
         }
@@ -139,72 +120,49 @@ namespace VirtoCommerce.Platform.Data.Settings
                 throw new ArgumentNullException("entity");
 
             if (entity.IsTransient())
-                throw new ArgumentException("entity transistent", "entity");
+                throw new ArgumentException("entity transistent");
 
             var objectType = entity.GetType().Name;
+
             var haveSettingsObjects = entity.GetFlatObjectsListWithInterface<IHaveSettings>();
+
             foreach (var haveSettingsObject in haveSettingsObjects)
             {
-                SaveObjectSettingsValues(entity.Id, objectType, haveSettingsObject);
-            }
-        }
+                var settings = new List<SettingEntry>();
 
-        public void SaveUserSettingsValues(ApplicationUserExtended user)
-        {
-            if (user == null)
-                throw new ArgumentNullException("user");
-            
-            SaveObjectSettingsValues(user.Id, user.GetType().Name, user);
-        }
-
-        private void SaveObjectSettingsValues(string id, string objectType, IHaveSettings haveSettingsObject)
-        {
-            var settings = new List<SettingEntry>();
-
-            if (haveSettingsObject.Settings != null)
-            {
-                //Save settings
-                foreach (var setting in haveSettingsObject.Settings)
+                if (haveSettingsObject.Settings != null)
                 {
-                    setting.ObjectId = id;
-                    setting.ObjectType = objectType;
-                    settings.Add(setting);
+                    //Save settings
+                    foreach (var setting in haveSettingsObject.Settings)
+                    {
+                        setting.ObjectId = entity.Id;
+                        setting.ObjectType = objectType;
+                        settings.Add(setting);
+                    }
                 }
+                SaveSettings(settings.ToArray());
             }
-            SaveSettings(settings.ToArray());
         }
 
         public void RemoveEntitySettings(Entity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
+            if (entity == null)
+                throw new ArgumentNullException("entity transistent");
 
-            if (entity.IsTransient())
-                throw new ArgumentException("entity transistent", "entity");
-
-            RemoveObjectSettings(entity.Id, entity.GetType().Name);
-        }
-
-        public void RemoveUserSettings(ApplicationUserExtended user)
-        {
-            if (user == null)
-                throw new ArgumentNullException("user");
-
-            RemoveObjectSettings(user.Id, user.GetType().Name);
-        }
-
-        private void RemoveObjectSettings(string id, string objectType)
-        {
+            var objectType = entity.GetType().Name;
             using (var repository = _repositoryFactory())
             {
-                var settings = repository.Settings.Include(setting => setting.SettingValues)
-                    .Where(setting => setting.ObjectId == id && setting.ObjectType == objectType).ToList();
+                var settings = repository.Settings.Include(s => s.SettingValues)
+                                                  .Where(x => x.ObjectId == entity.Id && x.ObjectType == objectType).ToList();
                 foreach (var setting in settings)
                 {
                     repository.Remove(setting);
                 }
                 repository.UnitOfWork.Commit();
             }
+
         }
 
         public SettingEntry[] GetModuleSettings(string moduleId)

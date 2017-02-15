@@ -1,32 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 using WebGrease.Extensions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
-    [RoutePrefix("")]
+    [RoutePrefix("api/platform/localization")]
     public class LocalizationController : ApiController
     {
-        private const string LanguageSetting = "VirtoCommerce.Core.General.Language";
-
         private readonly IModuleCatalog _moduleCatalog;
-        private readonly ISecurityService _securityService;
-
-        public LocalizationController(IModuleCatalog moduleCatalog, ISecurityService securityService)
+        public LocalizationController(IModuleCatalog moduleCatalog)
         {
             _moduleCatalog = moduleCatalog;
-            _securityService = securityService;
         }
 
         /// <summary>
@@ -35,7 +25,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="lang">Language of localization resource (en by default)</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/platform/localization")]
+        [Route("")]
         [ResponseType(typeof(object))] // Produces invalid response type in generated client
         [AllowAnonymous]
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -58,7 +48,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/platform/localization/locales")]
+        [Route("locales")]
         [ResponseType(typeof(string[]))]
         public IHttpActionResult GetLocales()
         {
@@ -70,31 +60,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(locales);
         }
 
-        [HttpGet]
-        [Route("api/platform/security/users/{id}/locale")]
-        [ResponseType(typeof(string))]
-        public async Task<IHttpActionResult> GetLocale(string id)
-        {
-            var user = await _securityService.FindByIdAsync(id, UserDetails.Undefined);
-            var locale = user.Settings.GetSettingValue(LanguageSetting, string.Empty);
-            return Ok(locale);
-        }
-
-        [HttpPut]
-        [Route("api/platform/security/users/{id}/locale")]
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> SetLocale(string id)
-        {
-            var user = await _securityService.FindByIdAsync(id, UserDetails.Undefined);
-            user.Settings.SetSettingValue(LanguageSetting, await Request.Content.ReadAsStringAsync());
-            await _securityService.UpdateAsync(user);
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        private void CreateUserLocaleSetting()
-        {
-            
-        }
 
         private string[] GetAllLocalizationFiles(string searchPattern)
         {
