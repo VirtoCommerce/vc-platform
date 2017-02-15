@@ -1,11 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class ApplicationUserExtended
+    public class ApplicationUserExtended: Entity, IHaveSettings
     {
-        public string Id { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
@@ -48,5 +50,7 @@ namespace VirtoCommerce.Platform.Core.Security
         /// API keys
         /// </summary>
         public ApiAccount[] ApiAccounts { get; set; }
+
+        public ICollection<SettingEntry> Settings { get; set; }
     }
 }

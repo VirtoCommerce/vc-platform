@@ -148,8 +148,9 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
-            if (entity == null)
-                throw new ArgumentNullException("entity transistent");
+
+            if (entity.IsTransient())
+                throw new ArgumentException("entity transistent", "entity");
 
             var objectType = entity.GetType().Name;
             using (var repository = _repositoryFactory())
