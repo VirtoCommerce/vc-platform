@@ -56,9 +56,9 @@
         if (!angular.isDefined(menuItem.favorite)) {
             menuItem.favorite = false;
         }
-        if (!angular.isDefined(menuItem.group)) {
-            menuItem.group = null;
-        }
+        //if (!angular.isDefined(menuItem.group)) {
+        //    menuItem.group = null;
+        //}
     }
 
     function removeMenuItem(menuItem, isDynamic) {
@@ -97,6 +97,7 @@
                 searchMenuItems: [],
                 searchText : ""
             };
+            scope.findByPath = mainMenuService.findByPath;
 
             scope.selectMenuItem = function (menuItem) {
                 scope.currentMenuItem = menuItem;

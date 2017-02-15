@@ -21,7 +21,8 @@
   'focusOn',
   'textAngular',
   'ngTagsInput',
-  'pascalprecht.translate'
+  'pascalprecht.translate',
+  'angular.filter'
 ];
 
 angular.module('platformWebApp', AppDependencies).

@@ -65,21 +65,29 @@
         </div>
         <div class="menu dropdown-content">
             <ul class="list" va-favorites>
-                <li class="list-item" ng-repeat="menuItem in {true: menuItems, false: search.searchMenuItems}[search.searchText==='']" va-permission="{{menuItem.permission}}">
-                    <div class="list-fav" ng-if="menuItem.group" ng-click="toggleFavorite(menuItem)">
-                        <i class="list-ico {{menuItem.favorite ? 'fa fa-star' : 'fa fa-star-o'}}"></i>
+                <li class="list-item" ng-if="search.searchText===''" ng-repeat="(group, groupMenuItems) in menuItems | omit: 'group == null' | groupBy: 'group.path'">
+                    <div class="list-group">
+                        {{findByPath(group).title | translate}}
                     </div>
-                    <div class="list-group" ng-if="!menuItem.group">
-                        {{menuItem.title | translate}}
-                    </div>
-                    <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" ng-if="menuItem.group" href="" ng-click="selectMenuItem(menuItem)">
-                        <i class="list-ico" ng-class="menuItem.icon">
-                            <i ng-if="menuItem.icon == 'fa fa-user'"></i>
-                        </i>
-                        {{menuItem.title | translate}}
-                    </a>
+                    <ul class="list">
+                        <li class="list-item" ng-repeat="menuItem in groupMenuItems" ng-include="'menuItemTemplate.html'" va-permission="{{menuItem.permission}}">
+                        </li>
+                    </ul>
+                </li>
+                <li class="list-item" ng-if="search.searchText!==''" ng-repeat="menuItem in search.searchMenuItems" ng-include="'menuItemTemplate.html'" va-permission="{{menuItem.permission}}">
                 </li>
             </ul>
+            <script type="text/ng-template" id="menuItemTemplate.html">
+                <div class="list-fav" ng-click="toggleFavorite(menuItem)">
+                    <i class="list-ico {{menuItem.favorite ? 'fa fa-star' : 'fa fa-star-o'}}"></i>
+                </div>
+                <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" href="" ng-click="selectMenuItem(menuItem)">
+                    <i class="list-ico" ng-class="menuItem.icon">
+                        <i ng-if="menuItem.icon == 'fa fa-user'"></i>
+                    </i>
+                    {{menuItem.title | translate}}
+                </a>
+            </script>
         </div>
     </div>
     <div class="notifications dropdown" ng-class="{'__opened': showNotificationDropdown}">
