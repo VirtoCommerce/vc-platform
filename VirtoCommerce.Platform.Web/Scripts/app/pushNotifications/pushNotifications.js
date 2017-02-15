@@ -4,7 +4,7 @@
       $stateProvider
           .state('workspace.pushNotificationsHistory', {
               url: '/events',
-              templateUrl: '$(Platform)/Scripts/app/pushNotifications/notification.tpl.html',
+              templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                   var blade = {
                       id: 'events',

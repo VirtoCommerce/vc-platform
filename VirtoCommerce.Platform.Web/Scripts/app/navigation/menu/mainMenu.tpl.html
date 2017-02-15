@@ -15,7 +15,8 @@
             <div class="outer-wrapper">
                 <div class="inner-wrapper">
                     <div class="content">
-                        <div class="menu-item" ng-class="{'__selected': $state.current.name == 'workspace.pushNotificationsHistory' || showNotificationDropdown, '__animated': notificationMenuItem.incremented}" ng-click="currentMenuItem = notificationMenuItem; showNotificationDropdown = notificationMenuItem.children.length != 0 && !showNotificationDropdown; notificationMenuItem.action();">
+                        <div class="menu-item" ng-class="{'__selected': $state.current.name == 'workspace.pushNotificationsHistory' || showNotificationDropdown, '__animated': notificationMenuItem.incremented}"
+                             ng-click="currentMenuItem = notificationMenuItem; showNotificationDropdown = notificationMenuItem.children.length != 0 && !showNotificationDropdown; showMenuItemList = false; notificationMenuItem.action();">
                             <a class="menu-link" href="">
                                 <i class="menu-ico" ng-class="notificationMenuItem.icon"></i>
                                 <span class="name">{{notificationMenuItem.title | translate}}</span>
@@ -31,7 +32,7 @@
                                 <ng-include src='menuItem.template'> </ng-include>
                             </li>
                         </ul>
-                        <div class="menu-item" ng-class="{'__selected': showMenuItemList}" ng-click="currentMenuItem = null; showMenuItemList = !showMenuItemList">
+                        <div class="menu-item" ng-class="{'__selected': showMenuItemList}" ng-click="currentMenuItem = null; showNotificationDropdown = false; showMenuItemList = !showMenuItemList">
                             <a class="menu-link" href="">
                                 <i class="menu-ico fa fa-folder-open"></i>
                                 <span class="name">{{'platform.menu.more' | translate}}</span>

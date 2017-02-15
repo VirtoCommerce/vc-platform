@@ -666,7 +666,6 @@
     <Content Include="Scripts\app\pushNotifications\blade\historyDefault.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\pushNotifications.js" />
     <Content Include="Scripts\app\pushNotifications\blade\history.js" />
-    <Content Include="Scripts\app\pushNotifications\notification.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\menuDefault.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\resources\signalRHubProxy.js" />
     <Content Include="Scripts\app\pushNotifications\resources\pushNotifications.js" />
