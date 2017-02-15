@@ -4647,7 +4647,7 @@ tags-input .tags .tag-item {
 .nav-bar {
     font-family: 'Exo 2';
     left: 0;
-    width: 315px;
+    width: 235px;
     z-index: 100;
 }
 
@@ -4679,6 +4679,7 @@ tags-input .tags .tag-item {
 
         .nav-bar.__collapsed .bar .menu-ico {
             margin: 0;
+            text-align: center;
         }
 
         .nav-bar.__collapsed .dropdown {
@@ -4742,7 +4743,7 @@ tags-input .tags .tag-item {
         background: #333;
         font-size: 0;
         text-align: center;
-        display: table-row;
+        padding: 5px 0;
         z-index: 50;
     }
 
@@ -4759,7 +4760,7 @@ tags-input .tags .tag-item {
         color: #c2c2c2;
         display: block;
         font-size: 12px;
-        padding: 10px 0;
+        padding: 5px 0;
     }
 
     .nav-bar .info-license.__valid {
@@ -4776,8 +4777,15 @@ tags-input .tags .tag-item {
 
         .nav-bar .bar .menu-link {
             font-size: 14px;
+            white-space: nowrap;
             line-height: 26px;
             padding: 10px 20px;
+            overflow: hidden;
+            width: 195px;
+        }
+
+        .nav-bar.__collapsed .bar .menu-link {
+            width: 32px;
         }
 
     .nav-bar .menu-item.__done {
@@ -4840,6 +4848,7 @@ tags-input .tags .tag-item {
     .nav-bar .bar .menu .menu-item.__expandable .menu-link {
         position: relative;
         padding-right: 50px;
+        width: 165px;
     }
 
         .nav-bar .bar .menu .menu-item.__expandable .menu-link:after {
@@ -4880,7 +4889,7 @@ tags-input .tags .tag-item {
             position: relative;
             top: 2px;
             width: 32px;
-            text-align: center;
+            text-align: left;
         }
 
     .nav-bar .bar .menu-count {
@@ -4905,13 +4914,13 @@ tags-input .tags .tag-item {
 
     /* Dropdown - dropdown menu navigation */
     .nav-bar .dropdown {
-        -webkit-transform: translateX(-45px);
-        transform: translateX(-45px);
+        -webkit-transform: translateX(-125px);
+        transform: translateX(-125px);
     }
 
         .nav-bar .dropdown.__opened {
-            -webkit-transform: translateX(315px);
-            transform: translateX(315px);
+            -webkit-transform: translateX(235px);
+            transform: translateX(235px);
         }
 
     .nav-bar .menu.dropdown {
@@ -5241,7 +5250,7 @@ tags-input .tags .tag-item {
 
 /* Content - main content area */
 .cnt {
-    left: 315px;
+    left: 235px;
     overflow: hidden;
     overflow-x: auto;
     right: 0;

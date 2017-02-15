@@ -97,10 +97,23 @@ a:hover,
 			transition: color .25s ease-in-out 0s;
 }
 
-.nav-bar .dropdown.__opened
+.nav-bar,
+.nav-bar .bar .menu-link
+{
+	-webkit-transition: width .25s ease-in-out 0s;
+			transition: width .25s ease-in-out 0s;
+}
+
+.nav-bar .dropdown
 {
 	-webkit-transition: transform .25s ease-in-out 0s;
 			transition: transform .25s ease-in-out 0s;
+}
+
+.cnt
+{
+	-webkit-transition: left .25s ease-in-out 0s;
+			transition: left .25s ease-in-out 0s;
 }
 
 .dropdown-content .list-link,
