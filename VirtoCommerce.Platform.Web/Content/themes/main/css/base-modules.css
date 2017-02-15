@@ -4641,7 +4641,7 @@ tags-input .tags .tag-item {
 .has-demo-warning .nav-bar,
 .has-demo-warning .nav-bar .dropdown,
 .has-demo-warning .cnt {
-    top: 28px;
+    top: 28px ! important;
 }
 /* Nav bar - Left navigation menu */
 .nav-bar {
