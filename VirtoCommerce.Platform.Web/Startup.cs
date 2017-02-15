@@ -309,6 +309,20 @@ namespace VirtoCommerce.Platform.Web
                 {
                     new ModuleSettingsGroup
                     {
+                        Name = "Platform|General",
+                        Settings = new []
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.General.MainMenu.Favorites",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Main menu favorites",
+                                Description = "List of menu items (JSON) which will be displayed as favorites"
+                            }
+                        }
+                    },
+                    new ModuleSettingsGroup
+                    {
                         Name = "Platform|Notifications|SendGrid",
                         Settings = new []
                         {

@@ -68,7 +68,8 @@
     };
     return retVal;
 }])
-.directive('vaMainMenu', ['$compile', '$filter', '$state', '$translate', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', function ($compile, $filter, $state, $translate, mainMenuService, pushNotificationService) {
+.directive('vaMainMenu', ['$compile', '$filter', '$state', '$translate', 'platformWebApp.mainMenuService', 'platformWebApp.authService', 'platformWebApp.accounts', 'platformWebApp.pushNotificationService',
+    function ($compile, $filter, $state, $translate, mainMenuService, authService, accounts, pushNotificationService) {
 
     return {
         restrict: 'E',
@@ -85,6 +86,8 @@
                 searchText : ""
             };
             scope.findByPath = mainMenuService.findByPath;
+
+            loadDynamicMenuItems();
 
             scope.selectMenuItem = function (menuItem) {
                 scope.currentMenuItem = menuItem;
@@ -103,6 +106,7 @@
                 } else {
                     mainMenuService.removeMenuItem(menuItem, true);
                 }
+                saveDynamicMenuItems();
             };
 
             scope.searchMenuItem = function(menuItems) {
@@ -121,8 +125,52 @@
                 // because otherwise draggable item can't replace top item:
                 // where is no space between top item and container top border
                 containment: ".menu ul",
-                tolerance: "pointer"
+                tolerance: "pointer",
+                stop: function (e, ui) {
+                    saveDynamicMenuItems();
+                }
             };
+
+            scope.$on('loginStatusChanged', loadDynamicMenuItems);
+
+            function loadDynamicMenuItems() {
+                // https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/working-with-platform-security
+                if (authService.checkPermission("platform:security:read")) {
+                    accounts.get({ id: authService.userLogin },
+                        function(currentUser) {
+                            var userMenuItemsSettingName = "VirtoCommerce.Platform.General.MainMenu.Favorites";
+                            var userMenuItemsSetting = _.find(currentUser.settings,
+                                function(setting) {
+                                    return setting.name === userMenuItemsSettingName;
+                                });
+                            Array.prototype.push.apply(mainMenuService.dynamicMenuItems,
+                                _.map(_.sortBy(angular.fromJson(userMenuItemsSetting.value), 'order'),
+                                    function(menuItemModel) {
+                                        var menuItem = mainMenuService.findByPath(menuItemModel.path);
+                                        menuItem.favorite = true;
+                                        return menuItem;
+                                    }));
+                        });
+                }
+            }
+
+            function saveDynamicMenuItems() {
+                if (authService.checkPermission("platform:security:read") && authService.checkPermission("platform:security:update")) {
+                    accounts.get({ id: authService.userLogin },
+                        function(currentUser) {
+                            var userMenuItemsSettingName = "VirtoCommerce.Platform.General.MainMenu.Favorites";
+                            var userMenuItemsSetting = _.find(currentUser.settings,
+                                function(setting) {
+                                    return setting.name === userMenuItemsSettingName;
+                                });
+                            userMenuItemsSetting.value = angular.toJson(_.map(mainMenuService.dynamicMenuItems,
+                                function(menuItem, index) {
+                                    return { path: menuItem.path, order: index };
+                                }));
+                            accounts.update(currentUser);
+                        });
+                }
+            }
         }
     }
 }]).directive('vaFavorites', function () {
