@@ -87,7 +87,12 @@
             };
             scope.findByPath = mainMenuService.findByPath;
 
-            loadDynamicMenuItems();
+            loadSettings();
+
+            scope.toggleCollapse = function() {
+                scope.collapsed = !scope.collapsed;
+                saveMenuCollapseState();
+            };
 
             scope.selectMenuItem = function (menuItem) {
                 scope.currentMenuItem = menuItem;
@@ -131,44 +136,59 @@
                 }
             };
 
-            scope.$on('loginStatusChanged', loadDynamicMenuItems);
+            scope.$on('loginStatusChanged', loadSettings);
+
+            function loadSettings() { loadMenuCollapseState(); loadDynamicMenuItems(); }
+
+            function loadMenuCollapseState() {
+                getMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Collapsed", function(collapsedSetting) {
+                    scope.collapsed = collapsedSetting.value.match(/true/i);
+                });
+            }
+
+            function saveMenuCollapseState() {
+                setMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Collapsed", function (collapsedSetting) {
+                    collapsedSetting.value = scope.collapsed;
+                });
+            }
 
             function loadDynamicMenuItems() {
-                // https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/working-with-platform-security
-                if (authService.checkPermission("platform:security:read")) {
-                    accounts.get({ id: authService.userLogin },
-                        function(currentUser) {
-                            var userMenuItemsSettingName = "VirtoCommerce.Platform.General.MainMenu.Favorites";
-                            var userMenuItemsSetting = _.find(currentUser.settings,
-                                function(setting) {
-                                    return setting.name === userMenuItemsSettingName;
-                                });
-                            Array.prototype.push.apply(mainMenuService.dynamicMenuItems,
-                                _.map(_.sortBy(angular.fromJson(userMenuItemsSetting.value), 'order'),
-                                    function(menuItemModel) {
-                                        var menuItem = mainMenuService.findByPath(menuItemModel.path);
-                                        menuItem.favorite = true;
-                                        return menuItem;
-                                    }));
-                        });
-                }
+                getMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function(favoritesSetting) {
+                    Array.prototype.push.apply(mainMenuService.dynamicMenuItems,
+                        _.map(_.sortBy(angular.fromJson(favoritesSetting.value), 'order'), function(menuItemModel) {
+                            var menuItem = mainMenuService.findByPath(menuItemModel.path);
+                            menuItem.favorite = true;
+                            return menuItem;
+                        }));
+                });
             }
 
             function saveDynamicMenuItems() {
-                if (authService.checkPermission("platform:security:read") && authService.checkPermission("platform:security:update")) {
-                    accounts.get({ id: authService.userLogin },
-                        function(currentUser) {
-                            var userMenuItemsSettingName = "VirtoCommerce.Platform.General.MainMenu.Favorites";
-                            var userMenuItemsSetting = _.find(currentUser.settings,
-                                function(setting) {
-                                    return setting.name === userMenuItemsSettingName;
-                                });
-                            userMenuItemsSetting.value = angular.toJson(_.map(mainMenuService.dynamicMenuItems,
-                                function(menuItem, index) {
-                                    return { path: menuItem.path, order: index };
-                                }));
-                            accounts.update(currentUser);
+                setMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function(favoritesSetting) {
+                    favoritesSetting.value = angular.toJson(_.map(mainMenuService.dynamicMenuItems, function(menuItem, index) {
+                        return { path: menuItem.path, order: index };
+                    }));
+                });
+            }
+
+            function getMainMenuSetting(settingName, action) {
+                // https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/working-with-platform-security
+                if (authService.checkPermission("platform:security:read")) {
+                    accounts.get({ id: authService.userLogin }, function(currentUser) {
+                        var setting = _.find(currentUser.settings, function(setting) {
+                            return setting.name === settingName;
                         });
+                        action(setting, currentUser);
+                    });
+                }
+            }
+
+            function setMainMenuSetting(settingName, action) {
+                if (authService.checkPermission("platform:security:update")) {
+                    getMainMenuSetting(settingName, function (setting, currentUser) {
+                        action(setting);
+                        accounts.update(currentUser);
+                    });
                 }
             }
         }

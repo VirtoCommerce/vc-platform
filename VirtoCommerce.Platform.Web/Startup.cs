@@ -318,6 +318,13 @@ namespace VirtoCommerce.Platform.Web
                                 ValueType = ModuleSetting.TypeString,
                                 Title = "Main menu favorites",
                                 Description = "List of menu items (JSON) which will be displayed as favorites"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.General.MainMenu.Collapsed",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Main menu collapsed",
+                                Description = "Check if you want to collapse main menu by default"
                             }
                         }
                     },
