@@ -26,8 +26,6 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly IPermissionScopeService _permissionScopeService;
         private readonly ISettingsManager _settingManager;
 
-        private const string LanguageSetting = "VirtoCommerce.Core.General.Language";
-
         [CLSCompliant(false)]
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
                                IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ISettingsManager settingManager, ICacheManager<object> cacheManager)
@@ -115,7 +113,7 @@ namespace VirtoCommerce.Platform.Data.Security
                     repository.UnitOfWork.Commit();
                 }
 
-                _settingManager.SaveUserSettingsValues(user);
+                _settingManager.SaveEntitySettingsValues(user);
             }
 
             return result.ToCoreModel();
@@ -171,7 +169,7 @@ namespace VirtoCommerce.Platform.Data.Security
                             changeTracker.Attach(targetDbAcount);
                             changedDbAccount.Patch(targetDbAcount);
 
-                            _settingManager.SaveUserSettingsValues(user);
+                            _settingManager.SaveEntitySettingsValues(user);
 
                             repository.UnitOfWork.Commit();
                         }
@@ -200,7 +198,7 @@ namespace VirtoCommerce.Platform.Data.Security
                             var account = repository.GetAccountByName(name, UserDetails.Reduced);
                             if (account != null)
                             {
-                                _settingManager.RemoveUserSettings(dbUser.ToCoreModel(account, _permissionScopeService));
+                                _settingManager.RemoveEntitySettings(dbUser.ToCoreModel(account, _permissionScopeService));
 
                                 repository.Remove(account);
                                 repository.UnitOfWork.Commit();
@@ -498,8 +496,8 @@ namespace VirtoCommerce.Platform.Data.Security
                         retVal.SecurityStamp = null;
                     }
 
-                    retVal.Settings = new[] {_settingManager.GetSettingByName(LanguageSetting)};
-                    _settingManager.LoadUserSettingsValues(retVal);
+                    retVal.Settings = new List<SettingEntry>();
+                    _settingManager.LoadEntitySettingsValues(retVal);
 
                     return retVal;
                 });
