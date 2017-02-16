@@ -315,7 +315,7 @@ namespace VirtoCommerce.Platform.Web
                             new ModuleSetting
                             {
                                 Name = "VirtoCommerce.Platform.General.MainMenu.Favorites",
-                                ValueType = ModuleSetting.TypeString,
+                                ValueType = ModuleSetting.TypeText,
                                 Title = "Main menu favorites",
                                 Description = "List of menu items (JSON) which will be displayed as favorites"
                             },
