@@ -68,8 +68,8 @@
     };
     return retVal;
 }])
-.directive('vaMainMenu', ['$compile', '$filter', '$state', '$translate', 'platformWebApp.mainMenuService', 'platformWebApp.authService', 'platformWebApp.accounts', 'platformWebApp.pushNotificationService',
-    function ($compile, $filter, $state, $translate, mainMenuService, authService, accounts, pushNotificationService) {
+.directive('vaMainMenu', ['$compile', '$filter', '$state', '$translate', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'platformWebApp.settings',
+    function ($compile, $filter, $state, $translate, mainMenuService, pushNotificationService, settings) {
 
     return {
         restrict: 'E',
@@ -98,7 +98,6 @@
                 scope.currentMenuItem = menuItem;
                 scope.showMenuItemList = false;
                 scope.showNotificationDropdown = false;
-                //run action
                 if (angular.isDefined(menuItem.action)) {
                     menuItem.action();
                 }
@@ -141,22 +140,22 @@
             function loadSettings() { loadMenuCollapseState(); loadDynamicMenuItems(); }
 
             function loadMenuCollapseState() {
-                getMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Collapsed", function(collapsedSetting) {
+                settings.getCurrentUserSetting({ name: "VirtoCommerce.Platform.General.MainMenu.Collapsed" }, function(collapsedSetting) {
                     scope.collapsed = collapsedSetting.value.match(/true/i);
                 });
             }
 
             function saveMenuCollapseState() {
-                setMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Collapsed", function (collapsedSetting) {
+                updateMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Collapsed", function (collapsedSetting) {
                     collapsedSetting.value = scope.collapsed;
                 });
             }
 
             function loadDynamicMenuItems() {
-                getMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function (favoritesSetting) {
-                    mainMenuService.dynamicMenuItems.length = 0;
+                mainMenuService.dynamicMenuItems.length = 0;
+                settings.getCurrentUserSetting({ name: "VirtoCommerce.Platform.General.MainMenu.Favorites" }, function (favoritesSetting) {
                     Array.prototype.push.apply(mainMenuService.dynamicMenuItems,
-                        _.map(_.sortBy(angular.fromJson(favoritesSetting.value), 'order'), function(menuItemModel) {
+                        _.map(_.sortBy(angular.fromJson(favoritesSetting.value), 'order'), function (menuItemModel) {
                             var menuItem = mainMenuService.findByPath(menuItemModel.path);
                             menuItem.favorite = true;
                             return menuItem;
@@ -165,32 +164,18 @@
             }
 
             function saveDynamicMenuItems() {
-                setMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function(favoritesSetting) {
+                updateMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function (favoritesSetting) {
                     favoritesSetting.value = angular.toJson(_.map(mainMenuService.dynamicMenuItems, function(menuItem, index) {
-                        return { path: menuItem.path, order: index };
-                    }));
+                            return { path: menuItem.path, order: index };
+                        }));
                 });
             }
 
-            function getMainMenuSetting(settingName, action) {
-                // https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/working-with-platform-security
-                if (authService.checkPermission("platform:security:read")) {
-                    accounts.get({ id: authService.userLogin }, function(currentUser) {
-                        var setting = _.find(currentUser.settings, function(setting) {
-                            return setting.name === settingName;
-                        });
-                        action(setting, currentUser);
-                    });
-                }
-            }
-
-            function setMainMenuSetting(settingName, action) {
-                if (authService.checkPermission("platform:security:update")) {
-                    getMainMenuSetting(settingName, function (setting, currentUser) {
-                        action(setting);
-                        accounts.update(currentUser);
-                    });
-                }
+            function updateMainMenuSetting(settingName, action) {
+                settings.getCurrentUserSetting({ name: settingName }, function (setting) {
+                    action(setting);
+                    settings.updateCurrentUserSetting({ name: settingName }, setting);
+                });
             }
         }
     }

@@ -309,27 +309,6 @@ namespace VirtoCommerce.Platform.Web
                 {
                     new ModuleSettingsGroup
                     {
-                        Name = "Platform|General",
-                        Settings = new []
-                        {
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.General.MainMenu.Favorites",
-                                ValueType = ModuleSetting.TypeText,
-                                Title = "Main menu favorites",
-                                Description = "List of menu items (JSON) which will be displayed as favorites"
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.General.MainMenu.Collapsed",
-                                ValueType = ModuleSetting.TypeBoolean,
-                                Title = "Main menu collapsed",
-                                Description = "Check if you want to collapse main menu by default"
-                            }
-                        }
-                    },
-                    new ModuleSettingsGroup
-                    {
                         Name = "Platform|Notifications|SendGrid",
                         Settings = new []
                         {
@@ -418,7 +397,41 @@ namespace VirtoCommerce.Platform.Web
                 }
             };
 
-            var settingsManager = new SettingsManager(moduleCatalog, platformRepositoryFactory, cacheManager, new[] { new ManifestModuleInfo(platformModuleManifest) });
+            var platformGeneralModuleManifest = new ModuleManifest
+            {
+                Id = "VirtoCommerce.Platform.General",
+                Version = PlatformVersion.CurrentVersion.ToString(),
+                PlatformVersion = PlatformVersion.CurrentVersion.ToString(),
+                Settings = new[]
+                {
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|General",
+                        Settings = new[]
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.General.MainMenu.Favorites",
+                                ValueType = ModuleSetting.TypeText,
+                                Title = "Main menu favorites",
+                                Description = "List of menu items (JSON) which will be displayed as favorites"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.General.MainMenu.Collapsed",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Main menu collapsed",
+                                Description = "Check if you want to collapse main menu by default"
+                            }
+                        }
+                    },
+                }
+            };
+
+            var settingsManager = new SettingsManager(moduleCatalog, platformRepositoryFactory, cacheManager, new[]
+            {
+                new ManifestModuleInfo(platformModuleManifest), new ManifestModuleInfo(platformGeneralModuleManifest)
+            });
             container.RegisterInstance<ISettingsManager>(settingsManager);
 
             #endregion
