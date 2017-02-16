@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Settings
 {
     public static class SettingsExtension
     {
+        public static SettingEntry GetSetting(this IEnumerable<SettingEntry> settings, string settingName)
+        {
+            return settings.FirstOrDefault(x => x.Name.Equals(settingName, StringComparison.OrdinalIgnoreCase));
+        }
+
         public static T GetSettingValue<T>(this IEnumerable<SettingEntry> settings, string settingName, T defaulValue)
         {
             var retVal = defaulValue;
@@ -19,6 +22,5 @@ namespace VirtoCommerce.Platform.Core.Settings
             }
             return retVal;
         }
-
     }
 }
