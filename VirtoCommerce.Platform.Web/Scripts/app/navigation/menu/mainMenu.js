@@ -153,7 +153,8 @@
             }
 
             function loadDynamicMenuItems() {
-                getMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function(favoritesSetting) {
+                getMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function (favoritesSetting) {
+                    mainMenuService.dynamicMenuItems.length = 0;
                     Array.prototype.push.apply(mainMenuService.dynamicMenuItems,
                         _.map(_.sortBy(angular.fromJson(favoritesSetting.value), 'order'), function(menuItemModel) {
                             var menuItem = mainMenuService.findByPath(menuItemModel.path);
