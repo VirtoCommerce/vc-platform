@@ -6217,11 +6217,11 @@ tags-input .tags .tag-item {
     }
 
         .tooltip.left {
-            margin-left: -5px;
+            margin-left: -3px;
         }
 
         .tooltip.right {
-            margin-left: 5px;
+            margin-left: 3px;
         }
 
     .tooltip.top,
@@ -6230,11 +6230,11 @@ tags-input .tags .tag-item {
     }
 
         .tooltip.top {
-            margin-top: -5px;
+            margin-top: -3px;
         }
 
         .tooltip.bottom {
-            margin-top: 5px;
+            margin-top: 3px;
         }
 
     .tooltip.left .tooltip-arrow,
