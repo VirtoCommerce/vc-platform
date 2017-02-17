@@ -68,8 +68,8 @@
     };
     return retVal;
 }])
-.directive('vaMainMenu', ['$compile', '$filter', '$state', '$translate', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'platformWebApp.settings',
-    function ($compile, $filter, $state, $translate, mainMenuService, pushNotificationService, settings) {
+.directive('vaMainMenu', ['$compile', '$filter', '$state', '$translate', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'platformWebApp.settings', "$tooltip",
+    function ($compile, $filter, $state, $translate, mainMenuService, pushNotificationService, settings, $tooltip) {
 
     return {
         restrict: 'E',
