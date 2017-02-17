@@ -5123,8 +5123,7 @@ tags-input .tags .tag-item {
 .dropdown .dropdown-content {
     height: calc(100% - 149px);
     padding: 0 20px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
     .dropdown .dropdown-content:hover {
