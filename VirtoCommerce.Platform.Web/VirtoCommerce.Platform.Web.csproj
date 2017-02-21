@@ -391,6 +391,14 @@
     <Content Include="Scripts\ai.0.22.19-build00125.min.js" />
     <Content Include="Scripts\app\licensing\license-detail.js" />
     <Content Include="Scripts\app\licensing\license-detail.tpl.html" />
+    <Content Include="Scripts\app\navigation\menu\mainMenu-itemList.js" />
+    <Content Include="Scripts\app\navigation\menu\mainMenu-itemList-list.tpl.html" />
+    <Content Include="Scripts\app\navigation\menu\mainMenu-itemList-item.tpl.html" />
+    <Content Include="Scripts\app\navigation\menu\mainMenu-items.js" />
+    <Content Include="Scripts\app\navigation\menu\mainMenu-items.tpl.html" />
+    <Content Include="Scripts\app\pushNotifications\menu.tpl.html" />
+    <Content Include="Scripts\app\pushNotifications\menuHeader.tpl.html" />
+    <Content Include="Scripts\common\directives\htmlTooltip.js" />
     <Content Include="Scripts\common\directives\metaform.js" />
     <Content Include="Scripts\common\directives\metaform.tpl.html" />
     <Content Include="Scripts\app\setup\templates\setupWizard.tpl.html" />
@@ -546,6 +554,7 @@
     <Content Include="Scripts\codemirror\markdown.js" />
     <Content Include="Scripts\codemirror\overlay.js" />
     <Content Include="Scripts\common\bladeUtils.js" />
+    <Content Include="Scripts\common\directives\tooltipOptions.js" />
     <Content Include="Scripts\common\validators.js" />
     <Content Include="Scripts\common\uiGridUtils.js" />
     <Content Include="Scripts\common\worldLanguages.js" />
@@ -648,7 +657,6 @@
     <Content Include="Scripts\common\dialogs\notifyDialog.tpl.html" />
     <Content Include="Scripts\common\directives\autofill.js" />
     <Content Include="Scripts\common\directives\dynamic.js" />
-    <Content Include="Scripts\common\directives\htmlTooltip.js" />
     <Content Include="Scripts\common\dialogs\confirmDialog.tpl.html" />
     <Content Include="Scripts\common\dialogs\confirmDialog.js" />
     <Content Include="Scripts\common\directives\inputNumber.js" />

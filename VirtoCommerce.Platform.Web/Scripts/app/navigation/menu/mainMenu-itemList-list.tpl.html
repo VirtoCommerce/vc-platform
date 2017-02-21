@@ -1,0 +1,44 @@
+﻿<div class="menu dropdown" ng-class="{'__opened': isOpen}" ng-init="searchText = ''">
+    <a class="dropdown-close" ng-click="isOpen = false">×</a>
+    <div class="dropdown-head">
+        <div class="form-group">
+            <div class="form-hint">{{'platform.menu.toggle-favorites' | translate }}</div>
+            <div class="form-input __search">
+                <input placeholder="{{'platform.placeholders.search-keyword' | translate }}" ng-model="searchText">
+                <button class="btn __other">
+                    <i class="btn-ico fa fa-remove" title="{{'platform.commands.clear' | translate}}" ng-click="searchText=''"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="dropdown-content">
+        <ul class="list" ng-if="searchText===''" va-favorites>
+            <li class="list-item" ng-repeat="(groupPath, groupItems) in items | omit: 'group == null' | orderBy: 'group.priority' | groupBy: 'group.path'">
+                <div class="list-group" ng-init="group = (items | filter: { path: groupPath })[0]">
+                    {{group.title | translate}}
+                </div>
+                <ul class="list">
+                    <li class="list-item" ng-repeat="menuItem in groupItems" ng-include="'listItemTemplate.html'" va-permission="{{menuItem.permission}}">
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="list" ng-if="searchText!==''" ng-init="searchItems = (items | omit: 'group == null' | orderBy: 'group.priority' | map: '{ path: path, title: (title | translate) }')" va-favorites>
+            <ng-repeat ng-repeat="item in searchItems | filter: { title: searchText }">
+                <li class="list-item" ng-init="menuItem = (items | filter: { path: item.path })[0]" ng-include="'listItemTemplate.html'" va-permission="{{menuItem.permission}}">
+                </li>
+            </ng-repeat>
+        </ul>
+    </div>
+    <script type="text/ng-template" id="listItemTemplate.html">
+        <div class="list-fav" ng-click="toggleFavorite(menuItem)">
+            <i class="list-ico {{menuItem.isFavorite ? 'fa fa-star' : 'fa fa-star-o'}}"></i>
+        </div>
+        <a class="list-link {{menuItem.icon == 'fa fa-user' ? '__customers' : ''}}" href="" ng-click="selectItem(menuItem)">
+            <i class="list-ico" ng-class="menuItem.icon">
+                <i ng-if="menuItem.icon == 'fa fa-user'"></i>
+            </i>
+            {{menuItem.title | translate}}
+        </a>
+    </script>
+</div>

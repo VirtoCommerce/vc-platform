@@ -26,7 +26,7 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', function ($scope, $window, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, $window, mainMenuService, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, settings) {
       pushNotificationService.run();
 
       $timeout(function () {
@@ -69,7 +69,78 @@ angular.module('platformWebApp', AppDependencies).
 
       $scope.$on('loginStatusChanged', function (event, authContext) {
           $scope.isAuthenticated = authContext.isAuthenticated;
+
+          mainMenuService.resetUserRelatedSettings();
+          if ($scope.isAuthenticated) {
+              loadMainMenuCollapseState();
+              loadMainMenuFavorites();
+          }
       });
+
+      // Main menu start
+
+      $scope.mainMenu = {};
+
+      var mainMenuCollapseStateLoaded = false;
+      $scope.$watch('mainMenu.isCollapsed', function () {
+          saveMainMenuCollapseState();
+      }, true);
+
+      function loadMainMenuCollapseState() {
+          settings.getCurrentUserSetting({ name: "VirtoCommerce.Platform.General.MainMenu.Collapsed" }, function(collapsedSetting) {
+              $scope.mainMenu.isCollapsed = /true/i.test(collapsedSetting.value);
+              mainMenuCollapseStateLoaded = true;
+          });
+      }
+
+      function saveMainMenuCollapseState() {
+          if (mainMenuCollapseStateLoaded) {
+              updateMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Collapsed", function(collapsedSetting) {
+                  collapsedSetting.value = $scope.mainMenu.isCollapsed;
+              });
+          }
+      }
+
+      $scope.mainMenu.items = mainMenuService.menuItems;
+      var mainMenuFavoritesLoaded = false;
+      $scope.$watchCollection('mainMenu.items', function (newMainMenuItems, oldMainMenuItems) {
+          angular.forEach(_.without(newMainMenuItems, oldMainMenuItems), function(menuItem) {
+              $scope.$watch(function() { return menuItem; }, function() {
+                  saveMainMenuFavorites();
+              }, true);
+          });
+          saveMainMenuFavorites();
+      });
+
+      function loadMainMenuFavorites() {
+          settings.getCurrentUserSetting({ name: "VirtoCommerce.Platform.General.MainMenu.Favorites" }, function (favoritesSetting) {
+              angular.forEach(_.sortBy(angular.fromJson(favoritesSetting.value), 'order'), function (menuItemModel) {
+                      var menuItem = mainMenuService.findByPath(menuItemModel.path);
+                      menuItem.isFavorite = true;
+                      menuItem.order = menuItemModel.order;
+                  });
+              mainMenuFavoritesLoaded = true;
+          });
+      }
+
+      function saveMainMenuFavorites() {
+          if (mainMenuFavoritesLoaded) {
+              updateMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function (favoritesSetting) {
+                  favoritesSetting.value = angular.toJson(_.map(_.filter(mainMenuService.menuItems, function(menuItem) { return menuItem.isFavorite && !menuItem.isAlwaysOnBar; }), function(menuItem) {
+                          return { path: menuItem.path, order: menuItem.order };
+                      }));
+              });
+          }
+      }
+
+      function updateMainMenuSetting(settingName, action) {
+          settings.getCurrentUserSetting({ name: settingName }, function (setting) {
+              action(setting);
+              settings.updateCurrentUserSetting({ name: settingName }, setting);
+          });
+      }
+
+      // Main menu end
 
       // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION
       $scope.initExpiration = function (x) {
@@ -163,6 +234,17 @@ angular.module('platformWebApp', AppDependencies).
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
 
+        var homeMenuItem = {
+            path: 'home',
+            title: 'platform.menu.home',
+            icon: 'fa fa-home',
+            action: function () { $state.go('workspace'); },
+            // this item must always be at the top
+            priority: 0,
+            isAlwaysOnBar: true
+        };
+        mainMenuService.addMenuItem(homeMenuItem);
+
         var browseMenuItem = {
             path: 'browse',
             icon: 'fa fa-search',
@@ -178,6 +260,20 @@ angular.module('platformWebApp', AppDependencies).
             priority: 1
         };
         mainMenuService.addMenuItem(cfgMenuItem);
+
+        var moreMenuItem = {
+            path: 'more',
+            icon: 'fa fa-angle-right',
+            title: 'platform.menu.more',
+            action: function (scope) { scope.showList.value = true; },
+            template: "$(Platform)/Scripts/app/navigation/menu/mainMenu-itemList-item.tpl.html",
+            // this item must always be at the bottom, so
+            // don't use just 99 number: we have INFINITE list
+            priority: 9007199254740991, // Number.MAX_SAFE_INTEGER,
+            isAlwaysOnBar: true,
+            isFavorite: true
+        };
+        mainMenuService.addMenuItem(moreMenuItem);
 
         $rootScope.$on('unauthorized', function (event, rejection) {
             if (!authService.isAuthenticated) {
