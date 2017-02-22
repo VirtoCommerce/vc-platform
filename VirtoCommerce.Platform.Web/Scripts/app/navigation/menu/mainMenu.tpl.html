@@ -11,7 +11,7 @@
             <a class="info-license" ng-if="license" href="" ng-click="showLicense()" ng-class="{'__valid': !license.hasExpired}">{{'platform.templates.licensing.license-present' | translate: license}}</a>
         </div>
         <div class="info">
-            <span class="info-version">{{$parent.platformVersion}}</span>
+            <span class="info-version">{{version}}</span>
         </div>
     </div>
     <va-main-menu-item-list is-open="showList.value" items="items | filter: { isAlwaysOnBar: '!true' }" select-item="selectItem"></va-main-menu-item-list>

@@ -102,7 +102,10 @@
         replace: true,
         scope: {
             items: "=*",
-            isCollapsed: "="
+            isCollapsed: "=",
+            license: "=",
+            showLicense: "&",
+            version: "="
         },
         templateUrl: '$(Platform)/Scripts/app/navigation/menu/mainMenu.tpl.html',
         link: function (scope, element, attr) {
