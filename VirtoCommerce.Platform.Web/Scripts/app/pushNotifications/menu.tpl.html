@@ -1,4 +1,4 @@
-﻿<a class="menu-link" href="" va-tooltip="{{menuItem.title | translate}}">
+﻿<a class="menu-link" href="" ng-click="selectItem(menuItem)" va-tooltip="{{menuItem.title | translate}}">
     <i class="menu-ico" ng-class="menuItem.icon"></i>
     <span class="name">{{menuItem.title | translate}}</span>
     <span class="menu-count" ng-if="menuItem.newCount > 0" ng-bind="menuItem.newCount"></span>

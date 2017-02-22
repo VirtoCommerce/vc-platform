@@ -265,7 +265,6 @@ angular.module('platformWebApp', AppDependencies).
             path: 'more',
             icon: 'fa fa-angle-right',
             title: 'platform.menu.more',
-            action: function (scope) { scope.showList.value = true; },
             template: "$(Platform)/Scripts/app/navigation/menu/mainMenu-itemList-item.tpl.html",
             // this item must always be at the bottom, so
             // don't use just 99 number: we have INFINITE list

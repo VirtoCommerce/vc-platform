@@ -71,7 +71,6 @@
         var cachedMenuItemIndex = findCacheIndexByPath(menuItem.path);
         if (cachedMenuItemIndex > -1) {
             var cachedMenuItem = menuItemsCache[cachedMenuItemIndex];
-            menuItem.isAlwaysOnBar = cachedMenuItem.isAlwaysOnBar;
             menuItem.isFavorite = cachedMenuItem.isFavorite;
             menuItem.order = cachedMenuItem.order;
         } else {
@@ -110,7 +109,7 @@
             scope.selectItem = function (menuItem) {
                 scope.showList.value = false;
                 if (angular.isDefined(menuItem.action)) {
-                    menuItem.action(scope);
+                    menuItem.action();
                 }
             };
         }
