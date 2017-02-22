@@ -396,19 +396,19 @@ namespace VirtoCommerce.Platform.Web
                     },
                     new ModuleSettingsGroup
                     {
-                        Name = "User profile",
+                        Name = "Platform|User Interface",
                         Settings = new[]
                         {
                             new ModuleSetting
                             {
-                                Name = "VirtoCommerce.Platform.General.MainMenu.Favorites",
+                                Name = "VirtoCommerce.Platform.UI.MainMenu.Favorites",
                                 ValueType = ModuleSetting.TypeText,
                                 Title = "Main menu favorites",
                                 Description = "List of menu items (JSON) which will be displayed as favorites by default"
                             },
                             new ModuleSetting
                             {
-                                Name = "VirtoCommerce.Platform.General.MainMenu.IsCollapsed",
+                                Name = "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed",
                                 ValueType = ModuleSetting.TypeBoolean,
                                 Title = "Is main menu collapsed?",
                                 Description = "Check if you want to collapse main menu by default"

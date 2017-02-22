@@ -51,7 +51,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var userProfile = new UserProfile(currentUser.Id);
             lock (_lock)
             {
-                userProfile.Settings = _settingsManager.GetModuleSettings("VirtoCommerce.Platform").Where(setting => setting.GroupName == "User profile").ToArray();
+                userProfile.Settings = _settingsManager.GetModuleSettings("VirtoCommerce.Platform").Where(setting => setting.GroupName == "Platform|User Interface").ToArray();
                 _settingsManager.LoadEntitySettingsValues(userProfile);
             }
             return userProfile;

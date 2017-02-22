@@ -81,13 +81,16 @@ angular.module('platformWebApp', AppDependencies).
 
       $scope.mainMenu = {};
 
+      var userProfileMainMenuIsCollapsedSettingName = "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed";
+      var userProfileMainMenuFavoritesSettingName = "VirtoCommerce.Platform.UI.MainMenu.Favorites";
+
       var mainMenuCollapseStateLoaded = false;
       $scope.$watch('mainMenu.isCollapsed', function () {
           saveMainMenuCollapseState();
       }, true);
 
       function loadMainMenuCollapseState() {
-          loadMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.IsCollapsed", function(isCollapsedSetting) {
+          loadMainMenuSetting(userProfileMainMenuIsCollapsedSettingName, function (isCollapsedSetting) {
               $scope.mainMenu.isCollapsed = /true/i.test(isCollapsedSetting.value);
               mainMenuCollapseStateLoaded = true;
           });
@@ -95,7 +98,7 @@ angular.module('platformWebApp', AppDependencies).
 
       function saveMainMenuCollapseState() {
           if (mainMenuCollapseStateLoaded) {
-              updateMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.IsCollapsed", function(isCollapsedSetting) {
+              updateMainMenuSetting(userProfileMainMenuIsCollapsedSettingName, function(isCollapsedSetting) {
                   isCollapsedSetting.value = $scope.mainMenu.isCollapsed;
               });
           }
@@ -113,7 +116,7 @@ angular.module('platformWebApp', AppDependencies).
       });
 
       function loadMainMenuFavorites() {
-          loadMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function (favoritesSetting) {
+          loadMainMenuSetting(userProfileMainMenuFavoritesSettingName, function (favoritesSetting) {
               angular.forEach(_.sortBy(angular.fromJson(favoritesSetting.value), 'order'), function (menuItemModel) {
                       var menuItem = mainMenuService.findByPath(menuItemModel.path);
                       menuItem.isFavorite = true;
@@ -125,7 +128,7 @@ angular.module('platformWebApp', AppDependencies).
 
       function saveMainMenuFavorites() {
           if (mainMenuFavoritesLoaded) {
-              updateMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function (favoritesSetting) {
+              updateMainMenuSetting(userProfileMainMenuFavoritesSettingName, function (favoritesSetting) {
                   favoritesSetting.value = angular.toJson(_.map(_.filter(mainMenuService.menuItems, function(menuItem) { return menuItem.isFavorite && !menuItem.isAlwaysOnBar; }), function(menuItem) {
                           return { path: menuItem.path, order: menuItem.order };
                       }));
