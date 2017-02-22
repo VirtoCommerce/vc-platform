@@ -86,7 +86,8 @@ angular.module('platformWebApp', AppDependencies).
 
       var mainMenuCollapseStateLoaded = false;
       $scope.$watch('mainMenu.isCollapsed', function () {
-          saveMainMenuCollapseState();
+          if ($scope.isAuthenticated)
+              saveMainMenuCollapseState();
       }, true);
 
       function loadMainMenuCollapseState() {
@@ -108,19 +109,23 @@ angular.module('platformWebApp', AppDependencies).
       var mainMenuFavoritesLoaded = false;
       $scope.$watchCollection('mainMenu.items', function (newMainMenuItems, oldMainMenuItems) {
           angular.forEach(_.without(newMainMenuItems, oldMainMenuItems), function(menuItem) {
-              $scope.$watch(function() { return menuItem; }, function() {
-                  saveMainMenuFavorites();
+              $scope.$watch(function () { return menuItem; }, function () {
+                  if ($scope.isAuthenticated)
+                      saveMainMenuFavorites();
               }, true);
           });
-          saveMainMenuFavorites();
+          if ($scope.isAuthenticated)
+              saveMainMenuFavorites();
       });
 
       function loadMainMenuFavorites() {
           loadMainMenuSetting(userProfileMainMenuFavoritesSettingName, function (favoritesSetting) {
               angular.forEach(_.sortBy(angular.fromJson(favoritesSetting.value), 'order'), function (menuItemModel) {
                       var menuItem = mainMenuService.findByPath(menuItemModel.path);
-                      menuItem.isFavorite = true;
-                      menuItem.order = menuItemModel.order;
+                      if (menuItem != null) {
+                          menuItem.isFavorite = true;
+                          menuItem.order = menuItemModel.order;
+                      }
                   });
               mainMenuFavoritesLoaded = true;
           });
