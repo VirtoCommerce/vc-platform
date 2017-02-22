@@ -87,16 +87,16 @@ angular.module('platformWebApp', AppDependencies).
       }, true);
 
       function loadMainMenuCollapseState() {
-          settings.getCurrentUserSetting({ name: "VirtoCommerce.Platform.General.MainMenu.Collapsed" }, function(collapsedSetting) {
-              $scope.mainMenu.isCollapsed = /true/i.test(collapsedSetting.value);
+          loadMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.IsCollapsed", function(isCollapsedSetting) {
+              $scope.mainMenu.isCollapsed = /true/i.test(isCollapsedSetting.value);
               mainMenuCollapseStateLoaded = true;
           });
       }
 
       function saveMainMenuCollapseState() {
           if (mainMenuCollapseStateLoaded) {
-              updateMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Collapsed", function(collapsedSetting) {
-                  collapsedSetting.value = $scope.mainMenu.isCollapsed;
+              updateMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.IsCollapsed", function(isCollapsedSetting) {
+                  isCollapsedSetting.value = $scope.mainMenu.isCollapsed;
               });
           }
       }
@@ -113,7 +113,7 @@ angular.module('platformWebApp', AppDependencies).
       });
 
       function loadMainMenuFavorites() {
-          settings.getCurrentUserSetting({ name: "VirtoCommerce.Platform.General.MainMenu.Favorites" }, function (favoritesSetting) {
+          loadMainMenuSetting("VirtoCommerce.Platform.General.MainMenu.Favorites", function (favoritesSetting) {
               angular.forEach(_.sortBy(angular.fromJson(favoritesSetting.value), 'order'), function (menuItemModel) {
                       var menuItem = mainMenuService.findByPath(menuItemModel.path);
                       menuItem.isFavorite = true;
@@ -133,10 +133,22 @@ angular.module('platformWebApp', AppDependencies).
           }
       }
 
+      function loadMainMenuSetting(settingName, action) {
+          settings.getCurrentUserProfile(function (currentUserSettings) {
+              var setting = _.findWhere(currentUserSettings, { name: settingName });
+              if (setting != null) {
+                  action(setting);
+              }
+          });
+      }
+
       function updateMainMenuSetting(settingName, action) {
-          settings.getCurrentUserSetting({ name: settingName }, function (setting) {
-              action(setting);
-              settings.updateCurrentUserSetting({ name: settingName }, setting);
+          settings.getCurrentUserProfile(function (currentUserSettings) {
+              var setting = _.findWhere(currentUserSettings, { name: settingName });
+              if (setting != null) {
+                  action(setting);
+                  settings.updateCurrentUserProfile(currentUserSettings);
+              }
           });
       }
 

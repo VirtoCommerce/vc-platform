@@ -393,20 +393,10 @@ namespace VirtoCommerce.Platform.Web
                                 DefaultValue = AccountType.Manager.ToString()
                             }
                         }
-                    }
-                }
-            };
-
-            var platformGeneralModuleManifest = new ModuleManifest
-            {
-                Id = "VirtoCommerce.Platform.General",
-                Version = PlatformVersion.CurrentVersion.ToString(),
-                PlatformVersion = PlatformVersion.CurrentVersion.ToString(),
-                Settings = new[]
-                {
+                    },
                     new ModuleSettingsGroup
                     {
-                        Name = "Platform|General",
+                        Name = "User profile",
                         Settings = new[]
                         {
                             new ModuleSetting
@@ -414,24 +404,21 @@ namespace VirtoCommerce.Platform.Web
                                 Name = "VirtoCommerce.Platform.General.MainMenu.Favorites",
                                 ValueType = ModuleSetting.TypeText,
                                 Title = "Main menu favorites",
-                                Description = "List of menu items (JSON) which will be displayed as favorites"
+                                Description = "List of menu items (JSON) which will be displayed as favorites by default"
                             },
                             new ModuleSetting
                             {
-                                Name = "VirtoCommerce.Platform.General.MainMenu.Collapsed",
+                                Name = "VirtoCommerce.Platform.General.MainMenu.IsCollapsed",
                                 ValueType = ModuleSetting.TypeBoolean,
-                                Title = "Main menu collapsed",
+                                Title = "Is main menu collapsed?",
                                 Description = "Check if you want to collapse main menu by default"
                             }
                         }
-                    },
+                    }
                 }
             };
 
-            var settingsManager = new SettingsManager(moduleCatalog, platformRepositoryFactory, cacheManager, new[]
-            {
-                new ManifestModuleInfo(platformModuleManifest), new ManifestModuleInfo(platformGeneralModuleManifest)
-            });
+            var settingsManager = new SettingsManager(moduleCatalog, platformRepositoryFactory, cacheManager, new[] { new ManifestModuleInfo(platformModuleManifest) });
             container.RegisterInstance<ISettingsManager>(settingsManager);
 
             #endregion
