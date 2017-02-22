@@ -4789,6 +4789,10 @@ tags-input .tags .tag-item {
                     border-radius: 50%;
                 }
 
+                .nav-bar.__collapsed .bar .menu-item .menu-link .menu-count {
+                    left: 44px;
+                }
+
             .nav-bar .bar .menu-item.__animated .menu-link {
                 color: #fff;
                 -webkit-animation: notify ease 1 1.5s;
