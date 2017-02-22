@@ -36,6 +36,11 @@
 
 .factory('platformWebApp.settings.helper', [function () {
     var retVal = {};
+
+    retVal.getSetting = function(settings, settingName) {
+        return _.findWhere(settings, { name: settingName });
+    };
+
     retVal.fixValues = function (settings) {
         // parse values as they all are strings
         var selectedSettings = _.where(settings, { valueType: 'Integer' });

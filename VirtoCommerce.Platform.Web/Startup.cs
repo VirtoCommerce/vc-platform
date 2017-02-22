@@ -401,6 +401,13 @@ namespace VirtoCommerce.Platform.Web
                         {
                             new ModuleSetting
                             {
+                                Name = "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Is main menu collapsed?",
+                                Description = "Check if you want to collapse main menu by default"
+                            },
+                            new ModuleSetting
+                            {
                                 Name = "VirtoCommerce.Platform.UI.MainMenu.Favorites",
                                 ValueType = ModuleSetting.TypeText,
                                 Title = "Main menu favorites",
@@ -408,10 +415,11 @@ namespace VirtoCommerce.Platform.Web
                             },
                             new ModuleSetting
                             {
-                                Name = "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed",
-                                ValueType = ModuleSetting.TypeBoolean,
-                                Title = "Is main menu collapsed?",
-                                Description = "Check if you want to collapse main menu by default"
+                                Name = "VirtoCommerce.Platform.UI.Language",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Language",
+                                Description = "Default language (two letter code from ISO 639-1)",
+                                DefaultValue = "en"
                             }
                         }
                     }

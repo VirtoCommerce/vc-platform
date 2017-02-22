@@ -26,14 +26,8 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, $window, mainMenuService, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, settings) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', function ($scope, $window, mainMenuService, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, settings, settingsHelper) {
       pushNotificationService.run();
-
-      $timeout(function () {
-          var currentLanguage = $translate.use();
-          var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
-          $scope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
-      }, 100);
 
       $scope.closeError = function () {
           $scope.platformError = undefined;
@@ -69,98 +63,85 @@ angular.module('platformWebApp', AppDependencies).
 
       $scope.$on('loginStatusChanged', function (event, authContext) {
           $scope.isAuthenticated = authContext.isAuthenticated;
-
+      });
+      
+      var isUserProfileSettingsLoaded;
+      var userProfileSettings;
+      var mainMenuIsCollapsedSetting;
+      var mainMenuFavoritesSetting;
+      $scope.$on('loginStatusChanged', function (event, authContext) {
           mainMenuService.resetUserRelatedSettings();
-          if ($scope.isAuthenticated) {
-              loadMainMenuCollapseState();
-              loadMainMenuFavorites();
+          if (authContext.isAuthenticated) {
+              settings.getCurrentUserProfile(function(currentUserProfileSettings) {
+                  settingsHelper.fixValues(currentUserProfileSettings);
+                  userProfileSettings = currentUserProfileSettings;
+                  isUserProfileSettingsLoaded = true;
+
+                  $translate.use(settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.Language").value);
+
+                  mainMenuIsCollapsedSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed");
+                  mainMenuFavoritesSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.Favorites");
+
+                  loadMainMenuCollapseState();
+                  loadMainMenuFavorites();
+              });
+
+              $timeout(function() {
+                  var currentLanguage = $translate.use();
+                  var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
+                  $scope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
+              }, 100);
+          } else {
+               isUserProfileSettingsLoaded = false;
           }
       });
 
-      // Main menu start
-
       $scope.mainMenu = {};
 
-      var userProfileMainMenuIsCollapsedSettingName = "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed";
-      var userProfileMainMenuFavoritesSettingName = "VirtoCommerce.Platform.UI.MainMenu.Favorites";
-
-      var mainMenuCollapseStateLoaded = false;
       $scope.$watch('mainMenu.isCollapsed', function () {
-          if ($scope.isAuthenticated)
-              saveMainMenuCollapseState();
+          saveMainMenuCollapseState();
       }, true);
 
       function loadMainMenuCollapseState() {
-          loadMainMenuSetting(userProfileMainMenuIsCollapsedSettingName, function (isCollapsedSetting) {
-              $scope.mainMenu.isCollapsed = /true/i.test(isCollapsedSetting.value);
-              mainMenuCollapseStateLoaded = true;
-          });
+          $scope.mainMenu.isCollapsed = mainMenuIsCollapsedSetting.value;
       }
 
       function saveMainMenuCollapseState() {
-          if (mainMenuCollapseStateLoaded) {
-              updateMainMenuSetting(userProfileMainMenuIsCollapsedSettingName, function(isCollapsedSetting) {
-                  isCollapsedSetting.value = $scope.mainMenu.isCollapsed;
-              });
+          if (isUserProfileSettingsLoaded) {
+              mainMenuIsCollapsedSetting.value = $scope.mainMenu.isCollapsed;
+              settings.updateCurrentUserProfile(userProfileSettings);
           }
       }
 
       $scope.mainMenu.items = mainMenuService.menuItems;
-      var mainMenuFavoritesLoaded = false;
       $scope.$watchCollection('mainMenu.items', function (newMainMenuItems, oldMainMenuItems) {
           angular.forEach(_.without(newMainMenuItems, oldMainMenuItems), function(menuItem) {
               $scope.$watch(function () { return menuItem; }, function () {
-                  if ($scope.isAuthenticated)
-                      saveMainMenuFavorites();
+                  saveMainMenuFavorites();
               }, true);
           });
-          if ($scope.isAuthenticated)
-              saveMainMenuFavorites();
+          saveMainMenuFavorites();
       });
 
       function loadMainMenuFavorites() {
-          loadMainMenuSetting(userProfileMainMenuFavoritesSettingName, function (favoritesSetting) {
-              angular.forEach(_.sortBy(angular.fromJson(favoritesSetting.value), 'order'), function (menuItemModel) {
-                      var menuItem = mainMenuService.findByPath(menuItemModel.path);
-                      if (menuItem != null) {
-                          menuItem.isFavorite = true;
-                          menuItem.order = menuItemModel.order;
-                      }
-                  });
-              mainMenuFavoritesLoaded = true;
-          });
+          angular.forEach(_.sortBy(angular.fromJson(mainMenuFavoritesSetting.value), 'order'), function (menuItemModel) {
+                  var menuItem = mainMenuService.findByPath(menuItemModel.path);
+                  if (menuItem != null) {
+                      menuItem.isFavorite = true;
+                      menuItem.order = menuItemModel.order;
+                  }
+              });
       }
 
       function saveMainMenuFavorites() {
-          if (mainMenuFavoritesLoaded) {
-              updateMainMenuSetting(userProfileMainMenuFavoritesSettingName, function (favoritesSetting) {
-                  favoritesSetting.value = angular.toJson(_.map(_.filter(mainMenuService.menuItems, function(menuItem) { return menuItem.isFavorite && !menuItem.isAlwaysOnBar; }), function(menuItem) {
-                          return { path: menuItem.path, order: menuItem.order };
-                      }));
-              });
+          if (isUserProfileSettingsLoaded) {
+              mainMenuFavoritesSetting.value = angular.toJson(_.map(_.filter(mainMenuService.menuItems,
+                  function (menuItem) { return menuItem.isFavorite && !menuItem.isAlwaysOnBar; }),
+                  function (menuItem) { return { path: menuItem.path, order: menuItem.order };
+              }));
+              settings.updateCurrentUserProfile(userProfileSettings);
           }
       }
-
-      function loadMainMenuSetting(settingName, action) {
-          settings.getCurrentUserProfile(function (currentUserSettings) {
-              var setting = _.findWhere(currentUserSettings, { name: settingName });
-              if (setting != null) {
-                  action(setting);
-              }
-          });
-      }
-
-      function updateMainMenuSetting(settingName, action) {
-          settings.getCurrentUserProfile(function (currentUserSettings) {
-              var setting = _.findWhere(currentUserSettings, { name: settingName });
-              if (setting != null) {
-                  action(setting);
-                  settings.updateCurrentUserProfile(currentUserSettings);
-              }
-          });
-      }
-
-      // Main menu end
 
       // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION
       $scope.initExpiration = function (x) {
