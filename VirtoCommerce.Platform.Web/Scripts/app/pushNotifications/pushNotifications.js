@@ -148,7 +148,6 @@
                             isAlwaysOnBar: true,
                             permission: '',
                             headerTemplate: '$(Platform)/Scripts/app/pushNotifications/menuHeader.tpl.html',
-                            listTemplate: '$(Platform)/Scripts/app/pushNotifications/menuList.tpl.html',
                             template: '$(Platform)/Scripts/app/pushNotifications/menu.tpl.html',
                             action: function () { markAllAsRead(); if (this.children.length == 0) { this.showHistory(); } },
                             showHistory: function () { $state.go('workspace.pushNotificationsHistory'); },

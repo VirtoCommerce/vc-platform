@@ -82,8 +82,7 @@ angular.module('platformWebApp', AppDependencies).
                   mainMenuIsCollapsedSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed");
                   mainMenuFavoritesSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.Favorites");
 
-                  loadMainMenuCollapseState();
-                  loadMainMenuFavorites();
+                  initializeMainMenu();
               });
 
               $timeout(function() {
@@ -96,34 +95,10 @@ angular.module('platformWebApp', AppDependencies).
           }
       });
 
-      $scope.mainMenu = {};
+      $scope.mainMenu = { };
 
-      $scope.$watch('mainMenu.isCollapsed', function () {
-          saveMainMenuCollapseState();
-      }, true);
-
-      function loadMainMenuCollapseState() {
+      function initializeMainMenu() {
           $scope.mainMenu.isCollapsed = mainMenuIsCollapsedSetting.value;
-      }
-
-      function saveMainMenuCollapseState() {
-          if (isUserProfileSettingsLoaded) {
-              mainMenuIsCollapsedSetting.value = $scope.mainMenu.isCollapsed;
-              settings.updateCurrentUserProfile(userProfileSettings);
-          }
-      }
-
-      $scope.mainMenu.items = mainMenuService.menuItems;
-      $scope.$watchCollection('mainMenu.items', function (newMainMenuItems, oldMainMenuItems) {
-          angular.forEach(_.without(newMainMenuItems, oldMainMenuItems), function(menuItem) {
-              $scope.$watch(function () { return menuItem; }, function () {
-                  saveMainMenuFavorites();
-              }, true);
-          });
-          saveMainMenuFavorites();
-      });
-
-      function loadMainMenuFavorites() {
           angular.forEach(_.sortBy(angular.fromJson(mainMenuFavoritesSetting.value), 'order'), function (menuItemModel) {
                   var menuItem = mainMenuService.findByPath(menuItemModel.path);
                   if (menuItem != null) {
@@ -133,6 +108,16 @@ angular.module('platformWebApp', AppDependencies).
               });
       }
 
+      $scope.$watch('mainMenu.isCollapsed', function () { saveMainMenuCollapseState(); });
+      function saveMainMenuCollapseState() {
+          if (isUserProfileSettingsLoaded) {
+              mainMenuIsCollapsedSetting.value = $scope.mainMenu.isCollapsed;
+              settings.updateCurrentUserProfile(userProfileSettings);
+          }
+      }
+
+      $scope.mainMenu.items = mainMenuService.menuItems;
+      $scope.$watch('mainMenu.items', function () { saveMainMenuFavorites(); }, true);
       function saveMainMenuFavorites() {
           if (isUserProfileSettingsLoaded) {
               mainMenuFavoritesSetting.value = angular.toJson(_.map(_.filter(mainMenuService.menuItems,
@@ -264,9 +249,9 @@ angular.module('platformWebApp', AppDependencies).
 
         var moreMenuItem = {
             path: 'more',
-            icon: 'fa fa-angle-right',
             title: 'platform.menu.more',
-            template: "$(Platform)/Scripts/app/navigation/menu/mainMenu-itemList-item.tpl.html",
+            headerTemplate: '$(Platform)/Scripts/app/navigation/menu/mainMenu-list-header.tpl.html',
+            contentTemplate: '$(Platform)/Scripts/app/navigation/menu/mainMenu-list-content.tpl.html',
             // this item must always be at the bottom, so
             // don't use just 99 number: we have INFINITE list
             priority: 9007199254740991, // Number.MAX_SAFE_INTEGER,

@@ -1,18 +1,40 @@
-﻿<nav class="nav-bar" ng-class="{'__collapsed': isCollapsed}" ng-init="showList = { value: false }">
+﻿<nav class="nav-bar" ng-class="{'__collapsed': isCollapsed}" ng-init="itemTemplateUrl = '$(Platform)/Scripts/app/navigation/menu/mainMenu-item.tpl.html'">
     <div class="bar">
-        <div class="menu-item" ng-click="isCollapsed = !isCollapsed">
-            <a class="menu-link">
-                <i class="menu-ico fa fa-bars"></i>
-            </a>
+        <div class="wrapper">
+            <div class="list __items" va-tooltip-options tooltip-enable="isCollapsed" tooltip-append-to-body="true" tooltip-placement="right" tooltip-animation="false">
+                <div class="list-item" ng-click="isCollapsed = !isCollapsed">
+                    <a class="list-link">
+                        <i class="list-ico fa fa-bars"></i>
+                    </a>
+                </div>
+                <ul>
+                    <li class="list-item" ng-class="{'__selected': selectedItem == menuItem || openedItem == menuItem}" ng-repeat="menuItem in items | filter: { isAlwaysOnBar: 'true', isFavorite: 'false' }" ng-include="itemTemplateUrl" ng-click="selectItem(menuItem)" va-tooltip tooltip="{{menuItem.title | translate}}" va-permission="{{menuItem.permission}}"></li>
+                </ul>
+                <div class="divider"></div>
+                <div class="outer-wrapper">
+                    <div class="inner-wrapper">
+                        <div class="content">
+                            <ul ng-model="favorites" ui-sortable="sortableOptions">
+                                <li class="list-item" ng-class="{'__draggable': !menuItem.isAlwaysOnBar, '__selected': selectedItem == menuItem || openedItem == menuItem, '__more': menuItem.path == 'more'}" ng-repeat="menuItem in favorites" ng-include="itemTemplateUrl" ng-click="selectItem(menuItem)" va-tooltip tooltip="{{menuItem.title | translate}}" va-permission="{{menuItem.permission}}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <va-main-menu-items items="items" select-item="selectItem" show-tooltip="isCollapsed" show-list="showList"></va-main-menu-items>
-        <div class="info">
-            <a class="info-license" ng-if="!license" href="" ng-click="showLicense()">{{'platform.templates.licensing.license-absent' | translate}}</a>
-            <a class="info-license" ng-if="license" href="" ng-click="showLicense()" ng-class="{'__valid': !license.hasExpired}">{{'platform.templates.licensing.license-present' | translate: license}}</a>
-        </div>
-        <div class="info">
-            <span class="info-version">{{version}}</span>
-        </div>
+        <ng-transclude></ng-transclude>
     </div>
-    <va-main-menu-item-list is-open="showList.value" items="items | filter: { isAlwaysOnBar: '!true' }" select-item="selectItem"></va-main-menu-item-list>
+    <div class="dropdown" ng-class="{'__more': openedItem.path == 'more', '__opened': openedItem != null}" ng-init="searchText = { value: '' }">
+        <a class="dropdown-close" ng-click="openedItem = null">×</a>
+        <div class="dropdown-head" ng-if="!openedItem.headerTemplate">
+        </div>
+        <ng-include src="openedItem.headerTemplate"></ng-include>
+        <div class="dropdown-content" ng-if="!openedItem.contentTemplate">
+            <ul class="list">
+                <li class="list-item" ng-repeat="menuItem in openedItem.children" ng-include="itemTemplateUrl" ng-click="selectItem(menuItem)" va-permission="{{menuItem.permission}}">
+                </li>
+            </ul>
+        </div>
+        <ng-include src="openedItem.contentTemplate"></ng-include>
+    </div>
 </nav>

@@ -1,0 +1,22 @@
+﻿<div class="dropdown-content">
+    <div class="list __items" ng-if="searchText.value==''" ng-init="openedItems={}" va-favorites>
+        <div class="list-group" ng-class="{'__opened': openedItems[$index]}" ng-init="openedItems[$index] = true" ng-repeat-start="(groupPath, groupItems) in items | filter: { isAlwaysOnBar: '!true' } | omit: 'group == null' | orderBy: 'group.priority' | groupBy: 'group.path'" ng-click="openedItems[$index]=!openedItems[$index]">
+            {{(items | filter: { path: groupPath })[0].title | translate}}
+        </div>
+        <ul class="list __sub" ng-repeat-end>
+            <li class="list-item" ng-repeat="menuItem in groupItems" ng-include="'listItemTemplate.html'" tabindex="1" ng-click="selectItem(menuItem)" va-permission="{{menuItem.permission}}"></li>
+        </ul>
+    </div>
+    <ul class="list __items" ng-if="searchText.value != ''" ng-init="searchItems = (items | filter: { isAlwaysOnBar: '!true' } | omit: 'group == null' | orderBy: 'group.priority' | map: '{ path: path, title: (title | translate) }')" va-favorites>
+        <ng-repeat ng-repeat="item in searchItems | filter: { title: searchText.value }">
+            <li class="list-item" ng-init="menuItem = (items | filter: { path: item.path })[0]" ng-include="'listItemTemplate.html'" tabindex="1" va-permission="{{menuItem.permission}}">
+            </li>
+        </ng-repeat>
+    </ul>
+    <script type="text/ng-template" id="listItemTemplate.html">
+        <div class="list-fav" ng-click="toggleFavorite(menuItem); $event.stopPropagation();">
+            <i class="list-ico {{menuItem.isFavorite ? 'fa fa-star' : 'fa fa-star-o'}}"></i>
+        </div>
+        <ng-include src="itemTemplateUrl"></ng-include>
+    </script>
+</div>

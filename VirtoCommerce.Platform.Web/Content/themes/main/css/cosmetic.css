@@ -22,7 +22,12 @@
 	background: #ecf7fc;
 }
 
+.nav-bar .bar .__items .list-item:hover {
+	background: #383838;
+}
+
 .table .table-item.__selected,
+.__items .list-item:focus,
 .__items .list-item.__selected,
 .__files .list-item.__selected > .list-block
 {
@@ -34,8 +39,13 @@
     background: #fff;
 }
 
+.nav-bar .bar .__items .list-item.__selected {
+    background: #232323;
+}
+
 /* Icons */
 .tile-ico,
+.__items .menu-ico,
 .__items .list-ico,
 .__files .list-ico
 {
@@ -49,6 +59,15 @@
 .__files .list-item.__selected > .list-block .list-ico
 {
 	color: #a1c0d4;
+}
+
+.nav-bar .bar .__items .list-item:hover .list-ico,
+.nav-bar .bar .__items .list-item.__selected .list-ico {
+    color: #a6a6a6;
+}
+
+.dropdown.__more .dropdown-content  .list-item .list-fav:hover .list-ico {
+    color: #52a2ca;
 }
 
 /* Links */
@@ -87,6 +106,7 @@ a:hover,
 .dropdown-content .list-link,
 .blade-toolbar .menu-btn,
 .pagination .menu-link,
+.__items .menu-ico,
 .__items .list-ico,
 .breadcrumbs .menu-link,
 .text-mini.__link,
@@ -97,8 +117,7 @@ a:hover,
 			transition: color .25s ease-in-out 0s;
 }
 
-.nav-bar,
-.nav-bar .bar .menu-link
+.nav-bar
 {
 	-webkit-transition: width .25s ease-in-out 0s;
 			transition: width .25s ease-in-out 0s;
@@ -130,6 +149,11 @@ a:hover,
 {
 	-webkit-transition: background-color .35s ease-in-out 0s;
 			transition: background-color .35s ease-in-out 0s;
+}
+
+.__items .list-item {
+	-webkit-transition: background-color .35s ease-in-out 0s, width .25s ease-in-out 0s;
+			transition: background-color .35s ease-in-out 0s, width .25s ease-in-out 0s;
 }
 
 .dashboard .dashboard-account,
