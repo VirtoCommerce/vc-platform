@@ -261,13 +261,21 @@
     {
         left: 120px;
     }
-
+    
+.list-ico.__customers,
 .menu-ico.__customers,
 .blade-t_ico.__customers
 {
     text-align: center;
 }
 
+
+.list-ico.__customers,
+.menu-ico.__customers {
+    position: relative;
+}
+
+.list-ico.__customers i,
 .menu-ico.__customers i,
 .blade-t_ico.__customers i
 {
@@ -279,6 +287,8 @@
     top: 0;
 }
 
+.list-ico.__customers i:after,
+.list-ico.__customers i:before,
 .menu-ico.__customers i:after,
 .menu-ico.__customers i:before,
 .blade-t_ico.__customers i:after,
@@ -286,16 +296,19 @@
 {
     content: '';
     font-size: 16px;
+    text-shadow: none;
     position: absolute;
     top: 2px;
 }
 
+.list-ico.__customers i:after,
 .menu-ico.__customers i:after,
 .blade-t_ico.__customers i:after
 {
     right: 0;
 }
 
+.list-ico.__customers i:before,
 .menu-ico.__customers i:before,
 .blade-t_ico.__customers i:before
 {
