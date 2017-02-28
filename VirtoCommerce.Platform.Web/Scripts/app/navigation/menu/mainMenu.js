@@ -2,7 +2,6 @@
 .factory('platformWebApp.mainMenuService', [function () {
 
     var menuItems = [];
-    var menuItemsCache = [];
 
     function sortByGroupFirst(a, b) {
         return a.path.split('/').length - b.path.split('/').length;
@@ -37,21 +36,18 @@
     };
 
     function addMenuItem(menuItem) {
-        setDefaults(menuItem);
+        resetMenuItemDefaults(menuItem);
         menuItems.push(menuItem);
-        menuItemsCache.push({ path: menuItem.path, isFavorite: menuItem.isFavorite, order: menuItem.order });
         constructList();
     }
 
     function removeMenuItem(menuItem) {
         var index = menuItems.indexOf(menuItem);
         menuItems.splice(index, 1);
-        var cacheIndex = findCacheIndexByPath(menuItem.path);
-        menuItemsCache.splice(cacheIndex, 1);
         constructList();
     }
 
-    function setDefaults(menuItem) {
+    function resetMenuItemDefaults(menuItem) {
         // set defaults
         if (!angular.isDefined(menuItem.priority)) {
             menuItem.priority = Number.NaN;
@@ -62,40 +58,25 @@
         if (!angular.isDefined(menuItem.isAlwaysOnBar)) {
             menuItem.isAlwaysOnBar = false;
         }
-        if (!angular.isDefined(menuItem.isFavorite)) {
+        if (!menuItem.isFavorite) {
             menuItem.isFavorite = false;
         }
-        if (!angular.isDefined(menuItem.order)) {
+        if (menuItem.order) {
             // place at the end
             menuItem.order = 9007199254740991; // Number.MAX_SAFE_INTEGER;
         }
-    }
-
-    function resetUserRelatedSettings() {
-        angular.forEach(menuItems, function (menuItem) {
-            var cachedMenuItemIndex = findCacheIndexByPath(menuItem.path);
-            if (cachedMenuItemIndex > -1) {
-                var cachedMenuItem = menuItemsCache[cachedMenuItemIndex];
-                menuItem.isFavorite = cachedMenuItem.isFavorite;
-                menuItem.order = cachedMenuItem.order;
-            }
-        });
     }
 
     function findByPath(path) {
         return _.find(menuItems, function (menuItem) { return menuItem.path === path });
     };
 
-    function findCacheIndexByPath(path) {
-        return _.findIndex(menuItemsCache, function (cachedMenuItem) { return cachedMenuItem.path === path; });
-    }
-
     var retVal = {
         menuItems: menuItems,
         addMenuItem: addMenuItem,
         removeMenuItem: removeMenuItem,
-        findByPath: findByPath,
-        resetUserRelatedSettings: resetUserRelatedSettings
+        resetMenuItemDefaults: resetMenuItemDefaults,
+        findByPath: findByPath
     };
     return retVal;
 }])
@@ -113,22 +94,12 @@
         templateUrl: '$(Platform)/Scripts/app/navigation/menu/mainMenu.tpl.html',
         link: function (scope) {
 
-            scope.$on('$stateChangeStart', function () {
-                scope.openedItem = null;
-            });
-
             scope.selectItem = function (menuItem) {
-                if (menuItem.path === "home") {
-                    scope.selectedItem = null;
-                    scope.openedItem = null;
-                } else if (scope.openedItem === menuItem) {
-                    scope.openedItem = null;
-                } else if (menuItem.children.length > 0 || menuItem.path === "more") {
-                    scope.openedItem = menuItem;
-                }
-                else {
-                    scope.selectedItem = menuItem;
-                    scope.openedItem = null;
+                if (scope.showSubMenu && scope.currentMenuItem === menuItem) {
+                    scope.showSubMenu = false;
+                } else {
+                    scope.currentMenuItem = menuItem;
+                    scope.showSubMenu = menuItem.children.length > 0 || menuItem.path === "more";
                 }
                 if (angular.isDefined(menuItem.action)) {
                     menuItem.action();
@@ -140,7 +111,7 @@
             // required by ui-sortable: we can't use filters with it
             // https://github.com/angular-ui/ui-sortable#usage
             function updateFavorites() {
-                scope.favorites = $filter("orderBy")($filter("filter")(scope.items, { isFavorite: "true" }), "order");
+                scope.dynamicMenuItems = _.sortBy(_.filter(scope.items, function (menuItem) { return menuItem.isFavorite || menuItem.path === "more"; }), function (menuItem) { return menuItem.order; });
             }
             
             scope.toggleFavorite = function (menuItem) {
@@ -149,7 +120,7 @@
                 if (!menuItem.isFavorite) {
                     menuItem.order = undefined;
                 }
-                var favorites = _.filter(_.sortBy(scope.items, function (menuItem) { return menuItem.order; }), function (menuItem) { return menuItem.isFavorite && !menuItem.isAlwaysOnBar; });
+                var favorites = _.sortBy(_.filter(scope.items, function (menuItem) { return menuItem.isFavorite }), function (menuItem) { return menuItem.order; });
                 // re-calculate order
                 for (var i = 0; i < favorites.length; i++) {
                     favorites[i].order = i;

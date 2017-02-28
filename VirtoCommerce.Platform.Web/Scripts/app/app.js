@@ -70,7 +70,7 @@ angular.module('platformWebApp', AppDependencies).
       var mainMenuIsCollapsedSetting;
       var mainMenuFavoritesSetting;
       $scope.$on('loginStatusChanged', function (event, authContext) {
-          mainMenuService.resetUserRelatedSettings();
+          angular.forEach(mainMenuService.menuItems, function(menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
           if (authContext.isAuthenticated) {
               settings.getCurrentUserProfile(function(currentUserProfileSettings) {
                   settingsHelper.fixValues(currentUserProfileSettings);
@@ -255,8 +255,7 @@ angular.module('platformWebApp', AppDependencies).
             // this item must always be at the bottom, so
             // don't use just 99 number: we have INFINITE list
             priority: 9007199254740991, // Number.MAX_SAFE_INTEGER,
-            isAlwaysOnBar: true,
-            isFavorite: true
+            isAlwaysOnBar: true
         };
         mainMenuService.addMenuItem(moreMenuItem);
 
