@@ -114,10 +114,10 @@
 
         function animateNotify() {
             var notifyMenu = mainMenuService.findByPath('pushNotifications');
-            notifyMenu.incremented = true;
+            notifyMenu.isAnimated = true;
 
             $timeout(function () {
-                notifyMenu.incremented = false;
+                notifyMenu.isAnimated = false;
             }, 1500);
         }
 
@@ -128,7 +128,7 @@
             }
 
             notifications.markAllAsRead(null, function (data, status, headers, config) {
-                notifyMenu.incremented = false;
+                notifyMenu.isAnimated = false;
                 notifyMenu.newCount = 0;
             }, function (error) {
                 //bladeNavigationService.setError('Error ' + error.status, blade);

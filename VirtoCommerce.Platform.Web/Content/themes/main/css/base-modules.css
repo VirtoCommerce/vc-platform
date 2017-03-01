@@ -4780,6 +4780,11 @@ tags-input .tags .tag-item {
                 display: none;
             }
 
+            .nav-bar .bar .__items .list-item.__animated {
+                -webkit-animation: notify ease 1 1.5s;
+                animation: notify ease 1 1.5s;
+            }
+
             .nav-bar .bar .__items .list-item.__draggable:before {
                 color: #a6a6a6;
                 content: "\f142";
@@ -4818,22 +4823,34 @@ tags-input .tags .tag-item {
                 width: 32px;
             }
 
+            .nav-bar .bar .list-item.__animated .list-ico,
+            .nav-bar .bar .list-item.__animated:hover .list-ico {
+                -webkit-animation: bell ease-in-out 1s .5s;
+                animation: bell ease-in-out 1s .5s;
+            }
+
             .nav-bar .bar .list-item.__more .list-ico {
                 margin: 0;
             }
 
-            .nav-bar .bar .__items .list-name {
+            .nav-bar .bar .__items .list-name,
+            .nav-bar .bar .__items .list-t {
                 color: #c2c2c2;
             }
 
-                .nav-bar .bar .__items .list-item:hover .list-name{
+                .nav-bar .bar .__items .list-item:hover .list-name,
+                .nav-bar .bar .__items .list-t,
+                .nav-bar .bar .__items .list-descr {
                     text-shadow: 1px 1px #333;
                 }
 
-            .nav-bar .bar .__items .list-t,
-            .nav-bar .bar .__items .list-descr {
-                text-shadow: 1px 1px #333;
-            }
+                .nav-bar .bar .__items .list-item.__animated .list-name,
+                .nav-bar .bar .__items .list-item.__animated .list-t,
+                .nav-bar .bar .__items .list-item.__animated:hover .list-name,
+                .nav-bar .bar .__items .list-item.__animated:hover .list-t {
+                    color: #fff;
+                    text-shadow: none;
+                }
 
             .nav-bar .bar .__items .list-count {
                 background: #fff;
@@ -4914,27 +4931,11 @@ tags-input .tags .tag-item {
         color: #43b0e6;
     }
 
-    .nav-bar .__selected.__animated .menu-link,
-    .nav-bar .__animated .menu-link {
-        color: #fff;
-        -webkit-animation: notify ease 1 1.5s;
-        animation: notify ease 1 1.5s;
-    }
-
-        .nav-bar .__animated .menu-link:hover {
-            color: #fff;
-        }
-
     .nav-bar .menu-ico {
         display: block;
         font-size: 24px;
         height: 20px;
         margin: 0 0 10px;
-    }
-
-    .nav-bar .__animated .menu-ico {
-        -webkit-animation: bell ease-in-out 1s .5s;
-        animation: bell ease-in-out 1s .5s;
     }
 
     /* Dropdown - dropdown menu navigation */
@@ -5116,10 +5117,13 @@ tags-input .tags .tag-item {
 .dropdown.__more .dropdown-content .list-fav {
     color: #a6a6a6;
     display: block;
-    float: right;
     font-size: 16px;
     font-weight: 300;
     line-height: 26px;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     padding: 0 12px;
 }
 

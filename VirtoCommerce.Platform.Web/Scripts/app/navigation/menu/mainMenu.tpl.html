@@ -8,14 +8,14 @@
                     </a>
                 </div>
                 <ul>
-                    <li class="list-item" ng-repeat="menuItem in items | filter: { path: '!more', isAlwaysOnBar: 'true', isFavorite: 'false' }" ng-include="itemTemplateUrl" ng-click="selectItem(menuItem)" va-tooltip tooltip="{{menuItem.title | translate}}" va-permission="{{menuItem.permission}}"></li>
+                    <li class="list-item" ng-class="{'__animated': menuItem.isAnimated}" ng-repeat="menuItem in items | filter: { path: '!more', isAlwaysOnBar: 'true', isFavorite: 'false' }" ng-include="itemTemplateUrl" ng-click="selectItem(menuItem)" va-tooltip tooltip="{{menuItem.title | translate}}" va-permission="{{menuItem.permission}}"></li>
                 </ul>
                 <div class="divider"></div>
                 <div class="outer-wrapper">
                     <div class="inner-wrapper">
                         <div class="content">
                             <ul ng-model="dynamicMenuItems" ui-sortable="sortableOptions">
-                                <li class="list-item" ng-class="{'__draggable': !menuItem.isAlwaysOnBar, '__more': menuItem.path == 'more'}" ng-repeat="menuItem in dynamicMenuItems" ng-include="itemTemplateUrl" ng-click="selectItem(menuItem)" va-tooltip tooltip="{{menuItem.title | translate}}" va-permission="{{menuItem.permission}}"></li>
+                                <li class="list-item" ng-class="{'__animated': menuItem.isAnimated, '__draggable': !menuItem.isAlwaysOnBar, '__more': menuItem.path == 'more'}" ng-repeat="menuItem in dynamicMenuItems" ng-include="itemTemplateUrl" ng-click="selectItem(menuItem)" va-tooltip tooltip="{{menuItem.title | translate}}" va-permission="{{menuItem.permission}}"></li>
                             </ul>
                         </div>
                     </div>
