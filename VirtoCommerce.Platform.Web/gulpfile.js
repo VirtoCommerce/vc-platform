@@ -1,4 +1,5 @@
-﻿/*
+/// <binding ProjectOpened='watch' />
+/*
 This file in the main entry point for defining Gulp tasks and using Gulp plugins.
 Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 */
@@ -6,7 +7,9 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 var gulp = require("gulp"),
     mainBowerFiles = require('main-bower-files'),
     concat = require("gulp-concat"),
-    uglify = require("gulp-uglify");
+    uglify = require("gulp-uglify"),
+    autoprefixer = require('gulp-autoprefixer'),
+    sass = require('gulp-sass');
 
 // minify all js files to single file
 gulp.task('packJavaScript', function () {
@@ -17,6 +20,16 @@ gulp.task('packJavaScript', function () {
       .pipe(concat('allPackages.js'))
       .pipe(uglify())
       .pipe(gulp.dest('Scripts'));
+});
+
+// translate sass to css
+gulp.task('sass', function () {
+    return gulp.src('Content/themes/main/css/sass/main.sass') //    return gulp.src(['Content/themes/main/css/sass/**/*.sass'])
+        .pipe(sass({
+            includePaths: require('node-bourbon').includePaths
+        }))
+        .pipe(autoprefixer({ browsers: ['last 2 versions'] }))
+        .pipe(gulp.dest('Content/themes/main/css'));
 });
 
 // concatenate all css files to single file
@@ -50,3 +63,8 @@ gulp.task('fontawesomeFonts', function () {
 gulp.task('fontawesomePackage', ['fontawesomeCss', 'fontawesomeFonts']);
 
 gulp.task('packAll', ['packJavaScript', 'packCss', 'copyMainFonts']);
+
+// Watch on sass to enable auto-translation
+gulp.task('watch', function () {
+    gulp.watch('Content/themes/main/css/sass/**/*.sass', ['sass']);
+})
