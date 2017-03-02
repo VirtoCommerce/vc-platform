@@ -152,6 +152,7 @@ $RECYCLE.BIN/
 *.nupkg
 
 .vs/
+.vscode/
 
 /VirtoCommerce.Platform.Web/App_Data
 /VirtoCommerce.Platform.Web/client_packages

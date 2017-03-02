@@ -24,7 +24,7 @@ gulp.task('packJavaScript', function () {
 
 // translate sass to css
 gulp.task('sass', function () {
-    return gulp.src('Content/themes/main/css/sass/main.sass') //    return gulp.src(['Content/themes/main/css/sass/**/*.sass'])
+    return gulp.src('Content/themes/main/sass/main.sass') //    return gulp.src(['Content/themes/main/sass/**/*.sass'])
         .pipe(sass({
             includePaths: require('node-bourbon').includePaths
         }))
@@ -66,5 +66,5 @@ gulp.task('packAll', ['packJavaScript', 'packCss', 'copyMainFonts']);
 
 // Watch on sass to enable auto-translation
 gulp.task('watch', function () {
-    gulp.watch('Content/themes/main/css/sass/**/*.sass', ['sass']);
+    gulp.watch('Content/themes/main/sass/**/*.sass', ['sass']);
 })

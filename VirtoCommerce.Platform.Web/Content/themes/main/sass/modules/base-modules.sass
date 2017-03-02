@@ -65,10 +65,10 @@ ol
     width: 25px
   .list-item.__error
     .list-ico
-      color: $listNoticeItemErrorColor
+      color: $genericErrorColor
   .list-item.__warning
     .list-ico
-      color: $listNoticeItemWarningColor
+      color: $genericWarningColor
 
 /* List car info */
 .list.__car-info
@@ -86,7 +86,7 @@ ol
     top: 5px
     width: 25px
   .list-name
-    color: $listCarInfoColor
+    color: $genericInfoColor
     display: block
 
 .tile.double .list.__car-info .tile-ico
@@ -265,7 +265,7 @@ h3
   margin: 10px 0
   padding: 10px
   span:first-child
-    color: $errorColor
+    color: $genericErrorColor
 
 .text.__editable
   background: $lightBg
@@ -325,16 +325,127 @@ h3
   border-color: $infoNotifyBrd
   color: $infoNotifyColor
 
-/* Product */
-.product-img .image
-  background-blend-mode: darken
-  background-position: 50% 50%
-  background-repeat: no-repeat
-  background-size: contain
-  height: 100%
-  margin: 0 0 0 6px
-  position: relative
+/* Tables */
+.table-wrapper
+  margin: 0 -20px 0
+.form .table-wrapper
+  margin: 0 -36px 15px -20px
+.table
+  border-collapse: collapse
+  border-spacing: 0
+  padding: 0
   width: 100%
+  &.__fixed
+    table-layout: fixed
+  .table-head
+    border-bottom: 1px solid $baseBrd
+    font-size: 14px
+    padding: 5px 20px
+  .table-col
+    border-color: $baseBrd
+    border-style: solid
+    border-width: 1px 0
+    font-size: 14px;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px $whiteColor
+  .table-col:first-child
+    padding-left: 20px
+  .table-col:last-child
+    padding-right: 20px
+  &.__data .table-col
+    vertical-align: top
+  th.table-col
+    background: rgba(0,0,0,.025)
+    font-size: 14px
+    font-weight: 500
+    line-height: 1.3
+  .table-item
+    cursor: pointer
+  .table-ico
+    .sort
+      font-size: 16px
+      margin: 5px 0 0 10px
+    &.sort.fa-sort-down
+      margin: -8px 0 0 10px
+.table thead.__indexed
+  @include column("th", 5, true)
+.table-t,
+.table-descr
+  display: block
+  font-size: 12px
+.table-t
+  display: inline-block
+  font-size: 14px
+  font-weight: 500
+  max-width: 100%
+  overflow: hidden
+  text-overflow: ellipsis
+  vertical-align: middle
+.table-descr
+  color: $tableColor
+.table-progress
+  margin: 10px 0 0
+  position: relative
+.table-status
+  background: $tableStatusBg
+  color: $whiteColor
+  display: block
+  font-size: 12px
+  height: 20px
+  line-height: 18px
+  padding: 0 5px
+  text-align: center
+  text-shadow: none
+  &.__active
+    background: $baseColor
+.table-date
+  color: $tableColor
+  font-size: 12px
+.table-img
+  border: none
+  height: auto
+  max-width: 40px
+  vertical-align: middle
+.table-ico
+  color: $tableIcoColor
+  font-size: 28px
+  margin: 0 10px
+  text-shadow: 1px 1px $whiteColor
+  vertical-align: middle
+.table-item
+  &.__error .table-ico
+    color: $genericErrorColor
+  &.__warning .table-ico
+    color: $genericWarningColor
+  &.__info .table-ico
+    color: $genericInfoColor
+
+/* Product */
+.product-img
+  height: 40px
+  line-height: 40px
+  text-align: center
+  width: 40px
+  .image
+    background-blend-mode: darken
+    background-position: 50% 50%
+    background-repeat: no-repeat
+    background-size: contain
+    height: 100%
+    margin: 0 0 0 6px
+    position: relative
+    width: 100%
+.table-item:hover .product-img .image
+  background-color: $productImgOver
+.table-item.__selected .product-img .image
+  background-color: $productImgSel
+.product .table-ico
+  color: $tableIcoColor
+  font-size: 28px
+  margin: 0 10px
+  text-shadow: 1px 1px $whiteColor
+  vertical-align: middle
 
 /* UI Grid */
 @import "modules/ui-grid.sass"
@@ -1142,14 +1253,8 @@ h3
   padding: 15px 0
 .form.columns
   padding: 0
-.column:nth-last-child(2),
-.column:nth-last-child(2) ~ .column
+@include column(".column", 5)
   float: left
-  width: 50%
-.column:nth-last-child(3),
-.column:nth-last-child(3) ~ .column
-  float: left
-  width: 33.3333%
 .column .list.__info
   margin: 0
 .column .form-group
@@ -1262,7 +1367,7 @@ h3
   padding: 0 10px
 .select2-container-multi
   .select2-choices
-    line-height: 32
+    line-height: 32px
     padding: 0 4px
 .select2-container .select2-choice,
 .select2-drop
@@ -1356,6 +1461,8 @@ tags-input
     box-shadow: none
     color: $colorText
     padding: 0 10px
+    -moz-appearance: none;
+    -webkit-appearance: none;
     li
       padding: 0
       text-indent: 0
@@ -1399,8 +1506,9 @@ tags-input
   position: fixed
   top: 0
 .has-demo-warning .nav-bar,
+.has-demo-warning .nav-bar .dropdown,
 .has-demo-warning .cnt
-  top: 28px
+  top: $demoWarningHeight
 
 /* Nav bar - Left navigation menu */
 .nav-bar
@@ -1563,7 +1671,7 @@ tags-input
         color: $baseColor
     .error
       .list-ico
-        color: $errorColor
+        color: $genericErrorColor
     .warning
       .list-ico
         color: #f0a30a
@@ -1766,6 +1874,9 @@ tags-input
           position: absolute
         &:hover
           background: $baseColor
+      .menu-item.__close
+        &:hover
+          background: $genericErrorColor
       .menu-item.__disabled
         &:hover
           background: none
@@ -1920,6 +2031,9 @@ tags-input
       margin: 0 20px
       padding: 17px 0
       position: relative
+    .blade-static .form-group:only-child
+      box-sizing: border-box
+      height: 100%
     .blade-static .column
       .form-group
         margin: 5px 10px 0 0
@@ -1934,12 +2048,11 @@ tags-input
           margin: 12px 10px 0 0
     .blade-static
       .form-input.__search
-        width: 80%
+        margin-right: 80px;
     .blade-static
       .form-count
-        position: absolute
-        right: 0
-        top: 15px
+        @include center(false, true, true)
+        right: 0;
     .blade-static .pagination
       border: none
       margin: 0
@@ -1985,14 +2098,14 @@ tags-input
       height: calc(100% - 174px)
     .blade-container .canceled + .blade-content
       height: calc(100% - 45px)
-    .blade .blade-content
-      width: 420px
-      white-space: normal
   .blade-container.__loading
     opacity: .25
     pointer-events: none
 
     filter: alpha(opacity=25)
+.blade .blade-content
+  width: $bladeCntNormalSize
+  white-space: normal
 .blade.__active
   .blade-content
     background: #f1fbfe
@@ -2002,25 +2115,25 @@ tags-input
 .__canceled
   background-color: #eff7fc
 .blade .blade-content.__medium-wide
-  width: 550px
+  width: $bladeCntMediumSize
 .blade .blade-content.__large-wide
-  width: 680px
+  width: $bladeCntLargeSize
 .blade .blade-content.__xlarge-wide
-  width: 810px
+  width: $bladeCntXLargeSize
 .blade .blade-content.__xxlarge-wide
-  width: 940px
+  width: $bladeCntXXLargeSize
 .blade .blade-content.__tree
   width: 340px
 .blade-content .table
-  min-width: 420px
+  min-width: $bladeCntNormalSize
 .blade-content.__medium-wide .table
-  min-width: 550px
+  min-width: $bladeCntMediumSize
 .blade .blade-content.blade-large
   width: 720px
 .blade .blade-inner
   box-sizing: border-box
   overflow: hidden
-  padding: 0 20px
+  padding: 0 $bladeInnerPadding
 .blade .blade-inner::-webkit-scrollbar,
 .log::-webkit-scrollbar,
 .ui-grid-viewport::-webkit-scrollbar

@@ -4,13 +4,13 @@
 .ui-grid-viewport
   overflow-x: auto !important
 .ui-grid-top-panel
-  background: rgba(0,0,0,.24)
+  background: rgba(0,0,0,.024)
 .ui-grid-header-cell
   color: #333
   font-size: 14px
   font-weight: 400
   vertical-align: middle
-.ui-grid-cel
+.ui-grid-cell
   border-style: solid
   border-width: 0 0 1px
   font-size: 14px
@@ -19,8 +19,7 @@
     color: #999
     font-size: 12px
 .ui-grid-pinned-container.ui-grid-pinned-container-left
-  .ui-grid-cell
-  &:last-child
+  .ui-grid-cell:last-child
     border-color: $baseBrd
     border-top: none
 .ui-grid-row
@@ -67,6 +66,12 @@
 .ui-grid-row-header-cell
   > :first-child
     height: 100%
+.ui-grid-header-cell
+  .ui-grid-selection-row-header-buttons
+    // quick bug fix, because other selection divs contain &nbsp by default
+    margin-right: 2px
+  .ui-grid-cell-contents:after
+    display: inline;
 .ui-grid-row-header-cell .ui-grid-cell-contents,
 .ui-grid-pinned-container-left .ui-grid-cell-contents
   text-align: center
@@ -136,8 +141,6 @@
   color: #a1c0d4
   height: 100%
   opacity: 1
-  margin: -5px
-  padding: 5px
 .ui-grid-selection-row-header-buttons
   &::after
     content: ' '
@@ -209,7 +212,6 @@ input.ui-grid-filter-input[type="text"]
 .ui-grid-render-container-left .ui-grid-header-cell,
 .ui-grid-render-container-body .ui-grid-header-cell
   height: 40px
-  line-height: 20px
 .ui-grid-menu-button
   right: 4px
   top: 4px

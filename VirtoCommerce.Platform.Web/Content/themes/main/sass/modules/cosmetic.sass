@@ -27,10 +27,20 @@
   top: 0
   z-index: 9000
 
-/* Codemirror */
-ui-codemirror
-  *:first-child
-    border: 1px solid $borderColor
+/* CodeMirror */
+.CodeMirror
+  border: 1px solid $borderColor
+  font-size: 13px
+.blade .blade-content .CodeMirror
+  width: $bladeCntNormalSize - $bladeInnerPadding * 2
+.blade .blade-content.__medium-wide .CodeMirror
+  width: $bladeCntMediumSize - $bladeInnerPadding * 2
+.blade .blade-content.__large-wide .CodeMirror
+  width: $bladeCntLargeSize - $bladeInnerPadding * 2
+.blade .blade-content.__xlarge-wide .CodeMirror
+  width: $bladeCntXLargeSize - $bladeInnerPadding * 2
+.blade .blade-content.__xxlarge-wide .CodeMirror
+  width: $bladeCntXXLargeSize - $bladeInnerPadding * 2
 
 /* Scroll bar */
 *::-webkit-scrollbar
@@ -50,7 +60,7 @@ ui-codemirror
 
 /* Platform error bar */
 .platform-error-bar
-  background: $platformErrorBarBg
+  background: $genericErrorColor
   color: $whiteColor
   font-family: $font
   font-size: 13px
@@ -95,7 +105,7 @@ ui-codemirror
 @import "includes/_flags.sass"
 
 .error
-  color: $errorColor
+  color: $genericErrorColor
   display: block
   font-size: 12px
   line-height: 1.4

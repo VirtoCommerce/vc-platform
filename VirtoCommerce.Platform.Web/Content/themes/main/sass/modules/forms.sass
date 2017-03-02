@@ -3,7 +3,7 @@
 input::-ms-clear
   display: none
 .__error
-  color: $errorColor
+  color: $genericErrorColor
 .form-input input.ng-invalid,
 .form-input input.ng-invalid.form-input,
 .form-input textarea.ng-invalid,
@@ -12,7 +12,7 @@ input::-ms-clear
 .form-input textarea.ng-invalid:focus
   background: #fef8f7
   border-color: #fce7e6
-  color: $errorColor
+  color: $genericErrorColor
 fieldset
   border: none
   legend
@@ -29,6 +29,10 @@ fieldset + fieldset
   color: $colorText
 .form
   padding: 15px 0
+  & > .form-group:first-child
+    margin-top: 0
+    & > .column > .form-group:first-child,
+        margin-top: 0;
 .form-group.__head
   border-bottom: 1px solid $baseBrd
 .__inline .form-group
@@ -41,12 +45,14 @@ fieldset + fieldset
   color: #999
   font-size: 12px
 .form-error
-  color: $errorColor
+  color: $genericErrorColor
   font-size: 12px
   line-height: 1.4
   padding: 5px 0
   *
     display: block
+.form .columns
+  padding: 0
 .form-group .form-input ~ .form-error,
 .form-group .form-input ~ .form-hint
   margin: 5px 0 0
@@ -85,8 +91,14 @@ fieldset + fieldset
 .form-input.__inline
   display: inline-block
   vertical-align: middle
-.table-col .form-input.__mini
-  margin: 5px 0 0
+.table-col
+  .form-input
+    &.__mini
+      margin: 5px 0 0
+    .form-text
+      margin: 5px 0 0
+  .table-space
+    height: 17px;
 .form-input input,
 .form-input select,
 .form-input .form-text
@@ -235,7 +247,7 @@ fieldset + fieldset
     display: block
     height: 20px
     line-height: 20px
-.form-input .btn.__other .btn-ic
+.form-input .btn.__other .btn-ico
   font-size: 12px
   line-height: 24px
 .form-control .form-label
@@ -459,7 +471,7 @@ button.btn
   &:hover
     background-color: #a0a0a0
 
-/* Md editor */
+/* Editors */
 .md-editor
   background: $lightBg
   border: 1px solid $baseBrd
@@ -533,3 +545,6 @@ button.btn
 .md-editor.md-fullscreen-mode .md-input,
 .md-editor.md-fullscreen-mode .md-preview
   padding: 20px 20px 20px 120px !important
+
+.has-demo-warning .uk-htmleditor-fullscreen
+  top: $demoWarningHeight
