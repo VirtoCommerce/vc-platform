@@ -28,20 +28,11 @@ namespace VirtoCommerce.Platform.Web
                     // "~/Content/angular-gridster.css", // customized style
                     //SELECT2
                     "~/Content/select2.css", // used in selectors
-                    //Theme UI
-                    //"~/Content/themes/main/css/includes/reset.css",
+                    //Theme UI,
                     "~/Content/themes/main/css/font-awesome.css",
                     "~/Content/themes/main/css/main.css",
-                    //"~/Content/themes/main/css/includes/gfonts.css",
-                    //"~/Content/themes/main/css/modules/base-modules.css",
-                    //"~/Content/themes/main/css/modules/ui-grid.css",
-                    //"~/Content/themes/main/css/modules/forms.css",
-                    //"~/Content/themes/main/css/modules/window-modals.css",
                     "~/Content/themes/main/css/lang-rtl.css"
-                    //"~/Content/themes/main/css/modules/project-modules.css",
-                    //"~/Content/themes/main/css/modules/cosmetic.css",
-                    //"~/Content/themes/main/css/includes/flags.css"
-                    ));
+                ));
 
             #endregion
 

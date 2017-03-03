@@ -8,6 +8,7 @@
     "gulp-uglify": "2.0.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-sass": "^2.2.0",
+    "gulp-sourcemaps": "^2.4.1",
     "main-bower-files": "2.9.0",
     "node-bourbon": "^4.2.3"
   }

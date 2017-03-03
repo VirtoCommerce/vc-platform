@@ -9,7 +9,8 @@ var gulp = require("gulp"),
     concat = require("gulp-concat"),
     uglify = require("gulp-uglify"),
     autoprefixer = require('gulp-autoprefixer'),
-    sass = require('gulp-sass');
+    sass = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps');
 
 // minify all js files to single file
 gulp.task('packJavaScript', function () {
@@ -24,11 +25,15 @@ gulp.task('packJavaScript', function () {
 
 // translate sass to css
 gulp.task('sass', function () {
-    return gulp.src('Content/themes/main/sass/main.sass') //    return gulp.src(['Content/themes/main/sass/**/*.sass'])
+    return gulp.src(['Content/themes/main/sass/**/*.sass'])
+        // must be executed straigh after source
+        .pipe(sourcemaps.init())
         .pipe(sass({
             includePaths: require('node-bourbon').includePaths
         }))
         .pipe(autoprefixer({ browsers: ['last 2 versions'] }))
+        // must be executed straight before output
+        .pipe(sourcemaps.write('.', { includeContent: false, sourceRoot: '../sass' }))
         .pipe(gulp.dest('Content/themes/main/css'));
 });
 
