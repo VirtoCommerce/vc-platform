@@ -456,7 +456,7 @@ h3
 /* Tiles */
 .tile-group
   margin: 0 -10px 0 0
-  min-width: 130px
+  min-width: ($tileSize + $tileMargin)
   overflow: hidden
   position: relative
   width: auto
@@ -469,20 +469,31 @@ h3
   float: left
   margin: 0
   padding: 0
-.tile-group.one
-  width: 130px
-.tile-group.two
-  width: 260px
-.tile-group.three
-  width: 390px
-.tile-group.four
-  width: 520px
-.tile-group.five
-  width: 650px
-.tile-group.six
-  width: 780px
-.tile-group.seven
-  width: 910px
+
+$names: "one", "two", "three", "four", "five", "six", "seven"
+@for $x from 1 through 7
+  .tile-group
+    #{("&." + nth($names, $x))}
+      width: ($tileSize + $tileMargin) * $x
+
+$names: "", ".double", ".triple", ".quadro"
+@for $x from 1 through 4
+  .tile
+    #{"&" + nth($names, $x)}
+      height: $tileSize * $x + $tileMargin * ($x - 1)
+      width: $tileSize * $x + $tileMargin * ($x - 1)
+      @if ($x > 1)
+        &.tall
+          height: $tileSize * $x + $tileMargin * ($x - 1)
+          width: $tileSize * ($x - 1) + $tileMargin * ($x - 2)
+        &.wide
+          height: $tileSize * ($x - 1) + $tileMargin * ($x - 2)
+          width: $tileSize * $x + $tileMargin * ($x - 1)
+        @if ($x >= 3)
+          &.wide.mini
+            height: $tileSize
+            width: $tileSize * $x + $tileMargin * ($x - 1)
+
 .tile
   background: $lightBg
   box-sizing: border-box
@@ -491,13 +502,11 @@ h3
   cursor: pointer
   float: left
   font-size: 48px
-  height: 120px
-  margin: 10px 10px 0 0
+  margin: $tileMargin $tileMargin 0 0
   padding: 2px
   position: relative
   text-align: center
   vertical-align: top
-  width: 120px
   &::before
     opacity: 0
   .tile-ico
@@ -608,10 +617,10 @@ h3
   margin: 20px 0
 .tile.__brand .tile-image
   display: inline-block
-  height: 120px
+  height: $tileSize
   line-height: 96px
   text-align: center
-  width: 120px
+  width: $tileSize
   img
     display: inline-block
     max-height: 100%
@@ -626,16 +635,12 @@ h3
 /* Half */
 .tile.double
   font-size: 72px
-  height: 250px
-  width: 250px
   .tile-descr.__once
     margin: 100px 0 0
   .tile-ico
     margin: 60px 0 0
 .tile-double.wide
   font-size: 48px
-  height: 120px
-  width: 250px
   .tile-descr.__once
     margin: 35px 0
   .tile-ico
@@ -649,40 +654,11 @@ h3
   line-height: 225px
 .tile.double.tall
   font-size: 48px
-  height: 250px
-  width: 120px
   .tile-ico
     margin: 80px 0 0
 
-/* Triple */
-.tile.triple
-  height: 380px
-  width: 380px
-  .tile.triple.tall
-    height: 380px
-    width: 250px
-  .tile.triple.wide
-    height: 250px
-    width: 380px
-  .tile.triple.wide.mini
-    height: 120px
-    width: 380px
-
-/* Quadro */
-.tile.quadro
-  height: 510px
-  width: 510px
 .tile.quadro.__tree:hover
   overflow-y: auto
-.tile.quadro.tall
-  height: 510px
-  width: 380px
-.tile.quadro.wide
-  height: 380px
-  width: 510px
-.tile.quadro.wide.mini
-  height: 120px
-  width: 510px
 
 /* Blade list */
 .list.__items,
@@ -2038,8 +2014,6 @@ tags-input
       .form-group
         margin: 5px 10px 0 0
         padding: 0
-    .blade-static .column + .column .form-group
-      margin: 0 0 0 10px
     .blade-static
       .form-group
         .link
@@ -2048,7 +2022,9 @@ tags-input
           margin: 12px 10px 0 0
     .blade-static
       .form-input.__search
-        margin-right: 80px;
+        margin-right: 80px
+        &:last-child
+          margin-right: 0
     .blade-static
       .form-count
         @include center(false, true, true)
@@ -2104,7 +2080,7 @@ tags-input
 
     filter: alpha(opacity=25)
 .blade .blade-content
-  width: $bladeCntNormalSize
+  width: $bladeNormalSize
   white-space: normal
 .blade.__active
   .blade-content
@@ -2115,25 +2091,31 @@ tags-input
 .__canceled
   background-color: #eff7fc
 .blade .blade-content.__medium-wide
-  width: $bladeCntMediumSize
+  width: $bladeMediumSize
 .blade .blade-content.__large-wide
-  width: $bladeCntLargeSize
+  width: $bladeLargeSize
 .blade .blade-content.__xlarge-wide
-  width: $bladeCntXLargeSize
+  width: $bladeXLargeSize
 .blade .blade-content.__xxlarge-wide
-  width: $bladeCntXXLargeSize
+  width: $bladeXXLargeSize
+.blade .blade-content.__3xlarge-wide
+  width: $blade3XLargeSize
+.blade .blade-content.__4xlarge-wide
+  width: $blade4XLargeSize
+.blade .blade-content.__5xlarge-wide
+  width: $blade5XLargeSize
 .blade .blade-content.__tree
   width: 340px
 .blade-content .table
-  min-width: $bladeCntNormalSize
+  min-width: $bladeNormalSize
 .blade-content.__medium-wide .table
-  min-width: $bladeCntMediumSize
+  min-width: $bladeMediumSize
 .blade .blade-content.blade-large
   width: 720px
 .blade .blade-inner
   box-sizing: border-box
   overflow: hidden
-  padding: 0 $bladeInnerPadding
+  padding: 0 $bladePadding
 .blade .blade-inner::-webkit-scrollbar,
 .log::-webkit-scrollbar,
 .ui-grid-viewport::-webkit-scrollbar
@@ -2164,19 +2146,27 @@ tags-input
 .blade .blade-inner.ui-grid-no-scroll:hover
   overflow: visible
 .blade-inner .inner-block
-  width: 380px
+  width: $bladeNormalSize - $bladePadding * 2
 .blade-content.__medium-wide .inner-block
-  width: 510px
+  width: $bladeMediumSize - $bladePadding * 2
 .blade-content.__large-wide .inner-block
-  width: 640px
+  width: $bladeLargeSize - $bladePadding * 2
 .blade-content.__xlarge-wide .inner-block
-  width: 770px
+  width: $bladeXLargeSize - $bladePadding * 2
 .blade-content.__xxlarge-wide .inner-block
-  width: 900px
+  width: $bladeXXLargeSize - $bladePadding * 2
+.blade-content.__3xlarge-wide .inner-block
+  width: $blade3XLargeSize - $bladePadding * 2
+.blade-content.__4xlarge-wide .inner-block
+  width: $blade4XLargeSize - $bladePadding * 2
+.blade-content.__5xlarge-wide .inner-block
+  width: $blade5XLargeSize - $bladePadding * 2
 .blade-content.__tree .inner-block
   width: 300px
-.blade-content.__code-editor .inner-block
-  width: auto
+.blade-content.__code-editor
+  width: calc(100vw - #{$bladeMediumSize})
+  .inner-block
+    width: calc(100vw - #{$bladeMediumSize} - #{$bladePadding} * 2)
 .blade .blade-loader
   padding: 20px
   text-align: center
