@@ -451,19 +451,19 @@ h3 {
   .table .table-ico.sort.fa-sort-down {
     margin: -8px 0 0 10px; }
 
-.table thead.__indexed th:nth-last-child(2) ~ th {
+.table.__indexed th:nth-last-child(2) ~ th {
   width: 100%; }
 
-.table thead.__indexed th:nth-last-child(3) ~ th {
+.table.__indexed th:nth-last-child(3) ~ th {
   width: 50%; }
 
-.table thead.__indexed th:nth-last-child(4) ~ th {
+.table.__indexed th:nth-last-child(4) ~ th {
   width: 33.33333%; }
 
-.table thead.__indexed th:nth-last-child(5) ~ th {
+.table.__indexed th:nth-last-child(5) ~ th {
   width: 25%; }
 
-.table thead.__indexed th:nth-last-child(6) ~ th {
+.table.__indexed th:nth-last-child(6) ~ th {
   width: 20%; }
 
 .table-t,
