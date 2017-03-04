@@ -68,7 +68,7 @@ angular.module('platformWebApp', AppDependencies).
       var isUserProfileSettingsLoaded;
       var userProfileSettings;
       var mainMenuIsCollapsedSetting;
-      var mainMenuFavoritesSetting;
+      var mainMenuItemsSetting;
       $scope.$on('loginStatusChanged', function (event, authContext) {
           angular.forEach(mainMenuService.menuItems, function(menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
           if (authContext.isAuthenticated) {
@@ -80,7 +80,7 @@ angular.module('platformWebApp', AppDependencies).
                   $translate.use(settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.Language").value);
 
                   mainMenuIsCollapsedSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed");
-                  mainMenuFavoritesSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.Favorites");
+                  mainMenuItemsSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.Items");
 
                   initializeMainMenu();
               });
@@ -99,10 +99,15 @@ angular.module('platformWebApp', AppDependencies).
 
       function initializeMainMenu() {
           $scope.mainMenu.isCollapsed = mainMenuIsCollapsedSetting.value;
-          angular.forEach(_.sortBy(angular.fromJson(mainMenuFavoritesSetting.value), 'order'), function (menuItemModel) {
+          angular.forEach(angular.fromJson(mainMenuItemsSetting.value), function (menuItemModel) {
                   var menuItem = mainMenuService.findByPath(menuItemModel.path);
-                  if (menuItem != null) {
-                      menuItem.isFavorite = true;
+                  if (angular.isDefined(menuItemModel.isCollapsed)) {
+                      menuItem.isCollapsed = menuItemModel.isCollapsed;
+                  }
+                  if (angular.isDefined(menuItemModel.isFavorite)) {
+                      menuItem.isFavorite = menuItemModel.isFavorite;
+                  }
+                  if (angular.isDefined(menuItemModel.order)) {
                       menuItem.order = menuItemModel.order;
                   }
               });
@@ -117,12 +122,12 @@ angular.module('platformWebApp', AppDependencies).
       }
 
       $scope.mainMenu.items = mainMenuService.menuItems;
-      $scope.$watch('mainMenu.items', function () { saveMainMenuFavorites(); }, true);
-      function saveMainMenuFavorites() {
+      $scope.$watch('mainMenu.items', function () { saveMainMenuItems(); }, true);
+      function saveMainMenuItems() {
           if (isUserProfileSettingsLoaded) {
-              mainMenuFavoritesSetting.value = angular.toJson(_.map(_.filter(mainMenuService.menuItems,
-                  function (menuItem) { return menuItem.isFavorite && !menuItem.isAlwaysOnBar; }),
-                  function (menuItem) { return { path: menuItem.path, order: menuItem.order };
+              mainMenuItemsSetting.value = angular.toJson(_.map(_.filter(mainMenuService.menuItems,
+                  function (menuItem) { return !menuItem.isAlwaysOnBar; }),
+                  function (menuItem) { return { path: menuItem.path, isCollapsed: menuItem.isCollapsed, isFavorite: menuItem.isFavorite, order: menuItem.order };
               }));
               settings.updateCurrentUserProfile(userProfileSettings);
           }

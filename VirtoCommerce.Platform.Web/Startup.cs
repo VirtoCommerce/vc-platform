@@ -408,10 +408,10 @@ namespace VirtoCommerce.Platform.Web
                             },
                             new ModuleSetting
                             {
-                                Name = "VirtoCommerce.Platform.UI.MainMenu.Favorites",
+                                Name = "VirtoCommerce.Platform.UI.MainMenu.Items",
                                 ValueType = ModuleSetting.TypeText,
-                                Title = "Main menu favorites",
-                                Description = "List of menu items (JSON) which will be displayed as favorites by default"
+                                Title = "Default user settings for main menu items (JSON)",
+                                Description = "For example: [{\"path\": \"browse\\catalog\", \"isFavorite\": \"true\", \"order\": \"0\"}, {\"path\": \"settings\", \"isCollapsed\": \"true\"}]"
                             },
                             new ModuleSetting
                             {

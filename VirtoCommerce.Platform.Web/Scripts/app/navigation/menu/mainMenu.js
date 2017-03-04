@@ -58,13 +58,10 @@
         if (!angular.isDefined(menuItem.isAlwaysOnBar)) {
             menuItem.isAlwaysOnBar = false;
         }
-        if (!menuItem.isFavorite) {
-            menuItem.isFavorite = false;
-        }
-        if (menuItem.order) {
+        menuItem.isCollapsed = false;
+        menuItem.isFavorite = false;
             // place at the end
-            menuItem.order = 9007199254740991; // Number.MAX_SAFE_INTEGER;
-        }
+        menuItem.order = 9007199254740991; // Number.MAX_SAFE_INTEGER;
     }
 
     function findByPath(path) {
@@ -118,7 +115,7 @@
                 menuItem.isFavorite = !menuItem.isFavorite;
                 // clear order when removed from favorites
                 if (!menuItem.isFavorite) {
-                    menuItem.order = undefined;
+                    menuItem.order = 9007199254740991; // Number.MAX_SAFE_INTEGER;
                 }
                 var favorites = _.sortBy(_.filter(scope.items, function (menuItem) { return menuItem.isFavorite }), function (menuItem) { return menuItem.order; });
                 // re-calculate order
