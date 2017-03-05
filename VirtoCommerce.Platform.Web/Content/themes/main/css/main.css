@@ -4209,34 +4209,8 @@ tags-input .tags.focused {
 /* CodeMirror */
 .CodeMirror {
   border: 1px solid #ddd;
-  font-size: 13px; }
-
-.blade .blade-content .CodeMirror {
-  width: 380px; }
-
-.blade .blade-content.__medium-wide .CodeMirror {
-  width: 510px; }
-
-.blade .blade-content.__large-wide .CodeMirror {
-  width: 640px; }
-
-.blade .blade-content.__xlarge-wide .CodeMirror {
-  width: 770px; }
-
-.blade .blade-content.__xxlarge-wide .CodeMirror {
-  width: 900px; }
-
-.blade .blade-content.__3xlarge-wide .CodeMirror {
-  width: 1030px; }
-
-.blade .blade-content.__4xlarge-wide .CodeMirror {
-  width: 1160px; }
-
-.blade .blade-content.__5xlarge-wide .CodeMirror {
-  width: 1290px; }
-
-.blade .blade-content.__code-editor .CodeMirror {
-  width: calc(100vw - 550px - 20px * 2); }
+  font-size: 13px;
+  width: 100%; }
 
 /* Scroll bar */
 *::-webkit-scrollbar {
