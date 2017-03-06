@@ -5121,10 +5121,11 @@ tags-input .tags .tag-item {
     font-weight: 300;
     line-height: 26px;
     position: absolute;
-    right: 20px;
+    right: 0;
     top: 50%;
+    -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
-    padding: 0 12px;
+    padding: 10px 32px 10px 12px;
 }
 
 .dropdown.__more .dropdown-content .list-fav .list-ico {
