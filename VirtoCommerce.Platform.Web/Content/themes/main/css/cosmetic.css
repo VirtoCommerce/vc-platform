@@ -128,11 +128,11 @@ a:hover,
 			transition: width .25s ease-in-out 0s;
 }
 
-.nav-bar .dropdown
+/*.nav-bar .dropdown
 {
 	-webkit-transition: transform .25s ease-in-out 0s;
 			transition: transform .25s ease-in-out 0s;
-}
+}*/
 
 .cnt
 {

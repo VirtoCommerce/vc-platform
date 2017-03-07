@@ -8,7 +8,7 @@
         </ul>
     </div>
     <ul class="list __items" ng-if="searchText.value != ''" ng-init="searchItems = (items | filter: { isAlwaysOnBar: 'false' } | omit: 'group == null' | orderBy: 'group.priority' | map: '{ path: path, title: (title | translate) }')" va-favorites>
-        <li class="list-item" ng-class="{'__animated': menuItem.isAnimated}" ng-init="menuItem = (items | filter: { path: item.path })[0]" ng-repeat="item in searchItems | filter: { title: searchText.value }" ng-include="'listItemTemplate.html'" tabindex="1" va-permission="{{menuItem.permission}}">
+        <li class="list-item" ng-class="{'__animated': menuItem.isAnimated}" ng-init="menuItem = (items | filter: { path: item.path })[0]" ng-repeat="item in searchItems | filter: { title: searchText.value }" ng-include="'listItemTemplate.html'" ng-click="selectItem(menuItem)" tabindex="1" va-permission="{{menuItem.permission}}">
         </li>
     </ul>
     <script type="text/ng-template" id="listItemTemplate.html">
