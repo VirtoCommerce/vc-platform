@@ -153,8 +153,12 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
 			else if (string.Equals(valueType, ModuleSetting.TypeText, StringComparison.InvariantCultureIgnoreCase))
 			{
 				retVal = SettingValueType.LongText;
-			}
-			return retVal;
+            }
+            else if (string.Equals(valueType, ModuleSetting.TypeJson, StringComparison.InvariantCultureIgnoreCase))
+            {
+                retVal = SettingValueType.Json;
+            }
+            return retVal;
 		}
       
         private static SettingValueType ConvertToSettingValueType(Type valueType)

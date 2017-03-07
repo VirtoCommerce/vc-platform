@@ -21,17 +21,21 @@
   vertical-align: middle
 
 /* Dashboard */
+$dashboardHorizontalPadding: 90px
+$dashboardVerticalPadding: 22px
+$dashboardHeadHeight: 144px
+
 .dashboard
   background: $baseBg
   font-family: $font
   position: relative
   z-index: 50
   .dashboard-head
-    height: 144px
+    height: $dashboardHeadHeight
     position: relative
   .dashboard-area
     box-sizing: border-box
-    height: calc(100% - 144px)
+    height: calc(100% - #{$dashboardHeadHeight})
     margin: 0 3px 0 0
     overflow: hidden
     position: relative
@@ -40,8 +44,8 @@
       .dashboard-inner
         overflow: auto
   .dashboard-inner
-    height: calc(100% - 22px)
-    padding: 22px 90px 0
+    height: calc(100% - #{$dashboardVerticalPadding})
+    padding: $dashboardVerticalPadding $dashboardHorizontalPadding 0
     position: relative
     .gridster-loaded
       width: 770px
@@ -51,8 +55,14 @@
     top: 30px
   .dashboard-title
     font-weight: 300
-    left: 90px
+    left: $dashboardHorizontalPadding
     text-shadow: 1px 2px rgba(255,255,255,.5), 2px -2px rgba(255,255,255,.5), -2px 2px rgba(255,255,255,.5), -2px -2px rgba(255,255,255,.5)
+    h1,
+    .__logo
+      display: inline
+    .__logo
+      max-height: $h1FontSize
+      vertical-align: top
   .dashboard-account
     background: $whiteColor
     border: 2px solid transparent

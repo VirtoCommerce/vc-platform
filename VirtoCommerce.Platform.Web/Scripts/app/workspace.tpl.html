@@ -3,7 +3,10 @@
     <div class="cnt-inner">
         <div class="dashboard" ng-if="$state.current.name === 'workspace'">
             <header class="dashboard-head">
-                <h1 class="dashboard-title">Virto Commerce</h1>
+                <div class="dashboard-title">
+                    <img class="__logo" ng-src="{{uiCustomization.logo}}" />
+                    <h1>{{uiCustomization.title}}</h1>
+                </div>
                 <va-login-toolbar></va-login-toolbar>
             </header>
             <div class="dashboard-area">

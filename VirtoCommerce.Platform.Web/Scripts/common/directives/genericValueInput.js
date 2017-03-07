@@ -121,7 +121,15 @@
             }
 
             function getTemplateName(property) {
-                var result = 'd' + property.valueType;
+                var result;
+                switch (property.valueType) {
+                    case 'Html':
+                    case 'Json':
+                        result = 'dCode';
+                        break;
+                    default:
+                        result = 'd' + property.valueType;
+                }
 
                 if (property.isDictionary) {
                     result += '-dictionary';
@@ -137,21 +145,26 @@
             };
 
             function changeValueTemplate() {
-                if (scope.currentEntity.valueType === 'Html') {
+                if (scope.currentEntity.valueType === 'Html' || scope.currentEntity.valueType === 'Json') {
                     // Codemirror configuration
                     scope.editorOptions = {
                         lineWrapping: true,
                         lineNumbers: true,
-                        parserfile: "liquid.js",
                         extraKeys: { "Ctrl-Q": function (cm) { cm.foldCode(cm.getCursor()); } },
                         foldGutter: true,
                         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
                         onLoad: function (_editor) {
                             codemirrorEditor = _editor;
                         },
-                        mode: 'htmlmixed'
-                        // mode: getEditorMode()
                     };
+                }
+                if (scope.currentEntity.valueType === 'Html') {
+                    scope.editorOptions['parserfile'] = 'liquid.js';
+                    scope.editorOptions['mode'] = 'htmlmixed';
+                }
+                if (scope.currentEntity.valueType === 'Json') {
+                    scope.editorOptions['parserfile'] = 'javascript.js';
+                    scope.editorOptions['mode'] = { name: 'javascript', json: true };
                 }
 
                 var templateName = getTemplateName(scope.currentEntity);

@@ -393,6 +393,26 @@ namespace VirtoCommerce.Platform.Web
                                 DefaultValue = AccountType.Manager.ToString()
                             }
                         }
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|User Interface",
+                        Settings = new[]
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.Customization",
+                                ValueType = ModuleSetting.TypeJson,
+                                Title = "Customization",
+                                Description = "Title, logo, theme settings",
+                                DefaultValue = "{\n" +
+                                               "  \"title\": \"Virto Commerce\",\n" +
+                                               "  \"logo\": \"Content/themes/main/images/logo.png\",\n" +
+                                               "  \"contrast_logo\": \"Content/themes/main/images/contrast-logo.png\",\n" +
+                                               "  \"theme\": \"default\"\n" +
+                                               "}"
+                            }
+                        }
                     }
                 }
             };

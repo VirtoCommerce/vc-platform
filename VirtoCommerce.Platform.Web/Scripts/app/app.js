@@ -25,7 +25,7 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', function ($scope, $window, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService) {
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', function ($rootScope, $scope, $window, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, settings, settingsHelper) {
       pushNotificationService.run();
 
       $timeout(function () {
@@ -68,6 +68,11 @@ angular.module('platformWebApp', AppDependencies).
 
       $scope.$on('loginStatusChanged', function (event, authContext) {
           $scope.isAuthenticated = authContext.isAuthenticated;
+      });
+
+      settings.get({ id: 'VirtoCommerce.Platform.UI.Customization' }, function(uiCustomizationSetting) {
+          settingsHelper.fixValues([uiCustomizationSetting]);
+          $rootScope.uiCustomization = uiCustomizationSetting.value;
       });
 
       // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION

@@ -3,7 +3,8 @@
         <div class="progress-bar"></div>
     </div>
     <header class="window-head">
-        <div class="window-t __logo">{{ 'platform.blades.login.labels.sign-in' | translate }}</div>
+        <img class="__logo" ng-src="{{uiCustomization.contrast_logo}}"/>
+        <span class="window-t">{{ 'platform.blades.login.labels.sign-in' | translate: uiCustomization }}</span>
     </header>
     <div class="window-cnt">
         <form class="form" novalidate ng-submit="ok()" name="loginForm">

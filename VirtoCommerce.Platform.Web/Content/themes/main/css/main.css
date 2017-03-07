@@ -285,13 +285,13 @@ ol li {
 
 /* Headings */
 h1 {
-  font-size: 330%; }
+  font-size: 53px; }
 
 h2 {
-  font-size: 275%; }
+  font-size: 44px; }
 
 h3 {
-  font-size: 225%; }
+  font-size: 36px; }
 
 h1,
 h2,
@@ -2210,11 +2210,14 @@ button.btn {
   font-weight: 400;
   padding: 20px; }
 
-.window-head .window-t.__logo {
-  background: url(../images/logo.png) no-repeat scroll 15px 50%;
-  background-size: 27px;
-  height: 100%;
-  padding-left: 55px; }
+.window-head .__logo {
+  display: inline;
+  padding: 0 0 0 20px;
+  max-height: 27px;
+  max-width: 27px;
+  vertical-align: middle; }
+  .window-head .__logo ~ .window-t {
+    padding: 0 20px 0 10px; }
 
 .window .window-cnt {
   padding: 0 20px; }
@@ -2816,13 +2819,6 @@ tags-input .tags.focused {
     left: 0;
     position: absolute;
     right: 0; }
-  .nav-bar .logo-img {
-    background: url(../images/logo.png) no-repeat scroll 0 0;
-    background-size: 30px 32px;
-    display: inline-block;
-    height: 33px;
-    margin: 15px 0 0;
-    width: 30px; }
   .nav-bar .logo-version {
     color: #c2c2c2;
     display: block;
@@ -4049,6 +4045,12 @@ tags-input .tags.focused {
     font-weight: 300;
     left: 90px;
     text-shadow: 1px 2px rgba(255, 255, 255, 0.5), 2px -2px rgba(255, 255, 255, 0.5), -2px 2px rgba(255, 255, 255, 0.5), -2px -2px rgba(255, 255, 255, 0.5); }
+    .dashboard .dashboard-title h1,
+    .dashboard .dashboard-title .__logo {
+      display: inline; }
+    .dashboard .dashboard-title .__logo {
+      max-height: 53px;
+      vertical-align: top; }
   .dashboard .dashboard-account {
     background: #fff;
     border: 2px solid transparent;
