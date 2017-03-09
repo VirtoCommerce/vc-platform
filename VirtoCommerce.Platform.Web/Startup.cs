@@ -401,18 +401,9 @@ namespace VirtoCommerce.Platform.Web
                         {
                             new ModuleSetting
                             {
-                                Name = "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed",
-                                ValueType = ModuleSetting.TypeBoolean,
-                                Title = "Is main menu collapsed?",
-                                Description = "Check if you want to collapse main menu by default"
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.UI.MainMenu.Items",
+                                Name = "VirtoCommerce.Platform.UI.MainMenu.State",
                                 ValueType = ModuleSetting.TypeText,
-                                Title = "Default user settings for main menu items (JSON)",
-                                Description = "For example: [{\"path\": \"browse\\catalog\", \"isFavorite\": \"true\", \"order\": \"0\"}, {\"path\": \"settings\", \"isCollapsed\": \"true\"}]. " +
-                                              "All described properties are required"
+                                Title = "Persisted state of main menu (JSON)"
                             },
                             new ModuleSetting
                             {

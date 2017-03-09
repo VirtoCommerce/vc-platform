@@ -65,24 +65,17 @@ angular.module('platformWebApp', AppDependencies).
           $scope.isAuthenticated = authContext.isAuthenticated;
       });
       
-      var isUserProfileSettingsLoaded;
-      var userProfileSettings;
-      var mainMenuIsCollapsedSetting;
-      var mainMenuItemsSetting;
+      var userProfileSettings;  
       $scope.$on('loginStatusChanged', function (event, authContext) {
           angular.forEach(mainMenuService.menuItems, function(menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
           if (authContext.isAuthenticated) {
               settings.getCurrentUserProfile(function(currentUserProfileSettings) {
                   settingsHelper.fixValues(currentUserProfileSettings);
                   userProfileSettings = currentUserProfileSettings;
-                  isUserProfileSettingsLoaded = true;
 
                   $translate.use(settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.Language").value);
-
-                  mainMenuIsCollapsedSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed");
-                  mainMenuItemsSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.Items");
-
-                  initializeMainMenu();
+               
+                  initializeMainMenu(userProfileSettings);
               });
 
               $timeout(function() {
@@ -90,36 +83,44 @@ angular.module('platformWebApp', AppDependencies).
                   var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
                   $scope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
               }, 100);
-          } else {
-               isUserProfileSettingsLoaded = false;
           }
       });
 
-      $scope.mainMenu = { };
-      $scope.$watch('mainMenu', function () { saveMainMenuCollapseState(); saveMainMenuItems(); }, true);
+      $scope.mainMenu = {};
+      $scope.mainMenu.items = mainMenuService.menuItems;
 
-      function initializeMainMenu() {
-          $scope.mainMenu.isCollapsed = mainMenuIsCollapsedSetting.value;
-          angular.forEach(angular.fromJson(mainMenuItemsSetting.value), function (savedMenuItem) {
-                  angular.extend(mainMenuService.findByPath(savedMenuItem.path), { isCollapsed: savedMenuItem.isCollapsed, isFavorite: savedMenuItem.isFavorite, order: savedMenuItem.order });
-              });
-      }
+      $scope.$watch('mainMenu', function () { saveMenuState($scope.mainMenu, userProfileSettings); }, true);
 
-      function saveMainMenuCollapseState() {
-          if (isUserProfileSettingsLoaded) {
-              mainMenuIsCollapsedSetting.value = $scope.mainMenu.isCollapsed;
-              settings.updateCurrentUserProfile(userProfileSettings);
+      function initializeMainMenu(profileSettings) {
+          if (profileSettings) {
+              var mainMenuStateSetting = settingsHelper.getSetting(profileSettings, "VirtoCommerce.Platform.UI.MainMenu.State");
+              if (mainMenuStateSetting && mainMenuStateSetting.value) {
+                  var menuState = angular.fromJson(mainMenuStateSetting.value);
+                  $scope.mainMenu.isCollapsed = menuState.isCollapsed;
+                  angular.forEach(menuState.items, function (x) {
+                      var existItem = mainMenuService.findByPath(x.path);
+                      if (existItem) {
+                          angular.extend(existItem, x);
+                      }
+                  });
+              }
           }
       }
 
-      $scope.mainMenu.items = mainMenuService.menuItems;
-      function saveMainMenuItems() {
-          if (isUserProfileSettingsLoaded) {
-              mainMenuItemsSetting.value = angular.toJson(_.map(_.filter(mainMenuService.menuItems,
-                  function (menuItem) { return !menuItem.isAlwaysOnBar; }),
-                  function (menuItem) { return { path: menuItem.path, isCollapsed: menuItem.isCollapsed, isFavorite: menuItem.isFavorite, order: menuItem.order };
-              }));
-              settings.updateCurrentUserProfile(userProfileSettings);
+
+      function saveMenuState(mainMenu, profileSettings) {
+          if (mainMenu && profileSettings) {
+              var menuState =
+                  {
+                      isCollapsed: mainMenu.isCollapsed,
+                      items: _.map(_.filter(mainMenu.items,
+                                          function (x) { return !x.isAlwaysOnBar; }),
+                                          function (x) { return { path: x.path, isCollapsed: x.isCollapsed, isFavorite: x.isFavorite, order: x.order }; }
+                                         )
+                  };
+              var mainMenuStateSetting = settingsHelper.getSetting(profileSettings, "VirtoCommerce.Platform.UI.MainMenu.State");
+              mainMenuStateSetting.value = angular.toJson(menuState);
+              settings.updateCurrentUserProfile(profileSettings);
           }
       }
 
