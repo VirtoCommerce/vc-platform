@@ -411,7 +411,8 @@ namespace VirtoCommerce.Platform.Web
                                 Name = "VirtoCommerce.Platform.UI.MainMenu.Items",
                                 ValueType = ModuleSetting.TypeText,
                                 Title = "Default user settings for main menu items (JSON)",
-                                Description = "For example: [{\"path\": \"browse\\catalog\", \"isFavorite\": \"true\", \"order\": \"0\"}, {\"path\": \"settings\", \"isCollapsed\": \"true\"}]"
+                                Description = "For example: [{\"path\": \"browse\\catalog\", \"isFavorite\": \"true\", \"order\": \"0\"}, {\"path\": \"settings\", \"isCollapsed\": \"true\"}]. " +
+                                              "All described properties are required"
                             },
                             new ModuleSetting
                             {

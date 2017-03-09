@@ -96,24 +96,15 @@ angular.module('platformWebApp', AppDependencies).
       });
 
       $scope.mainMenu = { };
+      $scope.$watch('mainMenu', function () { saveMainMenuCollapseState(); saveMainMenuItems(); }, true);
 
       function initializeMainMenu() {
           $scope.mainMenu.isCollapsed = mainMenuIsCollapsedSetting.value;
-          angular.forEach(angular.fromJson(mainMenuItemsSetting.value), function (menuItemModel) {
-                  var menuItem = mainMenuService.findByPath(menuItemModel.path);
-                  if (angular.isDefined(menuItemModel.isCollapsed)) {
-                      menuItem.isCollapsed = menuItemModel.isCollapsed;
-                  }
-                  if (angular.isDefined(menuItemModel.isFavorite)) {
-                      menuItem.isFavorite = menuItemModel.isFavorite;
-                  }
-                  if (angular.isDefined(menuItemModel.order)) {
-                      menuItem.order = menuItemModel.order;
-                  }
+          angular.forEach(angular.fromJson(mainMenuItemsSetting.value), function (savedMenuItem) {
+                  angular.extend(mainMenuService.findByPath(savedMenuItem.path), { isCollapsed: savedMenuItem.isCollapsed, isFavorite: savedMenuItem.isFavorite, order: savedMenuItem.order });
               });
       }
 
-      $scope.$watch('mainMenu.isCollapsed', function () { saveMainMenuCollapseState(); });
       function saveMainMenuCollapseState() {
           if (isUserProfileSettingsLoaded) {
               mainMenuIsCollapsedSetting.value = $scope.mainMenu.isCollapsed;
@@ -122,7 +113,6 @@ angular.module('platformWebApp', AppDependencies).
       }
 
       $scope.mainMenu.items = mainMenuService.menuItems;
-      $scope.$watch('mainMenu.items', function () { saveMainMenuItems(); }, true);
       function saveMainMenuItems() {
           if (isUserProfileSettingsLoaded) {
               mainMenuItemsSetting.value = angular.toJson(_.map(_.filter(mainMenuService.menuItems,
