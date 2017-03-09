@@ -21,18 +21,13 @@
   'focusOn',
   'textAngular',
   'ngTagsInput',
-  'pascalprecht.translate'
+  'pascalprecht.translate',
+  'angular.filter'
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', function ($scope, $window, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', function ($scope, $window, mainMenuService, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, settings, settingsHelper) {
       pushNotificationService.run();
-
-      $timeout(function () {
-          var currentLanguage = $translate.use();
-          var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
-          $scope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
-      }, 100);
 
       $scope.closeError = function () {
           $scope.platformError = undefined;
@@ -69,6 +64,64 @@ angular.module('platformWebApp', AppDependencies).
       $scope.$on('loginStatusChanged', function (event, authContext) {
           $scope.isAuthenticated = authContext.isAuthenticated;
       });
+      
+      var isUserProfileSettingsLoaded;
+      var userProfileSettings;
+      var mainMenuIsCollapsedSetting;
+      var mainMenuItemsSetting;
+      $scope.$on('loginStatusChanged', function (event, authContext) {
+          angular.forEach(mainMenuService.menuItems, function(menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
+          if (authContext.isAuthenticated) {
+              settings.getCurrentUserProfile(function(currentUserProfileSettings) {
+                  settingsHelper.fixValues(currentUserProfileSettings);
+                  userProfileSettings = currentUserProfileSettings;
+                  isUserProfileSettingsLoaded = true;
+
+                  $translate.use(settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.Language").value);
+
+                  mainMenuIsCollapsedSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed");
+                  mainMenuItemsSetting = settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.MainMenu.Items");
+
+                  initializeMainMenu();
+              });
+
+              $timeout(function() {
+                  var currentLanguage = $translate.use();
+                  var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
+                  $scope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
+              }, 100);
+          } else {
+               isUserProfileSettingsLoaded = false;
+          }
+      });
+
+      $scope.mainMenu = { };
+      $scope.$watch('mainMenu', function () { saveMainMenuCollapseState(); saveMainMenuItems(); }, true);
+
+      function initializeMainMenu() {
+          $scope.mainMenu.isCollapsed = mainMenuIsCollapsedSetting.value;
+          angular.forEach(angular.fromJson(mainMenuItemsSetting.value), function (savedMenuItem) {
+                  angular.extend(mainMenuService.findByPath(savedMenuItem.path), { isCollapsed: savedMenuItem.isCollapsed, isFavorite: savedMenuItem.isFavorite, order: savedMenuItem.order });
+              });
+      }
+
+      function saveMainMenuCollapseState() {
+          if (isUserProfileSettingsLoaded) {
+              mainMenuIsCollapsedSetting.value = $scope.mainMenu.isCollapsed;
+              settings.updateCurrentUserProfile(userProfileSettings);
+          }
+      }
+
+      $scope.mainMenu.items = mainMenuService.menuItems;
+      function saveMainMenuItems() {
+          if (isUserProfileSettingsLoaded) {
+              mainMenuItemsSetting.value = angular.toJson(_.map(_.filter(mainMenuService.menuItems,
+                  function (menuItem) { return !menuItem.isAlwaysOnBar; }),
+                  function (menuItem) { return { path: menuItem.path, isCollapsed: menuItem.isCollapsed, isFavorite: menuItem.isFavorite, order: menuItem.order };
+              }));
+              settings.updateCurrentUserProfile(userProfileSettings);
+          }
+      }
 
       // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION
       $scope.initExpiration = function (x) {
@@ -167,7 +220,9 @@ angular.module('platformWebApp', AppDependencies).
             title: 'platform.menu.home',
             icon: 'fa fa-home',
             action: function () { $state.go('workspace'); },
-            priority: 0
+            // this item must always be at the top
+            priority: 0,
+            isAlwaysOnBar: true
         };
         mainMenuService.addMenuItem(homeMenuItem);
 
@@ -175,7 +230,7 @@ angular.module('platformWebApp', AppDependencies).
             path: 'browse',
             icon: 'fa fa-search',
             title: 'platform.menu.browse',
-            priority: 90,
+            priority: 0
         };
         mainMenuService.addMenuItem(browseMenuItem);
 
@@ -183,9 +238,21 @@ angular.module('platformWebApp', AppDependencies).
             path: 'configuration',
             icon: 'fa fa-wrench',
             title: 'platform.menu.configuration',
-            priority: 91,
+            priority: 1
         };
         mainMenuService.addMenuItem(cfgMenuItem);
+
+        var moreMenuItem = {
+            path: 'more',
+            title: 'platform.menu.more',
+            headerTemplate: '$(Platform)/Scripts/app/navigation/menu/mainMenu-list-header.tpl.html',
+            contentTemplate: '$(Platform)/Scripts/app/navigation/menu/mainMenu-list-content.tpl.html',
+            // this item must always be at the bottom, so
+            // don't use just 99 number: we have INFINITE list
+            priority: 9007199254740991, // Number.MAX_SAFE_INTEGER,
+            isAlwaysOnBar: true
+        };
+        mainMenuService.addMenuItem(moreMenuItem);
 
         $rootScope.$on('unauthorized', function (event, rejection) {
             if (!authService.isAuthenticated) {
@@ -209,7 +276,7 @@ angular.module('platformWebApp', AppDependencies).
             $timeout(function () {
                 if (authContext.isAuthenticated) {
                     if (!$state.current.name || $state.current.name == 'loginDialog') {
-                        homeMenuItem.action();
+                        $state.go('workspace');
                     }
                 }
                 else {

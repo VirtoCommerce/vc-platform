@@ -22,7 +22,16 @@
 	background: #ecf7fc;
 }
 
+.nav-bar .bar .__items .list-item:hover {
+	background: #383838;
+}
+
+.nav-bar .bar .__items .list-item.__animated {
+    background: #43b0e6;
+}
+
 .table .table-item.__selected,
+.__items .list-item:focus,
 .__items .list-item.__selected,
 .__files .list-item.__selected > .list-block
 {
@@ -36,6 +45,7 @@
 
 /* Icons */
 .tile-ico,
+.__items .menu-ico,
 .__items .list-ico,
 .__files .list-ico
 {
@@ -49,6 +59,20 @@
 .__files .list-item.__selected > .list-block .list-ico
 {
 	color: #a1c0d4;
+}
+
+.nav-bar .bar .__items .list-item:hover .list-ico {
+    color: #a6a6a6;
+}
+
+.dropdown.__more .dropdown-content  .list-item .list-fav:hover .list-ico {
+    color: #52a2ca;
+}
+
+.nav-bar .bar .list-item.__animated .list-ico,
+.nav-bar .bar .list-item.__animated:hover .list-ico {
+    color: #fff;
+    text-shadow: none;
 }
 
 /* Links */
@@ -87,6 +111,7 @@ a:hover,
 .dropdown-content .list-link,
 .blade-toolbar .menu-btn,
 .pagination .menu-link,
+.__items .menu-ico,
 .__items .list-ico,
 .breadcrumbs .menu-link,
 .text-mini.__link,
@@ -97,10 +122,23 @@ a:hover,
 			transition: color .25s ease-in-out 0s;
 }
 
+.nav-bar
+{
+	-webkit-transition: width .25s ease-in-out 0s;
+			transition: width .25s ease-in-out 0s;
+}
+
+.nav-bar:not(.__collapsed) .dropdown.__opened,
 .nav-bar .dropdown.__opened
 {
 	-webkit-transition: transform .25s ease-in-out 0s;
 			transition: transform .25s ease-in-out 0s;
+}
+
+.cnt
+{
+	-webkit-transition: left .25s ease-in-out 0s;
+			transition: left .25s ease-in-out 0s;
 }
 
 .dropdown-content .list-link,
@@ -112,11 +150,16 @@ a:hover,
 .btn,
 .form-control.__switch .switch,
 .list.__notice .list-link,
-.nav-bar .menu-link.__animated,
+.nav-bar .bar .__items .list-item .__animated,
 .tree-block
 {
 	-webkit-transition: background-color .35s ease-in-out 0s;
 			transition: background-color .35s ease-in-out 0s;
+}
+
+.__items .list-item {
+	-webkit-transition: background-color .35s ease-in-out 0s, width .25s ease-in-out 0s;
+			transition: background-color .35s ease-in-out 0s, width .25s ease-in-out 0s;
 }
 
 .dashboard .dashboard-account,

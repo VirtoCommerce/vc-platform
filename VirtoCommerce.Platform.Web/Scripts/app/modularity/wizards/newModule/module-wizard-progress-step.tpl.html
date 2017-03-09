@@ -9,7 +9,7 @@
             <div class="sub-t">{{blade.currentEntity.title}}</div>
             <div class="block">
                 <p ng-if="blade.currentEntity.created" class="text no-data">{{ 'platform.blades.module-wizard-progress-step.labels.start' | translate }} — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.currentEntity.created"></span></p>
-                <p ng-if="!blade.currentEntity.finished" class="dropdown-content"><span class="list-bar progress-bar" data-role="progress-bar" data-value="30" style="margin-left: 0"></span></p>
+                <p ng-if="!blade.currentEntity.finished"><span class="list-bar progress-bar" data-role="progress-bar" data-value="30" style="margin-left: 0"></span></p>
                 <p ng-if="blade.currentEntity.finished" class="text no-data">{{ 'platform.blades.module-wizard-progress-step.labels.end' | translate }} — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.currentEntity.finished"></span></p>
             </div>
             <div class="sub-t">{{ 'platform.blades.module-wizard-progress-step.labels.progress-messages' | translate }}</div>

@@ -393,6 +393,36 @@ namespace VirtoCommerce.Platform.Web
                                 DefaultValue = AccountType.Manager.ToString()
                             }
                         }
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|User Interface",
+                        Settings = new[]
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.MainMenu.IsCollapsed",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Is main menu collapsed?",
+                                Description = "Check if you want to collapse main menu by default"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.MainMenu.Items",
+                                ValueType = ModuleSetting.TypeText,
+                                Title = "Default user settings for main menu items (JSON)",
+                                Description = "For example: [{\"path\": \"browse\\catalog\", \"isFavorite\": \"true\", \"order\": \"0\"}, {\"path\": \"settings\", \"isCollapsed\": \"true\"}]. " +
+                                              "All described properties are required"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.Language",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Language",
+                                Description = "Default language (two letter code from ISO 639-1)",
+                                DefaultValue = "en"
+                            }
+                        }
                     }
                 }
             };

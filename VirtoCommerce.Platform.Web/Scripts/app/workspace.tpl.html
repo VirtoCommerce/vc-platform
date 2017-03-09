@@ -1,4 +1,12 @@
-﻿<va-main-menu></va-main-menu>
+﻿<va-main-menu items="mainMenu.items" is-collapsed="mainMenu.isCollapsed">
+    <div class="info">
+        <a class="info-license" ng-if="!license" href="" ng-click="showLicense()">{{'platform.templates.licensing.license-absent' | translate}}</a>
+        <a class="info-license" ng-if="license" href="" ng-click="showLicense()" ng-class="{'__valid': !license.hasExpired}">{{'platform.templates.licensing.license-present' | translate: license}}</a>
+    </div>
+    <div class="info">
+        <span class="info-version">{{platformVersion}}</span>
+    </div>
+</va-main-menu>
 <article class="cnt" role="main">
     <div class="cnt-inner">
         <div class="dashboard" ng-if="$state.current.name === 'workspace'">
@@ -12,7 +20,6 @@
                 </div>
             </div>
         </div>
-
         <ui-view />
     </div>
 </article>
