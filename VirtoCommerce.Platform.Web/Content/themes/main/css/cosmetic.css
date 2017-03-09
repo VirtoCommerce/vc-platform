@@ -128,7 +128,6 @@ a:hover,
 			transition: width .25s ease-in-out 0s;
 }
 
-.nav-bar:not(.__collapsed) .dropdown.__opened,
 .nav-bar .dropdown.__opened
 {
 	-webkit-transition: transform .25s ease-in-out 0s;
