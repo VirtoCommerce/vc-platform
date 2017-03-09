@@ -4948,8 +4948,8 @@ tags-input .tags .tag-item {
         z-index: 25;
         -webkit-box-shadow: 5px 0 0 rgba(0,0,0,.1);
         box-shadow: 5px 0 0 rgba(0,0,0,.1);
-        -webkit-transform: translateX(-130px);
-        transform: translateX(-130px);
+        -webkit-transform: translateX(-360px);
+        transform: translateX(-360px);
     }
 
     .nav-bar .dropdown.__more {
@@ -4959,11 +4959,6 @@ tags-input .tags .tag-item {
         .nav-bar .dropdown.__opened {
             -webkit-transform: translateX(235px);
             transform: translateX(235px);
-        }
-
-        .nav-bar.__collapsed .dropdown {
-            -webkit-transform: translateX(-295px);
-            transform: translateX(-295px);
         }
 
             .nav-bar.__collapsed .dropdown.__opened {
