@@ -105,7 +105,7 @@
 	   	priority: 900,
 	   	satisfy: function (notify, place) { return place == 'menu' && (notify.notifyType == 'PlatformExportPushNotification' || notify.notifyType == 'PlatformImportPushNotification'); },
 	   	template: '$(Platform)/Scripts/app/exportImport/notifications/menu.tpl.html',
-	   	action: function (notify) { $state.go('pushNotificationsHistory', notify) }
+	   	action: function (notify) { $state.go('workspace.pushNotificationsHistory', notify) }
 	   };
   	pushNotificationTemplateResolver.register(menuExportImportTemplate);
 

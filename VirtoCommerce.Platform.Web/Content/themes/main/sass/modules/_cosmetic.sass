@@ -115,7 +115,13 @@
 .__items .list-item:hover,
 .__files .list-block:hover
   background: #ecf7fc
+.nav-bar .bar .__items .list-item
+  &:hover
+    background: #383838
+  &.__animated
+    background: #43b0e6
 .table .table-item.__selected,
+.__items .list-item:focus,
 .__items .list-item.__selected,
 .__files .list-item.__selected > .list-block
   background: #d9effa
@@ -124,6 +130,7 @@
 
 /* Icons */
 .tile-ico,
+.__items .menu-ico,
 .__items .list-ico,
 .__files .list-ico
   color: #a6a6a6
@@ -133,6 +140,15 @@
 .__files .list-block:hover .list-ico,
 .__files .list-item.__selected > .list-block .list-ico
   color: #a1c0d4
+.nav-bar .bar .__items .list-item
+  &:hover .list-ico
+    color: #a6a6a6
+  &.__animated .list-ico,
+  &.__animated:hover .list-ico
+    color: #fff
+    text-shadow: none
+.dropdown.__more .dropdown-content  .list-item .list-fav:hover .list-ico
+    color: #52a2ca
 
 /* Links */
 a
@@ -156,14 +172,19 @@ a:hover,
 .dropdown-content .list-link,
 .blade-toolbar .menu-btn,
 .pagination .menu-link,
+.__items .menu-ico,
 .__items .list-ico,
 .breadcrumbs .menu-link,
 .text-mini.__link,
 .menu.__context .menu-item,
 .nav-bar .menu-ico
   transition: color .25s ease-in-out 0s
+.nav-bar
+  transition: width .25s ease-in-out 0s
 .nav-bar .dropdown.__opened
   transition: transform .25s ease-in-out 0s
+.cnt
+  transition: left .25s ease-in-out 0s
 .dropdown-content .list-link,
 .blade-nav .menu-item,
 .table .table-item,
@@ -173,9 +194,11 @@ a:hover,
 .btn,
 .form-control.__switch .switch,
 .list.__notice .list-link,
-.nav-bar .menu-link.__animated,
+.nav-bar .bar .__items .list-item .__animated,
 .tree-block
   transition: background-color .35s ease-in-out 0s
+.__items .list-item
+  transition: background-color .35s ease-in-out 0s, width .25s ease-in-out 0s
 .dashboard .dashboard-account,
 .form-input input,
 .form-input textarea,

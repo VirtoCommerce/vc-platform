@@ -21,18 +21,13 @@
   'focusOn',
   'textAngular',
   'ngTagsInput',
-  'pascalprecht.translate'
+  'pascalprecht.translate',
+  'angular.filter'
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', function ($rootScope, $scope, $window, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, settings, settingsHelper) {
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', function ($rootScope, $scope, $window, mainMenuService, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, settings, settingsHelper) {
       pushNotificationService.run();
-
-      $timeout(function () {
-          var currentLanguage = $translate.use();
-          var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
-          $scope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
-      }, 100);
 
       $scope.closeError = function () {
           $scope.platformError = undefined;
@@ -69,6 +64,73 @@ angular.module('platformWebApp', AppDependencies).
       $scope.$on('loginStatusChanged', function (event, authContext) {
           $scope.isAuthenticated = authContext.isAuthenticated;
       });
+      
+      var userProfileSettings;
+
+      var unwatchMenuChangesFn;
+      $scope.$on('loginStatusChanged', function (event, authContext) {
+          //unsubscribe from previous watch
+          //We cannot use global watch because saveMenuState may be executed before menu initialized loaded persisted state
+          if (unwatchMenuChangesFn) {
+              unwatchMenuChangesFn();
+              unwatchMenuChangesFn = undefined;
+          }
+          //reset menu to default state
+          angular.forEach(mainMenuService.menuItems, function(menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
+          if (authContext.isAuthenticated) {
+              settings.getCurrentUserProfile(function(currentUserProfileSettings) {
+                  settingsHelper.fixValues(currentUserProfileSettings);
+                  userProfileSettings = currentUserProfileSettings;
+
+                  $translate.use(settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.Language").value);
+               
+                  initializeMainMenu(userProfileSettings);
+
+                  unwatchMenuChangesFn = $scope.$watch('mainMenu', function () { saveMenuState($scope.mainMenu, userProfileSettings); }, true);
+              });
+
+              $timeout(function() {
+                  var currentLanguage = $translate.use();
+                  var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
+                  $scope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
+              }, 100);
+          }
+      });
+
+      $scope.mainMenu = {};
+      $scope.mainMenu.items = mainMenuService.menuItems;
+       
+      function initializeMainMenu(profileSettings) {
+          if (profileSettings) {
+              var mainMenuStateSetting = settingsHelper.getSetting(profileSettings, "VirtoCommerce.Platform.UI.MainMenu.State");
+              if (mainMenuStateSetting && mainMenuStateSetting.value) {
+                  var menuState = angular.fromJson(mainMenuStateSetting.value);
+                  $scope.mainMenu.isCollapsed = menuState.isCollapsed;
+                  angular.forEach(menuState.items, function (x) {
+                      var existItem = mainMenuService.findByPath(x.path);
+                      if (existItem) {
+                          angular.extend(existItem, x);
+                      }
+                  });
+              }              
+          }
+      }
+
+      function saveMenuState(mainMenu, profileSettings) {
+          if (mainMenu && profileSettings) {
+              var menuState =
+                  {
+                      isCollapsed: mainMenu.isCollapsed,
+                      items: _.map(_.filter(mainMenu.items,
+                                          function (x) { return !x.isAlwaysOnBar; }),
+                                          function (x) { return { path: x.path, isCollapsed: x.isCollapsed, isFavorite: x.isFavorite, order: x.order }; }
+                                         )
+                  };
+              var mainMenuStateSetting = settingsHelper.getSetting(profileSettings, "VirtoCommerce.Platform.UI.MainMenu.State");
+              mainMenuStateSetting.value = angular.toJson(menuState);
+              settings.updateCurrentUserProfile(profileSettings);
+          }
+      }
 
       settings.get({ id: 'VirtoCommerce.Platform.UI.Customization' }, function(uiCustomizationSetting) {
           $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
@@ -171,7 +233,9 @@ angular.module('platformWebApp', AppDependencies).
             title: 'platform.menu.home',
             icon: 'fa fa-home',
             action: function () { $state.go('workspace'); },
-            priority: 0
+            // this item must always be at the top
+            priority: 0,
+            isAlwaysOnBar: true
         };
         mainMenuService.addMenuItem(homeMenuItem);
 
@@ -179,7 +243,7 @@ angular.module('platformWebApp', AppDependencies).
             path: 'browse',
             icon: 'fa fa-search',
             title: 'platform.menu.browse',
-            priority: 90,
+            priority: 90
         };
         mainMenuService.addMenuItem(browseMenuItem);
 
@@ -187,9 +251,21 @@ angular.module('platformWebApp', AppDependencies).
             path: 'configuration',
             icon: 'fa fa-wrench',
             title: 'platform.menu.configuration',
-            priority: 91,
+            priority: 91
         };
         mainMenuService.addMenuItem(cfgMenuItem);
+
+        var moreMenuItem = {
+            path: 'more',
+            title: 'platform.menu.more',
+            headerTemplate: '$(Platform)/Scripts/app/navigation/menu/mainMenu-list-header.tpl.html',
+            contentTemplate: '$(Platform)/Scripts/app/navigation/menu/mainMenu-list-content.tpl.html',
+            // this item must always be at the bottom, so
+            // don't use just 99 number: we have INFINITE list
+            priority: 9007199254740991, // Number.MAX_SAFE_INTEGER,
+            isAlwaysOnBar: true
+        };
+        mainMenuService.addMenuItem(moreMenuItem);
 
         $rootScope.$on('unauthorized', function (event, rejection) {
             if (!authService.isAuthenticated) {
@@ -213,7 +289,7 @@ angular.module('platformWebApp', AppDependencies).
             $timeout(function () {
                 if (authContext.isAuthenticated) {
                     if (!$state.current.name || $state.current.name == 'loginDialog') {
-                        homeMenuItem.action();
+                        $state.go('workspace');
                     }
                 }
                 else {

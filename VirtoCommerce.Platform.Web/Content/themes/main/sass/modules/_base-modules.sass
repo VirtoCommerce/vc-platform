@@ -345,7 +345,7 @@ h3
     border-color: $baseBrd
     border-style: solid
     border-width: 1px 0
-    font-size: 14px;
+    font-size: 14px
     padding: 10px;
     text-align: left;
     text-shadow: 1px 1px $whiteColor
@@ -660,7 +660,10 @@ $names: "", ".double", ".triple", ".quadro"
 .tile.quadro.__tree:hover
   overflow-y: auto
 
-/* Blade list */
+/* Items lists */
+$listItemHorizontalPadding: 20px
+$listItemArrowSpace: 30px
+
 .list.__items,
 .list.__files
   margin: 0 -20px 15px
@@ -670,8 +673,8 @@ $names: "", ".double", ".triple", ".quadro"
   background: $lightBg
   border-bottom: 1px solid $baseBrd
   cursor: pointer
-  font-size: 24px
-  padding: 10px 50px 10px 20px
+  font-size: 14px
+  padding: 10px ($listItemHorizontalPadding + $listItemArrowSpace) 10px $listItemHorizontalPadding
   position: relative
   &::after
     color: #a6a6a6
@@ -690,7 +693,7 @@ $names: "", ".double", ".triple", ".quadro"
   border-bottom: 1px solid $baseBrd
   cursor: pointer
   display: block
-  padding: 10px 50px 10px 20px
+  padding: 10px ($listItemHorizontalPadding + $listItemArrowSpace) 10px $listItemHorizontalPadding
   position: relative
 .__items .list-item.__hovered
   background: #ecf7fc
@@ -754,6 +757,10 @@ $names: "", ".double", ".triple", ".quadro"
   right: 0
 .__items .list-item:first-child
   border-top: 1px solid $baseBrd
+.__items .list-link
+    display: block
+    white-space: nowrap
+    overflow: hidden
 .__items .list-ico,
 .__files .list-ico
   font-size: 28px
@@ -1484,220 +1491,13 @@ tags-input
 .has-demo-warning .nav-bar,
 .has-demo-warning .nav-bar .dropdown,
 .has-demo-warning .cnt
-  top: $demoWarningHeight
+  top: $demoWarningHeight !important
 
-/* Nav bar - Left navigation menu */
-.nav-bar
-  font-family: $font
-  left: 0
-  width: 90px
-  z-index: 100
-  .bar
-    background: #333
-    box-shadow: -5px 0 5px -5px rgba(0, 0, 0, .2) inset
-    box-sizing: border-box
-    height: 100%
-    padding: 90px 0 0
-    position: relative
-    z-index: 50
-  .menu-item
-    text-align: center
-  .menu-item.__logo
-    bottom: 0
-    font-size: 0
-    left: 0
-    position: absolute
-    right: 0
-  .logo-version
-    color: #c2c2c2
-    display: block
-    font-size: 12px
-    padding: 10px 0
-  .menu-link
-    color: #c2c2c2
-    display: block
-    font-size: 13px
-    padding: 15px 0
-    position: relative
-  .menu-item.__done
-    left: 0
-    position: absolute
-    right: 0
-    top: 0
-  .menu-item.__done .menu-link
-    background: $baseColor
-    color: #fff
-    cursor: pointer
-  .menu-link
-    &:hover
-      color: $baseColor
-  .__selected .menu-link
-    background-color: #383838
-    color: $baseColor
-  .__selected.__animated .menu-link,
-  .__animated .menu-link
-    color: $whiteColor
-
-    animation: notify ease 1 1.5s
-  .__animated .menu-link:hover
-    color: $whiteColor
-  .menu-ico
-    display: block
-    font-size: 24px
-    height: 20px
-    margin: 0 0 10px
-  .menu-count
-    background: $whiteColor
-    border-radius: 50%
-    color: #333
-    height: 18px
-    font-size: 11px
-    line-height: 18px
-    min-width: 18px
-    position: absolute
-    right: 8px
-    top: 8px
-  .__animated .menu-ico
-    animation: bell ease-in-out 1s .5s
-  /* Dropdown - dropdown menu navigation */
-  .dropdown
-    background: #383838
-    bottom: 0
-    box-shadow: 5px 0 0 rgba(0,0,0,.25)
-    position: fixed
-    top: 0
-    width: 360px
-    z-index: 25
-
-    transform: translateX(-275px)
-  .dropdown.__opened
-    transform: translateX(90px)
-.dropdown
-  .dropdown-close
-    color: #c2c2c2
-    cursor: pointer
-    font-family: caption
-    font-size: 22px
-    font-weight: bold
-    line-height: 1
-    position: absolute
-    right: 15px
-    top: 30px
-    &:hover
-      color: $whiteColor
-  .dropdown-head
-    padding: 85px 20px 14px
-    text-align: right
-  .menu-item
-    margin: 0 0 0 20px
-    text-align: left
-  .menu-link
-    cursor: pointer
-    font-size: 14px
-    &:hover
-      color: #fff
-  .menu-ico
-    display: inline-block
-    font-size: 18px
-    margin: 0 5px 0 0
-  .dropdown-content
-    height: calc(100% - 149px)
-    padding: 0 20px
-    &:hover
-      overflow: auto
-  .dropdown-content
-    -ms-scrollbar-arrow-color: #545454
-    -ms-scrollbar-face-color: #434343
-    -ms-scrollbar-shadow-color: #434343
-    -ms-scrollbar-track-color: #545454
-    .list
-      width: 315px
-    .list-item
-      border-top: 1px solid #606060
-    .list-link
-      color: #c2c2c2
-      display: block
-      font-size: 16px
-      font-weight: 300
-      line-height: 26px
-      padding: 20px
-      text-transform: uppercase
-      &:hover
-        background: rgba(0,0,0,.2)
-        color: $whiteColor
-    .__selected .list-link
-      background: none
-      color: $baseColor
-    .list-ico
-      font-size: 25px
-      height: 24px
-      margin: 0 20px 0 0
-      position: relative
-      top: 2px
-      width: 32px
-    .info
-      .list-ico
-        color: $baseColor
-    .error
-      .list-ico
-        color: $genericErrorColor
-    .warning
-      .list-ico
-        color: #f0a30a
-    .error,
-    .warning
-      .list-ico
-        &::after
-          background: $whiteColor
-          content: ''
-          height: 12px
-          left: 11px
-          position: absolute
-          top: 7px
-          width: 3px
-          z-index: -1
-.dropdown .dropdown-content::-webkit-scrollbar
-  background-color: transparent
-.dropdown .dropdown-content::-webkit-scrollbar-track-piece
-  background: #545454
-.dropdown .dropdown-content::-webkit-scrollbar-thumb
-  background: #434343
-.dropdown-content .list-t,
-.dropdown-content .list-date,
-.dropdown-content .list-descr
-  color: $whiteColor
-  text-transform: none
-.dropdown-content .list-date,
-.dropdown-content .list-descr
-  display: block
-  font-size: 12px
-.dropdown-content .list-t
-  font-size: 14px
-.dropdown-content .list-descr
-  display: block
-  margin: 0 0 0 55px
-.dropdown-content .list-date
-  color: #c2c2c2
-  margin: 5px 0 0 55px
-  padding: 0 0 0 25px
-  position: relative
-  &::after
-    color: #c2c2c2
-    content: ''
-    font-family: $fontAw
-    font-size: 14px
-    left: 0
-    position: absolute
-    top: 0
-.dropdown-content .list-bar
-  background-color: $baseColor
-  display: block
-  height: 10px
-  margin-left: 55px
+@import "modules/_menu.sass"
 
 /* Content - main content area */
 .cnt
-  left: 90px
+  left: $mainMenuWidth
   overflow: hidden
   overflow-x: auto
   right: 0
@@ -2347,23 +2147,58 @@ tags-input
 
 /* Tooltip */
 .tooltip
-  background: $baseColor
-  color: $whiteColor
-  font-family: $font
+  font-family: 'Exo 2'
   font-size: 12px
-  max-width: 600px
   position: absolute
   z-index: 100
-  &::after
-    border-color: transparent #43b0e6 transparent transparent
+  .tooltip-arrow
+    border-color: transparent
     border-style: solid
-    border-width: 8px
-    content: ''
-    left: -15px
     position: absolute
-    top: 10px
-  .tooltip-cnt
+    width: 0
+    height: 0
+  &.left,
+  &.right
+    padding: 0 8px
+    .tooltip-arrow
+      top: 50%
+      margin-top: -8px
+  &.left
+    margin-left: -3px
+    .tooltip-arrow
+      border-left-color: $baseColor
+      border-width: 8px 0 8px 8px
+      right: 0
+  &.right
+    margin-left: 3px
+    .tooltip-arrow
+      border-right-color: $baseColor
+      border-width: 8px 8px 8px 0
+      left: 0
+  &.top,
+  &.bottom
+    padding: 8px 0
+    .tooltip-arrow
+      left: 50%
+      margin-left: -8px
+  &.top
+    margin-top: -3px
+    .tooltip-arrow
+      border-top-color: $baseColor
+      border-width: 8px 8px 0 8px
+      bottom: 0
+  &.bottom
+    margin-top: 3px
+    .tooltip-arrow
+      border-bottom-color: $baseColor
+      border-width: 0 8px 8px 8px
+      top: 0        
+  .tooltip-inner
+    background: $baseColor
+    color: $whiteColor
     padding: 10px
+    max-width: 600px
+
 /* Informer */
 .__informer
   background: #ecf7fc

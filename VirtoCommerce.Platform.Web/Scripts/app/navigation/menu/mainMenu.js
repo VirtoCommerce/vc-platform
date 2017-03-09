@@ -1,94 +1,159 @@
 ﻿angular.module('platformWebApp')
-.factory('platformWebApp.mainMenuService', ['$filter', function ($filter) {
+.factory('platformWebApp.mainMenuService', [function () {
 
     var menuItems = [];
 
-    function sortByParentFirst(a, b) {
+    function sortByGroupFirst(a, b) {
         return a.path.split('/').length - b.path.split('/').length;
     };
+
     function sortByPriority(a, b) {
         if (angular.isDefined(a.priority) && angular.isDefined(b.priority)) {
-            return a.priority - b.priority;
+            return a.priority < b.priority ? -1 : a.priority > b.priority ? 1 : 0;
         }
         return -1;
     };
-    function constructTree() {
 
-        //clear arrays
-        //menuTree.splice(0, menuTree.length)
-        //console.log('------------------constructTree---------------------');
-        angular.forEach(menuItems.sort(sortByParentFirst), function (x) {
-            //console.log(x.path);
-            if (!angular.isDefined(x.parent)) {
-                x.parent = null;
+    function constructList() {
+        angular.forEach(menuItems.sort(sortByGroupFirst), function (menuItem) {
+            if (!angular.isDefined(menuItem.group)) {
+                menuItem.group = null;
             }
-            if (!angular.isDefined(x.children)) {
-                x.children = [];
-            }
-            if (x.parent == null) {
-                var pathParts = x.path.split('/');
-                var path = x.path;
-                var parentPath = null;
+            if (menuItem.group == null) {
+                var pathParts = menuItem.path.split('/');
+                var groupPath = null;
                 if (pathParts.length > 1) {
                     pathParts.pop();
-                    parentPath = pathParts.join('/');
+                    groupPath = pathParts.join('/');
                 }
-
-                var parent = _.find(menuItems, function (y) { return y.path == parentPath });
-                if (angular.isDefined(parent)) {
-                    x.parent = parent;
-                    parent.children.push(x);
-                    parent.children.sort(sortByPriority);
+                var group = _.find(menuItems, function (menuItem) { return menuItem.path === groupPath });
+                if (angular.isDefined(group)) {
+                    menuItem.group = group;
                 }
             }
         });
-        //sort tree items
         menuItems.sort(sortByPriority);
     };
 
+    function addMenuItem(menuItem) {
+        resetMenuItemDefaults(menuItem);
+        menuItems.push(menuItem);
+        constructList();
+    }
+
+    function removeMenuItem(menuItem) {
+        var index = menuItems.indexOf(menuItem);
+        menuItems.splice(index, 1);
+        constructList();
+    }
+
+    function resetMenuItemDefaults(menuItem) {
+        // set defaults
+        if (!angular.isDefined(menuItem.priority)) {
+            menuItem.priority = Number.NaN;
+        }
+        if (!angular.isDefined(menuItem.children)) {
+            menuItem.children = [];
+        }
+        if (!angular.isDefined(menuItem.isAlwaysOnBar)) {
+            menuItem.isAlwaysOnBar = false;
+        }
+        menuItem.isCollapsed = false;
+        menuItem.isFavorite = false;
+            // place at the end
+        menuItem.order = 9007199254740991; // Number.MAX_SAFE_INTEGER;
+    }
 
     function findByPath(path) {
-        return _.find(menuItems, function (x) { return x.path == path; });
+        return _.find(menuItems, function (menuItem) { return menuItem.path === path });
     };
-
-    function addMenuItem(menuItem) {
-        menuItems.push(menuItem);
-        constructTree();
-    }
 
     var retVal = {
         menuItems: menuItems,
         addMenuItem: addMenuItem,
+        removeMenuItem: removeMenuItem,
+        resetMenuItemDefaults: resetMenuItemDefaults,
         findByPath: findByPath
     };
     return retVal;
 }])
-.directive('vaMainMenu', ['$compile', '$filter', '$state', 'platformWebApp.mainMenuService', function ($compile, $filter, $state, mainMenuService) {
+.directive('vaMainMenu', ["$filter",
+    function ($filter) {
 
     return {
         restrict: 'E',
         replace: true,
+        transclude: true,
+        scope: {
+            items: "=*",
+            isCollapsed: "="
+        },
         templateUrl: '$(Platform)/Scripts/app/navigation/menu/mainMenu.tpl.html',
-        link: function (scope, element, attr) {
+        link: function (scope) {
 
-            scope.currentMenuItem = undefined;
-            scope.menuItems = mainMenuService.menuItems;
-
-            scope.selectMenuItem = function (menuItem) {
+            scope.selectItem = function (menuItem) {
                 if (scope.showSubMenu && scope.currentMenuItem === menuItem) {
                     scope.showSubMenu = false;
                 } else {
                     scope.currentMenuItem = menuItem;
-
-                    // notifications should always open, even if nothing is there
-                    scope.showSubMenu = menuItem.children.length > 0 || menuItem.path === 'notification';
+                    scope.showSubMenu = menuItem.children.length > 0 || menuItem.path === "more";
                 }
-
-                //run action
                 if (angular.isDefined(menuItem.action)) {
                     menuItem.action();
                 }
             };
+
+            updateFavorites();
+            scope.$watch("items", function () { updateFavorites(); }, true);
+            // required by ui-sortable: we can't use filters with it
+            // https://github.com/angular-ui/ui-sortable#usage
+            function updateFavorites() {
+                scope.dynamicMenuItems = _.sortBy(_.filter(scope.items, function (menuItem) { return menuItem.isFavorite || menuItem.path === "more"; }), function (menuItem) { return menuItem.order; });
+            }
+            
+            scope.toggleFavorite = function (menuItem) {
+                menuItem.isFavorite = !menuItem.isFavorite;
+                // clear order when removed from favorites
+                if (!menuItem.isFavorite) {
+                    menuItem.order = 9007199254740991; // Number.MAX_SAFE_INTEGER;
+                }
+                var favorites = _.sortBy(_.filter(scope.items, function (menuItem) { return menuItem.isFavorite }), function (menuItem) { return menuItem.order; });
+                // re-calculate order
+                for (var i = 0; i < favorites.length; i++) {
+                    favorites[i].order = i;
+                }
+            };
+
+            scope.sortableOptions = {
+                axis: "y",
+                cursor: "move",
+                // always use container with tolerance
+                // because otherwise draggable item can't replace top item:
+                // where is no space between top item and container top border
+                containment: ".outer-wrapper",
+                items: ".__draggable",
+                tolerance: "pointer",
+                stop: function (e, ui) {
+                    // re-calculate order for all favorites
+                    // we may use scope.favorites or source model of ui-sortable
+                    // I'm prefer last, to avoid dependence on directive's model
+                    var favorites = ui.item.sortable.sourceModel;
+                    for (var i = 0; i < favorites.length; i++) {
+                        favorites[i].order = i;
+                    }
+                }
+            };
         }
     }
-}]);
+}]).directive('vaFavorites', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attr) {
+            $(element).keydown(function (e) {
+                if (e.shiftKey && e.keyCode === 32) { // Shift + Space
+                    $(e.target).find(".list-fav").click();
+                }
+            });
+        }
+    }
+});
