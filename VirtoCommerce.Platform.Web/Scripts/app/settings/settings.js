@@ -62,11 +62,6 @@
             }
         });
 
-        selectedSettings = _.where(settings, { valueType: 'Json' });
-        _.forEach(selectedSettings, function (setting) {
-            setting.value = angular.fromJson(setting.value);
-        });
-
         selectedSettings = _.where(settings, { isArray: true });
         _.forEach(selectedSettings, function (setting) {
             if (setting.arrayValues) {
