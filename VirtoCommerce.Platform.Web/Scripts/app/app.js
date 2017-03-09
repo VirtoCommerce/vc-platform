@@ -65,8 +65,17 @@ angular.module('platformWebApp', AppDependencies).
           $scope.isAuthenticated = authContext.isAuthenticated;
       });
       
-      var userProfileSettings;  
+      var userProfileSettings;
+
+      var unwatchMenuChangesFn;
       $scope.$on('loginStatusChanged', function (event, authContext) {
+          //unsubscribe from previous watch
+          //We cannot use global watch because saveMenuState may be executed before menu initialized loaded persisted state
+          if (unwatchMenuChangesFn) {
+              unwatchMenuChangesFn();
+              unwatchMenuChangesFn = undefined;
+          }
+          //reset menu to default state
           angular.forEach(mainMenuService.menuItems, function(menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
           if (authContext.isAuthenticated) {
               settings.getCurrentUserProfile(function(currentUserProfileSettings) {
@@ -76,6 +85,8 @@ angular.module('platformWebApp', AppDependencies).
                   $translate.use(settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.Language").value);
                
                   initializeMainMenu(userProfileSettings);
+
+                  unwatchMenuChangesFn = $scope.$watch('mainMenu', function () { saveMenuState($scope.mainMenu, userProfileSettings); }, true);
               });
 
               $timeout(function() {
@@ -88,9 +99,7 @@ angular.module('platformWebApp', AppDependencies).
 
       $scope.mainMenu = {};
       $scope.mainMenu.items = mainMenuService.menuItems;
-
-      $scope.$watch('mainMenu', function () { saveMenuState($scope.mainMenu, userProfileSettings); }, true);
-
+       
       function initializeMainMenu(profileSettings) {
           if (profileSettings) {
               var mainMenuStateSetting = settingsHelper.getSetting(profileSettings, "VirtoCommerce.Platform.UI.MainMenu.State");
@@ -103,10 +112,9 @@ angular.module('platformWebApp', AppDependencies).
                           angular.extend(existItem, x);
                       }
                   });
-              }
+              }              
           }
       }
-
 
       function saveMenuState(mainMenu, profileSettings) {
           if (mainMenu && profileSettings) {
