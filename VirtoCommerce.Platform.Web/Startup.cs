@@ -396,6 +396,27 @@ namespace VirtoCommerce.Platform.Web
                     },
                     new ModuleSettingsGroup
                     {
+                        Name = "Platform|User Profile",
+                        Settings = new[]
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.MainMenu.State",
+                                ValueType = ModuleSetting.TypeJson,
+                                Title = "Persisted state of main menu"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.Language",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Language",
+                                Description = "Default language (two letter code from ISO 639-1)",
+                                DefaultValue = "en"
+                            }
+                        }
+                    },
+                    new ModuleSettingsGroup
+                    {
                         Name = "Platform|User Interface",
                         Settings = new[]
                         {
@@ -411,20 +432,6 @@ namespace VirtoCommerce.Platform.Web
                                                "  \"contrast_logo\": \"Content/themes/main/images/contrast-logo.png\",\n" +
                                                "  \"theme\": \"default\"\n" +
                                                "}"
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.UI.MainMenu.State",
-                                ValueType = ModuleSetting.TypeJson,
-                                Title = "Persisted state of main menu"
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.UI.Language",
-                                ValueType = ModuleSetting.TypeString,
-                                Title = "Language",
-                                Description = "Default language (two letter code from ISO 639-1)",
-                                DefaultValue = "en"
                             }
                         }
                     }

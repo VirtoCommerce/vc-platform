@@ -4,17 +4,17 @@
     blade.headIcon = 'fa-user';
     blade.title = 'platform.blades.user-profile.title';
 
-    var userProfileSettings;
-    settings.getCurrentUserProfile(function (currentUserProfileSettings) {
-        settingsHelper.fixValues(currentUserProfileSettings);
-        userProfileSettings = currentUserProfileSettings;
+    var userProfile;
+    userProfileApi.get(function (currentUserProfile) {
+        settingsHelper.fixValues(currentUserProfile.settings);
+        userProfile = currentUserProfile;
         initializeBlade();
     });
 
     blade.currentLanguage = $translate.use();
 
     function initializeBlade() {
-        userProfileApi.query(
+        userProfileApi.getLocales(
            function (result) {
                blade.isLoading = false;
                result.sort();
@@ -31,7 +31,7 @@
 
     $scope.setLanguage = function () {
         $translate.use(blade.currentLanguage);
-        settingsHelper.getSetting(userProfileSettings, "VirtoCommerce.Platform.UI.Language").value = blade.currentLanguage;
-        settings.updateCurrentUserProfile(userProfileSettings);
+        settingsHelper.getSetting(userProfile.settings, "VirtoCommerce.Platform.UI.Language").value = blade.currentLanguage;
+        userProfileApi.save(userProfile);
     };
 }]);
