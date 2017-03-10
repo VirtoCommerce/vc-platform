@@ -406,6 +406,7 @@
     <Content Include="Scripts\app\modularity\templates\modulesInstallation.tpl.html" />
     <Content Include="Scripts\app\setup\setup.js" />
     <Content Include="Scripts\common\directives\fallbackSrc.js" />
+    <Compile Include="Model\Profiles\UserProfile.cs" />
     <Compile Include="Model\Security\CheckPermissionsResult.cs" />
     <Compile Include="Modularity\Bootstrapper.cs" />
     <Compile Include="Modularity\ExternalManifestModuleCatalog.cs" />

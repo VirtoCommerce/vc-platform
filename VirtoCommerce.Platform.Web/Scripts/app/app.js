@@ -26,7 +26,7 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', function ($scope, $window, mainMenuService, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, settings, settingsHelper) {
+  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfileApi', 'platformWebApp.settings', 'platformWebApp.settings.helper', function ($scope, $window, mainMenuService, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, userProfileApi, settings, settingsHelper) {
       pushNotificationService.run();
 
       $scope.closeError = function () {
@@ -64,8 +64,6 @@ angular.module('platformWebApp', AppDependencies).
       $scope.$on('loginStatusChanged', function (event, authContext) {
           $scope.isAuthenticated = authContext.isAuthenticated;
       });
-      
-      var userProfileSettings;
 
       var unwatchMenuChangesFn;
       $scope.$on('loginStatusChanged', function (event, authContext) {
@@ -78,15 +76,14 @@ angular.module('platformWebApp', AppDependencies).
           //reset menu to default state
           angular.forEach(mainMenuService.menuItems, function(menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
           if (authContext.isAuthenticated) {
-              settings.getCurrentUserProfile(function(currentUserProfileSettings) {
-                  settingsHelper.fixValues(currentUserProfileSettings);
-                  userProfileSettings = currentUserProfileSettings;
+              userProfileApi.get(function (currentUserProfile) {
+                  settingsHelper.fixValues(currentUserProfile.settings);
 
-                  $translate.use(settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.Language").value);
+                  $translate.use(settingsHelper.getSetting(currentUserProfile.settings, "VirtoCommerce.Platform.UI.Language").value);
                
-                  initializeMainMenu(userProfileSettings);
+                  initializeMainMenu(currentUserProfile);
 
-                  unwatchMenuChangesFn = $scope.$watch('mainMenu', function () { saveMenuState($scope.mainMenu, userProfileSettings); }, true);
+                  unwatchMenuChangesFn = $scope.$watch('mainMenu', function () { saveMainMenuState($scope.mainMenu, currentUserProfile); }, true);
               });
 
               $timeout(function() {
@@ -100,35 +97,33 @@ angular.module('platformWebApp', AppDependencies).
       $scope.mainMenu = {};
       $scope.mainMenu.items = mainMenuService.menuItems;
        
-      function initializeMainMenu(profileSettings) {
-          if (profileSettings) {
-              var mainMenuStateSetting = settingsHelper.getSetting(profileSettings, "VirtoCommerce.Platform.UI.MainMenu.State");
+      function initializeMainMenu(currentUserProfile) {
+          if (currentUserProfile) {
+              var mainMenuStateSetting = settingsHelper.getSetting(currentUserProfile.settings, "VirtoCommerce.Platform.UI.MainMenu.State");
               if (mainMenuStateSetting && mainMenuStateSetting.value) {
                   var menuState = angular.fromJson(mainMenuStateSetting.value);
                   $scope.mainMenu.isCollapsed = menuState.isCollapsed;
-                  angular.forEach(menuState.items, function (x) {
+                  angular.forEach(menuState.items, function(x) {
                       var existItem = mainMenuService.findByPath(x.path);
                       if (existItem) {
                           angular.extend(existItem, x);
                       }
                   });
-              }              
+              }
           }
       }
 
-      function saveMenuState(mainMenu, profileSettings) {
-          if (mainMenu && profileSettings) {
-              var menuState =
-                  {
-                      isCollapsed: mainMenu.isCollapsed,
-                      items: _.map(_.filter(mainMenu.items,
-                                          function (x) { return !x.isAlwaysOnBar; }),
-                                          function (x) { return { path: x.path, isCollapsed: x.isCollapsed, isFavorite: x.isFavorite, order: x.order }; }
-                                         )
-                  };
-              var mainMenuStateSetting = settingsHelper.getSetting(profileSettings, "VirtoCommerce.Platform.UI.MainMenu.State");
+      function saveMainMenuState(mainMenu, currentUserProfile) {
+          if (mainMenu && currentUserProfile) {
+              var menuState = {
+                  isCollapsed: mainMenu.isCollapsed,
+                  items: _.map(_.filter(mainMenu.items,
+                          function(x) { return !x.isAlwaysOnBar; }),
+                      function(x) { return { path: x.path, isCollapsed: x.isCollapsed, isFavorite: x.isFavorite, order: x.order }; })
+              };
+              var mainMenuStateSetting = settingsHelper.getSetting(currentUserProfile.settings, "VirtoCommerce.Platform.UI.MainMenu.State");
               mainMenuStateSetting.value = angular.toJson(menuState);
-              settings.updateCurrentUserProfile(profileSettings);
+              userProfileApi.save(currentUserProfile);
           }
       }
 

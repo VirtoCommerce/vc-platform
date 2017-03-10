@@ -396,7 +396,7 @@ namespace VirtoCommerce.Platform.Web
                     },
                     new ModuleSettingsGroup
                     {
-                        Name = "Platform|User Interface",
+                        Name = "Platform|User Profile",
                         Settings = new[]
                         {
                             new ModuleSetting
