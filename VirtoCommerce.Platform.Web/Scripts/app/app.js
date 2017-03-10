@@ -83,7 +83,7 @@ angular.module('platformWebApp', AppDependencies).
                
                   initializeMainMenu(currentUserProfile);
 
-                  unwatchMenuChangesFn = $scope.$watch('mainMenu', function () { saveMainMenuState($scope.mainMenu, currentUserProfile); }, true);
+                  unwatchMenuChangesFn = $scope.$watch('mainMenu', function () { saveMainMenuState($scope.mainMenu); }, true);
               });
 
               $timeout(function() {
@@ -113,18 +113,20 @@ angular.module('platformWebApp', AppDependencies).
           }
       }
 
-      function saveMainMenuState(mainMenu, currentUserProfile) {
-          if (mainMenu && currentUserProfile) {
-              var menuState = {
-                  isCollapsed: mainMenu.isCollapsed,
-                  items: _.map(_.filter(mainMenu.items,
-                          function(x) { return !x.isAlwaysOnBar; }),
-                      function(x) { return { path: x.path, isCollapsed: x.isCollapsed, isFavorite: x.isFavorite, order: x.order }; })
-              };
-              var mainMenuStateSetting = settingsHelper.getSetting(currentUserProfile.settings, "VirtoCommerce.Platform.UI.MainMenu.State");
-              mainMenuStateSetting.value = angular.toJson(menuState);
-              userProfileApi.save(currentUserProfile);
-          }
+      function saveMainMenuState(mainMenu) {
+          userProfileApi.get(function (currentUserProfile) {
+              if (mainMenu && currentUserProfile) {
+                  var menuState = {
+                      isCollapsed: mainMenu.isCollapsed,
+                      items: _.map(_.filter(mainMenu.items,
+                              function (x) { return !x.isAlwaysOnBar; }),
+                          function (x) { return { path: x.path, isCollapsed: x.isCollapsed, isFavorite: x.isFavorite, order: x.order }; })
+                  };
+                  var mainMenuStateSetting = settingsHelper.getSetting(currentUserProfile.settings, "VirtoCommerce.Platform.UI.MainMenu.State");
+                  mainMenuStateSetting.value = angular.toJson(menuState);
+                  userProfileApi.save(currentUserProfile);
+              }
+          });
       }
 
       // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION
