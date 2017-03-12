@@ -96,5 +96,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var value = _settingsManager.GetArray<object>(name, null);
             return Ok(value);
         }
+        
+        /// <summary>
+        /// Get UI customization setting
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("ui/customization")]
+        [ResponseType(typeof(webModel.Setting))]
+        public IHttpActionResult GetUICustomizationSetting()
+        {
+            var retVal = _settingsManager.GetSettingByName("VirtoCommerce.Platform.UI.Customization");
+            if (retVal != null)
+            {
+                return Ok(retVal.ToWebModel());
+            }
+            return NotFound();
+        }
     }
 }

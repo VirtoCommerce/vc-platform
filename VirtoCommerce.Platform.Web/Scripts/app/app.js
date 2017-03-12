@@ -129,7 +129,7 @@ angular.module('platformWebApp', AppDependencies).
           });
       }
 
-      settings.get({ id: 'VirtoCommerce.Platform.UI.Customization' }, function(uiCustomizationSetting) {
+      settings.getUiCustomizationSetting(function(uiCustomizationSetting) {
           $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
       });
 
