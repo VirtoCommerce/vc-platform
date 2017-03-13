@@ -22,7 +22,7 @@
                        value: x
                    };
                });
-           })
+           });
     };
 
     $scope.setLanguage = function () {

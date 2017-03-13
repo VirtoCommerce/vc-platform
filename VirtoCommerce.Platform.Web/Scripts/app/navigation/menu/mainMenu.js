@@ -61,7 +61,7 @@
         menuItem.isCollapsed = false;
         menuItem.isFavorite = false;
             // place at the end
-        menuItem.order = 9007199254740991; // Number.MAX_SAFE_INTEGER;
+        menuItem.order = Number.MAX_SAFE_INTEGER;
     }
 
     function findByPath(path) {
@@ -130,15 +130,15 @@
                 menuItem.isFavorite = !menuItem.isFavorite;
                 // clear order when removed from favorites
                 if (!menuItem.isFavorite) {
-                    menuItem.order = 9007199254740991; // Number.MAX_SAFE_INTEGER;
+                    menuItem.order = Number.MAX_SAFE_INTEGER;
                 }
                 var favorites = _.sortBy(_.filter(scope.menu.items, function (x) { return x.isFavorite }), function (x) { return x.order; });
                 // re-calculate order
                 for (var i = 0; i < favorites.length; i++) {
                     favorites[i].order = i;
                 }
-                //Call the callback function to notify what menu changed
-                raiseOnMenuChanged();
+                // Do not call the callback function to notify what favorites changed.
+                // We're already do that because we call updateFavorites (which call the calback) in ngModelController.$render
             };
 
             scope.sortableOptions = {

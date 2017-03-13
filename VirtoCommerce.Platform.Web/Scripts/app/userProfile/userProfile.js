@@ -15,31 +15,31 @@
             }]
         });
 }])
-    .factory('platformWebApp.userProfile', ['platformWebApp.userProfileApi', 'platformWebApp.settings.helper', function (userProfileApi, settingsHelper) {
-        var result = {
-            language: undefined,
-            menuState: {},
-            load: function () {
-                return userProfileApi.get(function (profile) {
-                    settingsHelper.fixValues(profile.settings);
-                    profile.language = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.Language").value;
-                    profile.menuState = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.MainMenu.State").value;
-                    if (profile.menuState) {
-                        profile.menuState = angular.fromJson(profile.menuState);
-                    }                  
-                    angular.extend(result, profile);
-                }).$promise;
-            },
-            save: function()
-            {
-                var mainMenuStateSetting = settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MainMenu.State");
-                mainMenuStateSetting.value = angular.toJson(this.menuState);
-                settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.Language").value = result.language;
-                return userProfileApi.save(result).$promise;
-            }
+.factory('platformWebApp.userProfile', ['platformWebApp.userProfileApi', 'platformWebApp.settings.helper', function (userProfileApi, settingsHelper) {
+    var result = {
+        language: undefined,
+        menuState: {},
+        load: function () {
+            return userProfileApi.get(function (profile) {
+                settingsHelper.fixValues(profile.settings);
+                profile.language = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.Language").value;
+                profile.menuState = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.MainMenu.State").value;
+                if (profile.menuState) {
+                    profile.menuState = angular.fromJson(profile.menuState);
+                }                  
+                angular.extend(result, profile);
+            }).$promise;
+        },
+        save: function()
+        {
+            var mainMenuStateSetting = settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MainMenu.State");
+            mainMenuStateSetting.value = angular.toJson(this.menuState);
+            settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.Language").value = result.language;
+            return userProfileApi.save(result).$promise;
         }
-        return result;
-    }])
+    }
+    return result;
+}])
 .run(
   ['platformWebApp.mainMenuService', '$state', function (mainMenuService, $state) {
       var menuItem = {

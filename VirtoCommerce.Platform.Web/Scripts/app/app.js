@@ -100,7 +100,7 @@ angular.module('platformWebApp', AppDependencies).
       }
 
       function saveMenuState(mainMenu, profile) {
-          if (mainMenu && profile) {
+          if (mainMenu && profile.$resolved) {
               profile.menuState =
                   {
                       isCollapsed: mainMenu.isCollapsed,
@@ -239,7 +239,7 @@ angular.module('platformWebApp', AppDependencies).
             contentTemplate: '$(Platform)/Scripts/app/navigation/menu/mainMenu-list-content.tpl.html',
             // this item must always be at the bottom, so
             // don't use just 99 number: we have INFINITE list
-            priority: 9007199254740991, // Number.MAX_SAFE_INTEGER,
+            priority: Number.MAX_SAFE_INTEGER,
             isAlwaysOnBar: true
         };
         mainMenuService.addMenuItem(moreMenuItem);
@@ -303,6 +303,13 @@ angular.module('platformWebApp', AppDependencies).
         String.prototype.endsWith = function (suffix) {
             return this.indexOf(suffix, this.length - suffix.length) !== -1;
         };
+
+        if (!angular.isDefined(Number.MIN_SAFE_INTEGER)) {
+            Number.MIN_SAFE_INTEGER = -9007199254740991;
+        }
+        if (!angular.isDefined(Number.MAX_SAFE_INTEGER)) {
+            Number.MAX_SAFE_INTEGER = 9007199254740991;
+        }
 
         // textAngular
         taOptions.toolbar = [
