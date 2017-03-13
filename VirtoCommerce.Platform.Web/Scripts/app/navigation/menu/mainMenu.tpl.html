@@ -1,14 +1,14 @@
-﻿<nav class="nav-bar" ng-class="{'__collapsed': isCollapsed}" ng-init="itemTemplateUrl = '$(Platform)/Scripts/app/navigation/menu/mainMenu-item.tpl.html'">
+﻿<nav class="nav-bar" ng-class="{'__collapsed': menu.isCollapsed}" ng-init="itemTemplateUrl = '$(Platform)/Scripts/app/navigation/menu/mainMenu-item.tpl.html'">
     <div class="bar">
         <div class="wrapper">
-            <div class="list __items" va-tooltip-options tooltip-enable="isCollapsed" tooltip-append-to-body="true" tooltip-placement="right" tooltip-animation="false">
-                <div class="list-item" ng-click="isCollapsed = !isCollapsed">
+            <div class="list __items" va-tooltip-options tooltip-enable="menu.isCollapsed" tooltip-append-to-body="true" tooltip-placement="right" tooltip-animation="false">
+                <div class="list-item" ng-click="toggleCollapsed()">
                     <a class="list-link">
                         <i class="list-ico fa fa-bars"></i>
                     </a>
                 </div>
                 <ul>
-                    <li class="list-item" ng-class="{'__animated': menuItem.isAnimated}" ng-repeat="menuItem in items | filter: { path: '!more', isAlwaysOnBar: 'true', isFavorite: 'false' }" ng-include="itemTemplateUrl" ng-click="selectItem(menuItem)" va-tooltip tooltip="{{menuItem.title | translate}}" va-permission="{{menuItem.permission}}"></li>
+                    <li class="list-item" ng-class="{'__animated': menuItem.isAnimated}" ng-repeat="menuItem in menu.items | filter: { path: '!more', isAlwaysOnBar: 'true', isFavorite: 'false' }" ng-include="itemTemplateUrl" ng-click="selectItem(menuItem)" va-tooltip tooltip="{{menuItem.title | translate}}" va-permission="{{menuItem.permission}}"></li>
                 </ul>
                 <div class="divider"></div>
                 <div class="outer-wrapper">

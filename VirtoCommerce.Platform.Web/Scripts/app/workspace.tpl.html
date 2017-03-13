@@ -1,4 +1,4 @@
-﻿<va-main-menu items="mainMenu.items" is-collapsed="mainMenu.isCollapsed">
+﻿<va-main-menu ng-model="mainMenu" on-menu-changed="onMenuChanged(menu)">
     <div class="info">
         <a class="info-license" ng-if="!license" href="" ng-click="showLicense()">{{'platform.templates.licensing.license-absent' | translate}}</a>
         <a class="info-license" ng-if="license" href="" ng-click="showLicense()" ng-class="{'__valid': !license.hasExpired}">{{'platform.templates.licensing.license-present' | translate: license}}</a>

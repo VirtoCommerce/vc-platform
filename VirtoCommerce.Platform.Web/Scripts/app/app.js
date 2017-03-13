@@ -67,14 +67,7 @@ angular.module('platformWebApp', AppDependencies).
       
       var userProfileSettings;
 
-      var unwatchMenuChangesFn;
-      $scope.$on('loginStatusChanged', function (event, authContext) {
-          //unsubscribe from previous watch
-          //We cannot use global watch because saveMenuState may be executed before menu initialized loaded persisted state
-          if (unwatchMenuChangesFn) {
-              unwatchMenuChangesFn();
-              unwatchMenuChangesFn = undefined;
-          }
+      $scope.$on('loginStatusChanged', function (event, authContext) {        
           //reset menu to default state
           angular.forEach(mainMenuService.menuItems, function(menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
           if (authContext.isAuthenticated) {
@@ -84,9 +77,7 @@ angular.module('platformWebApp', AppDependencies).
 
                   $translate.use(settingsHelper.getSetting(currentUserProfileSettings, "VirtoCommerce.Platform.UI.Language").value);
                
-                  initializeMainMenu(userProfileSettings);
-
-                  unwatchMenuChangesFn = $scope.$watch('mainMenu', function () { saveMenuState($scope.mainMenu, userProfileSettings); }, true);
+                  initializeMainMenu(userProfileSettings);              
               });
 
               $timeout(function() {
@@ -99,7 +90,11 @@ angular.module('platformWebApp', AppDependencies).
 
       $scope.mainMenu = {};
       $scope.mainMenu.items = mainMenuService.menuItems;
-       
+      
+      $scope.onMenuChanged = function (menu) {
+          saveMenuState(menu, userProfileSettings);
+      }
+
       function initializeMainMenu(profileSettings) {
           if (profileSettings) {
               var mainMenuStateSetting = settingsHelper.getSetting(profileSettings, "VirtoCommerce.Platform.UI.MainMenu.State");
