@@ -406,6 +406,7 @@
     <Content Include="Scripts\app\modularity\templates\modulesInstallation.tpl.html" />
     <Content Include="Scripts\app\setup\setup.js" />
     <Content Include="Scripts\common\directives\fallbackSrc.js" />
+    <Compile Include="Model\Profiles\UserProfile.cs" />
     <Compile Include="Model\Security\CheckPermissionsResult.cs" />
     <Compile Include="Modularity\Bootstrapper.cs" />
     <Compile Include="Modularity\ExternalManifestModuleCatalog.cs" />
@@ -547,7 +548,7 @@
     <Content Include="Scripts\app\userProfile\blades\userProfile.js" />
     <Content Include="Scripts\app\userProfile\blades\userProfile.tpl.html" />
     <Content Include="Scripts\app\userProfile\resources\userProfileApi.js" />
-    <Content Include="Scripts\app\userProfile\userProfileConfig.js" />
+    <Content Include="Scripts\app\userProfile\userProfile.js" />
     <Content Include="Scripts\codemirror\gfm.js" />
     <Content Include="Scripts\codemirror\markdown.js" />
     <Content Include="Scripts\codemirror\overlay.js" />
