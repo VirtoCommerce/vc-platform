@@ -12,7 +12,7 @@ var gulp = require("gulp"),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps');
 
-// minify all js files to single file
+// minify all js files from bower packages to single file
 gulp.task('packJavaScript', function () {
     return gulp.src(mainBowerFiles({
         // Only the JavaScript files
@@ -24,7 +24,7 @@ gulp.task('packJavaScript', function () {
 });
 
 // translate sass to css
-gulp.task('sass', function () {
+gulp.task('translateSass', function () {
     return gulp.src(['Content/themes/main/sass/**/*.sass'])
         // must be executed straigh after source
         .pipe(sourcemaps.init())
@@ -37,7 +37,7 @@ gulp.task('sass', function () {
         .pipe(gulp.dest('Content/themes/main/css'));
 });
 
-// concatenate all css files to single file
+// concatenate all css files from bower packages to single file
 gulp.task('packCss', function () {
     return gulp.src(mainBowerFiles({
         // Only the CSS files
@@ -71,5 +71,5 @@ gulp.task('packAll', ['packJavaScript', 'packCss', 'copyMainFonts']);
 
 // Watch on sass to enable auto-translation
 gulp.task('watch', function () {
-    gulp.watch('Content/themes/main/sass/**/*.sass', ['sass']);
+    gulp.watch('Content/themes/main/sass/**/*.sass', ['translateSass']);
 })
