@@ -86,7 +86,9 @@ angular.module('platformWebApp', AppDependencies).
       $scope.mainMenu.items = mainMenuService.menuItems;
       
       $scope.onMainMenuChanged = function (mainMenu) {
-          saveMainMenuState(mainMenu, userProfile);
+          if ($scope.isAuthenticated) {
+              saveMainMenuState(mainMenu, userProfile);
+          }
       }
 
       function initializeMainMenu(profile) {
