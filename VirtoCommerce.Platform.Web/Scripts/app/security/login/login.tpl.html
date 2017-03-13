@@ -3,8 +3,8 @@
         <div class="progress-bar"></div>
     </div>
     <header class="window-head">
-        <img class="__logo" ng-src="{{uiCustomization.contrast_logo}}"/>
-        <span class="window-t">{{ 'platform.blades.login.labels.sign-in' | translate: uiCustomization }}</span>
+        <img class="__logo" ng-src="{{uiCustomization.contrast_logo || 'Content/themes/main/images/contrast-logo.png'}}"/>
+        <span class="window-t">{{ 'platform.blades.login.labels.sign-in' | translate: (uiCustomization.title ? uiCustomization : 'Virto Commerce') }}</span>
     </header>
     <div class="window-cnt">
         <form class="form" novalidate ng-submit="ok()" name="loginForm">
