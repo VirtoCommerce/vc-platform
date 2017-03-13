@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [RoutePrefix("api/platform/profiles")]
     public class ProfilesController : ApiController
     {
-        private static object _lock = new object();
+        private static object _lockObject = new object();
         private readonly ISettingsManager _settingsManager;
         private readonly ISecurityService _securityService;
 
@@ -31,14 +31,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(UserProfile))]
         public async Task<IHttpActionResult> GetCurrentUserProfile()
         {
-            var currentUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full);
+            var currentUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Reduced);
             var userProfile = new UserProfile(currentUser.Id);
-            lock (_lock)
-            {
-                var modules = _settingsManager.GetModules();
-                userProfile.Settings = modules.SelectMany(module => _settingsManager.GetModuleSettings(module.Id)).Where(setting => setting.GroupName == "Platform|User Profile").ToArray();
-                _settingsManager.LoadEntitySettingsValues(userProfile);
-            }
+            var modules = _settingsManager.GetModules();
+            userProfile.Settings = modules.SelectMany(module => _settingsManager.GetModuleSettings(module.Id)).Where(setting => setting.GroupName == "Platform|User Profile").ToArray();
+            _settingsManager.LoadEntitySettingsValues(userProfile);
             return Ok(userProfile);
         }
 
@@ -52,12 +49,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> UpdateCurrentUserProfile(UserProfile userProfile)
         {
-            var currentUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full);
+            var currentUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Reduced);
             if (currentUser.Id != userProfile.Id)
             {
                 return Unauthorized();
             }
-            lock (_lock)
+            lock (_lockObject)
             {
                 _settingsManager.SaveEntitySettingsValues(userProfile);
             }
