@@ -18,22 +18,22 @@
 .factory('platformWebApp.userProfile', ['platformWebApp.userProfileApi', 'platformWebApp.settings.helper', function (userProfileApi, settingsHelper) {
     var result = {
         language: undefined,
-        menuState: {},
+        mainMenuState: {},
         load: function () {
             return userProfileApi.get(function (profile) {
                 settingsHelper.fixValues(profile.settings);
                 profile.language = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.Language").value;
-                profile.menuState = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.MainMenu.State").value;
-                if (profile.menuState) {
-                    profile.menuState = angular.fromJson(profile.menuState);
-                }                  
+                profile.mainMenuState = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.MainMenu.State").value;
+                if (profile.mainMenuState) {
+                    profile.mainMenuState = angular.fromJson(profile.mainMenuState);
+                }
                 angular.extend(result, profile);
             }).$promise;
         },
         save: function()
         {
             var mainMenuStateSetting = settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MainMenu.State");
-            mainMenuStateSetting.value = angular.toJson(this.menuState);
+            mainMenuStateSetting.value = angular.toJson(this.mainMenuState);
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.Language").value = result.language;
             return userProfileApi.save(result).$promise;
         }

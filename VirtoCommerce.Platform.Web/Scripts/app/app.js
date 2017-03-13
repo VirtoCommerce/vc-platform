@@ -86,12 +86,12 @@ angular.module('platformWebApp', AppDependencies).
       $scope.mainMenu.items = mainMenuService.menuItems;
       
       $scope.onMenuChanged = function (menu) {
-          saveMenuState(menu, userProfile);
+          saveMainMenuState(menu, userProfile);
       }
 
       function initializeMainMenu(profile) {
-          $scope.mainMenu.isCollapsed = profile.menuState.isCollapsed;
-          angular.forEach(profile.menuState.items, function (x) {
+          $scope.mainMenu.isCollapsed = profile.mainMenuState.isCollapsed;
+          angular.forEach(profile.mainMenuState.items, function (x) {
               var existItem = mainMenuService.findByPath(x.path);
               if (existItem) {
                   angular.extend(existItem, x);
@@ -99,16 +99,14 @@ angular.module('platformWebApp', AppDependencies).
           });
       }
 
-      function saveMenuState(mainMenu, profile) {
+      function saveMainMenuState(mainMenu, profile) {
           if (mainMenu && profile.$resolved) {
-              profile.menuState =
-                  {
-                      isCollapsed: mainMenu.isCollapsed,
-                      items: _.map(_.filter(mainMenu.items,
-                                          function (x) { return !x.isAlwaysOnBar; }),
-                                          function (x) { return { path: x.path, isCollapsed: x.isCollapsed, isFavorite: x.isFavorite, order: x.order }; }
-                                         )
-                  };
+              profile.mainMenuState = {
+                  isCollapsed: mainMenu.isCollapsed,
+                  items: _.map(_.filter(mainMenu.items,
+                          function(x) { return !x.isAlwaysOnBar; }),
+                      function(x) { return { path: x.path, isCollapsed: x.isCollapsed, isFavorite: x.isFavorite, order: x.order }; })
+              };
               profile.save();
           }
       }
