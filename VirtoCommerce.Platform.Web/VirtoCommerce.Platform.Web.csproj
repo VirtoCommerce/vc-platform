@@ -529,6 +529,7 @@
     <Content Include="Content\themes\main\sass\includes\_mixins.sass" />
     <Content Include="Content\themes\main\css\main.css.map" />
     <Content Include="Content\themes\main\sass\modules\_menu.sass" />
+    <Content Include="Content\themes\main\sass\modules\_lang-rtl.sass" />
     <None Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />

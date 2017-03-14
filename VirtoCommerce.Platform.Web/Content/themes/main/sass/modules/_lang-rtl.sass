@@ -1,0 +1,83 @@
+﻿.lang-rtl
+  direction: rtl
+  .nav-bar
+    left: auto
+    right: 0
+    &.__collapsed
+      &+.cnt
+        right: $mainMenuCollapsedWidth
+      .dropdown.__opened
+        transform: translateX(-$mainMenuCollapsedWidth)
+    .dropdown
+      transform: translateX($mainMenuDropdownWidth)
+      &.__opened
+        transform: translateX(-$mainMenuWidth)
+  .bar .__items
+    .list-item.__draggable:before
+      left: auto
+      right: 0
+    .list-count
+      left: auto
+      right: 44px
+  .dropdown
+    .dropdown-close
+      left: 15px
+      right: auto
+    &.__more .dropdown-close
+      left: 10px
+    .dropdown-head
+      text-align: left
+    &.__more .dropdown-head
+      text-align: right
+    &.__more .list-fav
+      left: 0
+      right: auto
+      padding: 10px 12px 10px 32px
+  .dropdown-content .list-ico
+    margin: 0 0 0 20px
+  .cnt
+    left: 0
+    right: $mainMenuWidth
+  .dashboard
+    .dashboard-area
+      margin: 0 0 0 3px
+  .dashboard-title
+    left: auto
+    right: 90px
+  .dashboard-account
+    left: 93px
+    right: auto
+    &::before
+      left: auto
+      right: 10px
+    .user-name
+      padding: 0 50px 0 0
+  .__items
+    .list-item
+      padding: 10px 20px 10px 50px
+      &::after
+        content: ''
+        left: 30px
+        right: auto
+        
+        transition: left 0.25s ease-in-out 0s
+      &:hover::after
+        left: 25px
+        right: auto
+  .__items .list-ico,
+  .__files .list-ico
+    margin: 0 0 0 5px
+  .blade-static
+    .form-count
+      left: 0
+      right: auto
+  .form-input
+    &.__langs .flag
+      left: auto
+      right: 11px
+    .btn
+      left: 0
+      right: auto !important
+  .ui-grid-menu-button
+    left: 4px
+    right: auto

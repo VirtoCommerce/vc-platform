@@ -30,8 +30,7 @@ namespace VirtoCommerce.Platform.Web
                     "~/Content/select2.css", // used in selectors
                     //Theme UI,
                     "~/Content/themes/main/css/font-awesome.css",
-                    "~/Content/themes/main/css/main.css",
-                    "~/Content/themes/main/css/lang-rtl.css"
+                    "~/Content/themes/main/css/main.css"
                 ));
 
             #endregion

@@ -3209,7 +3209,6 @@ tags-input .tags.focused {
   .cnt .cnt-inner {
     display: inline-block;
     height: 100%;
-    padding-right: 90px;
     word-spacing: -4px; }
   .cnt .dashboard,
   .cnt .blade {
@@ -5362,7 +5361,8 @@ a:hover,
   transition: transform .25s ease-in-out 0s; }
 
 .cnt {
-  transition: left .25s ease-in-out 0s; }
+  transition: left .25s ease-in-out 0s;
+  transition: right .25s ease-in-out 0s; }
 
 .dropdown-content .list-link,
 .blade-nav .menu-item,
@@ -5476,5 +5476,81 @@ a:hover,
   60%,
   80% {
     transform: rotate(7deg); } }
+
+.lang-rtl {
+  direction: rtl; }
+  .lang-rtl .nav-bar {
+    left: auto;
+    right: 0; }
+    .lang-rtl .nav-bar.__collapsed + .cnt {
+      right: 72px; }
+    .lang-rtl .nav-bar.__collapsed .dropdown.__opened {
+      transform: translateX(-72px); }
+    .lang-rtl .nav-bar .dropdown {
+      transform: translateX(360px); }
+      .lang-rtl .nav-bar .dropdown.__opened {
+        transform: translateX(-235px); }
+  .lang-rtl .bar .__items .list-item.__draggable:before {
+    left: auto;
+    right: 0; }
+  .lang-rtl .bar .__items .list-count {
+    left: auto;
+    right: 44px; }
+  .lang-rtl .dropdown .dropdown-close {
+    left: 15px;
+    right: auto; }
+  .lang-rtl .dropdown.__more .dropdown-close {
+    left: 10px; }
+  .lang-rtl .dropdown .dropdown-head {
+    text-align: left; }
+  .lang-rtl .dropdown.__more .dropdown-head {
+    text-align: right; }
+  .lang-rtl .dropdown.__more .list-fav {
+    left: 0;
+    right: auto;
+    padding: 10px 12px 10px 32px; }
+  .lang-rtl .dropdown-content .list-ico {
+    margin: 0 0 0 20px; }
+  .lang-rtl .cnt {
+    left: 0;
+    right: 235px; }
+  .lang-rtl .dashboard .dashboard-area {
+    margin: 0 0 0 3px; }
+  .lang-rtl .dashboard-title {
+    left: auto;
+    right: 90px; }
+  .lang-rtl .dashboard-account {
+    left: 93px;
+    right: auto; }
+    .lang-rtl .dashboard-account::before {
+      left: auto;
+      right: 10px; }
+    .lang-rtl .dashboard-account .user-name {
+      padding: 0 50px 0 0; }
+  .lang-rtl .__items .list-item {
+    padding: 10px 20px 10px 50px; }
+    .lang-rtl .__items .list-item::after {
+      content: '';
+      left: 30px;
+      right: auto;
+      transition: left 0.25s ease-in-out 0s; }
+    .lang-rtl .__items .list-item:hover::after {
+      left: 25px;
+      right: auto; }
+  .lang-rtl .__items .list-ico,
+  .lang-rtl .__files .list-ico {
+    margin: 0 0 0 5px; }
+  .lang-rtl .blade-static .form-count {
+    left: 0;
+    right: auto; }
+  .lang-rtl .form-input.__langs .flag {
+    left: auto;
+    right: 11px; }
+  .lang-rtl .form-input .btn {
+    left: 0;
+    right: auto !important; }
+  .lang-rtl .ui-grid-menu-button {
+    left: 4px;
+    right: auto; }
 
 /*# sourceMappingURL=main.css.map */
