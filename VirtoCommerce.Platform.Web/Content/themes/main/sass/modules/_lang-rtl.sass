@@ -67,17 +67,27 @@
   .__items .list-ico,
   .__files .list-ico
     margin: 0 0 0 5px
-  .blade-static
+  .blade .blade-container .blade-static
     .form-count
       left: 0
       right: auto
+    .form-input.__search
+        margin-left: 80px
+        margin-right: auto
+        &:last-child
+          margin-left: 0
+          margin-right: auto
   .form-input
     &.__langs .flag
       left: auto
       right: 11px
     .btn
       left: 0
-      right: auto !important
+      right: auto
   .ui-grid-menu-button
     left: 4px
     right: auto
+  .window-head .__logo
+    padding: 0 20px 0 0
+    ~.window-t
+      padding: 0 10px 0 20px
