@@ -1,0 +1,34 @@
+﻿@mixin center($horizontal, $vertical, $absolute: false)
+    @if $absolute
+      position: absolute
+    @else
+      position: relative
+    @if ($horizontal and $vertical)
+      left: 50%
+      top: 50%
+      transform: translateX(-50%) translateY(-50%)
+    @else if $vertical
+      top: 50%
+      transform: translateY(-50%)
+    @else if $horizontal
+      left: 50%
+      transform: translateX(-50%)
+
+@mixin column($selector, $count, $indexed: false)
+  $start: if($indexed, 1, 2)
+  @if (not $indexed)
+    #{$selector}
+      @content
+      width: 100%
+  @for $x from $start through $count
+    $currentCount: $x
+    @if $indexed
+      $currentCount: $x + 1;
+      #{$selector}:nth-last-child(#{$currentCount}) ~ #{$selector}
+        @content
+        width: (100% / $x)
+    @else
+      #{$selector}:nth-last-child(#{$currentCount}),
+      #{$selector}:nth-last-child(#{$currentCount}) ~ #{$selector}
+        @content
+        width: (100% / $x)

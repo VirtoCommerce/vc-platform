@@ -375,7 +375,9 @@
     <Compile Include="Model\Modularity\ModuleDescriptor.cs" />
     <Compile Include="Model\Modularity\ModulePushNotification.cs" />
     <Compile Include="Model\PlatformSetting.cs" />
-    <Content Include="Content\themes\main\css\google-fonts.css" />
+    <Content Include="Content\themes\main\css\font-awesome.css" />
+    <Content Include="Content\themes\main\css\lang-rtl.css" />
+    <Content Include="Content\themes\main\css\main.css" />
     <Content Include="Content\themes\main\fonts\Exo-2-300\Exo-2-300.svg" />
     <Content Include="Content\themes\main\fonts\Exo-2-300\LICENSE.txt" />
     <Content Include="Content\themes\main\fonts\Exo-2-500\Exo-2-500.svg" />
@@ -387,6 +389,7 @@
     <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.svg" />
     <Content Include="Content\themes\main\fonts\Exo-2-regular\LICENSE.txt" />
     <Content Include="Content\themes\main\images\grid.png" />
+    <Content Include="Content\themes\main\images\logo.png" />
     <Content Include="Scripts\ai.0.22.19-build00125.js" />
     <Content Include="Scripts\ai.0.22.19-build00125.min.js" />
     <Content Include="Scripts\app\licensing\license-detail.js" />
@@ -396,6 +399,7 @@
     <Content Include="Scripts\app\navigation\menu\mainMenu-list-header.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\menu.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\menuHeader.tpl.html" />
+    <Content Include="Scripts\app\userProfile\userProfile.js" />
     <Content Include="Scripts\common\directives\tooltip.js" />
     <Content Include="Scripts\common\directives\metaform.js" />
     <Content Include="Scripts\common\directives\metaform.tpl.html" />
@@ -484,8 +488,6 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
     <Content Include="Content\angular-gridster.css" />
-    <Content Include="Content\themes\main\css\font-awesome.css" />
-    <Content Include="Content\themes\main\css\lang-rtl.css" />
     <Content Include="Content\ui-grid.eot" />
     <Content Include="Content\ui-grid.svg" />
     <Content Include="Content\ui-grid.ttf" />
@@ -513,6 +515,21 @@
     <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.ttf" />
     <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.woff" />
     <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.woff2" />
+    <Content Include="Content\themes\main\sass\includes\_constants.sass" />
+    <Content Include="Content\themes\main\sass\includes\_flags.sass" />
+    <Content Include="Content\themes\main\sass\includes\_gfonts.sass" />
+    <Content Include="Content\themes\main\sass\includes\_reset.sass" />
+    <Content Include="Content\themes\main\sass\main.sass" />
+    <Content Include="Content\themes\main\sass\modules\_base-modules.sass" />
+    <Content Include="Content\themes\main\sass\modules\_cosmetic.sass" />
+    <Content Include="Content\themes\main\sass\modules\_forms.sass" />
+    <Content Include="Content\themes\main\sass\modules\_project-modules.sass" />
+    <Content Include="Content\themes\main\sass\modules\_ui-grid.sass" />
+    <Content Include="Content\themes\main\sass\modules\_window-modals.sass" />
+    <Content Include="Content\themes\main\sass\includes\_mixins.sass" />
+    <Content Include="Content\themes\main\css\main.css.map" />
+    <Content Include="Content\themes\main\sass\modules\_menu.sass" />
+    <Content Include="Content\themes\main\sass\modules\_lang-rtl.sass" />
     <None Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
@@ -548,7 +565,6 @@
     <Content Include="Scripts\app\userProfile\blades\userProfile.js" />
     <Content Include="Scripts\app\userProfile\blades\userProfile.tpl.html" />
     <Content Include="Scripts\app\userProfile\resources\userProfileApi.js" />
-    <Content Include="Scripts\app\userProfile\userProfile.js" />
     <Content Include="Scripts\codemirror\gfm.js" />
     <Content Include="Scripts\codemirror\markdown.js" />
     <Content Include="Scripts\codemirror\overlay.js" />
@@ -630,13 +646,9 @@
     <Content Include="Scripts\codemirror\codemirror.css" />
     <Content Include="Content\select2.css" />
     <Content Include="Content\themes\base\images\spinner.gif" />
-    <Content Include="Content\themes\main\css\base-modules.css" />
-    <Content Include="Content\themes\main\css\cosmetic.css" />
-    <Content Include="Content\themes\main\css\project-modules.css" />
-    <Content Include="Content\themes\main\css\reset.css" />
     <Content Include="Content\themes\main\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\themes\main\images\flags.png" />
-    <Content Include="Content\themes\main\images\logo.png" />
+    <Content Include="Content\themes\main\images\contrast-logo.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\codemirror\codemirror.js" />

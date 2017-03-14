@@ -5,26 +5,17 @@
         scope: false,
         compile: function () {
             return function (scope, element, attrs) {
-                if (attrs.tooltipPlacement) {
-                    scope.tooltipPlacement = attrs.tooltipPlacement;
-                }
-                if (attrs.tooltipAnimation) {
-                    scope.tooltipAnimation = attrs.tooltipAnimation;
-                }
-                if (attrs.tooltipPopupDelay) {
-                    scope.tooltipPopupDelay = attrs.tooltipPopupDelay;
-                }
-                if (attrs.tooltipTrigger) {
-                    scope.tooltipTrigger = attrs.tooltipTrigger;
-                }
-                if (attrs.tooltipEnable) {
-                    scope.tooltipEnable = attrs.tooltipEnable;
-                }
-                if (attrs.tooltipAppendToBody) {
-                    scope.tooltipAppendToBody = attrs.tooltipAppendToBody;
-                }
-                if (attrs.tooltipClass) {
-                    scope.tooltipClass = attrs.tooltipClass;
+                var options = ["tooltipPlacement", "tooltipAnimation", "tooltipPopupDelay", "tooltipTrigger", "tooltipEnable", "tooltipAppendToBody", "tooltipClass"];
+                var applyOption = function(option) {
+                    if (attrs[option]) {
+                        scope[option] = attrs[option];
+                        attrs.$observe(option, function() {
+                            scope[option] = attrs[option];
+                        });
+                    }
+                };
+                for (var i = 0; i < options.length; i++) {
+                    applyOption(options[i]);
                 }
             };
         }
