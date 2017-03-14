@@ -22,6 +22,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _settingsManager = settingsManager;
         }
 
+        /// <summary>
+        /// Get current user profile
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("currentuser")]
         [ResponseType(typeof(UserProfile))]
@@ -35,6 +39,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(userProfile);
         }
 
+        /// <summary>
+        /// Update current user profile
+        /// </summary>
+        /// <param name="userProfile"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("currentuser")]
         [ResponseType(typeof(void))]

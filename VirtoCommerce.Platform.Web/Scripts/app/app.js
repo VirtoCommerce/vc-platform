@@ -26,7 +26,7 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', function ($scope, $window, mainMenuService, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, userProfile) {
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', function ($rootScope, $scope, $window, mainMenuService, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
       pushNotificationService.run();
 
       $scope.closeError = function () {
@@ -112,6 +112,10 @@ angular.module('platformWebApp', AppDependencies).
               profile.save();
           }
       }
+
+      settings.getUiCustomizationSetting(function(uiCustomizationSetting) {
+          $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
+      });
 
       // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION
       $scope.initExpiration = function (x) {
@@ -220,7 +224,7 @@ angular.module('platformWebApp', AppDependencies).
             path: 'browse',
             icon: 'fa fa-search',
             title: 'platform.menu.browse',
-            priority: 0
+            priority: 90
         };
         mainMenuService.addMenuItem(browseMenuItem);
 
@@ -228,7 +232,7 @@ angular.module('platformWebApp', AppDependencies).
             path: 'configuration',
             icon: 'fa fa-wrench',
             title: 'platform.menu.configuration',
-            priority: 1
+            priority: 91
         };
         mainMenuService.addMenuItem(cfgMenuItem);
 

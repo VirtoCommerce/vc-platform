@@ -31,6 +31,10 @@ namespace VirtoCommerce.Platform.Data.Settings.Converters
             {
                 result.LongTextValue = value;
             }
+            else if (valueType == SettingValueType.Json)
+            {
+                result.LongTextValue = value;
+            }
             else if (valueType == SettingValueType.SecureString)
             {
                 result.ShortTextValue = value;

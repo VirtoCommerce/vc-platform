@@ -402,8 +402,8 @@ namespace VirtoCommerce.Platform.Web
                             new ModuleSetting
                             {
                                 Name = "VirtoCommerce.Platform.UI.MainMenu.State",
-                                ValueType = ModuleSetting.TypeText,
-                                Title = "Persisted state of main menu (JSON)"
+                                ValueType = ModuleSetting.TypeJson,
+                                Title = "Persisted state of main menu"
                             },
                             new ModuleSetting
                             {
@@ -412,6 +412,25 @@ namespace VirtoCommerce.Platform.Web
                                 Title = "Language",
                                 Description = "Default language (two letter code from ISO 639-1)",
                                 DefaultValue = "en"
+                            }
+                        }
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|User Interface",
+                        Settings = new[]
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.Customization",
+                                ValueType = ModuleSetting.TypeJson,
+                                Title = "Customization",
+                                Description = "JSON contains personalization settings of manager UI",
+                                DefaultValue = "{\n" +
+                                               "  \"title\": \"Virto Commerce\",\n" +
+                                               "  \"logo\": \"Content/themes/main/images/logo.png\",\n" +
+                                               "  \"contrast_logo\": \"Content/themes/main/images/contrast-logo.png\"\n" +
+                                               "}"
                             }
                         }
                     }

@@ -9,8 +9,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public const string TypeInteger = "integer";
         public const string TypeDecimal = "decimal";
         public const string TypeString = "string";
-		public const string TypeText = "text";
+        public const string TypeText = "text";
         public const string TypeSecureString = "secureString";
+        public const string TypeJson = "json";
 
         [XmlElement("name")]
         public string Name { get; set; }
@@ -51,26 +52,19 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         public static object RawValue(string valueType, string value)
         {
-            object result = null;
-
-            if (value != null)
+            object result = value;
+            
+            switch (valueType)
             {
-                switch (valueType)
-                {
-                    case TypeBoolean:
-                        result = bool.Parse(value);
-                        break;
-                    case TypeInteger:
-                        result = int.Parse(value, CultureInfo.InvariantCulture);
-                        break;
-                    case TypeDecimal:
-                        result = decimal.Parse(value, CultureInfo.InvariantCulture);
-                        break;
-                    case TypeString:
-                    case TypeSecureString:
-                        result = value;
-                        break;
-                }
+                case TypeBoolean:
+                    result = bool.Parse(value);
+                    break;
+                case TypeInteger:
+                    result = int.Parse(value, CultureInfo.InvariantCulture);
+                    break;
+                case TypeDecimal:
+                    result = decimal.Parse(value, CultureInfo.InvariantCulture);
+                    break;
             }
 
             return result;
