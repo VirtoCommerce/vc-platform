@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.DataProtection;
+using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Data.Notifications;
 
 namespace VirtoCommerce.Platform.Data.Security.Identity
 {
@@ -11,9 +13,13 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
     /// </summary>
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
-        public ApplicationUserManager(IUserStore<ApplicationUser> store, IDataProtectionProvider dataProtectionProvider)
+        private readonly INotificationManager _notificationManager;
+
+        public ApplicationUserManager(IUserStore<ApplicationUser> store, IDataProtectionProvider dataProtectionProvider, INotificationManager notificationManager)
             : base(store)
         {
+            _notificationManager = notificationManager;
+
             // Configure validation logic for usernames
             UserValidator = new UserValidator<ApplicationUser>(this)
             {
@@ -38,17 +44,14 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug in here.
-            RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<ApplicationUser>
+            RegisterTwoFactorProvider("PhoneNumberTokenProvider", new PhoneNumberTokenProvider<ApplicationUser>
             {
-                MessageFormat = "Your security code is: {0}"
+                MessageFormat = "{0}" // Token
             });
-            RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<ApplicationUser>
+            RegisterTwoFactorProvider("EmailTokenProvider", new EmailTokenProvider<ApplicationUser>
             {
-                Subject = "SecurityCode",
-                BodyFormat = "Your security code is {0}"
+                BodyFormat = "{0}" // Token
             });
-            EmailService = new EmailService();
-            //SmsService = new SmsService();
 
             if (dataProtectionProvider != null)
             {
@@ -56,35 +59,25 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
         }
-    }
 
-    public class EmailService : IIdentityMessageService
-    {
-
-        public Task SendAsync(IdentityMessage message)
+        public override async Task SendEmailAsync(string userId, string subject, string body)
         {
-            var emailMessage = new System.Net.Mail.MailMessage();
-            emailMessage.From = new System.Net.Mail.MailAddress("do-not-reply@samplestore.com");
-            emailMessage.To.Add(message.Destination);
-            emailMessage.Subject = message.Subject;
-            emailMessage.Body = message.Body;
-            emailMessage.IsBodyHtml = true;
+            var notification = _notificationManager.GetNewNotification<TwoFactorEmailNotification>();
 
-            var smtpClient = new System.Net.Mail.SmtpClient();
+            notification.Recipient = await GetEmailAsync(userId);
+            notification.Token = body;
 
-            return smtpClient.SendMailAsync(emailMessage);
-
-            // Plug in your enail service here to send a text message.
-            //return Task.FromResult(0);
+            _notificationManager.SendNotification(notification);
         }
-    }
 
-    public class SmsService : IIdentityMessageService
-    {
-        public Task SendAsync(IdentityMessage message)
+        public override async Task SendSmsAsync(string userId, string message)
         {
-            // Plug in your sms service here to send a text message.
-            return Task.FromResult(0);
+            var notification = _notificationManager.GetNewNotification<TwoFactorSmsNotification>();
+
+            notification.Recipient = await GetPhoneNumberAsync(userId);
+            notification.Token = message;
+
+            _notificationManager.SendNotification(notification);
         }
     }
 }

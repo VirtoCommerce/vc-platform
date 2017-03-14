@@ -193,26 +193,43 @@ namespace VirtoCommerce.Platform.Web
             RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
             var notificationManager = container.Resolve<INotificationManager>();
+
             notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
                 DisplayName = "Registration notification",
-                Description = "This notification sends by email to client when he finish registration",
+                Description = "This notification is sent by email to a client when he finishes registration",
                 NotificationTemplate = new NotificationTemplate
                 {
+                    Subject = PlatformNotificationResource.RegistrationNotificationSubject,
                     Body = PlatformNotificationResource.RegistrationNotificationBody,
-                    Subject = PlatformNotificationResource.RegistrationNotificationSubject
                 }
             });
 
             notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
                 DisplayName = "Reset password notification",
-                Description = "This notification sends by email to client when he want to reset his password",
+                Description = "This notification is sent by email to a client when he want to reset his password",
                 NotificationTemplate = new NotificationTemplate
                 {
+                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
                     Body = PlatformNotificationResource.ResetPasswordNotificationBody,
-                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject
                 }
+            });
+
+            notificationManager.RegisterNotificationType(() => new TwoFactorEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Two factor authentication",
+                Description = "This notification contains a security token for two factor authentication",
+                Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
+                Body = PlatformNotificationResource.TwoFactorNotificationBody,
+            });
+
+            notificationManager.RegisterNotificationType(() => new TwoFactorSmsNotification(container.Resolve<ISmsNotificationSendingGateway>())
+            {
+                DisplayName = "Two factor authentication",
+                Description = "This notification contains a security token for two factor authentication",
+                Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
+                Body = PlatformNotificationResource.TwoFactorNotificationBody,
             });
 
             //Get initialized modules list sorted by dependency order
@@ -318,7 +335,7 @@ namespace VirtoCommerce.Platform.Web
                                 ValueType = ModuleSetting.TypeString,
                                 Title = "SendGrid API key",
                                 Description = "Your SendGrid API key"
-                            }                        
+                            }
                         }
                     },
                     new ModuleSettingsGroup

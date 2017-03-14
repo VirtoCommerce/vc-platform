@@ -95,5 +95,23 @@ namespace VirtoCommerce.Platform.Web.Resources {
                 return ResourceManager.GetString("ResetPasswordNotificationSubject", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your security code is {{ token }}.
+        /// </summary>
+        public static string TwoFactorNotificationBody {
+            get {
+                return ResourceManager.GetString("TwoFactorNotificationBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security Code.
+        /// </summary>
+        public static string TwoFactorNotificationSubject {
+            get {
+                return ResourceManager.GetString("TwoFactorNotificationSubject", resourceCulture);
+            }
+        }
     }
 }
