@@ -69,6 +69,7 @@ html {
 body {
   background: #eef5f7;
   color: #333;
+  direction: ltr;
   font-family: "Exo 2";
   font-size: 16px;
   line-height: 1.4;
@@ -4439,6 +4440,7 @@ tags-input .tags.focused {
 /* CodeMirror */
 .CodeMirror {
   border: 1px solid #ddd;
+  direction: ltr;
   font-size: 13px;
   width: 100%; }
 
@@ -5540,17 +5542,27 @@ a:hover,
   .lang-rtl .__items .list-ico,
   .lang-rtl .__files .list-ico {
     margin: 0 0 0 5px; }
-  .lang-rtl .blade-static .form-count {
+  .lang-rtl .blade .blade-container .blade-static .form-count {
     left: 0;
     right: auto; }
+  .lang-rtl .blade .blade-container .blade-static .form-input.__search {
+    margin-left: 80px;
+    margin-right: auto; }
+    .lang-rtl .blade .blade-container .blade-static .form-input.__search:last-child {
+      margin-left: 0;
+      margin-right: auto; }
   .lang-rtl .form-input.__langs .flag {
     left: auto;
     right: 11px; }
   .lang-rtl .form-input .btn {
     left: 0;
-    right: auto !important; }
+    right: auto; }
   .lang-rtl .ui-grid-menu-button {
     left: 4px;
     right: auto; }
+  .lang-rtl .window-head .__logo {
+    padding: 0 20px 0 0; }
+    .lang-rtl .window-head .__logo ~ .window-t {
+      padding: 0 10px 0 20px; }
 
 /*# sourceMappingURL=main.css.map */

@@ -71,16 +71,20 @@ angular.module('platformWebApp', AppDependencies).
           if (authContext.isAuthenticated) {
               userProfile.load().then(function () {
                   $translate.use(userProfile.language);
+                  updateRtl(userProfile.language);
                   initializeMainMenu(userProfile);
               });
           };
-          $timeout(function () {
-              var currentLanguage = $translate.use();
-              var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
-              $scope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
-          }, 100);
+      });
+
+      $rootScope.$on('$translateChangeSuccess', function() {
+          updateRtl($translate.use());
+      });
+
+      function updateRtl(currentLanguage) {
+          var rtlLanguages = ['ar', 'arc', 'bcc', 'bqi', 'ckb', 'dv', 'fa', 'glk', 'he', 'lrc', 'mzn', 'pnb', 'ps', 'sd', 'ug', 'ur', 'yi'];
+          $rootScope.isRTL = rtlLanguages.indexOf(currentLanguage) >= 0;
       }
-      );
 
       $scope.mainMenu = {};
       $scope.mainMenu.items = mainMenuService.menuItems;
@@ -92,13 +96,15 @@ angular.module('platformWebApp', AppDependencies).
       }
 
       function initializeMainMenu(profile) {
-          $scope.mainMenu.isCollapsed = profile.mainMenuState.isCollapsed;
-          angular.forEach(profile.mainMenuState.items, function (x) {
-              var existItem = mainMenuService.findByPath(x.path);
-              if (existItem) {
-                  angular.extend(existItem, x);
-              }
-          });
+          if (profile.mainMenuState) {
+              $scope.mainMenu.isCollapsed = profile.mainMenuState.isCollapsed;
+              angular.forEach(profile.mainMenuState.items, function(x) {
+                  var existItem = mainMenuService.findByPath(x.path);
+                  if (existItem) {
+                      angular.extend(existItem, x);
+                  }
+              });
+          }
       }
 
       function saveMainMenuState(mainMenu, profile) {
@@ -113,7 +119,7 @@ angular.module('platformWebApp', AppDependencies).
           }
       }
 
-      settings.getUiCustomizationSetting(function(uiCustomizationSetting) {
+      settings.getUiCustomizationSetting(function (uiCustomizationSetting) {
           $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
       });
 

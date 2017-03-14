@@ -77,8 +77,8 @@
     };
     return retVal;
 }])
-.directive('vaMainMenu', ["$filter",
-    function ($filter) {
+.directive('vaMainMenu', ["$document",
+    function ($document) {
 
     return {
         restrict: 'E',
@@ -111,6 +111,33 @@
                 }
             };        
          
+            function handleKeyUpEvent(event) {
+                if (scope.showSubMenu && event.keyCode === 27) {
+                    scope.$apply(function () {
+                        scope.showSubMenu = false;
+                    });
+                }
+            }
+
+            function handleClickEvent(event) {
+                var dropdownElement = $document.find('.nav-bar .dropdown');
+                var hadDropdownElement = $document.find('.__has-dropdown');
+                if (scope.showSubMenu && !(dropdownElement.is(event.target) || dropdownElement.has(event.target).length > 0 ||
+                                           hadDropdownElement.is(event.target) || hadDropdownElement.has(event.target).length > 0)) {
+                    scope.$apply(function () {
+                        scope.showSubMenu = false;
+                    });
+                }
+            }
+
+            $document.bind('keyup', handleKeyUpEvent);
+            $document.bind('click', handleClickEvent);
+
+            scope.$on('$destroy', function () {
+                $document.unbind('keyup', handleKeyUpEvent);
+                $document.unbind('click', handleClickEvent);
+            });
+
             // required by ui-sortable: we can't use filters with it
             // https://github.com/angular-ui/ui-sortable#usage
             function updateFavorites() {
