@@ -50,14 +50,28 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<IHttpActionResult> Login(UserLogin model)
         {
-            if (await _signInManagerFactory().PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true) == SignInStatus.Success)
+            var signInManager = _signInManagerFactory();
+            var signInStatus = await signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true);
+
+            if (signInStatus == SignInStatus.Success)
             {
                 var retVal = await _securityService.FindByNameAsync(model.UserName, UserDetails.Full);
                 //Do not allow login to admin customers and rejected users
-                if (retVal.UserState != AccountState.Rejected && !String.Equals(retVal.UserType, AccountType.Customer.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                if (retVal.UserState != AccountState.Rejected && !string.Equals(retVal.UserType, AccountType.Customer.ToString(), StringComparison.InvariantCultureIgnoreCase))
                 {
                     return Ok(retVal);
                 }
+            }
+
+            if (signInStatus == SignInStatus.RequiresVerification)
+            {
+                // TODO: Add UI for choosing a two factor provider, sending the code and verifying the entered code.
+                // var userId = await signInManager.GetVerifiedUserIdAsync();
+                // var providers = await signInManager.UserManager.GetValidTwoFactorProvidersAsync(userId);
+                // var provider = providers.FirstOrDefault(); // User should choose a provider
+                // var sendCodeResult = await signInManager.SendTwoFactorCodeAsync(provider);
+                // var code = "123456"; // Get code from user
+                // var twoFactorSignInStatus = await signInManager.TwoFactorSignInAsync(provider, code, false, false);
             }
 
             return StatusCode(HttpStatusCode.Unauthorized);
