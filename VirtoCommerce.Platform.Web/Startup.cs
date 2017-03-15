@@ -202,6 +202,7 @@ namespace VirtoCommerce.Platform.Web
                 {
                     Subject = PlatformNotificationResource.RegistrationNotificationSubject,
                     Body = PlatformNotificationResource.RegistrationNotificationBody,
+                    Language = "en-US",
                 }
             });
 
@@ -213,6 +214,7 @@ namespace VirtoCommerce.Platform.Web
                 {
                     Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
                     Body = PlatformNotificationResource.ResetPasswordNotificationBody,
+                    Language = "en-US",
                 }
             });
 
@@ -220,16 +222,24 @@ namespace VirtoCommerce.Platform.Web
             {
                 DisplayName = "Two factor authentication",
                 Description = "This notification contains a security token for two factor authentication",
-                Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
-                Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
+                    Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                    Language = "en-US",
+                }
             });
 
             notificationManager.RegisterNotificationType(() => new TwoFactorSmsNotification(container.Resolve<ISmsNotificationSendingGateway>())
             {
                 DisplayName = "Two factor authentication",
                 Description = "This notification contains a security token for two factor authentication",
-                Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
-                Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
+                    Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                    Language = "en-US",
+                }
             });
 
             //Get initialized modules list sorted by dependency order

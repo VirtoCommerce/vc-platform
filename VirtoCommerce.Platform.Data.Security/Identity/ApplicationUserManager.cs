@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.DataProtection;
 using VirtoCommerce.Platform.Core.Notifications;
-using VirtoCommerce.Platform.Data.Notifications;
 
 namespace VirtoCommerce.Platform.Data.Security.Identity
 {
@@ -13,13 +11,9 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
     /// </summary>
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
-        private readonly INotificationManager _notificationManager;
-
         public ApplicationUserManager(IUserStore<ApplicationUser> store, IDataProtectionProvider dataProtectionProvider, INotificationManager notificationManager)
             : base(store)
         {
-            _notificationManager = notificationManager;
-
             // Configure validation logic for usernames
             UserValidator = new UserValidator<ApplicationUser>(this)
             {
@@ -43,41 +37,15 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             MaxFailedAccessAttemptsBeforeLockout = 5;
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
-            // You can write your own provider and plug in here.
-            RegisterTwoFactorProvider("PhoneNumberTokenProvider", new PhoneNumberTokenProvider<ApplicationUser>
-            {
-                MessageFormat = "{0}" // Token
-            });
-            RegisterTwoFactorProvider("EmailTokenProvider", new EmailTokenProvider<ApplicationUser>
-            {
-                BodyFormat = "{0}" // Token
-            });
+            // You can write your own provider and plug it in here.
+            RegisterTwoFactorProvider("PhoneCode", new ApplicationPhoneNumberTokenProvider(notificationManager));
+            RegisterTwoFactorProvider("EmailCode", new ApplicationEmailTokenProvider(notificationManager));
 
             if (dataProtectionProvider != null)
             {
                 UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
-        }
-
-        public override async Task SendEmailAsync(string userId, string subject, string body)
-        {
-            var notification = _notificationManager.GetNewNotification<TwoFactorEmailNotification>();
-
-            notification.Recipient = await GetEmailAsync(userId);
-            notification.Token = body;
-
-            _notificationManager.SendNotification(notification);
-        }
-
-        public override async Task SendSmsAsync(string userId, string message)
-        {
-            var notification = _notificationManager.GetNewNotification<TwoFactorSmsNotification>();
-
-            notification.Recipient = await GetPhoneNumberAsync(userId);
-            notification.Token = message;
-
-            _notificationManager.SendNotification(notification);
         }
     }
 }

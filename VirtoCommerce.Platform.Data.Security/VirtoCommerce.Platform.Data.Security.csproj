@@ -126,7 +126,9 @@
     <Compile Include="CurrentUserOwinMiddleware.cs" />
     <Compile Include="IApiAccountProvider.cs" />
     <Compile Include="Identity\ApplicationClaimsIdentityProvider.cs" />
+    <Compile Include="Identity\ApplicationEmailTokenProvider.cs" />
     <Compile Include="Identity\ApplicationSignInManager.cs" />
+    <Compile Include="Identity\ApplicationPhoneNumberTokenProvider.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
