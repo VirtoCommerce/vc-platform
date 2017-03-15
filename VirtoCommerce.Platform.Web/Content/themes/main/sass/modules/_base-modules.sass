@@ -1767,7 +1767,7 @@ tags-input
   position: static
 .blade .blade-head,
 .blade .blade-container
-  padding-right: 8px
+  padding-right: $bladeContainerPadding
 .blade .blade-wrapper,
 .blade .blade-container,
 .blade .blade-content,
@@ -1957,9 +1957,13 @@ tags-input
 .blade-content.__tree .inner-block
   width: 300px
 .blade-content.__code-editor
-  width: calc(100vw - #{$bladeMediumSize})
+  width: calc(100vw - #{$mainMenuWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2))
   .inner-block
-    width: calc(100vw - #{$bladeMediumSize} - #{$bladePadding} * 2)
+    width: calc(100vw - #{$mainMenuWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2 + #{$bladePadding} * 2))
+.nav-bar.__collapsed + .cnt .blade .blade-content.__code-editor
+  width: calc(100vw - #{$mainMenuCollapsedWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2))
+  .inner-block
+    width: calc(100vw - #{$mainMenuCollapsedWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2 + #{$bladePadding} * 2))
 .blade .blade-loader
   padding: 20px
   text-align: center
