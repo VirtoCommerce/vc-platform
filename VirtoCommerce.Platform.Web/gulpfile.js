@@ -31,7 +31,20 @@ gulp.task('translateSass', function () {
         .pipe(sass({
             includePaths: require('node-bourbon').includePaths
         }))
-        .pipe(autoprefixer({ browsers: ['last 2 versions'] }))
+        .pipe(autoprefixer({
+            browsers: [
+                'Explorer >= 10',
+                'Edge >= 12',
+                'Firefox >= 19',
+                'Chrome >= 20',
+                'Safari >= 8',
+                'Opera >= 15',
+                'iOS >= 8',
+                'Android >= 4.4',
+                'ExplorerMobile >= 10',
+                'last 2 versions'
+            ]
+        }))
         // must be executed straight before output
         .pipe(sourcemaps.write('.', { includeContent: false, sourceRoot: '../sass' }))
         .pipe(gulp.dest('Content/themes/main/css'));
