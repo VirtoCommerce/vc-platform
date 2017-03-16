@@ -64,13 +64,13 @@ angular.module('platformWebApp')
             }
 
             var recalculateWidth = function () {
-                if (scope.blade.state) {
+                if (angular.isDefined(scope.blade.isExpanded)) {
                     var currentBlade = $(element);
                     var mainMenu = $('.nav-bar');
                     var parentBlade = scope.blade.parentBlade ? $('#' + scope.blade.parentBlade.id) : undefined;
                     var contentWidth = '420px';
                     var innerWidth = '380px';
-                    if (scope.blade.state == 'expanded') {
+                    if (scope.blade.isExpanded === true) {
                         var widthOffset = mainMenu.width() + (parentBlade ? parentBlade.width() + 8 : 0) + 8;
                         contentWidth = 'calc(100vw - ' + parseInt(widthOffset) + 'px)';
                         innerWidth = 'calc(100vw - ' + parseInt(widthOffset + 40) + 'px)';
@@ -87,7 +87,7 @@ angular.module('platformWebApp')
                 recalculateWidth();
             });
 
-            scope.$watch('blade.state', function() {
+            scope.$watch('blade.state', function () {
                 recalculateWidth();
             });
 
@@ -220,8 +220,11 @@ angular.module('platformWebApp')
                 }
             });
 
-            if (blade.parentBlade && blade.parentBlade.state == 'collapsed') {
-                blade.parentBlade.state = 'expanded';
+            if (blade.parentBlade && blade.parentBlade.isExpanded === false) {
+                blade.parentBlade.isExpanded = true;
+                if (blade.parentBlade.onExpandChanged) {
+                    blade.parentBlade.onExpandChanged(true, false);
+                }
             }
         },
         closeChildrenBlades: function (blade, callback) {
@@ -309,8 +312,11 @@ angular.module('platformWebApp')
                 showBlade();
             }
 
-            if (parentBlade && parentBlade.state == 'expanded') {
-                parentBlade.state = 'collapsed';
+            if (parentBlade && parentBlade.isExpanded === true) {
+                parentBlade.isExpanded = false;
+                if (angular.isFunction(parentBlade.onExpandChanged)) {
+                    parentBlade.onExpandChanged(false, true);
+                }
             }
 
             blade.hasUpdatePermission = function () {
