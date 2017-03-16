@@ -53,7 +53,7 @@ angular.module('platformWebApp')
             var blade = $('.blade:last', mainContent);
             var offset = parseInt(blade.offset().left);
 
-            if (!scope.blade.disableOpenAnimation) {
+            if (!scope.blade.disableOpenAnimation && !scope.blade.state) {
                 blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');
 
                 setTimeout(function () {
@@ -63,41 +63,38 @@ angular.module('platformWebApp')
                 }, 0);
             }
 
+            var recalculateWidth = function () {
+                if (scope.blade.state) {
+                    var currentBlade = $(element);
+                    var mainMenu = $('.nav-bar');
+                    var parentBlade = scope.blade.parentBlade ? $('#' + scope.blade.parentBlade.id) : undefined;
+                    var contentWidth = '420px';
+                    var innerWidth = '380px';
+                    if (scope.blade.state == 'expanded') {
+                        var widthOffset = mainMenu.width() + (parentBlade ? parentBlade.width() + 8 : 0) + 8;
+                        contentWidth = 'calc(100vw - ' + parseInt(widthOffset) + 'px)';
+                        innerWidth = 'calc(100vw - ' + parseInt(widthOffset + 40) + 'px)';
+                    }
+                    var contentblock = currentBlade.find(".blade-content");
+                    $(contentblock).width(contentWidth);
+                    $(contentblock).find('.inner-block').width(innerWidth);
+
+                    setVisibleToolsLimit();
+                }
+            }
+            
+            scope.$on('$includeContentLoaded', function () {
+                recalculateWidth();
+            });
+
+            scope.$watch('blade.state', function() {
+                recalculateWidth();
+            });
+
             $timeout(function () {
                 var scrollAdjustment = (offset >= mainContent.scrollLeft()) ? blade.width() : mainContent.scrollLeft();
-                mainContent.animate({ scrollLeft: offset + scrollAdjustment + 'px' }, 500);
+                mainContent.animate({ scrollLeft: offset + scrollAdjustment + 'px' }, 0); //500);
             }, 0, false);
-
-            scope.bladeMaximize = function () {
-                scope.maximized = true;
-
-                var blade = $(element);
-                blade.attr('data-width', blade.width());
-                var leftMenu = $('.nav-bar');
-                var offset = parseInt((blade.offset().left + $('.cnt').scrollLeft()) - leftMenu.width());
-                var contentblock = blade.find(".blade-content");
-                $(contentblock).animate({ width: (parseInt(window.innerWidth - leftMenu.width()) + 'px') }, 100);
-                $(contentblock).find('.inner-block').animate({ width: parseInt(window.innerWidth - leftMenu.width() - 40) + 'px' }, 100);
-                $('.cnt').animate({ scrollLeft: offset + 'px' }, 250);
-
-                setVisibleToolsLimit();
-            };
-
-            scope.bladeRestore = function () {
-                scope.maximized = false;
-
-                var blade = $(element);
-                var blockWidth = blade.data('width');
-                var leftMenu = $('.nav-bar');
-                blade.removeAttr('data-width');
-                var offset = parseInt(blade.offset().left + $('.cnt').scrollLeft() - leftMenu.width());
-                var contentblock = blade.find(".blade-content");
-                $(contentblock).animate({ width: blockWidth }, 100);
-                $(contentblock).find('.inner-block').animate({ width: blockWidth - 40 }, 100);
-                $('.cnt').animate({ scrollLeft: offset + 'px' }, 250);
-
-                setVisibleToolsLimit();
-            };
 
             scope.bladeClose = function (onAfterClose) {
                 bladeNavigationService.closeBlade(scope.blade, onAfterClose, function (callback) {
@@ -222,6 +219,10 @@ angular.module('platformWebApp')
                     doCloseBlade();
                 }
             });
+
+            if (blade.parentBlade && blade.parentBlade.state == 'collapsed') {
+                blade.parentBlade.state = 'expanded';
+            }
         },
         closeChildrenBlades: function (blade, callback) {
             if (blade && _.any(blade.childrenBlades)) {
@@ -306,6 +307,10 @@ angular.module('platformWebApp')
             }
             else {
                 showBlade();
+            }
+
+            if (parentBlade && parentBlade.state == 'expanded') {
+                parentBlade.state = 'collapsed';
             }
 
             blade.hasUpdatePermission = function () {

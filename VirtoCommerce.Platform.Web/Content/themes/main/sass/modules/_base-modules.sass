@@ -1875,7 +1875,6 @@ tags-input
 
     filter: alpha(opacity=25)
 .blade .blade-content
-  width: $bladeNormalSize
   white-space: normal
 .blade.__active
   .blade-content
@@ -1885,28 +1884,28 @@ tags-input
     background: $lightBg
 .__canceled
   background-color: #eff7fc
-.blade .blade-content.__medium-wide
-  width: $bladeMediumSize
-.blade .blade-content.__large-wide
-  width: $bladeLargeSize
-.blade .blade-content.__xlarge-wide
-  width: $bladeXLargeSize
-.blade .blade-content.__xxlarge-wide
-  width: $bladeXXLargeSize
-.blade .blade-content.__3xlarge-wide
-  width: $blade3XLargeSize
-.blade .blade-content.__4xlarge-wide
-  width: $blade4XLargeSize
-.blade .blade-content.__5xlarge-wide
-  width: $blade5XLargeSize
-.blade .blade-content.__tree
-  width: 340px
+
+.blade-content
+  .blade &
+    $width: getBladeContentSize('Normal')
+    min-width: $width
+    width: $width
+    @for $bladeSizeIndex from 2 through length($bladeSizes)
+      $bladeSizeName: nth($bladeSizes, $bladeSizeIndex)
+      &.__#{to-lower-case($bladeSizeName)}-wide
+        $width: getBladeContentSize($bladeSizeName)
+        min-width: $width
+        width: $width
+  .blade &.__tree
+    width: 340px
+  .blade &.__code-editor
+    width: calc(100vw - #{$mainMenuWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2})
+    .nav-bar.__collapsed + .cnt &
+      width: calc(100vw - #{$mainMenuCollapsedWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2})
 .blade-content .table
-  min-width: $bladeNormalSize
+  min-width: getBladeContentSize('Normal')
 .blade-content.__medium-wide .table
-  min-width: $bladeMediumSize
-.blade .blade-content.blade-large
-  width: 720px
+  min-width: getBladeContentSize('Medium')
 .blade .blade-inner
   box-sizing: border-box
   overflow: hidden
@@ -1940,32 +1939,24 @@ tags-input
   overflow-y: auto
 .blade .blade-inner.ui-grid-no-scroll:hover
   overflow: visible
-.blade-inner .inner-block
-  width: $bladeNormalSize - $bladePadding * 2
-.blade-content.__medium-wide .inner-block
-  width: $bladeMediumSize - $bladePadding * 2
-.blade-content.__large-wide .inner-block
-  width: $bladeLargeSize - $bladePadding * 2
-.blade-content.__xlarge-wide .inner-block
-  width: $bladeXLargeSize - $bladePadding * 2
-.blade-content.__xxlarge-wide .inner-block
-  width: $bladeXXLargeSize - $bladePadding * 2
-.blade-content.__3xlarge-wide .inner-block
-  width: $blade3XLargeSize - $bladePadding * 2
-.blade-content.__4xlarge-wide .inner-block
-  width: $blade4XLargeSize - $bladePadding * 2
-.blade-content.__5xlarge-wide .inner-block
-  width: $blade5XLargeSize - $bladePadding * 2
-.blade-content.__tree .inner-block
-  width: 300px
-.blade-content.__code-editor
-  width: calc(100vw - #{$mainMenuWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2))
-  .inner-block
-    width: calc(100vw - #{$mainMenuWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2 + #{$bladePadding} * 2))
-.nav-bar.__collapsed + .cnt .blade .blade-content.__code-editor
-  width: calc(100vw - #{$mainMenuCollapsedWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2))
-  .inner-block
-    width: calc(100vw - #{$mainMenuCollapsedWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2 + #{$bladePadding} * 2))
+.inner-block
+  .blade-content &
+    $width: getBladeInnerSize('Normal')
+    min-width: $width
+    width: $width
+  @for $bladeSizeIndex from 2 through length($bladeSizes)
+    $bladeSizeName: nth($bladeSizes, $bladeSizeIndex)
+    .blade-content.__#{to-lower-case($bladeSizeName)}-wide &
+      $width: getBladeInnerSize($bladeSizeName)
+      min-width: $width
+      width: $width
+  .blade-content.__tree &
+      width: 300px
+  .blade-content.__code-editor &
+    width: calc(100vw - #{$mainMenuWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
+    .nav-bar.__collapsed + .cnt &
+      width: calc(100vw - #{$mainMenuCollapsedWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
+
 .blade .blade-loader
   padding: 20px
   text-align: center

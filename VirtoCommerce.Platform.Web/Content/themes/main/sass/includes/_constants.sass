@@ -16,17 +16,18 @@ $demoWarningHeight: 28px;
 $tileSize: 120px
 $tileMargin: 10px
 
-$bladeSize: $tileSize + $tileMargin;
+$bladeSizeBase: $tileSize + $tileMargin;
 $bladePadding: 20px
 $bladeContainerPadding: 8px
-$bladeNormalSize: $bladeSize * 3 + $bladePadding + 10px
-$bladeMediumSize: $bladeNormalSize + $bladeSize
-$bladeLargeSize: $bladeMediumSize + $bladeSize
-$bladeXLargeSize: $bladeLargeSize + $bladeSize
-$bladeXXLargeSize: $bladeXLargeSize + $bladeSize
-$blade3XLargeSize: $bladeXXLargeSize + $bladeSize
-$blade4XLargeSize: $blade3XLargeSize + $bladeSize
-$blade5XLargeSize: $blade4XLargeSize + $bladeSize
+
+$bladeSizes: ('Normal', 'Medium', 'Large', 'XLarge', 'XXLarge')
+
+@function getBladeContentSize($bladeSize)
+  $normalSize: $bladeSizeBase * 3 - $tileMargin + $bladePadding * 2
+  @return $normalSize + $bladeSizeBase * (index($bladeSizes, $bladeSize) - 1)
+
+@function getBladeInnerSize($bladeSize)
+  @return getBladeContentSize($bladeSize) - $bladePadding * 2
 
 $mainMenuWidth: 235px
 $mainMenuCollapsedWidth: 72px
