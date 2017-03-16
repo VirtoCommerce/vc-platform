@@ -5,16 +5,14 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Core.Settings.Profiles;
-using VirtoCommerce.Platform.Web.Converters.Settings;
-using webModel = VirtoCommerce.Platform.Web.Model.Settings;
+using VirtoCommerce.Platform.Web.Model.Profiles;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [RoutePrefix("api/platform/profiles")]
     public class ProfilesController : ApiController
     {
-        private static object _lock = new object();
+        private static object _lockObject = new object();
         private readonly ISettingsManager _settingsManager;
         private readonly ISecurityService _securityService;
 
@@ -24,38 +22,43 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _settingsManager = settingsManager;
         }
 
+        /// <summary>
+        /// Get current user profile
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("currentuser")]
-        [ResponseType(typeof(webModel.Setting[]))]
+        [ResponseType(typeof(UserProfile))]
         public async Task<IHttpActionResult> GetCurrentUserProfile()
         {
-            return Ok((await GetCurrentUserProfileInternal()).Settings.Select(setting => setting.ToWebModel()).ToArray());
+            var currentUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Reduced);
+            var userProfile = new UserProfile(currentUser.Id);
+            var modules = _settingsManager.GetModules();
+            userProfile.Settings = modules.SelectMany(module => _settingsManager.GetModuleSettings(module.Id)).Where(setting => setting.GroupName == "Platform|User Profile").ToArray();
+            _settingsManager.LoadEntitySettingsValues(userProfile);
+            return Ok(userProfile);
         }
 
+        /// <summary>
+        /// Update current user profile
+        /// </summary>
+        /// <param name="userProfile"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("currentuser")]
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> UpdateCurrentUserProfile(webModel.Setting[] settings)
+        public async Task<IHttpActionResult> UpdateCurrentUserProfile(UserProfile userProfile)
         {
-            var userProfile = await GetCurrentUserProfileInternal();
-            userProfile.Settings = settings.Select(setting => setting.ToModuleModel()).ToArray();
-            lock (_lock)
+            var currentUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Reduced);
+            if (currentUser.Id != userProfile.Id)
+            {
+                return Unauthorized();
+            }
+            lock (_lockObject)
             {
                 _settingsManager.SaveEntitySettingsValues(userProfile);
             }
             return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        private async Task<UserProfile> GetCurrentUserProfileInternal()
-        {
-            var currentUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full);
-            var userProfile = new UserProfile(currentUser.Id);
-            lock (_lock)
-            {
-                userProfile.Settings = _settingsManager.GetModuleSettings("VirtoCommerce.Platform").Where(setting => setting.GroupName == "Platform|User Interface").ToArray();
-                _settingsManager.LoadEntitySettingsValues(userProfile);
-            }
-            return userProfile;
         }
     }
 }

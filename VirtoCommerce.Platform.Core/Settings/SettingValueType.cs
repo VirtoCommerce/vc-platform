@@ -8,6 +8,7 @@
         Decimal,
         DateTime,
         Boolean,
-        SecureString
+        SecureString,
+        Json
     }
 }

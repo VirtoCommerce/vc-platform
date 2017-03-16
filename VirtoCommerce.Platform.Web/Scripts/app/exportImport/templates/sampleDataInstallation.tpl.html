@@ -1,6 +1,7 @@
 ﻿<header class="window-head">
-    <div class="window-t __logo" ng-if="!notification.created">{{ 'platform.templates.sampleDataChoose.labels.choose-sample-data-type' | translate }}</div>
-    <div class="window-t __logo" ng-if="notification.created">{{ 'platform.templates.sampleDataInitialization.labels.sample-data-initialization' | translate }}</div>
+    <img class="__logo" ng-src="{{uiCustomization.contrast_logo || 'Content/themes/main/images/contrast-logo.png'}}"/>
+    <span class="window-t" ng-if="!notification.created">{{ 'platform.templates.sampleDataChoose.labels.choose-sample-data-type' | translate }}</span>
+    <span class="window-t" ng-if="notification.created">{{ 'platform.templates.sampleDataInitialization.labels.sample-data-initialization' | translate }}</span>
 </header>
 <div class="window-cnt">
     <form class="form" novalidate ng-if="!notification.created">

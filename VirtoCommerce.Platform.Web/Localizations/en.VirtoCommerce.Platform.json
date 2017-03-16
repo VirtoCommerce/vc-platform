@@ -517,7 +517,7 @@
             },
             "login": {
                 "labels": {
-                    "sign-in": "Sign in to Virto Commerce Manager",
+                    "sign-in": "Sign in to {{title}} Manager",
                     "login": "Login",
                     "password": "Password",
                     "remember-me": "Remember me",
@@ -595,7 +595,7 @@
             "user-profile": {
                 "title": "User profile",
                 "labels": {
-                    "set-language": "Set Commerce Manager language"
+                    "set-language": "Set Manager language"
                 }
             }
         },

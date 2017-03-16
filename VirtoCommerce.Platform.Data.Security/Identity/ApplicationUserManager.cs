@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.DataProtection;
+using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.Platform.Data.Security.Identity
 {
@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
     /// </summary>
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
-        public ApplicationUserManager(IUserStore<ApplicationUser> store, IDataProtectionProvider dataProtectionProvider)
+        public ApplicationUserManager(IUserStore<ApplicationUser> store, IDataProtectionProvider dataProtectionProvider, INotificationManager notificationManager)
             : base(store)
         {
             // Configure validation logic for usernames
@@ -37,54 +37,15 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             MaxFailedAccessAttemptsBeforeLockout = 5;
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
-            // You can write your own provider and plug in here.
-            RegisterTwoFactorProvider("PhoneCode", new PhoneNumberTokenProvider<ApplicationUser>
-            {
-                MessageFormat = "Your security code is: {0}"
-            });
-            RegisterTwoFactorProvider("EmailCode", new EmailTokenProvider<ApplicationUser>
-            {
-                Subject = "SecurityCode",
-                BodyFormat = "Your security code is {0}"
-            });
-            EmailService = new EmailService();
-            //SmsService = new SmsService();
+            // You can write your own provider and plug it in here.
+            RegisterTwoFactorProvider("PhoneCode", new ApplicationPhoneNumberTokenProvider(notificationManager));
+            RegisterTwoFactorProvider("EmailCode", new ApplicationEmailTokenProvider(notificationManager));
 
             if (dataProtectionProvider != null)
             {
                 UserTokenProvider =
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
-        }
-    }
-
-    public class EmailService : IIdentityMessageService
-    {
-
-        public Task SendAsync(IdentityMessage message)
-        {
-            var emailMessage = new System.Net.Mail.MailMessage();
-            emailMessage.From = new System.Net.Mail.MailAddress("do-not-reply@samplestore.com");
-            emailMessage.To.Add(message.Destination);
-            emailMessage.Subject = message.Subject;
-            emailMessage.Body = message.Body;
-            emailMessage.IsBodyHtml = true;
-
-            var smtpClient = new System.Net.Mail.SmtpClient();
-
-            return smtpClient.SendMailAsync(emailMessage);
-
-            // Plug in your enail service here to send a text message.
-            //return Task.FromResult(0);
-        }
-    }
-
-    public class SmsService : IIdentityMessageService
-    {
-        public Task SendAsync(IdentityMessage message)
-        {
-            // Plug in your sms service here to send a text message.
-            return Task.FromResult(0);
         }
     }
 }

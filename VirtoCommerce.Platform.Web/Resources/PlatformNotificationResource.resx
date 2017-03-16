@@ -129,4 +129,10 @@
   <data name="ResetPasswordNotificationSubject" xml:space="preserve">
     <value>Reset password link</value>
   </data>
+  <data name="TwoFactorNotificationBody" xml:space="preserve">
+    <value>Your security code is {{ token }}</value>
+  </data>
+  <data name="TwoFactorNotificationSubject" xml:space="preserve">
+    <value>Security Code</value>
+  </data>
 </root>

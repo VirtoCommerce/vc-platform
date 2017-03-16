@@ -41,15 +41,16 @@
 			hasPermission = $.inArray(permission, authContext.permissions) > -1;
 			if (!hasPermission && securityScopes)
 			{
-				securityScopes = angular.isArray(securityScopes) ? securityScopes : securityScopes.split(',');
-				//Check permissions in scope
-				hasPermission = _.some(securityScopes, function (x) {
-					var permissionWithScope = permission + ":" + x;
-					var retVal = $.inArray(permissionWithScope, authContext.permissions) > -1;
-					//console.log(permissionWithScope + "=" + retVal);
-					return retVal;
-				});
-			
+			    if (typeof securityScopes === 'string' || angular.isArray(securityScopes)) {
+			        securityScopes = angular.isArray(securityScopes) ? securityScopes : securityScopes.split(',');
+			        //Check permissions in scope
+			        hasPermission = _.some(securityScopes, function (x) {
+			            var permissionWithScope = permission + ":" + x;
+			            var retVal = $.inArray(permissionWithScope, authContext.permissions) > -1;
+			            //console.log(permissionWithScope + "=" + retVal);
+			            return retVal;
+			        });
+			    }			
 			}
 		}
 		return hasPermission;

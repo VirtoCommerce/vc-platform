@@ -61,7 +61,7 @@
         menuItem.isCollapsed = false;
         menuItem.isFavorite = false;
             // place at the end
-        menuItem.order = 9007199254740991; // Number.MAX_SAFE_INTEGER;
+        menuItem.order = Number.MAX_SAFE_INTEGER;
     }
 
     function findByPath(path) {
@@ -77,19 +77,27 @@
     };
     return retVal;
 }])
-.directive('vaMainMenu', ["$filter",
-    function ($filter) {
+.directive('vaMainMenu', ["$document",
+    function ($document) {
 
     return {
         restrict: 'E',
         replace: true,
         transclude: true,
+        require: 'ngModel',
         scope: {
-            items: "=*",
-            isCollapsed: "="
+            onMenuChanged: "&"
         },
         templateUrl: '$(Platform)/Scripts/app/navigation/menu/mainMenu.tpl.html',
-        link: function (scope) {
+        link: function (scope, element, attr, ngModelController, linker) {
+            scope.menu = ngModelController.$modelValue;
+            ngModelController.$render = function () {
+                scope.menu = ngModelController.$modelValue;
+                updateFavorites();
+                scope.$watch(function () {
+                    return _.filter(scope.menu.items, function (x) { return x.isFavorite && !x.isAlwaysOnBar; });
+                }, function () { updateFavorites(); }, true);
+            };            
 
             scope.selectItem = function (menuItem) {
                 if (scope.showSubMenu && scope.currentMenuItem === menuItem) {
@@ -101,27 +109,63 @@
                 if (angular.isDefined(menuItem.action)) {
                     menuItem.action();
                 }
-            };
+            };        
+         
+            function handleKeyUpEvent(event) {
+                if (scope.showSubMenu && event.keyCode === 27) {
+                    scope.$apply(function () {
+                        scope.showSubMenu = false;
+                    });
+                }
+            }
 
-            updateFavorites();
-            scope.$watch("items", function () { updateFavorites(); }, true);
+            function handleClickEvent(event) {
+                var dropdownElement = $document.find('.nav-bar .dropdown');
+                var hadDropdownElement = $document.find('.__has-dropdown');
+                if (scope.showSubMenu && !(dropdownElement.is(event.target) || dropdownElement.has(event.target).length > 0 ||
+                                           hadDropdownElement.is(event.target) || hadDropdownElement.has(event.target).length > 0)) {
+                    scope.$apply(function () {
+                        scope.showSubMenu = false;
+                    });
+                }
+            }
+
+            $document.bind('keyup', handleKeyUpEvent);
+            $document.bind('click', handleClickEvent);
+
+            scope.$on('$destroy', function () {
+                $document.unbind('keyup', handleKeyUpEvent);
+                $document.unbind('click', handleClickEvent);
+            });
+
             // required by ui-sortable: we can't use filters with it
             // https://github.com/angular-ui/ui-sortable#usage
             function updateFavorites() {
-                scope.dynamicMenuItems = _.sortBy(_.filter(scope.items, function (menuItem) { return menuItem.isFavorite || menuItem.path === "more"; }), function (menuItem) { return menuItem.order; });
+                scope.dynamicMenuItems = _.sortBy(_.filter(scope.menu.items, function (x) { return x.isFavorite || x.path === "more"; }), function (x) { return x.order; });
+                raiseOnMenuChanged();
             }
-            
+
+            function raiseOnMenuChanged() {
+                _.throttle(scope.onMenuChanged({ menu: scope.menu }), 100);
+            };
+            scope.toggleCollapsed = function () {
+                scope.menu.isCollapsed = !scope.menu.isCollapsed;
+                raiseOnMenuChanged();
+            };
+
             scope.toggleFavorite = function (menuItem) {
                 menuItem.isFavorite = !menuItem.isFavorite;
                 // clear order when removed from favorites
                 if (!menuItem.isFavorite) {
-                    menuItem.order = 9007199254740991; // Number.MAX_SAFE_INTEGER;
+                    menuItem.order = Number.MAX_SAFE_INTEGER;
                 }
-                var favorites = _.sortBy(_.filter(scope.items, function (menuItem) { return menuItem.isFavorite }), function (menuItem) { return menuItem.order; });
+                var favorites = _.sortBy(_.filter(scope.menu.items, function (x) { return x.isFavorite }), function (x) { return x.order; });
                 // re-calculate order
                 for (var i = 0; i < favorites.length; i++) {
                     favorites[i].order = i;
                 }
+                // Do not call the callback function to notify what favorites changed.
+                // We're already do that because we call updateFavorites (which call the calback) in ngModelController.$render
             };
 
             scope.sortableOptions = {

@@ -193,25 +193,52 @@ namespace VirtoCommerce.Platform.Web
             RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
             var notificationManager = container.Resolve<INotificationManager>();
+
             notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
                 DisplayName = "Registration notification",
-                Description = "This notification sends by email to client when he finish registration",
+                Description = "This notification is sent by email to a client when he finishes registration",
                 NotificationTemplate = new NotificationTemplate
                 {
+                    Subject = PlatformNotificationResource.RegistrationNotificationSubject,
                     Body = PlatformNotificationResource.RegistrationNotificationBody,
-                    Subject = PlatformNotificationResource.RegistrationNotificationSubject
+                    Language = "en-US",
                 }
             });
 
             notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
                 DisplayName = "Reset password notification",
-                Description = "This notification sends by email to client when he want to reset his password",
+                Description = "This notification is sent by email to a client when he want to reset his password",
                 NotificationTemplate = new NotificationTemplate
                 {
+                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
                     Body = PlatformNotificationResource.ResetPasswordNotificationBody,
-                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject
+                    Language = "en-US",
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new TwoFactorEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Two factor authentication",
+                Description = "This notification contains a security token for two factor authentication",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
+                    Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                    Language = "en-US",
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new TwoFactorSmsNotification(container.Resolve<ISmsNotificationSendingGateway>())
+            {
+                DisplayName = "Two factor authentication",
+                Description = "This notification contains a security token for two factor authentication",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
+                    Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                    Language = "en-US",
                 }
             });
 
@@ -318,7 +345,7 @@ namespace VirtoCommerce.Platform.Web
                                 ValueType = ModuleSetting.TypeString,
                                 Title = "SendGrid API key",
                                 Description = "Your SendGrid API key"
-                            }                        
+                            }
                         }
                     },
                     new ModuleSettingsGroup
@@ -396,14 +423,14 @@ namespace VirtoCommerce.Platform.Web
                     },
                     new ModuleSettingsGroup
                     {
-                        Name = "Platform|User Interface",
+                        Name = "Platform|User Profile",
                         Settings = new[]
                         {
                             new ModuleSetting
                             {
                                 Name = "VirtoCommerce.Platform.UI.MainMenu.State",
-                                ValueType = ModuleSetting.TypeText,
-                                Title = "Persisted state of main menu (JSON)"
+                                ValueType = ModuleSetting.TypeJson,
+                                Title = "Persisted state of main menu"
                             },
                             new ModuleSetting
                             {
@@ -412,6 +439,25 @@ namespace VirtoCommerce.Platform.Web
                                 Title = "Language",
                                 Description = "Default language (two letter code from ISO 639-1)",
                                 DefaultValue = "en"
+                            }
+                        }
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|User Interface",
+                        Settings = new[]
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.Customization",
+                                ValueType = ModuleSetting.TypeJson,
+                                Title = "Customization",
+                                Description = "JSON contains personalization settings of manager UI",
+                                DefaultValue = "{\n" +
+                                               "  \"title\": \"Virto Commerce\",\n" +
+                                               "  \"logo\": \"Content/themes/main/images/logo.png\",\n" +
+                                               "  \"contrast_logo\": \"Content/themes/main/images/contrast-logo.png\"\n" +
+                                               "}"
                             }
                         }
                     }

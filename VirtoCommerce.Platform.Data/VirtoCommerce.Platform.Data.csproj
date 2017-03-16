@@ -144,6 +144,8 @@
     <Compile Include="Notifications\NotificationManager.cs" />
     <Compile Include="Notifications\NotificationTemplateServiceImpl.cs" />
     <Compile Include="Notifications\RegistrationSmsNotification.cs" />
+    <Compile Include="Notifications\TwoFactorEmailNotification.cs" />
+    <Compile Include="Notifications\TwoFactorSmsNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IPlatformRepository.cs" />
     <Compile Include="Repositories\Migrations\201504300700222_Initial.cs" />
