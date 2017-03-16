@@ -87,7 +87,7 @@ angular.module('platformWebApp')
                 recalculateWidth();
             });
 
-            scope.$watch('blade.state', function () {
+            scope.$watch('blade.isExpanded', function () {
                 recalculateWidth();
             });
 
