@@ -329,9 +329,8 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         private IEnumerable<ModuleSetting> GetAllManifestSettings()
         {
-            return GetModulesWithSettings()
-                .SelectMany(m => m.Settings)
-                .SelectMany(g => g.Settings);
+            return GetModulesWithSettings().SelectMany(m => m.Settings)
+                .Where(g => g.Settings != null).SelectMany(g => g.Settings);
         }
 
         private List<SettingEntity> GetAllEntities()
