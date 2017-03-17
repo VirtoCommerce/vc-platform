@@ -38,6 +38,9 @@
   .cnt
     left: 0
     right: $mainMenuWidth
+    .cnt-inner
+      padding-left: 90px
+      padding-right: 0
   .dashboard
     .dashboard-area
       margin: 0 0 0 3px
@@ -91,3 +94,9 @@
     padding: 0 20px 0 0
     ~.window-t
       padding: 0 10px 0 20px
+  .uk-htmleditor-fullscreen
+    left: auto
+    right: $mainMenuWidth !important
+    .nav-bar.__collapsed + .cnt &
+      left: auto
+      right: $mainMenuCollapsedWidth !important
