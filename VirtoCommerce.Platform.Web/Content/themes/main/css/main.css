@@ -2541,10 +2541,6 @@ button.btn {
 .form.columns {
   padding: 0; }
 
-.column {
-  float: left;
-  width: 100%; }
-
 .column:nth-last-child(2),
 .column:nth-last-child(2) ~ .column {
   float: left;
@@ -2554,16 +2550,6 @@ button.btn {
 .column:nth-last-child(3) ~ .column {
   float: left;
   width: 33.33333%; }
-
-.column:nth-last-child(4),
-.column:nth-last-child(4) ~ .column {
-  float: left;
-  width: 25%; }
-
-.column:nth-last-child(5),
-.column:nth-last-child(5) ~ .column {
-  float: left;
-  width: 20%; }
 
 .column .list.__info {
   margin: 0; }
@@ -3259,7 +3245,8 @@ tags-input .tags.focused {
   .cnt .cnt-inner {
     display: inline-block;
     height: 100%;
-    word-spacing: -4px; }
+    word-spacing: -4px;
+    padding-right: 90px; }
   .cnt .dashboard,
   .cnt .blade {
     display: inline-block;
@@ -5752,6 +5739,9 @@ a:hover,
   .lang-rtl .cnt {
     left: 0;
     right: 235px; }
+    .lang-rtl .cnt .cnt-inner {
+      padding-left: 90px;
+      padding-right: 0; }
   .lang-rtl .dashboard .dashboard-area {
     margin: 0 0 0 3px; }
   .lang-rtl .dashboard-title {

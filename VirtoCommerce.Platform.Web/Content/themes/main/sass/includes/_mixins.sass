@@ -14,9 +14,9 @@
       left: 50%
       transform: translateX(-50%)
 
-@mixin column($selector, $count, $indexed: false)
+@mixin column($selector, $count, $indexed: false, $multipleOnly: false)
   $start: if($indexed, 1, 2)
-  @if (not $indexed)
+  @if (not $indexed and not $multipleOnly)
     #{$selector}
       @content
       width: 100%
