@@ -1530,9 +1530,6 @@ button.btn {
 .md-editor.md-fullscreen-mode .md-preview {
   padding: 20px 20px 20px 120px !important; }
 
-.has-demo-warning .uk-htmleditor-fullscreen {
-  top: 28px; }
-
 /* Tiles */
 .tile-group {
   margin: 0 -10px 0 0;
@@ -2542,10 +2539,6 @@ button.btn {
 .form.columns {
   padding: 0; }
 
-.column {
-  float: left;
-  width: 100%; }
-
 .column:nth-last-child(2),
 .column:nth-last-child(2) ~ .column {
   float: left;
@@ -2555,16 +2548,6 @@ button.btn {
 .column:nth-last-child(3) ~ .column {
   float: left;
   width: 33.33333%; }
-
-.column:nth-last-child(4),
-.column:nth-last-child(4) ~ .column {
-  float: left;
-  width: 25%; }
-
-.column:nth-last-child(5),
-.column:nth-last-child(5) ~ .column {
-  float: left;
-  width: 20%; }
 
 .column .list.__info {
   margin: 0; }
@@ -3260,7 +3243,8 @@ tags-input .tags.focused {
   .cnt .cnt-inner {
     display: inline-block;
     height: 100%;
-    word-spacing: -4px; }
+    word-spacing: -4px;
+    padding-right: 90px; }
   .cnt .dashboard,
   .cnt .blade {
     display: inline-block;
@@ -4461,6 +4445,13 @@ tags-input .tags.focused {
   .loader span:nth-child(5) {
     left: 120px; }
 
+.uk-htmleditor-fullscreen {
+  left: 235px !important; }
+  .has-demo-warning .uk-htmleditor-fullscreen {
+    top: 28px !important; }
+  .nav-bar.__collapsed + .cnt .uk-htmleditor-fullscreen {
+    left: 72px !important; }
+
 .list-ico.__customers,
 .menu-ico.__customers,
 .blade-t_ico.__customers {
@@ -5481,11 +5472,10 @@ a:hover,
   transition: transform .25s ease-in-out 0s;
   transition: transform .25s ease-in-out 0s, -webkit-transform .25s ease-in-out 0s; }
 
-.cnt {
-  -webkit-transition: left .25s ease-in-out 0s;
-  transition: left .25s ease-in-out 0s;
-  -webkit-transition: right .25s ease-in-out 0s;
-  transition: right .25s ease-in-out 0s; }
+.cnt,
+.uk-htmleditor-fullscreen {
+  -webkit-transition: left .25s ease-in-out 0s, right .25s ease-in-out 0s;
+  transition: left .25s ease-in-out 0s, right .25s ease-in-out 0s; }
 
 .dropdown-content .list-link,
 .blade-nav .menu-item,
@@ -5723,6 +5713,9 @@ a:hover,
   .lang-rtl .cnt {
     left: 0;
     right: 235px; }
+    .lang-rtl .cnt .cnt-inner {
+      padding-left: 90px;
+      padding-right: 0; }
   .lang-rtl .dashboard .dashboard-area {
     margin: 0 0 0 3px; }
   .lang-rtl .dashboard-title {
@@ -5772,5 +5765,11 @@ a:hover,
     padding: 0 20px 0 0; }
     .lang-rtl .window-head .__logo ~ .window-t {
       padding: 0 10px 0 20px; }
+  .lang-rtl .uk-htmleditor-fullscreen {
+    left: auto;
+    right: 235px !important; }
+    .nav-bar.__collapsed + .cnt .lang-rtl .uk-htmleditor-fullscreen {
+      left: auto;
+      right: 72px !important; }
 
 /*# sourceMappingURL=main.css.map */

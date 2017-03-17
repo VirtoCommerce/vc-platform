@@ -120,7 +120,9 @@ angular.module('platformWebApp', AppDependencies).
       }
 
       settings.getUiCustomizationSetting(function (uiCustomizationSetting) {
-          $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
+          if (uiCustomizationSetting.value) {
+              $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
+          }
       });
 
       // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION

@@ -1238,7 +1238,7 @@ $listItemArrowSpace: 30px
   padding: 15px 0
 .form.columns
   padding: 0
-@include column(".column", 5)
+@include column(".column", 3, $multipleOnly: true)
   float: left
 .column .list.__info
   margin: 0
@@ -1509,6 +1509,7 @@ tags-input
     display: inline-block
     height: 100%
     word-spacing: -4px
+    padding-right: 90px
   .dashboard,
   .blade
     display: inline-block

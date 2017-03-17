@@ -376,7 +376,6 @@
     <Compile Include="Model\Modularity\ModulePushNotification.cs" />
     <Compile Include="Model\PlatformSetting.cs" />
     <Content Include="Content\themes\main\css\font-awesome.css" />
-    <Content Include="Content\themes\main\css\lang-rtl.css" />
     <Content Include="Content\themes\main\css\main.css" />
     <Content Include="Content\themes\main\fonts\Exo-2-300\Exo-2-300.svg" />
     <Content Include="Content\themes\main\fonts\Exo-2-300\LICENSE.txt" />
