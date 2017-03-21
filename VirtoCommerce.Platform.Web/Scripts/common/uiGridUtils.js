@@ -157,17 +157,30 @@
             extensionsMap: [],
             registerExtension : function(gridId, extensionFn)
             {
-                this.extensionsMap[gridId] = extensionFn;
+                if (!this.extensionsMap[gridId]) {
+                    this.extensionsMap[gridId] = [];
+                }
+                this.extensionsMap[gridId].push(extensionFn);
             },
-            tryExtendGridOptions: function(gridId, gridOptions)
-            {
-                if(this.extensionsMap[gridId])
-                {
-                    this.extensionsMap[gridId](gridOptions);
+            tryExtendGridOptions: function(gridId, gridOptions) {
+                var extensionsMap = this.extensionsMap[gridId].concat(this.extensionsMap['*']);
+                if (extensionsMap.length > 0) {
+                    extensionsMap.forEach(function(extensionFn) {
+                        extensionFn(gridOptions);
+                    });
                 }
             }
         };
     }])
+
+    .run(['platformWebApp.ui-grid.extension', function (gridOptionsExtension) {
+            // hide unnecessary colums
+            gridOptionsExtension.registerExtension('*', function(gridOptions) {
+                _.each(gridOptions.columnDefs, function (x) {
+                    x.visible = !gridOptions.collapsed ? !!x.wasPredefined : !!x.default;
+                });
+            });
+        }])
 
     // auto height and additional class for ui-grid
     .directive('uiGridHeight', ['$timeout', '$window', function ($timeout, $window) {

@@ -20,11 +20,11 @@ $bladeSizeBase: $tileSize + $tileMargin;
 $bladePadding: 20px
 $bladeContainerPadding: 8px
 
-$bladeSizes: ('Normal', 'Medium', 'Large', 'XLarge', 'XXLarge')
+$bladeSizes: ('Small', 'Normal', 'Medium', 'Large', 'XLarge', 'XXLarge')
 
 @function getBladeContentSize($bladeSize)
-  $normalSize: $bladeSizeBase * 3 - $tileMargin + $bladePadding * 2
-  @return $normalSize + $bladeSizeBase * (index($bladeSizes, $bladeSize) - 1)
+  $minimalSize: $bladeSizeBase * 2 - $tileMargin + $bladePadding * 2
+  @return $minimalSize + $bladeSizeBase * (index($bladeSizes, $bladeSize) - 1)
 
 @function getBladeInnerSize($bladeSize)
   @return getBladeContentSize($bladeSize) - $bladePadding * 2

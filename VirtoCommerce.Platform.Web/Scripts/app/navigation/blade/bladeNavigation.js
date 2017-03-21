@@ -50,58 +50,79 @@ angular.module('platformWebApp')
             scope.blade.$scope = scope;
 
             var mainContent = $('.cnt');
-            var blade = $('.blade:last', mainContent);
-            var offset = parseInt(blade.offset().left);
+            var currentBlade = $(element).parent();
+            var parentBlade = scope.blade.parentBlade ? $('#' + scope.blade.parentBlade.id).parent() : undefined;
 
-            if (!scope.blade.disableOpenAnimation && !scope.blade.state) {
-                blade.css('margin-left', '-' + blade.width() + 'px').addClass('__animate');
-
+            if (!scope.blade.disableOpenAnimation) {
+                scope.blade.animated = true;
                 setTimeout(function () {
-                    blade.animate({ 'margin-left': 0 }, 250, function () {
-                        blade.removeAttr('style').removeClass('__animate');
-                    });
-                }, 0);
+                   scope.blade.animated = false;
+                }, 250);
             }
 
-            var recalculateWidth = function () {
+            function scrollContent() {
+                // we can't use current blade position + width because of animation
+                // instead, use parent blade x-coordinate + parent blade width + current blade width (including margin; may be only if blade is not expanded)
+                var scrollLeft = mainContent.scrollLeft() + (parentBlade ? parentBlade.position().left + parentBlade.outerWidth() : 0) + currentBlade.outerWidth(/*!scope.blade.isExpanded*/) - mainContent.width();
+                mainContent.animate({ scrollLeft: (scrollLeft > 0 ? scrollLeft : 0) }, 500);
+            }
+
+            var updatePosition = function () {
                 if (angular.isDefined(scope.blade.isExpanded)) {
-                    var currentBlade = $(element);
-                    var mainMenu = $('.nav-bar');
-                    var parentBlade = scope.blade.parentBlade ? $('#' + scope.blade.parentBlade.id) : undefined;
-                    var contentWidth = '420px';
-                    var innerWidth = '380px';
+                    var contentBlock = currentBlade.find(".blade-content");
+
+                    // emptry strings is needed to clease properies when blade go to collapse state
+                    var contentWidth = "";
+                    var innerWidth = "";
+                    var bladeWidth = "";
+                    var bladeMinWidth = "";
+
                     if (scope.blade.isExpanded === true) {
-                        var widthOffset = mainMenu.width() + (parentBlade ? parentBlade.width() + 8 : 0) + 8;
-                        contentWidth = 'calc(100vw - ' + parseInt(widthOffset) + 'px)';
-                        innerWidth = 'calc(100vw - ' + parseInt(widthOffset + 40) + 'px)';
+                        var offset = parentBlade ? parentBlade.width() : 0;
+                        // free space of view - parent blade size (if exist)
+                        bladeWidth = 'calc(100% - ' + offset + 'px)';
+                        // minimal required width
+                        bladeMinWidth = contentBlock.css("min-width");
+                        // relative to blade size
+                        contentWidth = '100%';
+                        // horizontal margin = margin-left + margin-right = 20px  + 20px = 40px
+                        innerWidth = 'calc(100% - 40px)';
                     }
-                    var contentblock = currentBlade.find(".blade-content");
-                    $(contentblock).width(contentWidth);
-                    $(contentblock).find('.inner-block').width(innerWidth);
+
+                    contentBlock.width(contentWidth);
+                    contentBlock.find('.inner-block').width(innerWidth);
+                    currentBlade.width(bladeWidth);
+                    currentBlade.css('min-width', bladeMinWidth);
 
                     setVisibleToolsLimit();
                 }
+
+                scrollContent();
             }
-            
-            scope.$on('$includeContentLoaded', function () {
-                recalculateWidth();
-            });
 
             scope.$watch('blade.isExpanded', function () {
-                recalculateWidth();
+                if (angular.isDefined(scope.blade.isExpanded)) {
+                    // we must recalculate position only at next digest cycle,
+                    // because at this time blade UI is not fully (re)initialized
+                    $timeout(updatePosition, 0, false);
+                }
             });
-
-            $timeout(function () {
-                var scrollAdjustment = (offset >= mainContent.scrollLeft()) ? blade.width() : mainContent.scrollLeft();
-                mainContent.animate({ scrollLeft: offset + scrollAdjustment + 'px' }, 0); //500);
-            }, 0, false);
+            
+            scope.$on('$includeContentLoaded', function (event, src) {
+                if (src === scope.blade.template) {
+                    // see above
+                    $timeout(updatePosition, 0, false);
+                }
+            });
 
             scope.bladeClose = function (onAfterClose) {
                 bladeNavigationService.closeBlade(scope.blade, onAfterClose, function (callback) {
-                    blade.addClass('__animate').animate({ 'margin-left': '-' + blade.width() + 'px' }, 125, function () {
-                        blade.remove();
+                    scope.blade.animated = true;
+                    scope.blade.closing = true;
+                    setTimeout(function () {
+                        currentBlade.remove();
                         callback();
-                    });
+                    }, 125);
                 });
             };
 
@@ -111,7 +132,7 @@ angular.module('platformWebApp')
                 setVisibleToolsLimit();
             }, true);
 
-            var toolbar = blade.find(".blade-toolbar .menu.__inline");
+            var toolbar = currentBlade.find(".blade-toolbar .menu.__inline");
 
             function setVisibleToolsLimit() {
                 scope.toolsPerLineCount = scope.resolvedToolbarCommands ? scope.resolvedToolbarCommands.length : 1;
@@ -222,8 +243,8 @@ angular.module('platformWebApp')
 
             if (blade.parentBlade && blade.parentBlade.isExpanded === false) {
                 blade.parentBlade.isExpanded = true;
-                if (blade.parentBlade.onExpandChanged) {
-                    blade.parentBlade.onExpandChanged(true, false);
+                if (angular.isFunction(blade.parentBlade.onExpand)) {
+                    blade.parentBlade.onExpand();
                 }
             }
         },
@@ -314,8 +335,15 @@ angular.module('platformWebApp')
 
             if (parentBlade && parentBlade.isExpanded === true) {
                 parentBlade.isExpanded = false;
-                if (angular.isFunction(parentBlade.onExpandChanged)) {
-                    parentBlade.onExpandChanged(false, true);
+                if (angular.isFunction(parentBlade.onCollapse)) {
+                    parentBlade.onCollapse();
+                }
+            }
+
+            if (blade.isExpanded === true) {
+                
+                if (angular.isFunction(blade.onExpand)) {
+                    blade.onExpand();
                 }
             }
 

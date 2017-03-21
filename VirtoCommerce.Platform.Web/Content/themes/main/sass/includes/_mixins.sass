@@ -32,3 +32,14 @@
       #{$selector}:nth-last-child(#{$currentCount}) ~ #{$selector}
         @content
         width: (100% / $x)
+
+@mixin blaseSizes()
+  $bladeSizeName: nth($bladeSizes, 1) !global
+  &.__#{to-lower-case($bladeSizeName)}-narrow
+    @content  
+  $bladeSizeName: nth($bladeSizes, 2) !global
+  @content
+  @for $bladeSizeIndex from 3 through length($bladeSizes)
+    $bladeSizeName: nth($bladeSizes, $bladeSizeIndex) !global
+    &.__#{to-lower-case($bladeSizeName)}-wide
+      @content

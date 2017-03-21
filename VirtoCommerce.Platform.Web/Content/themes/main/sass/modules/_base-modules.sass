@@ -1509,7 +1509,11 @@ tags-input
     display: inline-block
     height: 100%
     word-spacing: -4px
-    padding-right: 90px
+    width: 100%
+    ui-view
+      width: 100%
+      .blade:not(:first-child):last-child
+        margin-right: 90px
   .dashboard,
   .blade
     display: inline-block
@@ -1527,6 +1531,14 @@ tags-input
   font-family: serif
   overflow: hidden
   position: relative
+  @for $index from 1 through 10
+    &:nth-last-child(#{$index})
+      z-index: $index
+  &.__animated
+    animation: blade ease-in-out .25s
+    &.__closing
+      animation-direction: reverse
+      animation-duration: .125s
   .blade-head,
   .blade-container
     box-shadow: -8px 0 0 0 rgba(0,0,0,.2) inset
@@ -1535,7 +1547,6 @@ tags-input
     background: #333
     box-sizing: border-box
     height: 132px
-    min-width: 300px
     padding: 25px 0 5px
     position: relative
 
@@ -1888,15 +1899,10 @@ tags-input
 
 .blade-content
   .blade &
-    $width: getBladeContentSize('Normal')
-    min-width: $width
-    width: $width
-    @for $bladeSizeIndex from 2 through length($bladeSizes)
-      $bladeSizeName: nth($bladeSizes, $bladeSizeIndex)
-      &.__#{to-lower-case($bladeSizeName)}-wide
-        $width: getBladeContentSize($bladeSizeName)
-        min-width: $width
-        width: $width
+    @include blaseSizes()
+      $width: getBladeContentSize($bladeSizeName)
+      min-width: $width
+      width: $width
   .blade &.__tree
     width: 340px
   .blade &.__code-editor
@@ -1911,6 +1917,7 @@ tags-input
   box-sizing: border-box
   overflow: hidden
   padding: 0 $bladePadding
+  position: relative
 .blade .blade-inner::-webkit-scrollbar,
 .log::-webkit-scrollbar,
 .ui-grid-viewport::-webkit-scrollbar
@@ -1940,17 +1947,14 @@ tags-input
   overflow-y: auto
 .blade .blade-inner.ui-grid-no-scroll:hover
   overflow: visible
-.inner-block
-  .blade-content &
-    $width: getBladeInnerSize('Normal')
-    min-width: $width
-    width: $width
-  @for $bladeSizeIndex from 2 through length($bladeSizes)
-    $bladeSizeName: nth($bladeSizes, $bladeSizeIndex)
-    .blade-content.__#{to-lower-case($bladeSizeName)}-wide &
+.blade-content
+  @include blaseSizes()
+    .inner-block
       $width: getBladeInnerSize($bladeSizeName)
       min-width: $width
       width: $width
+.inner-block
+  position: absolute
   .blade-content.__tree &
       width: 300px
   .blade-content.__code-editor &

@@ -32,11 +32,10 @@
   border: 1px solid $borderColor
   direction: ltr
   font-size: 13px
-  .blade &
-    width: getBladeInnerSize('Normal')
-@for $bladeSizeIndex from 2 through length($bladeSizes)
-  .blade .blade-content.__#{to-lower-case(nth($bladeSizes, $bladeSizeIndex))}-wide .CodeMirror
-    width: getBladeInnerSize(nth($bladeSizes, $bladeSizeIndex))
+.blade .blade-content
+  @include blaseSizes()
+    .CodeMirror
+      width: getBladeInnerSize($bladeSizeName)
 .blade .blade-content.__code-editor .CodeMirror
   width: calc(100vw - #{$mainMenuWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
   .nav-bar.__collapsed + .cnt &
@@ -302,3 +301,9 @@ a:hover,
   60%,
   80%
     transform: rotate(7deg)
+
+@keyframes blade
+  0%
+    transform: translateX(getBladeContentSize('Normal') * -1)
+  100%
+    transform: translateX(0)

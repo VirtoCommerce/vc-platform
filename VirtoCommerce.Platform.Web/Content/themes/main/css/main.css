@@ -2842,8 +2842,7 @@ tags-input .tags.focused {
     .nav-bar.__collapsed .bar .__items .list-item.__more {
       padding: 10px 20px 10px 20px; }
     .nav-bar.__collapsed .bar .__items .list-ico {
-      margin: 0;
-      text-align: center; }
+      margin: 0; }
     .nav-bar.__collapsed .bar .__items .list-name {
       display: none; }
     .nav-bar.__collapsed .bar .__items .list-count {
@@ -3244,7 +3243,11 @@ tags-input .tags.focused {
     display: inline-block;
     height: 100%;
     word-spacing: -4px;
-    padding-right: 90px; }
+    width: 100%; }
+    .cnt .cnt-inner ui-view {
+      width: 100%; }
+      .cnt .cnt-inner ui-view .blade:not(:first-child):last-child {
+        margin-right: 90px; }
   .cnt .dashboard,
   .cnt .blade {
     display: inline-block;
@@ -3263,6 +3266,34 @@ tags-input .tags.focused {
   font-family: serif;
   overflow: hidden;
   position: relative; }
+  .blade:nth-last-child(1) {
+    z-index: 1; }
+  .blade:nth-last-child(2) {
+    z-index: 2; }
+  .blade:nth-last-child(3) {
+    z-index: 3; }
+  .blade:nth-last-child(4) {
+    z-index: 4; }
+  .blade:nth-last-child(5) {
+    z-index: 5; }
+  .blade:nth-last-child(6) {
+    z-index: 6; }
+  .blade:nth-last-child(7) {
+    z-index: 7; }
+  .blade:nth-last-child(8) {
+    z-index: 8; }
+  .blade:nth-last-child(9) {
+    z-index: 9; }
+  .blade:nth-last-child(10) {
+    z-index: 10; }
+  .blade.__animated {
+    -webkit-animation: blade ease-in-out .25s;
+            animation: blade ease-in-out .25s; }
+    .blade.__animated.__closing {
+      -webkit-animation-direction: reverse;
+              animation-direction: reverse;
+      -webkit-animation-duration: .125s;
+              animation-duration: .125s; }
   .blade .blade-head,
   .blade .blade-container {
     box-shadow: -8px 0 0 0 rgba(0, 0, 0, 0.2) inset;
@@ -3272,7 +3303,6 @@ tags-input .tags.focused {
     -moz-box-sizing: border-box;
          box-sizing: border-box;
     height: 132px;
-    min-width: 300px;
     padding: 25px 0 5px;
     position: relative;
     -webkit-transition: height .3s ease;
@@ -3635,6 +3665,9 @@ tags-input .tags.focused {
 .blade .blade-content {
   min-width: 420px;
   width: 420px; }
+  .blade .blade-content.__small-narrow {
+    min-width: 290px;
+    width: 290px; }
   .blade .blade-content.__medium-wide {
     min-width: 550px;
     width: 550px; }
@@ -3668,7 +3701,8 @@ tags-input .tags.focused {
   -moz-box-sizing: border-box;
        box-sizing: border-box;
   overflow: hidden;
-  padding: 0 20px; }
+  padding: 0 20px;
+  position: relative; }
 
 .blade .blade-inner::-webkit-scrollbar,
 .log::-webkit-scrollbar,
@@ -3707,6 +3741,10 @@ tags-input .tags.focused {
 .blade .blade-inner.ui-grid-no-scroll:hover {
   overflow: visible; }
 
+.blade-content.__small-narrow .inner-block {
+  min-width: 250px;
+  width: 250px; }
+
 .blade-content .inner-block {
   min-width: 380px;
   width: 380px; }
@@ -3727,15 +3765,16 @@ tags-input .tags.focused {
   min-width: 900px;
   width: 900px; }
 
-.blade-content.__tree .inner-block {
-  width: 300px; }
-
-.blade-content.__code-editor .inner-block {
-  width: -webkit-calc(100vw - 841px);
-  width: calc(100vw - 841px); }
-  .nav-bar.__collapsed + .cnt .blade-content.__code-editor .inner-block {
-    width: -webkit-calc(100vw - 678px);
-    width: calc(100vw - 678px); }
+.inner-block {
+  position: absolute; }
+  .blade-content.__tree .inner-block {
+    width: 300px; }
+  .blade-content.__code-editor .inner-block {
+    width: -webkit-calc(100vw - 841px);
+    width: calc(100vw - 841px); }
+    .nav-bar.__collapsed + .cnt .blade-content.__code-editor .inner-block {
+      width: -webkit-calc(100vw - 678px);
+      width: calc(100vw - 678px); }
 
 .blade .blade-loader {
   padding: 20px;
@@ -4526,8 +4565,12 @@ tags-input .tags.focused {
   border: 1px solid #ddd;
   direction: ltr;
   font-size: 13px; }
-  .blade .blade-content .CodeMirror {
-    width: 380px; }
+
+.blade .blade-content.__small-narrow .CodeMirror {
+  width: 250px; }
+
+.blade .blade-content .CodeMirror {
+  width: 380px; }
 
 .blade .blade-content.__medium-wide .CodeMirror {
   width: 510px; }
@@ -5672,6 +5715,22 @@ a:hover,
   80% {
     -webkit-transform: rotate(7deg);
             transform: rotate(7deg); } }
+
+@-webkit-keyframes blade {
+  0% {
+    -webkit-transform: translateX(-420px);
+            transform: translateX(-420px); }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0); } }
+
+@keyframes blade {
+  0% {
+    -webkit-transform: translateX(-420px);
+            transform: translateX(-420px); }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0); } }
 
 .lang-rtl {
   direction: rtl; }

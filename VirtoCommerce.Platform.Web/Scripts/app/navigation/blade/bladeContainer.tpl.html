@@ -1,4 +1,4 @@
-﻿<div class="blade" ng-class="moduleName" ng-repeat="blade in blades">
+﻿<div class="blade" ng-class="[moduleName, {'__animated': blade.animated, '__closing': blade.closing}]" ng-repeat="blade in blades">
     <div class="blade-wrapper" va-blade='blade'>
         <header class="blade-head">
             <div class="blade-status" ng-class="{'__error': blade.error}">
