@@ -9,7 +9,7 @@
             headIcon: blade.headIcon,
             title: blade.title,
             subtitle: 'platform.widgets.operations.blade-subtitle',
-            isExpanded: true,
+            isExpandable: true,
             controller: 'platformWebApp.changeLog.operationListController',
             template: '$(Platform)/Scripts/app/changeLog/blades/operation-list.tpl.html'
         };

@@ -73,6 +73,12 @@
                         if (customOnRegisterApiCallback) {
                             customOnRegisterApiCallback(gridApi);
                         }
+                    },
+                    onCollapse: function() {
+                        updateColumnsVisibility(this, true);
+                    },
+                    onExpand: function () {
+                        updateColumnsVisibility(this, false);
                     }
                 });
 
@@ -107,6 +113,17 @@
                     });
                     gridOptions.columnDefsGenerated = true;
                 }
+            }
+
+            function updateColumnsVisibility(gridOptions, isCollapsed) {
+                _.each(gridOptions.columnDefs, function (x) {
+                    // normal: visible, if column was predefined
+                    // collapsed: visible only if we must display column always
+                    if (isCollapsed) {
+                        x.wasVisible = !!x.visible || !!x.wasPredefined;
+                    }
+                    x.visible = !isCollapsed ? !!x.wasVisible : !!x.displayAlways;
+                });
             }
 
             return gridOptions;
@@ -155,32 +172,16 @@
     .factory('platformWebApp.ui-grid.extension', [function () {
         return {
             extensionsMap: [],
-            registerExtension : function(gridId, extensionFn)
-            {
-                if (!this.extensionsMap[gridId]) {
-                    this.extensionsMap[gridId] = [];
-                }
-                this.extensionsMap[gridId].push(extensionFn);
+            registerExtension: function (gridId, extensionFn) {
+                this.extensionsMap[gridId] = extensionFn;
             },
-            tryExtendGridOptions: function(gridId, gridOptions) {
-                var extensionsMap = this.extensionsMap[gridId].concat(this.extensionsMap['*']);
-                if (extensionsMap.length > 0) {
-                    extensionsMap.forEach(function(extensionFn) {
-                        extensionFn(gridOptions);
-                    });
+            tryExtendGridOptions: function (gridId, gridOptions) {
+                if (this.extensionsMap[gridId]) {
+                    this.extensionsMap[gridId](gridOptions);
                 }
             }
         };
     }])
-
-    .run(['platformWebApp.ui-grid.extension', function (gridOptionsExtension) {
-            // hide unnecessary colums
-            gridOptionsExtension.registerExtension('*', function(gridOptions) {
-                _.each(gridOptions.columnDefs, function (x) {
-                    x.visible = !gridOptions.collapsed ? !!x.wasPredefined : !!x.default;
-                });
-            });
-        }])
 
     // auto height and additional class for ui-grid
     .directive('uiGridHeight', ['$timeout', '$window', function ($timeout, $window) {
@@ -196,6 +197,7 @@
                             $(element).height(bladeInner.height());
                         });
                     };
+                    scope.$watch('blade.isExpanded', setGridHeight);
                     scope.$watch('pageSettings.totalItems', setGridHeight);
                     angular.element($window).bind('resize', setGridHeight);
                 }

@@ -867,6 +867,8 @@ input.ui-grid-filter-input[type="text"] {
     vertical-align: middle;
     -webkit-transition: font .3s ease;
     transition: font .3s ease; }
+    .ui-grid-actions .fa.context-menu::before {
+      content: "\f141"; }
 
 .ui-grid-actions ~ .menu {
   background: #dee9f0;
@@ -1147,12 +1149,12 @@ fieldset + fieldset {
   display: inline-block;
   font-size: 14px;
   margin: 0 0 5px; }
-  .form-label .form-edit {
-    display: inline-block;
-    margin: 0 0 0 5px; }
-    .form-label .form-edit .form-ico {
-      font-size: 12px;
-      vertical-align: 2px; }
+
+.form-edit {
+  display: inline-block;
+  margin: 0 0 0 5px; }
+  .form-edit .form-ico {
+    vertical-align: 2px; }
 
 .form-label + .form-nav {
   float: right; }
@@ -3765,16 +3767,15 @@ tags-input .tags.focused {
   min-width: 900px;
   width: 900px; }
 
-.inner-block {
-  position: absolute; }
-  .blade-content.__tree .inner-block {
-    width: 300px; }
-  .blade-content.__code-editor .inner-block {
-    width: -webkit-calc(100vw - 841px);
-    width: calc(100vw - 841px); }
-    .nav-bar.__collapsed + .cnt .blade-content.__code-editor .inner-block {
-      width: -webkit-calc(100vw - 678px);
-      width: calc(100vw - 678px); }
+.blade-content.__tree .inner-block {
+  width: 300px; }
+
+.blade-content.__code-editor .inner-block {
+  width: -webkit-calc(100vw - 841px);
+  width: calc(100vw - 841px); }
+  .nav-bar.__collapsed + .cnt .blade-content.__code-editor .inner-block {
+    width: -webkit-calc(100vw - 678px);
+    width: calc(100vw - 678px); }
 
 .blade .blade-loader {
   padding: 20px;

@@ -1,18 +1,15 @@
-﻿@mixin center($horizontal, $vertical, $absolute: false)
-    @if $absolute
-      position: absolute
-    @else
-      position: relative
-    @if ($horizontal and $vertical)
-      left: 50%
-      top: 50%
-      transform: translateX(-50%) translateY(-50%)
-    @else if $vertical
-      top: 50%
-      transform: translateY(-50%)
-    @else if $horizontal
-      left: 50%
-      transform: translateX(-50%)
+﻿@mixin center($horizontal: false, $vertical: false, $absolute: false, $important: false)
+   $importantMark: if($important, !important, null)
+   position: if($absolute, absolute, relative) $importantMark
+   $indent: 50% $importantMark
+   $transform: null
+   @if $horizontal
+     left: $indent
+     $transform: translateX(-50%)
+   @if $vertical
+     top: $indent
+     $transform: $transform translateY(-50%)
+   transform: $transform $importantMark
 
 @mixin column($selector, $count, $indexed: false, $multipleOnly: false)
   $start: if($indexed, 1, 2)

@@ -51,7 +51,7 @@ angular.module('platformWebApp')
 
             var mainContent = $('.cnt');
             var currentBlade = $(element).parent();
-            var parentBlade = scope.blade.parentBlade ? $('#' + scope.blade.parentBlade.id).parent() : undefined;
+            var parentBlade = currentBlade.prev();
 
             if (!scope.blade.disableOpenAnimation) {
                 scope.blade.animated = true;
@@ -61,14 +61,24 @@ angular.module('platformWebApp')
             }
 
             function scrollContent() {
-                // we can't use current blade position + width because of animation
-                // instead, use parent blade x-coordinate + parent blade width + current blade width (including margin; may be only if blade is not expanded)
-                var scrollLeft = mainContent.scrollLeft() + (parentBlade ? parentBlade.position().left + parentBlade.outerWidth() : 0) + currentBlade.outerWidth(/*!scope.blade.isExpanded*/) - mainContent.width();
-                mainContent.animate({ scrollLeft: (scrollLeft > 0 ? scrollLeft : 0) }, 500);
+                $timeout(function() {
+                    // we can't just get current blade position (because of animation) or calculate it
+                    // via parent position + parent width (because we may open parent and child blade at the same time)
+                    // instead, we need to use sum of width of all blades
+                    var previousBlades = currentBlade.prevAll();
+                    var previousBladesWidthSum = 0;
+                    previousBlades.each(function() {
+                        previousBladesWidthSum += $(this).outerWidth();
+                    });
+                    var scrollLeft = mainContent.scrollLeft() + previousBladesWidthSum + currentBlade.outerWidth(!scope.blade.isExpanded) - mainContent.width();
+                    mainContent.animate({ scrollLeft: (scrollLeft > 0 ? scrollLeft : 0) }, 500);
+                }, 0, false);
             }
 
+            scrollContent();
+
             var updatePosition = function () {
-                if (angular.isDefined(scope.blade.isExpanded)) {
+                if (scope.blade.isExpandable) {
                     var contentBlock = currentBlade.find(".blade-content");
 
                     // emptry strings is needed to clease properies when blade go to collapse state
@@ -77,16 +87,16 @@ angular.module('platformWebApp')
                     var bladeWidth = "";
                     var bladeMinWidth = "";
 
-                    if (scope.blade.isExpanded === true) {
-                        var offset = parentBlade ? parentBlade.width() : 0;
+                    if (scope.blade.isExpanded) {
+                        var offset = parentBlade.length > 0 ? parentBlade.width() : 0;
                         // free space of view - parent blade size (if exist)
                         bladeWidth = 'calc(100% - ' + offset + 'px)';
-                        // minimal required width
-                        bladeMinWidth = contentBlock.css("min-width");
+                        // minimal required width + container padding
+                        bladeMinWidth = 'calc(' + contentBlock.css("min-width") + ' + ' + currentBlade.find(".blade-container").css("padding-right") + ')';
                         // relative to blade size
                         contentWidth = '100%';
                         // horizontal margin = margin-left + margin-right = 20px  + 20px = 40px
-                        innerWidth = 'calc(100% - 40px)';
+                        innerWidth = '100%';
                     }
 
                     contentBlock.width(contentWidth);
@@ -94,18 +104,16 @@ angular.module('platformWebApp')
                     currentBlade.width(bladeWidth);
                     currentBlade.css('min-width', bladeMinWidth);
 
+                    scrollContent();
+
                     setVisibleToolsLimit();
                 }
-
-                scrollContent();
             }
 
             scope.$watch('blade.isExpanded', function () {
-                if (angular.isDefined(scope.blade.isExpanded)) {
-                    // we must recalculate position only at next digest cycle,
-                    // because at this time blade UI is not fully (re)initialized
-                    $timeout(updatePosition, 0, false);
-                }
+                // we must recalculate position only at next digest cycle,
+                // because at this time blade UI is not fully (re)initialized
+                $timeout(updatePosition, 0, false);
             });
             
             scope.$on('$includeContentLoaded', function (event, src) {
@@ -241,7 +249,7 @@ angular.module('platformWebApp')
                 }
             });
 
-            if (blade.parentBlade && blade.parentBlade.isExpanded === false) {
+            if (blade.parentBlade && blade.parentBlade.isExpandable) {
                 blade.parentBlade.isExpanded = true;
                 if (angular.isFunction(blade.parentBlade.onExpand)) {
                     blade.parentBlade.onExpand();
@@ -333,15 +341,15 @@ angular.module('platformWebApp')
                 showBlade();
             }
 
-            if (parentBlade && parentBlade.isExpanded === true) {
+            if (parentBlade && parentBlade.isExpandable && parentBlade.isExpanded) {
                 parentBlade.isExpanded = false;
                 if (angular.isFunction(parentBlade.onCollapse)) {
                     parentBlade.onCollapse();
                 }
             }
 
-            if (blade.isExpanded === true) {
-                
+            if (blade.isExpandable) {
+                blade.isExpanded = true;
                 if (angular.isFunction(blade.onExpand)) {
                     blade.onExpand();
                 }
