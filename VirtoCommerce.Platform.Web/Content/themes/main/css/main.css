@@ -2943,6 +2943,7 @@ tags-input .tags.focused {
         .nav-bar .bar .__items .list-item.__more .list-ico {
           margin: 0; }
     .nav-bar .bar .__items .list-ico {
+      font-size: 25px;
       text-shadow: 1px 1px #333;
       width: 32px; }
     .nav-bar .bar .__items .list-name,
@@ -3120,12 +3121,15 @@ tags-input .tags.focused {
 .dropdown.__more .list-item:after {
   display: none; }
 
+.dropdown.__more .list-ico {
+  font-size: 25px;
+  width: 32px; }
+
 .dropdown.__more .list-fav {
   color: #a6a6a6;
   display: block;
   font-size: 16px;
   font-weight: 300;
-  line-height: 26px;
   position: absolute;
   right: 0;
   top: 50%;
