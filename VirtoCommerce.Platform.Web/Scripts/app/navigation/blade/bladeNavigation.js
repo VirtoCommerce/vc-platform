@@ -75,8 +75,6 @@ angular.module('platformWebApp')
                 }, 0, false);
             }
 
-            scrollContent();
-
             var updatePosition = function () {
                 if (scope.blade.isExpandable) {
                     var contentBlock = currentBlade.find(".blade-content");
@@ -104,8 +102,6 @@ angular.module('platformWebApp')
                     currentBlade.width(bladeWidth);
                     currentBlade.css('min-width', bladeMinWidth);
 
-                    scrollContent();
-
                     setVisibleToolsLimit();
                 }
             }
@@ -113,13 +109,17 @@ angular.module('platformWebApp')
             scope.$watch('blade.isExpanded', function () {
                 // we must recalculate position only at next digest cycle,
                 // because at this time blade UI is not fully (re)initialized
+                // for example, ng-class set classes after this watch called
                 $timeout(updatePosition, 0, false);
             });
             
             scope.$on('$includeContentLoaded', function (event, src) {
                 if (src === scope.blade.template) {
                     // see above
-                    $timeout(updatePosition, 0, false);
+                    $timeout(function() {
+                        updatePosition();
+                        scrollContent();
+                    }, 0, false);
                 }
             });
 
