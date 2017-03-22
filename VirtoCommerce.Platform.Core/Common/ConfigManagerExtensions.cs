@@ -1,52 +1,77 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Linq;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-	/// <summary>
-	/// http://softwarebydefault.com/code-samples/extending-configurationmanager-get-values-by-type/
-	/// </summary>
-	public static class ConfigManagerExtensions
-	{
-		[CLSCompliant(false)]
-		public static T GetValue<T>(this NameValueCollection nameValuePairs, string configKey, T defaultValue) where T : IConvertible
-		{
-			T retValue = default(T);
+    /// <summary>
+    /// http://softwarebydefault.com/code-samples/extending-configurationmanager-get-values-by-type/
+    /// </summary>
+    public static class ConfigManagerExtensions
+    {
+        private static readonly char[] _valuesSeparator = { ';' };
 
-			if (nameValuePairs.AllKeys.Contains(configKey))
-			{
-				string tmpValue = nameValuePairs[configKey];
+        /// <summary>
+        /// Splits named value by ';' and returns an array of non-empty substrings
+        /// </summary>
+        /// <param name="nameValueCollection"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [CLSCompliant(false)]
+        public static string[] SplitStringValue(this NameValueCollection nameValueCollection, string name)
+        {
+            return nameValueCollection.SplitStringValue(name, string.Empty, _valuesSeparator, StringSplitOptions.RemoveEmptyEntries);
+        }
 
-				retValue = (T)Convert.ChangeType(tmpValue, typeof(T));
-			}
-			else
-			{
-				return defaultValue;
-			}
+        /// <summary>
+        /// Splits named value by given separator and returns an array of substrings
+        /// </summary>
+        /// <param name="nameValueCollection"></param>
+        /// <param name="name"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="separator"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        [CLSCompliant(false)]
+        public static string[] SplitStringValue(this NameValueCollection nameValueCollection, string name, string defaultValue, char[] separator, StringSplitOptions options)
+        {
+            return nameValueCollection.GetValue(name, defaultValue).Split(separator, options);
+        }
 
-			return retValue;
-		}
+        [CLSCompliant(false)]
+        public static T GetValue<T>(this NameValueCollection nameValueCollection, string name, T defaultValue) where T : IConvertible
+        {
+            T result;
 
-		public static TimeSpan GetValue(this NameValueCollection nameValuePairs, string configKey, TimeSpan defaultValue)
-		{
-			var retValue = defaultValue;
+            if (nameValueCollection.AllKeys.Contains(name))
+            {
+                var stringValue = nameValueCollection[name];
+                result = (T)Convert.ChangeType(stringValue, typeof(T));
+            }
+            else
+            {
+                result = defaultValue;
+            }
 
-			if (nameValuePairs.AllKeys.Contains(configKey))
-			{
-				string tmpValue = nameValuePairs[configKey];
-   				retValue = TimeSpan.Parse(tmpValue, CultureInfo.InvariantCulture);
-			}
-			else
-			{
-				return defaultValue;
-			}
+            return result;
+        }
 
-			return retValue;
-		}
-	}
+        public static TimeSpan GetValue(this NameValueCollection nameValueCollection, string name, TimeSpan defaultValue)
+        {
+            TimeSpan result;
+
+            if (nameValueCollection.AllKeys.Contains(name))
+            {
+                var stringValue = nameValueCollection[name];
+                result = TimeSpan.Parse(stringValue, CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                result = defaultValue;
+            }
+
+            return result;
+        }
+    }
 }
