@@ -536,7 +536,7 @@ namespace VirtoCommerce.Platform.Web
 
             #region Modularity
 
-            var modulesDataSources = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:ModulesDataSources", string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            var modulesDataSources = ConfigurationManager.AppSettings.SplitStringValue("VirtoCommerce:ModulesDataSources");
             var externalModuleCatalog = new ExternalManifestModuleCatalog(moduleCatalog.Modules, modulesDataSources, container.Resolve<ILog>());
             container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, new ModuleInstaller(modulesPath, externalModuleCatalog), notifier, container.Resolve<IUserNameResolver>(), settingsManager));
 
