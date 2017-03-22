@@ -180,8 +180,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                             //Force dependency validation for new module
                             _moduleCatalog.CompleteListWithDependencies(new[] { module }).ToArray();
                             _moduleCatalog.AddModule(module);
-                         
                         }
+
                         module.Ref = fileData.LocalFileName;
                         retVal = module.ToWebModel();
                     }
@@ -264,7 +264,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 //set completed by default
                 Finished = DateTime.UtcNow
             };
-                       
+
 
             if (!_settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false))
             {
@@ -272,7 +272,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     if (!_settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false))
                     {
-                        var moduleBundles = ConfigurationManager.AppSettings.GetValues("VirtoCommerce:AutoInstallModuleBundles");
+                        var moduleBundles = ConfigurationManager.AppSettings.SplitStringValue("VirtoCommerce:AutoInstallModuleBundles");
                         if (!moduleBundles.IsNullOrEmpty())
                         {
                             _settingsManager.SetValue("VirtoCommerce.ModulesAutoInstalled", true);
