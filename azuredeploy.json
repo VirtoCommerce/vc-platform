@@ -5,10 +5,6 @@
         "siteName": {
             "type": "string"
         },
-        "siteLocation": {
-            "type": "string",
-            "defaultValue": "West US"
-        },
         "sku": {
             "type": "string",
             "allowedValues": [
@@ -20,7 +16,8 @@
             "defaultValue": "Free"
         },
         "sqlServerLocation": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "West US"
         },
         "sqlServerName": {
             "type": "string"
@@ -75,7 +72,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageName')]",
-            "location": "[parameters('siteLocation')]",
+            "location": "[parameters('sqlServerLocation')]",
             "apiVersion": "2015-06-15",
             "properties": {
                 "accountType": "[variables('storageType')]"
@@ -125,7 +122,7 @@
         {
             "type": "Microsoft.Web/serverfarms",
             "name": "[parameters('hostingPlanName')]",
-            "location": "[parameters('siteLocation')]",
+            "location": "[parameters('sqlServerLocation')]",
             "apiVersion": "2014-06-01",
             "properties": {
                 "name": "[parameters('hostingPlanName')]",
@@ -137,7 +134,7 @@
         {
             "type": "Microsoft.Web/sites",
             "name": "[parameters('siteName')]",
-            "location": "[parameters('siteLocation')]",
+            "location": "[parameters('sqlServerLocation')]",
             "apiVersion": "2014-06-01",
             "dependsOn": [
                 "[concat('Microsoft.Web/serverFarms/', parameters('hostingPlanName'))]"
