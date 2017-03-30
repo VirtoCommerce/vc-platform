@@ -19,6 +19,9 @@
             ],
             "defaultValue": "Free"
         },
+        "sqlServerLocation": {
+            "type": "string"
+        },
         "sqlServerName": {
             "type": "string"
         },
@@ -81,7 +84,7 @@
         {
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('sqlServerName')]",
-            "location": "[parameters('siteLocation')]",
+            "location": "[parameters('sqlServerLocation')]",
             "apiVersion": "2014-04-01-preview",
             "properties": {
                 "version": "12.0",
@@ -92,7 +95,7 @@
                 {
                     "type": "databases",
                     "name": "[parameters('siteName')]",
-                    "location": "[parameters('siteLocation')]",
+                    "location": "[parameters('sqlServerLocation')]",
                     "apiVersion": "2014-04-01-preview",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
@@ -107,7 +110,7 @@
                 {
                     "type": "firewallrules",
                     "name": "AllowAllWindowsAzureIps",
-                    "location": "[parameters('siteLocation')]",
+                    "location": "[parameters('sqlServerLocation')]",
                     "apiVersion": "2014-04-01-preview",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
