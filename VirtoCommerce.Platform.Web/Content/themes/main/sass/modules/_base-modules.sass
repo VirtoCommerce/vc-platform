@@ -1528,10 +1528,8 @@ tags-input
   font-family: serif
   overflow: hidden
   position: relative
-  @for $index from 1 through 10
-    &:nth-last-child(#{$index})
-      z-index: $index
   &.__animated
+    z-index: -1
     animation: blade ease-in-out .25s
     &.__closing
       animation-direction: reverse
@@ -1912,11 +1910,12 @@ tags-input
   min-width: getBladeContentSize('Normal')
 .blade-content.__medium-wide .table
   min-width: getBladeContentSize('Medium')
-.blade .blade-inner
-  box-sizing: border-box
-  overflow: hidden
-  padding: 0 $bladePadding
-  position: relative
+.blade
+    .blade-inner
+      box-sizing: border-box
+      overflow: hidden
+      padding: 0 $bladePadding
+      position: relative
 .blade .blade-inner::-webkit-scrollbar,
 .log::-webkit-scrollbar,
 .ui-grid-viewport::-webkit-scrollbar
@@ -1942,9 +1941,10 @@ tags-input
   -ms-scrollbar-face-color: #d6d6d6
   -ms-scrollbar-shadow-color: #d6d6d6
   -ms-scrollbar-track-color: #e9e9e9
+.blade.__expanded .blade-inner,
 .blade .blade-inner:hover
   overflow-y: auto
-.blade .blade-inner.ui-grid-no-scroll:hover
+.blade .blade-inner.ui-grid-no-scroll
   overflow: visible
 .blade-content
   @include blaseSizes()
