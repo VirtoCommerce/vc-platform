@@ -3250,10 +3250,8 @@ tags-input .tags.focused {
     height: 100%;
     word-spacing: -4px;
     width: 100%; }
-    .cnt .cnt-inner ui-view {
-      width: 100%; }
-      .cnt .cnt-inner ui-view .blade:not(:first-child):last-child {
-        margin-right: 90px; }
+    .cnt .cnt-inner .blade:not(:first-child):last-child {
+      margin-right: 90px; }
   .cnt .dashboard,
   .cnt .blade {
     display: inline-block;
@@ -3276,6 +3274,14 @@ tags-input .tags.focused {
     z-index: -1;
     -webkit-animation: blade ease-in-out .25s;
             animation: blade ease-in-out .25s; }
+    .blade.__animated:nth-child(2) {
+      z-index: -2; }
+    .blade.__animated:nth-child(3) {
+      z-index: -3; }
+    .blade.__animated:nth-child(4) {
+      z-index: -4; }
+    .blade.__animated:nth-child(5) {
+      z-index: -5; }
     .blade.__animated.__closing {
       -webkit-animation-direction: reverse;
               animation-direction: reverse;

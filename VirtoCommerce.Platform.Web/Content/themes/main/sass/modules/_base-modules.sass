@@ -1507,10 +1507,8 @@ tags-input
     height: 100%
     word-spacing: -4px
     width: 100%
-    ui-view
-      width: 100%
-      .blade:not(:first-child):last-child
-        margin-right: 90px
+    .blade:not(:first-child):last-child
+      margin-right: 90px
   .dashboard,
   .blade
     display: inline-block
@@ -1531,6 +1529,9 @@ tags-input
   &.__animated
     z-index: -1
     animation: blade ease-in-out .25s
+    @for $x from 2 through 5
+      &:nth-child(#{$x})
+        z-index: -$x
     &.__closing
       animation-direction: reverse
       animation-duration: .125s
