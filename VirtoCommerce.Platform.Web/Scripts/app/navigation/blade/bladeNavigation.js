@@ -261,11 +261,11 @@ angular.module('platformWebApp')
         showBlade: function (blade, parentBlade) {
 
             //If it is first blade for state try to open saved blades
-            var firstStateBlade = service.stateBlades($state.current.name)[0];
-            if (angular.isDefined(firstStateBlade) && firstStateBlade.id == blade.id) {
-                service.currentBlade = firstStateBlade;
-                return;
-            }
+            //var firstStateBlade = service.stateBlades($state.current.name)[0];
+            //if (angular.isDefined(firstStateBlade) && firstStateBlade.id == blade.id) {
+            //    service.currentBlade = firstStateBlade;
+            //    return;
+            //}
 
             blade.isLoading = true;
             blade.parentBlade = parentBlade;
