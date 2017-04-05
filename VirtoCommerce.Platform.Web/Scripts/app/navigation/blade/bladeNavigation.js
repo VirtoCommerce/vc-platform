@@ -61,27 +61,24 @@ angular.module('platformWebApp')
             }
 
             function scrollContent() {
-                $timeout(function() {
-                    // we can't just get current blade position (because of animation) or calculate it
-                    // via parent position + parent width (because we may open parent and child blade at the same time)
-                    // instead, we need to use sum of width of all blades
-                    var previousBlades = currentBlade.prevAll();
-                    var previousBladesWidthSum = 0;
-                    previousBlades.each(function() {
-                        previousBladesWidthSum += $(this).outerWidth();
-                    });
-                    var scrollLeft = mainContent.scrollLeft() + previousBladesWidthSum + currentBlade.outerWidth(!scope.blade.isExpanded) - mainContent.width();
-                    mainContent.animate({ scrollLeft: (scrollLeft > 0 ? scrollLeft : 0) }, 500);
-                }, 0, false);
+                // we can't just get current blade position (because of animation) or calculate it
+                // via parent position + parent width (because we may open parent and child blade at the same time)
+                // instead, we need to use sum of width of all blades
+                var previousBlades = currentBlade.prevAll();
+                var previousBladesWidthSum = 0;
+                previousBlades.each(function() {
+                    previousBladesWidthSum += $(this).outerWidth();
+                });
+                var scrollLeft = previousBladesWidthSum + currentBlade.outerWidth(!scope.blade.isExpanded) - mainContent.width();
+                mainContent.animate({ scrollLeft: (scrollLeft > 0 ? scrollLeft : 0) }, 500);
             }
 
-            var updatePosition = function () {
+            var updateSize = function () {
                 if (scope.blade.isExpandable) {
                     var contentBlock = currentBlade.find(".blade-content");
+                    var containerBlock = currentBlade.find(".blade-container");
 
                     // emptry strings is needed to clease properies when blade go to collapse state
-                    var contentWidth = "";
-                    var innerWidth = "";
                     var bladeWidth = "";
                     var bladeMinWidth = "";
 
@@ -90,15 +87,9 @@ angular.module('platformWebApp')
                         // free space of view - parent blade size (if exist)
                         bladeWidth = 'calc(100% - ' + offset + 'px)';
                         // minimal required width + container padding
-                        bladeMinWidth = 'calc(' + contentBlock.css("min-width") + ' + ' + currentBlade.find(".blade-container").css("padding-right") + ')';
-                        // relative to blade size
-                        contentWidth = '100%';
-                        // horizontal margin = margin-left + margin-right = 20px  + 20px = 40px
-                        innerWidth = '100%';
+                        bladeMinWidth = 'calc(' + contentBlock.css("min-width") + ' + ' + parseInt(containerBlock.outerWidth() - containerBlock.width()) + 'px)';
                     }
 
-                    contentBlock.width(contentWidth);
-                    contentBlock.find('.inner-block').width(innerWidth);
                     currentBlade.width(bladeWidth);
                     currentBlade.css('min-width', bladeMinWidth);
 
@@ -110,14 +101,14 @@ angular.module('platformWebApp')
                 // we must recalculate position only at next digest cycle,
                 // because at this time blade UI is not fully (re)initialized
                 // for example, ng-class set classes after this watch called
-                $timeout(updatePosition, 0, false);
+                $timeout(updateSize, 0, false);
             });
-            
+
             scope.$on('$includeContentLoaded', function (event, src) {
                 if (src === scope.blade.template) {
                     // see above
-                    $timeout(function() {
-                        updatePosition();
+                    $timeout(function () {
+                        updateSize();
                         scrollContent();
                     }, 0, false);
                 }

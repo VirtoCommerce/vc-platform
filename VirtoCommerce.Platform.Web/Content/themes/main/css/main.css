@@ -868,7 +868,7 @@ input.ui-grid-filter-input[type="text"] {
     -webkit-transition: font .3s ease;
     transition: font .3s ease; }
     .ui-grid-actions .fa.context-menu::before {
-      content: "\f141"; }
+      content: "\f142"; }
 
 .ui-grid-actions ~ .menu {
   background: #dee9f0;
@@ -3687,6 +3687,9 @@ tags-input .tags.focused {
     min-width: 940px;
     width: 940px; }
 
+.blade.__expanded .blade-content {
+  width: 100%; }
+
 .blade .blade-content.__tree {
   width: 340px; }
 
@@ -3770,6 +3773,9 @@ tags-input .tags.focused {
 .blade-content.__xxlarge-wide .inner-block {
   min-width: 900px;
   width: 900px; }
+
+.blade.__expanded .blade-content .inner-block {
+  width: 100%; }
 
 .blade-content.__tree .inner-block {
   width: 300px; }

@@ -1900,6 +1900,8 @@ tags-input
       $width: getBladeContentSize($bladeSizeName)
       min-width: $width
       width: $width
+  .blade.__expanded &
+    width: 100%
   .blade &.__tree
     width: 340px
   .blade &.__code-editor
@@ -1951,6 +1953,8 @@ tags-input
       min-width: $width
       width: $width
 .inner-block
+  .blade.__expanded .blade-content &
+    width: 100%
   .blade-content.__tree &
     width: 300px
   .blade-content.__code-editor &
