@@ -145,7 +145,7 @@
                       placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
         </div>
     </script>
-    <script type="text/ng-template" id="dHtml-multilang.html">
+    <script type="text/ng-template" id="dCode-multilang.html">
         <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
             <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
             <ui-codemirror ng-required="currentEntity.isRequired"
