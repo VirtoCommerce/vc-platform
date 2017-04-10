@@ -228,7 +228,7 @@ angular.module('platformWebApp')
                         }
                     }
                     if (angular.isFunction(callback)) {
-                        $timeout(callback, 60);
+                        callback();
                     };
                 };
 
