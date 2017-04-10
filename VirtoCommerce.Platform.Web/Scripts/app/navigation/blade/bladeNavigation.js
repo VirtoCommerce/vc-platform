@@ -55,7 +55,7 @@ angular.module('platformWebApp')
 
             if (!scope.blade.disableOpenAnimation) {
                 scope.blade.animated = true;
-                setTimeout(function () {
+                $timeout(function () {
                    scope.blade.animated = false;
                 }, 250);
             }
