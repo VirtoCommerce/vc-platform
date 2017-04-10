@@ -73,6 +73,12 @@
                         if (customOnRegisterApiCallback) {
                             customOnRegisterApiCallback(gridApi);
                         }
+                    },
+                    onCollapse: function() {
+                        updateColumnsVisibility(this, true);
+                    },
+                    onExpand: function () {
+                        updateColumnsVisibility(this, false);
                     }
                 });
 
@@ -107,6 +113,17 @@
                     });
                     gridOptions.columnDefsGenerated = true;
                 }
+            }
+
+            function updateColumnsVisibility(gridOptions, isCollapsed) {
+                _.each(gridOptions.columnDefs, function (x) {
+                    // normal: visible, if column was predefined
+                    // collapsed: visible only if we must display column always
+                    if (isCollapsed) {
+                        x.wasVisible = !!x.visible || !!x.wasPredefined;
+                    }
+                    x.visible = !isCollapsed ? !!x.wasVisible : !!x.displayAlways;
+                });
             }
 
             return gridOptions;
@@ -155,14 +172,11 @@
     .factory('platformWebApp.ui-grid.extension', [function () {
         return {
             extensionsMap: [],
-            registerExtension : function(gridId, extensionFn)
-            {
+            registerExtension: function (gridId, extensionFn) {
                 this.extensionsMap[gridId] = extensionFn;
             },
-            tryExtendGridOptions: function(gridId, gridOptions)
-            {
-                if(this.extensionsMap[gridId])
-                {
+            tryExtendGridOptions: function (gridId, gridOptions) {
+                if (this.extensionsMap[gridId]) {
                     this.extensionsMap[gridId](gridOptions);
                 }
             }
@@ -183,6 +197,7 @@
                             $(element).height(bladeInner.height());
                         });
                     };
+                    scope.$watch('blade.isExpanded', setGridHeight);
                     scope.$watch('pageSettings.totalItems', setGridHeight);
                     angular.element($window).bind('resize', setGridHeight);
                 }

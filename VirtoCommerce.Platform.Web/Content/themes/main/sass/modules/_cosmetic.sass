@@ -28,37 +28,20 @@
   z-index: 9000
 
 /* CodeMirror */
-.CodeMirror
+.blade-content .CodeMirror
   border: 1px solid $borderColor
   direction: ltr
   font-size: 13px
-.blade
-  .blade-content
+.blade .blade-content
+  @include blaseSizes()
     .CodeMirror
-      width: $bladeNormalSize - $bladePadding * 2
-    &.__medium-wide .CodeMirror
-      width: $bladeMediumSize - $bladePadding * 2
-    &.__large-wide .CodeMirror
-      width: $bladeLargeSize - $bladePadding * 2
-    &.__xlarge-wide .CodeMirror
-      width: $bladeXLargeSize - $bladePadding * 2
-    &.__xxlarge-wide .CodeMirror
-      width: $bladeXXLargeSize - $bladePadding * 2
-    &.__3xlarge-wide .CodeMirror
-      width: $blade3XLargeSize - $bladePadding * 2
-    &.__4xlarge-wide .CodeMirror
-      width: $blade4XLargeSize - $bladePadding * 2
-    &.__5xlarge-wide .CodeMirror
-      width: $blade5XLargeSize - $bladePadding * 2
-    &.__code-editor .CodeMirror
-      width: calc(100vw - #{$mainMenuWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2 + #{$bladePadding} * 2))
-  &.__maximized .blade-content .CodeMirror
-    width: calc(100vw - #{$mainMenuWidth} - #{$bladePadding} * 2)
-.nav-bar.__collapsed + .cnt .blade
-  .blade-content.__code-editor .CodeMirror
-    width: calc(100vw - #{$mainMenuCollapsedWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2 + #{$bladePadding} * 2))
-  &.__maximized .blade-content .CodeMirror
-    width: calc(100vw - #{$mainMenuCollapsedWidth} - #{$bladePadding} * 2)
+      width: getBladeInnerSize($bladeSizeName)
+.blade.__expanded .blade-content .CodeMirror
+  width: 100%
+.blade .blade-content.__code-editor .CodeMirror
+  width: calc(100vw - #{$mainMenuWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
+  .nav-bar.__collapsed + .cnt &
+    width: calc(100vw - #{$mainMenuCollapsedWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
 
 /* Scroll bar */
 *::-webkit-scrollbar
@@ -320,3 +303,9 @@ a:hover,
   60%,
   80%
     transform: rotate(7deg)
+
+@keyframes blade
+  0%
+    transform: translateX(getBladeContentSize('Normal') * -1)
+  100%
+    transform: translateX(0)

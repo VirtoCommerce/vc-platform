@@ -663,9 +663,6 @@ $names: "", ".double", ".triple", ".quadro"
   overflow-y: auto
 
 /* Items lists */
-$listItemHorizontalPadding: 20px
-$listItemArrowSpace: 30px
-
 .list.__items,
 .list.__files
   margin: 0 -20px 15px
@@ -1509,7 +1506,9 @@ tags-input
     display: inline-block
     height: 100%
     word-spacing: -4px
-    padding-right: 90px
+    width: 100%
+    .blade:not(:first-child):last-child
+      margin-right: 90px
   .dashboard,
   .blade
     display: inline-block
@@ -1527,6 +1526,15 @@ tags-input
   font-family: serif
   overflow: hidden
   position: relative
+  &.__animated
+    z-index: -1
+    animation: blade ease-in-out .25s
+    @for $x from 2 through 5
+      &:nth-child(#{$x})
+        z-index: -$x
+    &.__closing
+      animation-direction: reverse
+      animation-duration: .125s
   .blade-head,
   .blade-container
     box-shadow: -8px 0 0 0 rgba(0,0,0,.2) inset
@@ -1535,7 +1543,6 @@ tags-input
     background: #333
     box-sizing: border-box
     height: 132px
-    min-width: 300px
     padding: 25px 0 5px
     position: relative
 
@@ -1876,7 +1883,6 @@ tags-input
 
     filter: alpha(opacity=25)
 .blade .blade-content
-  width: $bladeNormalSize
   white-space: normal
 .blade.__active
   .blade-content
@@ -1886,32 +1892,31 @@ tags-input
     background: $lightBg
 .__canceled
   background-color: #eff7fc
-.blade .blade-content.__medium-wide
-  width: $bladeMediumSize
-.blade .blade-content.__large-wide
-  width: $bladeLargeSize
-.blade .blade-content.__xlarge-wide
-  width: $bladeXLargeSize
-.blade .blade-content.__xxlarge-wide
-  width: $bladeXXLargeSize
-.blade .blade-content.__3xlarge-wide
-  width: $blade3XLargeSize
-.blade .blade-content.__4xlarge-wide
-  width: $blade4XLargeSize
-.blade .blade-content.__5xlarge-wide
-  width: $blade5XLargeSize
-.blade .blade-content.__tree
-  width: 340px
+
+.blade-content
+  .blade &
+    @include blaseSizes()
+      $width: getBladeContentSize($bladeSizeName)
+      min-width: $width
+      width: $width
+  .blade.__expanded &
+    width: 100%
+  .blade &.__tree
+    width: 340px
+  .blade &.__code-editor
+    width: calc(100vw - #{$mainMenuWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2})
+    .nav-bar.__collapsed + .cnt &
+      width: calc(100vw - #{$mainMenuCollapsedWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2})
 .blade-content .table
-  min-width: $bladeNormalSize
+  min-width: getBladeContentSize('Normal')
 .blade-content.__medium-wide .table
-  min-width: $bladeMediumSize
-.blade .blade-content.blade-large
-  width: 720px
-.blade .blade-inner
-  box-sizing: border-box
-  overflow: hidden
-  padding: 0 $bladePadding
+  min-width: getBladeContentSize('Medium')
+.blade
+    .blade-inner
+      box-sizing: border-box
+      overflow: hidden
+      padding: 0 $bladePadding
+      position: relative
 .blade .blade-inner::-webkit-scrollbar,
 .log::-webkit-scrollbar,
 .ui-grid-viewport::-webkit-scrollbar
@@ -1937,36 +1942,27 @@ tags-input
   -ms-scrollbar-face-color: #d6d6d6
   -ms-scrollbar-shadow-color: #d6d6d6
   -ms-scrollbar-track-color: #e9e9e9
+.blade.__expanded .blade-inner,
 .blade .blade-inner:hover
   overflow-y: auto
-.blade .blade-inner.ui-grid-no-scroll:hover
+.blade .blade-inner.ui-grid-no-scroll
   overflow: visible
-.blade-inner .inner-block
-  width: $bladeNormalSize - $bladePadding * 2
-.blade-content.__medium-wide .inner-block
-  width: $bladeMediumSize - $bladePadding * 2
-.blade-content.__large-wide .inner-block
-  width: $bladeLargeSize - $bladePadding * 2
-.blade-content.__xlarge-wide .inner-block
-  width: $bladeXLargeSize - $bladePadding * 2
-.blade-content.__xxlarge-wide .inner-block
-  width: $bladeXXLargeSize - $bladePadding * 2
-.blade-content.__3xlarge-wide .inner-block
-  width: $blade3XLargeSize - $bladePadding * 2
-.blade-content.__4xlarge-wide .inner-block
-  width: $blade4XLargeSize - $bladePadding * 2
-.blade-content.__5xlarge-wide .inner-block
-  width: $blade5XLargeSize - $bladePadding * 2
-.blade-content.__tree .inner-block
-  width: 300px
-.blade-content.__code-editor
-  width: calc(100vw - #{$mainMenuWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2))
-  .inner-block
-    width: calc(100vw - #{$mainMenuWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2 + #{$bladePadding} * 2))
-.nav-bar.__collapsed + .cnt .blade .blade-content.__code-editor
-  width: calc(100vw - #{$mainMenuCollapsedWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2))
-  .inner-block
-    width: calc(100vw - #{$mainMenuCollapsedWidth} - (#{$bladeMediumSize} + #{$bladeContainerPadding} * 2 + #{$bladePadding} * 2))
+.blade-content
+  @include blaseSizes()
+    .inner-block
+      $width: getBladeInnerSize($bladeSizeName)
+      min-width: $width
+      width: $width
+.inner-block
+  .blade.__expanded .blade-content &
+    width: 100%
+  .blade-content.__tree &
+    width: 300px
+  .blade-content.__code-editor &
+    width: calc(100vw - #{$mainMenuWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
+    .nav-bar.__collapsed + .cnt &
+      width: calc(100vw - #{$mainMenuCollapsedWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
+
 .blade .blade-loader
   padding: 20px
   text-align: center

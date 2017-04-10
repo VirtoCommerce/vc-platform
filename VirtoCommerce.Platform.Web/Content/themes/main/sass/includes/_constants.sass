@@ -2,6 +2,7 @@
 $font: 'Exo 2'
 $fontAw: 'FontAwesome'
 $fontSize: 16px
+$fontAwFwSzeMultiplier: 1.28571429
 $monospaceFontSize: 13px
 $h1FontSize: ceil(3.30 * $fontSize)
 $h2FontSize: ceil(2.75 * $fontSize)
@@ -16,21 +17,26 @@ $demoWarningHeight: 28px;
 $tileSize: 120px
 $tileMargin: 10px
 
-$bladeSize: $tileSize + $tileMargin;
+$bladeSizeBase: $tileSize + $tileMargin;
 $bladePadding: 20px
 $bladeContainerPadding: 8px
-$bladeNormalSize: $bladeSize * 3 + $bladePadding + 10px
-$bladeMediumSize: $bladeNormalSize + $bladeSize
-$bladeLargeSize: $bladeMediumSize + $bladeSize
-$bladeXLargeSize: $bladeLargeSize + $bladeSize
-$bladeXXLargeSize: $bladeXLargeSize + $bladeSize
-$blade3XLargeSize: $bladeXXLargeSize + $bladeSize
-$blade4XLargeSize: $blade3XLargeSize + $bladeSize
-$blade5XLargeSize: $blade4XLargeSize + $bladeSize
+
+$bladeSizes: ('Small', 'Normal', 'Medium', 'Large', 'XLarge', 'XXLarge')
+
+@function getBladeContentSize($bladeSize)
+  $minimalSize: $bladeSizeBase * 2 - $tileMargin + $bladePadding * 2
+  @return $minimalSize + $bladeSizeBase * (index($bladeSizes, $bladeSize) - 1)
+
+@function getBladeInnerSize($bladeSize)
+  @return getBladeContentSize($bladeSize) - $bladePadding * 2
+
+$listItemHorizontalPadding: 20px
+$listItemArrowSpace: 30px
 
 $mainMenuWidth: 235px
-$mainMenuCollapsedWidth: 72px
-$mainMenuIcoSize: 32px
+$mainMenuIcoSize: $fontSize * 2
+$mainMenuIcoFontSize: round($mainMenuIcoSize / $fontAwFwSzeMultiplier)
+$mainMenuCollapsedWidth: $mainMenuIcoSize + $listItemHorizontalPadding * 2
 $mainMenuDropdownWidth: 360px
 
 /* Colors */

@@ -110,6 +110,7 @@
 .ui-grid-cell-contents .inner-contents
   display: inline-block
   vertical-align: middle
+  width: 100%
 .ui-grid-cell-contents
   &::after
     content: ' '
@@ -253,6 +254,8 @@ input.ui-grid-filter-input[type="text"]
     vertical-align: middle
 
     transition: font .3s ease
+    &.context-menu::before
+      content: "\f142"
 .ui-grid-actions ~ .menu
   background: $baseBrd
   box-sizing: border-box

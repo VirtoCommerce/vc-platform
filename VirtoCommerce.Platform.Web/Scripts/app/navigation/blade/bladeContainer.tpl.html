@@ -1,4 +1,4 @@
-﻿<div class="blade" ng-class="[moduleName, {'__maximized': maximized}]" ng-repeat="blade in blades">
+﻿<div class="blade" ng-class="[moduleName, {'__animated': blade.animated, '__expanded': blade.isExpanded, '__closing': blade.closing}]" ng-repeat="blade in blades">
     <div class="blade-wrapper" va-blade='blade'>
         <header class="blade-head">
             <div class="blade-status" ng-class="{'__error': blade.error}">
@@ -7,21 +7,6 @@
             </div>
             <div class="blade-nav">
                 <ul class="menu __inline">
-                    <!--<li class="menu-item">
-                        <button>
-                            <i class="btn-ico fa fa-thumb-tack"></i>
-                        </button>
-                    </li>-->
-                    <li class="menu-item __minimize" ng-click="bladeRestore()" ng-show="maximized">
-                        <button>
-                            {{ 'platform.commands.minimize' | translate }}
-                        </button>
-                    </li>
-                    <li class="menu-item __maximize" ng-click="bladeMaximize()" ng-show="!maximized">
-                        <button>
-                            {{ 'platform.commands.maximize' | translate }}
-                        </button>
-                    </li>
                     <li class="menu-item __close" ng-click="bladeClose()" ng-class="{'__disabled': blade.isClosingDisabled}" ng-disabled="blade.isClosingDisabled">
                         <button>
                             {{ 'platform.commands.close' | translate }}
