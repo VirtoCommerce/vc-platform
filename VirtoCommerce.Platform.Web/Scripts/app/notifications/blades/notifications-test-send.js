@@ -5,7 +5,7 @@
 
     $scope.setForm = function (form) {
         $scope.formScope = form;
-    }
+    };
 
     blade.initialize = function () {
         blade.isLoading = true;
@@ -23,47 +23,40 @@
                     isArray: false,
                     type: "String"
                 },
-		        {
-		            parameterName: "Sender",
-		            parameterDescription: "Sender email",
-		            isDictionary: false,
-		            isArray: false,
-		            type: "String"
-		        }]
+                {
+                    parameterName: "Sender",
+                    parameterDescription: "Sender email",
+                    isDictionary: false,
+                    isArray: false,
+                    type: "String"
+                }]
             };
             for (var i = 0; i < blade.currentParams.length; i++) {
-                var property = blade.currentParams[i];
-                if (property.isDictionary) {
-                    blade.currentParams[i].value = [{ name: '', value: '' }];
-                    blade.obj.notificationParameters.push(blade.currentParams[i]);
+                var notificationParam = blade.currentParams[i];
+                if (notificationParam.isDictionary) {
+                    notificationParam.value = [{ name: '', value: '' }];
                 }
-                else if (property.isArray) {
-                    if (property.type === 'Decimal')
-                        blade.currentParams[i].value = [{ key: '0.00' }];
-                    else if (property.type === 'Integer')
-                        blade.currentParams[i].value = [{ key: '0' }];
-                    else if (property.type === 'DateTime')
-                        blade.currentParams[i].value = [{ key: undefined }];
-                    else if (property.type === 'Boolean')
-                        blade.currentParams[i].value = [{ key: false }];
-                    else if (property.type === 'String')
-                        blade.currentParams[i].value = [{ key: '' }];
-                    blade.obj.notificationParameters.push(blade.currentParams[i]);
+                else if (notificationParam.isArray) {
+                    if (notificationParam.type === 'Decimal')
+                        notificationParam.value = [{ key: '0.00' }];
+                    else if (notificationParam.type === 'Integer')
+                        notificationParam.value = [{ key: '0' }];
+                    else if (notificationParam.type === 'DateTime')
+                        notificationParam.value = [{ key: undefined }];
+                    else if (notificationParam.type === 'Boolean')
+                        notificationParam.value = [{ key: false }];
+                    else if (notificationParam.type === 'String')
+                        notificationParam.value = [{ key: '' }];
                 }
-                else {
-                    if (!_.isEmpty($localStorage.notificationTestSend)) {
-                        var value = _.find($localStorage.notificationTestSend, function (element) { return blade.currentParams[i].parameterName === element.parameterName; });
-                        if (value) {
-                            blade.currentParams[i].value = value.value;
-                        }
-                        else {
-                            blade.obj.notificationParameters.push(blade.currentParams[i]);
-                        }
-                    }
-                    else {
-                        blade.obj.notificationParameters.push(blade.currentParams[i]);
+                else if (!_.isEmpty($localStorage.notificationTestSend)) {
+                    var value = _.find($localStorage.notificationTestSend, function (element) {
+                        return notificationParam.parameterName === element.parameterName;
+                    });
+                    if (value) {
+                        notificationParam.value = value.value;
                     }
                 }
+                blade.obj.notificationParameters.push(notificationParam);
             }
         }, function (error) {
             bladeNavigationService.setError('Error ' + error.status, blade);
@@ -82,23 +75,24 @@
         //prepare params for sending
         var preparedParams = [];
         for (var i = 0; i < blade.obj.notificationParameters.length; i++) {
-            if (blade.obj.notificationParameters[i].isDictionary) {
+            var notificationParam = blade.obj.notificationParameters[i];
+            if (notificationParam.isDictionary) {
                 var params = {};
-                preparedParams[i] = angular.copy(blade.obj.notificationParameters[i]);
-                var notParam = blade.obj.notificationParameters[i].value;
+                preparedParams[i] = angular.copy(notificationParam);
+                var notParam = notificationParam.value;
                 for (var j = 0; j < notParam.length; j++) {
                     params[notParam[j].name] = notParam[j].value;
                 }
-                blade.obj.notificationParameters[i].value = params;
+                notificationParam.value = params;
             }
-            else if (blade.obj.notificationParameters[i].isArray) {
+            else if (notificationParam.isArray) {
                 var arrayParams = [];
-                preparedParams[i] = angular.copy(blade.obj.notificationParameters[i]);
-                var notParam = blade.obj.notificationParameters[i].value;
+                preparedParams[i] = angular.copy(notificationParam);
+                var notParam = notificationParam.value;
                 for (var j = 0; j < notParam.length; j++) {
                     arrayParams.push(notParam[j].key);
                 }
-                blade.obj.notificationParameters[i].value = arrayParams;
+                notificationParam.value = arrayParams;
             }
         }
 
@@ -110,21 +104,21 @@
                     id: "successSend",
                     title: "platform.dialogs.email-sending-success.title",
                     message: "platform.dialogs.email-sending-success.message"
-                }
+                };
             } else {
                 dialog = {
                     id: "errorSend",
                     title: "platform.dialogs.email-send-error.title",
                     message: "platform.dialogs.email-send-error.message",
                     messageValues: { error: result.errorMessage }
-                }
+                };
             }
             dialogService.showNotificationDialog(dialog);
 
             //revert params
             blade.revertParams(preparedParams);
         });
-    }
+    };
 
     blade.headIcon = 'fa-upload';
 
@@ -132,22 +126,23 @@
 
     blade.revertParams = function (preparedParams) {
         for (var i = 0; i < blade.obj.notificationParameters.length; i++) {
-            if (blade.obj.notificationParameters[i].isDictionary || blade.obj.notificationParameters[i].isArray) {
-                blade.obj.notificationParameters[i].value = preparedParams[i].value;
+            var notificationParam = blade.obj.notificationParameters[i];
+            if (notificationParam.isDictionary || notificationParam.isArray) {
+                notificationParam.value = preparedParams[i].value;
             }
         }
-    }
+    };
 
     $scope.datepickers = {
         endDate: false,
-        startDate: false,
-    }
+        startDate: false
+    };
+
     $scope.today = new Date();
 
     $scope.open = function ($event, parameterName) {
         $event.preventDefault();
         $event.stopPropagation();
-
         $scope.datepickers[parameterName] = true;
     };
 
@@ -160,12 +155,16 @@
     $scope.format = $scope.formats[0];
 
     blade.addDictionaryElement = function (paramName) {
-        var value = _.find(blade.obj.notificationParameters, function (element) { return paramName === element.parameterName; });
+        var value = _.find(blade.obj.notificationParameters, function (element) {
+            return paramName === element.parameterName;
+        });
         value.push({ name: '', value: '' });
-    }
+    };
 
     blade.addArrayElement = function (parameter) {
-        var value = _.find(blade.obj.notificationParameters, function (element) { return parameter.parameterName === element.parameterName; });
+        var value = _.find(blade.obj.notificationParameters, function (element) {
+            return parameter.parameterName === element.parameterName;
+        });
         if (value) {
             if (value.type === 'Decimal')
                 value.value.push({ key: '0.00' });
@@ -178,5 +177,5 @@
             else if (value.type === 'String')
                 value.value.push({ key: '' });
         }
-    }
+    };
 }]);
