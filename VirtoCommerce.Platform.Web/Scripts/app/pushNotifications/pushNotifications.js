@@ -38,35 +38,35 @@
 
     //Recent events notification template (error, info, debug) 
     var menuDefaultTemplate =
-		{
-		    priority: 1000,
-		    satisfy: function (notification, place) { return place == 'menu'; },
-		    //template for display that notification in menu and list
-		    template: '$(Platform)/Scripts/app/pushNotifications/menuDefault.tpl.html',
-		    //action executed when notification selected
-		    action: function (notify) { $state.go('workspace.pushNotificationsHistory', notify) }
-		};
+        {
+            priority: 1000,
+            satisfy: function (notification, place) { return place == 'menu'; },
+            //template for display that notification in menu and list
+            template: '$(Platform)/Scripts/app/pushNotifications/menuDefault.tpl.html',
+            //action executed when notification selected
+            action: function (notify) { $state.go('workspace.pushNotificationsHistory', notify) }
+        };
 
     //In history list notification template (error, info, debug)
     var historyDefaultTemplate =
-		{
-		    priority: 1000,
-		    satisfy: function (notification, place) { return place == 'history'; },
-		    //template for display that notification in menu and list
-		    template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDefault.tpl.html',
-		    //action executed in event detail
-		    action: function (notify) {
-		        var blade = {
-		            id: 'notifyDetail',
-		            title: 'platform.blades.historyDetailDefault.title',
-		            subtitle: 'platform.blades.historyDetailDefault.subtitle',
-		            template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDetailDefault.tpl.html',
-		            isClosingDisabled: false,
-		            notify: notify
-		        };
-		        bladeNavigationService.showBlade(blade);
-		    }
-		};
+        {
+            priority: 1000,
+            satisfy: function (notification, place) { return place == 'history'; },
+            //template for display that notification in menu and list
+            template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDefault.tpl.html',
+            //action executed in event detail
+            action: function (notify) {
+                var blade = {
+                    id: 'notifyDetail',
+                    title: 'platform.blades.historyDetailDefault.title',
+                    subtitle: 'platform.blades.historyDetailDefault.subtitle',
+                    template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDetailDefault.tpl.html',
+                    isClosingDisabled: false,
+                    notify: notify
+                };
+                bladeNavigationService.showBlade(blade);
+            }
+        };
 
     retVal.register(menuDefaultTemplate);
     retVal.register(historyDefaultTemplate);
@@ -84,7 +84,6 @@
             $rootScope.$broadcast("new-notification-event", data);
 
             var menuItem = {
-                parent: notifyMenu,
                 path: 'pushNotifications/notifications',
                 icon: 'fa fa-bell-o',
                 title: data.title,
@@ -101,6 +100,7 @@
                 angular.copy(menuItem, alreadyExitstItem);
             }
             else {
+                menuItem.parent = notifyMenu;
                 notifyMenu.children.push(menuItem);
                 notifyMenu.newCount++;
 
