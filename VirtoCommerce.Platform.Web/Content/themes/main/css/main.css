@@ -3674,6 +3674,7 @@ tags-input .tags.focused {
     min-width: 940px;
     width: 940px; }
 
+.blade.__maximized .blade-content,
 .blade.__expanded .blade-content {
   width: 100%; }
 
@@ -3731,6 +3732,7 @@ tags-input .tags.focused {
   -ms-scrollbar-shadow-color: #d6d6d6;
   -ms-scrollbar-track-color: #e9e9e9; }
 
+.blade.__maximized .blade-inner,
 .blade.__expanded .blade-inner,
 .blade .blade-inner:hover {
   overflow-y: auto; }
@@ -3762,6 +3764,7 @@ tags-input .tags.focused {
   min-width: 900px;
   width: 900px; }
 
+.blade.__maximized .blade-content .inner-block,
 .blade.__expanded .blade-content .inner-block {
   width: 100%; }
 
