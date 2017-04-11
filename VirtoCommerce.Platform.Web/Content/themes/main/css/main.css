@@ -4586,6 +4586,7 @@ tags-input .tags.focused {
 .blade .blade-content.__xxlarge-wide .CodeMirror {
   width: 900px; }
 
+.blade.__maximized .blade-content .CodeMirror,
 .blade.__expanded .blade-content .CodeMirror {
   width: 100%; }
 
