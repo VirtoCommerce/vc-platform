@@ -45,6 +45,16 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
             var rootUri = new Uri(contentPhysicalPath);
 
+            // Clear directory
+            // Ignore any errors, because shadow copy may not work
+            try
+            {
+                Array.ForEach(Directory.GetFiles(_assembliesPath), File.Delete);
+            }
+            catch (Exception)
+            {
+            }
+
             CopyAssemblies(_modulesLocalPath, _assembliesPath);
 
             foreach (var pair in GetModuleManifests())

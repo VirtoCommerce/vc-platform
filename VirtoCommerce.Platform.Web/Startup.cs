@@ -84,6 +84,18 @@ namespace VirtoCommerce.Platform.Web
             var modulesVirtualPath = VirtualRoot + "/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
 
+            // Try to include modules directory to shadow copy directories
+            // Ignore any errors, because method AppDomain.CurrentDomain.SetShadowCopyPath is obsolete
+            try
+            {
+#pragma warning disable 618
+                AppDomain.CurrentDomain.SetShadowCopyPath(AppDomain.CurrentDomain.SetupInformation.ShadowCopyDirectories + ";" + _assembliesPath);
+#pragma warning restore 618
+            }
+            catch (Exception)
+            {
+            }
+
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
             //Modules initialization
