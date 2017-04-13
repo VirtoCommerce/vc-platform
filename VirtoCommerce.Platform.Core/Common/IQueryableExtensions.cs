@@ -50,7 +50,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public static IOrderedQueryable<T> ThenBySortInfos<T>(this IOrderedQueryable<T> source, SortInfo[] sortInfos)
         {
             var retVal = source;
-            if (sortInfos.IsNullOrEmpty())
+            if (!sortInfos.IsNullOrEmpty())
             {
                 foreach (var sortInfo in sortInfos)
                 {
