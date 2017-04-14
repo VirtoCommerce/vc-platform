@@ -312,9 +312,45 @@ angular.module('platformWebApp', AppDependencies).
             return hash;
         };
 
-        String.prototype.endsWith = function (suffix) {
-            return this.indexOf(suffix, this.length - suffix.length) !== -1;
-        };
+        if (!String.prototype.startsWith) {
+            String.prototype.startsWith = function (searchString, position) {
+                if (searchString && searchString.toString() == '[object RegExp]') {
+                    throw TypeError();
+                }
+                var length = this.length;
+                var startIndex = position ? Number(position) : 0;
+                if (isNaN(startIndex)) {
+                    startIndex = 0;
+                }
+                var fromIndex = Math.min(Math.max(startIndex, 0), length);
+                if (fromIndex + searchString.length > length) {
+                    return false;
+                }
+                return this.indexOf(searchString, startIndex) == fromIndex;
+            }
+        }
+
+        if (!String.prototype.endsWith) {
+            String.prototype.endsWith = function (searchString, position) {
+                if (searchString && searchString.toString() == '[object RegExp]') {
+                    throw TypeError();
+                }
+                var length = this.length;
+                var endIndex = length;
+                if (position !== undefined) {
+                    endIndex = position ? Number(position) : 0;
+                    if (isNaN(endIndex)) {
+                        endIndex = 0;
+                    }
+                }
+                var toIndex = Math.min(Math.max(endIndex, 0), length);
+                var fromIndex = toIndex - searchString.length;
+                if (fromIndex < 0) {
+                    return false;
+                }
+                return this.lastIndexOf(searchString, fromIndex) == fromIndex;
+            }
+        }
 
         if (!angular.isDefined(Number.MIN_SAFE_INTEGER)) {
             Number.MIN_SAFE_INTEGER = -9007199254740991;
