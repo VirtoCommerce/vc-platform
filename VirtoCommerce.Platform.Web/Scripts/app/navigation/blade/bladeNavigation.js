@@ -359,7 +359,9 @@ angular.module('platformWebApp')
                 service.closeBlade(existingBlade, showBlade);
             }
             else {
-                showBlade();
+                $timeout(function() {
+                    showBlade();
+                });
             }
 
             if (parentBlade && parentBlade.isExpandable && parentBlade.isExpanded) {
