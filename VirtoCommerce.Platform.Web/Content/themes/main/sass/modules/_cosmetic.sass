@@ -32,17 +32,6 @@
   border: 1px solid $borderColor
   direction: ltr
   font-size: 13px
-.blade .blade-content
-  @include blaseSizes()
-    .CodeMirror
-      width: getBladeInnerSize($bladeSizeName)
-.blade.__maximized .blade-content .CodeMirror,
-.blade.__expanded .blade-content .CodeMirror
-  width: 100%
-.blade .blade-content.__code-editor .CodeMirror
-  width: calc(100vw - #{$mainMenuWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
-  .nav-bar.__collapsed + .cnt &
-    width: calc(100vw - #{$mainMenuCollapsedWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
 
 /* Scroll bar */
 *::-webkit-scrollbar

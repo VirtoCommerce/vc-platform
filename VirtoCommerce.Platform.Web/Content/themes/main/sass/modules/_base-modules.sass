@@ -1904,10 +1904,6 @@ tags-input
     width: 100%
   .blade &.__tree
     width: 340px
-  .blade &.__code-editor
-    width: calc(100vw - #{$mainMenuWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2})
-    .nav-bar.__collapsed + .cnt &
-      width: calc(100vw - #{$mainMenuCollapsedWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2})
 .blade-content .table
   min-width: getBladeContentSize('Normal')
 .blade-content.__medium-wide .table
@@ -1961,10 +1957,6 @@ tags-input
     width: 100%
   .blade-content.__tree &
     width: 300px
-  .blade-content.__code-editor &
-    width: calc(100vw - #{$mainMenuWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
-    .nav-bar.__collapsed + .cnt &
-      width: calc(100vw - #{$mainMenuCollapsedWidth + getBladeContentSize('Medium') + $bladeContainerPadding * 2 + $bladePadding * 2})
 
 .blade .blade-loader
   padding: 20px
