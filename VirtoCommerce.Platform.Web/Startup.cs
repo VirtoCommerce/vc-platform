@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using CacheManager.Core;
+using CacheManager.Core.Configuration;
 using Common.Logging;
 using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -326,14 +327,22 @@ namespace VirtoCommerce.Platform.Web
             var moduleCatalog = container.Resolve<IModuleCatalog>();
 
             #region Caching
-            var cacheManager = CacheFactory.Build("platformCache", settings =>
+            ICacheManager<object> cacheManager = null;
+            //Try to load cache configuration from web.config first
+            if (ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) != null)
             {
-                //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
-                settings
-                    .WithUpdateMode(CacheUpdateMode.Up)
-                    .WithSystemRuntimeCacheHandle("memCacheHandle")
-                        .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromDays(1));
-            });
+                cacheManager = CacheFactory.FromConfiguration<object>("platformCache");
+            }
+            else
+            {
+                cacheManager = CacheFactory.Build("platformCache", settings =>
+                {
+                    //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
+                    settings.WithUpdateMode(CacheUpdateMode.Up)
+                            .WithSystemRuntimeCacheHandle("memCacheHandle")
+                            .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromDays(1));
+                });
+            }
             container.RegisterInstance(cacheManager);
             #endregion
 
