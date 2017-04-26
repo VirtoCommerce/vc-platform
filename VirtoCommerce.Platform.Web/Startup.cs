@@ -49,6 +49,7 @@ using VirtoCommerce.Platform.Data.Serialization;
 using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
+using VirtoCommerce.Platform.Web.Cache;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Modularity;
@@ -327,22 +328,29 @@ namespace VirtoCommerce.Platform.Web
             var moduleCatalog = container.Resolve<IModuleCatalog>();
 
             #region Caching
+            //Cure for System.Runtime.Caching.MemoryCache freezing 
+            //https://www.zpqrtbnk.net/posts/appdomains-threads-cultureinfos-and-paracetamol
+            app.SanitizeThreadCulture();
             ICacheManager<object> cacheManager = null;
             //Try to load cache configuration from web.config first
+            //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
             if (ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) != null)
             {
-                cacheManager = CacheFactory.FromConfiguration<object>("platformCache");
+                var configuration = ConfigurationBuilder.LoadConfiguration("platformCache");
+                configuration.LoggerFactoryType = typeof(CacheManagerLoggerFactory);
+                configuration.LoggerFactoryTypeArguments = new[] { container.Resolve<ILog>() };
+                cacheManager = CacheFactory.FromConfiguration<object>(configuration);
             }
             else
             {
                 cacheManager = CacheFactory.Build("platformCache", settings =>
-                {
-                    //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
+                {                 
                     settings.WithUpdateMode(CacheUpdateMode.Up)
                             .WithSystemRuntimeCacheHandle("memCacheHandle")
-                            .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromDays(1));
+                            .WithExpiration(ExpirationMode.Sliding, TimeSpan.FromMinutes(5));
                 });
-            }
+            }       
+        
             container.RegisterInstance(cacheManager);
             #endregion
 
