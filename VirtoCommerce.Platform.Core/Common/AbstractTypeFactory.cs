@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace VirtoCommerce.Platform.Core.Common
 {
     /// <summary>
-    /// Abstract static type factory. With supports of type overriding and sets special factories.
+    /// Abstract static type factory. With supports of type overriding and sets special factories.1
     /// </summary>
     /// <typeparam name="BaseType"></typeparam>
     public static class AbstractTypeFactory<BaseType>
