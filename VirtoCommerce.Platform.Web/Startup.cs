@@ -334,7 +334,7 @@ namespace VirtoCommerce.Platform.Web
             ICacheManager<object> cacheManager = null;
             //Try to load cache configuration from web.config first
             //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
-            if (ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) != null)
+            if (ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) != null && ConfigurationManager.GetSection("platformCache") != null)
             {
                 var configuration = ConfigurationBuilder.LoadConfiguration("platformCache");
                 configuration.LoggerFactoryType = typeof(CacheManagerLoggerFactory);
