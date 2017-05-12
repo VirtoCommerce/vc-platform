@@ -923,6 +923,7 @@ input::-ms-clear {
 .form-input input.ng-invalid.form-input,
 .form-input textarea.ng-invalid,
 .ui-select-container.ng-invalid .select2-choice,
+.ui-select-container.ng-invalid .select2-choices,
 .form-input input.ng-invalid:focus,
 .form-input textarea.ng-invalid:focus {
   background: #fef8f7;
