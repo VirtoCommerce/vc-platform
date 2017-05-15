@@ -371,7 +371,7 @@ namespace VirtoCommerce.Platform.Web
                             new ModuleSetting
                             {
                                 Name = "VirtoCommerce.Platform.Notifications.SendGrid.ApiKey",
-                                ValueType = ModuleSetting.TypeString,
+                                ValueType = ModuleSetting.TypeSecureString,
                                 Title = "SendGrid API key",
                                 Description = "Your SendGrid API key"
                             }
