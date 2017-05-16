@@ -753,6 +753,8 @@
     <Content Include="Content\themes\main\fonts\FontAwesome.otf" />
     <None Include=".bowerrc" />
     <None Include="bower.json" />
+    <Content Include="Localizations\de.VirtoCommerce.Common.json" />
+    <Content Include="Localizations\de.VirtoCommerce.Platform.json" />
     <None Include="package.json" />
     <Content Include="Scripts\codemirror\htmlmixed.js" />
     <Content Include="Scripts\codemirror\javascript.js" />
