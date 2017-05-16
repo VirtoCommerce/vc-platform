@@ -54,6 +54,10 @@
                 "2"
             ],
             "defaultValue": "0"
+        },
+        "modulesDataSources": {
+            "type": "string",
+            "defaultValue": "https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules.json"
         }
     },
     "variables": {
@@ -204,7 +208,8 @@
                         "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]"
                     ],
                     "properties": {
-                        "VirtoCommerce:AutoInstallModuleBundles": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
+                        "VirtoCommerce:AutoInstallModuleBundles": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]",
+                        "VirtoCommerce:ModulesDataSources": "[parameters('modulesDataSources')]"
                     }
                 },
                 {
