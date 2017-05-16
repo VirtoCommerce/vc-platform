@@ -1,6 +1,8 @@
 Virto Commerce 2.x
 ============
 
+[![Join the chat at https://gitter.im/VirtoCommerce/vc-community](https://badges.gitter.im/VirtoCommerce/vc-community.svg)](https://gitter.im/VirtoCommerce/vc-community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 | Branch  | Status |
 | ------------- | ------------- |
 | [Master](https://github.com/VirtoCommerce/vc-platform)  | [![Build Status](http://ci.virtocommerce.com:8080/buildStatus/icon?job=vc-2-org/vc-platform/master)](http://ci.virtocommerce.com:8080/job/vc-2-org/job/vc-platform/job/master/)  |
