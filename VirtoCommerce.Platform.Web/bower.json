@@ -7,6 +7,8 @@
     "jquery-mousewheel": "3.1.13",
     "signalr": "2.2.0",
     "angular": "1.4.4",
+    "angular-i18n":  "1.4.4",
+    "angular-dynamic-locale":  "0.1.32", 
     "angular-animate": "1.4.4",
     "angular-bootstrap": "0.13.1",
     "angular-cookies": "1.4.4",

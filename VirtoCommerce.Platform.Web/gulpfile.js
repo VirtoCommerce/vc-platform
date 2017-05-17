@@ -4,6 +4,8 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 */
 
 var gulp = require("gulp"),
+    filter = require('gulp-filter'),
+    fs = require('fs'),
     mainBowerFiles = require('main-bower-files'),
     concat = require("gulp-concat"),
     uglify = require("gulp-uglify"),
@@ -15,7 +17,7 @@ var gulp = require("gulp"),
 gulp.task('packJavaScript', function () {
     return gulp.src(mainBowerFiles({
         // Only the JavaScript files
-        filter: /.*\.js$/i
+        filter: /^(?!.*angular-i18n.*\.js$).*\.js$/i
     }))
       .pipe(concat('allPackages.js'))
       .pipe(uglify())
@@ -66,6 +68,25 @@ gulp.task('copyMainFonts', function () {
         filter: /.*\.(eot|svg|ttf|woff)$/i
     }))
       .pipe(gulp.dest('Content'));
+});
+
+// add angular-i18n package locales. only interscection of angular-i18n package supported locales and moment package supported locales must be used
+gulp.task('angularI18nPackage', function () {
+    return gulp.src('client_packages/angular-i18n/angular-locale_*.js')
+        .pipe(filter(file => {
+            var momentLocales = fs.readdirSync('client_packages/moment/locale');
+            for (var i = 0; i < momentLocales.length; i++) {
+                // get locale from file name in en-US.js format
+                momentLocales[i] = momentLocales[i].split('-')[0].replace(".js", "");
+            }
+            var result = false;
+            momentLocales.forEach(function (locale) {
+                // test angular-i18n locale has equivalent or fallback in moment package locales
+                result |= new RegExp(".*\\\\angular-locale_" + locale + "[^\\\\]*\\.js$").test(file.path);
+            });
+            return result;
+        }))
+        .pipe(gulp.dest('Scripts/i18n'));
 });
 
 // font-awesome package

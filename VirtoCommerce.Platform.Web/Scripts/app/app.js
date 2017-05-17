@@ -21,12 +21,13 @@
   'focusOn',
   'textAngular',
   'ngTagsInput',
+  'tmh.dynamicLocale',
   'pascalprecht.translate',
   'angular.filter'
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', function ($rootScope, $scope, $window, mainMenuService, pushNotificationService, $translate, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'tmhDynamicLocale', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', function ($rootScope, $scope, $window, mainMenuService, pushNotificationService, dynamicLocale, $translate, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
       pushNotificationService.run();
 
       $scope.closeError = function () {
@@ -181,7 +182,7 @@ angular.module('platformWebApp', AppDependencies).
     };
 })
 .config(
-  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', '$translateProvider', '$compileProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, $translateProvider, $compileProvider) {
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'tmhDynamicLocaleProvider', '$translateProvider', '$compileProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, dynamicLocaleProvider, $translateProvider, $compileProvider) {
       $stateProvider.state('workspace', {
           url: '/workspace',
           templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
@@ -195,6 +196,10 @@ angular.module('platformWebApp', AppDependencies).
       datepickerConfig.showWeeks = false;
 
       //Localization
+      // https://github.com/lgalfaso/angular-dynamic-locale/#usage
+      dynamicLocaleProvider.localeLocationPattern('$(Platform)/Scripts/i18n/angular-locale_{{locale}}.js');
+      dynamicLocaleProvider.useCookieStorage();
+      dynamicLocaleProvider.defaultLocale('en');
       // https://angular-translate.github.io/docs/#/guide
       $translateProvider.useUrlLoader('api/platform/localization')
         .useLoaderCache(true)
