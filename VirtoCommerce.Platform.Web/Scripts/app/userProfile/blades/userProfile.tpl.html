@@ -2,16 +2,25 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form">
-                <fieldset>
-                    <legend>{{ 'platform.blades.user-profile.labels.set-language' | translate }}</legend>
-                    <div class="list __items">
-                        <label class="list-item" ng-repeat="data in managerLanguages">
-                            <input type="radio" ng-model="blade.currentLanguage" value="{{data.value}}" ng-change="setLanguage()">
-                            <span class="switch"></span>
-                            <span class="list-name">{{data.title}}</span>
-                        </label>
-                    </div>
-                </fieldset>
+                <div class="form-group">
+                    <label class="form-label">{{ 'platform.blades.user-profile.labels.language' | translate }}</label>
+                    <ui-select ng-model="blade.currentLanguage" on-select="setLanguage()">
+                        <ui-select-match>{{ $select.selected.title }}</ui-select-match>
+                        <ui-select-choices repeat="x.value as x in languages">
+                            <span ng-bind-html="x.title"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'platform.blades.user-profile.labels.regional-format' | translate }}</label>
+                    <ui-select ng-model="blade.currentRegionalFormat" on-select="setRegionalFormat()">
+                        <ui-select-match>{{ $select.selected.title }}</ui-select-match>
+                        <ui-select-choices repeat="x.value as x in regionalFormats">
+                            <span ng-bind-html="x.title"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
             </form>
         </div>
     </div>

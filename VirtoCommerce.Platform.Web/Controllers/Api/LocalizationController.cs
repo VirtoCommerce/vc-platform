@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(string[]))]
         public IHttpActionResult GetLocales()
         {
-            var files = GetAllLocalizationFiles("*.json");
+            var files = GetAllLocalizationFiles("*.json", "Localizations");
             var locales = files
                 .Select(Path.GetFileName)
                 .Select(x => x.Substring(0, x.IndexOf('.'))).Distinct().ToArray();
@@ -60,33 +60,66 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(locales);
         }
 
+        /// <summary>
+        /// Return all available regional formats
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("regionalformats")]
+        [ResponseType(typeof(string[]))]
+        public IHttpActionResult GetRegionalFormats()
+        {
+            var files = GetAllInternationalizationFiles();
+            var formats = files
+                .Select(Path.GetFileName)
+                .Select(x =>
+                {
+                    var startIndexOfCode = x.IndexOf("_") + 1;
+                    var endIndexOfCode = x.IndexOf(".");
+                    return x.Substring(startIndexOfCode, endIndexOfCode - startIndexOfCode);
+                }).Distinct().ToArray();
 
-        private string[] GetAllLocalizationFiles(string searchPattern)
+            return Ok(formats);
+        }
+        
+        private string[] GetAllLocalizationFiles(string searchPattern, string localizationsFolder)
         {
             var files = new List<string>();
 
             // Get platform localization files
             var platformPath = HostingEnvironment.MapPath(Startup.VirtualRoot).EnsureEndSeparator();
-            var platformFileNames = GetLocalizationFilesByPath(platformPath, searchPattern);
+            var platformFileNames = GetFilesByPath(platformPath, searchPattern, localizationsFolder);
             files.AddRange(platformFileNames);
 
             // Get modules localization files
             foreach (var module in _moduleCatalog.Modules.OfType<ManifestModuleInfo>())
             {
-                  var moduleFileNames = GetLocalizationFilesByPath(module.FullPhysicalPath, searchPattern);
+                  var moduleFileNames = GetFilesByPath(module.FullPhysicalPath, searchPattern, localizationsFolder);
                 files.AddRange(moduleFileNames);
             }
 
             // Get user defined localization files from App_Data/Localizations folder
             var userLocalizationPath = HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data").EnsureEndSeparator();
-            var userFileNames = GetLocalizationFilesByPath(userLocalizationPath, searchPattern);
+            var userFileNames = GetFilesByPath(userLocalizationPath, searchPattern, localizationsFolder);
             files.AddRange(userFileNames);
             return files.ToArray();
         }
 
-        private string[] GetLocalizationFilesByPath(string path, string searchPattern, string localizationSubfolder = "Localizations")
+        private string[] GetAllInternationalizationFiles()
         {
-            var sourceDirectoryPath = Path.Combine(path, localizationSubfolder).EnsureEndSeparator();
+            var files = new List<string>();
+
+            // Get platform internationalization files
+            var platformPath = HostingEnvironment.MapPath(Startup.VirtualRoot).EnsureEndSeparator();
+            var platformFileNames = GetFilesByPath(platformPath, "*.js", "Scripts\\i18n");
+            files.AddRange(platformFileNames);
+
+            return files.ToArray();
+        }
+
+        private string[] GetFilesByPath(string path, string searchPattern, string subfolder)
+        {
+            var sourceDirectoryPath = Path.Combine(path, subfolder).EnsureEndSeparator();
 
             return Directory.Exists(sourceDirectoryPath)
                 ? Directory.EnumerateFiles(sourceDirectoryPath, searchPattern, SearchOption.AllDirectories).ToArray()

@@ -595,7 +595,8 @@
       "user-profile": {
         "title": "User Profil",
         "labels": {
-          "set-language": "Set Manager Sprache"
+          "language": "Sprache",
+          "regional-format": "Regionales Format" 
         }
       }
     },

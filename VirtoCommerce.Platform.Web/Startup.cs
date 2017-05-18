@@ -468,6 +468,14 @@ namespace VirtoCommerce.Platform.Web
                                 Title = "Language",
                                 Description = "Default language (two letter code from ISO 639-1)",
                                 DefaultValue = "en"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.RegionalFormat",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Regional format",
+                                Description = "Default regional format (CLDR locale code with dash or underscore as delemiters)",
+                                DefaultValue = "en"
                             }
                         }
                     },

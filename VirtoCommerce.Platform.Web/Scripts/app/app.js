@@ -73,6 +73,7 @@ angular.module('platformWebApp', AppDependencies).
               userProfile.load().then(function () {
                   $translate.use(userProfile.language);
                   updateRtl(userProfile.language);
+                  dynamicLocale.set(userProfile.regionalFormat);
                   initializeMainMenu(userProfile);
               });
           };
@@ -198,8 +199,8 @@ angular.module('platformWebApp', AppDependencies).
       //Localization
       // https://github.com/lgalfaso/angular-dynamic-locale/#usage
       dynamicLocaleProvider.localeLocationPattern('$(Platform)/Scripts/i18n/angular-locale_{{locale}}.js');
-      dynamicLocaleProvider.useCookieStorage();
       dynamicLocaleProvider.defaultLocale('en');
+      dynamicLocaleProvider.useCookieStorage();
       // https://angular-translate.github.io/docs/#/guide
       $translateProvider.useUrlLoader('api/platform/localization')
         .useLoaderCache(true)
