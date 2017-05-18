@@ -27,7 +27,7 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'tmhDynamicLocale', '$translate', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', function ($rootScope, $scope, $window, mainMenuService, pushNotificationService, dynamicLocale, $translate, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', 'tmhDynamicLocale', 'amMoment', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', function ($rootScope, $scope, $window, mainMenuService, pushNotificationService, $translate, dynamicLocale, momentService, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
       pushNotificationService.run();
 
       $scope.closeError = function () {
@@ -74,6 +74,7 @@ angular.module('platformWebApp', AppDependencies).
                   $translate.use(userProfile.language);
                   updateRtl(userProfile.language);
                   dynamicLocale.set(userProfile.regionalFormat);
+                  momentService.changeLocale(userProfile.regionalFormat);
                   initializeMainMenu(userProfile);
               });
           };
@@ -215,8 +216,8 @@ angular.module('platformWebApp', AppDependencies).
   }])
 
 .run(
-  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', 'platformWebApp.bladeNavigationService',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout, bladeNavigationService) {
+  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'angularMomentConfig', "amMoment", '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, momentConfig, momentService, $animate, $templateCache, gridsterConfig, taOptions, $timeout) {
         //Disable animation
         $animate.enabled(false);
 
@@ -261,6 +262,17 @@ angular.module('platformWebApp', AppDependencies).
             isAlwaysOnBar: true
         };
         mainMenuService.addMenuItem(moreMenuItem);
+
+        // Localization
+        // https://github.com/urish/angular-moment#usage
+        //
+        //  try to uncomment this code, if moment will not update locale correctly
+        // https://github.com/urish/angular-moment/issues/212
+        //momentConfig.preprocess = function (value) {
+        //    return moment(value).locale(moment.locale());
+        //}
+        // set default locale to moment
+        momentService.changeLocale("en");
 
         $rootScope.$on('unauthorized', function (event, rejection) {
             if (!authService.isAuthenticated) {

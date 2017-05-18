@@ -13,7 +13,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [RoutePrefix("api/platform/localization")]
     public class LocalizationController : ApiController
     {
+        private const string LocalizationFilesFormat = ".json";
+        private const string LocalizationFilesFolder = "Localizations";
+        private const string InternationalizationFilesFormat = ".js";
+        private const string InternationalizationFilesFolder = "Scripts\\i18n";
+
         private readonly IModuleCatalog _moduleCatalog;
+        
         public LocalizationController(IModuleCatalog moduleCatalog)
         {
             _moduleCatalog = moduleCatalog;
@@ -31,8 +37,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ApiExplorerSettings(IgnoreApi = true)]
         public JObject GetLocalization(string lang = "en")
         {
-            var searchPattern = string.Format("{0}.*.json", lang);
-            var files = GetAllLocalizationFiles(searchPattern);
+            var searchPattern = string.Format("{0}.*{1}", lang, LocalizationFilesFormat);
+            var files = GetAllLocalizationFiles(searchPattern, LocalizationFilesFolder);
 
             var result = new JObject();
             foreach (var file in files)
@@ -52,7 +58,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(string[]))]
         public IHttpActionResult GetLocales()
         {
-            var files = GetAllLocalizationFiles("*.json", "Localizations");
+            var files = GetAllLocalizationFiles("*" + LocalizationFilesFormat, LocalizationFilesFolder);
             var locales = files
                 .Select(Path.GetFileName)
                 .Select(x => x.Substring(0, x.IndexOf('.'))).Distinct().ToArray();
@@ -69,7 +75,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(string[]))]
         public IHttpActionResult GetRegionalFormats()
         {
-            var files = GetAllInternationalizationFiles();
+            var files = GetAllInternationalizationFiles("*" + InternationalizationFilesFormat, InternationalizationFilesFolder);
             var formats = files
                 .Select(Path.GetFileName)
                 .Select(x =>
@@ -105,13 +111,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return files.ToArray();
         }
 
-        private string[] GetAllInternationalizationFiles()
+        private string[] GetAllInternationalizationFiles(string searchPattern, string internationalizationsFolder)
         {
             var files = new List<string>();
 
             // Get platform internationalization files
             var platformPath = HostingEnvironment.MapPath(Startup.VirtualRoot).EnsureEndSeparator();
-            var platformFileNames = GetFilesByPath(platformPath, "*.js", "Scripts\\i18n");
+            var platformFileNames = GetFilesByPath(platformPath, searchPattern, internationalizationsFolder);
             files.AddRange(platformFileNames);
 
             return files.ToArray();

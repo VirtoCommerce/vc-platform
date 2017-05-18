@@ -6,8 +6,8 @@
                     <label class="form-label">{{ 'platform.blades.user-profile.labels.language' | translate }}</label>
                     <ui-select ng-model="blade.currentLanguage" on-select="setLanguage()">
                         <ui-select-match>{{ $select.selected.title }}</ui-select-match>
-                        <ui-select-choices repeat="x.value as x in languages">
-                            <span ng-bind-html="x.title"></span>
+                        <ui-select-choices repeat="x.value as x in languages| filter: $select.search">
+                            <span ng-bind-html="x.title | highlight: $select.search"></span>
                         </ui-select-choices>
                     </ui-select>
                     
@@ -16,8 +16,8 @@
                     <label class="form-label">{{ 'platform.blades.user-profile.labels.regional-format' | translate }}</label>
                     <ui-select ng-model="blade.currentRegionalFormat" on-select="setRegionalFormat()">
                         <ui-select-match>{{ $select.selected.title }}</ui-select-match>
-                        <ui-select-choices repeat="x.value as x in regionalFormats">
-                            <span ng-bind-html="x.title"></span>
+                        <ui-select-choices repeat="x.value as x in regionalFormats | filter: $select.search">
+                            <span ng-bind-html="x.title | highlight: $select.search"></span>
                         </ui-select-choices>
                     </ui-select>
                 </div>

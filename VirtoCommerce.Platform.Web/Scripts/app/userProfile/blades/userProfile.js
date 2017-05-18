@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.userProfile.userProfileController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', '$translate', 'tmhDynamicLocale', 'platformWebApp.userProfile', 'platformWebApp.common.worldLanguages', 'platformWebApp.common.worldLocales', 'platformWebApp.userProfileApi', function ($scope, bladeNavigationService, settings, settingsHelper, $translate, dynamicLocale, userProfile, worldLanguages, worldLocales, userProfileApi) {
+.controller('platformWebApp.userProfile.userProfileController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', '$translate', 'tmhDynamicLocale', 'amMoment', 'platformWebApp.userProfile', 'platformWebApp.common.worldLanguages', 'platformWebApp.common.worldLocales', 'platformWebApp.userProfileApi', function ($scope, bladeNavigationService, settings, settingsHelper, $translate, dynamicLocale, momentService, userProfile, worldLanguages, worldLocales, userProfileApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-user';
     blade.title = 'platform.blades.user-profile.title';
@@ -50,6 +50,7 @@
 
     $scope.setRegionalFormat = function() {
         dynamicLocale.set(blade.currentRegionalFormat);
+        momentService.changeLocale(blade.currentRegionalFormat);
         userProfile.regionalFormat = blade.currentRegionalFormat;
         userProfile.save();
     }

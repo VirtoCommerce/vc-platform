@@ -17,7 +17,16 @@ var gulp = require("gulp"),
 gulp.task('packJavaScript', function () {
     return gulp.src(mainBowerFiles({
         // Only the JavaScript files
-        filter: /^(?!.*angular-i18n.*\.js$).*\.js$/i
+        filter: /.*\.js$/i,
+        // Exclude angular-i18n packages files and include moment.js i18n files
+        overrides: {
+            "angular-i18n": {
+                "main": ""
+            },
+            "moment": {
+                "main": ["moment.js", "locale/*.js"]
+            }
+        }
     }))
       .pipe(concat('allPackages.js'))
       .pipe(uglify())
