@@ -72,7 +72,6 @@ angular.module('platformWebApp', AppDependencies).
           if (authContext.isAuthenticated) {
               userProfile.load().then(function () {
                   $translate.use(userProfile.language);
-                  updateRtl(userProfile.language);
                   dynamicLocale.set(userProfile.regionalFormat);
                   momentService.changeLocale(userProfile.regionalFormat);
                   initializeMainMenu(userProfile);

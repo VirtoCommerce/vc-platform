@@ -420,6 +420,7 @@
     <Content Include="Scripts\app\pushNotifications\menu.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\menuHeader.tpl.html" />
     <Content Include="Scripts\app\userProfile\userProfile.js" />
+    <Content Include="Scripts\common\directives\datepicker.js" />
     <Content Include="Scripts\common\directives\tooltip.js" />
     <Content Include="Scripts\common\directives\metaform.js" />
     <Content Include="Scripts\common\directives\metaform.tpl.html" />
