@@ -118,6 +118,7 @@
 
         function setDefaultColumnTemplates(grid) {
             var gridOptions = grid.options;
+            grid.buildColumns();
             var columnDefs = angular.copy(gridOptions.columnDefs);
             _.each(columnDefs, function (x) {
                 var firstRow = grid.rows.length > 0 ? grid.rows[0] : undefined;
