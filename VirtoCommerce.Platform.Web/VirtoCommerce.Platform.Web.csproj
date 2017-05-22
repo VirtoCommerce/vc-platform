@@ -591,6 +591,7 @@
     <Content Include="Scripts\codemirror\overlay.js" />
     <Content Include="Scripts\common\bladeUtils.js" />
     <Content Include="Scripts\common\directives\tooltipOptions.js" />
+    <Content Include="Scripts\common\templates\ui-grid\am-time-ago.cell.html" />
     <Content Include="Scripts\common\validators.js" />
     <Content Include="Scripts\common\uiGridUtils.js" />
     <Content Include="Scripts\common\worldLanguages.js" />
