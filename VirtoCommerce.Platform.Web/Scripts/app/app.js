@@ -27,7 +27,7 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', 'tmhDynamicLocale', 'amMoment', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', function ($rootScope, $scope, $window, mainMenuService, pushNotificationService, $translate, dynamicLocale, momentService, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', function ($rootScope, $scope, $window, mainMenuService, pushNotificationService, $translate, dynamicLocale, moment, momentService, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
       pushNotificationService.run();
 
       $scope.closeError = function () {
@@ -72,8 +72,9 @@ angular.module('platformWebApp', AppDependencies).
           if (authContext.isAuthenticated) {
               userProfile.load().then(function () {
                   $translate.use(userProfile.language);
-                  dynamicLocale.set(userProfile.regionalFormat);
+                  dynamicLocale.set(userProfile.regionalFormat.replace('_', '-').toLowerCase());
                   momentService.changeLocale(userProfile.regionalFormat);
+                  momentService.changeTimezone(userProfile.timeZone || moment.tz.guess());
                   initializeMainMenu(userProfile);
               });
           };
@@ -272,6 +273,7 @@ angular.module('platformWebApp', AppDependencies).
         //}
         // set default locale to moment
         momentService.changeLocale("en");
+        momentService.changeTimezone("Etc/UTC");
 
         $rootScope.$on('unauthorized', function (event, rejection) {
             if (!authService.isAuthenticated) {

@@ -596,7 +596,8 @@
         "title": "User Profil",
         "labels": {
           "language": "Sprache",
-          "regional-format": "Regionales Format" 
+          "regional-format": "Regionales Format",
+          "timezone": "Zeitzone"
         }
       }
     },

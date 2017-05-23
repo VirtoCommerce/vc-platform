@@ -466,7 +466,7 @@ namespace VirtoCommerce.Platform.Web
                                 Name = "VirtoCommerce.Platform.UI.Language",
                                 ValueType = ModuleSetting.TypeString,
                                 Title = "Language",
-                                Description = "Default language (two letter code from ISO 639-1)",
+                                Description = "Default language (two letter code from ISO 639-1, case-insensitive). Example: en, de",
                                 DefaultValue = "en"
                             },
                             new ModuleSetting
@@ -474,8 +474,15 @@ namespace VirtoCommerce.Platform.Web
                                 Name = "VirtoCommerce.Platform.UI.RegionalFormat",
                                 ValueType = ModuleSetting.TypeString,
                                 Title = "Regional format",
-                                Description = "Default regional format (CLDR locale code with dash or underscore as delemiters)",
+                                Description = "Default regional format (CLDR locale code, with dash or underscore as delemiter, case-insensitive). Example: en, en_US, sr_Cyrl, sr_Cyrl_RS",
                                 DefaultValue = "en"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.TimeZone",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Time zone",
+                                Description = "Default time zone (IANA time zone name [tz database], with slash or underscore as delemiter, case-insensitive). Examples: America/New_York, Europe/Moscow"
                             }
                         }
                     },
