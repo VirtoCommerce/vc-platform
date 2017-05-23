@@ -86,7 +86,7 @@ angular.module('platformWebApp')
                     );
                 } else {
                     ctrl.$parsers.unshift(function (viewValue) {
-                        var regexp = new RegExp(formatRegExp(regexpPrefix + regexpValue + regexpSuffix)).test(viewValue);
+                        var regexp = new RegExp(formatRegExp(regexpPrefix + regexpValue + regexpSuffix));
                         var isValid = regexp.test(viewValue);
                         if (!isValid) {
                             regexp = new RegExp(formatRegExp(regexpZero));
