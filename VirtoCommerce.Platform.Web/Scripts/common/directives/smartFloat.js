@@ -45,7 +45,7 @@ angular.module('platformWebApp')
                 var escapedPosSuf = escapeRegExp(posSuf);
 
                 var regexpPrefix = (isPrefixExists ? "[" + escapedNegPre + escapedPosPre + "]?" : "");
-                var regexpValue = "(\\d{1," + gSize + "}" + escapedGroupSeparator + ")?" + "(\\d{" + gSize + "}" + escapedGroupSeparator + ")*" + "(\\d{1," + lgSize + "})";
+                var regexpValue = "((\\d{1," + gSize + "}" + escapedGroupSeparator + ")?" + "(\\d{" + gSize + "}" + escapedGroupSeparator + ")*" + "(\\d{1," + lgSize + "})|\\d*)";
                 var regexpZero = "0";
                 var regexpFraction = "(" + escapedDecimalSeparator + "\\d{" + minFrac + 1 + "," + maxFrac + "}" + ")" + (minFrac === 0 ? "?" : "");
                 var regexpZeroFraction = regexpFraction.replace("\\d", "0");
@@ -55,7 +55,8 @@ angular.module('platformWebApp')
 
                 if (attrs.numType === "float") {
                     ctrl.$parsers.unshift(function (viewValue) {
-                        var regexp = new RegExp(formatRegExp(regexpPrefix + regexpValue + regexpFraction + regexpSuffix));
+                        var t = formatRegExp(regexpPrefix + regexpValue + regexpFraction + regexpSuffix);
+                        var regexp = new RegExp(t);
                         var isValid = regexp.test(viewValue);
                         if (!isValid) {
                             regexp = new RegExp(formatRegExp(regexpZero + regexpZeroFraction));
