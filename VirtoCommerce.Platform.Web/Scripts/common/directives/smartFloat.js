@@ -6,7 +6,7 @@ angular.module('platformWebApp')
 
         // https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
         function escapeRegExp(str) {
-            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+            return str.replace(/[ \-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
         }
 
         function formatRegExp(str) {
@@ -65,7 +65,7 @@ angular.module('platformWebApp')
                         if (isValid) {
                             var negativeMatches = viewValue.match(negativeRegExp);
                             var value = parseFloat(viewValue
-                                .replace(negativeMatches && negativeMatches.length > 1 ? negPre : '', '-')
+                                .replace(negativeMatches && negativeMatches.length > 1 ? negPre : '-', '')
                                 .replace(posPre, '')
                                 .replace(new RegExp(escapedGroupSeparator, "g"), '')
                                 .replace(decimalSeparator, '.')
