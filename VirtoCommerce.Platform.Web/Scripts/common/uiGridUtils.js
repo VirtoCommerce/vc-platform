@@ -121,12 +121,14 @@
             grid.buildColumns();
             var columnDefs = angular.copy(gridOptions.columnDefs);
             _.each(columnDefs, function (x) {
-                var firstRow = grid.rows.length > 0 ? grid.rows[0] : undefined;
-                if (firstRow) {
-                    var value = grid.getCellValue(firstRow, grid.getColumn(x.name));
-                    // Default template for columns with dates
-                    if (value && (angular.isDate(value) || angular.isString(value) && /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d{1,3})?Z/.test(value))) {
-                        x.cellTemplate = x.cellTemplate || '$(Platform)/Scripts/common/templates/ui-grid/am-time-ago.cell.html';
+                for (var i = 0; i < grid.rows.length; i++) {
+                    var value = grid.getCellValue(grid.rows[i], grid.getColumn(x.name));
+                    if (value) {
+                        // Default template for columns with dates
+                        if (angular.isDate(value) || angular.isString(value) && /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?Z/.test(value)) {
+                            x.cellTemplate = x.cellTemplate || '$(Platform)/Scripts/common/templates/ui-grid/am-time-ago.cell.html';
+                        }
+                        break;
                     }
                 }
             });
