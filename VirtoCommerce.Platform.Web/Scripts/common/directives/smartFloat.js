@@ -13,10 +13,6 @@ angular.module('platformWebApp')
             return "^" + str + "$";
         }
 
-        function inRange(value, min, max) {
-            return (!min || value >= min) && (!max || value <= max);
-        }
-
         return {
             require: 'ngModel',
             link: function (scope, elm, attrs, ctrl) {
@@ -53,6 +49,24 @@ angular.module('platformWebApp')
 
                 var negativeRegExp = new RegExp("^(" + escapedNegativePrefix + ")[^" + escapedNegativePrefix + escapedNegativeSuffix + "](" + escapedNegativeSuffix + ")$");
 
+                var inRange = function(value, min, max)
+                {
+                    var isGreaterThanOrEqualToMin = true;
+                    var isLessThanOrEqualToMax = true;
+                    if (min) {
+                        isGreaterThanOrEqualToMin = min <= value;
+                        ctrl.$setValidity('min', isGreaterThanOrEqualToMin);
+                    }
+                    if (max) {
+                        isLessThanOrEqualToMax = value <= max;
+                        ctrl.$setValidity('max', isLessThanOrEqualToMax);
+                    }
+                    if (!isGreaterThanOrEqualToMin || !isLessThanOrEqualToMax) {
+                        return undefined;
+                    }
+                    return value;
+                }
+
                 if (attrs.numType === "float") {
                     ctrl.$parsers.unshift(function (viewValue) {
                         var regexp = new RegExp(formatRegExp(regexpPrefix + regexpValue + regexpFraction + regexpSuffix));
@@ -70,10 +84,8 @@ angular.module('platformWebApp')
                                 .replace(decimalSeparator, '.')
                                 .replace(negativeSuffix, '')
                                 .replace(positiveSuffix, ''));
-                            if (inRange(value, attrs.min, attrs.max)) {
-                                ctrl.$setValidity('float', true);
-                                return value;
-                            }
+                            ctrl.$setValidity('float', true);
+                            return inRange(value, attrs.min, attrs.max);
                         }
                         ctrl.$setValidity('float', false);
                         return undefined;
@@ -100,10 +112,8 @@ angular.module('platformWebApp')
                                 .replace(new RegExp(escapedGroupSeparator, "g"), '')
                                 .replace(negativeSuffix, '')
                                 .replace(positiveSuffix, ''));
-                            if (inRange(value, attrs.min, attrs.max)) {
-                                ctrl.$setValidity('integer', true);
-                                return value;
-                            }
+                            ctrl.$setValidity('integer', true);
+                            return inRange(value, attrs.min, attrs.max);
                         }
                         ctrl.$setValidity('integer', false);
                         return undefined;
