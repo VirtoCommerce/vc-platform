@@ -27,7 +27,10 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', function ($rootScope, $scope, $window, mainMenuService, pushNotificationService, $translate, dynamicLocale, moment, momentService, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
+  controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService',
+      '$locale', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'amTimeAgoConfig', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings',
+      function ($rootScope, $scope, $window, mainMenuService, pushNotificationService,
+          $locale, $translate, dynamicLocale, moment, momentService, timeAgoConfig, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
       pushNotificationService.run();
 
       $scope.closeError = function () {
@@ -75,6 +78,10 @@ angular.module('platformWebApp', AppDependencies).
                   dynamicLocale.set(userProfile.regionalFormat.replace(/_/g, '-').toLowerCase());
                   momentService.changeLocale(userProfile.regionalFormat);
                   momentService.changeTimezone(userProfile.timeZone || moment.tz.guess());
+                  timeAgoConfig.fullDateThreshold = userProfile.useTimeAgo ? userProfile.fullDateThreshold : 1;
+                  timeAgoConfig.fullDateThresholdUnit = userProfile.fullDateThresholdUnit && userProfile.fullDateThresholdUnit != 'Never'
+                      ? userProfile.fullDateThresholdUnit.toLowerCase()
+                      : null;
                   initializeMainMenu(userProfile);
               });
           };
@@ -82,6 +89,19 @@ angular.module('platformWebApp', AppDependencies).
 
       $rootScope.$on('$translateChangeSuccess', function() {
           updateRtl($translate.use());
+      });
+
+      $rootScope.$on('$localeChangeSuccess', function () {
+          var updateDateFormat = function() {
+              timeAgoConfig.fullDateFormat = $locale.DATETIME_FORMATS['medium'];
+          }
+          if (userProfile.useTimeAgo == undefined) {
+              userProfile.load().then(function() {
+                  updateDateFormat();
+              });
+          } else {
+              updateDateFormat();
+          }
       });
 
       function updateRtl(currentLanguage) {
@@ -184,7 +204,8 @@ angular.module('platformWebApp', AppDependencies).
     };
 })
 .config(
-  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'datepickerPopupConfig', 'tmhDynamicLocaleProvider', '$translateProvider', '$compileProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, datepickerPopupConfig, dynamicLocaleProvider, $translateProvider, $compileProvider) {
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'datepickerPopupConfig', 'tmhDynamicLocaleProvider', '$translateProvider', '$compileProvider',
+      function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, datepickerPopupConfig, dynamicLocaleProvider, $translateProvider, $compileProvider) {
       $stateProvider.state('workspace', {
           url: '/workspace',
           templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
@@ -217,8 +238,10 @@ angular.module('platformWebApp', AppDependencies).
   }])
 
 .run(
-  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'angularMomentConfig', "amMoment", '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, momentConfig, momentService, $animate, $templateCache, gridsterConfig, taOptions, $timeout) {
+  ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService',
+      'angularMomentConfig', 'amMoment', 'amTimeAgoConfig', '$locale', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService,
+        momentConfig, momentService, timeAgoConfig, $locale, $animate, $templateCache, gridsterConfig, taOptions, $timeout) {
         //Disable animation
         $animate.enabled(false);
 
@@ -275,6 +298,11 @@ angular.module('platformWebApp', AppDependencies).
         // set default locale to moment
         momentService.changeLocale("en");
         momentService.changeTimezone("Etc/UTC");
+
+        timeAgoConfig.fullDateFormat = $locale.DATETIME_FORMATS['medium'];
+        // 1 millisecond threshold, it's not possible just 'off' time ago
+        timeAgoConfig.fullDateThreshold = 1;
+        timeAgoConfig.fullDateThresholdUnit = null;
 
         $rootScope.$on('unauthorized', function (event, rejection) {
             if (!authService.isAuthenticated) {

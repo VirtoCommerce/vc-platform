@@ -599,7 +599,10 @@
           "language": "Language",
           "regional-format": "Regional format",
           "timezone": "Time zone",
-          "use-time-ago":  "Use time ago format when possible" 
+          "use-time-ago": "Use time ago format when possible",
+          "full-date-threshold-group": "Use full date format for dates earlier than...",
+          "full-date-threshold": "Value",
+          "full-date-threshold-unit":  "Unit" 
         }
       }
     },

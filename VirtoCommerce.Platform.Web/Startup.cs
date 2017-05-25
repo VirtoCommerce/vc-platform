@@ -489,8 +489,35 @@ namespace VirtoCommerce.Platform.Web
                                 Name = "VirtoCommerce.Platform.UI.UseTimeAgo",
                                 ValueType = ModuleSetting.TypeBoolean,
                                 Title = "Use time ago format when possible",
-                                Description = "When set to true (by default), system will display time in format like 'a few seconds ago' when possible",
+                                Description = "When set to true (by default), system will display date in format like 'a few seconds ago' when possible",
                                 DefaultValue = true.ToString()
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.FullDateThreshold",
+                                ValueType = ModuleSetting.TypeInteger,
+                                Title = "Full date threshold",
+                                Description = "Number of units after which time ago format will be switched to full date format"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.FullDateThresholdUnit",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Full date threshold unit",
+                                Description = "Unit of full date threshold",
+                                DefaultValue = "Never",
+                                AllowedValues = new[]
+                                {
+                                    "Never",
+                                    "Seconds",
+                                    "Minutes",
+                                    "Hours",
+                                    "Days",
+                                    "Weeks",
+                                    "Months",
+                                    "Quarters",
+                                    "Years"
+                                }
                             }
                         }
                     },

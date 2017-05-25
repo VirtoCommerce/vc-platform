@@ -595,7 +595,6 @@
     <Content Include="Scripts\common\resources\countries.js" />
     <Content Include="Scripts\common\resources\timeZones.js" />
     <Content Include="Scripts\common\templates\ui-grid\am-time-ago.cell.html" />
-    <Content Include="Scripts\common\templates\ui-grid\am-time-ago.cell.js" />
     <Content Include="Scripts\common\validators.js" />
     <Content Include="Scripts\common\uiGridUtils.js" />
     <Content Include="Scripts\common\resources\languages.js" />
@@ -696,7 +695,6 @@
     <Content Include="Scripts\common\directives\dynamic.js" />
     <Content Include="Scripts\common\dialogs\confirmDialog.tpl.html" />
     <Content Include="Scripts\common\dialogs\confirmDialog.js" />
-    <Content Include="Scripts\common\directives\inputNumber.js" />
     <Content Include="Scripts\common\directives\showBigImage.js" />
     <Content Include="Scripts\common\directives\left-click-menu.js" />
     <Content Include="Scripts\common\filters.js" />

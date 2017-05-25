@@ -1,6 +1,6 @@
 ﻿angular.module('ng')
 .config(['$provide', function ($provide) {
-    $provide.decorator('dateFilter', ['$delegate', 'moment', 'amMoment', function ($delegate, moment, amMoment) {
+    $provide.decorator('dateFilter', ['$delegate', 'moment', function ($delegate, moment) {
         var filter = function (date, format, timeZone) {
             if (moment.isMoment(date)) {
                 timeZone = date.format("ZZ");

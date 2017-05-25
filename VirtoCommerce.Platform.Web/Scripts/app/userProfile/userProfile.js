@@ -23,6 +23,9 @@
         regionalFormat: undefined,
         timeZone: undefined,
         useTimeAgo: undefined,
+        fullDateThreshold: undefined,
+        fullDateThresholdUnit: undefined,
+        fullDateThresholdUnits: undefined,
         mainMenuState: {},
         load: function () {
             return userProfileApi.get(function (profile) {
@@ -34,6 +37,10 @@
                     profile.timeZone = timeZones.normalize(profile.timeZone);
                 }
                 profile.useTimeAgo = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.UseTimeAgo").value;
+                profile.fullDateThreshold = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.FullDateThreshold").value;
+                var fullDateThresholdSetting = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.FullDateThresholdUnit");
+                profile.fullDateThresholdUnit = fullDateThresholdSetting.value;
+                profile.fullDateThresholdUnits = fullDateThresholdSetting.allowedValues;
                 profile.mainMenuState = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.MainMenu.State").value;
                 if (profile.mainMenuState) {
                     profile.mainMenuState = angular.fromJson(profile.mainMenuState);
@@ -49,6 +56,8 @@
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.RegionalFormat").value = result.regionalFormat;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.TimeZone").value = result.timeZone;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.UseTimeAgo").value = result.useTimeAgo;
+            settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FullDateThreshold").value = result.fullDateThreshold;
+            settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FullDateThresholdUnit").value = result.fullDateThresholdUnit;
             return userProfileApi.save(result).$promise.then(function() {
                 onChangeCallbacks.forEach(function(callback) {
                     callback(this, oldState);

@@ -39,6 +39,30 @@
                         </label>
                     </div>
                 </div>
+                <div class="form">
+                    <div class="form-group clearfix">
+                        <label class="form-label">{{ 'platform.blades.user-profile.labels.full-date-threshold-group' | translate }}</label>
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'platform.blades.user-profile.labels.full-date-threshold' | translate }}</label>
+                                <div class="form-input __number">
+                                    <input smart-float num-type="integer" min="1" ng-model="blade.currentFullDateThreshold" ng-required="blade.useTimeAgo && blade.currentFullDateThresholdUnit != 'Never'" ng-disabled="!blade.useTimeAgo || blade.currentFullDateThresholdUnit == 'Never'" ng-change="setFullDateThreshold()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <label class="form-label">{{ 'platform.blades.user-profile.labels.full-date-threshold-unit' | translate }}</label>
+                                <ui-select ng-model="blade.currentFullDateThresholdUnit" ng-required="blade.useTimeAgo" on-select="setFullDateThresholdUnit()" ng-disabled="!blade.useTimeAgo">
+                                    <ui-select-match>{{ $select.selected }}</ui-select-match>
+                                    <ui-select-choices repeat="x in fullDateThresholdUnits | filter: $select.search">
+                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
