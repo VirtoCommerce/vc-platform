@@ -6,7 +6,7 @@ angular.module('platformWebApp')
 
         // https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
         function escapeRegExp(str) {
-            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&").replace(/\s/, " ");
+            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&").replace(/\s/g, " ");
         }
 
         function formatRegExp(str) {
@@ -16,38 +16,44 @@ angular.module('platformWebApp')
         return {
             require: 'ngModel',
             link: function (scope, elm, attrs, ctrl) {
-                var isNegativeAllowed = !(attrs.min && attrs.min >= 0);
-                var isPositiveAllowed = !(attrs.max && attrs.max <= 0);
+                var validationVariables = function () {
+                    var result = { };
 
-                var negativePrefix = isNegativeAllowed ? $locale.NUMBER_FORMATS.PATTERNS[0].negPre : "";
-                var positivePrefix = isPositiveAllowed ? $locale.NUMBER_FORMATS.PATTERNS[0].posPre : "";
-                var isPrefixExists = negativePrefix == positivePrefix == "";
-                var escapedNegativePrefix = escapeRegExp(negativePrefix);
-                var escapedPositivePrefix = escapeRegExp(positivePrefix);
+                    result["isNegativeAllowed"] = !(attrs.min && attrs.min >= 0);
+                    result["isPositiveAllowed"] = !(attrs.max && attrs.max <= 0);
 
-                var escapedGroupSeparator = escapeRegExp($locale.NUMBER_FORMATS.GROUP_SEP);
-                var groupSize = $locale.NUMBER_FORMATS.PATTERNS[0].gSize;
-                var largeGroupSize = $locale.NUMBER_FORMATS.PATTERNS[0].lgSize;
+                    result["negativePrefix"] = $locale.NUMBER_FORMATS.PATTERNS[0].negPre;
+                    result["positivePrefix"] = $locale.NUMBER_FORMATS.PATTERNS[0].posPre;
+                    result["isPrefixExists"] = result.negativePrefix == result.positivePrefix == "";
+                    result["escapedNegativePrefix"] = escapeRegExp(result.negativePrefix);
+                    result["escapedPositivePrefix"] = escapeRegExp(result.positivePrefix);
 
-                var decimalSeparator = $locale.NUMBER_FORMATS.DECIMAL_SEP;
-                var escapedDecimalSeparator = escapeRegExp(decimalSeparator);
-                var minimalFraction = attrs.fraction ? attrs.fraction : $locale.NUMBER_FORMATS.PATTERNS[0].minFrac;
-                var maximumFraction = attrs.fraction ? attrs.fraction : $locale.NUMBER_FORMATS.PATTERNS[0].maxFrac;
+                    result["escapedGroupSeparator"] = escapeRegExp($locale.NUMBER_FORMATS.GROUP_SEP);
+                    result["groupSize"] = $locale.NUMBER_FORMATS.PATTERNS[0].gSize;
+                    result["lastGroupSize"] = $locale.NUMBER_FORMATS.PATTERNS[0].lgSize;
 
-                var negativeSuffix = isNegativeAllowed ? $locale.NUMBER_FORMATS.PATTERNS[0].negSuf : "";
-                var positiveSuffix = isPositiveAllowed ? $locale.NUMBER_FORMATS.PATTERNS[0].posSuf : "";
-                var isSuffixExists = negativeSuffix == positiveSuffix == "";
-                var escapedNegativeSuffix = escapeRegExp(negativeSuffix);
-                var escapedPositiveSuffix = escapeRegExp(positiveSuffix);
+                    result["decimalSeparator"] = $locale.NUMBER_FORMATS.DECIMAL_SEP;
+                    result["escapedDecimalSeparator"] = escapeRegExp(result.decimalSeparator);
+                    result["minimalFraction"] = attrs.fraction ? attrs.fraction : $locale.NUMBER_FORMATS.PATTERNS[0].minFrac;
+                    result["maximumFraction"] = attrs.fraction ? attrs.fraction : $locale.NUMBER_FORMATS.PATTERNS[0].maxFrac;
 
-                var regexpPrefix = (isPrefixExists ? "[" + escapedNegativePrefix + escapedPositivePrefix + "]?" : "");
-                var regexpValue = "(((\\d{1," + groupSize + "}" + escapedGroupSeparator + ")?" + "(\\d{" + groupSize + "}" + escapedGroupSeparator + ")*" + "(\\d{1," + largeGroupSize + "}))|\\d*)";
-                var regexpZero = "0";
-                var regexpFraction = "(" + escapedDecimalSeparator + "\\d{" + minimalFraction + 1 + "," + maximumFraction + "}" + ")" + (minimalFraction === 0 ? "?" : "");
-                var regexpZeroFraction = regexpFraction.replace("\\d", "0");
-                var regexpSuffix = (isSuffixExists ? "[" + escapedNegativeSuffix + escapedPositiveSuffix + "]?" : "");
+                    result["negativeSuffix"] = $locale.NUMBER_FORMATS.PATTERNS[0].negSuf;
+                    result["positiveSuffix"] = $locale.NUMBER_FORMATS.PATTERNS[0].posSuf;
+                    result["isSuffixExists"] = result.negativeSuffix == result.positiveSuffix == "";
+                    result["escapedNegativeSuffix"] = escapeRegExp(result.negativeSuffix);
+                    result["escapedPositiveSuffix"] = escapeRegExp(result.positiveSuffix);
 
-                var negativeRegExp = new RegExp("^(" + escapedNegativePrefix + ")[^" + escapedNegativePrefix + escapedNegativeSuffix + "](" + escapedNegativeSuffix + ")$");
+                    result["regexpPrefix"] = (result.isPrefixExists ? "[" + (result.isNegativeAllowed ? result.escapedNegativePrefix : "") + (result.isPositiveAllowed ? result.escapedPositivePrefix : "") + "]?" : "");
+                    result["regexpValue"] = "(((\\d{1," + result.groupSize + "}" + result.escapedGroupSeparator + ")?" + "(\\d{" + result.groupSize + "}" + result.escapedGroupSeparator + ")*" + "(\\d{1," + result.lastGroupSize + "}))|\\d*)";
+                    result["regexpZero"] = "0";
+                    result["regexpFraction"] = "(" + result.escapedDecimalSeparator + "\\d{" + result.minimalFraction + 1 + "," + result.maximumFraction + "}" + ")" + (result.minimalFraction === 0 ? "?" : "");
+                    result["regexpZeroFraction"] = result.regexpFraction.replace("\\d", "0");
+                    result["regexpSuffix"] = (result.isSuffixExists ? "[" + (result.isNegativeAllowed ? result.escapedNegativeSuffix : "") + (result.isPositiveAllowed ? result.escapedPositiveSuffix : "") + "]?" : "");
+
+                    result["negativeRegExp"] = new RegExp("^(" + result.escapedNegativePrefix + ")[^" + result.escapedNegativePrefix + result.escapedNegativeSuffix + "](" + result.escapedNegativeSuffix + ")$");
+
+                    return result;
+                };
 
                 var inRange = function(value, min, max)
                 {
@@ -69,21 +75,22 @@ angular.module('platformWebApp')
 
                 if (attrs.numType === "float") {
                     ctrl.$parsers.unshift(function (viewValue) {
-                        var regexp = new RegExp(formatRegExp(regexpPrefix + regexpValue + regexpFraction + regexpSuffix));
+                        var vars = validationVariables();
+                        var regexp = new RegExp(formatRegExp(vars.regexpPrefix + vars.regexpValue + vars.regexpFraction + vars.regexpSuffix));
                         var isValid = regexp.test(viewValue);
                         if (!isValid) {
-                            regexp = new RegExp(formatRegExp(regexpZero + regexpZeroFraction));
+                            regexp = new RegExp(formatRegExp(vars.regexpZero + vars.regexpZeroFraction));
                             isValid = regexp.test(viewValue);
                         }
                         if (isValid) {
-                            var negativeMatches = viewValue.match(negativeRegExp);
+                            var negativeMatches = viewValue.match(vars.negativeRegExp);
                             var value = parseFloat(viewValue
-                                .replace(negativeMatches && negativeMatches.length > 1 ? negativePrefix : '-', '')
-                                .replace(positivePrefix, '')
-                                .replace(new RegExp(escapedGroupSeparator, "g"), '')
-                                .replace(decimalSeparator, '.')
-                                .replace(negativeSuffix, '')
-                                .replace(positiveSuffix, ''));
+                                .replace(negativeMatches && negativeMatches.length > 1 ? vars.negativePrefix : null, '-')
+                                .replace(vars.positivePrefix, '')
+                                .replace(new RegExp(vars.escapedGroupSeparator, "g"), '')
+                                .replace(vars.decimalSeparator, '.')
+                                .replace(vars.negativeSuffix, '')
+                                .replace(vars.positiveSuffix, ''));
                             ctrl.$setValidity('float', true);
                             return inRange(value, attrs.min, attrs.max);
                         }
@@ -93,25 +100,26 @@ angular.module('platformWebApp')
 
                     ctrl.$formatters.unshift(
                         function(modelValue) {
-                            return $filter('number')(parseFloat(modelValue), maximumFraction);
+                            return $filter('number')(parseFloat(modelValue), validationVariables().maximumFraction);
                         }
                     );
                 } else {
                     ctrl.$parsers.unshift(function (viewValue) {
-                        var regexp = new RegExp(formatRegExp(regexpPrefix + regexpValue + regexpSuffix));
+                        var vars = validationVariables();
+                        var regexp = new RegExp(formatRegExp(vars.regexpPrefix + vars.regexpValue + vars.regexpSuffix));
                         var isValid = regexp.test(viewValue);
                         if (!isValid) {
-                            regexp = new RegExp(formatRegExp(regexpZero));
+                            regexp = new RegExp(formatRegExp(vars.regexpZero));
                             isValid = regexp.test(viewValue);
                         }
                         if (isValid) {
-                            var negativeMatches = viewValue.match(negativeRegExp);
+                            var negativeMatches = viewValue.match(vars.negativeRegExp);
                             var value = parseFloat(viewValue
-                                .replace(negativeMatches && negativeMatches.length > 1 ? negativePrefix : '', '-')
-                                .replace(positivePrefix, '')
-                                .replace(new RegExp(escapedGroupSeparator, "g"), '')
-                                .replace(negativeSuffix, '')
-                                .replace(positiveSuffix, ''));
+                                .replace(negativeMatches && negativeMatches.length > 1 ? vars.negativePrefix : null, '-')
+                                .replace(vars.positivePrefix, '')
+                                .replace(new RegExp(vars.escapedGroupSeparator, "g"), '')
+                                .replace(vars.negativeSuffix, '')
+                                .replace(vars.positiveSuffix, ''));
                             ctrl.$setValidity('integer', true);
                             return inRange(value, attrs.min, attrs.max);
                         }
@@ -126,6 +134,11 @@ angular.module('platformWebApp')
                         }
                     );
                 }
+
+                scope.$on('$localeChangeSuccess', function () {
+                    ctrl.$viewValue = ctrl.$formatters.reduceRight((prev, fn) => fn(prev), ctrl.$modelValue);
+                    ctrl.$render();
+                });
             }
         };
     }
