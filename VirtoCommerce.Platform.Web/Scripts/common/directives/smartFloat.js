@@ -14,7 +14,7 @@ angular.module('platformWebApp')
         }
 
         function inRange(value, min, max) {
-            return (!min || value < min) && (!max || value > max);
+            return (!min || value >= min) && (!max || value <= max);
         }
 
         return {

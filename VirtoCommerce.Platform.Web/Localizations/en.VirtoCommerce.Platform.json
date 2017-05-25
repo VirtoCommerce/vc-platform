@@ -598,7 +598,8 @@
         "labels": {
           "language": "Language",
           "regional-format": "Regional format",
-          "timezone": "Time zone"
+          "timezone": "Time zone",
+          "use-time-ago":  "Use time ago format when possible" 
         }
       }
     },

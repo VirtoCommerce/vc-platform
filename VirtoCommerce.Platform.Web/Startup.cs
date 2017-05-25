@@ -483,6 +483,14 @@ namespace VirtoCommerce.Platform.Web
                                 ValueType = ModuleSetting.TypeString,
                                 Title = "Time zone",
                                 Description = "Default time zone (IANA time zone name [tz database], with slash or underscore as delemiter, case-insensitive). Examples: America/New_York, Europe/Moscow"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.UseTimeAgo",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Use time ago format when possible",
+                                Description = "When set to true (by default), system will display time in format like 'a few seconds ago' when possible",
+                                DefaultValue = true.ToString()
                             }
                         }
                     },

@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.userProfile.userProfileController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'angularMomentConfig', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', function ($scope, bladeNavigationService, settings, settingsHelper, $translate, dynamicLocale, moment, momentService, momentConfig, userProfile, languages, locales, timeZones, userProfileApi) {
+.controller('platformWebApp.userProfile.userProfileController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'angularMomentConfig', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', function ($rootScope, $scope, bladeNavigationService, settings, settingsHelper, $translate, dynamicLocale, moment, momentService, momentConfig, userProfile, languages, locales, timeZones, userProfileApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-user';
     blade.title = 'platform.blades.user-profile.title';
@@ -11,6 +11,7 @@
     blade.currentLanguage = languages.normalize($translate.use());
     blade.currentRegionalFormat = locales.normalize(dynamicLocale.get());
     blade.currentTimeZone = timeZones.normalize(momentConfig.timezone);
+    blade.useTimeAgo = userProfile.useTimeAgo;
 
     function initializeBlade() {
         function toNativeName(list, provider) {
@@ -59,6 +60,12 @@
     $scope.setTimeZone = function() {
         momentService.changeTimezone(blade.currentTimeZone);
         userProfile.timeZone = blade.currentTimeZone;
+        userProfile.save();
+    }
+
+    $scope.setUseTimeAgo = function () {
+        $rootScope.useTimeAgo = blade.useTimeAgo;
+        userProfile.useTimeAgo = blade.useTimeAgo;
         userProfile.save();
     }
 }]);
