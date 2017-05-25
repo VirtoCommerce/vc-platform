@@ -6,7 +6,7 @@ angular.module('platformWebApp')
 
         // https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
         function escapeRegExp(str) {
-            return str.replace(/[ \-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&").replace(/\s/, " ");
         }
 
         function formatRegExp(str) {
@@ -41,7 +41,7 @@ angular.module('platformWebApp')
                 var escapedPositiveSuffix = escapeRegExp(positiveSuffix);
 
                 var regexpPrefix = (isPrefixExists ? "[" + escapedNegativePrefix + escapedPositivePrefix + "]?" : "");
-                var regexpValue = "((\\d{1," + groupSize + "}" + escapedGroupSeparator + ")?" + "(\\d{" + groupSize + "}" + escapedGroupSeparator + ")*" + "(\\d{1," + largeGroupSize + "})|\\d*)";
+                var regexpValue = "(((\\d{1," + groupSize + "}" + escapedGroupSeparator + ")?" + "(\\d{" + groupSize + "}" + escapedGroupSeparator + ")*" + "(\\d{1," + largeGroupSize + "}))|\\d*)";
                 var regexpZero = "0";
                 var regexpFraction = "(" + escapedDecimalSeparator + "\\d{" + minimalFraction + 1 + "," + maximumFraction + "}" + ")" + (minimalFraction === 0 ? "?" : "");
                 var regexpZeroFraction = regexpFraction.replace("\\d", "0");

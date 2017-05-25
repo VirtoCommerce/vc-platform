@@ -58,7 +58,7 @@
     <script type="text/ng-template" id="dDateTime.html">
         <div class="form-input __calendar">
             <input ng-model="context.currentPropValues[0].value"
-                   datepicker-popup="{{currentEntity.isReadonly ? 'short' : '' }}"
+                   datepicker-popup
                    ng-disabled="currentEntity.isReadonly"
                    is-open="datepickers.DateTime"
                    placeholder="{{ 'platform.genericValueInput.placeholders.date-time' | translate}}"

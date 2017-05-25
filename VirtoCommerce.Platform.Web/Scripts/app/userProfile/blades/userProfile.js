@@ -51,7 +51,7 @@
     };
 
     $scope.setRegionalFormat = function() {
-        dynamicLocale.set(blade.currentRegionalFormat.replace("_", "-").toLowerCase());
+        dynamicLocale.set(blade.currentRegionalFormat.replace(/_/g, "-").toLowerCase());
         momentService.changeLocale(blade.currentRegionalFormat);
         userProfile.regionalFormat = blade.currentRegionalFormat;
         userProfile.save();

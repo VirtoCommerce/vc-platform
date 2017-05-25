@@ -72,7 +72,7 @@ angular.module('platformWebApp', AppDependencies).
           if (authContext.isAuthenticated) {
               userProfile.load().then(function () {
                   $translate.use(userProfile.language);
-                  dynamicLocale.set(userProfile.regionalFormat.replace('_', '-').toLowerCase());
+                  dynamicLocale.set(userProfile.regionalFormat.replace(/_/g, '-').toLowerCase());
                   momentService.changeLocale(userProfile.regionalFormat);
                   momentService.changeTimezone(userProfile.timeZone || moment.tz.guess());
                   initializeMainMenu(userProfile);
@@ -184,7 +184,7 @@ angular.module('platformWebApp', AppDependencies).
     };
 })
 .config(
-  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'tmhDynamicLocaleProvider', '$translateProvider', '$compileProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, dynamicLocaleProvider, $translateProvider, $compileProvider) {
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'datepickerPopupConfig', 'tmhDynamicLocaleProvider', '$translateProvider', '$compileProvider', function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, datepickerPopupConfig, dynamicLocaleProvider, $translateProvider, $compileProvider) {
       $stateProvider.state('workspace', {
           url: '/workspace',
           templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
@@ -196,6 +196,7 @@ angular.module('platformWebApp', AppDependencies).
       uiSelectConfig.theme = 'select2';
 
       datepickerConfig.showWeeks = false;
+      datepickerPopupConfig.datepickerPopup = "mediumDate";
 
       //Localization
       // https://github.com/lgalfaso/angular-dynamic-locale/#usage
