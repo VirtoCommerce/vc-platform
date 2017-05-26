@@ -3,10 +3,8 @@
 angular.module('platformWebApp')
 .directive('smartFloat', [
     '$filter', '$compile', '$locale', function ($filter, $compile, $locale) {
-
-        // https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
-        function escapeRegExp(str) {
-            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&").replace(/\s/g, " ");
+        function escape(str) {
+            return RegExp.escape(str).replace(/\s/g, " ");
         }
 
         function formatRegExp(str) {
@@ -25,23 +23,23 @@ angular.module('platformWebApp')
                     result["negativePrefix"] = $locale.NUMBER_FORMATS.PATTERNS[0].negPre;
                     result["positivePrefix"] = $locale.NUMBER_FORMATS.PATTERNS[0].posPre;
                     result["isPrefixExists"] = result.negativePrefix == result.positivePrefix == "";
-                    result["escapedNegativePrefix"] = escapeRegExp(result.negativePrefix);
-                    result["escapedPositivePrefix"] = escapeRegExp(result.positivePrefix);
+                    result["escapedNegativePrefix"] = escape(result.negativePrefix);
+                    result["escapedPositivePrefix"] = escape(result.positivePrefix);
 
-                    result["escapedGroupSeparator"] = escapeRegExp($locale.NUMBER_FORMATS.GROUP_SEP);
+                    result["escapedGroupSeparator"] = escape($locale.NUMBER_FORMATS.GROUP_SEP);
                     result["groupSize"] = $locale.NUMBER_FORMATS.PATTERNS[0].gSize;
                     result["lastGroupSize"] = $locale.NUMBER_FORMATS.PATTERNS[0].lgSize;
 
                     result["decimalSeparator"] = $locale.NUMBER_FORMATS.DECIMAL_SEP;
-                    result["escapedDecimalSeparator"] = escapeRegExp(result.decimalSeparator);
+                    result["escapedDecimalSeparator"] = escape(result.decimalSeparator);
                     result["minimalFraction"] = attrs.fraction ? attrs.fraction : $locale.NUMBER_FORMATS.PATTERNS[0].minFrac;
                     result["maximumFraction"] = attrs.fraction ? attrs.fraction : $locale.NUMBER_FORMATS.PATTERNS[0].maxFrac;
 
                     result["negativeSuffix"] = $locale.NUMBER_FORMATS.PATTERNS[0].negSuf;
                     result["positiveSuffix"] = $locale.NUMBER_FORMATS.PATTERNS[0].posSuf;
                     result["isSuffixExists"] = result.negativeSuffix == result.positiveSuffix == "";
-                    result["escapedNegativeSuffix"] = escapeRegExp(result.negativeSuffix);
-                    result["escapedPositiveSuffix"] = escapeRegExp(result.positiveSuffix);
+                    result["escapedNegativeSuffix"] = escape(result.negativeSuffix);
+                    result["escapedPositiveSuffix"] = escape(result.positiveSuffix);
 
                     result["regexpPrefix"] = (result.isPrefixExists ? "[" + (result.isNegativeAllowed ? result.escapedNegativePrefix : "") + (result.isPositiveAllowed ? result.escapedPositivePrefix : "") + "]?" : "");
                     result["regexpValue"] = "(((\\d{1," + result.groupSize + "}" + result.escapedGroupSeparator + ")?" + "(\\d{" + result.groupSize + "}" + result.escapedGroupSeparator + ")*" + "(\\d{1," + result.lastGroupSize + "}))|\\d*)";

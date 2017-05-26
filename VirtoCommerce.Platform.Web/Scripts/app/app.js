@@ -28,9 +28,10 @@
 
 angular.module('platformWebApp', AppDependencies).
   controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService',
-      '$locale', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'amTimeAgoConfig', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings',
+      'platformWebApp.dateUtils', '$locale', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'amTimeAgoConfig', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings',
       function ($rootScope, $scope, $window, mainMenuService, pushNotificationService,
-          $locale, $translate, dynamicLocale, moment, momentService, timeAgoConfig, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
+          dateUtils, $locale, $translate, dynamicLocale, moment, momentService, timeAgoConfig, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
+
       pushNotificationService.run();
 
       $scope.closeError = function () {
@@ -93,7 +94,7 @@ angular.module('platformWebApp', AppDependencies).
 
       $rootScope.$on('$localeChangeSuccess', function () {
           var updateDateFormat = function() {
-              timeAgoConfig.fullDateFormat = $locale.DATETIME_FORMATS['medium'];
+              timeAgoConfig.fullDateFormat = dateUtils.convert($locale.DATETIME_FORMATS['medium']);
           }
           if (userProfile.useTimeAgo == undefined) {
               userProfile.load().then(function() {
@@ -206,6 +207,10 @@ angular.module('platformWebApp', AppDependencies).
 .config(
   ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'datepickerPopupConfig', 'tmhDynamicLocaleProvider', '$translateProvider', '$compileProvider',
       function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, datepickerPopupConfig, dynamicLocaleProvider, $translateProvider, $compileProvider) {
+      RegExp.escape = function(str) {
+          return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+      };
+
       $stateProvider.state('workspace', {
           url: '/workspace',
           templateUrl: '$(Platform)/Scripts/app/workspace.tpl.html'
@@ -239,9 +244,10 @@ angular.module('platformWebApp', AppDependencies).
 
 .run(
   ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService',
-      'angularMomentConfig', 'amMoment', 'amTimeAgoConfig', '$locale', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout',
+      'platformWebApp.dateUtils', 'angularMomentConfig', 'amMoment', 'amTimeAgoConfig', '$locale', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout',
     function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService,
-        momentConfig, momentService, timeAgoConfig, $locale, $animate, $templateCache, gridsterConfig, taOptions, $timeout) {
+        dateUtils, momentConfig, momentService, timeAgoConfig, $locale, $animate, $templateCache, gridsterConfig, taOptions, $timeout) {
+
         //Disable animation
         $animate.enabled(false);
 
@@ -299,7 +305,7 @@ angular.module('platformWebApp', AppDependencies).
         momentService.changeLocale("en");
         momentService.changeTimezone("Etc/UTC");
 
-        timeAgoConfig.fullDateFormat = $locale.DATETIME_FORMATS['medium'];
+        timeAgoConfig.fullDateFormat = dateUtils.convert($locale.DATETIME_FORMATS['medium']);
         // 1 millisecond threshold, it's not possible just 'off' time ago
         timeAgoConfig.fullDateThreshold = 1;
         timeAgoConfig.fullDateThresholdUnit = null;

@@ -14,26 +14,17 @@
         };
         return $delegate;
     }]);
-    $provide.decorator('datepickerPopupDirective', ['$delegate', 'datepickerPopupConfig', '$filter', '$locale', '$log', function ($delegate, datepickerPopupConfig, $filter, $locale, $log) {
+    $provide.decorator('datepickerPopupDirective', ['$delegate', 'datepickerPopupConfig', '$filter', 'platformWebApp.dateUtils', '$locale',
+    function ($delegate, datepickerPopupConfig, $filter, dateUtils, $locale) {
         var directive = $delegate[0];
         var compile = directive.compile;
         directive.compile = function (tElement, tAttrs) {
             // datepicker has some bugs and limitations to support date & time formats,
             // also, it doesn't support localized input,
-            // so limit format number to prevent random occurence of errors
-            // Formats 'YYYY', 'YY', 'Y', 'DD', 'D'
-            var formats = ['yyyy', 'yy', 'y', 'MMMM', 'MMM', 'MM', 'M', 'dd', 'd', 'EEEE', 'EEE'];
-            var invalidFormats = ['Q', 'Do', 'DDD', 'ddd', 'DDDD', 'dddd', 'e', 'E', 'X', 'x',
-                'HH', 'H', 'hh', 'h', 'kk', 'k', 'mm', 'm', 's', 'S', 'ss', 'SS', 'sss', 'SSS', 'a', 'A', 'Z', 'ZZ', 'ww', 'WW', 'w', 'W', 'G', 'GG', 'gg', 'GGG', 'GGGG', 'gggg'];
-            var invalidAdditionalFormats = ['medium', 'short', 'mediumTime', 'shortTime'];
-            var additionalFormats = ['fullDate', 'longDate', 'mediumDate', 'shortDate'];
+            // so limit format number & convert to date via moment to prevent random occurence of errors
             var format = tAttrs.datepickerPopup ? tAttrs.datepickerPopup : datepickerPopupConfig.datepickerPopup;
-            var formatParts = format.split(" ");
-            var isInvalid = (_.intersection(invalidFormats, formatParts).length > 0 || invalidAdditionalFormats.includes(format)) && !additionalFormats.includes(format);
-            if (isInvalid) {
-                $log.error("Invalid date format for datepicker popup");
-            }
-            if (additionalFormats.includes(format)) {
+            dateUtils.validate(format, dateUtils.isInvalidDate);
+            if (dateUtils.additionalFormats.includes(format)) {
                 format = $locale.DATETIME_FORMATS[format];
             }
             tAttrs.datepickerPopup = format;
@@ -50,13 +41,8 @@
                 ngModelCtrl.$parsers.unshift(value => {
                     var output = null;
                     if (value) {
-                        formatParts = attrs.datepickerPopup.split(" ");
-                        for (var i = 0; i < formatParts.length; i++) {
-                            if (formats.includes(formatParts[i])) {
-                                formatParts[i] = formatParts[i].toUpperCase();
-                            }
-                        }
-                        var date = moment.utc(value, formatParts.join(" ").replace(/'/g, ""), moment.locale(), true);
+                        format = dateUtils.convert(format);
+                        var date = moment.utc(value, format, moment.locale(), true);
                         output = date.isValid() ? date.format() : undefined;
                     }
                     return output;
