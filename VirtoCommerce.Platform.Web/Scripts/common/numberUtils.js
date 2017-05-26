@@ -26,8 +26,8 @@
 
                 result["decimalSeparator"] = $locale.NUMBER_FORMATS.DECIMAL_SEP;
                 result["escapedDecimalSeparator"] = this.escape(result.decimalSeparator);
-                result["minimalFraction"] = fraction ? fraction : $locale.NUMBER_FORMATS.PATTERNS[0].minFrac;
-                result["maximumFraction"] = fraction ? fraction : $locale.NUMBER_FORMATS.PATTERNS[0].maxFrac;
+                result["minimalFraction"] = fraction || $locale.NUMBER_FORMATS.PATTERNS[0].minFrac;
+                result["maximumFraction"] = fraction || $locale.NUMBER_FORMATS.PATTERNS[0].maxFrac || 21; // ECMA 262
 
                 result["negativeSuffix"] = $locale.NUMBER_FORMATS.PATTERNS[0].negSuf;
                 result["positiveSuffix"] = $locale.NUMBER_FORMATS.PATTERNS[0].posSuf;
@@ -38,7 +38,7 @@
                 result["regexpPrefix"] = (result.isPrefixExists ? "[" + (result.isNegativeAllowed ? result.escapedNegativePrefix : "") + (result.isPositiveAllowed ? result.escapedPositivePrefix : "") + "]?" : "");
                 result["regexpValue"] = "(((\\d{1," + result.groupSize + "}" + result.escapedGroupSeparator + ")?" + "(\\d{" + result.groupSize + "}" + result.escapedGroupSeparator + ")*" + "(\\d{1," + result.lastGroupSize + "}))|\\d*)";
                 result["regexpZero"] = "0";
-                result["regexpFraction"] = "(" + result.escapedDecimalSeparator + "\\d{" + result.minimalFraction + 1 + "," + result.maximumFraction + "}" + ")" + (result.minimalFraction === 0 ? "?" : "");
+                result["regexpFraction"] = "(" + result.escapedDecimalSeparator + "\\d{1," + result.maximumFraction + "}" + ")?";
                 result["regexpZeroFraction"] = result.regexpFraction.replace("\\d", "0");
                 result["regexpSuffix"] = (result.isSuffixExists ? "[" + (result.isNegativeAllowed ? result.escapedNegativeSuffix : "") + (result.isPositiveAllowed ? result.escapedPositiveSuffix : "") + "]?" : "");
 
