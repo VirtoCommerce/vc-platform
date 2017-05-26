@@ -87,6 +87,7 @@
             setFullDateThreshold(1);
         } else {
             setFullDateThresholdUnit('Never');
+            setFullDateThreshold(null);
         }
         userProfile.useTimeAgo = blade.useTimeAgo;
         userProfile.save();
