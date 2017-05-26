@@ -205,8 +205,8 @@ angular.module('platformWebApp', AppDependencies).
     };
 })
 .config(
-  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'datepickerPopupConfig', 'tmhDynamicLocaleProvider', '$translateProvider', '$compileProvider',
-      function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, datepickerPopupConfig, dynamicLocaleProvider, $translateProvider, $compileProvider) {
+  ['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'datepickerPopupConfig', 'tagsInputConfigProvider', 'tmhDynamicLocaleProvider', '$translateProvider', '$compileProvider',
+      function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, datepickerPopupConfig, tagsInputConfigProvider, dynamicLocaleProvider, $translateProvider, $compileProvider) {
       RegExp.escape = function(str) {
           return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
       };
@@ -223,6 +223,16 @@ angular.module('platformWebApp', AppDependencies).
 
       datepickerConfig.showWeeks = false;
       datepickerPopupConfig.datepickerPopup = "mediumDate";
+
+      tagsInputConfigProvider.setDefaults('tagsInput', {
+          addOnEnter: true,
+          addOnSpace: false,
+          addOnComma: false,
+          addOnBlur: true,
+          addOnParse: true,
+          replaceSpacesWithDashes: false,
+          pasteSplitPattern: ";"
+      });
 
       //Localization
       // https://github.com/lgalfaso/angular-dynamic-locale/#usage

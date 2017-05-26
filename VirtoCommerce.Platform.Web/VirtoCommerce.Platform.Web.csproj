@@ -423,6 +423,7 @@
     <Content Include="Scripts\common\dateUtils.js" />
     <Content Include="Scripts\common\directives\date.js" />
     <Content Include="Scripts\common\directives\datepicker.js" />
+    <Content Include="Scripts\common\directives\tagsNumber.js" />
     <Content Include="Scripts\common\directives\tooltip.js" />
     <Content Include="Scripts\common\directives\metaform.js" />
     <Content Include="Scripts\common\directives\metaform.tpl.html" />
@@ -593,6 +594,7 @@
     <Content Include="Scripts\codemirror\overlay.js" />
     <Content Include="Scripts\common\bladeUtils.js" />
     <Content Include="Scripts\common\directives\tooltipOptions.js" />
+    <Content Include="Scripts\common\numberUtils.js" />
     <Content Include="Scripts\common\resources\countries.js" />
     <Content Include="Scripts\common\resources\timeZones.js" />
     <Content Include="Scripts\common\templates\ui-grid\am-time-ago.cell.html" />
