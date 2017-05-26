@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using FileLock;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Properties;
+using VirtoCommerce.Platform.Web.Util;
 
 namespace VirtoCommerce.Platform.Web.Modularity
 {
@@ -39,9 +39,16 @@ namespace VirtoCommerce.Platform.Web.Modularity
             if (string.IsNullOrEmpty(contentPhysicalPath))
                 throw new InvalidOperationException("The ContentPhysicalPath cannot contain a null value or be empty");
 
-            //Use lock file in file system to synhronize multiple platform instances initialization (to avoid collisions on initialization process)
-            var fileLock = SimpleFileLock.Create("vc-lock", TimeSpan.FromMinutes(1));
-            var needCopyAssemblies = fileLock.TryAcquireLock();
+            FileLock fileLock = null;
+            var lockFilePath = Path.Combine(_assembliesPath, "vc-lock.txt");
+            //Read application settings which control the assemblies copy behaviour
+            var needCopyAssemblies = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Platform:RefreshProbeFolderOnStart.Enabled", true);
+            if (needCopyAssemblies)
+            {
+                //Use lock file in file system to synhronize multiple platform instances initialization (to avoid collisions on initialization process)
+                fileLock = new FileLock(lockFilePath, TimeSpan.FromMinutes(1));
+                needCopyAssemblies = fileLock.TryAcquireLock();
+            }
 
             if (!contentPhysicalPath.EndsWith("\\", StringComparison.OrdinalIgnoreCase))
                 contentPhysicalPath += "\\";
@@ -61,7 +68,11 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 {
                     foreach(var assembly in Directory.GetFiles(_assembliesPath))
                     {
-                        File.Delete(assembly);
+                        //Do not delete lock file
+                        if (assembly != lockFilePath)
+                        {
+                            File.Delete(assembly);
+                        }
                     }
                 }
                 catch (Exception)
@@ -97,17 +108,20 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 moduleInfo.IsInstalled = true;
                 AddModule(moduleInfo);
             }
-         
-            //Wait until other (first) platform instance finished initialization (copying assemblies)
-            if(!needCopyAssemblies)
+
+            if (fileLock != null)
             {
-                while (!fileLock.TryAcquireLock())
+                //Wait until other (first) platform instance finished initialization (when copied all assemblies)
+                if (!needCopyAssemblies)
                 {
-                    Thread.Sleep(500);
+                    while (!fileLock.TryAcquireLock())
+                    {
+                        Thread.Sleep(500);
+                    }
                 }
+                //Release file system lock
+                fileLock.ReleaseLock();
             }
-            //Release file system lock
-            fileLock.ReleaseLock();
         }
 
         public override void Validate()
