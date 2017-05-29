@@ -38,19 +38,19 @@ namespace VirtoCommerce.Platform.Data.Security
         }
 
         #region ISecurityService Members
-        public async Task<ApplicationUserExtended> FindByNameAsync(string userName, UserDetails detailsLevel)
+        public virtual async Task<ApplicationUserExtended> FindByNameAsync(string userName, UserDetails detailsLevel)
         {
             var user = await GetApplicationUserByNameAsync(userName);
             return GetUserExtended(user, detailsLevel);
         }
 
-        public async Task<ApplicationUserExtended> FindByIdAsync(string userId, UserDetails detailsLevel)
+        public virtual async Task<ApplicationUserExtended> FindByIdAsync(string userId, UserDetails detailsLevel)
         {
             var user = await GetApplicationUserByIdAsync(userId);
             return GetUserExtended(user, detailsLevel);
         }
 
-        public async Task<ApplicationUserExtended> FindByEmailAsync(string email, UserDetails detailsLevel)
+        public virtual async Task<ApplicationUserExtended> FindByEmailAsync(string email, UserDetails detailsLevel)
         {
             using (var userManager = _userManagerFactory())
             {
@@ -59,7 +59,7 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public async Task<ApplicationUserExtended> FindByLoginAsync(string loginProvider, string providerKey, UserDetails detailsLevel)
+        public virtual async Task<ApplicationUserExtended> FindByLoginAsync(string loginProvider, string providerKey, UserDetails detailsLevel)
         {
             using (var userManager = _userManagerFactory())
             {
@@ -68,7 +68,7 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public async Task<SecurityResult> CreateAsync(ApplicationUserExtended user)
+        public virtual async Task<SecurityResult> CreateAsync(ApplicationUserExtended user)
         {
             IdentityResult result;
 
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result.ToCoreModel();
         }
 
-        public async Task<SecurityResult> UpdateAsync(ApplicationUserExtended user)
+        public virtual async Task<SecurityResult> UpdateAsync(ApplicationUserExtended user)
         {
             SecurityResult result;
 
@@ -174,7 +174,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        public async Task DeleteAsync(string[] names)
+        public virtual async Task DeleteAsync(string[] names)
         {
             using (var userManager = _userManagerFactory())
             {
@@ -204,14 +204,14 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public ApiAccount GenerateNewApiAccount(ApiAccountType type)
+        public virtual ApiAccount GenerateNewApiAccount(ApiAccountType type)
         {
             var apiAccount = _apiAccountProvider.GenerateApiCredentials(type);
             var result = apiAccount.ToCoreModel();
             return result;
         }
 
-        public async Task<SecurityResult> ChangePasswordAsync(string name, string oldPassword, string newPassword)
+        public virtual async Task<SecurityResult> ChangePasswordAsync(string name, string oldPassword, string newPassword)
         {
             using (var userManager = _userManagerFactory())
             {
@@ -228,7 +228,7 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public async Task<SecurityResult> ResetPasswordAsync(string name, string newPassword)
+        public virtual async Task<SecurityResult> ResetPasswordAsync(string name, string newPassword)
         {
             using (var userManager = _userManagerFactory())
             {
@@ -246,7 +246,7 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public async Task<SecurityResult> ResetPasswordAsync(string userId, string token, string newPassword)
+        public virtual async Task<SecurityResult> ResetPasswordAsync(string userId, string token, string newPassword)
         {
             using (var userManager = _userManagerFactory())
             {
@@ -263,7 +263,7 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public async Task<UserSearchResponse> SearchUsersAsync(UserSearchRequest request)
+        public virtual async Task<UserSearchResponse> SearchUsersAsync(UserSearchRequest request)
         {
             request = request ?? new UserSearchRequest();
             var result = new UserSearchResponse();
@@ -311,7 +311,7 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public async Task<string> GeneratePasswordResetTokenAsync(string userId)
+        public virtual async Task<string> GeneratePasswordResetTokenAsync(string userId)
         {
             using (var userManager = _userManagerFactory())
             {
@@ -319,12 +319,12 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public Permission[] GetAllPermissions()
+        public virtual Permission[] GetAllPermissions()
         {
             return _cacheManager.Get("AllPermissions", "PlatformRegion", LoadAllPermissions);
         }
 
-        public bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds)
+        public virtual bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds)
         {
             if (permissionIds == null)
             {
@@ -358,7 +358,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        public Permission[] GetUserPermissions(string userName)
+        public virtual Permission[] GetUserPermissions(string userName)
         {
             var user = FindByName(userName, UserDetails.Full);
             var result = user != null ? user.Roles.SelectMany(x => x.Permissions).Distinct().ToArray() : Enumerable.Empty<Permission>().ToArray();

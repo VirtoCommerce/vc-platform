@@ -314,19 +314,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             try
             {
-                using (var stream = new MemoryStream())
+                var relativeUrl = "tmp/exported_data.zip";
+                using (var stream = _blobStorageProvider.OpenWrite(relativeUrl))
                 {
                     var manifest = exportRequest.ToManifest();
                     _platformExportManager.Export(stream, manifest, progressCallback);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    var relativeUrl = "tmp/exported_data.zip";
-                    using (var targetStream = _blobStorageProvider.OpenWrite(relativeUrl))
-                    {
-                        stream.CopyTo(targetStream);
-                    }
                     //Get a download url
                     pushNotification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(relativeUrl);
                 }
+                
             }
             catch (Exception ex)
             {
