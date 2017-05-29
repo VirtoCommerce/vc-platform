@@ -421,7 +421,8 @@
     <Content Include="Scripts\app\pushNotifications\menuHeader.tpl.html" />
     <Content Include="Scripts\app\userProfile\userProfile.js" />
     <Content Include="Scripts\common\dateUtils.js" />
-    <Content Include="Scripts\common\directives\date.js" />
+    <Content Include="Scripts\common\filters\currency.js" />
+    <Content Include="Scripts\common\filters\date.js" />
     <Content Include="Scripts\common\directives\datepicker.js" />
     <Content Include="Scripts\common\directives\tagsNumber.js" />
     <Content Include="Scripts\common\directives\tooltip.js" />
