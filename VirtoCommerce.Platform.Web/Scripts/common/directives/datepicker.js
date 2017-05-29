@@ -49,8 +49,8 @@
                     var output = null;
                     if (value) {
                         var format = dateUtils.convert(attrs.datepickerPopup);
-                        var date = moment.utc(value, format, moment.locale(), true);
-                        output = date.isValid() ? date.format() : undefined;
+                        var date = moment(value, format, moment.locale(), true);
+                        output = date.isValid() ? date.toDate() : undefined;
                     }
                     return output;
                 });

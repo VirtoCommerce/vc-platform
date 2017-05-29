@@ -126,7 +126,7 @@
                 } else {
                     for (var i = 0; i < grid.rows.length; i++) {
                         var value = grid.getCellValue(grid.rows[i], grid.getColumn(x.name));
-                        if (value) {
+                        if (angular.isDefined(value)) {
                             if (angular.isNumber(value)) {
                                 x.cellFilter = x.cellFilter || 'number';
                             }
