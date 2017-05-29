@@ -1,17 +1,17 @@
-﻿'use strict';
+'use strict';
 
 angular.module('platformWebApp')
-.directive('smartFloat', ['platformWebApp.numberUtils', function (numberUtils) {
+.directive('money', ['platformWebApp.currencyUtils', function (currencyUtils) {
     return {
         restrict: 'A',
         require: 'ngModel',
         link: function (scope, elem, attrs, ctrl) {
             ctrl.$parsers.unshift(function(viewValue) {
-                return numberUtils.validate(viewValue, attrs.numType, attrs.minExclusive, attrs.min, attrs.maxExclusive, attrs.max, attrs.fraction, ctrl.$setValidity);
+                return currencyUtils.validate(viewValue, attrs.minExclusive, attrs.min, attrs.maxExclusive, attrs.max, attrs.fraction, ctrl.$setValidity);
             });
 
             ctrl.$formatters.unshift(function (modelValue) {
-                return numberUtils.format(modelValue, attrs.numType, attrs.minExclusive, attrs.min, attrs.maxExclusive, attrs.max, attrs.fraction);
+                return currencyUtils.format(modelValue, attrs.minExclusive, attrs.min, attrs.maxExclusive, attrs.max, attrs.fraction);
             });
 
             scope.$on('$localeChangeSuccess', function () {

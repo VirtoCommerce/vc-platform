@@ -6,7 +6,7 @@
                 <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText='';gridApi.grid.queueGridRefresh()"></i>
             </button>
         </div>
-        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntitiesCount}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntitiesCount | number:0}}</span></p>
 
         <div ng-if="blade.mode==='available'" style="margin-top:10px">
             <div class="form-input">

@@ -121,14 +121,21 @@
             grid.buildColumns();
             var columnDefs = angular.copy(gridOptions.columnDefs);
             _.each(columnDefs, function (x) {
-                for (var i = 0; i < grid.rows.length; i++) {
-                    var value = grid.getCellValue(grid.rows[i], grid.getColumn(x.name));
-                    if (value) {
-                        // Default template for columns with dates
-                        if (angular.isDate(value) || angular.isString(value) && /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?Z/.test(value)) {
-                            x.cellTemplate = x.cellTemplate || '$(Platform)/Scripts/common/templates/ui-grid/am-time-ago.cell.html';
+                if (x.type === "currency") {
+                    x.cellFilter = x.cellFilter || "currency:''";
+                } else {
+                    for (var i = 0; i < grid.rows.length; i++) {
+                        var value = grid.getCellValue(grid.rows[i], grid.getColumn(x.name));
+                        if (value) {
+                            if (angular.isNumber(value)) {
+                                x.cellFilter = x.cellFilter || 'number';
+                            }
+                            // Default template for columns with dates
+                            else if (angular.isDate(value) || angular.isString(value) && /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?Z/.test(value)) {
+                                x.cellTemplate = x.cellTemplate || '$(Platform)/Scripts/common/templates/ui-grid/am-time-ago.cell.html';
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
             });

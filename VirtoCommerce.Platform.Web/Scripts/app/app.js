@@ -9,7 +9,6 @@
   'ngAnimate',
   'ngStorage',
   'ngResource',
-  'fiestah.money',
   'ngCookies',
   'angularMoment',
   'angularFileUpload',

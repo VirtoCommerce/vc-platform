@@ -17,31 +17,38 @@
     $provide.decorator('datepickerPopupDirective', ['$delegate', 'datepickerPopupConfig', '$filter', 'platformWebApp.dateUtils', '$locale',
     function ($delegate, datepickerPopupConfig, $filter, dateUtils, $locale) {
         var directive = $delegate[0];
-        var compile = directive.compile;
-        directive.compile = function (tElement, tAttrs) {
-            // datepicker has some bugs and limitations to support date & time formats,
-            // also, it doesn't support localized input,
-            // so limit format number & convert to date via moment to prevent random occurence of errors
-            var format = tAttrs.datepickerPopup ? tAttrs.datepickerPopup : datepickerPopupConfig.datepickerPopup;
-            dateUtils.validate(format, dateUtils.isInvalidDate);
-            if (dateUtils.additionalFormats.includes(format)) {
-                format = $locale.DATETIME_FORMATS[format];
-            }
-            tAttrs.datepickerPopup = format;
-
-            var link = compile.apply(this, arguments);
+        directive.compile = function (tElem, tAttrs) {
+            tElem.attr("datepicker-popup-original", tAttrs.datepickerPopup);
             return function (scope, element, attrs, ngModelCtrl) {
                 attrs.currentText = attrs.currentText || $filter('translate')('platform.commands.today');
                 attrs.clearText = attrs.clearText || $filter('translate')('platform.commands.clear');
                 attrs.closeText = attrs.closeText || $filter('translate')('platform.commands.close');
 
-                link.apply(this, arguments);
+                // datepicker has some bugs and limitations to support date & time formats,
+                // also, it doesn't support localized input,
+                // so limit format number & convert to date via moment to prevent random occurence of errors
+                var applyFormat = function (newFormat, oldFormat) {
+                    if (newFormat !== oldFormat) {
+                        var format = newFormat || datepickerPopupConfig.datepickerPopup;
+                        dateUtils.validate(format, dateUtils.isInvalidDate);
+                        if (dateUtils.additionalFormats.includes(format)) {
+                            format = $locale.DATETIME_FORMATS[format];
+                        }
+                        attrs.datepickerPopup = format;
+                    }
+                };
+                attrs.$observe('datepickerPopupOriginal', function (value, oldValue) {
+                    applyFormat(value, oldValue);
+                });
+                applyFormat(attrs.datepickerPopup, undefined);
+
+                directive.link.apply(this, arguments);
                 
                 // convert localized date to javascript date object for correct validation
-                ngModelCtrl.$parsers.unshift(value => {
+                ngModelCtrl.$parsers.unshift(function(value) {
                     var output = null;
                     if (value) {
-                        format = dateUtils.convert(format);
+                        var format = dateUtils.convert(attrs.datepickerPopup);
                         var date = moment.utc(value, format, moment.locale(), true);
                         output = date.isValid() ? date.format() : undefined;
                     }

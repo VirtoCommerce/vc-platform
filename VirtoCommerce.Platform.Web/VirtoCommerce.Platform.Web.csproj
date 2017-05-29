@@ -416,6 +416,7 @@
     <Content Include="Scripts\app\pushNotifications\menu.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\menuHeader.tpl.html" />
     <Content Include="Scripts\app\userProfile\userProfile.js" />
+    <Content Include="Scripts\common\currencyUtils.js" />
     <Content Include="Scripts\common\dateUtils.js" />
     <Content Include="Scripts\common\filters\currency.js" />
     <Content Include="Scripts\common\filters\date.js" />
@@ -689,7 +690,7 @@
     <Content Include="Scripts\codemirror\liquid.css" />
     <Content Include="Scripts\codemirror\liquid.js" />
     <Content Include="Scripts\common\templates\create.tpl.html" />
-    <Content Include="Scripts\common\directives\angular-money-directive.js" />
+    <Content Include="Scripts\common\directives\money.js" />
     <Content Include="Scripts\app\workspace.tpl.html" />
     <Content Include="Scripts\common\dialogs\notifyDialog.tpl.html" />
     <Content Include="Scripts\common\directives\autofill.js" />
