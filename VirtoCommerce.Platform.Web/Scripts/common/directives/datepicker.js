@@ -45,8 +45,13 @@
                 directive.link.apply(this, arguments);
                 
                 // convert localized date to javascript date object for correct validation
+                ngModelCtrl.$formatters.splice(1, 1, function (value) {
+                    var format = attrs.datepickerPopup;
+                    scope.date = value;
+                    return ngModelCtrl.$isEmpty(value) ? value : $filter('date')(moment(value), format);
+                });
                 ngModelCtrl.$parsers.unshift(function(value) {
-                    var output = null;
+                    var output = undefined;
                     if (value) {
                         var format = dateUtils.convert(attrs.datepickerPopup);
                         var date = moment(value, format, moment.locale(), true);

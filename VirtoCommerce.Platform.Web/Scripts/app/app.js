@@ -93,7 +93,7 @@ angular.module('platformWebApp', AppDependencies).
 
       $rootScope.$on('$localeChangeSuccess', function () {
           var updateDateFormat = function() {
-              timeAgoConfig.fullDateFormat = dateUtils.convert($locale.DATETIME_FORMATS['medium']);
+              timeAgoConfig.fullDateFormat = dateUtils.convert($locale.DATETIME_FORMATS['short']);
           }
           if (userProfile.useTimeAgo == undefined) {
               userProfile.load().then(function() {
@@ -314,7 +314,7 @@ angular.module('platformWebApp', AppDependencies).
         momentService.changeLocale("en");
         momentService.changeTimezone("Etc/UTC");
 
-        timeAgoConfig.fullDateFormat = dateUtils.convert($locale.DATETIME_FORMATS['medium']);
+        timeAgoConfig.fullDateFormat = dateUtils.convert($locale.DATETIME_FORMATS['short']);
         // 1 millisecond threshold, it's not possible just 'off' time ago
         timeAgoConfig.fullDateThreshold = 1;
         timeAgoConfig.fullDateThresholdUnit = null;

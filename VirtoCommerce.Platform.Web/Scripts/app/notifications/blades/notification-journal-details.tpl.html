@@ -36,7 +36,7 @@
 				<li class="list-item" ng-if="!angular.isUndefined(blade.currentEntity.startSendingDate)">
 					<div class="list-t">{{ 'platform.blades.notification-journal-details.labels.start-sending-date' | translate }}</div>
 					<div class="list-descr">
-						{{blade.currentEntity.startSendingDate | amUtc | date:'medium'}}
+						{{blade.currentEntity.startSendingDate | amParse | date:'medium'}}
 					</div>
 				</li>
 
@@ -54,7 +54,7 @@
 				<li class="list-item" ng-if="blade.currentEntity.isSuccessSend">
 					<div class="list-t">{{ 'platform.blades.notification-journal-details.labels.sent-date' | translate }}</div>
 					<div class="list-descr">
-						{{blade.currentEntity.sentDate | amUtc | date:'medium'}}
+						{{blade.currentEntity.sentDate | amParse | date:'medium'}}
 					</div>
 				</li>
 
@@ -81,7 +81,7 @@
 				<li ng-if="blade.currentEntity.attemptCount > 0 && !blade.currentEntity.isSuccessSend">
 					<div class="list-t">{{ 'platform.blades.notification-journal-details.labels.last-fail-attempt-date' | translate }}</div>
 					<div class="list-descr">
-						{{blade.currentEntity.lastFailAttemptDate | amUtc | date:'medium'}}
+						{{blade.currentEntity.lastFailAttemptDate | amParse | date:'medium'}}
 					</div>
 				</li>
 				<li class="list-item" ng-if="blade.currentEntity.attemptCount > 0 && !blade.currentEntity.isSuccessSend">

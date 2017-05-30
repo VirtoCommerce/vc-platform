@@ -627,7 +627,7 @@
         "license-absent": "Community license",
         "license-present": "{{type}} license",
         "community": "Running community edition, click to request a commercial license.",
-        "expired": "You license has expired on {{expirationDate | date}}, please renew."
+        "expired": "You license has expired on {{expirationDate | amParse | date}}, please renew."
       },
       "modulesAutoInstallation": {
         "labels": {

@@ -16,6 +16,7 @@
                     if (foundDef = _.findWhere(initOptions.columnDefs, { name: x.name })) {
                         foundDef.sort = x.sort;
                         foundDef.width = x.width || foundDef.width;
+                        foundDef.visible = x.visible;
                         _.extend(x, foundDef);
                         x.wasPredefined = true;
                         initOptions.columnDefs.splice(initOptions.columnDefs.indexOf(foundDef), 1);
@@ -27,7 +28,10 @@
                 initOptions.columnDefs = _.union(initOptions.columnDefs, savedState.columns);
             } else {
                 // mark predefined columns
-                _.each(initOptions.columnDefs, function (x) { x.wasPredefined = true; })
+                _.each(initOptions.columnDefs, function(x) {
+                    x.visible = angular.isDefined(x.visible) ? x.visible : true;
+                    x.wasPredefined = true;
+                });
             }
                 
             // translate headers
@@ -64,7 +68,8 @@
                         gridApi.core.on.columnVisibilityChanged($scope, saveState);
                         gridApi.core.on.sortChanged($scope, saveState);
                         function saveState() {
-                            $localStorage['gridState:' + blade.template] = gridApi.saveState.save();
+                            var t = gridApi.saveState.save();
+                            $localStorage['gridState:' + blade.template] = t;
                         }
                     }
 
@@ -113,6 +118,7 @@
                     }
                 });
                 gridOptions.columnDefsGenerated = true;
+                grid.api.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
             }
         }
 
@@ -120,37 +126,40 @@
             var gridOptions = grid.options;
             grid.buildColumns();
             var columnDefs = angular.copy(gridOptions.columnDefs);
-            _.each(columnDefs, function (x) {
-                if (x.type === "currency") {
-                    x.cellFilter = x.cellFilter || "currency:''";
-                } else {
-                    for (var i = 0; i < grid.rows.length; i++) {
-                        var value = grid.getCellValue(grid.rows[i], grid.getColumn(x.name));
-                        if (angular.isDefined(value)) {
-                            if (angular.isNumber(value)) {
-                                x.cellFilter = x.cellFilter || 'number';
-                            }
-                            // Default template for columns with dates
-                            else if (angular.isDate(value) || angular.isString(value) && /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?Z/.test(value)) {
-                                x.cellTemplate = x.cellTemplate || '$(Platform)/Scripts/common/templates/ui-grid/am-time-ago.cell.html';
-                            }
-                            break;
+            for (var i = 0; i < columnDefs.length; i++) {
+                var columnDef = columnDefs[i];
+                for (var j = 0; j < grid.rows.length; j++) {
+                    var value = grid.getCellValue(grid.rows[j], grid.getColumn(columnDef.name));
+                    if (angular.isDefined(value)) {
+                        if (angular.isNumber(value)) {
+                            columnDef.cellFilter = columnDef.cellFilter || 'number';
                         }
+                        // Default template for columns with dates
+                        else if (angular.isDate(value) || angular.isString(value) && /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?Z/.test(value)) {
+                            columnDef.cellTemplate = columnDef.cellTemplate || '$(Platform)/Scripts/common/templates/ui-grid/am-time-ago.cell.html';
+                        }
+                        break;
                     }
                 }
-            });
+                gridOptions.columnDefs[i] = columnDef;
+            }
             grid.options.columnDefs = columnDefs;
+            grid.api.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
         }
 
         function updateColumnsVisibility(gridOptions, isCollapsed) {
+            var blade = bladeNavigationService.currentBlade;
+            var $scope = blade.$scope;
             _.each(gridOptions.columnDefs, function (x) {
                 // normal: visible, if column was predefined
                 // collapsed: visible only if we must display column always
                 if (isCollapsed) {
-                    x.wasVisible = !!x.visible || !!x.wasPredefined;
+                    x.wasVisible = !!x.wasPredefined && x.visible !== false || !!x.visible;
                 }
                 x.visible = !isCollapsed ? !!x.wasVisible : !!x.displayAlways;
             });
+            if ($scope && $scope.gridApi)
+                $scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.COLUMN);
         }
 
         return gridOptions;

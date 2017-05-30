@@ -622,7 +622,7 @@
         "license-absent": "Common License",
         "license-present": "{{type}} Lizenz",
         "community": "Sie nutzen die Community Edition. klicken Sie hier um eine kommerzielle Lizenz zu beantragen.",
-        "expired": "Ihre Lizenz ist am {{expirationDate | date}} abgelaufen, bitte erneuern."
+        "expired": "Ihre Lizenz ist am {{expirationDate | amParse | date}} abgelaufen, bitte erneuern."
       },
       "modulesAutoInstallation": {
         "labels": {
