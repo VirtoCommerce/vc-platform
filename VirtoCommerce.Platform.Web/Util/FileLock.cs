@@ -62,17 +62,9 @@ namespace VirtoCommerce.Platform.Web.Util
                     Timestamp = DateTime.UtcNow.Ticks,
                     Token = _token
                 };
-
-                try
+                using (var stream = File.Create(LockFilePath))
                 {
-                    using (var stream = File.Create(LockFilePath))
-                    {
-                        lockContent.SerializeJson(stream);
-                    }
-                }
-                catch (Exception)
-                {
-                    retVal = false;
+                    lockContent.SerializeJson(stream);
                 }
             }
             return retVal;

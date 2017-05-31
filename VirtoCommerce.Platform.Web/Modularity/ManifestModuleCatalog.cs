@@ -39,15 +39,9 @@ namespace VirtoCommerce.Platform.Web.Modularity
             if (string.IsNullOrEmpty(contentPhysicalPath))
                 throw new InvalidOperationException("The ContentPhysicalPath cannot contain a null value or be empty");
 
-            FileLock fileLock = null;
-            var lockFilePath = Path.Combine(_assembliesPath, "vc-lock.txt");
-            //Read application settings which control the assemblies copy behaviour
-            var needCopyAssemblies = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Platform:RefreshProbeFolderOnStart.Enabled", true);
-            if (needCopyAssemblies)
+            if (!Directory.Exists(_assembliesPath))
             {
-                //Use lock file in file system to synhronize multiple platform instances initialization (to avoid collisions on initialization process)
-                fileLock = new FileLock(lockFilePath, TimeSpan.FromMinutes(1));
-                needCopyAssemblies = fileLock.TryAcquireLock();
+                Directory.CreateDirectory(_assembliesPath);
             }
 
             if (!contentPhysicalPath.EndsWith("\\", StringComparison.OrdinalIgnoreCase))
@@ -55,32 +49,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
             var rootUri = new Uri(contentPhysicalPath);
 
-            if (needCopyAssemblies)
-            {
-                if (!Directory.Exists(_assembliesPath))
-                {
-                    Directory.CreateDirectory(_assembliesPath);
-                }
-
-                // Clear ~/moules directory from old assemblies
-                // Ignore any errors, because shadow copy may not work
-                try
-                {
-                    foreach(var assembly in Directory.GetFiles(_assembliesPath))
-                    {
-                        //Do not delete lock file
-                        if (assembly != lockFilePath)
-                        {
-                            File.Delete(assembly);
-                        }
-                    }
-                }
-                catch (Exception)
-                {
-                }
-
-                CopyAssemblies(_modulesLocalPath, _assembliesPath);
-            }
+            CopyAssemblies(_modulesLocalPath, _assembliesPath);
 
             foreach (var pair in GetModuleManifests())
             {
@@ -88,10 +57,8 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 var manifestPath = pair.Key;
 
                 var modulePath = Path.GetDirectoryName(manifestPath);
-                if (needCopyAssemblies)
-                {
-                    CopyAssemblies(modulePath, _assembliesPath);
-                }
+
+                CopyAssemblies(modulePath, _assembliesPath);
 
                 var moduleVirtualPath = GetModuleVirtualPath(rootUri, modulePath);
                 ConvertVirtualPath(manifest.Scripts, moduleVirtualPath);
@@ -107,20 +74,6 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
                 moduleInfo.IsInstalled = true;
                 AddModule(moduleInfo);
-            }
-
-            if (fileLock != null)
-            {
-                //Wait until other (first) platform instance finished initialization (when copied all assemblies)
-                if (!needCopyAssemblies)
-                {
-                    while (!fileLock.TryAcquireLock())
-                    {
-                        Thread.Sleep(500);
-                    }
-                }
-                //Release file system lock
-                fileLock.ReleaseLock();
             }
         }
 
