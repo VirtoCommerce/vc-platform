@@ -1,17 +1,17 @@
 ﻿'use strict';
 
 angular.module('platformWebApp')
-.directive('smartFloat', ['platformWebApp.numberUtils', function (numberUtils) {
+.directive('smartFloat', ['platformWebApp.numberFormat', function (numberFormat) {
     return {
         restrict: 'A',
         require: 'ngModel',
         link: function (scope, elem, attrs, ctrl) {
             ctrl.$parsers.unshift(function(viewValue) {
-                return numberUtils.validate(viewValue, attrs.numType, attrs.minExclusive, attrs.min, attrs.maxExclusive, attrs.max, attrs.fraction, ctrl.$setValidity);
+                return numberFormat.validate(viewValue, attrs.numType, attrs.minExclusive, attrs.min, attrs.maxExclusive, attrs.max, attrs.fraction, ctrl.$setValidity);
             });
 
             ctrl.$formatters.unshift(function (modelValue) {
-                return numberUtils.format(modelValue, attrs.numType, attrs.minExclusive, attrs.min, attrs.maxExclusive, attrs.max, attrs.fraction);
+                return numberFormat.format(modelValue, attrs.numType, attrs.minExclusive, attrs.min, attrs.maxExclusive, attrs.max, attrs.fraction);
             });
 
             scope.$on('$localeChangeSuccess', function () {

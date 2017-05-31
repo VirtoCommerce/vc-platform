@@ -27,9 +27,9 @@
 
 angular.module('platformWebApp', AppDependencies).
   controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService',
-      'platformWebApp.dateUtils', '$locale', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'amTimeAgoConfig', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings',
+      'platformWebApp.angularToMomentFormatConverter', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'amTimeAgoConfig', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings',
       function ($rootScope, $scope, $window, mainMenuService, pushNotificationService,
-          dateUtils, $locale, $translate, dynamicLocale, moment, momentService, timeAgoConfig, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
+          formatConverter, $translate, dynamicLocale, moment, momentService, timeAgoConfig, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
 
       pushNotificationService.run();
 
@@ -93,7 +93,7 @@ angular.module('platformWebApp', AppDependencies).
 
       $rootScope.$on('$localeChangeSuccess', function () {
           var updateDateFormat = function() {
-              timeAgoConfig.fullDateFormat = dateUtils.convert($locale.DATETIME_FORMATS['short']);
+              timeAgoConfig.fullDateFormat = formatConverter.convert('short');
           }
           if (userProfile.useTimeAgo == undefined) {
               userProfile.load().then(function() {
@@ -253,9 +253,9 @@ angular.module('platformWebApp', AppDependencies).
 
 .run(
   ['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService',
-      'platformWebApp.dateUtils', 'angularMomentConfig', 'amMoment', 'amTimeAgoConfig', '$locale', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout',
+      'platformWebApp.angularToMomentFormatConverter', 'angularMomentConfig', 'amMoment', 'amTimeAgoConfig', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout',
     function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService,
-        dateUtils, momentConfig, momentService, timeAgoConfig, $locale, $animate, $templateCache, gridsterConfig, taOptions, $timeout) {
+        formatConverter, momentConfig, momentService, timeAgoConfig, $animate, $templateCache, gridsterConfig, taOptions, $timeout) {
 
         //Disable animation
         $animate.enabled(false);
@@ -314,7 +314,7 @@ angular.module('platformWebApp', AppDependencies).
         momentService.changeLocale("en");
         momentService.changeTimezone("Etc/UTC");
 
-        timeAgoConfig.fullDateFormat = dateUtils.convert($locale.DATETIME_FORMATS['short']);
+        timeAgoConfig.fullDateFormat = formatConverter.convert('short');
         // 1 millisecond threshold, it's not possible just 'off' time ago
         timeAgoConfig.fullDateThreshold = 1;
         timeAgoConfig.fullDateThresholdUnit = null;

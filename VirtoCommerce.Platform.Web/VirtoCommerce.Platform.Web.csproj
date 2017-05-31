@@ -416,12 +416,6 @@
     <Content Include="Scripts\app\pushNotifications\menu.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\menuHeader.tpl.html" />
     <Content Include="Scripts\app\userProfile\userProfile.js" />
-    <Content Include="Scripts\common\currencyUtils.js" />
-    <Content Include="Scripts\common\dateUtils.js" />
-    <Content Include="Scripts\common\filters\currency.js" />
-    <Content Include="Scripts\common\filters\date.js" />
-    <Content Include="Scripts\common\directives\datepicker.js" />
-    <Content Include="Scripts\common\directives\tagsNumber.js" />
     <Content Include="Scripts\common\directives\tooltip.js" />
     <Content Include="Scripts\common\directives\metaform.js" />
     <Content Include="Scripts\common\directives\metaform.tpl.html" />
@@ -593,7 +587,8 @@
     <Content Include="Scripts\codemirror\overlay.js" />
     <Content Include="Scripts\common\bladeUtils.js" />
     <Content Include="Scripts\common\directives\tooltipOptions.js" />
-    <Content Include="Scripts\common\numberUtils.js" />
+    <Content Include="Scripts\common\formats.js" />
+    <Content Include="Scripts\common\decorators.js" />
     <Content Include="Scripts\common\resources\countries.js" />
     <Content Include="Scripts\common\resources\timeZones.js" />
     <Content Include="Scripts\common\templates\ui-grid\am-time-ago.cell.html" />
