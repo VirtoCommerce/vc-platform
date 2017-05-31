@@ -74,7 +74,7 @@
 				<li class="list-item">
 					<div class="list-t">{{ 'platform.blades.notification-journal-details.labels.sending-attempts-count' | translate }}</div>
 					<div class="list-descr">
-						{{blade.currentEntity.attemptCount}}/{{blade.currentEntity.maxAttemptCount}}
+						{{blade.currentEntity.attemptCount | number:0}}/{{blade.currentEntity.maxAttemptCount | number:0}}
 					</div>
 				</li>
 
