@@ -14,56 +14,56 @@
         getVariables: function(pattern, minExclusive, min, maxExclusive, max, fraction) {
             var result = {};
 
-            result["isNegativeAllowed"] = angular.isDefined(minExclusive) ? minExclusive <= 0 : angular.isDefined(min) ? min < 0 : true;
-            result["isPositiveAllowed"] = angular.isDefined(maxExclusive) ? maxExclusive >= 0 : angular.isDefined(max) ? max > 0 : true;
+            result.isNegativeAllowed = angular.isDefined(minExclusive) ? minExclusive <= 0 : angular.isDefined(min) ? min < 0 : true;
+            result.isPositiveAllowed = angular.isDefined(maxExclusive) ? maxExclusive >= 0 : angular.isDefined(max) ? max > 0 : true;
 
             // Negative (like "-") and positive (like "+") prefixies
-            result["negativePrefix"] = pattern.negPre;
-            result["positivePrefix"] = pattern.posPre;
-            result["isPrefixExists"] = result.negativePrefix == result.positivePrefix == "";
-            result["escapedNegativePrefix"] = this.escape(result.negativePrefix);
-            result["escapedPositivePrefix"] = this.escape(result.positivePrefix);
+            result.negativePrefix = pattern.negPre;
+            result.positivePrefix = pattern.posPre;
+            result.isPrefixExists = result.negativePrefix == result.positivePrefix == "";
+            result.escapedNegativePrefix = this.escape(result.negativePrefix);
+            result.escapedPositivePrefix = this.escape(result.positivePrefix);
 
             // Group separator, i.e. 111,111 or 111 111
-            result["escapedGroupSeparator"] = this.escape($locale.NUMBER_FORMATS.GROUP_SEP);
-            result["groupSize"] = pattern.gSize;
-            result["lastGroupSize"] = pattern.lgSize;
+            result.escapedGroupSeparator = this.escape($locale.NUMBER_FORMATS.GROUP_SEP);
+            result.groupSize = pattern.gSize;
+            result.lastGroupSize = pattern.lgSize;
 
             // Decimal separator, i.e. 111.00 or 111,00
-            result["decimalSeparator"] = $locale.NUMBER_FORMATS.DECIMAL_SEP;
-            result["escapedDecimalSeparator"] = this.escape(result.decimalSeparator);
-            result["minimalFraction"] = fraction || pattern.minFrac;
-            result["maximumFraction"] = fraction || pattern.maxFrac || 21; // ECMA 262
+            result.decimalSeparator = $locale.NUMBER_FORMATS.DECIMAL_SEP;
+            result.escapedDecimalSeparator = this.escape(result.decimalSeparator);
+            result.minimalFraction = fraction || pattern.minFrac;
+            result.maximumFraction = fraction || pattern.maxFrac || 21; // ECMA 262
 
             // Negative (like "-") and positive (like "+") suffixies
-            result["negativeSuffix"] = pattern.negSuf;
-            result["positiveSuffix"] = pattern.posSuf;
-            result["isSuffixExists"] = result.negativeSuffix == result.positiveSuffix == "";
-            result["escapedNegativeSuffix"] = this.escape(result.negativeSuffix);
-            result["escapedPositiveSuffix"] = this.escape(result.positiveSuffix);
+            result.negativeSuffix = pattern.negSuf;
+            result.positiveSuffix = pattern.posSuf;
+            result.isSuffixExists = result.negativeSuffix == result.positiveSuffix == "";
+            result.escapedNegativeSuffix = this.escape(result.negativeSuffix);
+            result.escapedPositiveSuffix = this.escape(result.positiveSuffix);
 
             // Select prefexies, like [-+]
-            result["regexpPrefix"] = (result.isPrefixExists ? "(" + (result.isNegativeAllowed ? result.escapedNegativePrefix : "") + "|" + (result.isPositiveAllowed ? result.escapedPositivePrefix : "") + ")" : "");
+            result.regexpPrefix = (result.isPrefixExists ? "(" + (result.isNegativeAllowed ? result.escapedNegativePrefix : "") + "|" + (result.isPositiveAllowed ? result.escapedPositivePrefix : "") + ")" : "");
 
             // Select value. There is three groups: start (without leading zeroes), middle (size of both defined in groupSize) and end (size defined in lastGroupSize)
             var startGroup = "([1-9][0-9]{0," + (result.groupSize > 0 ? result.groupSize - 1 : 0) + "}" + ")";
             var middleGroup = "(" + result.escapedGroupSeparator + "\\d{" + result.groupSize + "}" + ")";
             var endGroup = "(" + result.escapedGroupSeparator + "\\d{" + result.lastGroupSize + "})";
             // Number may have or start group (sss), start group + last group (sss,lll) or start group, multiple middle groups and end group (sss,mmm,mmm,lll)
-            result["regexpValue"] = "((" + startGroup + ("(" + middleGroup + endGroup + "|" + endGroup + ")?") + "|[1-9][0-9]*)|0)";
+            result.regexpValue = "((" + startGroup + ("(" + middleGroup + endGroup + "|" + endGroup + ")?") + "|[1-9][0-9]*)|0)";
 
             // Select fraction. May not exists and have maximum size defined by maximumFraction.
             // Minimum size ignored - we want to allow use type just 111 instead of 111.000
-            result["regexpFraction"] = "(" + result.escapedDecimalSeparator + "\\d{1," + result.maximumFraction + "}" + ")?";
+            result.regexpFraction = "(" + result.escapedDecimalSeparator + "\\d{1," + result.maximumFraction + "}" + ")?";
 
             // Select suffixies, like [-+]. This required because, for example, in some locales negative numbers may be defined as (111) instead of -111
-            result["regexpSuffix"] = (result.isSuffixExists ? "[" + (result.isNegativeAllowed ? result.escapedNegativeSuffix : "") + (result.isPositiveAllowed ? result.escapedPositiveSuffix : "") + "]?" : "");
+            result.regexpSuffix = (result.isSuffixExists ? "[" + (result.isNegativeAllowed ? result.escapedNegativeSuffix : "") + (result.isPositiveAllowed ? result.escapedPositiveSuffix : "") + "]?" : "");
 
-            result["regexpFloat"] = this.formatRegExp(result.regexpPrefix + result.regexpValue + result.regexpFraction + result.regexpSuffix);
-            result["regexpInteger"] = this.formatRegExp(result.regexpPrefix + result.regexpValue + result.regexpSuffix);
+            result.regexpFloat = this.formatRegExp(result.regexpPrefix + result.regexpValue + result.regexpFraction + result.regexpSuffix);
+            result.regexpInteger = this.formatRegExp(result.regexpPrefix + result.regexpValue + result.regexpSuffix);
 
             // Check is value a negative. Be careful! This regular expression does not check value for validity (see above), only for negativity
-            result["negativeRegExp"] = new RegExp("^(" + result.escapedNegativePrefix + ")[^" + result.escapedNegativePrefix + result.escapedNegativeSuffix + "](" + result.escapedNegativeSuffix + ")$");
+            result.negativeRegExp = new RegExp("^(" + result.escapedNegativePrefix + ")[^" + result.escapedNegativePrefix + result.escapedNegativeSuffix + "](" + result.escapedNegativeSuffix + ")$");
 
             return result;
         },
