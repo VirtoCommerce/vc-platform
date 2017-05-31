@@ -49,7 +49,7 @@
                         _.some(this.validDate, function(format) {
                             return originalFormat.indexOf(format) >= 0;
                         }), _.some(this.validTime, function (format) {
-                            return originalFormat.indexOf() >= 0;
+                            return originalFormat.indexOf(format) >= 0;
                         })
                     ]);
                     return result;
