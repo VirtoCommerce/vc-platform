@@ -12,7 +12,13 @@
 
         _.each(rawProperties, function (x) {
             x.values.sort(function (a, b) {
-                return a.value && b.value ? (a.value.name ? a.value.name.localeCompare(b.value.name) : a.value.localeCompare(b.value)) : -1;
+                return a.value && b.value
+                    ? (a.value.name
+                        ? a.value.name.localeCompare(b.value.name)
+                        : angular.isString(a.value) && angular.isString(b.value)
+                            ? a.value.localeCompare(b.value)
+                            : a.value < b.value ? -1 : a.value > b.value ? 1 : 0)
+                    : -1;
             });
         });
 
