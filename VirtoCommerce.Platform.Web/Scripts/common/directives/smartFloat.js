@@ -1,5 +1,6 @@
 ﻿'use strict';
 
+// Custom directive to support localized integer and float number parsing & validation
 angular.module('platformWebApp')
 .directive('smartFloat', ['platformWebApp.numberFormat', function (numberFormat) {
     return {

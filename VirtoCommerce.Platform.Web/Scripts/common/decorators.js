@@ -112,6 +112,7 @@
         };
         return $delegate;
     }]);
+    // Fix support of first day week for datepicker
     $provide.decorator('datepickerDirective', ['$delegate', '$locale', function ($delegate, $locale) {
         var directive = $delegate[0];
         directive.compile = function () {
@@ -126,12 +127,14 @@
         };
         return $delegate;
     }]);
+    // Fix bugs & add features for datepicker popup
     $provide.decorator('datepickerPopupDirective', ['$delegate', 'datepickerPopupConfig', '$filter', 'platformWebApp.angularToMomentFormatConverter', '$locale',
     function ($delegate, datepickerPopupConfig, $filter, formatConverter, $locale) {
         var directive = $delegate[0];
         directive.compile = function (tElem, tAttrs) {
             tElem.attr("datepicker-popup-original", tAttrs.datepickerPopup);
             return function (scope, element, attrs, ngModelCtrl) {
+                // Automatic localization support for buttons in popup
                 attrs.currentText = attrs.currentText || $filter('translate')('platform.commands.today');
                 attrs.clearText = attrs.clearText || $filter('translate')('platform.commands.clear');
                 attrs.closeText = attrs.closeText || $filter('translate')('platform.commands.close');

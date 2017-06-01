@@ -74,7 +74,7 @@
                     }
 
                     gridApi.grid.registerDataChangeCallback(processMissingColumns, [uiGridConstants.dataChange.ROW]);
-                    gridApi.grid.registerDataChangeCallback(setDefaultColumnTemplates, [uiGridConstants.dataChange.ROW]);
+                    gridApi.grid.registerDataChangeCallback(autoFormatColumns, [uiGridConstants.dataChange.ROW]);
 
                     if (customOnRegisterApiCallback) {
                         customOnRegisterApiCallback(gridApi);
@@ -122,7 +122,10 @@
             }
         }
 
-        function setDefaultColumnTemplates(grid) {
+        // Configure automatic formatting of columns/
+        // Column with type number will use numberFilter to correct display of values
+        // Column with type date will use predefined template with am-time-ago directive to display date in human-readable format
+        function autoFormatColumns(grid) {
             var gridOptions = grid.options;
             grid.buildColumns();
             var columnDefs = angular.copy(gridOptions.columnDefs);

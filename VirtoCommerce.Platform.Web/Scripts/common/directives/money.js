@@ -1,5 +1,6 @@
 'use strict';
 
+// Custom directive to support localized currency float number parsing & validation
 angular.module('platformWebApp')
 .directive('money', ['platformWebApp.currencyFormat', function (currencyFormat) {
     return {

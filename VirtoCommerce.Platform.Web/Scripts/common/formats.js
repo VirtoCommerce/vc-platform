@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp')
 // Service provide functions for currency convertion and validation with localization support
 .factory('platformWebApp.currencyFormat', ['platformWebApp.numberFormat', '$filter', '$locale', function (numberFormat, $filter, $locale) {
+    // Remove currency symbol from validation regular expression: we want only value in input
     var getPattern = function () {
         var pattern = $locale.NUMBER_FORMATS.PATTERNS[1];
         angular.forEach(pattern, function (patternPart, patternPartKey) {
@@ -12,7 +13,6 @@
         return pattern;
     };
 
-    // Service provide variables and functions for number (float & integer) convertion and validation
     var result = {
         validate: function (viewValue, minExclusive, min, maxExclusive, max, fraction, setValidity) {
             var negativeMatches;
@@ -113,6 +113,7 @@
 
             return result;
         },
+        // Check if number in specified range
         inRange: function (value, minExclusive, min, maxExclusive, max, setValidity) {
             var notLessThanMin = true;
             var notGreaterThanMax = true;
