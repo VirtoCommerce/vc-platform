@@ -597,12 +597,19 @@
         "title": "User profile",
         "labels": {
           "language": "Language",
-          "regional-format": "Regional format",
+          "language-description": "Display language",
           "timezone": "Time zone",
+          "timezone-description":  "Current user time zone in IANA (tz database) format. Select the nearest city in your time zone.",
+          "regional-format": "Regional format",
+          "regional-format-description": "Regional format of numbers, currency, date and time",
           "use-time-ago": "Use time ago format when possible",
           "full-date-threshold-group": "Use full date format for dates earlier than...",
-          "full-date-threshold": "Value",
-          "full-date-threshold-unit":  "Unit" 
+          "full-date-threshold-description": "Numeric value of time units",
+          "full-date-threshold-unit-description": "Time unit (i.e. hours or years)"
+        },
+        "placeholders": {
+          "full-date-threshold": "Enter threshold value",
+          "full-date-threshold-unit": "Select threshold unit"
         }
       }
     },

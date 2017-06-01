@@ -51,7 +51,6 @@
                                datepicker-popup
                                min-date="today"
                                name="$index"
-                               datepicker-options="dateOptions"
                                placeholder="Enter {{ data.type }}"
                                ng-if="data.type === 'DateTime'"
                                is-open="datepickers[$index]"
@@ -91,7 +90,6 @@
                                datepicker-popup
                                min-date="today"
                                name="{{ data.parameterName }}"
-                               datepicker-options="dateOptions"
                                placeholder="Enter {{data.parameterName}}"
                                ng-if="data.type === 'DateTime'"
                                is-open="datepickers[data.parameterName]"
