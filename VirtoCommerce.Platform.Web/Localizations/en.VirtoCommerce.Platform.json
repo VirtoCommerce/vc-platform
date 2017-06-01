@@ -598,8 +598,9 @@
         "labels": {
           "language": "Language",
           "language-description": "Display language",
+          "use-browser-timezone": "Use browser time zone",
           "timezone": "Time zone",
-          "timezone-description":  "Current user time zone in IANA (tz database) format. Select the nearest city in your time zone.",
+          "timezone-description": "Current user time zone in IANA (tz database) format. Select the nearest city in your time zone.",
           "regional-format": "Regional format",
           "regional-format-description": "Regional format of numbers, currency, date and time",
           "use-time-ago": "Use time ago format when possible",

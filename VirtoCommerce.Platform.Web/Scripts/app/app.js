@@ -77,7 +77,7 @@ angular.module('platformWebApp', AppDependencies).
                   $translate.use(userProfile.language);
                   dynamicLocale.set(userProfile.regionalFormat.replace(/_/g, '-').toLowerCase());
                   momentService.changeLocale(userProfile.regionalFormat);
-                  momentService.changeTimezone(userProfile.timeZone || moment.tz.guess());
+                  momentService.changeTimezone(userProfile.timeZone);
                   timeAgoConfig.fullDateThreshold = userProfile.useTimeAgo ? userProfile.fullDateThreshold : 1;
                   timeAgoConfig.fullDateThresholdUnit = userProfile.fullDateThresholdUnit && userProfile.fullDateThresholdUnit != 'Never'
                       ? userProfile.fullDateThresholdUnit.toLowerCase()

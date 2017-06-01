@@ -10,6 +10,7 @@
 
     blade.currentLanguage = languages.normalize($translate.use());
     blade.currentRegionalFormat = locales.normalize(dynamicLocale.get());
+    blade.useBrowserTimeZone = userProfile.useBrowserTimeZone;
     blade.currentTimeZone = timeZones.normalize(momentConfig.timezone);
     blade.useTimeAgo = userProfile.useTimeAgo;
     blade.currentFullDateThreshold = userProfile.fullDateThresholdUnit ? userProfile.fullDateThreshold : undefined;
@@ -61,8 +62,12 @@
         $scope.setUseTimeAgo();
     }
 
-    $scope.setTimeZone = function() {
+    $scope.setTimeZone = function () {
+        if (blade.useBrowserTimeZone) {
+            blade.currentTimeZone = moment.tz.guess();
+        }
         momentService.changeTimezone(blade.currentTimeZone);
+        userProfile.useBrowserTimeZone = blade.useBrowserTimeZone;
         userProfile.timeZone = blade.currentTimeZone;
         userProfile.save();
     }
@@ -75,7 +80,7 @@
 
     var setFullDateThresholdUnit = function (value) {
         blade.currentFullDateThresholdUnit = value;
-        timeAgoConfig.fullDateThresholdUnit = value && value != 'Never' ? value.toLowerCase() : null;
+        timeAgoConfig.fullDateThresholdUnit = value && value !== 'Never' ? value.toLowerCase() : null;
         userProfile.fullDateThresholdUnit = value;
         userProfile.save();
     }
@@ -99,7 +104,7 @@
     }
 
     $scope.setFullDateThresholdUnit = function () {
-        if (blade.currentFullDateThresholdUnit == 'Never') {
+        if (blade.currentFullDateThresholdUnit === 'Never') {
             setFullDateThreshold(null);
         }
         setFullDateThresholdUnit(blade.currentFullDateThresholdUnit);

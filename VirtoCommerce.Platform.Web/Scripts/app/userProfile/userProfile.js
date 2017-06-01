@@ -15,12 +15,13 @@
             }]
         });
 }])
-.factory('platformWebApp.userProfile', ['platformWebApp.userProfileApi', 'platformWebApp.settings.helper', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', function (userProfileApi, settingsHelper, languages, locales, timeZones) {
+.factory('platformWebApp.userProfile', ['platformWebApp.userProfileApi', 'platformWebApp.settings.helper', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'moment', 'platformWebApp.common.timeZones', function (userProfileApi, settingsHelper, languages, locales, moment, timeZones) {
     var onChangeCallbacks = [];
 
     var result = {
         language: undefined,
         regionalFormat: undefined,
+        useBrowserTimeZone: undefined,
         timeZone: undefined,
         useTimeAgo: undefined,
         fullDateThreshold: undefined,
@@ -34,7 +35,11 @@
                 profile.regionalFormat = locales.normalize(settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.RegionalFormat").value);
                 profile.timeZone = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.TimeZone").value;
                 if (profile.timeZone) {
+                    profile.useBrowserTimeZone = false;
                     profile.timeZone = timeZones.normalize(profile.timeZone);
+                } else {
+                    profile.useBrowserTimeZone = true;
+                    profile.timeZone = moment.tz.guess();
                 }
                 profile.useTimeAgo = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.UseTimeAgo").value;
                 profile.fullDateThreshold = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.FullDateThreshold").value;
@@ -54,7 +59,7 @@
             mainMenuStateSetting.value = angular.toJson(this.mainMenuState);
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.Language").value = result.language;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.RegionalFormat").value = result.regionalFormat;
-            settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.TimeZone").value = result.timeZone;
+            settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.TimeZone").value = !result.useBrowserTimeZone ? result.timeZone : null;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.UseTimeAgo").value = result.useTimeAgo;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FullDateThreshold").value = result.fullDateThreshold;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FullDateThresholdUnit").value = result.fullDateThresholdUnit;
