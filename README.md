@@ -1,3 +1,4 @@
+<img alt="Virto Commerce" src="https://virtocommerce.com/assets/images/home/hero.gif"/>
 Virto Commerce 2.x
 ============
 
@@ -8,13 +9,23 @@ Virto Commerce 2.x
 
 Virto Commerce is the second generation release and is the only enterprise level e-commerce product fully available under <a href="https://virtocommerce.com/open-source-license" target="_blank">Virto Commerce Open Source License</a>. Virto Commerce is based on .NET 4.5 with extensive use of MVC, IoC, EF, Azure, Angular JS and many other cutting edge technologies. It can be deployed in Microsoft Cloud (Azure), Amazon Web Services (AWS) and on-premise. Mobile App Starter built using Ionic Framework is also available.
 
-Documentation: https://virtocommerce.com/docs
+Documentation
+-----------
+https://virtocommerce.com/docs
+
+Architecture
+-----------
+<img alt="Virto Commerce architecture" width="300" height="300" src="https://virtocommerce.com/assets/images/features/architecture-circle.png">
 
 Want to chat with other members of the Virto Commerce community?
 
 [![Join the chat at https://gitter.im/VirtoCommerce/vc-community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/VirtoCommerce/vc-community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-DEMO
+Video Manuals
+-----------
+https://www.youtube.com/channel/UC4Mu_zoDThg2jvexT0py12w/videos
+
+Online Demo
 -----------
 http://virtocommerce.com/try-now/online-demo
 
