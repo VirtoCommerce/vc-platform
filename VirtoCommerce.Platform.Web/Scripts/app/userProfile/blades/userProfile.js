@@ -1,5 +1,7 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.userProfile.userProfileController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'amTimeAgoConfig', 'angularMomentConfig', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', function ($scope, bladeNavigationService, settings, settingsHelper, $translate, dynamicLocale, moment, momentService, timeAgoConfig, momentConfig, userProfile, languages, locales, timeZones, userProfileApi) {
+.controller('platformWebApp.userProfile.userProfileController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper',
+    'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi',
+    function ($rootScope, $scope, bladeNavigationService, settings, settingsHelper, i18n, userProfile, languages, locales, timeZones, userProfileApi) {
     var blade = $scope.blade;
     blade.headIcon = 'fa-user';
     blade.title = 'platform.blades.user-profile.title';
@@ -8,16 +10,13 @@
          initializeBlade();
     });
 
-    blade.currentLanguage = languages.normalize($translate.use());
-    blade.currentRegionalFormat = locales.normalize(dynamicLocale.get());
-    blade.useBrowserTimeZone = userProfile.useBrowserTimeZone;
-    blade.currentTimeZone = timeZones.normalize(momentConfig.timezone);
-    blade.useTimeAgo = userProfile.useTimeAgo;
-    blade.currentFullDateThreshold = userProfile.fullDateThresholdUnit ? userProfile.fullDateThreshold : undefined;
-    blade.currentFullDateThresholdUnit = userProfile.fullDateThresholdUnit;
-    $scope.fullDateThresholdUnits = userProfile.fullDateThresholdUnits;
+    blade.currentLanguage = i18n.getLanguage();
+    blade.currentRegionalFormat = i18n.getRegionalFormat();
+    blade.currentTimeZone = i18n.getTimeZone();
+    blade.timeAgoSettings = i18n.getTimeAgoSettings();
 
     function initializeBlade() {
+        // Display languages and locales in native name format (i.e. English, but русский (Russian))
         function toNativeName(list, provider) {
             return _.map(list, function (x) {
                 x = provider.normalize(x);
@@ -42,72 +41,53 @@
                 blade.isLoading = isLoading();
             });
         $scope.timeZones = timeZones.query();
+        blade.fullDateThresholdUnits = userProfile.timeAgoSettings.thresholdUnits;
     };
 
     function isLoading() {
-        return angular.isUndefined($scope.languages) || angular.isUndefined($scope.regionalFormats);
+        return angular.isUndefined($scope.languages) || angular.isUndefined($scope.regionalFormats) || angular.isUndefined(blade.currentTimeZone) || angular.isUndefined(blade.timeAgoSettings);
     }
 
+    // Localization and regional formats updated asynchronously
+    $rootScope.$on('$translateChangeSuccess', function() {
+        blade.currentLanguage = i18n.getLanguage();
+    });
+    $scope.$on('$localeChangeSuccess', function() {
+        blade.currentRegionalFormat = i18n.getRegionalFormat();
+    });
+
+    // Update blade fields after user profile fields, because we want to keep undefined on user profile, but always show value on blade
+
     $scope.setLanguage = function () {
-        $translate.use(blade.currentLanguage);
+        i18n.changeLanguage(blade.currentLanguage);
         userProfile.language = blade.currentLanguage;
+        // Fallback for situation when user alreasy use fallback language but want to reset it
+        blade.currentLanguage = i18n.getLanguage();
         userProfile.save();
     };
 
-    $scope.setRegionalFormat = function() {
-        dynamicLocale.set(blade.currentRegionalFormat.replace(/_/g, "-").toLowerCase());
-        momentService.changeLocale(blade.currentRegionalFormat);
+    $scope.setRegionalFormat = function () {
+        i18n.changeRegionalFormat(blade.currentRegionalFormat);
         userProfile.regionalFormat = blade.currentRegionalFormat;
+        // Fallback for situation when user alreasy use fallback language but want to reset it
+        blade.currentRegionalFormat = i18n.getRegionalFormat();
         userProfile.save();
-        $scope.setUseTimeAgo();
     }
 
     $scope.setTimeZone = function () {
-        if (blade.useBrowserTimeZone) {
-            blade.currentTimeZone = moment.tz.guess();
-        }
-        momentService.changeTimezone(blade.currentTimeZone);
-        userProfile.useBrowserTimeZone = blade.useBrowserTimeZone;
+        i18n.changeTimeZone(blade.currentTimeZone);
         userProfile.timeZone = blade.currentTimeZone;
+        // Because time zone change operation is synchronous, we just get value and set it to field
+        blade.currentTimeZone = i18n.getTimeZone();
         userProfile.save();
     }
 
-    var setFullDateThreshold = function (value) {
-        blade.currentFullDateThreshold = blade.currentFullDateThresholdUnit ? value : undefined;
-        timeAgoConfig.fullDateThreshold = value;
-        userProfile.fullDateThreshold = value;
-    }
-
-    var setFullDateThresholdUnit = function (value) {
-        blade.currentFullDateThresholdUnit = value;
-        timeAgoConfig.fullDateThresholdUnit = value && value !== 'Never' ? value.toLowerCase() : null;
-        userProfile.fullDateThresholdUnit = value;
-        userProfile.save();
-    }
-
-    $scope.setUseTimeAgo = function () {
-        if (!blade.useTimeAgo) {
-            // 1 millisecond threshold, it's not possible just 'off' time ago
-            setFullDateThresholdUnit(null);
-            setFullDateThreshold(1);
-        } else {
-            setFullDateThresholdUnit('Never');
-            setFullDateThreshold(null);
-        }
-        userProfile.useTimeAgo = blade.useTimeAgo;
-        userProfile.save();
-    }
-
-    $scope.setFullDateThreshold = function () {
-        setFullDateThreshold(blade.currentFullDateThreshold);
-        userProfile.save();
-    }
-
-    $scope.setFullDateThresholdUnit = function () {
-        if (blade.currentFullDateThresholdUnit === 'Never') {
-            setFullDateThreshold(null);
-        }
-        setFullDateThresholdUnit(blade.currentFullDateThresholdUnit);
+    $scope.setTimeAgoSettings = function () {
+        i18n.changeTimeAgoSettings(blade.timeAgoSettings);
+        // Because time ago setting change operation is synchronous, we just get value and set it to field
+        // Update blade field before user profile, because we want to use fixed by i18n service value and it's impossible to set undefined values for time ago settings in blade UI
+        blade.timeAgoSettings = i18n.getTimeAgoSettings();
+        userProfile.timeAgoSettings = blade.timeAgoSettings;
         userProfile.save();
     }
 }]);

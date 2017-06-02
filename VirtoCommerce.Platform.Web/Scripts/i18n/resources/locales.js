@@ -6,16 +6,23 @@ angular.module('platformWebApp')
         get: function (id) {
             return _.findWhere(this.query(), { id: this.normalize(id) });
         },
+        contains: function (id) {
+            return _.map(this.query(), function (entry) { return entry.id }).includes(this.normalize(id));
+        },
         normalize: function(id) {
-            var parts = id.split(/[-_]/g);
-            parts[0] = parts[0].toLowerCase();
-            if (parts.length > 1) {
-                parts[1] = parts[1].length === 2 ? parts[1].toUpperCase() : parts[1].charAt(0).toUpperCase() + parts[1].substr(1).toLowerCase();
+            var result = undefined;
+            if (!!id) {
+                var parts = id.split(/[-_]/g);
+                parts[0] = parts[0].toLowerCase();
+                if (parts.length > 1) {
+                    parts[1] = parts[1].length === 2 ? parts[1].toUpperCase() : parts[1].capitalize();
+                }
+                if (parts.length > 2) {
+                    parts[2] = parts[2].toUpperCase();
+                }
+                result = parts.join('_');
             }
-            if (parts.length > 2) {
-                parts[2] = parts[2].toUpperCase();
-            }
-            return parts.join('_');
+            return result;
         },
         query: function () {
             return [

@@ -43,7 +43,9 @@ namespace VirtoCommerce.Platform.Web
                     .IncludeAndFixRoot("~/Scripts/allPackages.js")
                     .IncludeDirectoryAndFixRoot("~/Scripts/codemirror/", "*.js", true)
                     .IncludeDirectoryAndFixRoot("~/Scripts/app/", "*.js", true)
-                    .IncludeDirectoryAndFixRoot("~/Scripts/common/", "*.js", true));
+                    .IncludeDirectoryAndFixRoot("~/Scripts/common/", "*.js", true)
+                    .IncludeDirectoryAndFixRoot("~/Scripts/i18n/", "*.js", true));
+            bundles.IgnoreList.Ignore("angular-locale_*");
 
             #endregion
 

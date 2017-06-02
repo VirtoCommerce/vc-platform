@@ -113,7 +113,7 @@ gulp.task('angularI18nPackage', function () {
             return result;
         }))
         .pipe(uglify())
-        .pipe(gulp.dest('Scripts/i18n'));
+        .pipe(gulp.dest('Scripts/i18n/angular'));
 });
 
 // font-awesome package

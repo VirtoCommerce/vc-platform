@@ -3,8 +3,9 @@
     // Provide default format
     $provide.decorator('currencyFilter', ['$delegate', function ($delegate) {
         var filter = function (currency, symbol, fractionSize) {
-            var result = $delegate.apply(this, [currency, "¤", fractionSize]).replace(/\s*¤\s*/g, "");
-            if (symbol) {
+            currency = $delegate.apply(this, [currency, "¤", fractionSize]);
+            var result = currency ? currency.replace(/\s*¤\s*/g, "") : currency;
+            if (result && symbol) {
                 result += "\u00a0" + symbol;
             }
             return result;
@@ -128,8 +129,8 @@
         return $delegate;
     }]);
     // Fix bugs & add features for datepicker popup
-    $provide.decorator('datepickerPopupDirective', ['$delegate', 'datepickerPopupConfig', '$filter', 'platformWebApp.angularToMomentFormatConverter', '$locale',
-    function ($delegate, datepickerPopupConfig, $filter, formatConverter, $locale) {
+    $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'datepickerPopupConfig', '$filter', '$locale',
+    function ($delegate, formatConverter, datepickerPopupConfig, $filter, $locale) {
         var directive = $delegate[0];
         directive.compile = function (tElem, tAttrs) {
             tElem.attr("datepicker-popup-original", tAttrs.datepickerPopup);

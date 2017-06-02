@@ -6,8 +6,15 @@ angular.module('platformWebApp')
         get: function (id) {
             return _.findWhere(this.query(), { id: this.normalize(id) });
         },
+        contains: function (id) {
+            return _.map(this.query(), function (entry) { return entry.id }).includes(this.normalize(id));
+        },
         normalize: function(id) {
-            return id.toLowerCase();
+            var result = undefined;
+            if (!!id) {
+                result = id.toLowerCase();
+            }
+            return result;
         },
         query: function () {
             return [
