@@ -433,8 +433,7 @@
           "is-administrator": "Ist Administrator",
           "account-type": "Kontentyp",
           "login": "Einloggen",
-          "account-state": "Konto Zustand",
-          "container-id": "Container (Shop) ID"
+          "account-state": "Konto Zustand"
         },
         "placeholders": {
           "account-type": "Wählen Sie aus..."

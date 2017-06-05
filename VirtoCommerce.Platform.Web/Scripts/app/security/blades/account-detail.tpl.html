@@ -2,45 +2,37 @@
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <div class="t __divider">{{ 'platform.blades.account-detail.labels.user-information' | translate }}</div>
-            <div class="form-group">
-                <label class="form-label">{{ 'platform.blades.account-detail.labels.is-administrator' | translate }}</label>
-                <div class="form-input">
-                    <label class="form-label __switch">
-                        <input type="checkbox" ng-model="blade.currentEntity.isAdministrator" />
-                        <span class="switch"></span>
-                    </label>
-                </div>
-            </div>
-            <ul class="list __info">
-                <li class="list-item">
-                    <div class="list-t">{{ 'platform.blades.account-detail.labels.account-type' | translate }}
-                        <a href="" ng-click="openAccountTypeSettingManagement()" class="form-edit">
-                            <i class="form-ico fa fa-pencil"></i>
-                        </a>
-                    </div>
-                    <div class="form-input">
-                        <ui-select ng-model="blade.currentEntity.userType">
-                            <ui-select-match placeholder="{{ 'platform.blades.account-detail.placeholders.account-type' | translate }}">{{$select.selected}}</ui-select-match>
-                            <ui-select-choices repeat="x as x in accountTypes | filter: $select.search ">
-                                <span ng-bind-html="x | highlight: $select.search"></span>
-                            </ui-select-choices>
-                        </ui-select>
-                    </div>
-                </li>
-                <li class="list-item">
-                    <div class="list-t">{{ 'platform.blades.account-detail.labels.login' | translate }}</div>
-                    <div class="list-descr">{{blade.currentEntity.userName}}</div>
-                </li>
-                <li class="list-item">
-                    <div class="list-t">{{ 'platform.blades.account-detail.labels.account-state' | translate }}</div>
-                    <div class="list-descr">{{blade.currentEntity.userState}}</div>
-                </li>
-                <li class="list-item">
-                    <div class="list-t">{{ 'platform.blades.account-detail.labels.container-id' | translate }}</div>
-                    <div class="list-descr">{{blade.currentEntity.storeId?blade.currentEntity.storeId:'N/A'}}</div>
-                </li>
-            </ul>
+            <va-metaform registered-inputs="blade.metaFields" blade="blade" column-count="1" ng-init="setForm(formScope)"></va-metaform>
             <va-widget-container group="accountDetail" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="accountTypeSelector.html">
+    <div class="form-label">
+        {{ 'platform.blades.account-detail.labels.account-type' | translate }}
+        <a href="" ng-click="openAccountTypeSettingManagement()" class="form-edit">
+            <i class="form-ico fa fa-pencil"></i>
+        </a>
+    </div>
+    <div class="form-input">
+        <ui-select ng-model="blade.currentEntity.userType">
+            <ui-select-match placeholder="{{ 'platform.blades.account-detail.placeholders.account-type' | translate }}">{{$select.selected}}</ui-select-match>
+            <ui-select-choices repeat="x as x in accountTypes | filter: $select.search ">
+                <span ng-bind-html="x | highlight: $select.search"></span>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+</script>
+<script type="text/ng-template" id="accountInfo.html">
+    <ul class="list __info">
+        <li class="list-item">
+            <div class="list-t">{{ 'platform.blades.account-detail.labels.login' | translate }}</div>
+            <div class="list-descr">{{blade.currentEntity.userName}}</div>
+        </li>
+        <li class="list-item">
+            <div class="list-t">{{ 'platform.blades.account-detail.labels.account-state' | translate }}</div>
+            <div class="list-descr">{{blade.currentEntity.userState}}</div>
+        </li>
+    </ul>
+</script>
