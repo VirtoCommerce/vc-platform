@@ -1,4 +1,27 @@
 ﻿angular.module('platformWebApp')
+.factory('platformWebApp.metaFormsService', [function () {
+    var metaFormCallbacks = { };
+    var metaFields = { };
+
+    return {
+        registerMetaFields: function (name, fields) {
+            var oldMetaFields = metaFields[name];
+            metaFields[name] = (metaFields[name] || []).concat(fields);
+            var newMetaFileds = metaFields[name];
+            if (metaFormCallbacks[name]) {
+                metaFormCallbacks[name].forEach(function(callback) {
+                    callback(newMetaFileds, oldMetaFields);
+                });
+            }
+        },
+        getMetaFields: function(name) {
+            return metaFields[name];
+        },
+        onMetaFieldsUpdate(name, callback) {
+            (metaFormCallbacks[name] = metaFormCallbacks[name] || []).push(callback);
+        }
+    };
+}])
 .directive('vaMetaform', [function () {
     return {
         restrict: 'E',
@@ -38,14 +61,4 @@
             scope.bladeInputGroups = resultingGroups;
         }
     }
-}])
-//.component('vaMetaform', {
-//    templateUrl: '$(Platform)/Scripts/common/directives/metaform.tpl.html',
-//    bindings: {
-//        blade: '=',
-//        registeredInputs: '=',
-//        columnCount: '@?'
-//    },
-//    controller: function () { }
-//})
-;
+}]);

@@ -1,5 +1,6 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings', function ($scope, bladeNavigationService, accounts, roles, dialogService, settings) {
+.controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings',
+    function ($scope, bladeNavigationService, metaFormsService, accounts, roles, dialogService, settings) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:security:update';
     blade.promise = roles.search({ takeCount: 10000 }).$promise;
@@ -22,6 +23,12 @@
         $scope.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
         userStateCommand.updateName();
     };
+
+    var metaFormName = "accountDetails";
+    blade.metaFields = metaFormsService.getMetaFields(metaFormName);
+    metaFormsService.onMetaFieldsUpdate(metaFormName, function(metaFields) {
+        blade.metaFields = metaFields;
+    });
 
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
