@@ -68,8 +68,7 @@
                         gridApi.core.on.columnVisibilityChanged($scope, saveState);
                         gridApi.core.on.sortChanged($scope, saveState);
                         function saveState() {
-                            var t = gridApi.saveState.save();
-                            $localStorage['gridState:' + blade.template] = t;
+                            $localStorage['gridState:' + blade.template] = gridApi.saveState.save();
                         }
                     }
 
@@ -244,6 +243,6 @@
     };
 }])
 .run(['$templateRequest', function ($templateRequest) {
-    // Pre-load default templates
+    // Pre-load default templates, because we inject templates to grid options dynamically, so they not loaded by default
     $templateRequest('$(Platform)/Scripts/common/templates/ui-grid/am-time-ago.cell.html');
 }]);

@@ -25,13 +25,15 @@ angular.module('platformWebApp')
             }
             return result;
         },
-        query: function() {
-            return _.map(moment.tz.names(), function(x) {
+        query: function () {
+            // Get time zone from moment list of time zones, append UTC offset to name (UTC ±XX:XX Continent/City) and sort by UTC offset
+            return _.sortBy(_.map(moment.tz.names(), function(x) {
                 return {
                     id: x,
-                    name: x
+                    utcOffset: parseInt(moment.tz(x).format('ZZ')),
+                    name: '(UTC ' + moment.tz(x).format('Z') + ') ' + x
                 };
-            });
+            }), 'utcOffset');
         }
     };
 }]);
