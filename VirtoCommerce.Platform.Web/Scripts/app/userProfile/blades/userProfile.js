@@ -6,14 +6,14 @@
     blade.headIcon = 'fa-user';
     blade.title = 'platform.blades.user-profile.title';
 
-     userProfile.load().then(function () {     
-         initializeBlade();
-    });
-
     blade.currentLanguage = i18n.getLanguage();
     blade.currentRegionalFormat = i18n.getRegionalFormat();
     blade.currentTimeZone = i18n.getTimeZone();
     blade.timeAgoSettings = i18n.getTimeAgoSettings();
+
+    userProfile.load().then(function () {     
+         initializeBlade();
+    });
 
     function initializeBlade() {
         // Display languages and locales in native name format (i.e. English, but русский (Russian))
@@ -45,7 +45,7 @@
     };
 
     function isLoading() {
-        return angular.isUndefined($scope.languages) || angular.isUndefined($scope.regionalFormats) || angular.isUndefined(blade.currentTimeZone) || angular.isUndefined(blade.timeAgoSettings);
+        return angular.isUndefined($scope.languages) || angular.isUndefined($scope.regionalFormats);
     }
 
     // Localization and regional formats updated asynchronously
@@ -59,35 +59,43 @@
     // Update blade fields after user profile fields, because we want to keep undefined on user profile, but always show value on blade
 
     $scope.setLanguage = function () {
-        i18n.changeLanguage(blade.currentLanguage);
-        userProfile.language = blade.currentLanguage;
-        // Fallback for situation when user alreasy use fallback language but want to reset it
-        blade.currentLanguage = i18n.getLanguage();
-        userProfile.save();
+        if (!isLoading()) {
+            i18n.changeLanguage(blade.currentLanguage);
+            userProfile.language = blade.currentLanguage;
+            // Fallback for situation when user alreasy use fallback language but want to reset it
+            blade.currentLanguage = i18n.getLanguage();
+            userProfile.save();
+        }
     };
 
     $scope.setRegionalFormat = function () {
-        i18n.changeRegionalFormat(blade.currentRegionalFormat);
-        userProfile.regionalFormat = blade.currentRegionalFormat;
-        // Fallback for situation when user alreasy use fallback language but want to reset it
-        blade.currentRegionalFormat = i18n.getRegionalFormat();
-        userProfile.save();
+        if (!isLoading()) {
+            i18n.changeRegionalFormat(blade.currentRegionalFormat);
+            userProfile.regionalFormat = blade.currentRegionalFormat;
+            // Fallback for situation when user alreasy use fallback language but want to reset it
+            blade.currentRegionalFormat = i18n.getRegionalFormat();
+            userProfile.save();
+        }
     }
 
     $scope.setTimeZone = function () {
-        i18n.changeTimeZone(blade.currentTimeZone);
-        userProfile.timeZone = blade.currentTimeZone;
-        // Because time zone change operation is synchronous, we just get value and set it to field
-        blade.currentTimeZone = i18n.getTimeZone();
-        userProfile.save();
+        if (!isLoading()) {
+            i18n.changeTimeZone(blade.currentTimeZone);
+            userProfile.timeZone = blade.currentTimeZone;
+            // Because time zone change operation is synchronous, we just get value and set it to field
+            blade.currentTimeZone = i18n.getTimeZone();
+            userProfile.save();
+        }
     }
 
     $scope.setTimeAgoSettings = function () {
-        i18n.changeTimeAgoSettings(blade.timeAgoSettings);
-        // Because time ago setting change operation is synchronous, we just get value and set it to field
-        // Update blade field before user profile, because we want to use fixed by i18n service value and it's impossible to set undefined values for time ago settings in blade UI
-        blade.timeAgoSettings = i18n.getTimeAgoSettings();
-        userProfile.timeAgoSettings = blade.timeAgoSettings;
-        userProfile.save();
+        if (!isLoading()) {
+            i18n.changeTimeAgoSettings(blade.timeAgoSettings);
+            // Because time ago setting change operation is synchronous, we just get value and set it to field
+            // Update blade field before user profile, because we want to use fixed by i18n service value and it's impossible to set undefined values for time ago settings in blade UI
+            blade.timeAgoSettings = i18n.getTimeAgoSettings();
+            userProfile.timeAgoSettings = blade.timeAgoSettings;
+            userProfile.save();
+        }
     }
 }]);
