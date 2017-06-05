@@ -1,7 +1,7 @@
 {
   "platform": {
     "commands": {
-	"add": "Hinzufügen",
+      "add": "Hinzufügen",
       "activate": "Aktivieren",
       "assign": "Zuweisen",
       "cancel": "Abbrechen",
@@ -55,7 +55,8 @@
       "set-active": "Aktiv setzen",
       "reject-user": "Benutzer ablehnen",
       "approve-user": "Benutzer genehmigen",
-      "change-password": "Passwort ändern"
+      "change-password": "Passwort ändern",
+      "today": "Heute"
     },
     "list": {
       "no-data": "Keine Daten",

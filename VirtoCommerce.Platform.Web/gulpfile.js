@@ -4,6 +4,9 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 */
 
 var gulp = require("gulp"),
+    gulpUtil = require("gulp-util"),
+    filter = require('gulp-filter'),
+    fs = require('fs'),
     mainBowerFiles = require('main-bower-files'),
     concat = require("gulp-concat"),
     uglify = require("gulp-uglify"),
@@ -12,14 +15,26 @@ var gulp = require("gulp"),
     sourcemaps = require('gulp-sourcemaps');
 
 // minify all js files from bower packages to single file
-gulp.task('packJavaScript', function () {
+gulp.task('packJavaScript', function() {
     return gulp.src(mainBowerFiles({
         // Only the JavaScript files
-        filter: /.*\.js$/i
+        filter: /.*\.js$/i,
+        // Exclude angular-i18n packages files and include moment.js i18n files
+        overrides: {
+            "angular-i18n": {
+                "main": ""
+            },
+            "moment": {
+                "main": ["moment.js", "locale/*.js"]
+            },
+            "moment-timezone": {
+                "main": ["builds/moment-timezone-with-data.js", "moment-timezone-utils.js"]
+            }
+        }
     }))
-      .pipe(concat('allPackages.js'))
-      .pipe(uglify())
-      .pipe(gulp.dest('Scripts'));
+    .pipe(concat('allPackages.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('Scripts'));
 });
 
 // translate sass to css
@@ -66,6 +81,39 @@ gulp.task('copyMainFonts', function () {
         filter: /.*\.(eot|svg|ttf|woff)$/i
     }))
       .pipe(gulp.dest('Content'));
+});
+
+// add angular-i18n package locales. only interscection of angular-i18n package supported locales and moment package supported locales must be used
+gulp.task('angularI18nPackage', function () {
+    return gulp.src('client_packages/angular-i18n/angular-locale_*.js')
+        .pipe(filter(file => {
+            var momentLocales = fs.readdirSync('client_packages/moment/locale');
+            for (var i = 0; i < momentLocales.length; i++) {
+                momentLocales[i] = momentLocales[i].replace(".js", "");
+            }
+            momentLocales.push("en");
+            var result = false;
+            momentLocales.forEach(function (momentLocale) {
+                // test angular-i18n locale has equivalent or fallback in moment package locales
+                var momentLocaleParts = momentLocale.match(/(^[a-z]{2})(\-([a-z]{4}))?(\-([a-z]{2}))?$/);
+                if (momentLocaleParts) {
+                    var localeTest;
+                    if (!momentLocaleParts[3] && !momentLocaleParts[5]) {
+                        localeTest = momentLocaleParts[1] + "(\\-[a-z]{2})?";
+                    } else if (momentLocaleParts[3] && !momentLocaleParts[5] || !momentLocaleParts[3] && momentLocaleParts[5]) {
+                        localeTest = momentLocaleParts[3]
+                            ? momentLocaleParts[1] + "\\-" + momentLocaleParts[3] + "(\\-[a-z]{2})?"
+                            : momentLocaleParts[1] + "\\-" + momentLocaleParts[5];
+                    } else if (momentLocaleParts[3] && momentLocaleParts[5]) {
+                        localeTest = momentLocale;
+                    }
+                    result |= new RegExp(".*\\\\angular-locale_" + localeTest + "\\.js$").test(file.path);
+                }
+            });
+            return result;
+        }))
+        .pipe(uglify())
+        .pipe(gulp.dest('Scripts/i18n/angular'));
 });
 
 // font-awesome package

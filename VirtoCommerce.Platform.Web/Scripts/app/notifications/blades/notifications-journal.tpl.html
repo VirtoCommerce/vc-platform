@@ -3,7 +3,7 @@
         <!--<div class="form-input __search">
             <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="filter.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
         </div>-->
-        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{pageSettings.totalItems | number:0}}</span></p>
     </div>
 </div>
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
@@ -18,7 +18,7 @@
                             { name: 'recipient', displayName: 'platform.blades.notifications-journal.labels.recipient' },
                             {
                                 name: 'sendingDate', displayName: 'platform.blades.notifications-journal.labels.sent-date',
-                                sort: { direction: uiGridConstants.DESC }, width: 87, cellTemplate: 'am-time-ago.cell.html'
+                                sort: { direction: uiGridConstants.DESC }, width: 87
                             },
                             { name: 'channel', displayName: 'platform.blades.notifications-journal.labels.channel', width: 65, cellTemplate: 'channel.cell.html' }
                 ]})">
@@ -94,9 +94,6 @@
             <span class="table-status __active" ng-if="row.entity.isSuccessSend">{{ 'platform.blades.notifications-journal.labels.success' | translate }}</span>
         </div>
     </div>
-</script>
-<script type="text/ng-template" id="am-time-ago.cell.html">
-    <span class="table-date" am-time-ago="COL_FIELD" title="{{COL_FIELD | date: 'medium' }}"></span>
 </script>
 <script type="text/ng-template" id="channel.cell.html">
     <div class="product-img">

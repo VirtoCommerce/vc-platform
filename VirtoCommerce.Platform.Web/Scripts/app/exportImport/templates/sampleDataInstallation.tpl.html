@@ -19,8 +19,8 @@
         <div class="form-group">
             <div class="sub-t">{{notification.description ? notification.description : platform.templates.sampleDataInitialization.labels.starting-initialization | translate}}</div>
             <div class="block" ng-if="notification.created || notification.finished">
-                <p ng-if="notification.created" ng-class="{'no-data': notification.created}" class="text">{{ 'platform.templates.sampleDataInitialization.labels.start' | translate }} — <i class="fa fa-clock-o"></i> <span am-time-ago="notification.created"></span></p>
-                <p ng-if="notification.finished" ng-class="{'no-data': notification.finished}" class="text">{{ 'platform.templates.sampleDataInitialization.labels.end' | translate }} — <i class="fa fa-clock-o"></i> <span am-time-ago="notification.finished"></span></p>
+                <p ng-if="notification.created" ng-class="{'no-data': notification.created}" class="text">{{ 'platform.templates.sampleDataInitialization.labels.start' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ notification.created | amParse | date:'mediumTime' }}</p>
+                <p ng-if="notification.finished" ng-class="{'no-data': notification.finished}" class="text">{{ 'platform.templates.sampleDataInitialization.labels.end' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ notification.finished | amParse | date:'mediumTime' }}</p>
             </div>
             <div ng-if="notification.errorCount > 0">
                 <span class="sub-t">{{ 'platform.templates.sampleDataInitialization.labels.errors' | translate }}</span>
