@@ -23,12 +23,8 @@
         $scope.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
         userStateCommand.updateName();
     };
-
-    var metaFormName = "accountDetails";
-    blade.metaFields = metaFormsService.getMetaFields(metaFormName);
-    metaFormsService.onMetaFieldsUpdate(metaFormName, function(metaFields) {
-        blade.metaFields = metaFields;
-    });
+        
+    blade.metaFields = metaFormsService.getMetaFields( "accountDetails");
 
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();

@@ -71,15 +71,18 @@
             {
                 name: "isAdministrator",
                 title: "platform.blades.account-detail.labels.is-administrator",
-                valueType: "Boolean"
+                valueType: "Boolean",
+                priority: 0
             },
             {
                 name: "accountType",
-                templateUrl: "accountTypeSelector.html"
+                templateUrl: "accountTypeSelector.html",
+                priority: 1
             },
             {
                 name: "accountInfo",
-                templateUrl: "accountInfo.html"
+                templateUrl: "accountInfo.html",
+                priority: 2
             }
         ]);
 

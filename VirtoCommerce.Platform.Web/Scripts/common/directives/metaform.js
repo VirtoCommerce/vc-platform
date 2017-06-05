@@ -1,24 +1,17 @@
 ﻿angular.module('platformWebApp')
 .factory('platformWebApp.metaFormsService', [function () {
-    var metaFormCallbacks = { };
-    var metaFields = { };
+    var registeredMetaFields = { };
 
     return {
-        registerMetaFields: function (name, fields) {
-            var oldMetaFields = metaFields[name];
-            metaFields[name] = (metaFields[name] || []).concat(fields);
-            var newMetaFileds = metaFields[name];
-            if (metaFormCallbacks[name]) {
-                metaFormCallbacks[name].forEach(function(callback) {
-                    callback(newMetaFileds, oldMetaFields);
-                });
+        registerMetaFields: function (metaFormName, metaFields) {
+            if (!registeredMetaFields[metaFormName]) {
+                registeredMetaFields[metaFormName] = [];
             }
+            Array.prototype.push.apply(registeredMetaFields[metaFormName], metaFields);
+            registeredMetaFields[metaFormName] = _.sortBy(registeredMetaFields[metaFormName], 'priority');
         },
-        getMetaFields: function(name) {
-            return metaFields[name];
-        },
-        onMetaFieldsUpdate(name, callback) {
-            (metaFormCallbacks[name] = metaFormCallbacks[name] || []).push(callback);
+        getMetaFields: function(metaFormName) {
+            return registeredMetaFields[metaFormName];
         }
     };
 }])
