@@ -609,7 +609,18 @@
         "placeholders": {
           "full-date-threshold": "Enter threshold value",
           "full-date-threshold-unit": "Select threshold unit"
-        }
+        },
+        "full-date-threshold-units": {
+          "Never": "Never",
+          "Seconds": "Seconds",
+          "Minutes": "Minutes" ,
+          "Hours": "Hours" ,
+          "Days": "Days" ,
+          "Weeks": "Weeks" ,
+          "Months": "Months" ,
+          "Quarters": "Quarters" ,
+          "Years": "Years" 
+        } 
       }
     },
     "templates": {

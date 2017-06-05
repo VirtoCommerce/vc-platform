@@ -55,9 +55,9 @@
                         <div class="column">
                             <div class="form-group">
                                 <ui-select ng-model="blade.currentTimeAgoSettings.thresholdUnit" ng-required="blade.currentTimeAgoSettings.useTimeAgo" on-select="setTimeAgoSettings()" ng-disabled="!blade.currentTimeAgoSettings.useTimeAgo">
-                                    <ui-select-match placeholder="{{'platform.blades.user-profile.placeholders.full-date-threshold-unit' | translate}}">{{ $select.selected }}</ui-select-match>
+                                    <ui-select-match placeholder="{{'platform.blades.user-profile.placeholders.full-date-threshold-unit' | translate}}">{{ ('platform.blades.user-profile.full-date-threshold-units.' + $select.selected | translate) }}</ui-select-match>
                                     <ui-select-choices repeat="x in userProfile.timeAgoSettings.thresholdUnits | filter: $select.search">
-                                        <span ng-bind-html="x | highlight: $select.search"></span>
+                                        <span ng-bind-html="('platform.blades.user-profile.full-date-threshold-units.' + x | translate) | highlight: $select.search"></span>
                                     </ui-select-choices>
                                 </ui-select>
                                 <div class="list-descr" ng-bind="'platform.blades.user-profile.labels.full-date-threshold-unit-description' | translate"></div>
