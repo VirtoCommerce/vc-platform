@@ -167,13 +167,16 @@
                     return ngModelCtrl.$isEmpty(value) ? value : $filter('date')(moment(value), format);
                 });
                 ngModelCtrl.$parsers.unshift(function (value) {
-                    var output = undefined;
                     if (value) {
                         var format = formatConverter.convert(attrs.datepickerPopup);
                         var date = moment(value, format, moment.locale(), true);
-                        output = date.isValid() ? date.toDate() : undefined;
+                        return date.isValid() ? date.toDate() : undefined;
                     }
-                    return output;
+                    else
+                    {
+                        //Allow to enter empty value
+                        return value;
+                    }
                 });
             }
         };

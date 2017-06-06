@@ -14,7 +14,7 @@ angular.module('platformWebApp')
         link: function (scope, elm, attrs, ctrl) {
             var fraction = attrs.fraction ? attrs.fraction : 2;
             if (attrs.numType === "float") {
-                ctrl.$parsers.unshift(function (viewValue) {
+                ctrl.$parsers.unshift(function (viewValue) {                    
                     if (FLOAT_REGEXP_1.test(viewValue)) {
                         ctrl.$setValidity('float', true);
                         return parseFloat(viewValue.replace('.', '').replace(',', '.'));
@@ -28,8 +28,9 @@ angular.module('platformWebApp')
                         ctrl.$setValidity('float', true);
                         return parseFloat(viewValue.replace(',', '.'));
                     } else {
-                        ctrl.$setValidity('float', false);
-                        return undefined;
+                        //Allow to use empty values
+                        ctrl.$setValidity('float', !viewValue);
+                        return viewValue;
                     }
                 });
 
@@ -46,8 +47,9 @@ angular.module('platformWebApp')
                         return viewValue;
                     }
                     else {
-                        ctrl.$setValidity('integer', false);
-                        return undefined;
+                        //Allow to use empty values
+                        ctrl.$setValidity('integer', !viewValue);
+                        return viewValue;
                     }
                 });
             }
