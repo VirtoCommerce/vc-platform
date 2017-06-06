@@ -315,14 +315,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             try
             {
                 var relativeUrl = "tmp/exported_data.zip";
-                using (var stream = _blobStorageProvider.OpenWrite(relativeUrl))
+                var localTmpFolder = HostingEnvironment.MapPath("~/App_Data/Uploads/");
+                var localTmpPath = Path.Combine(localTmpFolder, relativeUrl);
+                if (!Directory.Exists(localTmpFolder))
+                {
+                    Directory.CreateDirectory(localTmpFolder);
+                }
+                //Import first to local tmp folder because Azure blob storage doesn't support some special file access mode 
+                using (var stream = File.Open(localTmpPath, FileMode.OpenOrCreate))
                 {
                     var manifest = exportRequest.ToManifest();
-                    _platformExportManager.Export(stream, manifest, progressCallback);
+                    _platformExportManager.Export(stream, manifest, progressCallback);               
+                }
+                //Copy export data to blob provider for get public download url
+                using(var localStream = File.Open(localTmpPath, FileMode.Open))
+                using (var blobStream = _blobStorageProvider.OpenWrite(relativeUrl))
+                {
+                    localStream.CopyTo(blobStream);
                     //Get a download url
                     pushNotification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(relativeUrl);
                 }
-                
             }
             catch (Exception ex)
             {
