@@ -1,6 +1,5 @@
 <img alt="Virto Commerce" src="https://virtocommerce.com/assets/images/home/hero.gif"/>
 Virto Commerce 2.x
-============
 
 | Branch  | Status |
 | ------------- | ------------- |
