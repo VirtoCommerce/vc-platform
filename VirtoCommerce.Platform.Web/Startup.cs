@@ -466,8 +466,58 @@ namespace VirtoCommerce.Platform.Web
                                 Name = "VirtoCommerce.Platform.UI.Language",
                                 ValueType = ModuleSetting.TypeString,
                                 Title = "Language",
-                                Description = "Default language (two letter code from ISO 639-1)",
+                                Description = "Default language (two letter code from ISO 639-1, case-insensitive). Example: en, de",
                                 DefaultValue = "en"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.RegionalFormat",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Regional format",
+                                Description = "Default regional format (CLDR locale code, with dash or underscore as delemiter, case-insensitive). Example: en, en_US, sr_Cyrl, sr_Cyrl_RS",
+                                DefaultValue = "en"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.TimeZone",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Time zone",
+                                Description = "Default time zone (IANA time zone name [tz database], with slash or underscore as delemiter, case-insensitive). Examples: America/New_York, Europe/Moscow"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.UseTimeAgo",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Use time ago format when possible",
+                                Description = "When set to true (by default), system will display date in format like 'a few seconds ago' when possible",
+                                DefaultValue = true.ToString()
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.FullDateThreshold",
+                                ValueType = ModuleSetting.TypeInteger,
+                                Title = "Full date threshold",
+                                Description = "Number of units after which time ago format will be switched to full date format"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.FullDateThresholdUnit",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Full date threshold unit",
+                                Description = "Unit of full date threshold",
+                                DefaultValue = "Never",
+                                AllowedValues = new[]
+                                {
+                                    "Never",
+                                    "Seconds",
+                                    "Minutes",
+                                    "Hours",
+                                    "Days",
+                                    "Weeks",
+                                    "Months",
+                                    "Quarters",
+                                    "Years"
+                                }
                             }
                         }
                     },

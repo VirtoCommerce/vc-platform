@@ -1,735 +1,759 @@
 ﻿{
-    "platform": {
-      "menu": {
-        "home": "Home",
-        "browse": "Browse",
-        "configuration": "Configuration",
-        "notifications": "Notifications",
-        "more": "More",
-        "settings": "Settings",
-        "dynamic-properties": "Dynamic properties",
-        "security": "Security",
-        "modules": "Modules",
-        "export-import": "Export & Import",
-        "user-profile": "User profile",
-        "assets": "Assets",
-        "toggle-favorites": "Shift + Space to toggle favorites"
-      },
-        "navigation": {
-            "back": "Back",
-            "bread-crumb-top": "All"
-        },
-        "blades": {
-            "asset-list": {
-                "title": "Asset management",
-                "labels": {
-                    "picture": "Pic",
-                    "name": "Name",
-                    "size": "Size",
-                    "modified": "Modified",
-                    "actions": "Actions"
-                }
-            },
-            "asset-upload": {
-                "title": "Asset upload",
-                "labels": {
-                    "select-files": "Select files",
-                    "drag-note": "Drag and drop files here",
-                    "progress": "Progress",
-                    "asset-uploaded": "Asset(s) uploaded."
-                },
-                "placeholders": {
-                    "image-url": "Paste file URL here"
-                }
-            },
-            "operation-list": {
-                "labels": {
-                    "login": "Login",
-                    "details": "Details",
-                    "time": "Time"
-                }
-            },
-            "dynamicObject-list": {
-                "title": "Dynamic object types",
-                "subtitle": "Pick object type to manage dynamic properties",
-                "labels": {
-                    "no-objects": "No objects supports dynamic properties yet."
-                }
-            },
-            "dynamicProperty-detail": {
-                "title": "Manage property",
-                "subtitle": "Manage property",
-                "subtitle-new": "New property",
-                "labels": {
-                    "property-name": "Property name",
-                    "required": "Required",
-                    "multivalue": "Multivalue",
-                    "multilingual": "Multilingual",
-                    "dictionary": "Dictionary",
-                    "description": "Description",
-                    "display-name": "Display name",
-                    "value-type": "Value Type",
-                    "dictionary-values": "Dictionary values",
-                    "manage-dictionary": "Manage dictionary"
-                },
-                "placeholders": {
-                    "description": "Enter property description",
-                    "display-name": "Enter display name..."
-                },
-                "validations": {
-                    "multivalue": "Multivalue property can have only ShortText, Integer or Decimal value type.",
-                    "multilingual": "Only text or HTML value can be multilingual.",
-                    "dictionary": "Only dictionaries of value type ShortText are supported."
-                }
-            },
-            "dynamicProperty-list": {
-                "subtitle": "Manage dynamic properties",
-                "labels": {
-                    "no-properties": "No dynamic properties yet."
-                }
-            },
-            "property-dictionary": {
-                "title": "Dictionary values",
-                "subtitle": "Manage dictionary values",
-                "labels": {
-                    "edit-value": "Edit value",
-                    "new-value": "New value",
-                    "dictionary-name": "Dictionary entry name",
-                    "localized-values": "Localized values",
-                    "current-values": "Current values",
-                    "name": "Name",
-                    "values": "Values"
-                },
-                "validations": {
-                    "dictionary-name-required": "Required",
-                    "dictionary-name": "Duplicate name found",
-                    "localized-values-required": "Required",
-                    "localized-values": "Duplicate name found",
-                    "dictionary": "Only dictionaries of value type ShortText are supported."
-                },
-                "placeholders": {
-                    "dictionary-name": "Enter name",
-                    "localized-values": "Enter value"
-                }
-            },
-            "property-valueType": {
-                "title": "Dynamic Property value type",
-                "subtitle": "Change value type"
-            },
-            "propertyValue-list": {
-                "title": "Properties values",
-                "subtitle": "Edit properties values",
-                "labels": {
-                    "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
-                }
-            },
-            "export-main": {
-                "title": "Data export",
-                "labels": {
-                    "select-file": "Select file to import",
-                    "platform-entries": "Platform entries",
-                    "choose-modules": "Choose modules to export",
-                    "download-url": "Download Url",
-                    "errors": "Errors",
-                    "start-export": "Start export",
-                    "start": "Start",
-                    "end": "End"
-                },
-                "menu": {
-                    "security": {
-                        "title": "Security",
-                        "description": "Accounts and roles"
-                    },
-                    "binary": {
-                        "title": "Binary",
-                        "description": "Binary data"
-                    },
-                    "settings": {
-                        "title": "Settings",
-                        "description": "Platform settings"
-                    }
-                }
-            },
-            "import-main": {
-                "title": "Data import",
-                "labels": {
-                    "start-import": "Start import",
-                    "select-file": "Select file to import",
-                    "upload-progress": "Upload progress",
-                    "import-data-information": "Import data information",
-                    "author": "Author",
-                    "data-file-created": "Data file created",
-                    "created-platform-version": "Created in platform version",
-                    "platform-entries": "Platform entries",
-                    "choose-modules": "Choose modules to import",
-                    "no-data": "No data",
-                    "errors": "Errors",
-                    "start": "Start",
-                    "end": "End"
-                },
-                "menu": {
-                    "security": {
-                        "title": "Security",
-                        "description": "Accounts and roles"
-                    },
-                    "binary": {
-                        "title": "Binary",
-                        "description": "Binary data"
-                    },
-                    "settings": {
-                        "title": "Settings",
-                        "description": "Platform settings"
-                    }
-                }
-            },
-            "exportImport-main": {
-                "title": "Data export and import",
-                "menu": {
-                    "export": {
-                        "title": "Export",
-                        "description": "Data will be saved out to a file so it can later be imported."
-                    },
-                    "import": {
-                        "title": "Import",
-                        "description": "Import data from an exported file."
-                    }
-                }
-            },
-            "notification-journal-details": {
-                "title": "Details of notification",
-                "labels": {
-                    "notification-info": "Notification Info",
-                    "display-name": "Display name",
-                    "source": "Source",
-                    "sending-gateway": "Sending gateway",
-                    "active": "Active",
-                    "not-active": "Not active",
-                    "start-sending-date": "Start sending date",
-                    "sent-success": "Sent success",
-                    "not-sent": "Not sent",
-                    "sent": "Sent",
-                    "sent-date": "Sent date",
-                    "sender": "Sender",
-                    "recipient": "Recipient",
-                    "sending-attempts-count": "Sending attempts count",
-                    "last-fail-attempt-date": "Last fail attempt date",
-                    "last-fail-attempt-message": "Last fail attempt message"
-                }
-            },
-            "notifications-edit-template": {
-                "title": "Edit notification template",
-                "title-new": "Create notification template",
-                "labels": {
-                    "note": "This is list of notification parameters. You can paste this code and value of parameters will be inserted in your template",
-                    "parameter-name": "Parameter name",
-                    "parameter-description": "Parameter description",
-                    "paremeter-code": "Paremeter code in template (copy this code and insert anywhere in your template)",
-                    "language": "Language",
-                    "blank-note": "Leave blank to use default value",
-                    "sender": "Sender",
-                    "recipient": "Recipient",
-                    "subject": "Subject",
-                    "body": "Body"
-                },
-                "placeholders": {
-                    "language": "Select..."
-                }
-            },
-            "notifications-menu": {
-                "subtitle": "Working with notifications system"
-            },
-            "notification-templates-list": {
-                "title": "Notification templates",
-                "labels": {
-                    "subject": "Subject",
-                    "body": "Body",
-                    "language": "Language"
-                }
-            },
-            "notifications-test-resolve": {
-                "title": "Preview notification",
-                "subtitle": "Enter test data for {{type}}",
-                "labels": {
-                    "test": "Test",
-                    "enter-test-data": "Enter test data"
-                }
-            },
-            "notifications-test-send": {
-                "title": "Send notification",
-                "subtitle": "Enter test data for {{type}}",
-                "labels": {
-                    "send": "Send",
-                    "enter-test-data": "Enter test data"
-                }
-            },
-            "notifications-journal": {
-                "title": "Journal of sending",
-                "subtitle": "Marketing service",
-                "labels": {
-                    "display-name": "Display Name",
-                    "recipient": "Recipient",
-                    "sent-date": "Sent Date",
-                    "channel": "Channel",
-                    "error": "Error",
-                    "processing": "Processing",
-                    "success": "Success",
-                    "no-notifications": "No notifications yet"
-                }
-            },
-            "notifications-list": {
-                "title": "Notifications",
-                "subtitle": "Marketing service",
-                "labels": {
-                    "no-notifications": "No registered notifications yet"
-                }
-            },
-            "resolve-result": {
-                "title": "Preview result",
-                "labels": {
-                    "subject": "Subject",
-                    "body": "Body"
-                }
-            },
-            "module-settings-detail": {
-                "title": "Module settings"
-            },
-            "module-wizard-progress-step": {
-                "title-install": "Module install",
-                "title-update": "Module update",
-                "title-uninstall": "Module uninstall",
-                "labels": {
-                    "start": "Start",
-                    "end": "End",
-                    "progress-messages": "Progress messages",
-                    "process-completed": "Module installation process completed.",
-                    "restart-application": "Restart the application now or later."
-                }
-            },
-            "module-detail": {
-                "title": "Module information",
-                "labels": {
-                    "i-accept-the": "I accept the",
-                    "license-link": "license",
-                    "license": "License",
-                    "agreement": "agreement.",
-                    "install-from-file": "Install / update module from file",
-                    "select-module-file": "Upload a module (.zip) file from outside the central modules repository",
-                    "upload-progress": "Upload progress",
-                    "module-info": "Module info",
-                    "title": "Title",
-                    "author": "Author",
-                    "authors": "Authors",
-                    "id": "ID",
-                    "version": "Version",
-                    "project-information": "Project Information",
-                    "description": "Description",
-                    "platform-version": "Platform Version",
-                    "dependencies": "Dependencies",
-                    "tags": "Tags",
-                    "install-version": "Install version",
-                    "errors": "Errors"
-                }
-            },
-            "modules-main": {
-                "title": "Modules",
-                "labels": {
-                    "updates": "Updates",
-                    "available": "Available",
-                    "installed": "Installed",
-                    "withErrors": "Errors",
-                    "advanced": "Advanced"
-                }
-            },
-            "modules-list": {
-                "subtitle": "Modules management",
-                "labels": {
-                    "grouping": "Show Module bundles",
-                    "ungrouped": "Other",
-                    "no-updates": "No updates found.",
-                    "no-modules-part1": "No new Modules to install.",
-                    "no-installed-modules": "No installed Modules found.",
-                    "icon": "Icon",
-                    "module": "Module",
-                    "version": "Version",
-                    "author": "Author"
-                }
-            },
-            "history": {
-                "title": "System events",
-                "subtitle": "Events history",
-                "labels": {
-                    "type": "Type",
-                    "title": "Title",
-                    "created": "Created"
-                }
-            },
-            "historyDetailDefault": {
-                "title": "Event detail",
-                "subtitle": "Event detail"
-            },
-            "menuHeader": {
-                "labels": {
-                    "history": "History",
-                    "clear-recent": "Clear all recent"
-                }
-            },
-            "account-api": {
-                "title": "API key",
-                "title-new": "New API key",
-                "labels": {
-                    "is-active": "Is active",
-                    "key-name": "Key name",
-                    "key-type": "Key type",
-                    "secret-key": "Secret key"
-                },
-                "placeholders": {
-                    "key-name": "Enter name",
-                    "key-type": "Select...",
-                    "secret-key": "Generate secret key",
-                    "app-id": "Generate..."
-                }
-            },
-            "account-api-list": {
-                "labels": {
-                    "is-active": "Is active",
-                    "name": "Name"
-                }
-            },
-            "account-changePassword": {
-                "labels": {
-                    "current-password": "Current password",
-                    "new-password": "New password",
-                    "repeat-password": "Repeat password"
-                },
-                "validations": {
-                    "current-password": "Required",
-                    "new-password": "Old and new passwords are the same!",
-                    "repeat-password": "New passwords doesn't match!"
-                },
-                "placeholders": {
-                    "current-password": "Enter current password",
-                    "new-password": "Enter new password",
-                    "repeat-password": "Repeat new password"
-                }
-            },
-            "account-resetPassword": {
-                "subtitle": "Change your password",
-                "labels": {
-                    "new-password": "New password",
-                    "repeat-password": "Repeat password"
-                },
-                "validations": {
-                    "repeat-password": "New passwords doesn't match!"
-                },
-                "placeholders": {
-                    "new-password": "Enter new password",
-                    "repeat-password": "Repeat new password"
-                }
-            },
-            "account-detail": {
-                "title-new": "New Account",
-                "labels": {
-                    "user-information": "User information",
-                    "is-administrator": "Is administrator",
-                    "account-type": "Account type",
-                    "login": "Login",
-                    "account-state": "Account state",
-                    "container-id": "Container (store) ID"
-                },
-                "placeholders": {
-                    "account-type": "Select ..."
-                }
-            },
-            "account-list": {
-                "title": "Users",
-                "subtitle": "Security service",
-                "labels": {
-                    "name": "Name",
-                    "account-type": "Account type",
-                    "login": "Login",
-                    "state": "State"
-                }
-            },
-            "role-detail": {
-                "subtitle": "Role details",
-                "labels": {
-                    "summary": "Summary",
-                    "name": "Name",
-                    "description": "Description",
-                    "assigned-permissions": "Assigned permissions",
-                    "permission-name": "Name",
-                    "assigned-scopes": "Assigned scopes",
-                    "no-permissions-assigned": "No permissions assigned"
-                },
-                "placeholders": {
-                    "name": "Enter name",
-                    "description": "Enter description"
-                }
-            },
-            "account-roles": {
-                "subtitle": "Assign roles",
-                "labels": {
-                    "select-roles": "Select roles to assign",
-                    "no-roles": "No roles to assign."
-                }
-            },
-            "account-roles-list": {
-                "title": "",
-                "labels": {
-                    "assigned-roles": "Assigned roles",
-                    "no-assigned": "No roles assigned."
-                }
-            },
-            "permission-scopes": {
-                "subtitle": "Configure permission scopes",
-                "labels": {
-                    "select-bounded-scopes": "Select bounded scopes",
-                    "selected": "Selected",
-                    "scope-name": "Scope name and parameters",
-                    "no-scopes": "No scopes."
-                }
-            },
-            "role-permissions": {
-                "subtitle": "Assign permissions",
-                "labels": {
-                    "select-permissions": "Select permissions to assign"
-                }
-            },
-            "new-role-wizard": {
-                "title": "New Role",
-                "labels": {
-                    "summary": "Summary",
-                    "name": "Name",
-                    "description": "Description",
-                    "assign-permissions": "Assign permissions"
-                },
-                "placeholders": {
-                    "name": "Enter name",
-                    "description": "Enter description"
-                }
-            },
-            "role-list": {
-                "title": "Roles",
-                "subtitle": "Security service",
-                "labels": {
-                    "name": "Name"
-                }
-            },
-            "login": {
-                "labels": {
-                    "sign-in": "Sign in to {{title}} Manager",
-                    "login": "Login",
-                    "password": "Password",
-                    "remember-me": "Remember me",
-                    "log-in": "Log in"
-                }
-            },
-            "license": {
-                "title": "Current license",
-                "title-new": "New license activation",
-                "license-info": "License information",
-                "license-activation": "License activation",
-                "labels": {
-                    "info-running-no-license": "This instance of Virto Commerce is running on",
-                    "info-open-source-license": "Open Source Community license.",
-                    "info0": "Acquiring or renewing the license:",
-                    "info1": "Submit the ",
-                    "info2": "We'll process your request and should contact you soon.",
-                    "info3": "Once you receive the \"Activation Code\" and / or the License file, fill one of the activation fields below.",
-                    "info4": "The system will display you the new license information. Review it and click \"Activate\" to confirm.",
-                    "customer": "License issued to",
-                    "type": "Type",
-                    "expiration": "Expiration",
-                    "email": "Customer email",
-                    "request-license": "License request form.",
-                    "code-descr": "Enter the received license \"Activation Code\" and hit [Enter]. This is the quickest license activation method. (Requires internet connection)",
-                    "file-descr": "Optionally, provide the received License file. (Off-line activation)",
-                    "upload-progress": "Upload progress",
-                    "errors": "Activation error"
-                },
-                "placeholders": {
-                    "code": "Enter activation code"
-                }
-            },
-            "new-account-wizard": {
-                "labels": {
-                    "login": "Login",
-                    "password": "Password",
-                    "repeat-password": "Repeat password",
-                    "assign-roles": "Assign roles"
-                },
-                "placeholders": {
-                    "login": "Enter email address",
-                    "password": "Enter new password",
-                    "repeat-password": "Repeat new password"
-                }
-            },
-            "security-main": {
-                "title": "Security",
-                "subtitle": "User management"
-            },
-            "entitySetting-list": {
-                "title": "Settings"
-            },
-            "setting-dictionary": {
-                "subtitle": "Manage dictionary values",
-                "labels": {
-                    "new-value": "Please enter value",
-                    "current-values": "Current values",
-                    "value": "Value"
-                },
-                "validations": {
-                    "new-value-required": "Required",
-                    "new-value": "Duplicate value found"
-                },
-                "placeholders": {
-                    "new-value": "Please enter value"
-                }
-            },
-            "settings-detail": {
-                "title": "Setting values"
-            },
-            "settingGroup-list": {
-                "title": "Settings"
-            },
-            "user-profile": {
-                "title": "User profile",
-                "labels": {
-                    "set-language": "Set Manager language"
-                }
-            }
-        },
-        "templates": {
-            "sampleDataChoose": {
-                "labels": {
-                    "choose-sample-data-type": "Choose sample data type",
-                    "size": "size",
-                    "version": "version"
-                }
-            },
-            "sampleDataInitialization": {
-                "labels": {
-                    "sample-data-initialization": "Sample data initialization",
-                    "starting-initialization": "Starting sample data initialization...",
-                    "errors": "Errors",
-                    "start": "Start",
-                    "end": "End"
-                }
-            },
-            "licensing": {
-                "license-absent": "Community license",
-                "license-present": "{{type}} license",
-                "community": "Running community edition, click to request a commercial license.",
-                "expired": "You license has expired on {{expirationDate | date}}, please renew."
-            },
-            "modulesAutoInstallation": {
-                "labels": {
-                    "module-auto-installation": "Modules auto installation",
-                    "loading": "Retrieving modules information...",
-                    "finished": "Installation finished. Click Restart to continue.",
-                    "start": "Start",
-                    "end": "End"
-                }
-            }
-        },
-        "widgets": {
-            "operations": {
-                "title": "Changes",
-                "blade-subtitle": "Changes history"
-            },
-            "dynamicProperty": {
-                "title": "Dynamic properties"
-            },
-            "entitySettings": {
-                "title": "Settings"
-            },
-            "accountApi": {
-                "title": "API Keys",
-                "blade-subtitle": "API keys"
-            },
-            "accountRoles": {
-                "title": "Roles",
-                "blade-subtitle": "Manage roles"
-            }
-        },
-        "dialogs": {
-            "folders-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete selected folders or files?"
-            },
-            "properties-save": {
-                "title": "Save changes",
-                "message": "The properties have been modified. Do you want to confirm changes?"
-            },
-            "notification-template-save": {
-                "title": "Save changes",
-                "message": "The notification template has been modified. Do you want to save changes?"
-            },
-            "role-save": {
-                "title": "Save changes",
-                "message": "The Role has been modified. Do you want to save changes?"
-            },
-            "roles-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete selected Roles?"
-            },
-            "account-save": {
-                "title": "Save changes",
-                "message": "The Account has been modified. Do you want to save changes?"
-            },
-            "account-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete selected Accounts?"
-            },
-            "dynamic-property-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete this Dynamic Property?"
-            },
-            "settings-value-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete selected Values?"
-            },
-            "settings-save": {
-                "title": "Save changes",
-                "message": "The settings has been modified. Do you want to confirm changes?"
-            },
-            "settings-delete": {
-                "title": "Delete confirmation",
-                "message": "The settings has been modified. Do you want to save changes?"
-            },
-            "email-sending-success": {
-                "title": "Sending success",
-                "message": "Email was sent successfully!"
-            },
-            "email-send-error": {
-                "title": "Error in sending",
-                "message": "Email wasn't send! Error: {{error}}"
-            },
-            "dictionary-items-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete {{quantity}} selected dictionary item(s)?"
-            },
-            "module-action": {
-                "title-install": "Install confirmation",
-                "title-update": "Update confirmation",
-                "title-delete": "Uninstall confirmation",
-                "message0-install": "You are about to install:",
-                "message0-update": "You are about to update:",
-                "message0-delete": "You are about to uninstall:",
-                "message1-install": "The following dependencies will also be installed:",
-                "message1-delete": "The following depending modules will also be uninstalled:",
-                "message2-install": "Install selection and dependencies?",
-                "message2-update": "Update selection and dependencies?",
-                "message2-delete": "Uninstall this and ALL depending modules?"
-            },
-            "module-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to uninstall this Module?"
-            },
-            "api-key-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete this API key?"
-            }
+  "platform": {
+    "menu": {
+      "home": "Home",
+      "browse": "Browse",
+      "configuration": "Configuration",
+      "notifications": "Notifications",
+      "more": "More",
+      "settings": "Settings",
+      "dynamic-properties": "Dynamic properties",
+      "security": "Security",
+      "modules": "Modules",
+      "export-import": "Export & Import",
+      "user-profile": "User profile",
+      "assets": "Assets",
+      "toggle-favorites": "Shift + Space to toggle favorites"
+    },
+    "navigation": {
+      "back": "Back",
+      "bread-crumb-top": "All"
+    },
+    "blades": {
+      "asset-list": {
+        "title": "Asset management",
+        "labels": {
+          "picture": "Pic",
+          "name": "Name",
+          "size": "Size",
+          "modified": "Modified",
+          "actions": "Actions"
         }
+      },
+      "asset-upload": {
+        "title": "Asset upload",
+        "labels": {
+          "select-files": "Select files",
+          "drag-note": "Drag and drop files here",
+          "progress": "Progress",
+          "asset-uploaded": "Asset(s) uploaded."
+        },
+        "placeholders": {
+          "image-url": "Paste file URL here"
+        }
+      },
+      "operation-list": {
+        "labels": {
+          "login": "Login",
+          "details": "Details",
+          "time": "Time"
+        }
+      },
+      "dynamicObject-list": {
+        "title": "Dynamic object types",
+        "subtitle": "Pick object type to manage dynamic properties",
+        "labels": {
+          "no-objects": "No objects supports dynamic properties yet."
+        }
+      },
+      "dynamicProperty-detail": {
+        "title": "Manage property",
+        "subtitle": "Manage property",
+        "subtitle-new": "New property",
+        "labels": {
+          "property-name": "Property name",
+          "required": "Required",
+          "multivalue": "Multivalue",
+          "multilingual": "Multilingual",
+          "dictionary": "Dictionary",
+          "description": "Description",
+          "display-name": "Display name",
+          "value-type": "Value Type",
+          "dictionary-values": "Dictionary values",
+          "manage-dictionary": "Manage dictionary"
+        },
+        "placeholders": {
+          "description": "Enter property description",
+          "display-name": "Enter display name..."
+        },
+        "validations": {
+          "multivalue": "Multivalue property can have only ShortText, Integer or Decimal value type.",
+          "multilingual": "Only text or HTML value can be multilingual.",
+          "dictionary": "Only dictionaries of value type ShortText are supported."
+        }
+      },
+      "dynamicProperty-list": {
+        "subtitle": "Manage dynamic properties",
+        "labels": {
+          "no-properties": "No dynamic properties yet."
+        }
+      },
+      "property-dictionary": {
+        "title": "Dictionary values",
+        "subtitle": "Manage dictionary values",
+        "labels": {
+          "edit-value": "Edit value",
+          "new-value": "New value",
+          "dictionary-name": "Dictionary entry name",
+          "localized-values": "Localized values",
+          "current-values": "Current values",
+          "name": "Name",
+          "values": "Values"
+        },
+        "validations": {
+          "dictionary-name-required": "Required",
+          "dictionary-name": "Duplicate name found",
+          "localized-values-required": "Required",
+          "localized-values": "Duplicate name found",
+          "dictionary": "Only dictionaries of value type ShortText are supported."
+        },
+        "placeholders": {
+          "dictionary-name": "Enter name",
+          "localized-values": "Enter value"
+        }
+      },
+      "property-valueType": {
+        "title": "Dynamic Property value type",
+        "subtitle": "Change value type"
+      },
+      "propertyValue-list": {
+        "title": "Properties values",
+        "subtitle": "Edit properties values",
+        "labels": {
+          "no-properties":
+            "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
+        }
+      },
+      "export-main": {
+        "title": "Data export",
+        "labels": {
+          "select-file": "Select file to import",
+          "platform-entries": "Platform entries",
+          "choose-modules": "Choose modules to export",
+          "download-url": "Download Url",
+          "errors": "Errors",
+          "start-export": "Start export",
+          "start": "Start",
+          "end": "End"
+        },
+        "menu": {
+          "security": {
+            "title": "Security",
+            "description": "Accounts and roles"
+          },
+          "binary": {
+            "title": "Binary",
+            "description": "Binary data"
+          },
+          "settings": {
+            "title": "Settings",
+            "description": "Platform settings"
+          }
+        }
+      },
+      "import-main": {
+        "title": "Data import",
+        "labels": {
+          "start-import": "Start import",
+          "select-file": "Select file to import",
+          "upload-progress": "Upload progress",
+          "import-data-information": "Import data information",
+          "author": "Author",
+          "data-file-created": "Data file created",
+          "created-platform-version": "Created in platform version",
+          "platform-entries": "Platform entries",
+          "choose-modules": "Choose modules to import",
+          "no-data": "No data",
+          "errors": "Errors",
+          "start": "Start",
+          "end": "End"
+        },
+        "menu": {
+          "security": {
+            "title": "Security",
+            "description": "Accounts and roles"
+          },
+          "binary": {
+            "title": "Binary",
+            "description": "Binary data"
+          },
+          "settings": {
+            "title": "Settings",
+            "description": "Platform settings"
+          }
+        }
+      },
+      "exportImport-main": {
+        "title": "Data export and import",
+        "menu": {
+          "export": {
+            "title": "Export",
+            "description": "Data will be saved out to a file so it can later be imported."
+          },
+          "import": {
+            "title": "Import",
+            "description": "Import data from an exported file."
+          }
+        }
+      },
+      "notification-journal-details": {
+        "title": "Details of notification",
+        "labels": {
+          "notification-info": "Notification Info",
+          "display-name": "Display name",
+          "source": "Source",
+          "sending-gateway": "Sending gateway",
+          "active": "Active",
+          "not-active": "Not active",
+          "start-sending-date": "Start sending date",
+          "sent-success": "Sent success",
+          "not-sent": "Not sent",
+          "sent": "Sent",
+          "sent-date": "Sent date",
+          "sender": "Sender",
+          "recipient": "Recipient",
+          "sending-attempts-count": "Sending attempts count",
+          "last-fail-attempt-date": "Last fail attempt date",
+          "last-fail-attempt-message": "Last fail attempt message"
+        }
+      },
+      "notifications-edit-template": {
+        "title": "Edit notification template",
+        "title-new": "Create notification template",
+        "labels": {
+          "note": "This is list of notification parameters. You can paste this code and value of parameters will be inserted in your template",
+          "parameter-name": "Parameter name",
+          "parameter-description": "Parameter description",
+          "paremeter-code": "Paremeter code in template (copy this code and insert anywhere in your template)",
+          "language": "Language",
+          "blank-note": "Leave blank to use default value",
+          "sender": "Sender",
+          "recipient": "Recipient",
+          "subject": "Subject",
+          "body": "Body"
+        },
+        "placeholders": {
+          "language": "Select..."
+        }
+      },
+      "notifications-menu": {
+        "subtitle": "Working with notifications system"
+      },
+      "notification-templates-list": {
+        "title": "Notification templates",
+        "labels": {
+          "subject": "Subject",
+          "body": "Body",
+          "language": "Language"
+        }
+      },
+      "notifications-test-resolve": {
+        "title": "Preview notification",
+        "subtitle": "Enter test data for {{type}}",
+        "labels": {
+          "test": "Test",
+          "enter-test-data": "Enter test data"
+        }
+      },
+      "notifications-test-send": {
+        "title": "Send notification",
+        "subtitle": "Enter test data for {{type}}",
+        "labels": {
+          "send": "Send",
+          "enter-test-data": "Enter test data"
+        }
+      },
+      "notifications-journal": {
+        "title": "Journal of sending",
+        "subtitle": "Marketing service",
+        "labels": {
+          "display-name": "Display Name",
+          "recipient": "Recipient",
+          "sent-date": "Sent Date",
+          "channel": "Channel",
+          "error": "Error",
+          "processing": "Processing",
+          "success": "Success",
+          "no-notifications": "No notifications yet"
+        }
+      },
+      "notifications-list": {
+        "title": "Notifications",
+        "subtitle": "Marketing service",
+        "labels": {
+          "no-notifications": "No registered notifications yet"
+        }
+      },
+      "resolve-result": {
+        "title": "Preview result",
+        "labels": {
+          "subject": "Subject",
+          "body": "Body"
+        }
+      },
+      "module-settings-detail": {
+        "title": "Module settings"
+      },
+      "module-wizard-progress-step": {
+        "title-install": "Module install",
+        "title-update": "Module update",
+        "title-uninstall": "Module uninstall",
+        "labels": {
+          "start": "Start",
+          "end": "End",
+          "progress-messages": "Progress messages",
+          "process-completed": "Module installation process completed.",
+          "restart-application": "Restart the application now or later."
+        }
+      },
+      "module-detail": {
+        "title": "Module information",
+        "labels": {
+          "i-accept-the": "I accept the",
+          "license-link": "license",
+          "license": "License",
+          "agreement": "agreement.",
+          "install-from-file": "Install / update module from file",
+          "select-module-file": "Upload a module (.zip) file from outside the central modules repository",
+          "upload-progress": "Upload progress",
+          "module-info": "Module info",
+          "title": "Title",
+          "author": "Author",
+          "authors": "Authors",
+          "id": "ID",
+          "version": "Version",
+          "project-information": "Project Information",
+          "description": "Description",
+          "platform-version": "Platform Version",
+          "dependencies": "Dependencies",
+          "tags": "Tags",
+          "install-version": "Install version",
+          "errors": "Errors"
+        }
+      },
+      "modules-main": {
+        "title": "Modules",
+        "labels": {
+          "updates": "Updates",
+          "available": "Available",
+          "installed": "Installed",
+          "withErrors": "Errors",
+          "advanced": "Advanced"
+        }
+      },
+      "modules-list": {
+        "subtitle": "Modules management",
+        "labels": {
+          "grouping": "Show Module bundles",
+          "ungrouped": "Other",
+          "no-updates": "No updates found.",
+          "no-modules-part1": "No new Modules to install.",
+          "no-installed-modules": "No installed Modules found.",
+          "icon": "Icon",
+          "module": "Module",
+          "version": "Version",
+          "author": "Author"
+        }
+      },
+      "history": {
+        "title": "System events",
+        "subtitle": "Events history",
+        "labels": {
+          "type": "Type",
+          "title": "Title",
+          "created": "Created"
+        }
+      },
+      "historyDetailDefault": {
+        "title": "Event detail",
+        "subtitle": "Event detail"
+      },
+      "menuHeader": {
+        "labels": {
+          "history": "History",
+          "clear-recent": "Clear all recent"
+        }
+      },
+      "account-api": {
+        "title": "API key",
+        "title-new": "New API key",
+        "labels": {
+          "is-active": "Is active",
+          "key-name": "Key name",
+          "key-type": "Key type",
+          "secret-key": "Secret key"
+        },
+        "placeholders": {
+          "key-name": "Enter name",
+          "key-type": "Select...",
+          "secret-key": "Generate secret key",
+          "app-id": "Generate..."
+        }
+      },
+      "account-api-list": {
+        "labels": {
+          "is-active": "Is active",
+          "name": "Name"
+        }
+      },
+      "account-changePassword": {
+        "labels": {
+          "current-password": "Current password",
+          "new-password": "New password",
+          "repeat-password": "Repeat password"
+        },
+        "validations": {
+          "current-password": "Required",
+          "new-password": "Old and new passwords are the same!",
+          "repeat-password": "New passwords doesn't match!"
+        },
+        "placeholders": {
+          "current-password": "Enter current password",
+          "new-password": "Enter new password",
+          "repeat-password": "Repeat new password"
+        }
+      },
+      "account-resetPassword": {
+        "subtitle": "Change your password",
+        "labels": {
+          "new-password": "New password",
+          "repeat-password": "Repeat password"
+        },
+        "validations": {
+          "repeat-password": "New passwords doesn't match!"
+        },
+        "placeholders": {
+          "new-password": "Enter new password",
+          "repeat-password": "Repeat new password"
+        }
+      },
+      "account-detail": {
+        "title-new": "New Account",
+        "labels": {
+          "user-information": "User information",
+          "is-administrator": "Is administrator",
+          "account-type": "Account type",
+          "login": "Login",
+          "account-state": "Account state"
+        },
+        "placeholders": {
+          "account-type": "Select ..."
+        }
+      },
+      "account-list": {
+        "title": "Users",
+        "subtitle": "Security service",
+        "labels": {
+          "name": "Name",
+          "account-type": "Account type",
+          "login": "Login",
+          "state": "State"
+        }
+      },
+      "role-detail": {
+        "subtitle": "Role details",
+        "labels": {
+          "summary": "Summary",
+          "name": "Name",
+          "description": "Description",
+          "assigned-permissions": "Assigned permissions",
+          "permission-name": "Name",
+          "assigned-scopes": "Assigned scopes",
+          "no-permissions-assigned": "No permissions assigned"
+        },
+        "placeholders": {
+          "name": "Enter name",
+          "description": "Enter description"
+        }
+      },
+      "account-roles": {
+        "subtitle": "Assign roles",
+        "labels": {
+          "select-roles": "Select roles to assign",
+          "no-roles": "No roles to assign."
+        }
+      },
+      "account-roles-list": {
+        "title": "",
+        "labels": {
+          "assigned-roles": "Assigned roles",
+          "no-assigned": "No roles assigned."
+        }
+      },
+      "permission-scopes": {
+        "subtitle": "Configure permission scopes",
+        "labels": {
+          "select-bounded-scopes": "Select bounded scopes",
+          "selected": "Selected",
+          "scope-name": "Scope name and parameters",
+          "no-scopes": "No scopes."
+        }
+      },
+      "role-permissions": {
+        "subtitle": "Assign permissions",
+        "labels": {
+          "select-permissions": "Select permissions to assign"
+        }
+      },
+      "new-role-wizard": {
+        "title": "New Role",
+        "labels": {
+          "summary": "Summary",
+          "name": "Name",
+          "description": "Description",
+          "assign-permissions": "Assign permissions"
+        },
+        "placeholders": {
+          "name": "Enter name",
+          "description": "Enter description"
+        }
+      },
+      "role-list": {
+        "title": "Roles",
+        "subtitle": "Security service",
+        "labels": {
+          "name": "Name"
+        }
+      },
+      "login": {
+        "labels": {
+          "sign-in": "Sign in to {{title}} Manager",
+          "login": "Login",
+          "password": "Password",
+          "remember-me": "Remember me",
+          "log-in": "Log in"
+        }
+      },
+      "license": {
+        "title": "Current license",
+        "title-new": "New license activation",
+        "license-info": "License information",
+        "license-activation": "License activation",
+        "labels": {
+          "info-running-no-license": "This instance of Virto Commerce is running on",
+          "info-open-source-license": "Open Source Community license.",
+          "info0": "Acquiring or renewing the license:",
+          "info1": "Submit the ",
+          "info2": "We'll process your request and should contact you soon.",
+          "info3": "Once you receive the \"Activation Code\" and / or the License file, fill one of the activation fields below.",
+          "info4": "The system will display you the new license information. Review it and click \"Activate\" to confirm.",
+          "customer": "License issued to",
+          "type": "Type",
+          "expiration": "Expiration",
+          "email": "Customer email",
+          "request-license": "License request form.",
+          "code-descr": "Enter the received license \"Activation Code\" and hit [Enter]. This is the quickest license activation method. (Requires internet connection)",
+          "file-descr": "Optionally, provide the received License file. (Off-line activation)",
+          "upload-progress": "Upload progress",
+          "errors": "Activation error"
+        },
+        "placeholders": {
+          "code": "Enter activation code"
+        }
+      },
+      "new-account-wizard": {
+        "labels": {
+          "login": "Login",
+          "password": "Password",
+          "repeat-password": "Repeat password",
+          "assign-roles": "Assign roles"
+        },
+        "placeholders": {
+          "login": "Enter email address",
+          "password": "Enter new password",
+          "repeat-password": "Repeat new password"
+        }
+      },
+      "security-main": {
+        "title": "Security",
+        "subtitle": "User management"
+      },
+      "entitySetting-list": {
+        "title": "Settings"
+      },
+      "setting-dictionary": {
+        "subtitle": "Manage dictionary values",
+        "labels": {
+          "new-value": "Please enter value",
+          "current-values": "Current values",
+          "value": "Value"
+        },
+        "validations": {
+          "new-value-required": "Required",
+          "new-value": "Duplicate value found"
+        },
+        "placeholders": {
+          "new-value": "Please enter value"
+        }
+      },
+      "settings-detail": {
+        "title": "Setting values"
+      },
+      "settingGroup-list": {
+        "title": "Settings"
+      },
+      "user-profile": {
+        "title": "User profile",
+        "labels": {
+          "language": "Language",
+          "language-description": "Display language. Clear to use browser or fallback language.",
+          "regional-format": "Regional format",
+          "regional-format-description": "Regional format of numbers, currency, date and time. Clear to use browser or fallback regional format.",
+          "time-zone": "Time zone",
+          "time-zone-description": "Current user time zone in IANA (tz database) format. Select the nearest city in your time zone. Clear to use browser or fallback time zone.",
+          "use-time-ago": "Use time ago format if it is possible",
+          "full-date-threshold-group": "Use full date format for dates earlier than...",
+          "full-date-threshold-description": "Numeric value of time units",
+          "full-date-threshold-unit-description": "Time unit (i.e. hours or years)"
+        },
+        "placeholders": {
+          "full-date-threshold": "Enter threshold value",
+          "full-date-threshold-unit": "Select threshold unit"
+        },
+        "full-date-threshold-units": {
+          "Never": "Never",
+          "Seconds": "Seconds",
+          "Minutes": "Minutes" ,
+          "Hours": "Hours" ,
+          "Days": "Days" ,
+          "Weeks": "Weeks" ,
+          "Months": "Months" ,
+          "Quarters": "Quarters" ,
+          "Years": "Years" 
+        } 
+      }
+    },
+    "templates": {
+      "sampleDataChoose": {
+        "labels": {
+          "choose-sample-data-type": "Choose sample data type",
+          "size": "size",
+          "version": "version"
+        }
+      },
+      "sampleDataInitialization": {
+        "labels": {
+          "sample-data-initialization": "Sample data initialization",
+          "starting-initialization": "Starting sample data initialization...",
+          "errors": "Errors",
+          "start": "Start",
+          "end": "End"
+        }
+      },
+      "licensing": {
+        "license-absent": "Community license",
+        "license-present": "{{type}} license",
+        "community": "Running community edition, click to request a commercial license.",
+        "expired": "You license has expired on {{expirationDate | amParse | date}}, please renew."
+      },
+      "modulesAutoInstallation": {
+        "labels": {
+          "module-auto-installation": "Modules auto installation",
+          "loading": "Retrieving modules information...",
+          "finished": "Installation finished. Click Restart to continue.",
+          "start": "Start",
+          "end": "End"
+        }
+      }
+    },
+    "widgets": {
+      "operations": {
+        "title": "Changes",
+        "blade-subtitle": "Changes history"
+      },
+      "dynamicProperty": {
+        "title": "Dynamic properties"
+      },
+      "entitySettings": {
+        "title": "Settings"
+      },
+      "accountApi": {
+        "title": "API Keys",
+        "blade-subtitle": "API keys"
+      },
+      "accountRoles": {
+        "title": "Roles",
+        "blade-subtitle": "Manage roles"
+      }
+    },
+    "dialogs": {
+      "folders-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected folders or files?"
+      },
+      "properties-save": {
+        "title": "Save changes",
+        "message": "The properties have been modified. Do you want to confirm changes?"
+      },
+      "notification-template-save": {
+        "title": "Save changes",
+        "message": "The notification template has been modified. Do you want to save changes?"
+      },
+      "role-save": {
+        "title": "Save changes",
+        "message": "The Role has been modified. Do you want to save changes?"
+      },
+      "roles-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected Roles?"
+      },
+      "account-save": {
+        "title": "Save changes",
+        "message": "The Account has been modified. Do you want to save changes?"
+      },
+      "account-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected Accounts?"
+      },
+      "dynamic-property-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this Dynamic Property?"
+      },
+      "settings-value-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete selected Values?"
+      },
+      "settings-save": {
+        "title": "Save changes",
+        "message": "The settings has been modified. Do you want to confirm changes?"
+      },
+      "settings-delete": {
+        "title": "Delete confirmation",
+        "message": "The settings has been modified. Do you want to save changes?"
+      },
+      "email-sending-success": {
+        "title": "Sending success",
+        "message": "Email was sent successfully!"
+      },
+      "email-send-error": {
+        "title": "Error in sending",
+        "message": "Email wasn't send! Error: {{error}}"
+      },
+      "dictionary-items-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete {{quantity}} selected dictionary item(s)?"
+      },
+      "module-action": {
+        "title-install": "Install confirmation",
+        "title-update": "Update confirmation",
+        "title-delete": "Uninstall confirmation",
+        "message0-install": "You are about to install:",
+        "message0-update": "You are about to update:",
+        "message0-delete": "You are about to uninstall:",
+        "message1-install": "The following dependencies will also be installed:",
+        "message1-delete": "The following depending modules will also be uninstalled:",
+        "message2-install": "Install selection and dependencies?",
+        "message2-update": "Update selection and dependencies?",
+        "message2-delete": "Uninstall this and ALL depending modules?"
+      },
+      "module-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to uninstall this Module?"
+      },
+      "api-key-delete": {
+        "title": "Delete confirmation",
+        "message": "Are you sure you want to delete this API key?"
+      }
     }
+  }
 }

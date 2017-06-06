@@ -6,7 +6,7 @@
                 columnDefs: [
                     { name: 'createdBy', displayName: 'platform.blades.operation-list.labels.login', width: 100 },
                     { name: 'detail', displayName: 'platform.blades.operation-list.labels.details' },
-                    { name: 'createdDate', displayName: 'platform.blades.operation-list.labels.time', width: 87, cellTemplate: 'am-time-ago.cell.html' }
+                    { name: 'createdDate', displayName: 'platform.blades.operation-list.labels.time', width: 87 }
                 ]})">
                 <div ng-if="blade.currentEntities.length" ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
             </div>
@@ -14,6 +14,3 @@
         </div>
     </div>
 </div>
-<script type="text/ng-template" id="am-time-ago.cell.html">
-    <span class="table-date" am-time-ago="COL_FIELD"></span>
-</script>

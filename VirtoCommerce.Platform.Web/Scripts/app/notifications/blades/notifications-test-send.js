@@ -151,14 +151,6 @@
         $scope.datepickers[parameterName] = true;
     };
 
-    $scope.dateOptions = {
-        'year-format': "'yyyy'",
-        'starting-day': 1
-    };
-
-    $scope.formats = ['shortDate', 'dd-MMMM-yyyy', 'yyyy/MM/dd'];
-    $scope.format = $scope.formats[0];
-
     blade.addDictionaryElement = function (paramName) {
         var value = _.find(blade.obj.notificationParameters, function (element) { return paramName === element.parameterName; });
         value.push({ name: '', value: '' });

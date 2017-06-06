@@ -433,8 +433,7 @@
           "is-administrator": "Ist Administrator",
           "account-type": "Kontentyp",
           "login": "Einloggen",
-          "account-state": "Konto Zustand",
-          "container-id": "Container (Shop) ID"
+          "account-state": "Konto Zustand"
         },
         "placeholders": {
           "account-type": "Wählen Sie aus..."
@@ -595,7 +594,9 @@
       "user-profile": {
         "title": "User Profil",
         "labels": {
-          "set-language": "Set Manager Sprache"
+          "language": "Sprache",
+          "regional-format": "Regionales Format",
+          "timezone": "Zeitzone"
         }
       }
     },
@@ -620,7 +621,7 @@
         "license-absent": "Common License",
         "license-present": "{{type}} Lizenz",
         "community": "Sie nutzen die Community Edition. klicken Sie hier um eine kommerzielle Lizenz zu beantragen.",
-        "expired": "Ihre Lizenz ist am {{expirationDate | date}} abgelaufen, bitte erneuern."
+        "expired": "Ihre Lizenz ist am {{expirationDate | amParse | date}} abgelaufen, bitte erneuern."
       },
       "modulesAutoInstallation": {
         "labels": {
