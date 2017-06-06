@@ -16,7 +16,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private const string LocalizationFilesFormat = ".json";
         private const string LocalizationFilesFolder = "Localizations";
         private const string InternationalizationFilesFormat = ".js";
-        private const string InternationalizationFilesFolder = "Scripts\\i18n";
+        private const string InternationalizationFilesFolder = "Scripts\\i18n\\angular";
 
         private readonly IModuleCatalog _moduleCatalog;
         
@@ -55,6 +55,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("locales")]
+        [AllowAnonymous]
         [ResponseType(typeof(string[]))]
         public IHttpActionResult GetLocales()
         {
@@ -72,6 +73,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("regionalformats")]
+        [AllowAnonymous]
         [ResponseType(typeof(string[]))]
         public IHttpActionResult GetRegionalFormats()
         {

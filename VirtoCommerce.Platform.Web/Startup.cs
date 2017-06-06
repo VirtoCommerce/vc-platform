@@ -482,7 +482,7 @@ namespace VirtoCommerce.Platform.Web
                                 Name = "VirtoCommerce.Platform.UI.TimeZone",
                                 ValueType = ModuleSetting.TypeString,
                                 Title = "Time zone",
-                                Description = "Default time zone (IANA time zone name [tz database], with slash or underscore as delemiter, case-insensitive). Examples: America/New_York, Europe/Moscow"
+                                Description = "Default time zone (IANA time zone name [tz database], exactly as in database, case-sensitive). Examples: America/New_York, Europe/Moscow"
                             },
                             new ModuleSetting
                             {
