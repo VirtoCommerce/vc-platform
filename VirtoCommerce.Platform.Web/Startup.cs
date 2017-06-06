@@ -488,7 +488,7 @@ namespace VirtoCommerce.Platform.Web
                             {
                                 Name = "VirtoCommerce.Platform.UI.UseTimeAgo",
                                 ValueType = ModuleSetting.TypeBoolean,
-                                Title = "Use time ago format when possible",
+                                Title = "Use time ago format when is possible",
                                 Description = "When set to true (by default), system will display date in format like 'a few seconds ago' when possible",
                                 DefaultValue = true.ToString()
                             },
@@ -497,7 +497,7 @@ namespace VirtoCommerce.Platform.Web
                                 Name = "VirtoCommerce.Platform.UI.FullDateThreshold",
                                 ValueType = ModuleSetting.TypeInteger,
                                 Title = "Full date threshold",
-                                Description = "Number of units after which time ago format will be switched to full date format"
+                                Description = "Number of units after time ago format will be switched to full date format"
                             },
                             new ModuleSetting
                             {
