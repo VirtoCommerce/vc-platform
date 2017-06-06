@@ -42,7 +42,6 @@
             if (!timeZone) {
                 timeZone = moment.tz.guess();
             }
-            timeZone = timeZones.normalize(timeZone);
             momentService.changeTimezone(timeZone);
         }
 
@@ -65,7 +64,7 @@
         return {
             getLanguage: function() { return languages.normalize($translate.use()) },
             getRegionalFormat: function () { return locales.normalize(dynamicLocale.get()) },
-            getTimeZone: function () { return timeZones.normalize(momentConfig.timezone) },
+            getTimeZone: function () { return momentConfig.timezone },
             getTimeAgoSettings: function () {
                 var result = {};
                 // Always use time ago:          threshold unit = null, threshold value = null                           | null
