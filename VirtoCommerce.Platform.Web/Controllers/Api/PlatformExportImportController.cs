@@ -315,8 +315,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             try
             {
                 var relativeUrl = "tmp/exported_data.zip";
-                var localTmpFolder = HostingEnvironment.MapPath("~/App_Data/Uploads/");
-                var localTmpPath = Path.Combine(localTmpFolder, relativeUrl);
+                var localTmpFolder = HostingEnvironment.MapPath("~/App_Data/Uploads/tmp");
+                var localTmpPath = Path.Combine(localTmpFolder, "exported_data.zip");
                 if (!Directory.Exists(localTmpFolder))
                 {
                     Directory.CreateDirectory(localTmpFolder);
