@@ -64,6 +64,9 @@
     });
     $scope.$on('$localeChangeSuccess', function () {
         blade.currentRegionalFormat = getNameByCode($scope.regionalFormats, i18n.getRegionalFormat());
+        // Update time zones list because it contains numbers, which must be formatted with current regional format
+        $scope.timeZones = timeZones.query();
+        blade.currentTimeZone = getNameByCode($scope.timeZones, i18n.getTimeZone());
     });
 
     // Do not update user profile while blade is loading (change events occurs because user profile loaded)
