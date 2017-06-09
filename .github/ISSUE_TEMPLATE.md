@@ -1,6 +1,6 @@
 Version info: 
 - Browser version: 
-- Platorm version:
+- Platform version:
 - Module version: 
 ### Expected behavior
 ### Actual behavior
