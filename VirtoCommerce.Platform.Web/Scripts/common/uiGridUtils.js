@@ -17,6 +17,10 @@
                         foundDef.sort = x.sort;
                         foundDef.width = x.width || foundDef.width;
                         foundDef.visible = x.visible;
+                        // Workaround for #936
+                        if (x.cellTemplate === 'am-time-ago.cell.html') {
+                            x.cellTemplate = null;
+                        }
                         _.extend(x, foundDef);
                         x.wasPredefined = true;
                         initOptions.columnDefs.splice(initOptions.columnDefs.indexOf(foundDef), 1);
