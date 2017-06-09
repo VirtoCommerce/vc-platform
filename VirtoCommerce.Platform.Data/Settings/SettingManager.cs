@@ -148,8 +148,9 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
-            if (entity == null)
-                throw new ArgumentNullException("entity transistent");
+
+            if (entity.IsTransient())
+                throw new ArgumentException("entity transistent", "entity");
 
             var objectType = entity.GetType().Name;
             using (var repository = _repositoryFactory())
@@ -328,9 +329,8 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         private IEnumerable<ModuleSetting> GetAllManifestSettings()
         {
-            return GetModulesWithSettings()
-                .SelectMany(m => m.Settings)
-                .SelectMany(g => g.Settings);
+            return GetModulesWithSettings().SelectMany(m => m.Settings)
+                .Where(g => g.Settings != null).SelectMany(g => g.Settings);
         }
 
         private List<SettingEntity> GetAllEntities()

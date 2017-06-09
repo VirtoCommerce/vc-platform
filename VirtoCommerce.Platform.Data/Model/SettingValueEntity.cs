@@ -13,6 +13,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public const string TypeBoolean = "Boolean";
         public const string TypeDateTime = "DateTime";
         public const string TypeSecureString = "SecureString";
+        public const string TypeJson = "Json";
 
         [Required]
         [StringLength(64)]
@@ -49,6 +50,7 @@ namespace VirtoCommerce.Platform.Data.Model
                 case TypeInteger:
                     return IntegerValue;
                 case TypeLongText:
+                case TypeJson:
                     return LongTextValue;
                 case TypeShortText:
                 case TypeSecureString:
@@ -71,6 +73,7 @@ namespace VirtoCommerce.Platform.Data.Model
                 case TypeInteger:
                     return IntegerValue.ToString(formatProvider);
                 case TypeLongText:
+                case TypeJson:
                     return LongTextValue;
                 case TypeShortText:
                 case TypeSecureString:

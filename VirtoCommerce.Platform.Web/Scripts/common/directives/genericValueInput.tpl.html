@@ -29,7 +29,7 @@
                       placeholder="{{ 'platform.genericValueInput.placeholders.long-text' | translate}}"></textarea>
         </div>
     </script>
-    <script type="text/ng-template" id="dHtml.html">
+    <script type="text/ng-template" id="dCode.html">
         <div class="form-input">
             <ui-codemirror ng-required="currentEntity.isRequired"
                            ng-model="context.currentPropValues[0].value"
@@ -58,11 +58,10 @@
     <script type="text/ng-template" id="dDateTime.html">
         <div class="form-input __calendar">
             <input ng-model="context.currentPropValues[0].value"
-                   datepicker-popup="{{currentEntity.isReadonly ? 'short' : '' }}"
+                   datepicker-popup
                    ng-disabled="currentEntity.isReadonly"
                    is-open="datepickers.DateTime"
-                   placeholder="{{ 'platform.genericValueInput.placeholders.date-time' | translate}}"
-                   close-text="Close">
+                   placeholder="{{ 'platform.genericValueInput.placeholders.date-time' | translate}}">
             <button ng-click="open($event, 'DateTime')" type="button" class="btn" ng-disabled="currentEntity.isReadonly">
                 <i class="btn-ico fa fa-calendar"></i>
             </button>
@@ -80,7 +79,6 @@
         <tags-input ng-model="context.currentPropValues"
                     min-length="1"
                     min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
-                    add-on-blur="true"
                     display-property="value"
                     placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multivalue' | translate}}">
         </tags-input>
@@ -88,8 +86,7 @@
     <script type="text/ng-template" id="dInteger-multivalue.html">
         <tags-input ng-model="context.currentPropValues"
                     min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
-                    add-on-blur="true"
-                    allowed-tags-pattern="^[-]?[0-9]*$"
+                    tags-number num-type="integer"
                     min-length="1"
                     display-property="value"
                     placeholder="{{ 'platform.genericValueInput.placeholders.integer-multivalue' | translate}}">
@@ -98,8 +95,7 @@
     <script type="text/ng-template" id="dDecimal-multivalue.html">
         <tags-input ng-model="context.currentPropValues"
                     min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
-                    add-on-blur="true"
-                    allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
+                    tags-number num-type="float"
                     min-length="1"
                     display-property="value"
                     placeholder="{{ 'platform.genericValueInput.placeholders.number-multivalue' | translate}}">
@@ -145,7 +141,7 @@
                       placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
         </div>
     </script>
-    <script type="text/ng-template" id="dHtml-multilang.html">
+    <script type="text/ng-template" id="dCode-multilang.html">
         <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
             <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
             <ui-codemirror ng-required="currentEntity.isRequired"
@@ -160,7 +156,6 @@
             <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
             <tags-input ng-model="propValue.values"
                         min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
-                        add-on-blur="true"
                         min-length="1"
                         display-property="value"
                         placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multivalue-multilang' | translate}}">

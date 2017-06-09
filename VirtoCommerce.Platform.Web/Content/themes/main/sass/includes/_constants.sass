@@ -1,0 +1,108 @@
+/* Fonts */
+$font: 'Exo 2'
+$fontAw: 'FontAwesome'
+$fontSize: 16px
+$fontAwFwSzeMultiplier: 1.28571429
+$monospaceFontSize: 13px
+$h1FontSize: ceil(3.30 * $fontSize)
+$h2FontSize: ceil(2.75 * $fontSize)
+$h3FontSize: ceil(2.25 * $fontSize)
+
+/* Metrics */
+
+/* General */
+
+$demoWarningHeight: 28px;
+
+$tileSize: 120px
+$tileMargin: 10px
+
+$bladeSizeBase: $tileSize + $tileMargin;
+$bladePadding: 20px
+$bladeContainerPadding: 8px
+
+$bladeSizes: ('Small', 'Normal', 'Medium', 'Large', 'XLarge', 'XXLarge')
+
+@function getBladeContentSize($bladeSize)
+  $minimalSize: $bladeSizeBase * 2 - $tileMargin + $bladePadding * 2
+  @return $minimalSize + $bladeSizeBase * (index($bladeSizes, $bladeSize) - 1)
+
+@function getBladeInnerSize($bladeSize)
+  @return getBladeContentSize($bladeSize) - $bladePadding * 2
+
+$listItemHorizontalPadding: 20px
+$listItemArrowSpace: 30px
+
+$mainMenuWidth: 235px
+$mainMenuIcoSize: $fontSize * 2
+$mainMenuIcoFontSize: round($mainMenuIcoSize / $fontAwFwSzeMultiplier)
+$mainMenuCollapsedWidth: $mainMenuIcoSize + $listItemHorizontalPadding * 2
+$mainMenuDropdownWidth: 360px
+
+/* Colors */
+
+/* General */
+$baseColor: #43b0e6
+$baseBg: #eef5f7
+$baseBrd: #dee9f0
+$colorText: #4c4c4c
+$lightBg: #fbfdfe
+$whiteColor: #fff
+$borderColor: #ddd
+
+$scrollTrack: #c9d6df
+$scrollThumb: #b4c0c8
+
+$genericErrorColor: #e51400 
+$genericWarningColor: #f0a30a
+$genericSuccessColor: #008a00
+$genericInfoColor: #43b0e6
+
+/* Notify */
+$errorNotifyBg: #f2dede
+$errorNotifyBrd: #ebccd1
+$errorNotifyColor: #a94442
+
+$noteNotifyBg: #f9f9f9
+$noteNotifyBrd: #eee
+$noteNotifyColor: #999
+
+$successNotifyBg: #dff0d8
+$successNotifyBrd: #d6e9c6
+$successNotifyColor: #3c763d
+
+$warningNotifyBg: #fcf8e3
+$warningNotifyBrd: #faebcc
+$warningNotifyColor: #8a6d3b
+
+$infoNotifyBg: #d9edf7
+$infoNotifyBrd: #bce8f1
+$infoNotifyColor: #31708f
+
+/* Tables */
+$tableColor: #999
+$tableStatusBg: #a6a6a6
+$tableIcoColor: #a6a6a6
+$productImgOver: #ecf7fc
+$productImgSel: #d9effa
+
+/* List */
+$listNoticeItemColor: #4c4c4c
+$listNoticeLinkColor: #ececec
+$listCarInfoColor: #43b0e6
+
+$listInfoListTColor: #4c4c4c
+$listInfoListDescrColor: #999
+
+$listNumberItemColor: #a6a6a6
+
+/* Menu */
+$mainMenuBg: #333
+$menuContextBg: #333
+$menuContextMenuItemColorOver: #43b0e6
+
+/* Text */
+$textDebugColor: #a6a6a6
+$textNoteBrd: #eee
+$textEditBgOver: #ecf7fc
+$textEditBrdOver: #a1c0d4

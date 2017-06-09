@@ -1,4 +1,4 @@
-﻿<div class="blade" ng-class="moduleName" ng-repeat="blade in blades">
+﻿<div class="blade" ng-class="[moduleName, {'__animated': blade.animated, '__expanded': blade.isExpanded, '__maximized': blade.isMaximized, '__closing': blade.closing}]" ng-repeat="blade in blades">
     <div class="blade-wrapper" va-blade='blade'>
         <header class="blade-head">
             <div class="blade-status" ng-class="{'__error': blade.error}">
@@ -7,17 +7,12 @@
             </div>
             <div class="blade-nav">
                 <ul class="menu __inline">
-                    <!--<li class="menu-item">
+                    <li class="menu-item __minimize" ng-click="bladeMinimize()" ng-show="!blade.isExpandable && blade.isMaximized">
                         <button>
-                            <i class="btn-ico fa fa-thumb-tack"></i>
-                        </button>
-                    </li>-->
-                    <li class="menu-item __minimize" ng-click="bladeRestore()" ng-show="maximized">
-                        <button>
-                            {{ 'platform.commands.minimize' | translate }}
+                            {{ 'platform.commands.restore' | translate }}
                         </button>
                     </li>
-                    <li class="menu-item __maximize" ng-click="bladeMaximize()" ng-show="!maximized">
+                    <li class="menu-item __maximize" ng-click="bladeMaximize()" ng-show="!blade.isExpandable && !blade.isMaximized">
                         <button>
                             {{ 'platform.commands.maximize' | translate }}
                         </button>
@@ -30,8 +25,8 @@
                 </ul>
             </div>
             <div class="blade-t" ng-class="{'__secondary': blade.subtitle}">
-                <i class="blade-t_ico fa {{blade.headIcon == 'fa-user' ? '__customers' : ''}}" ng-class="blade.headIcon ? blade.headIcon : 'fa-folder'">
-                    <i ng-if="blade.headIcon == 'fa-user'"></i>
+                <i class="blade-t_ico fa" ng-class="blade.headIcon ? blade.headIcon : 'fa-folder'">
+                    <i></i>
                 </i>
                 <p class="blade-t_head">{{ blade.title | translate: blade.titleValues }}</p>
                 <p class="blade-t_subhead">{{ blade.subtitle | translate: blade.subtitleValues }}</p>

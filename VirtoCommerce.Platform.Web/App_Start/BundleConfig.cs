@@ -28,15 +28,10 @@ namespace VirtoCommerce.Platform.Web
                     // "~/Content/angular-gridster.css", // customized style
                     //SELECT2
                     "~/Content/select2.css", // used in selectors
-                    //Theme UI
-                    "~/Content/themes/main/css/reset.css",
+                    //Theme UI,
                     "~/Content/themes/main/css/font-awesome.css",
-                    "~/Content/themes/main/css/google-fonts.css",
-                    "~/Content/themes/main/css/base-modules.css",
-                    "~/Content/themes/main/css/lang-rtl.css",
-                    "~/Content/themes/main/css/project-modules.css",
-                    "~/Content/themes/main/css/cosmetic.css"
-                    ));
+                    "~/Content/themes/main/css/main.css"
+                ));
 
             #endregion
 
@@ -48,7 +43,9 @@ namespace VirtoCommerce.Platform.Web
                     .IncludeAndFixRoot("~/Scripts/allPackages.js")
                     .IncludeDirectoryAndFixRoot("~/Scripts/codemirror/", "*.js", true)
                     .IncludeDirectoryAndFixRoot("~/Scripts/app/", "*.js", true)
-                    .IncludeDirectoryAndFixRoot("~/Scripts/common/", "*.js", true));
+                    .IncludeDirectoryAndFixRoot("~/Scripts/common/", "*.js", true)
+                    .IncludeDirectoryAndFixRoot("~/Scripts/i18n/", "*.js", true));
+            bundles.IgnoreList.Ignore("angular-locale_*");
 
             #endregion
 

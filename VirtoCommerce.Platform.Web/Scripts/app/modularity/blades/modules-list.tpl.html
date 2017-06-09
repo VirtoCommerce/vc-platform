@@ -6,7 +6,7 @@
                 <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText='';gridApi.grid.queueGridRefresh()"></i>
             </button>
         </div>
-        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntitiesCount}}</span></p>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntitiesCount | number:0}}</span></p>
 
         <div ng-if="blade.mode==='available'" style="margin-top:10px">
             <div class="form-input">
@@ -68,7 +68,7 @@
     <div ng-if="row.groupHeader && col.isRowHeader" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell></div>
     <div ng-if="row.groupHeader && !col.isRowHeader" ng-click='grid.appScope.toggleRow(row)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns | limitTo:1 track by col.uid" class="ui-grid-cell __filters">
         <div class="ui-grid-cell-contents">
-            <div class="inner-contents"><span class="inner-t">{{grid.appScope.getGroupInfo(row.entity).groupVal | translate}}: <span class="count">{{grid.appScope.getGroupInfo(row.entity).value}}</span></span></div>
+            <div class="inner-contents"><span class="inner-t">{{grid.appScope.getGroupInfo(row.entity).groupVal | translate}}: <span class="count">{{grid.appScope.getGroupInfo(row.entity).value | number:0}}</span></span></div>
         </div>
     </div>
     <div ng-if="!row.groupHeader" ng-click='col.isRowHeader || grid.appScope.blade.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="mdl_menu"></div>

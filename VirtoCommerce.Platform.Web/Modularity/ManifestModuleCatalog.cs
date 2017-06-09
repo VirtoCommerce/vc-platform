@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Properties;
+using VirtoCommerce.Platform.Web.Util;
 
 namespace VirtoCommerce.Platform.Web.Modularity
 {
@@ -27,7 +29,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
         }
 
         protected override void InnerLoad()
-        {
+        {         
             var contentPhysicalPath = _modulesLocalPath;
 
             if (string.IsNullOrEmpty(_assembliesPath))
@@ -38,7 +40,9 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 throw new InvalidOperationException("The ContentPhysicalPath cannot contain a null value or be empty");
 
             if (!Directory.Exists(_assembliesPath))
+            {
                 Directory.CreateDirectory(_assembliesPath);
+            }
 
             if (!contentPhysicalPath.EndsWith("\\", StringComparison.OrdinalIgnoreCase))
                 contentPhysicalPath += "\\";
@@ -53,6 +57,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 var manifestPath = pair.Key;
 
                 var modulePath = Path.GetDirectoryName(manifestPath);
+
                 CopyAssemblies(modulePath, _assembliesPath);
 
                 var moduleVirtualPath = GetModuleVirtualPath(rootUri, modulePath);

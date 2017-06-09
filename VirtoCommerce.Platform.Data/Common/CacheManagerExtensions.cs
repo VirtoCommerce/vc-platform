@@ -35,7 +35,7 @@ namespace VirtoCommerce.Platform.Data.Common
                         result = getValueFunction();
                         if (result != null || cacheNullValue)
                         {
-                            cacheManager.Put(cacheKey, result ?? new NullCacheItem(), region);
+                            cacheManager.Add(cacheKey, result ?? new NullCacheItem(), region);
                         }
                     }
                 }
@@ -50,8 +50,11 @@ namespace VirtoCommerce.Platform.Data.Common
         {
             return cacheManager.Get<T>(cacheKey, region, expiration, getValueFunction, true);
         }
-
         public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, Func<T> getValueFunction, bool cacheNullValue)
+        {
+            return cacheManager.Get<T>(cacheKey, region, expiration, ExpirationMode.Sliding, getValueFunction, true);
+        }
+        public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, ExpirationMode expirationMode, Func<T> getValueFunction, bool cacheNullValue)
         {
             var result = cacheManager.Get(cacheKey, region);
             if (result == null)
@@ -65,7 +68,7 @@ namespace VirtoCommerce.Platform.Data.Common
                         result = getValueFunction();
                         if (result != null || cacheNullValue)
                         {
-                            var cacheItem = new CacheItem<object>(cacheKey, region, result ?? new NullCacheItem(), ExpirationMode.Absolute, expiration);
+                            var cacheItem = new CacheItem<object>(cacheKey, region, result ?? new NullCacheItem(), expirationMode, expiration);
                             cacheManager.Add(cacheItem);
                         }
                     }
@@ -98,7 +101,7 @@ namespace VirtoCommerce.Platform.Data.Common
                         result = await getValueFunction();
                         if (result != null || cacheNullValue)
                         {
-                            cacheManager.Put(cacheKey, result ?? new NullCacheItem(), region);
+                            cacheManager.Add(cacheKey, result ?? new NullCacheItem(), region);
                         }
                     }
                 }
@@ -114,8 +117,11 @@ namespace VirtoCommerce.Platform.Data.Common
         {
             return await cacheManager.GetAsync<T>(cacheKey, region, expiration, getValueFunction, true);
         }
-
         public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, Func<Task<T>> getValueFunction, bool cacheNullValue)
+        {
+            return await cacheManager.GetAsync<T>(cacheKey, region, expiration, ExpirationMode.Sliding, getValueFunction, true);
+        }
+        public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, ExpirationMode expirationMode, Func<Task<T>> getValueFunction, bool cacheNullValue)
         {
             var result = cacheManager.Get(cacheKey, region);
             if (result == null)
@@ -130,7 +136,7 @@ namespace VirtoCommerce.Platform.Data.Common
                         result = await getValueFunction();
                         if (result != null || cacheNullValue)
                         {
-                            var cacheItem = new CacheItem<object>(cacheKey, region, result ?? new NullCacheItem(), ExpirationMode.Absolute, expiration);
+                            var cacheItem = new CacheItem<object>(cacheKey, region, result ?? new NullCacheItem(), expirationMode, expiration);
                             cacheManager.Add(cacheItem);
                         }
                     }

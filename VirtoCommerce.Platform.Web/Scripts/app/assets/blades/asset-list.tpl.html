@@ -26,7 +26,7 @@
                         },
                         { name: 'name', displayName: 'platform.blades.asset-list.labels.name', cellTooltip: true },
                         { name: 'size', displayName: 'platform.blades.asset-list.labels.size'},
-                        { name: 'modifiedDate', displayName: 'platform.blades.asset-list.labels.modified', cellTemplate: 'am-time-ago.cell.html' }
+                        { name: 'modifiedDate', displayName: 'platform.blades.asset-list.labels.modified' }
                 ],
                 enablePaginationControls: false,
                 paginationPageSize: pageSettings.itemsPerPageCount
@@ -70,7 +70,4 @@
             <i class="table-ico fa" ng-class="row.entity.type === 'folder' ? 'fa-folder' : 'fa-file-o'" ng-if="!row.entity.isImage"></i>
         </div>
     </div>
-</script>
-<script type="text/ng-template" id="am-time-ago.cell.html">
-    <span class="table-date" am-time-ago="COL_FIELD"></span>
 </script>

@@ -2,8 +2,10 @@
   "platform": {
     "commands": {
       "add": "Add",
+      "activate": "Activate",
       "assign": "Assign",
       "cancel": "Cancel",
+      "clear": "Clear",
       "clear-all": "Clear all",
       "clone": "Clone",
       "close": "Close",
@@ -22,6 +24,7 @@
       "more": "More",
       "no": "No",
       "new-folder": "New folder",
+      "new-license": "Renew license",
       "ok": "Ok",
       "paste": "Paste",
       "pick-selected": "Pick selected",
@@ -46,13 +49,14 @@
       "add-new-property": "Add new property",
       "manage-type-properties": "Manage type properties",
       "manage-profile": "Manage profile",
-      "Minimize": "Minimize",
-      "Maximize": "Maximize",
+      "minimize": "Minimize",
+      "maximize": "Maximize",
       "stop-sending": "Stop sending",
       "set-active": "Set Active",
       "reject-user": "Reject user",
       "approve-user": "Approve user",
-      "change-password": "Change password"
+      "change-password": "Change password",
+      "today": "Today"
     },
     "list": {
       "no-data": "No data",
@@ -60,6 +64,7 @@
     },
     "placeholders": {
         "n-a": "N/A",
+        "no-file": "Choose file",
         "search-keyword": "Search keyword..."
     },
     "dialogs": {
@@ -102,25 +107,25 @@
       }
     },
     "genericValueInput": {
-      "placeholders": {
-        "short-text": "Enter short text",
-        "secure-string": "Enter secret text",
-        "url": "Enter URL",
-        "long-text": "Enter long text",
-        "integer": "Enter integer number",
-        "number": "Enter decimal number",
-        "date-time": "Choose date",
-        "short-text-multivalue": "Add value",
-        "integer-multivalue": "Add integer",
-        "number-multivalue": "Add decimal",
-        "short-text-dictionary": "Select value",
-        "short-text-dictionary-multivalue": "Select value",
-        "short-text-multilang": "Enter value",
-        "long-text-multilang": "Enter value",
-        "short-text-multivalue-multilang": "Add value",
-        "short-text-dictionary-multilang": "Select value",
-        "short-text-dictionary-multivalue-multilang": "Select value"
-      }
+        "placeholders": {
+            "short-text": "Enter short text",
+            "secure-string": "Enter secret text",
+            "url": "Enter URL",
+            "long-text": "Enter long text",
+            "integer": "Enter integer number",
+            "number": "Enter decimal number",
+            "date-time": "Choose date",
+            "short-text-multivalue": "Add value",
+            "integer-multivalue": "Add integer",
+            "number-multivalue": "Add decimal",
+            "short-text-dictionary": "Select value",
+            "short-text-dictionary-multivalue": "Select value",
+            "short-text-multilang": "Enter value",
+            "long-text-multilang": "Enter value",
+            "short-text-multivalue-multilang": "Add value",
+            "short-text-dictionary-multilang": "Select value",
+            "short-text-dictionary-multivalue-multilang": "Select value"
+        }
     }
   }
 }

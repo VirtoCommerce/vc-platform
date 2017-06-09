@@ -53,7 +53,8 @@
 	        ]
 	    });
 	}])
-    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state',  'platformWebApp.authService', function ($rootScope, mainMenuService, widgetService, $state, authService) {
+    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService',
+        function ($rootScope, mainMenuService, metaFormsService, widgetService, $state, authService) {
         //Register module in main menu
         var menuItem = {
             path: 'configuration/security',
@@ -64,6 +65,26 @@
             permission: 'platform:security:access'
         };
         mainMenuService.addMenuItem(menuItem);
+
+        metaFormsService.registerMetaFields("accountDetails",
+        [
+            {
+                name: "isAdministrator",
+                title: "platform.blades.account-detail.labels.is-administrator",
+                valueType: "Boolean",
+                priority: 0
+            },
+            {
+                name: "accountType",
+                templateUrl: "accountTypeSelector.html",
+                priority: 1
+            },
+            {
+                name: "accountInfo",
+                templateUrl: "accountInfo.html",
+                priority: 2
+            }
+        ]);
 
         //Register widgets
         widgetService.registerWidget({

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.SignalR;
 using VirtoCommerce.Platform.Core.Common;
@@ -15,11 +15,13 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
     [CLSCompliant(false)]
     public class InMemoryPushNotificationManager : core.IPushNotificationManager
     {
-        private readonly ConcurrentBag<core.PushNotification> _innerList = new ConcurrentBag<core.PushNotification>();
+        private readonly List<core.PushNotification> _innerList;
         private readonly IHubContext _hubSignalR;
+        private object _lockObject = new object();
 
         public InMemoryPushNotificationManager(IHubContext hubSignalR)
         {
+            _innerList = new List<core.PushNotification>();
             _hubSignalR = hubSignalR;
         }
 
@@ -32,29 +34,29 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                 throw new ArgumentNullException("notify");
             }
 
-            var alreadyExistNotify = _innerList.FirstOrDefault(x => x.Id == notify.Id);
-
-            if (alreadyExistNotify != null)
+            lock (_lockObject)
             {
-                _innerList.TryTake(out alreadyExistNotify);
-                _innerList.Add(notify);
-
-            }
-            else
-            {
-                var lastEvent = _innerList.OrderByDescending(x => x.Created).FirstOrDefault();
-                if (lastEvent != null && lastEvent.ItHasSameContent(notify))
+                var alreadyExistNotify = _innerList.FirstOrDefault(x => x.Id == notify.Id);
+                if (alreadyExistNotify != null)
                 {
-                    lastEvent.IsNew = true;
-                    lastEvent.RepeatCount++;
-                    lastEvent.Created = DateTime.UtcNow;
+                    _innerList.Remove(alreadyExistNotify);
+                    _innerList.Add(notify);
                 }
                 else
                 {
-                    _innerList.Add(notify);
+                    var lastEvent = _innerList.OrderByDescending(x => x.Created).FirstOrDefault();
+                    if (lastEvent != null && lastEvent.ItHasSameContent(notify))
+                    {
+                        lastEvent.IsNew = true;
+                        lastEvent.RepeatCount++;
+                        lastEvent.Created = DateTime.UtcNow;
+                    }
+                    else
+                    {
+                        _innerList.Add(notify);
+                    }
                 }
             }
-
             _hubSignalR.Clients.All.notification(notify);
 
         }

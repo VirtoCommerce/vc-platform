@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using CacheManager.Core;
+using CacheManager.Core.Configuration;
 using Common.Logging;
 using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -48,6 +49,7 @@ using VirtoCommerce.Platform.Data.Serialization;
 using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Web;
 using VirtoCommerce.Platform.Web.BackgroundJobs;
+using VirtoCommerce.Platform.Web.Cache;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Modularity;
@@ -83,6 +85,18 @@ namespace VirtoCommerce.Platform.Web
             HostingEnvironment.MapPath(VirtualRoot).EnsureEndSeparator();
             var modulesVirtualPath = VirtualRoot + "/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
+
+            // Try to include modules directory to shadow copy directories
+            // Ignore any errors, because method AppDomain.CurrentDomain.SetShadowCopyPath is obsolete
+            try
+            {
+#pragma warning disable 618
+                AppDomain.CurrentDomain.SetShadowCopyPath(AppDomain.CurrentDomain.SetupInformation.ShadowCopyDirectories + ";" + _assembliesPath);
+#pragma warning restore 618
+            }
+            catch (Exception)
+            {
+            }
 
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
 
@@ -193,25 +207,52 @@ namespace VirtoCommerce.Platform.Web
             RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
             var notificationManager = container.Resolve<INotificationManager>();
+
             notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
                 DisplayName = "Registration notification",
-                Description = "This notification sends by email to client when he finish registration",
+                Description = "This notification is sent by email to a client when he finishes registration",
                 NotificationTemplate = new NotificationTemplate
                 {
+                    Subject = PlatformNotificationResource.RegistrationNotificationSubject,
                     Body = PlatformNotificationResource.RegistrationNotificationBody,
-                    Subject = PlatformNotificationResource.RegistrationNotificationSubject
+                    Language = "en-US",
                 }
             });
 
             notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
                 DisplayName = "Reset password notification",
-                Description = "This notification sends by email to client when he want to reset his password",
+                Description = "This notification is sent by email to a client when he want to reset his password",
                 NotificationTemplate = new NotificationTemplate
                 {
+                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
                     Body = PlatformNotificationResource.ResetPasswordNotificationBody,
-                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject
+                    Language = "en-US",
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new TwoFactorEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Two factor authentication",
+                Description = "This notification contains a security token for two factor authentication",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
+                    Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                    Language = "en-US",
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new TwoFactorSmsNotification(container.Resolve<ISmsNotificationSendingGateway>())
+            {
+                DisplayName = "Two factor authentication",
+                Description = "This notification contains a security token for two factor authentication",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
+                    Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                    Language = "en-US",
                 }
             });
 
@@ -287,14 +328,29 @@ namespace VirtoCommerce.Platform.Web
             var moduleCatalog = container.Resolve<IModuleCatalog>();
 
             #region Caching
-            var cacheManager = CacheFactory.Build("platformCache", settings =>
+            //Cure for System.Runtime.Caching.MemoryCache freezing 
+            //https://www.zpqrtbnk.net/posts/appdomains-threads-cultureinfos-and-paracetamol
+            app.SanitizeThreadCulture();
+            ICacheManager<object> cacheManager = null;
+            //Try to load cache configuration from web.config first
+            //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
+            if (ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) != null && ConfigurationManager.GetSection("platformCache") != null)
             {
-                //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
-                settings
-                    .WithUpdateMode(CacheUpdateMode.Up)
-                    .WithSystemRuntimeCacheHandle("memCacheHandle")
-                        .WithExpiration(ExpirationMode.Absolute, TimeSpan.FromDays(1));
-            });
+                var configuration = ConfigurationBuilder.LoadConfiguration("platformCache");
+                configuration.LoggerFactoryType = typeof(CacheManagerLoggerFactory);
+                configuration.LoggerFactoryTypeArguments = new[] { container.Resolve<ILog>() };
+                cacheManager = CacheFactory.FromConfiguration<object>(configuration);
+            }
+            else
+            {
+                cacheManager = CacheFactory.Build("platformCache", settings =>
+                {                 
+                    settings.WithUpdateMode(CacheUpdateMode.Up)
+                            .WithSystemRuntimeCacheHandle("memCacheHandle")
+                            .WithExpiration(ExpirationMode.Sliding, TimeSpan.FromMinutes(5));
+                });
+            }       
+        
             container.RegisterInstance(cacheManager);
             #endregion
 
@@ -315,10 +371,10 @@ namespace VirtoCommerce.Platform.Web
                             new ModuleSetting
                             {
                                 Name = "VirtoCommerce.Platform.Notifications.SendGrid.ApiKey",
-                                ValueType = ModuleSetting.TypeString,
+                                ValueType = ModuleSetting.TypeSecureString,
                                 Title = "SendGrid API key",
                                 Description = "Your SendGrid API key"
-                            }                        
+                            }
                         }
                     },
                     new ModuleSettingsGroup
@@ -391,6 +447,96 @@ namespace VirtoCommerce.Platform.Web
                                 IsArray = true,
                                 ArrayValues = Enum.GetNames(typeof(AccountType)),
                                 DefaultValue = AccountType.Manager.ToString()
+                            }
+                        }
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|User Profile",
+                        Settings = new[]
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.MainMenu.State",
+                                ValueType = ModuleSetting.TypeJson,
+                                Title = "Persisted state of main menu"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.Language",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Language",
+                                Description = "Default language (two letter code from ISO 639-1, case-insensitive). Example: en, de",
+                                DefaultValue = "en"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.RegionalFormat",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Regional format",
+                                Description = "Default regional format (CLDR locale code, with dash or underscore as delemiter, case-insensitive). Example: en, en_US, sr_Cyrl, sr_Cyrl_RS",
+                                DefaultValue = "en"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.TimeZone",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Time zone",
+                                Description = "Default time zone (IANA time zone name [tz database], exactly as in database, case-sensitive). Examples: America/New_York, Europe/Moscow"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.UseTimeAgo",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Use time ago format when is possible",
+                                Description = "When set to true (by default), system will display date in format like 'a few seconds ago' when possible",
+                                DefaultValue = true.ToString()
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.FullDateThreshold",
+                                ValueType = ModuleSetting.TypeInteger,
+                                Title = "Full date threshold",
+                                Description = "Number of units after time ago format will be switched to full date format"
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.FullDateThresholdUnit",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Full date threshold unit",
+                                Description = "Unit of full date threshold",
+                                DefaultValue = "Never",
+                                AllowedValues = new[]
+                                {
+                                    "Never",
+                                    "Seconds",
+                                    "Minutes",
+                                    "Hours",
+                                    "Days",
+                                    "Weeks",
+                                    "Months",
+                                    "Quarters",
+                                    "Years"
+                                }
+                            }
+                        }
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|User Interface",
+                        Settings = new[]
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.Customization",
+                                ValueType = ModuleSetting.TypeJson,
+                                Title = "Customization",
+                                Description = "JSON contains personalization settings of manager UI",
+                                DefaultValue = "{\n" +
+                                               "  \"title\": \"Virto Commerce\",\n" +
+                                               "  \"logo\": \"Content/themes/main/images/logo.png\",\n" +
+                                               "  \"contrast_logo\": \"Content/themes/main/images/contrast-logo.png\"\n" +
+                                               "}"
                             }
                         }
                     }
@@ -469,7 +615,7 @@ namespace VirtoCommerce.Platform.Web
 
             #region Modularity
 
-            var modulesDataSources = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:ModulesDataSources", string.Empty).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            var modulesDataSources = ConfigurationManager.AppSettings.SplitStringValue("VirtoCommerce:ModulesDataSources");
             var externalModuleCatalog = new ExternalManifestModuleCatalog(moduleCatalog.Modules, modulesDataSources, container.Resolve<ILog>());
             container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, new ModuleInstaller(modulesPath, externalModuleCatalog), notifier, container.Resolve<IUserNameResolver>(), settingsManager));
 

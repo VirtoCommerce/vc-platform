@@ -1,6 +1,6 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.settingGroupListController', ['$injector', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService',
-function ($injector, $scope, settings, bladeNavigationService) {
+.controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService',
+function ($window, modules, $scope, settings, bladeNavigationService) {
     var settingsTree;
     var blade = $scope.blade;
 
@@ -120,6 +120,18 @@ function ($injector, $scope, settings, bladeNavigationService) {
             setBreadcrumbs({ groupName: null });
         }
     });
+
+    blade.toolbarCommands = [
+          {
+              name: "platform.commands.restart", icon: 'fa fa-bolt',
+              executeMethod: function () {
+                  blade.isLoading = true;
+                  modules.restart(function () { $window.location.reload(); });
+              },
+              canExecuteMethod: function () { return !blade.isLoading; },
+              permission: 'platform:module:manage'
+          }
+    ];
 
     // actions on load
     blade.refresh();

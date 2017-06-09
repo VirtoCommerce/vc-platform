@@ -1,24 +1,16 @@
-﻿<div class="blade-content __medium-wide">
+﻿<div class="blade-content __large-wide">
     <div class="blade-inner">
         <div class="inner-block">
-            <div class="table-wrapper">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="table-col __product-name">{{ 'platform.blades.operation-list.labels.login' | translate }}</th>
-                            <th class="table-col __product-code">{{ 'platform.blades.operation-list.labels.details' | translate }}</th>
-                            <th class="table-col __product-code">{{ 'platform.blades.operation-list.labels.time' | translate }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy: createdDate:true track by data.id">
-                            <td class="table-col">{{data.createdBy}}</td>
-                            <td class="table-col">{{data.detail}}</td>
-                            <td class="table-col" am-time-ago="data.createdDate"></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="table-wrapper" ng-init="setGridOptions({
+                data: 'blade.currentEntities',
+                columnDefs: [
+                    { name: 'createdBy', displayName: 'platform.blades.operation-list.labels.login', width: 100 },
+                    { name: 'detail', displayName: 'platform.blades.operation-list.labels.details' },
+                    { name: 'createdDate', displayName: 'platform.blades.operation-list.labels.time', width: 87 }
+                ]})">
+                <div ng-if="blade.currentEntities.length" ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
             </div>
+            <div class="note" ng-if="!blade.currentEntities.length">{{ 'platform.list.no-data' | translate }}</div>
         </div>
     </div>
 </div>

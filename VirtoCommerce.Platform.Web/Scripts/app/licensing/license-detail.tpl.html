@@ -1,0 +1,83 @@
+﻿<div class="blade-static __bottom" ng-if="blade.isNew && currentEntity">
+    <button class="btn" ng-click="activateLicense()" ng-disabled="blade.isLoading || activationError">{{ 'platform.commands.activate' | translate }}</button>
+</div>
+<div class="blade-content ___tree">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div ng-if="blade.isNew && !currentEntity">
+                <!--DO NOT CHANGE THE CODE BELOW: COPYRIGHT VIOLATION-->
+                <div class="form-group" ng-if="!license">
+                    <label class="form-label">{{ 'platform.blades.license.labels.info-running-no-license' | translate }}</label>
+                    <a href="https://virtocommerce.com/open-source-license" target="_blank">{{ 'platform.blades.license.labels.info-open-source-license' | translate }}</a>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ 'platform.blades.license.labels.info0' | translate }}</label>
+                    <ul class="list __number">
+                        <li class="list-item">{{ 'platform.blades.license.labels.info1' | translate }} <a href="https://virtocommerce.com/request-license" target="_blank">{{ 'platform.blades.license.labels.request-license' | translate }}</a></li>
+                        <li class="list-item">{{ 'platform.blades.license.labels.info2' | translate }}</li>
+                        <li class="list-item">{{ 'platform.blades.license.labels.info3' | translate }}</li>
+                        <li class="list-item">{{ 'platform.blades.license.labels.info4' | translate }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form">
+                <fieldset ng-if="blade.isNew && !currentEntity || activationError">
+                    <legend>{{ 'platform.blades.license.license-activation' | translate }}</legend>
+
+                    <div class="list __info">
+                        <div class="form-input __file">
+                            <input ng-model="activationCode" ng-keyup="$event.which === 13 && activationCode && activate(activationCode)" placeholder="{{ 'platform.blades.license.placeholders.code' | translate }}" focus-on>
+                            <button class="btn __file" type="button" ng-click="activate(activationCode)" ng-disabled="blade.isLoading || !activationCode" title="Activate by code">
+                                <i class="btn-ico fa fa-check"></i>
+                            </button>
+                            <div class="list-descr">{{ 'platform.blades.license.labels.code-descr' | translate }}</div>
+                        </div>
+                        <div class="form-input __file">
+                            <input type="file" accept=".lic" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+                            <input ng-model="filename" type="text" style="z-index: 1; cursor: default;" readonly="" placeholder="{{ 'platform.placeholders.no-file' | translate }}">
+                            <button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')" ng-disabled="blade.isLoading" title="Select license file">
+                                <i class="btn-ico fa fa-file"></i>
+                            </button>
+                            <div class="list-descr">{{ 'platform.blades.license.labels.file-descr' | translate }}</div>
+                        </div>
+
+                        <div ng-show="uploader.isUploading">
+                            <div class="sub-t">{{ 'platform.blades.license.labels.upload-progress' | translate }}</div>
+                            <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
+                        </div>
+
+                        <ul class="list __info">
+                            <li class="list-item" ng-if="activationError">
+                                <div class="list-t">{{ 'platform.blades.license.labels.errors' | translate }}</div>
+                                <div class="list-descr error">{{activationError}}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </fieldset>
+
+                <fieldset ng-if="currentEntity">
+                    <legend>{{ 'platform.blades.license.license-info' | translate }}</legend>
+                    <ul class="list __info">
+                        <li class="list-item">
+                            <div class="list-t">{{ 'platform.blades.license.labels.customer' | translate }}</div>
+                            <div class="list-descr">{{currentEntity.customerName}}</div>
+                        </li>
+                        <li class="list-item">
+                            <div class="list-t">{{ 'platform.blades.license.labels.type' | translate }}</div>
+                            <div class="list-descr">{{currentEntity.type}}</div>
+                        </li>
+                        <li class="list-item">
+                            <div class="list-t">{{ 'platform.blades.license.labels.expiration' | translate }}</div>
+                            <div class="list-descr">{{currentEntity.expirationDate | amParse | date }}</div>
+                        </li>
+                        <li class="list-item" ng-if="currentEntity.customerEmail">
+                            <div class="list-t">{{ 'platform.blades.license.labels.email' | translate }}</div>
+                            <div class="list-descr">{{currentEntity.customerEmail}}</div>
+                        </li>
+                    </ul>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>

@@ -26,6 +26,8 @@
 			title: 'platform.blades.notifications-edit-template.title',
 			templateId: template.id,
 			notificationType: blade.notificationType,
+			objectId: blade.objectId,
+			objectTypeId: blade.objectTypeId,
 			isNew: false,
 			isFirst: false,
 			languages: blade.languages,

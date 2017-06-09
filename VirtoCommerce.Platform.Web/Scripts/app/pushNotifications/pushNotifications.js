@@ -2,9 +2,9 @@
 .config(
   ['$stateProvider', function ($stateProvider) {
       $stateProvider
-          .state('pushNotificationsHistory', {
+          .state('workspace.pushNotificationsHistory', {
               url: '/events',
-              templateUrl: '$(Platform)/Scripts/app/pushNotifications/notification.tpl.html',
+              templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
               controller: ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
                   var blade = {
                       id: 'events',
@@ -38,35 +38,35 @@
 
     //Recent events notification template (error, info, debug) 
     var menuDefaultTemplate =
-		{
-		    priority: 1000,
-		    satisfy: function (notification, place) { return place == 'menu'; },
-		    //template for display that notification in menu and list
-		    template: '$(Platform)/Scripts/app/pushNotifications/menuDefault.tpl.html',
-		    //action executed when notification selected
-		    action: function (notify) { $state.go('pushNotificationsHistory', notify) }
-		};
+        {
+            priority: 1000,
+            satisfy: function (notification, place) { return place == 'menu'; },
+            //template for display that notification in menu and list
+            template: '$(Platform)/Scripts/app/pushNotifications/menuDefault.tpl.html',
+            //action executed when notification selected
+            action: function (notify) { $state.go('workspace.pushNotificationsHistory', notify) }
+        };
 
     //In history list notification template (error, info, debug)
     var historyDefaultTemplate =
-		{
-		    priority: 1000,
-		    satisfy: function (notification, place) { return place == 'history'; },
-		    //template for display that notification in menu and list
-		    template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDefault.tpl.html',
-		    //action executed in event detail
-		    action: function (notify) {
-		        var blade = {
-		            id: 'notifyDetail',
-		            title: 'platform.blades.historyDetailDefault.title',
-		            subtitle: 'platform.blades.historyDetailDefault.subtitle',
-		            template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDetailDefault.tpl.html',
-		            isClosingDisabled: false,
-		            notify: notify
-		        };
-		        bladeNavigationService.showBlade(blade);
-		    }
-		};
+        {
+            priority: 1000,
+            satisfy: function (notification, place) { return place == 'history'; },
+            //template for display that notification in menu and list
+            template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDefault.tpl.html',
+            //action executed in event detail
+            action: function (notify) {
+                var blade = {
+                    id: 'notifyDetail',
+                    title: 'platform.blades.historyDetailDefault.title',
+                    subtitle: 'platform.blades.historyDetailDefault.subtitle',
+                    template: '$(Platform)/Scripts/app/pushNotifications/blade/historyDetailDefault.tpl.html',
+                    isClosingDisabled: false,
+                    notify: notify
+                };
+                bladeNavigationService.showBlade(blade);
+            }
+        };
 
     retVal.register(menuDefaultTemplate);
     retVal.register(historyDefaultTemplate);
@@ -84,7 +84,6 @@
             $rootScope.$broadcast("new-notification-event", data);
 
             var menuItem = {
-                parent: notifyMenu,
                 path: 'pushNotifications/notifications',
                 icon: 'fa fa-bell-o',
                 title: data.title,
@@ -101,6 +100,7 @@
                 angular.copy(menuItem, alreadyExitstItem);
             }
             else {
+                menuItem.parent = notifyMenu;
                 notifyMenu.children.push(menuItem);
                 notifyMenu.newCount++;
 
@@ -114,10 +114,10 @@
 
         function animateNotify() {
             var notifyMenu = mainMenuService.findByPath('pushNotifications');
-            notifyMenu.incremented = true;
+            notifyMenu.isAnimated = true;
 
             $timeout(function () {
-                notifyMenu.incremented = false;
+                notifyMenu.isAnimated = false;
             }, 1500);
         }
 
@@ -128,7 +128,7 @@
             }
 
             notifications.markAllAsRead(null, function (data, status, headers, config) {
-                notifyMenu.incremented = false;
+                notifyMenu.isAnimated = false;
                 notifyMenu.newCount = 0;
             }, function (error) {
                 //bladeNavigationService.setError('Error ' + error.status, blade);
@@ -145,12 +145,12 @@
                             icon: 'fa fa-bell-o',
                             title: 'platform.menu.notifications',
                             priority: 2,
+                            isAlwaysOnBar: true,
                             permission: '',
                             headerTemplate: '$(Platform)/Scripts/app/pushNotifications/menuHeader.tpl.html',
-                            listTemplate: '$(Platform)/Scripts/app/pushNotifications/menuList.tpl.html',
                             template: '$(Platform)/Scripts/app/pushNotifications/menu.tpl.html',
                             action: function () { markAllAsRead(); if (this.children.length == 0) { this.showHistory(); } },
-                            showHistory: function () { $state.go('pushNotificationsHistory'); },
+                            showHistory: function () { $state.go('workspace.pushNotificationsHistory'); },
                             clearRecent: function () { notifyMenu.children.splice(0, notifyMenu.children.length); },
                             children: [],
                             newCount: 0

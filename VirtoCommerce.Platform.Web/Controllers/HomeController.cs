@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Configuration;
 using System.Reflection;
+using System.Web.Hosting;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Model;
 
 namespace VirtoCommerce.Platform.Web.Controllers
@@ -12,9 +16,15 @@ namespace VirtoCommerce.Platform.Web.Controllers
         public ActionResult Index()
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var version = string.Format("{0}.{1}", assembly.GetInformationalVersion(), assembly.GetFileVersion());
+            var version = string.Join(".", assembly.GetInformationalVersion(), assembly.GetFileVersion());
             var demoCredentials = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoCredentials", null);
             var resetTimeStr = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoResetTime", null);
+            var license = LoadLicense();
+            var licenseString = JsonConvert.SerializeObject(license, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            });
 
             if (!string.IsNullOrEmpty(resetTimeStr))
             {
@@ -29,7 +39,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                         resetTime = resetTime.AddDays(1);
                     }
 
-                    resetTimeStr = Newtonsoft.Json.JsonConvert.SerializeObject(resetTime).Replace("\"", "'");
+                    resetTimeStr = JsonConvert.SerializeObject(resetTime).Replace("\"", "'");
                 }
             }
 
@@ -37,8 +47,28 @@ namespace VirtoCommerce.Platform.Web.Controllers
             {
                 PlatformVersion = new MvcHtmlString(version),
                 DemoCredentials = new MvcHtmlString(demoCredentials ?? "''"),
-                DemoResetTime = new MvcHtmlString(resetTimeStr ?? "''")
+                DemoResetTime = new MvcHtmlString(resetTimeStr ?? "''"),
+                License = new MvcHtmlString(licenseString),
             });
+        }
+
+        private static License LoadLicense()
+        {
+            License license = null;
+
+            var licenseFilePath = HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/VirtoCommerce.lic");
+            if (System.IO.File.Exists(licenseFilePath))
+            {
+                var rawLicense = System.IO.File.ReadAllText(licenseFilePath);
+                license = License.Parse(rawLicense);
+
+                if (license != null)
+                {
+                    license.RawLicense = null;
+                }
+            }
+
+            return license;
         }
     }
 }

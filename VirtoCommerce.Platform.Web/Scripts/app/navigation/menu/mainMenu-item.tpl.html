@@ -1,0 +1,5 @@
+﻿<a class="list-link" ng-if="!menuItem.template" href="" tabindex="-1">
+    <i class="list-ico fa-fw" ng-class="menuItem.icon"><i></i></i>
+    <span class="list-name">{{menuItem.title | translate}}</span>
+</a>
+<ng-include src='menuItem.template'></ng-include>
