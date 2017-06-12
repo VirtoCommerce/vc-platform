@@ -321,30 +321,35 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
-
             Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository(connectionStringName, container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor());
             container.RegisterType<IPlatformRepository>(new InjectionFactory(c => platformRepositoryFactory()));
             container.RegisterInstance(platformRepositoryFactory);
             var moduleCatalog = container.Resolve<IModuleCatalog>();
 
             #region Caching
+                
             //Cure for System.Runtime.Caching.MemoryCache freezing 
             //https://www.zpqrtbnk.net/posts/appdomains-threads-cultureinfos-and-paracetamol
             app.SanitizeThreadCulture();
             ICacheManager<object> cacheManager = null;
+            
             //Try to load cache configuration from web.config first
             //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
-            if (ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) != null && ConfigurationManager.GetSection("platformCache") != null)
+            if (ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) != null)
             {
-                var configuration = ConfigurationBuilder.LoadConfiguration("platformCache");
-                configuration.LoggerFactoryType = typeof(CacheManagerLoggerFactory);
-                configuration.LoggerFactoryTypeArguments = new[] { container.Resolve<ILog>() };
-                cacheManager = CacheFactory.FromConfiguration<object>(configuration);
+                var configuration = ConfigurationBuilder.LoadConfiguration("platformCache") as CacheManagerConfiguration;
+
+                if (configuration != null)
+                {
+                    configuration.LoggerFactoryType = typeof(CacheManagerLoggerFactory);
+                    configuration.LoggerFactoryTypeArguments = new[] { container.Resolve<ILog>() };
+                    cacheManager = CacheFactory.FromConfiguration<object>(configuration);
+                }
             }
-            else
+            if (cacheManager == null)
             {
                 cacheManager = CacheFactory.Build("platformCache", settings =>
-                {                 
+                {
                     settings.WithUpdateMode(CacheUpdateMode.Up)
                             .WithSystemRuntimeCacheHandle("memCacheHandle")
                             .WithExpiration(ExpirationMode.Sliding, TimeSpan.FromMinutes(5));
@@ -352,6 +357,7 @@ namespace VirtoCommerce.Platform.Web
             }       
         
             container.RegisterInstance(cacheManager);
+            
             #endregion
 
             #region Settings
