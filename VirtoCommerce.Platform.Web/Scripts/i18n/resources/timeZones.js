@@ -15,7 +15,7 @@ angular.module('platformWebApp')
             offset = offset === 0 ? 0 : offset * -1;
             var minutes = offset % 60;
             var hours = (offset - minutes) / 60;
-            // format: ±HHMM
+            // format: ±HH:MM
             var pad = function (n, withSign) {
                 var result = '';
                 if (withSign) {
@@ -28,7 +28,7 @@ angular.module('platformWebApp')
             return { hours: hours, minutes: minutes, formatted: pad(hours, true) + ':' + pad(minutes) };
         },
         query: function () {
-            // Get time zone from moment list of time zones, append UTC offset to name (UTC ±XX:XX Continent/City) and sort by UTC offset
+            // Get time zone from moment list of time zones, append UTC offset to name [(UTC ±HH:MM) Continent/City] and sort by UTC offset
             return _.map(moment.tz.names(), function (x) {
                 var utcOffset = result.utcOffset(x);
                 return {
