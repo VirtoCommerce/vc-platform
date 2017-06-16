@@ -58,16 +58,8 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CacheManager.Core, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.Core.0.8.0\lib\net45\CacheManager.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="CacheManager.StackExchange.Redis, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CacheManager.StackExchange.Redis.0.8.0\lib\net45\CacheManager.StackExchange.Redis.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CacheManager.SystemRuntimeCaching, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CacheManager.SystemRuntimeCaching.0.8.0\lib\net45\CacheManager.SystemRuntimeCaching.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CacheManager.Web, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -1210,6 +1202,14 @@
     <Content Include="Views\Shared\_FacebookTrackerPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\tmp\CacheManager-0.8.0\src\CacheManager.Core.Net45\CacheManager.Core.csproj">
+      <Project>{701df657-8670-4313-a06b-63d8485b18f9}</Project>
+      <Name>CacheManager.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\tmp\CacheManager-0.8.0\src\CacheManager.SystemRuntimeCaching.Net45\CacheManager.SystemRuntimeCaching.csproj">
+      <Project>{d292fd01-c6f3-4600-abe7-7bba2b81bfd5}</Project>
+      <Name>CacheManager.SystemRuntimeCaching</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Platform.Core.Web\VirtoCommerce.Platform.Core.Web.csproj">
       <Project>{d30a07d3-04d4-4226-a6fa-2d54ea3946c1}</Project>
       <Name>VirtoCommerce.Platform.Core.Web</Name>

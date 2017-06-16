@@ -62,6 +62,10 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [XmlArrayItem("dependency")]
         public ManifestDependency[] Dependencies { get; set; }
 
+        [XmlArray("incompatibilities")]
+        [XmlArrayItem("module")]
+        public ManifestDependency[] Incompatibilities { get; set; }
+
         public string[] Groups { get; set; }
 
         [XmlArray("styles")]
