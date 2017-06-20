@@ -753,6 +753,10 @@
       "api-key-delete": {
         "title": "Delete confirmation",
         "message": "Are you sure you want to delete this API key?"
+      },
+      "app-restart": {
+        "title": "Application restart",
+        "message": "Are you sure you want to restart the application?"
       }
     }
   }
