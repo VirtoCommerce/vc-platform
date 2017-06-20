@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using CacheManager.Core;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
-using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security.Converters;
 
@@ -13,11 +13,13 @@ namespace VirtoCommerce.Platform.Data.Security
     {
         private readonly Func<IPlatformRepository> _platformRepository;
         private readonly IPermissionScopeService _permissionScopeService;
+        private readonly ICacheManager<object> _cacheManager;
 
-        public RoleManagementService(Func<IPlatformRepository> platformRepository, IPermissionScopeService permissionScopeService)
+        public RoleManagementService(Func<IPlatformRepository> platformRepository, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager)
         {
             _platformRepository = platformRepository;
             _permissionScopeService = permissionScopeService;
+            _cacheManager = cacheManager;
         }
 
         #region IRoleManagementService Members
@@ -87,6 +89,8 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     repository.Remove(role);
                     CommitChanges(repository);
+
+                    ResetCache();
                 }
             }
         }
@@ -101,42 +105,48 @@ namespace VirtoCommerce.Platform.Data.Security
             var sourceEntry = role.ToDataModel();
 
             using (var repository = _platformRepository())
-			using(var changeTracker = GetChangeTracker(repository))
+            using (var changeTracker = GetChangeTracker(repository))
             {
-			    var targetEntry = repository.GetRoleById(role.Id);
+                var targetEntry = repository.GetRoleById(role.Id);
 
                 //Create not exist permissions
-                if(role.Permissions != null)
+                if (role.Permissions != null)
                 {
                     var permissionIds = role.Permissions.Select(x => x.Id).ToArray();
                     var alreadyExistPermissionIds = repository.Permissions.Where(x => permissionIds.Contains(x.Id))
                                                             .Select(x => x.Id)
                                                             .ToArray();
                     var notExistPermissionIds = permissionIds.Except(alreadyExistPermissionIds).ToArray();
-                    foreach(var notExistPermissionId in notExistPermissionIds)
+                    foreach (var notExistPermissionId in notExistPermissionIds)
                     {
                         var permission = role.Permissions.First(x => x.Id == notExistPermissionId).ToDataModel();
                         repository.Add(permission);
                     }
                 }
                 if (targetEntry == null)
-				{
-					repository.Add(sourceEntry);
-				}
-				else
-				{
-					changeTracker.Attach(targetEntry);
-					sourceEntry.Patch(targetEntry);
-				}
+                {
+                    repository.Add(sourceEntry);
+                }
+                else
+                {
+                    changeTracker.Attach(targetEntry);
+                    sourceEntry.Patch(targetEntry);
+                }
                 CommitChanges(repository);
+                ResetCache();
             }
 
             var result = GetRole(sourceEntry.Id);
             return result;
         }
 
+        private void ResetCache()
+        {
+            _cacheManager.ClearRegion(SecurityConstants.CacheRegion);
+        }
+
         #endregion
-        
+
 
     }
 }
