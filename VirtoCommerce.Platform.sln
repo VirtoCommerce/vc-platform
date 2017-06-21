@@ -23,10 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Data
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Testing", "VirtoCommerce.Platform.Testing\VirtoCommerce.Platform.Testing.csproj", "{A98DB6C2-BD2E-46D8-A0CB-DF7F942F2CE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManager.Core", "..\..\..\tmp\CacheManager-0.8.0\src\CacheManager.Core.Net45\CacheManager.Core.csproj", "{701DF657-8670-4313-A06B-63D8485B18F9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheManager.SystemRuntimeCaching", "..\..\..\tmp\CacheManager-0.8.0\src\CacheManager.SystemRuntimeCaching.Net45\CacheManager.SystemRuntimeCaching.csproj", "{D292FD01-C6F3-4600-ABE7-7BBA2B81BFD5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,14 +69,6 @@ Global
 		{A98DB6C2-BD2E-46D8-A0CB-DF7F942F2CE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A98DB6C2-BD2E-46D8-A0CB-DF7F942F2CE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A98DB6C2-BD2E-46D8-A0CB-DF7F942F2CE3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{701DF657-8670-4313-A06B-63D8485B18F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{701DF657-8670-4313-A06B-63D8485B18F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{701DF657-8670-4313-A06B-63D8485B18F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{701DF657-8670-4313-A06B-63D8485B18F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D292FD01-C6F3-4600-ABE7-7BBA2B81BFD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D292FD01-C6F3-4600-ABE7-7BBA2B81BFD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D292FD01-C6F3-4600-ABE7-7BBA2B81BFD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D292FD01-C6F3-4600-ABE7-7BBA2B81BFD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
