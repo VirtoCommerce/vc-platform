@@ -142,7 +142,7 @@ namespace VirtoCommerce.Platform.Data.Security
                     result = identityResult.ToCoreModel();
 
                     //clear cache
-                    RemoveUserFromCache(user.Id, userName);
+                    ResetCache(user.Id, userName);
                 }
             }
 
@@ -198,7 +198,7 @@ namespace VirtoCommerce.Platform.Data.Security
                         }
 
                         //clear cache
-                        RemoveUserFromCache(dbUser.Id, name);
+                        ResetCache(dbUser.Id, name);
                     }
                 }
             }
@@ -321,7 +321,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public virtual Permission[] GetAllPermissions()
         {
-            return _cacheManager.Get("AllPermissions", "PlatformRegion", LoadAllPermissions);
+            return _cacheManager.Get("AllPermissions", SecurityConstants.CacheRegion, LoadAllPermissions);
         }
 
         public virtual bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds)
@@ -410,9 +410,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
         private async Task<ApplicationUser> GetApplicationUserByIdAsync(string userId)
         {
-            var cacheRegion = GetUserCacheRegion(userId);
-
-            var result = await _cacheManager.GetAsync(cacheRegion, cacheRegion, async () =>
+            var result = await _cacheManager.GetAsync($"GetUserById-{userId}", SecurityConstants.CacheRegion, async () =>
             {
                 using (var userManager = _userManagerFactory())
                 {
@@ -425,9 +423,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
         private ApplicationUser GetApplicationUserByName(string userName)
         {
-            var cacheRegion = GetUserCacheRegion(userName);
-
-            var result = _cacheManager.Get(cacheRegion, cacheRegion, () =>
+            var result = _cacheManager.Get($"GetUserByName-{userName}", SecurityConstants.CacheRegion, () =>
             {
                 using (var userManager = _userManagerFactory())
                 {
@@ -440,9 +436,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
         private async Task<ApplicationUser> GetApplicationUserByNameAsync(string userName)
         {
-            var cacheRegion = GetUserCacheRegion(userName);
-
-            var result = await _cacheManager.GetAsync(cacheRegion, cacheRegion, async () =>
+            var result = await _cacheManager.GetAsync($"GetUserByName-{userName}", SecurityConstants.CacheRegion, async () =>
             {
                 using (var userManager = _userManagerFactory())
                 {
@@ -453,19 +447,12 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        private void RemoveUserFromCache(string userId, string userName)
-        {
-            _cacheManager.ClearRegion(GetUserCacheRegion(userId));
-            _cacheManager.ClearRegion(GetUserCacheRegion(userName));
-        }
-
         private ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser, UserDetails detailsLevel)
         {
             ApplicationUserExtended result = null;
             if (applicationUser != null)
             {
-                var cacheRegion = GetUserCacheRegion(applicationUser.Id);
-                result = _cacheManager.Get(cacheRegion + ":" + detailsLevel, cacheRegion, () =>
+                result = _cacheManager.Get($"GetUserByName-{applicationUser.UserName}-{detailsLevel}", SecurityConstants.CacheRegion, () =>
                 {
                     ApplicationUserExtended retVal;
                     using (var repository = _platformRepository())
@@ -494,9 +481,14 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        private static string GetUserCacheRegion(string userId)
+        private void ResetCache(string userId, string userName)
         {
-            return "AppUserRegion:" + userId;
+            _cacheManager.Remove($"GetUserById-{userId}", SecurityConstants.CacheRegion);
+            _cacheManager.Remove($"GetUserByName-{userName}", SecurityConstants.CacheRegion);
+            foreach(var detailLevel in Enum.GetNames(typeof(UserDetails)))
+            {
+                _cacheManager.Remove($"GetUserByName-{userName}-{detailLevel}", SecurityConstants.CacheRegion);
+            }
         }
 
         private static void NormalizeUser(ApplicationUserExtended user)

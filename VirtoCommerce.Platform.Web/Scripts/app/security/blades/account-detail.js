@@ -4,7 +4,7 @@
     var blade = $scope.blade;
     blade.updatePermission = 'platform:security:update';
     blade.promise = roles.search({ takeCount: 10000 }).$promise;
-    $scope.accountTypes = [];
+    blade.accountTypes = [];
 
     blade.refresh = function (parentRefresh) {
         accounts.get({ id: blade.data.userName }, function (data) {
@@ -20,7 +20,7 @@
         blade.currentEntity = angular.copy(data);
         blade.origEntity = data;
         blade.isLoading = false;
-        $scope.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
+        blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
         userStateCommand.updateName();
     };
         
@@ -30,12 +30,12 @@
         return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
     };
 
-    $scope.openAccountTypeSettingManagement = function () {
+        blade.openAccountTypeSettingManagement = function () {
         var newBlade = {
             id: 'accountTypesDictionary',
             isApiSave: true,
             currentEntityId: 'VirtoCommerce.Platform.Security.AccountTypes',
-            parentRefresh: function (data) { $scope.accountTypes = data; },
+            parentRefresh: function (data) { blade.accountTypes = data; },
             controller: 'platformWebApp.settingDictionaryController',
             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
         };

@@ -730,6 +730,10 @@
       "api-key-delete": {
         "title": "Bestätigung löschen",
         "message": "Sind Sie sicher, dass Sie diese API-Schlüssel löschen?"
+      },
+      "app-restart": {
+        "title": "Anwendungsneustart",
+        "message": "Sind Sie sicher, dass Sie die Anwendung neu starten möchten?"
       }
     }
   }
