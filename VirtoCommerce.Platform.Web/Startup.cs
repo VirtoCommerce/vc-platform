@@ -332,10 +332,11 @@ namespace VirtoCommerce.Platform.Web
             //https://www.zpqrtbnk.net/posts/appdomains-threads-cultureinfos-and-paracetamol
             app.SanitizeThreadCulture();
             ICacheManager<object> cacheManager = null;
-            
+
             //Try to load cache configuration from web.config first
             //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
-            if (ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) != null)
+            var cacheManagerSection = ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) as CacheManagerSection;
+            if (cacheManagerSection != null && cacheManagerSection.CacheManagers.Any(p => p.Name.EqualsInvariant("platformCache")))
             {
                 var configuration = ConfigurationBuilder.LoadConfiguration("platformCache") as CacheManagerConfiguration;
 
