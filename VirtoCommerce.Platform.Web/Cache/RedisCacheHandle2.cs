@@ -110,11 +110,7 @@ namespace VirtoCommerce.Platform.Web.Cache
             else if (logLevel == CacheManager.Core.Logging.LogLevel.Debug)
             {
                 _log.Debug(message, exception);
-            }
-            else if (logLevel == CacheManager.Core.Logging.LogLevel.Trace)
-            {
-                _log.Trace(message, exception);
-            }
+            }        
             else
             {
                 _log.Info(message, exception);
