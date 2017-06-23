@@ -3,6 +3,7 @@ using CacheManager.Core;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Practices.Unity;
@@ -24,6 +25,8 @@ namespace VirtoCommerce.Platform.Web
         {
             app.CreatePerOwinContext(() => container.Resolve<SecurityDbContext>());
             app.CreatePerOwinContext(() => container.Resolve<ApplicationUserManager>());
+
+            app.UseCors(CorsOptions.AllowAll);
 
             if (authenticationOptions.CookiesEnabled)
             {
