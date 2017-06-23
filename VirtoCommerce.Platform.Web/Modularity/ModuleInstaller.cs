@@ -49,7 +49,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
                                                           .ToArray();
                     if (installedIncompatibilities.Any())
                     {
-                        module.Errors.Add(string.Format("{0} is incompatible with installed {1}. You should uninstall these modules first.", module, string.Join(", ", installedIncompatibilities.Select(x => x.ToString()))));
+                        Report(progress, ProgressMessageLevel.Error, string.Format("{0} is incompatible with installed {1}. You should uninstall these modules first.", module, string.Join(", ", installedIncompatibilities.Select(x => x.ToString()))));
                         isValid = false;
                     }
                 }
