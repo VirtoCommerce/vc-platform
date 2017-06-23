@@ -90,7 +90,7 @@ namespace VirtoCommerce.Platform.Data.Security
                     repository.Remove(role);
                     CommitChanges(repository);
 
-                    ClearAffectedCache();
+                    ResetCache();
                 }
             }
         }
@@ -131,19 +131,18 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     changeTracker.Attach(targetEntry);
                     sourceEntry.Patch(targetEntry);
-
-                    ClearAffectedCache();
                 }
                 CommitChanges(repository);
+                ResetCache();
             }
 
             var result = GetRole(sourceEntry.Id);
             return result;
         }
 
-        private void ClearAffectedCache()
+        private void ResetCache()
         {
-            _cacheManager.Clear();
+            _cacheManager.ClearRegion(SecurityConstants.CacheRegion);
         }
 
         #endregion

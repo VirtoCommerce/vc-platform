@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Core.Common
         Descending = 1
     }
 
-    public sealed class SortInfo : IEquatable<SortInfo>
+    public class SortInfo : IEquatable<SortInfo>
     {
         public override string ToString()
         {

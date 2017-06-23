@@ -91,7 +91,19 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 {
                     module.Errors.Add(string.Format("module platform version {0} is incompatible with current {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
                 }
-           
+
+                //Check that incompatible modules does not installed
+                if (!module.Incompatibilities.IsNullOrEmpty())
+                {
+                    var installedIncompatibilities = modules.Select(x => x.Identity).Join(module.Incompatibilities, x => x.Id, y => y.Id, (x, y) => new { x, y })
+                                                            .Where(g => g.y.Version.IsCompatibleWith(g.x.Version)).Select(g => g.x)
+                                                            .ToArray();
+                    if (installedIncompatibilities.Any())
+                    {
+                        module.Errors.Add(string.Format("{0} is incompatible with installed {1}. You should uninstall these modules first.", module, string.Join(", ", installedIncompatibilities.Select(x => x.ToString()))));
+                    }
+                }
+
                 foreach (var declaredDependency in module.Dependencies)
                 {
                     var installedDependency = modules.First(x => x.Id.EqualsInvariant(declaredDependency.Id));
