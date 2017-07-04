@@ -384,6 +384,15 @@
     <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.svg" />
     <Content Include="Content\themes\main\fonts\Exo-2-regular\LICENSE.txt" />
     <Content Include="Content\themes\main\images\grid.png" />
+    <Content Include="gulpfile.es5.js">
+      <DependentUpon>gulpfile.js</DependentUpon>
+    </Content>
+    <Content Include="gulpfile.es5.min.js">
+      <DependentUpon>gulpfile.es5.js</DependentUpon>
+    </Content>
+    <Content Include="gulpfile.min.js">
+      <DependentUpon>gulpfile.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\ai.0.22.19-build00125.js" />
     <Content Include="Scripts\ai.0.22.19-build00125.min.js" />
     <Content Include="Scripts\common\directives\metaform.js" />
@@ -501,6 +510,11 @@
     <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.ttf" />
     <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.woff" />
     <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.woff2" />
+    <None Include="bundleconfig.json" />
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
     <None Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
