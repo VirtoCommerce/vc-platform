@@ -231,10 +231,9 @@
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
-    <Compile Include="Settings\Converters\ModuleConverter.cs" />
-    <Compile Include="Settings\Converters\SettingConverter.cs" />
-    <Compile Include="Settings\Converters\SettingValueConverter.cs" />
     <Compile Include="Settings\SettingManager.cs" />
+    <Compile Include="Settings\SettingConstants.cs" />
+    <Compile Include="Settings\SettingExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">

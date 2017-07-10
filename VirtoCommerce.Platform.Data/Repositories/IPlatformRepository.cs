@@ -31,5 +31,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
 		DynamicPropertyEntity[] GetDynamicPropertiesByIds(string[] ids);
 		DynamicPropertyEntity[] GetDynamicPropertiesForType(string objectType);
 		DynamicPropertyEntity[] GetObjectDynamicProperties(string[] objectTypes, string[] objectIds);
+
+        SettingEntity GetSettingByName(string name);
+        SettingEntity[] GetAllObjectSettings(string objectType, string objectId);
 	}
 }
