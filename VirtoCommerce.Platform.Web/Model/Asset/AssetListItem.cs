@@ -13,6 +13,7 @@ namespace VirtoCommerce.Platform.Web.Model.Asset
         public string Url { get; set; }
         public string Size { get; set; }
         public string ParentUrl { get; set; }
+        public string RelativeUrl { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public DateTime? CreatedDate { get; set; }
     }

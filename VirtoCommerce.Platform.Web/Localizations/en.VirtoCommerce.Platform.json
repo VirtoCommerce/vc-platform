@@ -27,7 +27,8 @@
           "name": "Name",
           "size": "Size",
           "modified": "Modified",
-          "actions": "Actions"
+          "actions": "Actions",
+          "group": "Group"
         }
       },
       "asset-upload": {
@@ -120,8 +121,7 @@
         "title": "Properties values",
         "subtitle": "Edit properties values",
         "labels": {
-          "no-properties":
-            "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
+          "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
         }
       },
       "export-main": {
@@ -613,14 +613,14 @@
         "full-date-threshold-units": {
           "Never": "Never",
           "Seconds": "Seconds",
-          "Minutes": "Minutes" ,
-          "Hours": "Hours" ,
-          "Days": "Days" ,
-          "Weeks": "Weeks" ,
-          "Months": "Months" ,
-          "Quarters": "Quarters" ,
-          "Years": "Years" 
-        } 
+          "Minutes": "Minutes",
+          "Hours": "Hours",
+          "Days": "Days",
+          "Weeks": "Weeks",
+          "Months": "Months",
+          "Quarters": "Quarters",
+          "Years": "Years"
+        }
       }
     },
     "templates": {
