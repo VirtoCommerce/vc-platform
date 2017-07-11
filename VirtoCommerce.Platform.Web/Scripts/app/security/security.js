@@ -36,6 +36,47 @@
 	        }]
 	    })
 
+	    $stateProvider.state('forgotpasswordDialog', {
+	        url: '/forgotpassword',
+	        templateUrl: '$(Platform)/Scripts/app/security/login/forgotPassword.tpl.html',
+	        controller: ['$scope', 'platformWebApp.authService', function ($scope, authService) {
+	            $scope.viewModel = {};
+	            $scope.ok = function () {
+	                $scope.isLoading = true;
+	                $scope.errorMessage = null;
+	                authService.requestpasswordreset($scope.viewModel).then(function (retVal) {
+	                    $scope.isLoading = false;
+	                    angular.extend($scope, retVal);
+	                });
+	            };
+	        }]
+	    })
+
+	    $stateProvider.state('resetpasswordDialog', {
+	        url: '/resetpassword/:userId/{code:.*}',
+	        templateUrl: '$(Platform)/Scripts/app/security/login/resetPassword.tpl.html',
+	        controller: ['$rootScope', '$scope', '$stateParams', 'platformWebApp.authService', function ($rootScope, $scope, $stateParams, authService) {
+	            $scope.viewModel = $stateParams;
+	            $scope.ok = function () {
+	                $scope.errorMessage = null;
+	                $scope.isLoading = true;
+	                authService.resetpassword($scope.viewModel).then(function (retVal) {
+	                    $scope.isLoading = false;
+	                    $rootScope.preventLoginDialog = false;
+	                    angular.extend($scope, retVal);
+	                }, function (x) {
+	                    $scope.isLoading = false;
+	                    $scope.viewModel.newPassword = $scope.viewModel.newPassword2 = undefined;
+	                    if (x.status == 400 && x.data && x.data.message) {
+	                        $scope.errorMessage = x.data.message;
+	                    } else {
+	                        $scope.errorMessage = 'Error ' + x;
+	                    }
+	                });
+	            };
+	        }]
+	    })
+
 	    .state('workspace.securityModule', {
 	        url: '/security',
 	        templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',

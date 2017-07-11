@@ -7,8 +7,10 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Security;
+using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Web.Model.Security;
 
@@ -24,10 +26,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IRoleManagementService _roleService;
         private readonly ISecurityService _securityService;
         private readonly ISecurityOptions _securityOptions;
+        private readonly INotificationManager _notificationManager;
 
         /// <summary>
         /// </summary>
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
+                                  INotificationManager notificationManager,
                                   IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions)
         {
             _signInManagerFactory = signInManagerFactory;
@@ -35,6 +39,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _roleService = roleService;
             _securityService = securityService;
             _securityOptions = securityOptions;
+            _notificationManager = notificationManager;
         }
 
         /// <summary>
@@ -307,6 +312,71 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword);
             return ProcessSecurityResult(result);
+        }
+
+        /// <summary>
+        /// Reset password by token
+        /// </summary>
+        [HttpPost]
+        [Route("users/{userId}/resetpasswordconfirm")]
+        [ResponseType(typeof(SecurityResult))]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> ResetPasswordByToken(string userId, [FromBody] UserLogin resetPassword)
+        {
+            var result = await _securityService.ResetPasswordAsync(userId, resetPassword.UserName, resetPassword.Password);
+            return ProcessSecurityResult(result);
+        }
+
+        /// <summary>
+        /// Send email with instructions on how to reset user password.
+        /// </summary>
+        /// <remarks>
+        /// Verifies provided userName and (if succeeded) sends email.
+        /// </remarks>
+        [HttpPost]
+        [Route("users/{userName}/requestpasswordreset")]
+        [ResponseType(typeof(ApplicationUserExtended))]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> RequestPasswordReset(string userName)
+        {
+            var retVal = new SendNotificationResult();
+
+            try
+            {
+                EnsureThatUsersEditable(userName);
+
+                var user = await _securityService.FindByNameAsync(userName, UserDetails.Full);
+                //Do not permit rejected users and customers
+                if (user != null && user.UserState != AccountState.Rejected && !string.Equals(user.UserType, AccountType.Customer.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    //var userProfile = new UserProfile(user.Id);
+                    //userProfile.Settings = new SettingEntry[] { new SettingEntry { Name = "VirtoCommerce.Platform.UI.Language" } };
+                    //_settingsManager.LoadEntitySettingsValues(userProfile);
+                    //var languageSetting = userProfile.Settings.First();
+
+                    var uri = Request.RequestUri.AbsoluteUri;
+                    uri = uri.Substring(0, uri.IndexOf("/api/platform/security/"));
+                    var token = await _securityService.GeneratePasswordResetTokenAsync(user.Id);
+
+                    var notification = _notificationManager.GetNewNotification<ResetPasswordEmailNotification>("Platform", typeof(ResetPasswordEmailNotification).Name, "en");
+                    notification.Url = $"{uri}/#/resetpassword/{user.Id}/{token}";
+                    notification.Recipient = user.Email;
+                    notification.Sender = "noreply@" + Request.RequestUri.Host;
+                    // notification.Sender = "noreply@virtoCommerce.com";
+
+                    try
+                    {
+                        retVal = _notificationManager.SendNotification(notification);
+                    }
+                    catch (Exception ex)
+                    {
+                        retVal.ErrorMessage = ex.Message;
+                    }
+                }
+            }
+            catch { } // no details in here
+
+            return Ok(retVal);
         }
 
         /// <summary>

@@ -223,7 +223,7 @@ namespace VirtoCommerce.Platform.Web
             notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
                 DisplayName = "Reset password notification",
-                Description = "This notification is sent by email to a client when he want to reset his password",
+                Description = "This notification is sent by email to a client upon reset password request",
                 NotificationTemplate = new NotificationTemplate
                 {
                     Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
