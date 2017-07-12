@@ -33,7 +33,7 @@
     };
 
     authContext.resetpassword = function (data) {
-        return $http.post(serviceBase + 'users/' + data.userId + '/resetpasswordconfirm', { userName: data.code, password: data.newPassword }).then(
+        return $http.post(serviceBase + 'users/' + data.userId + '/resetpasswordconfirm', { token: data.code, newPassword: data.newPassword }).then(
 			function (results) {
 			    return results.data;
 			});

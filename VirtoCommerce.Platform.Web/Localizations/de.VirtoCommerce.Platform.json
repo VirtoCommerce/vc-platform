@@ -434,10 +434,12 @@
           "is-administrator": "Ist Administrator",
           "account-type": "Kontentyp",
           "login": "Einloggen",
-          "account-state": "Konto Zustand"
+          "account-state": "Konto Zustand",
+          "account-email": "E-mail"
         },
         "placeholders": {
-          "account-type": "Wählen Sie aus..."
+          "account-type": "Wählen Sie aus...",
+          "email": "Voer email in"
         }
       },
       "account-list": {
@@ -553,13 +555,15 @@
       },
       "new-account-wizard": {
         "labels": {
+          "email":  "E-mail",
           "login": "Einloggen",
           "password": "Passwort",
           "repeat-password": "Passwort wiederholen",
           "assign-roles": "Zuweisen von Rollen"
         },
         "placeholders": {
-          "login": "E-Mail-Adresse eingeben",
+          "email": "E-Mail-Adresse eingeben",
+          "login": "Einloggen eingeben",
           "password": "Neues Passwort eingeben",
           "repeat-password": "Neues Passwort wiederholen"
         }

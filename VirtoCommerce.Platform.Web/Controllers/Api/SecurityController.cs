@@ -321,9 +321,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("users/{userId}/resetpasswordconfirm")]
         [ResponseType(typeof(SecurityResult))]
         [AllowAnonymous]
-        public async Task<IHttpActionResult> ResetPasswordByToken(string userId, [FromBody] UserLogin resetPassword)
+        public async Task<IHttpActionResult> ResetPasswordByToken(string userId, [FromBody] ResetPasswordInfo resetPassword)
         {
-            var result = await _securityService.ResetPasswordAsync(userId, resetPassword.UserName, resetPassword.Password);
+            var result = await _securityService.ResetPasswordAsync(userId, resetPassword.Token, resetPassword.NewPassword);
             return ProcessSecurityResult(result);
         }
 
@@ -334,25 +334,29 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Verifies provided userName and (if succeeded) sends email.
         /// </remarks>
         [HttpPost]
-        [Route("users/{userName}/requestpasswordreset")]
-        [ResponseType(typeof(ApplicationUserExtended))]
+        [Route("users/{loginOrEmail}/requestpasswordreset")]
+        [ResponseType(typeof(SecurityResult))]
         [AllowAnonymous]
-        public async Task<IHttpActionResult> RequestPasswordReset(string userName)
+        public async Task<IHttpActionResult> RequestPasswordReset(string loginOrEmail)
         {
-            var retVal = new SendNotificationResult();
+            var retVal = new SecurityResult
+            {
+                //Return success by default for security reason
+                Succeeded = true
+            };
 
             try
             {
-                EnsureThatUsersEditable(userName);
-
-                var user = await _securityService.FindByNameAsync(userName, UserDetails.Full);
-                //Do not permit rejected users and customers
-                if (user != null && user.UserState != AccountState.Rejected && !string.Equals(user.UserType, AccountType.Customer.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                var user = await _securityService.FindByNameAsync(loginOrEmail, UserDetails.Full);
+                if(user == null)
                 {
-                    //var userProfile = new UserProfile(user.Id);
-                    //userProfile.Settings = new SettingEntry[] { new SettingEntry { Name = "VirtoCommerce.Platform.UI.Language" } };
-                    //_settingsManager.LoadEntitySettingsValues(userProfile);
-                    //var languageSetting = userProfile.Settings.First();
+                    user = await _securityService.FindByEmailAsync(loginOrEmail, UserDetails.Full);
+                }
+
+                //Do not permit rejected users and customers
+                if (user.Email != null && user != null && user.UserState != AccountState.Rejected && !string.Equals(user.UserType, AccountType.Customer.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    EnsureThatUsersEditable(user.UserName);                    
 
                     var uri = Request.RequestUri.AbsoluteUri;
                     uri = uri.Substring(0, uri.IndexOf("/api/platform/security/"));
@@ -362,19 +366,24 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     notification.Url = $"{uri}/#/resetpassword/{user.Id}/{token}";
                     notification.Recipient = user.Email;
                     notification.Sender = "noreply@" + Request.RequestUri.Host;
-                    // notification.Sender = "noreply@virtoCommerce.com";
-
                     try
                     {
-                        retVal = _notificationManager.SendNotification(notification);
+                        var result = _notificationManager.SendNotification(notification);
+                        retVal.Succeeded = result.IsSuccess;
+                        if (!retVal.Succeeded)
+                        {
+                            retVal.Errors = new string[] { result.ErrorMessage };
+                        }
                     }
                     catch (Exception ex)
                     {
-                        retVal.ErrorMessage = ex.Message;
+                        //Display errors only when sending notifications fail
+                        retVal.Errors = new string[] { ex.Message };
+                        retVal.Succeeded = false;
                     }
                 }
             }
-            catch { } // no details in here
+            catch { } // no details in here for security reasons
 
             return Ok(retVal);
         }

@@ -434,10 +434,12 @@
           "is-administrator": "Is administrator",
           "account-type": "Account type",
           "login": "Login",
-          "account-state": "Account state"
+          "account-state": "Account state",
+          "account-email": "Email"
         },
         "placeholders": {
-          "account-type": "Select ..."
+          "account-type": "Select ...",
+          "email":  "Enter email"
         }
       },
       "account-list": {
@@ -528,12 +530,15 @@
       "forgotpassword": {
         "title": "Forgot your password?",
         "labels": {
-          "login": "Login",
+          "login": "Login or email",
           "description": "We will send you an email with instructions on how to reset your password.",
-          "success": "Please check your email to reset the password.",
+          "success": "Email with instructions has been sent to you.",
           "fail": "Sorry, we could't reset password for this user.",
           "back": "Back",
           "submit": "Submit"
+        },
+        "placeholders": {
+          "login-or-email": "Please enter login or email"
         }
       },
       "resetpassword": {
@@ -575,12 +580,14 @@
       "new-account-wizard": {
         "labels": {
           "login": "Login",
+          "email":  "Email",
           "password": "Password",
           "repeat-password": "Repeat password",
           "assign-roles": "Assign roles"
         },
         "placeholders": {
-          "login": "Enter email address",
+          "email": "Enter email",
+          "login": "Enter login",
           "password": "Enter new password",
           "repeat-password": "Repeat new password"
         }

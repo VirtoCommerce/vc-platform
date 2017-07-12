@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-	.config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
+    .config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
 
 	    $stateProvider.state('loginDialog', {
 	        url: '/login',
@@ -39,7 +39,7 @@
 	    $stateProvider.state('forgotpasswordDialog', {
 	        url: '/forgotpassword',
 	        templateUrl: '$(Platform)/Scripts/app/security/login/forgotPassword.tpl.html',
-	        controller: ['$scope', 'platformWebApp.authService', function ($scope, authService) {
+            controller: ['$scope', 'platformWebApp.authService', '$state', function ($scope, authService, $state) {
 	            $scope.viewModel = {};
 	            $scope.ok = function () {
 	                $scope.isLoading = true;
@@ -48,7 +48,10 @@
 	                    $scope.isLoading = false;
 	                    angular.extend($scope, retVal);
 	                });
-	            };
+                };
+                $scope.close = function () {
+                    $state.go('loginDialog');
+                };
 	        }]
 	    })
 
@@ -116,14 +119,19 @@
                 priority: 0
             },
             {
+                name: "email",
+                templateUrl: "accountEmail.html",
+                priority: 1
+            },
+            {
                 name: "accountType",
                 templateUrl: "accountTypeSelector.html",
-                priority: 1
+                priority: 2
             },
             {
                 name: "accountInfo",
                 templateUrl: "accountInfo.html",
-                priority: 2
+                priority: 3
             }
         ]);
 
