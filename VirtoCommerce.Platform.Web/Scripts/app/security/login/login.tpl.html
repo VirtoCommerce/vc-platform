@@ -3,7 +3,7 @@
         <div class="progress-bar"></div>
     </div>
     <header class="window-head">
-        <img class="__logo" ng-src="{{uiCustomization.contrast_logo || 'Content/themes/main/images/contrast-logo.png'}}"/>
+        <img class="__logo" ng-src="{{uiCustomization.contrast_logo || 'Content/themes/main/images/contrast-logo.png'}}" />
         <span class="window-t">{{ 'platform.blades.login.labels.sign-in' | translate: (uiCustomization.title ? uiCustomization : { title: 'Virto Commerce' }) }}</span>
     </header>
     <div class="window-cnt">
@@ -38,10 +38,19 @@
                     {{authError}}
                 </div>
             </div>
-            <div class="form-group __right">
-                <button class="btn" type="submit" ng-disabled="loginForm.$invalid||loginProgress">
-                    <span>{{ 'platform.blades.login.labels.log-in' | translate }}</span>
-                </button>
+            <div class="clearfix">
+                <div class="column">
+                    <div class="form-group">
+                        <a ui-sref="forgotpasswordDialog">{{ 'platform.blades.login.labels.forgot-password' | translate }}</a>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="form-group __right">
+                        <button class="btn" type="submit" ng-disabled="loginForm.$invalid||loginProgress">
+                            <span>{{ 'platform.blades.login.labels.log-in' | translate }}</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
