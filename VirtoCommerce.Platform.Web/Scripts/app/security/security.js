@@ -95,4 +95,8 @@
             controller: 'platformWebApp.accountApiWidgetController',
             template: '$(Platform)/Scripts/app/security/widgets/accountApiWidget.tpl.html',
         }, 'accountDetail');
+        widgetService.registerWidget({
+            controller: 'platformWebApp.changeLog.operationsWidgetController',
+            template: '$(Platform)/Scripts/app/changeLog/widgets/operations-widget.tpl.html'
+        }, 'accountDetail');
     }]);
