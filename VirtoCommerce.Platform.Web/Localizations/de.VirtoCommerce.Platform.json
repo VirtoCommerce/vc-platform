@@ -1,4 +1,4 @@
-{
+﻿{
   "platform": {
     "menu": {
 	   "home":"Start",
@@ -27,7 +27,8 @@
           "name": " Name",
           "size": " Größe",
           "modified": "Geändert",
-          "actions": "Aktionen"
+          "actions": "Aktionen",
+          "group": "Groep"
         }
       },
       "asset-upload": {
