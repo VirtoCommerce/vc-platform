@@ -123,6 +123,7 @@
     <Compile Include="Common\ValueObject.cs" />
     <Compile Include="ExportImport\ISupportExportImportModule.cs" />
     <Compile Include="ExportImport\PlatformExportManifest.cs" />
+    <Compile Include="Common\IPathMapper.cs" />
     <Compile Include="Modularity\ManifestDependency.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />

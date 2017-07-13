@@ -7,8 +7,10 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Security;
+using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Web.Model.Security;
 
@@ -24,10 +26,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IRoleManagementService _roleService;
         private readonly ISecurityService _securityService;
         private readonly ISecurityOptions _securityOptions;
+        private readonly INotificationManager _notificationManager;
 
         /// <summary>
         /// </summary>
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
+                                  INotificationManager notificationManager,
                                   IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions)
         {
             _signInManagerFactory = signInManagerFactory;
@@ -35,6 +39,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _roleService = roleService;
             _securityService = securityService;
             _securityOptions = securityOptions;
+            _notificationManager = notificationManager;
         }
 
         /// <summary>
@@ -307,6 +312,80 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword);
             return ProcessSecurityResult(result);
+        }
+
+        /// <summary>
+        /// Reset password by token
+        /// </summary>
+        [HttpPost]
+        [Route("users/{userId}/resetpasswordconfirm")]
+        [ResponseType(typeof(SecurityResult))]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> ResetPasswordByToken(string userId, [FromBody] ResetPasswordInfo resetPassword)
+        {
+            var result = await _securityService.ResetPasswordAsync(userId, resetPassword.Token, resetPassword.NewPassword);
+            return ProcessSecurityResult(result);
+        }
+
+        /// <summary>
+        /// Send email with instructions on how to reset user password.
+        /// </summary>
+        /// <remarks>
+        /// Verifies provided userName and (if succeeded) sends email.
+        /// </remarks>
+        [HttpPost]
+        [Route("users/{loginOrEmail}/requestpasswordreset")]
+        [ResponseType(typeof(SecurityResult))]
+        [AllowAnonymous]
+        public async Task<IHttpActionResult> RequestPasswordReset(string loginOrEmail)
+        {
+            var retVal = new SecurityResult
+            {
+                //Return success by default for security reason
+                Succeeded = true
+            };
+
+            try
+            {
+                var user = await _securityService.FindByNameAsync(loginOrEmail, UserDetails.Full);
+                if(user == null)
+                {
+                    user = await _securityService.FindByEmailAsync(loginOrEmail, UserDetails.Full);
+                }
+
+                //Do not permit rejected users and customers
+                if (user.Email != null && user != null && user.UserState != AccountState.Rejected && !string.Equals(user.UserType, AccountType.Customer.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    EnsureThatUsersEditable(user.UserName);                    
+
+                    var uri = Request.RequestUri.AbsoluteUri;
+                    uri = uri.Substring(0, uri.IndexOf("/api/platform/security/"));
+                    var token = await _securityService.GeneratePasswordResetTokenAsync(user.Id);
+
+                    var notification = _notificationManager.GetNewNotification<ResetPasswordEmailNotification>("Platform", typeof(ResetPasswordEmailNotification).Name, "en");
+                    notification.Url = $"{uri}/#/resetpassword/{user.Id}/{token}";
+                    notification.Recipient = user.Email;
+                    notification.Sender = "noreply@" + Request.RequestUri.Host;
+                    try
+                    {
+                        var result = _notificationManager.SendNotification(notification);
+                        retVal.Succeeded = result.IsSuccess;
+                        if (!retVal.Succeeded)
+                        {
+                            retVal.Errors = new string[] { result.ErrorMessage };
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //Display errors only when sending notifications fail
+                        retVal.Errors = new string[] { ex.Message };
+                        retVal.Succeeded = false;
+                    }
+                }
+            }
+            catch { } // no details in here for security reasons
+
+            return Ok(retVal);
         }
 
         /// <summary>

@@ -27,7 +27,8 @@
           "name": "Name",
           "size": "Size",
           "modified": "Modified",
-          "actions": "Actions"
+          "actions": "Actions",
+          "group": "Group"
         }
       },
       "asset-upload": {
@@ -120,8 +121,7 @@
         "title": "Properties values",
         "subtitle": "Edit properties values",
         "labels": {
-          "no-properties":
-            "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
+          "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
         }
       },
       "export-main": {
@@ -434,10 +434,12 @@
           "is-administrator": "Is administrator",
           "account-type": "Account type",
           "login": "Login",
-          "account-state": "Account state"
+          "account-state": "Account state",
+          "account-email": "Email"
         },
         "placeholders": {
-          "account-type": "Select ..."
+          "account-type": "Select ...",
+          "email":  "Enter email"
         }
       },
       "account-list": {
@@ -521,7 +523,31 @@
           "login": "Login",
           "password": "Password",
           "remember-me": "Remember me",
+          "forgot-password": "Forgot your password?",
           "log-in": "Log in"
+        }
+      },
+      "forgotpassword": {
+        "title": "Forgot your password?",
+        "labels": {
+          "login": "Login or email",
+          "description": "We will send you an email with instructions on how to reset your password.",
+          "success": "Email with instructions has been sent to you.",
+          "fail": "Sorry, we could't reset password for this user.",
+          "back": "Back",
+          "submit": "Submit"
+        },
+        "placeholders": {
+          "login-or-email": "Please enter login or email"
+        }
+      },
+      "resetpassword": {
+        "title": "Password reset",
+        "labels": {
+          "success": "Your password was reset",
+          "fail": "Sorry, we couldn't reset password for this user.",
+          "submit": "Reset",
+          "log-in": "Sign in"
         }
       },
       "license": {
@@ -554,12 +580,14 @@
       "new-account-wizard": {
         "labels": {
           "login": "Login",
+          "email":  "Email",
           "password": "Password",
           "repeat-password": "Repeat password",
           "assign-roles": "Assign roles"
         },
         "placeholders": {
-          "login": "Enter email address",
+          "email": "Enter email",
+          "login": "Enter login",
           "password": "Enter new password",
           "repeat-password": "Repeat new password"
         }
@@ -613,14 +641,14 @@
         "full-date-threshold-units": {
           "Never": "Never",
           "Seconds": "Seconds",
-          "Minutes": "Minutes" ,
-          "Hours": "Hours" ,
-          "Days": "Days" ,
-          "Weeks": "Weeks" ,
-          "Months": "Months" ,
-          "Quarters": "Quarters" ,
-          "Years": "Years" 
-        } 
+          "Minutes": "Minutes",
+          "Hours": "Hours",
+          "Days": "Days",
+          "Weeks": "Weeks",
+          "Months": "Months",
+          "Quarters": "Quarters",
+          "Years": "Years"
+        }
       }
     },
     "templates": {
