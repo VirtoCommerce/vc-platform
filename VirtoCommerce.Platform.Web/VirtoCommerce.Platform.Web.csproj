@@ -412,6 +412,8 @@
     <Content Include="Content\themes\main\images\logo.png" />
     <Content Include="Scripts\ai.0.22.19-build00125.js" />
     <Content Include="Scripts\ai.0.22.19-build00125.min.js" />
+    <Content Include="Scripts\app\assets\blades\asset-select.js" />
+    <Content Include="Scripts\app\assets\blades\asset-select.tpl.html" />
     <Content Include="Scripts\app\licensing\license-detail.js" />
     <Content Include="Scripts\app\licensing\license-detail.tpl.html" />
     <Content Include="Scripts\app\navigation\menu\mainMenu-list-content.tpl.html" />
