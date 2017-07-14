@@ -61,7 +61,7 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New account &apos;{0}&apos; created.
+        ///   Looks up a localized string similar to Created new account &apos;{0}&apos;.
         /// </summary>
         internal static string AccountCreatedMessage {
             get {
@@ -70,7 +70,7 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Existing account &apos;{0}&apos; updated.
+        ///   Looks up a localized string similar to Updated existing account &apos;{0}&apos;.
         /// </summary>
         internal static string AccountUpdatedMessage {
             get {

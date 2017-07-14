@@ -491,8 +491,10 @@ namespace VirtoCommerce.Platform.Data.Security
                                 permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
                             }
                         }
+
                         //Load log entities to account
-                        _changeLogService.LoadChangeLogs(retVal);
+                        if (detailsLevel == UserDetails.Full)
+                            _changeLogService.LoadChangeLogs(retVal);
                     }
 
                     if (detailsLevel != UserDetails.Export)
