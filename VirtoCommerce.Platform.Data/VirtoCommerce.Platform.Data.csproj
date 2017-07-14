@@ -229,6 +229,10 @@
     <Compile Include="Repositories\Migrations\201610251133362_DynamicPropertyAddDescription.Designer.cs">
       <DependentUpon>201610251133362_DynamicPropertyAddDescription.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201707140957043_DynamicPropertyAddDisplayOrder.cs" />
+    <Compile Include="Repositories\Migrations\201707140957043_DynamicPropertyAddDisplayOrder.Designer.cs">
+      <DependentUpon>201707140957043_DynamicPropertyAddDisplayOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -313,6 +317,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201610251133362_DynamicPropertyAddDescription.resx">
       <DependentUpon>201610251133362_DynamicPropertyAddDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201707140957043_DynamicPropertyAddDisplayOrder.resx">
+      <DependentUpon>201707140957043_DynamicPropertyAddDisplayOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

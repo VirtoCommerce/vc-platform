@@ -75,7 +75,8 @@
                 },
                 "placeholders": {
                     "description": "Enter property description",
-                    "display-name": "Enter display name..."
+                    "display-name": "Enter display name...",
+                    "display-order": "Display order"
                 },
                 "validations": {
                     "multivalue": "Multivalue property can have only ShortText, Integer or Decimal value type.",
