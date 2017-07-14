@@ -68,6 +68,7 @@
           "multilingual": "Mehrsprachig",
           "dictionary": "Wörterbuch",
           "description": "Beschreibung",
+          "display-order": "Bestellung anzeigen",
           "display-name": "Anzeigename",
           "value-type": "Typ",
           "dictionary-values": "Wörterbucheinträge",
