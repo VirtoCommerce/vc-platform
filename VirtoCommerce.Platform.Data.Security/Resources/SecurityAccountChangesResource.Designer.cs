@@ -79,6 +79,24 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activated Api Key(s) [{0}] to account &apos;{1}&apos;.
+        /// </summary>
+        internal static string ApiKeysActivated {
+            get {
+                return ResourceManager.GetString("ApiKeysActivated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deactivated Api Key(s) [{0}] to account &apos;{1}&apos;.
+        /// </summary>
+        internal static string ApiKeysDeactivated {
+            get {
+                return ResourceManager.GetString("ApiKeysDeactivated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password changed for existing account &apos;{0}&apos;.
         /// </summary>
         internal static string PasswordChangedMessage {
@@ -93,6 +111,24 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         internal static string PasswordResetMessage {
             get {
                 return ResourceManager.GetString("PasswordResetMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Added role(s) [{0}] to account &apos;{1}&apos;.
+        /// </summary>
+        internal static string RolesAdded {
+            get {
+                return ResourceManager.GetString("RolesAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removed role(s) [{0}] from account &apos;{1}&apos;.
+        /// </summary>
+        internal static string RolesRemoved {
+            get {
+                return ResourceManager.GetString("RolesRemoved", resourceCulture);
             }
         }
     }

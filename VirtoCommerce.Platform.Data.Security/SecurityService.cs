@@ -164,6 +164,10 @@ namespace VirtoCommerce.Platform.Data.Security
                     }
                     else
                     {
+                        //Collect old Roles and API Keys
+                        var oldRoles = targetDbAcount.RoleAssignments.Select(r => r.Role).ToList();
+                        var oldApiKeys = targetDbAcount.ApiAccounts.Select(a => a.ToCoreModel()).ToList();
+
                         var changedDbAccount = user.ToDataModel();
                         using (var changeTracker = GetChangeTracker(repository))
                         {
@@ -171,6 +175,10 @@ namespace VirtoCommerce.Platform.Data.Security
                             changedDbAccount.Patch(targetDbAcount);
 
                             repository.UnitOfWork.Commit();
+
+                            //Log Role and ApiKey changes
+                            LogAccountRoleChanges(user, oldRoles, user.Roles.ToList());
+                            LogApiKeyChanges(user, oldApiKeys, changedDbAccount.ApiAccounts.ToList());
 
                             SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.AccountUpdatedMessage, user.UserName), EntryState.Modified);
                         }
@@ -483,13 +491,8 @@ namespace VirtoCommerce.Platform.Data.Security
                                 permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
                             }
                         }
-
+                        //Load log entities to account
                         _changeLogService.LoadChangeLogs(retVal);
-                        //Make general change log for account
-                        retVal.OperationsLog = retVal.GetFlatObjectsListWithInterface<IHasChangesHistory>().Distinct()
-                                                    .SelectMany(x => x.OperationsLog)
-                                                    .OrderBy(x => x.CreatedDate)
-                                                    .Distinct().ToList();
                     }
 
                     if (detailsLevel != UserDetails.Export)
@@ -511,6 +514,47 @@ namespace VirtoCommerce.Platform.Data.Security
             foreach(var detailLevel in Enum.GetNames(typeof(UserDetails)))
             {
                 _cacheManager.Remove($"GetUserByName-{userName}-{detailLevel}", SecurityConstants.CacheRegion);
+            }
+        }
+
+        private void LogAccountRoleChanges(ApplicationUserExtended user, List<Model.RoleEntity> oldRoleAssignments, List<Role> newRoles)
+        {
+            var oldRolesList = oldRoleAssignments.Select(r => new { r.Id, r.Name }).ToList();
+            var newRolesList = newRoles.Select(r => new { r.Id, r.Name }).ToList();
+
+            var removedRoles = oldRolesList.Except(newRolesList).ToList();
+            var addedRoles = newRolesList.Except(oldRolesList).ToList();
+
+            if (removedRoles.Any())
+            {
+                string removedRolesText = string.Join(", ", removedRoles.Select(r => r.Name).ToList());
+                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.RolesRemoved, removedRolesText, user.UserName), EntryState.Modified);
+            }
+            if (addedRoles.Any())
+            {
+                string addedRolesText = string.Join(", ", addedRoles.Select(r => r.Name).ToList());
+                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.RolesAdded, addedRolesText, user.UserName), EntryState.Modified);
+            }
+        }
+
+        private void LogApiKeyChanges(ApplicationUserExtended user, List<ApiAccount> oldApiKeys, List<Model.ApiAccountEntity> newApiKeys)
+        {
+            var oldApiKeyList = oldApiKeys.Select(a => new { a.Id, a.Name, IsActive = a.IsActive.Value, Type = a.ApiAccountType.ToString() }).ToList();
+            var newApiKeyList = newApiKeys.Select(a => new { a.Id, a.Name, a.IsActive, Type = a.ApiAccountType.ToString() }).ToList();
+
+            var actualApiKeys = newApiKeyList.Except(oldApiKeyList).ToList();
+            var activatedApiKeys = actualApiKeys.Where(a => a.IsActive).ToList();
+            var deactivatedApiKeys = actualApiKeys.Where(a => !a.IsActive).ToList();
+
+            if (activatedApiKeys.Any())
+            {
+                string activatedApiKeysText = string.Join(", ", activatedApiKeys.Select(r => string.Format("{0} ({1})", r.Name, r.Type)).ToList());
+                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.ApiKeysActivated, activatedApiKeysText, user.UserName), EntryState.Modified);
+            }
+            if (deactivatedApiKeys.Any())
+            {
+                string deactivatedApiKeysText = string.Join(", ", deactivatedApiKeys.Select(r => string.Format("{0} ({1})", r.Name, r.Type)).ToList());
+                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.ApiKeysDeactivated, deactivatedApiKeysText, user.UserName), EntryState.Modified);
             }
         }
 

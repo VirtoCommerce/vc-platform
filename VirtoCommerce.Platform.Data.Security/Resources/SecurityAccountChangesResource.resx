@@ -123,10 +123,22 @@
   <data name="AccountUpdatedMessage" xml:space="preserve">
     <value>Existing account '{0}' updated</value>
   </data>
+  <data name="ApiKeysActivated" xml:space="preserve">
+    <value>Activated Api Key(s) [{0}] to account '{1}'</value>
+  </data>
+  <data name="ApiKeysDeactivated" xml:space="preserve">
+    <value>Deactivated Api Key(s) [{0}] to account '{1}'</value>
+  </data>
   <data name="PasswordChangedMessage" xml:space="preserve">
     <value>Password changed for existing account '{0}'</value>
   </data>
   <data name="PasswordResetMessage" xml:space="preserve">
     <value>Password resets for existing account '{0}'</value>
+  </data>
+  <data name="RolesAdded" xml:space="preserve">
+    <value>Added role(s) [{0}] to account '{1}'</value>
+  </data>
+  <data name="RolesRemoved" xml:space="preserve">
+    <value>Removed role(s) [{0}] from account '{1}'</value>
   </data>
 </root>
