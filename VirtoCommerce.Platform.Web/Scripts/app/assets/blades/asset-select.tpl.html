@@ -1,4 +1,4 @@
-﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok.tpl.html'"></div>
+﻿<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-static __expanded">
     <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
@@ -10,9 +10,6 @@
         </div>
     </div>
 </div>
-<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok.tpl.html'"></div>
-<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
-
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">

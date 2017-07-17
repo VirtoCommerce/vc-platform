@@ -93,6 +93,17 @@
             }
         };
 
+        blade.toolbarCommands = [
+            {
+                name: 'platform.commands.confirm',
+                icon: 'fa fa-check',
+                executeMethod: function () { $scope.saveChanges(); },
+                canExecuteMethod: function() {
+                    return isItemsChecked();;
+                }
+            }
+        ];
+
         $scope.saveChanges = function() {
             if (blade.onSelect)
                 blade.onSelect(getSelectedAssets());
