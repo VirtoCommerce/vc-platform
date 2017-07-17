@@ -4,15 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
 using Microsoft.AspNet.Identity;
+using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security.Converters;
 using VirtoCommerce.Platform.Data.Security.Identity;
+using VirtoCommerce.Platform.Data.Security.Resources;
 
 namespace VirtoCommerce.Platform.Data.Security
 {
@@ -24,10 +25,11 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly ICacheManager<object> _cacheManager;
         private readonly IModuleCatalog _moduleCatalog;
         private readonly IPermissionScopeService _permissionScopeService;
+        private readonly IChangeLogService _changeLogService;
 
         [CLSCompliant(false)]
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
-                               IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager)
+                               IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager, IChangeLogService changeLogService)
         {
             _platformRepository = platformRepository;
             _userManagerFactory = userManagerFactory;
@@ -35,6 +37,7 @@ namespace VirtoCommerce.Platform.Data.Security
             _cacheManager = cacheManager;
             _moduleCatalog = moduleCatalog;
             _permissionScopeService = permissionScopeService;
+            _changeLogService = changeLogService;
         }
 
         #region ISecurityService Members
@@ -109,6 +112,8 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     repository.Add(dbAcount);
                     repository.UnitOfWork.Commit();
+
+                    SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.AccountCreatedMessage, user.UserName), EntryState.Added);
                 }
             }
 
@@ -159,6 +164,10 @@ namespace VirtoCommerce.Platform.Data.Security
                     }
                     else
                     {
+                        //Collect old Roles and API Keys
+                        var oldRoles = targetDbAcount.RoleAssignments.Select(r => r.Role).ToList();
+                        var oldApiKeys = targetDbAcount.ApiAccounts.Select(a => a.ToCoreModel()).ToList();
+
                         var changedDbAccount = user.ToDataModel();
                         using (var changeTracker = GetChangeTracker(repository))
                         {
@@ -166,6 +175,12 @@ namespace VirtoCommerce.Platform.Data.Security
                             changedDbAccount.Patch(targetDbAcount);
 
                             repository.UnitOfWork.Commit();
+
+                            //Log Role and ApiKey changes
+                            LogAccountRoleChanges(user, oldRoles, user.Roles.ToList());
+                            LogApiKeyChanges(user, oldApiKeys, changedDbAccount.ApiAccounts.ToList());
+
+                            SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.AccountUpdatedMessage, user.UserName), EntryState.Modified);
                         }
                     }
                 }
@@ -222,6 +237,9 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     var identityResult = await userManager.ChangePasswordAsync(dbUser.Id, oldPassword, newPassword);
                     result = identityResult.ToCoreModel();
+
+                    if (result.Succeeded)
+                        SaveOperationLog(dbUser.Id, string.Format(SecurityAccountChangesResource.PasswordChangedMessage, dbUser.UserName), EntryState.Modified);
                 }
 
                 return result;
@@ -240,6 +258,9 @@ namespace VirtoCommerce.Platform.Data.Security
                     var token = await userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
                     var identityResult = await userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
                     result = identityResult.ToCoreModel();
+
+                    if (result.Succeeded)
+                        SaveOperationLog(dbUser.Id, string.Format(SecurityAccountChangesResource.PasswordResetMessage, dbUser.UserName), EntryState.Modified);
                 }
 
                 return result;
@@ -257,6 +278,9 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     var identityResult = await userManager.ResetPasswordAsync(userId, token, newPassword);
                     result = identityResult.ToCoreModel();
+
+                    if (result.Succeeded)
+                        SaveOperationLog(dbUser.Id, string.Format(SecurityAccountChangesResource.PasswordResetMessage, dbUser.UserName), EntryState.Modified);
                 }
 
                 return result;
@@ -467,6 +491,10 @@ namespace VirtoCommerce.Platform.Data.Security
                                 permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
                             }
                         }
+
+                        //Load log entities to account
+                        if (detailsLevel == UserDetails.Full)
+                            _changeLogService.LoadChangeLogs(retVal);
                     }
 
                     if (detailsLevel != UserDetails.Export)
@@ -489,6 +517,59 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 _cacheManager.Remove($"GetUserByName-{userName}-{detailLevel}", SecurityConstants.CacheRegion);
             }
+        }
+
+        private void LogAccountRoleChanges(ApplicationUserExtended user, List<Model.RoleEntity> oldRoleAssignments, List<Role> newRoles)
+        {
+            var oldRolesList = oldRoleAssignments.Select(r => new { r.Id, r.Name }).ToList();
+            var newRolesList = newRoles.Select(r => new { r.Id, r.Name }).ToList();
+
+            var removedRoles = oldRolesList.Except(newRolesList).ToList();
+            var addedRoles = newRolesList.Except(oldRolesList).ToList();
+
+            if (removedRoles.Any())
+            {
+                string removedRolesText = string.Join(", ", removedRoles.Select(r => r.Name).ToList());
+                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.RolesRemoved, removedRolesText, user.UserName), EntryState.Modified);
+            }
+            if (addedRoles.Any())
+            {
+                string addedRolesText = string.Join(", ", addedRoles.Select(r => r.Name).ToList());
+                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.RolesAdded, addedRolesText, user.UserName), EntryState.Modified);
+            }
+        }
+
+        private void LogApiKeyChanges(ApplicationUserExtended user, List<ApiAccount> oldApiKeys, List<Model.ApiAccountEntity> newApiKeys)
+        {
+            var oldApiKeyList = oldApiKeys.Select(a => new { a.Id, a.Name, IsActive = a.IsActive.Value, Type = a.ApiAccountType.ToString() }).ToList();
+            var newApiKeyList = newApiKeys.Select(a => new { a.Id, a.Name, a.IsActive, Type = a.ApiAccountType.ToString() }).ToList();
+
+            var actualApiKeys = newApiKeyList.Except(oldApiKeyList).ToList();
+            var activatedApiKeys = actualApiKeys.Where(a => a.IsActive).ToList();
+            var deactivatedApiKeys = actualApiKeys.Where(a => !a.IsActive).ToList();
+
+            if (activatedApiKeys.Any())
+            {
+                string activatedApiKeysText = string.Join(", ", activatedApiKeys.Select(r => string.Format("{0} ({1})", r.Name, r.Type)).ToList());
+                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.ApiKeysActivated, activatedApiKeysText, user.UserName), EntryState.Modified);
+            }
+            if (deactivatedApiKeys.Any())
+            {
+                string deactivatedApiKeysText = string.Join(", ", deactivatedApiKeys.Select(r => string.Format("{0} ({1})", r.Name, r.Type)).ToList());
+                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.ApiKeysDeactivated, deactivatedApiKeysText, user.UserName), EntryState.Modified);
+            }
+        }
+
+        private void SaveOperationLog(string objectId, string detail, EntryState entryState)
+        {
+            var operation = new OperationLog
+            {
+                ObjectId = objectId,
+                ObjectType = typeof(ApplicationUserExtended).Name,
+                OperationType = entryState,
+                Detail = detail
+            };
+            _changeLogService.SaveChanges(operation);
         }
 
         private static void NormalizeUser(ApplicationUserExtended user)
