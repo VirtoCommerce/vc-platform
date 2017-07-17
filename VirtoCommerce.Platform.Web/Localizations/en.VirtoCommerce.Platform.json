@@ -68,6 +68,7 @@
                     "multilingual": "Multilingual",
                     "dictionary": "Dictionary",
                     "description": "Description",
+                    "display-order": "Display order",
                     "display-name": "Display name",
                     "value-type": "Value Type",
                     "dictionary-values": "Dictionary values",
@@ -75,7 +76,8 @@
                 },
                 "placeholders": {
                     "description": "Enter property description",
-                    "display-name": "Enter display name..."
+                    "display-name": "Enter display name...",
+                    "display-order": "Display order"
                 },
                 "validations": {
                     "multivalue": "Multivalue property can have only ShortText, Integer or Decimal value type.",

@@ -4,7 +4,7 @@
         <div class="inner-block">
             <form name="formScope">
                 <fieldset ng-init="setForm(formScope)">
-                    <div class="form-group list __info" ng-repeat="property in blade.currentEntities | orderBy: 'name'">
+                    <div class="form-group list __info" ng-repeat="property in blade.currentEntities | orderBy: 'displayOrder'">
                         <label class="form-label" for="">
                             {{property.name}}
                             <a href="" ng-click="editDictionary(property)" ng-show="property.isDictionary" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>

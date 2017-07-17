@@ -68,6 +68,7 @@
           "multilingual": "Mehrsprachig",
           "dictionary": "Wörterbuch",
           "description": "Beschreibung",
+          "display-order": "Bestellung anzeigen",
           "display-name": "Anzeigename",
           "value-type": "Typ",
           "dictionary-values": "Wörterbucheinträge",
@@ -75,7 +76,8 @@
         },
         "placeholders": {
           "description": "Beschreibung der Eigenschaft",
-          "display-name": "Anzeigename eingeben..."
+          "display-name": "Anzeigename eingeben...",
+          "display-order": "Bestellung anzeigen"
         },
         "validations": {
           "multivalue": "Mehrwert-Eigenschaft kann nur Kurztext-, Integer- oder Dezimal-Wert-Typ haben.",
