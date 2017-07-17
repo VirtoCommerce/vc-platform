@@ -49,10 +49,12 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
                         {
                             entityType = entityType.BaseType;
                         }
-
-                        if (_entityTypes == null || IsMatchInExpression(_entityTypes, entityType.Name))
+                        //This line allows you to use the base types to check that the current object type is matches the specified patterns
+                        var inheritanceChain = entityType.GetTypeInheritanceChainTo(typeof(Entity));
+                        var suitableEntityType = inheritanceChain.FirstOrDefault(x => IsMatchInExpression(_entityTypes, x.Name));
+                        if (suitableEntityType != null)
                         {
-                            var activityLog = StateEntry2OperationLog(entityType.Name, now, ((Entity)entry.Entity).Id, entryWithState.Key);
+                            var activityLog = StateEntry2OperationLog(suitableEntityType.Name, now, ((Entity)entry.Entity).Id, entryWithState.Key);
                             if (_policy == ChangeLogPolicy.Cumulative)
                             {
                                 var alreadyExistLog = repository.OperationLogs.OrderByDescending(x => x.ModifiedDate)

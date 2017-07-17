@@ -29,6 +29,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public bool IsDictionary { get; set; }
         public bool IsMultilingual { get; set; }
         public bool IsRequired { get; set; }
+        public int? DisplayOrder { get; set; }
 
         public virtual ObservableCollection<DynamicPropertyNameEntity> DisplayNames { get; set; }
         public virtual ObservableCollection<DynamicPropertyDictionaryItemEntity> DictionaryItems { get; set; }

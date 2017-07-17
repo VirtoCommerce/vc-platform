@@ -266,6 +266,18 @@ namespace VirtoCommerce.Platform.Data.Repositories
             return retVal;
         }
 
+        public SettingEntity GetSettingByName(string name)
+        {
+            var result = Settings.Include(x => x.SettingValues).FirstOrDefault(x => x.Name == name && x.ObjectId == null && x.ObjectType == null);
+            return result;
+        }
+
+        public SettingEntity[] GetAllObjectSettings(string objectType, string objectId)
+        {
+            var result = Settings.Include(x => x.SettingValues).Where(x => x.ObjectId == objectId && x.ObjectType == objectType).OrderBy(x => x.Name).ToArray();
+            return result;
+        }
+
         #endregion
 
         public NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language)

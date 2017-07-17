@@ -91,6 +91,7 @@
     <Compile Include="Events\EventPublisher.cs" />
     <Compile Include="Events\IEventPublisher.cs" />
     <Compile Include="Events\IPriorityObserver.cs" />
+    <Compile Include="Exceptions\PlatformException.cs" />
     <Compile Include="ExportImport\ExportImportProgressInfo.cs" />
     <Compile Include="ExportImport\ExportModuleInfo.cs" />
     <Compile Include="ExportImport\IPlatformExportImportManager.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Common\ValueObject.cs" />
     <Compile Include="ExportImport\ISupportExportImportModule.cs" />
     <Compile Include="ExportImport\PlatformExportManifest.cs" />
+    <Compile Include="Common\IPathMapper.cs" />
     <Compile Include="Modularity\ManifestDependency.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />

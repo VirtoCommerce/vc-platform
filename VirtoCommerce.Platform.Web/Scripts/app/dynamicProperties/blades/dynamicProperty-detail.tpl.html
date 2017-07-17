@@ -43,6 +43,12 @@
                     <div class="error" ng-if="formScope.dictFlag.$invalid">{{ 'platform.blades.dynamicProperty-detail.validations.dictionary' | translate }}</div>
                 </div>
                 <div class="form-group">
+                    <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.display-order' | translate }}</label>
+                    <div class="form-input">
+                        <input type="number" ng-model="blade.currentEntity.displayOrder" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.display-order' | translate}}" />
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.description' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.description" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.description' | translate}}" />

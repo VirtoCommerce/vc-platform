@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                     ModifiedDate = cloudBlob.Properties.LastModified != null ? cloudBlob.Properties.LastModified.Value.DateTime : (DateTime?)null
                 };
             }
-            catch(Exception)
+            catch (Exception)
             {
                 //Azure blob storage client does not provide method to check blob url exist without throwing exception
             }
@@ -90,7 +90,7 @@ namespace VirtoCommerce.Platform.Data.Azure
             var blob = container.GetBlockBlobReference(filePath);
 
             blob.Properties.ContentType = MimeTypeResolver.ResolveContentType(Path.GetFileName(filePath));
-            
+
             // Leverage Browser Caching - 7days
             // Setting Cache-Control on Azure Blobs can help reduce bandwidth and improve the performance by preventing consumers from having to continuously download resources. 
             // More Info https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
@@ -122,8 +122,8 @@ namespace VirtoCommerce.Platform.Data.Azure
                     //Remove blockBlobs if url not directory
                     /* http://stackoverflow.com/questions/29285239/delete-a-blob-from-windows-azure-in-c-sharp
                      * In Azure Storage Client Library 4.0, we changed Get*Reference methods to accept relative addresses only. */
-                    string blobName = GetOutlineFromUrl(url).Last();
-                    CloudBlockBlob blobBlock = blobContainer.GetBlockBlobReference(blobName);
+                    var filePath = GetFilePathFromUrl(url);
+                    CloudBlockBlob blobBlock = blobContainer.GetBlockBlobReference(filePath);
                     blobBlock.DeleteIfExists();
                 }
             }
@@ -145,6 +145,11 @@ namespace VirtoCommerce.Platform.Data.Azure
                     var listBlobs = blobDirectory != null ? blobDirectory.ListBlobs() : blobContainer.ListBlobs();
                     if (!String.IsNullOrEmpty(keyword))
                     {
+                        if (blobDirectory != null)
+                        {
+                            keyword = blobDirectory.Prefix + keyword;
+                        }
+                        //Only whole container list allow search by prefix
                         listBlobs = blobContainer.ListBlobs(keyword, useFlatBlobListing: true);
                     }
                     // Loop over items within the container and output the length and URI.

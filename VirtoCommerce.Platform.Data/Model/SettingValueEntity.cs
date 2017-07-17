@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
@@ -35,6 +37,46 @@ namespace VirtoCommerce.Platform.Data.Model
 
         public string SettingId { get; set; }
         public virtual SettingEntity Setting { get; set; }
+
+
+        public virtual SettingValueEntity FromString(string value, SettingValueType valueType)
+        {
+            this.ValueType = valueType.ToString();
+
+            if (valueType == SettingValueType.Boolean)
+            {
+                this.BooleanValue = Convert.ToBoolean(value);
+            }
+            else if (valueType == SettingValueType.DateTime)
+            {
+                this.DateTimeValue = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+            }
+            else if (valueType == SettingValueType.Decimal)
+            {
+                this.DecimalValue = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+            }
+            else if (valueType == SettingValueType.Integer)
+            {
+                this.IntegerValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+            }
+            else if (valueType == SettingValueType.LongText)
+            {
+                this.LongTextValue = value;
+            }
+            else if (valueType == SettingValueType.Json)
+            {
+                this.LongTextValue = value;
+            }
+            else if (valueType == SettingValueType.SecureString)
+            {
+                this.ShortTextValue = value;
+            }
+            else
+            {
+                this.ShortTextValue = value;
+            }
+            return this;
+        }
 
 
         public object RawValue()

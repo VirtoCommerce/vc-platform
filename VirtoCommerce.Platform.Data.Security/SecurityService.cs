@@ -4,15 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
 using Microsoft.AspNet.Identity;
+using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security.Converters;
 using VirtoCommerce.Platform.Data.Security.Identity;
+using VirtoCommerce.Platform.Data.Security.Resources;
 
 namespace VirtoCommerce.Platform.Data.Security
 {
@@ -24,10 +26,11 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly ICacheManager<object> _cacheManager;
         private readonly IModuleCatalog _moduleCatalog;
         private readonly IPermissionScopeService _permissionScopeService;
+        private readonly IChangeLogService _changeLogService;
 
         [CLSCompliant(false)]
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
-                               IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager)
+                               IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager, IChangeLogService changeLogService)
         {
             _platformRepository = platformRepository;
             _userManagerFactory = userManagerFactory;
@@ -35,6 +38,7 @@ namespace VirtoCommerce.Platform.Data.Security
             _cacheManager = cacheManager;
             _moduleCatalog = moduleCatalog;
             _permissionScopeService = permissionScopeService;
+            _changeLogService = changeLogService;
         }
 
         #region ISecurityService Members
@@ -109,6 +113,8 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     repository.Add(dbAcount);
                     repository.UnitOfWork.Commit();
+
+                    SaveOperationLog(user.Id, SecurityAccountChangesResource.AccountCreatedMessage, EntryState.Added);
                 }
             }
 
@@ -158,14 +164,22 @@ namespace VirtoCommerce.Platform.Data.Security
                         result = new SecurityResult { Errors = new[] { "Account not found." } };
                     }
                     else
-                    {
+                    {                
                         var changedDbAccount = user.ToDataModel();
                         using (var changeTracker = GetChangeTracker(repository))
                         {
+                            //Detect account changes before patch
+                            var changes = DetectAccountChanges(changedDbAccount, targetDbAcount);
+
                             changeTracker.Attach(targetDbAcount);
                             changedDbAccount.Patch(targetDbAcount);
 
                             repository.UnitOfWork.Commit();
+
+                            foreach (var key in changes.Keys)
+                            {
+                                SaveOperationLog(user.Id, string.Format(key, string.Join(", ", changes[key].ToArray())), EntryState.Modified);
+                            }
                         }
                     }
                 }
@@ -222,6 +236,9 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     var identityResult = await userManager.ChangePasswordAsync(dbUser.Id, oldPassword, newPassword);
                     result = identityResult.ToCoreModel();
+
+                    if (result.Succeeded)
+                        SaveOperationLog(dbUser.Id, SecurityAccountChangesResource.PasswordChangedMessage, EntryState.Modified);
                 }
 
                 return result;
@@ -240,6 +257,13 @@ namespace VirtoCommerce.Platform.Data.Security
                     var token = await userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
                     var identityResult = await userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
                     result = identityResult.ToCoreModel();
+
+                    if (result.Succeeded)
+                    {
+                        SaveOperationLog(dbUser.Id, SecurityAccountChangesResource.PasswordResetMessage, EntryState.Modified);
+                        //clear cache
+                        ResetCache(dbUser.Id, dbUser.UserName);
+                    }
                 }
 
                 return result;
@@ -257,6 +281,13 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     var identityResult = await userManager.ResetPasswordAsync(userId, token, newPassword);
                     result = identityResult.ToCoreModel();
+
+                    if (result.Succeeded)
+                    {
+                        SaveOperationLog(dbUser.Id, SecurityAccountChangesResource.PasswordResetMessage, EntryState.Modified);
+                        //clear cache
+                        ResetCache(dbUser.Id, dbUser.UserName);
+                    }
                 }
 
                 return result;
@@ -467,6 +498,10 @@ namespace VirtoCommerce.Platform.Data.Security
                                 permission.AvailableScopes = _permissionScopeService.GetAvailablePermissionScopes(permission.Id).ToList();
                             }
                         }
+
+                        //Load log entities to account
+                        if (detailsLevel == UserDetails.Full)
+                            _changeLogService.LoadChangeLogs(retVal);
                     }
 
                     if (detailsLevel != UserDetails.Export)
@@ -489,6 +524,70 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 _cacheManager.Remove($"GetUserByName-{userName}-{detailLevel}", SecurityConstants.CacheRegion);
             }
+        }
+     
+        private ListDictionary<string, string> DetectAccountChanges(AccountEntity changedDbAccount, AccountEntity targetDbAcount)
+        {
+            //Log changes
+            var result = new ListDictionary<string, string>();
+            if (changedDbAccount.UserType != targetDbAcount.UserType)
+            {
+                result.Add(SecurityAccountChangesResource.AccountUpdated, $"user type: {targetDbAcount.UserType} -> {changedDbAccount.UserType}");
+            }
+            if (changedDbAccount.AccountState != targetDbAcount.AccountState)
+            {
+                result.Add(SecurityAccountChangesResource.AccountUpdated, $"account state: {targetDbAcount.AccountState} -> {changedDbAccount.AccountState}");
+            }
+            if (changedDbAccount.IsAdministrator != targetDbAcount.IsAdministrator)
+            {
+                result.Add(SecurityAccountChangesResource.AccountUpdated, $"root: {targetDbAcount.IsAdministrator} -> {changedDbAccount.IsAdministrator}");
+            }
+            if (!changedDbAccount.ApiAccounts.IsNullCollection())
+            {
+                var apiAccountComparer = AnonymousComparer.Create((ApiAccountEntity x) => $"{x.ApiAccountType}-{x.SecretKey}");
+                changedDbAccount.ApiAccounts.CompareTo(targetDbAcount.ApiAccounts, apiAccountComparer, (state, sourceItem, targetItem) =>
+                {
+                    if (state == EntryState.Added)
+                    {
+                        result.Add(SecurityAccountChangesResource.ApiKeysActivated, $"{sourceItem.Name} ({sourceItem.ApiAccountType})");
+                    }
+                    else if (state == EntryState.Deleted)
+                    {
+                        result.Add(SecurityAccountChangesResource.ApiKeysDeactivated, $"{sourceItem.Name} ({sourceItem.ApiAccountType})");
+                    }
+                }
+                );
+            }
+            if (!changedDbAccount.RoleAssignments.IsNullCollection())
+            {
+                var roleAssignmentComparer = AnonymousComparer.Create((RoleAssignmentEntity x) => x.RoleId);
+                changedDbAccount.RoleAssignments.CompareTo(targetDbAcount.RoleAssignments, roleAssignmentComparer, (state, sourceItem, targetItem) =>
+                {
+                    if (state == EntryState.Added)
+                    {
+                        result.Add(SecurityAccountChangesResource.RolesAdded, $"{sourceItem?.RoleName}");
+                    }
+                    else if (state == EntryState.Deleted)
+                    {
+                        result.Add(SecurityAccountChangesResource.RolesRemoved, $"{sourceItem?.RoleName}");
+                    }
+                }
+                );
+            }
+
+            return result;
+        }
+
+        private void SaveOperationLog(string objectId, string detail, EntryState entryState)
+        {
+            var operation = new OperationLog
+            {
+                ObjectId = objectId,
+                ObjectType = typeof(ApplicationUserExtended).Name,
+                OperationType = entryState,
+                Detail = detail
+            };
+            _changeLogService.SaveChanges(operation);
         }
 
         private static void NormalizeUser(ApplicationUserExtended user)

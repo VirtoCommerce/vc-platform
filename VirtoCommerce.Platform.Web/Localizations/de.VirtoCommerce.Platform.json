@@ -1,4 +1,4 @@
-{
+﻿{
   "platform": {
     "menu": {
 	   "home":"Start",
@@ -27,7 +27,8 @@
           "name": " Name",
           "size": " Größe",
           "modified": "Geändert",
-          "actions": "Aktionen"
+          "actions": "Aktionen",
+          "group": "Groep"
         }
       },
       "asset-upload": {
@@ -67,6 +68,7 @@
           "multilingual": "Mehrsprachig",
           "dictionary": "Wörterbuch",
           "description": "Beschreibung",
+          "display-order": "Bestellung anzeigen",
           "display-name": "Anzeigename",
           "value-type": "Typ",
           "dictionary-values": "Wörterbucheinträge",
@@ -74,7 +76,8 @@
         },
         "placeholders": {
           "description": "Beschreibung der Eigenschaft",
-          "display-name": "Anzeigename eingeben..."
+          "display-name": "Anzeigename eingeben...",
+          "display-order": "Bestellung anzeigen"
         },
         "validations": {
           "multivalue": "Mehrwert-Eigenschaft kann nur Kurztext-, Integer- oder Dezimal-Wert-Typ haben.",
@@ -433,10 +436,12 @@
           "is-administrator": "Ist Administrator",
           "account-type": "Kontentyp",
           "login": "Einloggen",
-          "account-state": "Konto Zustand"
+          "account-state": "Konto Zustand",
+          "account-email": "E-mail"
         },
         "placeholders": {
-          "account-type": "Wählen Sie aus..."
+          "account-type": "Wählen Sie aus...",
+          "email": "Voer email in"
         }
       },
       "account-list": {
@@ -552,13 +557,15 @@
       },
       "new-account-wizard": {
         "labels": {
+          "email":  "E-mail",
           "login": "Einloggen",
           "password": "Passwort",
           "repeat-password": "Passwort wiederholen",
           "assign-roles": "Zuweisen von Rollen"
         },
         "placeholders": {
-          "login": "E-Mail-Adresse eingeben",
+          "email": "E-Mail-Adresse eingeben",
+          "login": "Einloggen eingeben",
           "password": "Neues Passwort eingeben",
           "repeat-password": "Neues Passwort wiederholen"
         }
