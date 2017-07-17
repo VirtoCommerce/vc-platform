@@ -61,7 +61,7 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Created new account &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Created.
         /// </summary>
         internal static string AccountCreatedMessage {
             get {
@@ -70,16 +70,16 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updated existing account &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Changes: {0}.
         /// </summary>
-        internal static string AccountUpdatedMessage {
+        internal static string AccountUpdated {
             get {
-                return ResourceManager.GetString("AccountUpdatedMessage", resourceCulture);
+                return ResourceManager.GetString("AccountUpdated", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Activated Api Key(s) [{0}] to account &apos;{1}&apos;.
+        ///   Looks up a localized string similar to Activated Api Key(s) [{0}] .
         /// </summary>
         internal static string ApiKeysActivated {
             get {
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deactivated Api Key(s) [{0}] to account &apos;{1}&apos;.
+        ///   Looks up a localized string similar to Deactivated Api Key(s) [{0}].
         /// </summary>
         internal static string ApiKeysDeactivated {
             get {
@@ -97,7 +97,7 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password changed for existing account &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Password changed.
         /// </summary>
         internal static string PasswordChangedMessage {
             get {
@@ -106,7 +106,7 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password resets for existing account &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Password resets.
         /// </summary>
         internal static string PasswordResetMessage {
             get {
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Added role(s) [{0}] to account &apos;{1}&apos;.
+        ///   Looks up a localized string similar to Added role(s) [{0}] .
         /// </summary>
         internal static string RolesAdded {
             get {
@@ -124,7 +124,7 @@ namespace VirtoCommerce.Platform.Data.Security.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Removed role(s) [{0}] from account &apos;{1}&apos;.
+        ///   Looks up a localized string similar to Removed role(s) [{0}].
         /// </summary>
         internal static string RolesRemoved {
             get {

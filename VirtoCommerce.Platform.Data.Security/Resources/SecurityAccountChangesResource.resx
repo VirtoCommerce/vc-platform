@@ -118,27 +118,27 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccountCreatedMessage" xml:space="preserve">
-    <value>Created new account '{0}'</value>
+    <value>Created</value>
   </data>
-  <data name="AccountUpdatedMessage" xml:space="preserve">
-    <value>Updated existing account '{0}'</value>
+  <data name="AccountUpdated" xml:space="preserve">
+    <value>Changes: {0}</value>
   </data>
   <data name="ApiKeysActivated" xml:space="preserve">
-    <value>Activated Api Key(s) [{0}] to account '{1}'</value>
+    <value>Activated Api Key(s) [{0}] </value>
   </data>
   <data name="ApiKeysDeactivated" xml:space="preserve">
-    <value>Deactivated Api Key(s) [{0}] to account '{1}'</value>
+    <value>Deactivated Api Key(s) [{0}]</value>
   </data>
   <data name="PasswordChangedMessage" xml:space="preserve">
-    <value>Password changed for existing account '{0}'</value>
+    <value>Password changed</value>
   </data>
   <data name="PasswordResetMessage" xml:space="preserve">
-    <value>Password resets for existing account '{0}'</value>
+    <value>Password resets</value>
   </data>
   <data name="RolesAdded" xml:space="preserve">
-    <value>Added role(s) [{0}] to account '{1}'</value>
+    <value>Added role(s) [{0}] </value>
   </data>
   <data name="RolesRemoved" xml:space="preserve">
-    <value>Removed role(s) [{0}] from account '{1}'</value>
+    <value>Removed role(s) [{0}]</value>
   </data>
 </root>

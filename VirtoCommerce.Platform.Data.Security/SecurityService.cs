@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security.Converters;
 using VirtoCommerce.Platform.Data.Security.Identity;
@@ -113,7 +114,7 @@ namespace VirtoCommerce.Platform.Data.Security
                     repository.Add(dbAcount);
                     repository.UnitOfWork.Commit();
 
-                    SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.AccountCreatedMessage, user.UserName), EntryState.Added);
+                    SaveOperationLog(user.Id, SecurityAccountChangesResource.AccountCreatedMessage, EntryState.Added);
                 }
             }
 
@@ -163,24 +164,22 @@ namespace VirtoCommerce.Platform.Data.Security
                         result = new SecurityResult { Errors = new[] { "Account not found." } };
                     }
                     else
-                    {
-                        //Collect old Roles and API Keys
-                        var oldRoles = targetDbAcount.RoleAssignments.Select(r => r.Role).ToList();
-                        var oldApiKeys = targetDbAcount.ApiAccounts.Select(a => a.ToCoreModel()).ToList();
-
+                    {                
                         var changedDbAccount = user.ToDataModel();
                         using (var changeTracker = GetChangeTracker(repository))
                         {
+                            //Detect account changes before patch
+                            var changes = DetectAccountChanges(changedDbAccount, targetDbAcount);
+
                             changeTracker.Attach(targetDbAcount);
                             changedDbAccount.Patch(targetDbAcount);
 
                             repository.UnitOfWork.Commit();
 
-                            //Log Role and ApiKey changes
-                            LogAccountRoleChanges(user, oldRoles, user.Roles.ToList());
-                            LogApiKeyChanges(user, oldApiKeys, changedDbAccount.ApiAccounts.ToList());
-
-                            SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.AccountUpdatedMessage, user.UserName), EntryState.Modified);
+                            foreach (var key in changes.Keys)
+                            {
+                                SaveOperationLog(user.Id, string.Format(key, string.Join(", ", changes[key].ToArray())), EntryState.Modified);
+                            }
                         }
                     }
                 }
@@ -239,7 +238,7 @@ namespace VirtoCommerce.Platform.Data.Security
                     result = identityResult.ToCoreModel();
 
                     if (result.Succeeded)
-                        SaveOperationLog(dbUser.Id, string.Format(SecurityAccountChangesResource.PasswordChangedMessage, dbUser.UserName), EntryState.Modified);
+                        SaveOperationLog(dbUser.Id, SecurityAccountChangesResource.PasswordChangedMessage, EntryState.Modified);
                 }
 
                 return result;
@@ -260,7 +259,11 @@ namespace VirtoCommerce.Platform.Data.Security
                     result = identityResult.ToCoreModel();
 
                     if (result.Succeeded)
-                        SaveOperationLog(dbUser.Id, string.Format(SecurityAccountChangesResource.PasswordResetMessage, dbUser.UserName), EntryState.Modified);
+                    {
+                        SaveOperationLog(dbUser.Id, SecurityAccountChangesResource.PasswordResetMessage, EntryState.Modified);
+                        //clear cache
+                        ResetCache(dbUser.Id, dbUser.UserName);
+                    }
                 }
 
                 return result;
@@ -280,7 +283,11 @@ namespace VirtoCommerce.Platform.Data.Security
                     result = identityResult.ToCoreModel();
 
                     if (result.Succeeded)
-                        SaveOperationLog(dbUser.Id, string.Format(SecurityAccountChangesResource.PasswordResetMessage, dbUser.UserName), EntryState.Modified);
+                    {
+                        SaveOperationLog(dbUser.Id, SecurityAccountChangesResource.PasswordResetMessage, EntryState.Modified);
+                        //clear cache
+                        ResetCache(dbUser.Id, dbUser.UserName);
+                    }
                 }
 
                 return result;
@@ -518,46 +525,57 @@ namespace VirtoCommerce.Platform.Data.Security
                 _cacheManager.Remove($"GetUserByName-{userName}-{detailLevel}", SecurityConstants.CacheRegion);
             }
         }
-
-        private void LogAccountRoleChanges(ApplicationUserExtended user, List<Model.RoleEntity> oldRoleAssignments, List<Role> newRoles)
+     
+        private ListDictionary<string, string> DetectAccountChanges(AccountEntity changedDbAccount, AccountEntity targetDbAcount)
         {
-            var oldRolesList = oldRoleAssignments.Select(r => new { r.Id, r.Name }).ToList();
-            var newRolesList = newRoles.Select(r => new { r.Id, r.Name }).ToList();
-
-            var removedRoles = oldRolesList.Except(newRolesList).ToList();
-            var addedRoles = newRolesList.Except(oldRolesList).ToList();
-
-            if (removedRoles.Any())
+            //Log changes
+            var result = new ListDictionary<string, string>();
+            if (changedDbAccount.UserType != targetDbAcount.UserType)
             {
-                string removedRolesText = string.Join(", ", removedRoles.Select(r => r.Name).ToList());
-                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.RolesRemoved, removedRolesText, user.UserName), EntryState.Modified);
+                result.Add(SecurityAccountChangesResource.AccountUpdated, $"user type: {targetDbAcount.UserType} -> {changedDbAccount.UserType}");
             }
-            if (addedRoles.Any())
+            if (changedDbAccount.AccountState != targetDbAcount.AccountState)
             {
-                string addedRolesText = string.Join(", ", addedRoles.Select(r => r.Name).ToList());
-                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.RolesAdded, addedRolesText, user.UserName), EntryState.Modified);
+                result.Add(SecurityAccountChangesResource.AccountUpdated, $"account state: {targetDbAcount.AccountState} -> {changedDbAccount.AccountState}");
             }
-        }
-
-        private void LogApiKeyChanges(ApplicationUserExtended user, List<ApiAccount> oldApiKeys, List<Model.ApiAccountEntity> newApiKeys)
-        {
-            var oldApiKeyList = oldApiKeys.Select(a => new { a.Id, a.Name, IsActive = a.IsActive.Value, Type = a.ApiAccountType.ToString() }).ToList();
-            var newApiKeyList = newApiKeys.Select(a => new { a.Id, a.Name, a.IsActive, Type = a.ApiAccountType.ToString() }).ToList();
-
-            var actualApiKeys = newApiKeyList.Except(oldApiKeyList).ToList();
-            var activatedApiKeys = actualApiKeys.Where(a => a.IsActive).ToList();
-            var deactivatedApiKeys = actualApiKeys.Where(a => !a.IsActive).ToList();
-
-            if (activatedApiKeys.Any())
+            if (changedDbAccount.IsAdministrator != targetDbAcount.IsAdministrator)
             {
-                string activatedApiKeysText = string.Join(", ", activatedApiKeys.Select(r => string.Format("{0} ({1})", r.Name, r.Type)).ToList());
-                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.ApiKeysActivated, activatedApiKeysText, user.UserName), EntryState.Modified);
+                result.Add(SecurityAccountChangesResource.AccountUpdated, $"root: {targetDbAcount.IsAdministrator} -> {changedDbAccount.IsAdministrator}");
             }
-            if (deactivatedApiKeys.Any())
+            if (!changedDbAccount.ApiAccounts.IsNullCollection())
             {
-                string deactivatedApiKeysText = string.Join(", ", deactivatedApiKeys.Select(r => string.Format("{0} ({1})", r.Name, r.Type)).ToList());
-                SaveOperationLog(user.Id, string.Format(SecurityAccountChangesResource.ApiKeysDeactivated, deactivatedApiKeysText, user.UserName), EntryState.Modified);
+                var apiAccountComparer = AnonymousComparer.Create((ApiAccountEntity x) => $"{x.ApiAccountType}-{x.SecretKey}");
+                changedDbAccount.ApiAccounts.CompareTo(targetDbAcount.ApiAccounts, apiAccountComparer, (state, sourceItem, targetItem) =>
+                {
+                    if (state == EntryState.Added)
+                    {
+                        result.Add(SecurityAccountChangesResource.ApiKeysActivated, $"{sourceItem.Name} ({sourceItem.ApiAccountType})");
+                    }
+                    else if (state == EntryState.Deleted)
+                    {
+                        result.Add(SecurityAccountChangesResource.ApiKeysDeactivated, $"{sourceItem.Name} ({sourceItem.ApiAccountType})");
+                    }
+                }
+                );
             }
+            if (!changedDbAccount.RoleAssignments.IsNullCollection())
+            {
+                var roleAssignmentComparer = AnonymousComparer.Create((RoleAssignmentEntity x) => x.RoleId);
+                changedDbAccount.RoleAssignments.CompareTo(targetDbAcount.RoleAssignments, roleAssignmentComparer, (state, sourceItem, targetItem) =>
+                {
+                    if (state == EntryState.Added)
+                    {
+                        result.Add(SecurityAccountChangesResource.RolesAdded, $"{sourceItem?.RoleName}");
+                    }
+                    else if (state == EntryState.Deleted)
+                    {
+                        result.Add(SecurityAccountChangesResource.RolesRemoved, $"{sourceItem?.RoleName}");
+                    }
+                }
+                );
+            }
+
+            return result;
         }
 
         private void SaveOperationLog(string objectId, string detail, EntryState entryState)
