@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.Common
                 : ConfigurationManager.ConnectionStrings[connectionStringName]?.ConnectionString;
         }
 
-        public static string GetConnetionStringName(string connectionStringName)
+        public static string GetConnectionStringName(string connectionStringName)
         {
             var environmentConnectionStringName = Environment.GetEnvironmentVariable($"VIRTO_CONN_STR_NAME_{connectionStringName.ToUpperInvariant()}");
             return !string.IsNullOrEmpty(environmentConnectionStringName)

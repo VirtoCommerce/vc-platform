@@ -119,7 +119,7 @@ namespace VirtoCommerce.Platform.Web
             moduleInitializerOptions.RoutePrefix = routePrefix;
 
             //Initialize Platform dependencies
-            var connectionStringName = ConnectionStringHelper.GetConnetionStringName("VirtoCommerce");
+            var connectionStringName = ConnectionStringHelper.GetConnectionStringName("VirtoCommerce");
 
             var hangfireOptions = new HangfireOptions
             {
