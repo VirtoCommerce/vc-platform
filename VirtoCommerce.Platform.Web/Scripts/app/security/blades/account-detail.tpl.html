@@ -36,3 +36,11 @@
         </li>
     </ul>
 </script>
+<script type="text/ng-template" id="accountEmail.html">
+    <div class="form-label">
+        {{ 'platform.blades.account-detail.labels.account-email' | translate }}     
+    </div>
+    <div class="form-input">
+        <input type="email" ng-model="blade.currentEntity.email" placeholder="{{'platform.blades.account-detail.placeholders.email' | translate}}" />
+    </div>
+</script>

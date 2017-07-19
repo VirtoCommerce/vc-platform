@@ -64,11 +64,13 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 
             if (!source.ApiAccounts.IsNullCollection())
             {
-                source.ApiAccounts.Patch(target.ApiAccounts, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+                var apiAccountComparer = AnonymousComparer.Create((ApiAccountEntity x) => $"{x.ApiAccountType}-{x.SecretKey}");
+                source.ApiAccounts.Patch(target.ApiAccounts, apiAccountComparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
             }
             if (!source.RoleAssignments.IsNullCollection())
             {
-                source.RoleAssignments.Patch(target.RoleAssignments, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+                var roleAssignmentComparer = AnonymousComparer.Create((RoleAssignmentEntity x) => x.RoleId);
+                source.RoleAssignments.Patch(target.RoleAssignments, roleAssignmentComparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
             }
         }
 

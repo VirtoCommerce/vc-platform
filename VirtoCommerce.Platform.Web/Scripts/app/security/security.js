@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-	.config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
+    .config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
 
 	    $stateProvider.state('loginDialog', {
 	        url: '/login',
@@ -33,6 +33,50 @@
 	                });
 	            };
 
+	        }]
+	    })
+
+	    $stateProvider.state('forgotpasswordDialog', {
+	        url: '/forgotpassword',
+	        templateUrl: '$(Platform)/Scripts/app/security/login/forgotPassword.tpl.html',
+            controller: ['$scope', 'platformWebApp.authService', '$state', function ($scope, authService, $state) {
+	            $scope.viewModel = {};
+	            $scope.ok = function () {
+	                $scope.isLoading = true;
+	                $scope.errorMessage = null;
+	                authService.requestpasswordreset($scope.viewModel).then(function (retVal) {
+	                    $scope.isLoading = false;
+	                    angular.extend($scope, retVal);
+	                });
+                };
+                $scope.close = function () {
+                    $state.go('loginDialog');
+                };
+	        }]
+	    })
+
+	    $stateProvider.state('resetpasswordDialog', {
+	        url: '/resetpassword/:userId/{code:.*}',
+	        templateUrl: '$(Platform)/Scripts/app/security/login/resetPassword.tpl.html',
+	        controller: ['$rootScope', '$scope', '$stateParams', 'platformWebApp.authService', function ($rootScope, $scope, $stateParams, authService) {
+	            $scope.viewModel = $stateParams;
+	            $scope.ok = function () {
+	                $scope.errorMessage = null;
+	                $scope.isLoading = true;
+	                authService.resetpassword($scope.viewModel).then(function (retVal) {
+	                    $scope.isLoading = false;
+	                    $rootScope.preventLoginDialog = false;
+	                    angular.extend($scope, retVal);
+	                }, function (x) {
+	                    $scope.isLoading = false;
+	                    $scope.viewModel.newPassword = $scope.viewModel.newPassword2 = undefined;
+	                    if (x.status == 400 && x.data && x.data.message) {
+	                        $scope.errorMessage = x.data.message;
+	                    } else {
+	                        $scope.errorMessage = 'Error ' + x;
+	                    }
+	                });
+	            };
 	        }]
 	    })
 
@@ -75,14 +119,19 @@
                 priority: 0
             },
             {
+                name: "email",
+                templateUrl: "accountEmail.html",
+                priority: 1
+            },
+            {
                 name: "accountType",
                 templateUrl: "accountTypeSelector.html",
-                priority: 1
+                priority: 2
             },
             {
                 name: "accountInfo",
                 templateUrl: "accountInfo.html",
-                priority: 2
+                priority: 3
             }
         ]);
 
@@ -94,5 +143,9 @@
         widgetService.registerWidget({
             controller: 'platformWebApp.accountApiWidgetController',
             template: '$(Platform)/Scripts/app/security/widgets/accountApiWidget.tpl.html',
+        }, 'accountDetail');
+        widgetService.registerWidget({
+            controller: 'platformWebApp.changeLog.operationsWidgetController',
+            template: '$(Platform)/Scripts/app/changeLog/widgets/operations-widget.tpl.html'
         }, 'accountDetail');
     }]);

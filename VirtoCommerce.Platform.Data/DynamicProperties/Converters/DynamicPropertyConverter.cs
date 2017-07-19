@@ -68,7 +68,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties.Converters
             if (target == null)
                 throw new ArgumentNullException("target");
 
-            var patchInjectionPolicy = new PatchInjection<DynamicPropertyEntity>(x => x.Name,x => x.Description, x => x.IsRequired, x => x.IsArray);
+            var patchInjectionPolicy = new PatchInjection<DynamicPropertyEntity>(x => x.Name, x => x.Description, x => x.IsRequired, x => x.IsArray, x => x.DisplayOrder);
             target.InjectFrom(patchInjectionPolicy, source);
 
             if (!source.DisplayNames.IsNullCollection())
