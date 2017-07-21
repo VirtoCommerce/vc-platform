@@ -35,7 +35,8 @@ namespace VirtoCommerce.Platform.Web.Converters.Asset
             {
                 Name = blobInfo.FileName,
                 Url = blobInfo.Url,
-                Size = blobInfo.Size.ToHumanReadableSize(),
+                ReadableSize = blobInfo.Size.ToHumanReadableSize(),
+                Size = blobInfo.Size,
                 ContentType = blobInfo.ContentType,
                 Type = "blob",
                 ModifiedDate = blobInfo.ModifiedDate,
