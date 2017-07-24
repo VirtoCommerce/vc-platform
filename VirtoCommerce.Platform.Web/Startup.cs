@@ -182,17 +182,18 @@ namespace VirtoCommerce.Platform.Web
 
             // Post-initialize
 
-            // Platform MVC configuration
+            // Register MVC areas unless running in the Web Platform Installer mode
             if (IsApplication)
             {
                 AreaRegistration.RegisterAllAreas();
-
-                GlobalConfiguration.Configure(WebApiConfig.Register);
-                FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-                RouteConfig.RegisterRoutes(RouteTable.Routes);
-                BundleConfig.RegisterBundles(BundleTable.Bundles);
-                AuthConfig.RegisterAuth();
             }
+
+            // Register other MVC resources
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            AuthConfig.RegisterAuth();
 
             // Security OWIN configuration
             var authenticationOptions = new Core.Security.AuthenticationOptions
