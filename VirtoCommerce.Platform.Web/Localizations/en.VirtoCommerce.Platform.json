@@ -28,7 +28,8 @@
                     "size": "Size",
                     "modified": "Modified",
                     "actions": "Actions",
-                    "group": "Group"
+                    "group": "Group",
+                    "language": "Language" 
                 }
             },
             "asset-upload": {
