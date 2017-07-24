@@ -11,7 +11,6 @@ namespace VirtoCommerce.Platform.Web.Model.Asset
         public string Name { get; set; }
         public string ContentType { get; set; }
         public string Url { get; set; }
-        public string ReadableSize { get; set; }
         public long Size { get; set; }
         public string ParentUrl { get; set; }
         public string RelativeUrl { get; set; }

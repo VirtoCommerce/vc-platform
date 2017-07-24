@@ -24,7 +24,7 @@
                             cellTemplate: 'asset-list-icon.cell.html'
                         },
                         { name: 'name', displayName: 'platform.blades.asset-list.labels.name', cellTooltip: true },
-                        { name: 'readableSize', displayName: 'platform.blades.asset-list.labels.size'},
+                        { name: 'size', displayName: 'platform.blades.asset-list.labels.size', cellTemplate: 'asset-list-size.cell.html' },
                         { name: 'modifiedDate', displayName: 'platform.blades.asset-list.labels.modified' }
                 ],
                 enablePaginationControls: false,
@@ -46,5 +46,11 @@
             <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.isImage"></div>
             <i class="table-ico fa" ng-class="row.entity.type === 'folder' ? 'fa-folder' : 'fa-file-o'" ng-if="!row.entity.isImage"></i>
         </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="asset-list-size.cell.html">
+    <div class="ui-grid-cell-contents">
+        {{ COL_FIELD | readablesize }}
     </div>
 </script>
