@@ -88,8 +88,7 @@ namespace VirtoCommerce.Platform.Web
             var modulesVirtualPath = VirtualRoot + "/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
 
-            // Try to include modules directory to shadow copy directories
-            // Ignore any errors, because method AppDomain.CurrentDomain.SetShadowCopyPath is obsolete
+            // Try to add modules directory to shadow copy directories
             try
             {
 #pragma warning disable 618
@@ -98,6 +97,7 @@ namespace VirtoCommerce.Platform.Web
             }
             catch (Exception)
             {
+                // Ignore any errors, because method AppDomain.CurrentDomain.SetShadowCopyPath is obsolete
             }
 
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
@@ -186,7 +186,7 @@ namespace VirtoCommerce.Platform.Web
             if (IsApplication)
             {
                 AreaRegistration.RegisterAllAreas();
-                
+
                 GlobalConfiguration.Configure(WebApiConfig.Register);
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
                 RouteConfig.RegisterRoutes(RouteTable.Routes);
@@ -334,7 +334,7 @@ namespace VirtoCommerce.Platform.Web
             var moduleCatalog = container.Resolve<IModuleCatalog>();
 
             #region Caching
-                
+
             //Cure for System.Runtime.Caching.MemoryCache freezing 
             //https://www.zpqrtbnk.net/posts/appdomains-threads-cultureinfos-and-paracetamol
             app.SanitizeThreadCulture();
@@ -345,12 +345,12 @@ namespace VirtoCommerce.Platform.Web
             var cacheManagerSection = ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) as CacheManagerSection;
             if (cacheManagerSection != null && cacheManagerSection.CacheManagers.Any(p => p.Name.EqualsInvariant("platformCache")))
             {
-                var configuration = ConfigurationBuilder.LoadConfiguration("platformCache") as CacheManagerConfiguration;
+                var configuration = ConfigurationBuilder.LoadConfiguration("platformCache");
 
                 if (configuration != null)
                 {
                     configuration.LoggerFactoryType = typeof(CacheManagerLoggerFactory);
-                    configuration.LoggerFactoryTypeArguments = new[] { container.Resolve<ILog>() };
+                    configuration.LoggerFactoryTypeArguments = new object[] { container.Resolve<ILog>() };
                     cacheManager = CacheFactory.FromConfiguration<object>(configuration);
                 }
             }
@@ -362,10 +362,10 @@ namespace VirtoCommerce.Platform.Web
                             .WithSystemRuntimeCacheHandle("memCacheHandle")
                             .WithExpiration(ExpirationMode.Sliding, TimeSpan.FromMinutes(5));
                 });
-            }       
-        
+            }
+
             container.RegisterInstance(cacheManager);
-            
+
             #endregion
 
             #region Settings
