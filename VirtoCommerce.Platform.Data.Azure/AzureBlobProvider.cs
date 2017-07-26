@@ -44,7 +44,8 @@ namespace VirtoCommerce.Platform.Data.Azure
                     FileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString())),
                     ContentType = cloudBlob.Properties.ContentType,
                     Size = cloudBlob.Properties.Length,
-                    ModifiedDate = cloudBlob.Properties.LastModified != null ? cloudBlob.Properties.LastModified.Value.DateTime : (DateTime?)null
+                    ModifiedDate = cloudBlob.Properties.LastModified != null ? cloudBlob.Properties.LastModified.Value.DateTime : (DateTime?)null,
+                    RelativeUrl = cloudBlob.Uri.LocalPath
                 };
             }
             catch (Exception)
