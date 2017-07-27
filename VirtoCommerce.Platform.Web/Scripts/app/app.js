@@ -1,5 +1,6 @@
 ﻿var AppDependencies = [
   'ui.router',
+  'luegg.directives',
   'googlechart',
   'gridster',
   'ui.bootstrap',
