@@ -8,6 +8,7 @@
     "signalr": "2.2.0",
     "angular": "1.4.4",
     "angular-i18n": "1.4.4",
+    "angular-scroll-glue": "v2.0.7",
     "angular-dynamic-locale": "0.1.32",
     "angular-animate": "1.4.4",
     "angular-bootstrap": "0.13.1",
