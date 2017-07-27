@@ -2,7 +2,7 @@
 .controller('platformWebApp.moduleInstallProgressController', ['$scope', '$window', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', function ($scope, $window, bladeNavigationService, modules) {
     var blade = $scope.blade;
     blade.subtitle = 'Installation progress';
-
+    
     $scope.$on("new-notification-event", function (event, notification) {
         if (blade.currentEntity && notification.id == blade.currentEntity.id) {
             angular.copy(notification, blade.currentEntity);
