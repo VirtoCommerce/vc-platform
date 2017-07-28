@@ -115,10 +115,6 @@
           "localized-values": "Wert eingeben"
         }
       },
-      "property-valueType": {
-        "title": "Dynamische Eigenschaft Wert Typ",
-        "subtitle": "Ändern Sie den Wert Typ"
-      },
       "propertyValue-list": {
         "title": "Eigenschaften Werte",
         "subtitle": "Eigenschaften bearbeiten Werte",

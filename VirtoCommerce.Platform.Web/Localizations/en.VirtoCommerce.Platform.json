@@ -116,10 +116,6 @@
                     "localized-values": "Enter value"
                 }
             },
-            "property-valueType": {
-                "title": "Dynamic Property value type",
-                "subtitle": "Change value type"
-            },
             "propertyValue-list": {
                 "title": "Properties values",
                 "subtitle": "Edit properties values",

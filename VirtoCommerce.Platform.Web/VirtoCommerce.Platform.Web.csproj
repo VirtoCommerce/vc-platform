@@ -571,8 +571,6 @@
     <Content Include="Scripts\app\dynamicProperties\blades\propertyValue-list.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-dictionary.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-dictionary.tpl.html" />
-    <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.js" />
-    <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.tpl.html" />
     <Content Include="Scripts\app\security\blades\common\scope-value-pick-from-simple-list.js" />
     <Content Include="Scripts\app\security\blades\common\scope-value-pick-from-simple-list.tpl.html" />
     <Content Include="Scripts\app\security\blades\permission-scopes.js" />
