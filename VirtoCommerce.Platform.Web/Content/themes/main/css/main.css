@@ -4193,6 +4193,15 @@ tags-input .tags.focused {
   top: 10px;
   z-index: 50; }
 
+.modal-body.size-clearfix {
+  max-height: 530px;
+  overflow: auto;
+}
+
+.modal-body .item-list-clearfix {
+  max-height: 530px;
+}
+
 .modal-body .gallery {
   height: 100%;
   overflow: hidden;
