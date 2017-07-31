@@ -1,4 +1,4 @@
-@if "%SCM_TRACE_LEVEL%" NEQ "4" @echo off
+﻿@if "%SCM_TRACE_LEVEL%" NEQ "4" @echo off
 
 :: ----------------------
 :: KUDU Deployment Script
@@ -55,7 +55,7 @@ IF NOT DEFINED KUDU_SYNC_CMD (
     SET "KUDU_SYNC_CMD=%appdata%\npm\kuduSync.cmd"
 )
 IF NOT DEFINED DEPLOYMENT_TEMP (
-    SET "DEPLOYMENT_TEMP=%temp%\___deployTemp%random%"
+    SET "DEPLOYMENT_TEMP=%temp%\_vc-deploy\%random%"
     SET CLEAN_LOCAL_DEPLOYMENT_TEMP=true
 )
 
