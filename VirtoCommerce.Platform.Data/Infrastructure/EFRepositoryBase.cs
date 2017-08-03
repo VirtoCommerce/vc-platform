@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
@@ -128,7 +129,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
           DbModelBuilder modelBuilder, string toTable, string discriminatorColumn = DiscriminatorFieldName, string discriminatorValue = "")
           where T : class
         {
-            var val = String.IsNullOrEmpty(discriminatorValue) ? typeof(T).Name : discriminatorValue;
+            var val = string.IsNullOrEmpty(discriminatorValue) ? typeof(T).Name : discriminatorValue;
 
             var config = modelBuilder.Entity<T>().Map(
               entity => entity.Requires(discriminatorColumn).HasValue(val).IsOptional());
@@ -144,18 +145,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// <value>
         /// The unit of work.
         /// </value>
-        public IUnitOfWork UnitOfWork
-        {
-            get
-            {
-                if (_unitOfWork == null)
-                {
-                    _unitOfWork = new BasicUnitOfWork(this, _interceptors);
-                }
-
-                return _unitOfWork;
-            }
-        }
+        public IUnitOfWork UnitOfWork => _unitOfWork ?? (_unitOfWork = new BasicUnitOfWork(this, _interceptors));
 
         /// <summary>
         /// Attaches the specified item.
@@ -180,7 +170,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         {
             if (entity == null)
             {
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
             }
 
             ObjectStateEntry entry;
@@ -232,6 +222,21 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             Set(item.GetType()).Remove(item);
         }
 
+        public void AddBatchDeletedEntities(IList<Entity> entities)
+        {
+            var nonEmptyEntities = entities?.Where(e => e?.Id != null).ToList();
+
+            if (!nonEmptyEntities.IsNullOrEmpty())
+            {
+                if (BatchDeletedEntities == null)
+                {
+                    BatchDeletedEntities = new List<Entity>();
+                }
+
+                BatchDeletedEntities.AddRange(nonEmptyEntities);
+            }
+        }
+
         /// <summary>
         /// Gets as queryable.
         /// </summary>
@@ -281,10 +286,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// <value>
         /// The object context.
         /// </value>
-        protected ObjectContext ObjectContext
-        {
-            get { return ((IObjectContextAdapter)this).ObjectContext; }
-        }
+        protected ObjectContext ObjectContext => ((IObjectContextAdapter)this).ObjectContext;
 
         /// <summary>
         /// Gets the object state manager.
@@ -292,10 +294,13 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// <value>
         /// The object state manager.
         /// </value>
-        protected ObjectStateManager ObjectStateManager
-        {
-            get { return ObjectContext.ObjectStateManager; }
-        }
+        protected ObjectStateManager ObjectStateManager => ObjectContext.ObjectStateManager;
+
         #endregion
+
+        /// <summary>
+        /// Entities deleted by batch command
+        /// </summary>
+        public IList<Entity> BatchDeletedEntities { get; private set; }
     }
 }

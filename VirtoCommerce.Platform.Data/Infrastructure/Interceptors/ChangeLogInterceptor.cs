@@ -13,14 +13,18 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
         private readonly Func<IPlatformRepository> _repositoryFactory;
         private readonly ChangeLogPolicy _policy;
         private readonly string[] _entityTypes;
-        private readonly IUserNameResolver _userNameResolver;
 
-        public ChangeLogInterceptor(Func<IPlatformRepository> repositoryFactory, ChangeLogPolicy policy, string[] entityTypes, IUserNameResolver userNameResolver)
+        public ChangeLogInterceptor(Func<IPlatformRepository> repositoryFactory, ChangeLogPolicy policy, string[] entityTypes)
         {
             _repositoryFactory = repositoryFactory;
             _policy = policy;
             _entityTypes = entityTypes;
-            _userNameResolver = userNameResolver;
+        }
+
+        [Obsolete]
+        public ChangeLogInterceptor(Func<IPlatformRepository> repositoryFactory, ChangeLogPolicy policy, string[] entityTypes, IUserNameResolver userNameResolver)
+            : this(repositoryFactory, policy, entityTypes)
+        {
         }
 
         /// <summary>
@@ -39,39 +43,56 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
         {
             using (var repository = _repositoryFactory())
             {
-                foreach (var entryWithState in context.EntriesByState.Where(x => x.Key != EntityState.Unchanged)) // added unchanged filter, so we don't log events for objects that haven't been changed
+                // Don't log events for objects that haven't been changed
+                foreach (var entryWithState in context.EntriesByState.Where(x => x.Key != EntityState.Unchanged))
                 {
-                    foreach (var entry in entryWithState.Where(x => x.Entity is Entity))
+                    var entityState = entryWithState.Key;
+                    var entities = entryWithState.Where(x => x.Entity is Entity).Select(x => (Entity)x.Entity).ToList();
+
+                    // Include entities deleted by batch command
+                    if (entityState == EntityState.Deleted && context.BatchDeletedEntities != null)
                     {
-                        var now = DateTime.UtcNow;
-                        var entityType = entry.Entity.GetType();
+                        entities.AddRange(context.BatchDeletedEntities);
+                    }
+
+                    foreach (var entity in entities)
+                    {
+                        var entityType = entity.GetType();
                         if (entityType.BaseType != null && entityType.Namespace == "System.Data.Entity.DynamicProxies")
                         {
                             entityType = entityType.BaseType;
                         }
-                        //This line allows you to use the base types to check that the current object type is matches the specified patterns
+
+                        // This line allows you to use the base types to check that the current object type is matches the specified patterns
                         var inheritanceChain = entityType.GetTypeInheritanceChainTo(typeof(Entity));
                         var suitableEntityType = inheritanceChain.FirstOrDefault(x => IsMatchInExpression(_entityTypes, x.Name));
+
                         if (suitableEntityType != null)
                         {
-                            var activityLog = StateEntry2OperationLog(suitableEntityType.Name, now, ((Entity)entry.Entity).Id, entryWithState.Key);
+                            var operationLogEntity = new OperationLogEntity
+                            {
+                                ObjectId = entity.Id,
+                                ObjectType = suitableEntityType.Name,
+                                OperationType = entityState.ToString()
+                            };
+
                             if (_policy == ChangeLogPolicy.Cumulative)
                             {
-                                var alreadyExistLog = repository.OperationLogs.OrderByDescending(x => x.ModifiedDate)
-                                                                .FirstOrDefault(x => x.ObjectId == activityLog.ObjectId && x.ObjectType == activityLog.ObjectType);
-                                if (alreadyExistLog != null)
+                                var existingLogEntity = repository.OperationLogs.OrderByDescending(x => x.ModifiedDate)
+                                                                .FirstOrDefault(x => x.ObjectId == operationLogEntity.ObjectId && x.ObjectType == operationLogEntity.ObjectType);
+                                if (existingLogEntity != null)
                                 {
-                                    alreadyExistLog.ModifiedDate = DateTime.UtcNow;
-                                    alreadyExistLog.OperationType = activityLog.OperationType;
+                                    existingLogEntity.ModifiedDate = DateTime.UtcNow;
+                                    existingLogEntity.OperationType = operationLogEntity.OperationType;
                                 }
                                 else
                                 {
-                                    repository.Add(activityLog);
+                                    repository.Add(operationLogEntity);
                                 }
                             }
                             else
                             {
-                                repository.Add(activityLog);
+                                repository.Add(operationLogEntity);
                             }
                         }
                     }
@@ -81,29 +102,6 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
             }
         }
 
-
-
-        /// <summary>
-        /// States the entry2 operation log.
-        /// </summary>
-        /// <param name="objectType">Type of the object.</param>
-        /// <param name="createdDate">The createdDate.</param>
-        /// <param name="objectId">The key value.</param>
-        /// <param name="state">The state.</param>
-        /// <returns>
-        /// OperationLog object
-        /// </returns>
-        private OperationLogEntity StateEntry2OperationLog(string objectType, DateTime createdDate, string objectId, EntityState state)
-        {
-            var retVal = new OperationLogEntity
-            {
-                ObjectId = objectId,
-                ObjectType = objectType,
-                OperationType = state.ToString()
-            };
-
-            return retVal;
-        }
 
         private static bool IsMatchInExpression(string[] expressions, string name)
         {
@@ -122,12 +120,6 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
             }
 
             return retVal;
-        }
-
-        private string GetCurrentUserName()
-        {
-            var result = _userNameResolver != null ? _userNameResolver.GetCurrentUserName() : "unknown";
-            return result;
         }
     }
 }
