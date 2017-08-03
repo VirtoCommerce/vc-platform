@@ -12,18 +12,18 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">{{ 'platform.blades.account-api.labels.key-name' | translate }}</label>
+                <label class="form-label">{{ 'platform.blades.account-api.labels.account-name' | translate }}</label>
                 <div class="form-input">
-                    <input ng-model="blade.currentEntity.name" placeholder="{{ 'platform.blades.account-api.placeholders.key-name' | translate }}" focus-on>
+                    <input ng-model="blade.currentEntity.name" placeholder="{{ 'platform.blades.account-api.placeholders.account-name' | translate }}" focus-on>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-if="blade.isNew">
                 <label class="form-label">
-                    {{ 'platform.blades.account-api.labels.key-type' | translate }}
+                    {{ 'platform.blades.account-api.labels.account-type' | translate }}
                 </label>
                 <div class="form-input">
                     <ui-select ng-model="blade.currentEntity.apiAccountType">
-                        <ui-select-match placeholder="{{ 'platform.blades.account-api.placeholders.key-type' | translate }}">{{$select.selected}}</ui-select-match>
+                        <ui-select-match placeholder="{{ 'platform.blades.account-api.placeholders.account-type' | translate }}">{{$select.selected}}</ui-select-match>
                         <ui-select-choices repeat="x as x in apiAccountTypes | filter: $select.search">
                             <span ng-bind-html="x | highlight: $select.search"></span>
                         </ui-select-choices>
@@ -32,7 +32,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">
-                    {{blade.currentEntity.apiAccountType===apiAccountTypes[0]?'App ID':'Key'}}
+                    {{ 'platform.blades.account-api.labels.app-id' | translate }}
                 </label>
                 <div class="form-input">
                     <input ng-model="blade.currentEntity.appId" placeholder="{{ 'platform.blades.account-api.placeholders.app-id' | translate }}" readonly>

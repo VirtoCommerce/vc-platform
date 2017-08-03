@@ -446,6 +446,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ModularityResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\SecurityResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SecurityResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
     <Compile Include="Swagger\CachingSwaggerProvider.cs" />
@@ -770,6 +775,10 @@
     <Content Include="Scripts\app\navigation\blade\bladeNavigation.js" />
     <Content Include="Scripts\codemirror\ui-codemirror.js" />
     <Content Include="Scripts\codemirror\xml.js" />
+    <EmbeddedResource Include="Resources\SecurityResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SecurityResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Swagger\UI\index.html" />
     <EmbeddedResource Include="Swagger\UI\logo_small.png" />
     <None Include="Swagger\UI\swagger-ui.js" />

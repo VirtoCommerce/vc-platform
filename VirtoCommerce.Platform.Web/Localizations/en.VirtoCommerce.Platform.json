@@ -377,17 +377,18 @@
                 }
             },
             "account-api": {
-                "title": "API key",
-                "title-new": "New API key",
+                "title": "API account",
+                "title-new": "New API account",
                 "labels": {
                     "is-active": "Is active",
-                    "key-name": "Key name",
-                    "key-type": "Key type",
+                    "account-name": "Account name",
+                    "account-type": "Account type",
+                    "app-id": "App ID",
                     "secret-key": "Secret key"
                 },
                 "placeholders": {
-                    "key-name": "Enter name",
-                    "key-type": "Select...",
+                    "account-name": "Enter name",
+                    "account-type": "Select...",
                     "secret-key": "Generate secret key",
                     "app-id": "Generate..."
                 }
@@ -698,8 +699,8 @@
                 "title": "Settings"
             },
             "accountApi": {
-                "title": "API Keys",
-                "blade-subtitle": "API keys"
+                "title": "API Accounts",
+                "blade-subtitle": "API acounts"
             },
             "accountRoles": {
                 "title": "Roles",

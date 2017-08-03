@@ -147,6 +147,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SecurityAccountChangesResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\SecurityAccountExceptions.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SecurityAccountExceptions.resx</DependentUpon>
+    </Compile>
     <Compile Include="RoleManagementService.cs" />
     <Compile Include="SecurityConstants.cs" />
     <Compile Include="SecurityOptions.cs" />
@@ -174,6 +179,10 @@
     <EmbeddedResource Include="Resources\SecurityAccountChangesResource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SecurityAccountChangesResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SecurityAccountExceptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SecurityAccountExceptions.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
