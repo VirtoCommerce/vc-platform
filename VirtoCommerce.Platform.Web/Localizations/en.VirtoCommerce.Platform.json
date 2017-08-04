@@ -352,6 +352,8 @@
                     "no-modules-part1": "No new Modules to install.",
                     "no-installed-modules": "No installed Modules found.",
                     "icon": "Icon",
+                    "up-to-date": "Module is up to date", 
+                    "update-available": "Update available for this module", 
                     "module": "Module",
                     "version": "Version",
                     "author": "Author"

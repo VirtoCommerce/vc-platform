@@ -1,4 +1,4 @@
-﻿@charset "UTF-8";
+@charset "UTF-8";
 /* Fonts */
 /* Metrics */
 /* General */
@@ -476,6 +476,11 @@ h3 {
 .table.__indexed th:nth-last-child(6) ~ th {
   width: 20%; }
 
+.table-info {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle; }
+
 .table-t,
 .table-descr {
   display: block;
@@ -551,6 +556,8 @@ h3 {
     margin: 0 0 0 6px;
     position: relative;
     width: 100%; }
+  .product-img img.image {
+    height: auto; }
 
 .table-item:hover .product-img .image {
   background-color: #ecf7fc; }
@@ -908,6 +915,28 @@ input.ui-grid-filter-input[type="text"] {
 .ui-grid-actions.__opened ~ .menu {
   width: -webkit-calc(100% - 80px);
   width: calc(100% - 80px); }
+
+.ui-grid-draggable-row-target {
+  opacity: 0.5 !important; }
+
+.ui-grid-draggable-row {
+  height: 60px; }
+
+.ui-grid-draggable-row-over {
+  position: relative; }
+  .ui-grid-draggable-row-over:before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px dashed #808080; }
+
+.ui-grid-draggable-row-over--above:before {
+  top: 0; }
+
+.ui-grid-draggable-row-over--below:before {
+  bottom: 0; }
 
 /* Forms */
 :-moz-ui-invalid:not(output) {
@@ -4195,12 +4224,10 @@ tags-input .tags.focused {
 
 .modal-body.size-clearfix {
   max-height: 530px;
-  overflow: auto;
-}
+  overflow: auto; }
 
 .modal-body .item-list-clearfix {
-  max-height: 530px;
-}
+  max-height: 530px; }
 
 .modal-body .gallery {
   height: 100%;
@@ -5811,30 +5838,5 @@ a:hover,
     .nav-bar.__collapsed + .cnt .lang-rtl .uk-htmleditor-fullscreen {
       left: auto;
       right: 72px !important; }
-
-
-.ui-grid-draggable-row-target {
-    opacity: 0.5 !important;
-}
-.ui-grid-draggable-row {
-    height: 60px;
-}
-.ui-grid-draggable-row-over {
-    position: relative;
-}
-.ui-grid-draggable-row-over:before {
-    content: "";
-    display: block;
-    position: absolute;
-    left: 0;
-    width: 100%;
-    border-bottom: 1px dashed #808080
-}
-.ui-grid-draggable-row-over--above:before {
-    top: 0;
-}
-.ui-grid-draggable-row-over--below:before {
-    bottom: 0;
-}
 
 /*# sourceMappingURL=main.css.map */
