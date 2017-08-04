@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Optimization;
 using Microsoft.Practices.ServiceLocation;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 
@@ -15,7 +17,7 @@ namespace VirtoCommerce.Platform.Web
 
         public static void RegisterBundles(BundleCollection bundles)
         {
-            //BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:EnableBundlesOptimizations", false);
 
             #region CSS
 
