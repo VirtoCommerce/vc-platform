@@ -5,13 +5,21 @@ namespace VirtoCommerce.Platform.Core.Common
 {
     public class ConnectionStringHelper
     {
-        public static string GetConnectionString(string name)
+        public static string GetConnectionString(string nameOrConnectionString)
         {
-            var environmentConnectionString = Environment.GetEnvironmentVariable($"VIRTO_CONN_STR_{name}");
+            var result = nameOrConnectionString;
 
-            return !string.IsNullOrEmpty(environmentConnectionString)
-                ? environmentConnectionString
-                : ConfigurationManager.ConnectionStrings[name]?.ConnectionString;
+            if (nameOrConnectionString.IndexOf('=') < 0)
+            {
+                result = Environment.GetEnvironmentVariable($"VIRTO_CONN_STR_{nameOrConnectionString}");
+
+                if (string.IsNullOrEmpty(result))
+                {
+                    result = ConfigurationManager.ConnectionStrings[nameOrConnectionString]?.ConnectionString;
+                }
+            }
+
+            return result;
         }
     }
 }
