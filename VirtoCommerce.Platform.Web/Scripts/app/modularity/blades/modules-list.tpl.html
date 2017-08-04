@@ -95,7 +95,7 @@
     <div class="ui-grid-cell-contents">
         <div class="inner-contents">
             <i class="table-ico fa fa-check-square-o" ng-if="row.entity.isInstalled && !row.entity.$alternativeVersion" ng-attr-title="{{ 'platform.blades.modules-list.labels.up-to-date' | translate }}"></i>
-            <i class="table-ico fa fa-share-square-o" ng-if="row.entity.isInstalled && row.entity.$alternativeVersion" ng-attr-title="{{ 'platform.blades.modules-list.labels.update-available' | translate }}"></i>
+            <i class="table-ico fa fa-arrow-up" ng-if="row.entity.isInstalled && row.entity.$alternativeVersion" ng-attr-title="{{ 'platform.blades.modules-list.labels.update-available' | translate }}"></i>
             <span class="table-info">
                 <span class="table-t" title="{{COL_FIELD}}">{{COL_FIELD}}</span>
                 <span class="table-descr">{{row.entity.$alternativeVersion}}</span>
