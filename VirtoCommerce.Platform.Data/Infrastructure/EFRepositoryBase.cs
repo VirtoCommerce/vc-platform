@@ -10,6 +10,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Reflection;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.Platform.Data.Infrastructure
@@ -27,7 +28,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// Initializes a new instance of the <see cref="EFRepositoryBase"/> class.
         /// </summary>
         protected EFRepositoryBase()
-            : base("VirtoCommerce")
+            : base(ConnectionStringHelper.GetConnectionString("VirtoCommerce"))
         {
         }
 

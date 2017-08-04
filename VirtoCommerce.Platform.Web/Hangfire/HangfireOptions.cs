@@ -4,6 +4,6 @@
     {
         public bool StartServer { get; set; }
         public string JobStorageType { get; set; }
-        public string DatabaseConnectionStringName { get; set; }
+        public string DatabaseConnectionString { get; set; }
     }
 }

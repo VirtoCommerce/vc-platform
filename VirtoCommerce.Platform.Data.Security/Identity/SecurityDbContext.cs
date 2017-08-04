@@ -1,12 +1,13 @@
 ﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.Platform.Data.Security.Identity
 {
     public class SecurityDbContext : IdentityDbContext<ApplicationUser>
     {
         public SecurityDbContext()
-       : this("VirtoCommerce")
+            : this(ConnectionStringHelper.GetConnectionString("VirtoCommerce"))
         {
         }
 
