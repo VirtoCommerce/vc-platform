@@ -1,4 +1,4 @@
-function Compress-Module
+﻿function Compress-Module
 {
     Param(
         [string] $ProjectName,
@@ -15,7 +15,10 @@ function Compress-Module
         $OutputDir = Split-Path $project.FullName -Parent
     }
 
-    $msbuild = "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
+    $msbuild = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
+    if (-Not (Test-Path $msbuild)) {
+        $msbuild = "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
+    }
     if (-Not (Test-Path $msbuild)) {
         $msbuild = "${env:ProgramFiles(x86)}\MSBuild\12.0\Bin\MSBuild.exe"
     }
