@@ -11,6 +11,6 @@
         <iconUrl>https://github.com/VirtoCommerce/vc-community/raw/master/NuGet/icon.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>$description$</description>
-        <copyright>Copyright © VirtoCommerce 2011-2016</copyright>
+        <copyright>Copyright © VirtoCommerce 2011-2017</copyright>
     </metadata>
 </package>
