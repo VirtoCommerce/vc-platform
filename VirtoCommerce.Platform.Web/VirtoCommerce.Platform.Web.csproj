@@ -38,7 +38,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\VirtoCommerce.Platform.Web.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
@@ -49,7 +48,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\VirtoCommerce.Platform.Web.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
@@ -499,6 +497,9 @@
     <Content Include="Content\themes\main\css\main.css.map" />
     <Content Include="Content\themes\main\sass\modules\_menu.sass" />
     <Content Include="Content\themes\main\sass\modules\_lang-rtl.sass" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
