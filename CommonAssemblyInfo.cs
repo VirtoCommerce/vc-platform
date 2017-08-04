@@ -12,11 +12,11 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyCompany("VirtoCommerce")]
-[assembly: AssemblyProduct("Virto Commerce 2.12")]
+[assembly: AssemblyProduct("Virto Commerce 2.13")]
 [assembly: AssemblyCopyright("Copyright © VirtoCommerce 2011-2017")]
 
-[assembly: AssemblyFileVersion("2.13.12.0")]
-[assembly: AssemblyVersion("2.13.12.0")]
+[assembly: AssemblyFileVersion("2.13.13.0")]
+[assembly: AssemblyVersion("2.13.13.0")]
 [assembly: AssemblyInformationalVersion("2.13")]
 
 
