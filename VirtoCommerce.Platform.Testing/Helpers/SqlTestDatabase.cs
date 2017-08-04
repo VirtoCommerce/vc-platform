@@ -2,7 +2,7 @@
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Globalization;
-using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Testing.Helpers
 {

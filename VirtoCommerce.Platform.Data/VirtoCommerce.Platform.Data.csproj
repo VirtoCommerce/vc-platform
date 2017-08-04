@@ -80,7 +80,6 @@
     <Compile Include="ChangeLog\ChangeLogService.cs" />
     <Compile Include="Common\AssemblyExtensions.cs" />
     <Compile Include="Common\CacheManagerExtensions.cs" />
-    <Compile Include="Common\ConnectionStringHelper.cs" />
     <Compile Include="Common\ConventionInjections\CloneInjection.cs" />
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />

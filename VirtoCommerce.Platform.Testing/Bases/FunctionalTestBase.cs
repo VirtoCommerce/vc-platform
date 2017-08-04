@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using System.Globalization;
 using System.IO;
-using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Testing.Bases
 {

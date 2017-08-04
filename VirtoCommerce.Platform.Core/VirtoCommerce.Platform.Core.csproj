@@ -46,6 +46,7 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
@@ -62,6 +63,7 @@
     <Compile Include="Assets\IBlobStorageProvider.cs" />
     <Compile Include="ChangeLog\IHasChangesHistory.cs" />
     <Compile Include="Common\AbstractTypeFactory.cs" />
+    <Compile Include="Common\ConnectionStringHelper.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\ConfigManagerExtensions.cs" />
