@@ -119,17 +119,17 @@ namespace VirtoCommerce.Platform.Web
             moduleInitializerOptions.RoutePrefix = routePrefix;
 
             //Initialize Platform dependencies
-            var connectionStringName = ConnectionStringHelper.GetConnectionStringName("VirtoCommerce");
+            var connectionString = ConnectionStringHelper.GetConnectionString("VirtoCommerce");
 
             var hangfireOptions = new HangfireOptions
             {
                 StartServer = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Jobs.Enabled", true),
                 JobStorageType = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Jobs.StorageType", "Memory"),
-                DatabaseConnectionStringName = connectionStringName,
+                DatabaseConnectionString = connectionString,
             };
             var hangfireLauncher = new HangfireLauncher(hangfireOptions);
 
-            InitializePlatform(app, container, pathMapper, connectionStringName, hangfireLauncher, modulesPhysicalPath);
+            InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath);
 
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -308,19 +308,19 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionStringName, HangfireLauncher hangfireLauncher, string modulesPath)
+        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionString, HangfireLauncher hangfireLauncher, string modulesPath)
         {
             container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
 
             #region Setup database
 
-            using (var db = new SecurityDbContext(connectionStringName))
+            using (var db = new SecurityDbContext(connectionString))
             {
                 new IdentityDatabaseInitializer().InitializeDatabase(db);
             }
 
-            using (var context = new PlatformRepository(connectionStringName, container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor()))
+            using (var context = new PlatformRepository(connectionString, container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor()))
             {
                 new PlatformDatabaseInitializer().InitializeDatabase(context);
             }
@@ -329,7 +329,7 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
-            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository(connectionStringName, container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor());
+            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository(connectionString, container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor());
             container.RegisterType<IPlatformRepository>(new InjectionFactory(c => platformRepositoryFactory()));
             container.RegisterInstance(platformRepositoryFactory);
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -653,7 +653,7 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
 
             container.RegisterInstance(app.GetDataProtectionProvider());
-            container.RegisterType<SecurityDbContext>(new InjectionConstructor(connectionStringName));
+            container.RegisterType<SecurityDbContext>(new InjectionConstructor(connectionString));
             container.RegisterType<IUserStore<ApplicationUser>, ApplicationUserStore>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
             container.RegisterType<ApplicationUserManager>();

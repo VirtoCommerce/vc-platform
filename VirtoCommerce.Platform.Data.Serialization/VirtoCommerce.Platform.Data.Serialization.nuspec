@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>$id$</id>
-        <version>2.13.12</version>
+        <version>2.13.14</version>
         <title>$title$</title>
         <authors>$author$</authors>
         <owners>$author$</owners>
@@ -11,9 +11,9 @@
         <iconUrl>https://github.com/VirtoCommerce/vc-community/raw/master/NuGet/icon.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>$description$</description>
-        <copyright>Copyright © VirtoCommerce 2011-2016</copyright>
+        <copyright>Copyright © VirtoCommerce 2011-2017</copyright>
     </metadata>
     <files>
-        <file src="lib\ExpressionSerialization.dll" target="lib\net451" />
+        <file src="lib\ExpressionSerialization.dll" target="lib\net461" />
     </files>
 </package>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
@@ -21,7 +22,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
             _entityTypes = entityTypes;
         }
 
-        [Obsolete]
+        [Obsolete("Don't pass IUserNameResolver")]
         public ChangeLogInterceptor(Func<IPlatformRepository> repositoryFactory, ChangeLogPolicy policy, string[] entityTypes, IUserNameResolver userNameResolver)
             : this(repositoryFactory, policy, entityTypes)
         {
@@ -49,59 +50,64 @@ namespace VirtoCommerce.Platform.Data.Infrastructure.Interceptors
                     var entityState = entryWithState.Key;
                     var entities = entryWithState.Where(x => x.Entity is Entity).Select(x => (Entity)x.Entity).ToList();
 
-                    // Include entities deleted by batch command
-                    if (entityState == EntityState.Deleted && context.BatchDeletedEntities != null)
-                    {
-                        entities.AddRange(context.BatchDeletedEntities);
-                    }
+                    SaveChangesToLog(repository, entityState, entities);
+                }
 
-                    foreach (var entity in entities)
-                    {
-                        var entityType = entity.GetType();
-                        if (entityType.BaseType != null && entityType.Namespace == "System.Data.Entity.DynamicProxies")
-                        {
-                            entityType = entityType.BaseType;
-                        }
-
-                        // This line allows you to use the base types to check that the current object type is matches the specified patterns
-                        var inheritanceChain = entityType.GetTypeInheritanceChainTo(typeof(Entity));
-                        var suitableEntityType = inheritanceChain.FirstOrDefault(x => IsMatchInExpression(_entityTypes, x.Name));
-
-                        if (suitableEntityType != null)
-                        {
-                            var operationLogEntity = new OperationLogEntity
-                            {
-                                ObjectId = entity.Id,
-                                ObjectType = suitableEntityType.Name,
-                                OperationType = entityState.ToString()
-                            };
-
-                            if (_policy == ChangeLogPolicy.Cumulative)
-                            {
-                                var existingLogEntity = repository.OperationLogs.OrderByDescending(x => x.ModifiedDate)
-                                                                .FirstOrDefault(x => x.ObjectId == operationLogEntity.ObjectId && x.ObjectType == operationLogEntity.ObjectType);
-                                if (existingLogEntity != null)
-                                {
-                                    existingLogEntity.ModifiedDate = DateTime.UtcNow;
-                                    existingLogEntity.OperationType = operationLogEntity.OperationType;
-                                }
-                                else
-                                {
-                                    repository.Add(operationLogEntity);
-                                }
-                            }
-                            else
-                            {
-                                repository.Add(operationLogEntity);
-                            }
-                        }
-                    }
+                // Process entities deleted by batch command
+                if (context.BatchDeletedEntities != null)
+                {
+                    SaveChangesToLog(repository, EntityState.Deleted, context.BatchDeletedEntities);
                 }
 
                 repository.UnitOfWork.Commit();
             }
         }
 
+
+        private void SaveChangesToLog(IPlatformRepository repository, EntityState entityState, IEnumerable<Entity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                var entityType = entity.GetType();
+                if (entityType.BaseType != null && entityType.Namespace == "System.Data.Entity.DynamicProxies")
+                {
+                    entityType = entityType.BaseType;
+                }
+
+                // This line allows you to use the base types to check that the current object type is matches the specified patterns
+                var inheritanceChain = entityType.GetTypeInheritanceChainTo(typeof(Entity));
+                var suitableEntityType = inheritanceChain.FirstOrDefault(x => IsMatchInExpression(_entityTypes, x.Name));
+
+                if (suitableEntityType != null)
+                {
+                    var operationLogEntity = new OperationLogEntity
+                    {
+                        ObjectId = entity.Id,
+                        ObjectType = suitableEntityType.Name,
+                        OperationType = entityState.ToString()
+                    };
+
+                    if (_policy == ChangeLogPolicy.Cumulative)
+                    {
+                        var existingLogEntity = repository.OperationLogs.OrderByDescending(x => x.ModifiedDate)
+                            .FirstOrDefault(x => x.ObjectId == operationLogEntity.ObjectId && x.ObjectType == operationLogEntity.ObjectType);
+                        if (existingLogEntity != null)
+                        {
+                            existingLogEntity.ModifiedDate = DateTime.UtcNow;
+                            existingLogEntity.OperationType = operationLogEntity.OperationType;
+                        }
+                        else
+                        {
+                            repository.Add(operationLogEntity);
+                        }
+                    }
+                    else
+                    {
+                        repository.Add(operationLogEntity);
+                    }
+                }
+            }
+        }
 
         private static bool IsMatchInExpression(string[] expressions, string name)
         {
