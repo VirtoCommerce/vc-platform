@@ -87,7 +87,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             }
             catch (MissedModuleException)
             {
-                // Do not throw if module was missing, just return a list with all dependencies (available and not).
+                // Do not throw if module was missing
                 // Use ValidateDependencyGraph to validate & write and error of module missing
                 result = Enumerable.Empty<ModuleInfo>();
             }
