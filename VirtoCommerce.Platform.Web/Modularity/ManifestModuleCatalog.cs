@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
         }
 
         protected override void InnerLoad()
-        {         
+        {
             var contentPhysicalPath = _modulesLocalPath;
 
             if (string.IsNullOrEmpty(_assembliesPath))
@@ -78,21 +78,22 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
         public override IEnumerable<ModuleInfo> CompleteListWithDependencies(IEnumerable<ModuleInfo> modules)
         {
-            IEnumerable<ModuleInfo> retVal = Enumerable.Empty<ModuleInfo>();
-            var passedModules = modules as ModuleInfo[] ?? modules.ToArray();
+            IEnumerable<ModuleInfo> result;
+
             try
             {
-                retVal = base.CompleteListWithDependencies(passedModules).ToArray();
+                var passedModules = modules as ModuleInfo[] ?? modules.ToArray();
+                result = base.CompleteListWithDependencies(passedModules).ToArray();
             }
-            catch (MissedModuleException exception)
+            catch (MissedModuleException)
             {
                 // Do not throw if module was missing, just return a list with all dependencies (available and not).
                 // Use ValidateDependencyGraph to validate & write and error of module missing
+                result = Enumerable.Empty<ModuleInfo>();
             }
-            return retVal;
-        }
 
-        #region Overrides of ModuleCatalog
+            return result;
+        }
 
         protected override void ValidateDependencyGraph()
         {
@@ -114,13 +115,11 @@ namespace VirtoCommerce.Platform.Web.Modularity
             }
         }
 
-        #endregion
-
         public override void Validate()
         {
             var modules = Modules.OfType<ManifestModuleInfo>();
             var manifestModules = modules as ManifestModuleInfo[] ?? modules.ToArray();
-            
+
             base.Validate();
 
             //Dependencies and platform version validation
@@ -151,9 +150,10 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     {
                         module.Errors.Add(string.Format(ModularityResources.ModuleDependencyIsIncompatible, declaredDependency, installedDependency.Version));
                     }
-                }        
+                }
             }
         }
+
 
         private IDictionary<string, ModuleManifest> GetModuleManifests()
         {
@@ -238,7 +238,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             return relativePath;
         }
 
-        private void ConvertVirtualPath(IEnumerable<ManifestBundleItem> items, string moduleVirtualPath)
+        private static void ConvertVirtualPath(IEnumerable<ManifestBundleItem> items, string moduleVirtualPath)
         {
             if (items != null)
             {
