@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Web.Util;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
+using VirtoCommerce.Platform.Web.Resources;
 
 namespace VirtoCommerce.Platform.Web.Modularity
 {
@@ -77,39 +76,80 @@ namespace VirtoCommerce.Platform.Web.Modularity
             }
         }
 
+        public override IEnumerable<ModuleInfo> CompleteListWithDependencies(IEnumerable<ModuleInfo> modules)
+        {
+            IEnumerable<ModuleInfo> retVal = Enumerable.Empty<ModuleInfo>();
+            var passedModules = modules as ModuleInfo[] ?? modules.ToArray();
+            try
+            {
+                retVal = base.CompleteListWithDependencies(passedModules).ToArray();
+            }
+            catch (MissedModuleException exception)
+            {
+                // Do not throw if module was missing, just return a list with all dependencies (available and not).
+                // Use ValidateDependencyGraph to validate & write and error of module missing
+            }
+            return retVal;
+        }
+
+        #region Overrides of ModuleCatalog
+
+        protected override void ValidateDependencyGraph()
+        {
+            var modules = Modules.OfType<ManifestModuleInfo>();
+            var manifestModules = modules as ManifestModuleInfo[] ?? modules.ToArray();
+            try
+            {
+                base.ValidateDependencyGraph();
+            }
+            catch (MissedModuleException exception)
+            {
+                foreach (var module in manifestModules)
+                {
+                    if (exception.MissedDependenciesMatrix.Keys.Contains(module.ModuleName))
+                    {
+                        module.Errors.Add(string.Format(ModularityResources.DependencyOnMissingModule, string.Join(", ", exception.MissedDependenciesMatrix[module.ModuleName])));
+                    }
+                }
+            }
+        }
+
+        #endregion
+
         public override void Validate()
         {
-
+            var modules = Modules.OfType<ManifestModuleInfo>();
+            var manifestModules = modules as ManifestModuleInfo[] ?? modules.ToArray();
+            
             base.Validate();
 
-            var modules = Modules.OfType<ManifestModuleInfo>();
             //Dependencies and platform version validation
-            foreach (var module in modules)
+            foreach (var module in manifestModules)
             {
                 //Check platform version
                 if (!module.PlatformVersion.IsCompatibleWith(PlatformVersion.CurrentVersion))
                 {
-                    module.Errors.Add(string.Format("module platform version {0} is incompatible with current {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
+                    module.Errors.Add(string.Format(ModularityResources.PlatformVersionIsIncompatible, module.PlatformVersion, PlatformVersion.CurrentVersion));
                 }
 
                 //Check that incompatible modules does not installed
                 if (!module.Incompatibilities.IsNullOrEmpty())
                 {
-                    var installedIncompatibilities = modules.Select(x => x.Identity).Join(module.Incompatibilities, x => x.Id, y => y.Id, (x, y) => new { x, y })
+                    var installedIncompatibilities = manifestModules.Select(x => x.Identity).Join(module.Incompatibilities, x => x.Id, y => y.Id, (x, y) => new { x, y })
                                                             .Where(g => g.y.Version.IsCompatibleWith(g.x.Version)).Select(g => g.x)
                                                             .ToArray();
                     if (installedIncompatibilities.Any())
                     {
-                        module.Errors.Add(string.Format("{0} is incompatible with installed {1}. You should uninstall these modules first.", module, string.Join(", ", installedIncompatibilities.Select(x => x.ToString()))));
+                        module.Errors.Add(string.Format(ModularityResources.ModuleIsIncompatible, module, string.Join(", ", installedIncompatibilities.Select(x => x.ToString()))));
                     }
                 }
 
                 foreach (var declaredDependency in module.Dependencies)
                 {
-                    var installedDependency = modules.First(x => x.Id.EqualsInvariant(declaredDependency.Id));
-                    if (!declaredDependency.Version.IsCompatibleWithBySemVer(installedDependency.Version))
+                    var installedDependency = manifestModules.FirstOrDefault(x => x.Id.EqualsInvariant(declaredDependency.Id));
+                    if (installedDependency != null && !declaredDependency.Version.IsCompatibleWithBySemVer(installedDependency.Version))
                     {
-                        module.Errors.Add(string.Format("module dependency {0} is incompatible with installed {1}", declaredDependency, installedDependency.Version));
+                        module.Errors.Add(string.Format(ModularityResources.ModuleDependencyIsIncompatible, declaredDependency, installedDependency.Version));
                     }
                 }        
             }

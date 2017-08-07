@@ -138,6 +138,9 @@
   <data name="CreatingUnityContainer" xml:space="preserve">
     <value>Creating Unity container.</value>
   </data>
+  <data name="DependencyOnMissingModule" xml:space="preserve">
+    <value>A module declared a dependency on another module which is not declared to be loaded. Missing module(s): {0}</value>
+  </data>
   <data name="FailedToGetType" xml:space="preserve">
     <value>Unable to retrieve the module type {0} from the loaded assemblies.  You may need to specify a more fully-qualified type name.</value>
   </data>
@@ -146,6 +149,12 @@
   </data>
   <data name="LoggerCreatedSuccessfully" xml:space="preserve">
     <value>Logger was created successfully.</value>
+  </data>
+  <data name="ModuleDependencyIsIncompatible" xml:space="preserve">
+    <value>Module dependency {0} is incompatible with installed {1}</value>
+  </data>
+  <data name="ModuleIsIncompatible" xml:space="preserve">
+    <value>{0} is incompatible with installed {1}. You should uninstall these modules first.</value>
   </data>
   <data name="ModuleNotFound" xml:space="preserve">
     <value>Module {0} was not found in the catalog.</value>
@@ -161,6 +170,9 @@
   </data>
   <data name="NullUnityContainerException" xml:space="preserve">
     <value>The IUnityContainer is required and cannot be null.</value>
+  </data>
+  <data name="PlatformVersionIsIncompatible" xml:space="preserve">
+    <value>Module platform version {0} is incompatible with current {1}</value>
   </data>
   <data name="RegisteringFrameworkExceptionTypes" xml:space="preserve">
     <value>Registering Framework Exception Types.</value>
