@@ -61,6 +61,7 @@
     <Compile Include="Assets\IBlobStorageProvider.cs" />
     <Compile Include="ChangeLog\IHasChangesHistory.cs" />
     <Compile Include="Common\AbstractTypeFactory.cs" />
+    <Compile Include="Common\ConfigurationHelper.cs" />
     <Compile Include="Common\ConnectionStringHelper.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="Common\AsyncLock.cs" />

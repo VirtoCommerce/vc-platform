@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Optimization;
@@ -17,7 +16,7 @@ namespace VirtoCommerce.Platform.Web
 
         public static void RegisterBundles(BundleCollection bundles)
         {
-            BundleTable.EnableOptimizations = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:EnableBundlesOptimizations", false);
+            BundleTable.EnableOptimizations = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:EnableBundlesOptimizations", false);
 
             #region CSS
 
@@ -30,7 +29,7 @@ namespace VirtoCommerce.Platform.Web
                     // "~/Content/angular-gridster.css", // customized style
                     //SELECT2
                     "~/Content/select2.css", // used in selectors
-                    //Theme UI,
+                                             //Theme UI,
                     "~/Content/themes/main/css/font-awesome.css",
                     "~/Content/themes/main/css/main.css"
                 ));
@@ -165,14 +164,8 @@ namespace VirtoCommerce.Platform.Web
 
         public override IBundleOrderer Orderer
         {
-            get
-            {
-                return new NonOrderingBundleOrderer();
-            }
-            set
-            {
-                throw new Exception("Unable to override Non-Ordered bundler");
-            }
+            get => new NonOrderingBundleOrderer();
+            set => throw new Exception("Unable to override Non-Ordered bundler");
         }
 
         #endregion

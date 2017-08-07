@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
     public class SecurityDbContext : IdentityDbContext<ApplicationUser>
     {
         public SecurityDbContext()
-            : this(ConnectionStringHelper.GetConnectionString("VirtoCommerce"))
+            : this(ConfigurationHelper.GetConnectionStringValue("VirtoCommerce"))
         {
         }
 

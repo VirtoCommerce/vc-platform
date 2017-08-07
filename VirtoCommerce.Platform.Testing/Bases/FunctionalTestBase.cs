@@ -25,7 +25,7 @@ namespace VirtoCommerce.Platform.Testing.Bases
             _previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
             AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
 
-            var connectionString = ConnectionStringHelper.GetConnectionString("VirtoCommerce_MigrationTestsBase");
+            var connectionString = ConfigurationHelper.GetConnectionStringValue("VirtoCommerce_MigrationTestsBase");
             if (connectionString != null)
             {
                 _connectionStringFormat = connectionString;
