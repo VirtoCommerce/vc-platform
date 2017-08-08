@@ -55,7 +55,7 @@ IF NOT DEFINED KUDU_SYNC_CMD (
     SET "KUDU_SYNC_CMD=%appdata%\npm\kuduSync.cmd"
 )
 IF NOT DEFINED DEPLOYMENT_TEMP (
-    SET "DEPLOYMENT_TEMP=%temp%\_vc-deploy\%random%"
+    SET "DEPLOYMENT_TEMP=%temp%\_vc_deploy\%random%"
     SET CLEAN_LOCAL_DEPLOYMENT_TEMP=true
 )
 
@@ -64,11 +64,17 @@ IF DEFINED CLEAN_LOCAL_DEPLOYMENT_TEMP (
     mkdir "%DEPLOYMENT_TEMP%"
 )
 
-IF NOT DEFINED ProgramFiles(x86) SET ProgramFiles(x86)=%ProgramFiles%
-IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe" SET MSBUILD_PATH=%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe
-IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe
-IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe" SET MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe
-IF NOT DEFINED MSBUILD_PATH SET MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
+IF NOT DEFINED ProgramFiles(x86) SET "ProgramFiles(x86)=%ProgramFiles%"
+IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" (
+    FOR /f "usebackq tokens=*" %%i IN (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.Component.MSBuild -property installationPath`) DO (
+        IF EXIST "%%i\MSBuild\15.0\Bin\MSBuild.exe" (
+            SET "MSBUILD_PATH=%%i\MSBuild\15.0\Bin\MSBuild.exe"
+        )
+    )
+)
+IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" SET "MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe"
+IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe" SET "MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe"
+IF NOT DEFINED MSBUILD_PATH SET "MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
 
 SET SOLUTION_DIR=%DEPLOYMENT_SOURCE%
 SET SOLUTION_FILE=%SOLUTION_DIR%\VirtoCommerce.Platform.sln
