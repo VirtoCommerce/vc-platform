@@ -61,6 +61,7 @@
     <Compile Include="Assets\IBlobStorageProvider.cs" />
     <Compile Include="ChangeLog\IHasChangesHistory.cs" />
     <Compile Include="Common\AbstractTypeFactory.cs" />
+    <Compile Include="Common\ConfigurationHelper.cs" />
     <Compile Include="Common\ConnectionStringHelper.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="Common\AsyncLock.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="ExportImport\ISupportExportImportModule.cs" />
     <Compile Include="ExportImport\PlatformExportManifest.cs" />
     <Compile Include="Common\IPathMapper.cs" />
+    <Compile Include="Modularity\Exceptions\MissedModuleException.cs" />
     <Compile Include="Modularity\ManifestDependency.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
