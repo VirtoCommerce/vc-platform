@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using DotLiquid;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
+using ILiquidizable = VirtoCommerce.Platform.Core.Common.ILiquidizable;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
@@ -44,6 +45,12 @@ namespace VirtoCommerce.Platform.Data.Notifications
                         RegisterTypeAsDrop(propertyInfo.PropertyType);
                         var allChildEntities = propertyValue.GetFlatObjectsListWithInterface<IEntity>();
                         foreach (var type in allChildEntities.Select(x => x.GetType()).Distinct())
+                        {
+                            RegisterTypeAsDrop(type);
+                        }
+
+                        var allChildLiquidObjects = propertyValue.GetFlatObjectsListWithInterface<ILiquidizable>();
+                        foreach (var type in allChildLiquidObjects.Select(x => x.GetType()).Distinct())
                         {
                             RegisterTypeAsDrop(type);
                         }
