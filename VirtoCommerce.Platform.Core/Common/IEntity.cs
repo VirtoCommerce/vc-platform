@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-    public interface IEntity
+    public interface IEntity: IValueObject
     {
         string Id { get; set; }
     }
