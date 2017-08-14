@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Moq;
-using VirtoCommerce.Domain.Commerce.Model;
-using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Notifications;
+using VirtoCommerce.Platform.Tests.Notifications.Models;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Notifications
@@ -11,7 +10,7 @@ namespace VirtoCommerce.Platform.Tests.Notifications
     public class NotificationTests
     {
         [Fact]
-        public void ResolveTemplateTest()
+        public void ResolveOrderNotificationTest()
         {
             var gw = new Mock<INotificationSendingGateway>();
             var notification = new OrderNotification(gw.Object);
@@ -22,7 +21,6 @@ namespace VirtoCommerce.Platform.Tests.Notifications
                 {
                     new Address
                     {
-                        AddressType = AddressType.Billing,
                         City = "City",
                         FirstName = "First Name",
                         LastName = "Last Name",
@@ -52,7 +50,7 @@ namespace VirtoCommerce.Platform.Tests.Notifications
                     {
                         Name = "Test product",
                         Sku = "0000011",
-                        Price = 500,
+                        PlacedPrice = 500,
                         Quantity = 1
                     }
                 }

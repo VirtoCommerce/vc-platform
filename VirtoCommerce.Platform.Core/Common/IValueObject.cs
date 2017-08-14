@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-    public interface ILiquidizable
+    public interface IValueObject
     {
     }
 }

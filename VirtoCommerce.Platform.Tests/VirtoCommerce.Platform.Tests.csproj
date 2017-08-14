@@ -75,14 +75,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtoCommerce.Domain, Version=2.24.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VirtoCommerce.Domain.2.24.7\lib\net461\VirtoCommerce.Domain.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="VirtoCommerce.Platform.Core, Version=2.13.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VirtoCommerce.Platform.Core.2.13.14\lib\net461\VirtoCommerce.Platform.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
     </Reference>
@@ -103,12 +95,19 @@
     <Compile Include="DynamicPropertyTests.cs" />
     <Compile Include="NotificationScenarios.cs" />
     <Compile Include="ModuleCatalogScenarios.cs" />
+    <Compile Include="Notifications\Models\Address.cs" />
+    <Compile Include="Notifications\Models\CustomerOrder.cs" />
+    <Compile Include="Notifications\Models\LineItem.cs" />
     <Compile Include="Notifications\NotificationTests.cs" />
     <Compile Include="Notifications\OrderInvoiceNotification.cs" />
     <Compile Include="Notifications\OrderNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
+      <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
+      <Name>VirtoCommerce.Platform.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.Platform.Data.Notifications\VirtoCommerce.Platform.Data.Notifications.csproj">
       <Project>{c6a9f9a0-953b-438d-989a-1169e32a60e6}</Project>
       <Name>VirtoCommerce.Platform.Data.Notifications</Name>

@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Core.Common
 	/// Value
 	/// </summary>
 	/// <typeparam name="TValueObject">The type of this value object</typeparam>
-	public class ValueObject<TValueObject> : IEquatable<TValueObject>, ILiquidizable
+	public class ValueObject<TValueObject> : IEquatable<TValueObject>, IValueObject
         where TValueObject : ValueObject<TValueObject>
 	{
 

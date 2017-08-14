@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Domain.Commerce.Model;
-using VirtoCommerce.Platform.Core.Notifications;
+﻿using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Tests.Notifications.Models;
 
 namespace VirtoCommerce.Platform.Tests.Notifications
 {

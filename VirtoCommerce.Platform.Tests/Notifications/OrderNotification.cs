@@ -1,5 +1,5 @@
-﻿using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Platform.Core.Notifications;
+﻿using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Tests.Notifications.Models;
 
 namespace VirtoCommerce.Platform.Tests.Notifications
 {
