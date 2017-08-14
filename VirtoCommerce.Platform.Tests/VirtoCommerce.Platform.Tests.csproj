@@ -95,6 +95,7 @@
     <Compile Include="DynamicPropertyTests.cs" />
     <Compile Include="NotificationScenarios.cs" />
     <Compile Include="ModuleCatalogScenarios.cs" />
+    <Compile Include="Notifications\AddressNotification.cs" />
     <Compile Include="Notifications\Models\Address.cs" />
     <Compile Include="Notifications\Models\CustomerOrder.cs" />
     <Compile Include="Notifications\Models\LineItem.cs" />

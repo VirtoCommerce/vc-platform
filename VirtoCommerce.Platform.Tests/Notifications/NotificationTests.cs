@@ -62,5 +62,33 @@ namespace VirtoCommerce.Platform.Tests.Notifications
             Assert.Contains("Test product", notification.Body);
             Assert.Contains("0000011", notification.Body);
         }
+
+        [Fact]
+        public void ResolveAddressNotificationTest()
+        {
+            var gw = new Mock<INotificationSendingGateway>();
+            var notification = new AddressNotification(gw.Object);
+
+            notification.Item = new LineItem
+            {
+                Name = "Test product",
+                Sku = "0000011",
+                PlacedPrice = 500,
+                Quantity = 1
+            };
+            notification.Address = new Address
+            {
+                City = "City",
+                FirstName = "First Name",
+                LastName = "Last Name",
+                CountryName = "Country"
+            };
+
+            var notificationTemplateResolver = new LiquidNotificationTemplateResolver();
+            notificationTemplateResolver.ResolveTemplate(notification);
+
+            Assert.Contains("Test product", notification.Body);
+            Assert.Contains("0000011", notification.Body);
+        }
     }
 }
