@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
@@ -19,8 +19,9 @@ namespace VirtoCommerce.Platform.Core.Common
             if (nameOrConnectionString == null)
                 throw new ArgumentNullException(nameof(nameOrConnectionString));
 
-            var result = nameOrConnectionString;
+            string result = null;
 
+            // Find connection string by name
             if (nameOrConnectionString.IndexOf('=') < 0)
             {
                 result = Environment.GetEnvironmentVariable($"{ConnectionStringPrefix}{nameOrConnectionString}");
@@ -29,6 +30,12 @@ namespace VirtoCommerce.Platform.Core.Common
                 {
                     result = ConfigurationManager.ConnectionStrings[nameOrConnectionString]?.ConnectionString;
                 }
+            }
+
+            // Return original nameOrConnectionString if cannot find connection string by name
+            if (string.IsNullOrEmpty(result))
+            {
+                result = nameOrConnectionString;
             }
 
             return result;
