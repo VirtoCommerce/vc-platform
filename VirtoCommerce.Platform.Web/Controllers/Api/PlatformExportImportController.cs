@@ -61,10 +61,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public IHttpActionResult TryToAutoInstallSampleData()
         {
-            var singleSampleData = InnerDiscoverSampleData().SingleOrDefault();
-            if (!string.IsNullOrEmpty(singleSampleData?.Url))
+            var sampleData = InnerDiscoverSampleData().FirstOrDefault(x => !x.Url.IsNullOrEmpty());
+            if (sampleData != null)
             {
-                return ImportSampleData(singleSampleData.Url);
+                return ImportSampleData(sampleData.Url);
             }
             return StatusCode(HttpStatusCode.NoContent);
         }
