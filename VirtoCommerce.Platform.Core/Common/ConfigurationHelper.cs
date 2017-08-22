@@ -14,12 +14,28 @@ namespace VirtoCommerce.Platform.Core.Common
 
         private static readonly char[] _valuesSeparator = { ';' };
 
+        public static string GetNonEmptyConnectionStringValue(string nameOrConnectionString)
+        {
+            if (nameOrConnectionString == null)
+                throw new ArgumentNullException(nameof(nameOrConnectionString));
+
+            var result = GetConnectionStringValue(nameOrConnectionString);
+
+            // Return original nameOrConnectionString if cannot find connection string by name
+            if (string.IsNullOrEmpty(result))
+            {
+                result = nameOrConnectionString;
+            }
+
+            return result;
+        }
+
         public static string GetConnectionStringValue(string nameOrConnectionString)
         {
             if (nameOrConnectionString == null)
                 throw new ArgumentNullException(nameof(nameOrConnectionString));
 
-            string result = null;
+            var result = nameOrConnectionString;
 
             // Find connection string by name
             if (nameOrConnectionString.IndexOf('=') < 0)
@@ -30,12 +46,6 @@ namespace VirtoCommerce.Platform.Core.Common
                 {
                     result = ConfigurationManager.ConnectionStrings[nameOrConnectionString]?.ConnectionString;
                 }
-            }
-
-            // Return original nameOrConnectionString if cannot find connection string by name
-            if (string.IsNullOrEmpty(result))
-            {
-                result = nameOrConnectionString;
             }
 
             return result;

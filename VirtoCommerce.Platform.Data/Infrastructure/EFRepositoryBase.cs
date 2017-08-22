@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// Initializes a new instance of the <see cref="EFRepositoryBase"/> class.
         /// </summary>
         protected EFRepositoryBase()
-            : base(ConfigurationHelper.GetConnectionStringValue("VirtoCommerce"))
+            : base(ConfigurationHelper.GetNonEmptyConnectionStringValue("VirtoCommerce"))
         {
         }
 
@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// <param name="unitOfWork">The unit of work.</param>
         /// <param name="interceptors">The interceptors.</param>
         protected EFRepositoryBase(string nameOrConnectionString, IUnitOfWork unitOfWork = null, IInterceptor[] interceptors = null)
-            : base(ConfigurationHelper.GetConnectionStringValue(nameOrConnectionString))
+            : base(ConfigurationHelper.GetNonEmptyConnectionStringValue(nameOrConnectionString))
         {
             _unitOfWork = unitOfWork;
             _interceptors = interceptors;
