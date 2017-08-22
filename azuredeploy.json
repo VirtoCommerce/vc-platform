@@ -5,6 +5,9 @@
         "siteName": {
             "type": "string"
         },
+        "storageName": {
+            "type": "string"
+        },
         "sku": {
             "type": "string",
             "allowedValues": [
@@ -57,7 +60,7 @@
         }
     },
     "variables": {
-        "storageName": "[replace(parameters('siteName'), '-', '')]",
+        "storageName": "[parameters('storageName')]",
         "storageType": "Standard_LRS",
         "moduleBundles": {
             "Commerce": {
