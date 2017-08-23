@@ -428,12 +428,14 @@ Copyright (C) Microsoft Corporation. All rights reserved.
                   Common.Logging.xml;
                   Common.Logging.Core.dll;
                   Common.Logging.Core.xml;
+                  DotLiquid.dll;
                   EntityFramework.dll;
                   EntityFramework.xml;
                   EntityFramework.SqlServer.dll;
                   EntityFramework.SqlServer.xml;
                   Hangfire.Core.dll;
                   Hangfire.Core.xml;
+                  **\Hangfire.Core.resources.dll;
                   Microsoft.AspNet.Identity.Core.dll;
                   Microsoft.AspNet.Identity.Core.xml;
                   Microsoft.AspNet.Identity.EntityFramework.dll;

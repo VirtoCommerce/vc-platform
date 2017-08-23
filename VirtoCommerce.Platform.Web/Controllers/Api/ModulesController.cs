@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -272,7 +271,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     if (!_settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false))
                     {
-                        var moduleBundles = ConfigurationManager.AppSettings.SplitStringValue("VirtoCommerce:AutoInstallModuleBundles");
+                        var moduleBundles = ConfigurationHelper.SplitAppSettingsStringValue("VirtoCommerce:AutoInstallModuleBundles");
                         if (!moduleBundles.IsNullOrEmpty())
                         {
                             _settingsManager.SetValue("VirtoCommerce.ModulesAutoInstalled", true);
@@ -377,7 +376,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _moduleCatalog.Initialize();
         }
 
-        private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(List<ManifestModuleInfo> modules)
+        private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(IEnumerable<ManifestModuleInfo> modules)
         {
             var retVal = new List<ManifestModuleInfo>();
             foreach (var module in modules)

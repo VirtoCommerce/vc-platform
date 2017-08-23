@@ -80,12 +80,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </remarks>
         /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
         /// <param name="url">Url for uploaded remote resource (optional)</param>
+        /// <param name="name">Image name.</param>
         /// <returns></returns>
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(webModel.BlobInfo[]))]
         [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
-        public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null)
+        public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null, [FromUri]string name = null)
         {
             if (url == null && !Request.Content.IsMimeMultipartContent())
             {
@@ -95,7 +96,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var retVal = new List<webModel.BlobInfo>();
             if (url != null)
             {
-                var fileName = HttpUtility.UrlDecode(Path.GetFileName(url));
+                var fileName = name ?? HttpUtility.UrlDecode(Path.GetFileName(url));
                 var fileUrl = folderUrl + "/" + fileName;
                 using (var client = new WebClient())
                 using (var blobStream = _blobProvider.OpenWrite(fileUrl))

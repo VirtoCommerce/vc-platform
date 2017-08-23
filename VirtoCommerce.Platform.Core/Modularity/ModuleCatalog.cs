@@ -358,23 +358,25 @@ namespace VirtoCommerce.Platform.Core.Modularity
         }
 
         /// <summary>
-        /// Ensures that all the dependencies within <paramref name="modules"/> refer to <see cref="ModuleInfo"/>s
+        /// Ensures that all the dependencies within <paramref name="validateFor"/> refer to <see cref="ModuleInfo"/>s
         /// within that list.
         /// </summary>
-        /// <param name="modules">The modules to validate modules for.</param>
+        /// <param name="availableModules">All available modules.</param>
+        /// <param name="validateFor">The modules to validate modules for.</param>
         /// <exception cref="ModularityException">
-        /// Throws if a <see cref="ModuleInfo"/> in <paramref name="modules"/> depends on a module that's 
-        /// not in <paramref name="modules"/>.
+        /// Throws if a <see cref="ModuleInfo"/> in <paramref name="validateFor"/> depends on a module that's 
+        /// not in <paramref name="validateFor"/>.
         /// </exception>
-        /// <exception cref="System.ArgumentNullException">Throws if <paramref name="modules"/> is <see langword="null"/>.</exception>
-        protected static void ValidateDependencies(IEnumerable<ModuleInfo> modules)
+        /// <exception cref="System.ArgumentNullException">Throws if <paramref name="validateFor"/> is <see langword="null"/>.</exception>
+        protected static void ValidateCrossGroupDependencies(IEnumerable<ModuleInfo> availableModules, IEnumerable<ModuleInfo> validateFor)
         {
-            if (modules == null) throw new System.ArgumentNullException("modules");
+            if (validateFor == null) throw new System.ArgumentNullException("validateFor");
 
-            var moduleNames = modules.Select(m => m.ModuleName).ToList();
-            foreach (ModuleInfo moduleInfo in modules.ToArray())
+            var moduleNames = validateFor.Select(m => m.ModuleName).ToList();
+            foreach (ModuleInfo moduleInfo in validateFor.ToArray())
             {
-                if (moduleInfo.DependsOn != null && moduleInfo.DependsOn.Except(moduleNames).Any())
+                // Do not throw if dependency is missing, because it is not our area of responsibility
+                if (moduleInfo.DependsOn != null && moduleInfo.DependsOn.Except(moduleNames).Any(d => availableModules.Select(m => m.ModuleName).Contains(d)))
                 {
                     throw new ModularityException(
                         moduleInfo.ModuleName,
@@ -440,10 +442,10 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// </remarks>
         protected virtual void ValidateCrossGroupDependencies()
         {
-            ValidateDependencies(this.GrouplessModules);
+            ValidateCrossGroupDependencies(this.Modules, this.GrouplessModules);
             foreach (ModuleInfoGroup group in this.Groups)
             {
-                ValidateDependencies(this.GrouplessModules.Union(group));
+                ValidateCrossGroupDependencies(this.Modules, this.GrouplessModules.Union(group));
             }
         }
 

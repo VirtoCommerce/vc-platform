@@ -38,12 +38,18 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 if (propertyValue != null)
                 {
                     myDict.Add(Template.NamingConvention.GetMemberName(propertyInfo.Name), propertyValue);
-                    if (typeof(IEntity).IsAssignableFrom(propertyInfo.PropertyType))
+                    if (typeof(IEntity).IsAssignableFrom(propertyInfo.PropertyType) || typeof(IValueObject).IsAssignableFrom(propertyInfo.PropertyType))
                     {
                         //For it is user type need to register this type as Drop in Liquid Template
                         RegisterTypeAsDrop(propertyInfo.PropertyType);
                         var allChildEntities = propertyValue.GetFlatObjectsListWithInterface<IEntity>();
                         foreach (var type in allChildEntities.Select(x => x.GetType()).Distinct())
+                        {
+                            RegisterTypeAsDrop(type);
+                        }
+
+                        var allChildLiquidObjects = propertyValue.GetFlatObjectsListWithInterface<IValueObject>();
+                        foreach (var type in allChildLiquidObjects.Select(x => x.GetType()).Distinct())
                         {
                             RegisterTypeAsDrop(type);
                         }

@@ -3,18 +3,18 @@
     <h3 class="modal-title" ng-if="action==='update'">{{ 'platform.dialogs.module-action.title-update' | translate }}</h3>
     <h3 class="modal-title" ng-if="action==='uninstall'">{{ 'platform.dialogs.module-action.title-delete' | translate }}</h3>
 </div>
-<div class="modal-body">
+<div class="modal-body size-clearfix">
     <p ng-if="action==='install'">{{ 'platform.dialogs.module-action.message0-install' | translate }}</p>
     <p ng-if="action==='update'">{{ 'platform.dialogs.module-action.message0-update' | translate }}</p>
     <p ng-if="action==='uninstall'">{{ 'platform.dialogs.module-action.message0-delete' | translate }}</p>
-    <ul>
+    <ul class="item-list-clearfix">
         <li ng-repeat="data in selection">{{data.id}} ({{action==='update' ? data.$alternativeVersion + ' &#8658; ' : ''}}{{data.version}})</li>
     </ul>
     <div ng-if="dependencies.length">
         <br>
         <p ng-if="action==='install' || action==='update'">{{ 'platform.dialogs.module-action.message1-install' | translate }}</p>
         <p ng-if="action==='uninstall'">{{ 'platform.dialogs.module-action.message1-delete' | translate }}</p>
-        <ul>
+        <ul style="max-height:530px;">
             <li ng-repeat="data in dependencies">{{data.id}} ({{data.version}})</li>
         </ul>
     </div>

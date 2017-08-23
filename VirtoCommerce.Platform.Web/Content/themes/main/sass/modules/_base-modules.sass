@@ -372,6 +372,10 @@ h3
       margin: -8px 0 0 10px
 .table.__indexed
   @include column("th", 5, true)
+.table-info	
+  display: inline-block
+  height: 100%
+  vertical-align: middle
 .table-t,
 .table-descr
   display: block
@@ -438,6 +442,8 @@ h3
     margin: 0 0 0 6px
     position: relative
     width: 100%
+  img.image
+      height: auto;
 .table-item:hover .product-img .image
   background-color: $productImgOver
 .table-item.__selected .product-img .image
@@ -2329,15 +2335,21 @@ tags-input
   position: absolute
   right: 0
   text-align: center
-.modal-body .popup-close
-  color: $whiteColor
-  cursor: pointer
-  font-size: 18px
-  line-height: 1
-  position: absolute
-  right: 10px
-  top: 10px
-  z-index: 50
+.modal-body
+  .popup-close
+    color: $whiteColor
+    cursor: pointer
+    font-size: 18px
+    line-height: 1
+    position: absolute
+    right: 10px
+    top: 10px
+    z-index: 50
+  &.size-clearfix
+    max-height: 530px
+    overflow: auto
+  .item-list-clearfix
+    max-height: 530px
 .modal-body .gallery
   height: 100%
   overflow: hidden

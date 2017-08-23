@@ -39,7 +39,6 @@ using VirtoCommerce.Platform.Core.Web.Common;
 using VirtoCommerce.Platform.Data.Assets;
 using VirtoCommerce.Platform.Data.Azure;
 using VirtoCommerce.Platform.Data.ChangeLog;
-using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -119,17 +118,17 @@ namespace VirtoCommerce.Platform.Web
             moduleInitializerOptions.RoutePrefix = routePrefix;
 
             //Initialize Platform dependencies
-            var connectionStringName = ConnectionStringHelper.GetConnectionStringName("VirtoCommerce");
+            var connectionString = ConfigurationHelper.GetConnectionStringValue("VirtoCommerce");
 
             var hangfireOptions = new HangfireOptions
             {
-                StartServer = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Jobs.Enabled", true),
-                JobStorageType = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Jobs.StorageType", "Memory"),
-                DatabaseConnectionStringName = connectionStringName,
+                StartServer = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Jobs.Enabled", true),
+                JobStorageType = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Jobs.StorageType", "Memory"),
+                DatabaseConnectionString = connectionString,
             };
             var hangfireLauncher = new HangfireLauncher(hangfireOptions);
 
-            InitializePlatform(app, container, pathMapper, connectionStringName, hangfireLauncher, modulesPhysicalPath);
+            InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath);
 
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -198,15 +197,15 @@ namespace VirtoCommerce.Platform.Web
             // Security OWIN configuration
             var authenticationOptions = new Core.Security.AuthenticationOptions
             {
-                CookiesEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
-                CookiesValidateInterval = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromDays(1)),
-                BearerTokensEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
-                BearerTokensExpireTimeSpan = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromHours(1)),
-                HmacEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
-                HmacSignatureValidityPeriod = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),
-                ApiKeysEnabled = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.Enabled", true),
-                ApiKeysHttpHeaderName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
-                ApiKeysQueryStringParameterName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
+                CookiesEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
+                CookiesValidateInterval = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromDays(1)),
+                BearerTokensEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
+                BearerTokensExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromHours(1)),
+                HmacEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
+                HmacSignatureValidityPeriod = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),
+                ApiKeysEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.Enabled", true),
+                ApiKeysHttpHeaderName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
+                ApiKeysQueryStringParameterName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
             };
             OwinConfig.Configure(app, container, authenticationOptions);
 
@@ -308,19 +307,19 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionStringName, HangfireLauncher hangfireLauncher, string modulesPath)
+        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionString, HangfireLauncher hangfireLauncher, string modulesPath)
         {
             container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
 
             #region Setup database
 
-            using (var db = new SecurityDbContext(connectionStringName))
+            using (var db = new SecurityDbContext(connectionString))
             {
                 new IdentityDatabaseInitializer().InitializeDatabase(db);
             }
 
-            using (var context = new PlatformRepository(connectionStringName, container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor()))
+            using (var context = new PlatformRepository(connectionString, container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor()))
             {
                 new PlatformDatabaseInitializer().InitializeDatabase(context);
             }
@@ -329,7 +328,7 @@ namespace VirtoCommerce.Platform.Web
 
             #endregion
 
-            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository(connectionStringName, container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor());
+            Func<IPlatformRepository> platformRepositoryFactory = () => new PlatformRepository(connectionString, container.Resolve<AuditableInterceptor>(), new EntityPrimaryKeyGeneratorInterceptor());
             container.RegisterType<IPlatformRepository>(new InjectionFactory(c => platformRepositoryFactory()));
             container.RegisterInstance(platformRepositoryFactory);
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -586,7 +585,7 @@ namespace VirtoCommerce.Platform.Web
 
             IEmailNotificationSendingGateway emailNotificationSendingGateway = null;
 
-            var emailNotificationSendingGatewayName = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Notifications:Gateway", "Default");
+            var emailNotificationSendingGatewayName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:Gateway", "Default");
 
             if (string.Equals(emailNotificationSendingGatewayName, "Default", StringComparison.OrdinalIgnoreCase))
             {
@@ -609,7 +608,7 @@ namespace VirtoCommerce.Platform.Web
 
             #region Assets
 
-            var blobConnectionString = BlobConnectionString.Parse(ConnectionStringHelper.GetConnectionString("AssetsConnectionString"));
+            var blobConnectionString = BlobConnectionString.Parse(ConfigurationHelper.GetConnectionStringValue("AssetsConnectionString"));
 
             if (string.Equals(blobConnectionString.Provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
             {
@@ -630,7 +629,7 @@ namespace VirtoCommerce.Platform.Web
 
             #region Modularity
 
-            var modulesDataSources = ConfigurationManager.AppSettings.SplitStringValue("VirtoCommerce:ModulesDataSources");
+            var modulesDataSources = ConfigurationHelper.SplitAppSettingsStringValue("VirtoCommerce:ModulesDataSources");
             var externalModuleCatalog = new ExternalManifestModuleCatalog(moduleCatalog.Modules, modulesDataSources, container.Resolve<ILog>());
             container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, new ModuleInstaller(modulesPath, externalModuleCatalog), notifier, container.Resolve<IUserNameResolver>(), settingsManager));
 
@@ -653,13 +652,13 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<IClaimsIdentityProvider, ApplicationClaimsIdentityProvider>(new ContainerControlledLifetimeManager());
 
             container.RegisterInstance(app.GetDataProtectionProvider());
-            container.RegisterType<SecurityDbContext>(new InjectionConstructor(connectionStringName));
+            container.RegisterType<SecurityDbContext>(new InjectionConstructor(connectionString));
             container.RegisterType<IUserStore<ApplicationUser>, ApplicationUserStore>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
             container.RegisterType<ApplicationUserManager>();
             container.RegisterType<ApplicationSignInManager>();
 
-            var nonEditableUsers = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:NonEditableUsers", string.Empty);
+            var nonEditableUsers = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:NonEditableUsers", string.Empty);
             container.RegisterInstance<ISecurityOptions>(new SecurityOptions(nonEditableUsers));
 
             container.RegisterType<ISecurityService, SecurityService>();

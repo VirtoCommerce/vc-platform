@@ -18,6 +18,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <param name="nameValueCollection"></param>
         /// <param name="name"></param>
         /// <returns></returns>
+        [Obsolete("Use ConfigurationHelper.SplitAppSettingsStringValue()")]
         [CLSCompliant(false)]
         public static string[] SplitStringValue(this NameValueCollection nameValueCollection, string name)
         {
@@ -33,14 +34,17 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <param name="separator"></param>
         /// <param name="options"></param>
         /// <returns></returns>
+        [Obsolete("Use ConfigurationHelper.SplitAppSettingsStringValue()")]
         [CLSCompliant(false)]
         public static string[] SplitStringValue(this NameValueCollection nameValueCollection, string name, string defaultValue, char[] separator, StringSplitOptions options)
         {
             return nameValueCollection.GetValue(name, defaultValue).Split(separator, options);
         }
 
+        [Obsolete("Use ConfigurationHelper.GetAppSettingsValue()")]
         [CLSCompliant(false)]
-        public static T GetValue<T>(this NameValueCollection nameValueCollection, string name, T defaultValue) where T : IConvertible
+        public static T GetValue<T>(this NameValueCollection nameValueCollection, string name, T defaultValue)
+            where T : IConvertible
         {
             T result;
 
@@ -57,6 +61,7 @@ namespace VirtoCommerce.Platform.Core.Common
             return result;
         }
 
+        [Obsolete("Use ConfigurationHelper.GetAppSettingsValue()")]
         public static TimeSpan GetValue(this NameValueCollection nameValueCollection, string name, TimeSpan defaultValue)
         {
             TimeSpan result;

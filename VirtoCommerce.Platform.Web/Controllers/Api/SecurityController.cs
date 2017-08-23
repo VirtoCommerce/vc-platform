@@ -13,6 +13,7 @@ using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Web.Model.Security;
+using VirtoCommerce.Platform.Web.Resources;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -186,10 +187,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Generate new API key
+        /// Generate new API account
         /// </summary>
         /// <remarks>
-        /// Generates new key but does not save it.
+        /// Generates new account but does not save it.
         /// </remarks>
         /// <param name="type"></param>
         [HttpGet]
@@ -201,6 +202,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = _securityService.GenerateNewApiAccount(type);
             result.IsActive = null;
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Generate new API key for specified account
+        /// </summary>
+        /// <remarks>
+        /// Generates new key for specified account but does not save it.
+        /// </remarks>
+        [HttpPut]
+        [Route("apiaccounts/newKey")]
+        [ResponseType(typeof(void))]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
+        public IHttpActionResult GenerateNewApiKey(ApiAccount account)
+        {
+            if (account.ApiAccountType != ApiAccountType.Hmac)
+            {
+                return BadRequest(SecurityResources.NonHmacKeyGenerationException);
+            }
+            var retVal =_securityService.GenerateNewApiKey(account);
+            return Ok(retVal);
         }
 
         /// <summary>
