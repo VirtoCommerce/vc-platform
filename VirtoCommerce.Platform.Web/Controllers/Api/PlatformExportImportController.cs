@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/autoinstall")]
         [ResponseType(typeof(SampleDataImportPushNotification))]
-        [AllowAnonymous]
+        [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult TryToAutoInstallSampleData()
         {
             var sampleData = InnerDiscoverSampleData().FirstOrDefault(x => !x.Url.IsNullOrEmpty());
@@ -72,7 +72,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/import")]
         [ResponseType(typeof(SampleDataImportPushNotification))]
-        [AllowAnonymous]
+        [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult ImportSampleData([FromUri]string url = null)
         {
             lock (_lockObject)
@@ -84,7 +84,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
                     {
                         _settingsManager.SetValue(_sampledataStateSetting, SampleDataState.Processing);
-                        var pushNotification = new SampleDataImportPushNotification("System");
+                        var pushNotification = new SampleDataImportPushNotification(User.Identity.Name);
                         _pushNotifier.Upsert(pushNotification);
                         BackgroundJob.Enqueue(() => SampleDataImportBackground(new Uri(url), HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/Uploads/"), pushNotification));
 
