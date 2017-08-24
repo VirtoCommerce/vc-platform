@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -254,10 +254,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("autoinstall")]
         [ResponseType(typeof(webModel.ModuleAutoInstallPushNotification))]
-        [AllowAnonymous]
+        [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult TryToAutoInstallModules()
         {
-            var notification = new webModel.ModuleAutoInstallPushNotification("System")
+            var notification = new webModel.ModuleAutoInstallPushNotification(User.Identity.Name)
             {
                 Title = "Modules installation",
                 //set completed by default
