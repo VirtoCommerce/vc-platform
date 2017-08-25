@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -397,7 +397,7 @@ namespace VirtoCommerce.Platform.Data.Security
         }
         #endregion
 
-        private ApplicationUserExtended FindByName(string userName, UserDetails detailsLevel)
+        protected ApplicationUserExtended FindByName(string userName, UserDetails detailsLevel)
         {
             var user = GetApplicationUserByName(userName);
             return GetUserExtended(user, detailsLevel);
