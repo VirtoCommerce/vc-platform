@@ -64,17 +64,19 @@ IF DEFINED CLEAN_LOCAL_DEPLOYMENT_TEMP (
     mkdir "%DEPLOYMENT_TEMP%"
 )
 
+IF NOT DEFINED MSBUILD_EXE IF DEFINED MSBUILD_15_DIR IF EXIST "%MSBUILD_15_DIR%\MSBuild.exe" SET "MSBUILD_EXE=%MSBUILD_15_DIR%\MSBuild.exe"
+IF NOT DEFINED MSBUILD_EXE IF DEFINED MSBUILD_PATH IF EXIST "%MSBUILD_PATH%" SET "MSBUILD_EXE=%MSBUILD_PATH%"
 IF NOT DEFINED ProgramFiles(x86) SET "ProgramFiles(x86)=%ProgramFiles%"
-IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" (
+IF NOT DEFINED MSBUILD_EXE IF EXIST "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" (
     FOR /f "usebackq tokens=*" %%i IN (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.Component.MSBuild -property installationPath`) DO (
         IF EXIST "%%i\MSBuild\15.0\Bin\MSBuild.exe" (
-            SET "MSBUILD_PATH=%%i\MSBuild\15.0\Bin\MSBuild.exe"
+            SET "MSBUILD_EXE=%%i\MSBuild\15.0\Bin\MSBuild.exe"
         )
     )
 )
-IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" SET "MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe"
-IF NOT DEFINED MSBUILD_PATH IF EXIST "%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe" SET "MSBUILD_PATH=%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe"
-IF NOT DEFINED MSBUILD_PATH SET "MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
+IF NOT DEFINED MSBUILD_EXE IF EXIST "%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" SET "MSBUILD_EXE=%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe"
+IF NOT DEFINED MSBUILD_EXE IF EXIST "%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe" SET "MSBUILD_EXE=%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe"
+IF NOT DEFINED MSBUILD_EXE SET "MSBUILD_EXE=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
 
 SET SOLUTION_DIR=%DEPLOYMENT_SOURCE%
 SET SOLUTION_FILE=%SOLUTION_DIR%\VirtoCommerce.Platform.sln
@@ -94,7 +96,7 @@ call :ExecuteCmd "%NUGET%" restore "%SOLUTION_FILE%"
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: Build to the temporary path
-call :ExecuteCmd "%MSBUILD_PATH%" "%SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;Platform="Any CPU";SolutionDir="%SOLUTION_DIR%\\";OutputPath="%DEPLOYMENT_TEMP%" %SCM_BUILD_ARGS%
+call :ExecuteCmd "%MSBUILD_EXE%" "%SOLUTION_FILE%" /nologo /verbosity:m /t:Build /p:Configuration=Release;Platform="Any CPU";SolutionDir="%SOLUTION_DIR%\\";OutputPath="%DEPLOYMENT_TEMP%" %SCM_BUILD_ARGS%
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: Rename application directory
@@ -102,7 +104,7 @@ call :ExecuteCmd rename "%PUBLISHED_WEBSITES%\VirtoCommerce.Platform.Web" platfo
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: Clear build output
-call :ExecuteCmd "%MSBUILD_PATH%" "%SOLUTION_FILE%" /nologo /verbosity:m /t:Clean /p:Configuration=Release;Platform="Any CPU";SolutionDir="%SOLUTION_DIR%\\" %SCM_BUILD_ARGS%
+call :ExecuteCmd "%MSBUILD_EXE%" "%SOLUTION_FILE%" /nologo /verbosity:m /t:Clean /p:Configuration=Release;Platform="Any CPU";SolutionDir="%SOLUTION_DIR%\\" %SCM_BUILD_ARGS%
 
 :: KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
