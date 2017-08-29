@@ -110,6 +110,7 @@
         "placeholders": {
             "short-text": "Enter short text",
             "secure-string": "Enter secret text",
+            "email": "Enter email",
             "url": "Enter URL",
             "long-text": "Enter long text",
             "integer": "Enter integer number",
