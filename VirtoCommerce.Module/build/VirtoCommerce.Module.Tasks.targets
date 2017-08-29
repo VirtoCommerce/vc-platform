@@ -402,8 +402,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
         <MSBuildCommunityTasksPath>$(MSBuildThisFileDirectory)</MSBuildCommunityTasksPath>
     </PropertyGroup>
 
-    <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.targets" />
-
     <Target Name="PackModule" Condition="'$(VCModulesZipDir)' != ''" DependsOnTargets="Build">
         <XmlRead XmlFileName="module.manifest" XPath="/module/id">
             <Output TaskParameter="Value" PropertyName="VCModuleId" />
@@ -525,8 +523,12 @@ Copyright (C) Microsoft Corporation. All rights reserved.
         <ItemGroup>
             <BinFiles Include="$(WebProjectOutputDir)\bin\**\*.*" Exclude="@(ExcludeBinFiles -> '$(WebProjectOutputDir)\%(Identity)')" />
         </ItemGroup>
-        
-        <Zip Files="@(Content);@(BinFiles)" WorkingDirectory="$(WebProjectOutputDir)" ZipFileName="$(VCModulePackagePath)" ZipLevel="9" />
+
+        <ItemGroup>
+            <ZipContent Include="@(Content -> '$(WebProjectOutputDir)\%(Identity)')" />
+        </ItemGroup>
+
+        <Zip Files="@(ZipContent);@(BinFiles)" WorkingDirectory="$(WebProjectOutputDir)" ZipFileName="$(VCModulePackagePath)" ZipLevel="9" />
         <Message Text="Created module package: $(VCModulePackagePath)" Importance="high" />
     </Target>
 </Project>

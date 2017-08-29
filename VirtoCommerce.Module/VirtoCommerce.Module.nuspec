@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
     <metadata>
         <id>VirtoCommerce.Module</id>
-        <version>0.15.0</version>
+        <version>0.17.0</version>
         <title>VirtoCommerce.Module</title>
-        <authors>VirtoCommerce</authors>
+        <authors>Artem Dudarev</authors>
         <owners>VirtoCommerce</owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <licenseUrl>https://github.com/VirtoCommerce/vc-platform/raw/master/LICENSE</licenseUrl>
@@ -14,10 +14,11 @@
         <copyright>Copyright © VirtoCommerce 2011-2017</copyright>
         <developmentDependency>true</developmentDependency>
         <dependencies>
+            <dependency id="MSBuildTasks" version="1.5.0.235" />
             <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" />
             <dependency id="Newtonsoft.Json" version="9.0.1" />
             <dependency id="Unity" version="4.0.1" />
-            <dependency id="VirtoCommerce.Platform.Core" version="2.13.14" />
+            <dependency id="VirtoCommerce.Platform.Core" version="2.13.15" />
         </dependencies>
     </metadata>
 </package>
