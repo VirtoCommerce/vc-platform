@@ -6,7 +6,6 @@ Virto Commerce is the second generation release and is the only enterprise level
 | **Team** | [![Join the chat at https://gitter.im/VirtoCommerce/vc-community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/VirtoCommerce/vc-community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) |
 
 <img alt="Virto Commerce" src="https://virtocommerce.com/assets/images/home/hero.gif"/>
-Virto Commerce 2.x
 
 Documentation
 -----------
