@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -64,23 +64,13 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 
         protected virtual void InitializeDbSettings(TContext context)
         {
-            // update general database settings here, for azure we need to connect to master db
-            var originalDbName = context.Database.Connection.Database;
-            var connectionString = context.Database.Connection.ConnectionString;
-
-            // do not modify connection string for localdb
-            if (!connectionString.ToLowerInvariant().Contains("(LocalDb)".ToLowerInvariant()))
+            // Enable recursive triggers
+            using (var connection = new SqlConnection(context.Database.Connection.ConnectionString))
             {
-                var csBuilder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master" };
-                connectionString = csBuilder.ToString();
-            }
-
-            using (var dbConnection = new SqlConnection(connectionString))
-            {
-                dbConnection.Open();
-                var cmd = dbConnection.CreateCommand();
-                cmd.CommandText = string.Format(@"ALTER DATABASE [{0}] SET RECURSIVE_TRIGGERS ON;", originalDbName);
-                cmd.ExecuteNonQuery();
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "ALTER DATABASE CURRENT SET RECURSIVE_TRIGGERS ON";
+                command.ExecuteNonQuery();
             }
         }
 
@@ -128,12 +118,12 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             string result = null;
 
             var paths = new List<string>
-			{
-				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, modelName, "Data", fileName),
-				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", modelName, "Data", fileName),
-				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", modelName, "Data", fileName),
-				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName)
-			};
+            {
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, modelName, "Data", fileName),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", modelName, "Data", fileName),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", modelName, "Data", fileName),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName)
+            };
 
             if (!string.IsNullOrEmpty(DataDirectoryPath))
                 paths.Insert(0, Path.Combine(DataDirectoryPath, modelName, "Data", fileName));
