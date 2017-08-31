@@ -50,7 +50,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                 }
                 catch (SqlException ex)
                 {
-                    throw new ApplicationException(string.Format("Migrations failed with error \"{0}\"", ex.ExpandExceptionMessage()), ex);
+                    throw new ApplicationException($"Migrations failed with error \"{ex.ExpandExceptionMessage()}\"", ex);
                 }
 
                 InitializeDbSettings(context);
@@ -97,19 +97,13 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                     }
                     catch (SqlException ex)
                     {
-                        throw new ApplicationException(
-                            string.Format(
-                                "Failed to process \"{0}\" in \"{1}\" model. Message: {2}",
-                                fileName,
-                                modelName,
-                                ex.Message),
-                            ex);
+                        throw new ApplicationException($"Failed to process \"{fileName}\" in \"{modelName}\" model. Message: {ex.Message}", ex);
                     }
                 }
             }
             else
             {
-                throw new FileNotFoundException(string.Format("File '{0}' is missing.", fileName));
+                throw new FileNotFoundException($"File '{fileName}' is missing.");
             }
         }
 
