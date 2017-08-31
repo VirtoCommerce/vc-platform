@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
         public SendGridEmailNotificationSendingGateway(ISettingsManager settingsManager)
         {
             if (settingsManager == null)
-                throw new ArgumentNullException("settingsManager");
+                throw new ArgumentNullException(nameof(settingsManager));
 
             _settingsManager = settingsManager;
         }
@@ -45,8 +45,10 @@ namespace VirtoCommerce.Platform.Data.Notifications
             var from = new Email(notification.Sender);
             var to = new Email(notification.Recipient);
             var content = new Content("text/html", notification.Body);
-            var mail = new Mail(from, notification.Subject, to, content);
-            mail.ReplyTo = from;
+            var mail = new Mail(from, notification.Subject, to, content)
+            {
+                ReplyTo = from
+            };
 
             try
             {
@@ -54,7 +56,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 retVal.IsSuccess = result.StatusCode == HttpStatusCode.Accepted;
                 if (!retVal.IsSuccess)
                 {
-                    retVal.ErrorMessage = result.StatusCode.ToString() + ":" + await result.Body.ReadAsStringAsync();
+                    retVal.ErrorMessage = result.StatusCode + ":" + await result.Body.ReadAsStringAsync();
                 }
             }
             catch (Exception ex)
@@ -67,15 +69,17 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
         private static bool ValidateNotificationRecipient(string recipient)
         {
+            MailAddress mailAddress = null;
+
             try
             {
-                new MailAddress(recipient);
-                return true;
+                mailAddress = new MailAddress(recipient);
             }
             catch (FormatException)
             {
-                return false;
             }
+
+            return mailAddress != null;
         }
     }
 }

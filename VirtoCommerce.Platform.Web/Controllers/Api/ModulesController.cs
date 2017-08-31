@@ -147,6 +147,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotAcceptable, "This request is not properly formatted"));
             }
+
             webModel.ModuleDescriptor retVal = null;
             var uploadsPath = HostingEnvironment.MapPath(_uploadsUrl);
             var streamProvider = new CustomMultipartFormDataStreamProvider(uploadsPath);
@@ -177,7 +178,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         else
                         {
                             //Force dependency validation for new module
-                            _moduleCatalog.CompleteListWithDependencies(new[] { module }).ToArray();
+                            var dependencies = _moduleCatalog.CompleteListWithDependencies(new[] { module }).ToArray();
                             _moduleCatalog.AddModule(module);
                         }
 
@@ -186,6 +187,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
             }
+
             return Ok(retVal);
         }
 
