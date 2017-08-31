@@ -178,7 +178,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         else
                         {
                             //Force dependency validation for new module
-                            var dependencies = _moduleCatalog.CompleteListWithDependencies(new[] { module }).ToArray();
+                            _moduleCatalog.CompleteListWithDependencies(new[] { module }).ToList().Clear();
                             _moduleCatalog.AddModule(module);
                         }
 

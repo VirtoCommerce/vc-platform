@@ -77,6 +77,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             }
             catch (FormatException)
             {
+                // Recipient address is not valid
             }
 
             return mailAddress != null;

@@ -136,9 +136,6 @@ namespace VirtoCommerce.Platform.Core.Common
 
             var other = (SemanticVersion)obj;
 
-            if (ReferenceEquals(this, null))
-                return -1;
-
             var result = Major.CompareTo(other.Major);
             if (result != 0)
                 return result;
