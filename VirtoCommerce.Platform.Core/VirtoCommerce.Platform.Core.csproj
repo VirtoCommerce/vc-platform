@@ -172,6 +172,7 @@
     <Compile Include="Notifications\EmailNotification.cs" />
     <Compile Include="Notifications\IEmailNotificationSendingGateway.cs" />
     <Compile Include="Notifications\INotificationManager.cs" />
+    <Compile Include="Notifications\INotificationParameterInitializable.cs" />
     <Compile Include="Notifications\INotificationSendingGateway.cs" />
     <Compile Include="Notifications\INotificationTemplateResolver.cs" />
     <Compile Include="Notifications\INotificationTemplateService.cs" />

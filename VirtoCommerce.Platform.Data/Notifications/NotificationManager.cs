@@ -109,12 +109,13 @@ namespace VirtoCommerce.Platform.Data.Notifications
         {
             var notifications = GetNotifications();
             var retVal = notifications.FirstOrDefault(x => x.GetType().Name == type);
+
             if (retVal == null)
             {
                 //try to find in derived types
                 retVal = notifications.FirstOrDefault(x => x.GetType().GetTypeInheritanceChain().Select(y => y.Name).Contains(type));
             }
-            if(retVal == null)
+            if (retVal == null)
             {
                 throw new NullReferenceException("Notification  " + type + " not found. Please register this type by notificationManager.RegisterNotificationType before use");
             }
@@ -122,17 +123,16 @@ namespace VirtoCommerce.Platform.Data.Notifications
             retVal.ObjectId = objectId;
             retVal.ObjectTypeId = objectTypeId;
             retVal.Language = language;
-            if (retVal != null)
+
+            var template = _notificationTemplateService.GetByNotification(type, objectId, objectTypeId, language);
+
+            if (template != null)
             {
-                var template = _notificationTemplateService.GetByNotification(type, objectId, objectTypeId, language);
-                if (template != null)
-                {
-                    retVal.NotificationTemplate = template;
-                }
-                else if (retVal.NotificationTemplate == null)
-                {
-                    retVal.NotificationTemplate = new NotificationTemplate();
-                }
+                retVal.NotificationTemplate = template;
+            }
+            else if (retVal.NotificationTemplate == null)
+            {
+                retVal.NotificationTemplate = new NotificationTemplate();
             }
 
             if (retVal.NotificationTemplate != null && string.IsNullOrEmpty(retVal.NotificationTemplate.NotificationTypeId))
