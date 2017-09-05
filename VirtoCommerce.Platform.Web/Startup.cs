@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,6 +12,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using CacheManager.Core;
 using CacheManager.Core.Configuration;
+using CacheManager.Redis;
 using Common.Logging;
 using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -273,13 +274,26 @@ namespace VirtoCommerce.Platform.Web
                 moduleManager.PostInitializeModule(module);
             }
 
-            // SignalR
+            var redisConnectionString = ConfigurationManager.ConnectionStrings["RedisConnectionString"];
+
+            // Redis
+            if (redisConnectionString != null && !string.IsNullOrEmpty(redisConnectionString.ConnectionString))
+            {
+                // Cache
+                RedisConfigurations.AddConfiguration(new RedisConfiguration("redisConnectionString", redisConnectionString.ConnectionString));
+
+                // SignalR
+                // https://stackoverflow.com/questions/29885470/signalr-scaleout-on-azure-rediscache-connection-issues
+                GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(redisConnectionString.ConnectionString, "VirtoCommerce.Platform.SignalR"));
+            }
+
+            // SignalR 
             var tempCounterManager = new TempPerformanceCounterManager();
             GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
             var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
             app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);
 
-            // Initialize InstrumentationKey from EnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY")
+            // Initialize InstrumentationKey from EnvironmentVariable
             var appInsightKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
 
             if (!string.IsNullOrEmpty(appInsightKey))
