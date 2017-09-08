@@ -3,8 +3,7 @@ angular.module('platformWebApp')
     return $resource('api/platform/assets', {}, {
         createFolder: { method: 'POST', url: 'api/platform/assets/folder' },
         move: { method: 'POST', url: 'api/platform/assets/move' },
-        uploadFromUrl: { method: 'POST', params: { url: '@url', folderUrl: '@folderUrl', name: '@name' }, isArray: true },
-        searchAssetItems: { method: 'GET', params: { folderUrl:'@folderUrl', keyword: '@keyword'}, isArray:true}
+        uploadFromUrl: { method: 'POST', params: { url: '@url', folderUrl: '@folderUrl', name: '@name' }, isArray: true }
     });
 }]);
 
