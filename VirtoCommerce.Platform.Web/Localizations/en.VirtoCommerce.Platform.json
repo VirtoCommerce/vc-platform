@@ -266,8 +266,8 @@
                 }
             },
             "notifications-journal": {
-                "title": "Journal of sending",
-                "subtitle": "Marketing service",
+                "title": "Notification history",
+                "subtitle": "View notification history",
                 "labels": {
                     "display-name": "Display Name",
                     "recipient": "Recipient",
@@ -281,7 +281,7 @@
             },
             "notifications-list": {
                 "title": "Notifications",
-                "subtitle": "Marketing service",
+                "subtitle": "View notification templates",
                 "labels": {
                     "no-notifications": "No registered notifications yet"
                 }
