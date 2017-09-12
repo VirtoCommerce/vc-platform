@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Testing.Helpers
             const string file = @";AttachDBFilename=|DataDirectory|\{0}.mdf";
             _name = name;
 
-            var connectionString = ConnectionStringHelper.GetConnectionString("VirtoCommerce_MigrationTestsBase");
+            var connectionString = ConfigurationHelper.GetConnectionStringValue("VirtoCommerce_MigrationTestsBase");
             if (connectionString != null)
             {
                 _connectionStringFormat = connectionString;

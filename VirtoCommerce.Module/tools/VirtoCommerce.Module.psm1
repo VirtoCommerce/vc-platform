@@ -11,23 +11,31 @@
         $project = Get-Project
     }
 
-    if (-Not $OutputDir) {
+    if (-not $OutputDir) {
         $OutputDir = Split-Path $project.FullName -Parent
     }
 
-    $msbuild = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\MSBuild.exe"
-    if (-Not (Test-Path $msbuild)) {
+    if (-not $msbuild -or -not (Test-Path $msbuild)) {
+        $vswhere="${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        if (Test-Path $vswhere) {
+            $vspath = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
+            if ($vspath) {
+                $msbuild = Join-Path $vspath 'MSBuild\15.0\Bin\MSBuild.exe'
+            }
+        }
+    }
+    if (-not $msbuild -or -not (Test-Path $msbuild)) {
         $msbuild = "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
     }
-    if (-Not (Test-Path $msbuild)) {
+    if (-not (Test-Path $msbuild)) {
         $msbuild = "${env:ProgramFiles(x86)}\MSBuild\12.0\Bin\MSBuild.exe"
     }
-    if (-Not (Test-Path $msbuild)) {
-        $msbuild = "${env:windir}\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
+    if (-not (Test-Path $msbuild)) {
+        $msbuild = "${env:windir}\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
     }
 
     $newGuid = [Guid]::NewGuid()
-    $tempDirName = "_vc_module_$newGuid"
+    $tempDirName = "_vc_deploy\$newGuid"
     $tempPath = [System.IO.Path]::GetTempPath()
     $tempDir = Join-Path $tempPath $tempDirName
     $modulesDir = "$tempDir\_PublishedWebsites"

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Reflection;
 using System.Web.Hosting;
 using System.Web.Mvc;
@@ -17,8 +16,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
         {
             var assembly = Assembly.GetExecutingAssembly();
             var version = string.Join(".", assembly.GetInformationalVersion(), assembly.GetFileVersion());
-            var demoCredentials = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoCredentials", null);
-            var resetTimeStr = ConfigurationManager.AppSettings.GetValue<string>("VirtoCommerce:DemoResetTime", null);
+            var demoCredentials = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:DemoCredentials");
+            var resetTimeStr = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:DemoResetTime");
             var license = LoadLicense();
             var licenseString = JsonConvert.SerializeObject(license, new JsonSerializerSettings
             {

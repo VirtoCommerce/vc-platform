@@ -66,7 +66,7 @@
 <script type="text/ng-template" id="asset-list-icon.cell.html">
     <div class="ui-grid-cell-contents">
         <div class="product-img">
-            <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.isImage"></div>
+            <img ng-if="row.entity.isImage" ng-attr-id="{{row.entity.name}}" class="image" ng-src="{{row.entity.noCacheUrl}}" />
             <i class="table-ico fa" ng-class="row.entity.type === 'folder' ? 'fa-folder' : 'fa-file-o'" ng-if="!row.entity.isImage"></i>
         </div>
     </div>
