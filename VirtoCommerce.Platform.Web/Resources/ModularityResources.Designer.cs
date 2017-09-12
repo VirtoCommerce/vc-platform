@@ -124,6 +124,15 @@ namespace VirtoCommerce.Platform.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A module declared a dependency on another module which is not declared to be loaded. Missing module(s): {0}.
+        /// </summary>
+        internal static string DependencyOnMissingModule {
+            get {
+                return ResourceManager.GetString("DependencyOnMissingModule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to retrieve the module type {0} from the loaded assemblies.  You may need to specify a more fully-qualified type name..
         /// </summary>
         internal static string FailedToGetType {
@@ -147,6 +156,24 @@ namespace VirtoCommerce.Platform.Web.Resources {
         internal static string LoggerCreatedSuccessfully {
             get {
                 return ResourceManager.GetString("LoggerCreatedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module dependency {0} is incompatible with installed {1}.
+        /// </summary>
+        internal static string ModuleDependencyIsIncompatible {
+            get {
+                return ResourceManager.GetString("ModuleDependencyIsIncompatible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is incompatible with installed {1}. You should uninstall these modules first..
+        /// </summary>
+        internal static string ModuleIsIncompatible {
+            get {
+                return ResourceManager.GetString("ModuleIsIncompatible", resourceCulture);
             }
         }
         
@@ -192,6 +219,15 @@ namespace VirtoCommerce.Platform.Web.Resources {
         internal static string NullUnityContainerException {
             get {
                 return ResourceManager.GetString("NullUnityContainerException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module platform version {0} is incompatible with current {1}.
+        /// </summary>
+        internal static string PlatformVersionIsIncompatible {
+            get {
+                return ResourceManager.GetString("PlatformVersionIsIncompatible", resourceCulture);
             }
         }
         

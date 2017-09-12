@@ -64,7 +64,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 
             if (!source.ApiAccounts.IsNullCollection())
             {
-                var apiAccountComparer = AnonymousComparer.Create((ApiAccountEntity x) => $"{x.ApiAccountType}-{x.SecretKey}");
+                var apiAccountComparer = AnonymousComparer.Create((ApiAccountEntity x) => $"{x.ApiAccountType}-{x.AppId}");
                 source.ApiAccounts.Patch(target.ApiAccounts, apiAccountComparer, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
             }
             if (!source.RoleAssignments.IsNullCollection())

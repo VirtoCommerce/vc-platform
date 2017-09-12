@@ -1,8 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -23,18 +21,23 @@ namespace VirtoCommerce.Platform.Core.Common
 
     public class SortInfo : IEquatable<SortInfo>
     {
+        public string SortColumn { get; set; }
+        public SortDirection SortDirection { get; set; }
+
         public override string ToString()
         {
             return SortColumn + ":" + (SortDirection == SortDirection.Descending ? "desc" : "asc");
         }
+
         public static string ToString(IEnumerable<SortInfo> sortInfos)
         {
             return string.Join(";", sortInfos);
         }
+
         public static IEnumerable<SortInfo> Parse(string sortExpr)
         {
             var retVal = new List<SortInfo>();
-            if (String.IsNullOrEmpty(sortExpr))
+            if (string.IsNullOrEmpty(sortExpr))
                 return retVal;
 
             var sortInfoStrings = sortExpr.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -48,7 +51,7 @@ namespace VirtoCommerce.Platform.Core.Common
                         SortColumn = parts[0],
                         SortDirection = SortDirection.Ascending
                     };
-                    if (parts.Count() > 1)
+                    if (parts.Length > 1)
                     {
                         sortInfo.SortDirection = parts[1].StartsWith("desc", StringComparison.InvariantCultureIgnoreCase) ? SortDirection.Descending : SortDirection.Ascending;
                     }
@@ -58,25 +61,17 @@ namespace VirtoCommerce.Platform.Core.Common
             return retVal;
         }
 
-        public string SortColumn { get; set; }
-
-        public SortDirection SortDirection { get; set; }
-
         public bool Equals(SortInfo other)
         {
             return other != null
-                   && String.Equals(SortColumn, other.SortColumn, StringComparison.OrdinalIgnoreCase)
+                   && string.Equals(SortColumn, other.SortColumn, StringComparison.OrdinalIgnoreCase)
                    && SortDirection == other.SortDirection;
         }
 
         public override bool Equals(object obj)
         {
-            SortInfo sortInfo = obj as SortInfo;
-            if (sortInfo != null)
-            {
-                return Equals(sortInfo);
-            }
-            return base.Equals(obj);
+            var other = obj as SortInfo;
+            return other != null ? Equals(other) : ReferenceEquals(this, obj);
         }
 
         public override int GetHashCode()

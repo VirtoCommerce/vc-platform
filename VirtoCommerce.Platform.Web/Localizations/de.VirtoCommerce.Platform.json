@@ -377,17 +377,17 @@
         }
       },
       "account-api": {
-        "title": "API-Schlüssel",
-        "title-new": "Neue API-Schlüssel",
+        "title": "API-Konto",
+        "title-new": "Neue API-Konto",
         "labels": {
           "is-active": "Ist aktiv",
-          "key-name": "Name der Taste",
-          "key-type": "Schlüsseltyp",
+          "account-name": "Name der Konto",
+          "account-type": "Kontotyp",
           "secret-key": "Geheimer Schlüssel"
         },
         "placeholders": {
-          "key-name": "Namen eingeben",
-          "key-type": "Wählen Sie aus...",
+          "account-name": "Namen eingeben",
+          "account-type": "Wählen Sie aus...",
           "secret-key": "Geheime Schlüssel generieren",
           "app-id": "Erzeugen..."
         }
@@ -652,8 +652,8 @@
         "title": "Einstellungen"
       },
       "accountApi": {
-        "title": "API-Schlüssel",
-        "blade-subtitle": "API-Schlüssel"
+        "title": "API-Konten",
+        "blade-subtitle": "API-Konten"
       },
       "accountRoles": {
         "title": "Rollen",

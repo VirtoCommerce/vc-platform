@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Properties;
@@ -90,29 +91,16 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
             if (skip.Count > knownModules.Count)
             {
-                string moduleNames = this.FindMissingModules(skip);
-                throw new ModularityException(moduleNames, String.Format(CultureInfo.CurrentCulture,
-                                                            Resources.DependencyOnMissingModule,
-                                                            moduleNames));
+                var missedDependencies = skip.Except(knownModules).ToList();
+                // Create missed module matrix (key: missed module, value: module that miss it) and reverse it (keys to values, values to keys; key: module that miss other module, value: missed module)
+                var missedDependenciesMatrix = missedDependencies.ToDictionary(md => md, md => dependencyMatrix[md])
+                    .SelectMany(p => p.Value.Select(m => new KeyValuePair<string, string>(m, p.Key)))
+                    .GroupBy(p => p.Key)
+                    .ToDictionary(g => g.Key, g => g.Select(p => p.Value));
+                throw new MissedModuleException(missedDependenciesMatrix, string.Format(CultureInfo.CurrentCulture, Resources.DependencyOnMissingModule, string.Join(", ", missedDependencies)));
             }
 
             return skip.ToArray();
-        }
-
-        private string FindMissingModules(List<string> skip)
-        {
-            string missingModules = "";
-
-            foreach (string module in skip)
-            {
-                if (!knownModules.Contains(module))
-                {
-                    missingModules += ", ";
-                    missingModules += module;
-                }
-            }
-
-            return missingModules.Substring(2);
         }
 
         /// <summary>

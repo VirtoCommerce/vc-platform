@@ -16,7 +16,12 @@
                 },
             function (data) {
                 $scope.pageSettings.totalItems = data.length;
-                _.each(data, function (x) { x.isImage = x.contentType && x.contentType.startsWith('image/'); });
+                _.each(data, function (x) {
+                    x.isImage = x.contentType && x.contentType.startsWith('image/');
+                    if (x.isImage) {
+                        x.noCacheUrl = x.url + '?t=' + x.modifiedDate;
+                    }
+                });
                 $scope.listEntries = data;
                 blade.isLoading = false;
 
@@ -115,7 +120,7 @@
                             var listEntryIds = _.pluck(selection, 'url');
                             assets.remove({ urls: listEntryIds },
                                 blade.refresh,
-                            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
                         }
                     }
                 }

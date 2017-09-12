@@ -77,7 +77,7 @@
 <script type="text/ng-template" id="modules-list-icon.cell.html">
     <div class="ui-grid-cell-contents">
         <div class="product-img">
-            <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="COL_FIELD"></div>
+            <img class="image" ng-src="{{COL_FIELD}}" ng-if="COL_FIELD">
             <i class="table-ico fa fa-cubes" ng-if="!COL_FIELD"></i>
         </div>
     </div>
@@ -94,9 +94,12 @@
 <script type="text/ng-template" id="modules-list-version.cell.html">
     <div class="ui-grid-cell-contents">
         <div class="inner-contents">
-            <i class="table-ico fa fa-check-square-o" ng-if="row.entity.isInstalled && !row.entity.$alternativeVersion" title="Module is up to date"></i>
-            <span class="table-t" title="{{COL_FIELD}}">{{COL_FIELD}}</span>
-            <span class="table-descr">{{row.entity.$alternativeVersion}}</span>
+            <i class="table-ico fa fa-check-square-o" ng-if="row.entity.isInstalled && !row.entity.$alternativeVersion" ng-attr-title="{{ 'platform.blades.modules-list.labels.up-to-date' | translate }}"></i>
+            <i class="table-ico fa fa-arrow-up" ng-if="row.entity.isInstalled && row.entity.$alternativeVersion" ng-attr-title="{{ 'platform.blades.modules-list.labels.update-available' | translate }}"></i>
+            <span class="table-info">
+                <span class="table-t" title="{{COL_FIELD}}">{{COL_FIELD}}</span>
+                <span class="table-descr">{{row.entity.$alternativeVersion}}</span>
+            </span>
         </div>
     </div>
 </script>

@@ -19,7 +19,13 @@ angular.module('platformWebApp')
                 bladeCommands = angular.copy(bladeCommands || []);
 
                 _.each(externalCommands, function (newCommand) {
-                    bladeCommands.splice(newCommand.index, 0, newCommand);
+                    var overrideIndex = _.findIndex(bladeCommands, function (bladeCommand) {
+                        return bladeCommand.name === newCommand.name;
+                    });
+                    var deleteCount = overrideIndex >= 0 ? 1 : 0;
+                    overrideIndex = overrideIndex >= 0 ? overrideIndex : newCommand.index;
+
+                    bladeCommands.splice(overrideIndex, deleteCount, newCommand);
                 });
             }
 

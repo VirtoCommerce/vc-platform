@@ -225,6 +225,16 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
+        public virtual ApiAccount GenerateNewApiKey(ApiAccount account)
+        {
+            if (account.ApiAccountType != ApiAccountType.Hmac)
+            {
+                throw new InvalidOperationException(SecurityAccountExceptions.NonHmacKeyGenerationException);
+            }
+            account = _apiAccountProvider.GenerateApiKey(account.ToDataModel()).ToCoreModel();
+            return account;
+        }
+
         public virtual async Task<SecurityResult> ChangePasswordAsync(string name, string oldPassword, string newPassword)
         {
             using (var userManager = _userManagerFactory())

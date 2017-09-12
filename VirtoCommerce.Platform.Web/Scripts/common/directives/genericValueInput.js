@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .directive('vaGenericValueInput', ['$compile', '$templateCache', '$http', 'platformWebApp.objCompareService', function ($compile, $templateCache, $http, objComparer) {
 
     return {
@@ -76,16 +76,6 @@
                     }
                 }
                 changeValueTemplate();
-            };
-
-            var difference = function (one, two) {
-                var containsEquals = function (obj, target) {
-                    if (obj == null) return false;
-                    return _.any(obj, function (value) {
-                        return value.value == target.value || angular.equals(value.values, target.values);
-                    });
-                };
-                return _.filter(one, function (value) { return !containsEquals(two, value); });
             };
 
             function needAddEmptyValue(property, values) {
