@@ -44,7 +44,6 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
         {
             var result = new dataModel.RoleAssignmentEntity();
             result.RoleId = source.Id;
-            result.RoleName = source.Name;
             return result;
         }
 

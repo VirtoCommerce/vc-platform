@@ -53,20 +53,18 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public static object RawValue(string valueType, string value)
         {
             object result = value;
-            if (value != null)
+            
+            switch (valueType)
             {
-                switch (valueType)
-                {
-                    case TypeBoolean:
-                        result = bool.Parse(value);
-                        break;
-                    case TypeInteger:
-                        result = int.Parse(value, CultureInfo.InvariantCulture);
-                        break;
-                    case TypeDecimal:
-                        result = decimal.Parse(value, CultureInfo.InvariantCulture);
-                        break;
-                }
+                case TypeBoolean:
+                    result = bool.Parse(value);
+                    break;
+                case TypeInteger:
+                    result = int.Parse(value, CultureInfo.InvariantCulture);
+                    break;
+                case TypeDecimal:
+                    result = decimal.Parse(value, CultureInfo.InvariantCulture);
+                    break;
             }
 
             return result;

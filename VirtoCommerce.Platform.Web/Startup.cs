@@ -35,11 +35,9 @@ using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Serialization;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Core.Web.Common;
 using VirtoCommerce.Platform.Data.Assets;
 using VirtoCommerce.Platform.Data.Azure;
 using VirtoCommerce.Platform.Data.ChangeLog;
-using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -79,7 +77,7 @@ namespace VirtoCommerce.Platform.Web
             Configuration(app, "~", string.Empty);
         }
 
-        public void Configuration(IAppBuilder app, string virtualRoot, string routePrefix)
+        public void Configuration(IAppBuilder app, string virtualRoot, string routPrefix)
         {
             VirtualRoot = virtualRoot;
 
@@ -106,20 +104,15 @@ namespace VirtoCommerce.Platform.Web
             var bootstrapper = new VirtoCommercePlatformWebBootstrapper(modulesVirtualPath, modulesPhysicalPath, _assembliesPath);
             bootstrapper.Run();
 
-            SetupContainer(app, bootstrapper.Container, new HostingEnvironmentPathMapper(), virtualRoot, routePrefix, modulesPhysicalPath);
-        }
-
-        public static void SetupContainer(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper,
-            string virtualRoot, string routePrefix, string modulesPhysicalPath)
-        {
+            var container = bootstrapper.Container;
             container.RegisterInstance(app);
 
             var moduleInitializerOptions = (ModuleInitializerOptions)container.Resolve<IModuleInitializerOptions>();
             moduleInitializerOptions.VirtualRoot = virtualRoot;
-            moduleInitializerOptions.RoutePrefix = routePrefix;
+            moduleInitializerOptions.RoutePrefix = routPrefix;
 
             //Initialize Platform dependencies
-            var connectionStringName = ConnectionStringHelper.GetConnectionStringName("VirtoCommerce");
+            const string connectionStringName = "VirtoCommerce";
 
             var hangfireOptions = new HangfireOptions
             {
@@ -129,7 +122,7 @@ namespace VirtoCommerce.Platform.Web
             };
             var hangfireLauncher = new HangfireLauncher(hangfireOptions);
 
-            InitializePlatform(app, container, pathMapper, connectionStringName, hangfireLauncher, modulesPhysicalPath);
+            InitializePlatform(app, container, connectionStringName, hangfireLauncher, modulesPhysicalPath);
 
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -137,7 +130,7 @@ namespace VirtoCommerce.Platform.Web
             var applicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase.EnsureEndSeparator();
 
             // Register URL rewriter for platform scripts
-            var scriptsPhysicalPath = pathMapper.MapPath(VirtualRoot + "/Scripts").EnsureEndSeparator();
+            var scriptsPhysicalPath = HostingEnvironment.MapPath(VirtualRoot + "/Scripts").EnsureEndSeparator();
             var scriptsRelativePath = MakeRelativePath(applicationBase, scriptsPhysicalPath);
             var platformUrlRewriterOptions = new UrlRewriterOptions();
             platformUrlRewriterOptions.Items.Add(PathString.FromUriComponent("/$(Platform)/Scripts"), "");
@@ -186,13 +179,13 @@ namespace VirtoCommerce.Platform.Web
             if (IsApplication)
             {
                 AreaRegistration.RegisterAllAreas();
-                
-                GlobalConfiguration.Configure(WebApiConfig.Register);
-                FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-                RouteConfig.RegisterRoutes(RouteTable.Routes);
-                BundleConfig.RegisterBundles(BundleTable.Bundles);
-                AuthConfig.RegisterAuth();
             }
+
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            AuthConfig.RegisterAuth();
 
             // Security OWIN configuration
             var authenticationOptions = new Core.Security.AuthenticationOptions
@@ -230,7 +223,7 @@ namespace VirtoCommerce.Platform.Web
             notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
                 DisplayName = "Reset password notification",
-                Description = "This notification is sent by email to a client upon reset password request",
+                Description = "This notification is sent by email to a client when he want to reset his password",
                 NotificationTemplate = new NotificationTemplate
                 {
                     Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
@@ -307,7 +300,7 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionStringName, HangfireLauncher hangfireLauncher, string modulesPath)
+        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, string connectionStringName, HangfireLauncher hangfireLauncher, string modulesPath)
         {
             container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
@@ -608,11 +601,11 @@ namespace VirtoCommerce.Platform.Web
 
             #region Assets
 
-            var blobConnectionString = BlobConnectionString.Parse(ConnectionStringHelper.GetConnectionString("AssetsConnectionString"));
+            var blobConnectionString = BlobConnectionString.Parse(ConfigurationManager.ConnectionStrings["AssetsConnectionString"].ConnectionString);
 
             if (string.Equals(blobConnectionString.Provider, FileSystemBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
             {
-                var fileSystemBlobProvider = new FileSystemBlobProvider(NormalizePath(pathMapper, blobConnectionString.RootPath), blobConnectionString.PublicUrl);
+                var fileSystemBlobProvider = new FileSystemBlobProvider(NormalizePath(blobConnectionString.RootPath), blobConnectionString.PublicUrl);
 
                 container.RegisterInstance<IBlobStorageProvider>(fileSystemBlobProvider);
                 container.RegisterInstance<IBlobUrlResolver>(fileSystemBlobProvider);
@@ -676,13 +669,13 @@ namespace VirtoCommerce.Platform.Web
             #endregion
         }
 
-        private static string NormalizePath(IPathMapper pathMapper, string path)
+        private static string NormalizePath(string path)
         {
             string retVal;
 
             if (path.StartsWith("~"))
             {
-                retVal = pathMapper.MapPath(path);
+                retVal = HostingEnvironment.MapPath(path);
             }
             else if (Path.IsPathRooted(path))
             {
@@ -690,7 +683,7 @@ namespace VirtoCommerce.Platform.Web
             }
             else
             {
-                retVal = pathMapper.MapPath("~/");
+                retVal = HostingEnvironment.MapPath("~/");
                 retVal += path;
             }
 

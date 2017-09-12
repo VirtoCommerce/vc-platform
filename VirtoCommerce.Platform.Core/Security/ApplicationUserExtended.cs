@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using VirtoCommerce.Platform.Core.ChangeLog;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class ApplicationUserExtended: IHasChangesHistory
+    public class ApplicationUserExtended
     {
         public string Id { get; set; }
         public string UserName { get; set; }
@@ -50,9 +48,5 @@ namespace VirtoCommerce.Platform.Core.Security
         /// API keys
         /// </summary>
         public ApiAccount[] ApiAccounts { get; set; }
-
-        #region IHasChangesHistory
-        public ICollection<OperationLog> OperationsLog { get; set; }
-        #endregion
     }
 }

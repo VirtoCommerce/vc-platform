@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -30,7 +30,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public IHttpActionResult GetAllSettings()
         {
             var modules = _settingsManager.GetModules();
-            return Ok(modules.SelectMany(x => _settingsManager.GetModuleSettings(x.Id)).Where(x => !x.IsRuntime).Select(x => x.ToWebModel()).ToArray());
+            return Ok(modules.SelectMany(x => _settingsManager.GetModuleSettings(x.Id)).Select(x => x.ToWebModel()).ToArray());
         }
 
         /// <summary>
