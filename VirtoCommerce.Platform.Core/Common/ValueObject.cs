@@ -12,8 +12,8 @@ namespace VirtoCommerce.Platform.Core.Common
 	/// Value
 	/// </summary>
 	/// <typeparam name="TValueObject">The type of this value object</typeparam>
-	public class ValueObject<TValueObject> : IEquatable<TValueObject>
-		where TValueObject : ValueObject<TValueObject>
+	public class ValueObject<TValueObject> : IEquatable<TValueObject>, IValueObject
+        where TValueObject : ValueObject<TValueObject>
 	{
 
 		#region IEquatable and Override Equals operators

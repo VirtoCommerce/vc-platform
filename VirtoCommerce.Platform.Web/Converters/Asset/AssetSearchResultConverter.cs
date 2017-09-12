@@ -23,7 +23,8 @@ namespace VirtoCommerce.Platform.Web.Converters.Asset
                 Name = assetFolder.Name,
                 ParentUrl = assetFolder.ParentUrl,
                 Url = assetFolder.Url,
-                Type = "folder"
+                Type = "folder",
+                RelativeUrl = assetFolder.RelativeUrl
             };
             return retVal;
         }
@@ -34,10 +35,11 @@ namespace VirtoCommerce.Platform.Web.Converters.Asset
             {
                 Name = blobInfo.FileName,
                 Url = blobInfo.Url,
-                Size = blobInfo.Size.ToHumanReadableSize(),
+                Size = blobInfo.Size,
                 ContentType = blobInfo.ContentType,
                 Type = "blob",
-                ModifiedDate = blobInfo.ModifiedDate
+                ModifiedDate = blobInfo.ModifiedDate,
+                RelativeUrl = blobInfo.RelativeUrl
             };
             return retVal;
         }

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Configuration;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Globalization;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Testing.Helpers
 {
@@ -14,27 +14,23 @@ namespace VirtoCommerce.Platform.Testing.Helpers
 
         public SqlTestDatabase(string name)
         {
-            var file = @";AttachDBFilename=|DataDirectory|\{0}.mdf";
+            const string file = @";AttachDBFilename=|DataDirectory|\{0}.mdf";
             _name = name;
 
-            var setting = ConfigurationManager.ConnectionStrings["VirtoCommerce_MigrationTestsBase"];
-
-            if (setting != null)
+            var connectionString = ConfigurationHelper.GetConnectionStringValue("VirtoCommerce_MigrationTestsBase");
+            if (connectionString != null)
             {
-                _connectionStringFormat = setting.ConnectionString;
+                _connectionStringFormat = connectionString;
             }
 
-            ConnectionString = string.Format(_connectionStringFormat, name) + String.Format(file, name);
+            ConnectionString = string.Format(_connectionStringFormat, name) + string.Format(file, name);
             ProviderName = "System.Data.SqlClient";
             //Info = CreateInfoContext(new SqlConnection(ConnectionString));
         }
 
         #region Overrides of TestDatabase
 
-        public override InfoContext Info
-        {
-            get { return base.Info ?? (base.Info = CreateInfoContext(new SqlConnection(ConnectionString))); }
-        }
+        public override InfoContext Info => base.Info ?? (base.Info = CreateInfoContext(new SqlConnection(ConnectionString)));
 
         #endregion
 

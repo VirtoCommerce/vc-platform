@@ -4,13 +4,10 @@
     blade.updatePermission = 'platform:setting:update';
 
     blade.refresh = function () {
-        if (blade.moduleId) {
+        if (blade.moduleId && !blade.data) {
             blade.isLoading = true;
 
-            settings.getSettings({ id: blade.moduleId }, initializeBlade,
-            function (error) {
-                bladeNavigationService.setError('Error ' + error.status, blade);
-            });
+            settings.getSettings({ id: blade.moduleId }, initializeBlade);
         } else {
             initializeBlade(angular.copy(blade.data));
         }
@@ -78,15 +75,14 @@
         settingsHelper.toApiFormat(objects);
 
         //console.log('saveChanges3: ' + angular.toJson(objects, true));
-        settings.update({}, objects, function (data, headers) {
+        settings.update({}, objects, function () {
             if (blade.moduleId) {
+                blade.data = undefined;
                 blade.refresh();
             } else {
                 blade.origEntity = blade.currentEntities;
                 blade.parentBlade.refresh(true);
             }
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
 

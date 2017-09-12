@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -148,6 +147,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotAcceptable, "This request is not properly formatted"));
             }
+
             webModel.ModuleDescriptor retVal = null;
             var uploadsPath = HostingEnvironment.MapPath(_uploadsUrl);
             var streamProvider = new CustomMultipartFormDataStreamProvider(uploadsPath);
@@ -178,7 +178,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         else
                         {
                             //Force dependency validation for new module
-                            _moduleCatalog.CompleteListWithDependencies(new[] { module }).ToArray();
+                            _moduleCatalog.CompleteListWithDependencies(new[] { module }).ToList().Clear();
                             _moduleCatalog.AddModule(module);
                         }
 
@@ -187,6 +187,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
             }
+
             return Ok(retVal);
         }
 
@@ -255,10 +256,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("autoinstall")]
         [ResponseType(typeof(webModel.ModuleAutoInstallPushNotification))]
-        [AllowAnonymous]
+        [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult TryToAutoInstallModules()
         {
-            var notification = new webModel.ModuleAutoInstallPushNotification("System")
+            var notification = new webModel.ModuleAutoInstallPushNotification(User.Identity.Name)
             {
                 Title = "Modules installation",
                 //set completed by default
@@ -272,7 +273,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     if (!_settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false))
                     {
-                        var moduleBundles = ConfigurationManager.AppSettings.SplitStringValue("VirtoCommerce:AutoInstallModuleBundles");
+                        var moduleBundles = ConfigurationHelper.SplitAppSettingsStringValue("VirtoCommerce:AutoInstallModuleBundles");
                         if (!moduleBundles.IsNullOrEmpty())
                         {
                             _settingsManager.SetValue("VirtoCommerce.ModulesAutoInstalled", true);
@@ -377,7 +378,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _moduleCatalog.Initialize();
         }
 
-        private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(List<ManifestModuleInfo> modules)
+        private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(IEnumerable<ManifestModuleInfo> modules)
         {
             var retVal = new List<ManifestModuleInfo>();
             foreach (var module in modules)

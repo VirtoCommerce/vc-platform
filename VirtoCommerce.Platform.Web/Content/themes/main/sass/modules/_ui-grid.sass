@@ -283,3 +283,21 @@ input.ui-grid-filter-input[type="text"]
   transition: width .35s ease .5s
 .ui-grid-actions.__opened ~ .menu
   width: calc(100% - 80px)
+  
+.ui-grid-draggable-row-target
+  opacity: 0.5 !important
+.ui-grid-draggable-row
+  height: 60px
+.ui-grid-draggable-row-over
+  position: relative
+  &:before
+    content: ""
+    display: block
+    position: absolute
+    left: 0
+    width: 100%
+    border-bottom: 1px dashed #808080
+.ui-grid-draggable-row-over--above:before
+  top: 0
+.ui-grid-draggable-row-over--below:before
+  bottom: 0

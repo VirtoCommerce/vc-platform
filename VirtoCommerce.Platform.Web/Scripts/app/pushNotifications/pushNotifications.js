@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .config(
   ['$stateProvider', function ($stateProvider) {
       $stateProvider
@@ -23,13 +23,12 @@
 .factory('platformWebApp.pushNotificationTemplateResolver', ['platformWebApp.bladeNavigationService', '$state', function (bladeNavigationService, $state) {
     var notificationTemplates = [];
 
-    var defaultTypes = ['error', 'info', 'warning'];
     function register(template) {
         notificationTemplates.push(template);
-        notificationTemplates.sort(function (a, b) { return a.priority - b.priority; })
+        notificationTemplates.sort(function (a, b) { return a.priority - b.priority; });
     };
     function resolve(notification, place) {
-        return _.find(notificationTemplates, function (x) { return x.satisfy(notification, place); })
+        return _.find(notificationTemplates, function (x) { return x.satisfy(notification, place); });
     };
     var retVal = {
         register: register,

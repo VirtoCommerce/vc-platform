@@ -8,6 +8,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Security.Resources;
 
 namespace VirtoCommerce.Platform.Data.Security
 {
@@ -41,10 +42,20 @@ namespace VirtoCommerce.Platform.Data.Security
 
             if (type == ApiAccountType.Hmac)
             {
-                result.SecretKey = ConvertBytesToHexString(GetRandomBytes(64));
+                result = GenerateApiKey(result);
             }
 
             return result;
+        }
+
+        public ApiAccountEntity GenerateApiKey(ApiAccountEntity account)
+        {
+            if (account.ApiAccountType != ApiAccountType.Hmac)
+            {
+                throw new InvalidOperationException(SecurityAccountExceptions.NonHmacKeyGenerationException);
+            }
+            account.SecretKey = ConvertBytesToHexString(GetRandomBytes(64));
+            return account;
         }
 
         #endregion

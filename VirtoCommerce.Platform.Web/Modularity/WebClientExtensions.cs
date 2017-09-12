@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Net;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -32,7 +31,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
         {
             if (address.Scheme == Uri.UriSchemeHttps && (address.Host == "api.github.com" || address.Host == "raw.githubusercontent.com"))
             {
-                var gitHubToken = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:Modules:GitHubAuthorizationToken", string.Empty);
+                var gitHubToken = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Modules:GitHubAuthorizationToken", string.Empty);
                 if (!string.IsNullOrEmpty(gitHubToken))
                 {
                     webClient.Headers["User-Agent"] = "Virto Commerce Manager";

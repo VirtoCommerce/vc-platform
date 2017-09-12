@@ -70,7 +70,7 @@ namespace VirtoCommerce.Platform.Web.Hangfire
                     QueuePollInterval = TimeSpan.FromSeconds(60) /* Default is 15 seconds */
                 };
 
-                result = new SqlServerStorage(_options.DatabaseConnectionStringName, sqlServerStorageOptions);
+                result = new SqlServerStorage(_options.DatabaseConnectionString, sqlServerStorageOptions);
             }
             else if (string.Equals(_options.JobStorageType, "Memory", StringComparison.OrdinalIgnoreCase))
             {

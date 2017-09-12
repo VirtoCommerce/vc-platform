@@ -6,6 +6,7 @@
     blade.title = 'platform.blades.import-main.title';
     blade.isLoading = false;
     $scope.importRequest = {};
+    var origManifest;
 
     $scope.$on("new-notification-event", function (event, notification) {
         if (blade.notification && notification.id == blade.notification.id) {
@@ -23,8 +24,8 @@
     $scope.startProcess = function () {
         blade.isLoading = true;
         exportImportResourse.runImport($scope.importRequest,
-        function (data) { blade.notification = data; blade.isLoading = false; },
-        function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            function (data) { blade.notification = data; blade.isLoading = false; },
+            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
     }
 
     $scope.updateModuleSelection = function () {
@@ -33,10 +34,6 @@
     };
 
     if (!$scope.uploader) {
-        function endsWith(str, suffix) {
-            return str.indexOf(suffix, str.length - suffix.length) !== -1;
-        }
-
         // create the uploader
         var uploader = $scope.uploader = new FileUploader({
             scope: $scope,
@@ -52,7 +49,7 @@
         uploader.filters.push({
             name: 'zipFilter',
             fn: function (i /*{File|FileLikeObject}*/, options) {
-                return endsWith(i.name.toLowerCase(), '.zip');
+                return i.name.toLowerCase().endsWith('.zip');
             }
         });
 
@@ -66,25 +63,50 @@
         };
 
         uploader.onSuccessItem = function (fileItem, asset, status, headers) {
-        	$scope.importRequest.fileUrl = asset[0].url;
-        	$scope.importRequest.fileName = asset[0].name;
+            $scope.importRequest.fileUrl = asset[0].url;
+            $scope.importRequest.fileName = asset[0].name;
 
             exportImportResourse.loadExportManifest({ fileUrl: $scope.importRequest.fileUrl }, function (data) {
+                origManifest = angular.copy(data);
+
                 // select all available data for import
                 $scope.importRequest.handleSecurity = data.handleSecurity;
                 $scope.importRequest.handleSettings = data.handleSettings;
                 $scope.importRequest.handleBinaryData = data.handleBinaryData;
 
-                _.each(data.modules, function (x) {
-                    x.isChecked = true;
-                });
+                _.each(data.modules, function (x) { x.isChecked = true; });
 
                 $scope.importRequest.exportManifest = data;
                 $scope.updateModuleSelection();
                 blade.isLoading = false;
-            }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, blade);
             });
         };
+    }
+
+
+    blade.toolbarCommands = [
+        {
+            name: "platform.commands.select-all", icon: 'fa fa-check-square-o',
+            executeMethod: function () { selectAll(true) },
+            canExecuteMethod: function () { return $scope.importRequest.exportManifest && !blade.notification; }
+        },
+        {
+            name: "platform.commands.unselect-all", icon: 'fa fa-square-o',
+            executeMethod: function () { selectAll(false) },
+            canExecuteMethod: function () { return $scope.importRequest.exportManifest && !blade.notification; }
+        }
+    ];
+
+    var selectAll = function (action) {
+        if (origManifest.handleSecurity)
+            $scope.importRequest.handleSecurity = action;
+        if (origManifest.handleBinaryData)
+            $scope.importRequest.handleBinaryData = action;
+        if (origManifest.handleSettings)
+            $scope.importRequest.handleSettings = action;
+
+        _.forEach($scope.importRequest.exportManifest.modules, function (module) { module.isChecked = action; });
+
+        $scope.updateModuleSelection();
     }
 }]);

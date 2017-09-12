@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', 'FileUploader', function ($scope, dialogService, bladeNavigationService, modules, moduleHelper, FileUploader) {
+.controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', 'FileUploader', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, modules, moduleHelper, FileUploader, settings) {
     var blade = $scope.blade;
 
     function initializeBlade() {
@@ -24,27 +24,36 @@
                     },
                     canExecuteMethod: function () { return true; },
                     permission: 'platform:module:manage'
-                },
-                {
-                    name: "platform.commands.settings", icon: 'fa fa-wrench',
-                    executeMethod: function () {
-                        var newBlade = {
-                            id: 'moduleSettingsSection',
-                            moduleId: blade.currentEntity.id,
-                            title: 'platform.blades.module-settings-detail.title',
-                            //subtitle: '',
-                            controller: 'platformWebApp.settingsDetailController',
-                            template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
-                        };
-                        bladeNavigationService.showBlade(newBlade, blade);
-                    },
-                    canExecuteMethod: function () { return true; }
                 }
             ];
+
+            // hide settings toolbar button when there are no settings available #523
+            settings.getSettings({ id: blade.currentEntity.id }, function (results) {
+                if (_.any(results)) {
+                    blade.toolbarCommands.push({
+                        name: "platform.commands.settings", icon: 'fa fa-wrench',
+                        executeMethod: function () {
+                            var newBlade = {
+                                id: 'moduleSettingsSection',
+                                moduleId: blade.currentEntity.id,
+                                data: results,
+                                title: 'platform.blades.module-settings-detail.title',
+                                //subtitle: '',
+                                controller: 'platformWebApp.settingsDetailController',
+                                template: '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html'
+                            };
+                            bladeNavigationService.showBlade(newBlade, blade);
+                        },
+                        canExecuteMethod: function () { return true; }
+                    });
+                }
+                blade.isLoading = false;
+            });
         } else {
             blade.toolbarCommands = [];
             blade.mode = blade.currentEntity.$alternativeVersion ? 'update' : 'install';
             $scope.availableVersions = _.where(moduleHelper.allmodules, { id: blade.currentEntity.id, isInstalled: false });
+            blade.isLoading = false;
         }
     }
 
@@ -172,9 +181,9 @@
                 bladeNavigationService.setError('Failed to upload. Error status: ' + status, blade);
             }
         };
+
+        blade.isLoading = false;
     } else {
         initializeBlade();
     }
-
-    blade.isLoading = false;
 }]);

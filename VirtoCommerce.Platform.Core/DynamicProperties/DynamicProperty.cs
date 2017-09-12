@@ -26,6 +26,7 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
         /// </summary>
         public bool IsMultilingual { get; set; }
         public bool IsRequired { get; set; }
+        public int? DisplayOrder { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public DynamicPropertyValueType ValueType { get; set; }
@@ -56,6 +57,7 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
                 IsDictionary = IsDictionary,
                 IsMultilingual = IsMultilingual,
                 IsRequired = IsRequired,
+                DisplayOrder = DisplayOrder,
                 ValueType = ValueType,
                 DisplayNames = DisplayNames == null ? null : DisplayNames.Select(n => n.Clone()).ToArray(),
             };

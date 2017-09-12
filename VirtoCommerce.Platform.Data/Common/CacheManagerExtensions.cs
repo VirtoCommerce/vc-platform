@@ -1,9 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using CacheManager.Core;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -19,9 +16,9 @@ namespace VirtoCommerce.Platform.Data.Common
 
         public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<T> getValueFunction)
         {
-            return cacheManager.Get<T>(cacheKey, region, getValueFunction, true);
+            return cacheManager.Get(cacheKey, region, getValueFunction, true);
         }
-        public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<T> getValueFunction, bool cacheNullValue = true)
+        public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<T> getValueFunction, bool cacheNullValue)
         {
             var result = cacheManager.Get(cacheKey, region);
             if (result == null)
@@ -48,11 +45,11 @@ namespace VirtoCommerce.Platform.Data.Common
         }
         public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, Func<T> getValueFunction)
         {
-            return cacheManager.Get<T>(cacheKey, region, expiration, getValueFunction, true);
+            return cacheManager.Get(cacheKey, region, expiration, getValueFunction, true);
         }
         public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, Func<T> getValueFunction, bool cacheNullValue)
         {
-            return cacheManager.Get<T>(cacheKey, region, expiration, ExpirationMode.Sliding, getValueFunction, true);
+            return cacheManager.Get(cacheKey, region, expiration, ExpirationMode.Sliding, getValueFunction, true);
         }
         public static T Get<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, ExpirationMode expirationMode, Func<T> getValueFunction, bool cacheNullValue)
         {
@@ -83,17 +80,17 @@ namespace VirtoCommerce.Platform.Data.Common
 
         public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<Task<T>> getValueFunction)
         {
-            return await cacheManager.GetAsync<T>(cacheKey, region, getValueFunction, true);
+            return await cacheManager.GetAsync(cacheKey, region, getValueFunction, true);
         }
 
-        public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<Task<T>> getValueFunction, bool cacheNullValue = true)
+        public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, Func<Task<T>> getValueFunction, bool cacheNullValue)
         {
             //http://sanjeev.dwivedi.net/?p=292
             var asyncLockObject = AsyncLock.GetLockByKey(cacheKey);
             var result = cacheManager.Get(cacheKey, region);
             if (result == null)
             {
-                using (var releaser = await asyncLockObject.LockAsync())
+                using (await asyncLockObject.LockAsync())
                 {
                     result = cacheManager.Get(cacheKey, region);
                     if (result == null)
@@ -115,11 +112,11 @@ namespace VirtoCommerce.Platform.Data.Common
 
         public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, Func<Task<T>> getValueFunction)
         {
-            return await cacheManager.GetAsync<T>(cacheKey, region, expiration, getValueFunction, true);
+            return await cacheManager.GetAsync(cacheKey, region, expiration, getValueFunction, true);
         }
         public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, Func<Task<T>> getValueFunction, bool cacheNullValue)
         {
-            return await cacheManager.GetAsync<T>(cacheKey, region, expiration, ExpirationMode.Sliding, getValueFunction, true);
+            return await cacheManager.GetAsync(cacheKey, region, expiration, ExpirationMode.Sliding, getValueFunction, true);
         }
         public static async Task<T> GetAsync<T>(this ICacheManager<object> cacheManager, string cacheKey, string region, TimeSpan expiration, ExpirationMode expirationMode, Func<Task<T>> getValueFunction, bool cacheNullValue)
         {
@@ -128,7 +125,7 @@ namespace VirtoCommerce.Platform.Data.Common
             {
                 //http://sanjeev.dwivedi.net/?p=292
                 var asyncLockObject = AsyncLock.GetLockByKey(cacheKey);
-                using (var releaser = await asyncLockObject.LockAsync())
+                using (await asyncLockObject.LockAsync())
                 {
                     result = cacheManager.Get(cacheKey, region);
                     if (result == null)

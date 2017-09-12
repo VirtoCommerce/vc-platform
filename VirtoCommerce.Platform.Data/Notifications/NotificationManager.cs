@@ -195,7 +195,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                                              && (n.StartSendingDate == null || n.StartSendingDate < DateTime.UtcNow));
                 }
                 retVal.TotalCount = query.Count();
-                retVal.Notifications = query.OrderBy(n => n.CreatedDate)
+                retVal.Notifications = query.OrderByDescending(n => n.CreatedDate)
                                             .Skip(criteria.Skip)
                                             .Take(criteria.Take)
                                             .ToArray()

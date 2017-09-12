@@ -139,7 +139,7 @@
 
 //        private IDynamicPropertyService GetDynamicPropertyService()
 //        {
-//            return new DynamicPropertyService(() => new PlatformRepository("VirtoCommerce", new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null)));
+//            return new DynamicPropertyService(() => new PlatformRepository(ConnectionStringHelper.GetConnectionString("VirtoCommerce"), new EntityPrimaryKeyGeneratorInterceptor(), new AuditableInterceptor(null)));
 //        }
 
 //    }
