@@ -1,10 +1,11 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', '$timeout', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, $timeout) {
+.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.i18n', '$timeout', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, i18n, $timeout) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
     blade.headIcon = 'fa-plus-square-o';
     blade.title = "platform.blades.propertyValue-list.title";
     blade.subtitle = "platform.blades.propertyValue-list.subtitle";
+    blade.currentLanguage = i18n.getLanguage();
 
     blade.refresh = function () {
         blade.data = blade.currentEntity;
