@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
     .filter('boolToValue', function () {
         return function (input, trueValue, falseValue) {
             return input ? trueValue : falseValue;
@@ -38,4 +38,10 @@
             return inputArray;
         }
     }])
-;
+    // translation with fall-back value if key not found
+    .filter('fallbackTranslate', ['$translate', function ($translate) {
+        return function (translateKey, fallbackValue) {
+            var result = $translate.instant(translateKey);
+            return result === translateKey ? fallbackValue : result;
+        };
+    }]);
