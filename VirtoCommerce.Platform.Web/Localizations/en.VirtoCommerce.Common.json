@@ -1,4 +1,4 @@
-﻿{
+{
   "platform": {
     "commands": {
       "add": "Add",
@@ -87,8 +87,8 @@
         "description": "Integer number."
       },
       "decimal": {
-        "title": "Number",
-        "description": "Digital input with float point."
+        "title": "Decimal Number",
+        "description": "Decimal number with precision 18 and scale 2."
       },
       "date-time": {
         "title": "Date time",
