@@ -186,12 +186,12 @@ namespace VirtoCommerce.Platform.Web
             if (IsApplication)
             {
                 AreaRegistration.RegisterAllAreas();
+                RouteConfig.RegisterRoutes(RouteTable.Routes);
             }
 
             // Register other MVC resources
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
 
