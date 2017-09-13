@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -407,13 +407,13 @@ namespace VirtoCommerce.Platform.Data.Security
         }
         #endregion
 
-        private ApplicationUserExtended FindByName(string userName, UserDetails detailsLevel)
+        protected virtual ApplicationUserExtended FindByName(string userName, UserDetails detailsLevel)
         {
             var user = GetApplicationUserByName(userName);
             return GetUserExtended(user, detailsLevel);
         }
 
-        private Permission[] LoadAllPermissions()
+        protected virtual Permission[] LoadAllPermissions()
         {
             var manifestPermissions = new List<Permission>();
 
@@ -437,7 +437,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return allPermissions;
         }
 
-        private SecurityResult ValidateUser(ApplicationUser dbUser)
+        protected virtual SecurityResult ValidateUser(ApplicationUser dbUser)
         {
             var result = new SecurityResult { Succeeded = true };
 
@@ -449,7 +449,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        private async Task<ApplicationUser> GetApplicationUserByIdAsync(string userId)
+        protected virtual async Task<ApplicationUser> GetApplicationUserByIdAsync(string userId)
         {
             var result = await _cacheManager.GetAsync($"GetUserById-{userId}", SecurityConstants.CacheRegion, async () =>
             {
@@ -462,7 +462,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        private ApplicationUser GetApplicationUserByName(string userName)
+        protected virtual ApplicationUser GetApplicationUserByName(string userName)
         {
             var result = _cacheManager.Get($"GetUserByName-{userName}", SecurityConstants.CacheRegion, () =>
             {
@@ -475,7 +475,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        private async Task<ApplicationUser> GetApplicationUserByNameAsync(string userName)
+        protected virtual async Task<ApplicationUser> GetApplicationUserByNameAsync(string userName)
         {
             var result = await _cacheManager.GetAsync($"GetUserByName-{userName}", SecurityConstants.CacheRegion, async () =>
             {
@@ -488,7 +488,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        private ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser, UserDetails detailsLevel)
+        protected virtual ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser, UserDetails detailsLevel)
         {
             ApplicationUserExtended result = null;
             if (applicationUser != null)
@@ -526,7 +526,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        private void ResetCache(string userId, string userName)
+        protected virtual void ResetCache(string userId, string userName)
         {
             _cacheManager.Remove($"GetUserById-{userId}", SecurityConstants.CacheRegion);
             _cacheManager.Remove($"GetUserByName-{userName}", SecurityConstants.CacheRegion);
@@ -535,8 +535,8 @@ namespace VirtoCommerce.Platform.Data.Security
                 _cacheManager.Remove($"GetUserByName-{userName}-{detailLevel}", SecurityConstants.CacheRegion);
             }
         }
-     
-        private ListDictionary<string, string> DetectAccountChanges(AccountEntity changedDbAccount, AccountEntity targetDbAcount)
+
+        protected virtual ListDictionary<string, string> DetectAccountChanges(AccountEntity changedDbAccount, AccountEntity targetDbAcount)
         {
             //Log changes
             var result = new ListDictionary<string, string>();
@@ -588,7 +588,7 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        private void SaveOperationLog(string objectId, string detail, EntryState entryState)
+        protected virtual void SaveOperationLog(string objectId, string detail, EntryState entryState)
         {
             var operation = new OperationLog
             {
@@ -600,7 +600,7 @@ namespace VirtoCommerce.Platform.Data.Security
             _changeLogService.SaveChanges(operation);
         }
 
-        private static void NormalizeUser(ApplicationUserExtended user)
+        protected virtual void NormalizeUser(ApplicationUserExtended user)
         {
             if (user.UserName != null)
                 user.UserName = user.UserName.Trim();
