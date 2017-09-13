@@ -17,7 +17,6 @@ The [`Virto Commerce`](https://github.com/virtocommerce/vc-platform) repository 
 ## Feedback
 
 * Ask a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/virtocommerce).
-* Request a new feature on [GitHub](CONTRIBUTING.md).
 * Vote for [popular feature requests](https://github.com/virtocommerce/vc-platform/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc).
 * File a bug in [GitHub Issues](https://github.com/virtocommerce/vc-platform/issues).
 * [Tweet](https://twitter.com/virtocommerce) us with other feedback.
