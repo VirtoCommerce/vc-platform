@@ -405,6 +405,27 @@ namespace VirtoCommerce.Platform.Data.Security
             var result = user != null ? user.Roles.SelectMany(x => x.Permissions).Distinct().ToArray() : Enumerable.Empty<Permission>().ToArray();
             return result;
         }
+
+        public virtual async Task<bool> IsUserLockedAsync(string userId)
+        {
+            using (var userManager = _userManagerFactory())
+            {
+                var result = await userManager.IsLockedOutAsync(userId);
+                return result;
+            }
+        }
+
+        public virtual async Task<SecurityResult> UnlockUserAsync(string userId)
+        {
+            using (var userManager = _userManagerFactory())
+            {
+                await userManager.ResetAccessFailedCountAsync(userId);
+                var  identityResult = await userManager.SetLockoutEndDateAsync(userId, DateTimeOffset.MinValue);
+                var result = identityResult.ToCoreModel();
+                return result;
+            }
+        }
+
         #endregion
 
         protected virtual ApplicationUserExtended FindByName(string userName, UserDetails detailsLevel)

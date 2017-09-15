@@ -21,6 +21,7 @@ namespace VirtoCommerce.Platform.Core.Security
         bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds);
         Permission[] GetAllPermissions();
         Permission[] GetUserPermissions(string userName);
-
+        Task<bool> IsUserLockedAsync(string userId);
+        Task<SecurityResult> UnlockUserAsync(string userId);
     }
 }

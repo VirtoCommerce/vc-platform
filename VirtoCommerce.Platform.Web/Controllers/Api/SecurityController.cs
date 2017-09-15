@@ -427,19 +427,33 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Delete users by name
+        /// Checks if user locked
         /// </summary>
-        /// <param name="names">An array of user names.</param>
-        [HttpDelete]
-        [Route("users")]
-        [ResponseType(typeof(void))]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityDelete)]
-        public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
+        /// <param name="id">User id</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("users/{id}/locked")]
+        [ResponseType(typeof(UserLockedResult))]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        public async Task<IHttpActionResult> IsUserLockedAsync(string id)
         {
-            EnsureThatUsersEditable(names);
+            var result = await _securityService.IsUserLockedAsync(id);
+            return Ok(new UserLockedResult(result));
+        }
 
-            await _securityService.DeleteAsync(names);
-            return StatusCode(HttpStatusCode.NoContent);
+        /// <summary>
+        /// Unlock user
+        /// </summary>
+        /// <param name="id">>User id</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("users/{id}/unlock")]
+        [ResponseType(typeof(SecurityResult))]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
+        public async Task<IHttpActionResult> UnlockUserAsync(string id)
+        {
+            var result = await _securityService.UnlockUserAsync(id);
+            return ProcessSecurityResult(result);
         }
 
 
