@@ -9,6 +9,6 @@
         resetPassword: { url: 'api/platform/security/users/:id/resetpassword', method: 'POST' },
         update: { method: 'PUT' },
         locked: { url: 'api/platform/security/users/:id/locked', method: 'GET' },
-        unlock: { url: 'api/platform/security/users/:id/unlock', metod: 'POST' }
+        unlock: { url: 'api/platform/security/users/:id/unlock', method: 'POST' }
     });
 }]);

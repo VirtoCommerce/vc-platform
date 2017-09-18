@@ -22,7 +22,7 @@
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
             isAccountlocked(blade.currentEntity.id).then(function (result) {
-                blade.currentEntity.lockedState = result.locked ? "Locked" : "Unlocked";
+                blade.accountLockedState = result.locked ? "Locked" : "Unlocked";
             }); 
             blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
             userStateCommand.updateName();
@@ -131,16 +131,23 @@
             },
             {
                 name: "platform.commands.unlock-account",
-                icon: 'fa fa-refresh',
+                icon: 'fa fa-unlock',
                 executeMethod: function () {
-                    account.unlock({ id: blade.currentEntity.id }, null, function(result) {
-                        if (result.isSussess) {
-                            return blade.currentEntity.lockedState = "Unlocked";
+                    blade.isLoading = true;
+                    accounts.unlock({ id: blade.currentEntity.id }, null, function (result) {
+                        if (result.succeeded) {
+                            blade.accountLockedState = "Unlocked";
                         }
+                        blade.isLoading = false;
+                    }, function (error) {
+                        bladeNavigationService.setError('Error ' + error.status, blade);
+                        blade.isLoading = false;
                     });
                 },
                 canExecuteMethod: function () {
-                    return blade.currentEntity.lockedState === "Locked";
+                    if (blade.accountLockedState)
+                        return blade.accountLockedState === "Locked";
+                    return false;
                 },
                 permission: blade.updatePermission
             }
