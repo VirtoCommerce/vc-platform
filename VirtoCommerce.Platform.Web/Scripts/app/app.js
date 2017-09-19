@@ -83,7 +83,7 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
                     i18n.changeTimeAgoSettings(userProfile.timeAgoSettings);
                     initializeMainMenu(userProfile);
                 });
-            };
+            }
         });
 
         // TODO: Fix me! we need to detect scripts, not languages + we use to letter language codes only
@@ -95,11 +95,11 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
         $scope.mainMenu = {};
         $scope.mainMenu.items = mainMenuService.menuItems;
 
-        $scope.onMainMenuChanged = function (mainMenu) {
+        $scope.onMainMenuChanged = function(mainMenu) {
             if ($scope.isAuthenticated) {
                 saveMainMenuState(mainMenu, userProfile);
             }
-        }
+        };
 
         function initializeMainMenu(profile) {
             if (profile.mainMenuState) {
@@ -292,7 +292,7 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
             //timeout need because $state not fully loading in run method and need to wait little time
             $timeout(function () {
                 if (authContext.isAuthenticated) {
-                    if (!$state.current.name || $state.current.name == 'loginDialog') {
+                    if (!$state.current.name || $state.current.name === 'loginDialog') {
                         $state.go('workspace');
                     }
                 }
@@ -318,22 +318,22 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
 
         String.prototype.hashCode = function () {
             var hash = 0, i, chr, len;
-            if (this.length == 0) return hash;
+            if (this.length === 0) return hash;
             for (i = 0, len = this.length; i < len; i++) {
                 chr = this.charCodeAt(i);
-                hash = ((hash << 5) - hash) + chr;
+                hash = (hash << 5) - hash + chr;
                 hash |= 0; // Convert to 32bit integer
             }
             return hash;
         };
 
-        String.prototype.capitalize = function () {
+        String.prototype.capitalize = function() {
             return this.charAt(0).toUpperCase() + this.substr(1).toLowerCase();
-        }
+        };
 
         if (!String.prototype.startsWith) {
-            String.prototype.startsWith = function (searchString, position) {
-                if (searchString && searchString.toString() == '[object RegExp]') {
+            String.prototype.startsWith = function(searchString, position) {
+                if (searchString && searchString.toString() === '[object RegExp]') {
                     throw TypeError();
                 }
                 var length = this.length;
@@ -345,13 +345,13 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
                 if (fromIndex + searchString.length > length) {
                     return false;
                 }
-                return this.indexOf(searchString, startIndex) == fromIndex;
-            }
+                return this.indexOf(searchString, startIndex) === fromIndex;
+            };
         }
 
         if (!String.prototype.endsWith) {
-            String.prototype.endsWith = function (searchString, position) {
-                if (searchString && searchString.toString() == '[object RegExp]') {
+            String.prototype.endsWith = function(searchString, position) {
+                if (searchString && searchString.toString() === '[object RegExp]') {
                     throw TypeError();
                 }
                 var length = this.length;
@@ -367,8 +367,8 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
                 if (fromIndex < 0) {
                     return false;
                 }
-                return this.lastIndexOf(searchString, fromIndex) == fromIndex;
-            }
+                return this.lastIndexOf(searchString, fromIndex) === fromIndex;
+            };
         }
 
         if (!angular.isDefined(Number.MIN_SAFE_INTEGER)) {
