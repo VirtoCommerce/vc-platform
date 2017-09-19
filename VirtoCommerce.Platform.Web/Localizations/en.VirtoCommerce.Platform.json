@@ -439,8 +439,9 @@
                     "account-email": "Email"
                 },
                 "placeholders": {
-                    "account-type": "Select ...",
-                    "email": "Enter email"
+                  "account-type": "Select ...",
+                  "email": "Enter email",
+                  "user-name": "Enter user name"  
                 }
             },
             "account-list": {
