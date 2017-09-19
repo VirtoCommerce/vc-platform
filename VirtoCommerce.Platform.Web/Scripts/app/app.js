@@ -1,4 +1,4 @@
-﻿var AppDependencies = [
+var AppDependencies = [
   'ui.router',
   'luegg.directives',
   'googlechart',
@@ -54,8 +54,10 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
 
 
         $scope.$on('httpError', function (event, error) {
-            if (bladeNavigationService.currentBlade) {
-                bladeNavigationService.setError(error.status + ': ' + error.statusText, bladeNavigationService.currentBlade);
+            if (!event.defaultPrevented) {
+                if (bladeNavigationService.currentBlade) {
+                    bladeNavigationService.setError(error.status + ': ' + error.statusText, bladeNavigationService.currentBlade);
+                }
             }
         });
 
