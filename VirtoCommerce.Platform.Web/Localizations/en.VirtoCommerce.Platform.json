@@ -430,14 +430,15 @@
             },
             "account-detail": {
                 "title-new": "New Account",
-                "labels": {
-                    "user-information": "User information",
-                    "is-administrator": "Is administrator",
-                    "account-type": "Account type",
-                    "login": "Login",
-                    "account-state": "Account state",
-                    "account-email": "Email"
-                },
+              "labels": {
+                "user-information": "User information",
+                "is-administrator": "Is administrator",
+                "account-type": "Account type",
+                "login": "Login",
+                "account-state": "Account state",
+                "account-email": "Email",
+                "locked-state": "Locked state" 
+              },
                 "placeholders": {
                     "account-type": "Select ...",
                     "email": "Enter email"
