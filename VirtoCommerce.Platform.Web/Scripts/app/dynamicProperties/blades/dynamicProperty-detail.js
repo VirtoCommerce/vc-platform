@@ -33,6 +33,10 @@
         return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'LongText' || blade.currentEntity.valueType === 'Html';
     };
 
+    $scope.dictionaryFlagValidator = function (value) {
+        return !value || blade.currentEntity.valueType === 'ShortText';
+    };
+
     $scope.openChild = function (childType) {
         var newBlade = {
             id: "propertyChild",

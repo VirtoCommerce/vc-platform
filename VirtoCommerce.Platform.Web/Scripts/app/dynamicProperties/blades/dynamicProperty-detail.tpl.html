@@ -54,7 +54,7 @@
                                     <label class="form-label">{{ 'platform.blades.dynamicProperty-detail.labels.dictionary' | translate }}</label>
                                     <div class="form-input">
                                         <label class="form-label __switch">
-                                            <input type="checkbox" ng-model="blade.currentEntity.isDictionary" ui-validate=" '!$value || blade.currentEntity.valueType === \' ShortText\'' " ui-validate-watch=" 'blade.currentEntity.valueType' " name="dictFlag">
+                                            <input type="checkbox" ng-model="blade.currentEntity.isDictionary" ui-validate=" 'dictionaryFlagValidator($value)' " ui-validate-watch=" 'blade.currentEntity.valueType' " name="dictFlag">
                                             <span class="switch"></span>
                                         </label>
                                     </div>
