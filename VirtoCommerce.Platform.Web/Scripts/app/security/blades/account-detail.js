@@ -6,9 +6,10 @@
         blade.promise = roles.search({ takeCount: 10000 }).$promise;
         blade.accountTypes = [];
 
-
         blade.refresh = function (parentRefresh) {
-            accounts.get({ id: blade.currentEntity ? blade.currentEntity.userName : blade.data.userName }, function (data) {
+            accounts.get({ id: blade.data.userName }, function (data) {
+
+
                 initializeBlade(data);
                 if (parentRefresh) {
                     blade.parentBlade.refresh();
@@ -17,14 +18,21 @@
             function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         }
 
-
         function initializeBlade(data) {
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
-            blade.isLoading = false;
+            isAccountlocked(blade.currentEntity.id).then(function (result) {
+                blade.accountLockedState = result.locked ? "Locked" : "Unlocked";
+            }); 
             blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
             userStateCommand.updateName();
+            blade.isLoading = false;
         };
+
+        function isAccountlocked(id) {
+            return accounts.locked({ id: id }).$promise;
+        }
+
 
         blade.metaFields = metaFormsService.getMetaFields("accountDetails");
 
@@ -48,11 +56,9 @@
             bladeNavigationService.showBlade(newBlade, blade);
 
         };
-
         $scope.setForm = function (form) {
             $scope.formScope = form;
         }
-
         $scope.saveChanges = function () {
             blade.isLoading = true;
 
@@ -96,7 +102,7 @@
                 executeMethod: function () {
                     $scope.saveChanges();
                 },
-                canExecuteMethod: canSave,
+                canExecuteMethod: isDirty,
                 permission: blade.updatePermission
             },
             {
@@ -126,6 +132,28 @@
                 },
                 canExecuteMethod: function () {
                     return true;
+                },
+                permission: blade.updatePermission
+            },
+            {
+                name: "platform.commands.unlock-account",
+                icon: 'fa fa-unlock',
+                executeMethod: function () {
+                    blade.isLoading = true;
+                    accounts.unlock({ id: blade.currentEntity.id }, null, function (result) {
+                        if (result.succeeded) {
+                            blade.accountLockedState = "Unlocked";
+                        }
+                        blade.isLoading = false;
+                    }, function (error) {
+                        bladeNavigationService.setError('Error ' + error.status, blade);
+                        blade.isLoading = false;
+                    });
+                },
+                canExecuteMethod: function () {
+                    if (blade.accountLockedState)
+                        return blade.accountLockedState === "Locked";
+                    return false;
                 },
                 permission: blade.updatePermission
             }
