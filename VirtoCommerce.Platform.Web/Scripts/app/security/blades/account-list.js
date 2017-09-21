@@ -23,7 +23,7 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
     };
 
     blade.selectNode = function (node) {
-        $scope.selectedNodeId = node.userName;
+        $scope.selectedNodeId = node.id;
 
         var newBlade = {
             id: 'listItemChild',

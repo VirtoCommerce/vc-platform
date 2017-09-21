@@ -8,7 +8,8 @@
 
 
         blade.refresh = function (parentRefresh) {
-            accounts.get({ id: blade.currentEntity ? blade.currentEntity.userName : blade.data.userName }, function (data) {
+            var entity = parentRefresh ? blade.currentEntity : blade.data;
+            accounts.get({ id: entity.userName }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
                     blade.parentBlade.refresh();
