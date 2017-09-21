@@ -133,6 +133,7 @@ namespace VirtoCommerce.Platform.Data.Security
             NormalizeUser(user);
 
             //Update ASP.NET indentity user
+            var userName = string.Empty;
             using (var userManager = _userManagerFactory())
             {
                 var dbUser = await userManager.FindByIdAsync(user.Id);
@@ -140,7 +141,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
                 if (result.Succeeded)
                 {
-                    var userName = dbUser.UserName;
+                    userName = dbUser.UserName;
 
                     //Update ASP.NET indentity user
                     user.Patch(dbUser);
@@ -157,7 +158,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 //Update platform security user
                 using (var repository = _platformRepository())
                 {
-                    var targetDbAcount = repository.GetAccountByName(user.UserName, UserDetails.Full);
+                    var targetDbAcount = repository.GetAccountByName(userName, UserDetails.Full);
 
                     if (targetDbAcount == null)
                     {
@@ -561,6 +562,10 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             //Log changes
             var result = new ListDictionary<string, string>();
+            if (changedDbAccount.UserName != targetDbAcount.UserName)
+            {
+                result.Add(SecurityAccountChangesResource.AccountUpdated, $"user name: {targetDbAcount.UserName} -> {changedDbAccount.UserName}");
+            }
             if (changedDbAccount.UserType != targetDbAcount.UserType)
             {
                 result.Add(SecurityAccountChangesResource.AccountUpdated, $"user type: {targetDbAcount.UserType} -> {changedDbAccount.UserType}");

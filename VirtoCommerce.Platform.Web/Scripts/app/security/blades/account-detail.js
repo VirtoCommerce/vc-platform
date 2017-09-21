@@ -7,9 +7,8 @@
         blade.accountTypes = [];
 
         blade.refresh = function (parentRefresh) {
-            accounts.get({ id: blade.data.userName }, function (data) {
-
-
+            var entity = parentRefresh ? blade.currentEntity : blade.data;
+            accounts.get({ id: entity.userName }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
                     blade.parentBlade.refresh();
@@ -40,6 +39,10 @@
             return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
         };
 
+        function canSave() {
+            return isDirty() && $scope.formScope && $scope.formScope.$valid;
+        }
+
         blade.openAccountTypeSettingManagement = function () {
             var newBlade = {
                 id: 'accountTypesDictionary',
@@ -52,7 +55,9 @@
             bladeNavigationService.showBlade(newBlade, blade);
 
         };
-
+        $scope.setForm = function (form) {
+            $scope.formScope = form;
+        }
         $scope.saveChanges = function () {
             blade.isLoading = true;
 

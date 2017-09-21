@@ -2,7 +2,9 @@
     <div class="blade-inner">
         <div class="inner-block clearfix">
             <div class="t __divider">{{ 'platform.blades.account-detail.labels.user-information' | translate }}</div>
-            <va-metaform registered-inputs="blade.metaFields" blade="blade" column-count="1" ng-init="setForm(formScope)"></va-metaform>
+            <form name="formScope">
+                <va-metaform registered-inputs="blade.metaFields" blade="blade" column-count="1" ng-init="setForm(formScope)"></va-metaform>
+            </form>
             <va-widget-container group="accountDetail" blade="blade" gridster-opts="{width: 396}"></va-widget-container>
         </div>
     </div>
@@ -24,12 +26,9 @@
         </ui-select>
     </div>
 </script>
+
 <script type="text/ng-template" id="accountInfo.html">
     <ul class="list __info">
-        <li class="list-item">
-            <div class="list-t">{{ 'platform.blades.account-detail.labels.login' | translate }}</div>
-            <div class="list-descr">{{blade.currentEntity.userName}}</div>
-        </li>
         <li class="list-item">
             <div class="list-t">{{ 'platform.blades.account-detail.labels.account-state' | translate }}</div>
             <div class="list-descr">{{blade.currentEntity.userState}}</div>
@@ -40,11 +39,22 @@
         </li>
     </ul>
 </script>
+
 <script type="text/ng-template" id="accountEmail.html">
     <div class="form-label">
-        {{ 'platform.blades.account-detail.labels.account-email' | translate }}     
+        {{ 'platform.blades.account-detail.labels.account-email' | translate }}
     </div>
     <div class="form-input">
         <input type="email" ng-model="blade.currentEntity.email" placeholder="{{'platform.blades.account-detail.placeholders.email' | translate}}" />
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="accountUserName.html">
+    <div class="form-label">
+        {{ 'platform.blades.account-detail.labels.login' | translate }}
+    </div>
+    <div class="form-input">
+        <input type="text" ng-model="blade.currentEntity.userName" placeholder="{{'platform.blades.account-detail.placeholders.user-name' | translate}}" required />
     </div>
 </script>
