@@ -1,4 +1,10 @@
-﻿<div class="blade-static __expanded">
+﻿<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+<div class="blade-static __expanded">
+    <style>
+        .breadcrumbs .menu .menu-item .menu-link {
+            max-width: 189px;
+        }
+    </style>
     <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
     <div class="form-group">
         <div class="form-input __other">
@@ -9,7 +15,6 @@
         </div>
     </div>
 </div>
-<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">
