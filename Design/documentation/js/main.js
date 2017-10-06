@@ -65,9 +65,11 @@ $(function (){
 
     $('section').each(function () {
         var self = $(this),
-            example = self.find('.example:not(.__bg), .example:not(.__tabs)');
+            example = self.find('.example');
 
-        example.before('<a class="preview-blade"><i class="fa fa-eye"></i>Preview in blade</a>');
+        if(!example.hasClass('__bg')) {
+            example.before('<a class="preview-blade"><i class="fa fa-eye"></i>Preview in blade</a>');
+        }
     });
 
     $('body').delegate('.reverse', 'click', function () {
