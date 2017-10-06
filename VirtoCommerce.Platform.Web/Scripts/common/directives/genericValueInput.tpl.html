@@ -1,6 +1,5 @@
 ﻿<div>
     <div id='valuePlaceHolder'></div>
-
     <script type="text/ng-template" id="dShortText.html">
         <div class="form-input">
             <input ng-required="currentEntity.isRequired"
@@ -44,7 +43,6 @@
                            ui-codemirror-opts="editorOptions"></ui-codemirror>
         </div>
     </script>
-
     <script type="text/ng-template" id="dInteger.html">
         <div class="form-input __number">
             <input smart-float num-type="integer"
@@ -53,7 +51,6 @@
                    placeholder="{{ 'platform.genericValueInput.placeholders.integer' | translate}}" />
         </div>
     </script>
-
     <script type="text/ng-template" id="dDecimal.html">
         <div class="form-input __number">
             <input smart-float num-type="float"
@@ -62,7 +59,6 @@
                    placeholder="{{ 'platform.genericValueInput.placeholders.number' | translate}}" />
         </div>
     </script>
-
     <script type="text/ng-template" id="dDateTime.html">
         <div class="form-input __calendar">
             <input ng-model="context.currentPropValues[0].value"
@@ -75,14 +71,12 @@
             </button>
         </div>
     </script>
-
     <script type="text/ng-template" id="dBoolean.html">
         <label class="form-label __switch">
             <input type="checkbox" ng-model="context.currentPropValues[0].value">
             <span class="switch"></span>
         </label>
     </script>
-
     <script type="text/ng-template" id="dShortText-multivalue.html">
         <tags-input ng-model="context.currentPropValues"
                     min-length="1"
@@ -109,30 +103,27 @@
                     placeholder="{{ 'platform.genericValueInput.placeholders.number-multivalue' | translate}}">
         </tags-input>
     </script>
-
     <script type="text/ng-template" id="dShortText-dictionary.html">
         <div class="form-input">
             <ui-select ng-model="context.currentPropValues[0]">
                 <ui-select-match placeholder="{{ 'platform.genericValueInput.placeholders.short-text-dictionary' | translate}}">{{$select.selected.name}}</ui-select-match>
-                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search} | orderBy: 'value'">
                     <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
         </div>
     </script>
-
 
     <script type="text/ng-template" id="dShortText-dictionary-multivalue.html">
         <div class="form-input">
             <ui-select multiple ng-model="context.currentPropValues">
                 <ui-select-match placeholder="{{ 'platform.genericValueInput.placeholders.short-text-dictionary-multivalue' | translate}}">{{$item.name}}</ui-select-match>
-                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search}">
+                <ui-select-choices repeat="propValue in context.allDictionaryValues | filter: {name: $select.search} | orderBy: 'value'">
                     <span ng-bind-html="propValue.name | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
         </div>
     </script>
-
     <script type="text/ng-template" id="dShortText-multilang.html">
         <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
             <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
@@ -158,7 +149,6 @@
         </div>
     </script>
 
-
     <script type="text/ng-template" id="dShortText-multivalue-multilang.html">
         <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
             <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
@@ -170,7 +160,6 @@
             </tags-input>
         </div>
     </script>
-
     <script type="text/ng-template" id="dShortText-dictionary-multilang.html">
         <div class="form-input">
             <ui-select ng-model="context.currentPropValues[0]">
@@ -185,7 +174,6 @@
             {{data.name}}
         </div>
     </script>
-
     <script type="text/ng-template" id="dShortText-dictionary-multivalue-multilang.html">
         <div class="form-input">
             <ui-select multiple ng-model="context.currentPropValues">

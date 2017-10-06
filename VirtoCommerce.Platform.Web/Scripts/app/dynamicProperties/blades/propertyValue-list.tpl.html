@@ -6,7 +6,7 @@
                 <fieldset ng-init="setForm(formScope)">
                     <div class="form-group list __info" ng-repeat="property in blade.currentEntities | orderBy: 'displayOrder'">
                         <label class="form-label" for="">
-                            {{property.name}}
+                            {{::property | localizeDynamicPropertyName:blade.currentLanguage}}
                             <a href="" ng-click="editDictionary(property)" ng-show="property.isDictionary" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
                         </label>
                         <va-generic-value-input ng-model="property" languages="languages" get-dictionary-values="getDictionaryValues"></va-generic-value-input>

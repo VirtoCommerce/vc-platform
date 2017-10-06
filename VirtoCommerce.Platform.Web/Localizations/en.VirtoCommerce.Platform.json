@@ -116,10 +116,6 @@
                     "localized-values": "Enter value"
                 }
             },
-            "property-valueType": {
-                "title": "Dynamic Property value type",
-                "subtitle": "Change value type"
-            },
             "propertyValue-list": {
                 "title": "Properties values",
                 "subtitle": "Edit properties values",
@@ -434,17 +430,19 @@
             },
             "account-detail": {
                 "title-new": "New Account",
-                "labels": {
-                    "user-information": "User information",
-                    "is-administrator": "Is administrator",
-                    "account-type": "Account type",
-                    "login": "Login",
-                    "account-state": "Account state",
-                    "account-email": "Email"
-                },
+              "labels": {
+                "user-information": "User information",
+                "is-administrator": "Is administrator",
+                "account-type": "Account type",
+                "login": "Login",
+                "account-state": "Account state",
+                "account-email": "Email",
+                "locked-state": "Locked state" 
+              },
                 "placeholders": {
-                    "account-type": "Select ...",
-                    "email": "Enter email"
+                  "account-type": "Select ...",
+                  "email": "Enter email",
+                  "user-name": "Enter user name"  
                 }
             },
             "account-list": {

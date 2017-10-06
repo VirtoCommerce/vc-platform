@@ -2347,6 +2347,10 @@ button.btn {
       top: 50%;
       width: 4px; }
   .breadcrumbs .menu-link {
+    max-width: 123px;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
     color: #43b0e6;
     font-size: 14px; }
     .breadcrumbs .menu-link:hover {
