@@ -35,11 +35,16 @@
                 <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
             </div>
             <ul ng-if="blade.currentEntity">
-                <div class="t __divider">{{ 'platform.blades.module-detail.labels.module-info' | translate }}</div>
+                <div class="t __divider">{{ 'platform.blades.module-detail.labels.module-info' | translate }}
+                    <img class="t-ico" src="Content/themes/main/images/approval-32.png" title="{{ 'platform.blades.module-detail.labels.official' | translate: blade.currentEntity }}" ng-if="blade.currentEntity.$isOwnedByVirto" />
+                </div>
                 <ul class="list __info">
                     <li class="list-item">
                         <div class="list-t">{{ 'platform.blades.module-detail.labels.title' | translate }}</div>
                         <div class="list-descr">{{blade.currentEntity.title}}</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.owners' | translate: blade.currentEntity }}</div>
                     </li>
                     <li class="list-item">
                         <div class="list-t">{{ 'platform.blades.module-detail.labels.authors' | translate }}</div>

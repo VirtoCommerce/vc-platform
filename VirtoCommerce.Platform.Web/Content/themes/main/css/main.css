@@ -337,7 +337,16 @@ h3 {
   border-style: solid;
   border-width: 1px 0;
   margin: 0 -20px 10px;
-  padding: 10px 20px; }
+  padding: 10px 20px;
+  position: relative; }
+  .t.__divider .t-ico {
+    position: absolute;
+    width: 32px;
+    background-size: 32px;
+    right: 20px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%); }
 
 .t.__divider + .t.__divider {
   margin-top: 20px; }
@@ -494,6 +503,8 @@ h3 {
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: middle; }
+  .table-t .table-descr {
+    display: inline; }
 
 .table-descr {
   color: #999; }
@@ -558,6 +569,11 @@ h3 {
     width: 100%; }
   .product-img img.image {
     height: auto; }
+  .product-img .table-badge {
+    position: absolute;
+    left: 1px;
+    top: 2px;
+    width: 16px; }
 
 .table-item:hover .product-img .image {
   background-color: #ecf7fc; }
