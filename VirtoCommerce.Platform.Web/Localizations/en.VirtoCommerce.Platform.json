@@ -1,4 +1,4 @@
-﻿{
+{
     "platform": {
         "menu": {
             "home": "Home",
@@ -306,28 +306,30 @@
             },
             "module-detail": {
                 "title": "Module information",
-                "labels": {
-                    "i-accept-the": "I accept the",
-                    "license-link": "license",
-                    "license": "License",
-                    "agreement": "agreement.",
-                    "install-from-file": "Install / update module from file",
-                    "select-module-file": "Upload a module (.zip) file from outside the central modules repository",
-                    "upload-progress": "Upload progress",
-                    "module-info": "Module info",
-                    "title": "Title",
-                    "author": "Author",
-                    "authors": "Authors",
-                    "id": "ID",
-                    "version": "Version",
-                    "project-information": "Project Information",
-                    "description": "Description",
-                    "platform-version": "Platform Version",
-                    "dependencies": "Dependencies",
-                    "tags": "Tags",
-                    "install-version": "Install version",
-                    "errors": "Errors"
-                }
+              "labels": {
+                "i-accept-the": "I accept the",
+                "license-link": "license",
+                "license": "License",
+                "agreement": "agreement.",
+                "install-from-file": "Install / update module from file",
+                "select-module-file": "Upload a module (.zip) file from outside the central modules repository",
+                "upload-progress": "Upload progress",
+                "module-info": "Module info",
+                "title": "Title",
+                "official": "Official module by {{$owner}}",
+                "owners": "Developed by {{$owner}}",
+                "author": "Author",
+                "authors": "Authors",
+                "id": "ID",
+                "version": "Version",
+                "project-information": "Project Information",
+                "description": "Description",
+                "platform-version": "Platform Version",
+                "dependencies": "Dependencies",
+                "tags": "Tags",
+                "install-version": "Install version",
+                "errors": "Errors"
+              }
             },
             "modules-main": {
                 "title": "Modules",

@@ -350,6 +350,7 @@
     <Content Include="Content\themes\main\fonts\Exo-2-italic\LICENSE.txt" />
     <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.svg" />
     <Content Include="Content\themes\main\fonts\Exo-2-regular\LICENSE.txt" />
+    <Content Include="Content\themes\main\images\approval-32.png" />
     <Content Include="Content\themes\main\images\grid.png" />
     <Content Include="Content\themes\main\images\logo.png" />
     <Content Include="Scripts\ai.0.22.19-build00125.js" />

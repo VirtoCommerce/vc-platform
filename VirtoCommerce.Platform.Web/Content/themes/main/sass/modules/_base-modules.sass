@@ -249,6 +249,14 @@ h3
   border-width: 1px 0
   margin: 0 -20px 10px
   padding: 10px 20px
+  position: relative
+  .t-ico
+    position: absolute
+    width: 32px
+    background-size: 32px
+    right: 20px
+    top: 50%
+    transform: translateY(-50%)
 
 .t.__divider + .t.__divider
   margin-top: 20px
@@ -388,6 +396,8 @@ h3
   overflow: hidden
   text-overflow: ellipsis
   vertical-align: middle
+  .table-descr
+    display: inline
 .table-descr
   color: $tableColor
 .table-progress
@@ -443,7 +453,12 @@ h3
     position: relative
     width: 100%
   img.image
-      height: auto;
+    height: auto
+  .table-badge
+    position: absolute
+    left: 1px
+    top: 2px
+    width: 16px
 .table-item:hover .product-img .image
   background-color: $productImgOver
 .table-item.__selected .product-img .image
