@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,6 +78,10 @@ namespace VirtoCommerce.Platform.Data.Settings
             else if (moduleSettingValueType.EqualsInvariant(ModuleSetting.TypeText))
             {
                 retVal = SettingValueType.LongText;
+            }
+            else if (moduleSettingValueType.EqualsInvariant(ModuleSetting.TypeDateTime))
+            {
+                retVal = SettingValueType.DateTime;
             }
             else if (moduleSettingValueType.EqualsInvariant(ModuleSetting.TypeJson))
             {

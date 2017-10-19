@@ -33,6 +33,10 @@
         return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'LongText' || blade.currentEntity.valueType === 'Html';
     };
 
+    $scope.dictionaryFlagValidator = function (value) {
+        return !value || blade.currentEntity.valueType === 'ShortText';
+    };
+
     $scope.openChild = function (childType) {
         var newBlade = {
             id: "propertyChild",
@@ -40,10 +44,6 @@
         };
 
         switch (childType) {
-            case 'valType':
-                newBlade.controller = 'platformWebApp.propertyValueTypeController';
-                newBlade.template = '$(Platform)/Scripts/app/dynamicProperties/blades/property-valueType.tpl.html';
-                break;
             case 'dict':
                 newBlade.isApiSave = !blade.isNew;
                 newBlade.controller = 'platformWebApp.propertyDictionaryController';
@@ -145,6 +145,44 @@
         }
         ];
     }
+
+    blade.valueTypes = [
+        {
+            valueType: "ShortText",
+            title: "platform.properties.short-text.title",
+            description: "platform.properties.short-text.description"
+        },
+        {
+            valueType: "LongText",
+            title: "platform.properties.long-text.title",
+            description: "platform.properties.long-text.description"
+        },
+        {
+            valueType: "Integer",
+            title: "platform.properties.integer.title",
+            description: "platform.properties.integer.description"
+        },
+        {
+            valueType: "Decimal",
+            title: "platform.properties.decimal.title",
+            description: "platform.properties.decimal.description"
+        },
+        {
+            valueType: "DateTime",
+            title: "platform.properties.date-time.title",
+            description: "platform.properties.date-time.description"
+        },
+        {
+            valueType: "Boolean",
+            title: "platform.properties.boolean.title",
+            description: "platform.properties.boolean.description"
+        },
+        {
+            valueType: "Html",
+            title: "platform.properties.html.title",
+            description: "platform.properties.html.description"
+        }
+    ];
 
     // on load: 
     blade.refresh();

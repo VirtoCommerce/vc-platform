@@ -184,14 +184,19 @@ namespace VirtoCommerce.Platform.Web
 
             // Register MVC areas unless running in the Web Platform Installer mode
             if (IsApplication)
-            {
+            { 
                 AreaRegistration.RegisterAllAreas();
             }
 
             // Register other MVC resources
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            if (IsApplication)
+            { 
+                RouteConfig.RegisterRoutes(RouteTable.Routes);
+            }
+
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
 

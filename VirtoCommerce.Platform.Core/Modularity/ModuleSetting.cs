@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Xml.Serialization;
 
 namespace VirtoCommerce.Platform.Core.Modularity
@@ -10,6 +10,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public const string TypeDecimal = "decimal";
         public const string TypeString = "string";
         public const string TypeText = "text";
+        public const string TypeDateTime = "dateTime";
         public const string TypeSecureString = "secureString";
         public const string TypeJson = "json";
 

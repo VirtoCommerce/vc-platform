@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.modulesMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', function ($scope, bladeNavigationService, modules, moduleHelper) {
     var blade = $scope.blade;
     var nodeUpdate, nodeAvailable, nodeInstalled;
@@ -20,6 +20,8 @@
                 if (x.tags) {
                     x.tagsArray = x.tags.split(' ');
                 }
+                x.$owner = x.owners.join(', ');
+                x.$isOwnedByVirto = _.contains(x.owners, 'Virto Commerce');
             });
 
             var newResults = [];
