@@ -126,6 +126,7 @@ namespace VirtoCommerce.Platform.Web
                 StartServer = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Jobs.Enabled", true),
                 JobStorageType = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Jobs.StorageType", "Memory"),
                 DatabaseConnectionString = connectionString,
+                WorkerCount = ConfigurationHelper.GetNullableAppSettingsValue("VirtoCommerce:Jobs.WorkerCount", (int?)null)
             };
             var hangfireLauncher = new HangfireLauncher(hangfireOptions);
 
