@@ -207,7 +207,11 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService) 
                     subtitle: scope.currentEntity.name,
                     controller: 'platformWebApp.assets.assetUploadController',
                     template: '$(Platform)/Scripts/app/assets/blades/asset-upload.tpl.html',
-                    isImageMode: true,
+                    fileUploadOptions: {
+                        singleFileMode: true,
+                        accept: "image/*",
+                        suppressParentRefresh: true
+                    },
                     onUploadComplete: function(data) {
                         if (data && data.length) {
                             scope.context.currentPropValues[0].value = data[0].url;

@@ -2,6 +2,9 @@
     .controller('platformWebApp.assets.assetUploadController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, assets, bladeNavigationService, FileUploader) {
         var blade = $scope.blade;
         var currentEntities;
+        if (!blade.fileUploadOptions) {
+            blade.fileUploadOptions = {};
+        }
 
         function initialize() {
             if (!$scope.uploader) {
@@ -15,7 +18,7 @@
                     removeAfterUpload: true
                 });
 
-                if (blade.isImageMode) {
+                if (blade.fileUploadOptions.accept && blade.fileUploadOptions.accept.contains('image')) {
                     uploader.filters.push({
                         name: 'imageFilter',
                         fn: function(item) {
@@ -48,9 +51,7 @@
                 };
 
                 uploader.onCompleteAll = function () {
-                    if (blade.parentBlade.refresh) {
-                        blade.parentBlade.refresh();
-                    }
+                    refreshParentBlade();
                     blade.uploadCompleted = true;
                 };
 
@@ -59,6 +60,12 @@
                         blade.onUploadComplete(images);
                     }
                 };
+            }
+        }
+
+        function refreshParentBlade() {
+            if (blade.parentBlade.refresh && !blade.fileUploadOptions.suppressParentRefresh) {
+                blade.parentBlade.refresh();
             }
         }
 
@@ -83,9 +90,7 @@
                 blade.uploadCompleted = false;
 
                 assets.uploadFromUrl({ folderUrl: blade.currentEntityId, url: blade.newExternalImageUrl }, function (data) {
-                    if (blade.parentBlade.refresh) {
-                        blade.parentBlade.refresh();
-                    }
+                    refreshParentBlade();
                     if (blade.onUploadComplete) {
                         blade.onUploadComplete(data);
                     }
