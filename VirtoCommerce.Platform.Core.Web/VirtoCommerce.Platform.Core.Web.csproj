@@ -59,7 +59,6 @@
     <Compile Include="Assets\BlobStorageMultipartStreamProvider.cs" />
     <Compile Include="Assets\CustomMultipartStreamProvider.cs" />
     <Compile Include="Common\HostingEnvironmentPathMapper.cs" />
-    <Compile Include="Jobs\JobPriority.cs" />
     <Compile Include="Security\Authentication\Basic\AuthenticationChallengeResult.cs" />
     <Compile Include="Security\Authentication\Basic\AuthenticationFailureResult.cs" />
     <Compile Include="Security\Authentication\Basic\BasicAuthenticationAttribute.cs" />
