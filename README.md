@@ -1,6 +1,6 @@
 [![Build Status](http://ci.virtocommerce.com/buildStatus/icon?job=vc-2-org/vc-platform/master)](http://ci.virtocommerce.com/job/vc-2-org/job/vc-platform/job/master/)
 [![Join the chat at https://gitter.im/VirtoCommerce/vc-community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/VirtoCommerce/vc-community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Lines of code](https://sonarcloud.io/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)](https://sonarcloud.io/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)
+[![Lines of code](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)
 
 Virto Commerce is the second generation release and is the only enterprise level e-commerce product fully available under <a href="https://virtocommerce.com/open-source-license" target="_blank">Virto Commerce Open Source License</a>. Virto Commerce is based on .NET 4.6 (soon to be migrated to .net core) with extensive use of MVC, IoC, EF, Azure, Angular JS and many other cutting edge technologies. It can be deployed in Microsoft Cloud (Azure), Amazon Web Services (AWS) and on-premise. It also support Docker deployment and images can be found on docker.io.
 
