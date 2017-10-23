@@ -105,7 +105,11 @@
       },
       "undefined": {
         "title": "Undefined"
-      }
+      },
+      "image": {
+        "title": "Image",
+        "description": "Image type."
+      } 
     },
     "genericValueInput": {
         "placeholders": {

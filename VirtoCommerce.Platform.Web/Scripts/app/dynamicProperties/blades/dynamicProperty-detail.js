@@ -181,6 +181,11 @@
             valueType: "Html",
             title: "platform.properties.html.title",
             description: "platform.properties.html.description"
+        },
+        {
+            valueType: "Image",
+            title: "platform.properties.image.title",
+            description: "platform.properties.image.description"
         }
     ];
 
