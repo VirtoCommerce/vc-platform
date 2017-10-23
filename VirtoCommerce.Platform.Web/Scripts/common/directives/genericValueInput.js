@@ -211,13 +211,14 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService) 
                         singleFileMode: true,
                         accept: "image/*",
                         suppressParentRefresh: true
-                    },
-                    onUploadComplete: function(data) {
-                        if (data && data.length) {
-                            scope.context.currentPropValues[0].value = data[0].url;
-                        }
                     }
                 };
+                newBlade.onUploadComplete = function(data) {
+                    if (data && data.length) {
+                        scope.context.currentPropValues[0].value = data[0].url;
+                        bladeNavigationService.closeBlade(newBlade);
+                    }
+                }
 
                 //saving orig blade reference (that is not imageUpload blade) for subsequent showBlade calls
                 if (!originalBlade) {
@@ -228,6 +229,10 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService) 
 
             scope.clearImage = function () {
                 scope.context.currentPropValues[0].value = undefined;
+            }
+
+            scope.openUrl = function (url) {
+                window.open(url, '_blank');
             }
         }
     }
