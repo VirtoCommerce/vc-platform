@@ -227,6 +227,7 @@
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
+    <Compile Include="Infrastructure\RepositoryExtensions.cs" />
     <Compile Include="Settings\SettingManager.cs" />
     <Compile Include="Settings\SettingConstants.cs" />
     <Compile Include="Settings\SettingExtensions.cs" />
