@@ -367,6 +367,7 @@
     <Content Include="Scripts\app\security\login\resetPassword.tpl.html" />
     <Content Include="Scripts\app\security\login\forgotPassword.tpl.html" />
     <Content Include="Scripts\app\userProfile\userProfile.js" />
+    <Content Include="Scripts\common\directives\multipleAttr.js" />
     <Content Include="Scripts\common\directives\tooltip.js" />
     <Content Include="Scripts\common\directives\metaform.js" />
     <Content Include="Scripts\common\directives\metaform.tpl.html" />

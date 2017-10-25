@@ -1,5 +1,6 @@
 angular.module('platformWebApp')
-.directive('vaGenericValueInput', ['$compile', '$templateCache', '$http', 'platformWebApp.objCompareService', function ($compile, $templateCache, $http, objComparer) {
+.directive('vaGenericValueInput', ['$compile', '$templateCache', '$http', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService',
+function ($compile, $templateCache, $http, objComparer, bladeNavigationService) {
 
     return {
         restrict: 'E',
@@ -195,6 +196,44 @@ angular.module('platformWebApp')
             linker(function (clone) {
                 element.append(clone);
             });
+
+            /* Image */
+            var originalBlade;
+            scope.uploadImage = function() {
+                var newBlade = {
+                    id: "imageUpload",
+                    currentEntityId: 'dynamicPropertyImages',
+                    title: 'platform.blades.asset-upload.title',
+                    subtitle: scope.currentEntity.name,
+                    controller: 'platformWebApp.assets.assetUploadController',
+                    template: '$(Platform)/Scripts/app/assets/blades/asset-upload.tpl.html',
+                    fileUploadOptions: {
+                        singleFileMode: true,
+                        accept: "image/*",
+                        suppressParentRefresh: true
+                    }
+                };
+                newBlade.onUploadComplete = function(data) {
+                    if (data && data.length) {
+                        scope.context.currentPropValues[0].value = data[0].url;
+                        bladeNavigationService.closeBlade(newBlade);
+                    }
+                }
+
+                //saving orig blade reference (that is not imageUpload blade) for subsequent showBlade calls
+                if (!originalBlade) {
+                    originalBlade = bladeNavigationService.currentBlade.id !== "imageUpload" ? bladeNavigationService.currentBlade : bladeNavigationService.currentBlade.parentBlade;
+                }
+                bladeNavigationService.showBlade(newBlade, originalBlade);
+            }
+
+            scope.clearImage = function () {
+                scope.context.currentPropValues[0].value = undefined;
+            }
+
+            scope.openUrl = function (url) {
+                window.open(url, '_blank');
+            }
         }
     }
 }]);
