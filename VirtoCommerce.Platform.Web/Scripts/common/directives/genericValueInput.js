@@ -202,7 +202,7 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService) 
             scope.uploadImage = function() {
                 var newBlade = {
                     id: "imageUpload",
-                    currentEntityId: 'dynamicPropertyImages',
+                    currentEntityId: 'images',
                     title: 'platform.blades.asset-upload.title',
                     subtitle: scope.currentEntity.name,
                     controller: 'platformWebApp.assets.assetUploadController',
