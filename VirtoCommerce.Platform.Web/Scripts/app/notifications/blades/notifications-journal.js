@@ -9,7 +9,8 @@
                 objectId: blade.objectId,
                 objectTypeId: blade.objectTypeId,
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-                count: $scope.pageSettings.itemsPerPageCount
+                count: $scope.pageSettings.itemsPerPageCount,
+                sort: uiGridHelper.getSortExpression($scope)
             }, function (data) {
                 blade.currentEntities = data.notifications;
                 $scope.pageSettings.totalItems = data.totalCount;
@@ -55,7 +56,9 @@
 
         // ui-grid
         $scope.setGridOptions = function (gridOptions) {
-            uiGridHelper.initialize($scope, gridOptions);
+            uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
+                uiGridHelper.bindRefreshOnSortChanged($scope);
+            });
             bladeUtils.initializePagination($scope);
         };
     }]);
