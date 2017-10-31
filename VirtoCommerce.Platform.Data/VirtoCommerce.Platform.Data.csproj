@@ -224,6 +224,10 @@
     <Compile Include="Repositories\Migrations\201707140957043_DynamicPropertyAddDisplayOrder.Designer.cs">
       <DependentUpon>201707140957043_DynamicPropertyAddDisplayOrder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201710311021135_NewIndexes2.cs" />
+    <Compile Include="Repositories\Migrations\201710311021135_NewIndexes2.Designer.cs">
+      <DependentUpon>201710311021135_NewIndexes2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -310,6 +314,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201707140957043_DynamicPropertyAddDisplayOrder.resx">
       <DependentUpon>201707140957043_DynamicPropertyAddDisplayOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201710311021135_NewIndexes2.resx">
+      <DependentUpon>201710311021135_NewIndexes2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

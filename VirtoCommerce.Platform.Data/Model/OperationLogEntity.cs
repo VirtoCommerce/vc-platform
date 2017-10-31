@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,12 @@ namespace VirtoCommerce.Platform.Data.Model
 	{
 
 		[StringLength(50)]
-		public string ObjectType { get; set; }
+        [Index("IX_ObjectType_ObjectId", 1)]
+        public string ObjectType { get; set; }
 
 		[StringLength(200)]
-		public string ObjectId { get; set; }
+        [Index("IX_ObjectType_ObjectId", 2)]
+        public string ObjectId { get; set; }
 
 		[Required]
 		[StringLength(20)]

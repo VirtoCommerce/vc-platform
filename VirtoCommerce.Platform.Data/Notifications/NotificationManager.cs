@@ -195,8 +195,15 @@ namespace VirtoCommerce.Platform.Data.Notifications
                                              && (n.StartSendingDate == null || n.StartSendingDate < DateTime.UtcNow));
                 }
                 retVal.TotalCount = query.Count();
-                retVal.Notifications = query.OrderByDescending(n => n.CreatedDate)
-                                            .Skip(criteria.Skip)
+
+                var sortInfos = criteria.SortInfos;
+                if (sortInfos.IsNullOrEmpty())
+                {
+                    sortInfos = new[] { new SortInfo { SortColumn = "CreatedDate", SortDirection = SortDirection.Descending } };
+                }
+                query = query.OrderBySortInfos(sortInfos);
+
+                retVal.Notifications = query.Skip(criteria.Skip)
                                             .Take(criteria.Take)
                                             .ToArray()
                                             .Select(x => GetNotificationCoreModel(x))

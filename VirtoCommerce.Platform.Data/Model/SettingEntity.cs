@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
@@ -18,9 +19,11 @@ namespace VirtoCommerce.Platform.Data.Model
         }
 
         [StringLength(128)]
+        [Index("IX_ObjectType_ObjectId", 1)]
         public string ObjectType { get; set; }
 
         [StringLength(128)]
+        [Index("IX_ObjectType_ObjectId", 2)]
         public string ObjectId { get; set; }
 
         [StringLength(128)]
