@@ -13,6 +13,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public const string TypeBoolean = "Boolean";
         public const string TypeDateTime = "DateTime";
         public const string TypeHtml = "Html";
+        public const string TypeImage = "Image";
 
         [StringLength(256)]
         public string ObjectType { get; set; }
@@ -59,6 +60,7 @@ namespace VirtoCommerce.Platform.Data.Model
                     return IntegerValue;
                 case TypeLongText:
                 case TypeHtml:
+                case TypeImage:
                     return LongTextValue;
                 case TypeShortText:
                     return ShortTextValue;
@@ -84,6 +86,7 @@ namespace VirtoCommerce.Platform.Data.Model
                     return IntegerValue == null ? null : IntegerValue.Value.ToString(formatProvider);
                 case TypeLongText:
                 case TypeHtml:
+                case TypeImage:
                     return LongTextValue;
                 case TypeShortText:
                     return ShortTextValue;

@@ -31,6 +31,9 @@ namespace VirtoCommerce.Platform.Core.Common
 			if (Object.ReferenceEquals(this, other))
 				return true;
 
+            if (GetType() != other.GetType())
+                return false;
+
             //compare all public properties
             PropertyInfo[] publicProperties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
@@ -75,7 +78,10 @@ namespace VirtoCommerce.Platform.Core.Common
 			if (Object.ReferenceEquals(this, obj))
 				return true;
 
-			ValueObject<TValueObject> item = obj as ValueObject<TValueObject>;
+            if (GetType() != obj.GetType())
+                return false;
+
+            ValueObject<TValueObject> item = obj as ValueObject<TValueObject>;
 
 			if ((object)item != null)
 				return Equals((TValueObject)item);

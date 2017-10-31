@@ -119,19 +119,25 @@
                 priority: 0
             },
             {
+                name: "userName",
+                templateUrl: "accountUserName.html",
+                priority: 1,
+                isRequired: true
+            },
+            {
                 name: "email",
                 templateUrl: "accountEmail.html",
-                priority: 1
+                priority: 2
             },
             {
                 name: "accountType",
                 templateUrl: "accountTypeSelector.html",
-                priority: 2
+                priority: 3
             },
             {
                 name: "accountInfo",
                 templateUrl: "accountInfo.html",
-                priority: 3
+                priority: 4
             }
         ]);
 

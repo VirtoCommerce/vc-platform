@@ -1,4 +1,4 @@
-﻿using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Platform.Data.Security.Identity
 {
@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             {
                 Id = "1eb2fa8ac6574541afdb525833dadb46",
                 UserName = "admin",
-                PasswordHash = "AHQSmKnSLYrzj9vtdDWWnUXojjpmuDW2cHvWloGL9UL3TC9UCfBmbIuR2YCyg4BpNg==",
+                PasswordHash = GetPasswordHash(),
                 SecurityStamp = string.Empty,
                 EmailConfirmed = true,
                 LockoutEnabled = true,
@@ -22,13 +22,18 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             {
                 Id = "9b605a3096ba4cc8bc0b8d80c397c59f",
                 UserName = "frontend",
-                PasswordHash = "AHQSmKnSLYrzj9vtdDWWnUXojjpmuDW2cHvWloGL9UL3TC9UCfBmbIuR2YCyg4BpNg==",
+                PasswordHash = GetPasswordHash(),
                 SecurityStamp = string.Empty,
                 EmailConfirmed = true,
                 LockoutEnabled = true,
             });
 
             context.SaveChanges();
+        }
+
+        private string GetPasswordHash()
+        {
+            return "AHQSmKnSLYrzj9vtdDWWnUXojjpmuDW2cHvWloGL9UL3TC9UCfBmbIuR2YCyg4BpNg==";
         }
     }
 }

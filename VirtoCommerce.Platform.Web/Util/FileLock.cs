@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+using System;
 using System.IO;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -7,8 +6,8 @@ namespace VirtoCommerce.Platform.Web.Util
 {
     public class FileLockContent
     {
-        public Guid Token;
-        public long Timestamp;
+        public Guid Token { get; set; }
+        public long Timestamp { get; set; }
     }
 
     /// <summary>
@@ -18,15 +17,16 @@ namespace VirtoCommerce.Platform.Web.Util
     public class FileLock
     {
         private readonly Guid _token;
+
         public FileLock(string lockFilePath, TimeSpan lockTimeout)
         {
             LockTimeout = lockTimeout;
             LockFilePath = lockFilePath;
-            _token = Guid.NewGuid();         
+            _token = Guid.NewGuid();
         }
 
-        public TimeSpan LockTimeout { get; private set; }
-        public string LockFilePath { get; private set; }
+        public TimeSpan LockTimeout { get; }
+        public string LockFilePath { get; }
 
         public bool TryAcquireLock()
         {
@@ -44,20 +44,21 @@ namespace VirtoCommerce.Platform.Web.Util
                         //or the lock has not timed out - we can't acquire it
                         retVal = lockContent.Token == _token || Math.Abs((DateTime.UtcNow - lockWriteTime).TotalSeconds) > LockTimeout.TotalSeconds;
                     }
-                }             
+                }
                 catch (IOException)
                 {
                     retVal = false;
                 }
-                catch (Exception) //We have no idea what went wrong - reacquire this lock
+                catch (Exception)
                 {
+                    // Something went wrong - reacquire this lock
                 }
             }
 
             //Acquire the lock
             if (retVal)
             {
-                var lockContent = new FileLockContent()
+                var lockContent = new FileLockContent
                 {
                     Timestamp = DateTime.UtcNow.Ticks,
                     Token = _token
@@ -81,6 +82,7 @@ namespace VirtoCommerce.Platform.Web.Util
                 }
                 catch (Exception)
                 {
+                    // ignored
                 }
             }
         }

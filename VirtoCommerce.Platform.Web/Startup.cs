@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,6 +12,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using CacheManager.Core;
 using CacheManager.Core.Configuration;
+using CacheManager.Redis;
 using Common.Logging;
 using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -125,6 +126,7 @@ namespace VirtoCommerce.Platform.Web
                 StartServer = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Jobs.Enabled", true),
                 JobStorageType = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Jobs.StorageType", "Memory"),
                 DatabaseConnectionString = connectionString,
+                WorkerCount = ConfigurationHelper.GetNullableAppSettingsValue("VirtoCommerce:Jobs.WorkerCount", (int?)null)
             };
             var hangfireLauncher = new HangfireLauncher(hangfireOptions);
 
@@ -183,14 +185,19 @@ namespace VirtoCommerce.Platform.Web
 
             // Register MVC areas unless running in the Web Platform Installer mode
             if (IsApplication)
-            {
+            { 
                 AreaRegistration.RegisterAllAreas();
             }
 
             // Register other MVC resources
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            if (IsApplication)
+            { 
+                RouteConfig.RegisterRoutes(RouteTable.Routes);
+            }
+
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
 
@@ -273,13 +280,26 @@ namespace VirtoCommerce.Platform.Web
                 moduleManager.PostInitializeModule(module);
             }
 
-            // SignalR
+            var redisConnectionString = ConfigurationManager.ConnectionStrings["RedisConnectionString"];
+
+            // Redis
+            if (redisConnectionString != null && !string.IsNullOrEmpty(redisConnectionString.ConnectionString))
+            {
+                // Cache
+                RedisConfigurations.AddConfiguration(new RedisConfiguration("redisConnectionString", redisConnectionString.ConnectionString));
+
+                // SignalR
+                // https://stackoverflow.com/questions/29885470/signalr-scaleout-on-azure-rediscache-connection-issues
+                GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(redisConnectionString.ConnectionString, "VirtoCommerce.Platform.SignalR"));
+            }
+
+            // SignalR 
             var tempCounterManager = new TempPerformanceCounterManager();
             GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
             var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
             app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);
 
-            // Initialize InstrumentationKey from EnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY")
+            // Initialize InstrumentationKey from EnvironmentVariable
             var appInsightKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
 
             if (!string.IsNullOrEmpty(appInsightKey))

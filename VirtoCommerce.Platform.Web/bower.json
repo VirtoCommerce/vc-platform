@@ -23,7 +23,7 @@
     "angular-ui-sortable": "0.13.4",
     "angular-ui-utils": "3.0.0",
     "angular-google-chart": "0.0.11",
-    "angular-gridster": "0.13.5",
+    "angular-gridster": "0.13.15",
     "angular-translate": "2.15.1",
     "angular-translate-loader-url": "2.15.1",
     "angular-translate-storage-local": "2.15.1",

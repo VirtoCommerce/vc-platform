@@ -120,8 +120,8 @@
     <Reference Include="Microsoft.ApplicationInsights, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.4.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationInsights.NLogTarget, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.NLogTarget.2.2.0\lib\net45\Microsoft.ApplicationInsights.NLogTarget.dll</HintPath>
+    <Reference Include="Microsoft.ApplicationInsights.NLogTarget, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.NLogTarget.2.4.1\lib\net45\Microsoft.ApplicationInsights.NLogTarget.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -132,8 +132,11 @@
     <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Redis, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Redis.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Redis.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.0\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
@@ -216,8 +219,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
@@ -347,6 +350,7 @@
     <Content Include="Content\themes\main\fonts\Exo-2-italic\LICENSE.txt" />
     <Content Include="Content\themes\main\fonts\Exo-2-regular\Exo-2-regular.svg" />
     <Content Include="Content\themes\main\fonts\Exo-2-regular\LICENSE.txt" />
+    <Content Include="Content\themes\main\images\approval-32.png" />
     <Content Include="Content\themes\main\images\grid.png" />
     <Content Include="Content\themes\main\images\logo.png" />
     <Content Include="Scripts\ai.0.22.19-build00125.js" />
@@ -363,6 +367,7 @@
     <Content Include="Scripts\app\security\login\resetPassword.tpl.html" />
     <Content Include="Scripts\app\security\login\forgotPassword.tpl.html" />
     <Content Include="Scripts\app\userProfile\userProfile.js" />
+    <Content Include="Scripts\common\directives\multipleAttr.js" />
     <Content Include="Scripts\common\directives\tooltip.js" />
     <Content Include="Scripts\common\directives\metaform.js" />
     <Content Include="Scripts\common\directives\metaform.tpl.html" />
@@ -525,8 +530,6 @@
     <Content Include="Scripts\app\dynamicProperties\blades\propertyValue-list.tpl.html" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-dictionary.js" />
     <Content Include="Scripts\app\dynamicProperties\blades\property-dictionary.tpl.html" />
-    <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.js" />
-    <Content Include="Scripts\app\dynamicProperties\blades\property-valueType.tpl.html" />
     <Content Include="Scripts\app\security\blades\common\scope-value-pick-from-simple-list.js" />
     <Content Include="Scripts\app\security\blades\common\scope-value-pick-from-simple-list.tpl.html" />
     <Content Include="Scripts\app\security\blades\permission-scopes.js" />
@@ -730,7 +733,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Swagger\UI\index.html" />
     <EmbeddedResource Include="Swagger\UI\logo_small.png" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Swagger\UI\swagger-ui.js" />
     <EmbeddedResource Include="Swagger\UI\vc.css" />
     <EmbeddedResource Include="Swagger\UI\swagger-ui.min.js" />
