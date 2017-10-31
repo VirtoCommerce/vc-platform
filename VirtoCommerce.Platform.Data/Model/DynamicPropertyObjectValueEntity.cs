@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
@@ -16,9 +17,11 @@ namespace VirtoCommerce.Platform.Data.Model
         public const string TypeImage = "Image";
 
         [StringLength(256)]
+        [Index("IX_ObjectType_ObjectId", 1)]
         public string ObjectType { get; set; }
 
         [StringLength(128)]
+        [Index("IX_ObjectType_ObjectId", 2)]
         public string ObjectId { get; set; }
 
         [StringLength(64)]
