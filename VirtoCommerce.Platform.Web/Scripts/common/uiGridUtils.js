@@ -1,4 +1,4 @@
-angular.module('platformWebApp')
+﻿angular.module('platformWebApp')
     .config(['$provide', 'uiGridConstants', function ($provide, uiGridConstants) {
         $provide.decorator('GridOptions', ['$delegate', '$localStorage', '$translate', 'platformWebApp.bladeNavigationService', function ($delegate, $localStorage, $translate, bladeNavigationService) {
             var gridOptions = angular.copy($delegate);
@@ -185,11 +185,17 @@ angular.module('platformWebApp')
         };
 
         retVal.getSortExpression = function ($scope) {
-            var columnDefs = $scope.gridApi ? $scope.gridApi.grid.columns : $scope.gridOptions.columnDefs;
+            var columnDefs;
+            if ($scope.gridApi) {
+                columnDefs = $scope.gridApi.grid.columns;
+            } else {
+                var savedState = $localStorage['gridState:' + $scope.blade.template];
+                columnDefs = savedState ? savedState.columns : $scope.gridOptions.columnDefs;
+            }
+
             var sorts = _.filter(columnDefs, function (x) {
                 return x.name !== '$path' && x.sort && (x.sort.direction === uiGridConstants.ASC || x.sort.direction === uiGridConstants.DESC);
             });
-
             sorts = _.sortBy(sorts, function (x) {
                 return x.sort.priority;
             });
