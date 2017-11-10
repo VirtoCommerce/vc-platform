@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                     TargetDatabase = new DbConnectionInfo(context.Database.Connection.ConnectionString, "System.Data.SqlClient")
                 };
 
-                var commandTimeout = ConfigurationHelper.GetNullableAppSettingsValue<int>("VirtoCommerce:DbMigration:CommandTimeout", null);
+                var commandTimeout = ConfigurationHelper.GetNullableAppSettingsValue<int>("VirtoCommerce:DbMigration.CommandTimeout", null);
                 if (commandTimeout.HasValue)
                     _config.CommandTimeout = commandTimeout;
             }
