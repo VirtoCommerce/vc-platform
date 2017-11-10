@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Hangfire.SqlServer;
@@ -6,6 +6,7 @@ using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Web.Jobs;
 
 namespace VirtoCommerce.Platform.Web.Hangfire
 {
@@ -53,7 +54,20 @@ namespace VirtoCommerce.Platform.Web.Hangfire
             // Configure Hangfire server
             if (_options.StartServer)
             {
-                app.UseHangfireServer(new BackgroundJobServerOptions { Activator = new UnityJobActivator(container) });
+                var serverOptions = new BackgroundJobServerOptions
+                {
+                    Activator = new UnityJobActivator(container),
+
+                    // Create some queues for job prioritization.
+                    // Normal equals 'default', because Hangfire depends on it.
+                    Queues = new[] {JobPriority.High, JobPriority.Normal, JobPriority.Low}
+                };
+
+                // Allow tweaking worker thread count.
+                if (_options.WorkerCount.HasValue)
+                    serverOptions.WorkerCount = _options.WorkerCount.Value;
+
+                app.UseHangfireServer(serverOptions);
             }
         }
 

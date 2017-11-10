@@ -77,12 +77,32 @@ namespace VirtoCommerce.Platform.Core.Common
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            return GetAppSettingsValue<string>(name, null);
+            return GetAppSettingsStringValue(name);
         }
 
         [CLSCompliant(false)]
         public static T GetAppSettingsValue<T>(string name, T defaultValue)
             where T : IConvertible
+        {
+            var stringValue = GetAppSettingsStringValue(name);
+
+            return string.IsNullOrEmpty(stringValue)
+                ? defaultValue
+                : (T) Convert.ChangeType(stringValue, typeof(T));
+        }
+
+        [CLSCompliant(false)]
+        public static T? GetNullableAppSettingsValue<T>(string name, T? defaultValue)
+            where T : struct, IConvertible
+        {
+            var stringValue = GetAppSettingsStringValue(name);
+
+            return string.IsNullOrEmpty(stringValue)
+                ? defaultValue
+                : (T) Convert.ChangeType(stringValue, typeof(T));
+        }
+
+        private static string GetAppSettingsStringValue(string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
@@ -94,11 +114,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 value = ConfigurationManager.AppSettings[name];
             }
 
-            var result = value != null
-                ? (T)Convert.ChangeType(value, typeof(T))
-                : defaultValue;
-
-            return result;
+            return value;
         }
 
         public static IList<string> GetAppSettingsNames()
