@@ -180,7 +180,9 @@
                     if (externalRegisterApiCallback) {
                         externalRegisterApiCallback(gridApi);
                     }
-                }
+                },
+                infiniteScrollRowsFromEnd: 10,
+                infiniteScrollDown: true
             }, gridOptions);
         };
 
@@ -212,14 +214,8 @@
         };
 
         retVal.bindInfinityScroll = function ($scope) {
-
-            if ($scope.settings.general.infitityScroll) {
-                $scope.gridOptions = angular.extend({
-                    infiniteScrollRowsFromEnd: 10,
-                    infiniteScrollDown: true
-                }, $scope.gridOptions);
-
-                $scope.gridApi.infiniteScroll.on.needLoadMoreData($scope, $scope.getDataDown);
+            if ($scope.infinityScroll) {
+                $scope.gridApi.infiniteScroll.on.needLoadMoreData($scope, $scope.showMore);
             }
         };
 
