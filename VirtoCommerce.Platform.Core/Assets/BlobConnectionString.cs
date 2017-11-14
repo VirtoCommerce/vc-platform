@@ -28,6 +28,11 @@ namespace VirtoCommerce.Platform.Core.Assets
         /// </summary>
         public string ConnectionString { get; private set; }
 
+        /// <summary>
+        /// CDN Url
+        /// </summary>
+        public string CdnUrl { get; private set; }
+
         public static BlobConnectionString Parse(string inputString)
         {
             var retVal = new BlobConnectionString();
@@ -46,6 +51,11 @@ namespace VirtoCommerce.Platform.Core.Assets
             {
                 retVal.PublicUrl = pairs["publicUrl"];
                 pairs.Remove("publicUrl");
+            }
+            if (pairs.ContainsKey("cdnUrl"))
+            {
+                retVal.CdnUrl = pairs["cdnUrl"];
+                pairs.Remove("cdnUrl");
             }
             retVal.ConnectionString = ToString(pairs, ";", "=");
             return retVal;
