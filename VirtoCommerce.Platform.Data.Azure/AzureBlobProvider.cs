@@ -15,11 +15,13 @@ namespace VirtoCommerce.Platform.Data.Azure
 
         private readonly CloudBlobClient _cloudBlobClient;
         private readonly CloudStorageAccount _cloudStorageAccount;
+        private readonly string _cdnUrl;
 
-        public AzureBlobProvider(string connectionString)
+        public AzureBlobProvider(string connectionString, string cdnUrl)
         {
             _cloudStorageAccount = ParseConnectionString(connectionString);
             _cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
+            _cdnUrl = cdnUrl;
         }
 
         #region IBlobStorageProvider Members
@@ -230,6 +232,13 @@ namespace VirtoCommerce.Platform.Data.Azure
             if (!relativeUrl.IsAbsoluteUrl())
             {
                 var baseUrl = _cloudStorageAccount.BlobEndpoint.AbsoluteUri;
+
+                if (!string.IsNullOrWhiteSpace(_cdnUrl))
+                {
+                    var cdnUriBuilder = new UriBuilder(_cloudStorageAccount.BlobEndpoint.Scheme, _cdnUrl);
+                    baseUrl = cdnUriBuilder.Uri.AbsoluteUri;
+                }
+                
                 retVal = baseUrl.TrimEnd('/') + "/" + relativeUrl;
             }
             return retVal;
