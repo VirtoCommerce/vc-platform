@@ -2,13 +2,9 @@
 <sup>dev:</sup> [![Dev branch build status](http://ci.virtocommerce.com/buildStatus/icon?job=vc-2-org/vc-platform/dev)](http://ci.virtocommerce.com/job/vc-2-org/job/vc-platform/job/dev/)&emsp;
 [![Latest release](https://img.shields.io/github/release/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/releases/latest)
 [![Total downloads](https://img.shields.io/github/downloads/VirtoCommerce/vc-platform/total.svg)](https://github.com/VirtoCommerce/vc-platform/releases)
-[![Open issues](https://img.shields.io/github/issues-raw/VirtoCommerce/vc-platform.svg?label=issues)](https://github.com/VirtoCommerce/vc-platform/issues)
-[![Closed issues](https://img.shields.io/github/issues-closed-raw/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/issues?q=is%3Aissue+is%3Aclosed)
-[![Open pull requests](https://img.shields.io/github/issues-pr-raw/VirtoCommerce/vc-platform.svg?label=prs)](https://github.com/VirtoCommerce/vc-platform/pulls)
-[![Closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/VirtoCommerce/vc-platform.svg?label=closed%20prs)](https://github.com/VirtoCommerce/vc-platform/pulls?q=is%3Apr+is%3Aclosed)<br />
+[![Lines of code](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)<br />
 <sup>master:</sup> [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Amaster)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Amaster)
 <sup>dev:</sup> [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Adev)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Adev)&emsp;
-[![Lines of code](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)
 [![Ask question at https://stackoverflow.com/questions/tagged/virtocommerce](https://img.shields.io/badge/stackoverflow-ask%20question-orange.svg)](https://stackoverflow.com/questions/tagged/virtocommerce)
 [![Join the chat at https://gitter.im/VirtoCommerce/vc-community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/VirtoCommerce/vc-community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Contributors](https://img.shields.io/github/contributors/VirtoCommerce/vc-platform.svg)]()
