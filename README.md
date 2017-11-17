@@ -6,10 +6,10 @@
 [![Lines of code](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)
 
 <sup>master:</sup> [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Amaster)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Amaster)
-<sup>dev:</sup> [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Adev)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Adev)
-[![Open issues](https://img.shields.io/github/issues-raw/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/issues)
+<sup>dev:</sup> [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Adev)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Adev)&emsp;
+[![Open issues](https://img.shields.io/github/issues-raw/VirtoCommerce/vc-platform.svg?label=issues)](https://github.com/VirtoCommerce/vc-platform/issues)
 [![Closed issues](https://img.shields.io/github/issues-closed-raw/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/issues?q=is%3Aissue+is%3Aclosed)
-[![Open pull requests](https://img.shields.io/github/issues-pr/VirtoCommerce/vc-platform.svg?label=open%20prs)](https://github.com/VirtoCommerce/vc-platform/pulls)
+[![Open pull requests](https://img.shields.io/github/issues-pr-raw/VirtoCommerce/vc-platform.svg?label=prs)](https://github.com/VirtoCommerce/vc-platform/pulls)
 [![Closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/VirtoCommerce/vc-platform.svg?label=closed%20prs)](https://github.com/VirtoCommerce/vc-platform/pulls?q=is%3Apr+is%3Aclosed)
 [![Contributors](https://img.shields.io/github/contributors/VirtoCommerce/vc-platform.svg)]()
 
