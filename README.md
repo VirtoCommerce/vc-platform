@@ -5,10 +5,12 @@
 [![Join the chat at https://gitter.im/VirtoCommerce/vc-community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/VirtoCommerce/vc-community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Lines of code](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)
 
+<sup>master:</sup> [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Amaster)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Amaster)
+<sup>dev:</sup> [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Adev)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Adev)
 [![Open issues](https://img.shields.io/github/issues-raw/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/issues)
 [![Closed issues](https://img.shields.io/github/issues-closed-raw/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/issues?q=is%3Aissue+is%3Aclosed)
-[![Open pull requests](https://img.shields.io/github/issues-pr/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/pulls)
-[![Closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/pulls?q=is%3Apr+is%3Aclosed)
+[![Open pull requests](https://img.shields.io/github/issues-pr/VirtoCommerce/vc-platform.svg?label=open%20prs)](https://github.com/VirtoCommerce/vc-platform/pulls)
+[![Closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/VirtoCommerce/vc-platform.svg?label=closed%20prs)](https://github.com/VirtoCommerce/vc-platform/pulls?q=is%3Apr+is%3Aclosed)
 [![Contributors](https://img.shields.io/github/contributors/VirtoCommerce/vc-platform.svg)]()
 
 Virto Commerce is the second generation release and is the only enterprise level e-commerce product fully available under <a href="https://virtocommerce.com/open-source-license" target="_blank">Virto Commerce Open Source License</a>. Virto Commerce is based on .NET 4.6 (soon to be migrated to .net core) with extensive use of MVC, IoC, EF, Azure, Angular JS and many other cutting edge technologies. It can be deployed in Microsoft Cloud (Azure), Amazon Web Services (AWS) and on-premise. It also support Docker deployment and images can be found on docker.io.
