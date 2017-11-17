@@ -5,6 +5,7 @@
 [![Lines of code](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)<br />
 <sup>master:</sup> [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Amaster)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Amaster)
 <sup>dev:</sup> [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Adev)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Adev)&emsp;
+[![Documentation](https://img.shields.io/badge/docs-read-lightgrey.svg)](https://virtocommerce.com/docs)
 [![Ask question at https://stackoverflow.com/questions/tagged/virtocommerce](https://img.shields.io/badge/stackoverflow-ask%20question-orange.svg)](https://stackoverflow.com/questions/tagged/virtocommerce)
 [![Join the chat at https://gitter.im/VirtoCommerce/vc-community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/VirtoCommerce/vc-community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Contributors](https://img.shields.io/github/contributors/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/graphs/contributors)
