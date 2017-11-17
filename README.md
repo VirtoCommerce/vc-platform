@@ -1,8 +1,8 @@
 <sup>master:</sup> [![Master branch build status](http://ci.virtocommerce.com/buildStatus/icon?job=vc-2-org/vc-platform/master)](http://ci.virtocommerce.com/job/vc-2-org/job/vc-platform/job/master/)
 <sup>dev:</sup> [![Dev branch build status](http://ci.virtocommerce.com/buildStatus/icon?job=vc-2-org/vc-platform/dev)](http://ci.virtocommerce.com/job/vc-2-org/job/vc-platform/job/dev/)&emsp;
-[![Open issues](https://img.shields.io/github/issues-raw/VirtoCommerce/vc-platform.svg?label=issues)](https://github.com/VirtoCommerce/vc-platform/issues)
+[![Open issues](https://img.shields.io/github/issues-raw/VirtoCommerce/vc-platform.svg?label=open%20issues)](https://github.com/VirtoCommerce/vc-platform/issues)
 [![Closed issues](https://img.shields.io/github/issues-closed-raw/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/issues?q=is%3Aissue+is%3Aclosed)
-[![Open pull requests](https://img.shields.io/github/issues-pr-raw/VirtoCommerce/vc-platform.svg?label=prs)](https://github.com/VirtoCommerce/vc-platform/pulls)
+[![Open pull requests](https://img.shields.io/github/issues-pr-raw/VirtoCommerce/vc-platform.svg?label=open%20prs)](https://github.com/VirtoCommerce/vc-platform/pulls)
 [![Closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/VirtoCommerce/vc-platform.svg?label=closed%20prs)](https://github.com/VirtoCommerce/vc-platform/pulls?q=is%3Apr+is%3Aclosed)
 [![Contributors](https://img.shields.io/github/contributors/VirtoCommerce/vc-platform.svg)]()<br />
 <sup>master:</sup> [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Amaster)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Amaster)
