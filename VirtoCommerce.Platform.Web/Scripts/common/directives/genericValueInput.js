@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-.directive('vaGenericValueInput', ['$compile', '$templateCache', '$http', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.valueTypesService',
-function ($compile, $templateCache, $http, objComparer, bladeNavigationService, valueTypesService) {
+.directive('vaGenericValueInput', ['$compile', '$templateCache', '$http', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService',
+function ($compile, $templateCache, $http, objComparer, bladeNavigationService) {
 
     return {
         restrict: 'E',
@@ -20,8 +20,6 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService, 
             scope.context.currentPropValues = [];
             scope.context.allDictionaryValues = [];
             var theEmptyValue = { value: null };
-
-            var supportedPropertyTypes = valueTypesService.query();
 
             scope.$watch('context.currentPropValues', function (newValue, oldValue) {
                 //reflect only real changes
@@ -161,14 +159,6 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService, 
                 }
 
                 var templateName = getTemplateName(scope.currentEntity);
-                var supportedPropertyType = _.find(supportedPropertyTypes, function (propertyType) {
-                    return scope.currentEntity.valueType === propertyType.valueType;
-                });
-                if (supportedPropertyType) {
-                    if (supportedPropertyType.baseTemplatePath) {
-                        templateName = supportedPropertyType.baseTemplatePath + "/" + templateName;
-                    }
-                }
 
                 //load input template and display
                 $http.get(templateName, { cache: $templateCache }).then(function (results) {

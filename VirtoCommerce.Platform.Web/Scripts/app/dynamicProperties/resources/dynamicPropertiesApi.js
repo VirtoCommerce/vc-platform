@@ -55,16 +55,6 @@
     return {
         query: function() {
             return propertyTypes;
-        },
-        registerTemplatePath: function(valueType, templatePath) {
-            var foundPropertyType = _.find(propertyTypes, function (propertyType) {
-                return valueType === propertyType.valueType;
-            });
-
-            if (!foundPropertyType)
-                return;
-
-            foundPropertyType.baseTemplatePath = templatePath;
         }
     };
 });

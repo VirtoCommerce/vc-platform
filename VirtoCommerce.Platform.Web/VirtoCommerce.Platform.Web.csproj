@@ -545,6 +545,7 @@
     <Content Include="Scripts\codemirror\overlay.js" />
     <Content Include="Scripts\common\bladeUtils.js" />
     <Content Include="Scripts\common\directives\tooltipOptions.js" />
+    <Content Include="Scripts\common\templates\valueInputs.tpl.html" />
     <Content Include="Scripts\i18n\resources\countries.js" />
     <Content Include="Scripts\i18n\resources\languages.js" />
     <Content Include="Scripts\i18n\resources\locales.js" />
