@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-.directive('vaGenericValueInput', ['$compile', '$templateCache', '$http', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService',
-function ($compile, $templateCache, $http, objComparer, bladeNavigationService) {
+.directive('vaGenericValueInput', ['$compile', '$templateCache', '$http', 'platformWebApp.objCompareService', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.valueTypesService',
+function ($compile, $templateCache, $http, objComparer, bladeNavigationService, valueTypesService) {
 
     return {
         restrict: 'E',
@@ -20,6 +20,8 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService) 
             scope.context.currentPropValues = [];
             scope.context.allDictionaryValues = [];
             var theEmptyValue = { value: null };
+
+            var supportedPropertyTypes = valueTypesService.query();
 
             scope.$watch('context.currentPropValues', function (newValue, oldValue) {
                 //reflect only real changes
@@ -159,6 +161,15 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService) 
                 }
 
                 var templateName = getTemplateName(scope.currentEntity);
+                var supportedPropertyType = _.find(supportedPropertyTypes, function (propertyType) {
+                    return scope.currentEntity.valueType === propertyType.valueType;
+                });
+                if (supportedPropertyType) {
+                    if (supportedPropertyType.baseTemplatePath) {
+                        templateName = supportedPropertyType.baseTemplatePath + "/" + templateName;
+                    }
+                }
+
                 //load input template and display
                 $http.get(templateName, { cache: $templateCache }).then(function (results) {
                     //Need to add ngForm to isolate form validation into sub form
@@ -172,7 +183,7 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService) 
                     var container = element.find('#valuePlaceHolder');
                     var result = container.html(results.data.trim());
                     if (scope.currentEntity.ngBindingModel) {
-                        $(result).find('[ng-model]').attr("ng-model", 'currentEntity.blade.currentEntity.' + scope.currentEntity.ngBindingModel)
+                        $(result).find('[ng-model]').attr("ng-model", 'currentEntity.blade.currentEntity.' + scope.currentEntity.ngBindingModel);
                     }
 
                     //Create new scope, otherwise we would destroy our directive scope
