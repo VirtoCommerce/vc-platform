@@ -384,7 +384,7 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
         ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent', 'html', 'insertImage', 'insertLink', 'insertVideo']];
 
         //register metaproperties templates
-        $templateRequest('$(Platform)/Scripts/common/templates/valueInputs.tpl.html').then(function(response) {
+        $templateRequest('$(Platform)/Scripts/common/directives/genericValueInput.tpl.html').then(function (response) {
             var template = angular.element(response);
             $compile(template);
         });

@@ -7,7 +7,6 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService) 
         require: 'ngModel',
         replace: true,
         transclude: true,
-        templateUrl: '$(Platform)/Scripts/common/directives/genericValueInput.tpl.html',
         scope: {
             languages: "=",
             getDictionaryValues: "&"
@@ -170,8 +169,12 @@ function ($compile, $templateCache, $http, objComparer, bladeNavigationService) 
                     if (el.length > 0) {
                         el.scope().$destroy();
                     }
-                    var container = element.find('#valuePlaceHolder');
+                    var container = angular.element("<div><div id='valuePlaceHolder'></div></div>");
+                    element.append(container);
+
+                    container = element.find('#valuePlaceHolder');
                     var result = container.html(results.data.trim());
+
                     if (scope.currentEntity.ngBindingModel) {
                         $(result).find('[ng-model]').attr("ng-model", 'currentEntity.blade.currentEntity.' + scope.currentEntity.ngBindingModel);
                     }
