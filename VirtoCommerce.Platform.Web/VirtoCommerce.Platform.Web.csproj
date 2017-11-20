@@ -404,6 +404,7 @@
     </Compile>
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
+    <Compile Include="SignalR\IgnoreSignarRTelemetryProcessor.cs" />
     <Compile Include="Swagger\CachingSwaggerProvider.cs" />
     <Compile Include="Swagger\FileResponseTypeFilter.cs" />
     <Compile Include="Swagger\HttpConfigurationExtensions.cs" />
@@ -468,6 +469,7 @@
     <Content Include="Content\ui-grid.woff" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\themes\main\fonts\Exo-2-300\Exo-2-300.eot" />
     <Content Include="Content\themes\main\fonts\Exo-2-300\Exo-2-300.ttf" />
