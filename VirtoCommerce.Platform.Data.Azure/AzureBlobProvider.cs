@@ -17,6 +17,11 @@ namespace VirtoCommerce.Platform.Data.Azure
         private readonly CloudStorageAccount _cloudStorageAccount;
         private readonly string _cdnUrl;
 
+        public AzureBlobProvider(string connectionString)
+            : this(connectionString, null)
+        {            
+        }
+
         public AzureBlobProvider(string connectionString, string cdnUrl)
         {
             _cloudStorageAccount = ParseConnectionString(connectionString);

@@ -427,6 +427,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Delete users by name
+        /// </summary>
+        /// <param name="names">An array of user names.</param>
+        [HttpDelete]
+        [Route("users")]
+        [ResponseType(typeof(void))]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityDelete)]
+        public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
+        {
+            EnsureThatUsersEditable(names);
+
+            await _securityService.DeleteAsync(names);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
         /// Checks if user locked
         /// </summary>
         /// <param name="id">User id</param>
