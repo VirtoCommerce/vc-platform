@@ -57,5 +57,3 @@ We welcome & recognize contributors to Virto Commerce. There are many benefits a
 3. Make your changes. We also recommend you test your code before contributing.
 4. Once ready to commit your changes, create a pull request according to <a href="https://help.github.com/articles/creating-a-pull-request/">GitHub Create a Pull Request</a>.
 5. Once received, the Virto Commerce development team will review your contribution and if approved, will pull your request to the appropriate branch.
-
-Note: You must agree to <a href="http://virtocommerce.com/contribute-agreement">Virto Commerce Contributor License Agreement</a> before pulling any requests. You only need to sign the agreement once.
