@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.dynamicPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.api', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, bladeNavigationService, dialogService, settings, dynamicPropertiesApi, dictionaryItemsApi) {
+.controller('platformWebApp.dynamicPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.api', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.dynamicProperties.valueTypesService', function ($scope, bladeNavigationService, dialogService, settings, dynamicPropertiesApi, dictionaryItemsApi, valueTypesService) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
     blade.headIcon = 'fa-plus-square-o';
@@ -146,48 +146,7 @@
         ];
     }
 
-    blade.valueTypes = [
-        {
-            valueType: "ShortText",
-            title: "platform.properties.short-text.title",
-            description: "platform.properties.short-text.description"
-        },
-        {
-            valueType: "LongText",
-            title: "platform.properties.long-text.title",
-            description: "platform.properties.long-text.description"
-        },
-        {
-            valueType: "Integer",
-            title: "platform.properties.integer.title",
-            description: "platform.properties.integer.description"
-        },
-        {
-            valueType: "Decimal",
-            title: "platform.properties.decimal.title",
-            description: "platform.properties.decimal.description"
-        },
-        {
-            valueType: "DateTime",
-            title: "platform.properties.date-time.title",
-            description: "platform.properties.date-time.description"
-        },
-        {
-            valueType: "Boolean",
-            title: "platform.properties.boolean.title",
-            description: "platform.properties.boolean.description"
-        },
-        {
-            valueType: "Html",
-            title: "platform.properties.html.title",
-            description: "platform.properties.html.description"
-        },
-        {
-            valueType: "Image",
-            title: "platform.properties.image.title",
-            description: "platform.properties.image.description"
-        }
-    ];
+    blade.valueTypes = valueTypesService.query();
 
     // on load: 
     blade.refresh();
