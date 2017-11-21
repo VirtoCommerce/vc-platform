@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Data.Azure
 
         public AzureBlobProvider(string connectionString)
             : this(connectionString, null)
-        {            
+        {
         }
 
         public AzureBlobProvider(string connectionString, string cdnUrl)
@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Data.Azure
         public virtual BlobInfo GetBlobInfo(string url)
         {
             if (string.IsNullOrEmpty(url))
-                throw new ArgumentNullException("url");
+                throw new ArgumentNullException(nameof(url));
 
             var uri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
             BlobInfo retVal = null;
@@ -51,7 +51,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                     FileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString())),
                     ContentType = cloudBlob.Properties.ContentType,
                     Size = cloudBlob.Properties.Length,
-                    ModifiedDate = cloudBlob.Properties.LastModified != null ? cloudBlob.Properties.LastModified.Value.DateTime : (DateTime?)null,
+                    ModifiedDate = cloudBlob.Properties.LastModified?.DateTime,
                     RelativeUrl = cloudBlob.Uri.LocalPath
                 };
             }
@@ -70,7 +70,7 @@ namespace VirtoCommerce.Platform.Data.Azure
         public virtual Stream OpenRead(string url)
         {
             if (string.IsNullOrEmpty(url))
-                throw new ArgumentNullException("url");
+                throw new ArgumentNullException(nameof(url));
 
             var uri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
             var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(uri);
@@ -90,7 +90,7 @@ namespace VirtoCommerce.Platform.Data.Azure
             var filePath = GetFilePathFromUrl(url);
             if (filePath == null)
             {
-                throw new NullReferenceException("filePath");
+                throw new ArgumentException(@"Cannot get file path from URL", nameof(url));
             }
             var container = _cloudBlobClient.GetContainerReference(containerName);
             container.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
@@ -115,7 +115,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                 var absoluteUri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
                 var blobContainer = GetBlobContainer(GetContainerNameFromUrl(absoluteUri.ToString()));
                 var directoryPath = GetDirectoryPathFromUrl(absoluteUri.ToString());
-                if (String.IsNullOrEmpty(directoryPath))
+                if (string.IsNullOrEmpty(directoryPath))
                 {
                     blobContainer.DeleteIfExists();
                 }
@@ -131,7 +131,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                     /* http://stackoverflow.com/questions/29285239/delete-a-blob-from-windows-azure-in-c-sharp
                      * In Azure Storage Client Library 4.0, we changed Get*Reference methods to accept relative addresses only. */
                     var filePath = GetFilePathFromUrl(url);
-                    CloudBlockBlob blobBlock = blobContainer.GetBlockBlobReference(filePath);
+                    var blobBlock = blobContainer.GetBlockBlobReference(filePath);
                     blobBlock.DeleteIfExists();
                 }
             }
@@ -142,16 +142,16 @@ namespace VirtoCommerce.Platform.Data.Azure
         {
             var retVal = new BlobSearchResult();
 
-            if (!String.IsNullOrEmpty(folderUrl))
+            if (!string.IsNullOrEmpty(folderUrl))
             {
                 var blobContainer = GetBlobContainer(GetContainerNameFromUrl(folderUrl));
 
                 if (blobContainer != null)
                 {
                     var directoryPath = GetDirectoryPathFromUrl(folderUrl);
-                    var blobDirectory = !String.IsNullOrEmpty(directoryPath) ? blobContainer.GetDirectoryReference(directoryPath) : null;
+                    var blobDirectory = !string.IsNullOrEmpty(directoryPath) ? blobContainer.GetDirectoryReference(directoryPath) : null;
                     var listBlobs = blobDirectory != null ? blobDirectory.ListBlobs() : blobContainer.ListBlobs();
-                    if (!String.IsNullOrEmpty(keyword))
+                    if (!string.IsNullOrEmpty(keyword))
                     {
                         if (blobDirectory != null)
                         {
@@ -161,7 +161,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                         listBlobs = blobContainer.ListBlobs(keyword, useFlatBlobListing: true);
                     }
                     // Loop over items within the container and output the length and URI.
-                    foreach (IListBlobItem item in listBlobs)
+                    foreach (var item in listBlobs)
                     {
                         var block = item as CloudBlockBlob;
                         var directory = item as CloudBlobDirectory;
@@ -173,11 +173,11 @@ namespace VirtoCommerce.Platform.Data.Azure
                                 FileName = Path.GetFileName(Uri.UnescapeDataString(block.Uri.ToString())),
                                 ContentType = block.Properties.ContentType,
                                 Size = block.Properties.Length,
-                                ModifiedDate = block.Properties.LastModified != null ? block.Properties.LastModified.Value.DateTime : (DateTime?)null
+                                ModifiedDate = block.Properties.LastModified?.DateTime
                             };
                             blobInfo.RelativeUrl = blobInfo.Url.Replace(_cloudBlobClient.BaseUri.ToString(), string.Empty);
                             //Do not return empty blob (created with directory because azure blob not support direct directory creation)
-                            if (!String.IsNullOrEmpty(blobInfo.FileName))
+                            if (!string.IsNullOrEmpty(blobInfo.FileName))
                             {
                                 retVal.Items.Add(blobInfo);
                             }
@@ -213,17 +213,17 @@ namespace VirtoCommerce.Platform.Data.Azure
 
         public virtual void CreateFolder(BlobFolder folder)
         {
-            var path = (folder.ParentUrl != null ? folder.ParentUrl + "/" : String.Empty) + folder.Name;
+            var path = (folder.ParentUrl != null ? folder.ParentUrl + "/" : string.Empty) + folder.Name;
 
             var containerName = GetContainerNameFromUrl(path);
             var blobContainer = _cloudBlobClient.GetContainerReference(containerName);
             blobContainer.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
 
             var directoryPath = GetDirectoryPathFromUrl(path);
-            if (!String.IsNullOrEmpty(directoryPath))
+            if (!string.IsNullOrEmpty(directoryPath))
             {
                 //Need upload empty blob because azure blob storage not support direct directory creation
-                blobContainer.GetBlockBlobReference(directoryPath).UploadText(String.Empty);
+                blobContainer.GetBlockBlobReference(directoryPath).UploadText(string.Empty);
             }
         }
 
@@ -243,7 +243,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                     var cdnUriBuilder = new UriBuilder(_cloudStorageAccount.BlobEndpoint.Scheme, _cdnUrl);
                     baseUrl = cdnUriBuilder.Uri.AbsoluteUri;
                 }
-                
+
                 retVal = baseUrl.TrimEnd('/') + "/" + relativeUrl;
             }
             return retVal;
@@ -272,13 +272,13 @@ namespace VirtoCommerce.Platform.Data.Azure
 
         private string GetDirectoryPathFromUrl(string url)
         {
-            var retVal = String.Join(_cloudBlobClient.DefaultDelimiter, GetOutlineFromUrl(url).Skip(1).ToArray());
-            return !String.IsNullOrEmpty(retVal) ? retVal + _cloudBlobClient.DefaultDelimiter : null;
+            var retVal = string.Join(_cloudBlobClient.DefaultDelimiter, GetOutlineFromUrl(url).Skip(1).ToArray());
+            return !string.IsNullOrEmpty(retVal) ? retVal + _cloudBlobClient.DefaultDelimiter : null;
         }
         private string GetFilePathFromUrl(string url)
         {
-            var retVal = String.Join(_cloudBlobClient.DefaultDelimiter, GetOutlineFromUrl(url).Skip(1).ToArray());
-            return !String.IsNullOrEmpty(retVal) ? retVal : null;
+            var retVal = string.Join(_cloudBlobClient.DefaultDelimiter, GetOutlineFromUrl(url).Skip(1).ToArray());
+            return !string.IsNullOrEmpty(retVal) ? retVal : null;
         }
 
         private CloudBlobContainer GetBlobContainer(string name)
