@@ -180,7 +180,9 @@
                     if (externalRegisterApiCallback) {
                         externalRegisterApiCallback(gridApi);
                     }
-                }
+                },
+                infiniteScrollRowsFromEnd: 10,
+                infiniteScrollDown: true
             }, gridOptions);
         };
 
@@ -209,6 +211,12 @@
             $scope.gridApi.core.on.sortChanged($scope, function () {
                 if (!$scope.blade.isLoading) $scope.blade.refresh();
             });
+        };
+
+        retVal.bindInfinityScroll = function ($scope) {
+            if ($scope.infinityScroll) {
+                $scope.gridApi.infiniteScroll.on.needLoadMoreData($scope, $scope.showMore);
+            }
         };
 
         return retVal;
