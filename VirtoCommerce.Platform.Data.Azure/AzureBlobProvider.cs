@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                 throw new ArgumentNullException(nameof(url));
 
             var uri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
-            var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(uri);
+            var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(new Uri(_cloudBlobClient.BaseUri, uri.AbsolutePath.TrimStart('/')));
             return cloudBlob.OpenRead();
         }
 
