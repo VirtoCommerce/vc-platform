@@ -220,8 +220,8 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
         // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
         $compileProvider.debugInfoEnabled(false);
     }])
-.run(['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout) {
+.run(['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile) {
 
         //Disable animation
         $animate.enabled(false);
@@ -383,4 +383,9 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
         ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear', 'quote'],
         ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent', 'html', 'insertImage', 'insertLink', 'insertVideo']];
 
+        //register metaproperties templates
+        $templateRequest('$(Platform)/Scripts/common/directives/genericValueInput.tpl.html').then(function (response) {
+            var template = angular.element(response);
+            $compile(template);
+        });
     }]);

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
@@ -639,7 +639,7 @@ namespace VirtoCommerce.Platform.Web
             }
             else if (string.Equals(blobConnectionString.Provider, AzureBlobProvider.ProviderName, StringComparison.OrdinalIgnoreCase))
             {
-                var azureBlobProvider = new AzureBlobProvider(blobConnectionString.ConnectionString);
+                var azureBlobProvider = new AzureBlobProvider(blobConnectionString.ConnectionString, blobConnectionString.CdnUrl);
                 container.RegisterInstance<IBlobStorageProvider>(azureBlobProvider);
                 container.RegisterInstance<IBlobUrlResolver>(azureBlobProvider);
             }

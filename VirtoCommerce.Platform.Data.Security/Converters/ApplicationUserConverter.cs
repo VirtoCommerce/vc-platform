@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
@@ -19,13 +15,12 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
         public static ApplicationUserExtended ToCoreModel(this ApplicationUser applicationUser, AccountEntity dbEntity, IPermissionScopeService scopeService)
         {
             var retVal = new ApplicationUserExtended();
-            retVal = new ApplicationUserExtended();
             retVal.InjectFrom(applicationUser);
             retVal.InjectFrom(dbEntity);
-            retVal.UserState = EnumUtility.SafeParse<Core.Security.AccountState>( dbEntity.AccountState, Core.Security.AccountState.Approved);
- 
+            retVal.UserState = EnumUtility.SafeParse(dbEntity.AccountState, AccountState.Approved);
+
             retVal.Roles = dbEntity.RoleAssignments.Select(x => x.Role.ToCoreModel(scopeService)).ToArray();
-            retVal.Permissions = retVal.Roles.SelectMany(x => x.Permissions).SelectMany(x=> x.GetPermissionWithScopeCombinationNames()).Distinct().ToArray();
+            retVal.Permissions = retVal.Roles.SelectMany(x => x.Permissions).SelectMany(x => x.GetPermissionWithScopeCombinationNames()).Distinct().ToArray();
             retVal.ApiAccounts = dbEntity.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();
 
             return retVal;
@@ -45,21 +40,21 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 
             retVal.AccountState = user.UserState.ToString();
 
-            if(user.Roles != null)
+            if (user.Roles != null)
             {
                 retVal.RoleAssignments = new ObservableCollection<RoleAssignmentEntity>(user.Roles.Select(x => x.ToAssignmentDataModel()));
             }
-            if(user.ApiAccounts != null)
+            if (user.ApiAccounts != null)
             {
                 retVal.ApiAccounts = new ObservableCollection<ApiAccountEntity>(user.ApiAccounts.Select(x => x.ToDataModel()));
             }
-            return retVal;     
+            return retVal;
         }
 
         public static void Patch(this AccountEntity source, AccountEntity target)
         {
             var patchInjection = new PatchInjection<AccountEntity>(x => x.UserType, x => x.AccountState, x => x.MemberId,
-                                                                   x => x.StoreId, x => x.IsAdministrator, x=>x.UserName);
+                                                                   x => x.StoreId, x => x.IsAdministrator, x => x.UserName);
             target.InjectFrom(patchInjection, source);
 
             if (!source.ApiAccounts.IsNullCollection())
@@ -93,7 +88,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
                 var comparer = AnonymousComparer.Create((IdentityUserLogin x) => x.LoginProvider);
                 changedLogins.Patch(dbUser.Logins, comparer, (sourceItem, targetItem) => { sourceItem.ProviderKey = targetItem.ProviderKey; });
             }
-        
+
         }
     }
 }

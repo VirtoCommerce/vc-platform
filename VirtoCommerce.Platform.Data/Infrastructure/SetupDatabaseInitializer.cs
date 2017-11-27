@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
 namespace VirtoCommerce.Platform.Data.Infrastructure
 {
@@ -35,6 +36,10 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                 {
                     TargetDatabase = new DbConnectionInfo(context.Database.Connection.ConnectionString, "System.Data.SqlClient")
                 };
+
+                var commandTimeout = ConfigurationHelper.GetNullableAppSettingsValue<int>("VirtoCommerce:DbMigration.CommandTimeout", null);
+                if (commandTimeout.HasValue)
+                    _config.CommandTimeout = commandTimeout;
             }
 
             var migrator = new System.Data.Entity.Migrations.DbMigrator(_config);
