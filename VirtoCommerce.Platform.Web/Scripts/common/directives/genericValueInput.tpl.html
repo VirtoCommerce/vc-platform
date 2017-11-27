@@ -126,7 +126,8 @@
 </script>
 <script type="text/ng-template" id="dShortText-multilang.html">
     <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
-        <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+        <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+        <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
         <input ng-required="currentEntity.isRequired"
                ng-model="propValue.value"
                placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">
@@ -134,7 +135,8 @@
 </script>
 <script type="text/ng-template" id="dLongText-multilang.html">
     <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
-        <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+        <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+        <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
         <textarea ng-required="currentEntity.isRequired"
                   ng-model="propValue.value"
                   placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
@@ -142,7 +144,8 @@
 </script>
 <script type="text/ng-template" id="dCode-multilang.html">
     <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
-        <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+        <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+        <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
         <ui-codemirror ng-required="currentEntity.isRequired"
                        ng-model="propValue.value"
                        ui-codemirror-opts="editorOptions"></ui-codemirror>
@@ -151,7 +154,8 @@
 
 <script type="text/ng-template" id="dShortText-multivalue-multilang.html">
     <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
-        <span class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+        <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
+        <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
         <tags-input ng-model="propValue.values"
                     min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
                     min-length="1"
@@ -170,7 +174,8 @@
         </ui-select>
     </div>
     <div ng-repeat="data in context.currentPropValues[0].displayNames | orderBy: 'locale'" style="margin:5px 0;">
-        <span class="flag flag-{{data.locale.substr(3, 2).toLowerCase()}}"></span>
+        <span ng-if="data.locale.length>2" class="flag flag-{{data.locale.substr(3, 2).toLowerCase()}}"></span>
+        <span ng-if="data.locale.length<=2" class="langCode">{{data.locale.toUpperCase()}}</span>
         {{data.name}}
     </div>
 </script>
@@ -191,7 +196,6 @@
             <img ng-if="context.currentPropValues[0].value" ng-src="{{context.currentPropValues[0].value}}" ng-click="openUrl(context.currentPropValues[0].value)" />
             <i ng-if="!context.currentPropValues[0].value" class="gallery-ico fa fa-image" ng-click="uploadImage()"></i>
         </div>
-
         <a href ng-click="uploadImage()">Upload</a>
         <a href ng-click="clearImage()">Delete</a>
     </div>
