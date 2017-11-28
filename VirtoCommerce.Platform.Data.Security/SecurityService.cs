@@ -521,7 +521,17 @@ namespace VirtoCommerce.Platform.Data.Security
                     using (var repository = _platformRepository())
                     {
                         var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
+
                         retVal = applicationUser.ToCoreModel(user, _permissionScopeService);
+                        if (applicationUser.Logins != null)
+                        {
+                        retVal.Logins = new ApplicationUserLogin[10];
+                            retVal.Logins = applicationUser.Logins.Select(x => new ApplicationUserLogin
+                            {
+                                LoginProvider = x.LoginProvider.ToString(),
+                                ProviderKey = x.ProviderKey.ToString()
+                            }).ToArray();
+                        }
                         //Populate available permission scopes
                         if (retVal.Roles != null)
                         {
