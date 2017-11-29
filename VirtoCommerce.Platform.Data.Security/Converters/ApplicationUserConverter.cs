@@ -20,7 +20,6 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             retVal.UserState = EnumUtility.SafeParse(dbEntity.AccountState, AccountState.Approved);
             if (applicationUser.Logins != null)
             {
-                retVal.Logins = new ApplicationUserLogin[10];
                 retVal.Logins = applicationUser.Logins.Select(x => new ApplicationUserLogin
                 {
                     LoginProvider = x.LoginProvider.ToString(),
