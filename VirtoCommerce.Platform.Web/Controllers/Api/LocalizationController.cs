@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private const string InternationalizationFilesFolder = "Scripts\\i18n\\angular";
 
         private readonly IModuleCatalog _moduleCatalog;
-        
+
         public LocalizationController(IModuleCatalog moduleCatalog)
         {
             _moduleCatalog = moduleCatalog;
@@ -89,7 +89,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             return Ok(formats);
         }
-        
+
         private string[] GetAllLocalizationFiles(string searchPattern, string localizationsFolder)
         {
             var files = new List<string>();
@@ -99,10 +99,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var platformFileNames = GetFilesByPath(platformPath, searchPattern, localizationsFolder);
             files.AddRange(platformFileNames);
 
-            // Get modules localization files
-            foreach (var module in _moduleCatalog.Modules.OfType<ManifestModuleInfo>())
+            // Get modules localization files ordered by dependency.
+            var allModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().ToArray();
+            var manifestModules = _moduleCatalog.CompleteListWithDependencies(allModules)
+                .Where(x => x.State == ModuleState.Initialized)
+                .OfType<ManifestModuleInfo>();
+
+            foreach (var module in manifestModules)
             {
-                  var moduleFileNames = GetFilesByPath(module.FullPhysicalPath, searchPattern, localizationsFolder);
+                var moduleFileNames = GetFilesByPath(module.FullPhysicalPath, searchPattern, localizationsFolder);
                 files.AddRange(moduleFileNames);
             }
 
