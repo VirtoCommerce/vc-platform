@@ -23,7 +23,8 @@
                     <div class="form-group">
                         <div class="form-input __langs" ng-repeat="data in newValue.displayNames | orderBy: 'locale'">
                             <ng-form name="valuesForm">
-                                <span class="flag flag-{{data.locale.substr(3).toLowerCase()}}"></span>
+                                <span ng-if="data.locale.length>2" class="flag flag-{{data.locale.substr(3).toLowerCase()}}"></span>
+                                <span ng-if="data.locale.length<=2" class="langCode">{{data.locale.toUpperCase()}}</span>
                                 <input ng-model="data.name" class="form-control" ui-validate=" 'dictValueValidator($value, data)' " name="mValue" placeholder="{{ 'platform.blades.property-dictionary.placeholders.localized-values' | translate }}" />
                                 <div class="form-error" ng-if="valuesForm.mValue.$dirty && valuesForm.mValue.$invalid">
                                     <span ng-if="valuesForm.mValue.$error.required">{{ 'platform.blades.property-dictionary.validations.localized-values-required' | translate }}</span>
@@ -77,7 +78,8 @@
                                     </td>
                                     <td class="table-col" ng-if="blade.currentEntity.isMultilingual">
                                         <div ng-repeat="data in data.displayNames | orderBy: 'locale'" style="margin:5px 0;">
-                                            <span class="flag flag-{{data.locale.substr(3, 2).toLowerCase()}}"></span>
+                                            <span ng-if="data.locale.length>2" class="flag flag-{{data.locale.substr(3,2).toLowerCase()}}"></span>
+                                            <span ng-if="data.locale.length<=2" class="langCode">{{data.locale.toUpperCase()}}</span>
                                             {{data.name}}
                                         </div>
                                     </td>

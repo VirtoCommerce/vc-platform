@@ -51,46 +51,46 @@ namespace VirtoCommerce.Platform.Data.Settings
             if (name == null)
                 throw new ArgumentNullException("name");
 
-           var result = _cacheManager.Get($"GetSettingByName-{name}", SettingConstants.CacheRegion, () =>
-            {
-                SettingEntry setting = null;
-                //Get setting definition from module manifest first
-                var moduleSetting = GetModuleSettingByName(name);
-                if (moduleSetting != null)
-                {
-                    setting = moduleSetting.ToSettingEntry();
-                }
-                using (var repository = _repositoryFactory())
-                {
-                    //try to load setting from db
-                    var settingEntity = repository.GetSettingByName(name);
-                    if (settingEntity != null)
-                    {
-                        setting = settingEntity.ToModel(setting ?? AbstractTypeFactory<SettingEntry>.TryCreateInstance());
-                    }
-                }
-                return setting;
-            });
+            var result = _cacheManager.Get($"GetSettingByName-{name}", SettingConstants.CacheRegion, () =>
+             {
+                 SettingEntry setting = null;
+                 //Get setting definition from module manifest first
+                 var moduleSetting = GetModuleSettingByName(name);
+                 if (moduleSetting != null)
+                 {
+                     setting = moduleSetting.ToSettingEntry();
+                 }
+                 using (var repository = _repositoryFactory())
+                 {
+                     //try to load setting from db
+                     var settingEntity = repository.GetSettingByName(name);
+                     if (settingEntity != null)
+                     {
+                         setting = settingEntity.ToModel(setting ?? AbstractTypeFactory<SettingEntry>.TryCreateInstance());
+                     }
+                 }
+                 return setting;
+             });
             return result;
         }
 
         public void LoadEntitySettingsValues(Entity entity)
         {
             if (entity == null)
-               throw new ArgumentNullException("entity");
+                throw new ArgumentNullException("entity");
 
             if (entity.IsTransient())
                 throw new ArgumentException("entity transistent");
 
             var entityType = entity.GetType().Name;
-            var storedSettings =  _cacheManager.Get($"GetObjectSettings-{entityType}-{entity.Id}", SettingConstants.CacheRegion, () =>
-            {
-                using (var repository = _repositoryFactory())
-                {
-                    return repository.GetAllObjectSettings(entityType, entity.Id)
-                                            .Select(x => x.ToModel(AbstractTypeFactory<SettingEntry>.TryCreateInstance())).ToList();
-                }
-            });
+            var storedSettings = _cacheManager.Get($"GetObjectSettings-{entityType}-{entity.Id}", SettingConstants.CacheRegion, () =>
+           {
+               using (var repository = _repositoryFactory())
+               {
+                   return repository.GetAllObjectSettings(entityType, entity.Id)
+                                           .Select(x => x.ToModel(AbstractTypeFactory<SettingEntry>.TryCreateInstance())).ToList();
+               }
+           });
             //Deep load settings values for all object contains settings
             var haveSettingsObjects = entity.GetFlatObjectsListWithInterface<IHaveSettings>();
             foreach (var haveSettingsObject in haveSettingsObjects)
@@ -110,19 +110,20 @@ namespace VirtoCommerce.Platform.Data.Settings
                             setting.Value = storedSetting.Value;
                             setting.ArrayValues = storedSetting.ArrayValues;
                         }
-                        else if(setting.Value == null && setting.ArrayValues == null)
+                        else if (setting.Value == null && setting.ArrayValues == null)
                         {
                             //try to use global setting value
                             var globalSetting = GetSettingByName(setting.Name);
+                            var defaultValue = (globalSetting ?? setting).DefaultValue;
+
                             if (setting.IsArray)
                             {
-                                setting.ArrayValues = globalSetting.ArrayValues ?? new[] { globalSetting.DefaultValue };
+                                setting.ArrayValues = globalSetting?.ArrayValues ?? new[] { defaultValue };
                             }
                             else
                             {
-                                setting.Value = globalSetting.Value ?? globalSetting.DefaultValue;
+                                setting.Value = globalSetting?.Value ?? defaultValue;
                             }
-
                         }
                     }
                 }
@@ -223,12 +224,12 @@ namespace VirtoCommerce.Platform.Data.Settings
         public void RegisterModuleSettings(string moduleId, params SettingEntry[] settings)
         {
             //check module exist
-            if(!GetModules().Any(x=>x.Id == moduleId))
+            if (!GetModules().Any(x => x.Id == moduleId))
             {
                 throw new ArgumentException(moduleId + " not exist");
             }
             List<SettingEntry> moduleSettings;
-            if(!_runtimeModuleSettingsMap.TryGetValue(moduleId, out moduleSettings))
+            if (!_runtimeModuleSettingsMap.TryGetValue(moduleId, out moduleSettings))
             {
                 moduleSettings = new List<SettingEntry>();
                 _runtimeModuleSettingsMap[moduleId] = moduleSettings;
@@ -260,7 +261,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                     changeTracker.RemoveAction = x => repository.Remove(x);
 
                     var target = new { Settings = new ObservableCollection<SettingEntity>(alreadyExistSettings) };
-                    var source = new { Settings = new ObservableCollection<SettingEntity>(settings.Select(x => AbstractTypeFactory<SettingEntity>.TryCreateInstance().FromModel(x) )) };
+                    var source = new { Settings = new ObservableCollection<SettingEntity>(settings.Select(x => AbstractTypeFactory<SettingEntity>.TryCreateInstance().FromModel(x))) };
 
                     changeTracker.Attach(target);
                     var settingComparer = AnonymousComparer.Create((SettingEntity x) => String.Join("-", x.Name, x.ObjectType, x.ObjectId));
@@ -293,7 +294,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 {
                     result = new[] { (T)setting.RawDefaultValue };
                 }
-            }          
+            }
 
             return result;
         }
@@ -342,9 +343,9 @@ namespace VirtoCommerce.Platform.Data.Settings
         private void ClearCache(SettingEntry[] settings)
         {
             //Clear setting from cache
-            foreach(var setting in settings)
+            foreach (var setting in settings)
             {
-                _cacheManager.Remove($"GetSettingByName-{setting.Name}", SettingConstants.CacheRegion);               
+                _cacheManager.Remove($"GetSettingByName-{setting.Name}", SettingConstants.CacheRegion);
             }
             //Clear
             foreach (var key in settings.Select(x => $"GetObjectSettings-{x.ObjectType}-{x.ObjectId}").Distinct())
@@ -368,6 +369,6 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
             return GetModulesWithSettings().SelectMany(m => m.Settings)
                 .Where(g => g.Settings != null).SelectMany(g => g.Settings);
-        }          
+        }
     }
 }
