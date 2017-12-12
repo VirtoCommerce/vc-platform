@@ -39,7 +39,7 @@
                     text: 'Close'
                 }
             },
-            closeOnDateSelection: true,
+            closeOnDateSelection: false,
             appendToBody: false,
             altInputFormats: [],
             ngModelOptions: {}
@@ -48,22 +48,8 @@
         [
             '$scope', '$element', '$attrs', '$compile', '$parse', '$document', '$timeout', '$position', 'dateFilter',
             'dateParser', 'uiDatetimePickerConfig', '$rootScope',
-            function(scope,
-                element,
-                attrs,
-                $compile,
-                $parse,
-                $document,
-                $timeout,
-                $uibPosition,
-                dateFilter,
-                uibDateParser,
-                uiDatetimePickerConfig,
-                $rootScope) {
-                var dateFormat = uiDatetimePickerConfig.dateFormat,
-                    ngModel,
-                    ngModelOptions,
-                    $popup,
+            function(scope, element, attrs, $compile, $parse, $document, $timeout, $uibPosition, dateFilter, uibDateParser, uiDatetimePickerConfig, $rootScope) {
+                var dateFormat = uiDatetimePickerConfig.dateFormat, ngModel, ngModelOptions, $popup,
                     cache = {},
                     watchListeners = [],
                     closeOnDateSelection = angular.isDefined(attrs.closeOnDateSelection)
