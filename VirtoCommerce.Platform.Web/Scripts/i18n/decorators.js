@@ -113,17 +113,15 @@
         };
         return $delegate;
     }]);
-    // Fix bugs & add features for datepicker popup
-    $provide.decorator('datepickerPopupDirective', ['$delegate',
-        function ($delegate) {
-        //delete standart bootstrap directive, use our dateTime-picker
-            $delegate.shift();
-            return $delegate;
-        }]);
-    // Fix bugs & add features for datepicker popup
-    $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'uiDatetimePickerConfig', '$filter', '$locale',
-        function ($delegate, formatConverter, datepickerPopupConfig, $filter, $locale) {
 
+    // Fix bugs & add features for datepicker popup
+    $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'uiDatetimePickerConfig', '$filter', '$locale', 'uiTimepickerConfig',
+        function ($delegate, formatConverter, datepickerPopupConfig, $filter, $locale,time) {
+
+        //delete bootstrap directive
+         $delegate.shift();
+
+         //use custom date time picker directive
         var directive = $delegate[0];
         directive.compile = function (tElem, tAttrs) {
             tElem.attr("datepicker-popup-original", tAttrs.datepickerPopup);
@@ -136,6 +134,7 @@
                     if (newFormat !== oldFormat) {
                         var format = newFormat || datepickerPopupConfig.dateFormat;
                         formatConverter.validate(format, formatConverter.isInvalidDate);
+                        debugger;
                         if (formatConverter.additionalFormats.includes(format)) {
                             format = $locale.DATETIME_FORMATS[format];
                         }

@@ -247,7 +247,7 @@
 
                     if (attrs.timepickerOptions) {
                         var options = scope.$parent.$eval(attrs.timepickerOptions);
-
+                        debugger;
                         angular.forEach(options,
                             function(value, option) {
                                 scope.watchData[option] = value;
@@ -422,14 +422,7 @@
 
                             scope.dropdownStyle.left = position.left + 'px';
 
-                            $timeout(function() {
-                                    scope.$broadcast('datepicker.focus');
-                                    $document.bind('click', documentClickBind);
-                                },
-                                0,
-                                false);
-
-                            scope.open(scope.showPicker);
+                            $timeout(function () { scope.$broadcast('datepicker.focus'); $document.bind('click', documentClickBind); }, 0, false);                            scope.open(scope.showPicker);
                         } else {
                             $document.unbind('click', documentClickBind);
                         }
@@ -683,5 +676,4 @@ angular.module('platformWebApp').run(['$templateCache', function ($templateCache
     $templateCache.put('template/time-picker.html',
         "<ul class=\"dropdown-menu dropdown-menu-left datetime-picker-dropdown\" ng-if=\"isOpen && showPicker == 'time'\" ng-style=dropdownStyle style=left:inherit ng-keydown=keydown($event) ng-click=$event.stopPropagation()><li style=\"padding:0 5px 5px 5px\" class=time-picker-menu><div ng-transclude></div></li><li style=padding:5px ng-if=buttonBar.show><span class=\"btn-group pull-left\" style=margin-right:5px ng-if=\"doShow('now') || doShow('clear')\"><button type=button class=\"btn btn-sm btn-info\" ng-if=\"doShow('now')\" ng-click=\"select('now')\" ng-disabled=\"isDisabled('now')\">{{ 'platform.commands.now' | translate}}</button> <button type=button class=\"btn btn-sm btn-danger\" ng-if=\"doShow('clear')\" ng-click=\"select('clear')\">{{ 'platform.commands.clear' | translate}}</button></span> <span class=\"btn-group pull-right\" ng-if=\"(doShow('date') && enableDate) || doShow('close')\"><button type=button class=\"btn btn-sm btn-default\" ng-if=\"doShow('date') && enableDate\" ng-click=\"open('date', $event)\">{{ 'platform.commands.date' | translate}}</button> <button type=button class=\"btn btn-sm btn-success\" ng-if=\"doShow('close')\" ng-click=close(true)>{{ 'platform.commands.close' | translate }}</button></span></li></ul>"
     );
-
 }]);
