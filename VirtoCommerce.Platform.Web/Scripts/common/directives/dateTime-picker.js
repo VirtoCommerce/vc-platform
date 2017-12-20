@@ -1,7 +1,7 @@
 ﻿angular.module('platformWebApp')
     .constant('uiDatetimePickerConfig',
         {
-            dateFormat: 'yyyy-MM-dd HH:mm',
+            dateFormat: 'MMM d, y H:mm',
             defaultTime: '00:00:00',
             html5Types: {
                 date: 'yyyy-MM-dd',
@@ -15,40 +15,36 @@
             buttonBar: {
                 show: true,
                 now: {
-                    show: true,
-                    text: 'Now'
+                    show: true
                 },
                 today: {
-                    show: true,
-                    text: 'Today'
+                    show: true
                 },
                 clear: {
-                    show: true,
-                    text: 'Clear'
+                    show: true
                 },
                 date: {
-                    show: true,
-                    text: 'Date'
+                    show: true
                 },
                 time: {
-                    show: true,
-                    text: 'Time'
+                    show: true
                 },
                 close: {
-                    show: true,
-                    text: 'Close'
+                    show: true
                 }
             },
             closeOnDateSelection: false,
             appendToBody: false,
             altInputFormats: [],
-            ngModelOptions: {}
+            ngModelOptions: {},
+            showMeridian: false
+
         })
     .controller('DateTimePickerController',
         [
             '$scope', '$element', '$attrs', '$compile', '$parse', '$document', '$timeout', '$position', 'dateFilter',
-            'dateParser', 'uiDatetimePickerConfig', '$rootScope',
-            function(scope, element, attrs, $compile, $parse, $document, $timeout, $uibPosition, dateFilter, uibDateParser, uiDatetimePickerConfig, $rootScope) {
+            'dateParser', 'uiDatetimePickerConfig', '$rootScope', 'timepickerConfig',
+            function (scope, element, attrs, $compile, $parse, $document, $timeout, $uibPosition, dateFilter, uibDateParser, uiDatetimePickerConfig, $rootScope, timepickerConfig) {
                 var dateFormat = uiDatetimePickerConfig.dateFormat, ngModel, ngModelOptions, $popup,
                     cache = {},
                     watchListeners = [],
@@ -61,7 +57,6 @@
                     altInputFormats = angular.isDefined(attrs.altInputFormats)
                         ? scope.$parent.$eval(attrs.altInputFormats)
                         : uiDatetimePickerConfig.altInputFormats;
-
 
                 // taken from UI Bootstrap 2.5.0
                 uibDateParser.fromTimezone = function fromTimezone(date, timezone) {

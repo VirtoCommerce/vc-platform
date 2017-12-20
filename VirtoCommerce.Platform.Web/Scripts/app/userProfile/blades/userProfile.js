@@ -52,6 +52,8 @@
         $scope.timeZones = timeZones.query();
         blade.currentTimeZone = getNameByCode($scope.timeZones, blade.currentTimeZone);
         blade.currentTimeAgoSettings = userProfile.timeAgoSettings;
+        blade.Use12HourClock = userProfile.Use12HourClock;
+        debugger;
     };
 
     function isLoading() {
@@ -103,4 +105,14 @@
             userProfile.save();
         }
     }
+    $scope.Use12HourClock = function () {
+            if (!isLoading()) {
+                i18n.changeTimeAgoSettings(blade.currentTimeAgoSettings);
+                // We want to use fixed by i18n service value and it's impossible to set undefined values for time ago settings in blade UI
+                // Extend time ago settings instead of directly set to prevent overwrite threshold units
+                angular.extend(blade.currentTimeAgoSettings, i18n.getTimeAgoSettings());
+                angular.extend(userProfile.timeAgoSettings, blade.currentTimeAgoSettings);
+                userProfile.save();
+            }
+        }
 }]);

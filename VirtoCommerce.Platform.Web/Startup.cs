@@ -520,6 +520,14 @@ namespace VirtoCommerce.Platform.Web
                             },
                             new ModuleSetting
                             {
+                                Name = "VirtoCommerce.Platform.UI.Use12HourClock",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Use 12 hour clock",
+                                Description = "When set to true (by default), system will display time in format like '12 hour format' when possible",
+                                DefaultValue = true.ToString()
+                            },
+                            new ModuleSetting
+                            {
                                 Name = "VirtoCommerce.Platform.UI.UseTimeAgo",
                                 ValueType = ModuleSetting.TypeBoolean,
                                 Title = "Use time ago format when is possible",

@@ -115,14 +115,18 @@
     }]);
 
     // Fix bugs & add features for datepicker popup
-    $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'uiDatetimePickerConfig', '$filter', '$locale', 'uiTimepickerConfig',
-        function ($delegate, formatConverter, datepickerPopupConfig, $filter, $locale,time) {
+    $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'uiDatetimePickerConfig', 'timepickerConfig', '$filter', '$locale',
+        function ($delegate, formatConverter, datepickerPopupConfig, timepickerConfig, $filter, $locale) {
+
+        // 12H / 24H mode
+        timepickerConfig.showMeridian = datepickerPopupConfig.showMeridian;
 
         //delete bootstrap directive
-         $delegate.shift();
+        $delegate.shift();
 
          //use custom date time picker directive
         var directive = $delegate[0];
+
         directive.compile = function (tElem, tAttrs) {
             tElem.attr("datepicker-popup-original", tAttrs.datepickerPopup);
             return function (scope, element, attrs, ctrls) {
@@ -170,5 +174,5 @@
             }
         };
         return $delegate;
-    }]);
+        }]);
 }]);
