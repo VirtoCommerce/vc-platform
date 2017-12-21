@@ -29,7 +29,7 @@
             thresholdUnits: undefined
         },
         timeSettings: {
-            Use12HourClock: undefined
+            use12HourFormat: undefined
         },
         mainMenuState: {},
         load: function () {
