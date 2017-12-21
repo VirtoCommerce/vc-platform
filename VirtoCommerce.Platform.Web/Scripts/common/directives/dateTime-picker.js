@@ -243,7 +243,6 @@
 
                     if (attrs.timepickerOptions) {
                         var options = scope.$parent.$eval(attrs.timepickerOptions);
-                        debugger;
                         angular.forEach(options,
                             function(value, option) {
                                 scope.watchData[option] = value;
