@@ -2,6 +2,7 @@
     .constant('uiDatetimePickerConfig',
         {
             dateFormat: 'MMM d, y H:mm',
+            date12TimeFormat: 'MMM d, y h:mm a',
             defaultTime: '00:00:00',
             html5Types: {
                 date: 'yyyy-MM-dd',
@@ -329,7 +330,29 @@
                 };
 
                 // Inner change
-                scope.dateSelection = function(dt) {
+                scope.dateSelection = function (dt) {
+
+                    if (scope.enableTime && scope.showPicker === 'date') {
+
+                        // only proceed if dt is a date
+                        if (dt || dt != null) {
+                            // check if our scope.date is null, and if so, set to todays date
+                            if (!angular.isDefined(scope.date) || scope.date == null) {
+                                scope.date = new Date();
+                            }
+
+                            // dt will not be undefined if the now or today button is pressed
+                            if (dt && dt != null) {
+                                // get the existing date and update the time 
+                                var date = new Date(dt);
+                                date.setHours(0);
+                                date.setMinutes(0);
+                                date.setSeconds(0);
+                                date.setMilliseconds(0);
+                                dt = date;
+                            }
+                        }
+                    }
 
                     // check if timePicker is being shown and merge dates, so that the date
                     // part is never changed, only the time

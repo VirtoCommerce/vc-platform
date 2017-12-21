@@ -115,12 +115,8 @@
     }]);
 
     // Fix bugs & add features for datepicker popup
-    $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'uiDatetimePickerConfig', 'timepickerConfig', '$filter', '$locale',
-        function ($delegate, formatConverter, datepickerPopupConfig, timepickerConfig, $filter, $locale) {
-
-        // 12H / 24H mode
-        timepickerConfig.showMeridian = datepickerPopupConfig.showMeridian;
-
+    $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'uiDatetimePickerConfig', 'timepickerConfig', '$filter', '$locale', 'platformWebApp.i18n',
+        function ($delegate, formatConverter, datepickerPopupConfig, timepickerConfig, $filter, $locale, i18n) {
         //delete bootstrap directive
         $delegate.shift();
 
@@ -136,9 +132,18 @@
                 // so limit format number & convert to date via moment to prevent random occurence of errors
                 var applyFormat = function (newFormat, oldFormat) {
                     if (newFormat !== oldFormat) {
-                        var format = newFormat || datepickerPopupConfig.dateFormat;
+                        //get date time format
+                        var timeSettings = i18n.getTimeSettings();
+
+                        //change date time format input and time picker
+                        var dateTimeFormat = timeSettings.use12HourFormat
+                            ? datepickerPopupConfig.date12TimeFormat
+                            : datepickerPopupConfig.dateFormat;
+                        timepickerConfig.showMeridian = timeSettings.use12HourFormat;
+
+                        var format = newFormat || dateTimeFormat;
                         formatConverter.validate(format, formatConverter.isInvalidDate);
-                        debugger;
+
                         if (formatConverter.additionalFormats.includes(format)) {
                             format = $locale.DATETIME_FORMATS[format];
                         }

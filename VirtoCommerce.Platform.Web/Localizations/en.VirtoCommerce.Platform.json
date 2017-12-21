@@ -1,4 +1,4 @@
-{
+﻿{
     "platform": {
         "menu": {
             "home": "Home",
@@ -637,7 +637,8 @@
                     "use-time-ago": "Use time ago format if it is possible",
                     "full-date-threshold-group": "Use full date format for dates earlier than...",
                     "full-date-threshold-description": "Numeric value of time units",
-                    "full-date-threshold-unit-description": "Time unit (i.e. hours or years)"
+                    "full-date-threshold-unit-description": "Time unit (i.e. hours or years)",
+                    "use-12-hour-format": "Use 12 hour clock format"  
                 },
                 "placeholders": {
                     "full-date-threshold": "Enter threshold value",

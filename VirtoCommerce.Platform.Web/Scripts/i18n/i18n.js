@@ -3,9 +3,10 @@
 .constant("platformWebApp.fallbackRegionalFormat", "en")
 .constant("platformWebApp.fallbackTimeZone", "Etc/Utc")
 .constant("platformWebApp.fallbackTimeAgoSettings", { useTimeAgo: true, thresholdUnit: 'Never', threshold: null })
+.constant("platformWebApp.fallbackTimeFormat", { use12HourFormat: true})
 // Service provider get/set function pairs for language, regional format, time zone and time ago settings
-.factory('platformWebApp.i18n', ['platformWebApp.fallbackLanguage', 'platformWebApp.fallbackRegionalFormat', 'platformWebApp.fallbackTimeAgoSettings', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'angularMomentConfig', 'amTimeAgoConfig',
-    function (fallbackLanguage, fallbackRegionalFormat, fallbackTimeAgoSettings, languages, locales, timeZones, userProfileApi, $translate, dynamicLocale, moment, momentService, momentConfig, timeAgoConfig) {
+    .factory('platformWebApp.i18n', ['platformWebApp.fallbackLanguage', 'platformWebApp.fallbackRegionalFormat', 'platformWebApp.fallbackTimeAgoSettings', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'angularMomentConfig', 'amTimeAgoConfig', 'platformWebApp.fallbackTimeFormat',
+        function (fallbackLanguage, fallbackRegionalFormat, fallbackTimeAgoSettings, languages, locales, timeZones, userProfileApi, $translate, dynamicLocale, moment, momentService, momentConfig, timeAgoConfig, fallbackTimeFormat) {
         var changeLanguage = function (language) {
             userProfileApi.getLocales(function(availableLanguages) {
                 availableLanguages.sort();
@@ -60,8 +61,11 @@
                 timeAgoConfig.fullDateThreshold = timeAgoSettings.thresholdUnit && timeAgoSettings.thresholdUnit !== 'Never' ? timeAgoSettings.threshold || 1 : null;
             }
         }
-
-        return {
+        var changeTimeSettings = function (timeSettings) {
+            if (timeSettings)
+                fallbackTimeFormat = timeSettings;
+        }
+            return {
             getLanguage: function() { return languages.normalize($translate.use()) },
             getRegionalFormat: function () { return locales.normalize(dynamicLocale.get()) },
             getTimeZone: function () { return momentConfig.timezone },
@@ -75,16 +79,22 @@
                 result.threshold = result.useTimeAgo && result.thresholdUnit !== 'Never' ? timeAgoConfig.fullDateThreshold : null;
                 return result;
             },
+            getTimeSettings: function () {
+                var result = {};
+                result.use12HourFormat = fallbackTimeFormat.use12HourFormat;
+                return result;
+            },
             changeLanguage: changeLanguage,
             changeRegionalFormat: changeRegionalFormat,
             changeTimeZone: changeTimeZone,
-            changeTimeAgoSettings: changeTimeAgoSettings
+            changeTimeAgoSettings: changeTimeAgoSettings,
+            changeTimeSettings: changeTimeSettings
         }
     }
 ])
 // Configure fallbacks for language, regional format, time zone and time ago settings
-.config(['$provide', 'platformWebApp.fallbackLanguage', 'platformWebApp.fallbackRegionalFormat', 'platformWebApp.fallbackTimeZone', 'platformWebApp.fallbackTimeAgoSettings', 'tmhDynamicLocaleProvider', '$translateProvider', 'angularMomentConfig', 'amTimeAgoConfig',
-        function ($provide, fallbackLanguage, fallbackRegionalFormat, fallbackTimeZone, fallbackTimeAgoSettings, dynamicLocaleProvider, $translateProvider, momentConfig, timeAgoConfig) {
+    .config(['$provide', 'platformWebApp.fallbackLanguage', 'platformWebApp.fallbackRegionalFormat', 'platformWebApp.fallbackTimeZone', 'platformWebApp.fallbackTimeAgoSettings', 'tmhDynamicLocaleProvider', '$translateProvider', 'angularMomentConfig', 'amTimeAgoConfig', 'platformWebApp.fallbackTimeFormat',
+        function ($provide, fallbackLanguage, fallbackRegionalFormat, fallbackTimeZone, fallbackTimeAgoSettings, dynamicLocaleProvider, $translateProvider, momentConfig, timeAgoConfig, fallbackTimeFormat) {
 
     // https://angular-translate.github.io/docs/#/guide
     $translateProvider.useUrlLoader('api/platform/localization')
@@ -132,4 +142,5 @@
     i18n.changeRegionalFormat();
     i18n.changeTimeZone();
     i18n.changeTimeAgoSettings();
+    i18n.changeTimeSettings();
 }]);
