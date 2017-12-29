@@ -123,6 +123,9 @@
          //use custom date time picker directive
         var directive = $delegate[0];
 
+            var timeSettings = i18n.getTimeSettings();
+            //timepickerConfig.showMeridian = timeSettings.use12HourFormat;
+            debugger;
         directive.compile = function (tElem, tAttrs) {
             tElem.attr("datepicker-popup-original", tAttrs.datepickerPopup);
             return function (scope, element, attrs, ctrls) {
@@ -132,16 +135,8 @@
                 // so limit format number & convert to date via moment to prevent random occurence of errors
                 var applyFormat = function (newFormat, oldFormat) {
                     if (newFormat !== oldFormat) {
-                        //get date time format
-                        var timeSettings = i18n.getTimeSettings();
 
-                        //change date time format input and time picker
-                        var dateTimeFormat = timeSettings.use12HourFormat
-                            ? datepickerPopupConfig.date12TimeFormat
-                            : datepickerPopupConfig.dateFormat;
-                        timepickerConfig.showMeridian = timeSettings.use12HourFormat;
-
-                        var format = newFormat || dateTimeFormat;
+                        var format = newFormat || datepickerPopupConfig.dateFormat;;
                         formatConverter.validate(format, formatConverter.isInvalidDate);
 
                         if (formatConverter.additionalFormats.includes(format)) {
@@ -179,5 +174,77 @@
             }
         };
         return $delegate;
+        }]);
+
+    $provide.decorator('timepickerDirective', ['$delegate', 'timepickerConfig', '$locale', 'platformWebApp.settings.helper', 'platformWebApp.i18n', 'platformWebApp.userProfile', function ($delegate, timepickerConfig, $locale, settings, i18n, userProfile) {
+        var directive = $delegate[0];
+        // replace custom toggle meridian
+        directive.templateUrl = 'template/timepicker/timepicker.tpl.html';
+        //save original format AMPMS
+        var meridians = angular.copy($locale.DATETIME_FORMATS.AMPMS);
+        //get date time format
+        var timeSettings = i18n.getTimeSettings();
+        //timepickerConfig.showMeridian = timeSettings.use12HourFormat;
+        var _24Hrs = '[24]';
+
+        timepickerConfig.showMeridian = timeSettings.use12HourFormat;
+
+        var compile = directive.compile;
+            directive.compile = function (tElem, tAttrs) {
+                var link = compile.apply(this, arguments);
+                return function (scope, element, attrs, ctrls) {
+                    scope.customMeridian = scope.meridian;
+
+                    if (!timeSettings.use12HourFormat) {
+                        scope.showMeridian = false;
+                        attrs.showMeridian = timeSettings.use12HourFormat;;
+                        scope.customMeridian = _24Hrs;
+                        //scope.toggleMeridian();
+                    }
+
+
+                    function cnahgeTimeSettings(timeSettings) {
+                        debugger;
+                        i18n.changeTimeSettings(timeSettings);
+                        userProfile.save();
+                    }
+
+                    //update time picker template
+                    function updateTimePicker(use12Hrs) {
+                        timeSettings.use12HourFormat = use12Hrs;
+                        cnahgeTimeSettings(timeSettings);
+                        //$locale.DATETIME_FORMATS.AMPMS[0] = $locale.DATETIME_FORMATS.AMPMS[1] = _24Hrs;
+                        scope.showMeridian = use12Hrs;
+                        scope.updateMinutes();
+                        scope.meridian = _24Hrs;
+                        attrs.showMeridian = use12Hrs;
+                    }
+
+                    scope.customToggleMeridian = function () {
+                        scope.customMeridian = scope.meridian;
+                        debugger;
+                        if (scope.meridian === meridians[1]) {
+                            updateTimePicker(false);
+                            scope.meridian = _24Hrs;
+                            //fix show 24 hours
+                            //$locale.DATETIME_FORMATS.AMPMS[0] = $locale.DATETIME_FORMATS.AMPMS[1] = _24Hrs;
+                        }
+                        else if (scope.meridian === _24Hrs) {
+                            updateTimePicker(true);
+                            //fix show AMPM hours
+                            $locale.DATETIME_FORMATS.AMPMS[0] = meridians[0];
+                            $locale.DATETIME_FORMATS.AMPMS[1] = meridians[1];
+
+                            scope.toggleMeridian();
+                        }
+                        else {
+                            scope.toggleMeridian();
+                        }
+                    }
+
+                    link.apply(this, arguments);
+                };
+            };
+            return $delegate;
         }]);
 }]);

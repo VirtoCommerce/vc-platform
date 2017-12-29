@@ -1,8 +1,7 @@
 ﻿angular.module('platformWebApp')
     .constant('uiDatetimePickerConfig',
         {
-            dateFormat: 'MMM d, y H:mm',
-            date12TimeFormat: 'MMM d, y h:mm a',
+            dateFormat: 'medium',
             defaultTime: '00:00:00',
             html5Types: {
                 date: 'yyyy-MM-dd',
@@ -693,4 +692,32 @@ angular.module('platformWebApp').run(['$templateCache', function ($templateCache
     $templateCache.put('template/time-picker.html',
         "<ul class=\"dropdown-menu dropdown-menu-left datetime-picker-dropdown\" ng-if=\"isOpen && showPicker == 'time'\" ng-style=dropdownStyle style=left:inherit ng-keydown=keydown($event) ng-click=$event.stopPropagation()><li style=\"padding:0 5px 5px 5px\" class=time-picker-menu><div ng-transclude></div></li><li style=padding:5px ng-if=buttonBar.show><span class=\"btn-group pull-left\" style=margin-right:5px ng-if=\"doShow('now') || doShow('clear')\"><button type=button class=\"btn btn-sm btn-info\" ng-if=\"doShow('now')\" ng-click=\"select('now')\" ng-disabled=\"isDisabled('now')\">{{ 'platform.commands.now' | translate}}</button> <button type=button class=\"btn btn-sm btn-danger\" ng-if=\"doShow('clear')\" ng-click=\"select('clear')\">{{ 'platform.commands.clear' | translate}}</button></span> <span class=\"btn-group pull-right\" ng-if=\"(doShow('date') && enableDate) || doShow('close')\"><button type=button class=\"btn btn-sm btn-default\" ng-if=\"doShow('date') && enableDate\" ng-click=\"open('date', $event)\">{{ 'platform.commands.date' | translate}}</button> <button type=button class=\"btn btn-sm btn-success\" ng-if=\"doShow('close')\" ng-click=close(true)>{{ 'platform.commands.close' | translate }}</button></span></li></ul>"
     );
+    $templateCache.put("template/timepicker/timepicker.tpl.html",
+        "<table>\n" +
+        "  <tbody>\n" +
+        "    <tr class=\"text-center\" ng-show=\"::showSpinners\">\n" +
+        "      <td><a ng-click=\"incrementHours()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
+        "      <td>&nbsp;</td>\n" +
+        "      <td><a ng-click=\"incrementMinutes()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-up\"></span></a></td>\n" +
+        "      <td></td>\n" +
+        "    </tr>\n" +
+        "    <tr>\n" +
+        "      <td class=\"form-group\" ng-class=\"{'has-error': invalidHours}\">\n" +
+        "        <input style=\"width:50px;\" type=\"text\" ng-model=\"hours\" ng-change=\"updateHours()\" class=\"form-control text-center\" ng-readonly=\"::readonlyInput\" maxlength=\"2\">\n" +
+        "      </td>\n" +
+        "      <td>:</td>\n" +
+        "      <td class=\"form-group\" ng-class=\"{'has-error': invalidMinutes}\">\n" +
+        "        <input style=\"width:50px;\" type=\"text\" ng-model=\"minutes\" ng-change=\"updateMinutes()\" class=\"form-control text-center\" ng-readonly=\"::readonlyInput\" maxlength=\"2\">\n" +
+        "      </td>\n" +
+        "      <td><button type=\"button\" class=\"btn btn-default text-center\" ng-click=\"customToggleMeridian()\">{{customMeridian}}</button></td>\n" +
+        "    </tr>\n" +
+        "    <tr class=\"text-center\" ng-show=\"::showSpinners\">\n" +
+        "      <td><a ng-click=\"decrementHours()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
+        "      <td>&nbsp;</td>\n" +
+        "      <td><a ng-click=\"decrementMinutes()\" class=\"btn btn-link\"><span class=\"glyphicon glyphicon-chevron-down\"></span></a></td>\n" +
+        "      <td></td>\n" +
+        "    </tr>\n" +
+        "  </tbody>\n" +
+        "</table>\n" +
+        "");
 }]);
