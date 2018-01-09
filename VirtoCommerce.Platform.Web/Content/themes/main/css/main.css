@@ -1189,6 +1189,12 @@ fieldset + fieldset {
   top: 11px;
   z-index: 50; }
 
+.form-input.__langs .langCode {
+    left: 8px;
+    position: absolute;
+    top: 6px;
+    z-index: 50; }
+
 .form-input.__currency {
   position: relative; }
   .form-input.__currency .currency {
@@ -4707,6 +4713,11 @@ tags-input .tags.focused {
     overflow: auto; }
 
 /* Flags */
+.langCode {
+    display: inline-block;
+    height: 11px;
+    width: 16px; }
+
 .flag {
   background: url(../images/flags.png) no-repeat;
   display: inline-block;
