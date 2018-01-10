@@ -290,18 +290,6 @@ namespace VirtoCommerce.Platform.Data.Azure
             }
         }
 
-        /// <summary>
-        /// Copy blob new url
-        /// </summary>
-        /// <param name="container"></param>
-        /// <param name="oldUrl"></param>
-        /// <param name="newUrl"></param>
-        private async void CopyBlob(CloudBlobContainer container, string oldUrl, string newUrl)
-        {
-            await MoveBlob(container, oldUrl, newUrl, true);
-        }
-
-
         #endregion
 
         #region IBlobUrlResolver Members
