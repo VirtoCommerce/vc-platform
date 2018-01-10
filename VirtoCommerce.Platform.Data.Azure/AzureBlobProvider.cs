@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using VirtoCommerce.Platform.Core.Assets;
@@ -226,6 +228,79 @@ namespace VirtoCommerce.Platform.Data.Azure
                 blobContainer.GetBlockBlobReference(directoryPath).UploadText(string.Empty);
             }
         }
+
+        public virtual void Move(string oldUrl, string newUrl)
+        {
+            Task.Run(async () => await MoveAsync(oldUrl, newUrl));
+        }
+
+        public virtual void Copy(string oldUrl, string newUrl)
+        {
+            Task.Run(async () => await MoveAsync(oldUrl, newUrl, true));
+        }
+
+        protected virtual async Task MoveAsync(string oldUrl, string newUrl, bool isCopy = false)
+        {
+            var moveItems = new Dictionary<string, string>();
+
+            var containerName = GetContainerNameFromUrl(oldUrl);
+
+            var oldPath = GetDirectoryPathFromUrl(oldUrl);
+            var newPath = GetDirectoryPathFromUrl(newUrl);
+
+            CloudBlobContainer blobContainer = _cloudBlobClient.GetContainerReference(containerName);
+
+            var items = blobContainer.ListBlobs(oldPath, true, BlobListingDetails.All);
+
+            foreach (var listBlobItem in items)
+            {
+                var blobName = listBlobItem.Uri.AbsoluteUri;
+                moveItems.Add(blobName, blobName.Replace(oldPath, newPath));
+            }
+
+            foreach (var item in moveItems)
+            {
+                await MoveBlob(blobContainer, item.Key, item.Value, isCopy);
+            }
+        }
+
+        /// <summary>
+        /// Move blob new url and remove old blob
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="oldUrl"></param>
+        /// <param name="newUrl"></param>
+        /// <param name="isCopy"></param>
+        private async Task MoveBlob(CloudBlobContainer container, string oldUrl, string newUrl, bool isCopy)
+        {
+            CloudBlockBlob target = container.GetBlockBlobReference(GetFilePathFromUrl(newUrl));
+
+            await container.CreateIfNotExistsAsync();
+
+            if (!await target.ExistsAsync())
+            {
+                CloudBlockBlob sourse = container.GetBlockBlobReference(GetFilePathFromUrl(oldUrl));
+
+                if (await sourse.ExistsAsync())
+                {
+                    await target.StartCopyAsync(sourse);
+                    if(!isCopy)
+                        await sourse.DeleteIfExistsAsync();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copy blob new url
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="oldUrl"></param>
+        /// <param name="newUrl"></param>
+        private async void CopyBlob(CloudBlobContainer container, string oldUrl, string newUrl)
+        {
+            await MoveBlob(container, oldUrl, newUrl, true);
+        }
+
 
         #endregion
 
