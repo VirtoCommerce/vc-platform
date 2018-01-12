@@ -123,7 +123,6 @@
          //use custom date time picker directive
         var directive = $delegate[0];
 
-        //timepickerConfig.showMeridian = timeSettings.use12HourFormat;
         directive.compile = function (tElem, tAttrs) {
             tElem.attr("datepicker-popup-original", tAttrs.datepickerPopup);
             return function (scope, element, attrs, ctrls) {
@@ -181,7 +180,7 @@
         var directive = $delegate[0];
 
         var timeSettings = userProfile.timeSettings;
-        timepickerConfig.showMeridian = timeSettings.use12HourFormat;
+        timepickerConfig.showMeridian = timeSettings.showMeridian;
 
         var compile = directive.compile;
             directive.compile = function (tElem, tAttrs) {
@@ -190,10 +189,10 @@
 
                     //set 24 hour format
                     timeSettings = i18n.getTimeSettings();
-                    scope.showMeridian = timeSettings.use12HourFormat;
+                    scope.showMeridian = timeSettings.showMeridian;
 
                     function cnahgeTimeSettings(showMeridian) {
-                        timeSettings.use12HourFormat = showMeridian;
+                        timeSettings.showMeridian = showMeridian;
                         i18n.changeTimeSettings(timeSettings);
                         userProfile.save();
                     }

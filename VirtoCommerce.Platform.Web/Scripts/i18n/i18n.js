@@ -3,7 +3,7 @@
 .constant("platformWebApp.fallbackRegionalFormat", "en")
 .constant("platformWebApp.fallbackTimeZone", "Etc/Utc")
 .constant("platformWebApp.fallbackTimeAgoSettings", { useTimeAgo: true, thresholdUnit: 'Never', threshold: null })
-.constant("platformWebApp.fallbackTimeFormat", { use12HourFormat: true})
+.constant("platformWebApp.fallbackTimeFormat", { showMeridian: true})
 // Service provider get/set function pairs for language, regional format, time zone and time ago settings
     .factory('platformWebApp.i18n', ['platformWebApp.fallbackLanguage', 'platformWebApp.fallbackRegionalFormat', 'platformWebApp.fallbackTimeAgoSettings', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi', '$translate', 'tmhDynamicLocale', 'moment', 'amMoment', 'angularMomentConfig', 'amTimeAgoConfig', 'platformWebApp.fallbackTimeFormat',
         function (fallbackLanguage, fallbackRegionalFormat, fallbackTimeAgoSettings, languages, locales, timeZones, userProfileApi, $translate, dynamicLocale, moment, momentService, momentConfig, timeAgoConfig, fallbackTimeFormat) {
@@ -81,7 +81,7 @@
             },
             getTimeSettings: function () {
                 var result = {};
-                result.use12HourFormat = fallbackTimeFormat.use12HourFormat;
+                result.showMeridian = fallbackTimeFormat.showMeridian;
                 return result;
             },
             changeLanguage: changeLanguage,
