@@ -2,6 +2,8 @@
 [![Build status](http://ci.virtocommerce.com/buildStatus/icon?job=vc-2-org/vc-platform/master)](http://ci.virtocommerce.com/job/vc-2-org/job/vc-platform/job/master/) [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Amaster&blinking=true)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Amaster) [![Lines of code](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)&emsp;
 [![Documentation](https://img.shields.io/badge/docs-read-brightgreen.svg)](https://virtocommerce.com/docs)&nbsp;[![Ask question at https://stackoverflow.com/questions/tagged/virtocommerce](https://img.shields.io/badge/stackoverflow-ask%20question-orange.svg)](https://stackoverflow.com/questions/tagged/virtocommerce) [![Join the chat at https://gitter.im/VirtoCommerce/vc-community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/VirtoCommerce/vc-community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Contributors](https://img.shields.io/github/contributors/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/graphs/contributors)
 
+Test
+
 Enterprise .NET ecommerce platform for B2B and B2C solutions. Virto Commerce is based on .NET 4.6 (soon to be migrated to .net core) with extensive use of MVC, IoC, EF, Azure, Angular JS and many other cutting edge technologies. It can be deployed in Microsoft Cloud (Azure), Amazon Web Services (AWS) and on-premise. It also support Docker deployment and images can be found on docker.io.
 
 Virto Commerce is updated almost daily and new modules can be downloaded using "Modules" blade in admin console.
