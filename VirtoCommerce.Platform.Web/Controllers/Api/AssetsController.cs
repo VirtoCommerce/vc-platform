@@ -94,10 +94,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var retVal = new List<webModel.BlobInfo>();
+			folderUrl = folderUrl.TrimStart('/');
+			
             if (url != null)
             {
                 var fileName = name ?? HttpUtility.UrlDecode(Path.GetFileName(url));
-                var fileUrl = folderUrl + "/" + fileName;
+                var fileUrl = folderUrl + '/' + fileName;
                 using (var client = new WebClient())
                 using (var blobStream = _blobProvider.OpenWrite(fileUrl))
                 using (var remoteStream = client.OpenRead(url))
