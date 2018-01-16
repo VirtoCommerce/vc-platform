@@ -4,9 +4,9 @@
 
 
 
-angular.module('angular-scroll-complete', [])
+angular.module('platformWebApp')
     .directive('whenScrolled', function () {
-        return function (scope, elm, attr) {        
+        return function (scope, elm, attr) {
             var raw = elm[0];
             var scrollCompleted = true;
             scope.$on('scrollCompleted', function () {
