@@ -462,8 +462,6 @@ angular.module('platformWebApp')
                 scope.select = function(opt) {
 
                     var date = null;
-                    var isNow = opt === 'now';
-
                     if (opt === 'today' || opt == 'now') {
                         var now = new Date();
                         if (angular.isDate(scope.date)) {
