@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using VirtoCommerce.Platform.Core.Assets;
@@ -224,6 +227,80 @@ namespace VirtoCommerce.Platform.Data.Azure
             {
                 //Need upload empty blob because azure blob storage not support direct directory creation
                 blobContainer.GetBlockBlobReference(directoryPath).UploadText(string.Empty);
+            }
+        }
+
+        public virtual void Move(string oldUrl, string newUrl)
+        {
+            Task.Factory.StartNew(() => MoveAsync(oldUrl, newUrl), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
+        }
+
+        public virtual void Copy(string oldUrl, string newUrl)
+        {
+            Task.Factory.StartNew(() => MoveAsync(oldUrl, newUrl, true), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
+        }
+
+        protected virtual async Task MoveAsync(string oldUrl, string newUrl, bool isCopy = false)
+        {
+            string oldPath, newPath;
+            bool isFolderRename = string.IsNullOrEmpty(Path.GetFileName(oldUrl));
+
+            var moveItems = new Dictionary<string, string>();
+
+            var containerName = GetContainerNameFromUrl(oldUrl);
+
+            //if rename file
+            if (!isFolderRename)
+            {
+                oldPath = GetFilePathFromUrl(oldUrl);
+                newPath = GetFilePathFromUrl(newUrl);
+            }
+            else
+            {
+                oldPath = GetDirectoryPathFromUrl(oldUrl);
+                newPath = GetDirectoryPathFromUrl(newUrl);
+            }
+
+            CloudBlobContainer blobContainer = _cloudBlobClient.GetContainerReference(containerName);
+
+            var items = blobContainer.ListBlobs(oldPath, true, BlobListingDetails.All);
+
+            foreach (var listBlobItem in items)
+            {
+                var blobName = isFolderRename ? listBlobItem.Uri.AbsoluteUri : listBlobItem.StorageUri.PrimaryUri.ToString();
+
+                moveItems.Add(blobName, blobName.Replace(oldPath, newPath));
+            }
+
+            foreach (var item in moveItems)
+            {
+                await MoveBlob(blobContainer, item.Key, item.Value, isCopy);
+            }
+        }
+
+        /// <summary>
+        /// Move blob new url and remove old blob
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="oldUrl"></param>
+        /// <param name="newUrl"></param>
+        /// <param name="isCopy"></param>
+        private async Task MoveBlob(CloudBlobContainer container, string oldUrl, string newUrl, bool isCopy)
+        {
+            CloudBlockBlob target = container.GetBlockBlobReference(GetFilePathFromUrl(newUrl));
+
+            await container.CreateIfNotExistsAsync();
+
+            if (!await target.ExistsAsync())
+            {
+                CloudBlockBlob sourse = container.GetBlockBlobReference(GetFilePathFromUrl(oldUrl));
+
+                if (await sourse.ExistsAsync())
+                {
+                    await target.StartCopyAsync(sourse);
+                    if(!isCopy)
+                        await sourse.DeleteIfExistsAsync();
+                }
             }
         }
 
