@@ -1361,6 +1361,13 @@ label.form-control {
   margin: 0 0 0 18px;
   vertical-align: 2px; }
 
+.form-input.__calendar .dropdown-menu table[timepicker] .btn span {
+  vertical-align: middle; }
+
+.form-input.__calendar .dropdown-menu table[timepicker] .form-group input {
+  text-align: center;
+  padding-right: 10px !important; }
+
 /* Switch */
 .__switch {
   cursor: pointer;
@@ -2717,6 +2724,12 @@ button.btn {
 
 .dropdown-menu .glyphicon.glyphicon-chevron-right:before {
   content: ''; }
+
+.dropdown-menu .glyphicon.glyphicon-chevron-up:before {
+  content: ''; }
+
+.dropdown-menu .glyphicon.glyphicon-chevron-down:before {
+  content: ''; }
 
 /* Select */
 .select2-container {

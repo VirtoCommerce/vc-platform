@@ -113,40 +113,29 @@
         };
         return $delegate;
     }]);
-    // Fix support of first day week for datepicker
-    $provide.decorator('datepickerDirective', ['$delegate', '$locale', function ($delegate, $locale) {
-        var directive = $delegate[0];
-        directive.compile = function () {
-            return function (scope, element, attrs, ctrls) {
-                var controller = ctrls[0];
-                // 0 is Sunday in angular-js and Monday in angular-ui datepicker
-                var firstDayOfWeek = $locale.DATETIME_FORMATS.FIRSTDAYOFWEEK + 1;
-                firstDayOfWeek = firstDayOfWeek === 7 ? 0 : firstDayOfWeek;
-                controller.startingDay = firstDayOfWeek;
-                directive.link.apply(this, arguments);
-            }
-        };
-        return $delegate;
-    }]);
+
     // Fix bugs & add features for datepicker popup
-    $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'datepickerPopupConfig', '$filter', '$locale',
-    function ($delegate, formatConverter, datepickerPopupConfig, $filter, $locale) {
+    $provide.decorator('datepickerPopupDirective', ['$delegate', 'platformWebApp.angularToMomentFormatConverter', 'uiDatetimePickerConfig', 'timepickerConfig', '$filter', '$locale',
+        function ($delegate, formatConverter, datepickerPopupConfig, timepickerConfig, $filter, $locale) {
+        //delete bootstrap directive
+        $delegate.shift();
+
+         //use custom date time picker directive
         var directive = $delegate[0];
+
         directive.compile = function (tElem, tAttrs) {
             tElem.attr("datepicker-popup-original", tAttrs.datepickerPopup);
-            return function (scope, element, attrs, ngModelCtrl) {
-                // Automatic localization support for buttons in popup
-                attrs.currentText = attrs.currentText || $filter('translate')('platform.commands.today');
-                attrs.clearText = attrs.clearText || $filter('translate')('platform.commands.clear');
-                attrs.closeText = attrs.closeText || $filter('translate')('platform.commands.close');
-
+            return function (scope, element, attrs, ctrls) {
+                var ngModelCtrl = ctrls[0];
                 // datepicker has some bugs and limitations to support date & time formats,
                 // also, it doesn't support localized input,
                 // so limit format number & convert to date via moment to prevent random occurence of errors
                 var applyFormat = function (newFormat, oldFormat) {
                     if (newFormat !== oldFormat) {
-                        var format = newFormat || datepickerPopupConfig.datepickerPopup;
+
+                        var format = newFormat || datepickerPopupConfig.dateFormat;;
                         formatConverter.validate(format, formatConverter.isInvalidDate);
+
                         if (formatConverter.additionalFormats.includes(format)) {
                             format = $locale.DATETIME_FORMATS[format];
                         }
@@ -166,6 +155,7 @@
                     scope.date = value;
                     return ngModelCtrl.$isEmpty(value) ? value : $filter('date')(moment(value), format);
                 });
+
                 ngModelCtrl.$parsers.unshift(function (value) {
                     if (value) {
                         var format = formatConverter.convert(attrs.datepickerPopup);
@@ -181,5 +171,39 @@
             }
         };
         return $delegate;
-    }]);
+        }]);
+
+    $provide.decorator('timepickerDirective', ['$delegate', 'timepickerConfig', '$locale', 'platformWebApp.settings.helper', 'platformWebApp.i18n', 'platformWebApp.userProfile',
+        function ($delegate, timepickerConfig, $locale, settings, i18n, userProfile) {
+
+        $delegate.shift();
+        var directive = $delegate[0];
+
+        var timeSettings = userProfile.timeSettings;
+        timepickerConfig.showMeridian = timeSettings.showMeridian;
+
+        var compile = directive.compile;
+            directive.compile = function (tElem, tAttrs) {
+                var link = compile.apply(this, arguments);
+                return function (scope, element, attrs, ctrls) {
+
+                    //set 24 hour format
+                    timeSettings = i18n.getTimeSettings();
+                    scope.showMeridian = timeSettings.showMeridian;
+
+                    function cnahgeTimeSettings(showMeridian) {
+                        timeSettings.showMeridian = showMeridian;
+                        i18n.changeTimeSettings(timeSettings);
+                        userProfile.save();
+                    }
+
+                    scope.$watch('showMeridian', function (showMeridian) {
+                            cnahgeTimeSettings(showMeridian);
+                    });
+
+                    link.apply(this, arguments);
+                };
+            };
+            return $delegate;
+        }]);
 }]);
