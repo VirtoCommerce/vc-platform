@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -231,22 +232,34 @@ namespace VirtoCommerce.Platform.Data.Azure
 
         public virtual void Move(string oldUrl, string newUrl)
         {
-            Task.Run(async () => await MoveAsync(oldUrl, newUrl));
+            Task.Factory.StartNew(() => MoveAsync(oldUrl, newUrl), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
         }
 
         public virtual void Copy(string oldUrl, string newUrl)
         {
-            Task.Run(async () => await MoveAsync(oldUrl, newUrl, true));
+            Task.Factory.StartNew(() => MoveAsync(oldUrl, newUrl, true), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
         }
 
         protected virtual async Task MoveAsync(string oldUrl, string newUrl, bool isCopy = false)
         {
+            string oldPath, newPath;
+            bool isFolderRename = string.IsNullOrEmpty(Path.GetFileName(oldUrl));
+
             var moveItems = new Dictionary<string, string>();
 
             var containerName = GetContainerNameFromUrl(oldUrl);
 
-            var oldPath = GetDirectoryPathFromUrl(oldUrl);
-            var newPath = GetDirectoryPathFromUrl(newUrl);
+            //if rename file
+            if (!isFolderRename)
+            {
+                oldPath = GetFilePathFromUrl(oldUrl);
+                newPath = GetFilePathFromUrl(newUrl);
+            }
+            else
+            {
+                oldPath = GetDirectoryPathFromUrl(oldUrl);
+                newPath = GetDirectoryPathFromUrl(newUrl);
+            }
 
             CloudBlobContainer blobContainer = _cloudBlobClient.GetContainerReference(containerName);
 
@@ -254,7 +267,8 @@ namespace VirtoCommerce.Platform.Data.Azure
 
             foreach (var listBlobItem in items)
             {
-                var blobName = listBlobItem.Uri.AbsoluteUri;
+                var blobName = isFolderRename ? listBlobItem.Uri.AbsoluteUri : listBlobItem.StorageUri.PrimaryUri.ToString();
+
                 moveItems.Add(blobName, blobName.Replace(oldPath, newPath));
             }
 
