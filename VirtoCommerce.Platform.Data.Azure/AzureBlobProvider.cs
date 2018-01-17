@@ -243,7 +243,7 @@ namespace VirtoCommerce.Platform.Data.Azure
         protected virtual async Task MoveAsync(string oldUrl, string newUrl, bool isCopy = false)
         {
             string oldPath, newPath;
-            bool isFolderRename = string.IsNullOrEmpty(Path.GetFileName(oldUrl));
+            var isFolderRename = string.IsNullOrEmpty(Path.GetFileName(oldUrl));
 
             var moveItems = new Dictionary<string, string>();
 
@@ -261,7 +261,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                 newPath = GetDirectoryPathFromUrl(newUrl);
             }
 
-            CloudBlobContainer blobContainer = _cloudBlobClient.GetContainerReference(containerName);
+            var blobContainer = _cloudBlobClient.GetContainerReference(containerName);
 
             var items = blobContainer.ListBlobs(oldPath, true, BlobListingDetails.All);
 
@@ -287,13 +287,13 @@ namespace VirtoCommerce.Platform.Data.Azure
         /// <param name="isCopy"></param>
         private async Task MoveBlob(CloudBlobContainer container, string oldUrl, string newUrl, bool isCopy)
         {
-            CloudBlockBlob target = container.GetBlockBlobReference(GetFilePathFromUrl(newUrl));
+            var target = container.GetBlockBlobReference(GetFilePathFromUrl(newUrl));
 
             await container.CreateIfNotExistsAsync();
 
             if (!await target.ExistsAsync())
             {
-                CloudBlockBlob sourse = container.GetBlockBlobReference(GetFilePathFromUrl(oldUrl));
+                var sourse = container.GetBlockBlobReference(GetFilePathFromUrl(oldUrl));
 
                 if (await sourse.ExistsAsync())
                 {
