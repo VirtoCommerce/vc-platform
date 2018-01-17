@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -323,6 +323,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
             return Ok(notification);
+        }
+
+        /// <summary>
+        /// This method used by azure automatically deployment scripts to check the installation status
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("autoinstall/state")]
+        [ResponseType(typeof(string))]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [AllowAnonymous]
+        public IHttpActionResult GetSampleDataState()
+        {
+            var state = _settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false) ? "Completed" : "Processing";
+            return Ok(state);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
