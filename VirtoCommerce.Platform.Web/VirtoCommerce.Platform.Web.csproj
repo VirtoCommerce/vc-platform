@@ -329,6 +329,7 @@
     <Compile Include="Model\ExportImport\PushNotifications\SampleDataImportPushNotification.cs" />
     <Compile Include="Model\ExportImport\SampleDataInfo.cs" />
     <Compile Include="Model\ExportImport\SampleDataState.cs" />
+    <Compile Include="Model\Modularity\AutoInstallState.cs" />
     <Compile Include="Model\Modularity\ModuleAutoInstallPushNotification.cs" />
     <Compile Include="Model\Modularity\ModuleIdentity.cs" />
     <Compile Include="Model\Notifications\RenderNotificationContentResult.cs" />
