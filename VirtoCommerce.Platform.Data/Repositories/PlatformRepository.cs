@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -26,6 +28,10 @@ namespace VirtoCommerce.Platform.Data.Repositories
             Configuration.LazyLoadingEnabled = false;
         }
 
+        public PlatformRepository(DbConnection existingConnection, IUnitOfWork unitOfWork = null, IInterceptor[] interceptors = null)
+            : base(existingConnection, unitOfWork, interceptors)
+        {
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
