@@ -28,7 +28,7 @@
         		}
         		$scope.sampleDataInfos = {};
         		//thats need when state direct open by url or push notification
-        		var step = setupWizard.findStep($state.current.name);
+                var step = setupWizard.findStepByState($state.current.name);
 
         		$scope.close = function () {
         			setupWizard.showStep(step.nextStep);
@@ -55,8 +55,8 @@
         					else
         					{
         						setupWizard.showStep(step.nextStep);
-        					}
-        				});
+                            }
+                        }, function (error) { setupWizard.showStep(step.nextStep); });
         			}
         			else
         			{

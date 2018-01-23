@@ -4,13 +4,7 @@
         .state('setupWizard', {
         	url: '/setupWizard',
         	templateUrl: '$(Platform)/Scripts/app/setup/templates/setupWizard.tpl.html',
-        	controller: ['$scope', '$state', '$stateParams', 'platformWebApp.setupWizard', function ($scope, $state, $stateParams, setupWizard) {
-        		setupWizard.loadStep(function (step) {
-        			if (step) {
-        				setupWizard.showStep(step);
-        			};
-        		});
-        	}]
+            controller: ['$scope', '$state', '$stateParams', 'platformWebApp.setupWizard', function ($scope, $state, $stateParams, setupWizard) {}]
         });
 }])
 .factory('platformWebApp.setupWizard', ['$state', 'platformWebApp.settings', function ($state, settings) {	
@@ -18,13 +12,20 @@
 	var wizard =
 	{
 		//switches the current step in the wizard to passed or next on the current
-		showStep : function (step) {
-			var state = step ? step.state : "workspace";
-			settings.update([{ name: 'VirtoCommerce.SetupStep', value: state }]);
-			$state.go(state);
+        showStep: function (step) {
+            var state = step ? step.state : "workspace";
+            if (wizard.currentStep != step) {
+                wizard.currentStep = step;
+                settings.update([{ name: 'VirtoCommerce.SetupStep', value: state }], function () {
+                    $state.go(state);
+                });
+            }
+            else {
+                $state.go(state);
+            }  
 		},
 
-		findStep : function (state) {
+		findStepByState : function (state) {
 			return _.find(wizardSteps, function (x) { return x.state == state; });
 		},
 
@@ -37,19 +38,19 @@
 				wizardSteps[i].nextStep = nextStep;
 				nextStep = wizardSteps[i];
 			}
-		},
-
-		loadStep : function (callback) {
+        },
+		load : function () {
 			//Initial step
-			var step = wizardSteps[0];
-			//restore  saved setup step
-			settings.getValues({ id: "VirtoCommerce.SetupStep" }, function (data) {
+            wizard.currentStep = wizardSteps[0];
+            //load  saved setup step
+            return settings.getValues({ id: "VirtoCommerce.SetupStep" }).$promise.then(function (data) {
 				if (angular.isArray(data) && data.length > 0) {
-					step = wizard.findStep(data[0]);
-				}
-				callback(step);
+                    wizard.currentStep = wizard.findStepByState(data[0]);
+                }
+                return wizard;
 			});
-		}
+        },
+        currentStep: undefined
 	};
 	return wizard;
 }])
@@ -59,13 +60,10 @@
   	$rootScope.$on('loginStatusChanged', function (event, authContext) {
   		if (authContext.isAuthenticated) {
   			//timeout need because $state not fully loading in run method and need to wait little time
-  			$timeout(function () {
-  				setupWizard.loadStep(function (step) {
-  					if (step) {
-  						setupWizard.showStep(step);
-  					};
-  				});
-  			}, 500);
+                $timeout(function () {
+                    setupWizard.load().then(
+                        function (wizard) { wizard.showStep(wizard.currentStep); });
+                }, 500);
   		}
   	});
 
