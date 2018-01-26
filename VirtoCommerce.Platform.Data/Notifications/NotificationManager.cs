@@ -119,7 +119,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
             retVal.ObjectTypeId = objectTypeId;
             retVal.Language = language;
 
-            var template = _notificationTemplateService.GetByNotification(type, objectId, objectTypeId, language);
+            var notificationTypeName = retVal.GetType().Name;
+            var template = _notificationTemplateService.GetByNotification(notificationTypeName, objectId, objectTypeId, language);
+
             if (template != null)
             {
                 retVal.NotificationTemplate = template;
