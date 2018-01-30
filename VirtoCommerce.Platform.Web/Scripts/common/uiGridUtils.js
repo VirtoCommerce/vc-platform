@@ -190,7 +190,11 @@
                 columnDefs = $scope.gridApi.grid.columns;
             } else {
                 var savedState = $localStorage['gridState:' + $scope.blade.template];
-                columnDefs = savedState ? savedState.columns : $scope.gridOptions.columnDefs;
+                if (savedState) {
+                    columnDefs = savedState.columns;
+                } else if ($scope.gridOptions) {
+                    columnDefs = $scope.gridOptions.columnDefs;
+                }
             }
 
             var sorts = _.filter(columnDefs, function (x) {
