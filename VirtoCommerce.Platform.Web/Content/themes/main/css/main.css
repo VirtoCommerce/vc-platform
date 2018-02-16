@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /* Fonts */
 /* Metrics */
 /* General */
@@ -3403,7 +3403,15 @@ tags-input .tags.focused {
           left: 20px;
           position: absolute;
           top: 2px; }
-      .blade .blade-head .blade-status .progress-bar {
+      .blade .blade-head .blade-status .link-error-details {
+          color: #999;
+          float: right;
+          margin-right: 80px;
+          margin-top: -1px;
+          text-decoration: underline; }
+     .blade .blade-head .blade-status .link-error-details:hover {
+          color: white; }
+     .blade .blade-head .blade-status .progress-bar {
         bottom: 0;
         height: auto;
         left: 0;

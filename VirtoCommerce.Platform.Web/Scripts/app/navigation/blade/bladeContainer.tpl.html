@@ -2,7 +2,7 @@
     <div class="blade-wrapper" va-blade='blade'>
         <header class="blade-head">
             <div class="blade-status" ng-class="{'__error': blade.error}">
-                <div class="status-message" ng-if="blade.error">{{blade.error}}</div>
+                <div class="status-message" ng-if="blade.error">{{blade.error}}<a class="link-error-details" ng-click="showErrorDetails()">{{ seeDetailsLabel | translate }}</a></div>
                 <div class="progress-bar" ng-class="{'__loaded': !blade.isLoading}" ng-show="blade.isLoading"></div>
             </div>
             <div class="blade-nav">
