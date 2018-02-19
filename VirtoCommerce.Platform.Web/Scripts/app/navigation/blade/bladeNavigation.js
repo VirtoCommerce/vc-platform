@@ -192,12 +192,11 @@
                 $document.bind('click', handleClickEvent);
             };
 
-            scope.seeDetailsLabel = "see Details";
             scope.showErrorDetails = function () {
-                var dialog = { id: "errorDetails", title: "Description of error." };
+                var dialog = { id: "errorDetails" };
                 if (scope.blade.error != undefined)
                     dialog.message = scope.blade.error;
-                dialogService.showNotificationDialog(dialog);
+                dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/errorDetails-dialog.tpl.html', 'platformWebApp.confirmDialogController');
             };
         }
     }
@@ -400,7 +399,9 @@
         setError: function (msg, blade) {
             if (blade) {
                 blade.isLoading = false;
-                blade.error = msg;
+                blade.error = $.trim(msg);
+                if (blade.error.length > 55)
+                    blade.error = blade.error.slice(0, -(blade.error.length - 55)) + "...";
             }
         }
     };

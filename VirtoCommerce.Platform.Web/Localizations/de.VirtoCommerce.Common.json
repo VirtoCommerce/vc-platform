@@ -1,4 +1,4 @@
-{
+﻿{
   "platform": {
     "commands": {
       "add": "Hinzufügen",
@@ -56,7 +56,8 @@
       "reject-user": "Benutzer ablehnen",
       "approve-user": "Benutzer genehmigen",
       "change-password": "Passwort ändern",
-      "today": "Heute"
+      "today": "Heute",
+      "see-details": "siehe Einzelheiten"
     },
     "list": {
       "no-data": "Keine Daten",

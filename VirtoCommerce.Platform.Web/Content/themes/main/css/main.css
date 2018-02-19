@@ -2341,9 +2341,23 @@ button.btn {
 .window-cnt .form-label {
   margin-left: 0; }
 
+.modal-content .modal-header-error {
+    background: #7a1c13;
+    height: auto;
+    line-height: 1;
+    position: relative;
+    z-index: 50; }
+
+.modal-header-error .modal-title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 10px 20px; }
+
 /* Breadcrumbs */
 .breadcrumbs {
-  padding: 15px 0; }
+    padding: 15px 0;
+}
   .breadcrumbs .back {
     background: #fff;
     border: 1px solid #a1c0d4;
