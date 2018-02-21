@@ -3398,29 +3398,41 @@ tags-input .tags.focused {
       right: 8px;
       top: 0; }
       .blade .blade-head .blade-status .status-message {
-        background: #7a1c13;
-        bottom: 0;
-        color: #fff;
-        font-size: 14px;
-        left: 0;
-        line-height: 23px;
-        padding: 0 0 0 50px;
-        position: absolute;
-        right: 0;
-        top: 0;
-        z-index: 300;
-        filter: alpha(opacity=50); }
-        .blade .blade-head .blade-status .status-message::after {
+          background: #7a1c13;
+          bottom: 0;
+          color: #fff;
+          font-size: 14px;
+          left: 0;
+          line-height: 23px;
+          padding: 0 0 0 50px;
+          position: absolute;
+          right: 0;
+          top: 0;
+          z-index: 300;
+          filter: alpha(opacity=50);
+          width: calc(100% - 70px);
+          display: flex;
+          box-sizing: border-box;
+      }
+      .blade .blade-head .blade-status .error-message {
+          flex-grow: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          padding-right: 15px;
+      }
+      .blade .blade-head .blade-status .status-message::after {
           color: #fff;
           content: '';
           font-family: "FontAwesome";
           left: 20px;
           position: absolute;
-          top: 2px; }
+          top: 2px;
+      }
       .blade .blade-head .blade-status .link-error-details {
           color: #999;
           float: right;
-          margin-right: 80px;
+          margin-right: 5px;
           margin-top: -1px;
           text-decoration: underline; }
      .blade .blade-head .blade-status .link-error-details:hover {

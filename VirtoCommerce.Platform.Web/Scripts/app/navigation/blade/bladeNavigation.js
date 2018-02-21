@@ -194,8 +194,8 @@
 
             scope.showErrorDetails = function () {
                 var dialog = { id: "errorDetails" };
-                if (scope.blade.error != undefined)
-                    dialog.message = scope.blade.error;
+                if (scope.blade.errorBody != undefined)
+                    dialog.message = scope.blade.errorBody;
                 dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/errorDetails-dialog.tpl.html', 'platformWebApp.confirmDialogController');
             };
         }
@@ -325,7 +325,7 @@
             //    service.currentBlade = firstStateBlade;
             //    return;
             //}
-
+            blade.errorBody = "";
             blade.isLoading = true;
             blade.parentBlade = parentBlade;
             blade.childrenBlades = [];
@@ -396,12 +396,11 @@
             };
         },
         checkPermission: authService.checkPermission,
-        setError: function (msg, blade) {
+        setError: function (error, blade) {
             if (blade) {
                 blade.isLoading = false;
-                blade.error = $.trim(msg);
-                if (blade.error.length > 55)
-                    blade.error = blade.error.slice(0, -(blade.error.length - 55)) + "...";
+                blade.error = error.status != undefined && error.statusText != undefined ? error.status + ': ' + error.statusText : error;
+                blade.errorBody = error.data.exceptionMessage;
             }
         }
     };
