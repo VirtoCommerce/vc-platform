@@ -399,8 +399,8 @@
         setError: function (error, blade) {
             if (blade) {
                 blade.isLoading = false;
-                blade.error = error.status != undefined && error.statusText != undefined ? error.status + ': ' + error.statusText : error;
-                blade.errorBody = error.data.exceptionMessage;
+                blade.error = error.status && error.statusText ? error.status + ': ' + error.statusText : error;
+                blade.errorBody = error.data ? error.data.exceptionMessage : blade.errorBody;
             }
         }
     };
