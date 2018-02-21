@@ -1,4 +1,4 @@
-angular.module('platformWebApp')
+﻿angular.module('platformWebApp')
 .factory('platformWebApp.toolbarService', function () {
     var toolbarCommandsMap = [];
     return {
@@ -43,7 +43,7 @@ angular.module('platformWebApp')
         }
     }
 }])
-.directive('vaBlade', ['$compile', 'platformWebApp.bladeNavigationService', 'platformWebApp.toolbarService', '$timeout', '$document', function ($compile, bladeNavigationService, toolbarService, $timeout, $document) {
+.directive('vaBlade', ['$compile', 'platformWebApp.bladeNavigationService', 'platformWebApp.toolbarService', '$timeout', '$document', 'platformWebApp.dialogService', function ($compile, bladeNavigationService, toolbarService, $timeout, $document, dialogService) {
     return {
         terminal: true,
         priority: 100,
@@ -62,7 +62,7 @@ angular.module('platformWebApp')
             if (!scope.blade.disableOpenAnimation) {
                 scope.blade.animated = true;
                 $timeout(function () {
-                   scope.blade.animated = false;
+                    scope.blade.animated = false;
                 }, 250);
             }
 
@@ -79,7 +79,7 @@ angular.module('platformWebApp')
                 // instead, we need to use sum of width of all blades
                 var previousBlades = scrollToElement.prevAll();
                 var previousBladesWidthSum = 0;
-                previousBlades.each(function() {
+                previousBlades.each(function () {
                     previousBladesWidthSum += $(this).outerWidth();
                 });
                 var scrollLeft = previousBladesWidthSum + scrollToElement.outerWidth(!(scrollToBlade.isExpanded || scrollToBlade.isMaximized)) - mainContent.width();
@@ -191,8 +191,15 @@ angular.module('platformWebApp')
                 event.stopPropagation();
                 $document.bind('click', handleClickEvent);
             };
+
+            scope.showErrorDetails = function () {
+                var dialog = { id: "errorDetails" };
+                if (scope.blade.errorBody != undefined)
+                    dialog.message = scope.blade.errorBody;
+                dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/errorDetails-dialog.tpl.html', 'platformWebApp.confirmDialogController');
+            };
         }
-    };
+    }
 }])
 .factory('platformWebApp.bladeNavigationService', ['platformWebApp.authService', '$timeout', '$state', 'platformWebApp.dialogService', function (authService, $timeout, $state, dialogService) {
 
@@ -318,7 +325,7 @@ angular.module('platformWebApp')
             //    service.currentBlade = firstStateBlade;
             //    return;
             //}
-
+            blade.errorBody = "";
             blade.isLoading = true;
             blade.parentBlade = parentBlade;
             blade.childrenBlades = [];
@@ -389,10 +396,11 @@ angular.module('platformWebApp')
             };
         },
         checkPermission: authService.checkPermission,
-        setError: function (msg, blade) {
+        setError: function (error, blade) {
             if (blade) {
                 blade.isLoading = false;
-                blade.error = msg;
+                blade.error = error.status != undefined && error.statusText != undefined ? error.status + ': ' + error.statusText : error;
+                blade.errorBody = error.data.exceptionMessage;
             }
         }
     };

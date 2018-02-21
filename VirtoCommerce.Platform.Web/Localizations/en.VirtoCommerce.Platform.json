@@ -709,88 +709,91 @@
                 "blade-subtitle": "Manage roles"
             }
         },
-        "dialogs": {
-            "folders-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete selected folders or files?"
-            },
-            "properties-save": {
-                "title": "Save changes",
-                "message": "The properties have been modified. Do you want to confirm changes?"
-            },
-            "notification-template-save": {
-                "title": "Save changes",
-                "message": "The notification template has been modified. Do you want to save changes?"
-            },
-            "role-save": {
-                "title": "Save changes",
-                "message": "The Role has been modified. Do you want to save changes?"
-            },
-            "roles-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete selected Roles?"
-            },
-            "account-save": {
-                "title": "Save changes",
-                "message": "The Account has been modified. Do you want to save changes?"
-            },
-            "account-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete selected Accounts?"
-            },
-            "dynamic-property-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete this Dynamic Property?"
-            },
-            "settings-value-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete selected Values?"
-            },
-            "settings-save": {
-                "title": "Save changes",
-                "message": "The settings has been modified. Do you want to confirm changes?"
-            },
-            "settings-delete": {
-                "title": "Delete confirmation",
-                "message": "The settings has been modified. Do you want to save changes?"
-            },
-            "email-sending-success": {
-                "title": "Sending success",
-                "message": "Email was sent successfully!"
-            },
-            "email-send-error": {
-                "title": "Error in sending",
-                "message": "Email wasn't send! Error: {{error}}"
-            },
-            "dictionary-items-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete {{quantity}} selected dictionary item(s)?"
-            },
-            "module-action": {
-                "title-install": "Install confirmation",
-                "title-update": "Update confirmation",
-                "title-delete": "Uninstall confirmation",
-                "message0-install": "You are about to install:",
-                "message0-update": "You are about to update:",
-                "message0-delete": "You are about to uninstall:",
-                "message1-install": "The following dependencies will also be installed:",
-                "message1-delete": "The following depending modules will also be uninstalled:",
-                "message2-install": "Install selection and dependencies?",
-                "message2-update": "Update selection and dependencies?",
-                "message2-delete": "Uninstall this and ALL depending modules?"
-            },
-            "module-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to uninstall this Module?"
-            },
-            "api-key-delete": {
-                "title": "Delete confirmation",
-                "message": "Are you sure you want to delete this API key?"
-            },
-            "app-restart": {
-                "title": "Application restart",
-                "message": "Are you sure you want to restart the application?"
-            }
+      "dialogs": {
+        "folders-delete": {
+          "title": "Delete confirmation",
+          "message": "Are you sure you want to delete selected folders or files?"
+        },
+        "properties-save": {
+          "title": "Save changes",
+          "message": "The properties have been modified. Do you want to confirm changes?"
+        },
+        "notification-template-save": {
+          "title": "Save changes",
+          "message": "The notification template has been modified. Do you want to save changes?"
+        },
+        "role-save": {
+          "title": "Save changes",
+          "message": "The Role has been modified. Do you want to save changes?"
+        },
+        "roles-delete": {
+          "title": "Delete confirmation",
+          "message": "Are you sure you want to delete selected Roles?"
+        },
+        "account-save": {
+          "title": "Save changes",
+          "message": "The Account has been modified. Do you want to save changes?"
+        },
+        "account-delete": {
+          "title": "Delete confirmation",
+          "message": "Are you sure you want to delete selected Accounts?"
+        },
+        "dynamic-property-delete": {
+          "title": "Delete confirmation",
+          "message": "Are you sure you want to delete this Dynamic Property?"
+        },
+        "settings-value-delete": {
+          "title": "Delete confirmation",
+          "message": "Are you sure you want to delete selected Values?"
+        },
+        "settings-save": {
+          "title": "Save changes",
+          "message": "The settings has been modified. Do you want to confirm changes?"
+        },
+        "settings-delete": {
+          "title": "Delete confirmation",
+          "message": "The settings has been modified. Do you want to save changes?"
+        },
+        "email-sending-success": {
+          "title": "Sending success",
+          "message": "Email was sent successfully!"
+        },
+        "email-send-error": {
+          "title": "Error in sending",
+          "message": "Email wasn't send! Error: {{error}}"
+        },
+        "dictionary-items-delete": {
+          "title": "Delete confirmation",
+          "message": "Are you sure you want to delete {{quantity}} selected dictionary item(s)?"
+        },
+        "module-action": {
+          "title-install": "Install confirmation",
+          "title-update": "Update confirmation",
+          "title-delete": "Uninstall confirmation",
+          "message0-install": "You are about to install:",
+          "message0-update": "You are about to update:",
+          "message0-delete": "You are about to uninstall:",
+          "message1-install": "The following dependencies will also be installed:",
+          "message1-delete": "The following depending modules will also be uninstalled:",
+          "message2-install": "Install selection and dependencies?",
+          "message2-update": "Update selection and dependencies?",
+          "message2-delete": "Uninstall this and ALL depending modules?"
+        },
+        "module-delete": {
+          "title": "Delete confirmation",
+          "message": "Are you sure you want to uninstall this Module?"
+        },
+        "api-key-delete": {
+          "title": "Delete confirmation",
+          "message": "Are you sure you want to delete this API key?"
+        },
+        "app-restart": {
+          "title": "Application restart",
+          "message": "Are you sure you want to restart the application?"
+        },
+        "error-details": {
+          "title": "The error details"
         }
+      }
     }
 }

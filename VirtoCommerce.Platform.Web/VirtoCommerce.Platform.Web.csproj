@@ -360,6 +360,7 @@
     <Content Include="Scripts\app\assets\blades\asset-select.tpl.html" />
     <Content Include="Scripts\app\licensing\license-detail.js" />
     <Content Include="Scripts\app\licensing\license-detail.tpl.html" />
+    <Content Include="Scripts\app\modularity\dialogs\errorDetails-dialog.tpl.html" />
     <Content Include="Scripts\app\navigation\menu\mainMenu-list-content.tpl.html" />
     <Content Include="Scripts\app\navigation\menu\mainMenu-item.tpl.html" />
     <Content Include="Scripts\app\navigation\menu\mainMenu-list-header.tpl.html" />
