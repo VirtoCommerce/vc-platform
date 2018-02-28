@@ -29,6 +29,10 @@ namespace VirtoCommerce.Platform.Web.Modularity
         /// <param name="address"></param>
         public static void AddAuthorizationTokenForGitHub(this WebClient webClient, Uri address)
         {
+            //https://github.com/octokit/octokit.net/pull/1758
+            // On February 22, 2018 19:00 UTC, GitHub will disable permanently the use of weak cryptogrpahic standards.
+            //Applications targeting .NET Framework 4.5.x will be affected, as that framework does not enable the now required protocol (TLS1.2) by default. 
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (address.Scheme == Uri.UriSchemeHttps && (address.Host == "api.github.com" || address.Host == "raw.githubusercontent.com"))
             {
                 var gitHubToken = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Modules:GitHubAuthorizationToken", string.Empty);
