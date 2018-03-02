@@ -20,9 +20,9 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             if (manager == null)
                 throw new ArgumentNullException(nameof(manager));
 
-            var notification = _notificationManager.GetNewNotification<TwoFactorEmailNotification>();
+            var notification = _notificationManager.GetNewNotification<TwoFactorSmsNotification>();
 
-            notification.Recipient = await manager.GetEmailAsync(user.Id);
+            notification.Recipient = await manager.GetPhoneNumberAsync(user.Id);
             notification.Token = token;
 
             _notificationManager.SendNotification(notification);
