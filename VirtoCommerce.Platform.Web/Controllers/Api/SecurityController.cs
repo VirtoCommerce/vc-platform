@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Security;
@@ -61,11 +62,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (signInStatus == SignInStatus.Success)
             {
-                var retVal = await _securityService.FindByNameAsync(model.UserName, UserDetails.Full);
-                //Do not allow login to admin customers and rejected users
-                if (retVal.UserState != AccountState.Rejected && !string.Equals(retVal.UserType, AccountType.Customer.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                var user = await _securityService.FindByNameAsync(model.UserName, UserDetails.Full);
+
+                // Rejected users and customers are not allowed to sign in
+                if (user.UserState != AccountState.Rejected && !user.UserType.EqualsInvariant(AccountType.Customer.ToString()))
                 {
-                    return Ok(retVal);
+                    return Ok(user);
                 }
             }
 
@@ -220,7 +222,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return BadRequest(SecurityResources.NonHmacKeyGenerationException);
             }
-            var retVal =_securityService.GenerateNewApiKey(account);
+            var retVal = _securityService.GenerateNewApiKey(account);
             return Ok(retVal);
         }
 
@@ -308,7 +310,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> ChangePassword(string userName, [FromBody] ChangePasswordInfo changePassword)
         {
-            EnsureThatUsersEditable(userName);
+            EnsureUserIsEditable(userName);
 
             var result = await _securityService.ChangePasswordAsync(userName, changePassword.OldPassword, changePassword.NewPassword);
 
@@ -329,7 +331,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
         public async Task<IHttpActionResult> ResetPassword(string userName, [FromBody] ResetPasswordInfo resetPassword)
         {
-            EnsureThatUsersEditable(userName);
+            EnsureUserIsEditable(userName);
 
             var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword);
             return ProcessSecurityResult(result);
@@ -362,25 +364,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var retVal = new SecurityResult
             {
-                //Return success by default for security reason
+                // Return success by default for security reason
                 Succeeded = true
             };
 
             try
             {
-                var user = await _securityService.FindByNameAsync(loginOrEmail, UserDetails.Full);
-                if(user == null)
-                {
-                    user = await _securityService.FindByEmailAsync(loginOrEmail, UserDetails.Full);
-                }
+                var user = await _securityService.FindByNameAsync(loginOrEmail, UserDetails.Full)
+                           ?? await _securityService.FindByEmailAsync(loginOrEmail, UserDetails.Full);
 
-                //Do not permit rejected users and customers
-                if (user.Email != null && user != null && user.UserState != AccountState.Rejected && !string.Equals(user.UserType, AccountType.Customer.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                // Do not permit rejected users and customers
+                if (user?.Email != null && user.UserState != AccountState.Rejected && !user.UserType.EqualsInvariant(AccountType.Customer.ToString()))
                 {
-                    EnsureThatUsersEditable(user.UserName);                    
+                    EnsureUserIsEditable(user.UserName);
 
                     var uri = Request.RequestUri.AbsoluteUri;
-                    uri = uri.Substring(0, uri.IndexOf("/api/platform/security/"));
+                    uri = uri.Substring(0, uri.IndexOf("/api/platform/security/", StringComparison.OrdinalIgnoreCase));
                     var token = await _securityService.GeneratePasswordResetTokenAsync(user.Id);
 
                     var notification = _notificationManager.GetNewNotification<ResetPasswordEmailNotification>("Platform", typeof(ResetPasswordEmailNotification).Name, "en");
@@ -393,18 +392,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         retVal.Succeeded = result.IsSuccess;
                         if (!retVal.Succeeded)
                         {
-                            retVal.Errors = new string[] { result.ErrorMessage };
+                            retVal.Errors = new[] { result.ErrorMessage };
                         }
                     }
                     catch (Exception ex)
                     {
-                        //Display errors only when sending notifications fail
-                        retVal.Errors = new string[] { ex.Message };
+                        // Display errors only when sending notifications fails
+                        retVal.Errors = new[] { ex.Message };
                         retVal.Succeeded = false;
                     }
                 }
             }
-            catch { } // no details in here for security reasons
+            catch
+            {
+                // No details for security reasons
+            }
 
             return Ok(retVal);
         }
@@ -419,7 +421,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
         public async Task<IHttpActionResult> UpdateAsync(ApplicationUserExtended user)
         {
-            EnsureThatUsersEditable(user.UserName);
+            EnsureUserIsEditable(user.UserName);
 
             ClearSecurityProperties(user);
             var result = await _securityService.UpdateAsync(user);
@@ -436,7 +438,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityDelete)]
         public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
         {
-            EnsureThatUsersEditable(names);
+            EnsureUserIsEditable(names);
 
             await _securityService.DeleteAsync(names);
             return StatusCode(HttpStatusCode.NoContent);
@@ -473,19 +475,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
 
-        private void EnsureThatUsersEditable(params string[] userNames)
+        private void EnsureUserIsEditable(params string[] userNames)
         {
-            if (_securityOptions != null && _securityOptions.NonEditableUsers != null)
+            if (_securityOptions?.NonEditableUsers != null)
             {
                 if (userNames.Any(x => _securityOptions.NonEditableUsers.Contains(x)))
                 {
                     throw new HttpException((int)HttpStatusCode.InternalServerError, "It is forbidden to edit this user.");
                 }
             }
-
         }
 
-        private void ClearSecurityProperties(ApplicationUserExtended user)
+        private static void ClearSecurityProperties(ApplicationUserExtended user)
         {
             if (user != null)
             {
