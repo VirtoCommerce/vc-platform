@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("")]
         [ResponseType(typeof(webModel.BlobInfo[]))]
         [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
-        [UploadFile("file", "", Required = true, Type = "file")]
+        [UploadFile]
         public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null, [FromUri]string name = null)
         {
             if (url == null && !Request.Content.IsMimeMultipartContent())

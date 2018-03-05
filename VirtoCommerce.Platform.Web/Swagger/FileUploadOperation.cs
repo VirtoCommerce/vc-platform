@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     {
                         name = attr.Name,
                         description = attr.Description,
-                        @in = attr.Type == "file" ? "formData" : "body",
+                        @in = "formData",
                         required = attr.Required,
                         type = attr.Type
                     });

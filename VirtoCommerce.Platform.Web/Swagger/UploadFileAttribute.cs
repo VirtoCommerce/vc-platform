@@ -8,17 +8,19 @@ namespace VirtoCommerce.Platform.Web.Swagger
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class UploadFileAttribute : Attribute
     {
-        public UploadFileAttribute(string name, string description)
+        public UploadFileAttribute()
         {
-            Name = name;
-            Description = description;
+            Name = "file";
+            Description = "Upload file";
+            Type = "file";
+            Required = true;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; } 
 
-        public string Description { get; private set; }
-        public string Type { get; set; } = "text";
+        public string Description { get; } 
+        public string Type { get; }
 
-        public bool Required { get; set; } = false;
+        public bool Required { get; } 
     }
 }
