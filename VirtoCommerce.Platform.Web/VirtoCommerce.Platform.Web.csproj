@@ -411,11 +411,13 @@
     <Compile Include="SignalR\IgnoreSignarRTelemetryProcessor.cs" />
     <Compile Include="Swagger\CachingSwaggerProvider.cs" />
     <Compile Include="Swagger\FileResponseTypeFilter.cs" />
+    <Compile Include="Swagger\FileUploadOperationFilter.cs" />
     <Compile Include="Swagger\HttpConfigurationExtensions.cs" />
     <Compile Include="Swagger\ModuleTagsFilter.cs" />
     <Compile Include="Swagger\OptionalParametersFilter.cs" />
     <Compile Include="Swagger\SwaggerConfig.cs" />
     <Compile Include="Swagger\TagsFilter.cs" />
+    <Compile Include="Swagger\UploadFileAttribute.cs" />
     <Compile Include="Util\FileLock.cs" />
     <Compile Include="VirtoCommercePlatformWebBootstrapper.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />

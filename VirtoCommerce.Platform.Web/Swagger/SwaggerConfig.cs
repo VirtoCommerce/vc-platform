@@ -124,6 +124,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             c.DescribeAllEnumsAsStrings();
             c.OperationFilter(() => new OptionalParametersFilter());
             c.OperationFilter(() => new FileResponseTypeFilter());
+            c.OperationFilter(() => new FileUploadOperationFilter());
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             c.RootUrl(message => new Uri(ComputeHostAsSeenByOriginalClient(message), message.GetRequestContext().VirtualPathRoot).ToString());
             c.PrettyPrint();
