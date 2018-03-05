@@ -376,7 +376,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // Do not permit rejected users and customers
                 if (string.IsNullOrEmpty(user?.Email) || user.UserState == AccountState.Rejected || user.UserType.EqualsInvariant(AccountType.Customer.ToString()))
                 {
-                    if (ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:ForgotPassword:RevealWhetherAccountExists", false))
+                    if (ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:ForgotPassword:RevealAccountState", false))
                     {
                         retVal.Errors = new[] { "User with this name or email does not exist" };
                         retVal.Succeeded = false;
