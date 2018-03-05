@@ -16,11 +16,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
             Required = true;
         }
 
-        public string Name { get; } 
-
-        public string Description { get; } 
+        public string Name { get; }
+        public string Description { get; }
         public string Type { get; }
-
         public bool Required { get; } 
     }
 }
