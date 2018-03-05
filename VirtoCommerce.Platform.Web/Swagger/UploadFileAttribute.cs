@@ -3,7 +3,7 @@
 namespace VirtoCommerce.Platform.Web.Swagger
 {
     /// <summary> 
-    /// Use this attribute for controllers methods for allow to upload file via Swagger 
+    /// Use this attribute for controllers methods to allow file upload via Swagger 
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class UploadFileAttribute : Attribute
