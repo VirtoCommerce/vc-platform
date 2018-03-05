@@ -397,7 +397,7 @@
         },
         checkPermission: authService.checkPermission,
         setError: function (error, blade) {
-            if (blade) {
+            if (blade && error) {
                 blade.isLoading = false;
                 blade.error = error.status && error.statusText ? error.status + ': ' + error.statusText : error;
                 blade.errorBody = error.data ? error.data.exceptionMessage : blade.errorBody;
