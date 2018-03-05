@@ -374,21 +374,35 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                            ?? await _securityService.FindByEmailAsync(loginOrEmail, UserDetails.Full);
 
                 // Do not permit rejected users and customers
-                if (user?.Email != null && user.UserState != AccountState.Rejected && !user.UserType.EqualsInvariant(AccountType.Customer.ToString()))
+                if (string.IsNullOrEmpty(user?.Email) || user.UserState == AccountState.Rejected || user.UserType.EqualsInvariant(AccountType.Customer.ToString()))
+                {
+                    if (ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:ForgotPassword:RevealAccountState", false))
+                    {
+                        retVal.Errors = new[] { "User with this name or email does not exist" };
+                        retVal.Succeeded = false;
+                    }
+                }
+                else
                 {
                     EnsureUserIsEditable(user.UserName);
 
                     var uri = Request.RequestUri.AbsoluteUri;
                     uri = uri.Substring(0, uri.IndexOf("/api/platform/security/", StringComparison.OrdinalIgnoreCase));
+
                     var token = await _securityService.GeneratePasswordResetTokenAsync(user.Id);
+
+                    var sender = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:Sender:Email")
+                        ?? "noreply@" + Request.RequestUri.Host;
 
                     var notification = _notificationManager.GetNewNotification<ResetPasswordEmailNotification>("Platform", typeof(ResetPasswordEmailNotification).Name, "en");
                     notification.Url = $"{uri}/#/resetpassword/{user.Id}/{token}";
                     notification.Recipient = user.Email;
-                    notification.Sender = "noreply@" + Request.RequestUri.Host;
+                    notification.Sender = sender;
+
                     try
                     {
                         var result = _notificationManager.SendNotification(notification);
+
                         retVal.Succeeded = result.IsSuccess;
                         if (!retVal.Succeeded)
                         {
