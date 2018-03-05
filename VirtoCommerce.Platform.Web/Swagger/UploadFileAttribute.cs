@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
         /// <summary>
         /// Parameter type (only File value supported)
         /// </summary>
-        public string Type { get; set; } = "Type";
+        public string Type { get; set; } = "file";
         /// <summary>
         /// Set true for required parameter
         /// </summary>
