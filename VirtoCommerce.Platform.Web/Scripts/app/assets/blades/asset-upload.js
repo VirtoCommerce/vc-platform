@@ -5,6 +5,7 @@
         if (!blade.fileUploadOptions) {
             blade.fileUploadOptions = {};
         }
+        var folderUrl = blade.currentEntityId || "";
 
         function initialize() {
             if (!$scope.uploader) {
@@ -12,7 +13,7 @@
                 var uploader = $scope.uploader = new FileUploader({
                     scope: $scope,
                     headers: { Accept: 'application/json' },
-                    url: 'api/platform/assets?folderUrl=' + blade.currentEntityId,
+                    url: 'api/platform/assets?folderUrl=' + folderUrl,
                     method: 'POST',
                     //autoUpload: true,
                     removeAfterUpload: true
@@ -34,7 +35,7 @@
                     bladeNavigationService.setError(null, blade);
 
                     // check for asset duplicates
-                    assets.query({ folderUrl: blade.currentEntityId },
+                    assets.query({ folderUrl: folderUrl },
                         function (data) {
                             blade.isLoading = false;
                             currentEntities = data;
@@ -89,7 +90,7 @@
             if (blade.newExternalImageUrl) {
                 blade.uploadCompleted = false;
 
-                assets.uploadFromUrl({ folderUrl: blade.currentEntityId, url: blade.newExternalImageUrl }, function (data) {
+                assets.uploadFromUrl({ folderUrl: folderUrl, url: blade.newExternalImageUrl }, function (data) {
                     refreshParentBlade();
                     if (blade.onUploadComplete) {
                         blade.onUploadComplete(data);

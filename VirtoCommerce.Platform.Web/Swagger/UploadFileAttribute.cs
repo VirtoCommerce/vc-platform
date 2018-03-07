@@ -23,6 +23,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
         /// <summary>
         /// Set true for required parameter
         /// </summary>
-        public bool Required { get; set; } = true; 
+        public bool Required { get; set; } = false; 
     }
 }
