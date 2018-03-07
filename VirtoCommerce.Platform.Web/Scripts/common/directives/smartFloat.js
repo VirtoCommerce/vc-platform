@@ -14,24 +14,29 @@ angular.module('platformWebApp')
         link: function (scope, elm, attrs, ctrl) {
             var fraction = attrs.fraction ? attrs.fraction : 2;
             if (attrs.numType === "float") {
-                ctrl.$parsers.unshift(function (viewValue) {                    
+                ctrl.$parsers.unshift(function (viewValue) {
+                    var result;
                     if (FLOAT_REGEXP_1.test(viewValue)) {
-                        ctrl.$setValidity('float', true);
-                        return parseFloat(viewValue.replace('.', '').replace(',', '.'));
+                        result = parseFloat(viewValue.replace('.', '').replace(',', '.'));
                     } else if (FLOAT_REGEXP_2.test(viewValue)) {
-                        ctrl.$setValidity('float', true);
-                        return parseFloat(viewValue.replace(',', ''));
+                        result = parseFloat(viewValue.replace(',', ''));
                     } else if (FLOAT_REGEXP_3.test(viewValue)) {
-                        ctrl.$setValidity('float', true);
-                        return parseFloat(viewValue);
+                        result = parseFloat(viewValue);
                     } else if (FLOAT_REGEXP_4.test(viewValue)) {
-                        ctrl.$setValidity('float', true);
-                        return parseFloat(viewValue.replace(',', '.'));
+                        result = parseFloat(viewValue.replace(',', '.'));
                     } else {
                         //Allow to use empty values
                         ctrl.$setValidity('float', !viewValue);
                         return viewValue;
                     }
+                    ctrl.$setValidity('float', true);
+                    if (attrs.min) {
+                        ctrl.$setValidity('min', result >= attrs.min);
+                    }
+                    if (attrs.max) {
+                        ctrl.$setValidity('max', result <= attrs.max);
+                    }
+                    return result;
                 });
 
                 ctrl.$formatters.unshift(

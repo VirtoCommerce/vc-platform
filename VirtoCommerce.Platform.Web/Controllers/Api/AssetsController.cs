@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Assets;
 using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Web.Converters.Asset;
+using VirtoCommerce.Platform.Web.Swagger;
 using webModel = VirtoCommerce.Platform.Web.Model.Asset;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -86,6 +88,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("")]
         [ResponseType(typeof(webModel.BlobInfo[]))]
         [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
+        [UploadFile]
         public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null, [FromUri]string name = null)
         {
             if (url == null && !Request.Content.IsMimeMultipartContent())
