@@ -60,7 +60,8 @@
       "today": "Today",
       "time": "Time",
       "now": "Now",
-      "date": "Date"
+      "date": "Date",
+      "see-details": "see Details"
     },
     "list": {
       "no-data": "No data",

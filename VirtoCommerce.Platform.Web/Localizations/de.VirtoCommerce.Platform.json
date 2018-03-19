@@ -737,6 +737,9 @@
       "app-restart": {
         "title": "Anwendungsneustart",
         "message": "Sind Sie sicher, dass Sie die Anwendung neu starten möchten?"
+      },
+      "error-details": {
+        "title": "Die Fehlerdetails"
       }
     }
   }
