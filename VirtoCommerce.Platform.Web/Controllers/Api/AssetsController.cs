@@ -25,11 +25,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly string _uploadsUrl = Startup.VirtualRoot + "/App_Data/Uploads/";
         private readonly IBlobStorageProvider _blobProvider;
         private readonly IBlobUrlResolver _urlResolver;
+        private readonly IAssetEntryService _assetService;
 
-        public AssetsController(IBlobStorageProvider blobProvider, IBlobUrlResolver urlResolver)
+        public AssetsController(IBlobStorageProvider blobProvider, IBlobUrlResolver urlResolver, IAssetEntryService assetService)
         {
             _blobProvider = blobProvider;
             _urlResolver = urlResolver;
+            _assetService = assetService;
         }
 
         /// <summary>
@@ -82,20 +84,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </remarks>
         /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
         /// <param name="url">Url for uploaded remote resource (optional)</param>
-        /// <param name="name">Image name.</param>
+        /// <param name="name">File name</param>
+        /// <param name="tenantId">Associated tenantId</param>
+        /// <param name="tenantType">Associated tenantType</param>
         /// <returns></returns>
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(webModel.BlobInfo[]))]
         [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
         [UploadFile]
-        public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null, [FromUri]string name = null)
+        public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null, [FromUri]string name = null, [FromUri]string tenantId = null, [FromUri]string tenantType = null)
         {
             if (url == null && !Request.Content.IsMimeMultipartContent())
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
+            var assetEntries = new List<AssetEntry>();
             var retVal = new List<webModel.BlobInfo>();
             if (url != null)
             {
@@ -113,6 +118,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         RelativeUrl = fileUrl,
                         Url = _urlResolver.GetAbsoluteUrl(fileUrl)
                     });
+
+                    var asset = AbstractTypeFactory<AssetEntry>.TryCreateInstance();
+                    asset.BlobInfo.FileName = fileName;
+                    asset.BlobInfo.RelativeUrl = fileUrl;
+                    asset.BlobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
+                    assetEntries.Add(asset);
                 }
             }
             else
@@ -130,9 +141,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         RelativeUrl = blobInfo.Key,
                         Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key)
                     });
+
+                    var asset = AbstractTypeFactory<AssetEntry>.TryCreateInstance();
+                    asset.BlobInfo = blobInfo;
+                    //asset.BlobInfo.Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key);
+                    asset.BlobInfo.RelativeUrl = blobInfo.Key;
+                    assetEntries.Add(asset);
                 }
 
             }
+
+            if (!string.IsNullOrEmpty(tenantId) && !string.IsNullOrEmpty(tenantType))
+            {
+                assetEntries.ForEach(x => {
+                    x.Tenant.TenantId = tenantId;
+                    x.Tenant.TenantType = tenantType;
+                });
+            }
+
+            _assetService.SaveChanges(assetEntries);
 
             return Ok(retVal.ToArray());
         }
