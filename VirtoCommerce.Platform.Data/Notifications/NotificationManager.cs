@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Common.Logging;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
@@ -16,6 +17,8 @@ namespace VirtoCommerce.Platform.Data.Notifications
         private readonly Func<IPlatformRepository> _repositoryFactory;
         private readonly INotificationTemplateService _notificationTemplateService;
         private readonly List<Func<Notification>> _notifications = new List<Func<Notification>>();
+
+        private readonly ILog Logger = LogManager.GetLogger(typeof(NotificationManager));
 
         public NotificationManager(INotificationTemplateResolver resolver, Func<IPlatformRepository> repositoryFactory, INotificationTemplateService notificationTemplateService)
         {
@@ -42,6 +45,16 @@ namespace VirtoCommerce.Platform.Data.Notifications
             if (!notifications.Any(x => notification.Type.EqualsInvariant(x.GetType().Name)))
             {
                 _notifications.Add(notificationFactory);
+            }
+        }
+
+        public void UnregisterNotificationType<T>()
+        {
+            var notificationToDelete = _notifications.FirstOrDefault(x => x().GetType() == typeof(T));
+
+            if (notificationToDelete != null)
+            {
+                _notifications.Remove(notificationToDelete);
             }
         }
 
@@ -112,7 +125,8 @@ namespace VirtoCommerce.Platform.Data.Notifications
             }
             if (retVal == null)
             {
-                throw new InvalidOperationException($"Notification {type} not found. Please register this type by notificationManager.RegisterNotificationType before use");
+                Logger.Debug($"Notification {type} not found. Please register this type by notificationManager.RegisterNotificationType before use");
+                return null;
             }
 
             retVal.ObjectId = objectId;
@@ -203,6 +217,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                                             .Take(criteria.Take)
                                             .ToArray()
                                             .Select(GetNotificationCoreModel)
+                                            .Where(x => x != null) // Skip types that have been unregistered.
                                             .ToList();
             }
 
@@ -231,7 +246,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
         private Notification GetNotificationCoreModel(NotificationEntity entity)
         {
             var retVal = GetNewNotification(entity.Type);
-            retVal.InjectFrom(entity);
+
+            // Type may have been unregistered by now. 
+            retVal?.InjectFrom(entity);
 
             return retVal;
         }
