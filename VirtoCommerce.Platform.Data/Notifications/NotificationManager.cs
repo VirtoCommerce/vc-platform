@@ -65,17 +65,19 @@ namespace VirtoCommerce.Platform.Data.Notifications
         SendNotificationResult INotificationManager.SendNotification(Notification notification)
         {
             var result = new SendNotificationResult();
-            if (!notification.IsActive || _unregisteredNotifications.Any(x => x.IsAssignableFrom(notification.GetType())))
+            //Do not send unregistered notifications
+            if (!_unregisteredNotifications.Any(x => x.IsAssignableFrom(notification.GetType())))
             {
                 ResolveTemplate(notification);
                 result = notification.SendNotification();
-            }
+            }            
             return result;
         }
 
         public void ScheduleSendNotification(Notification notification)
         {
-            if (!notification.IsActive || _unregisteredNotifications.Any(x => x.IsAssignableFrom(notification.GetType())))
+            //Do not send unregistered notifications
+            if (!_unregisteredNotifications.Any(x => x.IsAssignableFrom(notification.GetType())))
             {
                 ResolveTemplate(notification);
 
