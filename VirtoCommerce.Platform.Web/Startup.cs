@@ -270,6 +270,18 @@ namespace VirtoCommerce.Platform.Web
                 }
             });
 
+            notificationManager.RegisterNotificationType(() =>  new ForgotUserNameNotification(container.Resolve<IEmailNotificationSendingGateway>())
+            {
+                DisplayName = "Forgot user name",
+                Description = "This notification is sent by email to a client upon forgot user name request",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Subject = PlatformNotificationResource.ForgotUserNameNotificationSubject,
+                    Body = PlatformNotificationResource.ForgotUserNameNotificationBody,
+                    Language = "en-US",
+                }
+            });
+
             //Get initialized modules list sorted by dependency order
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules.OfType<ManifestModuleInfo>())
                 .Where(m => m.ModuleInstance != null && m.State == ModuleState.Initialized)

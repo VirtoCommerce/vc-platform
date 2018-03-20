@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ForgotUserNameNotificationBody" xml:space="preserve">
+    <value>Your user name - {{ user_name }}.</value>
+  </data>
+  <data name="ForgotUserNameNotificationSubject" xml:space="preserve">
+    <value>User name</value>
+  </data>
   <data name="RegistrationNotificationBody" xml:space="preserve">
-    <value>Thank you for registration {{ firstname }} {{ lastname }}!!!</value>
+    <value>Thank you for registration {{ first_name }} {{ last_name }}!!!</value>
   </data>
   <data name="RegistrationNotificationSubject" xml:space="preserve">
     <value>Your login - {{ login }}.</value>
