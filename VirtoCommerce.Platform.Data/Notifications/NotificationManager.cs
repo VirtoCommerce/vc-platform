@@ -17,6 +17,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
         private readonly Func<IPlatformRepository> _repositoryFactory;
         private readonly INotificationTemplateService _notificationTemplateService;
         private readonly List<Func<Notification>> _notifications = new List<Func<Notification>>();
+        private readonly List<Type> _unregisteredNotifications = new List<Type>();
 
         private readonly ILog Logger = LogManager.GetLogger(typeof(NotificationManager));
 
@@ -50,12 +51,10 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
         public void UnregisterNotificationType<T>()
         {
-            var notificationToDelete = _notifications.FirstOrDefault(x => x().GetType() == typeof(T));
-
-            if (notificationToDelete != null)
+            if(!_unregisteredNotifications.Contains(typeof(T)))
             {
-                _notifications.Remove(notificationToDelete);
-            }
+                _unregisteredNotifications.Add(typeof(T));
+            }         
         }
 
         public Notification[] GetNotifications()
@@ -65,22 +64,27 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
         SendNotificationResult INotificationManager.SendNotification(Notification notification)
         {
-            ResolveTemplate(notification);
-
-            var result = notification.SendNotification();
-
+            var result = new SendNotificationResult();
+            if (!notification.IsActive || _unregisteredNotifications.Any(x => x.IsAssignableFrom(notification.GetType())))
+            {
+                ResolveTemplate(notification);
+                result = notification.SendNotification();
+            }
             return result;
         }
 
         public void ScheduleSendNotification(Notification notification)
         {
-            ResolveTemplate(notification);
-
-            using (var repository = _repositoryFactory())
+            if (!notification.IsActive || _unregisteredNotifications.Any(x => x.IsAssignableFrom(notification.GetType())))
             {
-                var addedNotification = notification.ToDataModel();
-                repository.Add(addedNotification);
-                repository.UnitOfWork.Commit();
+                ResolveTemplate(notification);
+
+                using (var repository = _repositoryFactory())
+                {
+                    var addedNotification = notification.ToDataModel();
+                    repository.Add(addedNotification);
+                    repository.UnitOfWork.Commit();
+                }
             }
         }
 
@@ -125,8 +129,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             }
             if (retVal == null)
             {
-                Logger.Debug($"Notification {type} not found. Please register this type by notificationManager.RegisterNotificationType before use");
-                return null;
+                throw new InvalidOperationException($"Notification {type} not found. Please register this type by notificationManager.RegisterNotificationType before use");
             }
 
             retVal.ObjectId = objectId;
@@ -216,8 +219,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 retVal.Notifications = query.Skip(criteria.Skip)
                                             .Take(criteria.Take)
                                             .ToArray()
-                                            .Select(GetNotificationCoreModel)
-                                            .Where(x => x != null) // Skip types that have been unregistered.
+                                            .Select(GetNotificationCoreModel)                                          
                                             .ToList();
             }
 
