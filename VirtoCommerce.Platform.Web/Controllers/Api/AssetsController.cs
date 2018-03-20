@@ -144,7 +144,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                     var asset = AbstractTypeFactory<AssetEntry>.TryCreateInstance();
                     asset.BlobInfo = blobInfo;
-                    //asset.BlobInfo.Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key);
                     asset.BlobInfo.RelativeUrl = blobInfo.Key;
                     assetEntries.Add(asset);
                 }

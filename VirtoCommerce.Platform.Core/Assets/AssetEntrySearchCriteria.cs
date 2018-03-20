@@ -3,12 +3,8 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Assets
 {
-    public class AssetEntrySearchCriteria
-    {
-		public AssetEntrySearchCriteria()
-		{
-		}
-        
+    public class AssetEntrySearchCriteria : ValueObject<AssetEntrySearchCriteria>
+    {        
         /// <summary>
         /// Phrase to search in Name and RelativeUrl
         /// </summary>
@@ -19,7 +15,7 @@ namespace VirtoCommerce.Platform.Core.Assets
         /// <summary>
         /// Asset language
         /// </summary>
-        public string Language { get; set; }
+        public string LanguageCode { get; set; }
 
         public string Group { get; set; }
 

@@ -41,9 +41,9 @@ namespace VirtoCommerce.Platform.Data.Assets
                         query = query.Where(x => x.Name.Contains(criteria.SearchPhrase) || x.RelativeUrl.Contains(criteria.SearchPhrase));
                     }
 
-                    if (!string.IsNullOrEmpty(criteria.Language))
+                    if (!string.IsNullOrEmpty(criteria.LanguageCode))
                     {
-                        query = query.Where(x => x.LanguageCode == criteria.Language);
+                        query = query.Where(x => x.LanguageCode == criteria.LanguageCode);
                     }
 
                     if (!string.IsNullOrEmpty(criteria.Group))
@@ -53,50 +53,34 @@ namespace VirtoCommerce.Platform.Data.Assets
 
                     if (!criteria.Tenants.IsNullOrEmpty())
                     {
-                        var tenants = criteria.Tenants.Where(x => !string.IsNullOrEmpty(x.TenantId) && !string.IsNullOrEmpty(x.TenantType)).ToArray();
+                        var tenants = criteria.Tenants.Where(x => x.IsValid).ToArray();
                         if (tenants.Any())
                         {
-                            Expression<Func<AssetEntryEntity, bool>> tenantsExp = null;
-
-                            // x => x.TenantId == tenant.TenantId && x.TenantType == tenant.TenantType
-                            var paramX = Expression.Parameter(typeof(AssetEntryEntity), "x");
-                            var tenantId = Expression.MakeMemberAccess(paramX, typeof(AssetEntryEntity).GetMember("TenantId").First());
-                            var tenantType = Expression.MakeMemberAccess(paramX, typeof(AssetEntryEntity).GetMember("TenantType").First());
-                            foreach (var tenant in tenants)
-                            {
-                                var eqTenantId = Expression.Equal(tenantId, Expression.Constant(tenant.TenantId, typeof(string)));
-                                var lambdaId = Expression.Lambda<Func<AssetEntryEntity, bool>>(eqTenantId, paramX);
-                                
-                                var eqTenantType = Expression.Equal(tenantType, Expression.Constant(tenant.TenantType, typeof(string)));
-                                var lambdaType = Expression.Lambda<Func<AssetEntryEntity, bool>>(eqTenantType, paramX);
-
-                                var body = Expression.AndAlso(lambdaId.Body, lambdaType.Body);
-                                var tenantExp = Expression.Lambda<Func<AssetEntryEntity, bool>>(body, paramX);
-                                
-                                if (tenantsExp == null)
-                                    tenantsExp = tenantExp;
-                                else
-                                {
-                                    body = Expression.OrElse(tenantsExp.Body, tenantExp.Body);
-                                    tenantsExp = Expression.Lambda<Func<AssetEntryEntity, bool>>(body, paramX);
-                                }
-                            }
-
-                            query = query.Where(tenantsExp);
+                            var tenantsStrings = tenants.Select(x => x.ToString());
+                            query = query.Where(x => tenantsStrings.Contains(x.TenantId + "_" + x.TenantType));
                         }
                     }
-                    
+
                     var result = new AssetEntrySearchResult
                     {
                         TotalCount = query.Count()
                     };
 
-                    result.Assets = query
-                        .OrderBy(x => x.Name)
+                    var sortInfos = criteria.SortInfos;
+                    if (sortInfos.IsNullOrEmpty())
+                    {
+                        sortInfos = new[] { new SortInfo { SortColumn = "CreatedDate", SortDirection = SortDirection.Descending } };
+                    }
+                    query = query.OrderBySortInfos(sortInfos);
+
+                    var ids = query
                         .Skip(criteria.Skip)
                         .Take(criteria.Take)
-                        .ToArray()
+                        .Select(x => x.Id).ToList();
+
+                    result.Results = repository.GetAssetsByIds(ids)
                         .Select(x => x.ToModel(AbstractTypeFactory<AssetEntry>.TryCreateInstance(), _blobUrlResolver))
+                        .OrderBy(x => ids.IndexOf(x.Id))
                         .ToList();
                     return result;
                 }
@@ -107,7 +91,7 @@ namespace VirtoCommerce.Platform.Data.Assets
         {
             using (var repository = _platformRepository())
             {
-                var entities = repository.AssetEntries.Where(x => ids.Contains(x.Id)).ToArray();
+                var entities = repository.GetAssetsByIds(ids);
                 return entities.Select(x => x.ToModel(AbstractTypeFactory<AssetEntry>.TryCreateInstance(), _blobUrlResolver));
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
 using coreModel = VirtoCommerce.Platform.Core.Assets;
 using webModel = VirtoCommerce.Platform.Web.Model.Asset;
 
@@ -9,7 +10,7 @@ namespace VirtoCommerce.Platform.Web.Converters.Asset
     {
         public static coreModel.AssetEntry ToCoreModel(this webModel.AssetEntry item)
         {
-            var retVal = new coreModel.AssetEntry();
+            var retVal = AbstractTypeFactory<coreModel.AssetEntry>.TryCreateInstance();
             retVal.InjectFrom(item);
             retVal.BlobInfo = item.BlobInfo.ToCoreModel();
             return retVal;
@@ -17,8 +18,10 @@ namespace VirtoCommerce.Platform.Web.Converters.Asset
 
         public static coreModel.BlobInfo ToCoreModel(this webModel.BlobInfo item)
         {
-            var retVal = new coreModel.BlobInfo();
+            var retVal = AbstractTypeFactory<coreModel.BlobInfo>.TryCreateInstance();
             retVal.InjectFrom(item);
+            retVal.ContentType = item.MimeType;
+            retVal.FileName = item.Name;
             return retVal;
         }
 
@@ -26,8 +29,8 @@ namespace VirtoCommerce.Platform.Web.Converters.Asset
         {
             var retVal = new webModel.AssetEntrySearchResult();
             retVal.TotalCount = searchResult.TotalCount;
-            retVal.Assets = searchResult.Assets.Select(ToWebModel).ToArray();
-            
+            retVal.Assets = searchResult.Results.Select(ToWebModel).ToArray();
+
             return retVal;
         }
 
@@ -43,6 +46,9 @@ namespace VirtoCommerce.Platform.Web.Converters.Asset
         {
             var retVal = new webModel.BlobInfo();
             retVal.InjectFrom(item);
+            retVal.MimeType = item.ContentType;
+            retVal.Name = item.FileName;
+            retVal.Size = item.Size.ToString();
             return retVal;
         }
     }

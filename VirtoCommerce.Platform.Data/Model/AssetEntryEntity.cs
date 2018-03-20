@@ -53,8 +53,8 @@ namespace VirtoCommerce.Platform.Data.Model
             Size = asset.BlobInfo.Size;
             Group = asset.Group;
             Id = asset.Id;
-            TenantId = asset.Tenant.TenantId;
-            TenantType = asset.Tenant.TenantType;
+            TenantId = asset.Tenant?.TenantId;
+            TenantType = asset.Tenant?.TenantType;
 
             return this;
         }
@@ -74,7 +74,7 @@ namespace VirtoCommerce.Platform.Data.Model
 
             if (asset.BlobInfo == null)
             {
-                asset.BlobInfo = new BlobInfo();
+                asset.BlobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
             }
             asset.BlobInfo.FileName = Name;
             asset.BlobInfo.ContentType = MimeType;
@@ -84,7 +84,7 @@ namespace VirtoCommerce.Platform.Data.Model
 
             if (asset.Tenant == null)
             {
-                asset.Tenant = new TenantIdentity();
+                asset.Tenant = AbstractTypeFactory<TenantIdentity>.TryCreateInstance();
             }
             asset.Tenant.TenantId = TenantId;
             asset.Tenant.TenantType = TenantType;

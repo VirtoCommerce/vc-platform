@@ -4,12 +4,6 @@ namespace VirtoCommerce.Platform.Core.Assets
 {
     public class AssetEntry : AuditableEntity
     {
-        public AssetEntry()
-        {
-            BlobInfo = new BlobInfo();
-            Tenant = new TenantIdentity();
-        }
-
         /// <summary>
         /// Asset language
         /// </summary>
