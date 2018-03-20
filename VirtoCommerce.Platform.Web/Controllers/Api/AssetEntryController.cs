@@ -5,6 +5,8 @@ using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Security;
+using VirtoCommerce.Platform.Web.Converters.Asset;
+using webModel = VirtoCommerce.Platform.Web.Model.Asset;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -24,7 +26,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _blobProvider = blobProvider;
             _urlResolver = urlResolver;
         }
-        
+
         /// <summary>
         /// Search for AssetEntries by AssetEntrySearchCriteria
         /// </summary>
@@ -32,12 +34,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("search")]
-        [ResponseType(typeof(AssetEntrySearchResult))]
+        [ResponseType(typeof(webModel.AssetEntrySearchResult))]
         // [CheckPermission(Permission = PredefinedPermissions.AssetAccess)]
         public IHttpActionResult Search(AssetEntrySearchCriteria criteria)
         {
             var result = _assetSearchService.SearchAssetEntries(criteria);
-            return Ok(result);
+            return Ok(result.ToWebModel());
         }
 
         /// <summary>
@@ -45,14 +47,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         [HttpGet]
         [Route("{id}")]
-        [ResponseType(typeof(AssetEntry))]
+        [ResponseType(typeof(webModel.AssetEntry))]
         [CheckPermission(Permission = PredefinedPermissions.AssetRead)]
         public IHttpActionResult Get(string id)
         {
             var retVal = _assetService.GetByIds(new[] { id });
             if (retVal?.Any() == true)
             {
-                return Ok(retVal);
+                return Ok(retVal.Single().ToWebModel());
             }
 
             return NotFound();
@@ -65,9 +67,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("")]
         [ResponseType(typeof(void))]
         [CheckPermission(Permission = PredefinedPermissions.AssetUpdate)]
-        public IHttpActionResult Update(AssetEntry item)
+        public IHttpActionResult Update(webModel.AssetEntry item)
         {
-            _assetService.SaveChanges(new[] { item });
+            _assetService.SaveChanges(new[] { item.ToCoreModel() });
             return Ok();
         }
 
