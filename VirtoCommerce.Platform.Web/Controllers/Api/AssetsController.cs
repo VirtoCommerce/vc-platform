@@ -40,11 +40,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("localstorage")]
-        [ResponseType(typeof(webModel.BlobInfo[]))]
+        [ResponseType(typeof(BlobInfo[]))]
         [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
         public async Task<IHttpActionResult> UploadAssetToLocalFileSystem()
         {
-            var retVal = new List<webModel.BlobInfo>();
+            var retVal = new List<BlobInfo>();
 
             if (!Request.Content.IsMimeMultipartContent())
             {
@@ -64,12 +64,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 var fileName = fileData.Headers.ContentDisposition.FileName.Replace("\"", string.Empty);
 
-                var blobInfo = new webModel.BlobInfo
-                {
-                    Name = fileName,
-                    Url = VirtualPathUtility.ToAbsolute(_uploadsUrl + fileName),
-                    MimeType = MimeTypeResolver.ResolveContentType(fileName)
-                };
+                var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
+                blobInfo.FileName = fileName;
+                blobInfo.Url = VirtualPathUtility.ToAbsolute(_uploadsUrl + fileName);
+                blobInfo.ContentType = MimeTypeResolver.ResolveContentType(fileName);
                 retVal.Add(blobInfo);
             }
 
@@ -90,7 +88,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        [ResponseType(typeof(webModel.BlobInfo[]))]
+        [ResponseType(typeof(BlobInfo[]))]
         [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
         [UploadFile]
         public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null, [FromUri]string name = null, [FromUri]string tenantId = null, [FromUri]string tenantType = null)
@@ -101,7 +99,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var assetEntries = new List<AssetEntry>();
-            var retVal = new List<webModel.BlobInfo>();
+            var retVal = new List<BlobInfo>();
             if (url != null)
             {
                 var fileName = name ?? HttpUtility.UrlDecode(Path.GetFileName(url));
@@ -111,13 +109,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 using (var remoteStream = client.OpenRead(url))
                 {
                     remoteStream.CopyTo(blobStream);
-
-                    retVal.Add(new webModel.BlobInfo
-                    {
-                        Name = fileName,
-                        RelativeUrl = fileUrl,
-                        Url = _urlResolver.GetAbsoluteUrl(fileUrl)
-                    });
+                    var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
+                    blobInfo.FileName = fileName;
+                    blobInfo.RelativeUrl = fileUrl;
+                    blobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
+                    retVal.Add(blobInfo);
 
                     var asset = AbstractTypeFactory<AssetEntry>.TryCreateInstance();
                     asset.BlobInfo.FileName = fileName;
@@ -133,23 +129,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 foreach (var blobInfo in blobMultipartProvider.BlobInfos)
                 {
-                    retVal.Add(new webModel.BlobInfo
-                    {
-                        Name = blobInfo.FileName,
-                        Size = blobInfo.Size.ToString(),
-                        MimeType = blobInfo.ContentType,
-                        RelativeUrl = blobInfo.Key,
-                        Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key)
-                    });
-
+					blobInfo.RelativeUrl = blobInfo.Key;
+                    blobInfo.Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key);
+                    retVal.Add(blobInfo);
+                   
                     var asset = AbstractTypeFactory<AssetEntry>.TryCreateInstance();
                     asset.BlobInfo = blobInfo;
                     asset.BlobInfo.RelativeUrl = blobInfo.Key;
                     assetEntries.Add(asset);
                 }
 
-            }
-
+                   
+                }
             if (!string.IsNullOrEmpty(tenantId) && !string.IsNullOrEmpty(tenantType))
             {
                 assetEntries.ForEach(x => {
@@ -157,7 +148,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     x.Tenant.TenantType = tenantType;
                 });
             }
-
             _assetService.SaveChanges(assetEntries);
 
             return Ok(retVal.ToArray());
