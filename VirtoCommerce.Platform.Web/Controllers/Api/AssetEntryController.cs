@@ -5,8 +5,6 @@ using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Security;
-using VirtoCommerce.Platform.Web.Converters.Asset;
-using webModel = VirtoCommerce.Platform.Web.Model.Asset;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -34,12 +32,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("search")]
-        [ResponseType(typeof(webModel.AssetEntrySearchResult))]
+        [ResponseType(typeof(AssetEntrySearchResult))]
         // [CheckPermission(Permission = PredefinedPermissions.AssetAccess)]
         public IHttpActionResult Search(AssetEntrySearchCriteria criteria)
         {
             var result = _assetSearchService.SearchAssetEntries(criteria);
-            return Ok(result.ToWebModel());
+            return Ok(result);
         }
 
         /// <summary>
@@ -47,14 +45,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         [HttpGet]
         [Route("{id}")]
-        [ResponseType(typeof(webModel.AssetEntry))]
+        [ResponseType(typeof(AssetEntry))]
         [CheckPermission(Permission = PredefinedPermissions.AssetRead)]
         public IHttpActionResult Get(string id)
         {
             var retVal = _assetService.GetByIds(new[] { id });
             if (retVal?.Any() == true)
             {
-                return Ok(retVal.Single().ToWebModel());
+                return Ok(retVal.Single());
             }
 
             return NotFound();
@@ -67,9 +65,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("")]
         [ResponseType(typeof(void))]
         [CheckPermission(Permission = PredefinedPermissions.AssetUpdate)]
-        public IHttpActionResult Update(webModel.AssetEntry item)
+        public IHttpActionResult Update(AssetEntry item)
         {
-            _assetService.SaveChanges(new[] { item.ToCoreModel() });
+            _assetService.SaveChanges(new[] { item });
             return Ok();
         }
 

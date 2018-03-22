@@ -98,7 +98,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
 
-            var assetEntries = new List<AssetEntry>();
             var retVal = new List<BlobInfo>();
             if (url != null)
             {
@@ -114,12 +113,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     blobInfo.RelativeUrl = fileUrl;
                     blobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
                     retVal.Add(blobInfo);
-
-                    var asset = AbstractTypeFactory<AssetEntry>.TryCreateInstance();
-                    asset.BlobInfo.FileName = fileName;
-                    asset.BlobInfo.RelativeUrl = fileUrl;
-                    asset.BlobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
-                    assetEntries.Add(asset);
                 }
             }
             else
@@ -129,25 +122,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 foreach (var blobInfo in blobMultipartProvider.BlobInfos)
                 {
-					blobInfo.RelativeUrl = blobInfo.Key;
+                    blobInfo.RelativeUrl = blobInfo.Key;
                     blobInfo.Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key);
                     retVal.Add(blobInfo);
-                   
-                    var asset = AbstractTypeFactory<AssetEntry>.TryCreateInstance();
-                    asset.BlobInfo = blobInfo;
-                    asset.BlobInfo.RelativeUrl = blobInfo.Key;
-                    assetEntries.Add(asset);
                 }
-
-                   
-                }
-            if (!string.IsNullOrEmpty(tenantId) && !string.IsNullOrEmpty(tenantType))
-            {
-                assetEntries.ForEach(x => {
-                    x.Tenant.TenantId = tenantId;
-                    x.Tenant.TenantType = tenantType;
-                });
             }
+
+            var assetEntries = retVal.Select(x =>
+            {
+                var asset = AbstractTypeFactory<AssetEntry>.TryCreateInstance();
+                asset.BlobInfo = _blobProvider.GetBlobInfo(x.Url);
+                if (!string.IsNullOrEmpty(tenantId) && !string.IsNullOrEmpty(tenantType))
+                {
+                    asset.Tenant = new TenantIdentity
+                    {
+                        TenantId = tenantId,
+                        TenantType = tenantType
+                    };
+                }
+                return asset;
+            }).ToArray();
             _assetService.SaveChanges(assetEntries);
 
             return Ok(retVal.ToArray());

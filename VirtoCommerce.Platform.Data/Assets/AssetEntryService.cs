@@ -101,11 +101,20 @@ namespace VirtoCommerce.Platform.Data.Assets
             using (var repository = _platformRepository())
             using (var changeTracker = GetChangeTracker(repository))
             {
-                var dbExistingIds = items.Where(x => !x.IsTransient()).Select(x => x.Id).ToArray();
-                var dbExistEntities = repository.AssetEntries.Where(x => dbExistingIds.Contains(x.Id));
                 foreach (var item in items)
                 {
-                    var originalEntity = dbExistEntities.FirstOrDefault(x => x.Id == item.Id);
+                    AssetEntryEntity originalEntity = null;
+                    if (!item.IsTransient())
+                    {
+                        originalEntity = repository.AssetEntries.FirstOrDefault(x => x.Id == item.Id);
+                    }
+                    else if (item.Tenant?.IsValid == true)
+                    {
+                        originalEntity = repository.AssetEntries.FirstOrDefault(x => x.RelativeUrl == item.BlobInfo.RelativeUrl
+                                                && x.TenantId == item.Tenant.TenantId
+                                                && x.TenantType == item.Tenant.TenantType);
+                    }
+
                     var modifiedEntity = AbstractTypeFactory<AssetEntryEntity>.TryCreateInstance().FromModel(item);
                     if (originalEntity != null)
                     {
