@@ -439,7 +439,6 @@
     </Compile>
     <Compile Include="Hangfire\PermissionBasedAuthorizationFilter.cs" />
     <Compile Include="Hangfire\UnityJobActivator.cs" />
-    <Compile Include="Model\Asset\BlobInfo.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\PlatformExportImportPushNotification.cs" />
     <Compile Include="Model\ExportImport\PlatformImportExportRequest.cs" />
     <Compile Include="Model\ExportImport\PushNotifications\PlatformExportPushNotification.cs" />
