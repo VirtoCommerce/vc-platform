@@ -62,7 +62,10 @@
   			//timeout need because $state not fully loading in run method and need to wait little time
                 $timeout(function () {
                     setupWizard.load().then(
-                        function (wizard) { wizard.showStep(wizard.currentStep); });
+                        function (wizard) {
+                            if (wizard.currentStep)
+                                wizard.showStep(wizard.currentStep);
+                        });
                 }, 500);
   		}
   	});
