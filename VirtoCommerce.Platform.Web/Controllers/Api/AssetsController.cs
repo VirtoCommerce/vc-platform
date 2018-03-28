@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -25,13 +24,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly string _uploadsUrl = Startup.VirtualRoot + "/App_Data/Uploads/";
         private readonly IBlobStorageProvider _blobProvider;
         private readonly IBlobUrlResolver _urlResolver;
-        private readonly IAssetEntryService _assetService;
 
-        public AssetsController(IBlobStorageProvider blobProvider, IBlobUrlResolver urlResolver, IAssetEntryService assetService)
+        public AssetsController(IBlobStorageProvider blobProvider, IBlobUrlResolver urlResolver)
         {
             _blobProvider = blobProvider;
             _urlResolver = urlResolver;
-            _assetService = assetService;
         }
 
         /// <summary>
@@ -83,15 +80,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
         /// <param name="url">Url for uploaded remote resource (optional)</param>
         /// <param name="name">File name</param>
-        /// <param name="tenantId">Associated tenantId</param>
-        /// <param name="tenantType">Associated tenantType</param>
         /// <returns></returns>
         [HttpPost]
         [Route("")]
         [ResponseType(typeof(BlobInfo[]))]
         [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
         [UploadFile]
-        public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null, [FromUri]string name = null, [FromUri]string tenantId = null, [FromUri]string tenantType = null)
+        public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null, [FromUri]string name = null)
         {
             if (url == null && !Request.Content.IsMimeMultipartContent())
             {
@@ -127,22 +122,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     retVal.Add(blobInfo);
                 }
             }
-
-            var assetEntries = retVal.Select(x =>
-            {
-                var asset = AbstractTypeFactory<AssetEntry>.TryCreateInstance();
-                asset.BlobInfo = _blobProvider.GetBlobInfo(x.Url);
-                if (!string.IsNullOrEmpty(tenantId) && !string.IsNullOrEmpty(tenantType))
-                {
-                    asset.Tenant = new TenantIdentity
-                    {
-                        TenantId = tenantId,
-                        TenantType = tenantType
-                    };
-                }
-                return asset;
-            }).ToArray();
-            _assetService.SaveChanges(assetEntries);
 
             return Ok(retVal.ToArray());
         }

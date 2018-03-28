@@ -11,18 +11,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [RoutePrefix("api/platform/assetentries")]
     public class AssetEntryController : ApiController
     {
-        private static object _lock = new object();
         private readonly IAssetEntryService _assetService;
         private readonly IAssetEntrySearchService _assetSearchService;
-        private readonly IBlobStorageProvider _blobProvider;
-        private readonly IBlobUrlResolver _urlResolver;
 
-        public AssetEntryController(IAssetEntryService assetService, IAssetEntrySearchService assetSearchService, IBlobStorageProvider blobProvider, IBlobUrlResolver urlResolver)
+        public AssetEntryController(IAssetEntryService assetService, IAssetEntrySearchService assetSearchService)
         {
             _assetService = assetService;
             _assetSearchService = assetSearchService;
-            _blobProvider = blobProvider;
-            _urlResolver = urlResolver;
         }
 
         /// <summary>
