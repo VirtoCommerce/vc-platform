@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
 using Newtonsoft.Json;
+using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -25,6 +26,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             Settings = new List<SettingEntry>();
             DynamicPropertyDictionaryItems = new List<DynamicPropertyDictionaryItem>();
             NotificationTemplates = new List<NotificationTemplate>();
+            AssetEntries = new List<AssetEntry>();
         }
         public bool IsNotEmpty
         {
@@ -39,6 +41,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         public ICollection<DynamicPropertyDictionaryItem> DynamicPropertyDictionaryItems { get; set; }
         public ICollection<DynamicProperty> DynamicProperties { get; set; }
         public ICollection<NotificationTemplate> NotificationTemplates { get; set; }
+        public ICollection<AssetEntry> AssetEntries { get; set; }
     }
 
 
@@ -55,8 +58,12 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly INotificationTemplateService _notificationTemplateService;
         private readonly ICacheManager<object> _cacheManager;
+        private readonly IAssetEntryService _assetEntryService;
+        private readonly IAssetEntrySearchService _assetEntrySearchService;
+
         [CLSCompliant(false)]
-        public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IModuleCatalog moduleCatalog, ICacheManager<object> cacheManager, INotificationTemplateService notificationTemplateService)
+        public PlatformExportImportManager(ISecurityService securityService, IRoleManagementService roleManagementService, ISettingsManager settingsManager, IDynamicPropertyService dynamicPropertyService, IModuleCatalog moduleCatalog, ICacheManager<object> cacheManager,
+                                           INotificationTemplateService notificationTemplateService, IAssetEntryService assetEntryService, IAssetEntrySearchService assetEntrySearchService)
         {
             _dynamicPropertyService = dynamicPropertyService;
             _securityService = securityService;
@@ -67,6 +74,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             _notificationTemplateService = notificationTemplateService;
             _manifestPartUri = PackUriHelper.CreatePartUri(new Uri("Manifest.json", UriKind.Relative));
             _platformEntriesPartUri = PackUriHelper.CreatePartUri(new Uri("PlatformEntries.json", UriKind.Relative));
+            _assetEntryService = assetEntryService;
+            _assetEntrySearchService = assetEntrySearchService;
         }
 
         #region IPlatformExportImportManager Members
@@ -91,7 +100,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         public PlatformExportManifest ReadExportManifest(Stream stream)
         {
             PlatformExportManifest retVal = null;
-            using (var package = ZipPackage.Open(stream, FileMode.Open))
+            using (var package = Package.Open(stream, FileMode.Open))
             {
                 var manifestPart = package.GetPart(_manifestPartUri);
                 using (var manifestStream = manifestPart.GetStream())
@@ -110,7 +119,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 throw new ArgumentNullException("manifest");
             }
 
-            using (var package = ZipPackage.Open(outStream, FileMode.Create))
+            using (var package = Package.Open(outStream, FileMode.Create))
             {
                 //Export all selected platform entries
                 ExportPlatformEntriesInternal(package, manifest, progressCallback);
@@ -123,7 +132,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 //After all modules exported need write export manifest part
                 using (var stream = manifestPart.GetStream())
                 {
-                    manifest.SerializeJson<PlatformExportManifest>(stream, GetJsonSerializer());
+                    manifest.SerializeJson(stream, GetJsonSerializer());
                 }
             }
         }
@@ -135,11 +144,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 throw new ArgumentNullException("manifest");
             }
 
-            var progressInfo = new ExportImportProgressInfo();
-            progressInfo.Description = "Starting platform import...";
+            var progressInfo = new ExportImportProgressInfo
+            {
+                Description = "Starting platform import..."
+            };
             progressCallback(progressInfo);
 
-            using (var package = ZipPackage.Open(stream, FileMode.Open))
+            using (var package = Package.Open(stream, FileMode.Open))
             {
                 //Import selected platform entries
                 ImportPlatformEntriesInternal(package, manifest, progressCallback);
@@ -169,7 +180,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 //Import security objects
                 if (manifest.HandleSecurity)
                 {
-                    progressInfo.Description = String.Format("Import {0} users with roles...", platformEntries.Users.Count());
+                    progressInfo.Description = $"Import {platformEntries.Users.Count()} users with roles...";
                     progressCallback(progressInfo);
 
                     //First need import roles
@@ -212,6 +223,19 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 {
                     _notificationTemplateService.Update(platformEntries.NotificationTemplates.ToArray());
                 }
+
+                //Import asset entires 
+                if (!platformEntries.AssetEntries.IsNullOrEmpty())
+                {
+                    var totalAssetsEntriesCount = platformEntries.AssetEntries.Count();
+                    const int batchSize = 50;                
+                    for (var i = 0; i <= totalAssetsEntriesCount; i += batchSize)
+                    {
+                        progressInfo.Description = $"Asset: {Math.Min(totalAssetsEntriesCount, i + batchSize) } of {totalAssetsEntriesCount} asset entries have been imported...";
+                        progressCallback(progressInfo);
+                        _assetEntryService.SaveChanges(platformEntries.AssetEntries.Skip(i).Take(batchSize));
+                    }
+                }
             }
         }
 
@@ -226,7 +250,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 platformExportObj.Roles = _roleManagementService.SearchRoles(new RoleSearchRequest { SkipCount = 0, TakeCount = int.MaxValue }).Roles;
                 //users 
                 var usersResult = Task.Run(() => _securityService.SearchUsersAsync(new UserSearchRequest { TakeCount = int.MaxValue })).Result;
-                progressInfo.Description = String.Format("Security: {0} users exporting...", usersResult.Users.Count());
+                progressInfo.Description = $"Security: {usersResult.Users.Count()} users exporting...";
                 progressCallback(progressInfo);
 
                 foreach (var user in usersResult.Users)
@@ -242,7 +266,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             //Export setting for selected modules
             if (manifest.HandleSettings)
             {
-                progressInfo.Description = String.Format("Settings: selected modules settings exporting...");
+                progressInfo.Description = "Settings: selected modules settings exporting...";
                 progressCallback(progressInfo);
 
                 platformExportObj.Settings = manifest.Modules.SelectMany(x => _settingsManager.GetModuleSettings(x.Id)).ToList();
@@ -251,22 +275,34 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             //Dynamic properties
             var allTypes = _dynamicPropertyService.GetAvailableObjectTypeNames();
 
-            progressInfo.Description = String.Format("Dynamic properties: load properties...");
+            progressInfo.Description = "Dynamic properties: load properties...";
             progressCallback(progressInfo);
 
             platformExportObj.DynamicProperties = allTypes.SelectMany(x => _dynamicPropertyService.GetProperties(x)).ToList();
             platformExportObj.DynamicPropertyDictionaryItems = platformExportObj.DynamicProperties.Where(x => x.IsDictionary).SelectMany(x => _dynamicPropertyService.GetDictionaryItems(x.Id)).ToList();
 
             //Notification templates
-            progressInfo.Description = String.Format("Notifications: load templates...");
+            progressInfo.Description = "Notifications: load templates...";
             progressCallback(progressInfo);
             platformExportObj.NotificationTemplates = _notificationTemplateService.GetAllTemplates().ToList();
+
+            //Asset entries
+            progressInfo.Description = "Asset: Evaluate asset entries count...";
+            progressCallback(progressInfo);
+            const int batchSize = 50;
+            var totalAssetsEntriesCount =  _assetEntrySearchService.SearchAssetEntries(new AssetEntrySearchCriteria { Skip = 0, Take = 0 }).TotalCount;
+            for (var i = 0; i <= totalAssetsEntriesCount; i += batchSize)
+            {
+                progressInfo.Description = $"Asset: {Math.Min(totalAssetsEntriesCount, i + batchSize) } of {totalAssetsEntriesCount} asset entries have been loaded...";
+                progressCallback(progressInfo);
+                platformExportObj.AssetEntries.AddRange(_assetEntrySearchService.SearchAssetEntries(new AssetEntrySearchCriteria { Skip = i, Take = batchSize }).Results);
+            }
 
             //Create part for platform entries
             var platformEntiriesPart = package.CreatePart(_platformEntriesPartUri, System.Net.Mime.MediaTypeNames.Application.Octet, CompressionOption.Normal);
             using (var partStream = platformEntiriesPart.GetStream())
             {
-                platformExportObj.SerializeJson<PlatformExportEntries>(partStream);
+                platformExportObj.SerializeJson(partStream);
             }
         }
 
@@ -283,7 +319,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     {
                         Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
                         {
-                            progressInfo.Description = String.Format("{0}: {1}", moduleInfo.Id, x.Description);
+                            progressInfo.Description = $"{moduleInfo.Id}: {x.Description}";
                             progressCallback(progressInfo);
                         };
                         try
@@ -292,7 +328,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         }
                         catch (Exception ex)
                         {
-                            progressInfo.Errors.Add(String.Format("{0}: {1}", moduleInfo.Id, ex.ExpandExceptionMessage()));
+                            progressInfo.Errors.Add($"{moduleInfo.Id}: {ex.ExpandExceptionMessage()}");
                             progressCallback(progressInfo);
                         }
                     }
@@ -315,11 +351,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
                     Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
                     {
-                        progressInfo.Description = String.Format("{0}: {1}", module.Id, x.Description);
+                        progressInfo.Description = $"{module.Id}: {x.Description}";
                         progressCallback(progressInfo);
                     };
 
-                    progressInfo.Description = String.Format("{0}: exporting...", module.Id);
+                    progressInfo.Description = $"{module.Id}: exporting...";
                     progressCallback(progressInfo);
 
                     try
@@ -328,7 +364,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     }
                     catch (Exception ex)
                     {
-                        progressInfo.Errors.Add(String.Format("{0}: {1}", module.Id, ex.ExpandExceptionMessage()));
+                        progressInfo.Errors.Add($"{module.Id}: {ex.ExpandExceptionMessage()}");
                         progressCallback(progressInfo);
                     }
 
