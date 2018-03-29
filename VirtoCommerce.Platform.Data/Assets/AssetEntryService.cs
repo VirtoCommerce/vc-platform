@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using CacheManager.Core;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
@@ -17,7 +16,7 @@ namespace VirtoCommerce.Platform.Data.Assets
         private readonly Func<IPlatformRepository> _platformRepository;
         private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly ICacheManager<object> _cacheManager;
-
+        
         public AssetEntryService(Func<IPlatformRepository> repositoryFactory, IBlobUrlResolver blobUrlResolver, ICacheManager<object> cacheManager)
         {
             _platformRepository = repositoryFactory;
@@ -96,26 +95,17 @@ namespace VirtoCommerce.Platform.Data.Assets
             }
         }
 
-        public void SaveChanges(IEnumerable<AssetEntry> items)
+        public void SaveChanges(IEnumerable<AssetEntry> entries)
         {
             using (var repository = _platformRepository())
             using (var changeTracker = GetChangeTracker(repository))
             {
-                foreach (var item in items)
+                var nonTransientEntryIds = entries.Where(x => !x.IsTransient()).Select(x => x.Id).ToArray();
+                var originalDataEntities = repository.AssetEntries.Where(x => nonTransientEntryIds.Contains(x.Id)).ToList();
+                foreach (var entry in entries)
                 {
-                    AssetEntryEntity originalEntity = null;
-                    if (!item.IsTransient())
-                    {
-                        originalEntity = repository.AssetEntries.FirstOrDefault(x => x.Id == item.Id);
-                    }
-                    else if (item.Tenant?.IsValid == true)
-                    {
-                        originalEntity = repository.AssetEntries.FirstOrDefault(x => x.RelativeUrl == item.BlobInfo.RelativeUrl
-                                                && x.TenantId == item.Tenant.TenantId
-                                                && x.TenantType == item.Tenant.TenantType);
-                    }
-
-                    var modifiedEntity = AbstractTypeFactory<AssetEntryEntity>.TryCreateInstance().FromModel(item);
+                    var originalEntity =  originalDataEntities.FirstOrDefault(x => x.Id == entry.Id);                   
+                    var modifiedEntity = AbstractTypeFactory<AssetEntryEntity>.TryCreateInstance().FromModel(entry);
                     if (originalEntity != null)
                     {
                         changeTracker.Attach(originalEntity);

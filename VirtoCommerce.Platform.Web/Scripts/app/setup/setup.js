@@ -46,11 +46,13 @@
             return settings.getValues({ id: "VirtoCommerce.SetupStep" }).$promise.then(function (data) {
 				if (angular.isArray(data) && data.length > 0) {
                     wizard.currentStep = wizard.findStepByState(data[0]);
+                    wizard.isCompleted = wizard.currentStep === undefined;
                 }
                 return wizard;
 			});
         },
-        currentStep: undefined
+        currentStep: undefined,
+        isCompleted: false
 	};
 	return wizard;
 }])
@@ -62,7 +64,7 @@
   			//timeout need because $state not fully loading in run method and need to wait little time
                 $timeout(function () {
                     setupWizard.load().then(
-                        function (wizard) { wizard.showStep(wizard.currentStep); });
+                        function (wizard) { if (!wizard.isCompleted) { wizard.showStep(wizard.currentStep); } });
                 }, 500);
   		}
   	});
