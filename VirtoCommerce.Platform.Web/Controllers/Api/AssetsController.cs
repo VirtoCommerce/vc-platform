@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -80,7 +79,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </remarks>
         /// <param name="folderUrl">Parent folder url (relative or absolute).</param>
         /// <param name="url">Url for uploaded remote resource (optional)</param>
-        /// <param name="name">Image name.</param>
+        /// <param name="name">File name</param>
         /// <returns></returns>
         [HttpPost]
         [Route("")]
@@ -117,12 +116,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await Request.Content.ReadAsMultipartAsync(blobMultipartProvider);
 
                 foreach (var blobInfo in blobMultipartProvider.BlobInfos)
-                {  
+                {
                     blobInfo.RelativeUrl = blobInfo.Key;
                     blobInfo.Url = _urlResolver.GetAbsoluteUrl(blobInfo.Key);
                     retVal.Add(blobInfo);
                 }
             }
+
             return Ok(retVal.ToArray());
         }
 

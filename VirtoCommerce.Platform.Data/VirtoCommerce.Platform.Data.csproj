@@ -118,6 +118,7 @@
     <Compile Include="Model\DynamicPropertyDictionaryItemNameEntity.cs" />
     <Compile Include="Model\DynamicPropertyNameEntity.cs" />
     <Compile Include="Model\DynamicPropertyObjectValueEntity.cs" />
+    <Compile Include="Model\AssetEntryEntity.cs" />
     <Compile Include="Model\NotificationEntity.cs" />
     <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
@@ -228,6 +229,10 @@
     <Compile Include="Repositories\Migrations\201710311021135_NewIndexes2.Designer.cs">
       <DependentUpon>201710311021135_NewIndexes2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201803191347409_AssetEntry.cs" />
+    <Compile Include="Repositories\Migrations\201803191347409_AssetEntry.Designer.cs">
+      <DependentUpon>201803191347409_AssetEntry.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -235,6 +240,7 @@
     <Compile Include="Settings\SettingManager.cs" />
     <Compile Include="Settings\SettingConstants.cs" />
     <Compile Include="Settings\SettingExtensions.cs" />
+    <Compile Include="Assets\AssetEntryService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
@@ -317,6 +323,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201710311021135_NewIndexes2.resx">
       <DependentUpon>201710311021135_NewIndexes2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201803191347409_AssetEntry.resx">
+      <DependentUpon>201803191347409_AssetEntry.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

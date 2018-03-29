@@ -57,6 +57,7 @@
     <Compile Include="Assets\BlobFolder.cs" />
     <Compile Include="Assets\BlobSearchResult.cs" />
     <Compile Include="Assets\BlobInfo.cs" />
+    <Compile Include="Assets\IAssetEntrySearchService.cs" />
     <Compile Include="Assets\IBlobUrlResolver.cs" />
     <Compile Include="Assets\IBlobStorageProvider.cs" />
     <Compile Include="Bus\IHandlerRegistrar.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Common\StreamExtensions.cs" />
     <Compile Include="Common\SwaggerFileResponseAttribute.cs" />
     <Compile Include="Common\SwaggerOptionalAttribute.cs" />
+    <Compile Include="Common\TenantIdentity.cs" />
     <Compile Include="DynamicProperties\DynamicPropertiesExtensions.cs" />
     <Compile Include="DynamicProperties\DynamicProperty.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyDictionaryItem.cs" />
@@ -246,6 +248,10 @@
     <Compile Include="Settings\SettingEntry.cs" />
     <Compile Include="Settings\SettingsExtension.cs" />
     <Compile Include="Settings\SettingValueType.cs" />
+    <Compile Include="Assets\IAssetEntryService.cs" />
+    <Compile Include="Assets\AssetEntrySearchCriteria.cs" />
+    <Compile Include="Assets\AssetEntrySearchResult.cs" />
+    <Compile Include="Assets\AssetEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

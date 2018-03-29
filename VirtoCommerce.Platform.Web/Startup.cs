@@ -653,7 +653,9 @@ namespace VirtoCommerce.Platform.Web
                 container.RegisterInstance<IBlobStorageProvider>(azureBlobProvider);
                 container.RegisterInstance<IBlobUrlResolver>(azureBlobProvider);
             }
-
+            
+            container.RegisterType <IAssetEntryService, AssetEntryService>(new ContainerControlledLifetimeManager());
+            container.RegisterType <IAssetEntrySearchService, AssetEntryService>(new ContainerControlledLifetimeManager());
 
             #endregion
 
