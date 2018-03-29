@@ -488,6 +488,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return ProcessSecurityResult(result);
         }
 
+        [HttpGet]
+        [Route("users/{id}/lockout/enable")]
+        [ResponseType(typeof(UserLockedResult))]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        public async Task<IHttpActionResult> LockoutEnabledAsync(string id)
+        {
+            var result = await _securityService.IsLockoutEnabledAsync(id);
+            return Ok(new UserLockedResult {LockoutEnable = result});
+        }
+
+        [HttpGet]
+        [Route("users/{id}/lockout/enddate")]
+        [ResponseType(typeof(UserLockedResult))]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        public async Task<IHttpActionResult> LockoutEndDateAsync(string id)
+        {
+            var result = await _securityService.LockoutEndDateAsync(id);
+            return Ok(new UserLockedResult{ LockoutEndDate = result });
+        }
 
         private void EnsureUserIsEditable(params string[] userNames)
         {

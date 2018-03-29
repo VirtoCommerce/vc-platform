@@ -1,3 +1,4 @@
+﻿using System;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Security
@@ -23,5 +24,7 @@ namespace VirtoCommerce.Platform.Core.Security
         Permission[] GetUserPermissions(string userName);
         Task<bool> IsUserLockedAsync(string userId);
         Task<SecurityResult> UnlockUserAsync(string userId);
+        Task<bool> IsLockoutEnabledAsync(string userId);
+        Task<DateTimeOffset> LockoutEndDateAsync(string userId);
     }
 }
