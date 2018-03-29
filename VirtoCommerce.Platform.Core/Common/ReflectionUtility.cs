@@ -162,5 +162,18 @@ namespace VirtoCommerce.Platform.Core.Common
 
             return retVal;
         }
+
+        public static bool IsAssignableFromGenericList(this Type type)
+        {
+            foreach (var intType in type.GetInterfaces())
+            {
+                if (intType.IsGenericType
+                    && intType.GetGenericTypeDefinition() == typeof(IList<>))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

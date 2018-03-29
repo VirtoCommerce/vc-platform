@@ -59,9 +59,12 @@
     <Compile Include="Assets\BlobInfo.cs" />
     <Compile Include="Assets\IBlobUrlResolver.cs" />
     <Compile Include="Assets\IBlobStorageProvider.cs" />
+    <Compile Include="Bus\IHandlerRegistrar.cs" />
+    <Compile Include="Bus\InProcessBus.cs" />
     <Compile Include="ChangeLog\IHasChangesHistory.cs" />
     <Compile Include="Common\AbstractTypeFactory.cs" />
     <Compile Include="Common\CancellationTokenWrapper.cs" />
+    <Compile Include="Common\ChangedEntry.cs" />
     <Compile Include="Common\ConfigurationHelper.cs" />
     <Compile Include="Common\ConnectionStringHelper.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />
@@ -91,7 +94,13 @@
     <Compile Include="DynamicProperties\DynamicPropertyValueType.cs" />
     <Compile Include="DynamicProperties\IDynamicPropertyService.cs" />
     <Compile Include="DynamicProperties\IHasDynamicProperties.cs" />
+    <Compile Include="Events\ChangeEntryEvent.cs" />
+    <Compile Include="Events\DomainEvent.cs" />
     <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Events\ICancellableEventHandler.cs" />
+    <Compile Include="Events\IChangeEntryEvent.cs" />
+    <Compile Include="Events\IEvent.cs" />
+    <Compile Include="Events\IEventHandler.cs" />
     <Compile Include="Events\IEventPublisher.cs" />
     <Compile Include="Events\IPriorityObserver.cs" />
     <Compile Include="Exceptions\PlatformException.cs" />
@@ -128,6 +137,9 @@
     <Compile Include="ExportImport\PlatformExportManifest.cs" />
     <Compile Include="Common\IPathMapper.cs" />
     <Compile Include="Jobs\JobPriority.cs" />
+    <Compile Include="Messages\ICancellableHandler.cs" />
+    <Compile Include="Messages\IHandler.cs" />
+    <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Modularity\Exceptions\MissedModuleException.cs" />
     <Compile Include="Modularity\ManifestDependency.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
