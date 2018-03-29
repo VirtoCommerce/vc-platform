@@ -420,6 +420,24 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
+        public virtual async Task<bool> IsLockoutEnabledAsync(string userId)
+        {
+            using (var userManager = _userManagerFactory())
+            {
+                var result = await userManager.GetLockoutEnabledAsync(userId);
+                return result;
+            }
+        }
+
+        public virtual async Task<DateTimeOffset> LockoutEndDateAsync(string userId)
+        {
+            using (var userManager = _userManagerFactory())
+            {
+                var result = await userManager.GetLockoutEndDateAsync(userId);
+                return result;
+            }
+        }
+
         public virtual async Task<SecurityResult> UnlockUserAsync(string userId)
         {
             using (var userManager = _userManagerFactory())
