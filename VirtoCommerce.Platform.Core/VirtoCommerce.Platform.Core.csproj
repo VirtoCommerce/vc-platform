@@ -96,11 +96,11 @@
     <Compile Include="DynamicProperties\DynamicPropertyValueType.cs" />
     <Compile Include="DynamicProperties\IDynamicPropertyService.cs" />
     <Compile Include="DynamicProperties\IHasDynamicProperties.cs" />
-    <Compile Include="Events\ChangeEntryEvent.cs" />
+    <Compile Include="Events\ChangedEntryEvent.cs" />
     <Compile Include="Events\DomainEvent.cs" />
     <Compile Include="Events\EventPublisher.cs" />
     <Compile Include="Events\ICancellableEventHandler.cs" />
-    <Compile Include="Events\IChangeEntryEvent.cs" />
+    <Compile Include="Events\IChangedEntryEvent.cs" />
     <Compile Include="Events\IEvent.cs" />
     <Compile Include="Events\IEventHandler.cs" />
     <Compile Include="Events\IEventPublisher.cs" />

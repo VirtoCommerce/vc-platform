@@ -3,7 +3,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Events
 {
-    public interface IChangeEntryEvent<T> : IEvent
+    public interface IChangedEntryEvent<T> : IEvent
     {
         IEnumerable<ChangedEntry<T>> ChangedEntries { get; }
     }
