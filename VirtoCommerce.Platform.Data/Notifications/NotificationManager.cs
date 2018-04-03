@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Common.Logging;
 using Omu.ValueInjecter;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
@@ -16,6 +17,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
         private readonly Func<IPlatformRepository> _repositoryFactory;
         private readonly INotificationTemplateService _notificationTemplateService;
         private readonly List<Func<Notification>> _notifications = new List<Func<Notification>>();
+        private readonly List<Type> _unregisteredNotifications = new List<Type>();
+
+        private readonly ILog Logger = LogManager.GetLogger(typeof(NotificationManager));
 
         public NotificationManager(INotificationTemplateResolver resolver, Func<IPlatformRepository> repositoryFactory, INotificationTemplateService notificationTemplateService)
         {
@@ -45,6 +49,14 @@ namespace VirtoCommerce.Platform.Data.Notifications
             }
         }
 
+        public void UnregisterNotificationType<T>()
+        {
+            if(!_unregisteredNotifications.Contains(typeof(T)))
+            {
+                _unregisteredNotifications.Add(typeof(T));
+            }         
+        }
+
         public Notification[] GetNotifications()
         {
             return _notifications.Select(x => x()).ToArray();
@@ -52,22 +64,29 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
         SendNotificationResult INotificationManager.SendNotification(Notification notification)
         {
-            ResolveTemplate(notification);
-
-            var result = notification.SendNotification();
-
+            var result = new SendNotificationResult();
+            //Do not send unregistered notifications
+            if (!_unregisteredNotifications.Any(x => x.IsAssignableFrom(notification.GetType())))
+            {
+                ResolveTemplate(notification);
+                result = notification.SendNotification();
+            }            
             return result;
         }
 
         public void ScheduleSendNotification(Notification notification)
         {
-            ResolveTemplate(notification);
-
-            using (var repository = _repositoryFactory())
+            //Do not send unregistered notifications
+            if (!_unregisteredNotifications.Any(x => x.IsAssignableFrom(notification.GetType())))
             {
-                var addedNotification = notification.ToDataModel();
-                repository.Add(addedNotification);
-                repository.UnitOfWork.Commit();
+                ResolveTemplate(notification);
+
+                using (var repository = _repositoryFactory())
+                {
+                    var addedNotification = notification.ToDataModel();
+                    repository.Add(addedNotification);
+                    repository.UnitOfWork.Commit();
+                }
             }
         }
 
@@ -119,7 +138,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
             retVal.ObjectTypeId = objectTypeId;
             retVal.Language = language;
 
-            var template = _notificationTemplateService.GetByNotification(type, objectId, objectTypeId, language);
+            var notificationTypeName = retVal.GetType().Name;
+            var template = _notificationTemplateService.GetByNotification(notificationTypeName, objectId, objectTypeId, language);
+
             if (template != null)
             {
                 retVal.NotificationTemplate = template;
@@ -200,7 +221,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 retVal.Notifications = query.Skip(criteria.Skip)
                                             .Take(criteria.Take)
                                             .ToArray()
-                                            .Select(GetNotificationCoreModel)
+                                            .Select(GetNotificationCoreModel)                                          
                                             .ToList();
             }
 
@@ -229,7 +250,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
         private Notification GetNotificationCoreModel(NotificationEntity entity)
         {
             var retVal = GetNewNotification(entity.Type);
-            retVal.InjectFrom(entity);
+
+            // Type may have been unregistered by now. 
+            retVal?.InjectFrom(entity);
 
             return retVal;
         }

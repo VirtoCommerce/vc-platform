@@ -1,145 +1,117 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-	/// <summary>
-	/// Base class for value objects in domain.
-	/// Value
-	/// </summary>
-	/// <typeparam name="TValueObject">The type of this value object</typeparam>
-	public class ValueObject<TValueObject> : IEquatable<TValueObject>, IValueObject
-        where TValueObject : ValueObject<TValueObject>
-	{
+    public abstract class ValueObject : IValueObject
+    {
+        private static readonly ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>> TypeProperties = new ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>>();
 
-		#region IEquatable and Override Equals operators
-
-		/// <summary>
-		/// <see cref="M:System.Object.IEquatable{TValueObject}"/>
-		/// </summary>
-		/// <param name="other"><see cref="M:System.Object.IEquatable{TValueObject}"/></param>
-		/// <returns><see cref="M:System.Object.IEquatable{TValueObject}"/></returns>
-		public bool Equals(TValueObject other)
-		{
-			if ((object)other == null)
-				return false;
-
-			if (Object.ReferenceEquals(this, other))
-				return true;
-
-            if (GetType() != other.GetType())
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (ReferenceEquals(null, obj))
                 return false;
-
-            //compare all public properties
-            PropertyInfo[] publicProperties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            if ((object)publicProperties != null
-				&&
-				publicProperties.Any())
-			{
-				return publicProperties.All(p =>
-				{
-					var left = p.GetValue(this, null);
-					var right = p.GetValue(other, null);
-
-
-					if(left == null || right == null)
-					{
-						return left == right;
-					}
-					if (typeof(TValueObject).IsAssignableFrom(left.GetType()))
-					{
-						//check not self-references...
-						return Object.ReferenceEquals(left, right);
-					}
-					else
-						return left.Equals(right);
-
-
-				});
-			}
-			else
-				return true;
-		}
-		/// <summary>
-		/// <see cref="M:System.Object.Equals"/>
-		/// </summary>
-		/// <param name="obj"><see cref="M:System.Object.Equals"/></param>
-		/// <returns><see cref="M:System.Object.Equals"/></returns>
-		public override bool Equals(object obj)
-		{
-			if ((object)obj == null)
-				return false;
-
-			if (Object.ReferenceEquals(this, obj))
-				return true;
-
             if (GetType() != obj.GetType())
                 return false;
+            var other = obj as ValueObject;
+            return other != null && GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+        }
 
-            ValueObject<TValueObject> item = obj as ValueObject<TValueObject>;
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return GetEqualityComponents().Aggregate(17, (current, obj) => current * 23 + (obj?.GetHashCode() ?? 0));
+            }
+        }
 
-			if ((object)item != null)
-				return Equals((TValueObject)item);
-			else
-				return false;
+        public static bool operator ==(ValueObject left, ValueObject right)
+        {
+            return Equals(left, right);
+        }
 
-		}
-		/// <summary>
-		/// <see cref="M:System.Object.GetHashCode"/>
-		/// </summary>
-		/// <returns><see cref="M:System.Object.GetHashCode"/></returns>
-		public override int GetHashCode()
-		{
-			int hashCode = 31;
-			bool changeMultiplier = false;
-			int index = 1;
+        public static bool operator !=(ValueObject left, ValueObject right)
+        {
+            return !Equals(left, right);
+        }
 
-			//compare all public properties
-			PropertyInfo[] publicProperties = this.GetType().GetProperties();
+        public override string ToString()
+        {
+            return $"{{{string.Join(", ", GetProperties().Select(f => $"{f.Name}: {f.GetValue(this)}"))}}}";
+        }
 
+        protected virtual IEnumerable<object> GetEqualityComponents()
+        {
+            foreach (var property in GetProperties())
+            {
+                var value = property.GetValue(this);
+                if (value != null)
+                {
+                    var valueType = value.GetType();
 
-			if ((object)publicProperties != null
-				&&
-				publicProperties.Any())
-			{
-				foreach (var item in publicProperties)
-				{
-					object value = item.GetValue(this, null);
+                    if (valueType.IsAssignableFromGenericList())
+                    {
+                        foreach (var child in ((IEnumerable)value))
+                        {
+                            yield return child;
+                        }
+                    }
+                    else
+                    {
+                        yield return value;
+                    }
+                }
+            }
+        }
 
-					if ((object)value != null)
-					{
+        protected virtual IEnumerable<PropertyInfo> GetProperties()
+        {
+            return TypeProperties.GetOrAdd(
+                GetType(),
+                t => t
+                    .GetTypeInfo()
+                    .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                    .OrderBy(p => p.Name)
+                    .ToList());
+        }
+    }
 
-						hashCode = hashCode * ((changeMultiplier) ? 59 : 114) + value.GetHashCode();
+    /// <summary>
+    /// Previous generic ValueObject` type, leave it for backward compatibility
+    /// TODO: Make Obsolete later
+    /// </summary>
+    /// <typeparam name="TValueObject"></typeparam>
+    public class ValueObject<TValueObject> : ValueObject, IEquatable<TValueObject>
+    {
+        public bool Equals(TValueObject other)
+        {
+            return base.Equals(other);
+        }
 
-						changeMultiplier = !changeMultiplier;
-					}
-					else
-						hashCode = hashCode ^ (index * 13);//only for support {"a",null,null,"a"} <> {null,"a","a",null}
-				}
-			}
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
-			return hashCode;
-		}
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+        public static bool operator ==(ValueObject<TValueObject> left, ValueObject<TValueObject> right)
+        {
+            return Equals(left, right);
+        }
 
-		public static bool operator ==(ValueObject<TValueObject> left, ValueObject<TValueObject> right)
-		{
-			if (Object.Equals(left, null))
-				return (Object.Equals(right, null)) ? true : false;
-			else
-				return left.Equals(right);
+        public static bool operator !=(ValueObject<TValueObject> left, ValueObject<TValueObject> right)
+        {
+            return !Equals(left, right);
+        }
 
-		}
-
-		public static bool operator !=(ValueObject<TValueObject> left, ValueObject<TValueObject> right)
-		{
-			return !(left == right);
-		}
-
-		#endregion
-	}
+    }
 }

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Events
 {
+    [Obsolete("Use IEventPublisher.Publish() instead")]
 	public class EventPublisher<T>: IEventPublisher<T>
 	{
 		private readonly IObserver<T>[] _observers;

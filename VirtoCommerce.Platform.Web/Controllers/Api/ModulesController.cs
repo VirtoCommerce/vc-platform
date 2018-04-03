@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -29,6 +29,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [CheckPermission(Permission = PredefinedPermissions.ModuleQuery)]
     public class ModulesController : ApiController
     {
+        private const string _autoInstallStateSetting = "VirtoCommerce.ModulesAutoInstallState";
+
         private readonly string _uploadsUrl = Startup.VirtualRoot + "/App_Data/Uploads/";
         private readonly IModuleCatalog _moduleCatalog;
         private readonly IModuleInstaller _moduleInstaller;
@@ -277,6 +279,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         if (!moduleBundles.IsNullOrEmpty())
                         {
                             _settingsManager.SetValue("VirtoCommerce.ModulesAutoInstalled", true);
+                            _settingsManager.SetValue(_autoInstallStateSetting, webModel.AutoInstallState.Processing);
 
                             EnsureModulesCatalogInitialized();
 
@@ -325,6 +328,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(notification);
         }
 
+        /// <summary>
+        /// This method used by azure automatically deployment scripts to check the installation status
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("autoinstall/state")]
+        [ResponseType(typeof(string))]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [AllowAnonymous]
+        public IHttpActionResult GetAutoInstallState()
+        {
+            var state = EnumUtility.SafeParse(_settingsManager.GetValue(_autoInstallStateSetting, string.Empty), webModel.AutoInstallState.Undefined);
+            return Ok(state);
+        }
+
         [ApiExplorerSettings(IgnoreApi = true)]
         public void ModuleBackgroundJob(webModel.ModuleBackgroundJobOptions options, webModel.ModulePushNotification notification)
         {
@@ -363,6 +381,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             finally
             {
+                _settingsManager.SetValue(_autoInstallStateSetting, webModel.AutoInstallState.Completed);
+
                 notification.Finished = DateTime.UtcNow;
                 notification.ProgressLog.Add(new webModel.ProgressMessage
                 {

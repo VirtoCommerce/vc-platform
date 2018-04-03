@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -122,21 +122,11 @@ namespace VirtoCommerce.Platform.Web
                             directory.SearchSubdirectories);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Exception moduleException;
+                    var notFoundPath = file?.VirtualPath ?? directory?.VirtualPath;
+                    ((ManifestModuleInfo)item.Module).Errors.Add($"Path not found ({notFoundPath}).");
 
-                    if (item.Module.ModuleInstance != null)
-                    {
-                        var assemblyName = item.Module.ModuleInstance.GetType().Assembly.FullName;
-                        moduleException = new ModuleInitializeException(item.Module.ModuleName, assemblyName, ex.Message, ex);
-                    }
-                    else
-                    {
-                        moduleException = new ModuleInitializeException(item.Module.ModuleName, ex.Message, ex);
-                    }
-
-                    throw moduleException;
                 }
             }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.ChangeLog;
@@ -11,6 +12,32 @@ namespace VirtoCommerce.Platform.Core.Security
         public string UserName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+        /// <summary>
+        ///  True if the email is confirmed, default is false
+        /// </summary>
+        public bool EmailConfirmed { get; set; }
+        /// <summary>
+        /// True if the phone number is confirmed, default is false
+        /// </summary>     
+        public virtual bool PhoneNumberConfirmed { get; set; }
+        /// <summary>
+        ///   Is two factor enabled for the user
+        /// </summary>
+        public virtual bool TwoFactorEnabled { get; set; }
+        /// <summary>
+        /// DateTime in UTC when lockout ends, any time in the past is considered not locked out.
+        /// </summary>
+        public virtual DateTime? LockoutEndDateUtc { get; set; }
+
+        /// <summary>
+        /// Is lockout enabled for this user
+        /// </summary>
+        public virtual bool LockoutEnabled { get; set; }
+
+        /// <summary>
+        ///  Used to record failures for the purposes of lockout
+        /// </summary>
+        public virtual int AccessFailedCount { get; set; }
 
         /// <summary>
         /// Tenant id

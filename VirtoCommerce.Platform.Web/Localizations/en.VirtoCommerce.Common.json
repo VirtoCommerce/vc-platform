@@ -1,4 +1,4 @@
-{
+﻿{
   "platform": {
     "commands": {
       "add": "Add",
@@ -57,7 +57,11 @@
       "approve-user": "Approve user",
       "change-password": "Change password",
       "unlock-account": "Unlock account",
-      "today": "Today"
+      "today": "Today",
+      "time": "Time",
+      "now": "Now",
+      "date": "Date",
+      "see-details": "see Details"
     },
     "list": {
       "no-data": "No data",

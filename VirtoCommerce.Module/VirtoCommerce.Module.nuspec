@@ -15,10 +15,10 @@
         <developmentDependency>true</developmentDependency>
         <dependencies>
             <dependency id="MSBuildTasks" version="1.5.0.235" />
-            <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" />
-            <dependency id="Newtonsoft.Json" version="9.0.1" />
+            <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.4" />
+            <dependency id="Newtonsoft.Json" version="11.0.2" />
             <dependency id="Unity" version="4.0.1" />
-            <dependency id="VirtoCommerce.Platform.Core" version="2.13.15" />
+            <dependency id="VirtoCommerce.Platform.Core" version="2.13.24" />
         </dependencies>
     </metadata>
 </package>

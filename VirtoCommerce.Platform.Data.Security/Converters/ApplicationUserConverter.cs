@@ -18,7 +18,14 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             retVal.InjectFrom(applicationUser);
             retVal.InjectFrom(dbEntity);
             retVal.UserState = EnumUtility.SafeParse(dbEntity.AccountState, AccountState.Approved);
-
+            if (applicationUser.Logins != null)
+            {
+                retVal.Logins = applicationUser.Logins.Select(x => new ApplicationUserLogin
+                {
+                    LoginProvider = x.LoginProvider.ToString(),
+                    ProviderKey = x.ProviderKey.ToString()
+                }).ToArray();
+            }
             retVal.Roles = dbEntity.RoleAssignments.Select(x => x.Role.ToCoreModel(scopeService)).ToArray();
             retVal.Permissions = retVal.Roles.SelectMany(x => x.Permissions).SelectMany(x => x.GetPermissionWithScopeCombinationNames()).Distinct().ToArray();
             retVal.ApiAccounts = dbEntity.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();

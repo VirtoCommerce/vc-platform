@@ -43,16 +43,19 @@
       <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="StackExchange.Redis, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.1.2.6\lib\net46\StackExchange.Redis.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -118,6 +121,7 @@
     <Compile Include="Model\DynamicPropertyDictionaryItemNameEntity.cs" />
     <Compile Include="Model\DynamicPropertyNameEntity.cs" />
     <Compile Include="Model\DynamicPropertyObjectValueEntity.cs" />
+    <Compile Include="Model\AssetEntryEntity.cs" />
     <Compile Include="Model\NotificationEntity.cs" />
     <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
@@ -228,6 +232,10 @@
     <Compile Include="Repositories\Migrations\201710311021135_NewIndexes2.Designer.cs">
       <DependentUpon>201710311021135_NewIndexes2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201803191347409_AssetEntry.cs" />
+    <Compile Include="Repositories\Migrations\201803191347409_AssetEntry.Designer.cs">
+      <DependentUpon>201803191347409_AssetEntry.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -235,6 +243,7 @@
     <Compile Include="Settings\SettingManager.cs" />
     <Compile Include="Settings\SettingConstants.cs" />
     <Compile Include="Settings\SettingExtensions.cs" />
+    <Compile Include="Assets\AssetEntryService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">
@@ -317,6 +326,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201710311021135_NewIndexes2.resx">
       <DependentUpon>201710311021135_NewIndexes2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201803191347409_AssetEntry.resx">
+      <DependentUpon>201803191347409_AssetEntry.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -26,9 +26,11 @@ using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Platform.Core.Assets;
+using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notifications;
@@ -520,6 +522,14 @@ namespace VirtoCommerce.Platform.Web
                             },
                             new ModuleSetting
                             {
+                                Name = "VirtoCommerce.Platform.UI.ShowMeridian",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Meridian labels based on user preferences",
+                                Description = "When set to true (by default), system will display time in format like '12 hour format' when possible",
+                                DefaultValue = true.ToString()
+                            },
+                            new ModuleSetting
+                            {
                                 Name = "VirtoCommerce.Platform.UI.UseTimeAgo",
                                 ValueType = ModuleSetting.TypeBoolean,
                                 Title = "Use time ago format when is possible",
@@ -643,7 +653,9 @@ namespace VirtoCommerce.Platform.Web
                 container.RegisterInstance<IBlobStorageProvider>(azureBlobProvider);
                 container.RegisterInstance<IBlobUrlResolver>(azureBlobProvider);
             }
-
+            
+            container.RegisterType <IAssetEntryService, AssetEntryService>(new ContainerControlledLifetimeManager());
+            container.RegisterType <IAssetEntrySearchService, AssetEntryService>(new ContainerControlledLifetimeManager());
 
             #endregion
 
@@ -693,6 +705,12 @@ namespace VirtoCommerce.Platform.Web
 
             container.RegisterType<IExpressionSerializer, XmlExpressionSerializer>();
 
+            #endregion
+
+            #region Events
+            var inProcessBus = new InProcessBus();
+            container.RegisterInstance<IHandlerRegistrar>(inProcessBus);
+            container.RegisterInstance<IEventPublisher>(inProcessBus);
             #endregion
         }
 

@@ -11,6 +11,7 @@
     blade.currentRegionalFormat = i18n.getRegionalFormat();
     blade.currentTimeZone = i18n.getTimeZone();
     blade.currentTimeAgoSettings = i18n.getTimeAgoSettings();
+    blade.currentTimeSettings = i18n.getTimeSettings();
 
     userProfile.load().then(function () {     
          initializeBlade();
@@ -52,6 +53,7 @@
         $scope.timeZones = timeZones.query();
         blade.currentTimeZone = getNameByCode($scope.timeZones, blade.currentTimeZone);
         blade.currentTimeAgoSettings = userProfile.timeAgoSettings;
+        blade.currentTimeSettings = userProfile.timeSettings;
     };
 
     function isLoading() {
@@ -103,4 +105,12 @@
             userProfile.save();
         }
     }
+    $scope.setTimeSettings = function () {
+            if (!isLoading()) {
+                i18n.changeTimeSettings(blade.currentTimeSettings);
+                angular.extend(blade.currentTimeSettings, i18n.getTimeSettings());
+                angular.extend(userProfile.timeSettings, blade.currentTimeSettings);
+                userProfile.save();
+            }
+        }
 }]);

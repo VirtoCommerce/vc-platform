@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -26,10 +28,25 @@ namespace VirtoCommerce.Platform.Data.Repositories
             Configuration.LazyLoadingEnabled = false;
         }
 
+        public PlatformRepository(DbConnection existingConnection, IUnitOfWork unitOfWork = null, IInterceptor[] interceptors = null)
+            : base(existingConnection, unitOfWork, interceptors)
+        {
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+            #region Assets
+            modelBuilder.Entity<AssetEntryEntity>().ToTable("AssetEntry").HasKey(x => x.Id).Property(x => x.Id);
+
+            modelBuilder.Entity<AssetEntryEntity>()
+                .Property(x => x.TenantId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_AssetEntry_TenantId_TenantType", 1) { IsUnique = false }));
+            modelBuilder.Entity<AssetEntryEntity>()
+                .Property(x => x.TenantType)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_AssetEntry_TenantId_TenantType", 2) { IsUnique = false }));
+            #endregion
 
             #region Change logging
             modelBuilder.Entity<OperationLogEntity>().HasKey(x => x.Id)
@@ -201,6 +218,13 @@ namespace VirtoCommerce.Platform.Data.Repositories
         public IQueryable<RoleAssignmentEntity> RoleAssignments { get { return GetAsQueryable<RoleAssignmentEntity>(); } }
         public IQueryable<RolePermissionEntity> RolePermissions { get { return GetAsQueryable<RolePermissionEntity>(); } }
         public IQueryable<OperationLogEntity> OperationLogs { get { return GetAsQueryable<OperationLogEntity>(); } }
+        public IQueryable<AssetEntryEntity> AssetEntries => GetAsQueryable<AssetEntryEntity>();
+
+
+        public AssetEntryEntity[] GetAssetsByIds(IEnumerable<string> ids)
+        {
+            return AssetEntries.Where(x => ids.Contains(x.Id)).ToArray();
+        }
 
         public RoleEntity GetRoleById(string roleId)
         {
