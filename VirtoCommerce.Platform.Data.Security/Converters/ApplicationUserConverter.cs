@@ -78,10 +78,19 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 
         public static void Patch(this ApplicationUserExtended user, ApplicationUser dbUser)
         {
-            var patchInjection = new PatchInjection<ApplicationUser>(x => x.Id, x => x.PasswordHash, x => x.SecurityStamp,
-                                                                     x => x.UserName, x => x.Email, x => x.PhoneNumber);
-            dbUser.InjectFrom(patchInjection, user);
-
+            dbUser.Id = user.Id;
+            dbUser.LockoutEnabled = user.LockoutEnabled;
+            dbUser.LockoutEndDateUtc = user.LockoutEndDateUtc;
+            dbUser.PasswordHash = user.PasswordHash;
+            dbUser.PhoneNumber = user.PhoneNumber;
+            dbUser.PhoneNumberConfirmed = user.PhoneNumberConfirmed;
+            dbUser.SecurityStamp = user.SecurityStamp;
+            dbUser.TwoFactorEnabled = user.TwoFactorEnabled;
+            dbUser.UserName = user.UserName;
+            dbUser.AccessFailedCount = user.AccessFailedCount;
+            dbUser.EmailConfirmed = user.EmailConfirmed;
+            dbUser.Email = user.Email;
+            
             // Copy logins
             if (user.Logins != null)
             {
