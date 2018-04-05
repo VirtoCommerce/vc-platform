@@ -78,18 +78,18 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 
         public static void Patch(this ApplicationUserExtended user, ApplicationUser dbUser)
         {
-            dbUser.Id = user.Id;
+            dbUser.Id = user.Id ?? dbUser.Id;
             dbUser.LockoutEnabled = user.LockoutEnabled;
             dbUser.LockoutEndDateUtc = user.LockoutEndDateUtc;
-            dbUser.PasswordHash = user.PasswordHash;
-            dbUser.PhoneNumber = user.PhoneNumber;
+            dbUser.PasswordHash = user.PasswordHash ?? dbUser.PasswordHash;
+            dbUser.PhoneNumber = user.PhoneNumber ?? dbUser.PhoneNumber;
             dbUser.PhoneNumberConfirmed = user.PhoneNumberConfirmed;
-            dbUser.SecurityStamp = user.SecurityStamp;
+            dbUser.SecurityStamp = user.SecurityStamp ?? dbUser.SecurityStamp;
             dbUser.TwoFactorEnabled = user.TwoFactorEnabled;
-            dbUser.UserName = user.UserName;
+            dbUser.UserName = user.UserName ?? dbUser.UserName;
             dbUser.AccessFailedCount = user.AccessFailedCount;
             dbUser.EmailConfirmed = user.EmailConfirmed;
-            dbUser.Email = user.Email;
+            dbUser.Email = user.Email ?? dbUser.Email;
             
             // Copy logins
             if (user.Logins != null)
