@@ -108,6 +108,40 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full));
         }
 
+       
+        /// <summary>
+        /// Get user details by user email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("users/email/{email}")]
+        [ResponseType(typeof(ApplicationUserExtended))]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        public async Task<IHttpActionResult> GetUserByEmail(string email)
+        { 
+            var user = await _securityService.FindByEmailAsync(email, UserDetails.Export);         
+            return Ok(user);
+        }
+
+        /// <summary>
+        /// Get user details by external login provider
+        /// </summary>
+        /// <param name="loginProvider"></param>
+        /// <param name="providerKey"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("users/login/external")]
+        [ResponseType(typeof(ApplicationUserExtended))]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        public async Task<IHttpActionResult> GetUserByLogin(string loginProvider, string providerKey)
+        {
+            var user = await _securityService.FindByLoginAsync(loginProvider, providerKey, UserDetails.Export);
+             return Ok(user);
+        }
+
+
+
         /// <summary>
         /// Get all registered permissions
         /// </summary>
@@ -250,7 +284,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> GetUserByName(string userName)
         {
-            var retVal = await _securityService.FindByNameAsync(userName, UserDetails.Full);
+            var retVal = await _securityService.FindByNameAsync(userName, UserDetails.Export);
             return Ok(retVal);
         }
 
@@ -280,7 +314,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> GetUserById(string id)
         {
-            var retVal = await _securityService.FindByIdAsync(id, UserDetails.Full);
+            var retVal = await _securityService.FindByIdAsync(id, UserDetails.Export);
             return Ok(retVal);
         }
 
@@ -294,7 +328,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityCreate)]
         public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
         {
-            ClearSecurityProperties(user);
+            //ClearSecurityProperties(user);
             var result = await _securityService.CreateAsync(user);
             return ProcessSecurityResult(result);
         }
@@ -437,7 +471,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             EnsureUserIsEditable(user.UserName);
 
-            ClearSecurityProperties(user);
+            //ClearSecurityProperties(user);
             var result = await _securityService.UpdateAsync(user);
             return ProcessSecurityResult(result);
         }
