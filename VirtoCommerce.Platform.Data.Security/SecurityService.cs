@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using CacheManager.Core;
@@ -310,8 +311,11 @@ namespace VirtoCommerce.Platform.Data.Security
             request = request ?? new UserSearchRequest();
             var result = new UserSearchResponse();
 
+            var users = new AccountEntity[] { };
             using (var repository = _platformRepository())
             {
+                repository.DisableChangesTracking();
+
                 var query = repository.Accounts;
 
                 if (request.Keyword != null)
@@ -333,28 +337,26 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     query = query.Where(x => request.AccountTypes.Contains(x.UserType));
                 }
-                result.TotalCount = query.Count();
+                result.TotalCount = await query.CountAsync();
 
-                var users = query.OrderBy(x => x.UserName)
+                users = await query.OrderBy(x => x.UserName)
                                  .Skip(request.SkipCount)
                                  .Take(request.TakeCount)
-                                 .ToArray();
-
-                var extendedUsers = new List<ApplicationUserExtended>();
-
-                foreach (var user in users)
-                {
-                    var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
-                    if (extendedUser != null)
-                    {
-                        extendedUsers.Add(extendedUser);
-                    }
-                }
-
-                result.Users = extendedUsers.ToArray();
-
-                return result;
+                                 .ToArrayAsync();                
             }
+            var extendedUsers = new List<ApplicationUserExtended>();
+
+            foreach (var user in users)
+            {
+                var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
+                if (extendedUser != null)
+                {
+                    extendedUsers.Add(extendedUser);
+                }
+            }
+            result.Users = extendedUsers.ToArray();
+
+            return result;
         }
 
         public virtual async Task<string> GeneratePasswordResetTokenAsync(string userId)
