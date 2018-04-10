@@ -60,9 +60,10 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
 
         public static void Patch(this AccountEntity source, AccountEntity target)
         {
-            var patchInjection = new PatchInjection<AccountEntity>(x => x.UserType, x => x.AccountState, x => x.MemberId,
-                                                                   x => x.StoreId, x => x.IsAdministrator, x => x.UserName);
-            target.InjectFrom(patchInjection, source);
+            target.UserType = source.UserType ?? target.UserType;
+            target.AccountState = source.AccountState ?? target.AccountState;
+            target.IsAdministrator = source.IsAdministrator;
+            target.UserName = source.UserName;
 
             if (!source.ApiAccounts.IsNullCollection())
             {
