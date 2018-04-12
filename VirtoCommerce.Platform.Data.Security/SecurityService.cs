@@ -558,9 +558,13 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             _cacheManager.Remove($"GetUserById-{userId}", SecurityConstants.CacheRegion);
             _cacheManager.Remove($"GetUserByName-{userName}", SecurityConstants.CacheRegion);
+            //For normalized user name
+            _cacheManager.Remove($"GetUserByName-{userName.Normalize().ToUpperInvariant()}", SecurityConstants.CacheRegion);
             foreach (var detailLevel in Enum.GetNames(typeof(UserDetails)))
             {
                 _cacheManager.Remove($"GetUserByName-{userName}-{detailLevel}", SecurityConstants.CacheRegion);
+                //For normalized user name
+                _cacheManager.Remove($"GetUserByName-{userName.Normalize().ToUpperInvariant()}-{detailLevel}", SecurityConstants.CacheRegion);
             }
         }
 
