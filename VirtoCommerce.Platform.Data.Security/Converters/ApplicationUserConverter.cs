@@ -64,6 +64,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             target.AccountState = source.AccountState ?? target.AccountState;
             target.IsAdministrator = source.IsAdministrator;
             target.UserName = source.UserName;
+            target.MemberId = source.MemberId;
 
             if (!source.ApiAccounts.IsNullCollection())
             {
