@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Web.Hosting;
 using System.Web.Http;
@@ -84,32 +85,36 @@ namespace VirtoCommerce.Platform.Web.Swagger
             });
         }
 
+        private static string GetHeaderValue(HttpRequestHeaders headers, string header)
+        {
+            //when multiple apache httpd are chained, each proxy append to the header 
+            //with a comma (see //https://httpd.apache.org/docs/2.4/mod/mod_proxy.html#x-headers).
+            return headers.FirstOrDefault(h => String.Equals(h.Key, header, StringComparison.InvariantCultureIgnoreCase)).Value?.FirstOrDefault()?.Split(',')[0];
+        }
+
         private static Uri ComputeHostAsSeenByOriginalClient(HttpRequestMessage message)
         {
             if (message.RequestUri.Scheme != Uri.UriSchemeHttps)
             {
-                //we are behind a reverse proxy, use the host that was used by the client
-                if (message.Headers.Contains("X-Forwarded-Host"))
+                //we are behind a reverse proxy, use the host that was used by the client                
+                string scheme = GetHeaderValue(message.Headers, "X-Forwarded-Proto");
+                var host = GetHeaderValue(message.Headers, "X-Forwarded-Host") ?? GetHeaderValue(message.Headers, "x-ORIGINAL-HOST");
+                var port = GetHeaderValue(message.Headers, "x-Forwarded-Port");
+
+                if (String.IsNullOrEmpty(scheme))
+                    scheme = message.RequestUri.Scheme;
+                if (String.IsNullOrEmpty(host))
+                    host = message.RequestUri.Host;
+                if (String.IsNullOrEmpty(port))
+                    port = message.RequestUri.Port.ToString();
+
+                var uriBuilder = new UriBuilder(message.RequestUri)
                 {
-                    //when multiple apache httpd are chained, each proxy append to the header 
-                    //with a comma (see //https://httpd.apache.org/docs/2.4/mod/mod_proxy.html#x-headers).
-                    string protocol = message.Headers.GetValues("X-Forwarded-Proto")?.FirstOrDefault()?.Split(',')[0];
-                    var host = message.Headers.GetValues("X-Forwarded-Host")?.FirstOrDefault()?.Split(',')[0];
-                    var port =  message.Headers.GetValues("x-Forwarded-Port")?.FirstOrDefault()?.Split(',')[0];
-
-                    if (String.IsNullOrEmpty(protocol)) protocol = message.RequestUri.Scheme;
-                    if (String.IsNullOrEmpty(host)) host = message.RequestUri.Host;
-                    if (String.IsNullOrEmpty(port)) port = message.RequestUri.Port.ToString();
-
-                    var uriBuilder = new UriBuilder(message.RequestUri)
-                    {
-                        Scheme = protocol,
-                        Host = host,
-                        Port = Int32.Parse(port)
-                    };
-                    return uriBuilder.Uri;
-
-                }
+                    Scheme = scheme,
+                    Host = host,
+                    Port = Int32.Parse(port)
+                };
+                return uriBuilder.Uri;
             }
             return message.RequestUri;
         }
