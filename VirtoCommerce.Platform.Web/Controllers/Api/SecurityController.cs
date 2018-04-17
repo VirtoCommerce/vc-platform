@@ -8,8 +8,10 @@ using System.Web.Http.Description;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Security.Identity;
@@ -29,12 +31,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ISecurityService _securityService;
         private readonly ISecurityOptions _securityOptions;
         private readonly INotificationManager _notificationManager;
+        private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
         /// </summary>
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
                                   INotificationManager notificationManager,
-                                  IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions)
+                                  IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions, IEventPublisher eventPublisher)
         {
             _signInManagerFactory = signInManagerFactory;
             _authenticationManagerFactory = authManagerFactory;
@@ -42,6 +45,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _securityService = securityService;
             _securityOptions = securityOptions;
             _notificationManager = notificationManager;
+            _eventPublisher = eventPublisher;
         }
 
         /// <summary>
@@ -67,6 +71,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // Rejected users and customers are not allowed to sign in
                 if (user.UserState != AccountState.Rejected && !user.UserType.EqualsInvariant(AccountType.Customer.ToString()))
                 {
+                    await _eventPublisher.Publish(new UserLoginEvent(user));
                     return Ok(user);
                 }
             }
@@ -91,9 +96,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("logout")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult Logout()
+        public async Task<IHttpActionResult> Logout()
         {
-            _authenticationManagerFactory().SignOut();
+            var user = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Reduced);
+            if (user != null)
+            {
+                _authenticationManagerFactory().SignOut();
+                await _eventPublisher.Publish(new UserLogoutEvent(user));
+            }
             return StatusCode(HttpStatusCode.NoContent);
         }
 

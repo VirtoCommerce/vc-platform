@@ -36,6 +36,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Serialization;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Web.Common;
@@ -48,6 +49,7 @@ using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
+using VirtoCommerce.Platform.Data.Security.Handlers;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Data.Serialization;
 using VirtoCommerce.Platform.Data.Settings;
@@ -695,6 +697,8 @@ namespace VirtoCommerce.Platform.Web
 
             container.RegisterType<ISecurityService, SecurityService>();
 
+
+
             #endregion
 
             #region ExportImport
@@ -711,6 +715,10 @@ namespace VirtoCommerce.Platform.Web
             var inProcessBus = new InProcessBus();
             container.RegisterInstance<IHandlerRegistrar>(inProcessBus);
             container.RegisterInstance<IEventPublisher>(inProcessBus);
+
+            inProcessBus.RegisterHandler<UserChangedEvent>(async (message, token) => await container.Resolve<LogChangesUserChangedEventHandler>().Handle(message));
+            inProcessBus.RegisterHandler<UserPasswordChangedEvent>(async (message, token) => await container.Resolve<LogChangesUserChangedEventHandler>().Handle(message));
+            inProcessBus.RegisterHandler<UserResetPasswordEvent>(async (message, token) => await container.Resolve<LogChangesUserChangedEventHandler>().Handle(message));
             #endregion
         }
 

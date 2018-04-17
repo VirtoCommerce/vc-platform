@@ -7,8 +7,10 @@ using CacheManager.Core;
 using Microsoft.AspNet.Identity;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
@@ -28,10 +30,12 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly IModuleCatalog _moduleCatalog;
         private readonly IPermissionScopeService _permissionScopeService;
         private readonly IChangeLogService _changeLogService;
+        private readonly IEventPublisher _eventPublisher;
 
         [CLSCompliant(false)]
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
-                               IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager, IChangeLogService changeLogService)
+                               IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager,
+                               IChangeLogService changeLogService, IEventPublisher eventPublisher)
         {
             _platformRepository = platformRepository;
             _userManagerFactory = userManagerFactory;
@@ -40,6 +44,7 @@ namespace VirtoCommerce.Platform.Data.Security
             _moduleCatalog = moduleCatalog;
             _permissionScopeService = permissionScopeService;
             _changeLogService = changeLogService;
+            _eventPublisher = eventPublisher;
         }
 
         #region ISecurityService Members
@@ -113,9 +118,11 @@ namespace VirtoCommerce.Platform.Data.Security
                     dbAcount.AccountState = AccountState.Approved.ToString();
 
                     repository.Add(dbAcount);
-                    repository.UnitOfWork.Commit();
 
-                    SaveOperationLog(user.Id, SecurityAccountChangesResource.AccountCreatedMessage, EntryState.Added);
+                    var userChangedEntry = new ChangedEntry<ApplicationUserExtended>(user, EntryState.Added);
+                    await _eventPublisher.Publish(new UserChangingEvent(userChangedEntry));
+                    repository.UnitOfWork.Commit();
+                    await _eventPublisher.Publish(new UserChangedEvent(userChangedEntry));
                 }
             }
 
@@ -135,9 +142,10 @@ namespace VirtoCommerce.Platform.Data.Security
 
             //Update ASP.NET indentity user
             var userName = string.Empty;
+            ApplicationUser dbUser = null;
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await userManager.FindByIdAsync(user.Id);
+                dbUser = await userManager.FindByIdAsync(user.Id);
                 result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -169,19 +177,14 @@ namespace VirtoCommerce.Platform.Data.Security
                     {
                         var changedDbAccount = user.ToDataModel();
                         using (var changeTracker = GetChangeTracker(repository))
-                        {
-                            //Detect account changes before patch
-                            var changes = DetectAccountChanges(changedDbAccount, targetDbAcount);
-
+                        {                         
+                            var userChangedEntry = new ChangedEntry<ApplicationUserExtended>(user, dbUser.ToCoreModel(targetDbAcount, _permissionScopeService), EntryState.Modified);
                             changeTracker.Attach(targetDbAcount);
                             changedDbAccount.Patch(targetDbAcount);
-
+                          
+                            await _eventPublisher.Publish(new UserChangingEvent(userChangedEntry));
                             repository.UnitOfWork.Commit();
-
-                            foreach (var key in changes.Keys)
-                            {
-                                SaveOperationLog(user.Id, string.Format(key, string.Join(", ", changes[key].ToArray())), EntryState.Modified);
-                            }
+                            await _eventPublisher.Publish(new UserChangedEvent(userChangedEntry));
                         }
                     }
                 }
@@ -199,20 +202,20 @@ namespace VirtoCommerce.Platform.Data.Security
                     var dbUser = await userManager.FindByNameAsync(name);
 
                     if (dbUser != null)
-                    {
-
+                    {                      
                         await userManager.DeleteAsync(dbUser);
-
                         using (var repository = _platformRepository())
-                        {
+                        {                          
                             var account = repository.GetAccountByName(name, UserDetails.Reduced);
                             if (account != null)
                             {
+                                var userChangedEntry = new ChangedEntry<ApplicationUserExtended>(dbUser.ToCoreModel(account, _permissionScopeService), EntryState.Deleted);
                                 repository.Remove(account);
+                                await _eventPublisher.Publish(new UserChangingEvent(userChangedEntry));
                                 repository.UnitOfWork.Commit();
+                                await _eventPublisher.Publish(new UserChangedEvent(userChangedEntry));
                             }
                         }
-
                         //clear cache
                         ResetCache(dbUser.Id, name);
                     }
@@ -250,9 +253,10 @@ namespace VirtoCommerce.Platform.Data.Security
                     result = identityResult.ToCoreModel();
 
                     if (result.Succeeded)
-                        SaveOperationLog(dbUser.Id, SecurityAccountChangesResource.PasswordChangedMessage, EntryState.Modified);
+                    {
+                        await _eventPublisher.Publish(new UserPasswordChangedEvent(dbUser.Id));
+                    }
                 }
-
                 return result;
             }
         }
@@ -272,7 +276,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     if (result.Succeeded)
                     {
-                        SaveOperationLog(dbUser.Id, SecurityAccountChangesResource.PasswordResetMessage, EntryState.Modified);
+                        await _eventPublisher.Publish(new UserResetPasswordEvent(dbUser.Id));
                         //clear cache
                         ResetCache(dbUser.Id, dbUser.UserName);
                     }
@@ -296,7 +300,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     if (result.Succeeded)
                     {
-                        SaveOperationLog(dbUser.Id, SecurityAccountChangesResource.PasswordResetMessage, EntryState.Modified);
+                        await _eventPublisher.Publish(new UserResetPasswordEvent(userId));
                         //clear cache
                         ResetCache(dbUser.Id, dbUser.UserName);
                     }
@@ -538,8 +542,10 @@ namespace VirtoCommerce.Platform.Data.Security
                         }
 
                         //Load log entities to account
-                        if (detailsLevel == UserDetails.Full)
+                        if (detailsLevel.HasFlag(UserDetails.Full) || detailsLevel.HasFlag(UserDetails.Export))
+                        {
                             _changeLogService.LoadChangeLogs(retVal);
+                        }
                     }
 
                     if (detailsLevel != UserDetails.Export)
@@ -566,74 +572,6 @@ namespace VirtoCommerce.Platform.Data.Security
                 //For normalized user name
                 _cacheManager.Remove($"GetUserByName-{userName.Normalize().ToUpperInvariant()}-{detailLevel}", SecurityConstants.CacheRegion);
             }
-        }
-
-        protected virtual ListDictionary<string, string> DetectAccountChanges(AccountEntity changedDbAccount, AccountEntity targetDbAcount)
-        {
-            //Log changes
-            var result = new ListDictionary<string, string>();
-            if (changedDbAccount.UserName != targetDbAcount.UserName)
-            {
-                result.Add(SecurityAccountChangesResource.AccountUpdated, $"user name: {targetDbAcount.UserName} -> {changedDbAccount.UserName}");
-            }
-            if (changedDbAccount.UserType != targetDbAcount.UserType)
-            {
-                result.Add(SecurityAccountChangesResource.AccountUpdated, $"user type: {targetDbAcount.UserType} -> {changedDbAccount.UserType}");
-            }
-            if (changedDbAccount.AccountState != targetDbAcount.AccountState)
-            {
-                result.Add(SecurityAccountChangesResource.AccountUpdated, $"account state: {targetDbAcount.AccountState} -> {changedDbAccount.AccountState}");
-            }
-            if (changedDbAccount.IsAdministrator != targetDbAcount.IsAdministrator)
-            {
-                result.Add(SecurityAccountChangesResource.AccountUpdated, $"root: {targetDbAcount.IsAdministrator} -> {changedDbAccount.IsAdministrator}");
-            }
-            if (!changedDbAccount.ApiAccounts.IsNullCollection())
-            {
-                var apiAccountComparer = AnonymousComparer.Create((ApiAccountEntity x) => $"{x.ApiAccountType}-{x.SecretKey}");
-                changedDbAccount.ApiAccounts.CompareTo(targetDbAcount.ApiAccounts, apiAccountComparer, (state, sourceItem, targetItem) =>
-                {
-                    if (state == EntryState.Added)
-                    {
-                        result.Add(SecurityAccountChangesResource.ApiKeysActivated, $"{sourceItem.Name} ({sourceItem.ApiAccountType})");
-                    }
-                    else if (state == EntryState.Deleted)
-                    {
-                        result.Add(SecurityAccountChangesResource.ApiKeysDeactivated, $"{sourceItem.Name} ({sourceItem.ApiAccountType})");
-                    }
-                }
-                );
-            }
-            if (!changedDbAccount.RoleAssignments.IsNullCollection())
-            {
-                var roleAssignmentComparer = AnonymousComparer.Create((RoleAssignmentEntity x) => x.RoleId);
-                changedDbAccount.RoleAssignments.CompareTo(targetDbAcount.RoleAssignments, roleAssignmentComparer, (state, sourceItem, targetItem) =>
-                {
-                    if (state == EntryState.Added)
-                    {
-                        result.Add(SecurityAccountChangesResource.RolesAdded, $"{sourceItem?.RoleName}");
-                    }
-                    else if (state == EntryState.Deleted)
-                    {
-                        result.Add(SecurityAccountChangesResource.RolesRemoved, $"{sourceItem?.RoleName}");
-                    }
-                }
-                );
-            }
-
-            return result;
-        }
-
-        protected virtual void SaveOperationLog(string objectId, string detail, EntryState entryState)
-        {
-            var operation = new OperationLog
-            {
-                ObjectId = objectId,
-                ObjectType = typeof(ApplicationUserExtended).Name,
-                OperationType = entryState,
-                Detail = detail
-            };
-            _changeLogService.SaveChanges(operation);
         }
 
         protected virtual void NormalizeUser(ApplicationUserExtended user)

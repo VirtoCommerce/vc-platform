@@ -219,6 +219,12 @@
     <Compile Include="Security\ApiAccountType.cs" />
     <Compile Include="Security\ApplicationUserExtended.cs" />
     <Compile Include="Security\AuthentificationOptions.cs" />
+    <Compile Include="Security\Events\UserChangedEvent.cs" />
+    <Compile Include="Security\Events\UserChangingEvent.cs" />
+    <Compile Include="Security\Events\UserPasswordChangedEvent.cs" />
+    <Compile Include="Security\Events\UserResetPasswordEvent.cs" />
+    <Compile Include="Security\Events\UserLogoutEvent.cs" />
+    <Compile Include="Security\Events\UserLoginEvent.cs" />
     <Compile Include="Security\ICurrentUser.cs" />
     <Compile Include="Security\IHasSecurityAccounts.cs" />
     <Compile Include="Security\ISupportSecurityScopes.cs" />
