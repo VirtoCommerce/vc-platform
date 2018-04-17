@@ -8,9 +8,9 @@
                     iElement.bind('keyup', function () {
                         scope.$apply(function () {
                             if (scope.maxlength255) {
-                                var diff = 255 - iElement.val().length;
-                                scope.charsLeftTo255 = diff >= 0 ? "Maximum 255 characters(" + diff + " remaining)" :
-                                    diff < 0 ? "Maximum 255 characters(" + (-diff) + " to many)" : "";
+                                var diff = scope.maxlength255 - iElement.val().length;
+                                scope.charsLeftTo255 = diff >= 0 ? "Maximum " + scope.maxlength255 + " characters(" + diff + " remaining)" :
+                                    diff < 0 ? "Maximum " + scope.maxlength255 + " characters(" + (-diff) + " to many)" : "";
                                 var elem = iElement.parent().siblings("span");
                                 if (diff >= 0)
                                     elem.attr("style", "color: #999;");
