@@ -80,10 +80,10 @@ namespace VirtoCommerce.Platform.Data.Security.Handlers
             {
                 result.Add(SecurityAccountChangesResource.AccountUpdated, $"root: {oldUser.IsAdministrator} -> {newUser.IsAdministrator}");
             }
-            if (!newUser.ApiAccounts.IsNullCollection())
+            if (!newUser.ApiAccounts.IsNullOrEmpty())
             {
                 var apiAccountComparer = AnonymousComparer.Create((ApiAccount x) => $"{x.ApiAccountType}-{x.SecretKey}");
-                newUser.ApiAccounts.CompareTo(oldUser.ApiAccounts, apiAccountComparer, (state, sourceItem, targetItem) =>
+                newUser.ApiAccounts.CompareTo(oldUser.ApiAccounts ?? Array.Empty<ApiAccount>(), apiAccountComparer, (state, sourceItem, targetItem) =>
                 {
                     if (state == EntryState.Added)
                     {
@@ -96,9 +96,9 @@ namespace VirtoCommerce.Platform.Data.Security.Handlers
                 }
                 );
             }
-            if (!newUser.Roles.IsNullCollection())
+            if (!newUser.Roles.IsNullOrEmpty())
             {
-                newUser.Roles.CompareTo(oldUser.Roles, EqualityComparer<Role>.Default, (state, sourceItem, targetItem) =>
+                newUser.Roles.CompareTo(oldUser.Roles ?? Array.Empty<Role>(), EqualityComparer<Role>.Default, (state, sourceItem, targetItem) =>
                 {
                     if (state == EntryState.Added)
                     {
@@ -108,8 +108,7 @@ namespace VirtoCommerce.Platform.Data.Security.Handlers
                     {
                         result.Add(SecurityAccountChangesResource.RolesRemoved, $"{sourceItem?.Name}");
                     }
-                }
-                );
+                });
             }
 
             return result;
