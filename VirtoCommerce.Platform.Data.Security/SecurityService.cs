@@ -431,6 +431,23 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
+        public virtual async Task<SecurityResult> ConfirmUserEmailAsync(string userId, string token)
+        {
+            using (var userManager = _userManagerFactory())
+            {
+                var user = await GetApplicationUserByIdAsync(userId);
+
+                var result = await userManager.ConfirmEmailAsync(userId, token);
+
+                if (user != null)
+                {
+                    ResetCache(userId, user.UserName);
+                }
+
+                return result.ToCoreModel();
+            }
+        }
+
         #endregion
 
         protected virtual ApplicationUserExtended FindByName(string userName, UserDetails detailsLevel)

@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
@@ -23,5 +23,6 @@ namespace VirtoCommerce.Platform.Core.Security
         Permission[] GetUserPermissions(string userName);
         Task<bool> IsUserLockedAsync(string userId);
         Task<SecurityResult> UnlockUserAsync(string userId);
+        Task<SecurityResult> ConfirmUserEmailAsync(string userId, string token);
     }
 }
