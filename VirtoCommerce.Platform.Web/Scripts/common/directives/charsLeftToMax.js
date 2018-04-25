@@ -1,36 +1,36 @@
-﻿angular.module('platformWebApp')
-.directive('charsLeftToMax', function () {
+angular.module('platformWebApp')
+    .directive('charsLeftToMax', ['$parse', '$compile', function ($parse, $compile) {
     return {
-        restrict: 'A',
-        compile: function compile() {
-            return {
-                post: function postLink(scope, iElement, iAttrs) {
-                    iElement.bind('keyup', function () {
-                        scope.$apply(function () {
-                            if (scope.maxlength255 && iElement.hasClass("title")) {
-                                var diff = scope.maxlength255 - iElement.val().length;
-                                scope.charsLeftTo255 = diff >= 0 ? "Maximum " + scope.maxlength255 + " characters(" + diff + " remaining)" :
-                                    diff < 0 ? "Maximum " + scope.maxlength255 + " characters(" + (-diff) + " to many)" : "";
-                                var elem = iElement.parent().siblings("span");
-                                if (diff >= 0)
-                                    elem.attr("style", "color: #999;");
-                                if (diff < 0)
-                                    elem.attr("style", "color: #e51400;");
+        require: 'ngModel',
+        link: function (scope, element, attr, ngModel) {
+            var idP = Math.round(Math.random() * 1000000000);
+            $(element).parent('div').prev('label').after('<span class="form-label-limit" id=' + idP + '></span>');
+            scope.$watch(function () {
+                return ngModel.$viewValue;
+            },
+                function (newValue) {
+                    if (angular.isDefined(newValue)) {
+                        var remainingChar = attr.ngMaxlength - newValue.length;
+                        var remaiSpan;
+                        if (remainingChar >= 0)
+                            remaiSpan = "Maximum " + attr.ngMaxlength + " characters(" + remainingChar + " remaining)";
+                        if (remainingChar < 0)
+                            remaiSpan = "Maximum " + attr.ngMaxlength + " characters(" + (-remainingChar) + " too many)";
+                        $('#' + idP).html(remaiSpan);
+                        if (remainingChar > attr.warningCount && remainingChar > attr.dangerCount) {
+                            $('#' + idP).attr("style", "color: #999;");
+                        } 
+                        else {
+                            if (remainingChar <= attr.warningCount && remainingChar > attr.dangerCount) {
+                                $('#' + idP).attr("style", "color: #eea236;");
+                            } 
+                            else {
+                                $('#' + idP).attr("style", "color: #e51400;");
                             }
-                            if (scope.maxlength1024 && iElement.hasClass("description")) {
-                                var diff = scope.maxlength1024 - iElement.val().length;
-                                scope.charsLeftTo1024 = diff >= 0 ? "Maximum " + scope.maxlength1024 + " characters(" + diff + " remaining)" :
-                                    diff < 0 ? "Maximum " + scope.maxlength1024 + " characters(" + (-diff) + " to many)" : "";
-                                var elem = iElement.parent().siblings("span");
-                                if (diff >= 0)
-                                    elem.attr("style", "color: #999;");
-                                if (diff < 0)
-                                    elem.attr("style", "color: #e51400;");
-                            }
-                        });
-                    });
+                        }
+                    }
                 }
-            }
+            );
         }
-    }
-})
+    };
+}]);
