@@ -195,7 +195,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 SetValue(notification, param);
             }
-            var result = _notificationManager.SendNotification(notification);
+            var result = _notificationManager.SendNotification(notification);          
+            //save notification in feed
+            _notificationManager.ScheduleSendNotification(notification);
 
             return Ok(result);
         }

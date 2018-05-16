@@ -109,6 +109,7 @@
     <Compile Include="Converters\RolePermissionConverter.cs" />
     <Compile Include="CurrentUser.cs" />
     <Compile Include="CurrentUserOwinMiddleware.cs" />
+    <Compile Include="Handlers\LogChangesUserChangedEventHandler.cs" />
     <Compile Include="IApiAccountProvider.cs" />
     <Compile Include="Identity\ApplicationClaimsIdentityProvider.cs" />
     <Compile Include="Identity\ApplicationEmailTokenProvider.cs" />
@@ -180,6 +181,7 @@
       <Name>VirtoCommerce.Platform.Data</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

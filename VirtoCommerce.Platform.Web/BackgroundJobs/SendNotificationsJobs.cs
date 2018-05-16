@@ -44,14 +44,8 @@ namespace VirtoCommerce.Platform.Web.BackgroundJobs
                         };
                     }
 
-                    if (sendResult.IsSuccess)
-                    {
-                        notification.IsActive = false;
-                        notification.IsSuccessSend = true;
-                        notification.SentDate = DateTime.UtcNow;
-                    }
-                    else
-					{
+                    if (!sendResult.IsSuccess)
+                    { 
 						if(notification.AttemptCount >= notification.MaxAttemptCount)
 						{
 							notification.IsActive = false;
