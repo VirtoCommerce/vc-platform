@@ -110,7 +110,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                             setting.Value = storedSetting.Value;
                             setting.ArrayValues = storedSetting.ArrayValues;
                         }
-                        else if (setting.Value == null && setting.ArrayValues == null)
+                        if (setting.Value == null && setting.ArrayValues == null)
                         {
                             //try to use global setting value
                             var globalSetting = GetSettingByName(setting.Name);
