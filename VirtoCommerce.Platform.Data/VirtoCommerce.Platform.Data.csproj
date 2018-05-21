@@ -236,6 +236,10 @@
     <Compile Include="Repositories\Migrations\201803191347409_AssetEntry.Designer.cs">
       <DependentUpon>201803191347409_AssetEntry.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201805211114196_UpDecimalPrecisionToFive.cs" />
+    <Compile Include="Repositories\Migrations\201805211114196_UpDecimalPrecisionToFive.Designer.cs">
+      <DependentUpon>201805211114196_UpDecimalPrecisionToFive.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -329,6 +333,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201803191347409_AssetEntry.resx">
       <DependentUpon>201803191347409_AssetEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201805211114196_UpDecimalPrecisionToFive.resx">
+      <DependentUpon>201805211114196_UpDecimalPrecisionToFive.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
