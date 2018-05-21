@@ -64,6 +64,10 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .WithMany(x => x.SettingValues)
                 .HasForeignKey(x => x.SettingId);
 
+            modelBuilder.Entity<SettingValueEntity>()
+                .Property(x => x.DecimalValue)
+                .HasPrecision(18, 5);
+
             #endregion
 
             #region Dynamic Properties
@@ -97,6 +101,10 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .HasOptional(x => x.DictionaryItem)
                 .WithMany(x => x.ObjectValues)
                 .HasForeignKey(x => x.DictionaryItemId);
+
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>()
+                .Property(x => x.DecimalValue)
+                .HasPrecision(18, 5);
 
             modelBuilder.Entity<DynamicPropertyEntity>()
                 .Property(x => x.ObjectType)
