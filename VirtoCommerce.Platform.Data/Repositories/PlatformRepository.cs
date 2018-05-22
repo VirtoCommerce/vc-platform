@@ -289,10 +289,10 @@ namespace VirtoCommerce.Platform.Data.Repositories
             return retVal;
         }
 
-        public DynamicPropertyEntity[] GetDynamicPropertiesForType(string objectType)
+        public DynamicPropertyEntity[] GetDynamicPropertiesForTypes(string[] objectTypes)
         {
             var retVal = DynamicProperties.Include(p => p.DisplayNames)
-                                          .Where(p => p.ObjectType == objectType)
+                                          .Where(p => objectTypes.Contains(p.ObjectType))
                                           .OrderBy(p => p.Name)
                                           .ToArray();
             return retVal;

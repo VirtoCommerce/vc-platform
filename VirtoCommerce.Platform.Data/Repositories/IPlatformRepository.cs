@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
 		NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language);
 		DynamicPropertyDictionaryItemEntity[] GetDynamicPropertyDictionaryItems(string propertyId);
 		DynamicPropertyEntity[] GetDynamicPropertiesByIds(string[] ids);
-		DynamicPropertyEntity[] GetDynamicPropertiesForType(string objectType);
+		DynamicPropertyEntity[] GetDynamicPropertiesForTypes(string[] objectTypes);
 		DynamicPropertyEntity[] GetObjectDynamicProperties(string[] objectTypes, string[] objectIds);
 
         SettingEntity GetSettingByName(string name);

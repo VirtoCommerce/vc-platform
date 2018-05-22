@@ -61,7 +61,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
             using (var repository = _repositoryFactory())
             {
-                var properties = repository.GetDynamicPropertiesForType(objectType);
+                var properties = repository.GetDynamicPropertiesForTypes(new[] { objectType });
                 result.AddRange(properties.Select(p => p.ToModel()));
             }
             return result.ToArray();
@@ -76,8 +76,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             using (var changeTracker = GetChangeTracker(repository))
             {
                 var sourceProperties = properties.Select(x => x.ToEntity()).ToList();
-                var targetProperties = repository.GetDynamicPropertiesByIds(properties.Select(x => x.Id).ToArray()).ToList();
-                sourceProperties.CompareTo(targetProperties, EqualityComparer<DynamicPropertyEntity>.Default, (state, source, target) =>
+                var targetProperties = repository.GetDynamicPropertiesForTypes(properties.Select(x => x.ObjectType).Distinct().ToArray()).ToList();
+                var comparer = AnonymousComparer.Create((DynamicPropertyEntity x) => x.Name.ToLowerInvariant() + ":" + x.ObjectType.ToLowerInvariant());
+                sourceProperties.CompareTo(targetProperties, comparer, (state, source, target) =>
                     {
                         if (state == EntryState.Modified)
                         {
@@ -243,7 +244,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                             var transistentProperties = source.Properties.Where(x => x.IsTransient());
                             if (transistentProperties.Any())
                             {
-                                var allTypeProperties = repository.GetDynamicPropertiesForType(objectType);
+                                var allTypeProperties = repository.GetDynamicPropertiesForTypes(new[] { objectType });
                                 foreach (var transistentPropery in transistentProperties)
                                 {
                                     var property = allTypeProperties.FirstOrDefault(x => String.Equals(x.Name, transistentPropery.Name, StringComparison.InvariantCultureIgnoreCase));
