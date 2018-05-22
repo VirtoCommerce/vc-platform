@@ -728,6 +728,8 @@
     <None Include="bower.json" />
     <Content Include="Localizations\de.VirtoCommerce.Common.json" />
     <Content Include="Localizations\de.VirtoCommerce.Platform.json" />
+    <Content Include="Localizations\ru.VirtoCommerce.Common.json" />
+    <Content Include="Localizations\ru.VirtoCommerce.Platform.json" />
     <None Include="package.json" />
     <Content Include="Scripts\codemirror\htmlmixed.js" />
     <Content Include="Scripts\codemirror\javascript.js" />
