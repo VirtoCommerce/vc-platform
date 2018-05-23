@@ -115,10 +115,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(ApplicationUserExtended))]
         public async Task<IHttpActionResult> GetCurrentUser()
         {
-            return Ok(await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full));
+            var user = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full);
+            return Ok(user);
         }
 
-       
+
         /// <summary>
         /// Get user details by user email
         /// </summary>
@@ -129,8 +130,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(ApplicationUserExtended))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> GetUserByEmail(string email)
-        { 
-            var user = await _securityService.FindByEmailAsync(email, UserDetails.Export);         
+        {
+            var user = await _securityService.FindByEmailAsync(email, UserDetails.Export);
             return Ok(user);
         }
 
@@ -147,7 +148,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<IHttpActionResult> GetUserByLogin(string loginProvider, string providerKey)
         {
             var user = await _securityService.FindByLoginAsync(loginProvider, providerKey, UserDetails.Export);
-             return Ok(user);
+            return Ok(user);
         }
 
 
@@ -340,7 +341,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             //ClearSecurityProperties(user);
             var result = await _securityService.CreateAsync(user);
-            return ProcessSecurityResult(result);
+            return Ok(result);
         }
 
         /// <summary>
@@ -357,10 +358,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             EnsureUserIsEditable(userName);
 
             var result = await _securityService.ChangePasswordAsync(userName, changePassword.OldPassword, changePassword.NewPassword);
-
-            if (result == null)
-                return NotFound();
-
             return Ok(result);
         }
 
@@ -378,7 +375,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             EnsureUserIsEditable(userName);
 
             var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword);
-            return ProcessSecurityResult(result);
+            return Ok(result);
         }
 
         /// <summary>
@@ -391,7 +388,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<IHttpActionResult> ResetPasswordByToken(string userId, [FromBody] ResetPasswordInfo resetPassword)
         {
             var result = await _securityService.ResetPasswordAsync(userId, resetPassword.Token, resetPassword.NewPassword);
-            return ProcessSecurityResult(result);
+            return Ok(result);
         }
 
         /// <summary>
@@ -483,7 +480,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             //ClearSecurityProperties(user);
             var result = await _securityService.UpdateAsync(user);
-            return ProcessSecurityResult(result);
+            return Ok(result);
         }
 
         /// <summary>
@@ -529,7 +526,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<IHttpActionResult> UnlockUserAsync(string id)
         {
             var result = await _securityService.UnlockUserAsync(id);
-            return ProcessSecurityResult(result);
+            return Ok(result);
         }
 
 
@@ -551,25 +548,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 user.PasswordHash = null;
                 user.SecurityStamp = null;
             }
-        }
-
-        private IHttpActionResult ProcessSecurityResult(SecurityResult securityResult)
-        {
-            IHttpActionResult result;
-
-            if (securityResult == null)
-            {
-                result = BadRequest();
-            }
-            else
-            {
-                if (!securityResult.Succeeded)
-                    result = BadRequest(securityResult.Errors != null ? string.Join(" ", securityResult.Errors) : "Unknown error.");
-                else
-                    result = Ok(securityResult);
-            }
-
-            return result;
         }
     }
 }
