@@ -1,4 +1,4 @@
-using VirtoCommerce.Platform.Data.Infrastructure;
+﻿using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Platform.Data.Security.Identity
 {
@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             {
                 Id = "9b605a3096ba4cc8bc0b8d80c397c59f",
                 UserName = "frontend",
-                PasswordHash = GetPasswordHash(),
+                PasswordHash = null,
                 SecurityStamp = string.Empty,
                 EmailConfirmed = true,
                 LockoutEnabled = true,
