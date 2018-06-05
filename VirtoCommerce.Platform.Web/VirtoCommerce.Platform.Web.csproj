@@ -368,6 +368,7 @@
     <Content Include="Scripts\app\navigation\menu\mainMenu-list-header.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\menu.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\menuHeader.tpl.html" />
+    <Content Include="Scripts\app\security\login\changePassword.tpl.html" />
     <Content Include="Scripts\app\security\login\resetPassword.tpl.html" />
     <Content Include="Scripts\app\security\login\forgotPassword.tpl.html" />
     <Content Include="Scripts\app\userProfile\userProfile.js" />
@@ -408,6 +409,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SecurityResources.resx</DependentUpon>
     </Compile>
+    <Content Include="Scripts\app\security\services\apiAccounts.js" />
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
     <Compile Include="SignalR\IgnoreSignarRTelemetryProcessor.cs" />

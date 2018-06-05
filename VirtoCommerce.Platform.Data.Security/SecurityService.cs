@@ -253,6 +253,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 if (result.Succeeded)
                 {
                     var identityResult = await userManager.ChangePasswordAsync(dbUser.Id, oldPassword, newPassword);
+                    ResetCache(dbUser.Id, dbUser.UserName);
                     result = identityResult.ToCoreModel();
 
                     if (result.Succeeded)
