@@ -28,7 +28,7 @@
 
 angular.module('platformWebApp', AppDependencies).
 controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService',
-    'platformWebApp.i18n', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings',
+    'platformWebApp.i18n', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', 
     function ($rootScope, $scope, $window, mainMenuService, pushNotificationService,
         i18n, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
 
@@ -220,8 +220,8 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
         // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
         $compileProvider.debugInfoEnabled(false);
     }])
-.run(['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile) {
+    .run(['$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.apiAccounts', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 
+    function ($rootScope, $state, $stateParams, authService, apiAccounts, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile) {
 
         //Disable animation
         $animate.enabled(false);
@@ -292,8 +292,16 @@ controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platfo
             //timeout need because $state not fully loading in run method and need to wait little time
             $timeout(function () {
                 if (authContext.isAuthenticated) {
-                    if (!$state.current.name || $state.current.name === 'loginDialog') {
-                        $state.go('workspace');
+
+                    apiAccounts.run(authContext.userLogin);
+
+                    if (authContext.forcePasswordChange) {
+                        authContext.forcePasswordChange = false;
+                        $state.go('changePasswordDialog', { userName: authContext.userLogin });
+                    } else {
+                        if (!$state.current.name || $state.current.name === 'loginDialog') {
+                            $state.go('workspace');
+                        }
                     }
                 }
                 else {

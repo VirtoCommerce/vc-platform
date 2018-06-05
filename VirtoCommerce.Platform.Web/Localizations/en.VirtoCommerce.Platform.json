@@ -654,6 +654,19 @@
                     "Quarters": "Quarters",
                     "Years": "Years"
                 }
+            },
+            "change-password": {
+              "title": "Please enter a new password for the {{title}} user",
+              "password": "Password",
+              "confirm": "Confirm",
+              "save": "Change password"
+            },
+            "change-api-secret-key": {
+              "title": "Please generate a new API access keys for the {{userName}} user",
+              "app-id": "App id",
+              "secret-key": "Secret key",
+              "generate": "Generate new",
+              "save": "Save" 
             }
         },
         "templates": {
@@ -794,6 +807,6 @@
         "error-details": {
           "title": "The error details"
         }
-      }
+      } 
     }
 }
