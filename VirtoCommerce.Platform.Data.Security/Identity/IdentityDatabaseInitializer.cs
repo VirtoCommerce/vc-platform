@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             {
                 Id = "1eb2fa8ac6574541afdb525833dadb46",
                 UserName = "admin",
-                PasswordHash = GetPasswordHash(),
+                PasswordHash = SecurityConstants.DefaultPasswordHash,
                 SecurityStamp = string.Empty,
                 EmailConfirmed = true,
                 LockoutEnabled = true,
@@ -29,11 +29,6 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             });
 
             context.SaveChanges();
-        }
-
-        private string GetPasswordHash()
-        {
-            return "AHQSmKnSLYrzj9vtdDWWnUXojjpmuDW2cHvWloGL9UL3TC9UCfBmbIuR2YCyg4BpNg==";
         }
     }
 }
