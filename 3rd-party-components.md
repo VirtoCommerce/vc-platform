@@ -42,3 +42,6 @@
  Unity | IoC and DI container | Apache | https://github.com/unitycontainer | | NuGet 
  ValueInjecter | convention based mapper | MIT | https://github.com/omuleanu/ValueInjecter | | NuGet 
  sendgrid-csharp | The Official SendGrid Led, Community Driven C# | MIT| https://github.com/sendgrid | | NuGet 
+ DotLiquid | The templating system ported to the .net framework | Apache  | http://dotliquidmarkup.org/ | | NuGet 
+ 
+ 
