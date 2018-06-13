@@ -116,6 +116,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<IHttpActionResult> GetCurrentUser()
         {
             var user = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full);
+            ApplyAuthorizationRulesForUser(user);
             return Ok(user);
         }
 
@@ -132,6 +133,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<IHttpActionResult> GetUserByEmail(string email)
         {
             var user = await _securityService.FindByEmailAsync(email, UserDetails.Export);
+            ApplyAuthorizationRulesForUser(user);
             return Ok(user);
         }
 
@@ -148,6 +150,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<IHttpActionResult> GetUserByLogin(string loginProvider, string providerKey)
         {
             var user = await _securityService.FindByLoginAsync(loginProvider, providerKey, UserDetails.Export);
+            ApplyAuthorizationRulesForUser(user);
             return Ok(user);
         }
 
@@ -295,8 +298,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> GetUserByName(string userName)
         {
-            var retVal = await _securityService.FindByNameAsync(userName, UserDetails.Export);
-            return Ok(retVal);
+            var user = await _securityService.FindByNameAsync(userName, UserDetails.Export);
+            ApplyAuthorizationRulesForUser(user);
+            return Ok(user);
         }
 
         /// <summary>
@@ -325,8 +329,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> GetUserById(string id)
         {
-            var retVal = await _securityService.FindByIdAsync(id, UserDetails.Export);
-            return Ok(retVal);
+            var user = await _securityService.FindByIdAsync(id, UserDetails.Export);
+            ApplyAuthorizationRulesForUser(user);
+            return Ok(user);
         }
 
         /// <summary>
@@ -529,6 +534,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result);
         }
 
+        private void ApplyAuthorizationRulesForUser(ApplicationUserExtended user)
+        {
+            if (user != null && !_securityService.UserHasAnyPermission(User.Identity.Name, null, new[] { PredefinedPermissions.SecurityApiAccountsRead }))
+            {
+                user.ApiAccounts = null;
+            }
+        }
 
         private void EnsureUserIsEditable(params string[] userNames)
         {

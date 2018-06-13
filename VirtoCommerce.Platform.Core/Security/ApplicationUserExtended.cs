@@ -55,9 +55,9 @@ namespace VirtoCommerce.Platform.Core.Security
 
         public string Password { get; set; }
         /// <summary>
-        /// The flag indicates that user password must be changed
+        /// The flag indicates that user password is expired and must be changed
         /// </summary>
-        public bool ForcePasswordChange { get; set; }
+        public bool PasswordExpired { get; set; }
 
         public string PasswordHash { get; set; }
         public string SecurityStamp { get; set; }

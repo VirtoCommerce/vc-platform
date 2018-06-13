@@ -28,13 +28,14 @@
             SecurityCreate = "platform:security:create",
             SecurityAccess = "platform:security:access",
             SecurityUpdate = "platform:security:update",
+            SecurityApiAccountsRead = "platform:security:api_accounts:read",
             SecurityDelete = "platform:security:delete";
         public const string SecurityCallApi = "security:call_api";
         public const string BackgroundJobsManage = "background_jobs:manage";
         public const string PlatformExportImportAccess = "platform:exportImport:access",
             PlatformImport = "platform:import",
             PlatformExport = "platform:export";
-      
+
 
 
         public static Permission[] Permissions { get; private set; }
@@ -212,12 +213,20 @@
                 },
                 new Permission
                 {
+                    Id = SecurityApiAccountsRead,
+                    Name = "View user Api accounts",
+                    ModuleId = "VirtoCommerce.Platform",
+                    GroupName = "Security"
+                },
+                new Permission
+                {
                     Id = SecurityCallApi,
                     Name = "Call Web API methods",
                     Description = "Allows to make calls to Web API methods.",
                     ModuleId = "VirtoCommerce.Platform",
                     GroupName = "Web API"
                 },
+
                 new Permission
                 {
                     Id = BackgroundJobsManage,

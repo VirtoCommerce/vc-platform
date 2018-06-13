@@ -253,6 +253,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 if (result.Succeeded)
                 {
                     var identityResult = await userManager.ChangePasswordAsync(dbUser.Id, oldPassword, newPassword);
+                    ResetCache(dbUser.Id, dbUser.UserName);
                     result = identityResult.ToCoreModel();
 
                     if (result.Succeeded)
@@ -550,16 +551,16 @@ namespace VirtoCommerce.Platform.Data.Security
                             _changeLogService.LoadChangeLogs(retVal);
                         }
                     }
-                    var suppressForcingCredentialsChange = _settingsManager.GetValue("VirtoCommerce:Security:SuppressForcingCredentialsChange", false);
+                    var suppressForcingCredentialsChange = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Security:SuppressForcingCredentialsChange", false);
                     if (!suppressForcingCredentialsChange)
                     {
                         //Setting the flags which indicates a necessity of security credentials change
-                        retVal.ForcePasswordChange = retVal.PasswordHash == SecurityConstants.DefaultPasswordHash;
+                        retVal.PasswordExpired = retVal.PasswordHash == SecurityConstants.DefaultPasswordHash;
                         if (retVal.ApiAccounts != null)
                         {
                             foreach (var apiAccount in retVal.ApiAccounts)
                             {
-                                apiAccount.ForceSecretKeyChange = apiAccount.SecretKey == SecurityConstants.DefaultSecretKey;
+                                apiAccount.SecretKeyExpired = apiAccount.SecretKey == SecurityConstants.DefaultSecretKey;
                             }
                         }
                     }
