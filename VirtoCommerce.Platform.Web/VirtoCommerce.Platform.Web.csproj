@@ -368,8 +368,10 @@
     <Content Include="Scripts\app\navigation\menu\mainMenu-list-header.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\menu.tpl.html" />
     <Content Include="Scripts\app\pushNotifications\menuHeader.tpl.html" />
-    <Content Include="Scripts\app\security\login\resetPassword.tpl.html" />
-    <Content Include="Scripts\app\security\login\forgotPassword.tpl.html" />
+    <Content Include="Scripts\app\security\dialogs\changeApiSecretKeyDialog.tpl.html" />
+    <Content Include="Scripts\app\security\dialogs\changePasswordDialog.tpl.html" />
+    <Content Include="Scripts\app\security\dialogs\resetPasswordDialog.tpl.html" />
+    <Content Include="Scripts\app\security\dialogs\forgotPasswordDialog.tpl.html" />
     <Content Include="Scripts\app\userProfile\userProfile.js" />
     <Content Include="Scripts\common\directives\angular-scroll-complete.js" />
     <Content Include="Scripts\common\directives\dateTime-picker.js" />

@@ -11,32 +11,32 @@
 
     authContext.fillAuthData = function () {
         $http.get(serviceBase + 'currentuser').then(
-			function (results) {
-			    changeAuth(results.data);
-			},
+            function (results) {
+                changeAuth(results.data);
+            },
             function (error) { });
     };
 
     authContext.login = function (email, password, remember) {
         return $http.post(serviceBase + 'login/', { userName: email, password: password, rememberMe: remember }).then(
-			function (results) {
-			    changeAuth(results.data);
-			    return authContext.isAuthenticated;
-			});
+            function (results) {
+                changeAuth(results.data);
+                return authContext.isAuthenticated;
+            });
     };
 
     authContext.requestpasswordreset = function (data) {
         return $http.post(serviceBase + 'users/' + data.userName + '/requestpasswordreset/').then(
-			function (results) {
-			    return results.data;
-			});
+            function (results) {
+                return results.data;
+            });
     };
 
     authContext.resetpassword = function (data) {
         return $http.post(serviceBase + 'users/' + data.userId + '/resetpasswordconfirm', { token: data.code, newPassword: data.newPassword }).then(
-			function (results) {
-			    return results.data;
-			});
+            function (results) {
+                return results.data;
+            });
     };
 
     authContext.logout = function () {
@@ -70,14 +70,12 @@
         return hasPermission;
     };
 
-    function changeAuth(results) {
-        authContext.userId = results.id;
-        authContext.permissions = results.permissions;
-        authContext.userLogin = results.userName;
-        authContext.fullName = results.userLogin;
-        authContext.isAuthenticated = results.userName != null;
-        authContext.userType = results.userType;
-        authContext.isAdministrator = results.isAdministrator;
+    function changeAuth(user) {
+        angular.extend(authContext, user);    
+        authContext.userLogin = user.userName;
+        authContext.fullName = user.userLogin;
+        authContext.isAuthenticated = user.userName != null;       
+
         //Interpolate permissions to replace some template to real value
         if (authContext.permissions) {
             authContext.permissions = _.map(authContext.permissions, function (x) {

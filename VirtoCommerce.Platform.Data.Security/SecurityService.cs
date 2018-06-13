@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
@@ -31,11 +32,12 @@ namespace VirtoCommerce.Platform.Data.Security
         private readonly IPermissionScopeService _permissionScopeService;
         private readonly IChangeLogService _changeLogService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ISettingsManager _settingsManager;
 
         [CLSCompliant(false)]
         public SecurityService(Func<IPlatformRepository> platformRepository, Func<ApplicationUserManager> userManagerFactory, IApiAccountProvider apiAccountProvider,
                                IModuleCatalog moduleCatalog, IPermissionScopeService permissionScopeService, ICacheManager<object> cacheManager,
-                               IChangeLogService changeLogService, IEventPublisher eventPublisher)
+                               IChangeLogService changeLogService, IEventPublisher eventPublisher, ISettingsManager settingsManager)
         {
             _platformRepository = platformRepository;
             _userManagerFactory = userManagerFactory;
@@ -45,6 +47,7 @@ namespace VirtoCommerce.Platform.Data.Security
             _permissionScopeService = permissionScopeService;
             _changeLogService = changeLogService;
             _eventPublisher = eventPublisher;
+            _settingsManager = settingsManager;
         }
 
         #region ISecurityService Members
@@ -177,11 +180,11 @@ namespace VirtoCommerce.Platform.Data.Security
                     {
                         var changedDbAccount = user.ToDataModel();
                         using (var changeTracker = GetChangeTracker(repository))
-                        {                         
+                        {
                             var userChangedEntry = new ChangedEntry<ApplicationUserExtended>(user, dbUser.ToCoreModel(targetDbAcount, _permissionScopeService), EntryState.Modified);
                             changeTracker.Attach(targetDbAcount);
                             changedDbAccount.Patch(targetDbAcount);
-                          
+
                             await _eventPublisher.Publish(new UserChangingEvent(userChangedEntry));
                             repository.UnitOfWork.Commit();
                             await _eventPublisher.Publish(new UserChangedEvent(userChangedEntry));
@@ -202,10 +205,10 @@ namespace VirtoCommerce.Platform.Data.Security
                     var dbUser = await userManager.FindByNameAsync(name);
 
                     if (dbUser != null)
-                    {                      
+                    {
                         await userManager.DeleteAsync(dbUser);
                         using (var repository = _platformRepository())
-                        {                          
+                        {
                             var account = repository.GetAccountByName(name, UserDetails.Reduced);
                             if (account != null)
                             {
@@ -250,6 +253,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 if (result.Succeeded)
                 {
                     var identityResult = await userManager.ChangePasswordAsync(dbUser.Id, oldPassword, newPassword);
+                    ResetCache(dbUser.Id, dbUser.UserName);
                     result = identityResult.ToCoreModel();
 
                     if (result.Succeeded)
@@ -346,7 +350,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 users = await query.OrderBy(x => x.UserName)
                                  .Skip(request.SkipCount)
                                  .Take(request.TakeCount)
-                                 .ToArrayAsync();                
+                                 .ToArrayAsync();
             }
             var extendedUsers = new List<ApplicationUserExtended>();
 
@@ -547,7 +551,19 @@ namespace VirtoCommerce.Platform.Data.Security
                             _changeLogService.LoadChangeLogs(retVal);
                         }
                     }
-
+                    var suppressForcingCredentialsChange = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Security:SuppressForcingCredentialsChange", false);
+                    if (!suppressForcingCredentialsChange)
+                    {
+                        //Setting the flags which indicates a necessity of security credentials change
+                        retVal.PasswordExpired = retVal.PasswordHash == SecurityConstants.DefaultPasswordHash;
+                        if (retVal.ApiAccounts != null)
+                        {
+                            foreach (var apiAccount in retVal.ApiAccounts)
+                            {
+                                apiAccount.SecretKeyExpired = apiAccount.SecretKey == SecurityConstants.DefaultSecretKey;
+                            }
+                        }
+                    }
                     if (detailsLevel != UserDetails.Export)
                     {
                         retVal.PasswordHash = null;

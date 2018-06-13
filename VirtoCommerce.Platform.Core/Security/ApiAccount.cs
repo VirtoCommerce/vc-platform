@@ -12,5 +12,10 @@ namespace VirtoCommerce.Platform.Core.Security
         public bool? IsActive { get; set; }
         public string AppId { get; set; }
         public string SecretKey { get; set; }
+
+        /// <summary>
+        /// The flag indicates that SecretKey  must be changed
+        /// </summary>
+        public bool SecretKeyExpired { get; set; }
     }
 }
