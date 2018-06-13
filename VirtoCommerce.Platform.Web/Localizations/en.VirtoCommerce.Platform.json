@@ -661,7 +661,7 @@
         "confirm": "Repeat new password:",
         "save": "Change password",
         "postpone": "Postpone",
-        "force-change-info": "You must change the password to continue using the manager. \n\n-You login to the platform manager for the first time. \n-You password is expired.",
+        "force-change-info": "You must change the password to continue using the manager.",
       },
       "change-api-secret-key": {
         "title": "Please generate a new API access keys for the '{{userName}}' user",
