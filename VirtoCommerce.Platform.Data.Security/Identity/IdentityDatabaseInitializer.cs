@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
             {
                 Id = "1eb2fa8ac6574541afdb525833dadb46",
                 UserName = "admin",
-                PasswordHash = SecurityConstants.DefaultPasswordHash,
+                PasswordHash = Resources.Default.DefaultPasswordHash,
                 SecurityStamp = string.Empty,
                 EmailConfirmed = true,
                 LockoutEnabled = true,

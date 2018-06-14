@@ -555,12 +555,12 @@ namespace VirtoCommerce.Platform.Data.Security
                     if (!suppressForcingCredentialsChange)
                     {
                         //Setting the flags which indicates a necessity of security credentials change
-                        retVal.PasswordExpired = retVal.PasswordHash == SecurityConstants.DefaultPasswordHash;
+                        retVal.PasswordExpired = retVal.PasswordHash == Resources.Default.DefaultPasswordHash;
                         if (retVal.ApiAccounts != null)
                         {
                             foreach (var apiAccount in retVal.ApiAccounts)
                             {
-                                apiAccount.SecretKeyExpired = apiAccount.SecretKey == SecurityConstants.DefaultSecretKey;
+                                apiAccount.SecretKeyExpired = apiAccount.SecretKey == Resources.Default.DefaultSecretKey;
                             }
                         }
                     }
