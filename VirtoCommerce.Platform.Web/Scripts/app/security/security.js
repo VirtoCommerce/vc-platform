@@ -150,7 +150,7 @@
                     userName: null,
                     onClose: null
                 },
-                controller: ['$scope', '$stateParams', 'platformWebApp.accounts', '$state', 'platformWebApp.accounts', function ($scope, $stateParams, accounts, $state, accounts) {
+                controller: ['$scope', '$stateParams', 'platformWebApp.accounts', '$state', function ($scope, $stateParams, accounts, $state) {
 
                     accounts.get({ id: $stateParams.userName }, function (user) {
                         if (user && user.apiAccounts) {
