@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,7 +58,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/autoinstall")]
         [ResponseType(typeof(SampleDataImportPushNotification))]
-        [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult TryToAutoInstallSampleData()
         {
             var sampleData = InnerDiscoverSampleData().FirstOrDefault(x => !x.Url.IsNullOrEmpty());
