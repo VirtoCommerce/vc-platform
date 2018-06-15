@@ -165,6 +165,9 @@
                                 $stateParams.onClose();
                             }
                         }
+                        else {
+                            $stateParams.onClose();
+                        }
                     });
                     
                     $scope.generate = function () {
