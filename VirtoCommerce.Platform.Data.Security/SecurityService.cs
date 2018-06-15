@@ -436,6 +436,11 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 await userManager.ResetAccessFailedCountAsync(userId);
                 var identityResult = await userManager.SetLockoutEndDateAsync(userId, DateTimeOffset.MinValue);
+                if (identityResult.Succeeded)
+                {
+                    var user = await GetApplicationUserByIdAsync(userId);
+                    ResetCache(userId, user.UserName);
+                }
                 var result = identityResult.ToCoreModel();
                 return result;
             }
