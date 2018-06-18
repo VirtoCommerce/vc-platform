@@ -47,6 +47,7 @@ using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.ExportImport;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Notifications;
+using VirtoCommerce.Platform.Data.PushNotification;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Handlers;
@@ -604,7 +605,11 @@ namespace VirtoCommerce.Platform.Web
 
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
             var notifier = new InMemoryPushNotificationManager(hubSignalR);
-            container.RegisterInstance<IPushNotificationManager>(notifier);
+            //container.RegisterInstance<IPushNotificationManager>(notifier);
+
+            var pushNotifocationService = new PushNotificationService(platformRepositoryFactory);
+            var pushNotificationManager = new PushNotificationManager(pushNotifocationService, hubSignalR);
+            container.RegisterInstance<IPushNotificationManager>(pushNotificationManager);
 
             var resolver = new LiquidNotificationTemplateResolver();
             container.RegisterInstance<INotificationTemplateResolver>(resolver);

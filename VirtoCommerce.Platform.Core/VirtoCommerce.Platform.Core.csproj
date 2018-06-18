@@ -199,6 +199,7 @@
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Notifications\NotificationParameter.cs" />
     <Compile Include="Notifications\NotificationTemplate.cs" />
+    <Compile Include="PushNotifications\IPushNotificationService.cs" />
     <Compile Include="PushNotifications\PushNotification.cs" />
     <Compile Include="PushNotifications\PushNotificationSearchCriteria.cs" />
     <Compile Include="PushNotifications\PushNotificationSearchResult.cs" />

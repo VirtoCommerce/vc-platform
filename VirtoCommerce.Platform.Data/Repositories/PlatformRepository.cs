@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Platform.Data.Model;
+using VirtoCommerce.Platform.Data.PushNotification;
 
 namespace VirtoCommerce.Platform.Data.Repositories
 {
@@ -205,6 +206,12 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
             #endregion
 
+            #region PushNotification
+
+            modelBuilder.Entity<PushNotificationEntity>().ToTable("PlatformPushNotification ").HasKey(x => x.Id).Property(x => x.Id);
+
+            #endregion
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -227,6 +234,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         public IQueryable<RolePermissionEntity> RolePermissions { get { return GetAsQueryable<RolePermissionEntity>(); } }
         public IQueryable<OperationLogEntity> OperationLogs { get { return GetAsQueryable<OperationLogEntity>(); } }
         public IQueryable<AssetEntryEntity> AssetEntries => GetAsQueryable<AssetEntryEntity>();
+        public IQueryable<PushNotificationEntity> PushNotification => GetAsQueryable<PushNotificationEntity>();
 
 
         public AssetEntryEntity[] GetAssetsByIds(IEnumerable<string> ids)
@@ -310,6 +318,11 @@ namespace VirtoCommerce.Platform.Data.Repositories
             return result;
         }
 
+        public PushNotificationEntity[] GetPushNotificationByIds(IEnumerable<string> ids)
+        {
+            return PushNotification.Where(x => ids.Contains(x.Id)).ToArray();
+        }
+        
         #endregion
 
         public NotificationTemplateEntity GetNotificationTemplateByNotification(string notificationTypeId, string objectId, string objectTypeId, string language)

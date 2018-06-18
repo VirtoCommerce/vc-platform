@@ -4,16 +4,20 @@ using Newtonsoft.Json;
 
 namespace VirtoCommerce.Platform.Core.PushNotifications
 {
-    public abstract class PushNotification
+    public class PushNotification
     {
-        public PushNotification(string creator)
+        public PushNotification()
         {
-            Created = DateTime.UtcNow;
+            Id = Guid.NewGuid().ToString("N");
             IsNew = true;
-            Id = Guid.NewGuid().ToString();
-            Creator = creator;
             NotifyType = this.GetType().Name;
         }
+
+        public PushNotification(string creator) : this()
+        {
+            Creator = creator;
+        }
+
         [JsonProperty("id")]
         public string Id { get; set; }
         [JsonProperty("creator")]

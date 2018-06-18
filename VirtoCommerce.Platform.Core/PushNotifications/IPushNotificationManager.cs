@@ -4,6 +4,5 @@
     {
         void Upsert(PushNotification notification);
         PushNotificationSearchResult SearchNotifies(string userId, PushNotificationSearchCriteria criteria);
-
     }
 }

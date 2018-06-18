@@ -3,6 +3,7 @@ using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Model;
+using VirtoCommerce.Platform.Data.PushNotification;
 
 namespace VirtoCommerce.Platform.Data.Repositories
 {
@@ -26,7 +27,9 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
 		IQueryable<NotificationEntity> Notifications { get; }
 		IQueryable<NotificationTemplateEntity> NotificationTemplates { get; }
-		
+        IQueryable<PushNotificationEntity> PushNotification { get; }
+
+
         AssetEntryEntity[] GetAssetsByIds(IEnumerable<string> ids);
         RoleEntity GetRoleById(string id);
 		AccountEntity GetAccountByName(string userName, UserDetails detailsLevel);
@@ -38,5 +41,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
         SettingEntity GetSettingByName(string name);
         SettingEntity[] GetAllObjectSettings(string objectType, string objectId);
+
+	    PushNotificationEntity[] GetPushNotificationByIds(IEnumerable<string> ids);
+
 	}
 }
