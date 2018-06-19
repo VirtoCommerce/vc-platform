@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -42,22 +40,14 @@ namespace VirtoCommerce.Platform.Data.PushNotification
                     query = query.Where(x => x.CreatedDate <= criteria.EndDate);
                 }
 
-                if (criteria.OrderBy != null)
+                var sortInfos = SortInfo.Parse(criteria.OrderBy).ToArray();
+
+                if (sortInfos.IsNullOrEmpty())
                 {
-                    var parts = criteria.OrderBy.Split(':');
-                    if (parts.Any())
-                    {
-                        var fieldName = parts[0];
-                        if (parts.Length > 1 && String.Equals(parts[1], "desc", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            query = query.OrderByDescending(fieldName);
-                        }
-                        else
-                        {
-                            query = query.OrderBy(fieldName);
-                        }
-                    }
+                    sortInfos = new[] { new SortInfo { SortColumn = "Creator", SortDirection = SortDirection.Descending } };
                 }
+
+                query = query.OrderBySortInfos(sortInfos);
 
                 var ids = query
                     .Skip(criteria.Start)
@@ -65,7 +55,7 @@ namespace VirtoCommerce.Platform.Data.PushNotification
                     .Select(x => x.Id)
                     .ToList();
 
-                var retVal = new PushNotificationSearchResult
+                var result = new PushNotificationSearchResult
                 {
                     TotalCount = query.Count(),
                     NewCount = query.Count(x => x.IsNew),
@@ -75,7 +65,7 @@ namespace VirtoCommerce.Platform.Data.PushNotification
 
                 };
 
-                return retVal;
+                return result;
             }
         }
 
@@ -115,7 +105,22 @@ namespace VirtoCommerce.Platform.Data.PushNotification
 
         public void Delete(IEnumerable<string> ids)
         {
-            throw new NotImplementedException();
+            if (ids == null)
+                throw new ArgumentNullException(nameof(ids));
+
+            using (var repository = _platformRepository())
+            {
+                var items = repository.PushNotification
+                    .Where(p => ids.Contains(p.Id))
+                    .ToList();
+
+                foreach (var item in items)
+                {
+                    repository.Remove(item);
+                }
+
+                repository.UnitOfWork.Commit();
+            }
         }
     }
 }

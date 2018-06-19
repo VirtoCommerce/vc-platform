@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Data.Model
             Title = notification.Title;
             IsNew = notification.IsNew;
             RepeatCount = notification.RepeatCount;
-            Type = notification.Description;
+            Type = notification.NotifyType;
 
             return this;
         }
