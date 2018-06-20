@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -24,10 +24,11 @@ namespace VirtoCommerce.Platform.Core.Bus
 
         public Task Publish<T>(T @event, CancellationToken cancellationToken = default(CancellationToken)) where T : class, IEvent
         {
-            if (!_routes.TryGetValue(@event.GetType(), out var handlers))
-                return Task.FromResult(true);
-
-            return Task.WhenAll(handlers.Select(handler => handler(@event, cancellationToken)));
+            if (_routes.TryGetValue(@event.GetType(), out var handlers))
+            {
+                Task.Factory.StartNew(() => Task.WhenAll(handlers.Select(handler => handler(@event, cancellationToken))), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
+            }
+            return Task.CompletedTask;
         }
     }
 }
