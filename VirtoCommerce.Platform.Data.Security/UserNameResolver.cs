@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Data.Security
@@ -16,6 +17,11 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             var currentUser = _currentUserFactory != null ? _currentUserFactory() : null;
             var userName = currentUser != null ? currentUser.UserName : null;
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                userName = Thread.CurrentPrincipal?.Identity?.Name;
+            }
 
             if (string.IsNullOrEmpty(userName))
             {
