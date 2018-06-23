@@ -315,6 +315,7 @@
     <Compile Include="Cache\RedisConnectionManager2.cs" />
     <Compile Include="Cache\RetryHelper2.cs" />
     <Compile Include="Controllers\AiHandleErrorAttribute.cs" />
+    <Compile Include="Controllers\Api\ChangeLogController.cs" />
     <Compile Include="Controllers\Api\LicensingController.cs" />
     <Compile Include="Controllers\Api\ProfilesController.cs" />
     <Compile Include="Controllers\Api\AssetEntryController.cs" />
@@ -364,6 +365,7 @@
     <Content Include="Scripts\ai.0.22.19-build00125.min.js" />
     <Content Include="Scripts\app\assets\blades\asset-select.js" />
     <Content Include="Scripts\app\assets\blades\asset-select.tpl.html" />
+    <Content Include="Scripts\app\changeLog\resources\changeLog.js" />
     <Content Include="Scripts\app\licensing\license-detail.js" />
     <Content Include="Scripts\app\licensing\license-detail.tpl.html" />
     <Content Include="Scripts\app\modularity\dialogs\errorDetails-dialog.tpl.html" />
