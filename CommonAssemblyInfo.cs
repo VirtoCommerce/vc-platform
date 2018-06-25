@@ -15,8 +15,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Virto Commerce 2.13")]
 [assembly: AssemblyCopyright("Copyright © VirtoCommerce 2011-2018")]
 
-[assembly: AssemblyFileVersion("2.13.29.0")]
-[assembly: AssemblyVersion("2.13.29.0")]
+[assembly: AssemblyFileVersion("2.13.30.0")]
+[assembly: AssemblyVersion("2.13.30.0")]
 [assembly: AssemblyInformationalVersion("2.13")]
 
 
