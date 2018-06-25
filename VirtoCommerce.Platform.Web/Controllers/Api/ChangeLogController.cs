@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.ChangeLog;
@@ -18,9 +19,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("search")]
         [ResponseType(typeof(OperationLog[]))]
-        public IHttpActionResult SearchObjectChangeLogHistory([FromBody]TenantIdentity tenant)
+        public IHttpActionResult SearchObjectChangeHistory([FromBody]TenantIdentity tenant)
         {
             var result = _changeLog.FindObjectChangeHistory(tenant.TenantId, tenant.TenantType).ToArray();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("{type}/changes")]
+        [ResponseType(typeof(OperationLog[]))]
+        public IHttpActionResult SearchTypeChangeHistory(string type, [FromUri] DateTime? start = null, [FromUri] DateTime? end = null)
+        {
+            var result = _changeLog.FindChangeHistory(type, start, end).ToArray();
             return Ok(result);
         }
     }

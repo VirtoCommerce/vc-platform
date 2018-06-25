@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CacheManager.Core;
 using Microsoft.AspNet.Identity;
@@ -54,13 +55,13 @@ namespace VirtoCommerce.Platform.Data.Security
         public virtual async Task<ApplicationUserExtended> FindByNameAsync(string userName, UserDetails detailsLevel)
         {
             var user = await GetApplicationUserByNameAsync(userName);
-            return GetUserExtended(user, detailsLevel);
+            return await GetUserExtendedAsync(user, detailsLevel);
         }
 
         public virtual async Task<ApplicationUserExtended> FindByIdAsync(string userId, UserDetails detailsLevel)
         {
             var user = await GetApplicationUserByIdAsync(userId);
-            return GetUserExtended(user, detailsLevel);
+            return await GetUserExtendedAsync(user, detailsLevel);
         }
 
         public virtual async Task<ApplicationUserExtended> FindByEmailAsync(string email, UserDetails detailsLevel)
@@ -68,7 +69,7 @@ namespace VirtoCommerce.Platform.Data.Security
             using (var userManager = _userManagerFactory())
             {
                 var user = await userManager.FindByEmailAsync(email);
-                return GetUserExtended(user, detailsLevel);
+                return await GetUserExtendedAsync(user, detailsLevel);
             }
         }
 
@@ -77,7 +78,7 @@ namespace VirtoCommerce.Platform.Data.Security
             using (var userManager = _userManagerFactory())
             {
                 var user = await userManager.FindAsync(new UserLoginInfo(loginProvider, providerKey));
-                return GetUserExtended(user, detailsLevel);
+                return await GetUserExtendedAsync(user, detailsLevel);
             }
         }
 
@@ -170,7 +171,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 //Update platform security user
                 using (var repository = _platformRepository())
                 {
-                    var targetDbAcount = repository.GetAccountByName(userName, UserDetails.Full);
+                    var targetDbAcount = await repository.GetAccountByNameAsync(userName, UserDetails.Full);
 
                     if (targetDbAcount == null)
                     {
@@ -209,7 +210,7 @@ namespace VirtoCommerce.Platform.Data.Security
                         await userManager.DeleteAsync(dbUser);
                         using (var repository = _platformRepository())
                         {
-                            var account = repository.GetAccountByName(name, UserDetails.Reduced);
+                            var account = await repository.GetAccountByNameAsync(name, UserDetails.Reduced);
                             if (account != null)
                             {
                                 var userChangedEntry = new ChangedEntry<ApplicationUserExtended>(dbUser.ToCoreModel(account, _permissionScopeService), EntryState.Deleted);
@@ -505,15 +506,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
         protected virtual ApplicationUser GetApplicationUserByName(string userName)
         {
-            var result = _cacheManager.Get($"GetUserByName-{userName}", SecurityConstants.CacheRegion, () =>
-            {
-                using (var userManager = _userManagerFactory())
-                {
-                    return Task.Run(async () => await userManager.FindByNameAsync(userName)).Result;
-                }
-            }, cacheNullValue: false);
-
-            return result;
+            return Task.Factory.StartNew(() => GetApplicationUserByNameAsync(userName), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
         }
 
         protected virtual async Task<ApplicationUser> GetApplicationUserByNameAsync(string userName)
@@ -529,17 +522,22 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-        protected virtual ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser, UserDetails detailsLevel)
+        protected ApplicationUserExtended GetUserExtended(ApplicationUser applicationUser, UserDetails detailsLevel)
+        {
+            return Task.Factory.StartNew(() => GetUserExtendedAsync(applicationUser, detailsLevel), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default).Unwrap().GetAwaiter().GetResult();
+        }
+
+        protected virtual async Task<ApplicationUserExtended> GetUserExtendedAsync(ApplicationUser applicationUser, UserDetails detailsLevel)
         {
             ApplicationUserExtended result = null;
             if (applicationUser != null)
             {
-                result = _cacheManager.Get($"GetUserByName-{applicationUser.UserName}-{detailsLevel}", SecurityConstants.CacheRegion, () =>
+                result = await _cacheManager.GetAsync($"GetUserByName-{applicationUser.UserName}-{detailsLevel}", SecurityConstants.CacheRegion, async () =>
                 {
                     ApplicationUserExtended retVal;
                     using (var repository = _platformRepository())
                     {
-                        var user = repository.GetAccountByName(applicationUser.UserName, detailsLevel);
+                        var user = await repository.GetAccountByNameAsync(applicationUser.UserName, detailsLevel);
                         retVal = applicationUser.ToCoreModel(user, _permissionScopeService);
                         //Populate available permission scopes
                         if (retVal.Roles != null)
@@ -580,6 +578,8 @@ namespace VirtoCommerce.Platform.Data.Security
             }
             return result;
         }
+
+
 
         protected virtual void ResetCache(string userId, string userName)
         {
