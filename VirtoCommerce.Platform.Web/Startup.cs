@@ -64,6 +64,7 @@ using VirtoCommerce.Platform.Web.Resources;
 using VirtoCommerce.Platform.Web.SignalR;
 using VirtoCommerce.Platform.Web.Swagger;
 using WebGrease.Extensions;
+using AuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
 [assembly: OwinStartup(typeof(Startup))]
@@ -134,7 +135,38 @@ namespace VirtoCommerce.Platform.Web
             };
             var hangfireLauncher = new HangfireLauncher(hangfireOptions);
 
-            InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath);
+            var authenticationOptions = new Core.Security.AuthenticationOptions
+            {
+                AllowOnlyAlphanumericUserNames = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AllowOnlyAlphanumericUserNames", false),
+                RequireUniqueEmail = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:RequireUniqueEmail", false),
+
+                PasswordRequiredLength = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Password.RequiredLength", 5),
+                PasswordRequireNonLetterOrDigit = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Password.RequireNonLetterOrDigit", false),
+                PasswordRequireDigit = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Password.RequireDigit", false),
+                PasswordRequireLowercase = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Password.RequireLowercase", false),
+                PasswordRequireUppercase = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Password.RequireUppercase", false),
+
+                UserLockoutEnabledByDefault = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:UserLockoutEnabledByDefault", true),
+                DefaultAccountLockoutTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:DefaultAccountLockoutTimeSpan", TimeSpan.FromMinutes(5)),
+                MaxFailedAccessAttemptsBeforeLockout = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:MaxFailedAccessAttemptsBeforeLockout", 5),
+
+                DefaultTokenLifespan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:DefaultTokenLifespan", TimeSpan.FromDays(1)),
+
+                CookiesEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
+                CookiesValidateInterval = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromDays(1)),
+
+                BearerTokensEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
+                BearerTokensExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromHours(1)),
+
+                HmacEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
+                HmacSignatureValidityPeriod = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),
+
+                ApiKeysEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.Enabled", true),
+                ApiKeysHttpHeaderName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
+                ApiKeysQueryStringParameterName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
+            };
+
+            InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath, authenticationOptions);
 
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -206,18 +238,6 @@ namespace VirtoCommerce.Platform.Web
             AuthConfig.RegisterAuth();
 
             // Security OWIN configuration
-            var authenticationOptions = new Core.Security.AuthenticationOptions
-            {
-                CookiesEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.Enabled", true),
-                CookiesValidateInterval = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromDays(1)),
-                BearerTokensEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
-                BearerTokensExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromHours(1)),
-                HmacEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
-                HmacSignatureValidityPeriod = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),
-                ApiKeysEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.Enabled", true),
-                ApiKeysHttpHeaderName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
-                ApiKeysQueryStringParameterName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
-            };
             OwinConfig.Configure(app, container, authenticationOptions);
 
             hangfireLauncher.ConfigureOwin(app, container);
@@ -331,7 +351,7 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionString, HangfireLauncher hangfireLauncher, string modulesPath)
+        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionString, HangfireLauncher hangfireLauncher, string modulesPath, AuthenticationOptions authenticationOptions)
         {
             container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
@@ -689,7 +709,7 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<SecurityDbContext>(new InjectionConstructor(connectionString));
             container.RegisterType<IUserStore<ApplicationUser>, ApplicationUserStore>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
-            container.RegisterType<ApplicationUserManager>();
+            container.RegisterType<ApplicationUserManager>(new InjectionConstructor(container.Resolve<IUserStore<ApplicationUser>>(), container.Resolve<IDataProtectionProvider>(), container.Resolve<INotificationManager>(), authenticationOptions));
             container.RegisterType<ApplicationSignInManager>();
 
             var nonEditableUsers = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:NonEditableUsers", string.Empty);
