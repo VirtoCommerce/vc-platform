@@ -120,7 +120,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(user);
         }
 
-
+       
         /// <summary>
         /// Get user details by user email
         /// </summary>
@@ -131,7 +131,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(ApplicationUserExtended))]
         [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
         public async Task<IHttpActionResult> GetUserByEmail(string email)
-        {
+        { 
             var user = await _securityService.FindByEmailAsync(email, UserDetails.Export);
             ApplyAuthorizationRulesForUser(user);
             return Ok(user);
@@ -346,7 +346,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             //ClearSecurityProperties(user);
             var result = await _securityService.CreateAsync(user);
-            return Ok(result);
+            return ProcessSecurityResult(result);
         }
 
         /// <summary>
@@ -363,6 +363,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             EnsureUserIsEditable(userName);
 
             var result = await _securityService.ChangePasswordAsync(userName, changePassword.OldPassword, changePassword.NewPassword);
+
+            if (result == null)
+                return NotFound();
+
             return Ok(result);
         }
 
@@ -380,7 +384,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             EnsureUserIsEditable(userName);
 
             var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword);
-            return Ok(result);
+            return ProcessSecurityResult(result);
         }
 
         /// <summary>
@@ -393,7 +397,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<IHttpActionResult> ResetPasswordByToken(string userId, [FromBody] ResetPasswordInfo resetPassword)
         {
             var result = await _securityService.ResetPasswordAsync(userId, resetPassword.Token, resetPassword.NewPassword);
-            return Ok(result);
+            return ProcessSecurityResult(result);
         }
 
         /// <summary>
@@ -479,7 +483,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             //ClearSecurityProperties(user);
             var result = await _securityService.UpdateAsync(user);
-            return Ok(result);
+            return ProcessSecurityResult(result);
         }
 
         /// <summary>
@@ -525,7 +529,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<IHttpActionResult> UnlockUserAsync(string id)
         {
             var result = await _securityService.UnlockUserAsync(id);
-            return Ok(result);
+            return ProcessSecurityResult(result);
         }
 
         private void ApplyAuthorizationRulesForUser(ApplicationUserExtended user)
@@ -554,6 +558,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 user.PasswordHash = null;
                 user.SecurityStamp = null;
             }
+        }
+
+        private IHttpActionResult ProcessSecurityResult(SecurityResult securityResult)
+        {
+            IHttpActionResult result;
+
+            if (securityResult == null)
+            {
+                result = BadRequest();
+            }
+            else
+            {
+                if (!securityResult.Succeeded)
+                    result = BadRequest(securityResult.Errors != null ? string.Join(" ", securityResult.Errors) : "Unknown error.");
+                else
+                    result = Ok(securityResult);
+            }
+
+            return result;
         }
     }
 }

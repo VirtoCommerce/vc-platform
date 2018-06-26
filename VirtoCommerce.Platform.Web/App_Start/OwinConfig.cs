@@ -21,12 +21,14 @@ namespace VirtoCommerce.Platform.Web
     {
         public const string PublicClientId = "web";
 
-        public static void Configure(IAppBuilder app, IUnityContainer container, AuthenticationOptions authenticationOptions)
+        public static void Configure(IAppBuilder app, IUnityContainer container)
         {
             app.CreatePerOwinContext(() => container.Resolve<SecurityDbContext>());
             app.CreatePerOwinContext(() => container.Resolve<ApplicationUserManager>());
 
             app.UseCors(CorsOptions.AllowAll);
+
+            var authenticationOptions = container.Resolve<AuthenticationOptions>();
 
             if (authenticationOptions.CookiesEnabled)
             {
