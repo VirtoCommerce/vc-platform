@@ -444,20 +444,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     var sender = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:Sender:Email")
                         ?? "noreply@" + Request.RequestUri.Host;
 
-                    var notification = _notificationManager.GetNewNotification<ResetPasswordEmailNotification>("Platform", typeof(ResetPasswordEmailNotification).Name, "en");
+                    var notification = _notificationManager.GetNewNotification<ResetPasswordEmailNotification>("Platform", typeof(ResetPasswordEmailNotification).Name, "en-US");
                     notification.Url = $"{uri}/#/resetpassword/{user.Id}/{token}";
                     notification.Recipient = user.Email;
                     notification.Sender = sender;
 
                     try
                     {
-                        var result = _notificationManager.SendNotification(notification);
-
-                        retVal.Succeeded = result.IsSuccess;
-                        if (!retVal.Succeeded)
-                        {
-                            retVal.Errors = new[] { result.ErrorMessage };
-                        }
+                        _notificationManager.ScheduleSendNotification(notification);
                     }
                     catch (Exception ex)
                     {
