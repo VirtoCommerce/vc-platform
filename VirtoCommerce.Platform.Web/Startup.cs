@@ -135,7 +135,7 @@ namespace VirtoCommerce.Platform.Web
             };
             var hangfireLauncher = new HangfireLauncher(hangfireOptions);
 
-            var authenticationOptions = new Core.Security.AuthenticationOptions
+            var authenticationOptions = new AuthenticationOptions
             {
                 AllowOnlyAlphanumericUserNames = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AllowOnlyAlphanumericUserNames", false),
                 RequireUniqueEmail = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:RequireUniqueEmail", false),
@@ -166,7 +166,9 @@ namespace VirtoCommerce.Platform.Web
                 ApiKeysQueryStringParameterName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
             };
 
-            InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath, authenticationOptions);
+            container.RegisterInstance(authenticationOptions);
+
+            InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath);
 
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -238,7 +240,7 @@ namespace VirtoCommerce.Platform.Web
             AuthConfig.RegisterAuth();
 
             // Security OWIN configuration
-            OwinConfig.Configure(app, container, authenticationOptions);
+            OwinConfig.Configure(app, container);
 
             hangfireLauncher.ConfigureOwin(app, container);
 
@@ -351,7 +353,7 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionString, HangfireLauncher hangfireLauncher, string modulesPath, AuthenticationOptions authenticationOptions)
+        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionString, HangfireLauncher hangfireLauncher, string modulesPath)
         {
             container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
@@ -709,7 +711,7 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterType<SecurityDbContext>(new InjectionConstructor(connectionString));
             container.RegisterType<IUserStore<ApplicationUser>, ApplicationUserStore>();
             container.RegisterType<IAuthenticationManager>(new InjectionFactory(c => HttpContext.Current.GetOwinContext().Authentication));
-            container.RegisterType<ApplicationUserManager>(new InjectionConstructor(container.Resolve<IUserStore<ApplicationUser>>(), container.Resolve<IDataProtectionProvider>(), container.Resolve<INotificationManager>(), authenticationOptions));
+            container.RegisterType<ApplicationUserManager>();
             container.RegisterType<ApplicationSignInManager>();
 
             var nonEditableUsers = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:NonEditableUsers", string.Empty);
