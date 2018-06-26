@@ -447,13 +447,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                     try
                     {
-                        var result = _notificationManager.SendNotification(notification);
-
-                        retVal.Succeeded = result.IsSuccess;
-                        if (!retVal.Succeeded)
-                        {
-                            retVal.Errors = new[] { result.ErrorMessage };
-                        }
+                        _notificationManager.ScheduleSendNotification(notification);
                     }
                     catch (Exception ex)
                     {
