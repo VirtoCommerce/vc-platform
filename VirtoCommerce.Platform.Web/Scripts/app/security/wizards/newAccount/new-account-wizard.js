@@ -40,12 +40,8 @@
         accounts.save(postData, function () {
             blade.parentBlade.refresh();
             blade.parentBlade.selectNode(postData);
-        }, function (error) {
-            var errText = 'Error ' + error.status;
-            if (error.data && error.data.message) {
-                errText = errText + ": " + error.data.message;
-            }
-            bladeNavigationService.setError(errText, $scope.blade);
+        }, function (response) {
+            bladeNavigationService.setError(response, $scope.blade);
         });
     };
 

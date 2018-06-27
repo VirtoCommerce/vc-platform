@@ -75,14 +75,10 @@
                         $scope.isLoading = false;
                         $rootScope.preventLoginDialog = false;
                         angular.extend($scope, retVal);
-                    }, function (x) {
+                    }, function (response) {
                         $scope.isLoading = false;
                         $scope.viewModel.newPassword = $scope.viewModel.newPassword2 = undefined;
-                        if (x.status == 400 && x.data && x.data.message) {
-                            $scope.errorMessage = x.data.message;
-                        } else {
-                            $scope.errorMessage = 'Error ' + x;
-                        }
+                        $scope.errors = response.data.errors;
                     });
                 };
             }]
@@ -127,16 +123,13 @@
                     }
 
                     $scope.ok = function () {
-
                         var postData = {
                             NewPassword: $scope.password
                         };
                         accounts.resetPassword({ id: $scope.userName }, postData, function (data) {
-                            if (data.errors.length > 0) {
-                                $scope.errorMessage = data.errors[0];
-                            } else {
-                                $stateParams.onClose();
-                            }
+                            $stateParams.onClose();
+                        }, function (response) {
+                            $scope.errors = response.data.errors;
                         });
                     }
                 }]
@@ -180,8 +173,10 @@
                         $stateParams.onClose();
                     }
                     $scope.save = function () {
-                        accounts.update({}, $scope.user, function (data) {
+                        accounts.update({ }, $scope.user, function() {
                             $stateParams.onClose();
+                        }, function(response) {
+                            $scope.errors = response.data.errors;
                         });
                     };
                 }]

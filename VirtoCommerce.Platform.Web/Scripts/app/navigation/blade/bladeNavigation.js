@@ -396,11 +396,11 @@
             };
         },
         checkPermission: authService.checkPermission,
-        setError: function (error, blade) {
-            if (blade && error) {
+        setError: function (response, blade) {
+            if (blade && response) {
                 blade.isLoading = false;
-                blade.error = error.status && error.statusText ? error.status + ': ' + error.statusText : error;
-                blade.errorBody = error.data ? error.data.exceptionMessage : blade.errorBody;
+                blade.error = response.status && response.statusText ? response.status + ': ' + response.statusText : response;
+                blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody;
             }
         }
     };
