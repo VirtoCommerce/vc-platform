@@ -24,10 +24,10 @@
             newPassword: blade.currentEntity.newPassword
         };
 
-        accounts.resetPassword({ id: blade.currentEntityId }, postData, function (data) {
+        accounts.resetPassword({ id: blade.currentEntityId }, postData, function () {
             $scope.bladeClose();
-        }, function (error) {
-            bladeNavigationService.setError('Error: ' + error.data.message, $scope.blade);
+        }, function (response) {
+            bladeNavigationService.setError(response, $scope.blade);
         });
     };
     

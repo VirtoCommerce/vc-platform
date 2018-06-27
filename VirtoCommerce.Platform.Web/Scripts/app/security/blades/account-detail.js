@@ -63,8 +63,8 @@
 
             accounts.update({}, blade.currentEntity, function (data) {
                 blade.refresh(true);
-            }, function (error) {
-                bladeNavigationService.setError('Error ' + error.status, blade);
+            }, function (response) {
+                bladeNavigationService.setError(response, blade);
             });
         };
 
@@ -144,9 +144,8 @@
                             blade.accountLockedState = "Unlocked";
                         }
                         blade.isLoading = false;
-                    }, function (error) {
-                        bladeNavigationService.setError('Error ' + error.status, blade);
-                        blade.isLoading = false;
+                    }, function (response) {
+                        bladeNavigationService.setError(response, blade);
                     });
                 },
                 canExecuteMethod: function () {
