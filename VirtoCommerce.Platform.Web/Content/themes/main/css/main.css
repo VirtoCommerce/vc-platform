@@ -86,10 +86,21 @@ fieldset {
   fieldset {
     display: table-cell; } }
 
+/*Chars counter label for field*/
+.chars-counter{
+    display: inline-block;
+    float: right;
+    font-size: 14px;
+}
+
+.invalid{
+    color: #e51400;
+}
+
 /* Lists */
 ul,
 ol {
-  list-style: none; }
+    list-style: none; }
 
 .list.__inline,
 .menu.__inline {
