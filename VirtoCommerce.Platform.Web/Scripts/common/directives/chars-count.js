@@ -6,14 +6,15 @@
                        </div>`,
             scope: {
                 vaField: "@",
-                vaMaxlength: "@"
+                vaMaxlength: "@",
+                vaType: "@"
             },
             link: function (scope, element) {
                 scope.$watch('vaField', function () {
                     if (scope.vaField.length > scope.vaMaxlength) {
-                        element.addClass('invalid');
+                        element.addClass('text-' + scope.vaType);
                     } else {
-                        element.removeClass('invalid');
+                        element.removeClass('text-' + scope.vaType);
                     }
                 });
             },
