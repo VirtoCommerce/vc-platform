@@ -5945,11 +5945,10 @@ a:hover,
 
 /*
     This file contains all actual styles, which used to override old incorrect styles
-    Created 09.07.18 by Tigran Petrosyan
 
-    Namespace - ts 
+    Namespace -  bc
 */
-.ts.blade-static .form-group {
+body .blade .blade-wrapper .blade-container .bc.blade-static .form-group {
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -5965,21 +5964,21 @@ a:hover,
      -moz-box-align: center;
       -ms-flex-align: center;
           align-items: center; }
-  .ts.blade-static .form-group .form-count {
-    position: relative !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    -webkit-transform: none !important;
-            transform: none !important; }
+  body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .form-count {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    -webkit-transform: none;
+            transform: none; }
 
-.ts.blade-static .form-input {
+body .blade .blade-wrapper .blade-container .bc.blade-static .form-input {
   min-width: 190px; }
-  .ts.blade-static .form-input.__search {
-    margin-right: 0 !important; }
+  body .blade .blade-wrapper .blade-container .bc.blade-static .form-input.__search {
+    margin-right: 0; }
 
-.ts.blade-static .seacrh-filter {
+body .blade .blade-wrapper .blade-container .bc.blade-static .seacrh-filter {
   min-width: 190px; }
 
 /*# sourceMappingURL=main.css.map */

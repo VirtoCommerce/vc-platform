@@ -1,0 +1,44 @@
+﻿/*
+    This file contains all actual styles, which used to override old incorrect styles
+
+    Namespace -  bc
+*/
+
+body {
+    .blade {
+        .blade-wrapper {
+            .blade-container {
+                .bc {
+                    &.blade-static {
+                        .form-group {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+
+                            .form-count {
+                                position: relative;
+                                top: 0;
+                                bottom: 0;
+                                left: 0;
+                                right: 0;
+                                transform: none;
+                            }
+                        }
+                        // block with input "Search keyword"
+                        .form-input {
+                            min-width: 190px;
+
+                            &.__search {
+                                margin-right: 0;
+                            }
+                        }
+                        // search dropdown block
+                        .seacrh-filter {
+                            min-width: 190px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
