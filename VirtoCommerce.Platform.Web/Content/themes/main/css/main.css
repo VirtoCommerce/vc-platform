@@ -86,6 +86,7 @@ fieldset {
   fieldset {
     display: table-cell; } }
 
+/* Window and Modals */
 .modal-backdrop.fade,
 .modal.fade {
   bottom: 0;
@@ -218,6 +219,7 @@ fieldset {
 .window-cnt .form-label {
   margin-left: 0; }
 
+/* Lists */
 ul,
 ol {
   list-style: none; }
@@ -3417,14 +3419,7 @@ tags-input .tags.focused {
         right: 0;
         top: 0;
         z-index: 300;
-        filter: alpha(opacity=50);
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: flex;
-        -moz-box-sizing: border-box;
-             box-sizing: border-box; }
+        filter: alpha(opacity=50); }
         .blade .blade-head .blade-status .status-message::after {
           color: #fff;
           content: '';
