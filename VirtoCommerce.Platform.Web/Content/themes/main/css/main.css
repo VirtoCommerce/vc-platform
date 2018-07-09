@@ -111,18 +111,7 @@ fieldset {
   top: 50%;
   width: 500px;
   -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
-  background-color: #fff;
-  border: 5px solid #a1c0d4;
-  bottom: 40px;
-  left: 80px;
-  margin: 0;
-  position: absolute;
-  right: 80px;
-  top: 40px;
-  width: auto;
-  -webkit-transform: none;
-          transform: none; }
+          transform: translate(-50%, -50%); }
   .window .modal-header-error,
   .modal-content .modal-header-error {
     background: #7a1c13;
@@ -136,6 +125,19 @@ fieldset {
       font-size: 20px;
       font-weight: 400;
       padding: 10px 20px; }
+
+.__gallery .modal-dialog {
+  background-color: #fff;
+  border: 5px solid #a1c0d4;
+  bottom: 40px;
+  left: 80px;
+  margin: 0;
+  position: absolute;
+  right: 80px;
+  top: 40px;
+  width: auto;
+  -webkit-transform: none;
+          transform: none; }
 
 .__gallery .modal-content {
   box-shadow: none;
