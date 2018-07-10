@@ -4565,7 +4565,7 @@ tags-input .tags.focused {
   margin: 15px 0;
   overflow: auto;
   padding: 20px;
-  overflow-wrap: break-word; }
+  white-space: nowrap; }
 
 .log .__info {
   color: #43b0e6; }
@@ -5536,6 +5536,14 @@ tags-input .tags.focused {
   cursor: not-allowed;
   filter: alpha(opacity=60);
   opacity: .6; }
+
+input:-moz-read-only {
+  opacity: .6;
+  pointer-events: none; }
+
+input:read-only {
+  opacity: .6;
+  pointer-events: none; }
 
 .table .table-item:hover,
 .__items .list-item:hover,
