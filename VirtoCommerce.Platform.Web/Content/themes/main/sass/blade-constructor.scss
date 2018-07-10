@@ -14,6 +14,29 @@ body {
                             display: flex;
                             justify-content: space-between;
                             align-items: center;
+                            // block with search and filter
+                            .blade-search-panel {
+                                display: flex;
+                                align-items: center;
+                                // block with input "Search keyword"
+                                .form-input {
+                                    min-width: 190px;
+
+                                    input{
+                                        padding-right: 30px;    // cross-icon compensation
+                                    }
+                                }
+
+                                // search filter block/dropdown
+                                .__search {
+                                    margin-right: 10px;
+                                }
+
+                                // search dropdown block
+                                .seacrh-filter {
+                                    min-width: 190px;
+                                }
+                            }
 
                             .form-count {
                                 position: relative;
@@ -23,18 +46,6 @@ body {
                                 right: 0;
                                 transform: none;
                             }
-                        }
-                        // block with input "Search keyword"
-                        .form-input {
-                            min-width: 190px;
-
-                            &.__search {
-                                margin-right: 0;
-                            }
-                        }
-                        // search dropdown block
-                        .seacrh-filter {
-                            min-width: 190px;
                         }
                     }
                 }
