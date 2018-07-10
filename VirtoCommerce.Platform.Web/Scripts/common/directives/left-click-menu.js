@@ -1,4 +1,4 @@
-// leftClickMenu based on: ng-context-menu - v1.0.2 - An AngularJS directive to display a context menu when a right-click event is triggered
+﻿// leftClickMenu based on: ng-context-menu - v1.0.2 - An AngularJS directive to display a context menu when a right-click event is triggered
 angular
     .module('platformWebApp')
     .directive("leftClickMenu", ["$document", "ContextMenuService", function ($document, ContextMenuService) {
@@ -17,25 +17,37 @@ angular
 
                     var doc = $document[0].documentElement;
                     var docLeft = (window.pageXOffset || doc.scrollLeft) -
-                                  (doc.clientLeft || 0),
+                        (doc.clientLeft || 0),
                         docTop = (window.pageYOffset || doc.scrollTop) -
-                                 (doc.clientTop || 0),
+                            (doc.clientTop || 0),
                         elementWidth = menuElement[0].scrollWidth,
                         elementHeight = menuElement[0].scrollHeight;
                     var docWidth = doc.clientWidth + docLeft,
-                      docHeight = doc.clientHeight + docTop,
-                      totalWidth = elementWidth + event.pageX,
-                      totalHeight = elementHeight + event.pageY,
-                      left = Math.max(event.pageX - docLeft, 0),
-                      top = Math.max(event.pageY - docTop, 0);
+                        docHeight = doc.clientHeight + docTop,
+                        totalWidth = elementWidth + event.pageX,
+                        totalHeight = elementHeight + event.pageY,
+                        left = Math.max(event.pageX - docLeft, 0),
+                        top = Math.max(event.pageY - docTop, 0);
 
                     if (totalWidth > docWidth) {
                         left = left - (totalWidth - docWidth);
                     }
 
+                    let scrollbarHeight = 20;
                     if (totalHeight > docHeight) {
-                        top = top - (totalHeight - docHeight);
+                        top = top - (totalHeight - docHeight - elementHeight + scrollbarHeight);
                     }
+
+                    let maxChildTopOffset = 0;
+                    $.map(menuElement.children(), function (item) {
+                        let height = $(item).find('ul').height();
+                        let topPosition = $(item).position().top;
+                        let bottomPosition = height + topPosition;
+                        if (bottomPosition > maxChildTopOffset)
+                            maxChildTopOffset = bottomPosition;
+                    });
+
+                    top -= maxChildTopOffset;
 
                     menuElement.css('top', top + 'px');
                     menuElement.css('left', left + 'px');
@@ -58,7 +70,7 @@ angular
                             close(ContextMenuService.menuElement);
                         }
                         ContextMenuService.menuElement = angular.element(
-                          document.getElementById($attrs.target)
+                            document.getElementById($attrs.target)
                         );
                         ContextMenuService.element = event.target;
                         //console.log('set', ContextMenuService.element);
@@ -85,9 +97,9 @@ angular
 
                 function handleClickEvent(event) {
                     if (!$scope.disabled() &&
-                      opened &&
-                      (event.button !== 2 ||
-                       event.target !== ContextMenuService.element)) {
+                        opened &&
+                        (event.button !== 2 ||
+                            event.target !== ContextMenuService.element)) {
                         $scope.$apply(function () {
                             close(ContextMenuService.menuElement);
                         });
