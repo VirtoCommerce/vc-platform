@@ -4565,7 +4565,7 @@ tags-input .tags.focused {
   margin: 15px 0;
   overflow: auto;
   padding: 20px;
-  overflow-wrap: break-word; }
+  white-space: nowrap; }
 
 .log .__info {
   color: #43b0e6; }
