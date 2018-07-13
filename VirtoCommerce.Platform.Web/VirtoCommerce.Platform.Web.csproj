@@ -381,6 +381,7 @@
     <Content Include="Scripts\app\userProfile\userProfile.js" />
     <Content Include="Scripts\common\directives\angular-scroll-complete.js" />
     <Content Include="Scripts\common\directives\dateTime-picker.js" />
+    <Content Include="Scripts\common\directives\chars-count.js" />
     <Content Include="Scripts\common\directives\multipleAttr.js" />
     <Content Include="Scripts\common\directives\tooltip.js" />
     <Content Include="Scripts\common\directives\metaform.js" />
