@@ -414,7 +414,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("users/{userId}/validatepasswordresettoken")]
         [ResponseType(typeof(bool))]
         [AllowAnonymous]
-        public async Task<IHttpActionResult> ValidatePasswordResetToken(string userId, string token)
+        public async Task<IHttpActionResult> ValidatePasswordResetToken(string userId, [FromUri] string token)
         {
             var result = await _securityService.ValidatePasswordResetTokenAsync(userId, token);
             return Ok(result);
