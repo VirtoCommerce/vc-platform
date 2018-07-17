@@ -33,7 +33,7 @@
     };
 
     authContext.validatepasswordresettoken = function (data) {
-        return $http.get(serviceBase + 'users/' + data.userId + '/validatepasswordresettoken?token=' + data.code).then(
+        return $http.post(serviceBase + 'users/' + data.userId + '/validatepasswordresettoken', { token: data.code }).then(
             function (results) {
                 return results.data;
             });

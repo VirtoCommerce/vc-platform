@@ -319,6 +319,7 @@
     <Compile Include="Controllers\Api\LicensingController.cs" />
     <Compile Include="Controllers\Api\ProfilesController.cs" />
     <Compile Include="Controllers\Api\AssetEntryController.cs" />
+    <Compile Include="Model\Security\ResetPasswordTokenInfo.cs" />
     <Compile Include="Converters\Modularity\ModuleDescriptorConverter.cs" />
     <Compile Include="Extensions\AppBuilderExtensions.cs" />
     <Compile Include="Hangfire\HangfireLauncher.cs" />
