@@ -51,10 +51,10 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
         public void UnregisterNotificationType<T>()
         {
-            if(!_unregisteredNotifications.Contains(typeof(T)))
+            if (!_unregisteredNotifications.Contains(typeof(T)))
             {
                 _unregisteredNotifications.Add(typeof(T));
-            }         
+            }
         }
 
         public Notification[] GetNotifications()
@@ -70,7 +70,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             {
                 ResolveTemplate(notification);
                 result = notification.SendNotification();
-            }            
+            }
             return result;
         }
 
@@ -123,11 +123,14 @@ namespace VirtoCommerce.Platform.Data.Notifications
         public Notification GetNewNotification(string type, string objectId, string objectTypeId, string language)
         {
             var notifications = GetNotifications();
-            var retVal = notifications.FirstOrDefault(x => x.GetType().Name == type);
+
+            //search with type (with derived types) and language first then with just type
+            var retVal = notifications.FirstOrDefault(x => x.GetType().Name == type && x.NotificationTemplate != null && x.NotificationTemplate.Language.EqualsInvariant(language))
+                         ?? notifications.FirstOrDefault(x => x.GetType().GetTypeInheritanceChain().Select(y => y.Name).Contains(type) && x.NotificationTemplate != null && x.NotificationTemplate.Language.EqualsInvariant(language));
             if (retVal == null)
             {
-                //try to find in derived types
-                retVal = notifications.FirstOrDefault(x => x.GetType().GetTypeInheritanceChain().Select(y => y.Name).Contains(type));
+                retVal = notifications.FirstOrDefault(x => x.GetType().Name == type)
+                    ?? notifications.FirstOrDefault(x => x.GetType().GetTypeInheritanceChain().Select(y => y.Name).Contains(type));
             }
             if (retVal == null)
             {
@@ -221,7 +224,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 retVal.Notifications = query.Skip(criteria.Skip)
                                             .Take(criteria.Take)
                                             .ToArray()
-                                            .Select(GetNotificationCoreModel)                                          
+                                            .Select(GetNotificationCoreModel)
                                             .ToList();
             }
 
