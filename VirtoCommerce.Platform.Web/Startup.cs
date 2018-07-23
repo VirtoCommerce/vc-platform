@@ -21,6 +21,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
@@ -135,7 +136,7 @@ namespace VirtoCommerce.Platform.Web
             };
             var hangfireLauncher = new HangfireLauncher(hangfireOptions);
 
-            var authenticationOptions = new AuthenticationOptions
+            var authenticationOptions = new AuthenticationOptions(ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:AuthenticationType", DefaultAuthenticationTypes.ApplicationCookie))
             {
                 AllowOnlyAlphanumericUserNames = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AllowOnlyAlphanumericUserNames", false),
                 RequireUniqueEmail = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:RequireUniqueEmail", false),
@@ -164,6 +165,18 @@ namespace VirtoCommerce.Platform.Web
                 ApiKeysEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.Enabled", true),
                 ApiKeysHttpHeaderName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
                 ApiKeysQueryStringParameterName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
+
+                AuthenticationMode = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:AuthenticationMode", AuthenticationMode.Active),
+                CookieDomain = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:Domain", string.Empty),
+                CookieHttpOnly = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:HttpOnly", true),
+                CookieName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:Name", ".AspNet.Cookies"),
+                CookiePath = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:Path", "/"),
+                CookieSecure = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:Secure", CookieSecureOption.SameAsRequest),
+                ExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:ExpireTimeSpan", TimeSpan.FromDays(14)),
+                LoginPath = new PathString(ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:LoginPath", string.Empty)),
+                LogoutPath = new PathString(ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:LogoutPath", string.Empty)),
+                ReturnUrlParameter = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:ReturnUrlParameter", string.Empty),
+                SlidingExpiration = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:SlidingExpiration", true)
             };
 
             container.RegisterInstance(authenticationOptions);
@@ -223,7 +236,7 @@ namespace VirtoCommerce.Platform.Web
 
             // Register MVC areas unless running in the Web Platform Installer mode
             if (IsApplication)
-            { 
+            {
                 AreaRegistration.RegisterAllAreas();
             }
 
@@ -232,7 +245,7 @@ namespace VirtoCommerce.Platform.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 
             if (IsApplication)
-            { 
+            {
                 RouteConfig.RegisterRoutes(RouteTable.Routes);
             }
 
@@ -677,9 +690,9 @@ namespace VirtoCommerce.Platform.Web
                 container.RegisterInstance<IBlobStorageProvider>(azureBlobProvider);
                 container.RegisterInstance<IBlobUrlResolver>(azureBlobProvider);
             }
-            
-            container.RegisterType <IAssetEntryService, AssetEntryService>(new ContainerControlledLifetimeManager());
-            container.RegisterType <IAssetEntrySearchService, AssetEntryService>(new ContainerControlledLifetimeManager());
+
+            container.RegisterType<IAssetEntryService, AssetEntryService>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IAssetEntrySearchService, AssetEntryService>(new ContainerControlledLifetimeManager());
 
             #endregion
 

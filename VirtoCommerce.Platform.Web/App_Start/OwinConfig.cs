@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseCors(CorsOptions.AllowAll);
 
             var authenticationOptions = container.Resolve<AuthenticationOptions>();
-
+            
             if (authenticationOptions.CookiesEnabled)
             {
                 // Enable the application to use a cookie to store information for the signed in user
@@ -37,15 +37,15 @@ namespace VirtoCommerce.Platform.Web
                 // Configure the sign in cookie
                 app.UseCookieAuthentication(new CookieAuthenticationOptions
                 {
-                    AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                    //LoginPath = new PathString("/Account/Logon"),
+                    AuthenticationType = authenticationOptions.AuthenticationType,
+                    //LoginPath = authenticationOptions.LoginPath,
                     Provider = new CookieAuthenticationProvider
                     {
                         // Enables the application to validate the security stamp when the user logs in.
                         // This is a security feature which is used when you change a password or add an external login to your account.  
                         OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
                             validateInterval: authenticationOptions.CookiesValidateInterval,
-                            regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                            regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager, authenticationOptions))
                     }
                 });
             }
