@@ -7,17 +7,17 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
 {
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
     {
+        private readonly Core.Security.AuthenticationOptions _authenticationOptions;
+
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager, Core.Security.AuthenticationOptions authenticationOptions)
             : base(userManager, authenticationManager)
         {
-            AuthenticationOptions = authenticationOptions;
+            _authenticationOptions = authenticationOptions;
         }
-
-        protected Core.Security.AuthenticationOptions AuthenticationOptions { get; private set; }
-
+        
         public override Task<ClaimsIdentity> CreateUserIdentityAsync(ApplicationUser user)
         {
-            return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager, AuthenticationOptions);
+            return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager, _authenticationOptions.AuthenticationType);
         }
     }
 }

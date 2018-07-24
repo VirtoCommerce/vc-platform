@@ -136,7 +136,7 @@ namespace VirtoCommerce.Platform.Web
             };
             var hangfireLauncher = new HangfireLauncher(hangfireOptions);
 
-            var authenticationOptions = new AuthenticationOptions(ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:AuthenticationType", DefaultAuthenticationTypes.ApplicationCookie))
+            var authenticationOptions = new AuthenticationOptions
             {
                 AllowOnlyAlphanumericUserNames = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AllowOnlyAlphanumericUserNames", false),
                 RequireUniqueEmail = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:RequireUniqueEmail", false),
@@ -166,10 +166,11 @@ namespace VirtoCommerce.Platform.Web
                 ApiKeysHttpHeaderName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.HttpHeaderName", "api_key"),
                 ApiKeysQueryStringParameterName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName", "api_key"),
 
+                AuthenticationType = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:AuthenticationType", DefaultAuthenticationTypes.ApplicationCookie),
                 AuthenticationMode = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:AuthenticationMode", AuthenticationMode.Active),
                 CookieDomain = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:Domain", string.Empty),
                 CookieHttpOnly = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:HttpOnly", true),
-                CookieName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:Name", ".AspNet.Cookies"),
+                CookieName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:Name", CookieAuthenticationDefaults.CookiePrefix + CookieAuthenticationDefaults.AuthenticationType),
                 CookiePath = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:Path", "/"),
                 CookieSecure = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:Secure", CookieSecureOption.SameAsRequest),
                 ExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:ExpireTimeSpan", TimeSpan.FromDays(14)),

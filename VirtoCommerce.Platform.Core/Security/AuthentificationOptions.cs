@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class AuthenticationOptions : Microsoft.Owin.Security.AuthenticationOptions
+    public class AuthenticationOptions
     {
-        private string _cookieName;
-
-        public AuthenticationOptions(string authenticationType) : base(authenticationType)
-        {
-        }
-
         #region User validation
 
         public bool AllowOnlyAlphanumericUserNames { get; set; }
@@ -58,6 +53,21 @@ namespace VirtoCommerce.Platform.Core.Security
         #endregion
 
         #region Cookie
+        
+        /// <summary>
+        /// The AuthenticationType in the options corresponds to the IIdentity AuthenticationType property. A different
+        /// value may be assigned in order to use the same authentication middleware type more than once in a pipeline.
+        /// </summary>
+        public string AuthenticationType { get; set; }
+
+        /// <summary>
+        /// If Active the authentication middleware alter the request user coming in and
+        /// alter 401 Unauthorized responses going out. If Passive the authentication middleware will only provide
+        /// identity and alter responses when explicitly indicated by the AuthenticationType.
+        /// </summary>
+        public AuthenticationMode AuthenticationMode { get; set; }
+
+        private string _cookieName;
 
         /// <summary>
         /// Determines the cookie name used to persist the identity. The default value is ".AspNet.Cookies".
@@ -69,11 +79,7 @@ namespace VirtoCommerce.Platform.Core.Security
             get { return _cookieName; }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-                _cookieName = value;
+                _cookieName = value ?? throw new ArgumentNullException("value");
             }
         }
 
