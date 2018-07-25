@@ -1,4 +1,4 @@
-﻿<script type="text/ng-template" id="dShortText.html">
+<script type="text/ng-template" id="dShortText.html">
     <div class="form-input">
         <input ng-required="currentEntity.isRequired"
                ng-model="context.currentPropValues[0].value"
@@ -62,6 +62,7 @@
     <div class="form-input __calendar">
         <input ng-model="context.currentPropValues[0].value"
                datepicker-popup
+               ng-required="currentEntity.isRequired"
                ng-disabled="currentEntity.isReadonly"
                is-open="datepickers.DateTime"
                placeholder="{{ 'platform.genericValueInput.placeholders.date-time' | translate}}">

@@ -24,9 +24,16 @@
                 return authContext.isAuthenticated;
             });
     };
-
+    
     authContext.requestpasswordreset = function (data) {
         return $http.post(serviceBase + 'users/' + data.userName + '/requestpasswordreset/').then(
+            function (results) {
+                return results.data;
+            });
+    };
+
+    authContext.validatepasswordresettoken = function (data) {
+        return $http.post(serviceBase + 'users/' + data.userId + '/validatepasswordresettoken', { token: data.code }).then(
             function (results) {
                 return results.data;
             });

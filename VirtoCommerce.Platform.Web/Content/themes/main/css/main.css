@@ -219,6 +219,22 @@ fieldset {
 .window-cnt .form-label {
   margin-left: 0; }
 
+/* General classes for text */
+.text-error {
+  color: #a94442; }
+
+.text-success {
+  color: #3c763d; }
+
+.text-warning {
+  color: #8a6d3b; }
+
+.text-info {
+  color: #31708f; }
+
+.text-notify {
+  color: #999; }
+
 /* Lists */
 ul,
 ol {
@@ -726,9 +742,8 @@ h3 {
 .ui-grid-header {
   border-color: #dee9f0; }
 
-.ui-grid-viewport {
-  overflow-x: auto !important; }
-
+/*.ui-grid-viewport
+  overflow-x: auto !important*/
 .ui-grid-top-panel {
   background: rgba(0, 0, 0, 0.024); }
 
@@ -1138,6 +1153,10 @@ fieldset + fieldset {
 
 .form {
   padding: 15px 0; }
+  .form .chars-counter {
+    float: right;
+    margin-bottom: 5px;
+    font-size: 14px; }
   .form > .form-group:first-child {
     margin-top: 0; }
     .form > .form-group:first-child > .column > .form-group:first-child {
@@ -3419,7 +3438,14 @@ tags-input .tags.focused {
         right: 0;
         top: 0;
         z-index: 300;
-        filter: alpha(opacity=50); }
+        filter: alpha(opacity=50);
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        -moz-box-sizing: border-box;
+             box-sizing: border-box; }
         .blade .blade-head .blade-status .status-message::after {
           color: #fff;
           content: '';
@@ -4565,7 +4591,7 @@ tags-input .tags.focused {
   margin: 15px 0;
   overflow: auto;
   padding: 20px;
-  overflow-wrap: break-word; }
+  white-space: nowrap; }
 
 .log .__info {
   color: #43b0e6; }
