@@ -1,4 +1,4 @@
-// leftClickMenu based on: ng-context-menu - v1.0.2 - An AngularJS directive to display a context menu when a right-click event is triggered
+﻿// leftClickMenu based on: ng-context-menu - v1.0.2 - An AngularJS directive to display a context menu when a right-click event is triggered
 angular
     .module('platformWebApp')
     .directive("leftClickMenu", ["$document", "ContextMenuService", function ($document, ContextMenuService) {
@@ -17,24 +17,39 @@ angular
 
                     var doc = $document[0].documentElement;
                     var docLeft = (window.pageXOffset || doc.scrollLeft) -
-                                  (doc.clientLeft || 0),
+                        (doc.clientLeft || 0),
                         docTop = (window.pageYOffset || doc.scrollTop) -
-                                 (doc.clientTop || 0),
+                            (doc.clientTop || 0),
                         elementWidth = menuElement[0].scrollWidth,
                         elementHeight = menuElement[0].scrollHeight;
                     var docWidth = doc.clientWidth + docLeft,
-                      docHeight = doc.clientHeight + docTop,
-                      totalWidth = elementWidth + event.pageX,
-                      totalHeight = elementHeight + event.pageY,
-                      left = Math.max(event.pageX - docLeft, 0),
-                      top = Math.max(event.pageY - docTop, 0);
+                        docHeight = doc.clientHeight + docTop,
+                        totalWidth = elementWidth + event.pageX,
+                        totalHeight = elementHeight + event.pageY,
+                        left = Math.max(event.pageX - docLeft, 0),
+                        top = Math.max(event.pageY - docTop, 0);
 
                     if (totalWidth > docWidth) {
                         left = left - (totalWidth - docWidth);
                     }
 
-                    if (totalHeight > docHeight) {
-                        top = top - (totalHeight - docHeight);
+                    let maxTopOffset = 0;
+                    // get max bottom position of children
+                    $.map(menuElement.children(), function (item) {
+                        let height = $(item).find('ul').height();
+                        let topPosition = $(item).position().top;
+                        let bottomPosition = height + topPosition;
+                        if (bottomPosition > maxTopOffset)
+                            maxTopOffset = bottomPosition;
+                    });
+
+                    // get max bottom position of all context menu
+                    if (elementHeight > maxTopOffset)
+                        maxTopOffset = elementHeight;
+
+                    let scrollbarHeight = 20;
+                    if (event.pageY + maxTopOffset > docHeight) {
+                        top = top - (event.pageY - docHeight + maxTopOffset + scrollbarHeight);
                     }
 
                     menuElement.css('top', top + 'px');
@@ -58,10 +73,9 @@ angular
                             close(ContextMenuService.menuElement);
                         }
                         ContextMenuService.menuElement = angular.element(
-                          document.getElementById($attrs.target)
+                            document.getElementById($attrs.target)
                         );
                         ContextMenuService.element = event.target;
-                        //console.log('set', ContextMenuService.element);
 
                         event.preventDefault();
                         event.stopPropagation();
@@ -75,7 +89,6 @@ angular
                 });
 
                 function handleKeyUpEvent(event) {
-                    //console.log('keyup');
                     if (!$scope.disabled() && opened && event.keyCode === 27) {
                         $scope.$apply(function () {
                             close(ContextMenuService.menuElement);
@@ -85,9 +98,9 @@ angular
 
                 function handleClickEvent(event) {
                     if (!$scope.disabled() &&
-                      opened &&
-                      (event.button !== 2 ||
-                       event.target !== ContextMenuService.element)) {
+                        opened &&
+                        (event.button !== 2 ||
+                            event.target !== ContextMenuService.element)) {
                         $scope.$apply(function () {
                             close(ContextMenuService.menuElement);
                         });
@@ -101,7 +114,6 @@ angular
                 $document.bind('contextmenu', handleClickEvent);
 
                 $scope.$on('$destroy', function () {
-                    //console.log('destroy');
                     $document.unbind('keyup', handleKeyUpEvent);
                     $document.unbind('click', handleClickEvent);
                     $document.unbind('contextmenu', handleClickEvent);

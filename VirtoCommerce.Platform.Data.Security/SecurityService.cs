@@ -376,6 +376,15 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
+        public async Task<bool> ValidatePasswordResetTokenAsync(string userId, string token)
+        {
+            using (var userManager = _userManagerFactory())
+            {
+                // "ResetPassword" is hardcoded string in ASP.NET
+                return await userManager.VerifyUserTokenAsync(userId, "ResetPassword", token);
+            }
+        }
+
         public virtual Permission[] GetAllPermissions()
         {
             return _cacheManager.Get("AllPermissions", SecurityConstants.CacheRegion, LoadAllPermissions);
