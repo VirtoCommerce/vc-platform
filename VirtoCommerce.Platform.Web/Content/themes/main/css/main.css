@@ -742,9 +742,8 @@ h3 {
 .ui-grid-header {
   border-color: #dee9f0; }
 
-.ui-grid-viewport {
-  overflow-x: auto !important; }
-
+/*.ui-grid-viewport
+  overflow-x: auto !important*/
 .ui-grid-top-panel {
   background: rgba(0, 0, 0, 0.024); }
 
