@@ -1,3 +1,15 @@
+/* General classes for text */
+.text-error
+  color: $errorNotifyColor
+.text-success
+  color: $successNotifyColor
+.text-warning
+  color: $warningNotifyColor
+.text-info
+  color: $infoNotifyColor
+.text-notify
+  color: $noteNotifyColor
+
 /* Lists */
 ul,
 ol
@@ -1594,6 +1606,8 @@ tags-input
         top: 0
         z-index: 300
         filter: alpha(opacity=50)
+        display: flex
+        box-sizing: border-box
         &::after
           color: $whiteColor
           content: ''

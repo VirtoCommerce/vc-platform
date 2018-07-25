@@ -68,17 +68,26 @@
             templateUrl: '$(Platform)/Scripts/app/security/dialogs/resetPasswordDialog.tpl.html',
             controller: ['$rootScope', '$scope', '$stateParams', 'platformWebApp.authService', function ($rootScope, $scope, $stateParams, authService) {
                 $scope.viewModel = $stateParams;
+                $scope.isValidToken = true;
+                $scope.isLoading = true;
+                authService.validatepasswordresettoken($scope.viewModel).then(function (retVal) {
+                    $scope.isValidToken = retVal;
+                    $scope.isLoading = false;
+                }, function (response) {
+                    $scope.isLoading = false;
+                    $scope.errors = response.data.errors;
+                });
                 $scope.ok = function () {
                     $scope.errorMessage = null;
                     $scope.isLoading = true;
-                    authService.resetpassword($scope.viewModel).then(function (retVal) {
+                    authService.resetpassword($scope.viewModel).then(function(retVal) {
                         $scope.isLoading = false;
                         $rootScope.preventLoginDialog = false;
                         angular.extend($scope, retVal);
                     }, function (response) {
-                        $scope.isLoading = false;
                         $scope.viewModel.newPassword = $scope.viewModel.newPassword2 = undefined;
                         $scope.errors = response.data.errors;
+                        $scope.isLoading = false;
                     });
                 };
             }]
