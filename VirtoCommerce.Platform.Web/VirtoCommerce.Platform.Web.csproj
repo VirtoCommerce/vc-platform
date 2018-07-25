@@ -526,6 +526,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Content\themes\main\sass\blade-constructor.scss" />
     <None Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />

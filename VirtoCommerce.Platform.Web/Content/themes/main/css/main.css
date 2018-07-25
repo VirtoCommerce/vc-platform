@@ -5977,4 +5977,53 @@ a:hover,
       left: auto;
       right: 72px !important; }
 
+/*
+    This file contains all actual styles, which used to override old incorrect styles
+
+    Namespace -  bc
+*/
+body .blade .blade-wrapper .blade-container .bc.blade-static .form-group {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+     -moz-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+  body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .blade-search-panel {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+       -moz-box-align: center;
+        -ms-flex-align: center;
+            align-items: center; }
+    body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .blade-search-panel .form-input {
+      min-width: 190px; }
+      body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .blade-search-panel .form-input input {
+        padding-right: 30px; }
+    body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .blade-search-panel .__search {
+      margin-right: 10px; }
+    body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .blade-search-panel .seacrh-filter {
+      min-width: 190px; }
+  body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .form-count {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    -webkit-transform: none;
+            transform: none; }
+
 /*# sourceMappingURL=main.css.map */
