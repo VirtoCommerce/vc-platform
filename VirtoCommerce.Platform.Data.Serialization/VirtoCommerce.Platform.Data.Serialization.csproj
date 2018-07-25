@@ -64,6 +64,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="VirtoCommerce.Platform.Data.Serialization.nuspec">
       <SubType>Designer</SubType>
     </None>

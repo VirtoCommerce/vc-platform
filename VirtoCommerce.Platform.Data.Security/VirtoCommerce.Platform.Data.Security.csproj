@@ -118,6 +118,7 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Identity\ApplicationUserStore.cs" />
+    <Compile Include="Identity\AuthentificationOptions.cs" />
     <Compile Include="Identity\IClaimsIdentityProvider.cs" />
     <Compile Include="Identity\IdentityDatabaseInitializer.cs" />
     <Compile Include="Identity\Migrations\201411101625303_InitialCreate.cs" />
