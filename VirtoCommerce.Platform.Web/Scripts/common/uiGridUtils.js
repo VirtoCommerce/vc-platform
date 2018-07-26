@@ -234,19 +234,35 @@
     }])
 
     // auto height and additional class for ui-grid
-    .directive('uiGridHeight', ['$timeout', '$window', function ($timeout, $window) {
+    // attr =  the selector in which the part of the grid is located
+    .directive('uiGridHeight', ['$timeout', '$window', '$rootScope', function ($timeout, $window, $rootScope) {
         return {
             restrict: 'A',
             link: {
-                pre: function (scope, element) {
+                pre: function (scope, element, attrs) {
+                    //If the blade is not only grid.
+                    var nonGridPart;
+                    var heightAttr = attrs["uiGridHeight"];
+                    if (heightAttr)
+                        nonGridPart = $(heightAttr).siblings();
+
                     var bladeInner = $(element).parents('.blade-inner');
-                    bladeInner.addClass('ui-grid-no-scroll');
+
+                    if (!heightAttr)
+                        bladeInner.addClass('ui-grid-no-scroll');
 
                     var setGridHeight = function () {
                         $timeout(function () {
-                            $(element).height(bladeInner.height());
+                            if (heightAttr) {
+                                var result = nonGridPart.height() / bladeInner.height();
+                                //values selected by experience
+                                $(element).height(result < 0.7 ? bladeInner.height() * 0.3 : nonGridPart.height() * 0.5);
+                            } else {
+                                $(element).height(bladeInner.height());
+                            }
                         });
                     };
+
                     scope.$watch('blade.isExpanded', setGridHeight);
                     scope.$watch('pageSettings.totalItems', setGridHeight);
                     angular.element($window).bind('resize', setGridHeight);
