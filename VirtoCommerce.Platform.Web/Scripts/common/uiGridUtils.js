@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
     .config(['$provide', 'uiGridConstants', function ($provide, uiGridConstants) {
         $provide.decorator('GridOptions', ['$delegate', '$localStorage', '$translate', 'platformWebApp.bladeNavigationService', function ($delegate, $localStorage, $translate, bladeNavigationService) {
             var gridOptions = angular.copy($delegate);
@@ -13,7 +13,8 @@
                     // extend saved columns with custom columnDef information (e.g. cellTemplate, displayName)
                     var foundDef;
                     _.each(savedState.columns, function (x) {
-                        if (foundDef = _.findWhere(initOptions.columnDefs, { name: x.name })) {
+                        foundDef = _.findWhere(initOptions.columnDefs, { name: x.name });
+                        if (foundDef) {
                             foundDef.sort = x.sort;
                             foundDef.width = x.width || foundDef.width;
                             foundDef.visible = x.visible;
@@ -63,15 +64,16 @@
                                 //}, 10);
                             }
 
+                            var saveState = function () {
+                                $localStorage['gridState:' + blade.template] = gridApi.saveState.save();
+                            };
+
                             if (gridApi.colResizable)
                                 gridApi.colResizable.on.columnSizeChanged($scope, saveState);
                             if (gridApi.colMovable)
                                 gridApi.colMovable.on.columnPositionChanged($scope, saveState);
                             gridApi.core.on.columnVisibilityChanged($scope, saveState);
-                            gridApi.core.on.sortChanged($scope, saveState);
-                            function saveState() {
-                                $localStorage['gridState:' + blade.template] = gridApi.saveState.save();
-                            }
+                            gridApi.core.on.sortChanged($scope, saveState);                        
                         }
 
                         gridApi.grid.registerDataChangeCallback(processMissingColumns, [uiGridConstants.dataChange.ROW]);
