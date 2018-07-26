@@ -1,6 +1,5 @@
 ﻿using System;
 using CacheManager.Core;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
@@ -29,7 +28,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseCors(CorsOptions.AllowAll);
 
             var authenticationOptions = container.Resolve<AuthenticationOptions>();
-
+            
             if (authenticationOptions.CookiesEnabled)
             {
                 // Enable the application to use a cookie to store information for the signed in user
@@ -37,15 +36,25 @@ namespace VirtoCommerce.Platform.Web
                 // Configure the sign in cookie
                 app.UseCookieAuthentication(new CookieAuthenticationOptions
                 {
-                    AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                    //LoginPath = new PathString("/Account/Logon"),
+                    AuthenticationMode = authenticationOptions.AuthenticationMode,
+                    AuthenticationType = authenticationOptions.AuthenticationType,
+                    CookieDomain = authenticationOptions.CookieDomain,
+                    CookieHttpOnly = authenticationOptions.CookieHttpOnly,
+                    CookieName = authenticationOptions.CookieName,
+                    CookiePath = authenticationOptions.CookiePath,
+                    CookieSecure = authenticationOptions.CookieSecure,
+                    ExpireTimeSpan = authenticationOptions.ExpireTimeSpan,
+                    LoginPath = authenticationOptions.LoginPath,
+                    LogoutPath = authenticationOptions.LogoutPath,
+                    ReturnUrlParameter = authenticationOptions.ReturnUrlParameter,
+                    SlidingExpiration = authenticationOptions.SlidingExpiration,
                     Provider = new CookieAuthenticationProvider
                     {
                         // Enables the application to validate the security stamp when the user logs in.
                         // This is a security feature which is used when you change a password or add an external login to your account.  
                         OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
                             validateInterval: authenticationOptions.CookiesValidateInterval,
-                            regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                            regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager, authenticationOptions.AuthenticationType))
                     }
                 });
             }

@@ -423,7 +423,8 @@
           "repeat-password": "Repeat password"
         },
         "validations": {
-          "repeat-password": "New passwords doesn't match!"
+          "repeat-password": "New passwords doesn't match!",
+          "invalid-token": "Reset password token is invalid or expired" 
         },
         "placeholders": {
           "new-password": "Enter new password",

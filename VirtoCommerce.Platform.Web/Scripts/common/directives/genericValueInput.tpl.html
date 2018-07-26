@@ -1,6 +1,7 @@
-﻿<script type="text/ng-template" id="dShortText.html">
+<script type="text/ng-template" id="dShortText.html">
     <div class="form-input">
         <input ng-required="currentEntity.isRequired"
+               ng-readonly="currentEntity.isReadonly"
                ng-model="context.currentPropValues[0].value"
                placeholder="{{ 'platform.genericValueInput.placeholders.short-text' | translate}}">
     </div>
@@ -9,6 +10,7 @@
 <script type="text/ng-template" id="dEmail.html">
     <div class="form-input">
         <input ng-required="currentEntity.isRequired"
+               ng-readonly="currentEntity.isReadonly"
                ng-model="context.currentPropValues[0].value"
                placeholder="{{ 'platform.genericValueInput.placeholders.email' | translate}}"
                type="email" />
@@ -17,6 +19,7 @@
 <script type="text/ng-template" id="dSecureString.html">
     <div class="form-input">
         <input ng-required="currentEntity.isRequired"
+               ng-readonly="currentEntity.isReadonly"
                ng-model="context.currentPropValues[0].value"
                type="password" placeholder="{{ 'platform.genericValueInput.placeholders.secure-string' | translate}}">
     </div>
@@ -24,6 +27,7 @@
 <script type="text/ng-template" id="dUrl.html">
     <div class="form-input">
         <input ng-required="currentEntity.isRequired"
+               ng-readonly="currentEntity.isReadonly"
                ng-model="context.currentPropValues[0].value"
                type="url" placeholder="{{ 'platform.genericValueInput.placeholders.url' | translate}}">
     </div>
@@ -31,6 +35,7 @@
 <script type="text/ng-template" id="dLongText.html">
     <div class="form-input">
         <textarea ng-required="currentEntity.isRequired"
+                  ng-readonly="currentEntity.isReadonly"
                   ng-model="context.currentPropValues[0].value"
                   placeholder="{{ 'platform.genericValueInput.placeholders.long-text' | translate}}"></textarea>
     </div>
@@ -38,6 +43,7 @@
 <script type="text/ng-template" id="dCode.html">
     <div class="form-input">
         <ui-codemirror ng-required="currentEntity.isRequired"
+                       ng-readonly="currentEntity.isReadonly"
                        ng-model="context.currentPropValues[0].value"
                        ui-codemirror-opts="editorOptions"></ui-codemirror>
     </div>
@@ -46,6 +52,7 @@
     <div class="form-input __number">
         <input smart-float num-type="integer"
                ng-required="currentEntity.isRequired"
+               ng-readonly="currentEntity.isReadonly"
                ng-model="context.currentPropValues[0].value"
                placeholder="{{ 'platform.genericValueInput.placeholders.integer' | translate}}" />
     </div>
@@ -54,6 +61,7 @@
     <div class="form-input __number">
         <input smart-float num-type="float"
                ng-required="currentEntity.isRequired"
+               ng-readonly="currentEntity.isReadonly"
                ng-model="context.currentPropValues[0].value"
                placeholder="{{ 'platform.genericValueInput.placeholders.number' | translate}}" />
     </div>
@@ -62,6 +70,7 @@
     <div class="form-input __calendar">
         <input ng-model="context.currentPropValues[0].value"
                datepicker-popup
+               ng-required="currentEntity.isRequired"
                ng-disabled="currentEntity.isReadonly"
                is-open="datepickers.DateTime"
                placeholder="{{ 'platform.genericValueInput.placeholders.date-time' | translate}}">
@@ -129,6 +138,7 @@
         <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
         <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
         <input ng-required="currentEntity.isRequired"
+               ng-readonly="currentEntity.isReadonly"
                ng-model="propValue.value"
                placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">
     </div>
@@ -138,6 +148,7 @@
         <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
         <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
         <textarea ng-required="currentEntity.isRequired"
+                  ng-readonly="currentEntity.isReadonly"
                   ng-model="propValue.value"
                   placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
     </div>
@@ -147,6 +158,7 @@
         <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
         <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
         <ui-codemirror ng-required="currentEntity.isRequired"
+                       ng-readonly="currentEntity.isReadonly"
                        ng-model="propValue.value"
                        ui-codemirror-opts="editorOptions"></ui-codemirror>
     </div>

@@ -202,8 +202,8 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="SendGrid, Version=8.0.5.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sendgrid.8.0.5\lib\SendGrid.dll</HintPath>
+    <Reference Include="SendGrid, Version=9.8.0.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sendgrid.9.9.0\lib\net452\SendGrid.dll</HintPath>
     </Reference>
     <Reference Include="SendGrid.CSharp.HTTP.Client, Version=3.0.0.0, Culture=neutral, PublicKeyToken=79219bf4e5ecaaca, processorArchitecture=MSIL">
       <HintPath>..\packages\SendGrid.CSharp.HTTP.Client.3.0.0\lib\SendGrid.CSharp.HTTP.Client.dll</HintPath>
@@ -319,6 +319,7 @@
     <Compile Include="Controllers\Api\LicensingController.cs" />
     <Compile Include="Controllers\Api\ProfilesController.cs" />
     <Compile Include="Controllers\Api\AssetEntryController.cs" />
+    <Compile Include="Model\Security\ResetPasswordTokenInfo.cs" />
     <Compile Include="Converters\Modularity\ModuleDescriptorConverter.cs" />
     <Compile Include="Extensions\AppBuilderExtensions.cs" />
     <Compile Include="Hangfire\HangfireLauncher.cs" />
@@ -381,6 +382,7 @@
     <Content Include="Scripts\app\userProfile\userProfile.js" />
     <Content Include="Scripts\common\directives\angular-scroll-complete.js" />
     <Content Include="Scripts\common\directives\dateTime-picker.js" />
+    <Content Include="Scripts\common\directives\chars-count.js" />
     <Content Include="Scripts\common\directives\multipleAttr.js" />
     <Content Include="Scripts\common\directives\tooltip.js" />
     <Content Include="Scripts\common\directives\metaform.js" />
@@ -524,6 +526,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Content\themes\main\sass\blade-constructor.scss" />
     <None Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
