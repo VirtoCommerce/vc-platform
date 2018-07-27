@@ -41,7 +41,6 @@ namespace VirtoCommerce.Platform.Web
             //Note: must match the real path (~/Scripts/.) to find source map files references from .min.js (ex. # sourceMappingURL=angular-resource.min.js.map)
             bundles.Add(
                 new ScriptBundle(Startup.VirtualRoot + "/scripts/angular")
-                    .IncludeAndFixRoot("~/Scripts/allPackages.js")
                     .IncludeDirectoryAndFixRoot("~/Scripts/codemirror/", "*.js", true)
                     .IncludeDirectoryAndFixRoot("~/Scripts/app/", "*.js", true)
                     .IncludeDirectoryAndFixRoot("~/Scripts/common/", "*.js", true)
