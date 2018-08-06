@@ -207,7 +207,7 @@ p
 
         .content p span
         {
-            color: var(--cPrimaryColor);
+            color: var(--cPrimary);
         }
 
         .content .exmpl
@@ -238,7 +238,7 @@ p
 
         .content .example.__bg
         {
-            background: #eef5f7;
+            background: var(--cBodyTracing);
         }
 
         .content .example.__construct
@@ -379,7 +379,7 @@ p
 
         .popup
         {
-            background: #eef5f7;
+            background: var(--cBodyTracing);
             display: inline-block;
             max-height: 600px;
             max-width: 800px;

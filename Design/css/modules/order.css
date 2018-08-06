@@ -15,8 +15,8 @@
 
     .list.__prices .list-item.__total
     {
-        border-top: 1px solid #dee9f0;
-        color: var(--cPrimaryColor);
+        border-top: 1px solid var(--cPrimaryLight);
+        color: var(--cPrimary);
         padding: 5px 0 0;
     }
 

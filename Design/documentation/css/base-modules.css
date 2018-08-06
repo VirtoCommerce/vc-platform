@@ -19,7 +19,7 @@
 
 .alt-description
 {
-	color: var(--cPrimaryColor) !important;
+	color: var(--cPrimary) !important;
 }
 
 /* Scroll bar */
@@ -346,7 +346,7 @@ ol
     ul li:before,
     ol li:before
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
         content: '\2014\a0 ';
     }
 
@@ -467,7 +467,7 @@ ol
 
         .list.__car-info .list-name
         {
-            color: var(--cPrimaryColor);
+            color: var(--cPrimary);
             display: block;
         }
 
@@ -531,7 +531,7 @@ ol
 
     .menu.__context .menu-item:hover
     {
-        color: var(--cPrimaryColor);
+        color: var(--cPrimary);
     }
 
         .menu.__context .menu-ico
@@ -605,7 +605,7 @@ ol
 
     .list.__tags .list-item
     {
-        background: var(--cPrimaryColor);
+        background: var(--cPrimary);
         color: var(--cWhite);
         display: inline-block;
         line-height: 1.1;
@@ -640,7 +640,7 @@ ol
 
     .list.__number .list-item::before
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
         content: counter(num) '. ';
         counter-increment: num;
         left: 0;
@@ -693,7 +693,7 @@ h3
 
 .text.__debug
 {
-    color: #a6a6a6;
+    color: var(--cIconFill);
     font-size: 11px;
     word-wrap: break-word;
 }
@@ -708,8 +708,8 @@ h3
 .text.__editable
 {
     background: var(--cGrayTracing);
-    border: 1px dashed #dee9f0;
-    color: var(--cPrimaryColor);
+    border: 1px dashed var(--cPrimaryLight);
+    color: var(--cPrimary);
     cursor: text;
     padding: 5px 10px;
 }
@@ -717,7 +717,7 @@ h3
 .text.__editable:hover,
 .text.__editable.__selected
 {
-    background-color: #ecf7fc;
+    background-color: var(--cPrimaryLightest);
     border-color: #a1c0d4;
 }
 
@@ -755,7 +755,7 @@ h3
 
 .sub-t.__border
 {
-    border-bottom: 1px solid #dee9f0;
+    border-bottom: 1px solid var(--cPrimaryLight);
     margin: 20px 0 0;
     padding: 0 0 10px;
 }
@@ -769,7 +769,7 @@ h3
 .t.__divider
 {
     background: var(--cGrayTracing);
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
     border-style: solid;
     border-width: 1px 0;
     margin: 0 -20px 10px;
@@ -818,7 +818,7 @@ h3
 
     .table .table-col
     {
-        border-color: #dee9f0;
+        border-color: var(--cPrimaryLight);
         border-style: solid;
         border-width: 1px 0;
         font-size: 14px;
@@ -829,7 +829,7 @@ h3
 
     .table .table-head
     {
-        border-bottom: 1px solid #dee9f0;
+        border-bottom: 1px solid var(--cPrimaryLight);
         font-size: 14px;
         padding: 5px 20px;
     }
@@ -865,7 +865,7 @@ h3
 
         .table-col .table-status
         {
-            background: #a6a6a6;
+            background: var(--cIconFill);
             color: var(--cWhite);
             display: block;
             font-size: 12px;
@@ -880,7 +880,7 @@ h3
 
         .table-col .table-status.__active
         {
-            background: var(--cPrimaryColor);
+            background: var(--cPrimary);
         }
 
         .table-col .table-date
@@ -918,7 +918,7 @@ h3
 
         .table-item:hover .product-img .image
         {
-            background-color: #ecf7fc;
+            background-color: var(--cPrimaryLightest);
         }
 
         .table-item.__selected .product-img .image
@@ -952,7 +952,7 @@ h3
 
     .table .table-ico
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
         font-size: 28px;
         margin: -4px 10px 0 0;
         text-shadow: 1px 1px var(--cWhite);
@@ -982,7 +982,7 @@ h3
 
     .table-item.__info .table-ico
     {
-        color: var(--cPrimaryColor);
+        color: var(--cPrimary);
     }
 
 
@@ -1022,7 +1022,7 @@ fieldset + fieldset
 
     fieldset legend
     {
-        border-bottom: 1px solid #dee9f0;
+        border-bottom: 1px solid var(--cPrimaryLight);
         display: block;
         font-size: 24px;
         font-weight: 300;
@@ -1043,7 +1043,7 @@ fieldset + fieldset
 
 .form-group.__head
 {
-    border-bottom: 1px solid #dee9f0;
+    border-bottom: 1px solid var(--cPrimaryLight);
 }
 
 .__inline .form-group
@@ -1103,7 +1103,7 @@ fieldset + fieldset
 
     .count
     {
-        color: var(--cPrimaryColor);
+        color: var(--cPrimary);
         font-weight: 600;
     }
 
@@ -1116,7 +1116,7 @@ fieldset + fieldset
     .form-group .form-t
     {
         background: var(--cGrayTracing);
-        border: 1px solid #dee9f0;
+        border: 1px solid var(--cPrimaryLight);
         margin: 0 0 5px;
         padding: 5px;
     }
@@ -1168,7 +1168,7 @@ fieldset + fieldset
         .form-input textarea,
         .form-input select
         {
-            border: 1px solid #dee9f0;
+            border: 1px solid var(--cPrimaryLight);
             padding: 5px 10px;
         }
 
@@ -1258,7 +1258,7 @@ fieldset + fieldset
         .form-input.__number .up
         {
             background: var(--cGrayTracing);
-            border: 1px solid #dee9f0;
+            border: 1px solid var(--cPrimaryLight);
             cursor: pointer;
             height: 14px;
             right: 2px;
@@ -1294,13 +1294,13 @@ fieldset + fieldset
 
         .form-input.__number .down:after
         {
-            border-color: var(--cPrimaryColor) transparent transparent;
+            border-color: var(--cPrimary) transparent transparent;
             top: 4px;
         }
 
         .form-input.__number .up:after
         {
-            border-color: transparent transparent var(--cPrimaryColor);
+            border-color: transparent transparent var(--cPrimary);
             bottom: 4px;
         }
 
@@ -1319,7 +1319,7 @@ fieldset + fieldset
 
         .form-input.__currency .currency
         {
-            color: var(--cPrimaryColor);
+            color: var(--cPrimary);
             font-size: 12px;
             right: 10px;
             position: absolute;
@@ -1400,7 +1400,7 @@ fieldset + fieldset
 
             .form-input .btn-ico
             {
-                color: var(--cPrimaryColor);
+                color: var(--cPrimary);
                 font-size: 24px;
                 height: 26px;
                 padding: 0 10px;
@@ -1417,7 +1417,7 @@ fieldset + fieldset
 
             .form-input.__info .btn-ico::before
             {
-                background: var(--cPrimaryColor);
+                background: var(--cPrimary);
                 display: block;
                 height: 20px;
                 line-height: 20px;
@@ -1530,7 +1530,7 @@ fieldset + fieldset
         .form-control.__checkbox :checked ~ .check:after
         {
             bottom: 0;
-            color: var(--cPrimaryColor);
+            color: var(--cPrimary);
             content: '';
             font-family: 'FontAwesome';
             font-size: 11px;
@@ -1543,7 +1543,7 @@ fieldset + fieldset
 
         .form-control.__radio :checked ~ .check:after
         {
-            background: var(--cPrimaryColor);
+            background: var(--cPrimary);
             height: 7px;
             left: 2px;
             top: 2px;
@@ -1626,7 +1626,7 @@ fieldset + fieldset
 
             .__switch :checked ~ .switch
             {
-                background: var(--cPrimaryColor);
+                background: var(--cPrimary);
             }
 
             .__switch .switch::after
@@ -1690,12 +1690,12 @@ fieldset + fieldset
 
     .editable .btn-toolbar
     {
-        background: var(--cPrimaryColor);
+        background: var(--cPrimary);
     }
 
     .editable .ta-scroll-window.form-control
     {
-        border: 1px solid #dee9f0;
+        border: 1px solid var(--cPrimaryLight);
     }
 
     .ta-root.focussed > .ta-scroll-window.form-control
@@ -1722,7 +1722,7 @@ fieldset + fieldset
 /* Buttons */
 .btn
 {
-    background: var(--cPrimaryColor);
+    background: var(--cPrimary);
     border: none;
     color: var(--cWhite);
     cursor: pointer;
@@ -1795,7 +1795,7 @@ button.btn
 
 .btn.__cancel
 {
-    background-color: #a6a6a6;
+    background-color: var(--cIconFill);
 }
 
 .btn.__cancel:hover
@@ -1806,7 +1806,7 @@ button.btn
 .md-editor
 {
     background: var(--cGrayTracing);
-    border: 1px solid #dee9f0;
+    border: 1px solid var(--cPrimaryLight);
     margin: -1px -20px 0;
 }
 
@@ -1851,7 +1851,7 @@ button.btn
 
 .md-editor .btn-toolbar
 {
-    background: #dee9f0;
+    background: var(--cPrimaryLight);
     padding: 10px;
     overflow: hidden;
 }
@@ -2012,8 +2012,8 @@ button.btn
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
 
-    -webkit-box-shadow: 0 0 0 2px #dee9f0 inset;
-            box-shadow: 0 0 0 2px #dee9f0 inset;
+    -webkit-box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
+            box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
 }
 
 .tile.__price
@@ -2029,14 +2029,14 @@ button.btn
 
 .tile.__price .tile-count
 {
-    color: var(--cPrimaryColor);
+    color: var(--cPrimary);
     font-size: 24px;
     margin: 10px 0 0;
 }
 
 .tile.__price .tile-price
 {
-    color: var(--cPrimaryColor);
+    color: var(--cPrimary);
     font-size: 30px;
     height: 49px;
     line-height: 40px;
@@ -2388,7 +2388,7 @@ button.btn
     .__items .list-group
     {
         background: var(--cGrayTracing);
-        border-bottom: 1px solid #dee9f0;
+        border-bottom: 1px solid var(--cPrimaryLight);
         cursor: pointer;
         font-size: 24px;
         padding: 10px 50px 10px 20px;
@@ -2397,7 +2397,7 @@ button.btn
 
     .__items .list-group::after
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
         content: '';
         font-family: 'FontAwesome';
         font-size: 16px;
@@ -2417,7 +2417,7 @@ button.btn
     .__items .list-item
     {
         background: var(--cWhite);
-        border-bottom: 1px solid #dee9f0;
+        border-bottom: 1px solid var(--cPrimaryLight);
         cursor: pointer;
         display: block;
         padding: 10px 50px 10px 20px;
@@ -2437,12 +2437,12 @@ button.btn
 
     .__items .list-item.__default
     {
-        background: #ecf7fc;
+        background: var(--cPrimaryLightest);
     }
 
     .__items .list-item:after
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
         content: "";
         font-family: "FontAwesome";
         font-size: 16px;
@@ -2513,7 +2513,7 @@ button.btn
 
     .__items .list-item:first-child
     {
-        border-top: 1px solid #dee9f0;
+        border-top: 1px solid var(--cPrimaryLight);
     }
 
         .__items .list-ico,
@@ -2636,7 +2636,7 @@ button.btn
         .__items label.list-item :checked ~ .switch,
         .__items label.list-item.__selected .switch
         {
-            background: #ecf7fc;
+            background: var(--cPrimaryLightest);
 
             -webkit-box-shadow: 0 0 0 1px #a1c0d4;
                     box-shadow: 0 0 0 1px #a1c0d4;
@@ -2645,8 +2645,8 @@ button.btn
         .__items label.list-item :checked ~ .switch,
         .__items label.list-item.__selected .switch
         {
-            -webkit-box-shadow: 0 0 0 1px #dee9f0;
-                    box-shadow: 0 0 0 1px #dee9f0;
+            -webkit-box-shadow: 0 0 0 1px var(--cPrimaryLight);
+                    box-shadow: 0 0 0 1px var(--cPrimaryLight);
         }
 
         .__items .list-item :checked ~ .switch:after,
@@ -2665,7 +2665,7 @@ button.btn
 
         .__items .list-item.__selected .switch:after
         {
-            border-color: #dee9f0 #dee9f0 transparent transparent;
+            border-color: var(--cPrimaryLight) var(--cPrimaryLight) transparent transparent;
         }
 
         .__items .list-item :checked ~ .switch:before,
@@ -2684,7 +2684,7 @@ button.btn
 
         .__items label.list-item.__selected .list-name
         {
-            color: #a6a6a6;
+            color: var(--cIconFill);
         }
 
 .list.__chosen
@@ -2700,7 +2700,7 @@ button.btn
 
         .__chosen .list-name
         {
-            background: var(--cPrimaryColor);
+            background: var(--cPrimary);
             color: var(--cWhite);
             float: right;
             font-size: 11px;
@@ -2728,7 +2728,7 @@ button.btn
 
         .__chosen .list-remove:hover
         {
-            color: var(--cPrimaryColor);
+            color: var(--cPrimary);
         }
 
 .__files .list-item
@@ -2780,7 +2780,7 @@ button.btn
 .pagination
 {
     background: var(--cGrayTracing);
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
     border-style: solid;
     border-width: 1px 0;
     margin: 0 -20px;
@@ -2801,7 +2801,7 @@ button.btn
     .pagination .menu-link
     {
         background: var(--cWhite);
-        border: 1px solid #dee9f0;
+        border: 1px solid var(--cPrimaryLight);
         color: #4c4c4c;
         cursor: pointer;
         display: block;
@@ -2822,7 +2822,7 @@ button.btn
 
     .pagination .menu-item.__selected .menu-link
     {
-        background: var(--cPrimaryColor);
+        background: var(--cPrimary);
         color: var(--cWhite);
     }
 
@@ -2988,8 +2988,8 @@ button.btn
 
     .breadcrumbs .back:hover
     {
-        border-color: var(--cPrimaryColor);
-        color: var(--cPrimaryColor);
+        border-color: var(--cPrimary);
+        color: var(--cPrimary);
     }
 
     .breadcrumbs .back ~ .menu
@@ -3008,7 +3008,7 @@ button.btn
 
     .breadcrumbs .menu-item.__divider:after
     {
-        background: #a6a6a6;
+        background: var(--cIconFill);
         content: '';
         height: 4px;
         left: 50%;
@@ -3020,7 +3020,7 @@ button.btn
 
         .breadcrumbs .menu-link
         {
-            color: var(--cPrimaryColor);
+            color: var(--cPrimary);
             font-size: 14px;
         }
 
@@ -3140,7 +3140,7 @@ button.btn
 
 .tree-block:hover
 {
-    background: #ecf7fc;
+    background: var(--cPrimaryLightest);
 }
 
 .tree-block.__canceled:hover
@@ -3320,7 +3320,7 @@ button.btn
 
 .tree-el.__canceled
 {
-    background: var(--cPrimaryColor);
+    background: var(--cPrimary);
     color: var(--cWhite);
     margin: 5px -10px -5px;
     padding: 5px 0;
@@ -3329,7 +3329,7 @@ button.btn
 
 .tree-el.__title
 {
-    color: var(--cPrimaryColor);
+    color: var(--cPrimary);
     height: 24px;
 }
 
@@ -3406,7 +3406,7 @@ button.btn
 .form-input.__calendar .dropdown-menu
 {
     background: var(--cWhite);
-    border: 1px solid #dee9f0;
+    border: 1px solid var(--cPrimaryLight);
     margin: -1px 0 0;
     max-width: 400px;
     position: absolute;
@@ -3430,7 +3430,7 @@ button.btn
 
     .form-input.__calendar .dropdown-menu .btn:hover
     {
-        background-color: #ecf7fc;
+        background-color: var(--cPrimaryLightest);
     }
 
         .form-input.__calendar .dropdown-menu table .btn
@@ -3441,7 +3441,7 @@ button.btn
         .form-input.__calendar .dropdown-menu .btn-group .btn,
         .form-input.__calendar .dropdown-menu .btn-success
         {
-            background: var(--cPrimaryColor);
+            background: var(--cPrimary);
             color: var(--cWhite);
             display: inline-block;
             padding: 0 10px;
@@ -3454,7 +3454,7 @@ button.btn
     .form-input.__calendar .dropdown-menu .btn-info,
     .form-input.__calendar .dropdown-menu .btn.active
     {
-        background: var(--cPrimaryColor);
+        background: var(--cPrimary);
         color: var(--cWhite);
     }
 
@@ -3487,7 +3487,7 @@ button.btn
         .dropdown-menu table th,
         .dropdown-menu table td
         {
-            background: #dee9f0;
+            background: var(--cPrimaryLight);
             border-color: var(--cWhite);
             border-style: solid;
             border-width: 2px;
@@ -3499,7 +3499,7 @@ button.btn
 
         .dropdown-menu table th
         {
-            background: #dee9f0;
+            background: var(--cPrimaryLight);
             font-weight: 500;
         }
 
@@ -3545,7 +3545,7 @@ button.btn
 .select2-container-multi .select2-choices
 {
     background: var(--cWhite);
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
     color: #4c4c4c;
     font-size: 14px;
     line-height: 32px;
@@ -3601,7 +3601,7 @@ button.btn
 
 .select2-container .select2-choice .select2-arrow:after
 {
-    border-color: var(--cPrimaryColor) transparent transparent;
+    border-color: var(--cPrimary) transparent transparent;
     border-style: solid;
     border-width: 5px 4px;
     content: '';
@@ -3613,7 +3613,7 @@ button.btn
 
 .select2-dropdown-open .select2-choice .select2-arrow:after
 {
-    border-color: transparent transparent var(--cPrimaryColor);
+    border-color: transparent transparent var(--cPrimary);
     margin: -10px 0 0;
 }
 
@@ -3624,7 +3624,7 @@ button.btn
 
 .select2-results .select2-highlighted
 {
-    background: var(--cPrimaryColor);
+    background: var(--cPrimary);
 }
 
 .select2-container li
@@ -3691,7 +3691,7 @@ button.btn
 
 .select2-search-choice-close:hover::after
 {
-    color: var(--cPrimaryColor);
+    color: var(--cPrimary);
 }
 
 .select2-container-multi .select2-search-choice-close::after,
@@ -3704,7 +3704,7 @@ button.btn
 /* Tags input */
 tags-input .tags
 {
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
     color: #4c4c4c;
     padding: 0 10px;
 
@@ -3744,7 +3744,7 @@ tags-input .tags .input
 
 tags-input .tags .tag-item
 {
-    background: var(--cPrimaryColor);
+    background: var(--cPrimary);
     border: none;
     color: var(--cWhite);
     font-family: 'Exo 2';
@@ -3859,20 +3859,20 @@ tags-input .tags .tag-item .remove-button
 
             .nav-bar .menu-item.__done .menu-link
             {
-                background: var(--cPrimaryColor);
+                background: var(--cPrimary);
                 color: var(--cWhite);
                 cursor: pointer;
             }
 
             .nav-bar .menu-link:hover
             {
-                color: var(--cPrimaryColor);
+                color: var(--cPrimary);
             }
 
             .nav-bar .__selected .menu-link
             {
                 background-color: #383838;
-                color: var(--cPrimaryColor);
+                color: var(--cPrimary);
             }
 
             .nav-bar .__selected.__animated .menu-link,
@@ -4063,7 +4063,7 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .info .list-ico
                         {
-                            color: var(--cPrimaryColor);
+                            color: var(--cPrimary);
                         }
 
                         .dropdown-content .error .list-ico
@@ -4136,7 +4136,7 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .list-bar
                         {
-                            background-color: var(--cPrimaryColor);
+                            background-color: var(--cPrimary);
                             display: block;
                             height: 10px;
                             margin-left: 55px;
@@ -4371,7 +4371,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-nav .menu-item:hover
             {
-                background: var(--cPrimaryColor);
+                background: var(--cPrimary);
             }
 
             .blade-nav .menu-item.__disabled:hover
@@ -4554,7 +4554,7 @@ tags-input .tags .tag-item .remove-button
 
                     .blade-toolbar .menu-btn:hover
                     {
-                        color: var(--cPrimaryColor);
+                        color: var(--cPrimary);
                     }
 
                     .blade-toolbar .menu-btn:disabled
@@ -4605,7 +4605,7 @@ tags-input .tags .tag-item .remove-button
         .blade-container .blade-static
         {
             background: var(--cGrayTracing);
-            border-color: #dee9f0;
+            border-color: var(--cPrimaryLight);
             border-style: solid;
             border-width: 0 0 2px;
             height: 70px;
@@ -4947,7 +4947,7 @@ tags-input .tags .tag-item .remove-button
 
         .blade-loader .loading:after
         {
-            color: var(--cPrimaryColor);
+            color: var(--cPrimary);
             content: attr(data-title);
             font-size: 60px;
             left: 0;
@@ -4971,7 +4971,7 @@ tags-input .tags .tag-item .remove-button
 .ui-grid,
 .ui-grid-header
 {
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
 }
 
 .ui-grid-top-panel
@@ -4996,7 +4996,7 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-cell,
 .ui-grid-header-cell:last-child .ui-grid-column-resizer.right
 {
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
 }
 
 .ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell
@@ -5021,7 +5021,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-row:last-child .ui-grid-cell
 {
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
     border-width: 0 0 1px !important;
 }
 
@@ -5079,7 +5079,7 @@ input.ui-grid-filter-input[type="text"]
 .ui-grid-row:hover .ui-grid-cell,
 .ui-grid-row:nth-child(2n):hover .ui-grid-cell
 {
-    background: #ecf7fc;
+    background: var(--cPrimaryLightest);
 }
 
 .ui-grid-row-header-cell
@@ -5118,7 +5118,7 @@ input.ui-grid-filter-input[type="text"]
 
 .ui-grid-cell .product-img .pr-ico
 {
-    color: #a6a6a6;
+    color: var(--cIconFill);
     display: inline-block;
     font-size: 28px;
     margin: -4px 0 0;
@@ -5258,8 +5258,8 @@ input.ui-grid-filter-input[type="text"]
         -webkit-box-sizing: border-box;
                 box-sizing: border-box;
 
-        -webkit-box-shadow: 0 0 0 2px #dee9f0 inset;
-                box-shadow: 0 0 0 2px #dee9f0 inset;
+        -webkit-box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
+                box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
     }
 
     .gridster .gridster-item-moving
@@ -5298,7 +5298,7 @@ input.ui-grid-filter-input[type="text"]
 
     .gridster-preview-holder
     {
-        background: #dee9f0;
+        background: var(--cPrimaryLight);
         border-color: #a1c0d4;
         border-style: dashed;
         border-width: 1px;
@@ -5306,7 +5306,7 @@ input.ui-grid-filter-input[type="text"]
 
     .gridster .gridster-preview-holder
     {
-        background: #dee9f0;
+        background: var(--cPrimaryLight);
         border-color: #a1c0d4;
         border-style: dashed;
         border-width: 1px;
@@ -5371,7 +5371,7 @@ input.ui-grid-filter-input[type="text"]
 
         .gridster .image
         {
-            border: 1px solid #dee9f0;
+            border: 1px solid var(--cPrimaryLight);
             height: 50px;
             left: 69px;
             position: absolute;
@@ -5409,13 +5409,13 @@ input.ui-grid-filter-input[type="text"]
 
         .gridster .list-price
         {
-            color: var(--cPrimaryColor);
+            color: var(--cPrimary);
             font-size: 12px;
         }
 
         .gridster .list-count
         {
-            color: var(--cPrimaryColor);
+            color: var(--cPrimary);
             font-size: 22px;
             font-weight: 300;
         }
@@ -5429,7 +5429,7 @@ input.ui-grid-filter-input[type="text"]
         .gridster .gallery-ico,
         .gridster .comment-ico
         {
-            color: #dee9f0;
+            color: var(--cPrimaryLight);
             font-size: 24px;
         }
 
@@ -5450,7 +5450,7 @@ input.ui-grid-filter-input[type="text"]
 /* Tooltip */
 .tooltip
 {
-    background: var(--cPrimaryColor);
+    background: var(--cPrimary);
     color: var(--cWhite);
     font-family: 'Exo 2';
     font-size: 12px;
@@ -5461,7 +5461,7 @@ input.ui-grid-filter-input[type="text"]
 
 .tooltip::after
 {
-    border-color: transparent var(--cPrimaryColor) transparent transparent;
+    border-color: transparent var(--cPrimary) transparent transparent;
     border-style: solid;
     border-width: 8px;
     content: '';
@@ -5478,13 +5478,13 @@ input.ui-grid-filter-input[type="text"]
 /* Informer */
 .__informer
 {
-    background: #ecf7fc;
+    background: var(--cPrimaryLightest);
     color: #a1c0d4;
     font-size: 22px;
     padding: 10px;
 
-    -webkit-box-shadow: 0 0 0 2px #dee9f0 inset;
-            box-shadow: 0 0 0 2px #dee9f0 inset;
+    -webkit-box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
+            box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
 }
 
 .__informer::after
@@ -5534,9 +5534,9 @@ input.ui-grid-filter-input[type="text"]
 
     .tabs .tab-item
     {
-        background: #dee9f0;
-        border-top: 1px solid #dee9f0;
-        color: var(--cPrimaryColor);
+        background: var(--cPrimaryLight);
+        border-top: 1px solid var(--cPrimaryLight);
+        color: var(--cPrimary);
         cursor: pointer;
         float: left;
         font-size: 14px;

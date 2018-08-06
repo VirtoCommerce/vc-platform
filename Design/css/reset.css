@@ -14,7 +14,7 @@ body
 
 body
 {
-	background: #eef5f7;
+	background: var(--cBodyTracing);
 	color: #333;
 	font-size: 100%;
 	line-height: 1.4;

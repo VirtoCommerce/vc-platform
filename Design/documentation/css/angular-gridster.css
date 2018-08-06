@@ -53,7 +53,7 @@ transition-delay:50ms;
     -o-transition-delay:50ms;
     transition-delay:50ms;
 
-    background: #dee9f0;
+    background: var(--cPrimaryLight);
     border-color: #a1c0d4;
     border-style: dashed;
     border-width: 1px;

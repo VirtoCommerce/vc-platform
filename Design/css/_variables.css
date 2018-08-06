@@ -1,10 +1,16 @@
 :root {
     /* c - Colors */
-    --cPrimaryColor: #43b0e6;
+    --cPrimary: #43b0e6;
+    --cPrimaryLight: #dee9f0;
+    --cPrimaryLightest: #ecf7fc;
     
     --cGrayDark: #333;
     --cGrayDarkest: #232323;
     --cGrayTracing: #fbfdfe;
+
+    --cBodyTracing: #eef5f7;
+    
+    --cIconFill: #a6a6a6;   /* default - gray*/
 
     --cWhite: #fff;
     --cBlack: #000;

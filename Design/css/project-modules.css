@@ -1,7 +1,7 @@
 /* Drag and drop */
 .drag-area
 {
-    background: #dee9f0;
+    background: var(--cPrimaryLight);
     border: 2px dashed #a1c0d4;
     height: 250px;
     margin: 0 0 20px;
@@ -35,7 +35,7 @@
 /* Dashboard */
 .dashboard
 {
-    background: #eef5f7;
+    background: var(--cBodyTracing);
     font-family: 'Exo 2';
     position: relative;
     z-index: 50;
@@ -169,7 +169,7 @@
 /* Log */
 .log
 {
-    border: 1px solid #dee9f0;
+    border: 1px solid var(--cPrimaryLight);
     font-size: 12px;
     height: 300px;
     line-height: 1.4;
@@ -181,7 +181,7 @@
 
     .log .__info
     {
-        color: var(--cPrimaryColor);
+        color: var(--cPrimary);
     }
 
     .log .__warning
@@ -191,7 +191,7 @@
 
     .log .__debug
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
     }
 
     .log .__error
@@ -217,7 +217,7 @@
 
     .loader span
     {
-        background: #dee9f0;
+        background: var(--cPrimaryLight);
         height: 20px;
         position: absolute;
         top: 25px;

@@ -19,7 +19,7 @@
 .__items .list-item:hover,
 .__files .list-block:hover
 {
-	background: #ecf7fc;
+	background: var(--cPrimaryLightest);
 }
 
 .table .table-item.__selected,
@@ -39,7 +39,7 @@
 .__items .list-ico,
 .__files .list-ico
 {
-	color: #a6a6a6;
+	color: var(--cIconFill);
 }
 
 .tile:hover .tile-ico,
@@ -54,7 +54,7 @@
 /* Links */
 a
 {
-	color: var(--cPrimaryColor);
+	color: var(--cPrimary);
 	cursor: pointer;
 	font-size: 14px;
 	text-decoration: none;
@@ -78,7 +78,7 @@ a:hover,
 
 .__blue
 {
-	color: var(--cPrimaryColor);
+	color: var(--cPrimary);
 }
 
 /* Transitions */
@@ -181,7 +181,7 @@ a:hover,
 
 .progress-bar.__auqa
 {
-	background-color: var(--cPrimaryColor);
+	background-color: var(--cPrimary);
 }
 
 .progress-bar.__mini
@@ -352,11 +352,11 @@ a:hover,
 	}
 	30%
 	{
-		background-color: var(--cPrimaryColor);
+		background-color: var(--cPrimary);
 	}
 	90%
 	{
-		background-color: var(--cPrimaryColor);
+		background-color: var(--cPrimary);
 	}
 	100%
 	{
@@ -372,11 +372,11 @@ a:hover,
 	}
 	30%
 	{
-		background-color: var(--cPrimaryColor);
+		background-color: var(--cPrimary);
 	}
 	90%
 	{
-		background-color: var(--cPrimaryColor);
+		background-color: var(--cPrimary);
 	}
 	100%
 	{
