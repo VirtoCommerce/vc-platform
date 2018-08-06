@@ -72,7 +72,7 @@ p
     .header-text
     {
         font-family: 'Open Sans';
-        text-shadow: 2px 2px 0 #fff;
+        text-shadow: 2px 2px 0 var(--cWhite);
         text-transform: uppercase;
     }
 
@@ -207,7 +207,7 @@ p
 
         .content p span
         {
-            color: #43b0e6;
+            color: var(--cPrimaryColor);
         }
 
         .content .exmpl

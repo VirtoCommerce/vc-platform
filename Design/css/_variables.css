@@ -1,0 +1,14 @@
+:root {
+    /* c - Colors */
+    --cPrimaryColor: #43b0e6;
+    
+    --cGrayDark: #333;
+    --cGrayDarkest: #232323;
+    --cGrayTracing: #fbfdfe;
+
+    --cWhite: #fff;
+    --cBlack: #000;
+
+    /* s - Box Shadows */
+    --sBladeInnerShadow: -8px 0 0 0 rgba(0,0,0,.2) inset;   /*shadow like border*/
+}

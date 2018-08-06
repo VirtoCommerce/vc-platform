@@ -27,7 +27,7 @@
     color: #a1c0d4;
     display: inline-block;
     font-size: 18px;
-    text-shadow: 1px 1px 1px #fff;
+    text-shadow: 1px 1px 1px var(--cWhite);
     vertical-align: middle;
 }
 
@@ -96,7 +96,7 @@
 
         .dashboard .dashboard-account
         {
-            background: #fff;
+            background: var(--cWhite);
             border: 2px solid transparent;
             cursor: pointer;
             padding: 10px;
@@ -113,7 +113,7 @@
         .dashboard .dashboard-account:before
         {
             background: #bfbfbf;
-            color: #fff;
+            color: var(--cWhite);
             content: '';
             font-family: 'FontAwesome';
             font-size: 24px;
@@ -181,7 +181,7 @@
 
     .log .__info
     {
-        color: #43b0e6;
+        color: var(--cPrimaryColor);
     }
 
     .log .__warning

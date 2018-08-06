@@ -31,7 +31,7 @@
 
 .__items label.list-item.__selected
 {
-    background: #fff;
+    background: var(--cWhite);
 }
 
 /* Icons */
@@ -54,7 +54,7 @@
 /* Links */
 a
 {
-	color: #43b0e6;
+	color: var(--cPrimaryColor);
 	cursor: pointer;
 	font-size: 14px;
 	text-decoration: none;
@@ -78,7 +78,7 @@ a:hover,
 
 .__blue
 {
-	color: #43b0e6;
+	color: var(--cPrimaryColor);
 }
 
 /* Transitions */
@@ -181,7 +181,7 @@ a:hover,
 
 .progress-bar.__auqa
 {
-	background-color: #43b0e6;
+	background-color: var(--cPrimaryColor);
 }
 
 .progress-bar.__mini
@@ -352,11 +352,11 @@ a:hover,
 	}
 	30%
 	{
-		background-color: #43b0e6;
+		background-color: var(--cPrimaryColor);
 	}
 	90%
 	{
-		background-color: #43b0e6;
+		background-color: var(--cPrimaryColor);
 	}
 	100%
 	{
@@ -372,11 +372,11 @@ a:hover,
 	}
 	30%
 	{
-		background-color: #43b0e6;
+		background-color: var(--cPrimaryColor);
 	}
 	90%
 	{
-		background-color: #43b0e6;
+		background-color: var(--cPrimaryColor);
 	}
 	100%
 	{

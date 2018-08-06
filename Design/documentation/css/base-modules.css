@@ -19,7 +19,7 @@
 
 .alt-description
 {
-	color: #43b0e6 !important;
+	color: var(--cPrimaryColor) !important;
 }
 
 /* Scroll bar */
@@ -467,7 +467,7 @@ ol
 
         .list.__car-info .list-name
         {
-            color: #43b0e6;
+            color: var(--cPrimaryColor);
             display: block;
         }
 
@@ -513,7 +513,7 @@ ol
 
     .menu.__context .menu-item
     {
-        color: #fff;
+        color: var(--cWhite);
         cursor: pointer;
         font-family: 'Exo 2';
         font-size: 13px;
@@ -531,7 +531,7 @@ ol
 
     .menu.__context .menu-item:hover
     {
-        color: #43b0e6;
+        color: var(--cPrimaryColor);
     }
 
         .menu.__context .menu-ico
@@ -594,7 +594,7 @@ ol
         .list.__info .list-item:hover .list-t,
         .list.__info .list-item:hover .list-descr
         {
-            text-shadow: 1px 1px #fff;
+            text-shadow: 1px 1px var(--cWhite);
         }
     
 .list.__tags
@@ -605,8 +605,8 @@ ol
 
     .list.__tags .list-item
     {
-        background: #43b0e6;
-        color: #fff;
+        background: var(--cPrimaryColor);
+        color: var(--cWhite);
         display: inline-block;
         line-height: 1.1;
         margin: 0 5px 0 0;
@@ -707,9 +707,9 @@ h3
 
 .text.__editable
 {
-    background: #fbfdfe;
+    background: var(--cGrayTracing);
     border: 1px dashed #dee9f0;
-    color: #43b0e6;
+    color: var(--cPrimaryColor);
     cursor: text;
     padding: 5px 10px;
 }
@@ -768,7 +768,7 @@ h3
 
 .t.__divider
 {
-    background: #fbfdfe;
+    background: var(--cGrayTracing);
     border-color: #dee9f0;
     border-style: solid;
     border-width: 1px 0;
@@ -824,7 +824,7 @@ h3
         font-size: 14px;
         padding: 10px;
         text-align: left;
-        text-shadow: 1px 1px #fff;
+        text-shadow: 1px 1px var(--cWhite);
     }
 
     .table .table-head
@@ -866,7 +866,7 @@ h3
         .table-col .table-status
         {
             background: #a6a6a6;
-            color: #fff;
+            color: var(--cWhite);
             display: block;
             font-size: 12px;
             height: 20px;
@@ -880,7 +880,7 @@ h3
 
         .table-col .table-status.__active
         {
-            background: #43b0e6;
+            background: var(--cPrimaryColor);
         }
 
         .table-col .table-date
@@ -955,7 +955,7 @@ h3
         color: #a6a6a6;
         font-size: 28px;
         margin: -4px 10px 0 0;
-        text-shadow: 1px 1px #fff;
+        text-shadow: 1px 1px var(--cWhite);
         vertical-align: middle;
     }
 
@@ -982,7 +982,7 @@ h3
 
     .table-item.__info .table-ico
     {
-        color: #43b0e6;
+        color: var(--cPrimaryColor);
     }
 
 
@@ -1103,7 +1103,7 @@ fieldset + fieldset
 
     .count
     {
-        color: #43b0e6;
+        color: var(--cPrimaryColor);
         font-weight: 600;
     }
 
@@ -1115,7 +1115,7 @@ fieldset + fieldset
 
     .form-group .form-t
     {
-        background: #fbfdfe;
+        background: var(--cGrayTracing);
         border: 1px solid #dee9f0;
         margin: 0 0 5px;
         padding: 5px;
@@ -1257,7 +1257,7 @@ fieldset + fieldset
         .form-input.__number .down,
         .form-input.__number .up
         {
-            background: #fbfdfe;
+            background: var(--cGrayTracing);
             border: 1px solid #dee9f0;
             cursor: pointer;
             height: 14px;
@@ -1294,13 +1294,13 @@ fieldset + fieldset
 
         .form-input.__number .down:after
         {
-            border-color: #43b0e6 transparent transparent;
+            border-color: var(--cPrimaryColor) transparent transparent;
             top: 4px;
         }
 
         .form-input.__number .up:after
         {
-            border-color: transparent transparent #43b0e6;
+            border-color: transparent transparent var(--cPrimaryColor);
             bottom: 4px;
         }
 
@@ -1319,7 +1319,7 @@ fieldset + fieldset
 
         .form-input.__currency .currency
         {
-            color: #43b0e6;
+            color: var(--cPrimaryColor);
             font-size: 12px;
             right: 10px;
             position: absolute;
@@ -1400,7 +1400,7 @@ fieldset + fieldset
 
             .form-input .btn-ico
             {
-                color: #43b0e6;
+                color: var(--cPrimaryColor);
                 font-size: 24px;
                 height: 26px;
                 padding: 0 10px;
@@ -1408,7 +1408,7 @@ fieldset + fieldset
 
             .form-input.__info .btn-ico
             {
-                color: #fff;
+                color: var(--cWhite);
                 font-size: 16px;
                 height: auto;
                 text-shadow: none;
@@ -1417,7 +1417,7 @@ fieldset + fieldset
 
             .form-input.__info .btn-ico::before
             {
-                background: #43b0e6;
+                background: var(--cPrimaryColor);
                 display: block;
                 height: 20px;
                 line-height: 20px;
@@ -1497,7 +1497,7 @@ fieldset + fieldset
 
         .form-control .check
         {
-            background: #fff;
+            background: var(--cWhite);
             border: 1px solid #a1c0d4;
             height: 13px;
             left: 0;
@@ -1530,7 +1530,7 @@ fieldset + fieldset
         .form-control.__checkbox :checked ~ .check:after
         {
             bottom: 0;
-            color: #43b0e6;
+            color: var(--cPrimaryColor);
             content: '';
             font-family: 'FontAwesome';
             font-size: 11px;
@@ -1543,7 +1543,7 @@ fieldset + fieldset
 
         .form-control.__radio :checked ~ .check:after
         {
-            background: #43b0e6;
+            background: var(--cPrimaryColor);
             height: 7px;
             left: 2px;
             top: 2px;
@@ -1626,12 +1626,12 @@ fieldset + fieldset
 
             .__switch :checked ~ .switch
             {
-                background: #43b0e6;
+                background: var(--cPrimaryColor);
             }
 
             .__switch .switch::after
             {
-                background: #fff;
+                background: var(--cWhite);
                 color: #ccc;
                 content: '|||';
                 font-size: 11px;
@@ -1658,7 +1658,7 @@ fieldset + fieldset
 
             .__switch .switch::before
             {
-                color: #fff;
+                color: var(--cWhite);
                 content: '';
                 font-family: 'FontAwesome';
                 font-size: 12px;
@@ -1690,7 +1690,7 @@ fieldset + fieldset
 
     .editable .btn-toolbar
     {
-        background: #43b0e6;
+        background: var(--cPrimaryColor);
     }
 
     .editable .ta-scroll-window.form-control
@@ -1722,9 +1722,9 @@ fieldset + fieldset
 /* Buttons */
 .btn
 {
-    background: #43b0e6;
+    background: var(--cPrimaryColor);
     border: none;
-    color: #fff;
+    color: var(--cWhite);
     cursor: pointer;
     display: inline-block;
     font-family: inherit;
@@ -1787,7 +1787,7 @@ button.btn
 
 .btn:hover
 {
-    color: #fff;
+    color: var(--cWhite);
     opacity: .8;
 
     filter: alpha(opacity=80);
@@ -1805,14 +1805,14 @@ button.btn
 
 .md-editor
 {
-    background: #fbfdfe;
+    background: var(--cGrayTracing);
     border: 1px solid #dee9f0;
     margin: -1px -20px 0;
 }
 
 .md-editor.md-fullscreen-mode
 {
-    background: #ffffff !important;
+    background: var(--cWhite) !important;
     border: 0 none !important;
     height: 100%;
     left: 0;
@@ -1996,7 +1996,7 @@ button.btn
 
 .tile
 {
-    background: #fbfdfe;
+    background: var(--cGrayTracing);
     color: #4c4c4c;
     cursor: pointer;
     float: left;
@@ -2029,14 +2029,14 @@ button.btn
 
 .tile.__price .tile-count
 {
-    color: #43b0e6;
+    color: var(--cPrimaryColor);
     font-size: 24px;
     margin: 10px 0 0;
 }
 
 .tile.__price .tile-price
 {
-    color: #43b0e6;
+    color: var(--cPrimaryColor);
     font-size: 30px;
     height: 49px;
     line-height: 40px;
@@ -2092,7 +2092,7 @@ button.btn
 
 .tile.__selected:before
 {
-    color: #fff;
+    color: var(--cWhite);
     content: "";
     font-family: "FontAwesome";
     font-size: 10px;
@@ -2360,7 +2360,7 @@ button.btn
 
 .tile .tile-action::after
 {
-    color: #fff;
+    color: var(--cWhite);
     content: "";
     font-family: 'FontAwesome';
     font-size: 16px;
@@ -2387,7 +2387,7 @@ button.btn
 
     .__items .list-group
     {
-        background: #fbfdfe;
+        background: var(--cGrayTracing);
         border-bottom: 1px solid #dee9f0;
         cursor: pointer;
         font-size: 24px;
@@ -2416,7 +2416,7 @@ button.btn
 
     .__items .list-item
     {
-        background: #fff;
+        background: var(--cWhite);
         border-bottom: 1px solid #dee9f0;
         cursor: pointer;
         display: block;
@@ -2479,7 +2479,7 @@ button.btn
 
     .__items .list-item.__default:before
     {
-        color: #fff;
+        color: var(--cWhite);
         content: "";
         font-family: "FontAwesome";
         font-size: 10px;
@@ -2523,7 +2523,7 @@ button.btn
             height: 30px;
             line-height: 30px;
             margin: 0 5px 0 0;
-            text-shadow: 1px 1px #fff;
+            text-shadow: 1px 1px var(--cWhite);
             vertical-align: middle;
             width: 40px;
         }
@@ -2560,7 +2560,7 @@ button.btn
         .__items .list-item:hover .list-name,
         .__files .list-item:hover .list-name
         {
-            text-shadow: 1px 1px #fff;
+            text-shadow: 1px 1px var(--cWhite);
         }
 
         .__files .list-name
@@ -2611,7 +2611,7 @@ button.btn
         .__items .list-descr
         {
             position: relative;
-            text-shadow: 1px 1px #fff;
+            text-shadow: 1px 1px var(--cWhite);
             z-index: 50;
         }
 
@@ -2671,7 +2671,7 @@ button.btn
         .__items .list-item :checked ~ .switch:before,
         .__items .list-item.__selected .switch:before
         {
-            color: #fff;
+            color: var(--cWhite);
             content: "";
             font-family: "FontAwesome";
             font-size: 10px;
@@ -2700,8 +2700,8 @@ button.btn
 
         .__chosen .list-name
         {
-            background: #43b0e6;
-            color: #fff;
+            background: var(--cPrimaryColor);
+            color: var(--cWhite);
             float: right;
             font-size: 11px;
             max-width: 345px;
@@ -2728,7 +2728,7 @@ button.btn
 
         .__chosen .list-remove:hover
         {
-            color: #43b0e6;
+            color: var(--cPrimaryColor);
         }
 
 .__files .list-item
@@ -2779,7 +2779,7 @@ button.btn
 /* Pagination */
 .pagination
 {
-    background: #fbfdfe;
+    background: var(--cGrayTracing);
     border-color: #dee9f0;
     border-style: solid;
     border-width: 1px 0;
@@ -2800,7 +2800,7 @@ button.btn
 
     .pagination .menu-link
     {
-        background: #fff;
+        background: var(--cWhite);
         border: 1px solid #dee9f0;
         color: #4c4c4c;
         cursor: pointer;
@@ -2822,8 +2822,8 @@ button.btn
 
     .pagination .menu-item.__selected .menu-link
     {
-        background: #43b0e6;
-        color: #fff;
+        background: var(--cPrimaryColor);
+        color: var(--cWhite);
     }
 
     .pagination .menu-ico
@@ -2845,7 +2845,7 @@ button.btn
 
 .modal-backdrop.fade
 {
-    background: #000;
+    background: var(--cBlack);
     opacity: .5;
 
     filter: alpha(opacity=50);
@@ -2854,7 +2854,7 @@ button.btn
 .window,
 .modal-content
 {
-    background: #fff;
+    background: var(--cWhite);
     font-family: 'Exo 2';
     line-height: 1.3;
     min-height: 200px;
@@ -2916,7 +2916,7 @@ button.btn
         .window-head .window-t,
         .modal-header .modal-title
         {
-            color: #fff;
+            color: var(--cWhite);
             font-size: 14px;
             padding: 0 20px;
         }
@@ -2972,7 +2972,7 @@ button.btn
 
     .breadcrumbs .back
     {
-        background: #fff;
+        background: var(--cWhite);
         border: 1px solid #a1c0d4;
         color: #a1c0d4;
         display: inline-block;
@@ -2988,8 +2988,8 @@ button.btn
 
     .breadcrumbs .back:hover
     {
-        border-color: #43b0e6;
-        color: #43b0e6;
+        border-color: var(--cPrimaryColor);
+        color: var(--cPrimaryColor);
     }
 
     .breadcrumbs .back ~ .menu
@@ -3020,7 +3020,7 @@ button.btn
 
         .breadcrumbs .menu-link
         {
-            color: #43b0e6;
+            color: var(--cPrimaryColor);
             font-size: 14px;
         }
 
@@ -3072,7 +3072,7 @@ button.btn
 
 .tree-item:first-child:before
 {
-    background: #fff;
+    background: var(--cWhite);
     content: '';
     height: 2px;
     left: -1px;
@@ -3084,7 +3084,7 @@ button.btn
 
 .tree.__horizontal .tree-item:first-child:before
 {
-    background: #fff;
+    background: var(--cWhite);
     content: "";
     height: 50%;
     left: -1px;
@@ -3096,7 +3096,7 @@ button.btn
 
 .tree-item:last-child:before
 {
-    background: #fff;
+    background: var(--cWhite);
     content: '';
     height: 2px;
     right: -1px;
@@ -3108,7 +3108,7 @@ button.btn
 
 .tree.__horizontal .tree-item:last-child:after
 {
-    background: #fff;
+    background: var(--cWhite);
     content: "";
     height: 50%;
     left: -1px;
@@ -3163,7 +3163,7 @@ button.btn
 
 .tree-item.last .tree-block .inner:after
 {
-    background: #fff;
+    background: var(--cWhite);
     content: '';
     height: 2px;
     left: -1px;
@@ -3175,7 +3175,7 @@ button.btn
 
 .tree-item.last .tree-block .inner:before
 {
-    background: #fff;
+    background: var(--cWhite);
     content: '';
     height: 2px;
     position: absolute;
@@ -3320,8 +3320,8 @@ button.btn
 
 .tree-el.__canceled
 {
-    background: #43b0e6;
-    color: #fff;
+    background: var(--cPrimaryColor);
+    color: var(--cWhite);
     margin: 5px -10px -5px;
     padding: 5px 0;
     text-align: center;
@@ -3329,7 +3329,7 @@ button.btn
 
 .tree-el.__title
 {
-    color: #43b0e6;
+    color: var(--cPrimaryColor);
     height: 24px;
 }
 
@@ -3405,7 +3405,7 @@ button.btn
 /* Calendar */
 .form-input.__calendar .dropdown-menu
 {
-    background: #fff;
+    background: var(--cWhite);
     border: 1px solid #dee9f0;
     margin: -1px 0 0;
     max-width: 400px;
@@ -3416,7 +3416,7 @@ button.btn
 
     .form-input.__calendar .dropdown-menu .btn
     {
-        background: #fbfdfe;
+        background: var(--cGrayTracing);
         font-size: 14px;
         font-weight: 400;
         position: static;
@@ -3425,7 +3425,7 @@ button.btn
 
     .form-input.__calendar .dropdown-menu .btn:disabled:hover
     {
-        background: #fbfdfe;
+        background: var(--cGrayTracing);
     }
 
     .form-input.__calendar .dropdown-menu .btn:hover
@@ -3441,8 +3441,8 @@ button.btn
         .form-input.__calendar .dropdown-menu .btn-group .btn,
         .form-input.__calendar .dropdown-menu .btn-success
         {
-            background: #43b0e6;
-            color: #fff;
+            background: var(--cPrimaryColor);
+            color: var(--cWhite);
             display: inline-block;
             padding: 0 10px;
         }
@@ -3454,8 +3454,8 @@ button.btn
     .form-input.__calendar .dropdown-menu .btn-info,
     .form-input.__calendar .dropdown-menu .btn.active
     {
-        background: #43b0e6;
-        color: #fff;
+        background: var(--cPrimaryColor);
+        color: var(--cWhite);
     }
 
     .dropdown-menu li
@@ -3488,7 +3488,7 @@ button.btn
         .dropdown-menu table td
         {
             background: #dee9f0;
-            border-color: #fff;
+            border-color: var(--cWhite);
             border-style: solid;
             border-width: 2px;
             font-size: 14px;
@@ -3544,7 +3544,7 @@ button.btn
 .select2-container .select2-choice,
 .select2-container-multi .select2-choices
 {
-    background: #fff;
+    background: var(--cWhite);
     border-color: #dee9f0;
     color: #4c4c4c;
     font-size: 14px;
@@ -3601,7 +3601,7 @@ button.btn
 
 .select2-container .select2-choice .select2-arrow:after
 {
-    border-color: #43b0e6 transparent transparent;
+    border-color: var(--cPrimaryColor) transparent transparent;
     border-style: solid;
     border-width: 5px 4px;
     content: '';
@@ -3613,18 +3613,18 @@ button.btn
 
 .select2-dropdown-open .select2-choice .select2-arrow:after
 {
-    border-color: transparent transparent #43b0e6;
+    border-color: transparent transparent var(--cPrimaryColor);
     margin: -10px 0 0;
 }
 
 .select2-search input
 {
-    background: #fff;
+    background: var(--cWhite);
 }
 
 .select2-results .select2-highlighted
 {
-    background: #43b0e6;
+    background: var(--cPrimaryColor);
 }
 
 .select2-container li
@@ -3647,7 +3647,7 @@ button.btn
 
 .select2-container-multi .select2-choices .select2-search-choice
 {
-    background: #fbfdfe;
+    background: var(--cGrayTracing);
     border: 1px solid #a1c0d4;
     font-size: 13px;
     line-height: 1;
@@ -3691,7 +3691,7 @@ button.btn
 
 .select2-search-choice-close:hover::after
 {
-    color: #43b0e6;
+    color: var(--cPrimaryColor);
 }
 
 .select2-container-multi .select2-search-choice-close::after,
@@ -3744,9 +3744,9 @@ tags-input .tags .input
 
 tags-input .tags .tag-item
 {
-    background: #43b0e6;
+    background: var(--cPrimaryColor);
     border: none;
-    color: #fff;
+    color: var(--cWhite);
     font-family: 'Exo 2';
     font-size: 13px;
     height: 24px;
@@ -3859,26 +3859,26 @@ tags-input .tags .tag-item .remove-button
 
             .nav-bar .menu-item.__done .menu-link
             {
-                background: #43b0e6;
-                color: #fff;
+                background: var(--cPrimaryColor);
+                color: var(--cWhite);
                 cursor: pointer;
             }
 
             .nav-bar .menu-link:hover
             {
-                color: #43b0e6;
+                color: var(--cPrimaryColor);
             }
 
             .nav-bar .__selected .menu-link
             {
                 background-color: #383838;
-                color: #43b0e6;
+                color: var(--cPrimaryColor);
             }
 
             .nav-bar .__selected.__animated .menu-link,
             .nav-bar .__animated .menu-link
             {
-                color: #fff;
+                color: var(--cWhite);
 
                 -webkit-animation: notify ease 1 3s;
                         animation: notify ease 1 3s;
@@ -3886,7 +3886,7 @@ tags-input .tags .tag-item .remove-button
 
             .nav-bar .__animated .menu-link:hover
             {
-                color: #fff;
+                color: var(--cWhite);
             }
 
                 .nav-bar .menu-ico
@@ -3899,7 +3899,7 @@ tags-input .tags .tag-item .remove-button
 
                 .nav-bar .menu-count
                 {
-                    background: #fff;
+                    background: var(--cWhite);
                     color: #333;
                     height: 18px;
                     font-size: 11px;
@@ -3957,7 +3957,7 @@ tags-input .tags .tag-item .remove-button
 
         .dropdown .dropdown-close:hover
         {
-            color: #fff;
+            color: var(--cWhite);
         }
 
         .dropdown .dropdown-head
@@ -3980,7 +3980,7 @@ tags-input .tags .tag-item .remove-button
 
                 .dropdown-head .menu-link:hover
                 {
-                    color: #fff;
+                    color: var(--cWhite);
                 }
 
                     .dropdown-head .menu-ico
@@ -4048,7 +4048,7 @@ tags-input .tags .tag-item .remove-button
                     .dropdown-content .list-link:hover
                     {
                         background: rgba(0,0,0,.2);
-                        color: #fff;
+                        color: var(--cWhite);
                     }
 
                         .dropdown-content .list-ico
@@ -4063,7 +4063,7 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .info .list-ico
                         {
-                            color: #43b0e6;
+                            color: var(--cPrimaryColor);
                         }
 
                         .dropdown-content .error .list-ico
@@ -4079,7 +4079,7 @@ tags-input .tags .tag-item .remove-button
                         .dropdown-content .error .list-ico:after,
                         .dropdown-content .warning .list-ico:after
                         {
-                            background: #fff;
+                            background: var(--cWhite);
                             content: '';
                             height: 12px;
                             left: 11px;
@@ -4093,7 +4093,7 @@ tags-input .tags .tag-item .remove-button
                         .dropdown-content .list-date,
                         .dropdown-content .list-descr
                         {
-                            color: #fff;
+                            color: var(--cWhite);
                             text-transform: none;
                         }
 
@@ -4136,7 +4136,7 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .list-bar
                         {
-                            background-color: #43b0e6;
+                            background-color: var(--cPrimaryColor);
                             display: block;
                             height: 10px;
                             margin-left: 55px;
@@ -4175,7 +4175,7 @@ tags-input .tags .tag-item .remove-button
 /* Blades */
 .blade
 {
-    background: #fff;
+    background: var(--cWhite);
     font-family: serif;
     overflow: hidden;
     position: relative;
@@ -4199,8 +4199,8 @@ tags-input .tags .tag-item .remove-button
     {
         font-family: 'Exo 2';
 
-        -webkit-box-shadow: -8px 0 0 0 rgba(0,0,0,.2) inset;
-                box-shadow: -8px 0 0 0 rgba(0,0,0,.2) inset;
+        -webkit-box-shadow: var(--sBladeInnerShadow);
+                box-shadow: var(--sBladeInnerShadow);
     }
 
     .blade .blade-head
@@ -4236,7 +4236,7 @@ tags-input .tags .tag-item .remove-button
             {
                 background: #7a1c13;
                 bottom: 0;
-                color: #fff;
+                color: var(--cWhite);
                 font-size: 14px;
                 left: 0;
                 line-height: 23px;
@@ -4251,7 +4251,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-status .status-message:after
             {
-                color: #fff;
+                color: var(--cWhite);
                 content: '';
                 font-family: 'FontAwesome';
                 left: 20px;
@@ -4283,7 +4283,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-nav .menu
             {
-                background: #232323;
+                background: var(--cGrayDarkest);
                 position: relative;
             }
 
@@ -4322,7 +4322,7 @@ tags-input .tags .tag-item .remove-button
 
                 .blade-nav .menu-item .btn-ico
                 {
-                    color: #fff;
+                    color: var(--cWhite);
                     font-size: 13px;
                     line-height: 0;
                     margin: 12px 0 0;
@@ -4331,7 +4331,7 @@ tags-input .tags .tag-item .remove-button
             .blade-nav .menu-item.__minimize:after,
             .blade-nav .menu-item.__maximize:after
             {
-                border-color: #fff;
+                border-color: var(--cWhite);
                 border-style: solid;
                 height: 8px;
                 top: 8px;
@@ -4362,7 +4362,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-nav .menu-item:after
             {
-                color: #fff;
+                color: var(--cWhite);
                 content: '';
                 left: 50%;
                 margin: 0 0 0 -6px;
@@ -4371,7 +4371,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-nav .menu-item:hover
             {
-                background: #43b0e6;
+                background: var(--cPrimaryColor);
             }
 
             .blade-nav .menu-item.__disabled:hover
@@ -4386,7 +4386,7 @@ tags-input .tags .tag-item .remove-button
 
         .blade-head .blade-t
         {
-            color: #fff;
+            color: var(--cWhite);
             left: 0;
             margin: 10px 20px;
             min-height: 34px;
@@ -4461,7 +4461,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-switch .switch-t
             {
-                color: #fff;
+                color: var(--cWhite);
                 display: block;
                 font-size: 11px;
                 font-weight: 300;
@@ -4542,7 +4542,7 @@ tags-input .tags .tag-item .remove-button
                     {
                         background: none;
                         border: none;
-                        color: #fff;
+                        color: var(--cWhite);
                         cursor: pointer;
                         font-size: 11px;
                         font-weight: 300;
@@ -4554,12 +4554,12 @@ tags-input .tags .tag-item .remove-button
 
                     .blade-toolbar .menu-btn:hover
                     {
-                        color: #43b0e6;
+                        color: var(--cPrimaryColor);
                     }
 
                     .blade-toolbar .menu-btn:disabled
                     {
-                        color: #fff;
+                        color: var(--cWhite);
                         cursor: not-allowed;
                     }
 
@@ -4604,7 +4604,7 @@ tags-input .tags .tag-item .remove-button
 
         .blade-container .blade-static
         {
-            background: #fbfdfe;
+            background: var(--cGrayTracing);
             border-color: #dee9f0;
             border-style: solid;
             border-width: 0 0 2px;
@@ -4783,7 +4783,7 @@ tags-input .tags .tag-item .remove-button
 
     .blade .blade-content.__gray
     {
-        background-color: #fbfdfe;
+        background-color: var(--cGrayTracing);
     }
 
     .__canceled
@@ -4947,7 +4947,7 @@ tags-input .tags .tag-item .remove-button
 
         .blade-loader .loading:after
         {
-            color: #43b0e6;
+            color: var(--cPrimaryColor);
             content: attr(data-title);
             font-size: 60px;
             left: 0;
@@ -5029,7 +5029,7 @@ tags-input .tags .tag-item .remove-button
 {
     font-size: 14px;
     padding: 10px;
-    text-shadow: 1px 1px #fff;
+    text-shadow: 1px 1px var(--cWhite);
 }
 
 .ui-grid-row-header-cell .ui-grid-cell-contents,
@@ -5040,7 +5040,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-row:nth-child(2n) .ui-grid-cell
 {
-    background: #fff;
+    background: var(--cWhite);
 }
 
 .ui-grid-filter-container
@@ -5122,7 +5122,7 @@ input.ui-grid-filter-input[type="text"]
     display: inline-block;
     font-size: 28px;
     margin: -4px 0 0;
-    text-shadow: 1px 1px #fff;
+    text-shadow: 1px 1px var(--cWhite);
     vertical-align: middle;
 }
 
@@ -5148,7 +5148,7 @@ input.ui-grid-filter-input[type="text"]
 /* Image preview */
 .image-preview
 {
-    background: #fff;
+    background: var(--cWhite);
     border: 2px solid #a1c0d4;
     height: 300px;
     line-height: 298px;
@@ -5197,7 +5197,7 @@ input.ui-grid-filter-input[type="text"]
 
         .overlay .popup
         {
-            background: #fff;
+            background: var(--cWhite);
             display: inline-block;
             max-height: 600px;
             max-width: 800px;
@@ -5249,7 +5249,7 @@ input.ui-grid-filter-input[type="text"]
     .gridster gridster-item,
     .gridster .list-item
     {
-        background: #fbfdfe;
+        background: var(--cGrayTracing);
         cursor: move;
         padding: 2px;
         position: absolute;
@@ -5279,7 +5279,7 @@ input.ui-grid-filter-input[type="text"]
     .gridster .list:not(.__editing) .list-item .customize
     {
         background: #a1c0d4;
-        color: #fff;
+        color: var(--cWhite);
         font-size: 12px;
         font-weight: 500;
         left: 0;
@@ -5292,7 +5292,7 @@ input.ui-grid-filter-input[type="text"]
 
         .customize .custom-ico
         {
-            color: #fff;
+            color: var(--cWhite);
             font-size: 12px;
         }
 
@@ -5409,13 +5409,13 @@ input.ui-grid-filter-input[type="text"]
 
         .gridster .list-price
         {
-            color: #43b0e6;
+            color: var(--cPrimaryColor);
             font-size: 12px;
         }
 
         .gridster .list-count
         {
-            color: #43b0e6;
+            color: var(--cPrimaryColor);
             font-size: 22px;
             font-weight: 300;
         }
@@ -5450,8 +5450,8 @@ input.ui-grid-filter-input[type="text"]
 /* Tooltip */
 .tooltip
 {
-    background: #43b0e6;
-    color: #fff;
+    background: var(--cPrimaryColor);
+    color: var(--cWhite);
     font-family: 'Exo 2';
     font-size: 12px;
     max-width: 600px;
@@ -5461,7 +5461,7 @@ input.ui-grid-filter-input[type="text"]
 
 .tooltip::after
 {
-    border-color: transparent #43b0e6 transparent transparent;
+    border-color: transparent var(--cPrimaryColor) transparent transparent;
     border-style: solid;
     border-width: 8px;
     content: '';
@@ -5513,7 +5513,7 @@ input.ui-grid-filter-input[type="text"]
 
 .lookbook
 {
-    background: #fff;
+    background: var(--cWhite);
     bottom: 20px;
     position: absolute;
     right: 28px;
@@ -5536,7 +5536,7 @@ input.ui-grid-filter-input[type="text"]
     {
         background: #dee9f0;
         border-top: 1px solid #dee9f0;
-        color: #43b0e6;
+        color: var(--cPrimaryColor);
         cursor: pointer;
         float: left;
         font-size: 14px;
@@ -5553,13 +5553,13 @@ input.ui-grid-filter-input[type="text"]
 
     .tabs .tab-item + .tab-item
     {
-        border-left: 1px solid #fff;
+        border-left: 1px solid var(--cWhite);
     }
 
     .tabs .tab-item.__selected
     {
-        background: #fff;
-        border-bottom: 2px solid #fff;
+        background: var(--cWhite);
+        border-bottom: 2px solid var(--cWhite);
         line-height: 30px;
         top: 0;
     }
