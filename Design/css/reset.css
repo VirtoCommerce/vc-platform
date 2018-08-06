@@ -15,7 +15,7 @@ body
 body
 {
 	background: var(--cBodyTracing);
-	color: #333;
+	color: var(--cGrayDark);
 	font-size: 100%;
 	line-height: 1.4;
 	word-wrap: break-word;

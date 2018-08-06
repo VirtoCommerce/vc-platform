@@ -9,7 +9,7 @@
 .no-data,
 .__gray
 {
-    color: #999;
+    color: var(--cTooltipFont);
 }
 
 .block
@@ -329,7 +329,7 @@ ui-codemirror > *:first-child {
 
 .error
 {
-    color: #e51400;
+    color: var(--сError);
     display: block;
     font-size: 12px;
     line-height: 1.4;
@@ -446,12 +446,12 @@ ol
 
             .list.__notice .list-item.__error .list-ico
             {
-                color: #e51400;
+                color: var(--сError);
             }
 
             .list.__notice .list-item.__warning .list-ico
             {
-                color: #f0a30a;
+                color: var(--cWarning);
             }
 
 .list.__car-info
@@ -515,7 +515,7 @@ ol
 
 .menu.__context
 {
-    background: #333;
+    background: var(--cGrayDark);
     display: none;
     position: fixed;
     padding: 10px 0;
@@ -566,7 +566,7 @@ ol
 
         .menu.__context .menu.__sub
         {
-            background: #333;
+            background: var(--cGrayDark);
             display: none;
             left: 100%;
             padding: 10px 0;
@@ -598,7 +598,7 @@ ol
 
         .list.__info .list-descr
         {
-            color: #999;
+            color: var(--cTooltipFont);
             font-size: 12px;
             margin: 5px 0 0;
         }
@@ -717,7 +717,7 @@ h3
 
 .text.__note
 {
-    border: 1px solid #eee;
+    border: 1px solid var(--cTooltipBorder);
     margin: 10px 0;
     padding: 10px;
 }
@@ -735,12 +735,12 @@ h3
 .text.__editable.__selected
 {
     background-color: var(--cPrimaryLightest);
-    border-color: #a1c0d4;
+    border-color: var(--cPrimaryDark);
 }
 
 .text.__note span:first-child
 {
-    color: #e51400;
+    color: var(--сError);
 }
 
 .sub-text
@@ -768,9 +768,9 @@ h3
 
 .note
 {
-    background: #f9f9f9;
-    border-color: #eee;
-    color: #999;
+    background: var(--cTooltipFill);
+    border-color: var(--cTooltipBorder);
+    color: var(--cTooltipFont);
 }
 
 .error
@@ -914,7 +914,7 @@ h3
 
         .table-descr
         {
-            color: #999;
+            color: var(--cTooltipFont);
         }
 
         .table-status
@@ -937,7 +937,7 @@ h3
 
         .table-date
         {
-            color: #999;
+            color: var(--cTooltipFont);
             font-size: 12px;
         }
 
@@ -976,7 +976,7 @@ h3
 
         .table-item.__selected .product-img .image
         {
-            background-color: #d9effa;
+            background-color: var(--cPrimaryLighter);
         }
 
     .table th.table-col
@@ -1026,12 +1026,12 @@ h3
 
     .table-item.__error .table-ico
     {
-        color: #e51400;
+        color: var(--сError);
     }
 
     .table-item.__warning .table-ico
     {
-        color: #f0a30a;
+        color: var(--cWarning);
     }
 
     .table-item.__info .table-ico
@@ -1054,7 +1054,7 @@ input::-ms-clear
 
 .__error
 {
-    color: #e51400;
+    color: var(--сError);
 }
 
 .form-input input.ng-invalid,
@@ -1063,9 +1063,9 @@ input::-ms-clear
 .form-input input.ng-invalid:focus,
 .form-input textarea.ng-invalid:focus
 {
-    background: #fef8f7;
-    border-color: #fce7e6;
-    color: #e51400;
+    background: var(--cInvalidFill);
+    border-color: var(--cInvalidBorder);
+    color: var(--сError);
 }
 
 fieldset
@@ -1121,13 +1121,13 @@ fieldset + fieldset
 
     .form-group .form-hint
     {
-        color: #999;
+        color: var(--cTooltipFont);
         font-size: 12px;
     }
 
     .form-error
     {
-        color: #e51400;
+        color: var(--сError);
         font-size: 12px;
         line-height: 1.4;
         padding: 5px 0;
@@ -1294,7 +1294,7 @@ fieldset + fieldset
         .form-input textarea:focus,
         .form-input select:focus
         {
-            border-color: #a1c0d4;
+            border-color: var(--cPrimaryDark);
         }
 
         .form-input input[type=file]
@@ -1558,7 +1558,7 @@ fieldset + fieldset
         .form-control .check
         {
             background: var(--cWhite);
-            border: 1px solid #a1c0d4;
+            border: 1px solid var(--cPrimaryDark);
             height: 13px;
             left: 0;
             position: absolute;
@@ -1642,7 +1642,7 @@ fieldset + fieldset
 
         .__switch.__two::after
         {
-            background: #999;
+            background: var(--cTooltipFont);
             height: 10px;
             right: -7px;
             width: 1px;
@@ -1650,7 +1650,7 @@ fieldset + fieldset
 
         .__switch.__two::before
         {
-            border: 1px solid #999;
+            border: 1px solid var(--cTooltipFont);
             height: 8px;
             left: -15px;
             width: 8px;
@@ -1760,7 +1760,7 @@ fieldset + fieldset
 
     .ta-root.focussed > .ta-scroll-window.form-control
     {
-        border-color: #a1c0d4;
+        border-color: var(--cPrimaryDark);
 
         -webkit-box-shadow: none;
                 box-shadow: none;
@@ -1769,7 +1769,7 @@ fieldset + fieldset
     .ta-editor.ta-html,
     .ta-scroll-window.form-control
     {
-        border: 1px solid #a1c0d4;
+        border: 1px solid var(--cPrimaryDark);
         max-width: 100%;
         min-width: 100%;
         width: 100%;
@@ -1900,7 +1900,7 @@ button.btn
 {
     background: none;
     border: none;
-    color: #333;
+    color: var(--cGrayDark);
     height: 300px;
     padding: 10px;
     width: 100%;
@@ -2139,7 +2139,7 @@ button.btn
 
 .tile.__selected:after
 {
-    border-color: #a1c0d4 #a1c0d4 transparent transparent;
+    border-color: var(--cPrimaryDark) var(--cPrimaryDark) transparent transparent;
     border-style: solid;
     border-width: 15px;
     content: '';
@@ -2375,7 +2375,7 @@ button.btn
 
 .tile .tile-count
 {
-    color: #999;
+    color: var(--cTooltipFont);
     font-size: 30px;
     line-height: 1;
     margin: 0 0 10px;
@@ -2414,7 +2414,7 @@ button.btn
 
 .tile:hover .tile-action
 {
-    background-color: #a1c0d4;
+    background-color: var(--cPrimaryDark);
     opacity: 1;
 
     filter: alpha(opacity=100);
@@ -2528,7 +2528,7 @@ button.btn
 
     .__items .list-item.__default:after
     {
-        border-color: #a1c0d4 #a1c0d4 transparent transparent;
+        border-color: var(--cPrimaryDark) var(--cPrimaryDark) transparent transparent;
         border-style: solid;
         border-width: 15px;
         content: "";
@@ -2679,7 +2679,7 @@ button.btn
 
         .__items .list-descr
         {
-            color: #999;
+            color: var(--cTooltipFont);
             display: block;
             font-size: 12px;
         }
@@ -2754,8 +2754,8 @@ button.btn
         {
             background: var(--cPrimaryLightest);
 
-            -webkit-box-shadow: 0 0 0 1px #a1c0d4;
-                    box-shadow: 0 0 0 1px #a1c0d4;
+            -webkit-box-shadow: 0 0 0 1px var(--cPrimaryDark);
+                    box-shadow: 0 0 0 1px var(--cPrimaryDark);
         }
 
         .__items label.list-item :checked ~ .switch,
@@ -2768,7 +2768,7 @@ button.btn
         .__items .list-item :checked ~ .switch:after,
         .__items .list-item.__selected .switch:after
         {
-            border-color: #a1c0d4 #a1c0d4 transparent transparent;
+            border-color: var(--cPrimaryDark) var(--cPrimaryDark) transparent transparent;
             border-style: solid;
             border-width: 15px;
             content: '';
@@ -2832,7 +2832,7 @@ button.btn
 
         .__chosen .list-remove
         {
-            color: #a1c0d4;
+            color: var(--cPrimaryDark);
             cursor: pointer;
             float: left;
             font-family: caption;
@@ -2988,7 +2988,7 @@ button.btn
 
 .__gallery .modal-dialog {
     background-color: var(--cWhite);
-    border: 5px solid #a1c0d4;
+    border: 5px solid var(--cPrimaryDark);
     bottom: 40px;
     left: 80px;
     margin: 0;
@@ -3045,7 +3045,7 @@ button.btn
     .window .window-head,
     .modal-content .modal-header
     {
-        background: #333;
+        background: var(--cGrayDark);
         height: 40px;
         line-height: 36px;
         position: relative;
@@ -3123,8 +3123,8 @@ button.btn
     .breadcrumbs .back
     {
         background: var(--cWhite);
-        border: 1px solid #a1c0d4;
-        color: #a1c0d4;
+        border: 1px solid var(--cPrimaryDark);
+        color: var(--cPrimaryDark);
         display: inline-block;
         height: 30px;
         line-height: 28px;
@@ -3270,7 +3270,7 @@ button.btn
 
 .tree-block
 {
-    border: 2px solid #a1c0d4;
+    border: 2px solid var(--cPrimaryDark);
     cursor: pointer;
     display: inline-block;
     margin: 10px 11px;
@@ -3300,8 +3300,8 @@ button.btn
 
 .tree-block.__selected
 {
-    background: #d9effa;
-    border-color: #a1c0d4;
+    background: var(--cPrimaryLighter);
+    border-color: var(--cPrimaryDark);
 }
 
 .tree-block .inner
@@ -3342,7 +3342,7 @@ button.btn
 
 .tree-block:before
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     content: '';
     height: 10px;
     left: 50%;
@@ -3356,7 +3356,7 @@ button.btn
 
 .tree.__horizontal .tree-block:before
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     content: "";
     height: 2px;
     left: -14px;
@@ -3397,7 +3397,7 @@ button.btn
 
 .tree-node:after
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     content: '';
     height: 2px;
     left: 0;
@@ -3408,7 +3408,7 @@ button.btn
 
 .tree.__horizontal .tree-node:after
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     bottom: 0;
     content: "";
     height: auto;
@@ -3425,7 +3425,7 @@ button.btn
 
 .tree-node:before
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     content: '';
     height: 12px;
     left: 50%;
@@ -3439,7 +3439,7 @@ button.btn
 
 .tree.__horizontal .tree-node:before
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     content: "";
     height: 2px;
     left: -12px;
@@ -3727,7 +3727,7 @@ button.btn
 .select2-drop-active,
 .select2-container-multi.select2-container-active .select2-choices
 {
-    border-color: #a1c0d4;
+    border-color: var(--cPrimaryDark);
 
     -webkit-box-shadow: none;
             box-shadow: none;
@@ -3800,7 +3800,7 @@ button.btn
 .select2-container-multi .select2-choices .select2-search-choice
 {
     background: var(--cGrayTracing);
-    border: 1px solid #a1c0d4;
+    border: 1px solid var(--cPrimaryDark);
     font-size: 13px;
     line-height: 1;
     padding: 6px 30px 6px 5px;
@@ -3850,7 +3850,7 @@ button.btn
 .select2-container-multi .select2-search-choice-close::after,
 .select2-container-multi .select2-search-choice-close:hover::after
 {
-    color: #a1c0d4;
+    color: var(--cPrimaryDark);
 }
 
 
@@ -3888,7 +3888,7 @@ tags-input .tags li:before
 
 tags-input .tags.focused
 {
-    border-color: #a1c0d4;
+    border-color: var(--cPrimaryDark);
 
     -webkit-box-shadow: none;
             box-shadow: none;
@@ -3918,7 +3918,7 @@ tags-input .tags .tag-item
 
 tags-input .tags .tag-item.selected
 {
-    background: #e51400;
+    background: var(--сError);
 }
 
 tags-input .tags .tag-item .remove-button
@@ -3957,7 +3957,7 @@ tags-input .tags .tag-item .remove-button
     /* Bar - menu navigation */
     .nav-bar .bar
     {
-        background: #333;
+        background: var(--cGrayDark);
         height: 100%;
         padding: 90px 0 0;
         position: relative;
@@ -3996,7 +3996,7 @@ tags-input .tags .tag-item .remove-button
 
             .nav-bar .logo-version
             {
-                color: #c2c2c2;
+                color: var(--cNavLinkFont);
                 display: block;
                 font-size: 12px;
                 padding: 10px 0;
@@ -4004,7 +4004,7 @@ tags-input .tags .tag-item .remove-button
 
             .nav-bar .menu-link
             {
-                color: #c2c2c2;
+                color: var(--cNavLinkFont);
                 display: block;
                 font-size: 13px;
                 padding: 15px 0;
@@ -4033,7 +4033,7 @@ tags-input .tags .tag-item .remove-button
 
             .nav-bar .__selected .menu-link
             {
-                background-color: #383838;
+                background-color: var(--cGrayDarker);
                 color: var(--cPrimary);
             }
 
@@ -4062,7 +4062,7 @@ tags-input .tags .tag-item .remove-button
                 .nav-bar .menu-count
                 {
                     background: var(--cWhite);
-                    color: #333;
+                    color: var(--cGrayDark);
                     height: 18px;
                     font-size: 11px;
                     line-height: 18px;
@@ -4084,7 +4084,7 @@ tags-input .tags .tag-item .remove-button
     /* Dropdown - dropdown menu navigation */
     .nav-bar .dropdown
     {
-        background: #383838;
+        background: var(--cGrayDarker);
         bottom: 0;
         position: fixed;
         top: 0;
@@ -4106,7 +4106,7 @@ tags-input .tags .tag-item .remove-button
 
         .dropdown .dropdown-close
         {
-            color: #c2c2c2;
+            color: var(--cNavLinkFont);
             cursor: pointer;
             font-family: caption;
             font-size: 22px;
@@ -4198,7 +4198,7 @@ tags-input .tags .tag-item .remove-button
 
                     .dropdown-content .list-link
                     {
-                        color: #c2c2c2;
+                        color: var(--cNavLinkFont);
                         display: block;
                         font-size: 16px;
                         font-weight: 300;
@@ -4236,12 +4236,12 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .error .list-ico
                         {
-                            color: #e51400;
+                            color: var(--сError);
                         }
 
                         .dropdown-content .warning .list-ico
                         {
-                            color: #f0a30a;
+                            color: var(--cWarning);
                         }
 
                         .dropdown-content .error .list-ico:after,
@@ -4285,7 +4285,7 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .list-date
                         {
-                            color: #c2c2c2;
+                            color: var(--cNavLinkFont);
                             margin: 5px 0 0 55px;
                             padding: 0 0 0 25px;
                             position: relative;
@@ -4293,7 +4293,7 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .list-date:after
                         {
-                            color: #c2c2c2;
+                            color: var(--cNavLinkFont);
                             content: '';
                             font-family: 'FontAwesome';
                             font-size: 14px;
@@ -4378,7 +4378,7 @@ tags-input .tags .tag-item .remove-button
 
     .blade .blade-head
     {
-        background: #333;
+        background: var(--cGrayDark);
         height: 132px;
         min-width: 300px;
         padding: 25px 0 5px;
@@ -4601,13 +4601,13 @@ tags-input .tags .tag-item .remove-button
 
             .blade-t .blade-t_subhead
             {
-                color: #bbb;
+                color: var(--cSubtitle);
                 font-size: 11px;
             }
 
         .blade-head .blade-toolbar
         {
-            background: #333;
+            background: var(--cGrayDark);
             border-top: 1px solid #3d3d3d;
             left: 0;
             overflow: hidden;
@@ -4677,7 +4677,7 @@ tags-input .tags .tag-item .remove-button
 
                 .blade-toolbar .menu-item.__loading:after
                 {
-                    background-color: #333;
+                    background-color: var(--cGrayDark);
                     background-image: 
                         -webkit-linear-gradient(45deg, 
                         rgba(255, 255, 255, .15) 25%, 
@@ -5048,7 +5048,7 @@ tags-input .tags .tag-item .remove-button
     .blade .blade-inner::-webkit-scrollbar-track-piece,
     .log::-webkit-scrollbar-track-piece
     {
-        background: #f9f9f9;
+        background: var(--cTooltipFill);
     }
 
     .blade .blade-inner::-webkit-scrollbar-thumb,
@@ -5072,10 +5072,10 @@ tags-input .tags .tag-item .remove-button
     .blade .blade-inner,
     .log
     {
-        -ms-scrollbar-arrow-color: #f9f9f9;
+        -ms-scrollbar-arrow-color: var(--cTooltipFill);
         -ms-scrollbar-face-color: #e6e6e6;
         -ms-scrollbar-shadow-color: #e6e6e6;
-        -ms-scrollbar-track-color: #f9f9f9;
+        -ms-scrollbar-track-color: var(--cTooltipFill);
     }
 
     .blade .__gray .blade-inner,
@@ -5191,7 +5191,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-header-cell
 {
-    color: #333;
+    color: var(--cGrayDark);
     font-size: 14px;
     font-weight: 400;
 }
@@ -5206,7 +5206,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-cell .table-descr
 {
-    color: #999;
+    color: var(--cTooltipFont);
     font-size: 12px;
 }
 
@@ -5235,7 +5235,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected
 {
-    background: #d9effa !important;
+    background: var(--cPrimaryLighter) !important;
 }
 
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell
@@ -5256,7 +5256,7 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-row:nth-child(2n) .ui-grid-cell.__selected .image,
 .ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected .image
 {
-    background-color: #d9effa !important;
+    background-color: var(--cPrimaryLighter) !important;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-row:hover .ui-grid-cell,
@@ -5267,7 +5267,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell.__selected
 {
-    background: #d9effa !important;
+    background: var(--cPrimaryLighter) !important;
 }
 
 .ui-grid-header-cell,
@@ -5397,7 +5397,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-selection-row-header-buttons
 {
-    color: #a1c0d4;
+    color: var(--cPrimaryDark);
     height: 100%;
     opacity: 1;
     margin: -5px;
@@ -5429,7 +5429,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-row:nth-child(2n) .ui-grid-cell.__selected
 {
-    background: #d9effa !important;
+    background: var(--cPrimaryLighter) !important;
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-cell.__selected,
@@ -5512,7 +5512,7 @@ input.ui-grid-filter-input[type="text"]
 .ui-grid-row:hover .ui-grid-cell .pr-ico,
 .ui-grid-row-selected .ui-grid-cell .pr-ico
 {
-    color: #a1c0d4;
+    color: var(--cPrimaryDark);
 }
 
 .ui-grid-row > :first-child
@@ -5657,7 +5657,7 @@ input.ui-grid-filter-input[type="text"]
 .image-preview
 {
     background: var(--cWhite);
-    border: 2px solid #a1c0d4;
+    border: 2px solid var(--cPrimaryDark);
     height: 300px;
     line-height: 298px;
     overflow: hidden;
@@ -5757,7 +5757,7 @@ input.ui-grid-filter-input[type="text"]
 
     .gridster .list:not(.__editing) .list-item .customize
     {
-        background: #a1c0d4;
+        background: var(--cPrimaryDark);
         color: var(--cWhite);
         font-size: 12px;
         font-weight: 500;
@@ -5778,7 +5778,7 @@ input.ui-grid-filter-input[type="text"]
     .gridster-preview-holder
     {
         background: var(--cPrimaryLight);
-        border-color: #a1c0d4;
+        border-color: var(--cPrimaryDark);
         border-style: dashed;
         border-width: 1px;
     }
@@ -5786,7 +5786,7 @@ input.ui-grid-filter-input[type="text"]
     .gridster .gridster-preview-holder
     {
         background: var(--cPrimaryLight);
-        border-color: #a1c0d4;
+        border-color: var(--cPrimaryDark);
         border-style: dashed;
         border-width: 1px;
     }
@@ -5923,7 +5923,7 @@ input.ui-grid-filter-input[type="text"]
         .gridster .list-item:hover .gallery-ico,
         .gridster .list-item:hover .comment-ico
         {
-            color: #a1c0d4;
+            color: var(--cPrimaryDark);
         }
 
         .gridster .list-img
@@ -5974,7 +5974,7 @@ input.ui-grid-filter-input[type="text"]
 .__informer
 {
     background: var(--cPrimaryLightest);
-    color: #a1c0d4;
+    color: var(--cPrimaryDark);
     font-size: 22px;
     padding: 10px;
 
@@ -6160,7 +6160,7 @@ input.ui-grid-filter-input[type="text"]
         .overlay .popup
         {
             background: var(--cWhite);
-            border: 5px solid #a1c0d4;
+            border: 5px solid var(--cPrimaryDark);
             bottom: 40px;
             font-family: 'Exo 2';
             left: 80px;
@@ -6212,7 +6212,7 @@ input.ui-grid-filter-input[type="text"]
             }
 
                 .gallery .image-link {
-                    background: #a1c0d4;
+                    background: var(--cPrimaryDark);
                     color: var(--cWhite);
                     left: 0;
                     height: 45px;
@@ -6233,7 +6233,7 @@ input.ui-grid-filter-input[type="text"]
 
                 .gallery .control
                 {
-                    color: #a1c0d4;
+                    color: var(--cPrimaryDark);
                     font-size: 30px;
                     left: -50px;
                     position: absolute;
@@ -6349,7 +6349,7 @@ input.ui-grid-filter-input[type="text"]
                     .__navs .list-item:hover,
                     .__navs .list-item.__selected
                     {
-                        border-color: #a1c0d4;
+                        border-color: var(--cPrimaryDark);
                         opacity: 1;
 
                         filter: alpha(opacity=100);

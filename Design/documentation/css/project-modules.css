@@ -2,7 +2,7 @@
 .drag-area
 {
 	background: var(--cPrimaryLight);
-    border: 2px dashed #a1c0d4;
+    border: 2px dashed var(--cPrimaryDark);
     height: 250px;
 	margin: 0 0 20px;
 	padding: 0 20px;
@@ -24,7 +24,7 @@
 
 .drag-content
 {
-    color: #a1c0d4;
+    color: var(--cPrimaryDark);
     display: inline-block;
 	font-size: 18px;
     text-shadow: 1px 1px 1px var(--cWhite);
@@ -186,7 +186,7 @@
 
     .log .__warning
     {
-        color: #f0a30a;
+        color: var(--cWarning);
     }
 
     .log .__debug
@@ -196,7 +196,7 @@
 
     .log .__error
     {
-        color: #e51400;
+        color: var(--сError);
     }
 
 
@@ -231,7 +231,7 @@
 
 .table .table-col.__author
 {
-    color: #999;
+    color: var(--cTooltipFont);
 }
 
 .table .table-col.__version
@@ -392,7 +392,7 @@
 
 .gallery .gallery-img:hover
 {
-    border-color: #a1c0d4;
+    border-color: var(--cPrimaryDark);
 }
 
 .gallery-img

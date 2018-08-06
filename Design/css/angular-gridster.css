@@ -54,7 +54,7 @@ transition-delay:50ms;
     transition-delay:50ms;
 
     background: var(--cPrimaryLight);
-    border-color: #a1c0d4;
+    border-color: var(--cPrimaryDark);
     border-style: dashed;
     border-width: 1px;
 }

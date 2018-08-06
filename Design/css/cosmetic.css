@@ -26,7 +26,7 @@
 .__items .list-item.__selected,
 .__files .list-item.__selected > .list-block
 {
-	background: #d9effa;
+	background: var(--cPrimaryLighter);
 }
 
 .__items label.list-item.__selected
@@ -48,7 +48,7 @@
 .__files .list-block:hover .list-ico,
 .__files .list-item.__selected > .list-block .list-ico
 {
-	color: #a1c0d4;
+	color: var(--cPrimaryDark);
 }
 
 /* Links */

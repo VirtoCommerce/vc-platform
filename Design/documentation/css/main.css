@@ -63,7 +63,7 @@ p
 
     .header .header-text
     {
-        color: #999;
+        color: var(--cTooltipFont);
         font-size: 16px;
         font-weight: 600;
     }
@@ -141,7 +141,7 @@ p
                     .navbar .menu.__sub .menu-item.__t,
                     .menu.__sub .menu-item .form-t
                     {
-                        color: #999;
+                        color: var(--cTooltipFont);
                         font-size: 12px;
                     }
 
@@ -201,7 +201,7 @@ p
 
         .content .title
         {
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--cTooltipBorder);
             padding-bottom: 20px;
         }
 
@@ -222,7 +222,7 @@ p
 
         .content .example
         {
-            border: 1px solid #eee;
+            border: 1px solid var(--cTooltipBorder);
             margin: 20px 0 0;
             padding: 50px 20px 20px;
             position: relative;
@@ -276,7 +276,7 @@ p
             .content .example .table
             {
                 border-left: 1px solid #ddd;
-                border-right: 1px solid #eee;
+                border-right: 1px solid var(--cTooltipBorder);
                 margin: 0 auto;
                 width: 550px;
             }
@@ -290,7 +290,7 @@ p
 
         .content .example::before
         {
-            color: #999;
+            color: var(--cTooltipFont);
             content: 'Example';
             left: 0;
             padding: 15px;
@@ -305,7 +305,7 @@ p
         .content .code
         {
             background: #f7f7f9;
-            border: 1px solid #eee;
+            border: 1px solid var(--cTooltipBorder);
             margin: -1px 0 20px;
             position: relative;
             z-index: 5;
