@@ -775,9 +775,9 @@ h3
 
 .error
 {
-    background: #f2dede;
-    border-color: #ebccd1;
-    color: #a94442;
+    background: var(--cErrorFill);
+    border-color: var(--cErrorBorder);
+    color: var(--cErrorFont);
 }
 
 .success
@@ -981,7 +981,7 @@ h3
 
     .table th.table-col
     {
-        background: rgba(0,0,0,.025);
+        background: var(--сTableHeaderFill);
         font-size: 14px;
         font-weight: 500;
         line-height: 1.3;
@@ -2113,8 +2113,8 @@ button.btn
 .tile:hover,
 .tile.__selected
 {
-    -webkit-box-shadow: 0 0 0 2px #a1c0d4 inset;
-            box-shadow: 0 0 0 2px #a1c0d4 inset;
+    -webkit-box-shadow: var(--sBlockHover);
+            box-shadow: var(--sBlockHover);
 }
 
 .tile.__info:hover,
@@ -5707,11 +5707,11 @@ input.ui-grid-filter-input[type="text"]
 
     .gridster .list-item.error
     {
-        background: #f2dede;
+        background: var(--cErrorFill);
         color: #e0a9a9;
 
-        -webkit-box-shadow: 0 0 0 2px #ebccd1 inset;
-                box-shadow: 0 0 0 2px #ebccd1 inset;
+        -webkit-box-shadow: 0 0 0 2px var(--cErrorBorder) inset;
+                box-shadow: 0 0 0 2px var(--cErrorBorder) inset;
     }
 
     .gridster .list-item.success
@@ -5751,8 +5751,8 @@ input.ui-grid-filter-input[type="text"]
     .gridster gridster-item:hover,
     .gridster .list-item:hover
     {
-        -webkit-box-shadow: 0 0 0 2px #a1c0d4 inset;
-                box-shadow: 0 0 0 2px #a1c0d4 inset;
+        -webkit-box-shadow: var(--sBlockHover);
+                box-shadow: var(--sBlockHover);
     }
 
     .gridster .list:not(.__editing) .list-item .customize

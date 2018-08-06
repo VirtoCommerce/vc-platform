@@ -1,5 +1,13 @@
 :root {
-    /* c - Colors */
+    /* c - Colors ========================================= */
+    --cBodyTracing: #eef5f7;
+    --cWhite: #fff;
+    --cBlack: #000;
+
+    --cIconFill: #a6a6a6;   /* default - gray*/
+
+    --сTableHeaderFill: rgba(0,0,0,.025);
+
     --cPrimary: #43b0e6;
     --cPrimaryLight: #dee9f0;
     --cPrimaryLightest: #ecf7fc;
@@ -8,13 +16,11 @@
     --cGrayDarkest: #232323;
     --cGrayTracing: #fbfdfe;
 
-    --cBodyTracing: #eef5f7;
-    
-    --cIconFill: #a6a6a6;   /* default - gray*/
-
-    --cWhite: #fff;
-    --cBlack: #000;
-
-    /* s - Box Shadows */
+    --cErrorFill: #f2dede;
+    --cErrorBorder: #ebccd1;
+    --cErrorFont: #a94442;
+ 
+    /* s - Box Shadows ==================================== */
     --sBladeInnerShadow: -8px 0 0 0 rgba(0,0,0,.2) inset;   /*shadow like border*/
+    --sBlockHover: 0 0 0 2px #a1c0d4 inset;
 }
