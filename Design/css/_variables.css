@@ -42,3 +42,37 @@
     --sBladeInnerShadow: -8px 0 0 0 rgba(0,0,0,.2) inset;   /*shadow like border*/
     --sBlockHover: 0 0 0 2px #a1c0d4 inset;
 }
+
+body.red-theme{
+    --cPrimary: #e71919;
+    --cPrimaryDark: #cf1616;
+    --cPrimaryLight: #e92f2f;
+    --cPrimaryLighter: #eb4646;
+    --cPrimaryLightest: #ee5e5e;
+}
+
+body.custom-theme{
+    --cBodyTracing: #eee2dc;
+
+    --cPrimary: #ac3b61;
+    --cPrimaryDark: #c47590;
+    --cPrimaryLight: #cd89a0;
+    --cPrimaryLighter: #eed7df;
+    --cPrimaryLightest: #f6ebef;
+    
+    --cGrayDark: #123c69;
+    --cGrayDarker: #0e3054;
+    --cGrayDarkest: #0a243f;
+    --cGrayTracing: #e7ebf0;
+}
+
+.change-theme-buttons{
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+}
+
+.change-theme-buttons button{
+    padding: 5px;
+}
