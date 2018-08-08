@@ -89,4 +89,38 @@ namespace VirtoCommerce.Platform.Core.Common
                     .ToList());
         }
     }
+
+    /// <summary>
+    /// Previous generic ValueObject` type, leave it for backward compatibility
+    /// TODO: Make Obsolete later
+    /// </summary>
+    /// <typeparam name="TValueObject"></typeparam>
+    [Obsolete("Use non generic type instead")]
+    public class ValueObject<TValueObject> : ValueObject, IEquatable<TValueObject>
+    {
+        public bool Equals(TValueObject other)
+        {
+            return base.Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+        public static bool operator ==(ValueObject<TValueObject> left, ValueObject<TValueObject> right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(ValueObject<TValueObject> left, ValueObject<TValueObject> right)
+        {
+            return !Equals(left, right);
+        }
+
+    }
 }
