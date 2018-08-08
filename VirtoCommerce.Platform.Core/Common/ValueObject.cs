@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-    public abstract class ValueObject : IValueObject
+    public abstract class ValueObject : IValueObject, ICacheKey
     {
         private static readonly ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>> TypeProperties = new ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>>();
 
@@ -46,20 +46,28 @@ namespace VirtoCommerce.Platform.Core.Common
             return $"{{{string.Join(", ", GetProperties().Select(f => $"{f.Name}: {f.GetValue(this)}"))}}}";
         }
 
+        public virtual string GetCacheKey()
+        {
+            return string.Join("|", GetEqualityComponents().Select(x => x ?? "null").Select(x => x is ICacheKey cacheKey ? cacheKey.GetCacheKey() : x.ToString()));
+        }
+
         protected virtual IEnumerable<object> GetEqualityComponents()
         {
             foreach (var property in GetProperties())
             {
                 var value = property.GetValue(this);
-                if (value != null)
+                if (value == null)
+                {
+                    yield return "null";
+                }
+                else
                 {
                     var valueType = value.GetType();
-
                     if (valueType.IsAssignableFromGenericList())
                     {
                         foreach (var child in ((IEnumerable)value))
                         {
-                            yield return child;
+                            yield return child ?? "null";
                         }
                     }
                     else
@@ -80,38 +88,5 @@ namespace VirtoCommerce.Platform.Core.Common
                     .OrderBy(p => p.Name)
                     .ToList());
         }
-    }
-
-    /// <summary>
-    /// Previous generic ValueObject` type, leave it for backward compatibility
-    /// TODO: Make Obsolete later
-    /// </summary>
-    /// <typeparam name="TValueObject"></typeparam>
-    public class ValueObject<TValueObject> : ValueObject, IEquatable<TValueObject>
-    {
-        public bool Equals(TValueObject other)
-        {
-            return base.Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-        public static bool operator ==(ValueObject<TValueObject> left, ValueObject<TValueObject> right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(ValueObject<TValueObject> left, ValueObject<TValueObject> right)
-        {
-            return !Equals(left, right);
-        }
-
     }
 }
