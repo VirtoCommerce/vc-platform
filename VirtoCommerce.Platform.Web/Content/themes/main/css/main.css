@@ -932,7 +932,8 @@ h3 {
   content: '';
   font-size: 17px;
   font-family: 'FontAwesome';
-  margin: 0; }
+  margin: 0;
+  opacity: 1; }
 
 .ui-grid-selection-row-header-buttons.ui-grid-row-selected::before,
 .ui-grid-selection-row-header-buttons.ui-grid-all-selected::before {
@@ -2651,6 +2652,9 @@ button.btn {
 /* Columns */
 .columns {
   padding: 15px 0; }
+  .columns:last-of-type {
+    clear: both;
+    padding-top: 0; }
 
 .form.columns {
   padding: 0; }
