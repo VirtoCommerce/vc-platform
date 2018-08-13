@@ -1,4 +1,4 @@
-﻿@using VirtoCommerce.Platform.Web
+@using VirtoCommerce.Platform.Web
 <!DOCTYPE html>
 <html lang="en" ng-app="platformWebApp" ng-strict-di>
 <head>
@@ -43,7 +43,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     @RenderBody()
     <script src="~/Scripts/allPackages.js"></script>
 
-    @Scripts.Render(Startup.VirtualRoot + "/scripts/angular")
+    @Scripts.Render(Startup.VirtualRoot + "/scripts/platform")
     @Scripts.Render(Startup.VirtualRoot + "/scripts/modules")
     @RenderSection("scripts", required: false)
 </body>

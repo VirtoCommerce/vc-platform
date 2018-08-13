@@ -127,7 +127,7 @@ gulp.task('fontawesomeFonts', function () {
 });
 gulp.task('fontawesomePackage', ['fontawesomeCss', 'fontawesomeFonts']);
 
-gulp.task('packAll', ['packJavaScript', 'packCss', 'copyMainFonts']);
+gulp.task('packAll', ['packJavaScript', 'packCss', 'copyMainFonts', 'translateSass']);
 
 // Watch on sass to enable auto-translation
 gulp.task('watch', function () {

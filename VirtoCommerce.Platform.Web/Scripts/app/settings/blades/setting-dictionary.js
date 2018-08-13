@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.settingDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, settings) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:setting:update';
@@ -25,7 +25,7 @@
 
     $scope.dictValueValidator = function (value) {
         if (blade.currentEntity) {
-            if (blade.currentEntity.valueType == 'ShortText') {
+            if (blade.currentEntity.valueType === 'ShortText') {
                 return _.all(currentEntities, function (item) { return angular.lowercase(item.value) !== angular.lowercase(value); });
             } else {
                 return _.all(currentEntities, function (item) { return item.value !== value; });
@@ -65,24 +65,29 @@
      }
     ];
 
+    function isDirty() {
+        return !angular.equals(currentEntities, blade.origEntity) && blade.hasUpdatePermission();
+    };
+
+
+    function saveChanges() {
+        blade.selectedAll = false;
+        blade.isLoading = true;
+        if (blade.currentEntity && blade.currentEntity.arrayValues) {
+            blade.currentEntity.arrayValues = _.pluck(blade.currentEntity.arrayValues, 'value');
+        }
+        settings.update(null, [blade.currentEntity], blade.refresh,
+            function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
+    };
+
     if (blade.isApiSave) {
         var formScope;
         $scope.setForm = function (form) {
             formScope = form;
         }
 
-        function isDirty() {
-            return !angular.equals(currentEntities, blade.origEntity) && blade.hasUpdatePermission();
-        };
+        
 
-        function saveChanges() {
-            blade.selectedAll = false;
-            blade.isLoading = true;
-            blade.currentEntity.arrayValues = _.pluck(blade.currentEntity.arrayValues, 'value');
-
-            settings.update(null, [blade.currentEntity], blade.refresh,
-                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-        };
 
         blade.toolbarCommands.splice(0, 0,
         {

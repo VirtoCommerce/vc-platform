@@ -1,10 +1,10 @@
-﻿using System.Linq;
+using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Assets
 {
-    public class AssetEntrySearchCriteria : ValueObject<AssetEntrySearchCriteria>
-    {        
+    public class AssetEntrySearchCriteria : ValueObject
+    {
         /// <summary>
         /// Phrase to search in Name and RelativeUrl
         /// </summary>
