@@ -2652,6 +2652,9 @@ button.btn {
 /* Columns */
 .columns {
   padding: 15px 0; }
+  .columns:last-of-type {
+    clear: both;
+    padding-top: 0; }
 
 .form.columns {
   padding: 0; }
