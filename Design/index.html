@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en" ng-app="app">
+
 <head>
     <meta charset="UTF-8">
     <title>VCF Theme | Refactoring</title>
@@ -7,9 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <!-- Google fonts -->
-    <link href='http://fonts.googleapis.com/css?family=Exo+2:400,300,500,600,400italic&amp;subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Exo+2:400,300,500,600,400italic&amp;subset=latin,cyrillic' rel='stylesheet'
+        type='text/css'>
 
     <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/_variables.css">
     <link rel="stylesheet" href="ui-grid/ui-grid-unstable.css">
     <link rel="stylesheet" href="css/font-awesome.css">
     <link rel="stylesheet" href="css/base-modules.css">
@@ -24,7 +27,19 @@
     <link rel="stylesheet" href="css/angular-gridster.css">
 
 </head>
-<body ng-app="app">
+
+<script>
+   function changeColorTheme(themeName){
+        document.getElementById('body').className = themeName;
+   }
+</script>
+
+<body ng-app="app" id="body">
+    <div class="change-theme-buttons">
+        <button type="button" onclick="changeColorTheme('')">Color theme to blue</button>
+        <button type="button" onclick="changeColorTheme('red-theme')">Color theme to red</button>
+        <button type="button" onclick="changeColorTheme('custom-theme')">Color theme to custom</button>
+    </div>
 
     <div id="layout">
         <nav class="nav-bar">
@@ -202,7 +217,8 @@
                                                     </td>
                                                     <td class="table-col">
                                                         <span class="table-t">New product was added</span>
-                                                        <span class="table-descr">Username successfully added new product «product name» in category «Category name»</span>
+                                                        <span class="table-descr">Username successfully added new product «product name» in category
+                                                            «Category name»</span>
                                                     </td>
                                                     <td class="table-col __date">
                                                         <span class="table-date">2 m ago</span>
@@ -214,7 +230,8 @@
                                                     </td>
                                                     <td class="table-col">
                                                         <span class="table-t">New product was added</span>
-                                                        <span class="table-descr">Username successfully added new product «product name» in category «Category name»</span>
+                                                        <span class="table-descr">Username successfully added new product «product name» in category
+                                                            «Category name»</span>
                                                     </td>
                                                     <td class="table-col __date">
                                                         <span class="table-date">2 m ago</span>
@@ -226,7 +243,8 @@
                                                     </td>
                                                     <td class="table-col">
                                                         <span class="table-t">New product was added</span>
-                                                        <span class="table-descr">Username successfully added new product «product name» in category «Category name»</span>
+                                                        <span class="table-descr">Username successfully added new product «product name» in category
+                                                            «Category name»</span>
                                                     </td>
                                                     <td class="table-col __date">
                                                         <span class="table-date">2 m ago</span>
@@ -418,7 +436,9 @@
                                 <div class="form-input __search">
                                     <input placeholder="Search keyword..." type="text">
                                 </div>
-                                <p class="form-count">Count: <span class="count">16</span></p>
+                                <p class="form-count">Count:
+                                    <span class="count">16</span>
+                                </p>
                             </div>
                         </div>
                         <div class="blade-content __medium-wide">
@@ -620,7 +640,9 @@
                                 <div class="form-input __search">
                                     <input placeholder="Search keyword..." type="text">
                                 </div>
-                                <p class="form-count">Count: <span class="count">5</span></p>
+                                <p class="form-count">Count:
+                                    <span class="count">5</span>
+                                </p>
                             </div>
                         </div>
                         <div class="blade-static __bottom">
@@ -1018,7 +1040,8 @@
                                         <li class="list-item">
                                             <i class="list-ico fa fa-barcode"></i>
                                             <span class="list-t">Variation</span>
-                                            <span class="list-descr">Represents orderable item of merchandise for sale. Contains details, such as names, description, images, prices and inventory information.</span>
+                                            <span class="list-descr">Represents orderable item of merchandise for sale. Contains details, such as
+                                                names, description, images, prices and inventory information.</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -1296,7 +1319,9 @@
                                 <div class="form-input __search">
                                     <input placeholder="Search keyword..." type="text">
                                 </div>
-                                <p class="form-count">Count: <span class="count">12</span></p>
+                                <p class="form-count">Count:
+                                    <span class="count">12</span>
+                                </p>
                             </div>
                         </div>
                         <div class="blade-static __bottom">
@@ -2502,7 +2527,9 @@
                     <div class="blade-container">
                         <div class="blade-static">
                             <div class="form-group">
-                                <p class="form-count">Count: <span class="count ng-binding">2</span></p>
+                                <p class="form-count">Count:
+                                    <span class="count ng-binding">2</span>
+                                </p>
                             </div>
                         </div>
                         <div class="blade-content __large-wide">
@@ -2856,10 +2883,18 @@
                                             </div>
                                             <div class="tile double wide">
                                                 <ul class="list __prices">
-                                                    <li class="list-item">Sub total <span class="list-price">678.23</span></li>
-                                                    <li class="list-item">Discount Total <span class="list-price">36.00</span></li>
-                                                    <li class="list-item">Tax total <span class="list-price">0</span></li>
-                                                    <li class="list-item __total">Total <span class="list-price">218</span></li>
+                                                    <li class="list-item">Sub total
+                                                        <span class="list-price">678.23</span>
+                                                    </li>
+                                                    <li class="list-item">Discount Total
+                                                        <span class="list-price">36.00</span>
+                                                    </li>
+                                                    <li class="list-item">Tax total
+                                                        <span class="list-price">0</span>
+                                                    </li>
+                                                    <li class="list-item __total">Total
+                                                        <span class="list-price">218</span>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -3070,12 +3105,18 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="form-label">
-                                                    Property <a href=""><i class="form-ico fa fa-pencil"></i></a>
+                                                    Property
+                                                    <a href="">
+                                                        <i class="form-ico fa fa-pencil"></i>
+                                                    </a>
                                                 </label>
                                             </div>
                                             <div class="form-group">
                                                 <label class="form-label">
-                                                    Property 2 <a href=""><i class="form-ico fa fa-pencil"></i></a>
+                                                    Property 2
+                                                    <a href="">
+                                                        <i class="form-ico fa fa-pencil"></i>
+                                                    </a>
                                                 </label>
                                             </div>
                                         </fieldset>
@@ -3107,7 +3148,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="form-label">
-                                                    Property 4 <a href=""><i class="form-ico fa fa-pencil"></i></a>
+                                                    Property 4
+                                                    <a href="">
+                                                        <i class="form-ico fa fa-pencil"></i>
+                                                    </a>
                                                 </label>
                                             </div>
                                         </fieldset>
@@ -3300,7 +3344,8 @@
                                             <div class="columns">
                                                 <div class="column">
                                                     <div class="form-group">
-                                                        <label class="form-label"><span class="required">*</span> Store:</label>
+                                                        <label class="form-label">
+                                                            <span class="required">*</span> Store:</label>
                                                         <div class="form-input">
                                                             <select name="" id="">
                                                                 <option value="">Select store...</option>
@@ -3311,13 +3356,15 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="form-label"><span class="required">*</span> Promotion name:</label>
+                                                        <label class="form-label">
+                                                            <span class="required">*</span> Promotion name:</label>
                                                         <div class="form-input">
                                                             <input type="text">
                                                         </div>
                                                     </div>
                                                     <div class="form-group __calendar">
-                                                        <label class="form-label"><span class="required">*</span> Enable date/time:</label>
+                                                        <label class="form-label">
+                                                            <span class="required">*</span> Enable date/time:</label>
                                                         <div class="form-input">
                                                             <input type="text">
                                                             <button class="btn" type="button">
@@ -3398,7 +3445,8 @@
                                             <legend>Step 2 - Enter promotion details.</legend>
                                             <div class="text">Add promo conditions.</div>
                                             <div class="dynamic-expression">
-                                                <div class="dynamic-expression_t">For visitor with <a class="__link">all</a> of these eligibilities</div>
+                                                <div class="dynamic-expression_t">For visitor with
+                                                    <a class="__link">all</a> of these eligibilities</div>
                                                 <div class="dynamic-expression_b">
                                                     <span class="error">Cart promotion requires at least one eligibility</span>
                                                     <ul class="list">
@@ -3423,7 +3471,8 @@
                                                     </ul>
                                                     <a class="add __link __usergroup">Add usergroup</a>
                                                 </div>
-                                                <div class="dynamic-expression_t">if <a class="__link">all</a> of these are true</div>
+                                                <div class="dynamic-expression_t">if
+                                                    <a class="__link">all</a> of these are true</div>
                                                 <div class="dynamic-expression_b">
                                                     <ul class="list">
                                                         <li class="list-item">
@@ -4059,11 +4108,11 @@
                             <div class="blade-inner">
                                 <div class="inner-block">
                                     <div class="form">
-                                        <div class="iframe-cnt" style="background: #dee9f0; border: 1px dashed #a1c0d4;">
-                                            
+                                        <div class="iframe-cnt" style="background: var(--cPrimaryLight); border: 1px dashed var(--cPrimaryDark);">
+
                                         </div>
                                         <div class="lookbook">
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -4277,7 +4326,8 @@
                                                 </td>
                                                 <td class="table-col __product-img">
                                                     <div class="product-img">
-                                                        <div style="background-image: url(https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQNUAHMpbIvDL16vBagCrRu0xPofbpxx8WV_EDTj-LC3QSiQ2Iq1w)" class="image"></div>
+                                                        <div style="background-image: url(https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQNUAHMpbIvDL16vBagCrRu0xPofbpxx8WV_EDTj-LC3QSiQ2Iq1w)"
+                                                            class="image"></div>
                                                     </div>
                                                 </td>
                                                 <td class="table-col">
@@ -4311,7 +4361,8 @@
                                                 </td>
                                                 <td class="table-col __product-img">
                                                     <div class="product-img">
-                                                        <div style="background-image: url(https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQNUAHMpbIvDL16vBagCrRu0xPofbpxx8WV_EDTj-LC3QSiQ2Iq1w)" class="image"></div>
+                                                        <div style="background-image: url(https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQNUAHMpbIvDL16vBagCrRu0xPofbpxx8WV_EDTj-LC3QSiQ2Iq1w)"
+                                                            class="image"></div>
                                                     </div>
                                                 </td>
                                                 <td class="table-col">
@@ -4343,7 +4394,7 @@
                             </ul>
                         </div>
                         <div class="blade-t">
-                            
+
                         </div>
                         <div class="blade-toolbar">
                             <ul class="menu __inline">
@@ -4534,7 +4585,9 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <span style="display: block; font-size: 30px;">Dear <span style="color: #43b0e6;">&lt;username&gt;</span></span>
+                                                    <span style="display: block; font-size: 30px;">Dear
+                                                        <span style="color: var(--cPrimary);">&lt;username&gt;</span>
+                                                    </span>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -4551,10 +4604,12 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <a style="background: #43b0e6; color: #fff; font-size: 13px; display: inline-block; height: 30px; line-height: 28px; padding: 0 20px;" href="#">
+                                                    <a style="background: var(--cPrimary); color: var(--cWhite); font-size: 13px; display: inline-block; height: 30px; line-height: 28px; padding: 0 20px;"
+                                                        href="#">
                                                         Back
                                                     </a>
-                                                    <a style="background: #43b0e6; color: #fff; font-size: 13px; display: inline-block; height: 30px; line-height: 28px; padding: 0 20px;" href="#">
+                                                    <a style="background: var(--cPrimary); color: var(--cWhite); font-size: 13px; display: inline-block; height: 30px; line-height: 28px; padding: 0 20px;"
+                                                        href="#">
                                                         Visit site
                                                     </a>
                                                 </td>
@@ -4616,7 +4671,7 @@
                         <div class="blade-content __medium-wide">
                             <div class="blade-inner">
                                 <div class="inner-block">
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -4668,7 +4723,11 @@
                                         <div class="tab-cnt __opened">
                                             <div class="sub-t __border">Text 1</div>
                                             <div class="sub-t">Typography</div>
-                                            <p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cumque nisi nulla, rerum doloribus officia. Modi ex cum omnis animi consequuntur porro quibusdam mollitia! Tenetur incidunt ea, soluta commodi assumenda hic eius corporis explicabo sit, eveniet minima quia fuga aspernatur placeat itaque, illum iure rerum magnam. Illum architecto sequi, aut.</p>
+                                            <p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cumque nisi nulla,
+                                                rerum doloribus officia. Modi ex cum omnis animi consequuntur porro quibusdam
+                                                mollitia! Tenetur incidunt ea, soluta commodi assumenda hic eius corporis
+                                                explicabo sit, eveniet minima quia fuga aspernatur placeat itaque, illum
+                                                iure rerum magnam. Illum architecto sequi, aut.</p>
                                             <p class="text-mini __error">Warning</p>
                                             <div class="sub-t">Forms</div>
                                             <div class="form">
@@ -4687,7 +4746,11 @@
                                         <div class="tab-cnt">
                                             <div class="sub-t __border">Text 2</div>
                                             <div class="sub-t">Typography</div>
-                                            <p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cumque nisi nulla, rerum doloribus officia. Modi ex cum omnis animi consequuntur porro quibusdam mollitia! Tenetur incidunt ea, soluta commodi assumenda hic eius corporis explicabo sit, eveniet minima quia fuga aspernatur placeat itaque, illum iure rerum magnam. Illum architecto sequi, aut.</p>
+                                            <p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cumque nisi nulla,
+                                                rerum doloribus officia. Modi ex cum omnis animi consequuntur porro quibusdam
+                                                mollitia! Tenetur incidunt ea, soluta commodi assumenda hic eius corporis
+                                                explicabo sit, eveniet minima quia fuga aspernatur placeat itaque, illum
+                                                iure rerum magnam. Illum architecto sequi, aut.</p>
                                             <p class="text-mini __error">Warning</p>
                                             <div class="sub-t">Forms</div>
                                             <div class="form">
@@ -4706,7 +4769,11 @@
                                         <div class="tab-cnt">
                                             <div class="sub-t __border">Text 3</div>
                                             <div class="sub-t">Typography</div>
-                                            <p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cumque nisi nulla, rerum doloribus officia. Modi ex cum omnis animi consequuntur porro quibusdam mollitia! Tenetur incidunt ea, soluta commodi assumenda hic eius corporis explicabo sit, eveniet minima quia fuga aspernatur placeat itaque, illum iure rerum magnam. Illum architecto sequi, aut.</p>
+                                            <p class="text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cumque nisi nulla,
+                                                rerum doloribus officia. Modi ex cum omnis animi consequuntur porro quibusdam
+                                                mollitia! Tenetur incidunt ea, soluta commodi assumenda hic eius corporis
+                                                explicabo sit, eveniet minima quia fuga aspernatur placeat itaque, illum
+                                                iure rerum magnam. Illum architecto sequi, aut.</p>
                                             <p class="text-mini __error">Warning</p>
                                             <div class="sub-t">Forms</div>
                                             <div class="form">
@@ -4759,7 +4826,7 @@
                         <div class="blade-content __medium-wide">
                             <div class="blade-inner">
                                 <div class="inner-block">
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -4782,7 +4849,7 @@
                             </ul>
                         </div>
                         <div class="blade-toolbar">
-                            
+
                         </div>
                     </header>
                     <div class="blade-container">
@@ -4804,13 +4871,26 @@
     <div class="gallery-tpl">
         <div class="popup-cnt">
             <div class="gallery">
-                <a class="control ctrl-l"><i class="fa fa-chevron-left"></i></a>
-                <a class="control ctrl-r"><i class="fa fa-chevron-right"></i></a>
+                <a class="control ctrl-l">
+                    <i class="fa fa-chevron-left"></i>
+                </a>
+                <a class="control ctrl-r">
+                    <i class="fa fa-chevron-right"></i>
+                </a>
                 <ul class="list __slides">
-                    <li class="list-item"><img class="list-img" src="http://digit.ru/images/39581/57/395815771.jpg" alt="" /></li>
-                    <li class="list-item"><img class="list-img" src="http://ultramo.ru/sites/default/files/img/skupka-planshetov-7.png" alt="" /></li>
-                    <li class="list-item"><img class="list-img" src="http://mobiat.ru/image/data/photo/planshety.jpg" alt="" /></li>
-                    <li class="list-item"><img class="list-img" src="http://api.sonymobile.com/files/xperia-tablet-z-hero-black-select-1280x840-dd73f7239211249463fa93b1d09dfb1e.png" alt="" /></li>
+                    <li class="list-item">
+                        <img class="list-img" src="http://digit.ru/images/39581/57/395815771.jpg" alt="" />
+                    </li>
+                    <li class="list-item">
+                        <img class="list-img" src="http://ultramo.ru/sites/default/files/img/skupka-planshetov-7.png" alt="" />
+                    </li>
+                    <li class="list-item">
+                        <img class="list-img" src="http://mobiat.ru/image/data/photo/planshety.jpg" alt="" />
+                    </li>
+                    <li class="list-item">
+                        <img class="list-img" src="http://api.sonymobile.com/files/xperia-tablet-z-hero-black-select-1280x840-dd73f7239211249463fa93b1d09dfb1e.png"
+                            alt="" />
+                    </li>
                 </ul>
             </div>
         </div>
@@ -4849,7 +4929,7 @@
                 }, 1500);
             }
 
-            var html =  $('.gallery-tpl').html();
+            var html = $('.gallery-tpl').html();
 
             $('.__gallery').on('click', function () {
                 $('.gallery-tpl').remove();
@@ -4876,7 +4956,7 @@
             });
 
             $(document).on('click', function (e) {
-                if(!$('.__gallery, .popup').is(e.target) && !$('.__gallery, .popup').has(e.target).length) {
+                if (!$('.__gallery, .popup').is(e.target) && !$('.__gallery, .popup').has(e.target).length) {
                     Gallery.closePopup();
                 }
             });
@@ -4898,18 +4978,18 @@
             });
 
             $('.menu-item.__more').on('click', function () {
-                var attr  = $(this).parents('.blade-toolbar').attr('style'),
+                var attr = $(this).parents('.blade-toolbar').attr('style'),
                     count = $(this).parents('.blade-toolbar').find('.menu.__more').length;
 
-                if(count) {
+                if (count) {
                     if (typeof attr !== typeof undefined && attr !== false) {
                         $(this).parents('.blade-head').removeClass('__expanded');
-                        $(this).parents('.blade-toolbar').css({height: '50px'});
+                        $(this).parents('.blade-toolbar').css({ height: '50px' });
                         $(this).parents('.blade-toolbar').removeAttr('style');
                     }
                     else {
                         $(this).parents('.blade-head').addClass('__expanded');
-                        $(this).parents('.blade-toolbar').css({height: 50 + (count * 50) + 'px'});
+                        $(this).parents('.blade-toolbar').css({ height: 50 + (count * 50) + 'px' });
                     }
                 }
             });
@@ -4926,7 +5006,7 @@
             $('.__add-tab').on('click', function () {
                 var tabItemCounts = $('.tabs .tab-item').length;
 
-                if(tabItemCounts < 5) {
+                if (tabItemCounts < 5) {
                     $('.tabs-elements').append('<div class="tab-item">Tab ' + (tabItemCounts + 1) + '</div>');
                     var clone = $('.tab-cnt:first').clone();
                     clone.removeClass('__opened');
@@ -4938,8 +5018,8 @@
             $('.__remove-tab').on('click', function () {
                 var tabItemCounts = $('.tabs .tab-item').length;
 
-                if(tabItemCounts > 2) {
-                    if($('.tab-item').hasClass('__selected')) {
+                if (tabItemCounts > 2) {
+                    if ($('.tab-item').hasClass('__selected')) {
                         $('.tab-item:first').addClass('__selected');
                         $('.tab-cnt:first').addClass('__opened');
                     };
@@ -4970,7 +5050,8 @@
         });
 
     </script>
-    
+
 
 </body>
+
 </html>

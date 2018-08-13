@@ -48,11 +48,11 @@ visibility: hidden;
 }
 .ui-grid-top-panel-background {
 background: #f3f3f3;
-background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-background: -o-linear-gradient(#ffffff, #eeeeee);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, var(--cWhite)));
+background: -ms-linear-gradient(bottom, #eeeeee, var(--cWhite));
+background: -moz-linear-gradient(center bottom, #eeeeee 0%, var(--cWhite) 100%);
+background: -o-linear-gradient(var(--cWhite), #eeeeee);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='var(--cWhite)', endColorstr='#eeeeee', GradientType=0);
 }
 .ui-grid-header {
 border-bottom: 1px solid #d4d4d4;
@@ -63,11 +63,11 @@ position: relative;
 overflow: hidden;
 font-weight: bold;
 background: #f3f3f3;
-background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-background: -o-linear-gradient(#ffffff, #eeeeee);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, var(--cWhite)));
+background: -ms-linear-gradient(bottom, #eeeeee, var(--cWhite));
+background: -moz-linear-gradient(center bottom, #eeeeee 0%, var(--cWhite) 100%);
+background: -o-linear-gradient(var(--cWhite), #eeeeee);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='var(--cWhite)', endColorstr='#eeeeee', GradientType=0);
 -webkit-border-top-right-radius: -1px;
 -webkit-border-bottom-right-radius: 0;
 -webkit-border-bottom-left-radius: 0;
@@ -332,11 +332,11 @@ left: 0;
 right: 0;
 margin: 10%;
 background: #f3f3f3;
-background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-background: -o-linear-gradient(#ffffff, #eeeeee);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, var(--cWhite)));
+background: -ms-linear-gradient(bottom, #eeeeee, var(--cWhite));
+background: -moz-linear-gradient(center bottom, #eeeeee 0%, var(--cWhite) 100%);
+background: -o-linear-gradient(var(--cWhite), #eeeeee);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='var(--cWhite)', endColorstr='#eeeeee', GradientType=0);
 -webkit-border-top-right-radius: 0px;
 -webkit-border-bottom-right-radius: 0;
 -webkit-border-bottom-left-radius: 0;
@@ -402,11 +402,11 @@ border-bottom: solid 1px #d4d4d4;
 }
 .ui-grid-footer-panel-background {
 background: #f3f3f3;
-background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-background: -o-linear-gradient(#ffffff, #eeeeee);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, var(--cWhite)));
+background: -ms-linear-gradient(bottom, #eeeeee, var(--cWhite));
+background: -moz-linear-gradient(center bottom, #eeeeee 0%, var(--cWhite) 100%);
+background: -o-linear-gradient(var(--cWhite), #eeeeee);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='var(--cWhite)', endColorstr='#eeeeee', GradientType=0);
 }
 .ui-grid-footer-panel {
 position: relative;
@@ -415,11 +415,11 @@ border-top: 1px solid #d4d4d4;
 overflow: hidden;
 font-weight: bold;
 background: #f3f3f3;
-background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, #ffffff));
-background: -ms-linear-gradient(bottom, #eeeeee, #ffffff);
-background: -moz-linear-gradient(center bottom, #eeeeee 0%, #ffffff 100%);
-background: -o-linear-gradient(#ffffff, #eeeeee);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eeeeee), color-stop(1, var(--cWhite)));
+background: -ms-linear-gradient(bottom, #eeeeee, var(--cWhite));
+background: -moz-linear-gradient(center bottom, #eeeeee 0%, var(--cWhite) 100%);
+background: -o-linear-gradient(var(--cWhite), #eeeeee);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='var(--cWhite)', endColorstr='#eeeeee', GradientType=0);
 -webkit-border-top-right-radius: -1px;
 -webkit-border-bottom-right-radius: 0;
 -webkit-border-bottom-left-radius: 0;

@@ -1,0 +1,78 @@
+:root {
+    /* c - Colors ========================================= */
+    --cBodyTracing: #eef5f7;
+    --cWhite: #fff;
+    --cBlack: #000;
+    --сError: #e51400;
+    --cWarning: #f0a30a;
+
+    --cIconFill: #a6a6a6;   /* default - gray*/
+
+    --сTableHeaderFill: rgba(0,0,0,.025);
+
+    --cPrimary: #43b0e6;
+    --cPrimaryDark: #a1c0d4;
+    --cPrimaryLight: #dee9f0;
+    --cPrimaryLighter: #d9effa;
+    --cPrimaryLightest: #ecf7fc;
+    
+    --cGrayDark: #333;
+    --cGrayDarker: #383838;
+    --cGrayDarkest: #232323;
+    --cGrayTracing: #fbfdfe;
+
+    --cTooltipFill: #f9f9f9;
+    --cTooltipBorder: #eee;
+    --cTooltipFont: #999;
+
+    --cNavLinkFont: #c2c2c2;
+    --cSubtitle: #bbb;
+
+    /* error message */
+    --cErrorFill: #f2dede;
+    --cErrorBorder: #ebccd1;
+    --cErrorFont: #a94442;
+
+    /* invalid input */
+    --cInvalidFill: #fef8f7;
+    --cInvalidBorder: #fce7e6;
+    --cInvalidFont: #a94442;
+ 
+    /* s - Box Shadows ==================================== */
+    --sBladeInnerShadow: -8px 0 0 0 rgba(0,0,0,.2) inset;   /*shadow like border*/
+    --sBlockHover: 0 0 0 2px #a1c0d4 inset;
+}
+
+body.red-theme{
+    --cPrimary: #e71919;
+    --cPrimaryDark: #cf1616;
+    --cPrimaryLight: #e92f2f;
+    --cPrimaryLighter: #eb4646;
+    --cPrimaryLightest: #ee5e5e;
+}
+
+body.custom-theme{
+    --cBodyTracing: #eee2dc;
+
+    --cPrimary: #ac3b61;
+    --cPrimaryDark: #c47590;
+    --cPrimaryLight: #cd89a0;
+    --cPrimaryLighter: #eed7df;
+    --cPrimaryLightest: #f6ebef;
+    
+    --cGrayDark: #123c69;
+    --cGrayDarker: #0e3054;
+    --cGrayDarkest: #0a243f;
+    --cGrayTracing: #e7ebf0;
+}
+
+.change-theme-buttons{
+    position: fixed;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+}
+
+.change-theme-buttons button{
+    padding: 5px;
+}

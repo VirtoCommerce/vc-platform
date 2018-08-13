@@ -9,7 +9,7 @@
 .no-data,
 .__gray
 {
-    color: #999;
+    color: var(--cTooltipFont);
 }
 
 .block
@@ -19,7 +19,7 @@
 
 .alt-description
 {
-	color: #43b0e6 !important;
+	color: var(--cPrimary) !important;
 }
 
 /* Scroll bar */
@@ -312,7 +312,7 @@
 
 .error
 {
-    color: #e51400;
+    color: var(--сError);
     display: block;
     font-size: 12px;
     line-height: 1.4;
@@ -346,7 +346,7 @@ ol
     ul li:before,
     ol li:before
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
         content: '\2014\a0 ';
     }
 
@@ -429,12 +429,12 @@ ol
 
             .list.__notice .list-item.__error .list-ico
             {
-                color: #e51400;
+                color: var(--сError);
             }
 
             .list.__notice .list-item.__warning .list-ico
             {
-                color: #f0a30a;
+                color: var(--cWarning);
             }
 
 .list.__car-info
@@ -467,7 +467,7 @@ ol
 
         .list.__car-info .list-name
         {
-            color: #43b0e6;
+            color: var(--cPrimary);
             display: block;
         }
 
@@ -498,7 +498,7 @@ ol
 
 .menu.__context
 {
-    background: #333;
+    background: var(--cGrayDark);
     display: none;
     position: fixed;
     padding: 10px 0;
@@ -513,7 +513,7 @@ ol
 
     .menu.__context .menu-item
     {
-        color: #fff;
+        color: var(--cWhite);
         cursor: pointer;
         font-family: 'Exo 2';
         font-size: 13px;
@@ -531,7 +531,7 @@ ol
 
     .menu.__context .menu-item:hover
     {
-        color: #43b0e6;
+        color: var(--cPrimary);
     }
 
         .menu.__context .menu-ico
@@ -549,7 +549,7 @@ ol
 
         .menu.__context .menu.__sub
         {
-            background: #333;
+            background: var(--cGrayDark);
             display: none;
             left: 100%;
             padding: 10px 0;
@@ -581,7 +581,7 @@ ol
 
         .list.__info .list-descr
         {
-            color: #999;
+            color: var(--cTooltipFont);
             font-size: 12px;
             margin: 5px 0 0;
         }
@@ -594,7 +594,7 @@ ol
         .list.__info .list-item:hover .list-t,
         .list.__info .list-item:hover .list-descr
         {
-            text-shadow: 1px 1px #fff;
+            text-shadow: 1px 1px var(--cWhite);
         }
     
 .list.__tags
@@ -605,8 +605,8 @@ ol
 
     .list.__tags .list-item
     {
-        background: #43b0e6;
-        color: #fff;
+        background: var(--cPrimary);
+        color: var(--cWhite);
         display: inline-block;
         line-height: 1.1;
         margin: 0 5px 0 0;
@@ -640,7 +640,7 @@ ol
 
     .list.__number .list-item::before
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
         content: counter(num) '. ';
         counter-increment: num;
         left: 0;
@@ -693,23 +693,23 @@ h3
 
 .text.__debug
 {
-    color: #a6a6a6;
+    color: var(--cIconFill);
     font-size: 11px;
     word-wrap: break-word;
 }
 
 .text.__note
 {
-    border: 1px solid #eee;
+    border: 1px solid var(--cTooltipBorder);
     margin: 10px 0;
     padding: 10px;
 }
 
 .text.__editable
 {
-    background: #fbfdfe;
-    border: 1px dashed #dee9f0;
-    color: #43b0e6;
+    background: var(--cGrayTracing);
+    border: 1px dashed var(--cPrimaryLight);
+    color: var(--cPrimary);
     cursor: text;
     padding: 5px 10px;
 }
@@ -717,13 +717,13 @@ h3
 .text.__editable:hover,
 .text.__editable.__selected
 {
-    background-color: #ecf7fc;
-    border-color: #a1c0d4;
+    background-color: var(--cPrimaryLightest);
+    border-color: var(--cPrimaryDark);
 }
 
 .text.__note span:first-child
 {
-    color: #e51400;
+    color: var(--сError);
 }
 
 .sub-text
@@ -739,8 +739,8 @@ h3
 .note
 {
     background: rgba(0, 0, 0, .024);
-    border: 1px solid #eee;
-    color: #999;
+    border: 1px solid var(--cTooltipBorder);
+    color: var(--cTooltipFont);
     font-size: 14px;
     margin: 20px 0;
     padding: 10px;
@@ -755,7 +755,7 @@ h3
 
 .sub-t.__border
 {
-    border-bottom: 1px solid #dee9f0;
+    border-bottom: 1px solid var(--cPrimaryLight);
     margin: 20px 0 0;
     padding: 0 0 10px;
 }
@@ -768,8 +768,8 @@ h3
 
 .t.__divider
 {
-    background: #fbfdfe;
-    border-color: #dee9f0;
+    background: var(--cGrayTracing);
+    border-color: var(--cPrimaryLight);
     border-style: solid;
     border-width: 1px 0;
     margin: 0 -20px 10px;
@@ -818,18 +818,18 @@ h3
 
     .table .table-col
     {
-        border-color: #dee9f0;
+        border-color: var(--cPrimaryLight);
         border-style: solid;
         border-width: 1px 0;
         font-size: 14px;
         padding: 10px;
         text-align: left;
-        text-shadow: 1px 1px #fff;
+        text-shadow: 1px 1px var(--cWhite);
     }
 
     .table .table-head
     {
-        border-bottom: 1px solid #dee9f0;
+        border-bottom: 1px solid var(--cPrimaryLight);
         font-size: 14px;
         padding: 5px 20px;
     }
@@ -860,13 +860,13 @@ h3
 
         .table-col .table-descr
         {
-            color: #999;
+            color: var(--cTooltipFont);
         }
 
         .table-col .table-status
         {
-            background: #a6a6a6;
-            color: #fff;
+            background: var(--cIconFill);
+            color: var(--cWhite);
             display: block;
             font-size: 12px;
             height: 20px;
@@ -880,12 +880,12 @@ h3
 
         .table-col .table-status.__active
         {
-            background: #43b0e6;
+            background: var(--cPrimary);
         }
 
         .table-col .table-date
         {
-            color: #999;
+            color: var(--cTooltipFont);
             font-size: 12px;
         }
 
@@ -918,17 +918,17 @@ h3
 
         .table-item:hover .product-img .image
         {
-            background-color: #ecf7fc;
+            background-color: var(--cPrimaryLightest);
         }
 
         .table-item.__selected .product-img .image
         {
-            background-color: #d9effa;
+            background-color: var(--cPrimaryLighter);
         }
 
     .table th.table-col
     {
-        background: rgba(0,0,0,.025);
+        background: var(--сTableHeaderFill);
         font-size: 14px;
         font-weight: 500;
         line-height: 1.3;
@@ -952,10 +952,10 @@ h3
 
     .table .table-ico
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
         font-size: 28px;
         margin: -4px 10px 0 0;
-        text-shadow: 1px 1px #fff;
+        text-shadow: 1px 1px var(--cWhite);
         vertical-align: middle;
     }
 
@@ -972,17 +972,17 @@ h3
 
     .table-item.__error .table-ico
     {
-        color: #e51400;
+        color: var(--сError);
     }
 
     .table-item.__warning .table-ico
     {
-        color: #f0a30a;
+        color: var(--cWarning);
     }
 
     .table-item.__info .table-ico
     {
-        color: #43b0e6;
+        color: var(--cPrimary);
     }
 
 
@@ -996,7 +996,7 @@ h3
 .error,
 .__error
 {
-    color: #e51400;
+    color: var(--сError);
 }
 
 .form-input input.ng-invalid,
@@ -1005,9 +1005,9 @@ h3
 .form-input input.ng-invalid:focus,
 .form-input textarea.ng-invalid:focus
 {
-    background: #fef8f7;
-    border-color: #fce7e6;
-    color: #e51400;
+    background: var(--cInvalidFill);
+    border-color: var(--cInvalidBorder);
+    color: var(--сError);
 }
 
 fieldset
@@ -1022,7 +1022,7 @@ fieldset + fieldset
 
     fieldset legend
     {
-        border-bottom: 1px solid #dee9f0;
+        border-bottom: 1px solid var(--cPrimaryLight);
         display: block;
         font-size: 24px;
         font-weight: 300;
@@ -1043,7 +1043,7 @@ fieldset + fieldset
 
 .form-group.__head
 {
-    border-bottom: 1px solid #dee9f0;
+    border-bottom: 1px solid var(--cPrimaryLight);
 }
 
 .__inline .form-group
@@ -1063,13 +1063,13 @@ fieldset + fieldset
 
     .form-group .form-hint
     {
-        color: #999;
+        color: var(--cTooltipFont);
         font-size: 12px;
     }
 
     .form-group .form-error
     {
-        color: #e51400;
+        color: var(--сError);
         font-size: 12px;
         line-height: 1.4;
         padding: 5px 0;
@@ -1103,7 +1103,7 @@ fieldset + fieldset
 
     .count
     {
-        color: #43b0e6;
+        color: var(--cPrimary);
         font-weight: 600;
     }
 
@@ -1115,8 +1115,8 @@ fieldset + fieldset
 
     .form-group .form-t
     {
-        background: #fbfdfe;
-        border: 1px solid #dee9f0;
+        background: var(--cGrayTracing);
+        border: 1px solid var(--cPrimaryLight);
         margin: 0 0 5px;
         padding: 5px;
     }
@@ -1168,7 +1168,7 @@ fieldset + fieldset
         .form-input textarea,
         .form-input select
         {
-            border: 1px solid #dee9f0;
+            border: 1px solid var(--cPrimaryLight);
             padding: 5px 10px;
         }
 
@@ -1240,7 +1240,7 @@ fieldset + fieldset
         .form-input textarea:focus,
         .form-input select:focus
         {
-            border-color: #a1c0d4;
+            border-color: var(--cPrimaryDark);
         }
 
         .form-input input[type=file]
@@ -1257,8 +1257,8 @@ fieldset + fieldset
         .form-input.__number .down,
         .form-input.__number .up
         {
-            background: #fbfdfe;
-            border: 1px solid #dee9f0;
+            background: var(--cGrayTracing);
+            border: 1px solid var(--cPrimaryLight);
             cursor: pointer;
             height: 14px;
             right: 2px;
@@ -1294,13 +1294,13 @@ fieldset + fieldset
 
         .form-input.__number .down:after
         {
-            border-color: #43b0e6 transparent transparent;
+            border-color: var(--cPrimary) transparent transparent;
             top: 4px;
         }
 
         .form-input.__number .up:after
         {
-            border-color: transparent transparent #43b0e6;
+            border-color: transparent transparent var(--cPrimary);
             bottom: 4px;
         }
 
@@ -1319,7 +1319,7 @@ fieldset + fieldset
 
         .form-input.__currency .currency
         {
-            color: #43b0e6;
+            color: var(--cPrimary);
             font-size: 12px;
             right: 10px;
             position: absolute;
@@ -1400,7 +1400,7 @@ fieldset + fieldset
 
             .form-input .btn-ico
             {
-                color: #43b0e6;
+                color: var(--cPrimary);
                 font-size: 24px;
                 height: 26px;
                 padding: 0 10px;
@@ -1408,7 +1408,7 @@ fieldset + fieldset
 
             .form-input.__info .btn-ico
             {
-                color: #fff;
+                color: var(--cWhite);
                 font-size: 16px;
                 height: auto;
                 text-shadow: none;
@@ -1417,7 +1417,7 @@ fieldset + fieldset
 
             .form-input.__info .btn-ico::before
             {
-                background: #43b0e6;
+                background: var(--cPrimary);
                 display: block;
                 height: 20px;
                 line-height: 20px;
@@ -1497,8 +1497,8 @@ fieldset + fieldset
 
         .form-control .check
         {
-            background: #fff;
-            border: 1px solid #a1c0d4;
+            background: var(--cWhite);
+            border: 1px solid var(--cPrimaryDark);
             height: 13px;
             left: 0;
             position: absolute;
@@ -1530,7 +1530,7 @@ fieldset + fieldset
         .form-control.__checkbox :checked ~ .check:after
         {
             bottom: 0;
-            color: #43b0e6;
+            color: var(--cPrimary);
             content: '';
             font-family: 'FontAwesome';
             font-size: 11px;
@@ -1543,7 +1543,7 @@ fieldset + fieldset
 
         .form-control.__radio :checked ~ .check:after
         {
-            background: #43b0e6;
+            background: var(--cPrimary);
             height: 7px;
             left: 2px;
             top: 2px;
@@ -1582,7 +1582,7 @@ fieldset + fieldset
 
         .__switch.__two::after
         {
-            background: #999;
+            background: var(--cTooltipFont);
             height: 10px;
             right: -7px;
             width: 1px;
@@ -1590,7 +1590,7 @@ fieldset + fieldset
 
         .__switch.__two::before
         {
-            border: 1px solid #999;
+            border: 1px solid var(--cTooltipFont);
             height: 8px;
             left: -15px;
             width: 8px;
@@ -1626,12 +1626,12 @@ fieldset + fieldset
 
             .__switch :checked ~ .switch
             {
-                background: #43b0e6;
+                background: var(--cPrimary);
             }
 
             .__switch .switch::after
             {
-                background: #fff;
+                background: var(--cWhite);
                 color: #ccc;
                 content: '|||';
                 font-size: 11px;
@@ -1658,7 +1658,7 @@ fieldset + fieldset
 
             .__switch .switch::before
             {
-                color: #fff;
+                color: var(--cWhite);
                 content: '';
                 font-family: 'FontAwesome';
                 font-size: 12px;
@@ -1690,17 +1690,17 @@ fieldset + fieldset
 
     .editable .btn-toolbar
     {
-        background: #43b0e6;
+        background: var(--cPrimary);
     }
 
     .editable .ta-scroll-window.form-control
     {
-        border: 1px solid #dee9f0;
+        border: 1px solid var(--cPrimaryLight);
     }
 
     .ta-root.focussed > .ta-scroll-window.form-control
     {
-        border-color: #a1c0d4;
+        border-color: var(--cPrimaryDark);
 
         -webkit-box-shadow: none;
                 box-shadow: none;
@@ -1709,7 +1709,7 @@ fieldset + fieldset
     .ta-editor.ta-html,
     .ta-scroll-window.form-control
     {
-        border: 1px solid #a1c0d4;
+        border: 1px solid var(--cPrimaryDark);
         max-width: 100%;
         min-width: 100%;
         width: 100%;
@@ -1722,9 +1722,9 @@ fieldset + fieldset
 /* Buttons */
 .btn
 {
-    background: #43b0e6;
+    background: var(--cPrimary);
     border: none;
-    color: #fff;
+    color: var(--cWhite);
     cursor: pointer;
     display: inline-block;
     font-family: inherit;
@@ -1787,7 +1787,7 @@ button.btn
 
 .btn:hover
 {
-    color: #fff;
+    color: var(--cWhite);
     opacity: .8;
 
     filter: alpha(opacity=80);
@@ -1795,7 +1795,7 @@ button.btn
 
 .btn.__cancel
 {
-    background-color: #a6a6a6;
+    background-color: var(--cIconFill);
 }
 
 .btn.__cancel:hover
@@ -1805,14 +1805,14 @@ button.btn
 
 .md-editor
 {
-    background: #fbfdfe;
-    border: 1px solid #dee9f0;
+    background: var(--cGrayTracing);
+    border: 1px solid var(--cPrimaryLight);
     margin: -1px -20px 0;
 }
 
 .md-editor.md-fullscreen-mode
 {
-    background: #ffffff !important;
+    background: var(--cWhite) !important;
     border: 0 none !important;
     height: 100%;
     left: 0;
@@ -1840,7 +1840,7 @@ button.btn
 {
     background: none;
     border: none;
-    color: #333;
+    color: var(--cGrayDark);
     height: 300px;
     padding: 10px;
     width: 100%;
@@ -1851,7 +1851,7 @@ button.btn
 
 .md-editor .btn-toolbar
 {
-    background: #dee9f0;
+    background: var(--cPrimaryLight);
     padding: 10px;
     overflow: hidden;
 }
@@ -1996,7 +1996,7 @@ button.btn
 
 .tile
 {
-    background: #fbfdfe;
+    background: var(--cGrayTracing);
     color: #4c4c4c;
     cursor: pointer;
     float: left;
@@ -2012,8 +2012,8 @@ button.btn
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
 
-    -webkit-box-shadow: 0 0 0 2px #dee9f0 inset;
-            box-shadow: 0 0 0 2px #dee9f0 inset;
+    -webkit-box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
+            box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
 }
 
 .tile.__price
@@ -2029,14 +2029,14 @@ button.btn
 
 .tile.__price .tile-count
 {
-    color: #43b0e6;
+    color: var(--cPrimary);
     font-size: 24px;
     margin: 10px 0 0;
 }
 
 .tile.__price .tile-price
 {
-    color: #43b0e6;
+    color: var(--cPrimary);
     font-size: 30px;
     height: 49px;
     line-height: 40px;
@@ -2053,8 +2053,8 @@ button.btn
 .tile:hover,
 .tile.__selected
 {
-    -webkit-box-shadow: 0 0 0 2px #a1c0d4 inset;
-            box-shadow: 0 0 0 2px #a1c0d4 inset;
+    -webkit-box-shadow: var(--sBlockHover);
+            box-shadow: var(--sBlockHover);
 }
 
 .tile.__info:hover,
@@ -2079,7 +2079,7 @@ button.btn
 
 .tile.__selected:after
 {
-    border-color: #a1c0d4 #a1c0d4 transparent transparent;
+    border-color: var(--cPrimaryDark) var(--cPrimaryDark) transparent transparent;
     border-style: solid;
     border-width: 15px;
     content: '';
@@ -2092,7 +2092,7 @@ button.btn
 
 .tile.__selected:before
 {
-    color: #fff;
+    color: var(--cWhite);
     content: "";
     font-family: "FontAwesome";
     font-size: 10px;
@@ -2315,7 +2315,7 @@ button.btn
 
 .tile .tile-count
 {
-    color: #999;
+    color: var(--cTooltipFont);
     font-size: 30px;
     line-height: 1;
     margin: 0 0 10px;
@@ -2337,7 +2337,7 @@ button.btn
 
 .tile .tile-action
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     height: 30px;
     opacity: 0;
     position: absolute;
@@ -2360,7 +2360,7 @@ button.btn
 
 .tile .tile-action::after
 {
-    color: #fff;
+    color: var(--cWhite);
     content: "";
     font-family: 'FontAwesome';
     font-size: 16px;
@@ -2387,8 +2387,8 @@ button.btn
 
     .__items .list-group
     {
-        background: #fbfdfe;
-        border-bottom: 1px solid #dee9f0;
+        background: var(--cGrayTracing);
+        border-bottom: 1px solid var(--cPrimaryLight);
         cursor: pointer;
         font-size: 24px;
         padding: 10px 50px 10px 20px;
@@ -2397,7 +2397,7 @@ button.btn
 
     .__items .list-group::after
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
         content: '';
         font-family: 'FontAwesome';
         font-size: 16px;
@@ -2416,8 +2416,8 @@ button.btn
 
     .__items .list-item
     {
-        background: #fff;
-        border-bottom: 1px solid #dee9f0;
+        background: var(--cWhite);
+        border-bottom: 1px solid var(--cPrimaryLight);
         cursor: pointer;
         display: block;
         padding: 10px 50px 10px 20px;
@@ -2437,12 +2437,12 @@ button.btn
 
     .__items .list-item.__default
     {
-        background: #ecf7fc;
+        background: var(--cPrimaryLightest);
     }
 
     .__items .list-item:after
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
         content: "";
         font-family: "FontAwesome";
         font-size: 16px;
@@ -2460,7 +2460,7 @@ button.btn
 
     .__items .list-item.__default:after
     {
-        border-color: #a1c0d4 #a1c0d4 transparent transparent;
+        border-color: var(--cPrimaryDark) var(--cPrimaryDark) transparent transparent;
         border-style: solid;
         border-width: 15px;
         content: "";
@@ -2479,7 +2479,7 @@ button.btn
 
     .__items .list-item.__default:before
     {
-        color: #fff;
+        color: var(--cWhite);
         content: "";
         font-family: "FontAwesome";
         font-size: 10px;
@@ -2513,7 +2513,7 @@ button.btn
 
     .__items .list-item:first-child
     {
-        border-top: 1px solid #dee9f0;
+        border-top: 1px solid var(--cPrimaryLight);
     }
 
         .__items .list-ico,
@@ -2523,7 +2523,7 @@ button.btn
             height: 30px;
             line-height: 30px;
             margin: 0 5px 0 0;
-            text-shadow: 1px 1px #fff;
+            text-shadow: 1px 1px var(--cWhite);
             vertical-align: middle;
             width: 40px;
         }
@@ -2560,7 +2560,7 @@ button.btn
         .__items .list-item:hover .list-name,
         .__files .list-item:hover .list-name
         {
-            text-shadow: 1px 1px #fff;
+            text-shadow: 1px 1px var(--cWhite);
         }
 
         .__files .list-name
@@ -2592,7 +2592,7 @@ button.btn
 
         .__items .list-descr
         {
-            color: #999;
+            color: var(--cTooltipFont);
             display: block;
             font-size: 12px;
         }
@@ -2611,7 +2611,7 @@ button.btn
         .__items .list-descr
         {
             position: relative;
-            text-shadow: 1px 1px #fff;
+            text-shadow: 1px 1px var(--cWhite);
             z-index: 50;
         }
 
@@ -2636,23 +2636,23 @@ button.btn
         .__items label.list-item :checked ~ .switch,
         .__items label.list-item.__selected .switch
         {
-            background: #ecf7fc;
+            background: var(--cPrimaryLightest);
 
-            -webkit-box-shadow: 0 0 0 1px #a1c0d4;
-                    box-shadow: 0 0 0 1px #a1c0d4;
+            -webkit-box-shadow: 0 0 0 1px var(--cPrimaryDark);
+                    box-shadow: 0 0 0 1px var(--cPrimaryDark);
         }
 
         .__items label.list-item :checked ~ .switch,
         .__items label.list-item.__selected .switch
         {
-            -webkit-box-shadow: 0 0 0 1px #dee9f0;
-                    box-shadow: 0 0 0 1px #dee9f0;
+            -webkit-box-shadow: 0 0 0 1px var(--cPrimaryLight);
+                    box-shadow: 0 0 0 1px var(--cPrimaryLight);
         }
 
         .__items .list-item :checked ~ .switch:after,
         .__items .list-item.__selected .switch:after
         {
-            border-color: #a1c0d4 #a1c0d4 transparent transparent;
+            border-color: var(--cPrimaryDark) var(--cPrimaryDark) transparent transparent;
             border-style: solid;
             border-width: 15px;
             content: '';
@@ -2665,13 +2665,13 @@ button.btn
 
         .__items .list-item.__selected .switch:after
         {
-            border-color: #dee9f0 #dee9f0 transparent transparent;
+            border-color: var(--cPrimaryLight) var(--cPrimaryLight) transparent transparent;
         }
 
         .__items .list-item :checked ~ .switch:before,
         .__items .list-item.__selected .switch:before
         {
-            color: #fff;
+            color: var(--cWhite);
             content: "";
             font-family: "FontAwesome";
             font-size: 10px;
@@ -2684,7 +2684,7 @@ button.btn
 
         .__items label.list-item.__selected .list-name
         {
-            color: #a6a6a6;
+            color: var(--cIconFill);
         }
 
 .list.__chosen
@@ -2700,8 +2700,8 @@ button.btn
 
         .__chosen .list-name
         {
-            background: #43b0e6;
-            color: #fff;
+            background: var(--cPrimary);
+            color: var(--cWhite);
             float: right;
             font-size: 11px;
             max-width: 345px;
@@ -2716,7 +2716,7 @@ button.btn
 
         .__chosen .list-remove
         {
-            color: #a1c0d4;
+            color: var(--cPrimaryDark);
             cursor: pointer;
             float: left;
             font-family: caption;
@@ -2728,7 +2728,7 @@ button.btn
 
         .__chosen .list-remove:hover
         {
-            color: #43b0e6;
+            color: var(--cPrimary);
         }
 
 .__files .list-item
@@ -2779,8 +2779,8 @@ button.btn
 /* Pagination */
 .pagination
 {
-    background: #fbfdfe;
-    border-color: #dee9f0;
+    background: var(--cGrayTracing);
+    border-color: var(--cPrimaryLight);
     border-style: solid;
     border-width: 1px 0;
     margin: 0 -20px;
@@ -2800,8 +2800,8 @@ button.btn
 
     .pagination .menu-link
     {
-        background: #fff;
-        border: 1px solid #dee9f0;
+        background: var(--cWhite);
+        border: 1px solid var(--cPrimaryLight);
         color: #4c4c4c;
         cursor: pointer;
         display: block;
@@ -2822,8 +2822,8 @@ button.btn
 
     .pagination .menu-item.__selected .menu-link
     {
-        background: #43b0e6;
-        color: #fff;
+        background: var(--cPrimary);
+        color: var(--cWhite);
     }
 
     .pagination .menu-ico
@@ -2845,7 +2845,7 @@ button.btn
 
 .modal-backdrop.fade
 {
-    background: #000;
+    background: var(--cBlack);
     opacity: .5;
 
     filter: alpha(opacity=50);
@@ -2854,7 +2854,7 @@ button.btn
 .window,
 .modal-content
 {
-    background: #fff;
+    background: var(--cWhite);
     font-family: 'Exo 2';
     line-height: 1.3;
     min-height: 200px;
@@ -2895,7 +2895,7 @@ button.btn
     .window .window-head,
     .modal-content .modal-header
     {
-        background: #333;
+        background: var(--cGrayDark);
         height: 40px;
         line-height: 36px;
         position: relative;
@@ -2916,7 +2916,7 @@ button.btn
         .window-head .window-t,
         .modal-header .modal-title
         {
-            color: #fff;
+            color: var(--cWhite);
             font-size: 14px;
             padding: 0 20px;
         }
@@ -2972,9 +2972,9 @@ button.btn
 
     .breadcrumbs .back
     {
-        background: #fff;
-        border: 1px solid #a1c0d4;
-        color: #a1c0d4;
+        background: var(--cWhite);
+        border: 1px solid var(--cPrimaryDark);
+        color: var(--cPrimaryDark);
         display: inline-block;
         height: 30px;
         line-height: 28px;
@@ -2988,8 +2988,8 @@ button.btn
 
     .breadcrumbs .back:hover
     {
-        border-color: #43b0e6;
-        color: #43b0e6;
+        border-color: var(--cPrimary);
+        color: var(--cPrimary);
     }
 
     .breadcrumbs .back ~ .menu
@@ -3008,7 +3008,7 @@ button.btn
 
     .breadcrumbs .menu-item.__divider:after
     {
-        background: #a6a6a6;
+        background: var(--cIconFill);
         content: '';
         height: 4px;
         left: 50%;
@@ -3020,7 +3020,7 @@ button.btn
 
         .breadcrumbs .menu-link
         {
-            color: #43b0e6;
+            color: var(--cPrimary);
             font-size: 14px;
         }
 
@@ -3072,7 +3072,7 @@ button.btn
 
 .tree-item:first-child:before
 {
-    background: #fff;
+    background: var(--cWhite);
     content: '';
     height: 2px;
     left: -1px;
@@ -3084,7 +3084,7 @@ button.btn
 
 .tree.__horizontal .tree-item:first-child:before
 {
-    background: #fff;
+    background: var(--cWhite);
     content: "";
     height: 50%;
     left: -1px;
@@ -3096,7 +3096,7 @@ button.btn
 
 .tree-item:last-child:before
 {
-    background: #fff;
+    background: var(--cWhite);
     content: '';
     height: 2px;
     right: -1px;
@@ -3108,7 +3108,7 @@ button.btn
 
 .tree.__horizontal .tree-item:last-child:after
 {
-    background: #fff;
+    background: var(--cWhite);
     content: "";
     height: 50%;
     left: -1px;
@@ -3120,7 +3120,7 @@ button.btn
 
 .tree-block
 {
-    border: 2px solid #a1c0d4;
+    border: 2px solid var(--cPrimaryDark);
     cursor: pointer;
     display: inline-block;
     margin: 10px 11px;
@@ -3140,7 +3140,7 @@ button.btn
 
 .tree-block:hover
 {
-    background: #ecf7fc;
+    background: var(--cPrimaryLightest);
 }
 
 .tree-block.__canceled:hover
@@ -3150,8 +3150,8 @@ button.btn
 
 .tree-block.__selected
 {
-    background: #d9effa;
-    border-color: #a1c0d4;
+    background: var(--cPrimaryLighter);
+    border-color: var(--cPrimaryDark);
 }
 
 .tree-block .inner
@@ -3163,7 +3163,7 @@ button.btn
 
 .tree-item.last .tree-block .inner:after
 {
-    background: #fff;
+    background: var(--cWhite);
     content: '';
     height: 2px;
     left: -1px;
@@ -3175,7 +3175,7 @@ button.btn
 
 .tree-item.last .tree-block .inner:before
 {
-    background: #fff;
+    background: var(--cWhite);
     content: '';
     height: 2px;
     position: absolute;
@@ -3192,7 +3192,7 @@ button.btn
 
 .tree-block:before
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     content: '';
     height: 10px;
     left: 50%;
@@ -3206,7 +3206,7 @@ button.btn
 
 .tree.__horizontal .tree-block:before
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     content: "";
     height: 2px;
     left: -14px;
@@ -3247,7 +3247,7 @@ button.btn
 
 .tree-node:after
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     content: '';
     height: 2px;
     left: 0;
@@ -3258,7 +3258,7 @@ button.btn
 
 .tree.__horizontal .tree-node:after
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     bottom: 0;
     content: "";
     height: auto;
@@ -3275,7 +3275,7 @@ button.btn
 
 .tree-node:before
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     content: '';
     height: 12px;
     left: 50%;
@@ -3289,7 +3289,7 @@ button.btn
 
 .tree.__horizontal .tree-node:before
 {
-    background: #a1c0d4;
+    background: var(--cPrimaryDark);
     content: "";
     height: 2px;
     left: -12px;
@@ -3320,8 +3320,8 @@ button.btn
 
 .tree-el.__canceled
 {
-    background: #43b0e6;
-    color: #fff;
+    background: var(--cPrimary);
+    color: var(--cWhite);
     margin: 5px -10px -5px;
     padding: 5px 0;
     text-align: center;
@@ -3329,7 +3329,7 @@ button.btn
 
 .tree-el.__title
 {
-    color: #43b0e6;
+    color: var(--cPrimary);
     height: 24px;
 }
 
@@ -3405,8 +3405,8 @@ button.btn
 /* Calendar */
 .form-input.__calendar .dropdown-menu
 {
-    background: #fff;
-    border: 1px solid #dee9f0;
+    background: var(--cWhite);
+    border: 1px solid var(--cPrimaryLight);
     margin: -1px 0 0;
     max-width: 400px;
     position: absolute;
@@ -3416,7 +3416,7 @@ button.btn
 
     .form-input.__calendar .dropdown-menu .btn
     {
-        background: #fbfdfe;
+        background: var(--cGrayTracing);
         font-size: 14px;
         font-weight: 400;
         position: static;
@@ -3425,12 +3425,12 @@ button.btn
 
     .form-input.__calendar .dropdown-menu .btn:disabled:hover
     {
-        background: #fbfdfe;
+        background: var(--cGrayTracing);
     }
 
     .form-input.__calendar .dropdown-menu .btn:hover
     {
-        background-color: #ecf7fc;
+        background-color: var(--cPrimaryLightest);
     }
 
         .form-input.__calendar .dropdown-menu table .btn
@@ -3441,8 +3441,8 @@ button.btn
         .form-input.__calendar .dropdown-menu .btn-group .btn,
         .form-input.__calendar .dropdown-menu .btn-success
         {
-            background: #43b0e6;
-            color: #fff;
+            background: var(--cPrimary);
+            color: var(--cWhite);
             display: inline-block;
             padding: 0 10px;
         }
@@ -3454,8 +3454,8 @@ button.btn
     .form-input.__calendar .dropdown-menu .btn-info,
     .form-input.__calendar .dropdown-menu .btn.active
     {
-        background: #43b0e6;
-        color: #fff;
+        background: var(--cPrimary);
+        color: var(--cWhite);
     }
 
     .dropdown-menu li
@@ -3487,8 +3487,8 @@ button.btn
         .dropdown-menu table th,
         .dropdown-menu table td
         {
-            background: #dee9f0;
-            border-color: #fff;
+            background: var(--cPrimaryLight);
+            border-color: var(--cWhite);
             border-style: solid;
             border-width: 2px;
             font-size: 14px;
@@ -3499,7 +3499,7 @@ button.btn
 
         .dropdown-menu table th
         {
-            background: #dee9f0;
+            background: var(--cPrimaryLight);
             font-weight: 500;
         }
 
@@ -3544,8 +3544,8 @@ button.btn
 .select2-container .select2-choice,
 .select2-container-multi .select2-choices
 {
-    background: #fff;
-    border-color: #dee9f0;
+    background: var(--cWhite);
+    border-color: var(--cPrimaryLight);
     color: #4c4c4c;
     font-size: 14px;
     line-height: 32px;
@@ -3575,7 +3575,7 @@ button.btn
 .select2-drop-active,
 .select2-container-multi.select2-container-active .select2-choices
 {
-    border-color: #a1c0d4;
+    border-color: var(--cPrimaryDark);
 
     -webkit-box-shadow: none;
             box-shadow: none;
@@ -3601,7 +3601,7 @@ button.btn
 
 .select2-container .select2-choice .select2-arrow:after
 {
-    border-color: #43b0e6 transparent transparent;
+    border-color: var(--cPrimary) transparent transparent;
     border-style: solid;
     border-width: 5px 4px;
     content: '';
@@ -3613,18 +3613,18 @@ button.btn
 
 .select2-dropdown-open .select2-choice .select2-arrow:after
 {
-    border-color: transparent transparent #43b0e6;
+    border-color: transparent transparent var(--cPrimary);
     margin: -10px 0 0;
 }
 
 .select2-search input
 {
-    background: #fff;
+    background: var(--cWhite);
 }
 
 .select2-results .select2-highlighted
 {
-    background: #43b0e6;
+    background: var(--cPrimary);
 }
 
 .select2-container li
@@ -3647,8 +3647,8 @@ button.btn
 
 .select2-container-multi .select2-choices .select2-search-choice
 {
-    background: #fbfdfe;
-    border: 1px solid #a1c0d4;
+    background: var(--cGrayTracing);
+    border: 1px solid var(--cPrimaryDark);
     font-size: 13px;
     line-height: 1;
     padding: 6px 30px 6px 5px;
@@ -3679,7 +3679,7 @@ button.btn
 
 .select2-search-choice-close::after
 {
-    color: #a1c0d4;
+    color: var(--cPrimaryDark);
     content: '×';
     font-family: caption;
     font-size: 16px;
@@ -3691,20 +3691,20 @@ button.btn
 
 .select2-search-choice-close:hover::after
 {
-    color: #43b0e6;
+    color: var(--cPrimary);
 }
 
 .select2-container-multi .select2-search-choice-close::after,
 .select2-container-multi .select2-search-choice-close:hover::after
 {
-    color: #a1c0d4;
+    color: var(--cPrimaryDark);
 }
 
 
 /* Tags input */
 tags-input .tags
 {
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
     color: #4c4c4c;
     padding: 0 10px;
 
@@ -3730,7 +3730,7 @@ tags-input .tags li:before
 
 tags-input .tags.focused
 {
-    border-color: #a1c0d4;
+    border-color: var(--cPrimaryDark);
 
     -webkit-box-shadow: none;
             box-shadow: none;
@@ -3744,9 +3744,9 @@ tags-input .tags .input
 
 tags-input .tags .tag-item
 {
-    background: #43b0e6;
+    background: var(--cPrimary);
     border: none;
-    color: #fff;
+    color: var(--cWhite);
     font-family: 'Exo 2';
     font-size: 13px;
     height: 24px;
@@ -3760,7 +3760,7 @@ tags-input .tags .tag-item
 
 tags-input .tags .tag-item.selected
 {
-    background: #e51400;
+    background: var(--сError);
 }
 
 tags-input .tags .tag-item .remove-button
@@ -3795,7 +3795,7 @@ tags-input .tags .tag-item .remove-button
     /* Bar - menu navigation */
     .nav-bar .bar
     {
-        background: #333;
+        background: var(--cGrayDark);
         height: 100%;
         padding: 90px 0 0;
         position: relative;
@@ -3834,7 +3834,7 @@ tags-input .tags .tag-item .remove-button
 
             .nav-bar .logo-version
             {
-                color: #c2c2c2;
+                color: var(--cNavLinkFont);
                 display: block;
                 font-size: 12px;
                 padding: 10px 0;
@@ -3842,7 +3842,7 @@ tags-input .tags .tag-item .remove-button
 
             .nav-bar .menu-link
             {
-                color: #c2c2c2;
+                color: var(--cNavLinkFont);
                 display: block;
                 font-size: 13px;
                 padding: 15px 0;
@@ -3859,26 +3859,26 @@ tags-input .tags .tag-item .remove-button
 
             .nav-bar .menu-item.__done .menu-link
             {
-                background: #43b0e6;
-                color: #fff;
+                background: var(--cPrimary);
+                color: var(--cWhite);
                 cursor: pointer;
             }
 
             .nav-bar .menu-link:hover
             {
-                color: #43b0e6;
+                color: var(--cPrimary);
             }
 
             .nav-bar .__selected .menu-link
             {
-                background-color: #383838;
-                color: #43b0e6;
+                background-color: var(--cGrayDarker);
+                color: var(--cPrimary);
             }
 
             .nav-bar .__selected.__animated .menu-link,
             .nav-bar .__animated .menu-link
             {
-                color: #fff;
+                color: var(--cWhite);
 
                 -webkit-animation: notify ease 1 3s;
                         animation: notify ease 1 3s;
@@ -3886,7 +3886,7 @@ tags-input .tags .tag-item .remove-button
 
             .nav-bar .__animated .menu-link:hover
             {
-                color: #fff;
+                color: var(--cWhite);
             }
 
                 .nav-bar .menu-ico
@@ -3899,8 +3899,8 @@ tags-input .tags .tag-item .remove-button
 
                 .nav-bar .menu-count
                 {
-                    background: #fff;
-                    color: #333;
+                    background: var(--cWhite);
+                    color: var(--cGrayDark);
                     height: 18px;
                     font-size: 11px;
                     line-height: 18px;
@@ -3922,7 +3922,7 @@ tags-input .tags .tag-item .remove-button
     /* Dropdown - dropdown menu navigation */
     .nav-bar .dropdown
     {
-        background: #383838;
+        background: var(--cGrayDarker);
         bottom: 0;
         position: fixed;
         top: 0;
@@ -3944,7 +3944,7 @@ tags-input .tags .tag-item .remove-button
 
         .dropdown .dropdown-close
         {
-            color: #c2c2c2;
+            color: var(--cNavLinkFont);
             cursor: pointer;
             font-family: caption;
             font-size: 22px;
@@ -3957,7 +3957,7 @@ tags-input .tags .tag-item .remove-button
 
         .dropdown .dropdown-close:hover
         {
-            color: #fff;
+            color: var(--cWhite);
         }
 
         .dropdown .dropdown-head
@@ -3980,7 +3980,7 @@ tags-input .tags .tag-item .remove-button
 
                 .dropdown-head .menu-link:hover
                 {
-                    color: #fff;
+                    color: var(--cWhite);
                 }
 
                     .dropdown-head .menu-ico
@@ -4036,7 +4036,7 @@ tags-input .tags .tag-item .remove-button
 
                     .dropdown-content .list-link
                     {
-                        color: #c2c2c2;
+                        color: var(--cNavLinkFont);
                         display: block;
                         font-size: 16px;
                         font-weight: 300;
@@ -4048,7 +4048,7 @@ tags-input .tags .tag-item .remove-button
                     .dropdown-content .list-link:hover
                     {
                         background: rgba(0,0,0,.2);
-                        color: #fff;
+                        color: var(--cWhite);
                     }
 
                         .dropdown-content .list-ico
@@ -4063,23 +4063,23 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .info .list-ico
                         {
-                            color: #43b0e6;
+                            color: var(--cPrimary);
                         }
 
                         .dropdown-content .error .list-ico
                         {
-                            color: #e51400;
+                            color: var(--сError);
                         }
 
                         .dropdown-content .warning .list-ico
                         {
-                            color: #f0a30a;
+                            color: var(--cWarning);
                         }
 
                         .dropdown-content .error .list-ico:after,
                         .dropdown-content .warning .list-ico:after
                         {
-                            background: #fff;
+                            background: var(--cWhite);
                             content: '';
                             height: 12px;
                             left: 11px;
@@ -4093,7 +4093,7 @@ tags-input .tags .tag-item .remove-button
                         .dropdown-content .list-date,
                         .dropdown-content .list-descr
                         {
-                            color: #fff;
+                            color: var(--cWhite);
                             text-transform: none;
                         }
 
@@ -4117,7 +4117,7 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .list-date
                         {
-                            color: #c2c2c2;
+                            color: var(--cNavLinkFont);
                             margin: 5px 0 0 55px;
                             padding: 0 0 0 25px;
                             position: relative;
@@ -4125,7 +4125,7 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .list-date:after
                         {
-                            color: #c2c2c2;
+                            color: var(--cNavLinkFont);
                             content: '';
                             font-family: 'FontAwesome';
                             font-size: 14px;
@@ -4136,7 +4136,7 @@ tags-input .tags .tag-item .remove-button
 
                         .dropdown-content .list-bar
                         {
-                            background-color: #43b0e6;
+                            background-color: var(--cPrimary);
                             display: block;
                             height: 10px;
                             margin-left: 55px;
@@ -4175,7 +4175,7 @@ tags-input .tags .tag-item .remove-button
 /* Blades */
 .blade
 {
-    background: #fff;
+    background: var(--cWhite);
     font-family: serif;
     overflow: hidden;
     position: relative;
@@ -4199,13 +4199,13 @@ tags-input .tags .tag-item .remove-button
     {
         font-family: 'Exo 2';
 
-        -webkit-box-shadow: -8px 0 0 0 rgba(0,0,0,.2) inset;
-                box-shadow: -8px 0 0 0 rgba(0,0,0,.2) inset;
+        -webkit-box-shadow: var(--sBladeInnerShadow);
+                box-shadow: var(--sBladeInnerShadow);
     }
 
     .blade .blade-head
     {
-        background: #333;
+        background: var(--cGrayDark);
         height: 132px;
         min-width: 300px;
         padding: 25px 0 5px;
@@ -4236,7 +4236,7 @@ tags-input .tags .tag-item .remove-button
             {
                 background: #7a1c13;
                 bottom: 0;
-                color: #fff;
+                color: var(--cWhite);
                 font-size: 14px;
                 left: 0;
                 line-height: 23px;
@@ -4251,7 +4251,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-status .status-message:after
             {
-                color: #fff;
+                color: var(--cWhite);
                 content: '';
                 font-family: 'FontAwesome';
                 left: 20px;
@@ -4283,7 +4283,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-nav .menu
             {
-                background: #232323;
+                background: var(--cGrayDarkest);
                 position: relative;
             }
 
@@ -4322,7 +4322,7 @@ tags-input .tags .tag-item .remove-button
 
                 .blade-nav .menu-item .btn-ico
                 {
-                    color: #fff;
+                    color: var(--cWhite);
                     font-size: 13px;
                     line-height: 0;
                     margin: 12px 0 0;
@@ -4331,7 +4331,7 @@ tags-input .tags .tag-item .remove-button
             .blade-nav .menu-item.__minimize:after,
             .blade-nav .menu-item.__maximize:after
             {
-                border-color: #fff;
+                border-color: var(--cWhite);
                 border-style: solid;
                 height: 8px;
                 top: 8px;
@@ -4362,7 +4362,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-nav .menu-item:after
             {
-                color: #fff;
+                color: var(--cWhite);
                 content: '';
                 left: 50%;
                 margin: 0 0 0 -6px;
@@ -4371,7 +4371,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-nav .menu-item:hover
             {
-                background: #43b0e6;
+                background: var(--cPrimary);
             }
 
             .blade-nav .menu-item.__disabled:hover
@@ -4386,7 +4386,7 @@ tags-input .tags .tag-item .remove-button
 
         .blade-head .blade-t
         {
-            color: #fff;
+            color: var(--cWhite);
             left: 0;
             margin: 10px 20px;
             min-height: 34px;
@@ -4428,13 +4428,13 @@ tags-input .tags .tag-item .remove-button
 
             .blade-t .blade-t_subhead
             {
-                color: #bbb;
+                color: var(--cSubtitle);
                 font-size: 11px;
             }
 
         .blade-head .blade-toolbar
         {
-            background: #333;
+            background: var(--cGrayDark);
             border-top: 1px solid #3d3d3d;
             left: 0;
             overflow: hidden;
@@ -4461,7 +4461,7 @@ tags-input .tags .tag-item .remove-button
 
             .blade-switch .switch-t
             {
-                color: #fff;
+                color: var(--cWhite);
                 display: block;
                 font-size: 11px;
                 font-weight: 300;
@@ -4504,7 +4504,7 @@ tags-input .tags .tag-item .remove-button
 
                 .blade-toolbar .menu-item.__loading:after
                 {
-                    background-color: #333;
+                    background-color: var(--cGrayDark);
                     background-image: 
                         -webkit-linear-gradient(45deg, 
                         rgba(255, 255, 255, .15) 25%, 
@@ -4542,7 +4542,7 @@ tags-input .tags .tag-item .remove-button
                     {
                         background: none;
                         border: none;
-                        color: #fff;
+                        color: var(--cWhite);
                         cursor: pointer;
                         font-size: 11px;
                         font-weight: 300;
@@ -4554,12 +4554,12 @@ tags-input .tags .tag-item .remove-button
 
                     .blade-toolbar .menu-btn:hover
                     {
-                        color: #43b0e6;
+                        color: var(--cPrimary);
                     }
 
                     .blade-toolbar .menu-btn:disabled
                     {
-                        color: #fff;
+                        color: var(--cWhite);
                         cursor: not-allowed;
                     }
 
@@ -4604,8 +4604,8 @@ tags-input .tags .tag-item .remove-button
 
         .blade-container .blade-static
         {
-            background: #fbfdfe;
-            border-color: #dee9f0;
+            background: var(--cGrayTracing);
+            border-color: var(--cPrimaryLight);
             border-style: solid;
             border-width: 0 0 2px;
             height: 70px;
@@ -4783,7 +4783,7 @@ tags-input .tags .tag-item .remove-button
 
     .blade .blade-content.__gray
     {
-        background-color: #fbfdfe;
+        background-color: var(--cGrayTracing);
     }
 
     .__canceled
@@ -4851,7 +4851,7 @@ tags-input .tags .tag-item .remove-button
     .blade .blade-inner::-webkit-scrollbar-track-piece,
     .log::-webkit-scrollbar-track-piece
     {
-        background: #f9f9f9;
+        background: var(--cTooltipFill);
     }
 
     .blade .blade-inner::-webkit-scrollbar-thumb,
@@ -4873,10 +4873,10 @@ tags-input .tags .tag-item .remove-button
     .blade .blade-inner,
     .log
     {
-        -ms-scrollbar-arrow-color: #f9f9f9;
+        -ms-scrollbar-arrow-color: var(--cTooltipFill);
         -ms-scrollbar-face-color: #e6e6e6;
         -ms-scrollbar-shadow-color: #e6e6e6;
-        -ms-scrollbar-track-color: #f9f9f9;
+        -ms-scrollbar-track-color: var(--cTooltipFill);
     }
 
     .blade .__gray .blade-inner
@@ -4947,7 +4947,7 @@ tags-input .tags .tag-item .remove-button
 
         .blade-loader .loading:after
         {
-            color: #43b0e6;
+            color: var(--cPrimary);
             content: attr(data-title);
             font-size: 60px;
             left: 0;
@@ -4971,7 +4971,7 @@ tags-input .tags .tag-item .remove-button
 .ui-grid,
 .ui-grid-header
 {
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
 }
 
 .ui-grid-top-panel
@@ -4981,7 +4981,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-header-cell
 {
-    color: #333;
+    color: var(--cGrayDark);
     font-size: 14px;
     font-weight: 400;
 }
@@ -4996,12 +4996,12 @@ tags-input .tags .tag-item .remove-button
 .ui-grid-cell,
 .ui-grid-header-cell:last-child .ui-grid-column-resizer.right
 {
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
 }
 
 .ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell
 {
-    background: #d9effa !important;
+    background: var(--cPrimaryLighter) !important;
 }
 
 .ui-grid-canvas
@@ -5021,7 +5021,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-row:last-child .ui-grid-cell
 {
-    border-color: #dee9f0;
+    border-color: var(--cPrimaryLight);
     border-width: 0 0 1px !important;
 }
 
@@ -5029,7 +5029,7 @@ tags-input .tags .tag-item .remove-button
 {
     font-size: 14px;
     padding: 10px;
-    text-shadow: 1px 1px #fff;
+    text-shadow: 1px 1px var(--cWhite);
 }
 
 .ui-grid-row-header-cell .ui-grid-cell-contents,
@@ -5040,7 +5040,7 @@ tags-input .tags .tag-item .remove-button
 
 .ui-grid-row:nth-child(2n) .ui-grid-cell
 {
-    background: #fff;
+    background: var(--cWhite);
 }
 
 .ui-grid-filter-container
@@ -5079,18 +5079,18 @@ input.ui-grid-filter-input[type="text"]
 .ui-grid-row:hover .ui-grid-cell,
 .ui-grid-row:nth-child(2n):hover .ui-grid-cell
 {
-    background: #ecf7fc;
+    background: var(--cPrimaryLightest);
 }
 
 .ui-grid-row-header-cell
 {
     background: none !important;
-    border-bottom: 1px solid #d9effa;
+    border-bottom: 1px solid var(--cPrimaryLighter);
 }
 
 .ui-grid-selection-row-header-buttons.ui-grid-row-selected
 {
-    color: #a1c0d4;
+    color: var(--cPrimaryDark);
 }
 
 .ui-grid-pinned-container.ui-grid-pinned-container-left .ui-grid-header-cell:last-child,
@@ -5118,18 +5118,18 @@ input.ui-grid-filter-input[type="text"]
 
 .ui-grid-cell .product-img .pr-ico
 {
-    color: #a6a6a6;
+    color: var(--cIconFill);
     display: inline-block;
     font-size: 28px;
     margin: -4px 0 0;
-    text-shadow: 1px 1px #fff;
+    text-shadow: 1px 1px var(--cWhite);
     vertical-align: middle;
 }
 
 .ui-grid-row:hover .ui-grid-cell .pr-ico,
 .ui-grid-row-selected .ui-grid-cell .pr-ico
 {
-    color: #a1c0d4;
+    color: var(--cPrimaryDark);
 }
 
 .ui-grid-row > :first-child
@@ -5148,8 +5148,8 @@ input.ui-grid-filter-input[type="text"]
 /* Image preview */
 .image-preview
 {
-    background: #fff;
-    border: 2px solid #a1c0d4;
+    background: var(--cWhite);
+    border: 2px solid var(--cPrimaryDark);
     height: 300px;
     line-height: 298px;
     overflow: hidden;
@@ -5197,7 +5197,7 @@ input.ui-grid-filter-input[type="text"]
 
         .overlay .popup
         {
-            background: #fff;
+            background: var(--cWhite);
             display: inline-block;
             max-height: 600px;
             max-width: 800px;
@@ -5249,7 +5249,7 @@ input.ui-grid-filter-input[type="text"]
     .gridster gridster-item,
     .gridster .list-item
     {
-        background: #fbfdfe;
+        background: var(--cGrayTracing);
         cursor: move;
         padding: 2px;
         position: absolute;
@@ -5258,8 +5258,8 @@ input.ui-grid-filter-input[type="text"]
         -webkit-box-sizing: border-box;
                 box-sizing: border-box;
 
-        -webkit-box-shadow: 0 0 0 2px #dee9f0 inset;
-                box-shadow: 0 0 0 2px #dee9f0 inset;
+        -webkit-box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
+                box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
     }
 
     .gridster .gridster-item-moving
@@ -5272,14 +5272,14 @@ input.ui-grid-filter-input[type="text"]
     .gridster gridster-item:hover,
     .gridster .list-item:hover
     {
-        -webkit-box-shadow: 0 0 0 2px #a1c0d4 inset;
-                box-shadow: 0 0 0 2px #a1c0d4 inset;
+        -webkit-box-shadow: var(--sBlockHover);
+                box-shadow: var(--sBlockHover);
     }
 
     .gridster .list:not(.__editing) .list-item .customize
     {
-        background: #a1c0d4;
-        color: #fff;
+        background: var(--cPrimaryDark);
+        color: var(--cWhite);
         font-size: 12px;
         font-weight: 500;
         left: 0;
@@ -5292,22 +5292,22 @@ input.ui-grid-filter-input[type="text"]
 
         .customize .custom-ico
         {
-            color: #fff;
+            color: var(--cWhite);
             font-size: 12px;
         }
 
     .gridster-preview-holder
     {
-        background: #dee9f0;
-        border-color: #a1c0d4;
+        background: var(--cPrimaryLight);
+        border-color: var(--cPrimaryDark);
         border-style: dashed;
         border-width: 1px;
     }
 
     .gridster .gridster-preview-holder
     {
-        background: #dee9f0;
-        border-color: #a1c0d4;
+        background: var(--cPrimaryLight);
+        border-color: var(--cPrimaryDark);
         border-style: dashed;
         border-width: 1px;
     }
@@ -5371,7 +5371,7 @@ input.ui-grid-filter-input[type="text"]
 
         .gridster .image
         {
-            border: 1px solid #dee9f0;
+            border: 1px solid var(--cPrimaryLight);
             height: 50px;
             left: 69px;
             position: absolute;
@@ -5409,13 +5409,13 @@ input.ui-grid-filter-input[type="text"]
 
         .gridster .list-price
         {
-            color: #43b0e6;
+            color: var(--cPrimary);
             font-size: 12px;
         }
 
         .gridster .list-count
         {
-            color: #43b0e6;
+            color: var(--cPrimary);
             font-size: 22px;
             font-weight: 300;
         }
@@ -5429,7 +5429,7 @@ input.ui-grid-filter-input[type="text"]
         .gridster .gallery-ico,
         .gridster .comment-ico
         {
-            color: #dee9f0;
+            color: var(--cPrimaryLight);
             font-size: 24px;
         }
 
@@ -5443,15 +5443,15 @@ input.ui-grid-filter-input[type="text"]
         .gridster .list-item:hover .gallery-ico,
         .gridster .list-item:hover .comment-ico
         {
-            color: #a1c0d4;
+            color: var(--cPrimaryDark);
         }
 
 
 /* Tooltip */
 .tooltip
 {
-    background: #43b0e6;
-    color: #fff;
+    background: var(--cPrimary);
+    color: var(--cWhite);
     font-family: 'Exo 2';
     font-size: 12px;
     max-width: 600px;
@@ -5461,7 +5461,7 @@ input.ui-grid-filter-input[type="text"]
 
 .tooltip::after
 {
-    border-color: transparent #43b0e6 transparent transparent;
+    border-color: transparent var(--cPrimary) transparent transparent;
     border-style: solid;
     border-width: 8px;
     content: '';
@@ -5478,13 +5478,13 @@ input.ui-grid-filter-input[type="text"]
 /* Informer */
 .__informer
 {
-    background: #ecf7fc;
-    color: #a1c0d4;
+    background: var(--cPrimaryLightest);
+    color: var(--cPrimaryDark);
     font-size: 22px;
     padding: 10px;
 
-    -webkit-box-shadow: 0 0 0 2px #dee9f0 inset;
-            box-shadow: 0 0 0 2px #dee9f0 inset;
+    -webkit-box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
+            box-shadow: 0 0 0 2px var(--cPrimaryLight) inset;
 }
 
 .__informer::after
@@ -5513,7 +5513,7 @@ input.ui-grid-filter-input[type="text"]
 
 .lookbook
 {
-    background: #fff;
+    background: var(--cWhite);
     bottom: 20px;
     position: absolute;
     right: 28px;
@@ -5534,9 +5534,9 @@ input.ui-grid-filter-input[type="text"]
 
     .tabs .tab-item
     {
-        background: #dee9f0;
-        border-top: 1px solid #dee9f0;
-        color: #43b0e6;
+        background: var(--cPrimaryLight);
+        border-top: 1px solid var(--cPrimaryLight);
+        color: var(--cPrimary);
         cursor: pointer;
         float: left;
         font-size: 14px;
@@ -5553,13 +5553,13 @@ input.ui-grid-filter-input[type="text"]
 
     .tabs .tab-item + .tab-item
     {
-        border-left: 1px solid #fff;
+        border-left: 1px solid var(--cWhite);
     }
 
     .tabs .tab-item.__selected
     {
-        background: #fff;
-        border-bottom: 2px solid #fff;
+        background: var(--cWhite);
+        border-bottom: 2px solid var(--cWhite);
         line-height: 30px;
         top: 0;
     }

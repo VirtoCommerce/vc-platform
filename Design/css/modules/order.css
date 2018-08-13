@@ -1,7 +1,7 @@
 /* Prices */
 .list.__prices
 {
-    background: #fbfdfe;
+    background: var(--cGrayTracing);
     height: 100%;
     padding: 0 20px;
     text-align: left;
@@ -15,8 +15,8 @@
 
     .list.__prices .list-item.__total
     {
-        border-top: 1px solid #dee9f0;
-        color: #43b0e6;
+        border-top: 1px solid var(--cPrimaryLight);
+        color: var(--cPrimary);
         padding: 5px 0 0;
     }
 

@@ -1,8 +1,8 @@
 /* Drag and drop */
 .drag-area
 {
-	background: #dee9f0;
-    border: 2px dashed #a1c0d4;
+	background: var(--cPrimaryLight);
+    border: 2px dashed var(--cPrimaryDark);
     height: 250px;
 	margin: 0 0 20px;
 	padding: 0 20px;
@@ -24,10 +24,10 @@
 
 .drag-content
 {
-    color: #a1c0d4;
+    color: var(--cPrimaryDark);
     display: inline-block;
 	font-size: 18px;
-    text-shadow: 1px 1px 1px #fff;
+    text-shadow: 1px 1px 1px var(--cWhite);
     vertical-align: middle;
 }
 
@@ -35,7 +35,7 @@
 /* Dashboard */
 .dashboard
 {
-    background: #eef5f7;
+    background: var(--cBodyTracing);
 	font-family: 'Exo 2';
     position: relative;
     z-index: 50;
@@ -96,7 +96,7 @@
 
 		.dashboard .dashboard-account
 		{
-			background: #fff;
+			background: var(--cWhite);
 			border: 2px solid transparent;
 			cursor: pointer;
 			padding: 10px;
@@ -113,7 +113,7 @@
 		.dashboard .dashboard-account:before
 		{
 			background: #bfbfbf;
-			color: #fff;
+			color: var(--cWhite);
 			content: '';
 			font-family: 'FontAwesome';
 			font-size: 24px;
@@ -169,7 +169,7 @@
 /* Log */
 .log
 {
-    border: 1px solid #dee9f0;
+    border: 1px solid var(--cPrimaryLight);
     font-size: 12px;
     height: 300px;
     line-height: 1.4;
@@ -181,22 +181,22 @@
 
     .log .__info
     {
-        color: #43b0e6;
+        color: var(--cPrimary);
     }
 
     .log .__warning
     {
-        color: #f0a30a;
+        color: var(--cWarning);
     }
 
     .log .__debug
     {
-        color: #a6a6a6;
+        color: var(--cIconFill);
     }
 
     .log .__error
     {
-        color: #e51400;
+        color: var(--сError);
     }
 
 
@@ -231,7 +231,7 @@
 
 .table .table-col.__author
 {
-    color: #999;
+    color: var(--cTooltipFont);
 }
 
 .table .table-col.__version
@@ -241,7 +241,7 @@
 
 .table .table-col.__blue
 {
-    color: #43b0e6;
+    color: var(--cPrimary);
 }
 
 .table .table-col.__product-control
@@ -288,7 +288,7 @@
 
     .loader span
     {
-        background: #dee9f0;
+        background: var(--cPrimaryLight);
         height: 20px;
         position: absolute;
         top: 25px;
@@ -383,7 +383,7 @@
 
 .gallery .gallery-img
 {
-    border: 1px solid #dee9f0;
+    border: 1px solid var(--cPrimaryLight);
     position: absolute;
 
     -webkit-box-sizing: border-box;
@@ -392,7 +392,7 @@
 
 .gallery .gallery-img:hover
 {
-    border-color: #a1c0d4;
+    border-color: var(--cPrimaryDark);
 }
 
 .gallery-img

@@ -19,19 +19,19 @@
 .__items .list-item:hover,
 .__files .list-block:hover
 {
-	background: #ecf7fc;
+	background: var(--cPrimaryLightest);
 }
 
 .table .table-item.__selected,
 .__items .list-item.__selected,
 .__files .list-item.__selected > .list-block
 {
-	background: #d9effa;
+	background: var(--cPrimaryLighter);
 }
 
 .__items label.list-item.__selected
 {
-    background: #fff;
+    background: var(--cWhite);
 }
 
 /* Icons */
@@ -39,7 +39,7 @@
 .__items .list-ico,
 .__files .list-ico
 {
-	color: #a6a6a6;
+	color: var(--cIconFill);
 }
 
 .tile:hover .tile-ico,
@@ -48,13 +48,13 @@
 .__files .list-block:hover .list-ico,
 .__files .list-item.__selected > .list-block .list-ico
 {
-	color: #a1c0d4;
+	color: var(--cPrimaryDark);
 }
 
 /* Links */
 a
 {
-	color: #43b0e6;
+	color: var(--cPrimary);
 	cursor: pointer;
 	font-size: 14px;
 	text-decoration: none;
@@ -78,7 +78,7 @@ a:hover,
 
 .__blue
 {
-	color: #43b0e6;
+	color: var(--cPrimary);
 }
 
 /* Transitions */
@@ -181,7 +181,7 @@ a:hover,
 
 .progress-bar.__auqa
 {
-	background-color: #43b0e6;
+	background-color: var(--cPrimary);
 }
 
 .progress-bar.__mini
@@ -352,11 +352,11 @@ a:hover,
 	}
 	30%
 	{
-		background-color: #43b0e6;
+		background-color: var(--cPrimary);
 	}
 	90%
 	{
-		background-color: #43b0e6;
+		background-color: var(--cPrimary);
 	}
 	100%
 	{
@@ -372,11 +372,11 @@ a:hover,
 	}
 	30%
 	{
-		background-color: #43b0e6;
+		background-color: var(--cPrimary);
 	}
 	90%
 	{
-		background-color: #43b0e6;
+		background-color: var(--cPrimary);
 	}
 	100%
 	{
