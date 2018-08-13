@@ -480,10 +480,10 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
     <Content Include="Content\angular-gridster.css" />
-    <Content Include="Content\ui-grid.eot" />
+    <Content Include="Content\fonts\ui-grid.eot" />
     <Content Include="Content\ui-grid.svg" />
-    <Content Include="Content\ui-grid.ttf" />
-    <Content Include="Content\ui-grid.woff" />
+    <Content Include="Content\fonts\ui-grid.ttf" />
+    <Content Include="Content\fonts\ui-grid.woff" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
