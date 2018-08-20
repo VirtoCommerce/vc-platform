@@ -94,6 +94,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Assets\BlobStorageProviderTests.cs" />
     <Compile Include="DynamicPropertyTests.cs" />
     <Compile Include="NotificationScenarios.cs" />
     <Compile Include="ModuleCatalogScenarios.cs" />

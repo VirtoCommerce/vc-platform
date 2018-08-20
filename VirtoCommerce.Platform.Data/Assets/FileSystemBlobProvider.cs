@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
@@ -92,7 +92,8 @@ namespace VirtoCommerce.Platform.Data.Assets
             {
                 Directory.CreateDirectory(folderPath);
             }
-            return File.Open(filePath, FileMode.Create);
+
+            return File.Open(filePath, FileMode.Create, FileAccess.Write);
         }
 
 
