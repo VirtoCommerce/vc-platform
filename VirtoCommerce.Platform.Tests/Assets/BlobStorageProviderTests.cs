@@ -5,6 +5,7 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Assets
 {
+    [Trait("Category", "Unit")]
     public class BlobStorageProviderTests
     {
         /// <summary>
