@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Packaging;
@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notifications;
@@ -151,6 +152,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             progressCallback(progressInfo);
 
             using (var package = Package.Open(stream, FileMode.Open))
+            using (var guard = EventSupressor.SupressEvents())
             {
                 //Import selected platform entries
                 ImportPlatformEntriesInternal(package, manifest, progressCallback);
@@ -158,7 +160,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 ImportModulesInternal(package, manifest, progressCallback);
                 //Reset cache
                 _cacheManager.Clear();
-
             }
         }
 
@@ -228,7 +229,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 if (!platformEntries.AssetEntries.IsNullOrEmpty())
                 {
                     var totalAssetsEntriesCount = platformEntries.AssetEntries.Count();
-                    const int batchSize = 50;                
+                    const int batchSize = 50;
                     for (var i = 0; i <= totalAssetsEntriesCount; i += batchSize)
                     {
                         progressInfo.Description = $"Asset: {Math.Min(totalAssetsEntriesCount, i + batchSize) } of {totalAssetsEntriesCount} asset entries have been imported...";
@@ -290,7 +291,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             progressInfo.Description = "Asset: Evaluate asset entries count...";
             progressCallback(progressInfo);
             const int batchSize = 50;
-            var totalAssetsEntriesCount =  _assetEntrySearchService.SearchAssetEntries(new AssetEntrySearchCriteria { Skip = 0, Take = 0 }).TotalCount;
+            var totalAssetsEntriesCount = _assetEntrySearchService.SearchAssetEntries(new AssetEntrySearchCriteria { Skip = 0, Take = 0 }).TotalCount;
             for (var i = 0; i <= totalAssetsEntriesCount; i += batchSize)
             {
                 progressInfo.Description = $"Asset: {Math.Min(totalAssetsEntriesCount, i + batchSize) } of {totalAssetsEntriesCount} asset entries have been loaded...";

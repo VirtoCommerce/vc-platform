@@ -100,6 +100,7 @@
     <Compile Include="Events\ChangedEntryEvent.cs" />
     <Compile Include="Events\DomainEvent.cs" />
     <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Events\EventSupressor.cs" />
     <Compile Include="Events\ICancellableEventHandler.cs" />
     <Compile Include="Events\IChangedEntryEvent.cs" />
     <Compile Include="Events\IEvent.cs" />
