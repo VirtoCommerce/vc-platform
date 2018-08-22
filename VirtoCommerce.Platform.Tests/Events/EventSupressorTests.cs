@@ -50,7 +50,7 @@ namespace VirtoCommerce.Platform.Tests.Events
             Func<Task> notInteritedAction = async () =>
             {
                 await taskCompletionSource.Task;
-                Assert.False(EventSupressor.EventsSuppressed, "EventSupressor should be active in this thread.");
+                Assert.False(EventSupressor.EventsSuppressed, "EventSupressor shouldn't be active in this thread.");
             };
 
             var checkTask = notInteritedAction();
@@ -75,7 +75,7 @@ namespace VirtoCommerce.Platform.Tests.Events
             Func<Task> notInheritedAction = async () =>
             {
                 await taskCompletionSource.Task;
-                Assert.False(EventSupressor.EventsSuppressed, "EventSupressor should be active in this thread.");
+                Assert.False(EventSupressor.EventsSuppressed, "EventSupressor shouldn't be active in this thread.");
             };
 
             var checkTask = notInheritedAction();
