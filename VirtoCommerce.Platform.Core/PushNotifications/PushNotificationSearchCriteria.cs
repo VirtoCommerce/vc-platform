@@ -1,8 +1,9 @@
-﻿using System;
+using System;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.PushNotifications
 {
-	public class PushNotificationSearchCriteria
+	public class PushNotificationSearchCriteria : ValueObject
 	{
 		public PushNotificationSearchCriteria()
 		{
@@ -16,6 +17,5 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
 		public int Start { get; set; }
 		public int Count { get; set; }
 		public string OrderBy { get; set; }
-		
 	}
 }
