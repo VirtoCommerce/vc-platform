@@ -40,8 +40,7 @@
     "angular-filter": "0.5.8"
   },
   "resolutions": {
-    "angular": "1.4.4",
-    "angular-translate": "~2.15.2"
+    "angular": "1.4.4"
   },
   "overrides": {
     "angular": {

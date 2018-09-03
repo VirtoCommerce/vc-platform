@@ -29,8 +29,6 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <ApplicationInsightsResourceId>/subscriptions/dc56b6b7-adb2-402d-8637-2c248db98686/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/VirtoCommerce.Platform.Web</ApplicationInsightsResourceId>
-    <ApplicationInsightsAnnotationResourceId>/subscriptions/dc56b6b7-adb2-402d-8637-2c248db98686/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/VirtoCommerce.Platform.Web</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -532,7 +530,6 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="Content\themes\main\sass\blade-constructor.scss" />
-    <Content Include="Connected Services\Application Insights\ConnectedService.json" />
     <None Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
@@ -1237,9 +1234,6 @@
       <LastGenOutput>PlatformNotificationResource.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Web.Mvc;
@@ -10,10 +10,10 @@ namespace VirtoCommerce.Platform.Web
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            //filters.Add(new ErrorHandler.AiHandleErrorAttribute());
-            filters.Add(new AiHandleErrorAttribute());
+            filters.Add(new HandleErrorAttribute());
+			filters.Add(new AiHandleErrorAttribute());
 
-            System.Web.Http.GlobalConfiguration.Configuration.Filters.Add(new ResponseTimeHeaderFilter());
+			System.Web.Http.GlobalConfiguration.Configuration.Filters.Add(new ResponseTimeHeaderFilter());
         }
     }
     /// <summary>
