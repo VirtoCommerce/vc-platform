@@ -6,38 +6,56 @@ using Xunit;
 namespace VirtoCommerce.Platform.Tests.Assets
 {
     [Trait("Category", "Unit")]
-    public class BlobStorageProviderTests
+    public class BlobStorageProviderTests : IDisposable
     {
+        private readonly string _tempDirectory;
+
+        public BlobStorageProviderTests()
+        {
+            var tempPath = Path.GetTempPath();
+            _tempDirectory = Path.Combine(tempPath, "FileSystemBlobProviderTests");
+            Directory.CreateDirectory(_tempDirectory);
+        }
+
+        public void Dispose()
+        {
+            if (Directory.Exists(_tempDirectory))
+            {
+                Directory.Delete(_tempDirectory, recursive: true);
+            }
+        }
+
         /// <summary>
         /// `OpenWrite` method should return write-only stream.
         /// </summary>
         [Fact]
         public void FileSystemBlobProviderStreamWritePermissionsTest()
         {
-            var tempPath = Path.GetTempPath();
-            var tempDirectory = Path.Combine(tempPath, "FileSystemBlobProviderTests");
-            Directory.CreateDirectory(tempDirectory);
-            try
-            {
-                var fsbProvider = new FileSystemBlobProvider(tempDirectory);
+            var fsbProvider = new FileSystemBlobProvider(_tempDirectory);
 
-                using (var actualStream = fsbProvider.OpenWrite("file.tmp"))
-                {
-                    Assert.True(actualStream.CanWrite, "'OpenWrite' stream should be writable.");
-                    Assert.False(actualStream.CanRead, "'OpenWrite' stream should be write-only.");
-                }
-                
-            }
-            catch (Exception e)
+            using (var actualStream = fsbProvider.OpenWrite("file-write.tmp"))
             {
-                Assert.True(false, $"Test failed with unexpected exception '{e.Message}'");
+                Assert.True(actualStream.CanWrite, "'OpenWrite' stream should be writable.");
+                Assert.False(actualStream.CanRead, "'OpenWrite' stream should be write-only.");
             }
-            finally
+        }
+
+        /// <summary>
+        /// `OpenRead` method should return read-only stream.
+        /// </summary>
+        [Fact]
+        public void FileSystemBlobProviderStreamReadPermissionsTest()
+        {
+            var fsbProvider = new FileSystemBlobProvider(_tempDirectory);
+            const string fileForRead = "file-read.tmp";
+
+            // Creating empty file.
+            File.WriteAllText(Path.Combine(_tempDirectory, fileForRead), string.Empty);
+            
+            using (var actualStream = fsbProvider.OpenRead(fileForRead))
             {
-                if (Directory.Exists(tempDirectory))
-                {
-                    Directory.Delete(tempDirectory, recursive: true);
-                }
+                Assert.True(actualStream.CanRead, "'OpenRead' stream should be readable.");
+                Assert.False(actualStream.CanWrite, "'OpenRead' stream should be read-only.");
             }
         }
     }
