@@ -1,4 +1,4 @@
-﻿{
+{
   "platform": {
     "menu": {
       "home": "Home",
@@ -417,14 +417,16 @@
         }
       },
       "account-resetPassword": {
-        "subtitle": "Change your password",
+        "subtitle": "Change user password",
         "labels": {
           "new-password": "New password",
-          "repeat-password": "Repeat password"
+          "repeat-password": "Repeat password",
+          "force-password-change": "Make this user change their password when they first sign in"
         },
         "validations": {
           "repeat-password": "New passwords doesn't match!",
-          "invalid-token": "Reset password token is invalid or expired" 
+          "invalid-token": "Reset password token is invalid or expired",
+          "password-too-weak": "Entered password is too weak. // TODO: add detailed explanation"
         },
         "placeholders": {
           "new-password": "Enter new password",
@@ -662,7 +664,7 @@
         "confirm": "Repeat new password:",
         "save": "Change password",
         "postpone": "Postpone",
-        "force-change-info": "You must change the password to continue using the manager.",
+        "force-change-info": "You must change the password to continue using the manager."
       },
       "change-api-secret-key": {
         "title": "Please generate a new API access keys for the '{{userName}}' user",
