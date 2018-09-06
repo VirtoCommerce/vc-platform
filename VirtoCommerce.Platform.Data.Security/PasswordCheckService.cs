@@ -72,30 +72,32 @@ namespace VirtoCommerce.Platform.Data.Security
 
         private bool HasSufficientLength(string password)
         {
-            if (password.IsNullOrEmpty())
-                return false;
-
-            return password.Length >= _options.RequiredPasswordLength;
+            return !password.IsNullOrEmpty()
+                   && password.Length >= _options.RequiredPasswordLength;
         }
 
         private bool HasUpperCaseLetter(string password)
         {
-            return password.Any(char.IsUpper);
+            return !string.IsNullOrWhiteSpace(password)
+                   && password.Any(char.IsUpper);
         }
 
         private bool HasLowerCaseLetter(string password)
         {
-            return password.Any(char.IsLower);
+            return !string.IsNullOrWhiteSpace(password)
+                   && password.Any(char.IsLower);
         }
 
         private bool HasDigit(string password)
         {
-            return password.Any(char.IsDigit);
+            return !string.IsNullOrWhiteSpace(password)
+                   && password.Any(char.IsDigit);
         }
 
         private bool HasSpecialCharacter(string password)
         {
-            return password.IndexOfAny(SpecialCharacters.ToCharArray()) != -1;
+            return !string.IsNullOrWhiteSpace(password)
+                   && password.IndexOfAny(SpecialCharacters.ToCharArray()) != -1;
         }
     }
 }

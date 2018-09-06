@@ -35,6 +35,13 @@ namespace VirtoCommerce.Platform.Tests.Security
         [InlineData("login",      true, true, true, true,  5, false, false, true, false, true,  true)]
         [InlineData("0987654321", true, true, true, true, 12, false, true,  true, true,  false, true)]
         [InlineData("!@#$%^",     true, true, true, false, 5, false, false, true, true,  true,  false)]
+        // Handling null, empty and whitespace-only passwords
+        [InlineData(null,       false, false, false, false, 5, false, true,  false, false, false, false)]
+        [InlineData(null,       true,  true,  true,  true,  5, false, true,  true,  true,  true,  true)]
+        [InlineData("",         false, false, false, false, 5, false, true,  false, false, false, false)]
+        [InlineData(" \t \r\n", false, false, false, false, 5, true,  false, false, false, false, false)]
+        [InlineData(" \t \r\n", false, false, false, true,  5, false, false, false, false, false, true)]
+        [InlineData(" \t \r\n", true,  true,  true,  true,  5, false, false, true,  true,  true,  true)]
         public async Task TestCheckingPassword(
             string password,
             bool requireUpperCase,
