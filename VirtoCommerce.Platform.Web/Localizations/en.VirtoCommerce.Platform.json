@@ -427,7 +427,7 @@
           "repeat-password": "New passwords doesn't match!",
           "invalid-token": "Reset password token is invalid or expired",
           "password-too-weak": "Entered password is too weak.",
-          "password-too-short": "Passwords must be {{$minPasswordLength}} or more characters long",
+          "password-too-short": "Passwords must be {{minPasswordLength}} or more characters long",
           "password-must-contain-lowercase-letters": "Passwords must have at least one lowercase ('a'-'z')",
           "password-must-contain-uppercase-letters": "Passwords must have at least one uppercase ('A'-'Z')",
           "password-must-contain-digits": "Passwords must have at least one digit ('0'-'9')",
