@@ -522,41 +522,6 @@ namespace VirtoCommerce.Platform.Web
                                 IsArray = true,
                                 ArrayValues = Enum.GetNames(typeof(AccountType)),
                                 DefaultValue = AccountType.Manager.ToString()
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Security.PasswordValidation.MinLength",
-                                ValueType = ModuleSetting.TypeInteger,
-                                Title = "Min password length",
-                                Description = "Minimal length for users' passwords"
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Security.PasswordValidation.RequireUpperCaseLetters",
-                                ValueType = ModuleSetting.TypeBoolean,
-                                Title = "Require upper-case letters in passwords",
-                                Description = "Passwords must contain at least one upper-case letter"
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Security.PasswordValidation.RequireLowerCaseLetters",
-                                ValueType = ModuleSetting.TypeBoolean,
-                                Title = "Require lower-case letters in passwords",
-                                Description = "Passwords must contain at least one lower-case letter"
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Security.PasswordValidation.RequireDigits",
-                                ValueType = ModuleSetting.TypeBoolean,
-                                Title = "Require digits in passwords",
-                                Description = "Passwords must contain at least one digit"
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Security.PasswordValidation.RequireSpecialCharacters",
-                                ValueType = ModuleSetting.TypeBoolean,
-                                Title = "Require special characters in passwords",
-                                Description = "Passwords must contain at least one non-alphanumerical character ('~', '-', '@', etc)"
                             }
                         }
                     },
@@ -769,13 +734,9 @@ namespace VirtoCommerce.Platform.Web
 
             container.RegisterType<ISecurityService, SecurityService>();
 
-            var passwordCheckOptions = new SettingsManagerBasedPasswordCheckOptions(
-                settingsManager,
-                "VirtoCommerce.Platform.Security.PasswordValidation.MinLength",
-                "VirtoCommerce.Platform.Security.PasswordValidation.RequireUpperCaseLetters",
-                "VirtoCommerce.Platform.Security.PasswordValidation.RequireLowerCaseLetters",
-                "VirtoCommerce.Platform.Security.PasswordValidation.RequireDigits",
-                "VirtoCommerce.Platform.Security.PasswordValidation.RequireSpecialCharacters");
+            var authenticationOptions = container.Resolve<AuthenticationOptions>();
+            var passwordCheckOptions = new AuthenticationOptionsBasedPasswordCheckOptions(authenticationOptions);
+
             container.RegisterInstance<IPasswordCheckOptions>(passwordCheckOptions);
 
             container.RegisterType<IPasswordCheckService, PasswordCheckService>();
