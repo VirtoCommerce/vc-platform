@@ -13,6 +13,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Security.Identity;
@@ -31,6 +32,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IRoleManagementService _roleService;
         private readonly ISecurityService _securityService;
         private readonly ISecurityOptions _securityOptions;
+        private readonly IPasswordCheckService _passwordCheckService;
         private readonly INotificationManager _notificationManager;
         private readonly IEventPublisher _eventPublisher;
 
@@ -38,13 +40,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
                                   INotificationManager notificationManager,
-                                  IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions, IEventPublisher eventPublisher)
+                                  IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions,
+                                  IPasswordCheckService passwordCheckService, IEventPublisher eventPublisher)
         {
             _signInManagerFactory = signInManagerFactory;
             _authenticationManagerFactory = authManagerFactory;
             _roleService = roleService;
             _securityService = securityService;
             _securityOptions = securityOptions;
+            _passwordCheckService = passwordCheckService;
             _notificationManager = notificationManager;
             _eventPublisher = eventPublisher;
         }
@@ -487,6 +491,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             return Ok(retVal);
+        }
+
+        [HttpPost]
+        [Route("validatepassword")]
+        public async Task<IHttpActionResult> ValidatePasswordAsync([FromBody] string password)
+        {
+            var result = await _passwordCheckService.ValidatePasswordAsync(password);
+            return Ok(result);
         }
 
         /// <summary>
