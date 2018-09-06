@@ -49,8 +49,6 @@ angular.module('platformWebApp')
     }
 
     $scope.saveChanges = function () {
-        // TODO: invoke password strength check and set blade.error if password is too weak
-
         blade.isLoading = true;
         blade.error = undefined;
 
