@@ -418,6 +418,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SecurityResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Security\AuthenticationOptionsBasedPasswordCheckOptions.cs" />
     <Compile Include="Security\SettingsManagerBasedPasswordCheckOptions.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
