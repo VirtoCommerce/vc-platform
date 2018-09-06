@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.accountResetPasswordController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', function ($scope, bladeNavigationService, accounts) {
+.controller('platformWebApp.accountResetPasswordController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', function ($q, $scope, bladeNavigationService, accounts) {
     var blade = $scope.blade;
 
     function initializeBlade() {
@@ -14,38 +14,54 @@ angular.module('platformWebApp')
         blade.isLoading = false;
     };
 
-    $scope.handlePasswordChange = function() {
-        accounts.validatePassword(JSON.stringify(blade.currentEntity.newPassword),
-            function(response) {
-                blade.currentEntity.errors = [];
+    $scope.validatePasswordAsync = function (value) {
+        var requestPromise = accounts.validatePassword(JSON.stringify(value)).$promise;
+        var validationPromise = $q(
+            function (resolve, reject) {
+                requestPromise.then(
+                    function(response) {
+                        blade.currentEntity.errors = [];
 
-                if (response.passwordIsValid) {
-                    blade.currentEntity.passwordIsValid = true;
-                } else {
-                    blade.currentEntity.passwordIsValid = false;
-                    blade.currentEntity.minPasswordLength = response.minPasswordLength;
+                        if (response.passwordIsValid) {
+                            blade.currentEntity.passwordIsValid = true;
+                            resolve();
+                        } else {
+                            blade.currentEntity.passwordIsValid = false;
+                            blade.currentEntity.minPasswordLength = response.minPasswordLength;
 
-                    if (response.passwordViolatesMinLength) {
-                        blade.currentEntity.errors.push("platform.blades.account-resetPassword.validations.password-too-short");
+                            if (response.passwordViolatesMinLength) {
+                                blade.currentEntity.errors.push(
+                                    "platform.blades.account-resetPassword.validations.password-too-short");
+                            }
+
+                            if (response.passwordMustHaveUpperCaseLetters) {
+                                blade.currentEntity.errors.push(
+                                    "platform.blades.account-resetPassword.validations.password-must-contain-uppercase-letters");
+                            }
+
+                            if (response.passwordMustHaveLowerCaseLetters) {
+                                blade.currentEntity.errors.push(
+                                    "platform.blades.account-resetPassword.validations.password-must-contain-lowercase-letters");
+                            }
+
+                            if (response.passwordMustHaveDigits) {
+                                blade.currentEntity.errors.push(
+                                    "platform.blades.account-resetPassword.validations.password-must-contain-digits");
+                            }
+
+                            if (response.passwordMustHaveSpecialCharacters) {
+                                blade.currentEntity.errors.push(
+                                    "platform.blades.account-resetPassword.validations.password-must-contain-special-characters");
+                            }
+
+                            reject();
+                        }
                     }
+                );
+            }
+        );
 
-                    if (response.passwordMustHaveUpperCaseLetters) {
-                        blade.currentEntity.errors.push("platform.blades.account-resetPassword.validations.password-must-contain-uppercase-letters");
-                    }
-
-                    if (response.passwordMustHaveLowerCaseLetters) {
-                        blade.currentEntity.errors.push("platform.blades.account-resetPassword.validations.password-must-contain-lowercase-letters");
-                    }
-
-                    if (response.passwordMustHaveDigits) {
-                        blade.currentEntity.errors.push("platform.blades.account-resetPassword.validations.password-must-contain-digits");
-                    }
-
-                    if (response.passwordMustHaveSpecialCharacters) {
-                        blade.currentEntity.errors.push("platform.blades.account-resetPassword.validations.password-must-contain-special-characters");
-                    }
-                }
-            });
+        return validationPromise;
     }
 
     $scope.saveChanges = function () {
