@@ -273,19 +273,40 @@ namespace VirtoCommerce.Platform.Data.Security
                 var dbUser = await GetApplicationUserByNameAsync(name);
                 var result = ValidateUser(dbUser);
 
-                if (result.Succeeded)
-                {
-                    var token = await userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
-                    var identityResult = await userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
-                    result = identityResult.ToCoreModel();
+                if (!result.Succeeded)
+                    return result;
 
-                    if (result.Succeeded)
+                var token = await userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
+                var identityResult = await userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
+                result = identityResult.ToCoreModel();
+
+                if (!result.Succeeded)
+                    return result;
+
+                // If user is required to change password on first login, let's update corresponding AccountEntity.
+                if (forcePasswordChange)
+                {
+                    using (var repository = _platformRepository())
                     {
-                        await _eventPublisher.Publish(new UserResetPasswordEvent(dbUser.Id));
-                        //clear cache
-                        ResetCache(dbUser.Id, dbUser.UserName);
+                        var account = await repository.GetAccountByNameAsync(name, UserDetails.Reduced);
+                        if (account != null && !account.PasswordExpired)
+                        {
+                            var applicationUserExtended = dbUser.ToCoreModel(account, _permissionScopeService);
+
+                            account.PasswordExpired = true;
+                            repository.Update(account);
+
+                            var userChangedEntry = new ChangedEntry<ApplicationUserExtended>(applicationUserExtended, EntryState.Modified);
+                            await _eventPublisher.Publish(new UserChangingEvent(userChangedEntry));
+                            repository.UnitOfWork.Commit();
+                            await _eventPublisher.Publish(new UserChangedEvent(userChangedEntry));
+                        }
                     }
                 }
+
+                await _eventPublisher.Publish(new UserResetPasswordEvent(dbUser.Id));
+                //clear cache
+                ResetCache(dbUser.Id, dbUser.UserName);
 
                 return result;
             }
