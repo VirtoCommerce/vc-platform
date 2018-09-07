@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Data.Assets
 
             ValidatePath(filePath);
 
-            return File.Open(filePath, FileMode.Open);
+            return File.Open(filePath, FileMode.Open, FileAccess.Read);
         }
 
         /// <summary>
