@@ -237,6 +237,10 @@
     <Compile Include="Repositories\Migrations\201805211114196_UpDecimalPrecisionToFive.Designer.cs">
       <DependentUpon>201805211114196_UpDecimalPrecisionToFive.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201809070639174_AddAccountEntityPasswordExpired.cs" />
+    <Compile Include="Repositories\Migrations\201809070639174_AddAccountEntityPasswordExpired.Designer.cs">
+      <DependentUpon>201809070639174_AddAccountEntityPasswordExpired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -335,6 +339,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201805211114196_UpDecimalPrecisionToFive.resx">
       <DependentUpon>201805211114196_UpDecimalPrecisionToFive.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201809070639174_AddAccountEntityPasswordExpired.resx">
+      <DependentUpon>201809070639174_AddAccountEntityPasswordExpired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
