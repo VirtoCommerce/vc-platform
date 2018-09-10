@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Data.Security
         /// <inheritdoc />
         public virtual Task<PasswordValidationResult> ValidatePasswordAsync(string password)
         {
-            var result = new PasswordValidationResult()
+            var result = new PasswordValidationResult
             {
                 PasswordIsValid = true,
                 MinPasswordLength = _options.RequiredPasswordLength
