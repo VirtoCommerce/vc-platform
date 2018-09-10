@@ -259,6 +259,10 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     if (result.Succeeded)
                     {
+                        // Now the user had successfully changed their password.
+                        // If password change was required, now it is not needed anymore.
+                        await SetUserPasswordExpiredValue(dbUser, false);
+
                         await _eventPublisher.Publish(new UserPasswordChangedEvent(dbUser.Id));
                     }
                 }
@@ -311,7 +315,12 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     if (result.Succeeded)
                     {
+                        // Now the user had successfully reset their password.
+                        // If password change was required, now it is not needed anymore.
+                        await SetUserPasswordExpiredValue(dbUser, false);
+
                         await _eventPublisher.Publish(new UserResetPasswordEvent(userId));
+
                         //clear cache
                         ResetCache(dbUser.Id, dbUser.UserName);
                     }
