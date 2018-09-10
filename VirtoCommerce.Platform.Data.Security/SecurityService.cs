@@ -600,8 +600,6 @@ namespace VirtoCommerce.Platform.Data.Security
             return result;
         }
 
-
-
         protected virtual void ResetCache(string userId, string userName)
         {
             _cacheManager.Remove($"GetUserById-{userId}", SecurityConstants.CacheRegion);
@@ -638,7 +636,7 @@ namespace VirtoCommerce.Platform.Data.Security
 
                 var applicationUserExtended = applicationUser.ToCoreModel(account, _permissionScopeService);
 
-                account.PasswordExpired = true;
+                account.PasswordExpired = newValue;
                 repository.Update(account);
 
                 var userChangedEntry = new ChangedEntry<ApplicationUserExtended>(applicationUserExtended, EntryState.Modified);
