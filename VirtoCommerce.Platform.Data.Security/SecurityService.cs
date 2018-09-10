@@ -270,7 +270,7 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public virtual async Task<SecurityResult> ResetPasswordAsync(string name, string newPassword)
+        public virtual async Task<SecurityResult> ResetPasswordAsync(string name, string newPassword, bool forcePasswordChange)
         {
             using (var userManager = _userManagerFactory())
             {

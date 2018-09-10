@@ -392,7 +392,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             EnsureUserIsEditable(userName);
 
-            var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword);
+            var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword, resetPassword.ForcePasswordChangeOnFirstLogin);
             return Content(result.Succeeded ? HttpStatusCode.OK : HttpStatusCode.BadRequest, result);
         }
 
