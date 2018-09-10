@@ -13,7 +13,6 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Security.Identity;
@@ -374,6 +373,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             EnsureUserIsEditable(userName);
 
             var result = await _securityService.ChangePasswordAsync(userName, changePassword.OldPassword, changePassword.NewPassword);
+            return Content(result.Succeeded ? HttpStatusCode.OK : HttpStatusCode.BadRequest, result);
+        }
+
+        /// <summary>
+        /// Resets password for current user.
+        /// </summary>
+        /// <param name="resetPassword">Password reset information containing new password.</param>
+        /// <returns>Result of password reset.</returns>
+        [HttpPost]
+        [Route("currentuser/resetpassword")]
+        [ResponseType(typeof(SecurityResult))]
+        [SwaggerResponse(HttpStatusCode.OK, type: typeof(SecurityResult))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, type: typeof(SecurityResult))]
+        public async Task<IHttpActionResult> ResetCurrentUserPassword([FromBody] ResetPasswordInfo resetPassword)
+        {
+            var currentUserName = User.Identity.Name;
+
+            EnsureUserIsEditable(currentUserName);
+
+            var result = await _securityService.ResetPasswordAsync(currentUserName, resetPassword.NewPassword, resetPassword.ForcePasswordChangeOnFirstLogin);
             return Content(result.Succeeded ? HttpStatusCode.OK : HttpStatusCode.BadRequest, result);
         }
 
