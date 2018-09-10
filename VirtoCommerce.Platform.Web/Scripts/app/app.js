@@ -293,12 +293,16 @@ angular.module('platformWebApp', AppDependencies).
                 $timeout(function () {
                     if (authContext.isAuthenticated) {
                         if (authContext.passwordExpired) {
-                            $state.go('changePasswordDialog', { userName: authContext.userName });
+                            $state.go('changePasswordDialog', {
+                                userName: authContext.userName,
+                                onClose: function () {
+                                    $state.go('workspace');
+                                }
+                            });
                         } else if (!$state.current.name || $state.current.name === 'loginDialog') {
                             $state.go('workspace');
                         }
-                    }
-                    else {
+                    } else {
                         $state.go('loginDialog');
                     }
                 }, 500);
