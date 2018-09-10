@@ -288,10 +288,7 @@ namespace VirtoCommerce.Platform.Data.Security
                     return result;
 
                 // If user is required to change password on first login, let's update corresponding AccountEntity.
-                if (forcePasswordChange)
-                {
-                    await SetUserPasswordExpiredValue(dbUser, true);
-                }
+                await SetUserPasswordExpiredValue(dbUser, forcePasswordChange);
 
                 await _eventPublisher.Publish(new UserResetPasswordEvent(dbUser.Id));
                 //clear cache
