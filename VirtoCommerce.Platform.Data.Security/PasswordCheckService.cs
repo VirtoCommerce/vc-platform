@@ -10,9 +10,9 @@ namespace VirtoCommerce.Platform.Data.Security
     /// </summary>
     public class PasswordCheckService : IPasswordCheckService
     {
-        private const string SpecialCharacters = "!@#$%^&*?_~-£().,";
-
         private readonly IPasswordCheckOptions _options;
+
+        protected char[] SpecialCharacters { get; } = { '!', '@', '#', '$', '%', '^', '&', '*', '?', '_', '~', '-', '£', '(', ')', '.', ',' };
 
         /// <summary>
         /// Creates new instance of password check service.
@@ -92,7 +92,7 @@ namespace VirtoCommerce.Platform.Data.Security
         protected virtual bool HasSpecialCharacter(string password)
         {
             return !string.IsNullOrWhiteSpace(password)
-                   && password.IndexOfAny(SpecialCharacters.ToCharArray()) != -1;
+                   && password.IndexOfAny(SpecialCharacters) != -1;
         }
     }
 }
