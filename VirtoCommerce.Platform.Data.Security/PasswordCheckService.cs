@@ -10,9 +10,9 @@ namespace VirtoCommerce.Platform.Data.Security
     /// </summary>
     public class PasswordCheckService : IPasswordCheckService
     {
-        private readonly IPasswordCheckOptions _options;
-
         protected char[] SpecialCharacters { get; } = { '!', '@', '#', '$', '%', '^', '&', '*', '?', '_', '~', '-', '£', '(', ')', '.', ',' };
+
+        protected IPasswordCheckOptions Options { get; }
 
         /// <summary>
         /// Creates new instance of password check service.
@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Data.Security
         /// <param name="options"></param>
         public PasswordCheckService(IPasswordCheckOptions options)
         {
-            _options = options;
+            Options = options;
         }
 
         /// <inheritdoc />
@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Data.Security
             var result = new PasswordValidationResult
             {
                 PasswordIsValid = true,
-                MinPasswordLength = _options.RequiredPasswordLength
+                MinPasswordLength = Options.RequiredPasswordLength
             };
 
             if (!HasSufficientLength(password))
@@ -38,25 +38,25 @@ namespace VirtoCommerce.Platform.Data.Security
                 result.PasswordViolatesMinLength = true;
             }
 
-            if (_options.RequireUpperCaseLetters && !HasUpperCaseLetter(password))
+            if (Options.RequireUpperCaseLetters && !HasUpperCaseLetter(password))
             {
                 result.PasswordIsValid = false;
                 result.PasswordMustHaveUpperCaseLetters = true;
             }
 
-            if (_options.RequireLowerCaseLetters && !HasLowerCaseLetter(password))
+            if (Options.RequireLowerCaseLetters && !HasLowerCaseLetter(password))
             {
                 result.PasswordIsValid = false;
                 result.PasswordMustHaveLowerCaseLetters = true;
             }
 
-            if (_options.RequireDigits && !HasDigit(password))
+            if (Options.RequireDigits && !HasDigit(password))
             {
                 result.PasswordIsValid = false;
                 result.PasswordMustHaveDigits = true;
             }
 
-            if (_options.RequireSpecialCharacters && !HasSpecialCharacter(password))
+            if (Options.RequireSpecialCharacters && !HasSpecialCharacter(password))
             {
                 result.PasswordIsValid = false;
                 result.PasswordMustHaveSpecialCharacters = true;
@@ -68,7 +68,7 @@ namespace VirtoCommerce.Platform.Data.Security
         protected virtual bool HasSufficientLength(string password)
         {
             return !password.IsNullOrEmpty()
-                   && password.Length >= _options.RequiredPasswordLength;
+                   && password.Length >= Options.RequiredPasswordLength;
         }
 
         protected virtual bool HasUpperCaseLetter(string password)
