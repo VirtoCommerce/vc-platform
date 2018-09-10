@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
     .config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
 
         $stateProvider.state('loginDialog',
@@ -135,7 +135,7 @@
                         var postData = {
                             NewPassword: $scope.password
                         };
-                        accounts.resetPassword({ id: $scope.userName }, postData, function (data) {
+                        accounts.resetCurrentUserPassword(postData, function (data) {
                             $stateParams.onClose();
                         }, function (response) {
                             $scope.errors = response.data.errors;

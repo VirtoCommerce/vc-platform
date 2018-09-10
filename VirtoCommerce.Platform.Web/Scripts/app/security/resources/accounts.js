@@ -7,6 +7,7 @@ angular.module('platformWebApp')
         save: { url: 'api/platform/security/users/create', method: 'POST' },
         changepassword: { url: 'api/platform/security/users/:id/changepassword', method: 'POST' },
         resetPassword: { url: 'api/platform/security/users/:id/resetpassword', method: 'POST' },
+        resetCurrentUserPassword: { url: 'api/platform/security/currentuser/resetpassword', method: 'POST' },
         validatePassword: { url: 'api/platform/security/validatepassword', method: 'POST' },
         update: { method: 'PUT' },
         locked: { url: 'api/platform/security/users/:id/locked', method: 'GET' },
