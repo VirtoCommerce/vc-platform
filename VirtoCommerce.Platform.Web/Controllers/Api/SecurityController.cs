@@ -495,6 +495,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("validatepassword")]
+        [ResponseType(typeof(PasswordValidationResult))]
         public async Task<IHttpActionResult> ValidatePasswordAsync([FromBody] string password)
         {
             var result = await _passwordCheckService.ValidatePasswordAsync(password);

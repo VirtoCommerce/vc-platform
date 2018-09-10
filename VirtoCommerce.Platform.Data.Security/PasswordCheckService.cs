@@ -24,17 +24,12 @@ namespace VirtoCommerce.Platform.Data.Security
         }
 
         /// <inheritdoc />
-        public Task<PasswordValidationResult> ValidatePasswordAsync(string password)
+        public virtual Task<PasswordValidationResult> ValidatePasswordAsync(string password)
         {
             var result = new PasswordValidationResult()
             {
                 PasswordIsValid = true,
-                MinPasswordLength = _options.RequiredPasswordLength,
-                PasswordViolatesMinLength = false,
-                PasswordMustHaveUpperCaseLetters = false,
-                PasswordMustHaveLowerCaseLetters = false,
-                PasswordMustHaveDigits = false,
-                PasswordMustHaveSpecialCharacters = false
+                MinPasswordLength = _options.RequiredPasswordLength
             };
 
             if (!HasSufficientLength(password))
@@ -70,31 +65,31 @@ namespace VirtoCommerce.Platform.Data.Security
             return Task.FromResult(result);
         }
 
-        private bool HasSufficientLength(string password)
+        protected virtual bool HasSufficientLength(string password)
         {
             return !password.IsNullOrEmpty()
                    && password.Length >= _options.RequiredPasswordLength;
         }
 
-        private bool HasUpperCaseLetter(string password)
+        protected virtual bool HasUpperCaseLetter(string password)
         {
             return !string.IsNullOrWhiteSpace(password)
                    && password.Any(char.IsUpper);
         }
 
-        private bool HasLowerCaseLetter(string password)
+        protected virtual bool HasLowerCaseLetter(string password)
         {
             return !string.IsNullOrWhiteSpace(password)
                    && password.Any(char.IsLower);
         }
 
-        private bool HasDigit(string password)
+        protected virtual bool HasDigit(string password)
         {
             return !string.IsNullOrWhiteSpace(password)
                    && password.Any(char.IsDigit);
         }
 
-        private bool HasSpecialCharacter(string password)
+        protected virtual bool HasSpecialCharacter(string password)
         {
             return !string.IsNullOrWhiteSpace(password)
                    && password.IndexOfAny(SpecialCharacters.ToCharArray()) != -1;
