@@ -29,12 +29,7 @@ namespace VirtoCommerce.Platform.Data.Security
             var result = new PasswordValidationResult()
             {
                 PasswordIsValid = true,
-                MinPasswordLength = _options.RequiredPasswordLength,
-                PasswordViolatesMinLength = false,
-                PasswordMustHaveUpperCaseLetters = false,
-                PasswordMustHaveLowerCaseLetters = false,
-                PasswordMustHaveDigits = false,
-                PasswordMustHaveSpecialCharacters = false
+                MinPasswordLength = _options.RequiredPasswordLength
             };
 
             if (!HasSufficientLength(password))
