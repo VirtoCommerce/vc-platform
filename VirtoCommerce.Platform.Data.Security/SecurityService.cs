@@ -286,22 +286,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 // If user is required to change password on first login, let's update corresponding AccountEntity.
                 if (forcePasswordChange)
                 {
-                    using (var repository = _platformRepository())
-                    {
-                        var account = await repository.GetAccountByNameAsync(name, UserDetails.Reduced);
-                        if (account != null && !account.PasswordExpired)
-                        {
-                            var applicationUserExtended = dbUser.ToCoreModel(account, _permissionScopeService);
-
-                            account.PasswordExpired = true;
-                            repository.Update(account);
-
-                            var userChangedEntry = new ChangedEntry<ApplicationUserExtended>(applicationUserExtended, EntryState.Modified);
-                            await _eventPublisher.Publish(new UserChangingEvent(userChangedEntry));
-                            repository.UnitOfWork.Commit();
-                            await _eventPublisher.Publish(new UserChangedEvent(userChangedEntry));
-                        }
-                    }
+                    await SetUserPasswordExpiredValue(dbUser, true);
                 }
 
                 await _eventPublisher.Publish(new UserResetPasswordEvent(dbUser.Id));
@@ -635,6 +620,26 @@ namespace VirtoCommerce.Platform.Data.Security
 
             if (user.PhoneNumber != null)
                 user.PhoneNumber = user.PhoneNumber.Trim();
+        }
+
+        protected virtual async Task SetUserPasswordExpiredValue(ApplicationUser applicationUser, bool newValue)
+        {
+            using (var repository = _platformRepository())
+            {
+                var account = await repository.GetAccountByNameAsync(applicationUser.UserName, UserDetails.Reduced);
+                if (account == null || account.PasswordExpired == newValue)
+                    return;
+
+                var applicationUserExtended = applicationUser.ToCoreModel(account, _permissionScopeService);
+
+                account.PasswordExpired = true;
+                repository.Update(account);
+
+                var userChangedEntry = new ChangedEntry<ApplicationUserExtended>(applicationUserExtended, EntryState.Modified);
+                await _eventPublisher.Publish(new UserChangingEvent(userChangedEntry));
+                repository.UnitOfWork.Commit();
+                await _eventPublisher.Publish(new UserChangedEvent(userChangedEntry));
+            }
         }
     }
 }
