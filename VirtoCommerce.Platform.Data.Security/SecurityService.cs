@@ -575,8 +575,13 @@ namespace VirtoCommerce.Platform.Data.Security
                             _changeLogService.LoadChangeLogs(retVal);
                         }
                     }
+
                     var suppressForcingCredentialsChange = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Security:SuppressForcingCredentialsChange", false);
-                    if (!suppressForcingCredentialsChange)
+                    if (suppressForcingCredentialsChange)
+                    {
+                        retVal.PasswordExpired = false;
+                    }
+                    else
                     {
                         //Setting the flags which indicates a necessity of security credentials change
                         retVal.PasswordExpired |= retVal.PasswordHash == Resources.Default.DefaultPasswordHash;
@@ -588,6 +593,7 @@ namespace VirtoCommerce.Platform.Data.Security
                             }
                         }
                     }
+
                     if (detailsLevel != UserDetails.Export)
                     {
                         retVal.PasswordHash = null;
