@@ -11,8 +11,12 @@ angular
                             errors: []
                         };
 
-                        var filteredKeys = _.filter(Object.keys(response), key => !key.startsWith('$') && response[key] === true);
-                        filteredKeys.forEach(key => {
+                        var filteredKeys = _.filter(Object.keys(response),
+                            function(key) {
+                                return !key.startsWith('$') && response[key] === true;
+                            });
+
+                        filteredKeys.forEach(function(key) {
                             var resourceName = 'platform.blades.account-resetPassword.validations.' + key;
                             result.errors.push(resourceName);
                         });
