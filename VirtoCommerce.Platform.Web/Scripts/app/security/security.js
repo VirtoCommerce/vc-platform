@@ -118,14 +118,30 @@ angular.module('platformWebApp')
                     userName: null,
                     onClose: null
                 },
-                controller: ['$scope', '$stateParams', 'platformWebApp.accounts', '$state', 'platformWebApp.authService', function ($scope, $stateParams, accounts, $state, authService) {
+                controller: ['$q', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.passwordValidationService', function ($q, $scope, $stateParams, accounts, passwordValidationService) {
                     $scope.userName = $stateParams.userName;
+                    $scope.passwordValidationResult = {
+                        passwordIsValid: true,
+                        minPasswordLength: 0,
+                        errors: []
+                    };
 
                     accounts.get({ id: $stateParams.userName }, function (user) {
                         if (!user || !user.passwordExpired) {
                             $stateParams.onClose();
                         }
                     });
+
+                    $scope.validatePasswordAsync = function(value) {
+                        var promise = passwordValidationService.validatePasswordAsync(value).then(
+                            function (result) {
+                                $scope.passwordValidationResult = result;
+
+                                return result.passwordIsValid ? $q.resolve() : $q.reject();
+                            });
+
+                        return promise;
+                    }
 
                     $scope.postpone = function () {
                         $stateParams.onClose();
