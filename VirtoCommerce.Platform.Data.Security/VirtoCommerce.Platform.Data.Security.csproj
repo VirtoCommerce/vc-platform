@@ -127,7 +127,6 @@
     </Compile>
     <Compile Include="Identity\Migrations\Configuration.cs" />
     <Compile Include="Identity\SecurityDbContext.cs" />
-    <Compile Include="IPasswordCheckOptions.cs" />
     <Compile Include="PasswordCheckService.cs" />
     <Compile Include="PermissionScopeService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

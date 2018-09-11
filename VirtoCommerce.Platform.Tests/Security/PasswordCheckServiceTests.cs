@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security;
 using Xunit;
 
@@ -56,13 +57,13 @@ namespace VirtoCommerce.Platform.Tests.Security
             bool passwordMustHaveDigits,
             bool passwordMustHaveSpecialCharacters)
         {
-            var options = new PasswordCheckOptionsStub()
+            var options = new AuthenticationOptions
             {
-                RequiredPasswordLength = minLength,
-                RequireUpperCaseLetters = requireUpperCase,
-                RequireLowerCaseLetters = requireLowerCase,
-                RequireDigits = requireDigits,
-                RequireSpecialCharacters = requireSpecialCharacters
+                PasswordRequiredLength = minLength,
+                PasswordRequireUppercase = requireUpperCase,
+                PasswordRequireLowercase = requireLowerCase,
+                PasswordRequireDigit = requireDigits,
+                PasswordRequireNonLetterOrDigit = requireSpecialCharacters
             };
             var target = new PasswordCheckService(options);
 

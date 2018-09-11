@@ -62,7 +62,6 @@ using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Modularity;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Resources;
-using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.SignalR;
 using VirtoCommerce.Platform.Web.Swagger;
 using WebGrease.Extensions;
@@ -733,11 +732,6 @@ namespace VirtoCommerce.Platform.Web
             container.RegisterInstance<ISecurityOptions>(new SecurityOptions(nonEditableUsers));
 
             container.RegisterType<ISecurityService, SecurityService>();
-
-            var authenticationOptions = container.Resolve<AuthenticationOptions>();
-            var passwordCheckOptions = new AuthenticationOptionsBasedPasswordCheckOptions(authenticationOptions);
-
-            container.RegisterInstance<IPasswordCheckOptions>(passwordCheckOptions);
 
             container.RegisterType<IPasswordCheckService, PasswordCheckService>();
 
