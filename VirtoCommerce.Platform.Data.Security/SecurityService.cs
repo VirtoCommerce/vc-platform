@@ -278,14 +278,18 @@ namespace VirtoCommerce.Platform.Data.Security
                 var result = ValidateUser(dbUser);
 
                 if (!result.Succeeded)
+                {
                     return result;
+                }
 
                 var token = await userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
                 var identityResult = await userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
                 result = identityResult.ToCoreModel();
 
                 if (!result.Succeeded)
+                {
                     return result;
+                }
 
                 // If user is required to change password on first login, let's update corresponding AccountEntity.
                 await SetUserPasswordExpiredValue(dbUser, forcePasswordChange);
@@ -623,13 +627,19 @@ namespace VirtoCommerce.Platform.Data.Security
         protected virtual void NormalizeUser(ApplicationUserExtended user)
         {
             if (user.UserName != null)
+            {
                 user.UserName = user.UserName.Trim();
+            }
 
             if (user.Email != null)
+            {
                 user.Email = user.Email.Trim();
+            }
 
             if (user.PhoneNumber != null)
+            {
                 user.PhoneNumber = user.PhoneNumber.Trim();
+            }
         }
 
         protected virtual async Task SetUserPasswordExpiredValue(ApplicationUser applicationUser, bool newValue)
@@ -638,7 +648,9 @@ namespace VirtoCommerce.Platform.Data.Security
             {
                 var account = await repository.GetAccountByNameAsync(applicationUser.UserName, UserDetails.Reduced);
                 if (account == null || account.PasswordExpired == newValue)
+                {
                     return;
+                }
 
                 var applicationUserExtended = applicationUser.ToCoreModel(account, _permissionScopeService);
 
