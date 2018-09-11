@@ -11,32 +11,11 @@ angular
                             errors: []
                         };
 
-                        if (!response.passwordIsValid) {
-                            if (response.passwordViolatesMinLength) {
-                                result.errors.push(
-                                    "platform.blades.account-resetPassword.validations.password-too-short");
-                            }
-
-                            if (response.passwordMustHaveUpperCaseLetters) {
-                                result.errors.push(
-                                    "platform.blades.account-resetPassword.validations.password-must-contain-uppercase-letters");
-                            }
-
-                            if (response.passwordMustHaveLowerCaseLetters) {
-                                result.errors.push(
-                                    "platform.blades.account-resetPassword.validations.password-must-contain-lowercase-letters");
-                            }
-
-                            if (response.passwordMustHaveDigits) {
-                                result.errors.push(
-                                    "platform.blades.account-resetPassword.validations.password-must-contain-digits");
-                            }
-
-                            if (response.passwordMustHaveSpecialCharacters) {
-                                result.errors.push(
-                                    "platform.blades.account-resetPassword.validations.password-must-contain-special-characters");
-                            }
-                        }
+                        var filteredKeys = _.filter(Object.keys(response), key => !key.startsWith('$') && response[key] === true);
+                        filteredKeys.forEach(key => {
+                            var resourceName = 'platform.blades.account-resetPassword.validations.' + key;
+                            result.errors.push(resourceName);
+                        });
 
                         return result;
                     }
