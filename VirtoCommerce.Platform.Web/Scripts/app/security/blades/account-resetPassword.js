@@ -14,14 +14,6 @@ angular.module('platformWebApp')
         blade.isLoading = false;
     };
 
-    var errorMessages = {
-        passwordViolatesMinLength: "platform.blades.account-resetPassword.validations.password-too-short",
-        passwordMustHaveUpperCaseLetters: "platform.blades.account-resetPassword.validations.password-must-contain-uppercase-letters",
-        passwordMustHaveLowerCaseLetters: "platform.blades.account-resetPassword.validations.password-must-contain-lowercase-letters",
-        passwordMustHaveDigits: "platform.blades.account-resetPassword.validations.password-must-contain-digits",
-        passwordMustHaveSpecialCharacters: "platform.blades.account-resetPassword.validations.password-must-contain-special-characters"
-    };
-
     $scope.validatePasswordAsync = function (value) {
         var promise = accounts.validatePassword(JSON.stringify(value)).$promise.then(
             function(response) {
@@ -34,17 +26,15 @@ angular.module('platformWebApp')
                     blade.currentEntity.passwordIsValid = false;
                     blade.currentEntity.minPasswordLength = response.minPasswordLength;
 
-                    for (var propertyName in response) {
-                        // If the property is not a known password validation rule result, skip it.
-                        if (!errorMessages.hasOwnProperty(propertyName))
-                            continue;
-
-                        // If the password does not violate the rule, let's skip it too.
-                        if (response[propertyName] !== true)
-                            continue;
-
-                        blade.currentEntity.errors.push(errorMessages[propertyName]);
-                    }
+                    var filteredKeys = _.filter(Object.keys(response), key => !key.startsWith('$'));
+                    filteredKeys.forEach(key => {
+                        // Only properties with value of true can indicate violation of some password validation rule,
+                        // so let's skip other properties there.
+                        if (response[key] === true) {
+                            var resourceName = 'platform.blades.account-resetPassword.validations.' + key;
+                            blade.currentEntity.errors.push(resourceName);
+                        }
+                    });
 
                     return $q.reject();
                 }
