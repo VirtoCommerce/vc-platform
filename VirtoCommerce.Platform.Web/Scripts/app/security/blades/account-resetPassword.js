@@ -14,6 +14,14 @@ angular.module('platformWebApp')
         blade.isLoading = false;
     };
 
+    var errorMessages = {
+        passwordViolatesMinLength: "platform.blades.account-resetPassword.validations.password-too-short",
+        passwordMustHaveUpperCaseLetters: "platform.blades.account-resetPassword.validations.password-must-contain-uppercase-letters",
+        passwordMustHaveLowerCaseLetters: "platform.blades.account-resetPassword.validations.password-must-contain-lowercase-letters",
+        passwordMustHaveDigits: "platform.blades.account-resetPassword.validations.password-must-contain-digits",
+        passwordMustHaveSpecialCharacters: "platform.blades.account-resetPassword.validations.password-must-contain-special-characters"
+    };
+
     $scope.validatePasswordAsync = function (value) {
         var promise = accounts.validatePassword(JSON.stringify(value)).$promise.then(
             function(response) {
@@ -26,29 +34,16 @@ angular.module('platformWebApp')
                     blade.currentEntity.passwordIsValid = false;
                     blade.currentEntity.minPasswordLength = response.minPasswordLength;
 
-                    if (response.passwordViolatesMinLength) {
-                        blade.currentEntity.errors.push(
-                            "platform.blades.account-resetPassword.validations.password-too-short");
-                    }
+                    for (var propertyName in response) {
+                        // If the property is not a known password validation rule result, skip it.
+                        if (!errorMessages.hasOwnProperty(propertyName))
+                            continue;
 
-                    if (response.passwordMustHaveUpperCaseLetters) {
-                        blade.currentEntity.errors.push(
-                            "platform.blades.account-resetPassword.validations.password-must-contain-uppercase-letters");
-                    }
+                        // If the password does not violate the rule, let's skip it too.
+                        if (response[propertyName] !== true)
+                            continue;
 
-                    if (response.passwordMustHaveLowerCaseLetters) {
-                        blade.currentEntity.errors.push(
-                            "platform.blades.account-resetPassword.validations.password-must-contain-lowercase-letters");
-                    }
-
-                    if (response.passwordMustHaveDigits) {
-                        blade.currentEntity.errors.push(
-                            "platform.blades.account-resetPassword.validations.password-must-contain-digits");
-                    }
-
-                    if (response.passwordMustHaveSpecialCharacters) {
-                        blade.currentEntity.errors.push(
-                            "platform.blades.account-resetPassword.validations.password-must-contain-special-characters");
+                        blade.currentEntity.errors.push(errorMessages[propertyName]);
                     }
 
                     return $q.reject();
