@@ -115,11 +115,10 @@ angular.module('platformWebApp')
                 url: '/changepassword',
                 templateUrl: '$(Platform)/Scripts/app/security/dialogs/changePasswordDialog.tpl.html',
                 params: {
-                    userName: null,
                     onClose: null
                 },
-                controller: ['$q', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.passwordValidationService', function ($q, $scope, $stateParams, accounts, passwordValidationService) {
-                    $scope.userName = $stateParams.userName;
+                controller: ['$q', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.passwordValidationService', function ($q, $scope, $stateParams, accounts, authService, passwordValidationService) {
+                    $scope.userName = authService.userName;
                     $scope.passwordValidationResult = {
                         passwordIsValid: true,
                         minPasswordLength: 0,
@@ -268,7 +267,6 @@ angular.module('platformWebApp')
             //register setup wizard step - change admin password
             setupWizard.registerStep({
                 state: "changePasswordDialog",
-                userName: "admin",
                 onClose: function () {
                     var step = setupWizard.findStepByState($state.current.name);
                     setupWizard.showStep(step.nextStep);                    

@@ -294,7 +294,6 @@ angular.module('platformWebApp', AppDependencies).
                     if (authContext.isAuthenticated) {
                         if (authContext.passwordExpired) {
                             $state.go('changePasswordDialog', {
-                                userName: authContext.userName,
                                 onClose: function () {
                                     $state.go('workspace');
                                 }
