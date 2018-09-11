@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.accountResetPasswordController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', function ($q, $scope, bladeNavigationService, accounts) {
+.controller('platformWebApp.accountResetPasswordController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.passwordValidationService', function ($q, $scope, bladeNavigationService, accounts, passwordValidationService) {
     var blade = $scope.blade;
 
     function initializeBlade() {
@@ -15,46 +15,12 @@ angular.module('platformWebApp')
     };
 
     $scope.validatePasswordAsync = function (value) {
-        var promise = accounts.validatePassword(JSON.stringify(value)).$promise.then(
-            function(response) {
-                blade.currentEntity.errors = [];
+        var promise = passwordValidationService.validatePasswordAsync(value).then(
+            function(result) {
+                angular.extend(blade.currentEntity, result);
 
-                if (response.passwordIsValid) {
-                    blade.currentEntity.passwordIsValid = true;
-                    return $q.resolve();
-                } else {
-                    blade.currentEntity.passwordIsValid = false;
-                    blade.currentEntity.minPasswordLength = response.minPasswordLength;
-
-                    if (response.passwordViolatesMinLength) {
-                        blade.currentEntity.errors.push(
-                            "platform.blades.account-resetPassword.validations.password-too-short");
-                    }
-
-                    if (response.passwordMustHaveUpperCaseLetters) {
-                        blade.currentEntity.errors.push(
-                            "platform.blades.account-resetPassword.validations.password-must-contain-uppercase-letters");
-                    }
-
-                    if (response.passwordMustHaveLowerCaseLetters) {
-                        blade.currentEntity.errors.push(
-                            "platform.blades.account-resetPassword.validations.password-must-contain-lowercase-letters");
-                    }
-
-                    if (response.passwordMustHaveDigits) {
-                        blade.currentEntity.errors.push(
-                            "platform.blades.account-resetPassword.validations.password-must-contain-digits");
-                    }
-
-                    if (response.passwordMustHaveSpecialCharacters) {
-                        blade.currentEntity.errors.push(
-                            "platform.blades.account-resetPassword.validations.password-must-contain-special-characters");
-                    }
-
-                    return $q.reject();
-                }
-            }
-        );
+                return result.passwordIsValid ? $q.resolve() : $q.reject();
+            });
 
         return promise;
     }
