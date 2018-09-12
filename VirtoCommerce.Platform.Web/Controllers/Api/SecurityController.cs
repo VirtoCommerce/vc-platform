@@ -367,7 +367,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(SecurityResult))]
         [SwaggerResponse(HttpStatusCode.OK, type: typeof(SecurityResult))]
         [SwaggerResponse(HttpStatusCode.BadRequest, type: typeof(SecurityResult))]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
         public async Task<IHttpActionResult> ChangePassword(string userName, [FromBody] ChangePasswordInfo changePassword)
         {
             EnsureUserIsEditable(userName);
