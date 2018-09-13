@@ -261,7 +261,9 @@ namespace VirtoCommerce.Platform.Data.Security
                     {
                         // Now the user had successfully changed their password.
                         // If password change was required, now it is not needed anymore.
-                        await SetUserPasswordExpiredValue(dbUser, false);
+                        var applicationUserExtended = await GetUserExtendedAsync(dbUser, UserDetails.Reduced);
+                        applicationUserExtended.PasswordExpired = false;
+                        await UpdateAsync(applicationUserExtended);
 
                         await _eventPublisher.Publish(new UserPasswordChangedEvent(dbUser.Id));
                     }
@@ -291,8 +293,10 @@ namespace VirtoCommerce.Platform.Data.Security
                     return result;
                 }
 
-                // If user is required to change password on first login, let's update corresponding AccountEntity.
-                await SetUserPasswordExpiredValue(dbUser, forcePasswordChange);
+                // If user is required to change password on next login, let's update corresponding AccountEntity.
+                var applicationUserExtended = await GetUserExtendedAsync(dbUser, UserDetails.Reduced);
+                applicationUserExtended.PasswordExpired = forcePasswordChange;
+                await UpdateAsync(applicationUserExtended);
 
                 await _eventPublisher.Publish(new UserResetPasswordEvent(dbUser.Id));
                 //clear cache
@@ -318,7 +322,9 @@ namespace VirtoCommerce.Platform.Data.Security
                     {
                         // Now the user had successfully reset their password.
                         // If password change was required, now it is not needed anymore.
-                        await SetUserPasswordExpiredValue(dbUser, false);
+                        var applicationUserExtended = await GetUserExtendedAsync(dbUser, UserDetails.Reduced);
+                        applicationUserExtended.PasswordExpired = false;
+                        await UpdateAsync(applicationUserExtended);
 
                         await _eventPublisher.Publish(new UserResetPasswordEvent(userId));
 
@@ -635,28 +641,6 @@ namespace VirtoCommerce.Platform.Data.Security
             if (user.PhoneNumber != null)
             {
                 user.PhoneNumber = user.PhoneNumber.Trim();
-            }
-        }
-
-        protected virtual async Task SetUserPasswordExpiredValue(ApplicationUser applicationUser, bool newValue)
-        {
-            using (var repository = _platformRepository())
-            {
-                var account = await repository.GetAccountByNameAsync(applicationUser.UserName, UserDetails.Reduced);
-                if (account == null || account.PasswordExpired == newValue)
-                {
-                    return;
-                }
-
-                var applicationUserExtended = applicationUser.ToCoreModel(account, _permissionScopeService);
-
-                account.PasswordExpired = newValue;
-                repository.Update(account);
-
-                var userChangedEntry = new ChangedEntry<ApplicationUserExtended>(applicationUserExtended, EntryState.Modified);
-                await _eventPublisher.Publish(new UserChangingEvent(userChangedEntry));
-                repository.UnitOfWork.Commit();
-                await _eventPublisher.Publish(new UserChangedEvent(userChangedEntry));
             }
         }
     }
