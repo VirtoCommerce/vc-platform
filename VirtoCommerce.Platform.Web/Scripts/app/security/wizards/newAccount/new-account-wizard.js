@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-.controller('platformWebApp.newAccountWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.passwordValidationService', function ($scope, bladeNavigationService, accounts, roles, passwordValidationService) {
+.controller('platformWebApp.newAccountWizardController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.passwordValidationService', function ($q, $scope, bladeNavigationService, accounts, roles, passwordValidationService) {
     var blade = $scope.blade;
     var promise = roles.search({ takeCount: 10000 }).$promise;
 
@@ -30,7 +30,7 @@ angular.module('platformWebApp')
             function (result) {
                 angular.extend(blade.currentEntity, result);
 
-                return result.passwordIsValid;
+                return result.passwordIsValid ? $q.resolve() : $q.reject();
             });
 
         return promise;
