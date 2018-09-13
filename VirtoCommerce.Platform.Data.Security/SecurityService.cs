@@ -248,7 +248,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await GetApplicationUserByNameAsync(name);
+                var dbUser = await FindByNameAsync(name, UserDetails.Reduced);
                 var result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -261,9 +261,8 @@ namespace VirtoCommerce.Platform.Data.Security
                     {
                         // Now the user had successfully changed their password.
                         // If password change was required, now it is not needed anymore.
-                        var applicationUserExtended = await GetUserExtendedAsync(dbUser, UserDetails.Reduced);
-                        applicationUserExtended.PasswordExpired = false;
-                        await UpdateAsync(applicationUserExtended);
+                        dbUser.PasswordExpired = false;
+                        await UpdateAsync(dbUser);
 
                         await _eventPublisher.Publish(new UserPasswordChangedEvent(dbUser.Id));
                     }
@@ -276,16 +275,16 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await GetApplicationUserByNameAsync(name);
-                var result = ValidateUser(dbUser);
+                var applicationUserExtended = await FindByNameAsync(name, UserDetails.Reduced);
+                var result = ValidateUser(applicationUserExtended);
 
                 if (!result.Succeeded)
                 {
                     return result;
                 }
 
-                var token = await userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
-                var identityResult = await userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
+                var token = await userManager.GeneratePasswordResetTokenAsync(applicationUserExtended.Id);
+                var identityResult = await userManager.ResetPasswordAsync(applicationUserExtended.Id, token, newPassword);
                 result = identityResult.ToCoreModel();
 
                 if (!result.Succeeded)
@@ -294,13 +293,12 @@ namespace VirtoCommerce.Platform.Data.Security
                 }
 
                 // If user is required to change password on next login, let's update corresponding AccountEntity.
-                var applicationUserExtended = await GetUserExtendedAsync(dbUser, UserDetails.Reduced);
                 applicationUserExtended.PasswordExpired = forcePasswordChange;
                 await UpdateAsync(applicationUserExtended);
 
-                await _eventPublisher.Publish(new UserResetPasswordEvent(dbUser.Id));
+                await _eventPublisher.Publish(new UserResetPasswordEvent(applicationUserExtended.Id));
                 //clear cache
-                ResetCache(dbUser.Id, dbUser.UserName);
+                ResetCache(applicationUserExtended.Id, applicationUserExtended.UserName);
 
                 return result;
             }
@@ -310,7 +308,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await GetApplicationUserByIdAsync(userId);
+                var dbUser = await FindByIdAsync(userId, UserDetails.Reduced);
                 var result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -322,9 +320,8 @@ namespace VirtoCommerce.Platform.Data.Security
                     {
                         // Now the user had successfully reset their password.
                         // If password change was required, now it is not needed anymore.
-                        var applicationUserExtended = await GetUserExtendedAsync(dbUser, UserDetails.Reduced);
-                        applicationUserExtended.PasswordExpired = false;
-                        await UpdateAsync(applicationUserExtended);
+                        dbUser.PasswordExpired = false;
+                        await UpdateAsync(dbUser);
 
                         await _eventPublisher.Publish(new UserResetPasswordEvent(userId));
 
@@ -510,16 +507,24 @@ namespace VirtoCommerce.Platform.Data.Security
             return allPermissions;
         }
 
-        protected virtual SecurityResult ValidateUser(ApplicationUser dbUser)
+        protected virtual SecurityResult ValidateUser(ApplicationUser applicationUser)
         {
-            var result = new SecurityResult { Succeeded = true };
-
-            if (dbUser == null)
+            if (applicationUser == null)
             {
-                result = new SecurityResult { Errors = new[] { "User not found." } };
+                return new SecurityResult { Errors = new[] { "User not found." } };
             }
 
-            return result;
+            return new SecurityResult { Succeeded = true };
+        }
+
+        protected virtual SecurityResult ValidateUser(ApplicationUserExtended applicationUserExtended)
+        {
+            if (applicationUserExtended == null)
+            {
+                return new SecurityResult { Errors = new[] { "User not found." } };
+            }
+
+            return new SecurityResult { Succeeded = true };
         }
 
         protected virtual async Task<ApplicationUser> GetApplicationUserByIdAsync(string userId)
