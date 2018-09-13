@@ -581,11 +581,7 @@ namespace VirtoCommerce.Platform.Data.Security
                     }
 
                     var suppressForcingCredentialsChange = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Security:SuppressForcingCredentialsChange", false);
-                    if (suppressForcingCredentialsChange)
-                    {
-                        retVal.PasswordExpired = false;
-                    }
-                    else
+                    if (!suppressForcingCredentialsChange)
                     {
                         //Setting the flags which indicates a necessity of security credentials change
                         retVal.PasswordExpired |= retVal.PasswordHash == Resources.Default.DefaultPasswordHash;
