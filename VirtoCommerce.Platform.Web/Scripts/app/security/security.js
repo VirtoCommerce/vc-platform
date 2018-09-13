@@ -119,11 +119,6 @@ angular.module('platformWebApp')
                 },
                 controller: ['$q', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.passwordValidationService', function ($q, $scope, $stateParams, accounts, authService, passwordValidationService) {
                     $scope.userName = authService.userName;
-                    $scope.passwordValidationResult = {
-                        passwordIsValid: true,
-                        minPasswordLength: 0,
-                        errors: []
-                    };
 
                     accounts.get({ id: $stateParams.userName }, function (user) {
                         if (!user || !user.passwordExpired) {
