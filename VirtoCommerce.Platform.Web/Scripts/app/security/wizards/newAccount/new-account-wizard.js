@@ -26,14 +26,12 @@ angular.module('platformWebApp')
     };
 
     $scope.validatePasswordAsync = function (value) {
-        var promise = passwordValidationService.validatePasswordAsync(value).then(
+        return passwordValidationService.validatePasswordAsync(value).then(
             function (result) {
                 angular.extend(blade.currentEntity, result);
 
                 return result.passwordIsValid ? $q.resolve() : $q.reject();
             });
-
-        return promise;
     }
 
     $scope.saveChanges = function () {
