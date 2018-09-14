@@ -127,12 +127,7 @@ angular.module('platformWebApp')
                     });
 
                     $scope.validatePasswordAsync = function(value) {
-                        return passwordValidationService.validatePasswordAsync(value).then(
-                            function (result) {
-                                $scope.passwordValidationResult = result;
-
-                                return result.passwordIsValid ? $q.resolve() : $q.reject();
-                            });
+                        return passwordValidationService.validatePasswordAsync(value);
                     }
 
                     $scope.postpone = function () {
