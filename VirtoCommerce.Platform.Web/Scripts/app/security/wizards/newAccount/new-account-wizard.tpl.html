@@ -17,17 +17,10 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.password' | translate }}</label>
-                    <div class="form-input">
-                        <input name="password" ng-model="blade.currentEntity.password" required placeholder="{{ 'platform.blades.new-account-wizard.placeholders.password' | translate }}" type="password" ui-validate-async="'validatePasswordAsync($value)'">
-                    </div>
-                    <div class="form-error" ng-show="formScope.password.$dirty && !blade.currentEntity.passwordIsValid">
-                        <span>{{ 'platform.blades.account-resetPassword.validations.password-too-weak' | translate }}</span>
-                        <ul>
-                            <li ng-repeat="error in blade.currentEntity.errors">
-                                {{ error | translate: blade.currentEntity }}
-                            </li>
-                        </ul>
-                    </div>
+                    <va-password-input password-placeholder="{{ 'platform.blades.new-account-wizard.placeholders.password' | translate }}"
+                                       password-too-weak-message="{{ 'platform.blades.account-resetPassword.validations.password-too-weak' | translate }}"
+                                       run-password-validation="validatePasswordAsync(value)"
+                                       new-password="blade.currentEntity.password" />
                 </div>
                 <div class="form-group">
                     <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.repeat-password' | translate }}</label>
