@@ -572,6 +572,10 @@
           "login": "Einloggen eingeben",
           "password": "Neues Passwort eingeben",
           "repeat-password": "Neues Passwort wiederholen"
+        },
+        "validations": {
+          "repeat-password": "Eingegebene Passwörter stimmen nicht überein!",
+          "password-too-weak": "Das eingegebene Passwort entspricht nicht einer oder mehreren Passwortsicherheitsrichtlinien:"
         }
       },
       "security-main": {
