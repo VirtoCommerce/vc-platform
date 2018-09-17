@@ -1,31 +1,51 @@
 angular
     .module('platformWebApp')
-    .factory('platformWebApp.passwordValidationService', ['$q', 'platformWebApp.accounts', function ($q, accounts) {
-        var service = {
-            validatePasswordAsync: function(value) {
-                var promise = accounts.validatePassword(JSON.stringify(value)).$promise.then(
-                    function(response) {
-                        var result = {
-                            passwordIsValid: response.passwordIsValid,
-                            minPasswordLength: response.minPasswordLength,
-                            errors: []
-                        };
+    .factory('platformWebApp.passwordValidationService', ['$timeout', 'platformWebApp.accounts', function ($timeout, accounts) {
+        var lastPassword = null;
+        var lastPromise = null;
 
-                        var filteredKeys = _.filter(Object.keys(response),
-                            function(key) {
-                                return !key.startsWith('$') && response[key] === true;
-                            });
+        var performPasswordValidation = function(value) {
+            return accounts.validatePassword(JSON.stringify(value)).$promise.then(
+                function (response) {
+                    var result = {
+                        passwordIsValid: response.passwordIsValid,
+                        minPasswordLength: response.minPasswordLength,
+                        errors: []
+                    };
 
-                        filteredKeys.forEach(function(key) {
-                            var resourceName = 'platform.blades.account-resetPassword.validations.' + key;
-                            result.errors.push(resourceName);
+                    var filteredKeys = _.filter(Object.keys(response),
+                        function (key) {
+                            return !key.startsWith('$') && response[key] === true;
                         });
 
-                        return result;
-                    }
-                );
+                    filteredKeys.forEach(function (key) {
+                        var resourceName = 'platform.blades.account-resetPassword.validations.' + key;
+                        result.errors.push(resourceName);
+                    });
 
-                return promise;
+                    return result;
+                }
+            );
+        };
+
+        var service = {
+            throttleTimeoutMilliseconds: 100,
+
+            validatePasswordAsync: function(value) {
+                lastPassword = value;
+
+                if (lastPromise != null) {
+                    return lastPromise;
+                }
+
+                lastPromise = $timeout(
+                    function () {
+                        lastPromise = null;
+                        return performPasswordValidation(lastPassword);
+                    },
+                    this.throttleTimeoutMilliseconds);
+
+                return lastPromise;
             }
         }
 
