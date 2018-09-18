@@ -1,8 +1,9 @@
 using System;
+using System.IdentityModel.Tokens;
 using CacheManager.Core;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using Microsoft.Owin.Cors;
+using Microsoft.Owin.Security.ActiveDirectory;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Practices.Unity;
@@ -101,6 +102,19 @@ namespace VirtoCommerce.Platform.Web
                         QueryStringParameterName = authenticationOptions.ApiKeysQueryStringParameterName
                     });
                 }
+            }
+
+            if (authenticationOptions.AzureAdAuthenticationEnabled)
+            {
+                var azureAdAuthenticationOptions = new WindowsAzureActiveDirectoryBearerAuthenticationOptions
+                {
+                    Tenant = authenticationOptions.AzureAdTenant,
+                    TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidAudience = authenticationOptions.AzureAdApplicationId
+                    }
+                };
+                app.UseWindowsAzureActiveDirectoryBearerAuthentication(azureAdAuthenticationOptions);
             }
 
             app.Use<CurrentUserOwinMiddleware>(container.Resolve<Func<ICurrentUser>>());

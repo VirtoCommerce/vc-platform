@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
@@ -177,7 +177,11 @@ namespace VirtoCommerce.Platform.Web
                 LoginPath = new PathString(ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:LoginPath", string.Empty)),
                 LogoutPath = new PathString(ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:LogoutPath", string.Empty)),
                 ReturnUrlParameter = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:ReturnUrlParameter", CookieAuthenticationDefaults.ReturnUrlParameter),
-                SlidingExpiration = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:SlidingExpiration", true)
+                SlidingExpiration = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:SlidingExpiration", true),
+
+                AzureAdAuthenticationEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.Enabled", false),
+                AzureAdApplicationId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.ApplicationId", string.Empty),
+                AzureAdTenant = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.Tenant", string.Empty)
             };
 
             container.RegisterInstance(authenticationOptions);

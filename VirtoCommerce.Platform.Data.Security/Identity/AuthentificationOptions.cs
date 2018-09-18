@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
@@ -147,6 +147,27 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "ReturnUrl is the name of a querystring parameter")]
         public string ReturnUrlParameter { get; set; }
+
+        #endregion
+
+        #region AzureAD authentication
+
+        /// <summary>
+        /// Determines whether the user authentication via Azure Active Directory is enabled.
+        /// </summary>
+        public bool AzureAdAuthenticationEnabled { get; set; }
+
+        /// <summary>
+        /// Application ID of the VirtoCommerce platform application registered in Azure Active Directory. It can be found 
+        /// in the Azure control panel: Azure Active Directory > App registrations > (platform app) > Application ID
+        /// (e.g. 01234567-89ab-cdef-0123-456789abcdef).
+        /// </summary>
+        public string AzureAdApplicationId { get; set; }
+
+        /// <summary>
+        /// Name of the Azure Active Directory domain that will be used for authentication (e.g. testcompany.com).
+        /// </summary>
+        public string AzureAdTenant { get; set; }
 
         #endregion
     }
