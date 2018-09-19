@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Packaging;
@@ -320,6 +320,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
                         {
                             progressInfo.Description = $"{moduleInfo.Id}: {x.Description}";
+                            progressInfo.Errors = x.Errors;
                             progressCallback(progressInfo);
                         };
                         try
@@ -352,6 +353,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     Action<ExportImportProgressInfo> modulePorgressCallback = (x) =>
                     {
                         progressInfo.Description = $"{module.Id}: {x.Description}";
+                        progressInfo.Errors = x.Errors;
                         progressCallback(progressInfo);
                     };
 
