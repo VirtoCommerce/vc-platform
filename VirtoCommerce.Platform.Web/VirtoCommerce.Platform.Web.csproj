@@ -382,6 +382,9 @@
     <Content Include="Scripts\app\security\dialogs\changePasswordDialog.tpl.html" />
     <Content Include="Scripts\app\security\dialogs\resetPasswordDialog.tpl.html" />
     <Content Include="Scripts\app\security\dialogs\forgotPasswordDialog.tpl.html" />
+    <Content Include="Scripts\app\security\directives\password-input.js" />
+    <Content Include="Scripts\app\security\directives\password-input.tpl.html" />
+    <Content Include="Scripts\app\security\services\passwordValidationService.js" />
     <Content Include="Scripts\app\userProfile\userProfile.js" />
     <Content Include="Scripts\common\directives\angular-scroll-complete.js" />
     <Content Include="Scripts\common\directives\dateTime-picker.js" />

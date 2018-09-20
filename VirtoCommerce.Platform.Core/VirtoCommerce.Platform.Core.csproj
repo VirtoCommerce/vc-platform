@@ -228,8 +228,10 @@
     <Compile Include="Security\Events\UserLoginEvent.cs" />
     <Compile Include="Security\ICurrentUser.cs" />
     <Compile Include="Security\IHasSecurityAccounts.cs" />
+    <Compile Include="Security\IPasswordCheckService.cs" />
     <Compile Include="Security\ISupportSecurityScopes.cs" />
     <Compile Include="Security\IUserNameResolver.cs" />
+    <Compile Include="Security\PasswordValidationResult.cs" />
     <Compile Include="Security\VirtoCommerceClaimTypes.cs" />
     <Compile Include="Security\IPermissionScopeService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
