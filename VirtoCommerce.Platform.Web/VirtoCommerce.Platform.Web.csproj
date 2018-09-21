@@ -337,7 +337,6 @@
     <Compile Include="ApplicationOAuthProvider.cs" />
     <Compile Include="App_Start\AiExceptionHandler.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
-    <Compile Include="App_Start\AzureAdCorsPolicyProvider.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="Cache\RedisCacheBackplane2.cs" />
