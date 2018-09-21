@@ -1,4 +1,4 @@
-﻿{
+{
   "platform": {
     "menu": {
       "home": "Home",
@@ -417,14 +417,21 @@
         }
       },
       "account-resetPassword": {
-        "subtitle": "Change your password",
+        "subtitle": "Change user password",
         "labels": {
           "new-password": "New password",
-          "repeat-password": "Repeat password"
+          "repeat-password": "Repeat password",
+          "force-password-change": "Make this user change their password when they first sign in"
         },
         "validations": {
-          "repeat-password": "New passwords doesn't match!",
-          "invalid-token": "Reset password token is invalid or expired" 
+          "repeat-password": "New passwords do not match!",
+          "invalid-token": "Reset password token is invalid or expired",
+          "password-too-weak": "New password does not comply one or more password security policies:",
+          "passwordViolatesMinLength": "Passwords must be {{minPasswordLength}} or more characters long",
+          "passwordMustHaveLowerCaseLetters": "Passwords must have at least one lowercase ('a'-'z')",
+          "passwordMustHaveUpperCaseLetters": "Passwords must have at least one uppercase ('A'-'Z')",
+          "passwordMustHaveDigits": "Passwords must have at least one digit ('0'-'9')",
+          "passwordMustHaveSpecialCharacters": "Passwords must have at least one non alphanumeric character"
         },
         "placeholders": {
           "new-password": "Enter new password",
@@ -596,6 +603,10 @@
           "login": "Enter login",
           "password": "Enter new password",
           "repeat-password": "Repeat new password"
+        },
+        "validations": {
+          "repeat-password": "Entered passwords do not match!",
+          "password-too-weak": "Entered password does not comply one or more password security policies:"
         }
       },
       "security-main": {
@@ -662,7 +673,7 @@
         "confirm": "Repeat new password:",
         "save": "Change password",
         "postpone": "Postpone",
-        "force-change-info": "You must change the password to continue using the manager.",
+        "force-change-info": "You must change the password to continue using the manager."
       },
       "change-api-secret-key": {
         "title": "Please generate a new API access keys for the '{{userName}}' user",

@@ -742,7 +742,7 @@ namespace VirtoCommerce.Platform.Web
 
             container.RegisterType<ISecurityService, SecurityService>();
 
-
+            container.RegisterType<IPasswordCheckService, PasswordCheckService>();
 
             #endregion
 

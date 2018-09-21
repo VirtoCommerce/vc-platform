@@ -1,27 +1,30 @@
-﻿angular.module('platformWebApp')
-.controller('platformWebApp.accountResetPasswordController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', function ($scope, bladeNavigationService, accounts) {
+angular.module('platformWebApp')
+.controller('platformWebApp.accountResetPasswordController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.passwordValidationService', function ($q, $scope, bladeNavigationService, accounts, passwordValidationService) {
     var blade = $scope.blade;
 
     function initializeBlade() {
         blade.currentEntity = {
             newPassword: '',
-            newPassword2: ''
+            forcePasswordChange: true,
+            passwordIsValid: true,
+            minPasswordLength: 0,
+            errors: []
         };
         
         blade.isLoading = false;
     };
-    
-    $scope.saveChanges = function () {
-        if (blade.currentEntity.newPassword != blade.currentEntity.newPassword2) {
-            blade.error = 'Error: new passwords doesn\'t match!';
-            return;
-        }
 
+    $scope.validatePasswordAsync = function(value) {
+        return passwordValidationService.validatePasswordAsync(value);
+    }
+
+    $scope.saveChanges = function () {
         blade.isLoading = true;
         blade.error = undefined;
 
         var postData = {
-            newPassword: blade.currentEntity.newPassword
+            newPassword: blade.currentEntity.newPassword,
+            forcePasswordChangeOnFirstLogin: blade.currentEntity.forcePasswordChange
         };
 
         accounts.resetPassword({ id: blade.currentEntityId }, postData, function () {

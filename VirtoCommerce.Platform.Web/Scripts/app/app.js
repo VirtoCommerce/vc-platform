@@ -1,4 +1,4 @@
-﻿var AppDependencies = [
+var AppDependencies = [
     'ui.router',
     'luegg.directives',
     'googlechart',
@@ -292,11 +292,16 @@ angular.module('platformWebApp', AppDependencies).
                 //timeout need because $state not fully loading in run method and need to wait little time
                 $timeout(function () {
                     if (authContext.isAuthenticated) {
-                        if (!$state.current.name || $state.current.name === 'loginDialog') {
+                        if (authContext.passwordExpired) {
+                            $state.go('changePasswordDialog', {
+                                onClose: function () {
+                                    $state.go('workspace');
+                                }
+                            });
+                        } else if (!$state.current.name || $state.current.name === 'loginDialog') {
                             $state.go('workspace');
                         }
-                    }
-                    else {
+                    } else {
                         $state.go('loginDialog');
                     }
                 }, 500);
