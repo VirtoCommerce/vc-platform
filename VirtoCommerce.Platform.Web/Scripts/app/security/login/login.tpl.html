@@ -1,4 +1,4 @@
-﻿<div class="window">
+<div class="window">
     <div class="window-status" ng-if="loginProgress">
         <div class="progress-bar"></div>
     </div>
@@ -37,6 +37,12 @@
                 <div class="form-error" ng-if="authError">
                     {{authError}}
                 </div>
+            </div>
+            <div class="form-group">
+                <!-- TODO: i18n, style, address change, maybe refactoring -->
+                <a href="ExternalLogin/SignIn">
+                    <label class="form-label">Sign in with Azure AD</label>
+                </a>
             </div>
             <div class="clearfix">
                 <div class="column">

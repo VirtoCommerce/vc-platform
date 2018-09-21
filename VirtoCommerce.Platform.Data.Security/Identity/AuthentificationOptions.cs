@@ -169,6 +169,16 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public string AzureAdTenant { get; set; }
 
+        public string AzureAdTenantId { get; set; }
+
+        public string AzureAdInstance { get; set; }
+
+        public string AzureAdPostLogoutRedirectUri { get; set; }
+
+        public string AzureAdApplicationSecretKey { get; set; }
+
+        public string AzureAdDefaultUserType { get; set; }
+
         #endregion
     }
 }

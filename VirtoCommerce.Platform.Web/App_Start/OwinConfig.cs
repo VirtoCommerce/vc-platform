@@ -3,9 +3,12 @@ using System.IdentityModel.Tokens;
 using CacheManager.Core;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using Microsoft.Owin.Cors;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.ActiveDirectory;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
+using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Platform.Core.Security;
@@ -14,6 +17,7 @@ using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Authentication.ApiKeys;
 using VirtoCommerce.Platform.Data.Security.Authentication.Hmac;
 using VirtoCommerce.Platform.Data.Security.Identity;
+using AuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -30,6 +34,15 @@ namespace VirtoCommerce.Platform.Web
             //app.UseCors(CorsOptions.AllowAll);
 
             var authenticationOptions = container.Resolve<AuthenticationOptions>();
+
+            if (authenticationOptions.AzureAdAuthenticationEnabled)
+            {
+                var corsOptions = new CorsOptions
+                {
+                    PolicyProvider = new AzureAdCorsPolicyProvider(authenticationOptions)
+                };
+                app.UseCors(corsOptions);
+            }
 
             if (authenticationOptions.CookiesEnabled)
             {
@@ -104,17 +117,22 @@ namespace VirtoCommerce.Platform.Web
                 }
             }
 
-            if (authenticationOptions.AzureAdAuthenticationEnabled)
+            if (authenticationOptions.AzureAdAuthenticationEnabled && authenticationOptions.CookiesEnabled)
             {
-                var azureAdAuthenticationOptions = new WindowsAzureActiveDirectoryBearerAuthenticationOptions
-                {
-                    Tenant = authenticationOptions.AzureAdTenant,
-                    TokenValidationParameters = new TokenValidationParameters
+                app.SetDefaultSignInAsAuthenticationType(authenticationOptions.AuthenticationType);
+
+                var authority = authenticationOptions.AzureAdInstance + authenticationOptions.AzureAdTenantId;
+                app.UseOpenIdConnectAuthentication(
+                    new OpenIdConnectAuthenticationOptions
                     {
-                        ValidAudience = authenticationOptions.AzureAdApplicationId
-                    }
-                };
-                app.UseWindowsAzureActiveDirectoryBearerAuthentication(azureAdAuthenticationOptions);
+                        ClientId = authenticationOptions.AzureAdApplicationId,
+                        ClientSecret = authenticationOptions.AzureAdApplicationSecretKey,
+                        Authority = authority,
+                        PostLogoutRedirectUri = authenticationOptions.AzureAdPostLogoutRedirectUri,
+                        AuthenticationMode = AuthenticationMode.Passive,
+                        SignInAsAuthenticationType = authenticationOptions.AuthenticationType,
+                        //CallbackPath = new PathString("/signin-azuread")
+                    });
             }
 
             app.Use<CurrentUserOwinMiddleware>(container.Resolve<Func<ICurrentUser>>());
