@@ -1,11 +1,8 @@
 using System;
-using System.IdentityModel.Tokens;
 using CacheManager.Core;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.ActiveDirectory;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.OpenIdConnect;
