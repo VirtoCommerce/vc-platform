@@ -35,15 +35,6 @@ namespace VirtoCommerce.Platform.Web
 
             var authenticationOptions = container.Resolve<AuthenticationOptions>();
 
-            if (authenticationOptions.AzureAdAuthenticationEnabled)
-            {
-                var corsOptions = new CorsOptions
-                {
-                    PolicyProvider = new AzureAdCorsPolicyProvider(authenticationOptions)
-                };
-                app.UseCors(corsOptions);
-            }
-
             if (authenticationOptions.CookiesEnabled)
             {
                 // Enable the application to use a cookie to store information for the signed in user
