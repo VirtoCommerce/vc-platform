@@ -76,9 +76,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var userName = identity.FindFirstValue(ClaimTypes.Upn);
             if (string.IsNullOrWhiteSpace(userName))
             {
-                // TODO: apparently user doesn't have an UPN claim, but OpenID Connect provider must provide it:
-                // https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-id-and-access-tokens#claims-in-idtokens
-                return Redirect(returnUrl);
+                throw new InvalidOperationException("Received external login info does not have an UPN claim.");
             }
 
             var signInManager = _signInManagerFactory();
@@ -96,12 +94,11 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
                 case SignInStatus.LockedOut:
                 case SignInStatus.RequiresVerification:
-                    // TODO: handle user lock-out and 2FA
+                    // TODO: handle user lock-out and two-factor authentication
                     return Redirect(returnUrl);
 
                 default:
-                    // TODO: throw ArgumentOutOfRangeException?
-                    return Redirect(returnUrl);
+                    throw new InvalidOperationException($"External login result has the unexpected value: {externalLoginResult}.");
             }
         }
 
@@ -112,15 +109,13 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var platformUser = await _securityService.FindByNameAsync(userName, UserDetails.Reduced);
             if (platformUser == null)
             {
-                // TODO: something isn't right - user exists in ASP.NET Identity database, but does not exist in platform database.
-                return;
+                throw new InvalidOperationException($"User '{userName}' exists in ASP.NET Identity database, but there is no corresponding VC platform account.");
             }
 
             var aspnetUser = await userManager.FindByNameAsync(userName);
             if (aspnetUser == null)
             {
-                // TODO: this can't be - user successfully signed in, so they must exist in ASP.NET Identity database.
-                return;
+                throw new InvalidOperationException($"User '{userName}' does not have an ASP.NET Identity account.");
             }
 
             await signInManager.SignInAsync(aspnetUser, true, true);
@@ -138,18 +133,13 @@ namespace VirtoCommerce.Platform.Web.Controllers
             else
             {
                 platformUser = await RegisterExternalUser(userName, externalLoginInfo);
-                if (platformUser == null)
-                {
-                    return;
-                }
             }
 
             var userManager = _userManagerFactory();
             var aspnetUser = await userManager.FindByNameAsync(userName);
             if (aspnetUser == null)
             {
-                // TODO: at this moment user is guaranteed to exist in both platform and ASP.NET Identity database, so this normally couldn't be.
-                return;
+                throw new InvalidOperationException($"ASP.NET Identity account for user '{userName}' could not be found.");
             }
 
             await signInManager.SignInAsync(aspnetUser, true, true);
@@ -169,14 +159,13 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var result = await _securityService.UpdateAsync(platformUser);
             if (!result.Succeeded)
             {
-                // TODO: something went wrong, so we should notify user or at least log it
+                var joinedErrors = string.Join(Environment.NewLine, result.Errors);
+                throw new InvalidOperationException("Failed to link VC platform account with external login due to errors: " + joinedErrors);
             }
         }
 
         private async Task<ApplicationUserExtended> RegisterExternalUser(string userName, ExternalLoginInfo externalLoginInfo)
         {
-            // TODO: access Graph API for more verbose information (like email and phone number)
-
             var user = new ApplicationUserExtended
             {
                 UserName = userName,
@@ -191,8 +180,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var securityResult = await _securityService.CreateAsync(user);
             if (!securityResult.Succeeded)
             {
-                // TODO: how to report error to UI?
-                return null;
+                var joinedErrors = string.Join(Environment.NewLine, securityResult.Errors);
+                throw new InvalidOperationException("Failed to create a VC platform account due to errors: " + joinedErrors);
             }
 
             return user;
