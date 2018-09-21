@@ -183,7 +183,7 @@ namespace VirtoCommerce.Platform.Web
                 AzureAdApplicationId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.ApplicationId", string.Empty),
                 AzureAdTenantId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.TenantId", string.Empty),
                 AzureAdInstance = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.Instance", string.Empty),
-                AzureAdDefaultUserType = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.DefaultUserType", "Customer")
+                AzureAdDefaultUserType = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.DefaultUserType", "Manager")
             };
 
             container.RegisterInstance(authenticationOptions);
