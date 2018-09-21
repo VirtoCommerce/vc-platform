@@ -106,7 +106,7 @@ namespace VirtoCommerce.Platform.Web
                 }
             }
 
-            if (authenticationOptions.AzureAdAuthenticationEnabled && authenticationOptions.CookiesEnabled)
+            if (authenticationOptions.AzureAdAuthenticationEnabled)
             {
                 // Cookie authentication to temporarily store external authentication data.
                 // NOTE: AuthenticationType should not change - it is used internally by ASP.NET external authentication code!
