@@ -16,11 +16,16 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Data.Security.Converters;
 using VirtoCommerce.Platform.Data.Security.Identity;
+
 using MvcAllowAnonymousAttribute = System.Web.Mvc.AllowAnonymousAttribute;
+using MvcHttpGetAttribute = System.Web.Mvc.HttpGetAttribute;
+using MvcRouteAttribute = System.Web.Mvc.RouteAttribute;
+using MvcRoutePrefixAttribute = System.Web.Mvc.RoutePrefixAttribute;
 using PlatformAuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 
 namespace VirtoCommerce.Platform.Web.Controllers
 {
+    [MvcRoutePrefix("")]
     public class ExternalLoginController : Controller
     {
         private readonly Func<IAuthenticationManager> _authenticationManagerFactory;
@@ -42,6 +47,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
             _authenticationOptions = authenticationOptions;
         }
 
+        [MvcHttpGet]
+        [MvcRoute("externalsignin")]
         [MvcAllowAnonymous]
         public ActionResult SignIn()
         {
@@ -61,6 +68,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
             return new EmptyResult();
         }
 
+        [MvcHttpGet]
+        [MvcRoute("externalsignin/callback")]
         [MvcAllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
@@ -95,8 +104,11 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
                 case SignInStatus.LockedOut:
                 case SignInStatus.RequiresVerification:
+                    // TODO: handle user lock-out and 2FA
+                    return Redirect(returnUrl);
+
                 default:
-                    // TODO: handle these cases
+                    // TODO: throw ArgumentOutOfRangeException?
                     return Redirect(returnUrl);
             }
         }
