@@ -134,6 +134,10 @@ namespace VirtoCommerce.Platform.Web.Controllers
             else
             {
                 platformUser = await RegisterExternalUser(userName, externalLoginInfo);
+                if (platformUser == null)
+                {
+                    return;
+                }
             }
 
             var userManager = _userManagerFactory();
@@ -173,9 +177,6 @@ namespace VirtoCommerce.Platform.Web.Controllers
             {
                 UserName = userName,
                 UserType = _authenticationOptions.AzureAdDefaultUserType,
-
-                // FIXME: remove this line before committing this code!
-                Password = "12345",
 
                 Logins = new[]
                 {
