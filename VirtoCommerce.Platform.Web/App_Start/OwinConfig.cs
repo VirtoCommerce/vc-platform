@@ -1,5 +1,6 @@
 using System;
 using CacheManager.Core;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
@@ -107,7 +108,13 @@ namespace VirtoCommerce.Platform.Web
 
             if (authenticationOptions.AzureAdAuthenticationEnabled && authenticationOptions.CookiesEnabled)
             {
-                app.SetDefaultSignInAsAuthenticationType(authenticationOptions.AuthenticationType);
+                // Cookie authentication to temporarily store external authentication data.
+                // NOTE: AuthenticationType should not change - it is used internally by ASP.NET external authentication code!
+                app.UseCookieAuthentication(new CookieAuthenticationOptions
+                {
+                    AuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
+                    AuthenticationMode = AuthenticationMode.Passive
+                });
 
                 var authority = authenticationOptions.AzureAdInstance + authenticationOptions.AzureAdTenantId;
                 app.UseOpenIdConnectAuthentication(
@@ -116,7 +123,7 @@ namespace VirtoCommerce.Platform.Web
                         ClientId = authenticationOptions.AzureAdApplicationId,
                         Authority = authority,
                         AuthenticationMode = AuthenticationMode.Passive,
-                        SignInAsAuthenticationType = authenticationOptions.AuthenticationType
+                        SignInAsAuthenticationType = DefaultAuthenticationTypes.ExternalCookie
                     });
             }
 
