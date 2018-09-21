@@ -529,6 +529,8 @@
           "login": "Einloggen",
           "password": "Passwort",
           "remember-me": "Erinnern Sie sich an mich",
+          "sign-in-with-azure-ad": "Melden Sie sich mit Azure Active Directory an",
+          "forgot-password": "Haben Sie Ihr Passwort vergessen?",
           "log-in": "Anmelden"
         }
       },
