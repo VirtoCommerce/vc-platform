@@ -165,18 +165,19 @@ namespace VirtoCommerce.Platform.Core.Security
         public string AzureAdApplicationId { get; set; }
 
         /// <summary>
-        /// Name of the Azure Active Directory domain that will be used for authentication (e.g. testcompany.com).
+        /// ID of the Azure AD domain that will be used for authentication. It can be found in the Azure control panel:
+        /// Azure Active Directory > Properties > Directory ID (e.g. abcdef01-2345-6789-abcd-ef0123456789).
         /// </summary>
-        public string AzureAdTenant { get; set; }
-
         public string AzureAdTenantId { get; set; }
 
+        /// <summary>
+        /// URL of the Azure AD endpoint used for authentication (usually https://login.microsoftonline.com/).
+        /// </summary>
         public string AzureAdInstance { get; set; }
 
-        public string AzureAdPostLogoutRedirectUri { get; set; }
-
-        public string AzureAdApplicationSecretKey { get; set; }
-
+        /// <summary>
+        /// Default user type for users created by Azure AD accounts.
+        /// </summary>
         public string AzureAdDefaultUserType { get; set; }
 
         #endregion

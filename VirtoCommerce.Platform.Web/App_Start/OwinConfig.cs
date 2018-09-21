@@ -126,12 +126,9 @@ namespace VirtoCommerce.Platform.Web
                     new OpenIdConnectAuthenticationOptions
                     {
                         ClientId = authenticationOptions.AzureAdApplicationId,
-                        ClientSecret = authenticationOptions.AzureAdApplicationSecretKey,
                         Authority = authority,
-                        PostLogoutRedirectUri = authenticationOptions.AzureAdPostLogoutRedirectUri,
                         AuthenticationMode = AuthenticationMode.Passive,
-                        SignInAsAuthenticationType = authenticationOptions.AuthenticationType,
-                        //CallbackPath = new PathString("/signin-azuread")
+                        SignInAsAuthenticationType = authenticationOptions.AuthenticationType
                     });
             }
 

@@ -181,11 +181,8 @@ namespace VirtoCommerce.Platform.Web
 
                 AzureAdAuthenticationEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.Enabled", false),
                 AzureAdApplicationId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.ApplicationId", string.Empty),
-                AzureAdTenant = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.Tenant", string.Empty),
                 AzureAdTenantId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.TenantId", string.Empty),
                 AzureAdInstance = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.Instance", string.Empty),
-                AzureAdPostLogoutRedirectUri = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.PostLogoutRedirectUri", string.Empty),
-                AzureAdApplicationSecretKey = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.ApplicationSecretKey", string.Empty),
                 AzureAdDefaultUserType = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.DefaultUserType", "Customer")
             };
 
