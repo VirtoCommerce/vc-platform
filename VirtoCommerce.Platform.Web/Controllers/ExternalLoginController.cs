@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Security;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -14,18 +11,13 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
-using VirtoCommerce.Platform.Data.Security.Converters;
 using VirtoCommerce.Platform.Data.Security.Identity;
 
-using MvcAllowAnonymousAttribute = System.Web.Mvc.AllowAnonymousAttribute;
-using MvcHttpGetAttribute = System.Web.Mvc.HttpGetAttribute;
-using MvcRouteAttribute = System.Web.Mvc.RouteAttribute;
-using MvcRoutePrefixAttribute = System.Web.Mvc.RoutePrefixAttribute;
 using PlatformAuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 
 namespace VirtoCommerce.Platform.Web.Controllers
 {
-    [MvcRoutePrefix("")]
+    [RoutePrefix("")]
     public class ExternalLoginController : Controller
     {
         private readonly Func<IAuthenticationManager> _authenticationManagerFactory;
@@ -47,9 +39,9 @@ namespace VirtoCommerce.Platform.Web.Controllers
             _authenticationOptions = authenticationOptions;
         }
 
-        [MvcHttpGet]
-        [MvcRoute("externalsignin")]
-        [MvcAllowAnonymous]
+        [HttpGet]
+        [Route("externalsignin")]
+        [AllowAnonymous]
         public ActionResult SignIn()
         {
             if (Request.IsAuthenticated)
@@ -68,9 +60,9 @@ namespace VirtoCommerce.Platform.Web.Controllers
             return new EmptyResult();
         }
 
-        [MvcHttpGet]
-        [MvcRoute("externalsignin/callback")]
-        [MvcAllowAnonymous]
+        [HttpGet]
+        [Route("externalsignin/callback")]
+        [AllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
             var authenticationManager = _authenticationManagerFactory();
