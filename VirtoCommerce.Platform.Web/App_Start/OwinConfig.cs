@@ -120,6 +120,8 @@ namespace VirtoCommerce.Platform.Web
                 app.UseOpenIdConnectAuthentication(
                     new OpenIdConnectAuthenticationOptions
                     {
+                        AuthenticationType = authenticationOptions.AzureAdAuthenticationType,
+                        Caption = authenticationOptions.AzureAdAuthenticationCaption,
                         ClientId = authenticationOptions.AzureAdApplicationId,
                         Authority = authority,
                         AuthenticationMode = AuthenticationMode.Passive,

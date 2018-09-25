@@ -536,7 +536,7 @@
           "login": "Login",
           "password": "Password",
           "remember-me": "Remember me",
-          "sign-in-with-azure-ad": "Sign in with Azure Active Directory",
+          "external-sign-in": "Sign in with {{displayName}}",
           "forgot-password": "Forgot your password?",
           "log-in": "Log in"
         }

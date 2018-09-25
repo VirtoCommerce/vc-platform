@@ -7,7 +7,6 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.OpenIdConnect;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -42,7 +41,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [HttpGet]
         [Route("externalsignin")]
         [AllowAnonymous]
-        public ActionResult SignIn()
+        public ActionResult SignIn(string authenticationType)
         {
             if (Request.IsAuthenticated)
             {
@@ -53,10 +52,10 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var callbackUrl = Url.Action("SignInCallback", "ExternalLogin", new { returnUrl });
 
             var authenticationProperties = new AuthenticationProperties { RedirectUri = callbackUrl };
-            authenticationProperties.Dictionary["LoginProvider"] = OpenIdConnectAuthenticationDefaults.AuthenticationType;
+            authenticationProperties.Dictionary["LoginProvider"] = authenticationType;
 
             var authenticationManager = _authenticationManagerFactory();
-            authenticationManager.Challenge(authenticationProperties, OpenIdConnectAuthenticationDefaults.AuthenticationType);
+            authenticationManager.Challenge(authenticationProperties, authenticationType);
             return new EmptyResult();
         }
 

@@ -536,7 +536,7 @@
                     "login": "Логин",
                     "password": "Пароль",
                     "remember-me": "Запомнить меня",
-                    "sign-in-with-azure-ad": "Войти при помощи Azure Active Directory",
+                    "external-sign-in": "Войти при помощи {{displayName}}",
                     "forgot-password": "Забыли пароль?",
                     "log-in": "Войти"
                 }

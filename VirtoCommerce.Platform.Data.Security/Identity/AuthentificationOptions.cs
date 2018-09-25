@@ -158,6 +158,16 @@ namespace VirtoCommerce.Platform.Core.Security
         public bool AzureAdAuthenticationEnabled { get; set; }
 
         /// <summary>
+        /// Sets AuthenticationType value for Azure AD authentication provider.
+        /// </summary>
+        public string AzureAdAuthenticationType { get; set; }
+
+        /// <summary>
+        /// Sets human-readable caption for Azure AD authentication provider. It is visible on sign-in page.
+        /// </summary>
+        public string AzureAdAuthenticationCaption { get; set; }
+
+        /// <summary>
         /// Application ID of the VirtoCommerce platform application registered in Azure Active Directory. It can be found 
         /// in the Azure control panel: Azure Active Directory > App registrations > (platform app) > Application ID
         /// (e.g. 01234567-89ab-cdef-0123-456789abcdef).

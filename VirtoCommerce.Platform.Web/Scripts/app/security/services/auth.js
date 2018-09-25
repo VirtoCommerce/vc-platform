@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', '$interpolate', function ($http, $rootScope, $cookieStore, $state, $interpolate) {
     var serviceBase = 'api/platform/security/';
     var authContext = {
@@ -8,6 +8,10 @@
         permissions: null,
         isAuthenticated: false
     };
+
+    authContext.getExternalLoginProviders = function () {
+        return $http.get(serviceBase + 'externalloginproviders');
+    }
 
     authContext.fillAuthData = function () {
         $http.get(serviceBase + 'currentuser').then(

@@ -38,9 +38,9 @@
                     {{authError}}
                 </div>
             </div>
-            <div class="form-group">
-                <a href="externalsignin">
-                    <label class="form-label">{{ 'platform.blades.login.labels.sign-in-with-azure-ad' | translate }}</label>
+            <div class="form-group" ng-repeat="provider in externalLoginProviders">
+                <a ng-href="externalsignin?authenticationType={{provider.authenticationType}}">
+                    <label class="form-label">{{ 'platform.blades.login.labels.external-sign-in' | translate: provider }}</label>
                 </a>
             </div>
             <div class="clearfix">

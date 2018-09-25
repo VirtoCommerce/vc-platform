@@ -23,6 +23,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataProtection;
+using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.StaticFiles;
 using Microsoft.Practices.Unity;
 using Owin;
@@ -180,6 +181,8 @@ namespace VirtoCommerce.Platform.Web
                 SlidingExpiration = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookie:SlidingExpiration", true),
 
                 AzureAdAuthenticationEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.Enabled", false),
+                AzureAdAuthenticationType = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.AuthenticationType", OpenIdConnectAuthenticationDefaults.AuthenticationType),
+                AzureAdAuthenticationCaption = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.Caption", OpenIdConnectAuthenticationDefaults.Caption),
                 AzureAdApplicationId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.ApplicationId", string.Empty),
                 AzureAdTenantId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.TenantId", string.Empty),
                 AzureAdInstance = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:AzureAD.Instance", string.Empty),
