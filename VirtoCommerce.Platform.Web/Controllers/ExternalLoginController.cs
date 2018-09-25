@@ -85,7 +85,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             switch (externalLoginResult)
             {
                 case SignInStatus.Success:
-                    await SignInExternalUser(externalLoginInfo, userName, signInManager);
+                    await SignInExternalUser(userName, signInManager);
                     return Redirect(returnUrl);
 
                 case SignInStatus.Failure:
