@@ -102,7 +102,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             }
         }
 
-        private async Task SignInExternalUser(ExternalLoginInfo externalLoginInfo, string userName, ApplicationSignInManager signInManager)
+        private async Task SignInExternalUser(string userName, ApplicationSignInManager signInManager)
         {
             var userManager = _userManagerFactory();
 
