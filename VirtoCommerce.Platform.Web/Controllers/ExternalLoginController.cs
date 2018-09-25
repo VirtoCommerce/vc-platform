@@ -84,9 +84,6 @@ namespace VirtoCommerce.Platform.Web.Controllers
             switch (externalLoginResult)
             {
                 case SignInStatus.Success:
-                    await SignInExternalUser(userName, signInManager);
-                    return Redirect(returnUrl);
-
                 case SignInStatus.Failure:
                     await CreateOrUpdatePlatformUser(externalLoginInfo, userName, signInManager);
                     return Redirect(returnUrl);
@@ -99,26 +96,6 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 default:
                     throw new InvalidOperationException($"External login result has the unexpected value: {externalLoginResult}.");
             }
-        }
-
-        private async Task SignInExternalUser(string userName, ApplicationSignInManager signInManager)
-        {
-            var userManager = _userManagerFactory();
-
-            var platformUser = await _securityService.FindByNameAsync(userName, UserDetails.Reduced);
-            if (platformUser == null)
-            {
-                throw new InvalidOperationException($"User '{userName}' exists in ASP.NET Identity database, but there is no corresponding VC platform account.");
-            }
-
-            var aspnetUser = await userManager.FindByNameAsync(userName);
-            if (aspnetUser == null)
-            {
-                throw new InvalidOperationException($"User '{userName}' does not have an ASP.NET Identity account.");
-            }
-
-            await signInManager.SignInAsync(aspnetUser, true, true);
-            await _eventPublisher.Publish(new UserLoginEvent(platformUser));
         }
 
         private async Task CreateOrUpdatePlatformUser(ExternalLoginInfo externalLoginInfo, string userName,
@@ -134,15 +111,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 platformUser = await RegisterExternalUser(userName, externalLoginInfo);
             }
 
-            var userManager = _userManagerFactory();
-            var aspnetUser = await userManager.FindByNameAsync(userName);
-            if (aspnetUser == null)
-            {
-                throw new InvalidOperationException($"ASP.NET Identity account for user '{userName}' could not be found.");
-            }
-
-            await signInManager.SignInAsync(aspnetUser, true, true);
-            await _eventPublisher.Publish(new UserLoginEvent(platformUser));
+            await SignInPlatformUser(platformUser, signInManager);
         }
 
         private async Task AddExternalLoginToExistingUser(ApplicationUserExtended platformUser,
@@ -150,8 +119,16 @@ namespace VirtoCommerce.Platform.Web.Controllers
         {
             var externalLogins = platformUser.Logins?.ToList() ?? new List<ApplicationUserLogin>();
 
-            var externalLogin = ConvertExternalLoginInfoToExternalLogin(externalLoginInfo);
-            externalLogins.Add(externalLogin);
+            if (externalLogins.Any(existingLogin =>
+                existingLogin.LoginProvider == externalLoginInfo.Login.LoginProvider &&
+                existingLogin.ProviderKey == externalLoginInfo.Login.ProviderKey))
+            {
+                // The user account is already linked with current external login, so there is no need to modify it.
+                return;
+            }
+
+            var newExternalLogin = ConvertExternalLoginInfoToExternalLogin(externalLoginInfo);
+            externalLogins.Add(newExternalLogin);
 
             platformUser.Logins = externalLogins.ToArray();
 
@@ -194,6 +171,21 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 LoginProvider = externalLogin.LoginProvider,
                 ProviderKey = externalLogin.ProviderKey
             };
+        }
+
+        private async Task SignInPlatformUser(ApplicationUserExtended platformUser, ApplicationSignInManager signInManager)
+        {
+            var userName = platformUser.UserName;
+
+            var userManager = _userManagerFactory();
+            var aspnetUser = await userManager.FindByNameAsync(userName);
+            if (aspnetUser == null)
+            {
+                throw new InvalidOperationException($"ASP.NET Identity account for user '{userName}' could not be found.");
+            }
+
+            await signInManager.SignInAsync(aspnetUser, true, true);
+            await _eventPublisher.Publish(new UserLoginEvent(platformUser));
         }
     }
 }
