@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Data.Repositories.Migrations;
+using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public string Description { get; set; }
         public int RepeatCount { get; set; }
 
-        public virtual PushNotificationEntity FromModel(Core.PushNotifications.PushNotification notification)
+        public virtual PushNotificationEntity FromModel(PushNotification notification)
         {
             if (notification == null)
                 throw new ArgumentNullException(nameof(notification));
@@ -34,7 +34,7 @@ namespace VirtoCommerce.Platform.Data.Model
             return this;
         }
 
-        public Core.PushNotifications.PushNotification ToModel(Core.PushNotifications.PushNotification notifcation)
+        public PushNotification ToModel(PushNotification notifcation)
         {
             notifcation.Id = Id;
             notifcation.Created = CreatedDate;
@@ -48,15 +48,13 @@ namespace VirtoCommerce.Platform.Data.Model
             return notifcation;
         }
 
-        public virtual void Patch( PushNotificationEntity target)
+        public virtual void Patch(PushNotificationEntity target)
         {
             target.Description = Description;
             target.IsNew = IsNew;
             target.RepeatCount = RepeatCount;
             target.Title = Title;
             target.Type = Type;
-
         }
-
     }
 }
