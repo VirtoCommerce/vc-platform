@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
@@ -7,46 +7,48 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 
-namespace VirtoCommerce.Platform.Data.PushNotification
+namespace VirtoCommerce.Platform.Data.PushNotifications
 {
     public class PushNotificationService : ServiceBase, IPushNotificationService
     {
-        private readonly Func<IPlatformRepository> _platformRepository;
+        private readonly Func<IPlatformRepository> _platformRepositoryFactory;
 
-        public PushNotificationService(Func<IPlatformRepository> repositoryFactory)
+        public PushNotificationService(Func<IPlatformRepository> platformRepositoryFactory)
         {
-            _platformRepository = repositoryFactory;
+            _platformRepositoryFactory = platformRepositoryFactory;
         }
 
         public PushNotificationSearchResult SearchPushNotification(string userId, PushNotificationSearchCriteria criteria)
         {
-            using (var repository = _platformRepository())
+            using (var repository = _platformRepositoryFactory())
             {
                 var query = repository.PushNotification;
+
                 if (criteria.Ids != null && criteria.Ids.Any())
                 {
                     query = query.Where(x => criteria.Ids.Contains(x.Id));
                 }
+
                 if (criteria.OnlyNew)
                 {
                     query = query.Where(x => x.IsNew);
                 }
+
                 if (criteria.StartDate != null)
                 {
                     query = query.Where(x => x.CreatedDate >= criteria.StartDate);
                 }
+
                 if (criteria.EndDate != null)
                 {
                     query = query.Where(x => x.CreatedDate <= criteria.EndDate);
                 }
 
                 var sortInfos = SortInfo.Parse(criteria.OrderBy).ToArray();
-
                 if (sortInfos.IsNullOrEmpty())
                 {
                     sortInfos = new[] { new SortInfo { SortColumn = "Creator", SortDirection = SortDirection.Descending } };
                 }
-
                 query = query.OrderBySortInfos(sortInfos);
 
                 var ids = query
@@ -60,7 +62,7 @@ namespace VirtoCommerce.Platform.Data.PushNotification
                     TotalCount = query.Count(),
                     NewCount = query.Count(x => x.IsNew),
                     NotifyEvents = repository.GetPushNotificationByIds(ids)
-                        .Select( x => x.ToModel(AbstractTypeFactory<Core.PushNotifications.PushNotification>.TryCreateInstance()))
+                        .Select( x => x.ToModel(AbstractTypeFactory<PushNotification>.TryCreateInstance()))
                         .ToList()
 
                 };
@@ -69,18 +71,18 @@ namespace VirtoCommerce.Platform.Data.PushNotification
             }
         }
 
-        public IEnumerable<Core.PushNotifications.PushNotification> GetByIds(IEnumerable<string> ids)
+        public IEnumerable<PushNotification> GetByIds(IEnumerable<string> ids)
         {
-            using (var repository = _platformRepository())
+            using (var repository = _platformRepositoryFactory())
             {
                 var entities = repository.GetPushNotificationByIds(ids);
-                return entities.Select(x => x.ToModel(AbstractTypeFactory<Core.PushNotifications.PushNotification>.TryCreateInstance()));
+                return entities.Select(x => x.ToModel(AbstractTypeFactory<PushNotification>.TryCreateInstance()));
             }
         }
 
-        public void SaveChanges(IEnumerable<Core.PushNotifications.PushNotification> notification)
+        public void SaveChanges(IEnumerable<PushNotification> notification)
         {
-            using (var repository = _platformRepository())
+            using (var repository = _platformRepositoryFactory())
             using (var changeTracker = GetChangeTracker(repository))
             {
                 var nonTransientEntryIds = notification.Where(x => x.Id != null).Select(x => x.Id).ToArray();
@@ -108,7 +110,7 @@ namespace VirtoCommerce.Platform.Data.PushNotification
             if (ids == null)
                 throw new ArgumentNullException(nameof(ids));
 
-            using (var repository = _platformRepository())
+            using (var repository = _platformRepositoryFactory())
             {
                 var items = repository.PushNotification
                     .Where(p => ids.Contains(p.Id))

@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Model;
-using VirtoCommerce.Platform.Data.PushNotification;
 
 namespace VirtoCommerce.Platform.Data.Repositories
 {
