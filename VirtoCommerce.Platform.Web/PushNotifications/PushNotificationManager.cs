@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
     [CLSCompliant(false)]
     public class PushNotificationManager : IPushNotificationManager
     {
-        private IPushNotificationService _pushNotificationService;
+        private readonly IPushNotificationService _pushNotificationService;
         private readonly IHubContext _hubSignalR;
 
         public PushNotificationManager(IPushNotificationService pushNotificationService, IHubContext hubSignalR)
@@ -23,10 +23,10 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
         {
             if (notification == null)
             {
-                throw new ArgumentNullException("notification");
+                throw new ArgumentNullException(nameof(notification));
             }
 
-            _pushNotificationService.SaveChanges( new []{ notification });
+            _pushNotificationService.SaveChanges(new[] { notification });
             _hubSignalR.Clients.All.notification(notification);
         }
 
