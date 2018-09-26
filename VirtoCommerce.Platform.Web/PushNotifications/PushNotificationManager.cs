@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
 
         public PushNotificationSearchResult SearchNotifies(string userId, PushNotificationSearchCriteria criteria)
         {
-            return _pushNotificationService.SearchPushNotification(userId, criteria);
+            return _pushNotificationService.SearchPushNotifications(userId, criteria);
         }
     }
 }

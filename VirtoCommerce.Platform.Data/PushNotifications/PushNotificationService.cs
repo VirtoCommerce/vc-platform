@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
             _platformRepositoryFactory = platformRepositoryFactory;
         }
 
-        public PushNotificationSearchResult SearchPushNotification(string userId, PushNotificationSearchCriteria criteria)
+        public PushNotificationSearchResult SearchPushNotifications(string userId, PushNotificationSearchCriteria criteria)
         {
             using (var repository = _platformRepositoryFactory())
             {
@@ -64,7 +64,6 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
                     NotifyEvents = repository.GetPushNotificationByIds(ids)
                         .Select( x => x.ToModel(AbstractTypeFactory<PushNotification>.TryCreateInstance()))
                         .ToList()
-
                 };
 
                 return result;
