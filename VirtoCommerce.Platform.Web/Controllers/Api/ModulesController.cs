@@ -258,7 +258,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("autoinstall")]
         [ResponseType(typeof(webModel.ModuleAutoInstallPushNotification))]
-        [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult TryToAutoInstallModules()
         {
             var notification = new webModel.ModuleAutoInstallPushNotification(User.Identity.Name)

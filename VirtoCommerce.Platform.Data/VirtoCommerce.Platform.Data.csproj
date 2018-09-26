@@ -54,9 +54,6 @@
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
     </Reference>
-    <Reference Include="StackExchange.Redis, Version=1.2.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StackExchange.Redis.1.2.6\lib\net46\StackExchange.Redis.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
@@ -246,6 +243,10 @@
     <Compile Include="Repositories\Migrations\201806181302103_PushNotificationEntity.Designer.cs">
       <DependentUpon>201806181302103_PushNotificationEntity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201809070639174_AddAccountEntityPasswordExpired.cs" />
+    <Compile Include="Repositories\Migrations\201809070639174_AddAccountEntityPasswordExpired.Designer.cs">
+      <DependentUpon>201809070639174_AddAccountEntityPasswordExpired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -265,7 +266,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="VirtoCommerce.Platform.Data.nuspec">
       <SubType>Designer</SubType>
     </None>
@@ -345,6 +348,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201806181302103_PushNotificationEntity.resx">
       <DependentUpon>201806181302103_PushNotificationEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201809070639174_AddAccountEntityPasswordExpired.resx">
+      <DependentUpon>201809070639174_AddAccountEntityPasswordExpired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

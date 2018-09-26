@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Omu.ValueInjecter;
@@ -65,6 +65,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             target.IsAdministrator = source.IsAdministrator;
             target.UserName = source.UserName;
             target.MemberId = source.MemberId;
+            target.PasswordExpired = source.PasswordExpired;
 
             if (!source.ApiAccounts.IsNullCollection())
             {

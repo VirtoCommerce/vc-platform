@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
+using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -249,7 +250,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
                         .FirstOrDefault(x => x.Id == roleId);
         }
 
-        public AccountEntity GetAccountByName(string userName, UserDetails detailsLevel)
+        public async Task<AccountEntity> GetAccountByNameAsync(string userName, UserDetails detailsLevel)
         {
             var query = Accounts;
 
@@ -261,7 +262,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
                     .Include(a => a.ApiAccounts);
             }
 
-            return query.FirstOrDefault(a => a.UserName == userName);
+            return await query.FirstOrDefaultAsync(a => a.UserName == userName);
         }
 
         public DynamicPropertyDictionaryItemEntity[] GetDynamicPropertyDictionaryItems(string propertyId)

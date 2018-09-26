@@ -1,8 +1,8 @@
 .ui-grid,
 .ui-grid-header
   border-color: $baseBrd
-.ui-grid-viewport
-  overflow-x: auto !important
+/*.ui-grid-viewport
+  overflow-x: auto !important*/
 .ui-grid-top-panel
   background: rgba(0,0,0,.024)
 .ui-grid-header-cell
@@ -75,6 +75,14 @@
 .ui-grid-row-header-cell .ui-grid-cell-contents,
 .ui-grid-pinned-container-left .ui-grid-cell-contents
   text-align: center
+.table-wrapper.nowrap .ui-grid-cell-contents
+  white-space: initial
+.table-wrapper.nowrap .ui-grid-cell 
+  height: auto
+  display: table-cell
+  float: none
+.table-wrapper.nowrap .ui-grid-row
+  height: auto
 .ui-grid-cell-contents
   display: inline-block
   font-size: 14px
@@ -153,6 +161,7 @@
     font-size: 17px
     font-family: 'FontAwesome'
     margin: 0
+    opacity: 1
 .ui-grid-selection-row-header-buttons.ui-grid-row-selected,
 .ui-grid-selection-row-header-buttons.ui-grid-all-selected
   &::before

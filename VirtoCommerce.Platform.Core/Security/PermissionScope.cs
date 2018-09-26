@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
@@ -6,7 +6,7 @@ namespace VirtoCommerce.Platform.Core.Security
     /// <summary>
     /// Base class for all types repesents permision boundary scopes
     /// </summary>
-    public class PermissionScope : ValueObject<PermissionScope>
+    public class PermissionScope : ValueObject
     {
         public PermissionScope()
         {
@@ -33,7 +33,8 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         /// <param name="permission"></param>
         /// <returns></returns>
-        public virtual bool IsScopeAvailableForPermission(string permission) {
+        public virtual bool IsScopeAvailableForPermission(string permission)
+        {
             return false;
         }
 
@@ -42,10 +43,11 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual IEnumerable<string> GetEntityScopeStrings(object entity) {
+        public virtual IEnumerable<string> GetEntityScopeStrings(object entity)
+        {
             return null;
         }
-      
+
         public override string ToString()
         {
             return Type + ":" + Scope;

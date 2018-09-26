@@ -1,8 +1,8 @@
-﻿using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Tests.Notifications.Models
 {
-    public class Address : ValueObject<Address>
+    public class Address : ValueObject
     {
         public string Name { get; set; }
         public string Organization { get; set; }

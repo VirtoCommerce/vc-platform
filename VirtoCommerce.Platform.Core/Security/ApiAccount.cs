@@ -16,6 +16,6 @@ namespace VirtoCommerce.Platform.Core.Security
         /// <summary>
         /// The flag indicates that SecretKey  must be changed
         /// </summary>
-        public bool ForceSecretKeyChange { get; set; }
+        public bool SecretKeyExpired { get; set; }
     }
 }

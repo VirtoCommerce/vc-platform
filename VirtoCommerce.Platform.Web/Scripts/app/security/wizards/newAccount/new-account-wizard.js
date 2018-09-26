@@ -1,5 +1,5 @@
-﻿angular.module('platformWebApp')
-.controller('platformWebApp.newAccountWizardController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', function ($scope, bladeNavigationService, accounts, roles) {
+angular.module('platformWebApp')
+.controller('platformWebApp.newAccountWizardController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.passwordValidationService', function ($q, $scope, bladeNavigationService, accounts, roles, passwordValidationService) {
     var blade = $scope.blade;
     var promise = roles.search({ takeCount: 10000 }).$promise;
 
@@ -25,6 +25,10 @@
         bladeNavigationService.showBlade(newBlade, blade);
     };
 
+    $scope.validatePasswordAsync = function (value) {
+        return passwordValidationService.validatePasswordAsync(value);
+    }
+
     $scope.saveChanges = function () {
         if (blade.currentEntity.password != blade.currentEntity.newPassword2) {
             blade.error = 'Error: passwords don\'t match!';
@@ -40,12 +44,8 @@
         accounts.save(postData, function () {
             blade.parentBlade.refresh();
             blade.parentBlade.selectNode(postData);
-        }, function (error) {
-            var errText = 'Error ' + error.status;
-            if (error.data && error.data.message) {
-                errText = errText + ": " + error.data.message;
-            }
-            bladeNavigationService.setError(errText, $scope.blade);
+        }, function (response) {
+            bladeNavigationService.setError(response, $scope.blade);
         });
     };
 

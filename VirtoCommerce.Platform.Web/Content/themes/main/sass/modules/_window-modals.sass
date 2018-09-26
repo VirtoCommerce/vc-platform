@@ -9,7 +9,6 @@
 .modal-backdrop.fade
   background: #000
   opacity: .5
-
   filter: alpha(opacity=50)
 .window,
 .modal-content
@@ -22,8 +21,18 @@
   position: absolute
   top: 50%
   width: 500px
-
   transform: translate(-50%, -50%)
+  .modal-header-error 
+    background: #7a1c13
+    height: auto
+    line-height: 1
+    position: relative
+    z-index: 50;
+    .modal-title 
+      color: #fff
+      font-size: 20px
+      font-weight: 400
+      padding: 10px 20px
 .__gallery .modal-dialog
   background-color: $whiteColor
   border: 5px solid #a1c0d4
@@ -34,7 +43,6 @@
   right: 80px
   top: 40px
   width: auto
-
   transform: none
 .__gallery .modal-content
   box-shadow: none
@@ -42,7 +50,6 @@
   margin: 0
   position: static
   width: 100%
-
   transform: none
   .modal-body
     height: 100%

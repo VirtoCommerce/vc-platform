@@ -1,3 +1,15 @@
+/* General classes for text */
+.text-error
+  color: $errorNotifyColor
+.text-success
+  color: $successNotifyColor
+.text-warning
+  color: $warningNotifyColor
+.text-info
+  color: $infoNotifyColor
+.text-notify
+  color: $noteNotifyColor
+
 /* Lists */
 ul,
 ol
@@ -996,7 +1008,6 @@ $names: "", ".double", ".triple", ".quadro"
   .menu-ico
     font-size: 14px
 
-@import "modules/_window-modals.sass"
 
 /* Breadcrumbs */
 .breadcrumbs
@@ -1258,6 +1269,9 @@ $names: "", ".double", ".triple", ".quadro"
 /* Columns */
 .columns
   padding: 15px 0
+  &:last-of-type
+    clear: both
+    padding-top: 0
 .form.columns
   padding: 0
 @include column(".column", 3, $multipleOnly: true)
@@ -1594,8 +1608,9 @@ tags-input
         right: 0
         top: 0
         z-index: 300
-
         filter: alpha(opacity=50)
+        display: flex
+        box-sizing: border-box
         &::after
           color: $whiteColor
           content: ''
@@ -1603,6 +1618,20 @@ tags-input
           left: 20px
           position: absolute
           top: 2px
+      .error-message 
+        flex-grow: 1
+        overflow: hidden
+        text-overflow: ellipsis
+        white-space: nowrap
+        padding-right: 15px
+      .link-error-details 
+        color: #999
+        float: right
+        margin-right: 80px
+        margin-top: -1px
+        text-decoration: underline
+        &::hover
+          color: $whiteColor
       .progress-bar
         bottom: 0
         height: auto

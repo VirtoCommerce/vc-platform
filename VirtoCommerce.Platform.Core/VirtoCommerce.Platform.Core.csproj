@@ -71,6 +71,7 @@
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\ConfigManagerExtensions.cs" />
+    <Compile Include="Common\ICacheKey.cs" />
     <Compile Include="Common\ICancellationToken.cs" />
     <Compile Include="Common\IEntity.cs" />
     <Compile Include="Common\IFactory.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Events\ChangedEntryEvent.cs" />
     <Compile Include="Events\DomainEvent.cs" />
     <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Events\EventSupressor.cs" />
     <Compile Include="Events\ICancellableEventHandler.cs" />
     <Compile Include="Events\IChangedEntryEvent.cs" />
     <Compile Include="Events\IEvent.cs" />
@@ -219,7 +221,6 @@
     <Compile Include="Security\ApiAccount.cs" />
     <Compile Include="Security\ApiAccountType.cs" />
     <Compile Include="Security\ApplicationUserExtended.cs" />
-    <Compile Include="Security\AuthentificationOptions.cs" />
     <Compile Include="Security\Events\UserChangedEvent.cs" />
     <Compile Include="Security\Events\UserChangingEvent.cs" />
     <Compile Include="Security\Events\UserPasswordChangedEvent.cs" />
@@ -228,8 +229,10 @@
     <Compile Include="Security\Events\UserLoginEvent.cs" />
     <Compile Include="Security\ICurrentUser.cs" />
     <Compile Include="Security\IHasSecurityAccounts.cs" />
+    <Compile Include="Security\IPasswordCheckService.cs" />
     <Compile Include="Security\ISupportSecurityScopes.cs" />
     <Compile Include="Security\IUserNameResolver.cs" />
+    <Compile Include="Security\PasswordValidationResult.cs" />
     <Compile Include="Security\VirtoCommerceClaimTypes.cs" />
     <Compile Include="Security\IPermissionScopeService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />

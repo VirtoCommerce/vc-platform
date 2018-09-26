@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using CacheManager.Core;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
@@ -21,12 +20,15 @@ namespace VirtoCommerce.Platform.Web
     {
         public const string PublicClientId = "web";
 
-        public static void Configure(IAppBuilder app, IUnityContainer container, AuthenticationOptions authenticationOptions)
+        public static void Configure(IAppBuilder app, IUnityContainer container)
         {
             app.CreatePerOwinContext(() => container.Resolve<SecurityDbContext>());
             app.CreatePerOwinContext(() => container.Resolve<ApplicationUserManager>());
 
-            app.UseCors(CorsOptions.AllowAll);
+            //Commented out for security reasons
+            //app.UseCors(CorsOptions.AllowAll);
+
+            var authenticationOptions = container.Resolve<AuthenticationOptions>();
 
             if (authenticationOptions.CookiesEnabled)
             {
@@ -35,15 +37,25 @@ namespace VirtoCommerce.Platform.Web
                 // Configure the sign in cookie
                 app.UseCookieAuthentication(new CookieAuthenticationOptions
                 {
-                    AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                    //LoginPath = new PathString("/Account/Logon"),
+                    AuthenticationMode = authenticationOptions.AuthenticationMode,
+                    AuthenticationType = authenticationOptions.AuthenticationType,
+                    CookieDomain = authenticationOptions.CookieDomain,
+                    CookieHttpOnly = authenticationOptions.CookieHttpOnly,
+                    CookieName = authenticationOptions.CookieName,
+                    CookiePath = authenticationOptions.CookiePath,
+                    CookieSecure = authenticationOptions.CookieSecure,
+                    ExpireTimeSpan = authenticationOptions.ExpireTimeSpan,
+                    LoginPath = authenticationOptions.LoginPath,
+                    LogoutPath = authenticationOptions.LogoutPath,
+                    ReturnUrlParameter = authenticationOptions.ReturnUrlParameter,
+                    SlidingExpiration = authenticationOptions.SlidingExpiration,
                     Provider = new CookieAuthenticationProvider
                     {
                         // Enables the application to validate the security stamp when the user logs in.
                         // This is a security feature which is used when you change a password or add an external login to your account.  
                         OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
                             validateInterval: authenticationOptions.CookiesValidateInterval,
-                            regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                            regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager, authenticationOptions.AuthenticationType))
                     }
                 });
             }
