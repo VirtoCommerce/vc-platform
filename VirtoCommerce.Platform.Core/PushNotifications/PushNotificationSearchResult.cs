@@ -11,6 +11,6 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
 
         public int TotalCount { get; set; }
         public int NewCount { get; set; }
-        public IList<PushNotification> NotifyEvents { get; set; }
+        public List<PushNotification> NotifyEvents { get; set; }
     }
 }
