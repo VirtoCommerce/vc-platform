@@ -7,12 +7,28 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
     {
         public override void Up()
         {
-            RenameTable(name: "dbo.PlatformPushNotifcation", newName: "PlatformPushNotification");
+            CreateTable(
+                "dbo.PlatformPushNotification",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Type = c.String(maxLength: 128),
+                        IsNew = c.Boolean(nullable: false),
+                        Title = c.String(),
+                        Description = c.String(),
+                        RepeatCount = c.Int(nullable: false),
+                        CreatedDate = c.DateTime(nullable: false),
+                        ModifiedDate = c.DateTime(),
+                        CreatedBy = c.String(maxLength: 64),
+                        ModifiedBy = c.String(maxLength: 64),
+                    })
+                .PrimaryKey(t => t.Id);
+            
         }
         
         public override void Down()
         {
-            RenameTable(name: "dbo.PlatformPushNotification", newName: "PlatformPushNotifcation");
+            DropTable("dbo.PlatformPushNotification");
         }
     }
 }
