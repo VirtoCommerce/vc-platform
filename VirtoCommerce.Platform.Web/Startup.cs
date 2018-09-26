@@ -641,7 +641,6 @@ namespace VirtoCommerce.Platform.Web
 
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
             var notifier = new InMemoryPushNotificationManager(hubSignalR);
-            //container.RegisterInstance<IPushNotificationManager>(notifier);
 
             var pushNotifocationService = new PushNotificationService(platformRepositoryFactory);
             var pushNotificationManager = new PushNotificationManager(pushNotifocationService, hubSignalR);
