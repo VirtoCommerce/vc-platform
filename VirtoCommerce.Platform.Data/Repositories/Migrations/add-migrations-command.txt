@@ -1,1 +1,0 @@
-﻿add-migration -Name NameOfMigration -ConfigurationTypeName VirtoCommerce.Platform.Data.Repositories.Migrations.Configuration -ConnectionString "Data Source=(local);Initial Catalog=VirtoCommerce2;Persist Security Info=True;User ID=virto;Password=virto;MultipleActiveResultSets=True;Connect Timeout=420"  -ConnectionProviderName "System.Data.SqlClient"
