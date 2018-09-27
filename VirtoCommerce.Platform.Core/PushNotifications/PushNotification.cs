@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -9,8 +9,9 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
         public PushNotification()
         {
             Id = Guid.NewGuid().ToString("N");
+            Created = DateTime.UtcNow;
             IsNew = true;
-            NotifyType = this.GetType().Name;
+            NotifyType = GetType().Name;
         }
 
         public PushNotification(string creator) : this()
