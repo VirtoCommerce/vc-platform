@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
     {
         PushNotificationSearchResult SearchPushNotifications(string userId, PushNotificationSearchCriteria criteria);
         IEnumerable<PushNotification> GetByIds(IEnumerable<string> ids);
-        void SaveChanges(IEnumerable<PushNotification> notification);
+        void SaveChanges(IEnumerable<PushNotification> notifications);
         void Delete(IEnumerable<string> ids);
     }
 }

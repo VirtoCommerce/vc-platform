@@ -74,22 +74,24 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
         {
             using (var repository = _platformRepositoryFactory())
             {
-                var entities = repository.GetPushNotificationByIds(ids);
+                var entities = repository.GetPushNotificationsByIds(ids);
                 return entities.Select(x => x.ToModel(AbstractTypeFactory<PushNotification>.TryCreateInstance()));
             }
         }
 
-        public void SaveChanges(IEnumerable<PushNotification> notification)
+        public void SaveChanges(IEnumerable<PushNotification> notifications)
         {
             using (var repository = _platformRepositoryFactory())
             using (var changeTracker = GetChangeTracker(repository))
             {
-                var nonTransientEntryIds = notification.Where(x => x.Id != null).Select(x => x.Id).ToArray();
+                var nonTransientEntryIds = notifications.Where(x => x.Id != null).Select(x => x.Id).ToArray();
                 var originalDataEntities = repository.PushNotification.Where(x => nonTransientEntryIds.Contains(x.Id)).ToList();
-                foreach (var entry in notification)
+
+                foreach (var entry in notifications)
                 {
-                    var originalEntity = originalDataEntities.FirstOrDefault(x => x.Id == entry.Id);
                     var modifiedEntity = AbstractTypeFactory<PushNotificationEntity>.TryCreateInstance().FromModel(entry);
+
+                    var originalEntity = originalDataEntities.FirstOrDefault(x => x.Id == entry.Id);
                     if (originalEntity != null)
                     {
                         changeTracker.Attach(originalEntity);
@@ -100,6 +102,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
                         repository.Add(modifiedEntity);
                     }
                 }
+
                 CommitChanges(repository);
             }
         }

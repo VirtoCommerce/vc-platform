@@ -318,7 +318,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             return result;
         }
 
-        public PushNotificationEntity[] GetPushNotificationByIds(IEnumerable<string> ids)
+        public PushNotificationEntity[] GetPushNotificationsByIds(IEnumerable<string> ids)
         {
             return PushNotification.Where(x => ids.Contains(x.Id)).ToArray();
         }

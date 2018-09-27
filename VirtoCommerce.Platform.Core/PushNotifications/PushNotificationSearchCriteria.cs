@@ -9,6 +9,7 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
 		{
 			Count = 20;
 		}
+
 		public string[] Ids { get; set; }
 		public bool OnlyNew { get; set; }
 		public DateTime? StartDate { get; set; }
