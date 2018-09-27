@@ -45,25 +45,42 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
                 }
 
                 var sortInfos = SortInfo.Parse(criteria.OrderBy).ToArray();
-                if (sortInfos.IsNullOrEmpty())
+                if (!sortInfos.IsNullOrEmpty())
                 {
-                    sortInfos = new[] { new SortInfo { SortColumn = "Creator", SortDirection = SortDirection.Descending } };
+                    // Note that PushNotificationEntity property names differ from PushNotification property names,
+                    // so for proper sorting we'll need to map sort column name to corresponding property of entity.
+                    foreach (var sortInfo in sortInfos)
+                    {
+                        sortInfo.SortColumn = MapSortColumnNameToEntityFieldName(sortInfo.SortColumn);
+                    }
+                }
+                else
+                {
+                    sortInfos = new[]
+                    {
+                        new SortInfo
+                        {
+                            SortColumn = nameof(PushNotificationEntity.CreatedDate),
+                            SortDirection = SortDirection.Descending
+                        }
+                    };
                 }
                 query = query.OrderBySortInfos(sortInfos);
 
-                var ids = query
+                var notificationEntities = query
                     .Skip(criteria.Start)
                     .Take(criteria.Count)
-                    .Select(x => x.Id)
+                    .ToList();
+
+                var notifyEvents = notificationEntities
+                    .Select(x => x.ToModel(AbstractTypeFactory<PushNotification>.TryCreateInstance()))
                     .ToList();
 
                 var result = new PushNotificationSearchResult
                 {
-                    TotalCount = query.Count(),
-                    NewCount = query.Count(x => x.IsNew),
-                    NotifyEvents = repository.GetPushNotificationByIds(ids)
-                        .Select( x => x.ToModel(AbstractTypeFactory<PushNotification>.TryCreateInstance()))
-                        .ToList()
+                    TotalCount = notifyEvents.Count,
+                    NewCount = notifyEvents.Count(x => x.IsNew),
+                    NotifyEvents = notifyEvents
                 };
 
                 return result;
@@ -124,6 +141,28 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
                 }
 
                 repository.UnitOfWork.Commit();
+            }
+        }
+
+
+        protected virtual string MapSortColumnNameToEntityFieldName(string sortColumnName)
+        {
+            if (string.IsNullOrWhiteSpace(sortColumnName))
+                return string.Empty;
+
+            switch (sortColumnName)
+            {
+                case "Created":
+                    return nameof(PushNotificationEntity.CreatedDate);
+
+                case "NotifyType":
+                    return nameof(PushNotificationEntity.Type);
+
+                case "Title":
+                    return nameof(PushNotificationEntity.Title);
+
+                default:
+                    return sortColumnName;
             }
         }
     }
