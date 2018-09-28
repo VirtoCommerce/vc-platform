@@ -639,10 +639,8 @@ namespace VirtoCommerce.Platform.Web
 
             #region Notifications
 
-            var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
-            var notifier = new InMemoryPushNotificationManager(hubSignalR);
-
             var pushNotifocationService = new PushNotificationService(platformRepositoryFactory);
+            var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
             var pushNotificationManager = new PushNotificationManager(pushNotifocationService, hubSignalR);
             container.RegisterInstance<IPushNotificationManager>(pushNotificationManager);
 
@@ -705,7 +703,7 @@ namespace VirtoCommerce.Platform.Web
 
             var modulesDataSources = ConfigurationHelper.SplitAppSettingsStringValue("VirtoCommerce:ModulesDataSources");
             var externalModuleCatalog = new ExternalManifestModuleCatalog(moduleCatalog.Modules, modulesDataSources, container.Resolve<ILog>());
-            container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, new ModuleInstaller(modulesPath, externalModuleCatalog), notifier, container.Resolve<IUserNameResolver>(), settingsManager));
+            container.RegisterType<ModulesController>(new InjectionConstructor(externalModuleCatalog, new ModuleInstaller(modulesPath, externalModuleCatalog), pushNotificationManager, container.Resolve<IUserNameResolver>(), settingsManager));
 
             #endregion
 
