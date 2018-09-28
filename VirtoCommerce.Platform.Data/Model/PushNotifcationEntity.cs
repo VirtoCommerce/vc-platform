@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
@@ -7,17 +8,13 @@ namespace VirtoCommerce.Platform.Data.Model
 {
     public class PushNotificationEntity : AuditableEntity
     {
-        public PushNotificationEntity()
-        {
-            Type = GetType().Name;
-        }
-
         [StringLength(128)]
         public string Type { get; set; }
         public bool IsNew { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
-        public int RepeatCount { get; set; }
+
+        public string AssemblyQualifiedType { get; set; }
+        public string SourceNotificationAsJson { get; set; }
 
         public virtual PushNotificationEntity FromModel(PushNotification notification)
         {
@@ -25,36 +22,43 @@ namespace VirtoCommerce.Platform.Data.Model
                 throw new ArgumentNullException(nameof(notification));
 
             Id = notification.Id;
-            Description = notification.Description;
-            Title = notification.Title;
+            CreatedDate = notification.Created;
+            CreatedBy = notification.Creator;
             IsNew = notification.IsNew;
-            RepeatCount = notification.RepeatCount;
+            Title = notification.Title;
             Type = notification.NotifyType;
+
+            // Note: we are not using Type.AssemblyQualifiedType here, because it includes assembly version,
+            // which may lead to assembly mismatch failures when updating modules or the platform itself.
+            var notificationType = notification.GetType();
+            AssemblyQualifiedType = $"{notificationType.FullName}, {notificationType.Assembly.GetName().Name}";
+
+            SourceNotificationAsJson = JsonConvert.SerializeObject(notification);
 
             return this;
         }
 
-        public PushNotification ToModel(PushNotification notifcation)
+        public virtual PushNotification ToModel(PushNotification notification)
         {
-            notifcation.Id = Id;
-            notifcation.Created = CreatedDate;
-            notifcation.Creator = CreatedBy;
-            notifcation.Description = Description;
-            notifcation.IsNew = IsNew;
-            notifcation.NotifyType = Type;
-            notifcation.RepeatCount = RepeatCount;
-            notifcation.Title = Title;
+            notification.Id = Id;
+            notification.Created = CreatedDate;
+            notification.Creator = CreatedBy;
+            notification.IsNew = IsNew;
+            notification.NotifyType = Type;
+            notification.Title = Title;
 
-            return notifcation;
+            JsonConvert.PopulateObject(SourceNotificationAsJson, notification);
+
+            return notification;
         }
 
         public virtual void Patch(PushNotificationEntity target)
         {
-            target.Description = Description;
             target.IsNew = IsNew;
-            target.RepeatCount = RepeatCount;
             target.Title = Title;
             target.Type = Type;
+            target.AssemblyQualifiedType = AssemblyQualifiedType;
+            target.SourceNotificationAsJson = SourceNotificationAsJson;
         }
     }
 }

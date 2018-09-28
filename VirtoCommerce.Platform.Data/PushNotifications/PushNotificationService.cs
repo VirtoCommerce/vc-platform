@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -72,9 +73,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
                     .Take(criteria.Count)
                     .ToList();
 
-                var notifyEvents = notificationEntities
-                    .Select(x => x.ToModel(AbstractTypeFactory<PushNotification>.TryCreateInstance()))
-                    .ToList();
+                var notifyEvents = ConvertEntitiesToModels(notificationEntities).ToList();
 
                 var result = new PushNotificationSearchResult
                 {
@@ -92,7 +91,7 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
             using (var repository = _platformRepositoryFactory())
             {
                 var entities = repository.GetPushNotificationsByIds(ids);
-                return entities.Select(x => x.ToModel(AbstractTypeFactory<PushNotification>.TryCreateInstance()));
+                return ConvertEntitiesToModels(entities);
             }
         }
 
@@ -163,6 +162,20 @@ namespace VirtoCommerce.Platform.Data.PushNotifications
 
                 default:
                     return sortColumnName;
+            }
+        }
+
+        protected virtual IEnumerable<PushNotification> ConvertEntitiesToModels(IEnumerable<PushNotificationEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                var targetTypeName = entity.AssemblyQualifiedType;
+                var targetType = Type.GetType(targetTypeName) ?? typeof(PushNotification);
+
+                if (!(FormatterServices.GetUninitializedObject(targetType) is PushNotification zeroedNotification))
+                    zeroedNotification = AbstractTypeFactory<PushNotification>.TryCreateInstance();
+
+                yield return entity.ToModel(zeroedNotification);
             }
         }
     }
