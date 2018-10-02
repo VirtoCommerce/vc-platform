@@ -72,35 +72,60 @@ namespace VirtoCommerce.Platform.Web.Controllers
             }
             ApplicationUserExtended platformUser = null;
 
+            // If the user does not have an account, then create a new account for them.
+            var userName = externalLoginInfo.ExternalIdentity.FindFirstValue(ClaimTypes.Upn) ?? externalLoginInfo.DefaultUserName;
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
+            }
+
             var signInManager = _signInManagerFactory();
             var externalLoginResult = await signInManager.ExternalSignInAsync(externalLoginInfo, false);
 
             if (externalLoginResult == SignInStatus.Failure)
             {
-                // If the user does not have an account, then create an new account for them.
-                var userName = externalLoginInfo.ExternalIdentity.FindFirstValue(ClaimTypes.Upn) ?? externalLoginInfo.DefaultUserName;
-                if (string.IsNullOrWhiteSpace(userName))
+                platformUser = await _securityService.FindByNameAsync(userName, UserDetails.Full);
+                if (platformUser != null)
                 {
-                    throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
+                    // The VC platform user account already exists, it is just missing an external login info.
+                    var existingLogins = platformUser.Logins?.ToList() ?? new List<ApplicationUserLogin>();
+                    existingLogins.Add(
+                        new ApplicationUserLogin
+                        {
+                            LoginProvider = externalLoginInfo.Login.LoginProvider,
+                            ProviderKey = externalLoginInfo.Login.ProviderKey
+                        });
+                    platformUser.Logins = existingLogins.ToArray();
+
+                    var securityResult = await _securityService.UpdateAsync(platformUser);
+                    if (!securityResult.Succeeded)
+                    {
+                        var joinedErrors = string.Join(Environment.NewLine, securityResult.Errors);
+                        throw new InvalidOperationException($"Failed to add external login info to the VC platform account '{userName}' due to errors: " + joinedErrors);
+                    }
                 }
-                platformUser = new ApplicationUserExtended
+                else
                 {
-                    UserName = userName,
-                    UserType = _authenticationOptions.AzureAdDefaultUserType,
-                    Logins = new[] {
-                          new ApplicationUserLogin
+                    platformUser = new ApplicationUserExtended
+                    {
+                        UserName = userName,
+                        UserType = _authenticationOptions.AzureAdDefaultUserType,
+                        Logins = new[] {
+                            new ApplicationUserLogin
                             {
                                 LoginProvider = externalLoginInfo.Login.LoginProvider,
                                 ProviderKey = externalLoginInfo.Login.ProviderKey
                             }
+                        }
+                    };
+                    var securityResult = await _securityService.CreateAsync(platformUser);
+                    if (!securityResult.Succeeded)
+                    {
+                        var joinedErrors = string.Join(Environment.NewLine, securityResult.Errors);
+                        throw new InvalidOperationException("Failed to create a VC platform account due to errors: " + joinedErrors);
                     }
-                };
-                var securityResult = await _securityService.CreateAsync(platformUser);
-                if (!securityResult.Succeeded)
-                {
-                    var joinedErrors = string.Join(Environment.NewLine, securityResult.Errors);
-                    throw new InvalidOperationException("Failed to create a VC platform account due to errors: " + joinedErrors);
                 }
+
                 var aspNetUser = await signInManager.UserManager.FindByNameAsync(platformUser.UserName);
                 await signInManager.SignInAsync(aspNetUser, isPersistent: true, rememberBrowser: true);
             }
@@ -112,7 +137,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             if (platformUser == null)
             {
-                platformUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full);
+                platformUser = await _securityService.FindByNameAsync(userName, UserDetails.Full);
             }
             await _eventPublisher.Publish(new UserLoginEvent(platformUser));
             return Redirect(returnUrl);
