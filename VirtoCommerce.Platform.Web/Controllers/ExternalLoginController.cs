@@ -68,124 +68,55 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var externalLoginInfo = await authenticationManager.GetExternalLoginInfoAsync();
             if (externalLoginInfo == null)
             {
-                return Redirect(returnUrl);
+                return RedirectToAction("Index", "Home");
             }
-
-            var identity = externalLoginInfo.ExternalIdentity;
-            var userName = identity.FindFirstValue(ClaimTypes.Upn);
-            if (string.IsNullOrWhiteSpace(userName))
-            {
-                throw new InvalidOperationException("Received external login info does not have an UPN claim.");
-            }
+            ApplicationUserExtended platformUser = null;
 
             var signInManager = _signInManagerFactory();
             var externalLoginResult = await signInManager.ExternalSignInAsync(externalLoginInfo, false);
 
-            switch (externalLoginResult)
+            if (externalLoginResult == SignInStatus.Failure)
             {
-                case SignInStatus.Success:
-                case SignInStatus.Failure:
-                    await CreateOrUpdatePlatformUser(externalLoginInfo, userName, signInManager);
-                    return Redirect(returnUrl);
-
-                case SignInStatus.LockedOut:
-                case SignInStatus.RequiresVerification:
-                    // TODO: handle user lock-out and two-factor authentication
-                    return Redirect(returnUrl);
-
-                default:
-                    throw new InvalidOperationException($"External login result has the unexpected value: {externalLoginResult}.");
-            }
-        }
-
-        private async Task CreateOrUpdatePlatformUser(ExternalLoginInfo externalLoginInfo, string userName,
-            ApplicationSignInManager signInManager)
-        {
-            var platformUser = await _securityService.FindByNameAsync(userName, UserDetails.Reduced);
-            if (platformUser != null)
-            {
-                await AddExternalLoginToExistingUser(platformUser, externalLoginInfo);
-            }
-            else
-            {
-                platformUser = await RegisterExternalUser(userName, externalLoginInfo);
-            }
-
-            await SignInPlatformUser(platformUser, signInManager);
-        }
-
-        private async Task AddExternalLoginToExistingUser(ApplicationUserExtended platformUser,
-            ExternalLoginInfo externalLoginInfo)
-        {
-            var externalLogins = platformUser.Logins?.ToList() ?? new List<ApplicationUserLogin>();
-
-            if (externalLogins.Any(existingLogin =>
-                existingLogin.LoginProvider == externalLoginInfo.Login.LoginProvider &&
-                existingLogin.ProviderKey == externalLoginInfo.Login.ProviderKey))
-            {
-                // The user account is already linked with current external login, so there is no need to modify it.
-                return;
-            }
-
-            var newExternalLogin = ConvertExternalLoginInfoToExternalLogin(externalLoginInfo);
-            externalLogins.Add(newExternalLogin);
-
-            platformUser.Logins = externalLogins.ToArray();
-
-            var result = await _securityService.UpdateAsync(platformUser);
-            if (!result.Succeeded)
-            {
-                var joinedErrors = string.Join(Environment.NewLine, result.Errors);
-                throw new InvalidOperationException("Failed to link VC platform account with external login due to errors: " + joinedErrors);
-            }
-        }
-
-        private async Task<ApplicationUserExtended> RegisterExternalUser(string userName, ExternalLoginInfo externalLoginInfo)
-        {
-            var user = new ApplicationUserExtended
-            {
-                UserName = userName,
-                UserType = _authenticationOptions.AzureAdDefaultUserType,
-
-                Logins = new[]
+                // If the user does not have an account, then create an new account for them.
+                var userName = externalLoginInfo.ExternalIdentity.FindFirstValue(ClaimTypes.Upn) ?? externalLoginInfo.DefaultUserName;
+                if (string.IsNullOrWhiteSpace(userName))
                 {
-                    ConvertExternalLoginInfoToExternalLogin(externalLoginInfo)
+                    throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
                 }
-            };
-
-            var securityResult = await _securityService.CreateAsync(user);
-            if (!securityResult.Succeeded)
+                platformUser = new ApplicationUserExtended
+                {
+                    UserName = userName,
+                    UserType = _authenticationOptions.AzureAdDefaultUserType,
+                    Logins = new[] {
+                          new ApplicationUserLogin
+                            {
+                                LoginProvider = externalLoginInfo.Login.LoginProvider,
+                                ProviderKey = externalLoginInfo.Login.ProviderKey
+                            }
+                    }
+                };
+                var securityResult = await _securityService.CreateAsync(platformUser);
+                if (!securityResult.Succeeded)
+                {
+                    var joinedErrors = string.Join(Environment.NewLine, securityResult.Errors);
+                    throw new InvalidOperationException("Failed to create a VC platform account due to errors: " + joinedErrors);
+                }
+                var aspNetUser = await signInManager.UserManager.FindByNameAsync(platformUser.UserName);
+                await signInManager.SignInAsync(aspNetUser, isPersistent: true, rememberBrowser: true);
+            }
+            else if (externalLoginResult == SignInStatus.LockedOut || externalLoginResult == SignInStatus.RequiresVerification)
             {
-                var joinedErrors = string.Join(Environment.NewLine, securityResult.Errors);
-                throw new InvalidOperationException("Failed to create a VC platform account due to errors: " + joinedErrors);
+                // TODO: handle user lock-out and two-factor authentication
+                return RedirectToAction("Index", "Home");
             }
 
-            return user;
-        }
-
-        private ApplicationUserLogin ConvertExternalLoginInfoToExternalLogin(ExternalLoginInfo externalLoginInfo)
-        {
-            var externalLogin = externalLoginInfo.Login;
-            return new ApplicationUserLogin
+            if (platformUser == null)
             {
-                LoginProvider = externalLogin.LoginProvider,
-                ProviderKey = externalLogin.ProviderKey
-            };
-        }
-
-        private async Task SignInPlatformUser(ApplicationUserExtended platformUser, ApplicationSignInManager signInManager)
-        {
-            var userName = platformUser.UserName;
-
-            var userManager = _userManagerFactory();
-            var aspnetUser = await userManager.FindByNameAsync(userName);
-            if (aspnetUser == null)
-            {
-                throw new InvalidOperationException($"ASP.NET Identity account for user '{userName}' could not be found.");
+                platformUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full);
             }
-
-            await signInManager.SignInAsync(aspnetUser, true, true);
             await _eventPublisher.Publish(new UserLoginEvent(platformUser));
+            return Redirect(returnUrl);
         }
+
     }
 }
