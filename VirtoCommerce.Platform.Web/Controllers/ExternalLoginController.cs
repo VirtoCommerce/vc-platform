@@ -73,6 +73,13 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             ApplicationUserExtended platformUser = null;
 
+            //try yo take an user name from claims
+            var userName = externalLoginInfo.ExternalIdentity.FindFirstValue(ClaimTypes.Upn) ?? externalLoginInfo.DefaultUserName;
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
+            }
+
             var signInManager = _signInManagerFactory();
             var externalLoginResult = await signInManager.ExternalSignInAsync(externalLoginInfo, false);
             if (externalLoginResult == SignInStatus.Failure)
@@ -80,7 +87,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 //Need handle the two cases
                 //first - when the VC platform user account already exists, it is just missing an external login info and
                 //second - when user does not have an account, then create a new account for them
-                platformUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full);
+                platformUser = await _securityService.FindByNameAsync(userName, UserDetails.Full);
                 var newExtenalLogin = new ApplicationUserLogin
                 {
                     LoginProvider = externalLoginInfo.Login.LoginProvider,
@@ -89,12 +96,6 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
                 if (platformUser == null)
                 {
-                    //try yo take an user name from claims
-                    var userName = externalLoginInfo.ExternalIdentity.FindFirstValue(ClaimTypes.Upn) ?? externalLoginInfo.DefaultUserName;
-                    if (string.IsNullOrWhiteSpace(userName))
-                    {
-                        throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
-                    }
                     platformUser = new ApplicationUserExtended
                     {
                         UserName = userName,
@@ -121,7 +122,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             }
             if (platformUser == null)
             {
-                platformUser = await _securityService.FindByNameAsync(User.Identity.Name, UserDetails.Full);
+                platformUser = await _securityService.FindByNameAsync(userName, UserDetails.Full);
             }
             await _eventPublisher.Publish(new UserLoginEvent(platformUser));
             return Redirect(returnUrl);
