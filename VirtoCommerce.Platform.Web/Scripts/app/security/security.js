@@ -6,7 +6,12 @@ angular.module('platformWebApp')
                 url: '/login',
                 templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
                 controller: [
-                    '$scope', 'platformWebApp.authService', function ($scope, authService) {
+                    '$scope', 'platformWebApp.authService', 'platformWebApp.externalSignInService', function ($scope, authService, externalSignInService) {
+                        externalSignInService.getProviders().then(
+                            function (response) {
+                                $scope.externalLoginProviders = response.data;
+                            });
+
                         $scope.user = {};
                         $scope.authError = null;
                         $scope.authReason = false;

@@ -1,10 +1,12 @@
 using System;
 using CacheManager.Core;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
-using Microsoft.Owin.Cors;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
+using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Practices.Unity;
 using Owin;
 using VirtoCommerce.Platform.Core.Security;
@@ -13,6 +15,7 @@ using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Authentication.ApiKeys;
 using VirtoCommerce.Platform.Data.Security.Authentication.Hmac;
 using VirtoCommerce.Platform.Data.Security.Identity;
+using AuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -101,6 +104,29 @@ namespace VirtoCommerce.Platform.Web
                         QueryStringParameterName = authenticationOptions.ApiKeysQueryStringParameterName
                     });
                 }
+            }
+
+            if (authenticationOptions.AzureAdAuthenticationEnabled)
+            {
+                // Cookie authentication to temporarily store external authentication data.
+                // NOTE: AuthenticationType should not change - it is used internally by ASP.NET external authentication code!
+                app.UseCookieAuthentication(new CookieAuthenticationOptions
+                {
+                    AuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
+                    AuthenticationMode = AuthenticationMode.Passive
+                });
+
+                var authority = authenticationOptions.AzureAdInstance + authenticationOptions.AzureAdTenantId;
+                app.UseOpenIdConnectAuthentication(
+                    new OpenIdConnectAuthenticationOptions
+                    {
+                        AuthenticationType = authenticationOptions.AzureAdAuthenticationType,
+                        Caption = authenticationOptions.AzureAdAuthenticationCaption,
+                        ClientId = authenticationOptions.AzureAdApplicationId,
+                        Authority = authority,
+                        AuthenticationMode = AuthenticationMode.Passive,
+                        SignInAsAuthenticationType = DefaultAuthenticationTypes.ExternalCookie
+                    });
             }
 
             app.Use<CurrentUserOwinMiddleware>(container.Resolve<Func<ICurrentUser>>());

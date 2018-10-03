@@ -536,6 +536,7 @@
           "login": "Login",
           "password": "Password",
           "remember-me": "Remember me",
+          "external-sign-in": "Sign in with {{displayName}}",
           "forgot-password": "Forgot your password?",
           "log-in": "Log in"
         }

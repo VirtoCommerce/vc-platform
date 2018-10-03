@@ -18,6 +18,7 @@ using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Resources;
+using PlatformAuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -38,7 +39,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// </summary>
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
-                                  INotificationManager notificationManager,
+                                  INotificationManager notificationManager, 
                                   IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions,
                                   IPasswordCheckService passwordCheckService, IEventPublisher eventPublisher)
         {

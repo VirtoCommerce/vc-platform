@@ -536,6 +536,7 @@
                     "login": "Логин",
                     "password": "Пароль",
                     "remember-me": "Запомнить меня",
+                    "external-sign-in": "Войти при помощи {{displayName}}",
                     "forgot-password": "Забыли пароль?",
                     "log-in": "Войти"
                 }

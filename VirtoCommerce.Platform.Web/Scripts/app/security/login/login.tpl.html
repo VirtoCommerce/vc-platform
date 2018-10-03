@@ -1,4 +1,4 @@
-﻿<div class="window">
+<div class="window">
     <div class="window-status" ng-if="loginProgress">
         <div class="progress-bar"></div>
     </div>
@@ -37,6 +37,11 @@
                 <div class="form-error" ng-if="authError">
                     {{authError}}
                 </div>
+            </div>
+            <div class="form-group" ng-repeat="provider in externalLoginProviders">
+                <a ng-href="externalsignin?authenticationType={{provider.authenticationType}}">
+                    <label class="form-label">{{ 'platform.blades.login.labels.external-sign-in' | translate: provider }}</label>
+                </a>
             </div>
             <div class="clearfix">
                 <div class="column">
