@@ -1,45 +1,44 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Data.Security.Identity;
-
+using VirtoCommerce.Platform.Web.Model.Security;
 using PlatformAuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 
 namespace VirtoCommerce.Platform.Web.Controllers
 {
-    [RoutePrefix("")]
+    [RoutePrefix("externalsignin")]
     public class ExternalLoginController : Controller
     {
         private readonly Func<IAuthenticationManager> _authenticationManagerFactory;
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
-        private readonly Func<ApplicationUserManager> _userManagerFactory;
         private readonly ISecurityService _securityService;
         private readonly IEventPublisher _eventPublisher;
         private readonly PlatformAuthenticationOptions _authenticationOptions;
 
         public ExternalLoginController(Func<IAuthenticationManager> authenticationManagerFactory, Func<ApplicationSignInManager> signInManagerFactory,
-            Func<ApplicationUserManager> userManagerFactory, ISecurityService securityService, IEventPublisher eventPublisher,
-            PlatformAuthenticationOptions authenticationOptions)
+            ISecurityService securityService, IEventPublisher eventPublisher, PlatformAuthenticationOptions authenticationOptions)
         {
             _authenticationManagerFactory = authenticationManagerFactory;
             _signInManagerFactory = signInManagerFactory;
-            _userManagerFactory = userManagerFactory;
             _securityService = securityService;
             _eventPublisher = eventPublisher;
             _authenticationOptions = authenticationOptions;
         }
 
         [HttpGet]
-        [Route("externalsignin")]
+        [Route("")]
         [AllowAnonymous]
         public ActionResult SignIn(string authenticationType)
         {
@@ -60,7 +59,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         }
 
         [HttpGet]
-        [Route("externalsignin/callback")]
+        [Route("callback")]
         [AllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
@@ -128,5 +127,26 @@ namespace VirtoCommerce.Platform.Web.Controllers
             return Redirect(returnUrl);
         }
 
+        [HttpGet]
+        [Route("providers")]
+        [AllowAnonymous]
+        public ActionResult GetExternalLoginProviders()
+        {
+            var authenticationManager = _authenticationManagerFactory();
+            var externalLoginProviders = authenticationManager.GetExternalAuthenticationTypes()
+                .Select(authenticationDescription => new ExternalLoginProviderInfo
+                {
+                    AuthenticationType = authenticationDescription.AuthenticationType,
+                    DisplayName = authenticationDescription.Caption
+                })
+                .ToArray();
+
+            // Unfortunately, JsonResult (Json(...)) doesn't allow to translate PascalCase to camelCase
+            // in property names, so we'll have to do it manually.
+            var serializedResult = JsonConvert.SerializeObject(externalLoginProviders,
+                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+
+            return Content(serializedResult, "application/json", Encoding.UTF8);
+        }
     }
 }

@@ -7,7 +7,6 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.OpenIdConnect;
 using Swashbuckle.Swagger.Annotations;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
@@ -30,7 +29,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly Func<IAuthenticationManager> _authenticationManagerFactory;
         private readonly Func<ApplicationSignInManager> _signInManagerFactory;
-        private readonly PlatformAuthenticationOptions _authenticationOptions;
         private readonly IRoleManagementService _roleService;
         private readonly ISecurityService _securityService;
         private readonly ISecurityOptions _securityOptions;
@@ -41,13 +39,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// </summary>
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
-                                  INotificationManager notificationManager, PlatformAuthenticationOptions authenticationOptions,
+                                  INotificationManager notificationManager, 
                                   IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions,
                                   IPasswordCheckService passwordCheckService, IEventPublisher eventPublisher)
         {
             _signInManagerFactory = signInManagerFactory;
             _authenticationManagerFactory = authManagerFactory;
-            _authenticationOptions = authenticationOptions;
             _roleService = roleService;
             _securityService = securityService;
             _securityOptions = securityOptions;
@@ -590,24 +587,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var result = await _securityService.UnlockUserAsync(id);
             return Content(result.Succeeded ? HttpStatusCode.OK : HttpStatusCode.BadRequest, result);
-        }
-
-        [HttpGet]
-        [Route("externalloginproviders")]
-        [ResponseType(typeof(ExternalLoginProviderInfo[]))]
-        [AllowAnonymous]
-        public IHttpActionResult GetExternalLoginProviders()
-        {
-            var authenticationManager = _authenticationManagerFactory();
-            var externalLoginProviders = authenticationManager.GetExternalAuthenticationTypes()
-                .Select(ad => new ExternalLoginProviderInfo
-                {
-                    AuthenticationType = ad.AuthenticationType,
-                    DisplayName = ad.Caption
-                })
-                .ToArray();
-
-            return Ok(externalLoginProviders);
         }
 
         private void ApplyAuthorizationRulesForUser(ApplicationUserExtended user)

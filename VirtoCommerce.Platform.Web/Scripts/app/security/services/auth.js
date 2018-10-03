@@ -9,10 +9,6 @@ angular.module('platformWebApp')
         isAuthenticated: false
     };
 
-    authContext.getExternalLoginProviders = function () {
-        return $http.get(serviceBase + 'externalloginproviders');
-    }
-
     authContext.fillAuthData = function () {
         $http.get(serviceBase + 'currentuser').then(
             function (results) {
