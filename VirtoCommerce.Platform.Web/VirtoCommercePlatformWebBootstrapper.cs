@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
+using System.Web.Mvc;
 using Common.Logging;
 using Microsoft.Practices.Unity;
 using Unity.WebApi;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Modularity;
+using MvcUnityDependencyResolver = Microsoft.Practices.Unity.Mvc.UnityDependencyResolver;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -49,7 +51,7 @@ namespace VirtoCommerce.Platform.Web
             base.Run(runWithDefaultConfiguration);
 
             //registering Unity for MVC
-            //DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            DependencyResolver.SetResolver(new MvcUnityDependencyResolver(Container));
 
             //registering Unity for web API
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(Container);
@@ -59,7 +61,6 @@ namespace VirtoCommerce.Platform.Web
 
             // Standard WebHostHttpControllerTypeResolver uses cache and does not see new modules.
             GlobalConfiguration.Configuration.Services.Replace(typeof(IHttpControllerTypeResolver), new DefaultHttpControllerTypeResolver());
-
         }
 
         public class CustomAssemblyResolver : DefaultAssembliesResolver

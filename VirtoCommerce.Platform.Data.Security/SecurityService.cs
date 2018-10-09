@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -248,7 +248,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await GetApplicationUserByNameAsync(name);
+                var dbUser = await FindByNameAsync(name, UserDetails.Reduced);
                 var result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -259,6 +259,11 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     if (result.Succeeded)
                     {
+                        // Now the user had successfully changed their password.
+                        // If password change was required, now it is not needed anymore.
+                        dbUser.PasswordExpired = false;
+                        await UpdateAsync(dbUser);
+
                         await _eventPublisher.Publish(new UserPasswordChangedEvent(dbUser.Id));
                     }
                 }
@@ -266,26 +271,34 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public virtual async Task<SecurityResult> ResetPasswordAsync(string name, string newPassword)
+        public virtual async Task<SecurityResult> ResetPasswordAsync(string name, string newPassword, bool forcePasswordChange)
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await GetApplicationUserByNameAsync(name);
-                var result = ValidateUser(dbUser);
+                var applicationUserExtended = await FindByNameAsync(name, UserDetails.Reduced);
+                var result = ValidateUser(applicationUserExtended);
 
-                if (result.Succeeded)
+                if (!result.Succeeded)
                 {
-                    var token = await userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
-                    var identityResult = await userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
-                    result = identityResult.ToCoreModel();
-
-                    if (result.Succeeded)
-                    {
-                        await _eventPublisher.Publish(new UserResetPasswordEvent(dbUser.Id));
-                        //clear cache
-                        ResetCache(dbUser.Id, dbUser.UserName);
-                    }
+                    return result;
                 }
+
+                var token = await userManager.GeneratePasswordResetTokenAsync(applicationUserExtended.Id);
+                var identityResult = await userManager.ResetPasswordAsync(applicationUserExtended.Id, token, newPassword);
+                result = identityResult.ToCoreModel();
+
+                if (!result.Succeeded)
+                {
+                    return result;
+                }
+
+                // If user is required to change password on next login, let's update corresponding AccountEntity.
+                applicationUserExtended.PasswordExpired = forcePasswordChange;
+                await UpdateAsync(applicationUserExtended);
+
+                await _eventPublisher.Publish(new UserResetPasswordEvent(applicationUserExtended.Id));
+                //clear cache
+                ResetCache(applicationUserExtended.Id, applicationUserExtended.UserName);
 
                 return result;
             }
@@ -295,7 +308,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await GetApplicationUserByIdAsync(userId);
+                var dbUser = await FindByIdAsync(userId, UserDetails.Reduced);
                 var result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -305,7 +318,13 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     if (result.Succeeded)
                     {
+                        // Now the user had successfully reset their password.
+                        // If password change was required, now it is not needed anymore.
+                        dbUser.PasswordExpired = false;
+                        await UpdateAsync(dbUser);
+
                         await _eventPublisher.Publish(new UserResetPasswordEvent(userId));
+
                         //clear cache
                         ResetCache(dbUser.Id, dbUser.UserName);
                     }
@@ -488,16 +507,24 @@ namespace VirtoCommerce.Platform.Data.Security
             return allPermissions;
         }
 
-        protected virtual SecurityResult ValidateUser(ApplicationUser dbUser)
+        protected virtual SecurityResult ValidateUser(ApplicationUser applicationUser)
         {
-            var result = new SecurityResult { Succeeded = true };
-
-            if (dbUser == null)
+            if (applicationUser == null)
             {
-                result = new SecurityResult { Errors = new[] { "User not found." } };
+                return new SecurityResult { Errors = new[] { "User not found." } };
             }
 
-            return result;
+            return new SecurityResult { Succeeded = true };
+        }
+
+        protected virtual SecurityResult ValidateUser(ApplicationUserExtended applicationUserExtended)
+        {
+            if (applicationUserExtended == null)
+            {
+                return new SecurityResult { Errors = new[] { "User not found." } };
+            }
+
+            return new SecurityResult { Succeeded = true };
         }
 
         protected virtual async Task<ApplicationUser> GetApplicationUserByIdAsync(string userId)
@@ -563,11 +590,12 @@ namespace VirtoCommerce.Platform.Data.Security
                             _changeLogService.LoadChangeLogs(retVal);
                         }
                     }
+
                     var suppressForcingCredentialsChange = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Security:SuppressForcingCredentialsChange", false);
                     if (!suppressForcingCredentialsChange)
                     {
                         //Setting the flags which indicates a necessity of security credentials change
-                        retVal.PasswordExpired = retVal.PasswordHash == Resources.Default.DefaultPasswordHash;
+                        retVal.PasswordExpired |= retVal.PasswordHash == Resources.Default.DefaultPasswordHash;
                         if (retVal.ApiAccounts != null)
                         {
                             foreach (var apiAccount in retVal.ApiAccounts)
@@ -576,6 +604,7 @@ namespace VirtoCommerce.Platform.Data.Security
                             }
                         }
                     }
+
                     if (detailsLevel != UserDetails.Export)
                     {
                         retVal.PasswordHash = null;
@@ -587,8 +616,6 @@ namespace VirtoCommerce.Platform.Data.Security
             }
             return result;
         }
-
-
 
         protected virtual void ResetCache(string userId, string userName)
         {
@@ -607,13 +634,19 @@ namespace VirtoCommerce.Platform.Data.Security
         protected virtual void NormalizeUser(ApplicationUserExtended user)
         {
             if (user.UserName != null)
+            {
                 user.UserName = user.UserName.Trim();
+            }
 
             if (user.Email != null)
+            {
                 user.Email = user.Email.Trim();
+            }
 
             if (user.PhoneNumber != null)
+            {
                 user.PhoneNumber = user.PhoneNumber.Trim();
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'"></div>
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
@@ -17,14 +17,24 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.password' | translate }}</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.password" required placeholder="{{ 'platform.blades.new-account-wizard.placeholders.password' | translate }}" type="password">
-                    </div>
+                    <va-password-input password-placeholder="{{ 'platform.blades.new-account-wizard.placeholders.password' | translate }}"
+                                       password-too-weak-message="{{ 'platform.blades.new-account-wizard.validations.password-too-weak' | translate }}"
+                                       run-password-validation="validatePasswordAsync(value)"
+                                       new-password="blade.currentEntity.password" />
                 </div>
                 <div class="form-group">
                     <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.repeat-password' | translate }}</label>
                     <div class="form-input">
-                        <input ng-model="blade.currentEntity.newPassword2" required placeholder="{{ 'platform.blades.new-account-wizard.placeholders.repeat-password' | translate }}" type="password">
+                        <input name="passwordConfirmation"
+                               ng-model="blade.currentEntity.newPassword2"
+                               required
+                               placeholder="{{ 'platform.blades.new-account-wizard.placeholders.repeat-password' | translate }}"
+                               type="password"
+                               ui-validate="'$value == blade.currentEntity.password'"
+                               ui-validate-watch="blade.currentEntity.password">
+                    </div>
+                    <div class="form-error" ng-if="formScope.passwordConfirmation.$dirty && blade.currentEntity.password != blade.currentEntity.newPassword2">
+                        <span>{{ 'platform.blades.new-account-wizard.validations.repeat-password' | translate }}</span>
                     </div>
                 </div>
             </form>

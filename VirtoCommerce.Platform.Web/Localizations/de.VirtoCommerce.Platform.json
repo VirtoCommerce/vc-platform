@@ -1,4 +1,4 @@
-﻿{
+{
   "platform": {
     "menu": {
 	   "home":"Start",
@@ -415,10 +415,18 @@
         "subtitle": "Ändern Sie Ihr Passwort",
         "labels": {
           "new-password": "Neues Passwort",
-          "repeat-password": "Passwort wiederholen"
+          "repeat-password": "Passwort wiederholen",
+          "force-password-change": "Veranlassen Sie, dass dieser Benutzer bei der ersten Anmeldung sein Passwort ändert"
         },
         "validations": {
-          "repeat-password": "Das neue Passwort stimmt nicht überein!"
+          "repeat-password": "Das neue Passwort stimmt nicht überein!",
+          "invalid-token": "Passwort zurücksetzen Token ist ungültig oder abgelaufen",
+          "password-too-weak": "Neues Passwort entspricht nicht einer oder mehreren Passwortsicherheitsrichtlinien:",
+          "passwordViolatesMinLength": "Passwörter müssen {{minPasswordLength}} oder mehr Zeichen lang sein",
+          "passwordMustHaveLowerCaseLetters": "Passwörter müssen mindestens einen Kleinbuchstaben enthalten ('a'-'z')",
+          "passwordMustHaveUpperCaseLetters": "Passwörter müssen mindestens einen Großbuchstaben haben ('A'-'Z')",
+          "passwordMustHaveDigits": "Passwörter müssen mindestens eine Ziffer haben ('0'-'9')",
+          "passwordMustHaveSpecialCharacters": "Passwörter müssen mindestens ein nicht alphanumerisches Zeichen enthalten"
         },
         "placeholders": {
           "new-password": "Neues Passwort eingeben",
@@ -521,6 +529,8 @@
           "login": "Einloggen",
           "password": "Passwort",
           "remember-me": "Erinnern Sie sich an mich",
+          "external-sign-in": "Melden Sie sich mit {{displayName}} an",
+          "forgot-password": "Haben Sie Ihr Passwort vergessen?",
           "log-in": "Anmelden"
         }
       },
@@ -564,6 +574,10 @@
           "login": "Einloggen eingeben",
           "password": "Neues Passwort eingeben",
           "repeat-password": "Neues Passwort wiederholen"
+        },
+        "validations": {
+          "repeat-password": "Eingegebene Passwörter stimmen nicht überein!",
+          "password-too-weak": "Das eingegebene Passwort entspricht nicht einer oder mehreren Passwortsicherheitsrichtlinien:"
         }
       },
       "security-main": {
