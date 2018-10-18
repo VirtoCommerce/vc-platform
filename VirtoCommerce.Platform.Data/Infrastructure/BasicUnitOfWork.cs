@@ -13,19 +13,6 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         private readonly EFRepositoryBase _observableContext;
         private readonly IInterceptor[] _interceptors;
 
-        public TimeSpan? CommandTimeout
-        {
-            get
-            {
-                var s = ObjectContext.CommandTimeout;
-                return s == null ? (TimeSpan?)null : TimeSpan.FromSeconds(s.Value);
-            }
-            set
-            {
-                ObjectContext.CommandTimeout = value == null ? (int?)null : (int)value.Value.TotalSeconds;
-            }
-        }
-
         public BasicUnitOfWork(EFRepositoryBase observableContext, IInterceptor[] interceptors)
         {
             _observableContext = observableContext;
