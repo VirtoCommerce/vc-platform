@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Web
             app.CreatePerOwinContext(() => container.Resolve<ApplicationUserManager>());
 
             //Commented out for security reasons
-            //app.UseCors(CorsOptions.AllowAll);
+            //app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
 
             var authenticationOptions = container.Resolve<AuthenticationOptions>();
 

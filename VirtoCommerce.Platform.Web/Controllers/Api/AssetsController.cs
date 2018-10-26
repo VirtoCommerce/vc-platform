@@ -87,7 +87,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(BlobInfo[]))]
         [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
         [UploadFile]
-        [EnableCors(origins: "*", headers: "*", methods: "*")]
+        [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
         public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null, [FromUri]string name = null)
         {
             if (url == null && !Request.Content.IsMimeMultipartContent())
