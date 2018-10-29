@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Web
             app.CreatePerOwinContext(() => container.Resolve<SecurityDbContext>());
             app.CreatePerOwinContext(() => container.Resolve<ApplicationUserManager>());
 
-            //Commented out for security reasons
+            //Commented out for security reasons, use web.config system.webServer/httpProtocol/customHeaders section
             //app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
 
             var authenticationOptions = container.Resolve<AuthenticationOptions>();
