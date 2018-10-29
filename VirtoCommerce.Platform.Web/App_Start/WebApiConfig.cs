@@ -24,10 +24,6 @@ namespace VirtoCommerce.Platform.Web
             config.Filters.Add(new CheckPermissionAttribute { Permission = PredefinedPermissions.SecurityCallApi });
             //Commented out for security reasons
             config.EnableCors();
-            //new System.Web.Http.Cors.EnableCorsAttribute("*", "*", "*")
-            //{
-            //    SupportsCredentials = true
-            //}
 
             // Web API routes
             config.MapHttpAttributeRoutes();

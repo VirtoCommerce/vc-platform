@@ -13,6 +13,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Assets;
 using VirtoCommerce.Platform.Core.Web.Security;
+using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Web.Converters.Asset;
 using VirtoCommerce.Platform.Web.Swagger;
 using webModel = VirtoCommerce.Platform.Web.Model.Asset;
@@ -87,7 +88,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(BlobInfo[]))]
         [CheckPermission(Permission = PredefinedPermissions.AssetCreate)]
         [UploadFile]
-        [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*", SupportsCredentials = true)]
+        [AllowContentCors]
         public async Task<IHttpActionResult> UploadAsset([FromUri] string folderUrl, [FromUri]string url = null, [FromUri]string name = null)
         {
             if (url == null && !Request.Content.IsMimeMultipartContent())
