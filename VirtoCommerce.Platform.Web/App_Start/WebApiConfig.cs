@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.OData.Extensions;
 using Newtonsoft.Json;
@@ -15,6 +16,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Web.App_Start;
+using VirtoCommerce.Platform.Web.Extensions;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -24,7 +26,7 @@ namespace VirtoCommerce.Platform.Web
         {
             config.Filters.Add(new CheckPermissionAttribute { Permission = PredefinedPermissions.SecurityCallApi });
             //Commented out for security reasons, use web.config system.webServer/httpProtocol/customHeaders section
-            //config.EnableCors(new AllowContentCorsAttribute());
+            config.SetupCors();
 
             // Web API routes
             config.MapHttpAttributeRoutes();
