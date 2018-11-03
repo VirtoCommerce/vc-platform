@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.PushNotifications;
@@ -20,6 +20,6 @@ namespace VirtoCommerce.Platform.Web.Model.Modularity
         public DateTime? Finished { get; set; }
 
         [JsonProperty("progressLog")]
-        public ICollection<ProgressMessage> ProgressLog;
+        public ICollection<ProgressMessage> ProgressLog { get; set; }
     }
 }

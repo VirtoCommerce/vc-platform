@@ -19,7 +19,6 @@
           padding: 10px $listItemHorizontalPadding 10px $listItemHorizontalPadding
         .list-ico
           margin: 0
-          text-align: center
         .list-name
           display: none
         .list-count
@@ -115,6 +114,7 @@
           .list-ico
             margin: 0
       .list-ico
+        font-size: $mainMenuIcoFontSize
         text-shadow: 1px 1px $mainMenuBg
         width: $mainMenuIcoSize
       .list-name,
@@ -276,23 +276,25 @@
       padding: 10px 20px
     .list-item:after
       display: none
+    .list-ico
+      font-size: $mainMenuIcoFontSize
+      width: $mainMenuIcoSize
     .list-fav
       color: #a6a6a6
       display: block
-      font-size: 16px
+      font-size: $fontSize
       font-weight: 300
-      line-height: 26px
       position: absolute
       right: 0
       top: 50%
       transform: translateY(-50%)
       padding: 10px 32px 10px 12px
       .list-ico
-        font-size: 16px
+        font-size: $fontSize
         text-align: center
         margin: 0
         top: 0
-        width: 16px
+        width: $fontSize
   &:not(.__more) .dropdown-content
     -ms-scrollbar-arrow-color: #545454
     -ms-scrollbar-face-color: #434343
@@ -317,12 +319,12 @@
       background: none
       color: $baseColor
     .list-ico
-      font-size: 25px
+      font-size: $mainMenuIcoFontSize
       height: 24px
       margin: 0 20px 0 0
       position: relative
       top: 2px
-      width: 32px
+      width: $mainMenuIcoSize
     .info
       .list-ico
         color: $baseColor

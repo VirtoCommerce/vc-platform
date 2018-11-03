@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Xml.Serialization;
 
 namespace VirtoCommerce.Platform.Core.Modularity
@@ -10,6 +10,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public const string TypeDecimal = "decimal";
         public const string TypeString = "string";
         public const string TypeText = "text";
+        public const string TypeDateTime = "dateTime";
         public const string TypeSecureString = "secureString";
         public const string TypeJson = "json";
 
@@ -53,18 +54,20 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public static object RawValue(string valueType, string value)
         {
             object result = value;
-            
-            switch (valueType)
+            if (value != null)
             {
-                case TypeBoolean:
-                    result = bool.Parse(value);
-                    break;
-                case TypeInteger:
-                    result = int.Parse(value, CultureInfo.InvariantCulture);
-                    break;
-                case TypeDecimal:
-                    result = decimal.Parse(value, CultureInfo.InvariantCulture);
-                    break;
+                switch (valueType)
+                {
+                    case TypeBoolean:
+                        result = bool.Parse(value);
+                        break;
+                    case TypeInteger:
+                        result = int.Parse(value, CultureInfo.InvariantCulture);
+                        break;
+                    case TypeDecimal:
+                        result = decimal.Parse(value, CultureInfo.InvariantCulture);
+                        break;
+                }
             }
 
             return result;

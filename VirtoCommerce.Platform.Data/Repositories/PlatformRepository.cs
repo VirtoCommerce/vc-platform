@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure.Annotations;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
+using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Infrastructure.Interceptors;
@@ -26,10 +29,25 @@ namespace VirtoCommerce.Platform.Data.Repositories
             Configuration.LazyLoadingEnabled = false;
         }
 
+        public PlatformRepository(DbConnection existingConnection, IUnitOfWork unitOfWork = null, IInterceptor[] interceptors = null)
+            : base(existingConnection, unitOfWork, interceptors)
+        {
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+            #region Assets
+            modelBuilder.Entity<AssetEntryEntity>().ToTable("AssetEntry").HasKey(x => x.Id).Property(x => x.Id);
+
+            modelBuilder.Entity<AssetEntryEntity>()
+                .Property(x => x.TenantId)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_AssetEntry_TenantId_TenantType", 1) { IsUnique = false }));
+            modelBuilder.Entity<AssetEntryEntity>()
+                .Property(x => x.TenantType)
+                .HasColumnAnnotation("Index", new IndexAnnotation(new IndexAttribute("IX_AssetEntry_TenantId_TenantType", 2) { IsUnique = false }));
+            #endregion
 
             #region Change logging
             modelBuilder.Entity<OperationLogEntity>().HasKey(x => x.Id)
@@ -46,6 +64,10 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .HasRequired(x => x.Setting)
                 .WithMany(x => x.SettingValues)
                 .HasForeignKey(x => x.SettingId);
+
+            modelBuilder.Entity<SettingValueEntity>()
+                .Property(x => x.DecimalValue)
+                .HasPrecision(18, 5);
 
             #endregion
 
@@ -80,6 +102,10 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .HasOptional(x => x.DictionaryItem)
                 .WithMany(x => x.ObjectValues)
                 .HasForeignKey(x => x.DictionaryItemId);
+
+            modelBuilder.Entity<DynamicPropertyObjectValueEntity>()
+                .Property(x => x.DecimalValue)
+                .HasPrecision(18, 5);
 
             modelBuilder.Entity<DynamicPropertyEntity>()
                 .Property(x => x.ObjectType)
@@ -201,6 +227,13 @@ namespace VirtoCommerce.Platform.Data.Repositories
         public IQueryable<RoleAssignmentEntity> RoleAssignments { get { return GetAsQueryable<RoleAssignmentEntity>(); } }
         public IQueryable<RolePermissionEntity> RolePermissions { get { return GetAsQueryable<RolePermissionEntity>(); } }
         public IQueryable<OperationLogEntity> OperationLogs { get { return GetAsQueryable<OperationLogEntity>(); } }
+        public IQueryable<AssetEntryEntity> AssetEntries => GetAsQueryable<AssetEntryEntity>();
+
+
+        public AssetEntryEntity[] GetAssetsByIds(IEnumerable<string> ids)
+        {
+            return AssetEntries.Where(x => ids.Contains(x.Id)).ToArray();
+        }
 
         public RoleEntity GetRoleById(string roleId)
         {
@@ -209,7 +242,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
                         .FirstOrDefault(x => x.Id == roleId);
         }
 
-        public AccountEntity GetAccountByName(string userName, UserDetails detailsLevel)
+        public async Task<AccountEntity> GetAccountByNameAsync(string userName, UserDetails detailsLevel)
         {
             var query = Accounts;
 
@@ -221,7 +254,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
                     .Include(a => a.ApiAccounts);
             }
 
-            return query.FirstOrDefault(a => a.UserName == userName);
+            return await query.FirstOrDefaultAsync(a => a.UserName == userName);
         }
 
         public DynamicPropertyDictionaryItemEntity[] GetDynamicPropertyDictionaryItems(string propertyId)
@@ -257,13 +290,25 @@ namespace VirtoCommerce.Platform.Data.Repositories
             return retVal;
         }
 
-        public DynamicPropertyEntity[] GetDynamicPropertiesForType(string objectType)
+        public DynamicPropertyEntity[] GetDynamicPropertiesForTypes(string[] objectTypes)
         {
             var retVal = DynamicProperties.Include(p => p.DisplayNames)
-                                          .Where(p => p.ObjectType == objectType)
+                                          .Where(p => objectTypes.Contains(p.ObjectType))
                                           .OrderBy(p => p.Name)
                                           .ToArray();
             return retVal;
+        }
+
+        public SettingEntity GetSettingByName(string name)
+        {
+            var result = Settings.Include(x => x.SettingValues).FirstOrDefault(x => x.Name == name && x.ObjectId == null && x.ObjectType == null);
+            return result;
+        }
+
+        public SettingEntity[] GetAllObjectSettings(string objectType, string objectId)
+        {
+            var result = Settings.Include(x => x.SettingValues).Where(x => x.ObjectId == objectId && x.ObjectType == objectType).OrderBy(x => x.Name).ToArray();
+            return result;
         }
 
         #endregion

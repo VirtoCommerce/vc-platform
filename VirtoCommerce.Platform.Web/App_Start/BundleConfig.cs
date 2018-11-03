@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Optimization;
 using Microsoft.Practices.ServiceLocation;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 
@@ -15,7 +16,7 @@ namespace VirtoCommerce.Platform.Web
 
         public static void RegisterBundles(BundleCollection bundles)
         {
-            //BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:EnableBundlesOptimizations", false);
 
             #region CSS
 
@@ -28,7 +29,7 @@ namespace VirtoCommerce.Platform.Web
                     // "~/Content/angular-gridster.css", // customized style
                     //SELECT2
                     "~/Content/select2.css", // used in selectors
-                    //Theme UI,
+                                             //Theme UI,
                     "~/Content/themes/main/css/font-awesome.css",
                     "~/Content/themes/main/css/main.css"
                 ));
@@ -39,11 +40,12 @@ namespace VirtoCommerce.Platform.Web
             //AngularJS 
             //Note: must match the real path (~/Scripts/.) to find source map files references from .min.js (ex. # sourceMappingURL=angular-resource.min.js.map)
             bundles.Add(
-                new ScriptBundle(Startup.VirtualRoot + "/scripts/angular")
-                    .IncludeAndFixRoot("~/Scripts/allPackages.js")
+                new ScriptBundle(Startup.VirtualRoot + "/scripts/platform")
                     .IncludeDirectoryAndFixRoot("~/Scripts/codemirror/", "*.js", true)
                     .IncludeDirectoryAndFixRoot("~/Scripts/app/", "*.js", true)
-                    .IncludeDirectoryAndFixRoot("~/Scripts/common/", "*.js", true));
+                    .IncludeDirectoryAndFixRoot("~/Scripts/common/", "*.js", true)
+                    .IncludeDirectoryAndFixRoot("~/Scripts/i18n/", "*.js", true));
+            bundles.IgnoreList.Ignore("angular-locale_*");
 
             #endregion
 
@@ -119,21 +121,11 @@ namespace VirtoCommerce.Platform.Web
                             directory.SearchSubdirectories);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Exception moduleException;
+                    var notFoundPath = file?.VirtualPath ?? directory?.VirtualPath;
+                    ((ManifestModuleInfo)item.Module).Errors.Add($"Path not found ({notFoundPath}).");
 
-                    if (item.Module.ModuleInstance != null)
-                    {
-                        var assemblyName = item.Module.ModuleInstance.GetType().Assembly.FullName;
-                        moduleException = new ModuleInitializeException(item.Module.ModuleName, assemblyName, ex.Message, ex);
-                    }
-                    else
-                    {
-                        moduleException = new ModuleInitializeException(item.Module.ModuleName, ex.Message, ex);
-                    }
-
-                    throw moduleException;
                 }
             }
 
@@ -161,14 +153,8 @@ namespace VirtoCommerce.Platform.Web
 
         public override IBundleOrderer Orderer
         {
-            get
-            {
-                return new NonOrderingBundleOrderer();
-            }
-            set
-            {
-                throw new Exception("Unable to override Non-Ordered bundler");
-            }
+            get { return new NonOrderingBundleOrderer(); }
+            set { throw new Exception("Unable to override Non-Ordered bundler"); }
         }
 
         #endregion

@@ -1,10 +1,11 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', '$timeout', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, $timeout) {
+.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.i18n', '$timeout', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, i18n, $timeout) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
     blade.headIcon = 'fa-plus-square-o';
     blade.title = "platform.blades.propertyValue-list.title";
     blade.subtitle = "platform.blades.propertyValue-list.subtitle";
+    blade.currentLanguage = i18n.getLanguage();
 
     blade.refresh = function () {
         blade.data = blade.currentEntity;
@@ -12,7 +13,13 @@
 
         _.each(rawProperties, function (x) {
             x.values.sort(function (a, b) {
-                return a.value && b.value ? (a.value.name ? a.value.name.localeCompare(b.value.name) : a.value.localeCompare(b.value)) : -1;
+                return a.value && b.value
+                    ? (a.value.name
+                        ? a.value.name.localeCompare(b.value.name)
+                        : angular.isString(a.value) && angular.isString(b.value)
+                            ? a.value.localeCompare(b.value)
+                            : a.value < b.value ? -1 : a.value > b.value ? 1 : 0)
+                    : -1;
             });
         });
 

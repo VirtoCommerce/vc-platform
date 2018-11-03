@@ -59,10 +59,10 @@
         {
             name: "platform.commands.generate", icon: 'fa fa-refresh',
             executeMethod: function () {
-                generateNewApiAccount();
+                generateNewApiKey();
             },
             canExecuteMethod: function () {
-                return true;
+                return blade.currentEntity.apiAccountType === 'Hmac';
             },
             permission: blade.updatePermission
         },
@@ -104,10 +104,20 @@
                 angular.extend(blade.currentEntity, apiAccount);
                 blade.isLoading = false;
             }
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+        }, function (response) {
+            bladeNavigationService.setError(response, $scope.blade);
         });
     };
+
+    function generateNewApiKey() {
+        blade.isLoading = true;
+        accounts.generateNewApiKey({}, blade.currentEntity, function (apiAccount) {
+            angular.copy(apiAccount, blade.currentEntity);
+            blade.isLoading = false;
+        }, function (response) {
+            bladeNavigationService.setError(response, $scope.blade);
+        });
+    }
 
     $scope.copyCode = function () {
         var secretKey = document.getElementById('secretKey');
@@ -115,9 +125,9 @@
         secretKey.select();
     };
 
-    $scope.$watch('blade.currentEntity.apiAccountType', function (oldVal, newVal) {
-        if (oldVal && newVal && oldVal !== newVal) {
-            generateNewApiAccount();
+    $scope.$watch('blade.currentEntity.apiAccountType', function (newVal, oldVal) {
+        if (oldVal && newVal && oldVal !== newVal && newVal === 'Hmac') {
+            generateNewApiKey();
         }
     });
 

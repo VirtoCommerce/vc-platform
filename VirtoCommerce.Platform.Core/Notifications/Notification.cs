@@ -99,7 +99,12 @@ namespace VirtoCommerce.Platform.Core.Notifications
         public virtual SendNotificationResult SendNotification()
         {
             var result = NotificationSendingGateway.SendNotification(this);
-
+            if(result.IsSuccess)
+            {
+                IsActive = false;
+                IsSuccessSend = true;
+                SentDate = DateTime.UtcNow;
+            }
             return result;
         }
     }

@@ -12,7 +12,7 @@
                         <label class="form-label">{{ 'platform.blades.import-main.labels.select-file' | translate }}</label>
                         <div class="form-input">
                             <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
-                            <input type="text" placeholder="upload import zip package" readonly="" ng-model="importRequest.fileName">
+                            <input type="text" placeholder="Upload import zip" readonly="" ng-model="importRequest.fileName">
                             <button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
                                 <i class="btn-ico fa fa-file-archive-o"></i>
                             </button>
@@ -84,8 +84,8 @@
                     <div>
                         <div class="sub-t">{{blade.notification.description}}</div>
                         <div class="block" ng-if="blade.notification.created || blade.notification.finished">
-                            <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">{{ 'platform.blades.import-main.labels.start' | translate }} — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.notification.created"></span></p>
-                            <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">{{ 'platform.blades.import-main.labels.end' | translate }} — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.notification.finished"></span></p>
+                            <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">{{ 'platform.blades.import-main.labels.start' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.created | amParse | date:'mediumTime' }}</p>
+                            <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">{{ 'platform.blades.import-main.labels.end' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.finished | amParse | date:'mediumTime' }}</p>
                         </div>
 
                         <div ng-if="blade.notification.errorCount > 0">

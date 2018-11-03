@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.DataProtection;
 using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Data.Security.Identity
 {
@@ -11,30 +12,30 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
     /// </summary>
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
-        public ApplicationUserManager(IUserStore<ApplicationUser> store, IDataProtectionProvider dataProtectionProvider, INotificationManager notificationManager)
+        public ApplicationUserManager(IUserStore<ApplicationUser> store, IDataProtectionProvider dataProtectionProvider, INotificationManager notificationManager, AuthenticationOptions authenticationOptions)
             : base(store)
         {
             // Configure validation logic for usernames
             UserValidator = new UserValidator<ApplicationUser>(this)
             {
-                AllowOnlyAlphanumericUserNames = false,
-                //RequireUniqueEmail = true, //Cannot require emails because users can be created from wpf admin and username not enforced to be as email
+                AllowOnlyAlphanumericUserNames = authenticationOptions.AllowOnlyAlphanumericUserNames,
+                RequireUniqueEmail = authenticationOptions.RequireUniqueEmail,
             };
 
             // Configure validation logic for passwords
             PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 5,
-                RequireNonLetterOrDigit = false,
-                RequireDigit = false,
-                RequireLowercase = false,
-                RequireUppercase = false,
+                RequiredLength = authenticationOptions.PasswordRequiredLength,
+                RequireNonLetterOrDigit = authenticationOptions.PasswordRequireNonLetterOrDigit,
+                RequireDigit = authenticationOptions.PasswordRequireDigit,
+                RequireLowercase = authenticationOptions.PasswordRequireLowercase,
+                RequireUppercase = authenticationOptions.PasswordRequireUppercase,
             };
 
             // Configure user lockout defaults
-            UserLockoutEnabledByDefault = true;
-            DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            MaxFailedAccessAttemptsBeforeLockout = 5;
+            UserLockoutEnabledByDefault = authenticationOptions.UserLockoutEnabledByDefault;
+            DefaultAccountLockoutTimeSpan = authenticationOptions.DefaultAccountLockoutTimeSpan;
+            MaxFailedAccessAttemptsBeforeLockout = authenticationOptions.MaxFailedAccessAttemptsBeforeLockout;
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
@@ -43,8 +44,7 @@ namespace VirtoCommerce.Platform.Data.Security.Identity
 
             if (dataProtectionProvider != null)
             {
-                UserTokenProvider =
-                    new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+                UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity")) { TokenLifespan = authenticationOptions.DefaultTokenLifespan };
             }
         }
     }

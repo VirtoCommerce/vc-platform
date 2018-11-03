@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
@@ -13,11 +14,14 @@ namespace VirtoCommerce.Platform.Data.Model
         public const string TypeBoolean = "Boolean";
         public const string TypeDateTime = "DateTime";
         public const string TypeHtml = "Html";
+        public const string TypeImage = "Image";
 
         [StringLength(256)]
+        [Index("IX_ObjectType_ObjectId", 1)]
         public string ObjectType { get; set; }
 
         [StringLength(128)]
+        [Index("IX_ObjectType_ObjectId", 2)]
         public string ObjectId { get; set; }
 
         [StringLength(64)]
@@ -59,6 +63,7 @@ namespace VirtoCommerce.Platform.Data.Model
                     return IntegerValue;
                 case TypeLongText:
                 case TypeHtml:
+                case TypeImage:
                     return LongTextValue;
                 case TypeShortText:
                     return ShortTextValue;
@@ -84,6 +89,7 @@ namespace VirtoCommerce.Platform.Data.Model
                     return IntegerValue == null ? null : IntegerValue.Value.ToString(formatProvider);
                 case TypeLongText:
                 case TypeHtml:
+                case TypeImage:
                     return LongTextValue;
                 case TypeShortText:
                     return ShortTextValue;

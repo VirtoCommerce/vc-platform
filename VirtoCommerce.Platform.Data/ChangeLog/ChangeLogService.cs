@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -11,13 +9,15 @@ using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.Platform.Data.ChangeLog
 {
-	public class ChangeLogService : ServiceBase, IChangeLogService
-	{
-		private Func<IPlatformRepository> _platformRepositoryFactory;
-		public ChangeLogService(Func<IPlatformRepository> platformRepositoryFactory)
-		{
-			_platformRepositoryFactory = platformRepositoryFactory;
-		}
+    public class ChangeLogService : ServiceBase, IChangeLogService
+    {
+        private readonly Func<IPlatformRepository> _platformRepositoryFactory;
+
+        public ChangeLogService(Func<IPlatformRepository> platformRepositoryFactory)
+        {
+            _platformRepositoryFactory = platformRepositoryFactory;
+        }
+
         #region IChangeLogService Members
 
         public void LoadChangeLogs(IHasChangesHistory owner)
@@ -37,21 +37,21 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
         {
             if (operationLogs == null)
             {
-                throw new ArgumentNullException("operationLogs");
+                throw new ArgumentNullException(nameof(operationLogs));
             }
             var retVal = new List<OperationLogEntity>();
             using (var repository = _platformRepositoryFactory())
             {
                 var ids = operationLogs.Where(x => x.Id != null).Select(x => x.Id).Distinct().ToArray();
 
-                var origDbOperations = repository.OperationLogs.Where(x=> ids.Contains(x.Id));
+                var origDbOperations = repository.OperationLogs.Where(x => ids.Contains(x.Id));
                 using (var changeTracker = GetChangeTracker(repository))
                 {
                     //Update
                     foreach (var origDbOperation in origDbOperations)
                     {
                         var changedOperation = operationLogs.First(x => x.Id == origDbOperation.Id);
-                    
+
                         var changedDbOperation = changedOperation.ToDataModel();
                         changeTracker.Attach(origDbOperation);
                         changedDbOperation.Patch(origDbOperation);
@@ -73,63 +73,63 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
         }
 
         public IEnumerable<OperationLog> FindObjectChangeHistory(string objectId, string objectType)
-		{
-			if(objectId == null)
-				throw new ArgumentNullException("objectId");
-		
-			if(objectType == null)
-				throw new ArgumentNullException("objectType");
+        {
+            if (objectId == null)
+                throw new ArgumentNullException(nameof(objectId));
 
-			var retVal = new List<OperationLog>();
-			using(var repository = _platformRepositoryFactory())
-			{
-				retVal = repository.OperationLogs.Where(x => x.ObjectId == objectId && x.ObjectType == objectType)
-													.OrderBy(x => x.ModifiedDate).ToArray()
-													.Select(x => x.ToCoreModel()).ToList();
-											
-			}
-			return retVal;
-		}
+            if (objectType == null)
+                throw new ArgumentNullException(nameof(objectType));
 
-		public OperationLog GetObjectLastChange(string objectId, string objectType)
-		{
-			if (objectId == null)
-				throw new ArgumentNullException("objectId");
+            using (var repository = _platformRepositoryFactory())
+            {
+                var retVal = repository.OperationLogs.Where(x => x.ObjectId == objectId && x.ObjectType == objectType)
+                                                    .OrderBy(x => x.ModifiedDate)
+                                                    .ToArray()
+                                                    .Select(x => x.ToCoreModel())
+                                                    .ToList();
+                return retVal;
+            }
+        }
 
-			if (objectType == null)
-				throw new ArgumentNullException("objectType");
+        public OperationLog GetObjectLastChange(string objectId, string objectType)
+        {
+            if (objectId == null)
+                throw new ArgumentNullException(nameof(objectId));
 
-			OperationLog retVal = null;
-			using (var repository = _platformRepositoryFactory())
-			{
-				var entity = repository.OperationLogs.Where(x => x.ObjectId == objectId && x.ObjectType == objectType)
-													 .OrderByDescending(x => x.ModifiedDate).FirstOrDefault();
-				if(entity != null)
-				{
-					retVal = entity.ToCoreModel();
-				}
+            if (objectType == null)
+                throw new ArgumentNullException(nameof(objectType));
 
-			}
-			return retVal;
-		}
+            OperationLog retVal = null;
+            using (var repository = _platformRepositoryFactory())
+            {
+                var entity = repository.OperationLogs.Where(x => x.ObjectId == objectId && x.ObjectType == objectType)
+                                                     .OrderByDescending(x => x.ModifiedDate).FirstOrDefault();
+                if (entity != null)
+                {
+                    retVal = entity.ToCoreModel();
+                }
 
-		public IEnumerable<OperationLog> FindChangeHistory(string objectType, DateTime? startDate, DateTime? endDate)
-		{
+            }
+            return retVal;
+        }
 
-			if (objectType == null)
-				throw new ArgumentNullException("objectType");
+        public IEnumerable<OperationLog> FindChangeHistory(string objectType, DateTime? startDate, DateTime? endDate)
+        {
 
-			var retVal = new List<OperationLog>();
-			using (var repository = _platformRepositoryFactory())
-			{
-				retVal = repository.OperationLogs.Where(x =>x.ObjectType == objectType && (startDate == null || x.ModifiedDate >= startDate) && (endDate == null || x.ModifiedDate <= endDate))
-												 .OrderBy(x => x.ModifiedDate).ToArray()
-												 .Select(x => x.ToCoreModel()).ToList();
+            if (objectType == null)
+                throw new ArgumentNullException(nameof(objectType));
 
-			}
-			return retVal;
-		}
+            using (var repository = _platformRepositoryFactory())
+            {
+                var retVal = repository.OperationLogs.Where(x => x.ObjectType == objectType && (startDate == null || x.ModifiedDate >= startDate) && (endDate == null || x.ModifiedDate <= endDate))
+                                                 .OrderBy(x => x.ModifiedDate)
+                                                 .ToArray()
+                                                 .Select(x => x.ToCoreModel())
+                                                 .ToList();
+                return retVal;
+            }
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

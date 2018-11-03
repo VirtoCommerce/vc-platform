@@ -195,7 +195,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 SetValue(notification, param);
             }
-            var result = _notificationManager.SendNotification(notification);
+            var result = _notificationManager.SendNotification(notification);          
+            //save notification in feed
+            _notificationManager.ScheduleSendNotification(notification);
 
             return Ok(result);
         }
@@ -211,12 +213,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="objectTypeId">Object type id</param>
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
+        /// <param name="sort">Sort expression</param>
         [HttpGet]
         [ResponseType(typeof(webModels.SearchNotificationsResult))]
         [Route("journal/{objectId}/{objectTypeId}")]
-        public IHttpActionResult GetObjectNotificationJournal(string objectId, string objectTypeId, int start, int count)
+        public IHttpActionResult GetObjectNotificationJournal(string objectId, string objectTypeId, int start, int count, string sort)
         {
-            var result = _notificationManager.SearchNotifications(new SearchNotificationCriteria() { ObjectId = objectId, ObjectTypeId = objectTypeId, Skip = start, Take = count });
+            var result = _notificationManager.SearchNotifications(new SearchNotificationCriteria() { ObjectId = objectId, ObjectTypeId = objectTypeId, Skip = start, Take = count, Sort = sort });
 
             var retVal = new webModels.SearchNotificationsResult();
             retVal.Notifications = result.Notifications.Select(nt => nt.ToWebModel()).ToArray();
@@ -234,12 +237,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </remarks>
         /// <param name="start">Page setting start</param>
         /// <param name="count">Page setting count</param>
+        /// <param name="sort">Sort expression</param>
         [HttpGet]
         [ResponseType(typeof(webModels.SearchNotificationsResult))]
         [Route("journal")]
-        public IHttpActionResult GetNotificationJournal(int start, int count)
+        public IHttpActionResult GetNotificationJournal(int start, int count, string sort)
         {
-            var result = _notificationManager.SearchNotifications(new SearchNotificationCriteria() { Skip = start, Take = count });
+            var result = _notificationManager.SearchNotifications(new SearchNotificationCriteria() { Skip = start, Take = count, Sort = sort });
 
             var retVal = new webModels.SearchNotificationsResult();
             retVal.Notifications = result.Notifications.Select(nt => nt.ToWebModel()).ToArray();

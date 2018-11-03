@@ -27,14 +27,16 @@
 				$scope.notification = $stateParams.notification;
 			}
 			//thats need when state direct open by url or push notification
-			var step = setupWizard.findStep($state.current.name);
+            var step = setupWizard.findStepByState($state.current.name);
 			if (!$scope.notification.created) {
 			modules.autoInstall({}, function (data) {
 				//if already installed need skip this step
 				if (data.finished) {					
-						setupWizard.showStep(step.nextStep);
-				}
-			});
+				    setupWizard.showStep(step.nextStep);
+                }
+            }, function (error) {
+                setupWizard.showStep(step.nextStep);
+            });
 			}
 
 			$scope.restart = function () {

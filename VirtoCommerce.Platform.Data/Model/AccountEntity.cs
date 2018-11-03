@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using VirtoCommerce.Platform.Core.Common;
@@ -25,6 +25,8 @@ namespace VirtoCommerce.Platform.Data.Model
         public string UserType { get; set; }
         [StringLength(128)]
         public string AccountState { get; set; }
+
+        public bool PasswordExpired { get; set; }
 
 		public virtual ObservableCollection<RoleAssignmentEntity> RoleAssignments { get; set; }
 		public virtual ObservableCollection<ApiAccountEntity> ApiAccounts { get; set; }

@@ -1,0 +1,61 @@
+<div class="blade-static __expanded">
+    <style>
+        .breadcrumbs .menu .menu-item .menu-link {
+            max-width: 189px;
+        }
+    </style>
+    <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
+    <div class="form-group">
+        <div class="form-input __other">
+            <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">
+            <button class="btn __other" type="button">
+                <i class="btn-ico fa fa-times-circle" title="Clear" ng-click="blade.searchKeyword=null;blade.refresh()"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper" ng-init="setGridOptions({
+                data: 'listEntries',
+                rowTemplate: 'asset-list.row.html',
+                rowHeight: 61,
+                columnDefs: [
+                        {
+                            name: 'url', displayName: 'platform.blades.asset-list.labels.picture',
+                            enableColumnResizing: false, enableSorting: false, width: 60,
+                            cellTemplate: 'asset-list-icon.cell.html'
+                        },
+                        { name: 'name', displayName: 'platform.blades.asset-list.labels.name', cellTooltip: true },
+                        { name: 'size', displayName: 'platform.blades.asset-list.labels.size', cellTemplate: 'asset-list-size.cell.html' },
+                        { name: 'modifiedDate', displayName: 'platform.blades.asset-list.labels.modified' }
+                ],
+                enablePaginationControls: false,
+                paginationPageSize: pageSettings.itemsPerPageCount
+                 })">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-pagination ui-grid-height></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="asset-list.row.html">
+    <div ng-click='grid.appScope.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': grid.appScope.blade.selectedNodeId === row.entity.url}" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell style="{{'cursor: ' + ((col.name==='actions' || row.entity.type==='folder' || row.entity.isOpenable) ? 'pointer' : 'default')}}" context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="ast_menu"></div>
+</script>
+
+<script type="text/ng-template" id="asset-list-icon.cell.html">
+    <div class="ui-grid-cell-contents">
+        <div class="product-img">
+            <div class="image" style="background-image: url('{{COL_FIELD}}')" ng-if="row.entity.isImage"></div>
+            <i class="table-ico fa" ng-class="row.entity.type === 'folder' ? 'fa-folder' : 'fa-file-o'" ng-if="!row.entity.isImage"></i>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="asset-list-size.cell.html">
+    <div class="ui-grid-cell-contents">
+        {{ COL_FIELD | readablesize }}
+    </div>
+</script>

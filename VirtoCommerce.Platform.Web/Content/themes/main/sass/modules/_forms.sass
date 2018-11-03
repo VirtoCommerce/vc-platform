@@ -1,4 +1,4 @@
-:-moz-ui-invalid:not(output)
+﻿:-moz-ui-invalid:not(output)
   box-shadow: none
 input::-ms-clear
   display: none
@@ -8,6 +8,7 @@ input::-ms-clear
 .form-input input.ng-invalid.form-input,
 .form-input textarea.ng-invalid,
 .ui-select-container.ng-invalid .select2-choice,
+.ui-select-container.ng-invalid .select2-choices,
 .form-input input.ng-invalid:focus,
 .form-input textarea.ng-invalid:focus
   background: #fef8f7
@@ -29,6 +30,10 @@ fieldset + fieldset
   color: $colorText
 .form
   padding: 15px 0
+  .chars-counter
+    float: right
+    margin-bottom: 5px // by label
+    font-size: 14px
   & > .form-group:first-child
     margin-top: 0
     & > .column > .form-group:first-child,
@@ -189,6 +194,11 @@ fieldset + fieldset
   position: absolute
   top: 11px
   z-index: 50
+.form-input.__langs .langCode
+  left: 8px
+  position: absolute
+  top: 6px
+  z-index: 50
 .form-input.__currency
   position: relative
   .currency
@@ -202,12 +212,11 @@ fieldset + fieldset
   display: inline-block
   font-size: 14px
   margin: 0 0 5px
-  .form-edit
-    display: inline-block
-    margin: 0 0 0 5px
-    .form-ico
-      font-size: 12px
-      vertical-align: 2px
+.form-edit
+  display: inline-block
+  margin: 0 0 0 5px
+  .form-ico
+    vertical-align: 2px
 .form-label + .form-nav
   float: right
   *
@@ -330,6 +339,11 @@ label.form-control
   display: inline-block
   margin: 0 0 0 18px
   vertical-align: 2px
+.form-input.__calendar .dropdown-menu table[timepicker] .btn span
+  vertical-align: middle
+.form-input.__calendar .dropdown-menu table[timepicker] .form-group input
+  text-align: center
+  padding-right: 10px !important
 
 /* Switch */
 .__switch

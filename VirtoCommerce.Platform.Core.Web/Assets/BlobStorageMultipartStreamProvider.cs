@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Core.Web.Assets
 
         public override Stream GetStream(HttpContent parent, HttpContentHeaders headers)
         {
-            var fileName = (headers.ContentDisposition.FileName ?? headers.ContentDisposition.Name).Replace("\"", string.Empty);
+            var fileName = Path.GetFileName((headers.ContentDisposition.FileName ?? headers.ContentDisposition.Name).Replace("\"", string.Empty));
             var relativeUrl = _rootPath + "/" + fileName;
             var absoluteUrl = _blobUrlResolver.GetAbsoluteUrl(relativeUrl);
 

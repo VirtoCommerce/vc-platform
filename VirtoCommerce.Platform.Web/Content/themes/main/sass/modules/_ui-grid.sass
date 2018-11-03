@@ -1,8 +1,8 @@
 .ui-grid,
 .ui-grid-header
   border-color: $baseBrd
-.ui-grid-viewport
-  overflow-x: auto !important
+/*.ui-grid-viewport
+  overflow-x: auto !important*/
 .ui-grid-top-panel
   background: rgba(0,0,0,.024)
 .ui-grid-header-cell
@@ -75,6 +75,14 @@
 .ui-grid-row-header-cell .ui-grid-cell-contents,
 .ui-grid-pinned-container-left .ui-grid-cell-contents
   text-align: center
+.table-wrapper.nowrap .ui-grid-cell-contents
+  white-space: initial
+.table-wrapper.nowrap .ui-grid-cell 
+  height: auto
+  display: table-cell
+  float: none
+.table-wrapper.nowrap .ui-grid-row
+  height: auto
 .ui-grid-cell-contents
   display: inline-block
   font-size: 14px
@@ -110,6 +118,7 @@
 .ui-grid-cell-contents .inner-contents
   display: inline-block
   vertical-align: middle
+  max-width: 100%
 .ui-grid-cell-contents
   &::after
     content: ' '
@@ -152,6 +161,7 @@
     font-size: 17px
     font-family: 'FontAwesome'
     margin: 0
+    opacity: 1
 .ui-grid-selection-row-header-buttons.ui-grid-row-selected,
 .ui-grid-selection-row-header-buttons.ui-grid-all-selected
   &::before
@@ -253,6 +263,8 @@ input.ui-grid-filter-input[type="text"]
     vertical-align: middle
 
     transition: font .3s ease
+    &.context-menu::before
+      content: "\f142"
 .ui-grid-actions ~ .menu
   background: $baseBrd
   box-sizing: border-box
@@ -280,3 +292,21 @@ input.ui-grid-filter-input[type="text"]
   transition: width .35s ease .5s
 .ui-grid-actions.__opened ~ .menu
   width: calc(100% - 80px)
+  
+.ui-grid-draggable-row-target
+  opacity: 0.5 !important
+.ui-grid-draggable-row
+  height: 60px
+.ui-grid-draggable-row-over
+  position: relative
+  &:before
+    content: ""
+    display: block
+    position: absolute
+    left: 0
+    width: 100%
+    border-bottom: 1px dashed #808080
+.ui-grid-draggable-row-over--above:before
+  top: 0
+.ui-grid-draggable-row-over--below:before
+  bottom: 0

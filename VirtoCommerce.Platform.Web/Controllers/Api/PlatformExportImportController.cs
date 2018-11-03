@@ -1,9 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -28,6 +30,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     public class PlatformExportImportController : ApiController
     {
         private const string _sampledataStateSetting = "VirtoCommerce.SampleDataState";
+        private readonly string _defaultExportFolder = Startup.VirtualRoot + "/App_Data/Export/";
+        private const string _defaultExportFileName = "exported_data.zip";
 
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
@@ -59,13 +63,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/autoinstall")]
         [ResponseType(typeof(SampleDataImportPushNotification))]
-        [AllowAnonymous]
         public IHttpActionResult TryToAutoInstallSampleData()
         {
-            var singleSampleData = InnerDiscoverSampleData().SingleOrDefault();
-            if (singleSampleData != null && !string.IsNullOrEmpty(singleSampleData.Url))
+            var sampleData = InnerDiscoverSampleData().FirstOrDefault(x => !x.Url.IsNullOrEmpty());
+            if (sampleData != null)
             {
-                return ImportSampleData(singleSampleData.Url);
+                return ImportSampleData(sampleData.Url);
             }
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -73,19 +76,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/import")]
         [ResponseType(typeof(SampleDataImportPushNotification))]
-        [AllowAnonymous]
+        [CheckPermission(Permission = PredefinedPermissions.PlatformImport)]
         public IHttpActionResult ImportSampleData([FromUri]string url = null)
         {
             lock (_lockObject)
             {
-                var sampleDataState = EnumUtility.SafeParse<SampleDataState>(_settingsManager.GetValue<string>(_sampledataStateSetting, SampleDataState.Undefined.ToString()), SampleDataState.Undefined);
+                var sampleDataState = EnumUtility.SafeParse(_settingsManager.GetValue(_sampledataStateSetting, SampleDataState.Undefined.ToString()), SampleDataState.Undefined);
                 if (sampleDataState == SampleDataState.Undefined)
                 {
                     //Sample data initialization
                     if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
                     {
                         _settingsManager.SetValue(_sampledataStateSetting, SampleDataState.Processing);
-                        var pushNotification = new SampleDataImportPushNotification("System");
+                        var pushNotification = new SampleDataImportPushNotification(User.Identity.Name);
                         _pushNotifier.Upsert(pushNotification);
                         BackgroundJob.Enqueue(() => SampleDataImportBackground(new Uri(url), HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/Uploads/"), pushNotification));
 
@@ -94,6 +97,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+
+        [HttpGet]
+        [Route("export/download/{fileName}")]
+        [CheckPermission(Permission = PredefinedPermissions.PlatformExport)]
+        public HttpResponseMessage DownloadExportFile(string fileName)
+        {
+            var localTmpFolder = HostingEnvironment.MapPath(_defaultExportFolder);
+            var localPath = Path.Combine(localTmpFolder, Path.GetFileName(_defaultExportFileName));
+
+            //Load source data only from local file system 
+            var stream = File.Open(localPath, FileMode.Open);
+            var result = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StreamContent(stream) };
+            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = fileName
+            };
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(localPath));
+            return result;
+
         }
 
         /// <summary>
@@ -126,7 +150,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             if (string.IsNullOrEmpty(fileUrl))
             {
-                throw new ArgumentNullException("fileUrl");
+                throw new ArgumentNullException(nameof(fileUrl));
             }
             var localPath = HostingEnvironment.MapPath(fileUrl);
             PlatformExportManifest retVal;
@@ -173,11 +197,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(notification);
         }
 
-        private IEnumerable<SampleDataInfo> InnerDiscoverSampleData()
+        private static IEnumerable<SampleDataInfo> InnerDiscoverSampleData()
         {
             var retVal = new List<SampleDataInfo>();
 
-            var sampleDataUrl = ConfigurationManager.AppSettings.GetValue("VirtoCommerce:SampleDataUrl", string.Empty);
+            var sampleDataUrl = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:SampleDataUrl", string.Empty);
             if (!string.IsNullOrEmpty(sampleDataUrl))
             {
                 //Discovery mode
@@ -314,19 +338,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             try
             {
-                using (var stream = new MemoryStream())
+                var localTmpFolder = HostingEnvironment.MapPath(_defaultExportFolder);
+                var localTmpPath = Path.Combine(localTmpFolder, _defaultExportFileName);
+
+                if (!Directory.Exists(localTmpFolder))
+                {
+                    Directory.CreateDirectory(localTmpFolder);
+                }
+                //Import first to local tmp folder because Azure blob storage doesn't support some special file access mode 
+                using (var stream = File.Open(localTmpPath, FileMode.OpenOrCreate))
                 {
                     var manifest = exportRequest.ToManifest();
                     _platformExportManager.Export(stream, manifest, progressCallback);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    var relativeUrl = "tmp/exported_data.zip";
-                    using (var targetStream = _blobStorageProvider.OpenWrite(relativeUrl))
-                    {
-                        stream.CopyTo(targetStream);
-                    }
-                    //Get a download url
-                    pushNotification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(relativeUrl);
+                    pushNotification.DownloadUrl = $"api/platform/export/download/{_defaultExportFileName}";
                 }
+
             }
             catch (Exception ex)
             {

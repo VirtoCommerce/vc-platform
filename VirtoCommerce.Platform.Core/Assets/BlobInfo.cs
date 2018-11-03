@@ -14,8 +14,15 @@ namespace VirtoCommerce.Platform.Core.Assets
         public string Url { get; set; }
         public string RelativeUrl { get; set; }
         public string FileName { get; set; }
+      
         public long Size { get; set; }
-        public string ContentType { get; set; }
+      
+        public string ContentType { get; set; }      
+
         public DateTime? ModifiedDate { get; set; }
+
+        //Properties for backward compatibility
+        public string Name => FileName;            
+        public string MimeType => ContentType;
     }
 }

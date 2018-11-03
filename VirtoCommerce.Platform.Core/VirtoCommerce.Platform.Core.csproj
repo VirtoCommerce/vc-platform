@@ -24,7 +24,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <DocumentationFile>bin\Debug\VirtoCommerce.Platform.Core.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
@@ -37,16 +36,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Release\VirtoCommerce.Platform.Core.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
@@ -59,15 +57,25 @@
     <Compile Include="Assets\BlobFolder.cs" />
     <Compile Include="Assets\BlobSearchResult.cs" />
     <Compile Include="Assets\BlobInfo.cs" />
+    <Compile Include="Assets\IAssetEntrySearchService.cs" />
     <Compile Include="Assets\IBlobUrlResolver.cs" />
     <Compile Include="Assets\IBlobStorageProvider.cs" />
+    <Compile Include="Bus\IHandlerRegistrar.cs" />
+    <Compile Include="Bus\InProcessBus.cs" />
     <Compile Include="ChangeLog\IHasChangesHistory.cs" />
     <Compile Include="Common\AbstractTypeFactory.cs" />
+    <Compile Include="Common\CancellationTokenWrapper.cs" />
+    <Compile Include="Common\ChangedEntry.cs" />
+    <Compile Include="Common\ConfigurationHelper.cs" />
+    <Compile Include="Common\ConnectionStringHelper.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\ConfigManagerExtensions.cs" />
+    <Compile Include="Common\ICacheKey.cs" />
+    <Compile Include="Common\ICancellationToken.cs" />
     <Compile Include="Common\IEntity.cs" />
     <Compile Include="Common\IFactory.cs" />
+    <Compile Include="Common\IValueObject.cs" />
     <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PlatformVersion.cs" />
     <Compile Include="Common\PredicateBuilder.cs" />
@@ -78,6 +86,7 @@
     <Compile Include="Common\StreamExtensions.cs" />
     <Compile Include="Common\SwaggerFileResponseAttribute.cs" />
     <Compile Include="Common\SwaggerOptionalAttribute.cs" />
+    <Compile Include="Common\TenantIdentity.cs" />
     <Compile Include="DynamicProperties\DynamicPropertiesExtensions.cs" />
     <Compile Include="DynamicProperties\DynamicProperty.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyDictionaryItem.cs" />
@@ -88,9 +97,17 @@
     <Compile Include="DynamicProperties\DynamicPropertyValueType.cs" />
     <Compile Include="DynamicProperties\IDynamicPropertyService.cs" />
     <Compile Include="DynamicProperties\IHasDynamicProperties.cs" />
+    <Compile Include="Events\ChangedEntryEvent.cs" />
+    <Compile Include="Events\DomainEvent.cs" />
     <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Events\EventSupressor.cs" />
+    <Compile Include="Events\ICancellableEventHandler.cs" />
+    <Compile Include="Events\IChangedEntryEvent.cs" />
+    <Compile Include="Events\IEvent.cs" />
+    <Compile Include="Events\IEventHandler.cs" />
     <Compile Include="Events\IEventPublisher.cs" />
     <Compile Include="Events\IPriorityObserver.cs" />
+    <Compile Include="Exceptions\PlatformException.cs" />
     <Compile Include="ExportImport\ExportImportProgressInfo.cs" />
     <Compile Include="ExportImport\ExportModuleInfo.cs" />
     <Compile Include="ExportImport\IPlatformExportImportManager.cs" />
@@ -122,6 +139,12 @@
     <Compile Include="Common\ValueObject.cs" />
     <Compile Include="ExportImport\ISupportExportImportModule.cs" />
     <Compile Include="ExportImport\PlatformExportManifest.cs" />
+    <Compile Include="Common\IPathMapper.cs" />
+    <Compile Include="Jobs\JobPriority.cs" />
+    <Compile Include="Messages\ICancellableHandler.cs" />
+    <Compile Include="Messages\IHandler.cs" />
+    <Compile Include="Messages\IMessage.cs" />
+    <Compile Include="Modularity\Exceptions\MissedModuleException.cs" />
     <Compile Include="Modularity\ManifestDependency.cs" />
     <Compile Include="Modularity\ModuleBase.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
@@ -197,11 +220,18 @@
     <Compile Include="Security\ApiAccount.cs" />
     <Compile Include="Security\ApiAccountType.cs" />
     <Compile Include="Security\ApplicationUserExtended.cs" />
-    <Compile Include="Security\AuthentificationOptions.cs" />
+    <Compile Include="Security\Events\UserChangedEvent.cs" />
+    <Compile Include="Security\Events\UserChangingEvent.cs" />
+    <Compile Include="Security\Events\UserPasswordChangedEvent.cs" />
+    <Compile Include="Security\Events\UserResetPasswordEvent.cs" />
+    <Compile Include="Security\Events\UserLogoutEvent.cs" />
+    <Compile Include="Security\Events\UserLoginEvent.cs" />
     <Compile Include="Security\ICurrentUser.cs" />
     <Compile Include="Security\IHasSecurityAccounts.cs" />
+    <Compile Include="Security\IPasswordCheckService.cs" />
     <Compile Include="Security\ISupportSecurityScopes.cs" />
     <Compile Include="Security\IUserNameResolver.cs" />
+    <Compile Include="Security\PasswordValidationResult.cs" />
     <Compile Include="Security\VirtoCommerceClaimTypes.cs" />
     <Compile Include="Security\IPermissionScopeService.cs" />
     <Compile Include="Security\IRoleManagementService.cs" />
@@ -227,6 +257,10 @@
     <Compile Include="Settings\SettingEntry.cs" />
     <Compile Include="Settings\SettingsExtension.cs" />
     <Compile Include="Settings\SettingValueType.cs" />
+    <Compile Include="Assets\IAssetEntryService.cs" />
+    <Compile Include="Assets\AssetEntrySearchCriteria.cs" />
+    <Compile Include="Assets\AssetEntrySearchResult.cs" />
+    <Compile Include="Assets\AssetEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

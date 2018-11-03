@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.dynamicPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.api', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, bladeNavigationService, dialogService, settings, dynamicPropertiesApi, dictionaryItemsApi) {
+.controller('platformWebApp.dynamicPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.api', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.dynamicProperties.valueTypesService', function ($scope, bladeNavigationService, dialogService, settings, dynamicPropertiesApi, dictionaryItemsApi, valueTypesService) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
     blade.headIcon = 'fa-plus-square-o';
@@ -33,6 +33,10 @@
         return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'LongText' || blade.currentEntity.valueType === 'Html';
     };
 
+    $scope.dictionaryFlagValidator = function (value) {
+        return !value || blade.currentEntity.valueType === 'ShortText';
+    };
+
     $scope.openChild = function (childType) {
         var newBlade = {
             id: "propertyChild",
@@ -40,10 +44,6 @@
         };
 
         switch (childType) {
-            case 'valType':
-                newBlade.controller = 'platformWebApp.propertyValueTypeController';
-                newBlade.template = '$(Platform)/Scripts/app/dynamicProperties/blades/property-valueType.tpl.html';
-                break;
             case 'dict':
                 newBlade.isApiSave = !blade.isNew;
                 newBlade.controller = 'platformWebApp.propertyDictionaryController';
@@ -145,6 +145,8 @@
         }
         ];
     }
+
+    blade.valueTypes = valueTypesService.query();
 
     // on load: 
     blade.refresh();

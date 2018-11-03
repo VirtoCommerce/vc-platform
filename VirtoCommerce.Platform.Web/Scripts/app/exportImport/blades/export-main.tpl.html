@@ -48,8 +48,8 @@
                     <div>
                         <div class="sub-t">{{blade.notification.description}}</div>
                         <div class="block" ng-if="blade.notification.created || blade.notification.finished">
-                            <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">{{ 'platform.blades.export-main.labels.start' | translate }} — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.notification.created"></span></p>
-                            <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">{{ 'platform.blades.export-main.labels.end' | translate }} — <i class="fa fa-clock-o"></i> <span am-time-ago="blade.notification.finished"></span></p>
+                            <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">{{ 'platform.blades.export-main.labels.start' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.created | amParse | date:'mediumTime' }}</p>
+                            <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">{{ 'platform.blades.export-main.labels.end' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.finished | amParse | date:'mediumTime' }}</p>
                         </div>
                         <div ng-if="blade.notification.errorCount > 0">
                             <span class="sub-t">{{ 'platform.blades.export-main.labels.errors' | translate }}</span>

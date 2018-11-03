@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Events
 {
+    [Obsolete("Use non generic IEventPublisher instead")]
     public interface IEventPublisher<T>
     {
         /// <summary>
@@ -13,5 +12,9 @@ namespace VirtoCommerce.Platform.Core.Events
         /// </summary>
         /// <param name="eventMessage">Event message</param>
         void Publish(T eventMessage);
+    }
+    public interface IEventPublisher
+    {
+        Task Publish<T>(T @event, CancellationToken cancellationToken = default(CancellationToken)) where T : class, IEvent;
     }
 }

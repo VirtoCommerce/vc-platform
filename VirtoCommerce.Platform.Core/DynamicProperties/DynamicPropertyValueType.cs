@@ -10,5 +10,6 @@
         DateTime,
         Boolean,
         Html,
+        Image
     }
 }

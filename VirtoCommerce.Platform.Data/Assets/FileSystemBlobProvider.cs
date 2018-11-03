@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.Platform.Data.Assets
 {
@@ -41,6 +42,9 @@ namespace VirtoCommerce.Platform.Data.Assets
 
             BlobInfo retVal = null;
             var filePath = GetStoragePathFromUrl(url);
+
+            ValidatePath(filePath);
+
             if (File.Exists(filePath))
             {
                 var fileInfo = new FileInfo(filePath);
@@ -66,7 +70,10 @@ namespace VirtoCommerce.Platform.Data.Assets
         public virtual Stream OpenRead(string url)
         {
             var filePath = GetStoragePathFromUrl(url);
-            return File.Open(filePath, FileMode.Open);
+
+            ValidatePath(filePath);
+
+            return File.Open(filePath, FileMode.Open, FileAccess.Read);
         }
 
         /// <summary>
@@ -79,11 +86,14 @@ namespace VirtoCommerce.Platform.Data.Assets
             var filePath = GetStoragePathFromUrl(url);
             var folderPath = Path.GetDirectoryName(filePath);
 
+            ValidatePath(filePath);
+
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
-            return File.Open(filePath, FileMode.Create);
+
+            return File.Open(filePath, FileMode.Create, FileAccess.Write);
         }
 
 
@@ -99,6 +109,9 @@ namespace VirtoCommerce.Platform.Data.Assets
             folderUrl = folderUrl ?? _basePublicUrl;
 
             var storageFolderPath = GetStoragePathFromUrl(folderUrl);
+
+            ValidatePath(storageFolderPath);
+
             if (!Directory.Exists(storageFolderPath))
             {
                 return retVal;
@@ -152,6 +165,8 @@ namespace VirtoCommerce.Platform.Data.Assets
             }
             path = Path.Combine(path, folder.Name);
 
+            ValidatePath(path);
+
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -172,6 +187,9 @@ namespace VirtoCommerce.Platform.Data.Assets
             foreach (var url in urls)
             {
                 var path = GetStoragePathFromUrl(url);
+
+                ValidatePath(path);
+
                 // get the file attributes for file or directory
                 var attr = File.GetAttributes(path);
 
@@ -219,7 +237,7 @@ namespace VirtoCommerce.Platform.Data.Assets
 
         protected string GetAbsoluteUrlFromPath(string path)
         {
-            var retVal = _basePublicUrl + "/" + path.Replace(_storagePath, String.Empty).TrimStart('\\').Replace('\\', '/');
+            var retVal = _basePublicUrl + "/" + path.Replace(_storagePath, string.Empty).TrimStart('\\').Replace('\\', '/');
             return Uri.EscapeUriString(retVal);
         }
 
@@ -231,12 +249,23 @@ namespace VirtoCommerce.Platform.Data.Assets
                 retVal = _storagePath + "\\";
                 if (!String.IsNullOrEmpty(_basePublicUrl))
                 {
-                    url = url.Replace(_basePublicUrl, String.Empty);
+                    url = url.Replace(_basePublicUrl, string.Empty);
                 }
                 retVal += url;
                 retVal = retVal.Replace("/", "\\").Replace("\\\\", "\\");
-            }
+            }       
             return Uri.UnescapeDataString(retVal);
+        }
+
+        protected void ValidatePath(string path)
+        {
+            path = Path.GetFullPath(path);
+            //Do not allow the use paths located above of  the defined storagePath folder
+            //for security reason (avoid the file structure manipulation through using relative paths)
+            if (!path.StartsWith(_storagePath))
+            {
+                throw new PlatformException($"Invalid path {path}");
+            }
         }
     }
 }

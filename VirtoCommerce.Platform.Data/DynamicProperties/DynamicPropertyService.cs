@@ -61,7 +61,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
             using (var repository = _repositoryFactory())
             {
-                var properties = repository.GetDynamicPropertiesForType(objectType);
+                var properties = repository.GetDynamicPropertiesForTypes(new[] { objectType });
                 result.AddRange(properties.Select(p => p.ToModel()));
             }
             return result.ToArray();
@@ -76,8 +76,9 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             using (var changeTracker = GetChangeTracker(repository))
             {
                 var sourceProperties = properties.Select(x => x.ToEntity()).ToList();
-                var targetProperties = repository.GetDynamicPropertiesByIds(properties.Select(x => x.Id).ToArray()).ToList();
-                sourceProperties.CompareTo(targetProperties, EqualityComparer<DynamicPropertyEntity>.Default, (state, source, target) =>
+                var targetProperties = repository.GetDynamicPropertiesForTypes(properties.Select(x => x.ObjectType).Distinct().ToArray()).ToList();
+                var comparer = AnonymousComparer.Create((DynamicPropertyEntity x) => x.Name.ToLowerInvariant() + ":" + x.ObjectType.ToLowerInvariant());
+                sourceProperties.CompareTo(targetProperties, comparer, (state, source, target) =>
                     {
                         if (state == EntryState.Modified)
                         {
@@ -191,12 +192,12 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
         public void LoadDynamicPropertyValues(params IHasDynamicProperties[] owners)
         {
-            if(owners == null)
+            if (owners == null)
             {
                 throw new ArgumentNullException("owners");
             }
 
-            var propOwners = owners.SelectMany(x=> x.GetFlatObjectsListWithInterface<IHasDynamicProperties>());
+            var propOwners = owners.SelectMany(x => x.GetFlatObjectsListWithInterface<IHasDynamicProperties>());
             using (var repository = _repositoryFactory())
             {
                 var objectTypeNames = propOwners.Select(x => GetObjectTypeName(x)).Distinct().ToArray();
@@ -211,7 +212,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 }
             }
         }
-     
+
         public void SaveDynamicPropertyValues(IHasDynamicProperties owner)
         {
             if (owner == null)
@@ -226,53 +227,50 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 using (var repository = _repositoryFactory())
                 using (var changeTracker = GetChangeTracker(repository))
                 {
-                    if (objectWithDynamicProperties.Id != null)
+                    if (objectWithDynamicProperties.Id != null && !objectWithDynamicProperties.DynamicProperties.IsNullOrEmpty())
                     {
-                        if (objectWithDynamicProperties.DynamicProperties != null && objectsWithDynamicProperties.Any())
+                        var objectType = GetObjectTypeName(objectWithDynamicProperties);
+
+                        var sourceCollection = objectWithDynamicProperties.DynamicProperties.Select(x => x.ToEntity(objectWithDynamicProperties.Id, objectType));
+                        var targetCollection = repository.GetObjectDynamicProperties(new[] { objectType }, new[] { objectWithDynamicProperties.Id });
+
+                        var target = new { Properties = new ObservableCollection<DynamicPropertyEntity>(targetCollection) };
+                        var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(sourceCollection) };
+
+                        //When creating DynamicProperty manually, many properties remain unfilled (except Name, ValueType and ObjectValues).
+                        //We have to set them with data from the repository.
+                        var transistentProperties = source.Properties.Where(x => x.IsTransient());
+                        if (transistentProperties.Any())
                         {
-                            var objectType = GetObjectTypeName(objectWithDynamicProperties);
-
-                            var sourceCollection = objectWithDynamicProperties.DynamicProperties.Select(x => x.ToEntity(objectWithDynamicProperties.Id, objectType));
-                            var targetCollection = repository.GetObjectDynamicProperties(new[] { objectType }, new[] { objectWithDynamicProperties.Id });
-
-                            var target = new { Properties = new ObservableCollection<DynamicPropertyEntity>(targetCollection) };
-                            var source = new { Properties = new ObservableCollection<DynamicPropertyEntity>(sourceCollection) };
-
-                            //When creating DynamicProperty manually, many properties remain unfilled (except Name, ValueType and ObjectValues).
-                            //We have to set them with data from the repository.
-                            var transistentProperties = source.Properties.Where(x => x.IsTransient());
-                            if (transistentProperties.Any())
+                            var allTypeProperties = repository.GetDynamicPropertiesForTypes(new[] { objectType });
+                            foreach (var transistentPropery in transistentProperties)
                             {
-                                var allTypeProperties = repository.GetDynamicPropertiesForType(objectType);
-                                foreach (var transistentPropery in transistentProperties)
+                                var property = allTypeProperties.FirstOrDefault(x => String.Equals(x.Name, transistentPropery.Name, StringComparison.InvariantCultureIgnoreCase));
+                                if (property != null)
                                 {
-                                    var property = allTypeProperties.FirstOrDefault(x => String.Equals(x.Name, transistentPropery.Name, StringComparison.InvariantCultureIgnoreCase));
-                                    if (property != null)
-                                    {
-                                        transistentPropery.Id = property.Id;
-                                        transistentPropery.ObjectType = property.ObjectType;
-                                        transistentPropery.IsArray = property.IsArray;
-                                        transistentPropery.IsRequired = property.IsRequired;
-                                        transistentPropery.ValueType = property.ValueType;
-                                    }
-                                }
-                            }
-                            changeTracker.Attach(target);
-                            foreach (var sourceProperty in source.Properties)
-                            {
-                                var targetProperty = target.Properties.FirstOrDefault(x => x.Id == sourceProperty.Id);
-                                if (targetProperty != null)
-                                {
-                                    if (!sourceProperty.ObjectValues.IsNullCollection())
-                                    {
-                                        sourceProperty.ObjectValues.Patch(targetProperty.ObjectValues, new DynamicPropertyObjectValueComparer(), (sourceValue, targetValue) => sourceValue.Patch(targetValue));
-                                    }
+                                    transistentPropery.Id = property.Id;
+                                    transistentPropery.ObjectType = property.ObjectType;
+                                    transistentPropery.IsArray = property.IsArray;
+                                    transistentPropery.IsRequired = property.IsRequired;
+                                    transistentPropery.ValueType = property.ValueType;
                                 }
                             }
                         }
-                    }
+                        changeTracker.Attach(target);
+                        foreach (var sourceProperty in source.Properties)
+                        {
+                            var targetProperty = target.Properties.FirstOrDefault(x => x.Id == sourceProperty.Id);
+                            if (targetProperty != null)
+                            {
+                                if (!sourceProperty.ObjectValues.IsNullCollection())
+                                {
+                                    sourceProperty.ObjectValues.Patch(targetProperty.ObjectValues, new DynamicPropertyObjectValueComparer(), (sourceValue, targetValue) => sourceValue.Patch(targetValue));
+                                }
+                            }
+                        }
 
-                    repository.UnitOfWork.Commit();
+                        repository.UnitOfWork.Commit();
+                    }
                 }
             }
         }

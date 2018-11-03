@@ -69,7 +69,7 @@
                         </li>
                         <li class="list-item">
                             <div class="list-t">{{ 'platform.blades.license.labels.expiration' | translate }}</div>
-                            <div class="list-descr">{{currentEntity.expirationDate | date }}</div>
+                            <div class="list-descr">{{currentEntity.expirationDate | amParse | date }}</div>
                         </li>
                         <li class="list-item" ng-if="currentEntity.customerEmail">
                             <div class="list-t">{{ 'platform.blades.license.labels.email' | translate }}</div>

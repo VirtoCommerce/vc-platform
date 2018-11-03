@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +22,8 @@ namespace VirtoCommerce.Platform.Web
         public static void Register(HttpConfiguration config)
         {
             config.Filters.Add(new CheckPermissionAttribute { Permission = PredefinedPermissions.SecurityCallApi });
-
-            config.EnableCors();
+            //Commented out for security reasons
+            //config.EnableCors();
 
             // Web API routes
             config.MapHttpAttributeRoutes();
@@ -64,12 +64,12 @@ namespace VirtoCommerce.Platform.Web
         /// This converter gets derived types from AbstractTypeFactory
         /// </summary>
         public class PolymorphJsonContractResolver : CamelCasePropertyNamesContractResolver
-        {        
+        {
             protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
             {
                 //Do not handle abstract types
                 if (!type.IsAbstract)
-                {               
+                {
                     var abstractTypeFactory = typeof(Core.Common.AbstractTypeFactory<>).MakeGenericType(type);
                     var pi = abstractTypeFactory.GetProperty("AllTypeInfos");
                     var values = pi.GetValue(null) as IList;

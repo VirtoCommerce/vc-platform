@@ -95,10 +95,7 @@ namespace VirtoCommerce.Platform.Tests
 
             moduleInstaller.Uninstall(modules.Union(modulesWithDependencies), progress);
             ListModules(catalog);
-            Assert.Equal(
-                0, 
-                modules.Union(modulesWithDependencies).OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).Count()
-            );
+            Assert.Empty(modules.Union(modulesWithDependencies).OfType<ManifestModuleInfo>().Where(x => x.IsInstalled));
         }
 
         public override void Dispose()

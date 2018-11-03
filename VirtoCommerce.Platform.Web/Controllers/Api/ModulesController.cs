@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -30,6 +29,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [CheckPermission(Permission = PredefinedPermissions.ModuleQuery)]
     public class ModulesController : ApiController
     {
+        private const string _autoInstallStateSetting = "VirtoCommerce.ModulesAutoInstallState";
+
         private readonly string _uploadsUrl = Startup.VirtualRoot + "/App_Data/Uploads/";
         private readonly IModuleCatalog _moduleCatalog;
         private readonly IModuleInstaller _moduleInstaller;
@@ -148,6 +149,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotAcceptable, "This request is not properly formatted"));
             }
+
             webModel.ModuleDescriptor retVal = null;
             var uploadsPath = HostingEnvironment.MapPath(_uploadsUrl);
             var streamProvider = new CustomMultipartFormDataStreamProvider(uploadsPath);
@@ -178,15 +180,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         else
                         {
                             //Force dependency validation for new module
-                            _moduleCatalog.CompleteListWithDependencies(new[] { module }).ToArray();
+                            _moduleCatalog.CompleteListWithDependencies(new[] { module }).ToList().Clear();
                             _moduleCatalog.AddModule(module);
-                         
                         }
+
                         module.Ref = fileData.LocalFileName;
                         retVal = module.ToWebModel();
                     }
                 }
             }
+
             return Ok(retVal);
         }
 
@@ -255,16 +258,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("autoinstall")]
         [ResponseType(typeof(webModel.ModuleAutoInstallPushNotification))]
-        [AllowAnonymous]
         public IHttpActionResult TryToAutoInstallModules()
         {
-            var notification = new webModel.ModuleAutoInstallPushNotification("System")
+            var notification = new webModel.ModuleAutoInstallPushNotification(User.Identity.Name)
             {
                 Title = "Modules installation",
                 //set completed by default
                 Finished = DateTime.UtcNow
             };
-                       
+
 
             if (!_settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false))
             {
@@ -272,10 +274,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     if (!_settingsManager.GetValue("VirtoCommerce.ModulesAutoInstalled", false))
                     {
-                        var moduleBundles = ConfigurationManager.AppSettings.GetValues("VirtoCommerce:AutoInstallModuleBundles");
+                        var moduleBundles = ConfigurationHelper.SplitAppSettingsStringValue("VirtoCommerce:AutoInstallModuleBundles");
                         if (!moduleBundles.IsNullOrEmpty())
                         {
                             _settingsManager.SetValue("VirtoCommerce.ModulesAutoInstalled", true);
+                            _settingsManager.SetValue(_autoInstallStateSetting, webModel.AutoInstallState.Processing);
 
                             EnsureModulesCatalogInitialized();
 
@@ -324,6 +327,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(notification);
         }
 
+        /// <summary>
+        /// This method used by azure automatically deployment scripts to check the installation status
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("autoinstall/state")]
+        [ResponseType(typeof(string))]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [AllowAnonymous]
+        public IHttpActionResult GetAutoInstallState()
+        {
+            var state = EnumUtility.SafeParse(_settingsManager.GetValue(_autoInstallStateSetting, string.Empty), webModel.AutoInstallState.Undefined);
+            return Ok(state);
+        }
+
         [ApiExplorerSettings(IgnoreApi = true)]
         public void ModuleBackgroundJob(webModel.ModuleBackgroundJobOptions options, webModel.ModulePushNotification notification)
         {
@@ -362,6 +380,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             finally
             {
+                _settingsManager.SetValue(_autoInstallStateSetting, webModel.AutoInstallState.Completed);
+
                 notification.Finished = DateTime.UtcNow;
                 notification.ProgressLog.Add(new webModel.ProgressMessage
                 {
@@ -377,7 +397,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _moduleCatalog.Initialize();
         }
 
-        private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(List<ManifestModuleInfo> modules)
+        private IEnumerable<ManifestModuleInfo> GetDependingModulesRecursive(IEnumerable<ManifestModuleInfo> modules)
         {
             var retVal = new List<ManifestModuleInfo>();
             foreach (var module in modules)
