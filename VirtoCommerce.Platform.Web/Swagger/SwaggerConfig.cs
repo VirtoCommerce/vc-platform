@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -48,6 +47,19 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.UseFullTypeNameInSchemaIds();
                 c.DocumentFilter(tagsFilterFactory);
                 c.OperationFilter(tagsFilterFactory);
+
+                // TECHDEBT: this is a workaround for the Swashbuckle issue: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/752
+                // By default, Swashbuckle encodes generic types like this: System.Func[VirtoCommerce.Domain.Common.IEvaluationContext,System.Boolean]
+                // and uses that string to reference the type. It contains URL-incompatible characters like '[' or ']', and Swagger validation doesn't accept it.
+                // So, to overcome this, we replace these characters with URL compatible characters like '-' or '_', and the result will look like this:
+                // System.Func_2_VirtoCommerce.Domain.Common.IEvaluationContext-System.Boolean_
+                c.SchemaId(type => type.ToString()
+                    .Replace('[', '_')
+                    .Replace(']', '_')
+                    .Replace('`', '_')
+                    .Replace(',', '-')
+                );
+
                 ApplyCommonSwaggerConfiguration(c, container, string.Empty, xmlCommentsFilePaths);
             })
             .EnableSwaggerUi(routePrefix + "docs/ui/{*assetPath}", c =>

@@ -62,7 +62,7 @@
                 generateNewApiKey();
             },
             canExecuteMethod: function () {
-                return blade.currentEntity.apiAccountType === 'Hmac';
+                return blade.currentEntity && blade.currentEntity.apiAccountType === 'Hmac';
             },
             permission: blade.updatePermission
         },
