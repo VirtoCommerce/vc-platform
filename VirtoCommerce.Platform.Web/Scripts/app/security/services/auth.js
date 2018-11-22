@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-.factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', '$interpolate', function ($http, $rootScope, $cookieStore, $state, $interpolate) {
+    .factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', '$interpolate', '$q', 'platformWebApp.authDataStorage', function ($http, $rootScope, $cookieStore, $state, $interpolate, $q, authDataStorage) {
     var serviceBase = 'api/platform/security/';
     var authContext = {
         userId: null,
@@ -10,7 +10,9 @@ angular.module('platformWebApp')
     };
 
     authContext.fillAuthData = function () {
-        $http.get(serviceBase + 'currentuser').then(
+        // TODO: check authDataStorage for authenticationData?
+
+        return $http.get(serviceBase + 'currentuser').then(
             function (results) {
                 changeAuth(results.data);
             },
@@ -18,11 +20,30 @@ angular.module('platformWebApp')
     };
 
     authContext.login = function (email, password, remember) {
-        return $http.post(serviceBase + 'login/', { userName: email, password: password, rememberMe: remember }).then(
-            function (results) {
-                changeAuth(results.data);
-                return authContext.isAuthenticated;
+        var requestData = 'grant_type=password&username=' + email + '&password=' + password;
+
+        var promise = $q.defer();
+
+        return $http.post('token', requestData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
+            function (response) {
+                authDataStorage.storeAuthData(response.data.access_token, email);
+
+                return authContext.fillAuthData().then(function() {
+                    promise.resolve(response.data);
+                }, function(error) {
+                    promise.reject(error);
+                })
+            }, function(error) {
+                authContext.logout();
+                promise.reject(error);
             });
+
+        // TODO: remove this old code
+        //return $http.post(serviceBase + 'login/', { userName: email, password: password, rememberMe: remember }).then(
+        //    function (results) {
+        //        changeAuth(results.data);
+        //        return authContext.isAuthenticated;
+        //    });
     };
     
     authContext.requestpasswordreset = function (data) {
@@ -47,10 +68,11 @@ angular.module('platformWebApp')
     };
 
     authContext.logout = function () {
+        authDataStorage.clearStoredData();
         changeAuth({});
 
-        $http.post(serviceBase + 'logout/').then(function (result) {
-        });
+        //$http.post(serviceBase + 'logout/').then(function (result) {
+        //});
     };
 
     authContext.checkPermission = function (permission, securityScopes) {

@@ -23,7 +23,8 @@ var AppDependencies = [
     'ngTagsInput',
     'tmh.dynamicLocale',
     'pascalprecht.translate',
-    'angular.filter'
+    'angular.filter',
+    'LocalStorageModule'
 ];
 
 angular.module('platformWebApp', AppDependencies).
@@ -149,10 +150,17 @@ angular.module('platformWebApp', AppDependencies).
         var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
         return retVal;
     }])
-    .factory('platformWebApp.httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
+    .factory('platformWebApp.httpErrorInterceptor', ['$q', '$rootScope', 'platformWebApp.authDataStorage', function ($q, $rootScope, authDataStorage) {
         var httpErrorInterceptor = {};
 
         httpErrorInterceptor.request = function (config) {
+            config.headers = config.headers || {};
+
+            var authenticationData = authDataStorage.getStoredData();
+            if (authenticationData) {
+                config.headers.Authorization = 'Bearer ' + authenticationData.token;
+            }
+
             // do something on success
             if (!config.cache) {
                 $rootScope.$broadcast('httpRequestSuccess', config);
