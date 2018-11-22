@@ -21,6 +21,10 @@ The [`Virto Commerce`](https://github.com/virtocommerce/vc-platform) repository 
 * File a bug in [GitHub Issues](https://github.com/virtocommerce/vc-platform/issues).
 * [Tweet](https://twitter.com/virtocommerce) us with other feedback.
 
+Platform context
+-----------
+![platform context](https://user-images.githubusercontent.com/7566324/48913507-432cc700-ee81-11e8-96da-98da10eba8e2.png)
+
 Architecture
 -----------
 ![Virto Commerce architecture](https://virtocommerce.com/assets/images/features/architecture-circle.png "Virto Commerce architecture")
