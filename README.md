@@ -23,7 +23,7 @@ The [`Virto Commerce`](https://github.com/virtocommerce/vc-platform) repository 
 
 Platform context
 -----------
-![platform context](https://user-images.githubusercontent.com/7566324/48913507-432cc700-ee81-11e8-96da-98da10eba8e2.png)
+![platform context](https://user-images.githubusercontent.com/7566324/48930344-91c97800-eef8-11e8-999a-6f37a060bd64.png)
 
 Architecture
 -----------
