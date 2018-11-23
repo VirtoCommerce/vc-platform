@@ -6,7 +6,7 @@ Enterprise .NET ecommerce platform for B2B and B2C solutions. Virto Commerce is 
 
 Virto Commerce is updated almost daily and new modules can be downloaded using "Modules" blade in admin console.
 
-![Virto Commerce](https://virtocommerce.com/assets/images/home/hero.gif "Virto Commerce")
+![Virto Commerce](https://user-images.githubusercontent.com/7566324/48930498-8460bd80-eef9-11e8-810e-db11abe1989d.gif "Virto Commerce")
 
 The [`Virto Commerce`](https://github.com/virtocommerce/vc-platform) repository is where we do development for the platform (you can see other repositories for various components/modules here - [`Virto Commerce Repositories`](https://github.com/VirtoCommerce)) and there are many ways you can participate in the project, for example:
 
