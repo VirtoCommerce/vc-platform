@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
@@ -6,6 +6,7 @@ using System.Text;
 using CacheManager.Core;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Common;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security.Resources;
@@ -28,8 +29,8 @@ namespace VirtoCommerce.Platform.Data.Security
 
         public ApiAccountEntity GetAccountByAppId(ApiAccountType type, string appId)
         {
-            var cacheKey = String.Join(":", "ApiAccount", type.ToString(), appId);
-            return _cacheManager.Get(cacheKey, "PlatformRegion",  () => LoadApiAccount(type, appId));
+            var cacheKey = string.Join(":", "ApiAccount", type.ToString(), appId);
+            return _cacheManager.Get(cacheKey, SecurityConstants.CacheRegion, () => LoadApiAccount(type, appId));
         }
 
         public ApiAccountEntity GenerateApiCredentials(ApiAccountType type)
@@ -65,6 +66,8 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var repository = _platformRepository())
             {
+                //Do not return EF DynamicProxies types, it can leads to strange behavior when caching
+                repository.DisableChangesTracking();
                 var apiAccount = repository.ApiAccounts.FirstOrDefault(c => c.ApiAccountType == type && c.AppId == appId &&
                     c.IsActive && c.Account.AccountState == AccountState.Approved.ToString());
                 return apiAccount;
