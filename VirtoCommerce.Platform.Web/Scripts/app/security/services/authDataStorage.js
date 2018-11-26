@@ -1,11 +1,12 @@
 angular.module('platformWebApp')
 .factory('platformWebApp.authDataStorage', ['localStorageService', function(localStorageService) {
     var service = {
-        storeAuthData: function(token, userName) {
+        storeAuthData: function(token, userName, refreshToken) {
             localStorageService.set('authenticationData',
                 {
                     token: token,
-                    userName: userName
+                    userName: userName,
+                    refreshToken: refreshToken
                 });
         },
         getStoredData: function() {

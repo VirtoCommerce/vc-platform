@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 
 namespace VirtoCommerce.Platform.Web
@@ -15,20 +17,21 @@ namespace VirtoCommerce.Platform.Web
 
         public ApplicationOAuthProvider(string publicClientId)
         {
-            if (publicClientId == null)
-            {
-                throw new ArgumentNullException("publicClientId");
-            }
-
-            _publicClientId = publicClientId;
+            _publicClientId = publicClientId ?? throw new ArgumentNullException(nameof(publicClientId));
         }
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
+            var allowedOrigin = context.OwinContext.Get<string>("as:clientAllowedOrigin");
+            if (allowedOrigin == null)
+            {
+                allowedOrigin = "*";
+            }
+            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
+
             var userManager = context.OwinContext.GetUserManager<ApplicationUserManager>();
 
             var user = await userManager.FindAsync(context.UserName, context.Password);
-
             if (user == null)
             {
                 context.SetError("invalid_grant", "The user name or password is incorrect.");
@@ -38,10 +41,25 @@ namespace VirtoCommerce.Platform.Web
             var oAuthIdentity = await userManager.CreateIdentityAsync(user, OAuthDefaults.AuthenticationType);
             var cookiesIdentity = await userManager.CreateIdentityAsync(user, CookieAuthenticationDefaults.AuthenticationType);
 
-            var properties = CreateProperties(user.UserName);
-            var ticket = new AuthenticationTicket(oAuthIdentity, properties);
+            var properties = new Dictionary<string, string>
+            {
+                { "userName", user.UserName },
+            };
+            var ticket = new AuthenticationTicket(oAuthIdentity, new AuthenticationProperties(properties));
             context.Validated(ticket);
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
+        }
+
+        public override Task GrantRefreshToken(OAuthGrantRefreshTokenContext context)
+        {
+            // Change auth ticket for refresh token requests
+            var newIdentity = new ClaimsIdentity(context.Ticket.Identity);
+            newIdentity.AddClaim(new Claim("newClaim", "newValue"));
+
+            var newTicket = new AuthenticationTicket(newIdentity, context.Ticket.Properties);
+            context.Validated(newTicket);
+
+            return Task.CompletedTask;
         }
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
@@ -51,7 +69,7 @@ namespace VirtoCommerce.Platform.Web
                 context.AdditionalResponseParameters.Add(property.Key, property.Value);
             }
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
@@ -62,7 +80,7 @@ namespace VirtoCommerce.Platform.Web
                 context.Validated();
             }
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public override Task ValidateClientRedirectUri(OAuthValidateClientRedirectUriContext context)
@@ -82,17 +100,7 @@ namespace VirtoCommerce.Platform.Web
                 }
             }
 
-            return Task.FromResult<object>(null);
-        }
-
-
-        private static AuthenticationProperties CreateProperties(string userName)
-        {
-            var data = new Dictionary<string, string>
-			{
-				{ "userName", userName },
-			};
-            return new AuthenticationProperties(data);
+            return Task.CompletedTask;
         }
     }
 }

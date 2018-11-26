@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', '$interpolate', '$q', 'platformWebApp.authDataStorage', function ($http, $rootScope, $cookieStore, $state, $interpolate, $q, authDataStorage) {
+.factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', '$interpolate', '$q', 'platformWebApp.authDataStorage', function ($http, $rootScope, $cookieStore, $state, $interpolate, $q, authDataStorage) {
     var serviceBase = 'api/platform/security/';
     var authContext = {
         userId: null,
@@ -22,11 +22,11 @@ angular.module('platformWebApp')
     authContext.login = function (email, password, remember) {
         var requestData = 'grant_type=password&username=' + email + '&password=' + password;
 
-        var promise = $q.defer();
+        var deferred = $q.defer();
 
-        return $http.post('token', requestData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
+        $http.post('token', requestData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
             function (response) {
-                authDataStorage.storeAuthData(response.data.access_token, email);
+                authDataStorage.storeAuthData(response.data.access_token, email, response.data.refresh_token);
 
                 return authContext.fillAuthData().then(function() {
                     promise.resolve(response.data);
@@ -38,14 +38,39 @@ angular.module('platformWebApp')
                 promise.reject(error);
             });
 
-        // TODO: remove this old code
+        return deferred.promise;
+
+        // TODO: remove this obsolete code
         //return $http.post(serviceBase + 'login/', { userName: email, password: password, rememberMe: remember }).then(
         //    function (results) {
         //        changeAuth(results.data);
         //        return authContext.isAuthenticated;
         //    });
     };
-    
+
+    authContext.refreshToken = function() {
+        var deferred = $q.defer();
+
+        var authData = authDataStorage.getStoredData();
+        if (authData) {
+            var data = 'grant_type=refresh_token&refresh_token=' + authData.refreshToken;
+
+            authDataStorage.clearStoredData();
+
+            $http.post('token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).success(function (response) {
+                authDataStorage.storeAuthData(response.access_token, response.userName, response.refresh_token);
+                deferred.resolve(response);
+            }).error(function (err) {
+                authContext.logout();
+                deferred.reject(err);
+            });
+        } else {
+            deferred.reject();
+        }
+
+        return deferred.promise;
+    };
+
     authContext.requestpasswordreset = function (data) {
         return $http.post(serviceBase + 'users/' + data.userName + '/requestpasswordreset/').then(
             function (results) {
@@ -71,6 +96,7 @@ angular.module('platformWebApp')
         authDataStorage.clearStoredData();
         changeAuth({});
 
+        // TODO: remove this obsolete code
         //$http.post(serviceBase + 'logout/').then(function (result) {
         //});
     };

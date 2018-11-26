@@ -177,6 +177,7 @@ angular.module('platformWebApp', AppDependencies).
             }
             return $q.reject(rejection);
         };
+
         httpErrorInterceptor.requestError = function (rejection) {
             $rootScope.$broadcast('httpError', rejection);
             return $q.reject(rejection);
