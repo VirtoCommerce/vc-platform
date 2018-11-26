@@ -5,7 +5,7 @@
     "jquery": "2.1.4",
     "jquery-ui": "1.11.4",
     "jquery-mousewheel": "3.1.13",
-    "signalr": "2.2.0",
+    "signalr": "v2.3.0",
     "angular": "1.4.4",
     "angular-i18n": "1.4.4",
     "angular-scroll-glue": "v2.0.7",

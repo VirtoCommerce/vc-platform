@@ -191,7 +191,7 @@ namespace VirtoCommerce.Platform.Web
 
             container.RegisterInstance(authenticationOptions);
 
-            InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath);
+            InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath, moduleInitializerOptions);
 
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -329,25 +329,6 @@ namespace VirtoCommerce.Platform.Web
                 moduleManager.PostInitializeModule(module);
             }
 
-            var redisConnectionString = ConfigurationManager.ConnectionStrings["RedisConnectionString"];
-
-            // Redis
-            if (redisConnectionString != null && !string.IsNullOrEmpty(redisConnectionString.ConnectionString))
-            {
-                // Cache
-                RedisConfigurations.AddConfiguration(new RedisConfiguration("redisConnectionString", redisConnectionString.ConnectionString));
-
-                // SignalR
-                // https://stackoverflow.com/questions/29885470/signalr-scaleout-on-azure-rediscache-connection-issues
-                GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(redisConnectionString.ConnectionString, "VirtoCommerce.Platform.SignalR"));
-            }
-
-            // SignalR 
-            var tempCounterManager = new TempPerformanceCounterManager();
-            GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
-            var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
-            app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);
-
             // Initialize InstrumentationKey from EnvironmentVariable
             var appInsightKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
 
@@ -376,7 +357,7 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionString, HangfireLauncher hangfireLauncher, string modulesPath)
+        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionString, HangfireLauncher hangfireLauncher, string modulesPath, ModuleInitializerOptions moduleInitializerOptions)
         {
             container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
@@ -647,10 +628,29 @@ namespace VirtoCommerce.Platform.Web
 
             #region Notifications
 
+            var redisConnectionString = ConfigurationManager.ConnectionStrings["RedisConnectionString"];
+
+            // Redis
+            if (redisConnectionString != null && !string.IsNullOrEmpty(redisConnectionString.ConnectionString))
+            {
+                // Cache
+                RedisConfigurations.AddConfiguration(new RedisConfiguration("redisConnectionString", redisConnectionString.ConnectionString));
+
+                // SignalR
+                // https://stackoverflow.com/questions/29885470/signalr-scaleout-on-azure-rediscache-connection-issues
+                GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(redisConnectionString.ConnectionString, "VirtoCommerce.Platform.SignalR"));
+            }
+
+            // SignalR 
+            var tempCounterManager = new TempPerformanceCounterManager();
+            GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
+            var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
+            app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);
+
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
             var notifier = new InMemoryPushNotificationManager(hubSignalR);
             container.RegisterInstance<IPushNotificationManager>(notifier);
-
+            
             var resolver = new LiquidNotificationTemplateResolver();
             container.RegisterInstance<INotificationTemplateResolver>(resolver);
 
