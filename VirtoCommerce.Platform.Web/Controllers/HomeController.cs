@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Web.Hosting;
 using System.Web.Mvc;
@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         public ActionResult Index()
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var version = string.Join(".", assembly.GetInformationalVersion(), assembly.GetFileVersion());
+            var version = PlatformVersion.CurrentVersion.ToString();
             var demoCredentials = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:DemoCredentials");
             var resetTimeStr = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:DemoResetTime");
             var license = LoadLicense();
@@ -27,8 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             if (!string.IsNullOrEmpty(resetTimeStr))
             {
-                TimeSpan timeSpan;
-                if (TimeSpan.TryParse(resetTimeStr, out timeSpan))
+                if (TimeSpan.TryParse(resetTimeStr, out var timeSpan))
                 {
                     var now = DateTime.UtcNow;
                     var resetTime = new DateTime(now.Year, now.Month, now.Day, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, DateTimeKind.Utc);
