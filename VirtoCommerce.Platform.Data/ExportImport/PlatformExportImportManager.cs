@@ -25,6 +25,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         {
             Users = new List<ApplicationUserExtended>();
             Settings = new List<SettingEntry>();
+            DynamicProperties = new List<DynamicProperty>();
             DynamicPropertyDictionaryItems = new List<DynamicPropertyDictionaryItem>();
             NotificationTemplates = new List<NotificationTemplate>();
             AssetEntries = new List<AssetEntry>();
