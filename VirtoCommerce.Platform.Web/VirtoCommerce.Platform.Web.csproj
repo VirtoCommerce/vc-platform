@@ -547,6 +547,9 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="Content\themes\main\sass\blade-constructor.scss" />
+    <Content Include="Content\ui-grid.eot" />
+    <Content Include="Content\ui-grid.ttf" />
+    <Content Include="Content\ui-grid.woff" />
     <None Include="gulpfile.js" />
     <Content Include="Scripts\allPackages.js" />
     <Content Include="Content\allStyles.css" />
