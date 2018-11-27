@@ -70,15 +70,16 @@ namespace VirtoCommerce.Platform.Web
             {
                 container.RegisterType<IRefreshTokenService, RefreshTokenServiceImpl>();
 
-                container.RegisterType<RefreshTokenProvider>();
+                var refreshTokenService = container.Resolve<IRefreshTokenService>();
+                var refreshTokenProvider = new RefreshTokenProvider(authenticationOptions.RefreshTokenExpireTimeSpan, refreshTokenService);
 
                 app.UseOAuthBearerTokens(new OAuthAuthorizationServerOptions
                 {
                     TokenEndpointPath = new PathString("/Token"),
                     AuthorizeEndpointPath = new PathString("/Account/Authorize"),
                     Provider = new ApplicationOAuthProvider(PublicClientId),
-                    RefreshTokenProvider = container.Resolve<RefreshTokenProvider>(),
-                    AccessTokenExpireTimeSpan = authenticationOptions.BearerTokensExpireTimeSpan,
+                    RefreshTokenProvider = refreshTokenProvider,
+                    AccessTokenExpireTimeSpan = authenticationOptions.AccessTokenExpireTimeSpan,
                     AllowInsecureHttp = true
                 });
             }

@@ -26,26 +26,25 @@ angular.module('platformWebApp')
 
         $http.post('token', requestData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
             function (response) {
-                authDataStorage.storeAuthData(response.data.access_token, email, response.data.refresh_token);
+                var authData = {
+                    token: response.data.access_token,
+                    userName: email,
+                    expiresAt: getCurrentDateWithOffset(response.data.expires_in),
+                    refreshToken: response.data.refresh_token
+                };
+                authDataStorage.storeAuthData(authData);
 
                 return authContext.fillAuthData().then(function() {
-                    promise.resolve(response.data);
+                    deferred.resolve(response.data);
                 }, function(error) {
-                    promise.reject(error);
-                })
+                    deferred.reject(error);
+                });
             }, function(error) {
                 authContext.logout();
-                promise.reject(error);
+                deferred.reject(error);
             });
 
         return deferred.promise;
-
-        // TODO: remove this obsolete code
-        //return $http.post(serviceBase + 'login/', { userName: email, password: password, rememberMe: remember }).then(
-        //    function (results) {
-        //        changeAuth(results.data);
-        //        return authContext.isAuthenticated;
-        //    });
     };
 
     authContext.refreshToken = function() {
@@ -57,19 +56,30 @@ angular.module('platformWebApp')
 
             authDataStorage.clearStoredData();
 
-            $http.post('token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).success(function (response) {
-                authDataStorage.storeAuthData(response.access_token, response.userName, response.refresh_token);
-                deferred.resolve(response);
-            }).error(function (err) {
-                authContext.logout();
-                deferred.reject(err);
-            });
+            $http.post('token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
+                function (response) {
+                    var newAuthData = {
+                        token: response.data.access_token,
+                        userName: response.userName,
+                        expiresAt: getCurrentDateWithOffset(response.data.expires_in),
+                        refreshToken: response.data.refresh_token
+                    };
+                    authDataStorage.storeAuthData(newAuthData);
+                    deferred.resolve(newAuthData);
+                }, function (err) {
+                    authContext.logout();
+                    deferred.reject(err);
+                });
         } else {
             deferred.reject();
         }
 
         return deferred.promise;
     };
+
+    function getCurrentDateWithOffset(offsetInSeconds) {
+        return Date.now() + offsetInSeconds * 1000;
+    }
 
     authContext.requestpasswordreset = function (data) {
         return $http.post(serviceBase + 'users/' + data.userName + '/requestpasswordreset/').then(
@@ -95,10 +105,6 @@ angular.module('platformWebApp')
     authContext.logout = function () {
         authDataStorage.clearStoredData();
         changeAuth({});
-
-        // TODO: remove this obsolete code
-        //$http.post(serviceBase + 'logout/').then(function (result) {
-        //});
     };
 
     authContext.checkPermission = function (permission, securityScopes) {

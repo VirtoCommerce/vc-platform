@@ -9,30 +9,30 @@ namespace VirtoCommerce.Platform.Web
 {
     public class RefreshTokenProvider : IAuthenticationTokenProvider
     {
+        private readonly TimeSpan _refreshTokenLifeTime;
         private readonly IRefreshTokenService _refreshTokenService;
 
-        public RefreshTokenProvider(IRefreshTokenService refreshTokenService)
+        public RefreshTokenProvider(TimeSpan refreshTokenLifeTime, IRefreshTokenService refreshTokenService)
         {
+            _refreshTokenLifeTime = refreshTokenLifeTime;
             _refreshTokenService = refreshTokenService;
         }
 
         public void Create(AuthenticationTokenCreateContext context)
         {
-            throw new NotImplementedException();
+            CreateAsync(context).RunSynchronously();
         }
 
         public async Task CreateAsync(AuthenticationTokenCreateContext context)
         {
             var refreshTokenId = Guid.NewGuid().ToString("n");
 
-            var refreshTokenLifeTime = context.OwinContext.Get<string>("as:clientRefreshTokenLifeTime");
-
             var token = new RefreshToken
             {
                 Id = refreshTokenId.GetHash<SHA256CryptoServiceProvider>(),
                 Subject = context.Ticket.Identity.Name,
                 IssuedUtc = DateTime.UtcNow,
-                ExpiresUtc = DateTime.UtcNow.AddMinutes(Convert.ToDouble(refreshTokenLifeTime))
+                ExpiresUtc = DateTime.UtcNow + _refreshTokenLifeTime
             };
 
             context.Ticket.Properties.IssuedUtc = token.IssuedUtc;
@@ -46,14 +46,11 @@ namespace VirtoCommerce.Platform.Web
 
         public void Receive(AuthenticationTokenReceiveContext context)
         {
-            throw new NotImplementedException();
+            ReceiveAsync(context).RunSynchronously();
         }
 
         public async Task ReceiveAsync(AuthenticationTokenReceiveContext context)
         {
-            var allowedOrigin = context.OwinContext.Get<string>("as:clientAllowedOrigin");
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
-
             string hashedTokenId = context.Token.GetHash<SHA256CryptoServiceProvider>();
 
             var refreshToken = await _refreshTokenService.GetByIdAsync(hashedTokenId);

@@ -150,29 +150,45 @@ angular.module('platformWebApp', AppDependencies).
         var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
         return retVal;
     }])
-    .factory('platformWebApp.httpErrorInterceptor', ['$q', '$rootScope', 'platformWebApp.authDataStorage', function ($q, $rootScope, authDataStorage) {
+    .factory('platformWebApp.httpErrorInterceptor', ['$q', '$rootScope', '$injector', 'platformWebApp.authDataStorage', function ($q, $rootScope, $injector, authDataStorage) {
         var httpErrorInterceptor = {};
 
         httpErrorInterceptor.request = function (config) {
             config.headers = config.headers || {};
 
-            var authenticationData = authDataStorage.getStoredData();
-            if (authenticationData) {
-                config.headers.Authorization = 'Bearer ' + authenticationData.token;
+            return extractAuthData()
+                .then(function (authData) {
+                    if (authData) {
+                        config.headers.Authorization = 'Bearer ' + authData.token;
+                    }
+
+                    return config;
+                }).finally(function() {
+                    // do something on success
+                    if (!config.cache) {
+                        $rootScope.$broadcast('httpRequestSuccess', config);
+                    }
+                });
+        };
+
+        function extractAuthData() {
+            var authData = authDataStorage.getStoredData();
+            if (!authData) {
+                return $q.resolve();
             }
 
-            // do something on success
-            if (!config.cache) {
-                $rootScope.$broadcast('httpRequestSuccess', config);
+            if (Date.now() < authData.expiresAt) {
+                return $q.resolve(authData);
             }
-            return config;
-        };
+
+            var authService = $injector.get('platformWebApp.authService');
+            return authService.refreshToken();
+        }
 
         httpErrorInterceptor.responseError = function (rejection) {
             if (rejection.status === 401) {
                 $rootScope.$broadcast('unauthorized', rejection);
-            }
-            else {
+            } else {
                 $rootScope.$broadcast('httpError', rejection);
             }
             return $q.reject(rejection);
