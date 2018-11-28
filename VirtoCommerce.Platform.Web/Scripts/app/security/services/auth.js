@@ -54,6 +54,9 @@ angular.module('platformWebApp')
         if (authData) {
             var data = 'grant_type=refresh_token&refresh_token=' + authData.refreshToken;
 
+            // NOTE: this method is called by the HTTP interceptor if the access token in the local storage expired.
+            //       So we clean the storage before sending the HTTP request - otherwise the HTTP interceptor will
+            //       detect expired token and will call this method again, causing the infinite loop.
             authDataStorage.clearStoredData();
 
             $http.post('token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
