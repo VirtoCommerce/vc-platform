@@ -68,7 +68,7 @@ namespace VirtoCommerce.Platform.Web
 
             if (authenticationOptions.BearerTokensEnabled)
             {
-                container.RegisterType<IRefreshTokenService, RefreshTokenServiceImpl>();
+                container.RegisterType<IRefreshTokenService, RefreshTokenService>();
 
                 var refreshTokenService = container.Resolve<IRefreshTokenService>();
                 var refreshTokenProvider = new RefreshTokenProvider(authenticationOptions.RefreshTokenExpireTimeSpan, refreshTokenService);

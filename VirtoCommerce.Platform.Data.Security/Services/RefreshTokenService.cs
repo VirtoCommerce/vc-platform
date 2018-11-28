@@ -10,9 +10,9 @@ using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.Platform.Data.Security.Services
 {
-    public class RefreshTokenServiceImpl : IRefreshTokenService
+    public class RefreshTokenService : IRefreshTokenService
     {
-        public RefreshTokenServiceImpl(Func<IPlatformRepository> repositoryFactory)
+        public RefreshTokenService(Func<IPlatformRepository> repositoryFactory)
         {
             RepositoryFactory = repositoryFactory;
         }

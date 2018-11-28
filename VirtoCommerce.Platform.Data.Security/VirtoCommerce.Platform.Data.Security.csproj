@@ -149,7 +149,7 @@
     <Compile Include="SecurityConstants.cs" />
     <Compile Include="SecurityOptions.cs" />
     <Compile Include="SecurityService.cs" />
-    <Compile Include="Services\RefreshTokenServiceImpl.cs" />
+    <Compile Include="Services\RefreshTokenService.cs" />
     <Compile Include="UserNameResolver.cs" />
   </ItemGroup>
   <ItemGroup>
