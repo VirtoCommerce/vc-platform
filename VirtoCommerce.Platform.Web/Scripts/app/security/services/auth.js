@@ -18,7 +18,7 @@ angular.module('platformWebApp')
     };
 
     authContext.login = function (email, password, remember) {
-        var requestData = 'grant_type=password&username=' + email + '&password=' + password;
+        var requestData = 'grant_type=password&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password);
 
         return $http.post('token', requestData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
             function (response) {
@@ -42,7 +42,7 @@ angular.module('platformWebApp')
     authContext.refreshToken = function() {
         var authData = authDataStorage.getStoredData();
         if (authData) {
-            var data = 'grant_type=refresh_token&refresh_token=' + authData.refreshToken;
+            var data = 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(authData.refreshToken);
 
             // NOTE: this method is called by the HTTP interceptor if the access token in the local storage expired.
             //       So we clean the storage before sending the HTTP request - otherwise the HTTP interceptor will
