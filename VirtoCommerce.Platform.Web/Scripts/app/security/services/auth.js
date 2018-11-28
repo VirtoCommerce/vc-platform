@@ -20,9 +20,7 @@ angular.module('platformWebApp')
     authContext.login = function (email, password, remember) {
         var requestData = 'grant_type=password&username=' + email + '&password=' + password;
 
-        var deferred = $q.defer();
-
-        $http.post('token', requestData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
+        return $http.post('token', requestData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
             function (response) {
                 var authData = {
                     token: response.data.access_token,
@@ -33,21 +31,15 @@ angular.module('platformWebApp')
                 authDataStorage.storeAuthData(authData);
 
                 return authContext.fillAuthData().then(function() {
-                    deferred.resolve(response.data);
-                }, function(error) {
-                    deferred.reject(error);
+                    return response.data;
                 });
-            }, function(error) {
+            }, function (error) {
                 authContext.logout();
-                deferred.reject(error);
+                return $q.reject(error);
             });
-
-        return deferred.promise;
     };
 
     authContext.refreshToken = function() {
-        var deferred = $q.defer();
-
         var authData = authDataStorage.getStoredData();
         if (authData) {
             var data = 'grant_type=refresh_token&refresh_token=' + authData.refreshToken;
@@ -57,7 +49,7 @@ angular.module('platformWebApp')
             //       detect expired token and will call this method again, causing the infinite loop.
             authDataStorage.clearStoredData();
 
-            $http.post('token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
+            return $http.post('token', data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
                 function (response) {
                     var newAuthData = {
                         token: response.data.access_token,
@@ -66,16 +58,14 @@ angular.module('platformWebApp')
                         refreshToken: response.data.refresh_token
                     };
                     authDataStorage.storeAuthData(newAuthData);
-                    deferred.resolve(newAuthData);
+                    return newAuthData;
                 }, function (err) {
                     authContext.logout();
-                    deferred.reject(err);
+                    return $q.reject(err);
                 });
         } else {
-            deferred.reject();
+            return $q.reject();
         }
-
-        return deferred.promise;
     };
 
     function getCurrentDateWithOffset(offsetInSeconds) {
