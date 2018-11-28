@@ -113,7 +113,6 @@
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
     <Compile Include="Model\AccountEntity.cs" />
     <Compile Include="Model\ApiAccountEntity.cs" />
-    <Compile Include="Model\ClientApplicationType.cs" />
     <Compile Include="Model\DynamicPropertyDictionaryItemEntity.cs" />
     <Compile Include="Model\DynamicPropertyEntity.cs" />
     <Compile Include="Model\DynamicPropertyDictionaryItemNameEntity.cs" />
