@@ -36,18 +36,17 @@ namespace VirtoCommerce.Platform.Data.Security.Services
             return result;
         }
 
-        public virtual async Task AddAsync(RefreshToken refreshToken)
+        public virtual Task AddAsync(RefreshToken refreshToken)
         {
             using (var repository = RepositoryFactory())
             {
-                var existingTokens = await repository.RefreshTokens.Where(r => r.Subject == refreshToken.Subject).ToArrayAsync();
-                await RemoveInternalAsync(repository, existingTokens.Select(token => token.Id));
-
                 var tokenEntity = AbstractTypeFactory<RefreshTokenEntity>.TryCreateInstance().FromModel(refreshToken);
                 repository.Add(tokenEntity);
 
                 repository.UnitOfWork.Commit();
             }
+
+            return Task.CompletedTask;
         }
 
         public virtual async Task DeleteAsync(IEnumerable<string> refreshTokenIds)
