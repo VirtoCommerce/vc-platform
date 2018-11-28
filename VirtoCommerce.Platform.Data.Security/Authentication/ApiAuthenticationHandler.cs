@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -51,8 +51,8 @@ namespace VirtoCommerce.Platform.Data.Security.Authentication
 
         protected virtual async Task<ClaimsIdentity> GetIdentityByUserId(string userId)
         {
-            var cacheKey = String.Join(":",  "GetIdentityByUserId", userId);
-            var result = await Options.CacheManager.Get(cacheKey, "PlatformRegion", () => CreateIdentityByUserId(userId));
+            var cacheKey = string.Join(":", "GetIdentityByUserId", userId);
+            var result = await Options.CacheManager.GetAsync(cacheKey, SecurityConstants.CacheRegion, () => CreateIdentityByUserId(userId));
             return result;
         }
 
