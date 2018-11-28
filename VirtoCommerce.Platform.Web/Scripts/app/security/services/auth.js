@@ -10,8 +10,6 @@ angular.module('platformWebApp')
     };
 
     authContext.fillAuthData = function () {
-        // TODO: check authDataStorage for authenticationData?
-
         return $http.get(serviceBase + 'currentuser').then(
             function (results) {
                 changeAuth(results.data);
