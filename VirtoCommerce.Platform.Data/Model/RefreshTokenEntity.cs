@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Data.Model
     public class RefreshTokenEntity : Entity
     {
         [Required]
-        [MaxLength(50)]
+        [MaxLength(128)]
         public string Subject { get; set; }
         public DateTime IssuedUtc { get; set; }
         public DateTime ExpiresUtc { get; set; }

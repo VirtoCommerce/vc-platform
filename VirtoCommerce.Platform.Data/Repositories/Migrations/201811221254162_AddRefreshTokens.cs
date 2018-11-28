@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
                 c => new
                     {
                         Id = c.String(nullable: false, maxLength: 64),
-                        Subject = c.String(nullable: false, maxLength: 50),
+                        Subject = c.String(nullable: false, maxLength: 128),
                         IssuedUtc = c.DateTime(nullable: false),
                         ExpiresUtc = c.DateTime(nullable: false),
                         ProtectedTicket = c.String(nullable: false),
