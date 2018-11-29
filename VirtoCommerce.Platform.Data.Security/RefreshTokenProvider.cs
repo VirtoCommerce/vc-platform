@@ -5,7 +5,7 @@ using Microsoft.Owin.Security.Infrastructure;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 
-namespace VirtoCommerce.Platform.Web
+namespace VirtoCommerce.Platform.Data.Security
 {
     public class RefreshTokenProvider : IAuthenticationTokenProvider
     {
@@ -26,13 +26,13 @@ namespace VirtoCommerce.Platform.Web
         public async Task CreateAsync(AuthenticationTokenCreateContext context)
         {
             var refreshTokenId = Guid.NewGuid().ToString("n");
-
+            var now = DateTime.UtcNow;
             var token = new RefreshToken
             {
                 Id = refreshTokenId.GetHash<SHA256CryptoServiceProvider>(),
                 Subject = context.Ticket.Identity.Name,
-                IssuedUtc = DateTime.UtcNow,
-                ExpiresUtc = DateTime.UtcNow + _refreshTokenLifeTime
+                IssuedUtc = now,
+                ExpiresUtc = now + _refreshTokenLifeTime
             };
 
             context.Ticket.Properties.IssuedUtc = token.IssuedUtc;
@@ -51,14 +51,14 @@ namespace VirtoCommerce.Platform.Web
 
         public async Task ReceiveAsync(AuthenticationTokenReceiveContext context)
         {
-            string hashedTokenId = context.Token.GetHash<SHA256CryptoServiceProvider>();
+            var hashedTokenId = context.Token.GetHash<SHA256CryptoServiceProvider>();
 
             var refreshToken = await _refreshTokenService.GetByIdAsync(hashedTokenId);
             if (refreshToken != null)
             {
                 //Get protectedTicket from refreshToken class
                 context.DeserializeTicket(refreshToken.ProtectedTicket);
-                await _refreshTokenService.DeleteAsync(new[] {hashedTokenId});
+                await _refreshTokenService.DeleteAsync(new[] { hashedTokenId });
             }
         }
     }
