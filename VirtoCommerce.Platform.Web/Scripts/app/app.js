@@ -211,6 +211,23 @@ angular.module('platformWebApp', AppDependencies).
             return $q.when({});
         };
     })
+    .factory('fileUploaderOptions', ["platformWebApp.authDataStorage", function (authDataStorage) {
+        var authData = authDataStorage.getStoredData();
+        return {
+            url: '/',
+            alias: 'file',
+            queue: [],
+            progress: 0,
+            autoUpload: false,
+            removeAfterUpload: false,
+            method: 'POST',
+            filters: [],
+            formData: [],
+            queueLimit: Number.MAX_VALUE,
+            withCredentials: false,
+            headers: authData ? { Authorization: 'Bearer ' + authData.token } : {}
+        };
+    }])
     .config(['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'datepickerPopupConfig', 'tagsInputConfigProvider', '$compileProvider',
         function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, datepickerPopupConfig, tagsInputConfigProvider, $compileProvider) {
 
