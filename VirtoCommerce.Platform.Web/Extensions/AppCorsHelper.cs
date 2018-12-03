@@ -9,10 +9,13 @@ namespace VirtoCommerce.Platform.Web.Extensions
         public static void SetupCors(this HttpConfiguration config)
         {
             var origins = ConfigurationHelper.GetAppSettingsValue("cors:origins");
-            var headers = ConfigurationHelper.GetAppSettingsValue("cors:headers");
-            var methods = ConfigurationHelper.GetAppSettingsValue("cors:methods");
+            var headers = ConfigurationHelper.GetAppSettingsValue("cors:headers") ?? "*";
+            var methods = ConfigurationHelper.GetAppSettingsValue("cors:methods") ?? "*";
             var credentials = ConfigurationHelper.GetAppSettingsValue("cors:credentials", false);
-            config.EnableCors(new EnableCorsAttribute(origins, headers, methods) { SupportsCredentials = credentials});
+            if (origins != null)
+            {
+                config.EnableCors(new EnableCorsAttribute(origins, headers, methods) { SupportsCredentials = credentials });
+            }
         }
     }
 }
