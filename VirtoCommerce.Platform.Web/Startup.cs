@@ -608,6 +608,7 @@ namespace VirtoCommerce.Platform.Web
                                                "  \"title\": \"Virto Commerce\",\n" +
                                                "  \"logo\": \"Content/themes/main/images/logo.png\",\n" +
                                                "  \"contrast_logo\": \"Content/themes/main/images/contrast-logo.png\"\n" +
+                                               "  \"favicon\": \"~/favicon.ico\"\n" +
                                                "}"
                             }
                         }
@@ -650,7 +651,7 @@ namespace VirtoCommerce.Platform.Web
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
             var notifier = new InMemoryPushNotificationManager(hubSignalR);
             container.RegisterInstance<IPushNotificationManager>(notifier);
-            
+
             var resolver = new LiquidNotificationTemplateResolver();
             container.RegisterInstance<INotificationTemplateResolver>(resolver);
 
