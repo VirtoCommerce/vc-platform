@@ -50,15 +50,13 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 }
             }
 
-            var favIcon = GetFavIcon();
-
             return View(new PlatformSetting
             {
                 PlatformVersion = new MvcHtmlString(version),
                 DemoCredentials = new MvcHtmlString(demoCredentials ?? "''"),
                 DemoResetTime = new MvcHtmlString(resetTimeStr ?? "''"),
                 License = new MvcHtmlString(licenseString),
-                FavIcon = new MvcHtmlString(favIcon ?? "~/favicon.ico"),
+                FavIcon = new MvcHtmlString(GetFavIcon() ?? "~/favicon.ico"),
             });
         }
 
@@ -87,8 +85,15 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var uiSettings = _settingsManager.GetSettingByName("VirtoCommerce.Platform.UI.Customization");
             if (uiSettings != null)
             {
-                var jObject = JObject.Parse(uiSettings.Value);
-                result = (string)jObject.SelectToken("favicon");
+                try
+                {
+                    var jObject = JObject.Parse(uiSettings.Value);
+                    result = (string)jObject?.SelectToken("favicon", false);
+                }
+                catch (JsonReaderException)
+                {
+                    result = null;
+                }
             }
             return result;
         }
