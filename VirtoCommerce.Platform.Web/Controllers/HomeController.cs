@@ -3,8 +3,10 @@ using System.Reflection;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Model;
 
@@ -12,6 +14,13 @@ namespace VirtoCommerce.Platform.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ISettingsManager _settingsManager;
+
+        public HomeController(ISettingsManager settingsManager)
+        {
+            _settingsManager = settingsManager;
+        }
+
         public ActionResult Index()
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -41,6 +50,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 }
             }
 
+            ViewBag.FavIcon = GetFavIcon();
+
             return View(new PlatformSetting
             {
                 PlatformVersion = new MvcHtmlString(version),
@@ -67,6 +78,18 @@ namespace VirtoCommerce.Platform.Web.Controllers
             }
 
             return license;
+        }
+
+        private string GetFavIcon()
+        {
+            string result = null;
+            var uiSettings = _settingsManager.GetSettingByName("VirtoCommerce.Platform.UI.Customization");
+            if (uiSettings != null)
+            {
+                var jObject = JObject.Parse(uiSettings.Value);
+                result = (string)jObject.SelectToken("favicon");
+            }
+            return result;
         }
     }
 }
