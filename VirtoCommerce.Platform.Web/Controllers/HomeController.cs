@@ -50,7 +50,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 }
             }
 
-            ViewBag.FavIcon = GetFavIcon();
+            var favIcon = GetFavIcon();
 
             return View(new PlatformSetting
             {
@@ -58,6 +58,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 DemoCredentials = new MvcHtmlString(demoCredentials ?? "''"),
                 DemoResetTime = new MvcHtmlString(resetTimeStr ?? "''"),
                 License = new MvcHtmlString(licenseString),
+                FavIcon = new MvcHtmlString(favIcon ?? "~/favicon.ico"),
             });
         }
 
