@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Modularity;
 using WebGrease.Extensions;
@@ -43,8 +44,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = new JObject();
             foreach (var file in files)
             {
-                var part = JObject.Parse(File.ReadAllText(file));
-                result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                try
+                {
+                    var part = JObject.Parse(File.ReadAllText(file));
+                    result.Merge(part, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
+                }
+                catch (JsonReaderException)
+                {
+#pragma warning disable S3626 
+                    continue;
+#pragma warning restore S3626 
+                }
             }
             return result;
         }
