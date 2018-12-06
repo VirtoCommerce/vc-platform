@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>Virto Commerce @ViewBag.Title</title>
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="@(Model.FavIcon)" rel="shortcut icon" type="image/x-icon" />
 
     @{var google_tag_container_id = System.Configuration.ConfigurationManager.AppSettings["GoogleTagManager:ContainerId"];}
     @if(google_tag_container_id != null)
