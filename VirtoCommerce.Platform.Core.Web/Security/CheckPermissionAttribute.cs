@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.Security.Principal;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -44,16 +45,29 @@ namespace VirtoCommerce.Platform.Core.Web.Security
         {
             if (actionContext == null)
             {
-                throw new ArgumentNullException("actionContext");
+                throw new ArgumentNullException(nameof(actionContext));
             }
 
             var isAuthorized = base.IsAuthorized(actionContext);
-
             if (isAuthorized && _permissions.Length > 0)
             {
-                var securityService = actionContext.ControllerContext.Configuration.DependencyResolver.GetService(typeof(ISecurityService)) as ISecurityService;
                 var principal = actionContext.RequestContext.Principal;
-                isAuthorized = IsAuthorized(securityService, principal);
+                var dependencyResolver = actionContext.ControllerContext.Configuration.DependencyResolver;
+
+                var authenticationType = principal.Identity.AuthenticationType;
+                var settings = dependencyResolver.GetService(typeof(ICheckPermissionAttributeSettings)) as ICheckPermissionAttributeSettings;
+                if (settings != null && authenticationType == settings.LimitedCookieAuthenticationType)
+                {
+                    // If the user is authorized by helper cookies with limited set of permissions, we can authorize these permissions only.
+                    // If this attribute requires any other permissions, this method will return false.
+                    isAuthorized = Permissions.All(settings.LimitedCookiePermissions.Contains);
+                }
+
+                if (isAuthorized)
+                {
+                    var securityService = dependencyResolver.GetService(typeof(ISecurityService)) as ISecurityService;
+                    isAuthorized = IsAuthorized(securityService, principal);
+                }
             }
 
             return isAuthorized;

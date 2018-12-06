@@ -4,20 +4,29 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Data.Security.Identity;
+using PlatformAuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 
 namespace VirtoCommerce.Platform.Web
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
         private readonly string _publicClientId;
+        private readonly PlatformAuthenticationOptions _authenticationOptions;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly ISecurityService _securityService;
 
-        public ApplicationOAuthProvider(string publicClientId)
+        public ApplicationOAuthProvider(string publicClientId, PlatformAuthenticationOptions authenticationOptions,
+            IEventPublisher eventPublisher, ISecurityService securityService)
         {
             _publicClientId = publicClientId ?? throw new ArgumentNullException(nameof(publicClientId));
+            _authenticationOptions = authenticationOptions;
+            _eventPublisher = eventPublisher;
+            _securityService = securityService;
         }
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
@@ -32,7 +41,7 @@ namespace VirtoCommerce.Platform.Web
             }
 
             var oAuthIdentity = await userManager.CreateIdentityAsync(user, OAuthDefaults.AuthenticationType);
-            var cookiesIdentity = await userManager.CreateIdentityAsync(user, CookieAuthenticationDefaults.AuthenticationType);
+            var cookiesIdentity = await userManager.CreateIdentityAsync(user, _authenticationOptions.PermissionCookieAuthenticationType);
 
             var properties = new Dictionary<string, string>
             {
@@ -40,7 +49,12 @@ namespace VirtoCommerce.Platform.Web
             };
             var ticket = new AuthenticationTicket(oAuthIdentity, new AuthenticationProperties(properties));
             context.Validated(ticket);
+
+            // Issue a helper cookie - it will be used to authorize some non-AJAX requests
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
+
+            var platformUser = await _securityService.FindByNameAsync(context.UserName, UserDetails.Full);
+            await _eventPublisher.Publish(new UserLoginEvent(platformUser));
         }
 
         public override Task GrantRefreshToken(OAuthGrantRefreshTokenContext context)

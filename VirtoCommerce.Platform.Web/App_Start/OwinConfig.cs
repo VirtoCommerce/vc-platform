@@ -10,7 +10,9 @@ using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Practices.Unity;
 using Owin;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
@@ -35,6 +37,7 @@ namespace VirtoCommerce.Platform.Web
             //app.UseCors(CorsOptions.AllowAll);
 
             var authenticationOptions = container.Resolve<AuthenticationOptions>();
+            container.RegisterInstance<ICheckPermissionAttributeSettings>(new CheckPermissionAttributeSettingsAdapter(authenticationOptions));
 
             if (authenticationOptions.CookiesEnabled)
             {
@@ -70,14 +73,36 @@ namespace VirtoCommerce.Platform.Web
             {
                 container.RegisterType<IRefreshTokenService, RefreshTokenService>();
 
+                app.UseCookieAuthentication(new CookieAuthenticationOptions
+                {
+                    AuthenticationMode = AuthenticationMode.Active,
+                    AuthenticationType = authenticationOptions.PermissionCookieAuthenticationType,
+                    CookieDomain = authenticationOptions.PermissionCookieDomain,
+                    CookieName = authenticationOptions.PermissionCookieName,
+                    CookiePath = authenticationOptions.PermissionCookiePath,
+                    CookieSecure = authenticationOptions.PermissionCookieSecure,
+                    ExpireTimeSpan = authenticationOptions.PermissionCookieExpireTimeSpan,
+                    // TODO: sliding expiration?
+                    Provider = new CookieAuthenticationProvider
+                    {
+                        // Enables the application to validate the security stamp when the user logs in.
+                        // This is a security feature which is used when you change a password or add an external login to your account.  
+                        OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
+                            validateInterval: authenticationOptions.CookiesValidateInterval,
+                            regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager, authenticationOptions.PermissionCookieAuthenticationType))
+                    }
+                });
+
                 var refreshTokenService = container.Resolve<IRefreshTokenService>();
                 var refreshTokenProvider = new RefreshTokenProvider(authenticationOptions.RefreshTokenExpireTimeSpan, refreshTokenService);
+                var eventPublisher = container.Resolve<IEventPublisher>();
+                var securityService = container.Resolve<ISecurityService>();
 
                 app.UseOAuthBearerTokens(new OAuthAuthorizationServerOptions
                 {
                     TokenEndpointPath = new PathString("/Token"),
                     AuthorizeEndpointPath = new PathString("/Account/Authorize"),
-                    Provider = new ApplicationOAuthProvider(PublicClientId),
+                    Provider = new ApplicationOAuthProvider(PublicClientId, authenticationOptions, eventPublisher, securityService),
                     RefreshTokenProvider = refreshTokenProvider,
                     AccessTokenExpireTimeSpan = authenticationOptions.AccessTokenExpireTimeSpan,
                     AllowInsecureHttp = true
