@@ -64,7 +64,7 @@ namespace VirtoCommerce.Platform.Core.Web.Security
                     var claim = claimsIdentity.FindFirst(PermissionConstants.LimitedPermissionsClaimName);
                     if (claim != null)
                     {
-                        var permissionsToCheck = claim.Value?.Split(PermissionConstants.PermissionsDelimiters, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                        var permissionsToCheck = claim.Value?.Split(new [] { PermissionConstants.PermissionsDelimiter }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
                         isAuthorized = Permissions.All(permissionsToCheck.Contains);
                     }
                 }
