@@ -43,7 +43,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public bool BearerTokensEnabled { get; set; }
         public TimeSpan AccessTokenExpireTimeSpan { get; set; }
         public TimeSpan RefreshTokenExpireTimeSpan { get; set; }
-        public string PermissionsToCheck { get; set; }
+        public string BearerTokensCookiePermissions { get; set; }
 
         public bool HmacEnabled { get; set; }
         public TimeSpan HmacSignatureValidityPeriod { get; set; }
