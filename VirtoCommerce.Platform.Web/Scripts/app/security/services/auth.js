@@ -53,7 +53,7 @@ angular.module('platformWebApp')
                 function (response) {
                     var newAuthData = {
                         token: response.data.access_token,
-                        userName: response.userName,
+                        userName: response.data.userName,
                         expiresAt: getCurrentDateWithOffset(response.data.expires_in),
                         refreshToken: response.data.refresh_token
                     };
