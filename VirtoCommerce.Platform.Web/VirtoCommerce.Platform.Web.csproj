@@ -328,7 +328,6 @@
     <Compile Include="Cache\RedisCacheHandle2.cs" />
     <Compile Include="Cache\RedisConnectionManager2.cs" />
     <Compile Include="Cache\RetryHelper2.cs" />
-    <Compile Include="CheckPermissionAttributeSettingsAdapter.cs" />
     <Compile Include="Controllers\AiHandleErrorAttribute.cs" />
     <Compile Include="Controllers\Api\ChangeLogController.cs" />
     <Compile Include="Controllers\Api\LicensingController.cs" />

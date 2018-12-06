@@ -162,13 +162,6 @@ namespace VirtoCommerce.Platform.Web
                 BearerTokensEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
                 AccessTokenExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromMinutes(30)),
                 RefreshTokenExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.RefreshTokenExpireTimeSpan", TimeSpan.FromDays(30)),
-
-                PermissionCookieAuthenticationType = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.PermissionCookieAuthenticationType", "BearerTokenHelperCookie"),
-                PermissionCookieName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.PermissionCookieName", "vc-platform_UserPermissions"),
-                PermissionCookieDomain = ConfigurationHelper.GetAppSettingsValue<string>("VirtoCommerce:Authentication:BearerTokens.PermissionCookieDomain", null),
-                PermissionCookiePath = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.PermissionCookiePath", "/"),
-                PermissionCookieSecure = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.PermissionCookieSecure", CookieSecureOption.SameAsRequest),
-                PermissionCookieExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.PermissionCookieExpireTimeSpan", TimeSpan.FromDays(30)),
                 PermissionsToCheck = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.PermissionsToCheck", string.Empty),
 
                 HmacEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.Enabled", true),

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -52,20 +53,25 @@ namespace VirtoCommerce.Platform.Core.Web.Security
             if (isAuthorized && _permissions.Length > 0)
             {
                 var principal = actionContext.RequestContext.Principal;
-                var dependencyResolver = actionContext.ControllerContext.Configuration.DependencyResolver;
 
-                var authenticationType = principal.Identity.AuthenticationType;
-                var settings = dependencyResolver.GetService(typeof(ICheckPermissionAttributeSettings)) as ICheckPermissionAttributeSettings;
-                if (settings != null && authenticationType == settings.LimitedCookieAuthenticationType)
+                // NOTE: if the user identity has claim named "LimitedPermissions", this attribute should authorize only
+                //       permissions listed in that claim. Any permissions that are required by this attribute but
+                //       not listed in the claim should cause this method to return false.
+                //       However, if permission limits of user identity are not defined ("LimitedPermissions" claim is missing),
+                //       then no limitations should be applied to the permissions.
+                if (principal.Identity is ClaimsIdentity claimsIdentity)
                 {
-                    // If the user is authorized by helper cookies with limited set of permissions, we can authorize these permissions only.
-                    // If this attribute requires any other permissions, this method will return false.
-                    isAuthorized = Permissions.All(settings.LimitedCookiePermissions.Contains);
+                    var claim = claimsIdentity.FindFirst(PermissionConstants.LimitedPermissionsClaimName);
+                    if (claim != null)
+                    {
+                        var permissionsToCheck = claim.Value?.Split(PermissionConstants.PermissionsDelimiters, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                        isAuthorized = Permissions.All(permissionsToCheck.Contains);
+                    }
                 }
 
                 if (isAuthorized)
                 {
-                    var securityService = dependencyResolver.GetService(typeof(ISecurityService)) as ISecurityService;
+                    var securityService = actionContext.ControllerContext.Configuration.DependencyResolver.GetService(typeof(ISecurityService)) as ISecurityService;
                     isAuthorized = IsAuthorized(securityService, principal);
                 }
             }

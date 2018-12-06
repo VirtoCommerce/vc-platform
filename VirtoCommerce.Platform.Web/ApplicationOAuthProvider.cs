@@ -8,6 +8,7 @@ using Microsoft.Owin.Security.OAuth;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using PlatformAuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 
@@ -41,8 +42,6 @@ namespace VirtoCommerce.Platform.Web
             }
 
             var oAuthIdentity = await userManager.CreateIdentityAsync(user, OAuthDefaults.AuthenticationType);
-            var cookiesIdentity = await userManager.CreateIdentityAsync(user, _authenticationOptions.PermissionCookieAuthenticationType);
-
             var properties = new Dictionary<string, string>
             {
                 { "userName", user.UserName },
@@ -51,6 +50,9 @@ namespace VirtoCommerce.Platform.Web
             context.Validated(ticket);
 
             // Issue a helper cookie - it will be used to authorize some non-AJAX requests
+            var cookiesIdentity = await userManager.CreateIdentityAsync(user, _authenticationOptions.AuthenticationType);
+            cookiesIdentity.AddClaim(new Claim(PermissionConstants.LimitedPermissionsClaimName, _authenticationOptions.PermissionsToCheck));
+
             context.Request.Context.Authentication.SignIn(cookiesIdentity);
 
             var platformUser = await _securityService.FindByNameAsync(context.UserName, UserDetails.Full);

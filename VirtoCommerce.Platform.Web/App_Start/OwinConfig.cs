@@ -37,39 +37,6 @@ namespace VirtoCommerce.Platform.Web
             //app.UseCors(CorsOptions.AllowAll);
 
             var authenticationOptions = container.Resolve<AuthenticationOptions>();
-            container.RegisterInstance<ICheckPermissionAttributeSettings>(new CheckPermissionAttributeSettingsAdapter(authenticationOptions));
-
-            if (authenticationOptions.BearerTokensEnabled)
-            {
-                container.RegisterType<IRefreshTokenService, RefreshTokenService>();
-
-                app.UseCookieAuthentication(new CookieAuthenticationOptions
-                {
-                    AuthenticationMode = AuthenticationMode.Active,
-                    AuthenticationType = authenticationOptions.PermissionCookieAuthenticationType,
-                    CookieDomain = authenticationOptions.PermissionCookieDomain,
-                    CookieName = authenticationOptions.PermissionCookieName,
-                    CookiePath = authenticationOptions.PermissionCookiePath,
-                    CookieSecure = authenticationOptions.PermissionCookieSecure,
-                    ExpireTimeSpan = authenticationOptions.PermissionCookieExpireTimeSpan
-                    // TODO: sliding expiration?
-                });
-
-                var refreshTokenService = container.Resolve<IRefreshTokenService>();
-                var refreshTokenProvider = new RefreshTokenProvider(authenticationOptions.RefreshTokenExpireTimeSpan, refreshTokenService);
-                var eventPublisher = container.Resolve<IEventPublisher>();
-                var securityService = container.Resolve<ISecurityService>();
-
-                app.UseOAuthBearerTokens(new OAuthAuthorizationServerOptions
-                {
-                    TokenEndpointPath = new PathString("/Token"),
-                    AuthorizeEndpointPath = new PathString("/Account/Authorize"),
-                    Provider = new ApplicationOAuthProvider(PublicClientId, authenticationOptions, eventPublisher, securityService),
-                    RefreshTokenProvider = refreshTokenProvider,
-                    AccessTokenExpireTimeSpan = authenticationOptions.AccessTokenExpireTimeSpan,
-                    AllowInsecureHttp = true
-                });
-            }
 
             if (authenticationOptions.CookiesEnabled)
             {
@@ -98,6 +65,26 @@ namespace VirtoCommerce.Platform.Web
                             validateInterval: authenticationOptions.CookiesValidateInterval,
                             regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager, authenticationOptions.AuthenticationType))
                     }
+                });
+            }
+
+            if (authenticationOptions.BearerTokensEnabled)
+            {
+                container.RegisterType<IRefreshTokenService, RefreshTokenService>();
+
+                var refreshTokenService = container.Resolve<IRefreshTokenService>();
+                var refreshTokenProvider = new RefreshTokenProvider(authenticationOptions.RefreshTokenExpireTimeSpan, refreshTokenService);
+                var eventPublisher = container.Resolve<IEventPublisher>();
+                var securityService = container.Resolve<ISecurityService>();
+
+                app.UseOAuthBearerTokens(new OAuthAuthorizationServerOptions
+                {
+                    TokenEndpointPath = new PathString("/Token"),
+                    AuthorizeEndpointPath = new PathString("/Account/Authorize"),
+                    Provider = new ApplicationOAuthProvider(PublicClientId, authenticationOptions, eventPublisher, securityService),
+                    RefreshTokenProvider = refreshTokenProvider,
+                    AccessTokenExpireTimeSpan = authenticationOptions.AccessTokenExpireTimeSpan,
+                    AllowInsecureHttp = true
                 });
             }
 
