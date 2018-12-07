@@ -16,6 +16,8 @@ using CacheManager.Redis;
 using Common.Logging;
 using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.Extensibility.Implementation;
+using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
@@ -330,11 +332,23 @@ namespace VirtoCommerce.Platform.Web
             }
 
             // Initialize InstrumentationKey from EnvironmentVariable
-            var appInsightKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
-
-            if (!string.IsNullOrEmpty(appInsightKey))
+            var applicationInsightsInstrumentationKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
+            if (!string.IsNullOrEmpty(applicationInsightsInstrumentationKey))
             {
-                TelemetryConfiguration.Active.InstrumentationKey = appInsightKey;
+                TelemetryConfiguration.Active.InstrumentationKey = applicationInsightsInstrumentationKey;
+            }
+
+            // https://docs.microsoft.com/en-us/azure/application-insights/app-insights-live-stream#secure-the-control-channel
+            // https://github.com/Microsoft/ApplicationInsights-dotnet-server/issues/733#issuecomment-349752497
+            // https://github.com/Azure/azure-webjobs-sdk/issues/1349
+            var applicationInsightsAuthApiKey = Environment.GetEnvironmentVariable("APPINSIGHTS_QUICKPULSEAUTHAPIKEY");
+            if (!string.IsNullOrEmpty(applicationInsightsAuthApiKey))
+            {
+                var module = TelemetryModules.Instance.Modules.OfType<QuickPulseTelemetryModule>().Single();
+                if (module != null)
+                {
+                    module.AuthenticationApiKey = applicationInsightsAuthApiKey;
+                }
             }
         }
 
@@ -608,6 +622,7 @@ namespace VirtoCommerce.Platform.Web
                                                "  \"title\": \"Virto Commerce\",\n" +
                                                "  \"logo\": \"Content/themes/main/images/logo.png\",\n" +
                                                "  \"contrast_logo\": \"Content/themes/main/images/contrast-logo.png\"\n" +
+                                               "  \"favicon\": \"~/favicon.ico\"\n" +
                                                "}"
                             }
                         }
@@ -650,7 +665,7 @@ namespace VirtoCommerce.Platform.Web
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
             var notifier = new InMemoryPushNotificationManager(hubSignalR);
             container.RegisterInstance<IPushNotificationManager>(notifier);
-            
+
             var resolver = new LiquidNotificationTemplateResolver();
             container.RegisterInstance<INotificationTemplateResolver>(resolver);
 
