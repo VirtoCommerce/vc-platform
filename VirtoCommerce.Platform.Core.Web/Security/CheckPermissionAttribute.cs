@@ -53,27 +53,8 @@ namespace VirtoCommerce.Platform.Core.Web.Security
             if (isAuthorized && _permissions.Length > 0)
             {
                 var principal = actionContext.RequestContext.Principal;
-
-                // NOTE: if the user identity has claim named "LimitedPermissions", this attribute should authorize only
-                //       permissions listed in that claim. Any permissions that are required by this attribute but
-                //       not listed in the claim should cause this method to return false.
-                //       However, if permission limits of user identity are not defined ("LimitedPermissions" claim is missing),
-                //       then no limitations should be applied to the permissions.
-                if (principal.Identity is ClaimsIdentity claimsIdentity)
-                {
-                    var claim = claimsIdentity.FindFirst(PermissionConstants.LimitedPermissionsClaimName);
-                    if (claim != null)
-                    {
-                        var permissionsToCheck = claim.Value?.Split(new [] { PermissionConstants.PermissionsDelimiter }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
-                        isAuthorized = Permissions.All(permissionsToCheck.Contains);
-                    }
-                }
-
-                if (isAuthorized)
-                {
-                    var securityService = actionContext.ControllerContext.Configuration.DependencyResolver.GetService(typeof(ISecurityService)) as ISecurityService;
-                    isAuthorized = IsAuthorized(securityService, principal);
-                }
+                var securityService = actionContext.ControllerContext.Configuration.DependencyResolver.GetService(typeof(ISecurityService)) as ISecurityService;
+                isAuthorized = IsAuthorized(securityService, principal);
             }
 
             return isAuthorized;
@@ -85,7 +66,27 @@ namespace VirtoCommerce.Platform.Core.Web.Security
 
             if (securityService != null && principal != null)
             {
-                isAuthorized = securityService.UserHasAnyPermission(principal.Identity.Name, null, _permissions);
+                var filteredPermissions = _permissions;
+
+                // NOTE: if the user identity has claim named "LimitedPermissions", this attribute should authorize only
+                //       permissions listed in that claim. Any permissions that are required by this attribute but
+                //       not listed in the claim should cause this method to return false.
+                //       However, if permission limits of user identity are not defined ("LimitedPermissions" claim is missing),
+                //       then no limitations should be applied to the permissions.
+                if (principal.Identity is ClaimsIdentity claimsIdentity)
+                {
+                    var claim = claimsIdentity.FindFirst(PermissionConstants.LimitedPermissionsClaimName);
+                    if (claim != null)
+                    {
+                        var permissionsToCheck = claim.Value?.Split(new[] {PermissionConstants.PermissionsDelimiter}, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                        filteredPermissions = _permissions.Where(permissionsToCheck.Contains).ToArray();
+                    }
+                }
+
+                if (filteredPermissions.Any())
+                {
+                    isAuthorized = securityService.UserHasAnyPermission(principal.Identity.Name, null, filteredPermissions);
+                }
             }
 
             return isAuthorized;
