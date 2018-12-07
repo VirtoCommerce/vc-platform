@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity;
@@ -153,6 +153,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<RoleAssignmentEntity>("PlatformRoleAssignment", "Id");
             modelBuilder.Entity<RolePermissionEntity>("PlatformRolePermission", "Id");
             modelBuilder.Entity<PermissionScopeEntity>("PlatformPermissionScope", "Id");
+            modelBuilder.Entity<RefreshTokenEntity>("RefreshToken", "Id");
 
             // Relations
             modelBuilder.Entity<ApiAccountEntity>()
@@ -229,6 +230,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         public IQueryable<OperationLogEntity> OperationLogs { get { return GetAsQueryable<OperationLogEntity>(); } }
         public IQueryable<AssetEntryEntity> AssetEntries => GetAsQueryable<AssetEntryEntity>();
 
+        public IQueryable<RefreshTokenEntity> RefreshTokens => GetAsQueryable<RefreshTokenEntity>();
 
         public AssetEntryEntity[] GetAssetsByIds(IEnumerable<string> ids)
         {

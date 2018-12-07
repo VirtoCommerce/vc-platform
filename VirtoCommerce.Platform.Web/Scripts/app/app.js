@@ -23,7 +23,8 @@ var AppDependencies = [
     'ngTagsInput',
     'tmh.dynamicLocale',
     'pascalprecht.translate',
-    'angular.filter'
+    'angular.filter',
+    'LocalStorageModule'
 ];
 
 angular.module('platformWebApp', AppDependencies).
@@ -149,26 +150,50 @@ angular.module('platformWebApp', AppDependencies).
         var retVal = $location.url() ? $location.absUrl().slice(0, -$location.url().length - 1) : $location.absUrl();
         return retVal;
     }])
-    .factory('platformWebApp.httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
+    .factory('platformWebApp.httpErrorInterceptor', ['$q', '$rootScope', '$injector', 'platformWebApp.authDataStorage', function ($q, $rootScope, $injector, authDataStorage) {
         var httpErrorInterceptor = {};
 
         httpErrorInterceptor.request = function (config) {
-            // do something on success
-            if (!config.cache) {
-                $rootScope.$broadcast('httpRequestSuccess', config);
-            }
-            return config;
+            config.headers = config.headers || {};
+
+            return extractAuthData()
+                .then(function (authData) {
+                    if (authData) {
+                        config.headers.Authorization = 'Bearer ' + authData.token;
+                    }
+
+                    return config;
+                }).finally(function() {
+                    // do something on success
+                    if (!config.cache) {
+                        $rootScope.$broadcast('httpRequestSuccess', config);
+                    }
+                });
         };
+
+        function extractAuthData() {
+            var authData = authDataStorage.getStoredData();
+            if (!authData) {
+                return $q.resolve();
+            }
+
+            if (Date.now() < authData.expiresAt) {
+                return $q.resolve(authData);
+            }
+
+            var authService = $injector.get('platformWebApp.authService');
+            return authService.refreshToken();
+        }
 
         httpErrorInterceptor.responseError = function (rejection) {
             if (rejection.status === 401) {
                 $rootScope.$broadcast('unauthorized', rejection);
-            }
-            else {
+            } else {
                 $rootScope.$broadcast('httpError', rejection);
             }
             return $q.reject(rejection);
         };
+
         httpErrorInterceptor.requestError = function (rejection) {
             $rootScope.$broadcast('httpError', rejection);
             return $q.reject(rejection);
@@ -186,6 +211,23 @@ angular.module('platformWebApp', AppDependencies).
             return $q.when({});
         };
     })
+    .factory('fileUploaderOptions', ["platformWebApp.authDataStorage", function (authDataStorage) {
+        var authData = authDataStorage.getStoredData();
+        return {
+            url: '/',
+            alias: 'file',
+            queue: [],
+            progress: 0,
+            autoUpload: false,
+            removeAfterUpload: false,
+            method: 'POST',
+            filters: [],
+            formData: [],
+            queueLimit: Number.MAX_VALUE,
+            withCredentials: false,
+            headers: authData ? { Authorization: 'Bearer ' + authData.token } : {}
+        };
+    }])
     .config(['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'datepickerPopupConfig', 'tagsInputConfigProvider', '$compileProvider',
         function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, datepickerPopupConfig, tagsInputConfigProvider, $compileProvider) {
 

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using CacheManager.Core;
@@ -73,6 +74,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.CustomAsset("swagger-ui-standalone-preset", assembly, resourcePrefix + "swagger-ui-standalone-preset.js");
                 c.CustomAsset("swagger-ui_css", assembly, resourcePrefix + "swagger-ui.css");
                 c.CustomAsset("css/vc-css", assembly, resourcePrefix + "vc.css");
+                c.EnableOAuth2Support(OwinConfig.PublicClientId, "test-realm", "Swagger UI");
             });
         }
 
@@ -139,6 +141,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             c.OperationFilter(() => new OptionalParametersFilter());
             c.OperationFilter(() => new FileResponseTypeFilter());
             c.OperationFilter(() => new FileUploadOperationFilter());
+            c.OperationFilter(() => new AssignOAuth2SecurityOperationFilter());
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             c.RootUrl(message => new Uri(ComputeHostAsSeenByOriginalClient(message), message.GetRequestContext().VirtualPathRoot).ToString());
             c.PrettyPrint();
@@ -147,9 +150,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 .Name("api_key")
                 .In("header");
             c.OAuth2("OAuth2")
-                .Description("OAuth2 Resource Owner Password Grant")
+                .Description("OAuth2 Resource Owner Password Grant flow")
                 .Flow("password")
-                .TokenUrl($"{HostingEnvironment.ApplicationVirtualPath}/token");
+                .TokenUrl(HttpRuntime.AppDomainAppVirtualPath + "/token");
             c.OperationFilter(() => new OAuth2SecurityRequirementsFilter());
 
             foreach (var path in xmlCommentsFilePaths)
