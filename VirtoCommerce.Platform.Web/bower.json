@@ -37,7 +37,8 @@
     "ng-focus-on": "0.2.2",
     "modernizr": "2.8.3",
     "underscore": "1.8.3",
-    "angular-filter": "0.5.8"
+    "angular-filter": "0.5.8",
+    "angular-local-storage": "^0.7.1"
   },
   "resolutions": {
     "angular": "1.4.4"

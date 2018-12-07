@@ -66,6 +66,7 @@
     <Compile Include="Security\CheckPermissionAttribute.cs" />
     <Compile Include="Common\ClientCacheAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\PermissionConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
