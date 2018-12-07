@@ -78,8 +78,8 @@ namespace VirtoCommerce.Platform.Core.Web.Security
                     var claim = claimsIdentity.FindFirst(PermissionConstants.LimitedPermissionsClaimName);
                     if (claim != null)
                     {
-                        var permissionsToCheck = claim.Value?.Split(new[] {PermissionConstants.PermissionsDelimiter}, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
-                        filteredPermissions = _permissions.Where(permissionsToCheck.Contains).ToArray();
+                        var limitedPermissions = claim.Value?.Split(new[] { PermissionConstants.PermissionsDelimiter }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                        filteredPermissions = _permissions.Where(limitedPermissions.Contains).ToArray();
                     }
                 }
 
