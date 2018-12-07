@@ -39,6 +39,9 @@
       validatorUrl: stringOrNullFrom('%(ValidatorUrl)'),
       docExpansion: '%(DocExpansion)',
       oAuth2Enabled: ('%(OAuth2Enabled)' == 'true'),
+      oAuth2ClientId: '%(OAuth2ClientId)',
+      oAuth2Realm: '%(OAuth2Realm)',
+      oAuth2AppName: '%(OAuth2AppName)'
     };
     window.onload = function() {
       var options = {
@@ -64,7 +67,11 @@
 
       var ui = SwaggerUIBundle(options);
       if (swashbuckleConfig.oAuth2Enabled) {
-        ui.initOAuth();
+        ui.initOAuth({
+            clientId: swashbuckleConfig.oAuth2ClientId,
+            realm: swashbuckleConfig.oAuth2Realm,
+            appName: swashbuckleConfig.oAuth2AppName
+        });
       }
 
       window.ui = ui;
