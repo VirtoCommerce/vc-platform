@@ -624,7 +624,7 @@ namespace VirtoCommerce.Platform.Web
                                                "  \"title\": \"Virto Commerce\",\n" +
                                                "  \"logo\": \"Content/themes/main/images/logo.png\",\n" +
                                                "  \"contrast_logo\": \"Content/themes/main/images/contrast-logo.png\"\n" +
-                                               "  \"favicon\": \"~/favicon.ico\"\n" +
+                                               "  \"favicon\": \"favicon.ico\"\n" +
                                                "}"
                             }
                         }
