@@ -56,7 +56,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 DemoCredentials = new MvcHtmlString(demoCredentials ?? "''"),
                 DemoResetTime = new MvcHtmlString(resetTimeStr ?? "''"),
                 License = new MvcHtmlString(licenseString),
-                FavIcon = new MvcHtmlString(GetFavIcon() ?? "~/favicon.ico"),
+                FavIcon = new MvcHtmlString(GetFavIcon() ?? "favicon.ico"),
             });
         }
 
