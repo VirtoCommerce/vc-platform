@@ -153,7 +153,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 .Description("OAuth2 Resource Owner Password Grant flow")
                 .Flow("password")
                 .TokenUrl(HttpRuntime.AppDomainAppVirtualPath + "/token");
-            c.OperationFilter(() => new OAuth2SecurityRequirementsFilter());
 
             foreach (var path in xmlCommentsFilePaths)
             {

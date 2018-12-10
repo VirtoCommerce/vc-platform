@@ -442,13 +442,12 @@
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
     <Compile Include="SignalR\IgnoreSignarRTelemetryProcessor.cs" />
-    <Compile Include="Swagger\AssignOAuth2SecurityOperationFilter.cs" />
     <Compile Include="Swagger\CachingSwaggerProvider.cs" />
     <Compile Include="Swagger\FileResponseTypeFilter.cs" />
     <Compile Include="Swagger\FileUploadOperationFilter.cs" />
     <Compile Include="Swagger\HttpConfigurationExtensions.cs" />
     <Compile Include="Swagger\ModuleTagsFilter.cs" />
-    <Compile Include="Swagger\OAuth2SecurityRequirementsFilter.cs" />
+    <Compile Include="Swagger\AssignOAuth2SecurityOperationFilter.cs" />
     <Compile Include="Swagger\OptionalParametersFilter.cs" />
     <Compile Include="Swagger\SwaggerConfig.cs" />
     <Compile Include="Swagger\TagsFilter.cs" />
