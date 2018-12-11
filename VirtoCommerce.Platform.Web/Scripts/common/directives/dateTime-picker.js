@@ -395,7 +395,7 @@ angular.module('platformWebApp')
                     }
 
                     var newDate = scope.date ? dateFilter(scope.date, dateFormat, ngModelOptions.timezone) : null;
-                    
+
                     element.val(newDate);
                     ngModel.$setViewValue(newDate);
 
