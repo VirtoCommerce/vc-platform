@@ -37,3 +37,11 @@ body
 .swagger-ui .topbar .download-url-wrapper .download-url-button {
     background-color: #f89406;
 }
+
+hgroup.main a.link, hgroup.main .base-url {
+    display: none;
+}
+
+.modal-ux-content .auth-container:first-child {
+    display: none;
+}
