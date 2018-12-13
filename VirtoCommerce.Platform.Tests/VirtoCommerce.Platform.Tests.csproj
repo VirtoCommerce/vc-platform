@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="Assets\BlobStorageProviderTests.cs" />
     <Compile Include="DynamicPropertyTests.cs" />
+    <Compile Include="Common\EnumUtilityTests.cs" />
     <Compile Include="Events\EventSupressorTests.cs" />
     <Compile Include="NotificationScenarios.cs" />
     <Compile Include="ModuleCatalogScenarios.cs" />
