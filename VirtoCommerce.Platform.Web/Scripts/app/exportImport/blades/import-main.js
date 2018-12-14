@@ -24,8 +24,7 @@ angular.module('platformWebApp')
     $scope.startProcess = function () {
         blade.isLoading = true;
         exportImportResourse.runImport($scope.importRequest,
-            function (data) { blade.notification = data; blade.isLoading = false; },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            function (data) { blade.notification = data; blade.isLoading = false; });
     }
 
     $scope.updateModuleSelection = function () {
@@ -58,7 +57,11 @@ angular.module('platformWebApp')
         };
 
         uploader.onErrorItem = function (item, response, status, headers) {
-            bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
+            bladeNavigationService.setError({
+                status: status,
+                statusText: response.message,
+                data: response
+            }, blade);
         };
 
         uploader.onSuccessItem = function (fileItem, asset, status, headers) {

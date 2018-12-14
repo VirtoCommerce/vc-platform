@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Security.Claims;
 using System.Security.Principal;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -46,14 +44,15 @@ namespace VirtoCommerce.Platform.Core.Web.Security
         {
             if (actionContext == null)
             {
-                throw new ArgumentNullException(nameof(actionContext));
+                throw new ArgumentNullException("actionContext");
             }
 
             var isAuthorized = base.IsAuthorized(actionContext);
+
             if (isAuthorized && _permissions.Length > 0)
             {
-                var principal = actionContext.RequestContext.Principal;
                 var securityService = actionContext.ControllerContext.Configuration.DependencyResolver.GetService(typeof(ISecurityService)) as ISecurityService;
+                var principal = actionContext.RequestContext.Principal;
                 isAuthorized = IsAuthorized(securityService, principal);
             }
 
@@ -66,27 +65,7 @@ namespace VirtoCommerce.Platform.Core.Web.Security
 
             if (securityService != null && principal != null)
             {
-                var filteredPermissions = _permissions;
-
-                // NOTE: if the user identity has claim named "LimitedPermissions", this attribute should authorize only
-                //       permissions listed in that claim. Any permissions that are required by this attribute but
-                //       not listed in the claim should cause this method to return false.
-                //       However, if permission limits of user identity are not defined ("LimitedPermissions" claim is missing),
-                //       then no limitations should be applied to the permissions.
-                if (principal.Identity is ClaimsIdentity claimsIdentity)
-                {
-                    var claim = claimsIdentity.FindFirst(PermissionConstants.LimitedPermissionsClaimName);
-                    if (claim != null)
-                    {
-                        var limitedPermissions = claim.Value?.Split(new[] { PermissionConstants.PermissionsDelimiter }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
-                        filteredPermissions = _permissions.Where(limitedPermissions.Contains).ToArray();
-                    }
-                }
-
-                if (filteredPermissions.Any())
-                {
-                    isAuthorized = securityService.UserHasAnyPermission(principal.Identity.Name, null, filteredPermissions);
-                }
+                isAuthorized = securityService.UserHasAnyPermission(principal.Identity.Name, null, _permissions);
             }
 
             return isAuthorized;

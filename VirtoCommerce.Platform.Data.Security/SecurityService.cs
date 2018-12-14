@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using CacheManager.Core;
@@ -417,14 +418,39 @@ namespace VirtoCommerce.Platform.Data.Security
             }
 
             var user = FindByName(userName, UserDetails.Full);
-
             var result = user != null && user.UserState == AccountState.Approved;
+            var isUserAuthenticatedByLimitedCookie = false;
+            if (result)
+            {
 
-            if (result && user.IsAdministrator)
+                //LimitedPermissions claims that will be granted to the user by cookies when bearer token authentication is enabled.
+                //This can help to authorize the user for direct(non - AJAX) GET requests to the VC platform API and / or to use
+                //some 3rd - party web applications for the VC platform(like Hangfire dashboard).
+                //
+                //If the user identity has claim named "LimitedPermissions", this attribute should authorize only
+                //permissions listed in that claim. Any permissions that are required by this attribute but
+                //not listed in the claim should cause this method to return false.
+                //However, if permission limits of user identity are not defined ("LimitedPermissions" claim is missing),
+                //then no limitations should be applied to the permissions.
+                //
+                //TDB: usually we have to use identity for the passed username, but we cannot, because it’s impossible to access any of the user’s cookies by their username, so we assume that
+                //this username will always be the same as for the current member of the thread -  Thread.CurrentPrincipal
+                if (Thread.CurrentPrincipal is ClaimsPrincipal claimsPrinicpal && claimsPrinicpal.Identity.AuthenticationType == DefaultAuthenticationTypes.ApplicationCookie)
+                {
+                    var limitedPermissionsClaim = claimsPrinicpal.Claims.FirstOrDefault(x => x.Type.EqualsInvariant(VirtoCommerceClaimTypes.LimitedPermissionsClaimName));
+                    if (limitedPermissionsClaim != null)
+                    {
+                        isUserAuthenticatedByLimitedCookie = true;
+                        var limitedPermissions = limitedPermissionsClaim.Value?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                        permissionIds = permissionIds.Where(limitedPermissions.Contains).ToArray();
+                    }
+                }
+            }
+
+            if (result && user.IsAdministrator && !isUserAuthenticatedByLimitedCookie)
             {
                 return true;
             }
-
             //For managers always allow to call api
             if (result && permissionIds.Length == 1 && permissionIds.Contains(PredefinedPermissions.SecurityCallApi)
                && (string.Equals(user.UserType, AccountType.Manager.ToString(), StringComparison.InvariantCultureIgnoreCase) ||
