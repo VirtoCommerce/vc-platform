@@ -28,6 +28,11 @@ namespace VirtoCommerce.Platform.Core.Common
         public static T SafeParseFlags<T>(string value, T defaultValue, string separator)
             where T : struct
         {
+            if (!typeof(T).IsDefined(typeof(FlagsAttribute), false))
+            {
+                throw new ArgumentException($"{typeof(T).FullName} type should have [Flags] attribute.");
+            }
+
             var result = 0;
             var wasAssigned = false;
 
@@ -45,7 +50,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 }
             }
            
-            return (T)Enum.ToObject(typeof(T), wasAssigned ? result : Convert.ToInt32(defaultValue));
+            return wasAssigned ? (T)Enum.ToObject(typeof(T), result) : defaultValue;
         }
     }
 }
