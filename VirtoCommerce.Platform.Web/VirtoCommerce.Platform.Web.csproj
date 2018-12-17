@@ -442,12 +442,12 @@
     <Compile Include="SignalR\NoOpPerformanceCounter.cs" />
     <Compile Include="SignalR\NoOpPerformanceCounterManager.cs" />
     <Compile Include="SignalR\IgnoreSignarRTelemetryProcessor.cs" />
-    <Compile Include="Swagger\AssignOAuth2SecurityOperationFilter.cs" />
     <Compile Include="Swagger\CachingSwaggerProvider.cs" />
     <Compile Include="Swagger\FileResponseTypeFilter.cs" />
     <Compile Include="Swagger\FileUploadOperationFilter.cs" />
     <Compile Include="Swagger\HttpConfigurationExtensions.cs" />
     <Compile Include="Swagger\ModuleTagsFilter.cs" />
+    <Compile Include="Swagger\AssignOAuth2SecurityOperationFilter.cs" />
     <Compile Include="Swagger\OptionalParametersFilter.cs" />
     <Compile Include="Swagger\SwaggerConfig.cs" />
     <Compile Include="Swagger\TagsFilter.cs" />
@@ -776,14 +776,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SecurityResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Swagger\UI\index.html" />
     <EmbeddedResource Include="Swagger\UI\logo_small.png" />
+    <EmbeddedResource Include="Swagger\UI\vc.css" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Swagger\UI\swagger-ui.js" />
-    <EmbeddedResource Include="Swagger\UI\vc.css" />
-    <EmbeddedResource Include="Swagger\UI\swagger-ui.min.js" />
     <Content Include="Scripts\i18n\angular\angular-locale_af-na.js" />
     <Content Include="Scripts\i18n\angular\angular-locale_af-za.js" />
     <Content Include="Scripts\i18n\angular\angular-locale_af.js" />
@@ -1183,6 +1180,10 @@
     <Content Include="Scripts\i18n\angular\angular-locale_zh-hk.js" />
     <Content Include="Scripts\i18n\angular\angular-locale_zh-tw.js" />
     <Content Include="Scripts\i18n\i18n.js" />
+    <EmbeddedResource Include="Swagger\UI\index.html" />
+    <EmbeddedResource Include="Swagger\UI\swagger-ui-bundle.js" />
+    <EmbeddedResource Include="Swagger\UI\swagger-ui-standalone-preset.js" />
+    <EmbeddedResource Include="Swagger\UI\swagger-ui.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
