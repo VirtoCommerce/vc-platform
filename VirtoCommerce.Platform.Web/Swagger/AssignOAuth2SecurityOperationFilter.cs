@@ -30,8 +30,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             var securityRequirements = new Dictionary<string, IEnumerable<string>>
             {
-                {"OAuth2", permissions},
-                {"apiKey", permissions}
+                {"OAuth2", permissions}
             };
 
             if (operation.security == null)
