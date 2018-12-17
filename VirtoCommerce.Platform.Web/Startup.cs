@@ -162,7 +162,7 @@ namespace VirtoCommerce.Platform.Web
                 BearerTokensEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
                 AccessTokenExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromMinutes(30)),
                 RefreshTokenExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.RefreshTokenExpireTimeSpan", TimeSpan.FromDays(30)),
-                BearerTokensCookiePermissions = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.LimitedCookiePermissions", string.Empty),
+                BearerAuthorizationLimitedCookiePermissions = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.LimitedCookiePermissions", string.Empty),
 
                 HmacEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
                 HmacSignatureValidityPeriod = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),

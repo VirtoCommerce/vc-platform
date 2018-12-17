@@ -419,7 +419,6 @@ namespace VirtoCommerce.Platform.Data.Security
 
             var user = FindByName(userName, UserDetails.Full);
             var result = user != null && user.UserState == AccountState.Approved;
-            var isUserAuthenticatedByLimitedCookie = false;
             if (result)
             {
 
@@ -440,14 +439,13 @@ namespace VirtoCommerce.Platform.Data.Security
                     var limitedPermissionsClaim = claimsPrinicpal.Claims.FirstOrDefault(x => x.Type.EqualsInvariant(VirtoCommerceClaimTypes.LimitedPermissionsClaimName));
                     if (limitedPermissionsClaim != null)
                     {
-                        isUserAuthenticatedByLimitedCookie = true;
                         var limitedPermissions = limitedPermissionsClaim.Value?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
-                        permissionIds = permissionIds.Where(limitedPermissions.Contains).ToArray();
+                        return limitedPermissions.Intersect(permissionIds, StringComparer.OrdinalIgnoreCase).Any();
                     }
                 }
             }
 
-            if (result && user.IsAdministrator && !isUserAuthenticatedByLimitedCookie)
+            if (result && user.IsAdministrator)
             {
                 return true;
             }

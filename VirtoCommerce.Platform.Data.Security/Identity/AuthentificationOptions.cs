@@ -43,7 +43,8 @@ namespace VirtoCommerce.Platform.Core.Security
         public bool BearerTokensEnabled { get; set; }
         public TimeSpan AccessTokenExpireTimeSpan { get; set; }
         public TimeSpan RefreshTokenExpireTimeSpan { get; set; }
-        public string BearerTokensCookiePermissions { get; set; }
+        //The list of permissions that issued for user when using Barrier token authorization and it will be used to authorize some non-AJAX requests where is impossible to add Barrier Authorization header
+        public string BearerAuthorizationLimitedCookiePermissions { get; set; }
 
         public bool HmacEnabled { get; set; }
         public TimeSpan HmacSignatureValidityPeriod { get; set; }
@@ -55,7 +56,7 @@ namespace VirtoCommerce.Platform.Core.Security
         #endregion
 
         #region Cookie
-        
+
         /// <summary>
         /// The AuthenticationType in the options corresponds to the IIdentity AuthenticationType property. A different
         /// value may be assigned in order to use the same authentication middleware type more than once in a pipeline.

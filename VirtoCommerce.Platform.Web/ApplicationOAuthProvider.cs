@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.Owin;
@@ -49,13 +50,21 @@ namespace VirtoCommerce.Platform.Web
             var ticket = new AuthenticationTicket(oAuthIdentity, new AuthenticationProperties(properties));
             context.Validated(ticket);
 
-            // Issue a helper cookie - it will be used to authorize some non-AJAX requests
-            var cookiesIdentity = await userManager.CreateIdentityAsync(user, _authenticationOptions.AuthenticationType);
-            cookiesIdentity.AddClaim(new Claim(VirtoCommerceClaimTypes.LimitedPermissionsClaimName, _authenticationOptions.BearerTokensCookiePermissions));
-
-            context.Request.Context.Authentication.SignIn(cookiesIdentity);
-
             var platformUser = await _securityService.FindByNameAsync(context.UserName, UserDetails.Full);
+            var limitedCookiePermissions = _authenticationOptions.BearerAuthorizationLimitedCookiePermissions?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+            if (!platformUser.IsAdministrator)
+            {
+                var allUserPermissions = _securityService.GetUserPermissions(user.UserName).Select(x => x.Id);
+                limitedCookiePermissions = limitedCookiePermissions.Intersect(allUserPermissions, StringComparer.OrdinalIgnoreCase).ToArray();
+            }
+            if (limitedCookiePermissions.Any())
+            {
+                // Issue a helper cookie - it will be used to authorize some non-AJAX requests
+                var cookiesIdentity = await userManager.CreateIdentityAsync(user, _authenticationOptions.AuthenticationType);
+                cookiesIdentity.AddClaim(new Claim(VirtoCommerceClaimTypes.LimitedPermissionsClaimName, _authenticationOptions.BearerAuthorizationLimitedCookiePermissions));
+                context.Request.Context.Authentication.SignIn(cookiesIdentity);
+            }
+
             await _eventPublisher.Publish(new UserLoginEvent(platformUser));
         }
 
