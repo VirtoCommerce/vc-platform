@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             var permissionAttributes = apiDescription.ActionDescriptor
                 .GetFilterPipeline().Select(x => x.Instance).OfType<CheckPermissionAttribute>();
 
-            var permissions = permissionAttributes.SelectMany(x => x.Permissions).ToList();
+            var permissions = permissionAttributes.SelectMany(x => x.Permissions).Distinct().ToList();
             if (permissions.Count == 0)
             {
                 return;
