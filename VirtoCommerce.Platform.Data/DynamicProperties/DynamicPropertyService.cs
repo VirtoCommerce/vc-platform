@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -77,7 +77,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             {
                 var sourceProperties = properties.Select(x => x.ToEntity()).ToList();
                 var targetProperties = repository.GetDynamicPropertiesForTypes(properties.Select(x => x.ObjectType).Distinct().ToArray()).ToList();
-                var comparer = AnonymousComparer.Create((DynamicPropertyEntity x) => x.Name.ToLowerInvariant() + ":" + x.ObjectType.ToLowerInvariant());
+                var comparer = AnonymousComparer.Create((DynamicPropertyEntity x) => $"{x.Id?.ToLowerInvariant() ?? x.Name.ToLowerInvariant()}:{x.ObjectType.ToLowerInvariant()}");
                 sourceProperties.CompareTo(targetProperties, comparer, (state, source, target) =>
                     {
                         if (state == EntryState.Modified)
