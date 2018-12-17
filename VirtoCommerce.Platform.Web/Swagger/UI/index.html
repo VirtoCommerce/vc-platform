@@ -19,12 +19,31 @@
     <script src="swagger-ui-standalone-preset"> </script>
     <script>
     // Get Swashbuckle config into JavaScript
+
+    //filter to hide empty API block operations
+    const HideEmptyTagsPlugin = () => {
+        return {
+            statePlugins: {
+                spec: {
+                    wrapSelectors: {
+                        taggedOperations: (ori) => (...args) => {
+                            return ori(...args)
+                                .filter(tagMeta => tagMeta.get("operations") && tagMeta.get("operations").size > 0)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     function arrayFrom(configString) {
       return (configString !== "") ? configString.split('|') : [];
     }
+
     function stringOrNullFrom(configString) {
       return (configString !== "null") ? configString : null;
     }
+
     function addLogo() {
       document.querySelector('.topbar-wrapper a.link').remove();
       var logo = document.createElement("a");
@@ -33,6 +52,7 @@
       logo.innerHTML = "Virto Commerce";
       document.querySelector('.topbar-wrapper').prepend(logo);
     }
+
     window.swashbuckleConfig = {
       rootUrl: '%(RootUrl)',
       discoveryPaths: arrayFrom('%(DiscoveryPaths)'),
@@ -57,7 +77,8 @@
           SwaggerUIStandalonePreset
         ],
         plugins: [
-          SwaggerUIBundle.plugins.DownloadUrl
+            SwaggerUIBundle.plugins.DownloadUrl,
+            HideEmptyTagsPlugin 
         ],
         layout: "StandaloneLayout"
       };
