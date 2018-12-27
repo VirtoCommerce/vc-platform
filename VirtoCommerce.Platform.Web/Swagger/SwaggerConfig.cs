@@ -111,17 +111,20 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     //with a comma (see //https://httpd.apache.org/docs/2.4/mod/mod_proxy.html#x-headers).
                     string protocol = message.Headers.GetValues("X-Forwarded-Proto")?.FirstOrDefault()?.Split(',')[0];
                     var host = message.Headers.GetValues("X-Forwarded-Host")?.FirstOrDefault()?.Split(',')[0];
-                    var port =  message.Headers.GetValues("x-Forwarded-Port")?.FirstOrDefault()?.Split(',')[0];
+                    var port = message.Headers.GetValues("x-Forwarded-Port")?.FirstOrDefault()?.Split(',')[0];
 
-                    if (String.IsNullOrEmpty(protocol)) protocol = message.RequestUri.Scheme;
-                    if (String.IsNullOrEmpty(host)) host = message.RequestUri.Host;
-                    if (String.IsNullOrEmpty(port)) port = message.RequestUri.Port.ToString();
+                    if (string.IsNullOrEmpty(protocol))
+                        protocol = message.RequestUri.Scheme;
+                    if (string.IsNullOrEmpty(host))
+                        host = message.RequestUri.Host;
+                    if (string.IsNullOrEmpty(port))
+                        port = message.RequestUri.Port.ToString();
 
                     var uriBuilder = new UriBuilder(message.RequestUri)
                     {
                         Scheme = protocol,
                         Host = host,
-                        Port = Int32.Parse(port)
+                        Port = int.Parse(port)
                     };
                     return uriBuilder.Uri;
 
@@ -145,14 +148,10 @@ namespace VirtoCommerce.Platform.Web.Swagger
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             c.RootUrl(message => new Uri(ComputeHostAsSeenByOriginalClient(message), message.GetRequestContext().VirtualPathRoot).ToString());
             c.PrettyPrint();
-            c.ApiKey("apiKey")
-                .Description("API Key Authentication")
-                .Name("api_key")
-                .In("header");
             c.OAuth2("OAuth2")
                 .Description("OAuth2 Resource Owner Password Grant flow")
                 .Flow("password")
-                .TokenUrl(HttpRuntime.AppDomainAppVirtualPath + "/token");
+                .TokenUrl(HttpRuntime.AppDomainAppVirtualPath?.TrimEnd('/') + "/token");
 
             foreach (var path in xmlCommentsFilePaths)
             {

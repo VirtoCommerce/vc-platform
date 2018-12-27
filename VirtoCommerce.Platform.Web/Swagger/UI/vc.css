@@ -42,9 +42,6 @@ hgroup.main a.link, hgroup.main .base-url {
     display: none;
 }
 
-.modal-ux-content .auth-container:first-child {
-    display: none;
-}
 .description {
     display: none;
 }
