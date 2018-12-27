@@ -61,7 +61,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 // Issue a helper cookie - it will be used to authorize some non-AJAX requests
                 var cookiesIdentity = await userManager.CreateIdentityAsync(user, _authenticationOptions.AuthenticationType);
-                cookiesIdentity.AddClaim(new Claim(VirtoCommerceClaimTypes.LimitedPermissionsClaimName, _authenticationOptions.BearerAuthorizationLimitedCookiePermissions));
+                cookiesIdentity.AddClaim(new Claim(VirtoCommerceClaimTypes.LimitedPermissionsClaimName, string.Join(";", limitedCookiePermissions)));
                 context.Request.Context.Authentication.SignIn(cookiesIdentity);
             }
 
