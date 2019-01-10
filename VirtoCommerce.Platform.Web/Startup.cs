@@ -406,12 +406,27 @@ namespace VirtoCommerce.Platform.Web
             app.SanitizeThreadCulture();
             ICacheManager<object> cacheManager = null;
 
+            // Try to find app setting which controls using of scaled up VC cache instances
+            var cacheScaleUpSetting = ConfigurationManager.AppSettings["VirtoCommerce:Cache:ScaleUpEnabled"];
+            var cacheScaleUpEnabled = cacheScaleUpSetting != null && bool.TryParse(cacheScaleUpSetting, out var useCacheScaleUp) && useCacheScaleUp;
+
             //Try to load cache configuration from web.config first
             //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
-            var cacheManagerSection = ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) as CacheManagerSection;
-            if (cacheManagerSection != null && cacheManagerSection.CacheManagers.Any(p => p.Name.EqualsInvariant("platformCache")))
+            if (ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) is CacheManagerSection cacheManagerSection)
             {
-                var configuration = ConfigurationBuilder.LoadConfiguration("platformCache");
+                CacheManagerConfiguration configuration = null;
+
+                var defaultCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("defaultPlatformCache"));
+                if (defaultCacheManager != null)
+                {
+                    configuration = ConfigurationBuilder.LoadConfiguration("defaultPlatformCache");
+                }
+
+                var redisCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("redisPlatformCache"));
+                if (cacheScaleUpEnabled && redisCacheManager != null)
+                {
+                    configuration = ConfigurationBuilder.LoadConfiguration("redisPlatformCache");
+                }
 
                 if (configuration != null)
                 {
@@ -420,9 +435,11 @@ namespace VirtoCommerce.Platform.Web
                     cacheManager = CacheFactory.FromConfiguration<object>(configuration);
                 }
             }
+
+            // Create a default cache manager if there is no any others
             if (cacheManager == null)
             {
-                cacheManager = CacheFactory.Build("platformCache", settings =>
+                cacheManager = CacheFactory.Build("defaultPlatformCache", settings =>
                 {
                     settings.WithUpdateMode(CacheUpdateMode.Up)
                             .WithSystemRuntimeCacheHandle("memCacheHandle")
