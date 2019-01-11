@@ -419,13 +419,13 @@ namespace VirtoCommerce.Platform.Web
                 var defaultCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("defaultPlatformCache"));
                 if (defaultCacheManager != null)
                 {
-                    configuration = ConfigurationBuilder.LoadConfiguration("defaultPlatformCache");
+                    configuration = ConfigurationBuilder.LoadConfiguration(defaultCacheManager.Name);
                 }
 
                 var redisCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("redisPlatformCache"));
                 if (cacheScaleUpEnabled && redisCacheManager != null)
                 {
-                    configuration = ConfigurationBuilder.LoadConfiguration("redisPlatformCache");
+                    configuration = ConfigurationBuilder.LoadConfiguration(redisCacheManager.Name);
                 }
 
                 if (configuration != null)
