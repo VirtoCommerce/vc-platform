@@ -406,9 +406,7 @@ namespace VirtoCommerce.Platform.Web
             app.SanitizeThreadCulture();
             ICacheManager<object> cacheManager = null;
 
-            // Try to find app setting which controls using of scaled up VC cache instances
-            var cacheScaleUpSetting = ConfigurationManager.AppSettings["VirtoCommerce:Cache:ScaleUpEnabled"];
-            var cacheScaleUpEnabled = cacheScaleUpSetting != null && bool.TryParse(cacheScaleUpSetting, out var useCacheScaleUp) && useCacheScaleUp;
+            var redisConnectionString = ConfigurationManager.ConnectionStrings["RedisConnectionString"];
 
             //Try to load cache configuration from web.config first
             //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
@@ -423,7 +421,7 @@ namespace VirtoCommerce.Platform.Web
                 }
 
                 var redisCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("redisPlatformCache"));
-                if (cacheScaleUpEnabled && redisCacheManager != null)
+                if (redisConnectionString != null && redisCacheManager != null)
                 {
                     configuration = ConfigurationBuilder.LoadConfiguration(redisCacheManager.Name);
                 }
@@ -661,8 +659,6 @@ namespace VirtoCommerce.Platform.Web
             #endregion
 
             #region Notifications
-
-            var redisConnectionString = ConfigurationManager.ConnectionStrings["RedisConnectionString"];
 
             // Redis
             if (redisConnectionString != null && !string.IsNullOrEmpty(redisConnectionString.ConnectionString))
