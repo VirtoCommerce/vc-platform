@@ -489,11 +489,6 @@
     <Compile Include="Model\Settings\ModuleDescriptor.cs" />
     <Compile Include="Model\Settings\Setting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\PlatformNotificationResource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PlatformNotificationResource.resx</DependentUpon>
-    </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="UrlRewriterOwinMiddleware.cs" />
   </ItemGroup>
@@ -1251,11 +1246,6 @@
     <EmbeddedResource Include="Resources\ModularityResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ModularityResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\PlatformNotificationResource.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>PlatformNotificationResource.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

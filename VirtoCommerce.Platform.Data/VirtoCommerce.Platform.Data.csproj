@@ -360,6 +360,14 @@
   <ItemGroup>
     <Folder Include="Security\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Notifications\Templates\RegistrationNotificationTemplateBody.html" />
+    <Content Include="Notifications\Templates\RegistrationNotificationTemplateSubject.html" />
+    <Content Include="Notifications\Templates\ResetPasswordNotificationTemplateBody.html" />
+    <Content Include="Notifications\Templates\ResetPasswordNotificationTemplateSubject.html" />
+    <Content Include="Notifications\Templates\TwoFactorNotificationTemplateBody.html" />
+    <Content Include="Notifications\Templates\TwoFactorNotificationTemplateSubject.html" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
