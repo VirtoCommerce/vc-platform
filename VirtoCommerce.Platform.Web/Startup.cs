@@ -64,7 +64,6 @@ using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Modularity;
 using VirtoCommerce.Platform.Web.PushNotifications;
-using VirtoCommerce.Platform.Web.Resources;
 using VirtoCommerce.Platform.Web.SignalR;
 using VirtoCommerce.Platform.Web.Swagger;
 using WebGrease.Extensions;
@@ -274,6 +273,7 @@ namespace VirtoCommerce.Platform.Web
             RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
             var notificationManager = container.Resolve<INotificationManager>();
+            var assembly = typeof(LiquidNotificationTemplateResolver).Assembly;
 
             notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
@@ -281,8 +281,8 @@ namespace VirtoCommerce.Platform.Web
                 Description = "This notification is sent by email to a client when he finishes registration",
                 NotificationTemplate = new NotificationTemplate
                 {
-                    Subject = PlatformNotificationResource.RegistrationNotificationSubject,
-                    Body = PlatformNotificationResource.RegistrationNotificationBody,
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.RegistrationNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.RegistrationNotificationTemplateSubject.html").ReadToString(),
                     Language = "en-US",
                 }
             });
@@ -293,8 +293,8 @@ namespace VirtoCommerce.Platform.Web
                 Description = "This notification is sent by email to a client upon reset password request",
                 NotificationTemplate = new NotificationTemplate
                 {
-                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
-                    Body = PlatformNotificationResource.ResetPasswordNotificationBody,
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ResetPasswordNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ResetPasswordNotificationTemplateSubject.html").ReadToString(),
                     Language = "en-US",
                 }
             });
@@ -305,8 +305,8 @@ namespace VirtoCommerce.Platform.Web
                 Description = "This notification contains a security token for two factor authentication",
                 NotificationTemplate = new NotificationTemplate
                 {
-                    Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
-                    Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateSubject.html").ReadToString(),
                     Language = "en-US",
                 }
             });
@@ -317,8 +317,8 @@ namespace VirtoCommerce.Platform.Web
                 Description = "This notification contains a security token for two factor authentication",
                 NotificationTemplate = new NotificationTemplate
                 {
-                    Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
-                    Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateSubject.html").ReadToString(),
                     Language = "en-US",
                 }
             });
