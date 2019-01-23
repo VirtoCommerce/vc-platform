@@ -64,7 +64,6 @@ using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Modularity;
 using VirtoCommerce.Platform.Web.PushNotifications;
-using VirtoCommerce.Platform.Web.Resources;
 using VirtoCommerce.Platform.Web.SignalR;
 using VirtoCommerce.Platform.Web.Swagger;
 using WebGrease.Extensions;
@@ -274,7 +273,7 @@ namespace VirtoCommerce.Platform.Web
             RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
             var notificationManager = container.Resolve<INotificationManager>();
-            var assembly = typeof(IPlatformRepository).Assembly;
+            var assembly = typeof(LiquidNotificationTemplateResolver).Assembly;
 
             notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
