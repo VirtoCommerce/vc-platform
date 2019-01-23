@@ -361,12 +361,12 @@
     <Folder Include="Security\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Notifications\Templates\RegistrationNotificationTemplateBody.html" />
-    <Content Include="Notifications\Templates\RegistrationNotificationTemplateSubject.html" />
-    <Content Include="Notifications\Templates\ResetPasswordNotificationTemplateBody.html" />
-    <Content Include="Notifications\Templates\ResetPasswordNotificationTemplateSubject.html" />
-    <Content Include="Notifications\Templates\TwoFactorNotificationTemplateBody.html" />
-    <Content Include="Notifications\Templates\TwoFactorNotificationTemplateSubject.html" />
+    <EmbeddedResource Include="Notifications\Templates\RegistrationNotificationTemplateBody.html" />
+    <EmbeddedResource Include="Notifications\Templates\RegistrationNotificationTemplateSubject.html" />
+    <EmbeddedResource Include="Notifications\Templates\ResetPasswordNotificationTemplateBody.html" />
+    <EmbeddedResource Include="Notifications\Templates\ResetPasswordNotificationTemplateSubject.html" />
+    <EmbeddedResource Include="Notifications\Templates\TwoFactorNotificationTemplateBody.html" />
+    <EmbeddedResource Include="Notifications\Templates\TwoFactorNotificationTemplateSubject.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
