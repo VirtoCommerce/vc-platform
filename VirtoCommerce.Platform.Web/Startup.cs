@@ -406,7 +406,7 @@ namespace VirtoCommerce.Platform.Web
             app.SanitizeThreadCulture();
             ICacheManager<object> cacheManager = null;
 
-            var redisConnectionString = ConfigurationManager.ConnectionStrings["RedisConnectionString"];
+            var redisConnectionString = ConfigurationHelper.GetConnectionStringValue("RedisConnectionString");
 
             //Try to load cache configuration from web.config first
             //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
@@ -414,7 +414,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 CacheManagerConfiguration configuration = null;
 
-                var defaultCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("defaultPlatformCache"));
+                var defaultCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("platformCache"));
                 if (defaultCacheManager != null)
                 {
                     configuration = ConfigurationBuilder.LoadConfiguration(defaultCacheManager.Name);
@@ -437,7 +437,7 @@ namespace VirtoCommerce.Platform.Web
             // Create a default cache manager if there is no any others
             if (cacheManager == null)
             {
-                cacheManager = CacheFactory.Build("defaultPlatformCache", settings =>
+                cacheManager = CacheFactory.Build("platformCache", settings =>
                 {
                     settings.WithUpdateMode(CacheUpdateMode.Up)
                             .WithSystemRuntimeCacheHandle("memCacheHandle")
@@ -661,14 +661,14 @@ namespace VirtoCommerce.Platform.Web
             #region Notifications
 
             // Redis
-            if (redisConnectionString != null && !string.IsNullOrEmpty(redisConnectionString.ConnectionString))
+            if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 // Cache
-                RedisConfigurations.AddConfiguration(new RedisConfiguration("redisConnectionString", redisConnectionString.ConnectionString));
+                RedisConfigurations.AddConfiguration(new RedisConfiguration("redisConnectionString", redisConnectionString));
 
                 // SignalR
                 // https://stackoverflow.com/questions/29885470/signalr-scaleout-on-azure-rediscache-connection-issues
-                GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(redisConnectionString.ConnectionString, "VirtoCommerce.Platform.SignalR"));
+                GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(redisConnectionString, "VirtoCommerce.Platform.SignalR"));
             }
 
             // SignalR 
