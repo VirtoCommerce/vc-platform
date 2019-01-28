@@ -88,6 +88,24 @@
     </None>
     <None Include="VirtoCommerce.Platform.Data.Notifications.nuspec" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\RegistrationNotificationTemplateBody.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\RegistrationNotificationTemplateSubject.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\ResetPasswordNotificationTemplateBody.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\ResetPasswordNotificationTemplateSubject.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\TwoFactorNotificationTemplateBody.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\TwoFactorNotificationTemplateSubject.html" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
