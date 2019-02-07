@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Platform.Core.Security
+namespace VirtoCommerce.Platform.Core.Security
 {
     public enum UserDetails
     {
@@ -6,5 +6,6 @@
         Full,
         Reduced,
         Export,
+        Info
     }
 }

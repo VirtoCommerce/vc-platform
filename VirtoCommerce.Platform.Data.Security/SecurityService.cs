@@ -366,21 +366,42 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     query = query.Where(x => request.AccountTypes.Contains(x.UserType));
                 }
+
+                if (request.ModifiedSinceDate != null && request.ModifiedSinceDate != default(DateTime))
+                {
+                    query = query.Where(x => x.ModifiedDate > request.ModifiedSinceDate);
+                }
+
                 result.TotalCount = await query.CountAsync();
 
-                users = await query.OrderBy(x => x.UserName)
-                                 .Skip(request.SkipCount)
+                var sortInfos = request.SortInfos;
+                if (sortInfos.IsNullOrEmpty())
+                {
+                    sortInfos = new[] { new SortInfo { SortColumn = "UserName", SortDirection = SortDirection.Descending } };
+                }
+                query = query.OrderBySortInfos(sortInfos);
+
+
+                users = await query.Skip(request.SkipCount)
                                  .Take(request.TakeCount)
                                  .ToArrayAsync();
             }
             var extendedUsers = new List<ApplicationUserExtended>();
 
-            foreach (var user in users)
+            var userDetail = EnumUtility.SafeParse(request.ResponseGroup, UserDetails.Full);
+            if (userDetail == UserDetails.Info)
             {
-                var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
-                if (extendedUser != null)
+                extendedUsers = users.Select(x => new ApplicationUser().ToCoreModel(x, _permissionScopeService)).ToList();
+            }
+            else
+            {
+                foreach (var user in users)
                 {
-                    extendedUsers.Add(extendedUser);
+                    var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
+                    if (extendedUser != null)
+                    {
+                        extendedUsers.Add(extendedUser);
+                    }
                 }
             }
             result.Users = extendedUsers.ToArray();
