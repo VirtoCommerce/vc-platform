@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,39 +69,40 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
 		{
-			if (property == null)
-				throw new ArgumentNullException("property");
+            if (property == null)
+                throw new ArgumentNullException("property");
 
-			string[] props = property.Split('.');
-			Type type = typeof(T);
-			ParameterExpression arg = Expression.Parameter(type, "x");
-			Expression expr = arg;
+            string[] props = property.Split('.');
+            var effectiveType = source.FirstOrDefault().GetType();
+            ParameterExpression arg = Expression.Parameter(typeof(T), "x");
+            Expression expr = Expression.Convert(arg, effectiveType);
             foreach (string prop in props)
             {
                 // use reflection (not ComponentModel) to mirror LINQ
-                PropertyInfo pi = type.GetProperty(prop, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                PropertyInfo pi = effectiveType.GetProperty(prop, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                 if (pi != null)
                 {
                     expr = Expression.Property(expr, pi);
-                    type = pi.PropertyType;
+                    effectiveType = pi.PropertyType;
                 }
                 else
                 {
                     return source.OrderBy(x => 1);
                 }
             }
-            Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
-			LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
+            Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), effectiveType);
+            LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
 
-			object result = typeof(Queryable).GetMethods().Single(
-					method => method.Name == methodName
-							&& method.IsGenericMethodDefinition
-							&& method.GetGenericArguments().Length == 2
-							&& method.GetParameters().Length == 2)
-					.MakeGenericMethod(typeof(T), type)
-					.Invoke(null, new object[] { source, lambda });
-			return (IOrderedQueryable<T>)result;
-		}
+            object result = typeof(Queryable).GetMethods().Single(
+                    method => method.Name == methodName
+                            && method.IsGenericMethodDefinition
+                            && method.GetGenericArguments().Length == 2
+                            && method.GetParameters().Length == 2)
+                    .MakeGenericMethod(arg.Type, effectiveType)
+                    .Invoke(null, new object[] { source, lambda });
+
+            return (IOrderedQueryable<T>)result;
+        }
 
 	}
 }
