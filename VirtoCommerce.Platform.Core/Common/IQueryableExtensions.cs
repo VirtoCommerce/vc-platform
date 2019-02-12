@@ -1,40 +1,39 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Collections;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-	public static class IQueryableExtensions
-	{
-		public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, string property)
-		{
-			return ApplyOrder<T>(source, property, "OrderBy");
-		}
-		public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string property)
-		{
-			return ApplyOrder<T>(source, property, "OrderByDescending");
-		}
-		public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> source, string property)
-		{
-			return ApplyOrder<T>(source, property, "ThenBy");
-		}
-		public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> source, string property)
-		{
-			return ApplyOrder<T>(source, property, "ThenByDescending");
-		}
+    public static class IQueryableExtensions
+    {
+        public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, string property)
+        {
+            return ApplyOrder(source, property, "OrderBy");
+        }
 
-      
+        public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string property)
+        {
+            return ApplyOrder(source, property, "OrderByDescending");
+        }
+
+        public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> source, string property)
+        {
+            return ApplyOrder(source, property, "ThenBy");
+        }
+
+        public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> source, string property)
+        {
+            return ApplyOrder(source, property, "ThenByDescending");
+        }
+
         public static IOrderedQueryable<T> OrderBySortInfos<T>(this IQueryable<T> source, SortInfo[] sortInfos)
         {
-            if(sortInfos.IsNullOrEmpty())
+            if (sortInfos.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("sortInfos");
+                throw new ArgumentNullException(nameof(sortInfos));
             }
-            IOrderedQueryable<T> retVal = null;
+            IOrderedQueryable<T> retVal;
             var firstSortInfo = sortInfos.First();
             if (firstSortInfo.SortDirection == SortDirection.Descending)
             {
@@ -68,18 +67,20 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         public static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
-		{
+        {
             if (property == null)
-                throw new ArgumentNullException("property");
+                throw new ArgumentNullException(nameof(property));
 
-            string[] props = property.Split('.');
-            var effectiveType = source.FirstOrDefault().GetType();
-            ParameterExpression arg = Expression.Parameter(typeof(T), "x");
+            var props = property.Split('.');
+            var registeredType = AbstractTypeFactory<T>.AllTypeInfos.Select(x => x.Type).FirstOrDefault();
+            var effectiveType = registeredType ?? typeof(T);
+            var arg = Expression.Parameter(typeof(T), "x");
             Expression expr = Expression.Convert(arg, effectiveType);
-            foreach (string prop in props)
+
+            foreach (var prop in props)
             {
                 // use reflection (not ComponentModel) to mirror LINQ
-                PropertyInfo pi = effectiveType.GetProperty(prop, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                var pi = effectiveType.GetProperty(prop, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                 if (pi != null)
                 {
                     expr = Expression.Property(expr, pi);
@@ -90,10 +91,10 @@ namespace VirtoCommerce.Platform.Core.Common
                     return source.OrderBy(x => 1);
                 }
             }
-            Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), effectiveType);
-            LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
+            var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), effectiveType);
+            var lambda = Expression.Lambda(delegateType, expr, arg);
 
-            object result = typeof(Queryable).GetMethods().Single(
+            var result = typeof(Queryable).GetMethods().Single(
                     method => method.Name == methodName
                             && method.IsGenericMethodDefinition
                             && method.GetGenericArguments().Length == 2
@@ -103,6 +104,5 @@ namespace VirtoCommerce.Platform.Core.Common
 
             return (IOrderedQueryable<T>)result;
         }
-
-	}
+    }
 }
