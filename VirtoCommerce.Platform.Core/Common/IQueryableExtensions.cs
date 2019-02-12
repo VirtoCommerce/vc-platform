@@ -72,7 +72,8 @@ namespace VirtoCommerce.Platform.Core.Common
                 throw new ArgumentNullException(nameof(property));
 
             var props = property.Split('.');
-            var effectiveType = AbstractTypeFactory<T>.TryCreateInstance().GetType();
+            var registeredType = AbstractTypeFactory<T>.TryCreateInstance()?.GetType();
+            var effectiveType = registeredType ?? typeof(T);
             var arg = Expression.Parameter(typeof(T), "x");
             Expression expr = Expression.Convert(arg, effectiveType);
 
