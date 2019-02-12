@@ -7,6 +7,7 @@ using Xunit;
 namespace VirtoCommerce.Platform.Tests.Common
 {
     [CLSCompliant(false)]
+    [Trait("Category", "CI")]
     public class QueryableExtensionsTests
     {
         class A { }
@@ -61,7 +62,6 @@ namespace VirtoCommerce.Platform.Tests.Common
 
             var orderedList = _bInsideListA.AsQueryable().OrderBySortInfos(sortInfo).ToList();
             var firstB = (B)orderedList.First();
-
             Assert.Equal(expected, firstB.Prop);
         }
 
@@ -80,7 +80,6 @@ namespace VirtoCommerce.Platform.Tests.Common
             };
 
             var orderedList = _simpleList.AsQueryable().OrderBySortInfos(sortInfo).ToList();
-
             Assert.Equal(expected, orderedList.First().Prop);
         }
     }
