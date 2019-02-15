@@ -123,6 +123,7 @@
     <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
     <Compile Include="Model\PermissionEntity.cs" />
+    <Compile Include="Model\RefreshTokenEntity.cs" />
     <Compile Include="Model\RoleAssignmentEntity.cs" />
     <Compile Include="Model\RoleEntity.cs" />
     <Compile Include="Model\RolePermissionEntity.cs" />
@@ -241,6 +242,10 @@
     <Compile Include="Repositories\Migrations\201809070639174_AddAccountEntityPasswordExpired.Designer.cs">
       <DependentUpon>201809070639174_AddAccountEntityPasswordExpired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201811221254162_AddRefreshTokens.cs" />
+    <Compile Include="Repositories\Migrations\201811221254162_AddRefreshTokens.Designer.cs">
+      <DependentUpon>201811221254162_AddRefreshTokens.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -342,6 +347,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201809070639174_AddAccountEntityPasswordExpired.resx">
       <DependentUpon>201809070639174_AddAccountEntityPasswordExpired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201811221254162_AddRefreshTokens.resx">
+      <DependentUpon>201811221254162_AddRefreshTokens.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

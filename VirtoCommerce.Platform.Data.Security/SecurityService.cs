@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using CacheManager.Core;
@@ -365,21 +366,42 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     query = query.Where(x => request.AccountTypes.Contains(x.UserType));
                 }
+
+                if (request.ModifiedSinceDate != null && request.ModifiedSinceDate != default(DateTime))
+                {
+                    query = query.Where(x => x.ModifiedDate > request.ModifiedSinceDate);
+                }
+
                 result.TotalCount = await query.CountAsync();
 
-                users = await query.OrderBy(x => x.UserName)
-                                 .Skip(request.SkipCount)
+                var sortInfos = request.SortInfos;
+                if (sortInfos.IsNullOrEmpty())
+                {
+                    sortInfos = new[] { new SortInfo { SortColumn = "UserName", SortDirection = SortDirection.Descending } };
+                }
+                query = query.OrderBySortInfos(sortInfos);
+
+
+                users = await query.Skip(request.SkipCount)
                                  .Take(request.TakeCount)
                                  .ToArrayAsync();
             }
             var extendedUsers = new List<ApplicationUserExtended>();
 
-            foreach (var user in users)
+            var userDetail = EnumUtility.SafeParse(request.ResponseGroup, UserDetails.Full);
+            if (userDetail == UserDetails.Info)
             {
-                var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
-                if (extendedUser != null)
+                extendedUsers = users.Select(x => new ApplicationUser().ToCoreModel(x, _permissionScopeService)).ToList();
+            }
+            else
+            {
+                foreach (var user in users)
                 {
-                    extendedUsers.Add(extendedUser);
+                    var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
+                    if (extendedUser != null)
+                    {
+                        extendedUsers.Add(extendedUser);
+                    }
                 }
             }
             result.Users = extendedUsers.ToArray();
@@ -417,14 +439,37 @@ namespace VirtoCommerce.Platform.Data.Security
             }
 
             var user = FindByName(userName, UserDetails.Full);
-
             var result = user != null && user.UserState == AccountState.Approved;
+            if (result)
+            {
+
+                //LimitedPermissions claims that will be granted to the user by cookies when bearer token authentication is enabled.
+                //This can help to authorize the user for direct(non - AJAX) GET requests to the VC platform API and / or to use
+                //some 3rd - party web applications for the VC platform(like Hangfire dashboard).
+                //
+                //If the user identity has claim named "LimitedPermissions", this attribute should authorize only
+                //permissions listed in that claim. Any permissions that are required by this attribute but
+                //not listed in the claim should cause this method to return false.
+                //However, if permission limits of user identity are not defined ("LimitedPermissions" claim is missing),
+                //then no limitations should be applied to the permissions.
+                //
+                //TDB: usually we have to use identity for the passed username, but we cannot, because it’s impossible to access any of the user’s cookies by their username, so we assume that
+                //this username will always be the same as for the current member of the thread -  Thread.CurrentPrincipal
+                if (Thread.CurrentPrincipal is ClaimsPrincipal claimsPrinicpal && claimsPrinicpal.Identity.AuthenticationType == DefaultAuthenticationTypes.ApplicationCookie)
+                {
+                    var limitedPermissionsClaim = claimsPrinicpal.Claims.FirstOrDefault(x => x.Type.EqualsInvariant(VirtoCommerceClaimTypes.LimitedPermissionsClaimName));
+                    if (limitedPermissionsClaim != null)
+                    {
+                        var limitedPermissions = limitedPermissionsClaim.Value?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                        return limitedPermissions.Intersect(permissionIds, StringComparer.OrdinalIgnoreCase).Any();
+                    }
+                }
+            }
 
             if (result && user.IsAdministrator)
             {
                 return true;
             }
-
             //For managers always allow to call api
             if (result && permissionIds.Length == 1 && permissionIds.Contains(PredefinedPermissions.SecurityCallApi)
                && (string.Equals(user.UserType, AccountType.Manager.ToString(), StringComparison.InvariantCultureIgnoreCase) ||

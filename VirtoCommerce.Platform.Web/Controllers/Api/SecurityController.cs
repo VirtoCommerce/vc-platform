@@ -551,6 +551,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityDelete)]
         public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
         {
+            if (names.Contains(User.Identity.Name))
+            {
+                throw new HttpException((int)HttpStatusCode.InternalServerError, "You cannot delete your own account.");
+            }
+
             EnsureUserIsEditable(names);
 
             await _securityService.DeleteAsync(names);

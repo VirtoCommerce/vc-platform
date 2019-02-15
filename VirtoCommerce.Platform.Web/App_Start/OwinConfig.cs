@@ -5,16 +5,21 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Infrastructure;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Practices.Unity;
 using Owin;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data;
+using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Authentication.ApiKeys;
 using VirtoCommerce.Platform.Data.Security.Authentication.Hmac;
 using VirtoCommerce.Platform.Data.Security.Identity;
+using VirtoCommerce.Platform.Data.Security.Services;
 using AuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 
 namespace VirtoCommerce.Platform.Web
@@ -65,12 +70,20 @@ namespace VirtoCommerce.Platform.Web
 
             if (authenticationOptions.BearerTokensEnabled)
             {
+                container.RegisterType<IRefreshTokenService, RefreshTokenService>();
+
+                var refreshTokenService = container.Resolve<IRefreshTokenService>();
+                var refreshTokenProvider = new RefreshTokenProvider(authenticationOptions.RefreshTokenExpireTimeSpan, refreshTokenService);
+                var eventPublisher = container.Resolve<IEventPublisher>();
+                var securityService = container.Resolve<ISecurityService>();
+
                 app.UseOAuthBearerTokens(new OAuthAuthorizationServerOptions
                 {
                     TokenEndpointPath = new PathString("/Token"),
                     AuthorizeEndpointPath = new PathString("/Account/Authorize"),
-                    Provider = new ApplicationOAuthProvider(PublicClientId),
-                    AccessTokenExpireTimeSpan = authenticationOptions.BearerTokensExpireTimeSpan,
+                    Provider = new ApplicationOAuthProvider(PublicClientId, authenticationOptions, eventPublisher, securityService),
+                    RefreshTokenProvider = refreshTokenProvider,
+                    AccessTokenExpireTimeSpan = authenticationOptions.AccessTokenExpireTimeSpan,
                     AllowInsecureHttp = true
                 });
             }

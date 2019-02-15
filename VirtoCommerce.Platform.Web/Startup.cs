@@ -16,6 +16,8 @@ using CacheManager.Redis;
 using Common.Logging;
 using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.Extensibility.Implementation;
+using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
@@ -62,7 +64,6 @@ using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Modularity;
 using VirtoCommerce.Platform.Web.PushNotifications;
-using VirtoCommerce.Platform.Web.Resources;
 using VirtoCommerce.Platform.Web.SignalR;
 using VirtoCommerce.Platform.Web.Swagger;
 using WebGrease.Extensions;
@@ -158,7 +159,9 @@ namespace VirtoCommerce.Platform.Web
                 CookiesValidateInterval = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Cookies.ValidateInterval", TimeSpan.FromDays(1)),
 
                 BearerTokensEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.Enabled", true),
-                BearerTokensExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromHours(1)),
+                AccessTokenExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan", TimeSpan.FromMinutes(30)),
+                RefreshTokenExpireTimeSpan = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.RefreshTokenExpireTimeSpan", TimeSpan.FromDays(30)),
+                BearerAuthorizationLimitedCookiePermissions = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:BearerTokens.LimitedCookiePermissions", string.Empty),
 
                 HmacEnabled = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.Enabled", true),
                 HmacSignatureValidityPeriod = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod", TimeSpan.FromMinutes(20)),
@@ -270,6 +273,7 @@ namespace VirtoCommerce.Platform.Web
             RecurringJob.AddOrUpdate<SendNotificationsJobs>("SendNotificationsJob", x => x.Process(), "*/1 * * * *");
 
             var notificationManager = container.Resolve<INotificationManager>();
+            var assembly = typeof(LiquidNotificationTemplateResolver).Assembly;
 
             notificationManager.RegisterNotificationType(() => new RegistrationEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
@@ -277,8 +281,8 @@ namespace VirtoCommerce.Platform.Web
                 Description = "This notification is sent by email to a client when he finishes registration",
                 NotificationTemplate = new NotificationTemplate
                 {
-                    Subject = PlatformNotificationResource.RegistrationNotificationSubject,
-                    Body = PlatformNotificationResource.RegistrationNotificationBody,
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.RegistrationNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.RegistrationNotificationTemplateSubject.html").ReadToString(),
                     Language = "en-US",
                 }
             });
@@ -289,8 +293,8 @@ namespace VirtoCommerce.Platform.Web
                 Description = "This notification is sent by email to a client upon reset password request",
                 NotificationTemplate = new NotificationTemplate
                 {
-                    Subject = PlatformNotificationResource.ResetPasswordNotificationSubject,
-                    Body = PlatformNotificationResource.ResetPasswordNotificationBody,
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ResetPasswordNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ResetPasswordNotificationTemplateSubject.html").ReadToString(),
                     Language = "en-US",
                 }
             });
@@ -301,8 +305,8 @@ namespace VirtoCommerce.Platform.Web
                 Description = "This notification contains a security token for two factor authentication",
                 NotificationTemplate = new NotificationTemplate
                 {
-                    Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
-                    Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateSubject.html").ReadToString(),
                     Language = "en-US",
                 }
             });
@@ -313,8 +317,8 @@ namespace VirtoCommerce.Platform.Web
                 Description = "This notification contains a security token for two factor authentication",
                 NotificationTemplate = new NotificationTemplate
                 {
-                    Subject = PlatformNotificationResource.TwoFactorNotificationSubject,
-                    Body = PlatformNotificationResource.TwoFactorNotificationBody,
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateSubject.html").ReadToString(),
                     Language = "en-US",
                 }
             });
@@ -330,11 +334,23 @@ namespace VirtoCommerce.Platform.Web
             }
 
             // Initialize InstrumentationKey from EnvironmentVariable
-            var appInsightKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
-
-            if (!string.IsNullOrEmpty(appInsightKey))
+            var applicationInsightsInstrumentationKey = Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY");
+            if (!string.IsNullOrEmpty(applicationInsightsInstrumentationKey))
             {
-                TelemetryConfiguration.Active.InstrumentationKey = appInsightKey;
+                TelemetryConfiguration.Active.InstrumentationKey = applicationInsightsInstrumentationKey;
+            }
+
+            // https://docs.microsoft.com/en-us/azure/application-insights/app-insights-live-stream#secure-the-control-channel
+            // https://github.com/Microsoft/ApplicationInsights-dotnet-server/issues/733#issuecomment-349752497
+            // https://github.com/Azure/azure-webjobs-sdk/issues/1349
+            var applicationInsightsAuthApiKey = Environment.GetEnvironmentVariable("APPINSIGHTS_QUICKPULSEAUTHAPIKEY");
+            if (!string.IsNullOrEmpty(applicationInsightsAuthApiKey))
+            {
+                var module = TelemetryModules.Instance.Modules.OfType<QuickPulseTelemetryModule>().Single();
+                if (module != null)
+                {
+                    module.AuthenticationApiKey = applicationInsightsAuthApiKey;
+                }
             }
         }
 
@@ -390,12 +406,25 @@ namespace VirtoCommerce.Platform.Web
             app.SanitizeThreadCulture();
             ICacheManager<object> cacheManager = null;
 
+            var redisConnectionString = ConfigurationHelper.GetConnectionStringValue("RedisConnectionString");
+
             //Try to load cache configuration from web.config first
             //Should be aware to using Web cache cache handle because it not worked in native threads. (Hangfire jobs)
-            var cacheManagerSection = ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) as CacheManagerSection;
-            if (cacheManagerSection != null && cacheManagerSection.CacheManagers.Any(p => p.Name.EqualsInvariant("platformCache")))
+            if (ConfigurationManager.GetSection(CacheManagerSection.DefaultSectionName) is CacheManagerSection cacheManagerSection)
             {
-                var configuration = ConfigurationBuilder.LoadConfiguration("platformCache");
+                CacheManagerConfiguration configuration = null;
+
+                var defaultCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("platformCache"));
+                if (defaultCacheManager != null)
+                {
+                    configuration = ConfigurationBuilder.LoadConfiguration(defaultCacheManager.Name);
+                }
+
+                var redisCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("redisPlatformCache"));
+                if (redisConnectionString != null && redisCacheManager != null)
+                {
+                    configuration = ConfigurationBuilder.LoadConfiguration(redisCacheManager.Name);
+                }
 
                 if (configuration != null)
                 {
@@ -404,6 +433,8 @@ namespace VirtoCommerce.Platform.Web
                     cacheManager = CacheFactory.FromConfiguration<object>(configuration);
                 }
             }
+
+            // Create a default cache manager if there is no any others
             if (cacheManager == null)
             {
                 cacheManager = CacheFactory.Build("platformCache", settings =>
@@ -607,7 +638,8 @@ namespace VirtoCommerce.Platform.Web
                                 DefaultValue = "{\n" +
                                                "  \"title\": \"Virto Commerce\",\n" +
                                                "  \"logo\": \"Content/themes/main/images/logo.png\",\n" +
-                                               "  \"contrast_logo\": \"Content/themes/main/images/contrast-logo.png\"\n" +
+                                               "  \"contrast_logo\": \"Content/themes/main/images/contrast-logo.png\",\n" +
+                                               "  \"favicon\": \"favicon.ico\"\n" +
                                                "}"
                             }
                         }
@@ -628,17 +660,15 @@ namespace VirtoCommerce.Platform.Web
 
             #region Notifications
 
-            var redisConnectionString = ConfigurationManager.ConnectionStrings["RedisConnectionString"];
-
             // Redis
-            if (redisConnectionString != null && !string.IsNullOrEmpty(redisConnectionString.ConnectionString))
+            if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 // Cache
-                RedisConfigurations.AddConfiguration(new RedisConfiguration("redisConnectionString", redisConnectionString.ConnectionString));
+                RedisConfigurations.AddConfiguration(new RedisConfiguration("redisConnectionString", redisConnectionString));
 
                 // SignalR
                 // https://stackoverflow.com/questions/29885470/signalr-scaleout-on-azure-rediscache-connection-issues
-                GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(redisConnectionString.ConnectionString, "VirtoCommerce.Platform.SignalR"));
+                GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(redisConnectionString, "VirtoCommerce.Platform.SignalR"));
             }
 
             // SignalR 
@@ -650,7 +680,7 @@ namespace VirtoCommerce.Platform.Web
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
             var notifier = new InMemoryPushNotificationManager(hubSignalR);
             container.RegisterInstance<IPushNotificationManager>(notifier);
-            
+
             var resolver = new LiquidNotificationTemplateResolver();
             container.RegisterInstance<INotificationTemplateResolver>(resolver);
 

@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.exportImport.importMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'FileUploader', function ($scope, bladeNavigationService, exportImportResourse, FileUploader) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:exportImport:import';
@@ -24,8 +24,7 @@
     $scope.startProcess = function () {
         blade.isLoading = true;
         exportImportResourse.runImport($scope.importRequest,
-            function (data) { blade.notification = data; blade.isLoading = false; },
-            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+            function (data) { blade.notification = data; blade.isLoading = false; });
     }
 
     $scope.updateModuleSelection = function () {
@@ -37,7 +36,6 @@
         // create the uploader
         var uploader = $scope.uploader = new FileUploader({
             scope: $scope,
-            headers: { Accept: 'application/json' },
             url: 'api/platform/assets/localstorage',
             method: 'POST',
             autoUpload: true,
@@ -59,7 +57,11 @@
         };
 
         uploader.onErrorItem = function (item, response, status, headers) {
-            bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
+            bladeNavigationService.setError({
+                status: status,
+                statusText: response.message,
+                data: response
+            }, blade);
         };
 
         uploader.onSuccessItem = function (fileItem, asset, status, headers) {

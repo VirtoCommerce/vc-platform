@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
     .controller('platformWebApp.assets.assetUploadController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, assets, bladeNavigationService, FileUploader) {
         var blade = $scope.blade;
         var currentEntities;
@@ -12,7 +12,6 @@
                 // Create the uploader
                 var uploader = $scope.uploader = new FileUploader({
                     scope: $scope,
-                    headers: { Accept: 'application/json' },
                     url: 'api/platform/assets?folderUrl=' + folderUrl,
                     method: 'POST',
                     //autoUpload: true,

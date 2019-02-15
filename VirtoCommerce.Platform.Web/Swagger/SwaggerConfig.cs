@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using CacheManager.Core;
@@ -37,7 +38,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             {
                 EnableSwagger(module.ModuleName, httpConfiguration, container, routePrefix, xmlCommentsFilePaths, module.UseFullTypeNameInSwagger, module.ModuleInstance.GetType().Assembly);
             }
-           
+
             // Add full swagger generator
             httpConfiguration.EnableSwagger(routePrefix + "docs/{apiVersion}", c =>
             {
@@ -69,8 +70,11 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
                 c.CustomAsset("index", assembly, resourcePrefix + "index.html");
                 c.CustomAsset("images/logo_small-png", assembly, resourcePrefix + "logo_small.png");
+                c.CustomAsset("swagger-ui-bundle", assembly, resourcePrefix + "swagger-ui-bundle.js");
+                c.CustomAsset("swagger-ui-standalone-preset", assembly, resourcePrefix + "swagger-ui-standalone-preset.js");
+                c.CustomAsset("swagger-ui_css", assembly, resourcePrefix + "swagger-ui.css");
                 c.CustomAsset("css/vc-css", assembly, resourcePrefix + "vc.css");
-                c.CustomAsset("swagger-ui-min-js", assembly, resourcePrefix + "swagger-ui.min.js");
+                c.EnableOAuth2Support(OwinConfig.PublicClientId, "test-realm", "Swagger UI");
             });
         }
 
@@ -103,21 +107,24 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 //we are behind a reverse proxy, use the host that was used by the client
                 if (message.Headers.Contains("X-Forwarded-Host"))
                 {
-                    //when multiple apache httpd are chained, each proxy append to the header 
+                    //when multiple apache httpd are chained, each proxy append to the header
                     //with a comma (see //https://httpd.apache.org/docs/2.4/mod/mod_proxy.html#x-headers).
                     string protocol = message.Headers.GetValues("X-Forwarded-Proto")?.FirstOrDefault()?.Split(',')[0];
                     var host = message.Headers.GetValues("X-Forwarded-Host")?.FirstOrDefault()?.Split(',')[0];
-                    var port =  message.Headers.GetValues("x-Forwarded-Port")?.FirstOrDefault()?.Split(',')[0];
+                    var port = message.Headers.GetValues("x-Forwarded-Port")?.FirstOrDefault()?.Split(',')[0];
 
-                    if (String.IsNullOrEmpty(protocol)) protocol = message.RequestUri.Scheme;
-                    if (String.IsNullOrEmpty(host)) host = message.RequestUri.Host;
-                    if (String.IsNullOrEmpty(port)) port = message.RequestUri.Port.ToString();
+                    if (string.IsNullOrEmpty(protocol))
+                        protocol = message.RequestUri.Scheme;
+                    if (string.IsNullOrEmpty(host))
+                        host = message.RequestUri.Host;
+                    if (string.IsNullOrEmpty(port))
+                        port = message.RequestUri.Port.ToString();
 
                     var uriBuilder = new UriBuilder(message.RequestUri)
                     {
                         Scheme = protocol,
                         Host = host,
-                        Port = Int32.Parse(port)
+                        Port = int.Parse(port)
                     };
                     return uriBuilder.Uri;
 
@@ -137,13 +144,14 @@ namespace VirtoCommerce.Platform.Web.Swagger
             c.OperationFilter(() => new OptionalParametersFilter());
             c.OperationFilter(() => new FileResponseTypeFilter());
             c.OperationFilter(() => new FileUploadOperationFilter());
+            c.OperationFilter(() => new AssignOAuth2SecurityOperationFilter());
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             c.RootUrl(message => new Uri(ComputeHostAsSeenByOriginalClient(message), message.GetRequestContext().VirtualPathRoot).ToString());
             c.PrettyPrint();
-            c.ApiKey("apiKey")
-                .Description("API Key Authentication")
-                .Name("api_key")
-                .In("header");
+            c.OAuth2("OAuth2")
+                .Description("OAuth2 Resource Owner Password Grant flow")
+                .Flow("password")
+                .TokenUrl(HttpRuntime.AppDomainAppVirtualPath?.TrimEnd('/') + "/token");
 
             foreach (var path in xmlCommentsFilePaths)
             {
