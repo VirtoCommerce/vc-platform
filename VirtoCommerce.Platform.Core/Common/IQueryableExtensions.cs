@@ -71,38 +71,108 @@ namespace VirtoCommerce.Platform.Core.Common
             if (property == null)
                 throw new ArgumentNullException(nameof(property));
 
+            var propertyStringValid = !string.IsNullOrEmpty(property);
+            var effectiveParameterType = typeof(T);
             var props = property.Split('.');
-            var registeredType = AbstractTypeFactory<T>.TryCreateInstance()?.GetType();
-            var effectiveType = registeredType ?? typeof(T);
-            var arg = Expression.Parameter(typeof(T), "x");
-            Expression expr = Expression.Convert(arg, effectiveType);
 
+            if (propertyStringValid && effectiveParameterType.GetProperty(props[0], BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public) == null)
+            {
+                effectiveParameterType = AbstractTypeFactory<T>.TryCreateInstance()?.GetType() ?? typeof(T);
+            }
+
+            var inParameter = Expression.Parameter(typeof(T));
+            var expr = (effectiveParameterType == typeof(T)) ? (Expression)inParameter : Expression.Convert(inParameter, effectiveParameterType);
+
+            var propertyResultingType = effectiveParameterType;
             foreach (var prop in props)
             {
                 // use reflection (not ComponentModel) to mirror LINQ
-                var pi = effectiveType.GetProperty(prop, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                var pi = propertyResultingType.GetProperty(prop, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                 if (pi != null)
                 {
                     expr = Expression.Property(expr, pi);
-                    effectiveType = pi.PropertyType;
+                    propertyResultingType = pi.PropertyType;
                 }
                 else
                 {
-                    return source.OrderBy(x => 1);
+                    propertyStringValid = false;
                 }
             }
-            var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), effectiveType);
-            var lambda = Expression.Lambda(delegateType, expr, arg);
+            IOrderedQueryable<T> result;
+            if (propertyStringValid)
+            {
+                var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), propertyResultingType);
+                var lambda = Expression.Lambda(delegateType, expr, inParameter);
 
-            var result = typeof(Queryable).GetMethods().Single(
-                    method => method.Name == methodName
-                            && method.IsGenericMethodDefinition
-                            && method.GetGenericArguments().Length == 2
-                            && method.GetParameters().Length == 2)
-                    .MakeGenericMethod(arg.Type, effectiveType)
-                    .Invoke(null, new object[] { source, lambda });
+                result = (effectiveParameterType == typeof(T))
+                    ? HandleSingleTypeQueryable(source, methodName, inParameter.Type, propertyResultingType, lambda)
+                    : HandleMixedQueryable(source, methodName, inParameter.Type, effectiveParameterType, propertyResultingType, lambda);
+            }
+            else
+            {
+                result = source.OrderBy(x => 1);
+            }
 
-            return (IOrderedQueryable<T>)result;
+            return result;
+        }
+
+        private static IOrderedQueryable<T> HandleMixedQueryable<T>(
+            IQueryable<T> source,
+            string methodName,
+            Type inParameterType,
+            Type effectiveParameterType,
+            Type propertyResultingType,
+            LambdaExpression sortValueGetter)
+        {
+            // constructing following logic:
+            // var ofType = source.OfType<effectiveType>();
+            // var except = source.Except(ofType);
+            // var result = ofType.SortMethod(sortValueGetter).Concat(except);
+
+            IOrderedQueryable<T> result;
+
+            var ofType = (IQueryable<T>)typeof(Queryable).GetMethods()
+                .Single(method => method.Name.EqualsInvariant("OfType")
+                        && method.IsGenericMethodDefinition
+                        && method.GetGenericArguments().Length == 1
+                        && method.GetParameters().Length == 1)
+                .MakeGenericMethod(effectiveParameterType)
+                .Invoke(null, new object[] { source });
+
+            var orderedOfType = HandleSingleTypeQueryable(ofType, methodName, inParameterType, propertyResultingType, sortValueGetter);
+
+            var others = (IQueryable<T>)typeof(Queryable).GetMethods()
+                .Single(method => method.Name.EqualsInvariant("Except")
+                        && method.IsGenericMethodDefinition
+                        && method.GetGenericArguments().Length == 1
+                        && method.GetParameters().Length == 2)
+                .MakeGenericMethod(inParameterType)
+                .Invoke(null, new object[] { source, ofType });
+            result = ((IQueryable<T>)typeof(Queryable).GetMethods()
+                .Single(method => method.Name.EqualsInvariant("Concat")
+                        && method.IsGenericMethodDefinition
+                        && method.GetGenericArguments().Length == 1
+                        && method.GetParameters().Length == 2)
+                .MakeGenericMethod(inParameterType)
+                .Invoke(null, new object[] { orderedOfType, others }))
+                .OrderBy(x => 1);
+            return result;
+        }
+
+        private static IOrderedQueryable<T> HandleSingleTypeQueryable<T>(
+            IQueryable<T> source,
+            string methodName,
+            Type inParameterType,
+            Type propertyResultingType,
+            LambdaExpression sortValueGetter)
+        {
+            return (IOrderedQueryable<T>)typeof(Queryable).GetMethods()
+                .Single(method => method.Name.EqualsInvariant(methodName)
+                        && method.IsGenericMethodDefinition
+                        && method.GetGenericArguments().Length == 2
+                        && method.GetParameters().Length == 2)
+                .MakeGenericMethod(inParameterType, propertyResultingType)
+                .Invoke(null, new object[] { source, sortValueGetter });
         }
     }
 }
