@@ -96,3 +96,7 @@ csharp_space_between_parentheses = false
 
 csharp_preserve_single_line_statements = false
 csharp_preserve_single_line_blocks = true
+
+#HTML code style settings
+[*.html]
+insert_final_newline = false
