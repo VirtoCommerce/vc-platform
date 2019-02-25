@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.ChangeLog;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class ApplicationUserExtended : IHasChangesHistory
+    public class ApplicationUserExtended : Entity, IHasChangesHistory, ICloneable
     {
-        public string Id { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
@@ -85,5 +86,18 @@ namespace VirtoCommerce.Platform.Core.Security
         #region IHasChangesHistory
         public ICollection<OperationLog> OperationsLog { get; set; }
         #endregion
+
+        public object Clone()
+        {
+            var clone = (ApplicationUserExtended) MemberwiseClone();
+
+            clone.Logins = Logins?.Select(x => x.Clone() as ApplicationUserLogin).ToArray();
+            clone.Roles = Roles?.Select(x => x.Clone() as Role).ToArray();
+            clone.Permissions = Permissions?.ToArray();
+            clone.ApiAccounts = ApiAccounts?.Select(x => x.Clone() as ApiAccount).ToArray();
+            clone.OperationsLog = OperationsLog?.Select(x => x.Clone() as OperationLog).ToArray();
+
+            return clone;
+        }
     }
 }
