@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
@@ -16,7 +16,7 @@ namespace VirtoCommerce.Platform.Core.Security
         Task<string> GeneratePasswordResetTokenAsync(string userId);
         Task<bool> ValidatePasswordResetTokenAsync(string userId, string token);
         Task<SecurityResult> ChangePasswordAsync(string name, string oldPassword, string newPassword);
-        Task<SecurityResult> ResetPasswordAsync(string name, string newPassword);
+        Task<SecurityResult> ResetPasswordAsync(string name, string newPassword, bool forcePasswordChange);
         Task<SecurityResult> ResetPasswordAsync(string userId, string token, string newPassword);
         Task<UserSearchResponse> SearchUsersAsync(UserSearchRequest request);
         bool UserHasAnyPermission(string userName, string[] scopes, params string[] permissionIds);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,5 +15,6 @@ namespace VirtoCommerce.Platform.Web.Model
         public MvcHtmlString DemoCredentials { get; set; }
         public MvcHtmlString DemoResetTime { get; set; }
         public MvcHtmlString License { get; set; }
+        public MvcHtmlString FavIcon { get; set; }
     }
 }

@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -27,6 +30,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     public class PlatformExportImportController : ApiController
     {
         private const string _sampledataStateSetting = "VirtoCommerce.SampleDataState";
+        private readonly string _defaultExportFolder = Startup.VirtualRoot + "/App_Data/Export/";
+        private const string _defaultExportFileName = "exported_data.zip";
 
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
@@ -92,6 +97,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+
+        [HttpGet]
+        [Route("export/download/{fileName}")]
+        [CheckPermission(Permission = PredefinedPermissions.PlatformExport)]
+        public HttpResponseMessage DownloadExportFile(string fileName)
+        {
+            var localTmpFolder = HostingEnvironment.MapPath(_defaultExportFolder);
+            var localPath = Path.Combine(localTmpFolder, Path.GetFileName(_defaultExportFileName));
+
+            //Load source data only from local file system 
+            var stream = File.Open(localPath, FileMode.Open);
+            var result = new HttpResponseMessage(HttpStatusCode.OK) { Content = new StreamContent(stream) };
+            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = fileName
+            };
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(localPath));
+            return result;
+
         }
 
         /// <summary>
@@ -312,9 +338,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             try
             {
-                const string relativeUrl = "tmp/exported_data.zip";
-                var localTmpFolder = HostingEnvironment.MapPath("~/App_Data/Uploads/tmp");
-                var localTmpPath = Path.Combine(localTmpFolder, "exported_data.zip");
+                var localTmpFolder = HostingEnvironment.MapPath(_defaultExportFolder);
+                var localTmpPath = Path.Combine(localTmpFolder, _defaultExportFileName);
+
                 if (!Directory.Exists(localTmpFolder))
                 {
                     Directory.CreateDirectory(localTmpFolder);
@@ -324,15 +350,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     var manifest = exportRequest.ToManifest();
                     _platformExportManager.Export(stream, manifest, progressCallback);
+                    pushNotification.DownloadUrl = $"api/platform/export/download/{_defaultExportFileName}";
                 }
-                //Copy export data to blob provider for get public download url
-                using (var localStream = File.Open(localTmpPath, FileMode.Open))
-                using (var blobStream = _blobStorageProvider.OpenWrite(relativeUrl))
-                {
-                    localStream.CopyTo(blobStream);
-                    //Get a download url
-                    pushNotification.DownloadUrl = _blobUrlResolver.GetAbsoluteUrl(relativeUrl);
-                }
+
             }
             catch (Exception ex)
             {

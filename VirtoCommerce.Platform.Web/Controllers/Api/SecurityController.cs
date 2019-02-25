@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -18,6 +18,7 @@ using VirtoCommerce.Platform.Data.Notifications;
 using VirtoCommerce.Platform.Data.Security.Identity;
 using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Resources;
+using PlatformAuthenticationOptions = VirtoCommerce.Platform.Core.Security.AuthenticationOptions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -31,20 +32,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IRoleManagementService _roleService;
         private readonly ISecurityService _securityService;
         private readonly ISecurityOptions _securityOptions;
+        private readonly IPasswordCheckService _passwordCheckService;
         private readonly INotificationManager _notificationManager;
         private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
         /// </summary>
         public SecurityController(Func<ApplicationSignInManager> signInManagerFactory, Func<IAuthenticationManager> authManagerFactory,
-                                  INotificationManager notificationManager,
-                                  IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions, IEventPublisher eventPublisher)
+                                  INotificationManager notificationManager, 
+                                  IRoleManagementService roleService, ISecurityService securityService, ISecurityOptions securityOptions,
+                                  IPasswordCheckService passwordCheckService, IEventPublisher eventPublisher)
         {
             _signInManagerFactory = signInManagerFactory;
             _authenticationManagerFactory = authManagerFactory;
             _roleService = roleService;
             _securityService = securityService;
             _securityOptions = securityOptions;
+            _passwordCheckService = passwordCheckService;
             _notificationManager = notificationManager;
             _eventPublisher = eventPublisher;
         }
@@ -364,12 +368,32 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(SecurityResult))]
         [SwaggerResponse(HttpStatusCode.OK, type: typeof(SecurityResult))]
         [SwaggerResponse(HttpStatusCode.BadRequest, type: typeof(SecurityResult))]
-        [CheckPermission(Permission = PredefinedPermissions.SecurityQuery)]
+        [CheckPermission(Permission = PredefinedPermissions.SecurityUpdate)]
         public async Task<IHttpActionResult> ChangePassword(string userName, [FromBody] ChangePasswordInfo changePassword)
         {
             EnsureUserIsEditable(userName);
 
             var result = await _securityService.ChangePasswordAsync(userName, changePassword.OldPassword, changePassword.NewPassword);
+            return Content(result.Succeeded ? HttpStatusCode.OK : HttpStatusCode.BadRequest, result);
+        }
+
+        /// <summary>
+        /// Resets password for current user.
+        /// </summary>
+        /// <param name="resetPassword">Password reset information containing new password.</param>
+        /// <returns>Result of password reset.</returns>
+        [HttpPost]
+        [Route("currentuser/resetpassword")]
+        [ResponseType(typeof(SecurityResult))]
+        [SwaggerResponse(HttpStatusCode.OK, type: typeof(SecurityResult))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, type: typeof(SecurityResult))]
+        public async Task<IHttpActionResult> ResetCurrentUserPassword([FromBody] ResetPasswordInfo resetPassword)
+        {
+            var currentUserName = User.Identity.Name;
+
+            EnsureUserIsEditable(currentUserName);
+
+            var result = await _securityService.ResetPasswordAsync(currentUserName, resetPassword.NewPassword, resetPassword.ForcePasswordChangeOnFirstLogin);
             return Content(result.Succeeded ? HttpStatusCode.OK : HttpStatusCode.BadRequest, result);
         }
 
@@ -388,7 +412,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             EnsureUserIsEditable(userName);
 
-            var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword);
+            var result = await _securityService.ResetPasswordAsync(userName, resetPassword.NewPassword, resetPassword.ForcePasswordChangeOnFirstLogin);
             return Content(result.Succeeded ? HttpStatusCode.OK : HttpStatusCode.BadRequest, result);
         }
 
@@ -489,6 +513,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(retVal);
         }
 
+        [HttpPost]
+        [Route("validatepassword")]
+        [ResponseType(typeof(PasswordValidationResult))]
+        public async Task<IHttpActionResult> ValidatePasswordAsync([FromBody] string password)
+        {
+            var result = await _passwordCheckService.ValidatePasswordAsync(password);
+            return Ok(result);
+        }
+
         /// <summary>
         /// Update user details by user ID
         /// </summary>
@@ -518,6 +551,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [CheckPermission(Permission = PredefinedPermissions.SecurityDelete)]
         public async Task<IHttpActionResult> DeleteAsync([FromUri] string[] names)
         {
+            if (names.Contains(User.Identity.Name))
+            {
+                throw new HttpException((int)HttpStatusCode.InternalServerError, "You cannot delete your own account.");
+            }
+
             EnsureUserIsEditable(names);
 
             await _securityService.DeleteAsync(names);

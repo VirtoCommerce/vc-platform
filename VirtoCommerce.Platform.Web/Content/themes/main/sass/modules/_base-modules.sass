@@ -1269,6 +1269,9 @@ $names: "", ".double", ".triple", ".quadro"
 /* Columns */
 .columns
   padding: 15px 0
+  &:last-of-type
+    clear: both
+    padding-top: 0
 .form.columns
   padding: 0
 @include column(".column", 3, $multipleOnly: true)

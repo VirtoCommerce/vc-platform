@@ -163,3 +163,4 @@ $RECYCLE.BIN/
 # VirtoCommerce.Module/build folder is required for the NuGet package
 !VirtoCommerce.Module/build/
 /artifacts
+/VirtoCommerce.Platform.Web/package-lock.json

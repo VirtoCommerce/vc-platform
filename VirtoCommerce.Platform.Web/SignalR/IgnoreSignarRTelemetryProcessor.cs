@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Web.SignalR
         {
             var request = item as RequestTelemetry;
 
-            if (request != null && request.Url.AbsolutePath.ToLowerInvariant().Contains("/signalr/"))
+            if (request != null && request.Url != null && request.Url.AbsolutePath.ToLowerInvariant().Contains("/signalr/"))
             {
                 // To filter out an item, just terminate the chain:
                 return;

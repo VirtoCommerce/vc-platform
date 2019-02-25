@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
@@ -24,6 +24,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
         IQueryable<RoleAssignmentEntity> RoleAssignments { get; }
         IQueryable<RolePermissionEntity> RolePermissions { get; }
         IQueryable<OperationLogEntity> OperationLogs { get; }
+
+        IQueryable<RefreshTokenEntity> RefreshTokens { get; }
 
         IQueryable<NotificationEntity> Notifications { get; }
         IQueryable<NotificationTemplateEntity> NotificationTemplates { get; }

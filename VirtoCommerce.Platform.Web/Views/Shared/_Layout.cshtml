@@ -1,11 +1,11 @@
-﻿@using VirtoCommerce.Platform.Web
+@using VirtoCommerce.Platform.Web
 <!DOCTYPE html>
 <html lang="en" ng-app="platformWebApp" ng-strict-di>
 <head>
     <meta charset="utf-8" />
     <title>Virto Commerce @ViewBag.Title</title>
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="@(Model.FavIcon)" rel="shortcut icon" type="image/x-icon" />
 
     @{var google_tag_container_id = System.Configuration.ConfigurationManager.AppSettings["GoogleTagManager:ContainerId"];}
     @if(google_tag_container_id != null)
@@ -43,7 +43,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     @RenderBody()
     <script src="~/Scripts/allPackages.js"></script>
 
-    @Scripts.Render(Startup.VirtualRoot + "/scripts/angular")
+    @Scripts.Render(Startup.VirtualRoot + "/scripts/platform")
     @Scripts.Render(Startup.VirtualRoot + "/scripts/modules")
     @RenderSection("scripts", required: false)
 </body>
