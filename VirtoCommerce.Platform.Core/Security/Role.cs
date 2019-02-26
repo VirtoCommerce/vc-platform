@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Core.Security
 
         public Permission[] Permissions { get; set; }
 
-        public object Clone()
+        public virtual object Clone()
         {
             var clone = (Role) MemberwiseClone();
 

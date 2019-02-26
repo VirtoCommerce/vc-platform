@@ -54,7 +54,7 @@ namespace VirtoCommerce.Platform.Core.Security
             return Type + ":" + Scope;
         }
 
-        public object Clone()
+        public virtual object Clone()
         {
             return MemberwiseClone();
         }

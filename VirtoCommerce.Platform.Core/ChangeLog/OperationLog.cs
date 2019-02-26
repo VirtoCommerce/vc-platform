@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Core.ChangeLog
 
         public string Detail { get; set; }
         
-        public object Clone()
+        public virtual object Clone()
         {
             return MemberwiseClone();
         }

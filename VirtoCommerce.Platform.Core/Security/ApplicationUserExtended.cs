@@ -87,7 +87,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public ICollection<OperationLog> OperationsLog { get; set; }
         #endregion
 
-        public object Clone()
+        public virtual object Clone()
         {
             var clone = (ApplicationUserExtended) MemberwiseClone();
 

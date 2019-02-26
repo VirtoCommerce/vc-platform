@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Core.Security
             return retVal;
         }
 
-        public object Clone()
+        public virtual object Clone()
         {
             var clone = (Permission)MemberwiseClone();
 

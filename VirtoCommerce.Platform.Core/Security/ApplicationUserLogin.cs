@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public virtual string LoginProvider { get; set; }
         public virtual string ProviderKey { get; set; }
 
-        public object Clone()
+        public virtual object Clone()
         {
             return MemberwiseClone();
         }

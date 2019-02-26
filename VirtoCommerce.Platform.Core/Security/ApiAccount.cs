@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public bool SecretKeyExpired { get; set; }
 
-        public object Clone()
+        public virtual object Clone()
         {
             return MemberwiseClone();
         }
