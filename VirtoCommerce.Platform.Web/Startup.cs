@@ -289,7 +289,7 @@ namespace VirtoCommerce.Platform.Web
 
             notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
-                DisplayName = "Reset password notification",
+                DisplayName = "Reset password email notification",
                 Description = "This notification is sent by email to a client upon reset password request",
                 NotificationTemplate = new NotificationTemplate
                 {
@@ -319,6 +319,18 @@ namespace VirtoCommerce.Platform.Web
                 {
                     Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateBody.html").ReadToString(),
                     Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateSubject.html").ReadToString(),
+                    Language = "en-US",
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new ResetPasswordSmsNotification(container.Resolve<ISmsNotificationSendingGateway>())
+            {
+                DisplayName = "Reset password sms notification",
+                Description = "This notification is sent by sms to a client upon reset password request",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ResetPasswordSmsNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ResetPasswordSmsNotificationTemplateSubject.html").ReadToString(),
                     Language = "en-US",
                 }
             });

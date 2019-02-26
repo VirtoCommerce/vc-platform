@@ -138,6 +138,7 @@
     <Compile Include="Notifications\NotificationManager.cs" />
     <Compile Include="Notifications\NotificationTemplateServiceImpl.cs" />
     <Compile Include="Notifications\RegistrationSmsNotification.cs" />
+    <Compile Include="Notifications\ResetPasswordSmsNotification.cs" />
     <Compile Include="Notifications\TwoFactorEmailNotification.cs" />
     <Compile Include="Notifications\TwoFactorSmsNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
