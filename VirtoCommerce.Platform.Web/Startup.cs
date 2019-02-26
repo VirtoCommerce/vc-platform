@@ -542,6 +542,62 @@ namespace VirtoCommerce.Platform.Web
                     },
                     new ModuleSettingsGroup
                     {
+                        Name = "Platform|Notifications|ASPSMS",
+                        Settings = new []
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.ASPSMS.UserKey",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "ASPSMS user key",
+                                Description = "ASPSMS user key",
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.ASPSMS.UserPassword",
+                                ValueType = ModuleSetting.TypeSecureString,
+                                Title = "ASPSMS user password",
+                                Description = "ASPSMS user password",
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.ASPSMS.Sender",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "ASPSMS sender",
+                                Description = "ASPSMS sender",
+                            },
+                        },
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|Notifications|TwilioSMS",
+                        Settings = new []
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.Twilio.AccountSid",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Twilio account Sid",
+                                Description = "Twilio account Sid",
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.Twilio.AuthToken",
+                                ValueType = ModuleSetting.TypeSecureString,
+                                Title = "Twilio Auth Token",
+                                Description = "Twilio Auth Token",
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.Twilio.From",
+                                ValueType = ModuleSetting.TypeString,
+                                Title = "Twilio sender",
+                                Description = "Twilio sender",
+                            },
+                        },
+                    },
+                    new ModuleSettingsGroup
+                    {
                         Name = "Platform|Security",
                         Settings = new []
                         {
@@ -720,8 +776,19 @@ namespace VirtoCommerce.Platform.Web
                 container.RegisterInstance(emailNotificationSendingGateway);
             }
 
-            var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
-            container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
+            ISmsNotificationSendingGateway smsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
+            var smsNotificationSendingGatewayName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway", "Default");
+
+            if (smsNotificationSendingGatewayName.EqualsInvariant("Twilio"))
+            {
+                smsNotificationSendingGateway = new TwilioSmsNotificationSendingGateway(settingsManager);
+            }
+            else if (smsNotificationSendingGatewayName.EqualsInvariant("ASPSMS"))
+            {
+                smsNotificationSendingGateway = new ASPSMSSmsNotificationSendingGateway(settingsManager);
+            }
+
+            container.RegisterInstance(smsNotificationSendingGateway);
 
             #endregion
 
