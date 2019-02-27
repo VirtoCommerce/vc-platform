@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
-using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
@@ -14,15 +13,11 @@ namespace VirtoCommerce.Platform.Data.Notifications
     public class ASPSMSSmsNotificationSendingGateway : ISmsNotificationSendingGateway
 #pragma warning restore S101 // Types should be named in PascalCase
     {
-        private readonly ISettingsManager _settingsManager;
+        private readonly SmsGatewayOptions _options;
 
-        private const string _userKeySettingName = "VirtoCommerce.Platform.Notifications.ASPSMS.UserKey";
-        private const string _userPasswordSettingName = "VirtoCommerce.Platform.Notifications.ASPSMS.UserPassword";
-        private const string _senderSettingName = "VirtoCommerce.Platform.Notifications.ASPSMS.Sender";
-
-        public ASPSMSSmsNotificationSendingGateway(ISettingsManager settingsManager)
+        public ASPSMSSmsNotificationSendingGateway(SmsGatewayOptions options)
         {
-            _settingsManager = settingsManager ?? throw new ArgumentNullException(nameof(settingsManager));
+            _options = options;
         }
 
         public SendNotificationResult SendNotification(Notification notification)
@@ -35,19 +30,15 @@ namespace VirtoCommerce.Platform.Data.Notifications
             return !string.IsNullOrWhiteSpace(notification.Recipient) && !string.IsNullOrWhiteSpace(notification.Body) && notification.Body.Length < 500;
         }
 
-        private async Task<SendNotificationResult> SendNotificationAsync(Notification notification)
+        protected async Task<SendNotificationResult> SendNotificationAsync(Notification notification)
         {
             ValidateParameters(notification);
 
             var result = new SendNotificationResult();
-            var accountId = _settingsManager.GetSettingByName(_userKeySettingName).Value;
-            var accountPassword = _settingsManager.GetSettingByName(_userPasswordSettingName).Value;
-            var sender = _settingsManager.GetSettingByName(_senderSettingName).Value;
-            var ASPSMSJsonApiUri = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:ASPSMSJsonApiUri", "https://json.aspsms.com/SendSimpleTextSMS");
 
             try
             {
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(ASPSMSJsonApiUri);
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(_options.ASPSMSJsonApiUri);
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
@@ -56,9 +47,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
                     var json = JsonConvert.SerializeObject(new
                     {
-                        UserName = accountId,
-                        Password = accountPassword,
-                        Originator = sender,
+                        UserName = _options.AccountId,
+                        Password = _options.AccountPassword,
+                        Originator = _options.Sender,
                         Recipients = new[] { notification.Recipient },
                         MessageText = notification.Body,
                         ForceGSM7bit = false,

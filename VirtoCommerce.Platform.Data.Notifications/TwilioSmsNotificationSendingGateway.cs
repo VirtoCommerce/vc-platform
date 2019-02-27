@@ -4,21 +4,16 @@ using Twilio;
 using Twilio.Exceptions;
 using Twilio.Rest.Api.V2010.Account;
 using VirtoCommerce.Platform.Core.Notifications;
-using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
     public class TwilioSmsNotificationSendingGateway : ISmsNotificationSendingGateway
     {
-        private readonly ISettingsManager _settingsManager;
+        private readonly SmsGatewayOptions _options;
 
-        private const string _accountIdSettingName = "VirtoCommerce.Platform.Notifications.Twilio.AccountSid";
-        private const string _accountAuthTokenSettingName = "VirtoCommerce.Platform.Notifications.Twilio.AuthToken";
-        private const string _senderSettingName = "VirtoCommerce.Platform.Notifications.Twilio.From";
-
-        public TwilioSmsNotificationSendingGateway(ISettingsManager settingsManager)
+        public TwilioSmsNotificationSendingGateway(SmsGatewayOptions options)
         {
-            _settingsManager = settingsManager ?? throw new ArgumentNullException(nameof(settingsManager));
+            _options = options;
         }
 
         public SendNotificationResult SendNotification(Notification notification)
@@ -36,17 +31,14 @@ namespace VirtoCommerce.Platform.Data.Notifications
             ValidateParameters(notification);
 
             var result = new SendNotificationResult();
-            var accountId = _settingsManager.GetSettingByName(_accountIdSettingName).Value;
-            var authToken = _settingsManager.GetSettingByName(_accountAuthTokenSettingName).Value;
-            var sender = _settingsManager.GetSettingByName(_senderSettingName).Value;
 
-            TwilioClient.Init(accountId, authToken);
+            TwilioClient.Init(_options.AccountId, _options.AccountPassword);
 
             try
             {
                 var message = await MessageResource.CreateAsync(
                     body: notification.Body,
-                    from: new Twilio.Types.PhoneNumber(sender),
+                    from: new Twilio.Types.PhoneNumber(_options.Sender),
                     to: notification.Recipient
                 );
 

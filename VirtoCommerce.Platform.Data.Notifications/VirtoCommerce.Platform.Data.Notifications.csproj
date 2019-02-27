@@ -84,6 +84,7 @@
     <Compile Include="SendGridEmailNotificationSendingGateway.cs" />
     <Compile Include="LiquidNotificationTemplateResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SmsGatewayOptions.cs" />
     <Compile Include="TwilioSmsNotificationSendingGateway.cs" />
   </ItemGroup>
   <ItemGroup>

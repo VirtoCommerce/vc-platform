@@ -194,7 +194,17 @@ namespace VirtoCommerce.Platform.Web
 
             container.RegisterInstance(authenticationOptions);
 
-            InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath, moduleInitializerOptions);
+            var smsGateweayOptions = new SmsGatewayOptions
+            {
+                AccountId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountId", "id"),
+                AccountPassword = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountPassword", "password"),
+                Sender = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:Sender", "+12345678901"),
+                ASPSMSJsonApiUri = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:ASPSMSJsonApiUri", "https://json.aspsms.com/SendSimpleTextSMS"),
+            };
+
+            container.RegisterInstance(smsGateweayOptions);
+
+            InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath, moduleInitializerOptions, smsGateweayOptions);
 
             var moduleManager = container.Resolve<IModuleManager>();
             var moduleCatalog = container.Resolve<IModuleCatalog>();
@@ -385,7 +395,15 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionString, HangfireLauncher hangfireLauncher, string modulesPath, ModuleInitializerOptions moduleInitializerOptions)
+        private static void InitializePlatform(
+            IAppBuilder app,
+            IUnityContainer container,
+            IPathMapper pathMapper,
+            string connectionString,
+            HangfireLauncher hangfireLauncher,
+            string modulesPath,
+            ModuleInitializerOptions moduleInitializerOptions,
+            SmsGatewayOptions smsGatewayOptions)
         {
             container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
@@ -539,62 +557,6 @@ namespace VirtoCommerce.Platform.Web
                                 Description = "Use secure connection"
                             },
                         }
-                    },
-                    new ModuleSettingsGroup
-                    {
-                        Name = "Platform|Notifications|ASPSMS",
-                        Settings = new []
-                        {
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Notifications.ASPSMS.UserKey",
-                                ValueType = ModuleSetting.TypeString,
-                                Title = "ASPSMS user key",
-                                Description = "ASPSMS user key",
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Notifications.ASPSMS.UserPassword",
-                                ValueType = ModuleSetting.TypeSecureString,
-                                Title = "ASPSMS user password",
-                                Description = "ASPSMS user password",
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Notifications.ASPSMS.Sender",
-                                ValueType = ModuleSetting.TypeString,
-                                Title = "ASPSMS sender",
-                                Description = "ASPSMS sender",
-                            },
-                        },
-                    },
-                    new ModuleSettingsGroup
-                    {
-                        Name = "Platform|Notifications|TwilioSMS",
-                        Settings = new []
-                        {
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Notifications.Twilio.AccountSid",
-                                ValueType = ModuleSetting.TypeString,
-                                Title = "Twilio account Sid",
-                                Description = "Twilio account Sid",
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Notifications.Twilio.AuthToken",
-                                ValueType = ModuleSetting.TypeSecureString,
-                                Title = "Twilio Auth Token",
-                                Description = "Twilio Auth Token",
-                            },
-                            new ModuleSetting
-                            {
-                                Name = "VirtoCommerce.Platform.Notifications.Twilio.From",
-                                ValueType = ModuleSetting.TypeString,
-                                Title = "Twilio sender",
-                                Description = "Twilio sender",
-                            },
-                        },
                     },
                     new ModuleSettingsGroup
                     {
@@ -781,11 +743,11 @@ namespace VirtoCommerce.Platform.Web
 
             if (smsNotificationSendingGatewayName.EqualsInvariant("Twilio"))
             {
-                smsNotificationSendingGateway = new TwilioSmsNotificationSendingGateway(settingsManager);
+                smsNotificationSendingGateway = new TwilioSmsNotificationSendingGateway(smsGatewayOptions);
             }
             else if (smsNotificationSendingGatewayName.EqualsInvariant("ASPSMS"))
             {
-                smsNotificationSendingGateway = new ASPSMSSmsNotificationSendingGateway(settingsManager);
+                smsNotificationSendingGateway = new ASPSMSSmsNotificationSendingGateway(smsGatewayOptions);
             }
 
             container.RegisterInstance(smsNotificationSendingGateway);
