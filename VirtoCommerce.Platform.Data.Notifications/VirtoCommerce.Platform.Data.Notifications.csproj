@@ -79,12 +79,14 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ASPSMSSmsNotificationSendingGateway.cs" />
+    <Compile Include="AspsmsSmsGatewayOptions.cs" />
+    <Compile Include="AspsmsSmsNotificationSendingGateway.cs" />
     <Compile Include="LiquidFilters\MathFilters.cs" />
     <Compile Include="SendGridEmailNotificationSendingGateway.cs" />
     <Compile Include="LiquidNotificationTemplateResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmsGatewayOptions.cs" />
+    <Compile Include="TwilioSmsGatewayOptions.cs" />
     <Compile Include="TwilioSmsNotificationSendingGateway.cs" />
   </ItemGroup>
   <ItemGroup>

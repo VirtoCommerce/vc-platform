@@ -9,13 +9,11 @@ using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
-#pragma warning disable S101 // Types should be named in PascalCase
-    public class ASPSMSSmsNotificationSendingGateway : ISmsNotificationSendingGateway
-#pragma warning restore S101 // Types should be named in PascalCase
+    public class AspsmsSmsNotificationSendingGateway : ISmsNotificationSendingGateway
     {
-        private readonly SmsGatewayOptions _options;
+        private readonly AspsmsSmsGatewayOptions _options;
 
-        public ASPSMSSmsNotificationSendingGateway(SmsGatewayOptions options)
+        public AspsmsSmsNotificationSendingGateway(AspsmsSmsGatewayOptions options)
         {
             _options = options;
         }
@@ -38,7 +36,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
             try
             {
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(_options.ASPSMSJsonApiUri);
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(_options.JsonApiUri);
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 

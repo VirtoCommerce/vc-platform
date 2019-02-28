@@ -9,9 +9,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
 {
     public class TwilioSmsNotificationSendingGateway : ISmsNotificationSendingGateway
     {
-        private readonly SmsGatewayOptions _options;
+        private readonly TwilioSmsGatewayOptions _options;
 
-        public TwilioSmsNotificationSendingGateway(SmsGatewayOptions options)
+        public TwilioSmsNotificationSendingGateway(TwilioSmsGatewayOptions options)
         {
             _options = options;
         }
