@@ -369,6 +369,18 @@ namespace VirtoCommerce.Platform.Web
                 }
             });
 
+            notificationManager.RegisterNotificationType(() => new ChangePhoneNumberSmsNotification(container.Resolve<ISmsNotificationSendingGateway>())
+            {
+                DisplayName = "Change phone number sms notification",
+                Description = "This notification is sent by sms to a client upon change phone number request",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ChangePhoneNumberSmsNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ChangePhoneNumberSmsNotificationTemplateSubject.html").ReadToString(),
+                    Language = "en-US",
+                }
+            });
+
             //Get initialized modules list sorted by dependency order
             var postInitializeModules = moduleCatalog.CompleteListWithDependencies(moduleCatalog.Modules.OfType<ManifestModuleInfo>())
                 .Where(m => m.ModuleInstance != null && m.State == ModuleState.Initialized)
