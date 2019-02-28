@@ -194,40 +194,6 @@ namespace VirtoCommerce.Platform.Web
 
             container.RegisterInstance(authenticationOptions);
 
-            #region SMS Gateway options
-
-            Func<SmsGatewayOptions> smsGatewayOptionsFactory = () => new SmsGatewayOptions
-            {
-                AccountId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountId", "id"),
-                AccountPassword = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountPassword", "password"),
-                Sender = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:Sender", "+12345678901"),
-            };
-            container.RegisterType<SmsGatewayOptions>(new InjectionFactory(c => smsGatewayOptionsFactory()));
-            container.RegisterInstance(smsGatewayOptionsFactory);
-
-            Func<SmsGatewayOptions, TwilioSmsGatewayOptions> twilioGatewayOptionsFactory = (smsGetewayOptions) =>
-            {
-                var result = new TwilioSmsGatewayOptions();
-                result.Assign(smsGetewayOptions);
-                return result;
-            };
-            container.RegisterType<TwilioSmsGatewayOptions>(new InjectionFactory(c => twilioGatewayOptionsFactory(c.Resolve<SmsGatewayOptions>())));
-            container.RegisterInstance(twilioGatewayOptionsFactory);
-
-            Func<SmsGatewayOptions, AspsmsSmsGatewayOptions> aspsmsSmsGatewayOptionsFactory = (smsGetewayOptions) =>
-            {
-                var result = new AspsmsSmsGatewayOptions()
-                {
-                    JsonApiUri = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:ASPSMS:JsonApiUri", "https://json.aspsms.com/SendSimpleTextSMS"),
-                };
-                result.Assign(smsGetewayOptions);
-                return result;
-            };
-            container.RegisterType<AspsmsSmsGatewayOptions>(new InjectionFactory(c => aspsmsSmsGatewayOptionsFactory(c.Resolve<SmsGatewayOptions>())));
-            container.RegisterInstance(aspsmsSmsGatewayOptionsFactory);
-
-            #endregion SMS Gateway options
-
             InitializePlatform(app, container, pathMapper, connectionString, hangfireLauncher, modulesPhysicalPath, moduleInitializerOptions);
 
             var moduleManager = container.Resolve<IModuleManager>();
@@ -773,28 +739,37 @@ namespace VirtoCommerce.Platform.Web
                 container.RegisterInstance(emailNotificationSendingGateway);
             }
 
-            container.RegisterType<DefaultSmsNotificationSendingGateway>();
-            container.RegisterType<TwilioSmsNotificationSendingGateway>();
-            container.RegisterType<AspsmsSmsNotificationSendingGateway>();
-            container.RegisterType<ISmsNotificationSendingGateway>(new InjectionFactory(c =>
-            {
-                ISmsNotificationSendingGateway result;
-                var smsNotificationSendingGatewayName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway", "Default");
+            ISmsNotificationSendingGateway smsNotificationSendingGateway = null;
+            var smsNotificationSendingGatewayName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway", "Default");
 
-                if (smsNotificationSendingGatewayName.EqualsInvariant("Twilio"))
+            var accountId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountId", "id");
+            var accountPassword = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountPassword", "password");
+            var sender = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:Sender", "+12345678901");
+            if (smsNotificationSendingGatewayName.EqualsInvariant("Twilio"))
+            {
+                smsNotificationSendingGateway = new TwilioSmsNotificationSendingGateway(new TwilioSmsGatewayOptions
                 {
-                    result = c.Resolve<TwilioSmsNotificationSendingGateway>();
-                }
-                else if (smsNotificationSendingGatewayName.EqualsInvariant("ASPSMS"))
+                    AccountId = accountId,
+                    AccountPassword = accountPassword,
+                    Sender = sender,
+                });
+            }
+            else if (smsNotificationSendingGatewayName.EqualsInvariant("ASPSMS"))
+            {
+                smsNotificationSendingGateway = new AspsmsSmsNotificationSendingGateway(new AspsmsSmsGatewayOptions
                 {
-                    result = c.Resolve<AspsmsSmsNotificationSendingGateway>();
-                }
-                else
-                {
-                    result = c.Resolve<DefaultSmsNotificationSendingGateway>();
-                }
-                return result;
-            }));
+                    AccountId = accountId,
+                    AccountPassword = accountPassword,
+                    Sender = sender,
+                    JsonApiUri = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:ASPSMS:JsonApiUri", "https://json.aspsms.com/SendSimpleTextSMS"),
+                });
+            }
+            else
+            {
+                smsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
+            }
+
+            container.RegisterInstance(smsNotificationSendingGateway);
 
             #endregion
 

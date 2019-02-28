@@ -14,12 +14,5 @@ namespace VirtoCommerce.Platform.Data.Notifications
         /// Phone number or name (if supported by gateway) used for sending sms
         /// </summary>
         public string Sender { get; set; }
-
-        public void Assign(SmsGatewayOptions source)
-        {
-            AccountId = source.AccountId;
-            AccountPassword = source.AccountPassword;
-            Sender = source.Sender;
-        }
     }
 }
