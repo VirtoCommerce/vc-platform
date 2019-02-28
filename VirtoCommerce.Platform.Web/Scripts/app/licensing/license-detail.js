@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.licenseDetailController', ['$scope', '$window', 'FileUploader', '$http', 'platformWebApp.bladeNavigationService', function ($scope, $window, FileUploader, $http, bladeNavigationService) {
     var blade = $scope.blade;
     blade.isNew = blade.isNew || !$scope.license;
@@ -39,9 +39,6 @@
         // create the uploader
         var uploader = $scope.uploader = new FileUploader({
             scope: $scope,
-            headers: {
-                Accept: 'application/json'
-            },
             url: 'api/platform/licensing/activateByFile',
             method: 'POST',
             autoUpload: true,

@@ -130,6 +130,7 @@
     <Compile Include="PasswordCheckService.cs" />
     <Compile Include="PermissionScopeService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RefreshTokenProvider.cs" />
     <Compile Include="Resources\Default.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -149,6 +150,7 @@
     <Compile Include="SecurityConstants.cs" />
     <Compile Include="SecurityOptions.cs" />
     <Compile Include="SecurityService.cs" />
+    <Compile Include="Services\RefreshTokenService.cs" />
     <Compile Include="UserNameResolver.cs" />
   </ItemGroup>
   <ItemGroup>
