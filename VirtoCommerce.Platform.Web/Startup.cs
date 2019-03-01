@@ -742,34 +742,34 @@ namespace VirtoCommerce.Platform.Web
             ISmsNotificationSendingGateway smsNotificationSendingGateway = null;
             var smsNotificationSendingGatewayName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway", "Default");
 
-            var accountId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountId", "id");
-            var accountPassword = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountPassword", "password");
-            var sender = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:Sender", "+12345678901");
-            if (smsNotificationSendingGatewayName.EqualsInvariant("Twilio"))
+            if (smsNotificationSendingGatewayName.EqualsInvariant("Default"))
+            {
+                smsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
+            }
+            else if (smsNotificationSendingGatewayName.EqualsInvariant("Twilio"))
             {
                 smsNotificationSendingGateway = new TwilioSmsNotificationSendingGateway(new TwilioSmsGatewayOptions
                 {
-                    AccountId = accountId,
-                    AccountPassword = accountPassword,
-                    Sender = sender,
+                    AccountId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountId"),
+                    AccountPassword = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountPassword"),
+                    Sender = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:Sender"),
                 });
             }
             else if (smsNotificationSendingGatewayName.EqualsInvariant("ASPSMS"))
             {
                 smsNotificationSendingGateway = new AspsmsSmsNotificationSendingGateway(new AspsmsSmsGatewayOptions
                 {
-                    AccountId = accountId,
-                    AccountPassword = accountPassword,
-                    Sender = sender,
-                    JsonApiUri = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:ASPSMS:JsonApiUri", "https://json.aspsms.com/SendSimpleTextSMS"),
+                    AccountId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountId"),
+                    AccountPassword = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountPassword"),
+                    Sender = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:Sender"),
+                    JsonApiUri = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:ASPSMS:JsonApiUri"),
                 });
             }
-            else
-            {
-                smsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
-            }
 
-            container.RegisterInstance(smsNotificationSendingGateway);
+            if (smsNotificationSendingGateway != null)
+            {
+                container.RegisterInstance(smsNotificationSendingGateway);
+            }
 
             #endregion
 
