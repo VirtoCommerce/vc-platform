@@ -289,7 +289,7 @@ namespace VirtoCommerce.Platform.Web
 
             notificationManager.RegisterNotificationType(() => new ResetPasswordEmailNotification(container.Resolve<IEmailNotificationSendingGateway>())
             {
-                DisplayName = "Reset password notification",
+                DisplayName = "Reset password email notification",
                 Description = "This notification is sent by email to a client upon reset password request",
                 NotificationTemplate = new NotificationTemplate
                 {
@@ -319,6 +319,30 @@ namespace VirtoCommerce.Platform.Web
                 {
                     Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateBody.html").ReadToString(),
                     Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.TwoFactorNotificationTemplateSubject.html").ReadToString(),
+                    Language = "en-US",
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new ResetPasswordSmsNotification(container.Resolve<ISmsNotificationSendingGateway>())
+            {
+                DisplayName = "Reset password sms notification",
+                Description = "This notification is sent by sms to a client upon reset password request",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ResetPasswordSmsNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ResetPasswordSmsNotificationTemplateSubject.html").ReadToString(),
+                    Language = "en-US",
+                }
+            });
+
+            notificationManager.RegisterNotificationType(() => new ChangePhoneNumberSmsNotification(container.Resolve<ISmsNotificationSendingGateway>())
+            {
+                DisplayName = "Change phone number sms notification",
+                Description = "This notification is sent by sms to a client upon change phone number request",
+                NotificationTemplate = new NotificationTemplate
+                {
+                    Body = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ChangePhoneNumberSmsNotificationTemplateBody.html").ReadToString(),
+                    Subject = assembly.GetManifestResourceStream("VirtoCommerce.Platform.Data.Notifications.Templates.ChangePhoneNumberSmsNotificationTemplateSubject.html").ReadToString(),
                     Language = "en-US",
                 }
             });
@@ -373,7 +397,14 @@ namespace VirtoCommerce.Platform.Web
             return assembly;
         }
 
-        private static void InitializePlatform(IAppBuilder app, IUnityContainer container, IPathMapper pathMapper, string connectionString, HangfireLauncher hangfireLauncher, string modulesPath, ModuleInitializerOptions moduleInitializerOptions)
+        private static void InitializePlatform(
+            IAppBuilder app,
+            IUnityContainer container,
+            IPathMapper pathMapper,
+            string connectionString,
+            HangfireLauncher hangfireLauncher,
+            string modulesPath,
+            ModuleInitializerOptions moduleInitializerOptions)
         {
             container.RegisterType<ICurrentUser, CurrentUser>(new HttpContextLifetimeManager());
             container.RegisterType<IUserNameResolver, UserNameResolver>();
@@ -708,8 +739,37 @@ namespace VirtoCommerce.Platform.Web
                 container.RegisterInstance(emailNotificationSendingGateway);
             }
 
-            var defaultSmsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
-            container.RegisterInstance<ISmsNotificationSendingGateway>(defaultSmsNotificationSendingGateway);
+            ISmsNotificationSendingGateway smsNotificationSendingGateway = null;
+            var smsNotificationSendingGatewayName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway", "Default");
+
+            if (smsNotificationSendingGatewayName.EqualsInvariant("Default"))
+            {
+                smsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
+            }
+            else if (smsNotificationSendingGatewayName.EqualsInvariant("Twilio"))
+            {
+                smsNotificationSendingGateway = new TwilioSmsNotificationSendingGateway(new TwilioSmsGatewayOptions
+                {
+                    AccountId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountId"),
+                    AccountPassword = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountPassword"),
+                    Sender = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:Sender"),
+                });
+            }
+            else if (smsNotificationSendingGatewayName.EqualsInvariant("ASPSMS"))
+            {
+                smsNotificationSendingGateway = new AspsmsSmsNotificationSendingGateway(new AspsmsSmsGatewayOptions
+                {
+                    AccountId = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountId"),
+                    AccountPassword = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:AccountPassword"),
+                    Sender = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:Sender"),
+                    JsonApiUri = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:ASPSMS:JsonApiUri"),
+                });
+            }
+
+            if (smsNotificationSendingGateway != null)
+            {
+                container.RegisterInstance(smsNotificationSendingGateway);
+            }
 
             #endregion
 

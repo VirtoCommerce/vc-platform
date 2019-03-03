@@ -130,6 +130,7 @@
     <Compile Include="Model\PermissionScopeEntity.cs" />
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
+    <Compile Include="Notifications\ChangePhoneNumberSmsNotification.cs" />
     <Compile Include="Notifications\DefaultSmsNotificationSendingGateway.cs" />
     <Compile Include="Notifications\DefaultSmtpEmailNotificationSendingGateway.cs" />
     <Compile Include="Notifications\RegistrationEmailNotification.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Notifications\NotificationManager.cs" />
     <Compile Include="Notifications\NotificationTemplateServiceImpl.cs" />
     <Compile Include="Notifications\RegistrationSmsNotification.cs" />
+    <Compile Include="Notifications\ResetPasswordSmsNotification.cs" />
     <Compile Include="Notifications\TwoFactorEmailNotification.cs" />
     <Compile Include="Notifications\TwoFactorSmsNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
