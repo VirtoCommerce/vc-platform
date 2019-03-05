@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
     .config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
 
         $stateProvider.state('loginDialog',
@@ -6,7 +6,12 @@
                 url: '/login',
                 templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
                 controller: [
-                    '$scope', 'platformWebApp.authService', function ($scope, authService) {
+                    '$scope', 'platformWebApp.authService', 'platformWebApp.externalSignInService', function ($scope, authService, externalSignInService) {
+                        externalSignInService.getProviders().then(
+                            function (response) {
+                                $scope.externalLoginProviders = response.data;
+                            });
+
                         $scope.user = {};
                         $scope.authError = null;
                         $scope.authReason = false;
@@ -68,17 +73,26 @@
             templateUrl: '$(Platform)/Scripts/app/security/dialogs/resetPasswordDialog.tpl.html',
             controller: ['$rootScope', '$scope', '$stateParams', 'platformWebApp.authService', function ($rootScope, $scope, $stateParams, authService) {
                 $scope.viewModel = $stateParams;
+                $scope.isValidToken = true;
+                $scope.isLoading = true;
+                authService.validatepasswordresettoken($scope.viewModel).then(function (retVal) {
+                    $scope.isValidToken = retVal;
+                    $scope.isLoading = false;
+                }, function (response) {
+                    $scope.isLoading = false;
+                    $scope.errors = response.data.errors;
+                });
                 $scope.ok = function () {
                     $scope.errorMessage = null;
                     $scope.isLoading = true;
-                    authService.resetpassword($scope.viewModel).then(function (retVal) {
+                    authService.resetpassword($scope.viewModel).then(function(retVal) {
                         $scope.isLoading = false;
                         $rootScope.preventLoginDialog = false;
                         angular.extend($scope, retVal);
                     }, function (response) {
-                        $scope.isLoading = false;
                         $scope.viewModel.newPassword = $scope.viewModel.newPassword2 = undefined;
                         $scope.errors = response.data.errors;
+                        $scope.isLoading = false;
                     });
                 };
             }]
@@ -106,17 +120,20 @@
                 url: '/changepassword',
                 templateUrl: '$(Platform)/Scripts/app/security/dialogs/changePasswordDialog.tpl.html',
                 params: {
-                    userName: null,
                     onClose: null
                 },
-                controller: ['$scope', '$stateParams', 'platformWebApp.accounts', '$state', 'platformWebApp.authService', function ($scope, $stateParams, accounts, $state, authService) {
-                    $scope.userName = $stateParams.userName;
+                controller: ['$q', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.passwordValidationService', function ($q, $scope, $stateParams, accounts, authService, passwordValidationService) {
+                    $scope.userName = authService.userName;
 
                     accounts.get({ id: $stateParams.userName }, function (user) {
                         if (!user || !user.passwordExpired) {
                             $stateParams.onClose();
                         }
                     });
+
+                    $scope.validatePasswordAsync = function(value) {
+                        return passwordValidationService.validatePasswordAsync(value);
+                    }
 
                     $scope.postpone = function () {
                         $stateParams.onClose();
@@ -126,7 +143,7 @@
                         var postData = {
                             NewPassword: $scope.password
                         };
-                        accounts.resetPassword({ id: $scope.userName }, postData, function (data) {
+                        accounts.resetCurrentUserPassword(postData, function (data) {
                             $stateParams.onClose();
                         }, function (response) {
                             $scope.errors = response.data.errors;
@@ -243,7 +260,6 @@
             //register setup wizard step - change admin password
             setupWizard.registerStep({
                 state: "changePasswordDialog",
-                userName: "admin",
                 onClose: function () {
                     var step = setupWizard.findStepByState($state.current.name);
                     setupWizard.showStep(step.nextStep);                    

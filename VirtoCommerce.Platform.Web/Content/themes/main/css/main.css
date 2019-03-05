@@ -742,9 +742,8 @@ h3 {
 .ui-grid-header {
   border-color: #dee9f0; }
 
-.ui-grid-viewport {
-  overflow-x: auto !important; }
-
+/*.ui-grid-viewport
+  overflow-x: auto !important*/
 .ui-grid-top-panel {
   background: rgba(0, 0, 0, 0.024); }
 
@@ -933,7 +932,8 @@ h3 {
   content: '';
   font-size: 17px;
   font-family: 'FontAwesome';
-  margin: 0; }
+  margin: 0;
+  opacity: 1; }
 
 .ui-grid-selection-row-header-buttons.ui-grid-row-selected::before,
 .ui-grid-selection-row-header-buttons.ui-grid-all-selected::before {
@@ -2652,6 +2652,9 @@ button.btn {
 /* Columns */
 .columns {
   padding: 15px 0; }
+  .columns:last-of-type {
+    clear: both;
+    padding-top: 0; }
 
 .form.columns {
   padding: 0; }
@@ -3439,7 +3442,14 @@ tags-input .tags.focused {
         right: 0;
         top: 0;
         z-index: 300;
-        filter: alpha(opacity=50); }
+        filter: alpha(opacity=50);
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        -moz-box-sizing: border-box;
+             box-sizing: border-box; }
         .blade .blade-head .blade-status .status-message::after {
           color: #fff;
           content: '';
@@ -5557,6 +5567,14 @@ tags-input .tags.focused {
   filter: alpha(opacity=60);
   opacity: .6; }
 
+input:-moz-read-only {
+  opacity: .6;
+  pointer-events: none; }
+
+input:read-only {
+  opacity: .6;
+  pointer-events: none; }
+
 .table .table-item:hover,
 .__items .list-item:hover,
 .__files .list-block:hover {
@@ -5962,5 +5980,54 @@ a:hover,
     .nav-bar.__collapsed + .cnt .lang-rtl .uk-htmleditor-fullscreen {
       left: auto;
       right: 72px !important; }
+
+/*
+    This file contains all actual styles, which used to override old incorrect styles
+
+    Namespace -  bc
+*/
+body .blade .blade-wrapper .blade-container .bc.blade-static .form-group {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+     -moz-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+  body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .blade-search-panel {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+       -moz-box-align: center;
+        -ms-flex-align: center;
+            align-items: center; }
+    body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .blade-search-panel .form-input {
+      min-width: 190px; }
+      body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .blade-search-panel .form-input input {
+        padding-right: 30px; }
+    body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .blade-search-panel .__search {
+      margin-right: 10px; }
+    body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .blade-search-panel .seacrh-filter {
+      min-width: 190px; }
+  body .blade .blade-wrapper .blade-container .bc.blade-static .form-group .form-count {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    -webkit-transform: none;
+            transform: none; }
 
 /*# sourceMappingURL=main.css.map */

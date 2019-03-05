@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
@@ -88,7 +88,9 @@ namespace VirtoCommerce.Platform.Core.Common
 
             return string.IsNullOrEmpty(stringValue)
                 ? defaultValue
-                : (T) Convert.ChangeType(stringValue, typeof(T));
+                : typeof(T).IsEnum
+                    ? (T)Enum.Parse(typeof(T), stringValue)
+                    : (T)Convert.ChangeType(stringValue, typeof(T));
         }
 
         [CLSCompliant(false)]
@@ -99,7 +101,9 @@ namespace VirtoCommerce.Platform.Core.Common
 
             return string.IsNullOrEmpty(stringValue)
                 ? defaultValue
-                : (T) Convert.ChangeType(stringValue, typeof(T));
+                : typeof(T).IsEnum
+                    ? (T)Enum.Parse(typeof(T), stringValue)
+                    : (T)Convert.ChangeType(stringValue, typeof(T));
         }
 
         private static string GetAppSettingsStringValue(string name)

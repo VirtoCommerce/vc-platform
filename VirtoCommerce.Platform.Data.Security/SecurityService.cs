@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using CacheManager.Core;
@@ -248,7 +249,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await GetApplicationUserByNameAsync(name);
+                var dbUser = await FindByNameAsync(name, UserDetails.Reduced);
                 var result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -259,6 +260,11 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     if (result.Succeeded)
                     {
+                        // Now the user had successfully changed their password.
+                        // If password change was required, now it is not needed anymore.
+                        dbUser.PasswordExpired = false;
+                        await UpdateAsync(dbUser);
+
                         await _eventPublisher.Publish(new UserPasswordChangedEvent(dbUser.Id));
                     }
                 }
@@ -266,26 +272,34 @@ namespace VirtoCommerce.Platform.Data.Security
             }
         }
 
-        public virtual async Task<SecurityResult> ResetPasswordAsync(string name, string newPassword)
+        public virtual async Task<SecurityResult> ResetPasswordAsync(string name, string newPassword, bool forcePasswordChange)
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await GetApplicationUserByNameAsync(name);
-                var result = ValidateUser(dbUser);
+                var applicationUserExtended = await FindByNameAsync(name, UserDetails.Reduced);
+                var result = ValidateUser(applicationUserExtended);
 
-                if (result.Succeeded)
+                if (!result.Succeeded)
                 {
-                    var token = await userManager.GeneratePasswordResetTokenAsync(dbUser.Id);
-                    var identityResult = await userManager.ResetPasswordAsync(dbUser.Id, token, newPassword);
-                    result = identityResult.ToCoreModel();
-
-                    if (result.Succeeded)
-                    {
-                        await _eventPublisher.Publish(new UserResetPasswordEvent(dbUser.Id));
-                        //clear cache
-                        ResetCache(dbUser.Id, dbUser.UserName);
-                    }
+                    return result;
                 }
+
+                var token = await userManager.GeneratePasswordResetTokenAsync(applicationUserExtended.Id);
+                var identityResult = await userManager.ResetPasswordAsync(applicationUserExtended.Id, token, newPassword);
+                result = identityResult.ToCoreModel();
+
+                if (!result.Succeeded)
+                {
+                    return result;
+                }
+
+                // If user is required to change password on next login, let's update corresponding AccountEntity.
+                applicationUserExtended.PasswordExpired = forcePasswordChange;
+                await UpdateAsync(applicationUserExtended);
+
+                await _eventPublisher.Publish(new UserResetPasswordEvent(applicationUserExtended.Id));
+                //clear cache
+                ResetCache(applicationUserExtended.Id, applicationUserExtended.UserName);
 
                 return result;
             }
@@ -295,7 +309,7 @@ namespace VirtoCommerce.Platform.Data.Security
         {
             using (var userManager = _userManagerFactory())
             {
-                var dbUser = await GetApplicationUserByIdAsync(userId);
+                var dbUser = await FindByIdAsync(userId, UserDetails.Reduced);
                 var result = ValidateUser(dbUser);
 
                 if (result.Succeeded)
@@ -305,7 +319,13 @@ namespace VirtoCommerce.Platform.Data.Security
 
                     if (result.Succeeded)
                     {
+                        // Now the user had successfully reset their password.
+                        // If password change was required, now it is not needed anymore.
+                        dbUser.PasswordExpired = false;
+                        await UpdateAsync(dbUser);
+
                         await _eventPublisher.Publish(new UserResetPasswordEvent(userId));
+
                         //clear cache
                         ResetCache(dbUser.Id, dbUser.UserName);
                     }
@@ -346,21 +366,42 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     query = query.Where(x => request.AccountTypes.Contains(x.UserType));
                 }
+
+                if (request.ModifiedSinceDate != null && request.ModifiedSinceDate != default(DateTime))
+                {
+                    query = query.Where(x => x.ModifiedDate > request.ModifiedSinceDate);
+                }
+
                 result.TotalCount = await query.CountAsync();
 
-                users = await query.OrderBy(x => x.UserName)
-                                 .Skip(request.SkipCount)
+                var sortInfos = request.SortInfos;
+                if (sortInfos.IsNullOrEmpty())
+                {
+                    sortInfos = new[] { new SortInfo { SortColumn = "UserName", SortDirection = SortDirection.Descending } };
+                }
+                query = query.OrderBySortInfos(sortInfos);
+
+
+                users = await query.Skip(request.SkipCount)
                                  .Take(request.TakeCount)
                                  .ToArrayAsync();
             }
             var extendedUsers = new List<ApplicationUserExtended>();
 
-            foreach (var user in users)
+            var userDetail = EnumUtility.SafeParse(request.ResponseGroup, UserDetails.Full);
+            if (userDetail == UserDetails.Info)
             {
-                var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
-                if (extendedUser != null)
+                extendedUsers = users.Select(x => new ApplicationUser().ToCoreModel(x, _permissionScopeService)).ToList();
+            }
+            else
+            {
+                foreach (var user in users)
                 {
-                    extendedUsers.Add(extendedUser);
+                    var extendedUser = await FindByNameAsync(user.UserName, UserDetails.Reduced);
+                    if (extendedUser != null)
+                    {
+                        extendedUsers.Add(extendedUser);
+                    }
                 }
             }
             result.Users = extendedUsers.ToArray();
@@ -373,6 +414,15 @@ namespace VirtoCommerce.Platform.Data.Security
             using (var userManager = _userManagerFactory())
             {
                 return await userManager.GeneratePasswordResetTokenAsync(userId);
+            }
+        }
+
+        public async Task<bool> ValidatePasswordResetTokenAsync(string userId, string token)
+        {
+            using (var userManager = _userManagerFactory())
+            {
+                // "ResetPassword" is hardcoded string in ASP.NET
+                return await userManager.VerifyUserTokenAsync(userId, "ResetPassword", token);
             }
         }
 
@@ -389,14 +439,37 @@ namespace VirtoCommerce.Platform.Data.Security
             }
 
             var user = FindByName(userName, UserDetails.Full);
-
             var result = user != null && user.UserState == AccountState.Approved;
+            if (result)
+            {
+
+                //LimitedPermissions claims that will be granted to the user by cookies when bearer token authentication is enabled.
+                //This can help to authorize the user for direct(non - AJAX) GET requests to the VC platform API and / or to use
+                //some 3rd - party web applications for the VC platform(like Hangfire dashboard).
+                //
+                //If the user identity has claim named "LimitedPermissions", this attribute should authorize only
+                //permissions listed in that claim. Any permissions that are required by this attribute but
+                //not listed in the claim should cause this method to return false.
+                //However, if permission limits of user identity are not defined ("LimitedPermissions" claim is missing),
+                //then no limitations should be applied to the permissions.
+                //
+                //TDB: usually we have to use identity for the passed username, but we cannot, because it’s impossible to access any of the user’s cookies by their username, so we assume that
+                //this username will always be the same as for the current member of the thread -  Thread.CurrentPrincipal
+                if (Thread.CurrentPrincipal is ClaimsPrincipal claimsPrinicpal && claimsPrinicpal.Identity.AuthenticationType == DefaultAuthenticationTypes.ApplicationCookie)
+                {
+                    var limitedPermissionsClaim = claimsPrinicpal.Claims.FirstOrDefault(x => x.Type.EqualsInvariant(VirtoCommerceClaimTypes.LimitedPermissionsClaimName));
+                    if (limitedPermissionsClaim != null)
+                    {
+                        var limitedPermissions = limitedPermissionsClaim.Value?.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                        return limitedPermissions.Intersect(permissionIds, StringComparer.OrdinalIgnoreCase).Any();
+                    }
+                }
+            }
 
             if (result && user.IsAdministrator)
             {
                 return true;
             }
-
             //For managers always allow to call api
             if (result && permissionIds.Length == 1 && permissionIds.Contains(PredefinedPermissions.SecurityCallApi)
                && (string.Equals(user.UserType, AccountType.Manager.ToString(), StringComparison.InvariantCultureIgnoreCase) ||
@@ -479,16 +552,24 @@ namespace VirtoCommerce.Platform.Data.Security
             return allPermissions;
         }
 
-        protected virtual SecurityResult ValidateUser(ApplicationUser dbUser)
+        protected virtual SecurityResult ValidateUser(ApplicationUser applicationUser)
         {
-            var result = new SecurityResult { Succeeded = true };
-
-            if (dbUser == null)
+            if (applicationUser == null)
             {
-                result = new SecurityResult { Errors = new[] { "User not found." } };
+                return new SecurityResult { Errors = new[] { "User not found." } };
             }
 
-            return result;
+            return new SecurityResult { Succeeded = true };
+        }
+
+        protected virtual SecurityResult ValidateUser(ApplicationUserExtended applicationUserExtended)
+        {
+            if (applicationUserExtended == null)
+            {
+                return new SecurityResult { Errors = new[] { "User not found." } };
+            }
+
+            return new SecurityResult { Succeeded = true };
         }
 
         protected virtual async Task<ApplicationUser> GetApplicationUserByIdAsync(string userId)
@@ -554,11 +635,12 @@ namespace VirtoCommerce.Platform.Data.Security
                             _changeLogService.LoadChangeLogs(retVal);
                         }
                     }
+
                     var suppressForcingCredentialsChange = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Security:SuppressForcingCredentialsChange", false);
                     if (!suppressForcingCredentialsChange)
                     {
                         //Setting the flags which indicates a necessity of security credentials change
-                        retVal.PasswordExpired = retVal.PasswordHash == Resources.Default.DefaultPasswordHash;
+                        retVal.PasswordExpired |= retVal.PasswordHash == Resources.Default.DefaultPasswordHash;
                         if (retVal.ApiAccounts != null)
                         {
                             foreach (var apiAccount in retVal.ApiAccounts)
@@ -567,6 +649,7 @@ namespace VirtoCommerce.Platform.Data.Security
                             }
                         }
                     }
+
                     if (detailsLevel != UserDetails.Export)
                     {
                         retVal.PasswordHash = null;
@@ -578,8 +661,6 @@ namespace VirtoCommerce.Platform.Data.Security
             }
             return result;
         }
-
-
 
         protected virtual void ResetCache(string userId, string userName)
         {
@@ -598,13 +679,19 @@ namespace VirtoCommerce.Platform.Data.Security
         protected virtual void NormalizeUser(ApplicationUserExtended user)
         {
             if (user.UserName != null)
+            {
                 user.UserName = user.UserName.Trim();
+            }
 
             if (user.Email != null)
+            {
                 user.Email = user.Email.Trim();
+            }
 
             if (user.PhoneNumber != null)
+            {
                 user.PhoneNumber = user.PhoneNumber.Trim();
+            }
         }
     }
 }

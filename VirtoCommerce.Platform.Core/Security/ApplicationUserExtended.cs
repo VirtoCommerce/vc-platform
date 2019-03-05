@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -8,7 +8,8 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class ApplicationUserExtended : Entity, IHasChangesHistory, ICloneable
+    public class ApplicationUserExtended : AuditableEntity, IHasChangesHistory, ICloneable
+
     {
         public string UserName { get; set; }
         public string Email { get; set; }

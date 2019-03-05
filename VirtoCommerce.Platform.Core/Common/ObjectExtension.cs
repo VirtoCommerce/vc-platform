@@ -95,7 +95,7 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             if (obj == null)
             {
-                return default(T);
+                return null;
             }
             var objString = obj as string;
             if (objString != null)

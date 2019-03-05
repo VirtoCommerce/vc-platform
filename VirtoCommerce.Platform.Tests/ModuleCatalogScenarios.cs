@@ -1,4 +1,5 @@
-﻿using Common.Logging.Simple;
+using Common.Logging;
+using Common.Logging.Simple;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -118,7 +119,7 @@ namespace VirtoCommerce.Platform.Tests
 
         private IModuleCatalog GetExternalModuleCatalog(IModuleCatalog local)
         {
-            var logger = new ConsoleOutLogger("test", Common.Logging.LogLevel.All, true, true, true, "yyyy/MM/dd HH:mm:ss:fff");
+            var logger = new ConsoleOutLogger("test", LogLevel.All, true, true, true, "yyyy/MM/dd HH:mm:ss:fff");
             var externalModuleCatalog = new ExternalManifestModuleCatalog(local.Modules, new[] { "https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules.json" }, logger);
             return externalModuleCatalog;
         }

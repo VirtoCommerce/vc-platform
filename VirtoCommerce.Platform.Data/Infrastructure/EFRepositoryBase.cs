@@ -43,6 +43,10 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             _unitOfWork = unitOfWork;
             _interceptors = interceptors;
 
+            //The workaround of a known bug with specifying default command timeout within the EF connection string. https://stackoverflow.com/questions/6232633/entity-framework-timeouts/6234593#6234593
+            Database.CommandTimeout = Database.Connection.ConnectionTimeout;
+
+
             Configuration.LazyLoadingEnabled = false;
 
         }
