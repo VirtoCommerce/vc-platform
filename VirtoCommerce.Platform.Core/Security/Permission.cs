@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class Permission : Entity
+    public class Permission : Entity, ICloneable
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -26,7 +27,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public IEnumerable<string> GetPermissionWithScopeCombinationNames()
         {
             var retVal = new List<string>();
-            if(AssignedScopes != null && AssignedScopes.Any())
+            if (AssignedScopes != null && AssignedScopes.Any())
             {
                 retVal.AddRange(AssignedScopes.Select(x => Id + ":" + x.ToString()));
             }
@@ -37,5 +38,21 @@ namespace VirtoCommerce.Platform.Core.Security
             return retVal;
         }
 
+        public virtual object Clone()
+        {
+            var clone = (Permission)MemberwiseClone();
+
+            if (AssignedScopes != null)
+            {
+                clone.AssignedScopes = new List<PermissionScope>(AssignedScopes.Select(x => x.Clone() as PermissionScope));
+            }
+
+            if (AvailableScopes != null)
+            {
+                clone.AvailableScopes = new List<PermissionScope>(AvailableScopes.Select(x => x.Clone() as PermissionScope));
+            }
+
+            return clone;
+        }
     }
 }
