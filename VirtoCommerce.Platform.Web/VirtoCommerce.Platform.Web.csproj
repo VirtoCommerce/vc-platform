@@ -1192,6 +1192,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Shared\_AppInsightsPartial.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\vc-admin-test - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\vc-admin-test - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
