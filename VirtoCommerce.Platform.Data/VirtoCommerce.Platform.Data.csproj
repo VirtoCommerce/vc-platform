@@ -82,11 +82,6 @@
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyDictionaryItemConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyDictionaryItemNameConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyNameConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyObjectValueConverter.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyService.cs" />
     <Compile Include="ExportImport\PlatformExportImportManager.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
