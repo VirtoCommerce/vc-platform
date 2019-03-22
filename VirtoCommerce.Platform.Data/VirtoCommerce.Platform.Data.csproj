@@ -243,6 +243,10 @@
     <Compile Include="Repositories\Migrations\201811221254162_AddRefreshTokens.Designer.cs">
       <DependentUpon>201811221254162_AddRefreshTokens.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201903220839086_ChangeOperationLogDetailLength.cs" />
+    <Compile Include="Repositories\Migrations\201903220839086_ChangeOperationLogDetailLength.Designer.cs">
+      <DependentUpon>201903220839086_ChangeOperationLogDetailLength.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -347,6 +351,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201811221254162_AddRefreshTokens.resx">
       <DependentUpon>201811221254162_AddRefreshTokens.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201903220839086_ChangeOperationLogDetailLength.resx">
+      <DependentUpon>201903220839086_ChangeOperationLogDetailLength.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
