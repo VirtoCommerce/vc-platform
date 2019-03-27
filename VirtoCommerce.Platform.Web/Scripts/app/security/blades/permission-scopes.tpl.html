@@ -1,4 +1,4 @@
-﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel.tpl.html'"></div>
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel.tpl.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
@@ -17,7 +17,7 @@
                                     <span class="check"></span>
                                 </label>
                             </td>
-                            <td class="table-col"  ng-click="blade.selectNode(data, true)">
+                            <td class="table-col"  ng-click="blade.selectNode(data, !data.$selected, $event)">
                                 <span class="table-t">{{data.title | translate}}</span>
                                 <span class="table-descr alt-description">{{data.assignedScopesLabels.length > 0 ? data.assignedScopesLabels.join() : 'none'}}</span>
                             </td>
