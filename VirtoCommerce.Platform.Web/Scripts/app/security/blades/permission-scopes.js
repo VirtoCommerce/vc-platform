@@ -23,7 +23,7 @@ angular.module('platformWebApp')
         blade.isLoading = false;
     }
 
-    blade.selectNode = function (node, selected) {
+    blade.selectNode = function (node, selected, event) {
         if (event) {
             event.preventDefault();
         }
