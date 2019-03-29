@@ -101,7 +101,6 @@ angular.module('platformWebApp')
 
     authContext.checkPermission = function (permission, securityScopes) {
         //first check admin permission
-        // var hasPermission = $.inArray('admin', authContext.permissions) > -1;
         var hasPermission = authContext.isAdministrator;
         if (!hasPermission && permission) {
             permission = permission.trim();
@@ -111,10 +110,23 @@ angular.module('platformWebApp')
                 if (typeof securityScopes === 'string' || angular.isArray(securityScopes)) {
                     securityScopes = angular.isArray(securityScopes) ? securityScopes : securityScopes.split(',');
                     //Check permissions in scope
-                    hasPermission = _.some(securityScopes, function (x) {
-                        var permissionWithScope = permission + ":" + x;
-                        var retVal = $.inArray(permissionWithScope, authContext.permissions) > -1;
-                        //console.log(permissionWithScope + "=" + retVal);
+                    hasPermission = _.some(securityScopes, function (securityScope) {
+                        if (!securityScope) {
+                            return false;
+                        }
+
+                        var scopeName = permission + ":" + securityScope.split(':').shift();
+
+                        // if we have no scope means we have permission
+                        var retVal = !_.some(authContext.permissions, function (item) {
+                            return item === scopeName || item.indexOf(scopeName + ':') > -1;
+                        });
+
+                        if (!retVal) {
+                            var permissionWithScope = permission + ":" + securityScope;
+                            retVal = $.inArray(permissionWithScope, authContext.permissions) > -1;
+                        }
+
                         return retVal;
                     });
                 }
