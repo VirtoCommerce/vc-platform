@@ -119,7 +119,7 @@ angular.module('platformWebApp')
 
                         // if we have no scope means we have permission
                         var retVal = !_.some(authContext.permissions, function (item) {
-                            return item === scopeName || !item.indexOf(scopeName + ':');
+                            return item === scopeName || item.indexOf(scopeName + ':') > -1;
                         });
 
                         if (!retVal) {
