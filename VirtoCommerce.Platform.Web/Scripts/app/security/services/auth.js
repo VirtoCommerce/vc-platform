@@ -99,6 +99,20 @@ angular.module('platformWebApp')
         changeAuth({});
     };
 
+    /**
+     * if we are checking
+     * authService.checkPermission('order:read', 'limitResponseGroup:WithPrices');
+     *
+     * and the user has following permissions:
+     * ['order:read']
+     * check result => true
+     * 
+     * ['order:read:responsible']
+     * check result => true
+     * 
+     * ['order:read:limitResponseGroup:WithAddress']
+     * check result => false
+     */
     authContext.checkPermission = function (permission, securityScopes) {
         //first check admin permission
         var hasPermission = authContext.isAdministrator;
