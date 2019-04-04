@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -298,7 +298,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                 if (await sourse.ExistsAsync())
                 {
                     await target.StartCopyAsync(sourse);
-                    if(!isCopy)
+                    if (!isCopy)
                         await sourse.DeleteIfExistsAsync();
                 }
             }
@@ -321,7 +321,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                     baseUrl = cdnUriBuilder.Uri.AbsoluteUri;
                 }
 
-                retVal = baseUrl.TrimEnd('/') + "/" + relativeUrl;
+                retVal = baseUrl.TrimEnd('/') + "/" + relativeUrl.TrimStart('/');
             }
             return retVal;
         }
