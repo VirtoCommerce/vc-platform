@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -6,7 +7,7 @@ namespace VirtoCommerce.Platform.Core.Security
     /// <summary>
     /// Base class for all types repesents permision boundary scopes
     /// </summary>
-    public class PermissionScope : ValueObject
+    public class PermissionScope : ValueObject, ICloneable
     {
         public PermissionScope()
         {
@@ -51,6 +52,11 @@ namespace VirtoCommerce.Platform.Core.Security
         public override string ToString()
         {
             return Type + ":" + Scope;
+        }
+
+        public virtual object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }

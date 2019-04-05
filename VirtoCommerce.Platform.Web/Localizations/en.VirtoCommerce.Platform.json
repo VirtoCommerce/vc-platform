@@ -820,6 +820,10 @@
         "title": "Application restart",
         "message": "Are you sure you want to restart the application?"
       },
+      "app-restart-required": {
+        "title": "Application restart required",
+        "message": "Application restart required, restart now?"
+      },
       "error-details": {
         "title": "The error details"
       }

@@ -82,11 +82,6 @@
     <Compile Include="Common\ConventionInjections\IgnorePropertiesInjection.cs" />
     <Compile Include="Common\ConventionInjections\PatchInjection.cs" />
     <Compile Include="Common\ExceptionExtensions.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyDictionaryItemConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyDictionaryItemNameConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyNameConverter.cs" />
-    <Compile Include="DynamicProperties\Converters\DynamicPropertyObjectValueConverter.cs" />
     <Compile Include="DynamicProperties\DynamicPropertyService.cs" />
     <Compile Include="ExportImport\PlatformExportImportManager.cs" />
     <Compile Include="Infrastructure\BasicUnitOfWork.cs" />
@@ -123,12 +118,14 @@
     <Compile Include="Model\NotificationTemplateEntity.cs" />
     <Compile Include="Model\OperationLogEntity.cs" />
     <Compile Include="Model\PermissionEntity.cs" />
+    <Compile Include="Model\RefreshTokenEntity.cs" />
     <Compile Include="Model\RoleAssignmentEntity.cs" />
     <Compile Include="Model\RoleEntity.cs" />
     <Compile Include="Model\RolePermissionEntity.cs" />
     <Compile Include="Model\PermissionScopeEntity.cs" />
     <Compile Include="Model\SettingEntity.cs" />
     <Compile Include="Model\SettingValueEntity.cs" />
+    <Compile Include="Notifications\ChangePhoneNumberSmsNotification.cs" />
     <Compile Include="Notifications\DefaultSmsNotificationSendingGateway.cs" />
     <Compile Include="Notifications\DefaultSmtpEmailNotificationSendingGateway.cs" />
     <Compile Include="Notifications\RegistrationEmailNotification.cs" />
@@ -137,6 +134,7 @@
     <Compile Include="Notifications\NotificationManager.cs" />
     <Compile Include="Notifications\NotificationTemplateServiceImpl.cs" />
     <Compile Include="Notifications\RegistrationSmsNotification.cs" />
+    <Compile Include="Notifications\ResetPasswordSmsNotification.cs" />
     <Compile Include="Notifications\TwoFactorEmailNotification.cs" />
     <Compile Include="Notifications\TwoFactorSmsNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -241,6 +239,14 @@
     <Compile Include="Repositories\Migrations\201809070639174_AddAccountEntityPasswordExpired.Designer.cs">
       <DependentUpon>201809070639174_AddAccountEntityPasswordExpired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201811221254162_AddRefreshTokens.cs" />
+    <Compile Include="Repositories\Migrations\201811221254162_AddRefreshTokens.Designer.cs">
+      <DependentUpon>201811221254162_AddRefreshTokens.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\Migrations\201903220839086_ChangeOperationLogDetailLength.cs" />
+    <Compile Include="Repositories\Migrations\201903220839086_ChangeOperationLogDetailLength.Designer.cs">
+      <DependentUpon>201903220839086_ChangeOperationLogDetailLength.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -342,6 +348,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201809070639174_AddAccountEntityPasswordExpired.resx">
       <DependentUpon>201809070639174_AddAccountEntityPasswordExpired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201811221254162_AddRefreshTokens.resx">
+      <DependentUpon>201811221254162_AddRefreshTokens.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201903220839086_ChangeOperationLogDetailLength.resx">
+      <DependentUpon>201903220839086_ChangeOperationLogDetailLength.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

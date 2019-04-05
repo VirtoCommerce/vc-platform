@@ -1,4 +1,4 @@
-﻿//replace datetimeDirective
+//replace datetimeDirective
 angular.module('platformWebApp')
     .constant('uiDatetimePickerConfig',
         {
@@ -397,7 +397,7 @@ angular.module('platformWebApp')
                     var newDate = scope.date ? dateFilter(scope.date, dateFormat, ngModelOptions.timezone) : null;
 
                     element.val(newDate);
-                    ngModel.$setViewValue(scope.date);
+                    ngModel.$setViewValue(newDate);
 
                     if (closeOnDateSelection) {
                         // do not close when using timePicker as make impossible to choose a time

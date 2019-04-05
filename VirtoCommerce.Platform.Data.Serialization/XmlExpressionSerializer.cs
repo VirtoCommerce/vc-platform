@@ -8,28 +8,33 @@ namespace VirtoCommerce.Platform.Data.Serialization
 {
     public class XmlExpressionSerializer : IExpressionSerializer
     {
+        private static Lazy<ExpressionSerializer> _expressionSerializer;
+        static XmlExpressionSerializer()
+        {
+            //TypeResolver creates a dynamic assembly each time it's constructed, which is awfully wasteful. You should create only one AssemblyBuilder and reuse it, and you should create it lazily - anonymous types are not commonly used, especially in where serialization is required.
+            _expressionSerializer = new Lazy<ExpressionSerializer>(() =>
+            {
+                var typeResolver = new TypeResolver(assemblies: AppDomain.CurrentDomain.GetAssemblies(), knownTypes: null);
+                return new ExpressionSerializer(typeResolver);
+            });
+        }
         public string SerializeExpression(Expression expression)
         {
-            var serializer = GetSerializer();
-            var result = serializer.Serialize(expression).ToString();
+
+            var result = _expressionSerializer.Value.Serialize(expression).ToString();
             return result;
+
         }
 
         public T DeserializeExpression<T>(string serializedExpression)
         {
             var xElement = XElement.Parse(serializedExpression);
-            var serializer = GetSerializer();
-            var expression = serializer.Deserialize<T>(xElement);
+            var expression = _expressionSerializer.Value.Deserialize<T>(xElement);
             var result = expression.Compile();
             return result;
         }
 
 
-        private static ExpressionSerializer GetSerializer()
-        {
-            var typeResolver = new TypeResolver(assemblies: AppDomain.CurrentDomain.GetAssemblies(), knownTypes: null);
-            var serializer = new ExpressionSerializer(typeResolver);
-            return serializer;
-        }
+
     }
 }

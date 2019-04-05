@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', 'FileUploader', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, modules, moduleHelper, FileUploader, settings) {
     var blade = $scope.blade;
 
@@ -136,9 +136,6 @@
         // the uploader
         var uploader = $scope.uploader = new FileUploader({
             scope: $scope,
-            headers: {
-                Accept: 'application/json'
-            },
             url: 'api/platform/modules/localstorage',
             autoUpload: true,
             removeAfterUpload: true

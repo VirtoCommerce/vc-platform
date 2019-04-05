@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Security.Principal;
 using System.Web.Http;
 using System.Web.Http.Controllers;
