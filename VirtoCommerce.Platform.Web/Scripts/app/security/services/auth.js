@@ -13,7 +13,8 @@ angular.module('platformWebApp')
         return $http.get(serviceBase + 'currentuser').then(
             function (results) {
                 changeAuth(results.data);
-            });
+            },
+            function (error) { });
     };
 
     authContext.login = function (email, password, remember) {
@@ -29,10 +30,8 @@ angular.module('platformWebApp')
                 };
                 authDataStorage.storeAuthData(authData);
 
-                return authContext.fillAuthData().then(function () {
+                return authContext.fillAuthData().then(function() {
                     return response.data;
-                }, function(error) {
-                    return $q.reject(error);
                 });
             }, function (error) {
                 authContext.logout();
@@ -40,7 +39,7 @@ angular.module('platformWebApp')
             });
     };
 
-    authContext.refreshToken = function () {
+    authContext.refreshToken = function() {
         var authData = authDataStorage.getStoredData();
         if (authData) {
             var data = 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(authData.refreshToken);
@@ -96,7 +95,6 @@ angular.module('platformWebApp')
 
     authContext.logout = function () {
         authDataStorage.clearStoredData();
-        $http.post(serviceBase + 'logout');
         changeAuth({});
     };
 
@@ -125,10 +123,10 @@ angular.module('platformWebApp')
     };
 
     function changeAuth(user) {
-        angular.extend(authContext, user);
+        angular.extend(authContext, user);    
         authContext.userLogin = user.userName;
         authContext.fullName = user.userLogin;
-        authContext.isAuthenticated = user.userName != null;
+        authContext.isAuthenticated = user.userName != null;       
 
         //Interpolate permissions to replace some template to real value
         if (authContext.permissions) {
