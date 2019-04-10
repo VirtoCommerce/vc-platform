@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CacheManager.Core;
@@ -16,7 +16,7 @@ namespace VirtoCommerce.Platform.Data.Assets
         private readonly Func<IPlatformRepository> _platformRepository;
         private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly ICacheManager<object> _cacheManager;
-        
+
         public AssetEntryService(Func<IPlatformRepository> repositoryFactory, IBlobUrlResolver blobUrlResolver, ICacheManager<object> cacheManager)
         {
             _platformRepository = repositoryFactory;
@@ -70,7 +70,7 @@ namespace VirtoCommerce.Platform.Data.Assets
                     {
                         sortInfos = new[] { new SortInfo { SortColumn = "CreatedDate", SortDirection = SortDirection.Descending } };
                     }
-                    query = query.OrderBySortInfos(sortInfos);
+                    query = query.OrderBySortInfos(sortInfos).ThenBy(x => x.Id);
 
                     var ids = query
                         .Skip(criteria.Skip)
@@ -104,7 +104,7 @@ namespace VirtoCommerce.Platform.Data.Assets
                 var originalDataEntities = repository.AssetEntries.Where(x => nonTransientEntryIds.Contains(x.Id)).ToList();
                 foreach (var entry in entries)
                 {
-                    var originalEntity =  originalDataEntities.FirstOrDefault(x => x.Id == entry.Id);                   
+                    var originalEntity = originalDataEntities.FirstOrDefault(x => x.Id == entry.Id);
                     var modifiedEntity = AbstractTypeFactory<AssetEntryEntity>.TryCreateInstance().FromModel(entry);
                     if (originalEntity != null)
                     {

@@ -379,7 +379,7 @@ namespace VirtoCommerce.Platform.Data.Security
                 {
                     sortInfos = new[] { new SortInfo { SortColumn = "UserName", SortDirection = SortDirection.Descending } };
                 }
-                query = query.OrderBySortInfos(sortInfos);
+                query = query.OrderBySortInfos(sortInfos).ThenBy(x => x.Id);
 
 
                 users = await query.Skip(request.SkipCount)
