@@ -13,8 +13,7 @@ angular.module('platformWebApp')
         return $http.get(serviceBase + 'currentuser').then(
             function (results) {
                 changeAuth(results.data);
-            },
-            function (error) { });
+            });
     };
 
     authContext.login = function (email, password, remember) {
@@ -32,6 +31,8 @@ angular.module('platformWebApp')
 
                 return authContext.fillAuthData().then(function () {
                     return response.data;
+                }, function(error) {
+                    return $q.reject(error);
                 });
             }, function (error) {
                 authContext.logout();
