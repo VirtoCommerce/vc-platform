@@ -652,7 +652,15 @@ namespace VirtoCommerce.Platform.Web
                                     "Quarters",
                                     "Years"
                                 }
-                            }
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.MoneyPrecision",
+                                ValueType = ModuleSetting.TypeInteger,
+                                Title = "Money decimal precision",
+                                Description = "Sets how many decimal digits are shown in money amounts. By default - 2.",
+                                DefaultValue = "2",
+                            },
                         }
                     },
                     new ModuleSettingsGroup

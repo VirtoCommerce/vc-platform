@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .config(['$stateProvider', function ($stateProvider) {
     $stateProvider
         .state('workspace.userProfile', {
@@ -32,6 +32,7 @@
             showMeridian: undefined
         },
         mainMenuState: {},
+        moneyPrecision: {},
         load: function () {
             return userProfileApi.get(function (profile) {
                 settingsHelper.fixValues(profile.settings);
@@ -50,10 +51,11 @@
                 if (profile.mainMenuState) {
                     profile.mainMenuState = angular.fromJson(profile.mainMenuState);
                 }
+                profile.moneyPrecision = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.MoneyPrecision").value;
                 angular.extend(result, profile);
             }).$promise;
         },
-        save: function() {
+        save: function(saveMoneyPrecision) {
             var oldState = angular.copy(this);
             var mainMenuStateSetting = settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MainMenu.State");
             mainMenuStateSetting.value = angular.toJson(this.mainMenuState);
@@ -64,7 +66,13 @@
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.UseTimeAgo").value = result.timeAgoSettings.useTimeAgo;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FullDateThreshold").value = result.timeAgoSettings.threshold;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FullDateThresholdUnit").value = result.timeAgoSettings.thresholdUnit;
-            return userProfileApi.save(result).$promise.then(function() {
+            // Need to save MoneyPrecision only if user explicitly specify it. No need to save it if is was not defined explicilty to support Platform value propagation.
+            if (saveMoneyPrecision) {
+                settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MoneyPrecision").value = result.moneyPrecision;
+            } else {
+                settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MoneyPrecision").value = null;
+            }
+            return userProfileApi.save(result).$promise.then(function () {
                 onChangeCallbacks.forEach(function(callback) {
                     callback(this, oldState);
                 });

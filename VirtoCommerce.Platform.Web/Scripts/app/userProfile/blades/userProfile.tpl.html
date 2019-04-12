@@ -1,4 +1,4 @@
-﻿<div class="blade-content">
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form list __info">
@@ -40,6 +40,13 @@
                             <span class="switch"></span>
                         </label>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" ng-bind="'platform.blades.user-profile.labels.money-precision' | translate"></label>
+                    <div class="form-input __number">
+                        <input ng-model="blade.moneyPrecision" ng-change="setMoneyPrecision()" smart-float num-type="integer" placeholder="{{'platform.blades.user-profile.placeholders.money-precision' | translate}}" ng-required="true" />
+                    </div>
+                    <div class="list-descr" ng-bind="'platform.blades.user-profile.labels.money-precision-description' | translate"></div>
                 </div>
                 <div class="form">
                     <div class="form-group clearfix">
