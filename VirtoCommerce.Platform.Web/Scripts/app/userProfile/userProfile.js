@@ -32,7 +32,7 @@ angular.module('platformWebApp')
             showMeridian: undefined
         },
         mainMenuState: {},
-        moneyPrecision: {},
+        moneyPrecision: undefined,
         load: function () {
             return userProfileApi.get(function (profile) {
                 settingsHelper.fixValues(profile.settings);
@@ -70,7 +70,7 @@ angular.module('platformWebApp')
             if (saveMoneyPrecision) {
                 settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MoneyPrecision").value = result.moneyPrecision;
             } else {
-                settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MoneyPrecision").value = null;
+                settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MoneyPrecision").value = undefined;
             }
             return userProfileApi.save(result).$promise.then(function () {
                 onChangeCallbacks.forEach(function(callback) {
