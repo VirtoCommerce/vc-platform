@@ -55,7 +55,7 @@ angular.module('platformWebApp')
                 angular.extend(result, profile);
             }).$promise;
         },
-        save: function(saveMoneyPrecision) {
+        save: function() {
             var oldState = angular.copy(this);
             var mainMenuStateSetting = settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MainMenu.State");
             mainMenuStateSetting.value = angular.toJson(this.mainMenuState);

@@ -119,7 +119,7 @@ angular.module('platformWebApp')
     $scope.setFourDecimalsInMoney = function () {
         if (!isLoading()) {
             userProfile.fourDecimalsInMoney = blade.fourDecimalsInMoney;
-            userProfile.save(true);
+            userProfile.save();
         }
     };
 }]);
