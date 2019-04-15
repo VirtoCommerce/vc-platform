@@ -16,7 +16,7 @@ angular.module('platformWebApp')
         
 
         var min = parseFloat(attrs.min || 0);
-        var precision = parseFloat(attrs.precision || userProfile.moneyPrecision || 2);
+        var precision = parseFloat(attrs.precision || (userProfile.fourDecimalsInMoney ? 4 : 2));
         var lastValidValue;
 
         function round(num) {

@@ -54,7 +54,7 @@ angular.module('platformWebApp')
         blade.currentTimeZone = getNameByCode($scope.timeZones, blade.currentTimeZone);
         blade.currentTimeAgoSettings = userProfile.timeAgoSettings;
         blade.currentTimeSettings = userProfile.timeSettings;
-        blade.moneyPrecision = userProfile.moneyPrecision;
+        blade.fourDecimalsInMoney = userProfile.fourDecimalsInMoney;
     };
 
     function isLoading() {
@@ -116,9 +116,9 @@ angular.module('platformWebApp')
             }
         }
 
-    $scope.setMoneyPrecision = function () {
+    $scope.setFourDecimalsInMoney = function () {
         if (!isLoading()) {
-            userProfile.moneyPrecision = blade.moneyPrecision;
+            userProfile.fourDecimalsInMoney = blade.fourDecimalsInMoney;
             userProfile.save(true);
         }
     };

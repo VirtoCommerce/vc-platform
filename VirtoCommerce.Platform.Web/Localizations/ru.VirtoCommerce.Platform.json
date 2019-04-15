@@ -648,16 +648,14 @@
                     "time-zone": "Часовой пояс",
                     "time-zone-description": "Текущий часовой пояс пользователя в формате IANA (tz database). Выберите ближайший город в вашем часовом поясе. Clear to use browser or fallback time zone.",
                     "use-time-ago": "Используйте time ago формат, если это возможно",
-                    "money-precision": "Количество десятичных знаков для денег",
-                    "money-precision-description": "Количество знаков после запятой для денежных сумм.",
+                    "four-decimals": "Показывать 4 десятичных знака для денег",
                     "full-date-threshold-group": "Используйте полный формат даты для дат, раньше...",
                     "full-date-threshold-description": "Числовое значение единиц времени",
                     "full-date-threshold-unit-description": "Единица времени (то есть часы или годы)"
                 },
                 "placeholders": {
                     "full-date-threshold": "Введите пороговое значение",
-                    "full-date-threshold-unit": "Выберите измерение для даты порогового значения",
-                    "money-precision": "Введите десятичную точность"
+                    "full-date-threshold-unit": "Выберите измерение для даты порогового значения"
                 },
                 "full-date-threshold-units": {
                     "Never": "Никогда",

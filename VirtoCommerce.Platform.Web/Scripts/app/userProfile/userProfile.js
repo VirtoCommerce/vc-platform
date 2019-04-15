@@ -32,7 +32,7 @@ angular.module('platformWebApp')
             showMeridian: undefined
         },
         mainMenuState: {},
-        moneyPrecision: undefined,
+        fourDecimalsInMoney: undefined,
         load: function () {
             return userProfileApi.get(function (profile) {
                 settingsHelper.fixValues(profile.settings);
@@ -51,7 +51,7 @@ angular.module('platformWebApp')
                 if (profile.mainMenuState) {
                     profile.mainMenuState = angular.fromJson(profile.mainMenuState);
                 }
-                profile.moneyPrecision = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.MoneyPrecision").value;
+                profile.fourDecimalsInMoney = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.FourDecimalsInMoney").value;
                 angular.extend(result, profile);
             }).$promise;
         },
@@ -66,12 +66,7 @@ angular.module('platformWebApp')
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.UseTimeAgo").value = result.timeAgoSettings.useTimeAgo;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FullDateThreshold").value = result.timeAgoSettings.threshold;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FullDateThresholdUnit").value = result.timeAgoSettings.thresholdUnit;
-            // Need to save MoneyPrecision only if user explicitly specify it. No need to save it if is was not defined explicilty to support Platform value propagation.
-            if (saveMoneyPrecision) {
-                settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MoneyPrecision").value = result.moneyPrecision;
-            } else {
-                settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.MoneyPrecision").value = undefined;
-            }
+            settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FourDecimalsInMoney").value = result.fourDecimalsInMoney;
             return userProfileApi.save(result).$promise.then(function () {
                 onChangeCallbacks.forEach(function(callback) {
                     callback(this, oldState);
