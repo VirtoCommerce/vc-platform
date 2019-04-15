@@ -172,7 +172,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                         {
                             var blobInfo = new BlobInfo
                             {
-                                Url = Uri.EscapeUriString(GetAbsoluteUrl(block.Uri.PathAndQuery)),
+                                Url = GetAbsoluteUrl(block.Uri.PathAndQuery),
                                 FileName = Path.GetFileName(Uri.UnescapeDataString(block.Uri.ToString())),
                                 ContentType = block.Properties.ContentType,
                                 Size = block.Properties.Length,

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -24,7 +25,7 @@ namespace VirtoCommerce.Platform.Core.Web.Assets
 
         public override Stream GetStream(HttpContent parent, HttpContentHeaders headers)
         {
-            var fileName = Path.GetFileName((headers.ContentDisposition.FileName ?? headers.ContentDisposition.Name).Replace("\"", string.Empty));
+            var fileName = Uri.EscapeDataString(Path.GetFileName((headers.ContentDisposition.FileName ?? headers.ContentDisposition.Name).Replace("\"", string.Empty)));
             var relativeUrl = _rootPath + "/" + fileName;
             var absoluteUrl = _blobUrlResolver.GetAbsoluteUrl(relativeUrl);
 
