@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .config(['$stateProvider', function ($stateProvider) {
     $stateProvider
         .state('workspace.userProfile', {
@@ -32,6 +32,7 @@
             showMeridian: undefined
         },
         mainMenuState: {},
+        fourDecimalsInMoney: undefined,
         load: function () {
             return userProfileApi.get(function (profile) {
                 settingsHelper.fixValues(profile.settings);
@@ -50,6 +51,7 @@
                 if (profile.mainMenuState) {
                     profile.mainMenuState = angular.fromJson(profile.mainMenuState);
                 }
+                profile.fourDecimalsInMoney = settingsHelper.getSetting(profile.settings, "VirtoCommerce.Platform.UI.FourDecimalsInMoney").value;
                 angular.extend(result, profile);
             }).$promise;
         },
@@ -64,7 +66,8 @@
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.UseTimeAgo").value = result.timeAgoSettings.useTimeAgo;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FullDateThreshold").value = result.timeAgoSettings.threshold;
             settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FullDateThresholdUnit").value = result.timeAgoSettings.thresholdUnit;
-            return userProfileApi.save(result).$promise.then(function() {
+            settingsHelper.getSetting(this.settings, "VirtoCommerce.Platform.UI.FourDecimalsInMoney").value = result.fourDecimalsInMoney;
+            return userProfileApi.save(result).$promise.then(function () {
                 onChangeCallbacks.forEach(function(callback) {
                     callback(this, oldState);
                 });

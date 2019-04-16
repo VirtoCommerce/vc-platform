@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.userProfile.userProfileController', ['$rootScope', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.settings.helper',
     'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi',
     function ($rootScope, $scope, bladeNavigationService, settings, settingsHelper, i18n, userProfile, languages, locales, timeZones, userProfileApi) {
@@ -54,6 +54,7 @@
         blade.currentTimeZone = getNameByCode($scope.timeZones, blade.currentTimeZone);
         blade.currentTimeAgoSettings = userProfile.timeAgoSettings;
         blade.currentTimeSettings = userProfile.timeSettings;
+        blade.fourDecimalsInMoney = userProfile.fourDecimalsInMoney;
     };
 
     function isLoading() {
@@ -105,6 +106,7 @@
             userProfile.save();
         }
     }
+
     $scope.setTimeSettings = function () {
             if (!isLoading()) {
                 i18n.changeTimeSettings(blade.currentTimeSettings);
@@ -113,4 +115,11 @@
                 userProfile.save();
             }
         }
+
+    $scope.setFourDecimalsInMoney = function () {
+        if (!isLoading()) {
+            userProfile.fourDecimalsInMoney = blade.fourDecimalsInMoney;
+            userProfile.save();
+        }
+    };
 }]);

@@ -652,7 +652,15 @@ namespace VirtoCommerce.Platform.Web
                                     "Quarters",
                                     "Years"
                                 }
-                            }
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.FourDecimalsInMoney",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Show 4 decimal digits for money",
+                                Description = "Set to true to show 4 decimal digits for money. By default - false, 2 decimal digits are shown.",
+                                DefaultValue = "false",
+                            },
                         }
                     },
                     new ModuleSettingsGroup
