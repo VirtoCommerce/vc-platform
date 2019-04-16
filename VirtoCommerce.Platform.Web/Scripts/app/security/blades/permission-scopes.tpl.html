@@ -1,4 +1,4 @@
-﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel.tpl.html'"></div>
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel.tpl.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
@@ -12,7 +12,7 @@
                         </tr>
                         <tr class="table-item" ng-repeat="data in availableScopes track by data.type" ng-class="{'__selected': data.type === selectedNodeId}">
                             <td class="table-col">
-                                <label class="form-control __checkbox" ng-click="blade.selectNode(data, !data.$selected)">
+                                <label class="form-control __checkbox" ng-click="blade.selectNode(data, !data.$selected, $event)">
                                     <input type="checkbox" ng-model="data.$selected">
                                     <span class="check"></span>
                                 </label>

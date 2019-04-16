@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.permissionScopesController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.permissionScopeResolver', function ($q, $scope, bladeNavigationService, dialogService, permissionScopeResolver) {
     var blade = $scope.blade;
     
@@ -23,7 +23,10 @@
         blade.isLoading = false;
     }
 
-    blade.selectNode = function (node, selected) {
+    blade.selectNode = function (node, selected, event) {
+        if (event) {
+            event.preventDefault();
+        }
     	node.$selected = selected;
     	if (node.$selected && node.selectFn) {
     		if (node.selectFn) {
