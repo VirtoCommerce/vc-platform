@@ -50,7 +50,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                 var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(uri);
                 retVal = new BlobInfo
                 {
-                    Url = Uri.EscapeUriString(GetAbsoluteUrl(cloudBlob.Uri.PathAndQuery)),
+                    Url = GetAbsoluteUrl(cloudBlob.Uri.PathAndQuery),
                     FileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString())),
                     ContentType = cloudBlob.Properties.ContentType,
                     Size = cloudBlob.Properties.Length,
@@ -172,7 +172,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                         {
                             var blobInfo = new BlobInfo
                             {
-                                Url = Uri.EscapeUriString(GetAbsoluteUrl(block.Uri.PathAndQuery)),
+                                Url = GetAbsoluteUrl(block.Uri.PathAndQuery),
                                 FileName = Path.GetFileName(Uri.UnescapeDataString(block.Uri.ToString())),
                                 ContentType = block.Properties.ContentType,
                                 Size = block.Properties.Length,
