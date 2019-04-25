@@ -12,6 +12,7 @@ using Swashbuckle.Application;
 using Swashbuckle.Swagger;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Web.Controllers.Api;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
@@ -61,6 +62,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     .Replace(',', '-')
                 );
 
+                c.DocumentFilter<PolymorphismDocumentFilter<BaseClass>>();
+                c.SchemaFilter<PolymorphismSchemaFilter<BaseClass>>();
+
                 ApplyCommonSwaggerConfiguration(c, container, string.Empty, xmlCommentsFilePaths);
             })
             .EnableSwaggerUi(routePrefix + "docs/ui/{*assetPath}", c =>
@@ -97,6 +101,11 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
                 ApplyCommonSwaggerConfiguration(c, container, moduleName, xmlCommentsFilePaths);
                 c.OperationFilter(() => new ModuleTagsFilter(moduleName));
+                if (moduleName.Equals("VirtoCommerce.Platform", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    c.DocumentFilter<PolymorphismDocumentFilter<BaseClass>>();
+                    c.SchemaFilter<PolymorphismSchemaFilter<BaseClass>>();
+                }
             });
         }
 

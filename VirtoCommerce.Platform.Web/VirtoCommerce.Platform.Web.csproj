@@ -337,6 +337,7 @@
     <Compile Include="Controllers\AiHandleErrorAttribute.cs" />
     <Compile Include="Controllers\Api\ChangeLogController.cs" />
     <Compile Include="Controllers\Api\LicensingController.cs" />
+    <Compile Include="Controllers\Api\PolyController.cs" />
     <Compile Include="Controllers\Api\ProfilesController.cs" />
     <Compile Include="Controllers\Api\AssetEntryController.cs" />
     <Compile Include="Controllers\ExternalLoginController.cs" />
@@ -455,6 +456,7 @@
     <Compile Include="Swagger\ModuleTagsFilter.cs" />
     <Compile Include="Swagger\AssignOAuth2SecurityOperationFilter.cs" />
     <Compile Include="Swagger\OptionalParametersFilter.cs" />
+    <Compile Include="Swagger\PolymorphismSchemaFilter.cs" />
     <Compile Include="Swagger\SwaggerConfig.cs" />
     <Compile Include="Swagger\TagsFilter.cs" />
     <Compile Include="Swagger\UploadFileAttribute.cs" />
