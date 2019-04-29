@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -10,9 +11,10 @@ using CacheManager.Core;
 using Microsoft.Practices.Unity;
 using Swashbuckle.Application;
 using Swashbuckle.Swagger;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Web.Controllers.Api;
+using VirtoCommerce.Platform.Data.Common;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
@@ -35,10 +37,13 @@ namespace VirtoCommerce.Platform.Web.Swagger
             EnableSwagger("VirtoCommerce.Platform", httpConfiguration, container, routePrefix, xmlCommentsFilePaths, false, Assembly.GetExecutingAssembly());
 
             // Add separate swagger generator for each installed module
-            foreach (var module in container.Resolve<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null))
+            var allmodules = container.Resolve<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null);
+
+            foreach (var module in allmodules)
             {
                 EnableSwagger(module.ModuleName, httpConfiguration, container, routePrefix, xmlCommentsFilePaths, module.UseFullTypeNameInSwagger, module.ModuleInstance.GetType().Assembly);
             }
+            var allModuleAssemblies = allmodules.Select(x => x.ModuleInstance.GetType().Assembly).Concat(new[] { Assembly.GetExecutingAssembly() });
 
             // Add full swagger generator
             httpConfiguration.EnableSwagger(routePrefix + "docs/{apiVersion}", c =>
@@ -62,8 +67,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     .Replace(',', '-')
                 );
 
-                c.DocumentFilter<PolymorphismDocumentFilter<BaseClass>>();
-                c.SchemaFilter<PolymorphismSchemaFilter<BaseClass>>();
+                AddProlymorphicFilters(c, allModuleAssemblies);
 
                 ApplyCommonSwaggerConfiguration(c, container, string.Empty, xmlCommentsFilePaths);
             })
@@ -101,12 +105,19 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
                 ApplyCommonSwaggerConfiguration(c, container, moduleName, xmlCommentsFilePaths);
                 c.OperationFilter(() => new ModuleTagsFilter(moduleName));
-                if (moduleName.Equals("VirtoCommerce.Platform", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    c.DocumentFilter<PolymorphismDocumentFilter<BaseClass>>();
-                    c.SchemaFilter<PolymorphismSchemaFilter<BaseClass>>();
-                }
+
+                AddProlymorphicFilters(c, new[] { apiAssembly });
             });
+        }
+
+        private static void AddProlymorphicFilters(SwaggerDocsConfig swaggerDocsConfig, IEnumerable<Assembly> assemblies)
+        {
+            var polymorphicTypes = assemblies.SelectMany(x => x.GetTypesWithAttribute(typeof(PolymorphicBaseClassAttribute), false)).ToArray();
+            if (polymorphicTypes.Any())
+            {
+                swaggerDocsConfig.DocumentFilter(() => new PolymorphismDocumentFilter(polymorphicTypes));
+                swaggerDocsConfig.SchemaFilter(() => new PolymorphismSchemaFilter(polymorphicTypes));
+            }
         }
 
         private static Uri ComputeHostAsSeenByOriginalClient(HttpRequestMessage message)
