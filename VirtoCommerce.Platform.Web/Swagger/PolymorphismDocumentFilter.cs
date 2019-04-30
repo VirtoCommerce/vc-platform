@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Swashbuckle.Swagger;
-using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
@@ -26,7 +25,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
         private static void RegisterSubClasses(SchemaRegistry schemaRegistry, Type abstractType)
         {
-            var discriminatorName = abstractType.GetAttributeValue<PolymorphicBaseClassAttribute, string>(x => x.DiscriminatorPropertyName) ?? "type";
+            var discriminatorName = "type";
 
             // Need to make first property character lower to avoid properties duplication because of case, as all properties in OpenApi spec are in camelCase
             discriminatorName = char.ToLowerInvariant(discriminatorName[0]) + discriminatorName.Substring(1);

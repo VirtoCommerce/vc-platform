@@ -78,7 +78,6 @@
     <Compile Include="Common\IValueObject.cs" />
     <Compile Include="Common\ObservableChangeTracker.cs" />
     <Compile Include="Common\PlatformVersion.cs" />
-    <Compile Include="Common\PolymorphicBaseClassAttribute.cs" />
     <Compile Include="Common\PredicateBuilder.cs" />
     <Compile Include="Common\PrimaryKeyResolvingMap.cs" />
     <Compile Include="Common\SemanticVersion.cs" />

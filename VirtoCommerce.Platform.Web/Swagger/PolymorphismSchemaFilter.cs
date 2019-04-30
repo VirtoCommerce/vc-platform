@@ -21,10 +21,10 @@ namespace VirtoCommerce.Platform.Web.Swagger
         {
             var result = new HashSet<Type>();
 
-            var derivedTypes = _types.SelectMany(x =>
-                x.Assembly
-                .GetTypes()
-                .Where(y => x != y && y.IsAssignableFrom(x)));
+            var derivedTypes = _types.SelectMany(baseType =>
+                baseType.Assembly
+                    .GetTypes()
+                    .Where(derivedType => baseType != derivedType && baseType.IsAssignableFrom(derivedType)));
 
             foreach (var item in derivedTypes)
             {
@@ -46,8 +46,10 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     required = schema.required
                 };
 
-                //schemaRegistry.Definitions[typeof(T).Name]; does not work correctly in SwashBuckle
-                var parentSchema = new Schema { @ref = "#/definitions/" + type.BaseType.Name };
+                var baseType = type.BaseType;
+                var baseTypeName = schemaRegistry.Definitions.ContainsKey(baseType.FullName) ? baseType.FullName : baseType.FriendlyId();
+
+                var parentSchema = new Schema { @ref = "#/definitions/" + baseTypeName };
 
                 schema.allOf = new List<Schema> { parentSchema, clonedSchema };
 

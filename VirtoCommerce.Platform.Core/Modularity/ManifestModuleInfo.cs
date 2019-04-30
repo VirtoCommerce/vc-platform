@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -62,10 +62,12 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 Groups.AddRange(manifest.Groups);
             }
             Incompatibilities = new List<ModuleIdentity>();
-            if(manifest.Incompatibilities != null)
+            if (manifest.Incompatibilities != null)
             {
                 Incompatibilities.AddRange(manifest.Incompatibilities.Select(x => new ModuleIdentity(x.Id, x.Version)));
             }
+
+            OpenAPIPolymorphicTypes = manifest.OpenAPIPolymorphicTypes?.Select(x => x.Trim()) ?? Enumerable.Empty<string>();
 
             InitializationMode = InitializationMode.OnDemand;
         }
@@ -101,6 +103,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public ICollection<ModuleSettingsGroup> Settings { get; private set; }
         public ICollection<string> Errors { get; set; }
         public bool UseFullTypeNameInSwagger { get; set; }
+        public IEnumerable<string> OpenAPIPolymorphicTypes { get; private set; }
 
         public override string ToString()
         {
