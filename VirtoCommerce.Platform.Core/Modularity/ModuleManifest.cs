@@ -88,9 +88,5 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         [XmlElement("useFullTypeNameInSwagger")]
         public bool UseFullTypeNameInSwagger { get; set; }
-
-        [XmlArray("openAPIPolymorphicTypes")]
-        [XmlArrayItem("assemblyQualifiedTypeName")]
-        public string[] OpenAPIPolymorphicTypes { get; set; }
     }
 }
