@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -33,21 +32,12 @@ namespace VirtoCommerce.Platform.Web.Swagger
             var xmlCommentsFilePaths = xmlCommentsDirectoryPaths.SelectMany(GetXmlFilesPaths).ToArray();
 
             // Add separate swagger generator for platform
-            EnableSwagger("VirtoCommerce.Platform", httpConfiguration, container, routePrefix, xmlCommentsFilePaths, false, Assembly.GetExecutingAssembly(), null);
+            EnableSwagger("VirtoCommerce.Platform", httpConfiguration, container, routePrefix, xmlCommentsFilePaths, false, Assembly.GetExecutingAssembly());
 
             // Add separate swagger generator for each installed module
-            var allmodules = container.Resolve<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null);
-
-            ICollection<Type> allPolymorphicTypes = new List<Type>();
-
-            // Add separate swagger generator for each installed module
-            foreach (var module in allmodules)
+            foreach (var module in container.Resolve<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null))
             {
-                var polimorphicTypes = GetPolymorphicTypes(module);
-
-                allPolymorphicTypes.AddRange(polimorphicTypes);
-
-                EnableSwagger(module.ModuleName, httpConfiguration, container, routePrefix, xmlCommentsFilePaths, module.UseFullTypeNameInSwagger, module.ModuleInstance.GetType().Assembly, polimorphicTypes);
+                EnableSwagger(module.ModuleName, httpConfiguration, container, routePrefix, xmlCommentsFilePaths, module.UseFullTypeNameInSwagger, module.ModuleInstance.GetType().Assembly);
             }
 
             // Add full swagger generator
@@ -72,7 +62,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     .Replace(',', '-')
                 );
 
-                AddProlymorphicFilters(c, allPolymorphicTypes.ToArray());
+                AddProlymorphicFilters(container, c, null, true);
 
                 ApplyCommonSwaggerConfiguration(c, container, string.Empty, xmlCommentsFilePaths);
             })
@@ -91,23 +81,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
             });
         }
 
-        private static Type[] GetPolymorphicTypes(ManifestModuleInfo module)
-        {
-            //TODO: Could move type loading to module loading mechanism with its error handling
-            Type[] polimorphicTypes = null;
-            try
-            {
-                polimorphicTypes = module.OpenAPIPolymorphicTypes
-                    .Select(x => Type.GetType(x, false))
-                    .Where(x => x != null)
-                    .ToArray();
-            }
-            // Need to add catch as even with GetType throwOnError = false it could throw
-            catch { }
-
-            return polimorphicTypes;
-        }
-
         private static void EnableSwagger(
             string moduleName,
             HttpConfiguration httpConfiguration,
@@ -115,8 +88,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             string routePrefix,
             string[] xmlCommentsFilePaths,
             bool useFullTypeNameInSchemaIds,
-            Assembly apiAssembly,
-            Type[] polymorphicTypes)
+            Assembly apiAssembly)
         {
             var routeName = string.Concat("swagger_", moduleName);
             var routeTemplate = string.Concat(routePrefix, "docs/", moduleName, "/{apiVersion}");
@@ -136,17 +108,16 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 ApplyCommonSwaggerConfiguration(c, container, moduleName, xmlCommentsFilePaths);
                 c.OperationFilter(() => new ModuleTagsFilter(moduleName));
 
-                AddProlymorphicFilters(c, polymorphicTypes);
+                AddProlymorphicFilters(container, c, moduleName, false);
             });
         }
 
-        private static void AddProlymorphicFilters(SwaggerDocsConfig swaggerDocsConfig, Type[] polymorphicTypes)
+        private static void AddProlymorphicFilters(IUnityContainer container, SwaggerDocsConfig swaggerDocsConfig, string moduleName, bool useFullTypeName)
         {
-            if (polymorphicTypes?.Any() == true)
-            {
-                swaggerDocsConfig.DocumentFilter(() => new PolymorphismDocumentFilter(polymorphicTypes));
-                swaggerDocsConfig.SchemaFilter(() => new PolymorphismSchemaFilter(polymorphicTypes));
-            }
+            var polymorphismRegistrar = container.Resolve<IPolymorphismRegistrar>();
+
+            swaggerDocsConfig.DocumentFilter(() => new PolymorphismDocumentFilter(polymorphismRegistrar, moduleName, useFullTypeName));
+            swaggerDocsConfig.SchemaFilter(() => new PolymorphismSchemaFilter(polymorphismRegistrar, moduleName, useFullTypeName));
         }
 
         private static Uri ComputeHostAsSeenByOriginalClient(HttpRequestMessage message)

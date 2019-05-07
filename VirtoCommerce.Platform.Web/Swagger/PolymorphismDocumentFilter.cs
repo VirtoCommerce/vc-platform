@@ -1,36 +1,41 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Swashbuckle.Swagger;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
     public class PolymorphismDocumentFilter : IDocumentFilter
     {
-        private readonly Type[] _types;
+        private readonly string _moduleName;
+        private readonly IPolymorphismRegistrar _polymorphismRegistrar;
+        private readonly bool _useFullTypeNames;
 
-        public PolymorphismDocumentFilter(Type[] types)
+        public PolymorphismDocumentFilter(IPolymorphismRegistrar polymorphismRegistrar, string moduleName, bool useFullTypeNames)
         {
-            _types = types;
+            _polymorphismRegistrar = polymorphismRegistrar ?? throw new ArgumentNullException(nameof(polymorphismRegistrar));
+            _moduleName = moduleName;
+            _useFullTypeNames = useFullTypeNames;
         }
 
         [CLSCompliant(false)]
         public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, System.Web.Http.Description.IApiExplorer apiExplorer)
         {
-            foreach (var type in _types)
+            foreach (var polymorphicBaseTypeInfo in _polymorphismRegistrar.GetPolymorphicBaseTypes(_moduleName))
             {
-                RegisterSubClasses(schemaRegistry, type);
+                RegisterSubClasses(schemaRegistry, polymorphicBaseTypeInfo);
             }
         }
 
-        private static void RegisterSubClasses(SchemaRegistry schemaRegistry, Type abstractType)
+        private void RegisterSubClasses(SchemaRegistry schemaRegistry, IPolymorphicBaseTypeInfo polymorphicBaseTypeInfo)
         {
-            var discriminatorName = "type";
+            var abstractType = polymorphicBaseTypeInfo.Type;
+            var discriminatorName = polymorphicBaseTypeInfo.DiscriminatorName;
 
             // Need to make first property character lower to avoid properties duplication because of case, as all properties in OpenApi spec are in camelCase
             discriminatorName = char.ToLowerInvariant(discriminatorName[0]) + discriminatorName.Substring(1);
 
-            var typeName = schemaRegistry.Definitions.ContainsKey(abstractType.FullName) ? abstractType.FullName : abstractType.FriendlyId();
+            var typeName = _useFullTypeNames ? abstractType.FullName : abstractType.FriendlyId();
             var parentSchema = schemaRegistry.Definitions[typeName];
 
             //set up a discriminator property (it must be required)
@@ -43,9 +48,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             }
 
             //register all subclasses
-            var derivedTypes = abstractType.Assembly
-                                           .GetTypes()
-                                           .Where(x => abstractType != x && abstractType.IsAssignableFrom(x));
+            var derivedTypes = polymorphicBaseTypeInfo.DerivedTypes;
 
             foreach (var item in derivedTypes)
             {

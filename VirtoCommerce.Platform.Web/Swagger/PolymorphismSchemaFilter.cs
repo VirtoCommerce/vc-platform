@@ -2,34 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Swashbuckle.Swagger;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
-
     public class PolymorphismSchemaFilter : ISchemaFilter
     {
-        private readonly Type[] _types;
+        private readonly string _moduleName;
+        private readonly IPolymorphismRegistrar _polymorphismRegistrar;
         private readonly Lazy<HashSet<Type>> _derivedTypes;
+        private readonly bool _useFullTypeNames;
 
-        public PolymorphismSchemaFilter(Type[] types)
+        public PolymorphismSchemaFilter(IPolymorphismRegistrar polymorphismRegistrar, string moduleName, bool useFullTypeNames)
         {
-            _types = types;
+            _polymorphismRegistrar = polymorphismRegistrar ?? throw new ArgumentNullException(nameof(polymorphismRegistrar));
+            _moduleName = moduleName;
             _derivedTypes = new Lazy<HashSet<Type>>(Init);
+            _useFullTypeNames = useFullTypeNames;
         }
 
         private HashSet<Type> Init()
         {
             var result = new HashSet<Type>();
 
-            var derivedTypes = _types.SelectMany(baseType =>
-                baseType.Assembly
-                    .GetTypes()
-                    .Where(derivedType => baseType != derivedType && baseType.IsAssignableFrom(derivedType)));
-
-            foreach (var item in derivedTypes)
-            {
-                result.Add(item);
-            }
+            result.AddRange(_polymorphismRegistrar.GetPolymorphicBaseTypes(_moduleName).SelectMany(x => x.DerivedTypes).Distinct());
 
             return result;
         }
@@ -47,7 +43,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 };
 
                 var baseType = type.BaseType;
-                var baseTypeName = schemaRegistry.Definitions.ContainsKey(baseType.FullName) ? baseType.FullName : baseType.FriendlyId();
+                var baseTypeName = _useFullTypeNames ? baseType.FullName : baseType.FriendlyId();
 
                 var parentSchema = new Schema { @ref = "#/definitions/" + baseTypeName };
 
