@@ -1,9 +1,9 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
     .directive('vaCharsCount', function () {
         return {
-            template: `<div class="chars-counter">
-                            <span>{{!!vaField ? vaField.length : 0}}</span> / <span>{{vaMaxlength}}</span> 
-                       </div>`,
+            template: "<div class=\"chars-counter\">"+
+                            "<span>{{!!vaField ? vaField.length : 0}}</span> / <span>{{vaMaxlength}}</span> "+
+                       "</div>",
             scope: {
                 vaField: "@",
                 vaMaxlength: "@",
