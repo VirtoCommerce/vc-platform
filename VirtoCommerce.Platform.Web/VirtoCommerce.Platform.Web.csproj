@@ -456,7 +456,6 @@
     <Compile Include="Swagger\AssignOAuth2SecurityOperationFilter.cs" />
     <Compile Include="Swagger\OptionalParametersFilter.cs" />
     <Compile Include="Swagger\PolymorphismDocumentFilter.cs" />
-    <Compile Include="Swagger\PolymorphismSchemaFilter.cs" />
     <Compile Include="Swagger\SwaggerConfig.cs" />
     <Compile Include="Swagger\TagsFilter.cs" />
     <Compile Include="Swagger\UploadFileAttribute.cs" />

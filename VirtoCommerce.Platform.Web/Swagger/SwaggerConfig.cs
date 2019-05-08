@@ -10,7 +10,6 @@ using CacheManager.Core;
 using Microsoft.Practices.Unity;
 using Swashbuckle.Application;
 using Swashbuckle.Swagger;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 
@@ -62,7 +61,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     .Replace(',', '-')
                 );
 
-                AddProlymorphicFilters(container, c, null, true);
+                AddProlymorphicFilters(c, true);
 
                 ApplyCommonSwaggerConfiguration(c, container, string.Empty, xmlCommentsFilePaths);
             })
@@ -81,14 +80,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             });
         }
 
-        private static void EnableSwagger(
-            string moduleName,
-            HttpConfiguration httpConfiguration,
-            IUnityContainer container,
-            string routePrefix,
-            string[] xmlCommentsFilePaths,
-            bool useFullTypeNameInSchemaIds,
-            Assembly apiAssembly)
+        private static void EnableSwagger(string moduleName, HttpConfiguration httpConfiguration, IUnityContainer container, string routePrefix, string[] xmlCommentsFilePaths, bool useFullTypeNameInSchemaIds, Assembly apiAssembly)
         {
             var routeName = string.Concat("swagger_", moduleName);
             var routeTemplate = string.Concat(routePrefix, "docs/", moduleName, "/{apiVersion}");
@@ -108,16 +100,13 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 ApplyCommonSwaggerConfiguration(c, container, moduleName, xmlCommentsFilePaths);
                 c.OperationFilter(() => new ModuleTagsFilter(moduleName));
 
-                AddProlymorphicFilters(container, c, moduleName, false);
+                AddProlymorphicFilters(c, false);
             });
         }
 
-        private static void AddProlymorphicFilters(IUnityContainer container, SwaggerDocsConfig swaggerDocsConfig, string moduleName, bool useFullTypeName)
+        private static void AddProlymorphicFilters(SwaggerDocsConfig swaggerDocsConfig, bool useFullTypeName)
         {
-            var polymorphismRegistrar = container.Resolve<IPolymorphismRegistrar>();
-
-            swaggerDocsConfig.DocumentFilter(() => new PolymorphismDocumentFilter(polymorphismRegistrar, moduleName, useFullTypeName));
-            swaggerDocsConfig.SchemaFilter(() => new PolymorphismSchemaFilter(polymorphismRegistrar, moduleName, useFullTypeName));
+            swaggerDocsConfig.DocumentFilter(() => new PolymorphismDocumentFilter(useFullTypeName));
         }
 
         private static Uri ComputeHostAsSeenByOriginalClient(HttpRequestMessage message)

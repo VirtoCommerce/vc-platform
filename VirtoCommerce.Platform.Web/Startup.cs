@@ -863,12 +863,6 @@ namespace VirtoCommerce.Platform.Web
             inProcessBus.RegisterHandler<UserPasswordChangedEvent>(async (message, token) => await container.Resolve<LogChangesUserChangedEventHandler>().Handle(message));
             inProcessBus.RegisterHandler<UserResetPasswordEvent>(async (message, token) => await container.Resolve<LogChangesUserChangedEventHandler>().Handle(message));
             #endregion
-
-            #region Polymorphism registrar
-
-            container.RegisterInstance<IPolymorphismRegistrar>(new PolymorphismRegistrar());
-
-            #endregion 
         }
 
         private static string NormalizePath(IPathMapper pathMapper, string path)

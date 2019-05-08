@@ -1,8 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -52,7 +50,7 @@ namespace VirtoCommerce.Platform.Core.Common
             var existTypeInfo = _typeInfos.FirstOrDefault(x => x.Type == oldType);
             var newTypeInfo = new TypeInfo<BaseType>(newType);
             if (existTypeInfo != null)
-            {             
+            {
                 _typeInfos.Remove(existTypeInfo);
             }
 
@@ -85,9 +83,9 @@ namespace VirtoCommerce.Platform.Core.Common
             var typeInfo = _typeInfos.FirstOrDefault(x => x.Type.Name.EqualsInvariant(typeName));
             //Then need to find in inheritance chain from registered types
             if (typeInfo == null)
-            {                
+            {
                 typeInfo = _typeInfos.Where(x => x.IsAssignableTo(typeName)).FirstOrDefault();
-            }          
+            }
             if (typeInfo != null)
             {
                 if (typeInfo.Factory != null)
@@ -104,7 +102,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 retVal = (BaseType)Activator.CreateInstance(typeof(BaseType));
             }
             return retVal;
-        }      
+        }
     }
 
     /// <summary>
@@ -122,10 +120,11 @@ namespace VirtoCommerce.Platform.Core.Common
         public Type Type { get; private set; }
         public Type MappedType { get; set; }
         public ICollection<object> Services { get; set; }
+        public string Discriminator { get; set; }
 
         public T GetService<T>()
         {
-            return Services.OfType<T>().FirstOrDefault(); ;
+            return Services.OfType<T>().FirstOrDefault();
         }
 
         public TypeInfo<BaseType> WithService<T>(T service)
