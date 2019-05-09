@@ -1611,6 +1611,9 @@ label.form-control {
   left: 0;
   right: auto; }
 
+.switch.disabled {
+  cursor: not-allowed; }
+
 /* Editable */
 .editable {
   font-size: 14px; }
@@ -2892,6 +2895,9 @@ button.btn {
 /* Tags input */
 tags-input .host {
   margin: 0; }
+
+tags-input.ng-untouched .tags {
+  box-shadow: none; }
 
 tags-input .tags {
   border-color: #dee9f0;
