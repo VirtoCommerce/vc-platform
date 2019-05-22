@@ -455,6 +455,7 @@ namespace VirtoCommerce.Platform.Web
                 if (redisConnectionString != null && redisCacheManager != null)
                 {
                     configuration = ConfigurationBuilder.LoadConfiguration(redisCacheManager.Name);
+                    configuration.BackplaneChannelName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Cache:Redis:ChannelName");
                 }
 
                 if (configuration != null)
