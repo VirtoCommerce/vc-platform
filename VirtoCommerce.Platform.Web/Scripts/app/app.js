@@ -163,7 +163,7 @@ angular.module('platformWebApp', AppDependencies).
                     }
 
                     return config;
-                }).finally(function() {
+                }).finally(function () {
                     // do something on success
                     if (!config.cache) {
                         $rootScope.$broadcast('httpRequestSuccess', config);
@@ -338,7 +338,9 @@ angular.module('platformWebApp', AppDependencies).
                         if (authContext.passwordExpired) {
                             $state.go('changePasswordDialog', {
                                 onClose: function () {
-                                    if (!currentState.abstract && currentState.name !== 'loginDialog') {
+                                    if (!currentState.abstract
+                                        && currentState.name !== 'loginDialog'
+                                        && currentState.name !== 'changePasswordDialog') {
                                         $state.go(currentState);
                                     } else {
                                         $state.go('workspace');
