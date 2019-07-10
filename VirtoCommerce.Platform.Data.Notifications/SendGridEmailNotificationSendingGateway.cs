@@ -57,9 +57,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
                     mail.AddCc(new EmailAddress(ccEmail));
                 }
             }
-            if (!emailNotification.BCC.IsNullOrEmpty())
+            if (!emailNotification.Bcc.IsNullOrEmpty())
             {
-                foreach (var bccEmail in emailNotification.BCC)
+                foreach (var bccEmail in emailNotification.Bcc)
                 {
                     mail.AddBcc(new EmailAddress(bccEmail));
                 }

@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             if (notification is EmailNotification emailNotification)
             {
                 retVal.Сс = !emailNotification.CC.IsNullOrEmpty() ? string.Join(",", emailNotification.CC) : null;
-                retVal.Bcс = !emailNotification.BCC.IsNullOrEmpty() ? string.Join(",", emailNotification.BCC) : null;
+                retVal.Bcс = !emailNotification.Bcc.IsNullOrEmpty() ? string.Join(",", emailNotification.Bcc) : null;
             }
 
             return retVal;

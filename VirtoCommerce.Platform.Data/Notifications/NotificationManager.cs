@@ -257,7 +257,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             if (retVal is EmailNotification emailNotification)
             {
                 emailNotification.CC = entity.Сс?.Split(',');
-                emailNotification.BCC = entity.Bcс?.Split(',');
+                emailNotification.Bcc = entity.Bcс?.Split(',');
             }
 
             return retVal;
