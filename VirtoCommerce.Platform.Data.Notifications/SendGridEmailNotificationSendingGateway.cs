@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -57,9 +57,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
                     mail.AddCc(new EmailAddress(ccEmail));
                 }
             }
-            if (!emailNotification.Bcc.IsNullOrEmpty())
+            if (!emailNotification.BCC.IsNullOrEmpty())
             {
-                foreach (var bccEmail in emailNotification.Bcc)
+                foreach (var bccEmail in emailNotification.BCC)
                 {
                     mail.AddBcc(new EmailAddress(bccEmail));
                 }
