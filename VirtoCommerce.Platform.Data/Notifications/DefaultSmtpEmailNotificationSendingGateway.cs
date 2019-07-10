@@ -32,35 +32,35 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
             try
             {
-                using (var mailMsg = new MailMessage())
+                using (var mailMessage = new MailMessage())
                 {
                     var emailNotification = notification as EmailNotification;
                     //To email
                     var recipients = emailNotification.Recipient.Split(';', ',');
                     foreach (var email in recipients)
                     {
-                        mailMsg.To.Add(new MailAddress(email));
+                        mailMessage.To.Add(new MailAddress(email));
                     }
 
                     //From email
-                    mailMsg.From = new MailAddress(emailNotification.Sender);
-                    mailMsg.ReplyToList.Add(mailMsg.From);
+                    mailMessage.From = new MailAddress(emailNotification.Sender);
+                    mailMessage.ReplyToList.Add(mailMessage.From);
 
-                    mailMsg.Subject = emailNotification.Subject;
-                    mailMsg.Body = emailNotification.Body;
-                    mailMsg.IsBodyHtml = true;
+                    mailMessage.Subject = emailNotification.Subject;
+                    mailMessage.Body = emailNotification.Body;
+                    mailMessage.IsBodyHtml = true;
                     if (!emailNotification.CC.IsNullOrEmpty())
                     {
                         foreach (var ccEmail in emailNotification.CC)
                         {
-                            mailMsg.CC.Add(new MailAddress(ccEmail));
+                            mailMessage.CC.Add(new MailAddress(ccEmail));
                         }
                     }
                     if (!emailNotification.Bcc.IsNullOrEmpty())
                     {
                         foreach (var bccEmail in emailNotification.Bcc)
                         {
-                            mailMsg.Bcc.Add(new MailAddress(bccEmail));
+                            mailMessage.Bcc.Add(new MailAddress(bccEmail));
                         }
                     }
 
@@ -75,7 +75,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                         smtpClient.Credentials = new System.Net.NetworkCredential(login, password);
                         smtpClient.EnableSsl = useSsl;
 
-                        smtpClient.Send(mailMsg);
+                        smtpClient.Send(mailMessage);
                     }
 
                 }
