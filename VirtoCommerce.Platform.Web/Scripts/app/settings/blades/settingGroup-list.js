@@ -8,6 +8,7 @@ function ($window, modules, $scope, settings, bladeNavigationService, dialogServ
         blade.isLoading = true;
 
         settings.query({}, function (results) {
+            results = _.sortBy(results, 'groupName');
             blade.allSettings = results;
             settingsTree = {};
             _.each(results, function (setting) {
