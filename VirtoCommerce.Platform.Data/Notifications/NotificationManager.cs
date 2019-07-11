@@ -254,6 +254,12 @@ namespace VirtoCommerce.Platform.Data.Notifications
             // Type may have been unregistered by now. 
             retVal?.InjectFrom(entity);
 
+            if (retVal is EmailNotification emailNotification)
+            {
+                emailNotification.CC = entity.Сс?.Split(',');
+                emailNotification.Bcc = entity.Bcс?.Split(',');
+            }
+
             return retVal;
         }
     }

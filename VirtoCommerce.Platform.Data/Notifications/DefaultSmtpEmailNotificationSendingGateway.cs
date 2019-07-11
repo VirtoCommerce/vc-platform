@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+using System;
 using System.Net.Mail;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
@@ -33,7 +32,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
             try
             {
-                MailMessage mailMsg = new MailMessage();
+                var mailMsg = new MailMessage();
 
                 var emailNotification = notification as EmailNotification;
                 //To email
@@ -71,8 +70,8 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 var port = _settingsManager.GetSettingByName(_smtpClientPortSettingName).Value;
                 var useSsl = _settingsManager.GetValue(_smtpClientUseSslSettingName, false);
 
-                SmtpClient smtpClient = new SmtpClient(host, Convert.ToInt32(port));
-                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(login, password);
+                var smtpClient = new SmtpClient(host, Convert.ToInt32(port));
+                var credentials = new System.Net.NetworkCredential(login, password);
                 smtpClient.Credentials = credentials;
                 smtpClient.EnableSsl = useSsl;
 

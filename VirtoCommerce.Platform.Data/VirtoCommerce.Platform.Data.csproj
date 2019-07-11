@@ -250,6 +250,10 @@
     <Compile Include="Repositories\Migrations\201903220839086_ChangeOperationLogDetailLength.Designer.cs">
       <DependentUpon>201903220839086_ChangeOperationLogDetailLength.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201907101025300_AddNotificationCcBccFields.cs" />
+    <Compile Include="Repositories\Migrations\201907101025300_AddNotificationCcBccFields.Designer.cs">
+      <DependentUpon>201907101025300_AddNotificationCcBccFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -357,6 +361,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201903220839086_ChangeOperationLogDetailLength.resx">
       <DependentUpon>201903220839086_ChangeOperationLogDetailLength.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201907101025300_AddNotificationCcBccFields.resx">
+      <DependentUpon>201907101025300_AddNotificationCcBccFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
