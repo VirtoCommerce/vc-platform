@@ -25,11 +25,9 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
                     ProviderKey = x.ProviderKey.ToString()
                 }).ToArray();
             }
-            if (!dbEntity.RoleAssignments.IsNullOrEmpty())
-            {
-                retVal.Roles = dbEntity.RoleAssignments.Select(x => x.Role.ToCoreModel(scopeService)).ToArray();
-                retVal.Permissions = retVal.Roles.SelectMany(x => x.Permissions).SelectMany(x => x.GetPermissionWithScopeCombinationNames()).Distinct().ToArray();
-            }
+            retVal.Roles = dbEntity.RoleAssignments.Select(x => x.Role.ToCoreModel(scopeService)).ToArray();
+            retVal.Permissions = retVal.Roles.SelectMany(x => x.Permissions).SelectMany(x => x.GetPermissionWithScopeCombinationNames()).Distinct().ToArray();
+            
             if (!dbEntity.ApiAccounts.IsNullOrEmpty())
             {
                 retVal.ApiAccounts = dbEntity.ApiAccounts.Select(x => x.ToCoreModel()).ToArray();
