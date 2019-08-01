@@ -2438,7 +2438,9 @@ button.btn {
   text-align: center; }
 
 .tree-view {
-  overflow-x: auto; }
+  overflow-x: auto;
+  overflow-y: auto;
+  height: 100%; }
   .tree-view ul {
     list-style: none;
     margin: 0;
