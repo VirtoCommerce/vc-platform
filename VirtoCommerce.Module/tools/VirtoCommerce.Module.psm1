@@ -1,4 +1,4 @@
-﻿function Compress-Module
+function Compress-Module
 {
     Param(
         [string] $ProjectName,
@@ -16,22 +16,23 @@
     }
 
     if (-not $msbuild -or -not (Test-Path $msbuild)) {
-        $vswhere="${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
         if (Test-Path $vswhere) {
             $vspath = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
-            if ($vspath) {
-                $msbuild = Join-Path $vspath 'MSBuild\15.0\Bin\MSBuild.exe'
+        }
+
+        $paths = @("${vspath}\MSBuild\Current\Bin\MSBuild.exe",
+                   "${vspath}\MSBuild\15.0\Bin\MSBuild.exe",
+                   "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe",
+                   "${env:ProgramFiles(x86)}\MSBuild\12.0\Bin\MSBuild.exe",
+                   "${env:windir}\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe")
+
+        foreach ($path in $paths) {
+            if (Test-Path $path) {
+                $msbuild = $path
+                break
             }
         }
-    }
-    if (-not $msbuild -or -not (Test-Path $msbuild)) {
-        $msbuild = "${env:ProgramFiles(x86)}\MSBuild\14.0\Bin\MSBuild.exe"
-    }
-    if (-not (Test-Path $msbuild)) {
-        $msbuild = "${env:ProgramFiles(x86)}\MSBuild\12.0\Bin\MSBuild.exe"
-    }
-    if (-not (Test-Path $msbuild)) {
-        $msbuild = "${env:windir}\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
     }
 
     $newGuid = [Guid]::NewGuid()
