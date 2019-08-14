@@ -81,8 +81,8 @@
 </script>
 <script type="text/ng-template" id="dBoolean.html">
     <label class="form-label __switch">
-        <input type="checkbox" ng-model="context.currentPropValues[0].value">
-        <span class="switch"></span>
+        <input type="checkbox" ng-model="context.currentPropValues[0].value" ng-disabled="currentEntity.isReadonly">
+        <span class="switch" ng-class="{disabled: currentEntity.isReadonly}"></span>
     </label>
 </script>
 <script type="text/ng-template" id="dShortText-multivalue.html">

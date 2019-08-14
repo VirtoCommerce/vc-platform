@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+using System;
 using System.Net.Mail;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
@@ -33,50 +32,54 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
             try
             {
-                MailMessage mailMsg = new MailMessage();
-
-                var emailNotification = notification as EmailNotification;
-                //To email
-                var recipients = emailNotification.Recipient.Split(';', ',');
-                foreach (var email in recipients)
+                using (var mailMessage = new MailMessage())
                 {
-                    mailMsg.To.Add(new MailAddress(email));
-                }
-
-                //From email
-                mailMsg.From = new MailAddress(emailNotification.Sender);
-                mailMsg.ReplyToList.Add(mailMsg.From);
-
-                mailMsg.Subject = emailNotification.Subject;
-                mailMsg.Body = emailNotification.Body;
-                mailMsg.IsBodyHtml = true;
-                if (!emailNotification.CC.IsNullOrEmpty())
-                {
-                    foreach (var ccEmail in emailNotification.CC)
+                    var emailNotification = notification as EmailNotification;
+                    //To email
+                    var recipients = emailNotification.Recipient.Split(';', ',');
+                    foreach (var email in recipients)
                     {
-                        mailMsg.CC.Add(new MailAddress(ccEmail));
+                        mailMessage.To.Add(new MailAddress(email));
                     }
-                }
-                if (!emailNotification.Bcc.IsNullOrEmpty())
-                {
-                    foreach (var bccEmail in emailNotification.Bcc)
+
+                    //From email
+                    mailMessage.From = new MailAddress(emailNotification.Sender);
+                    mailMessage.ReplyToList.Add(mailMessage.From);
+
+                    mailMessage.Subject = emailNotification.Subject;
+                    mailMessage.Body = emailNotification.Body;
+                    mailMessage.IsBodyHtml = true;
+                    if (!emailNotification.CC.IsNullOrEmpty())
                     {
-                        mailMsg.Bcc.Add(new MailAddress(bccEmail));
+                        foreach (var ccEmail in emailNotification.CC)
+                        {
+                            mailMessage.CC.Add(new MailAddress(ccEmail));
+                        }
                     }
+                    if (!emailNotification.Bcc.IsNullOrEmpty())
+                    {
+                        foreach (var bccEmail in emailNotification.Bcc)
+                        {
+                            mailMessage.Bcc.Add(new MailAddress(bccEmail));
+                        }
+                    }
+
+                    var login = _settingsManager.GetSettingByName(_smtpClientLoginSettingName).Value;
+                    var password = _settingsManager.GetSettingByName(_smtpClientPWDSettingName).Value;
+                    var host = _settingsManager.GetSettingByName(_smtpClientHostSettingName).Value;
+                    var port = _settingsManager.GetSettingByName(_smtpClientPortSettingName).Value;
+                    var useSsl = _settingsManager.GetValue(_smtpClientUseSslSettingName, false);
+
+                    using (var smtpClient = new SmtpClient(host, Convert.ToInt32(port)))
+                    {
+                        smtpClient.Credentials = new System.Net.NetworkCredential(login, password);
+                        smtpClient.EnableSsl = useSsl;
+
+                        smtpClient.Send(mailMessage);
+                    }
+
                 }
 
-                var login = _settingsManager.GetSettingByName(_smtpClientLoginSettingName).Value;
-                var password = _settingsManager.GetSettingByName(_smtpClientPWDSettingName).Value;
-                var host = _settingsManager.GetSettingByName(_smtpClientHostSettingName).Value;
-                var port = _settingsManager.GetSettingByName(_smtpClientPortSettingName).Value;
-                var useSsl = _settingsManager.GetValue(_smtpClientUseSslSettingName, false);
-
-                SmtpClient smtpClient = new SmtpClient(host, Convert.ToInt32(port));
-                System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(login, password);
-                smtpClient.Credentials = credentials;
-                smtpClient.EnableSsl = useSsl;
-
-                smtpClient.Send(mailMsg);
                 retVal.IsSuccess = true;
             }
             catch (Exception ex)

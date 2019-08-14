@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -51,10 +51,10 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
         public void UnregisterNotificationType<T>()
         {
-            if(!_unregisteredNotifications.Contains(typeof(T)))
+            if (!_unregisteredNotifications.Contains(typeof(T)))
             {
                 _unregisteredNotifications.Add(typeof(T));
-            }         
+            }
         }
 
         public Notification[] GetNotifications()
@@ -70,7 +70,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             {
                 ResolveTemplate(notification);
                 result = notification.SendNotification();
-            }            
+            }
             return result;
         }
 
@@ -216,12 +216,12 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 {
                     sortInfos = new[] { new SortInfo { SortColumn = "CreatedDate", SortDirection = SortDirection.Descending } };
                 }
-                query = query.OrderBySortInfos(sortInfos);
+                query = query.OrderBySortInfos(sortInfos).ThenBy(x => x.Id);
 
                 retVal.Notifications = query.Skip(criteria.Skip)
                                             .Take(criteria.Take)
                                             .ToArray()
-                                            .Select(GetNotificationCoreModel)                                          
+                                            .Select(GetNotificationCoreModel)
                                             .ToList();
             }
 
@@ -253,6 +253,12 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
             // Type may have been unregistered by now. 
             retVal?.InjectFrom(entity);
+
+            if (retVal is EmailNotification emailNotification)
+            {
+                emailNotification.CC = entity.Сс?.Split(',');
+                emailNotification.Bcc = entity.Bcс?.Split(',');
+            }
 
             return retVal;
         }

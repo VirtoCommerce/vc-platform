@@ -1,8 +1,5 @@
-﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
@@ -10,6 +7,16 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
     {
         public string ObjectId { get; set; }
         public ICollection<DynamicPropertyObjectValue> Values { get; set; }
+
+        public override DynamicProperty Clone()
+        {
+            var result = base.Clone() as DynamicObjectProperty;
+            if (Values != null)
+            {
+                result.Values = Values.Select(x => x.Clone() as DynamicPropertyObjectValue).ToList();
+            }
+            return result;
+        }
 
         public override string ToString()
         {

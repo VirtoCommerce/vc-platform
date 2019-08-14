@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using Omu.ValueInjecter;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Data.Common.ConventionInjections;
 using VirtoCommerce.Platform.Data.Model;
 
@@ -9,18 +11,24 @@ namespace VirtoCommerce.Platform.Data.Notifications
     {
         public static NotificationEntity ToDataModel(this Core.Notifications.Notification notification)
         {
-            NotificationEntity retVal = new NotificationEntity();
+            var retVal = new NotificationEntity();
 
             retVal.InjectFrom(notification);
 
             retVal.SendingGateway = notification.NotificationSendingGateway.GetType().Name;
+
+            if (notification is EmailNotification emailNotification)
+            {
+                retVal.Сс = !emailNotification.CC.IsNullOrEmpty() ? string.Join(",", emailNotification.CC) : null;
+                retVal.Bcс = !emailNotification.Bcc.IsNullOrEmpty() ? string.Join(",", emailNotification.Bcc) : null;
+            }
 
             return retVal;
         }
 
         public static NotificationTemplateEntity ToDataModel(this Core.Notifications.NotificationTemplate notificationTemplate)
         {
-            NotificationTemplateEntity retVal = new NotificationTemplateEntity();
+            var retVal = new NotificationTemplateEntity();
 
             retVal.InjectFrom(notificationTemplate);
 
@@ -29,7 +37,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
         public static Core.Notifications.NotificationTemplate ToCoreModel(this NotificationTemplateEntity notificationTemplate)
         {
-            Core.Notifications.NotificationTemplate retVal = new Core.Notifications.NotificationTemplate();
+            var retVal = new Core.Notifications.NotificationTemplate();
 
             retVal.InjectFrom(notificationTemplate);
 

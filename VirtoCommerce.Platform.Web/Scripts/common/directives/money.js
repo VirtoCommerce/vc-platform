@@ -7,14 +7,16 @@
 
 angular.module('platformWebApp')
 // TODO: Replace with tested localized version (see below)
-.directive('money', ['$timeout', function ($timeout) {
+.directive('money', ['$timeout', 'platformWebApp.userProfile', function ($timeout, userProfile) {
     'use strict';
 
     var NUMBER_REGEXP = /^\s*(\-|\+)?(\d+|(\d*(\.\d*)))\s*$/;
 
     function link(scope, el, attrs, ngModelCtrl) {
+        
+
         var min = parseFloat(attrs.min || 0);
-        var precision = parseFloat(attrs.precision || 2);
+        var precision = parseFloat(attrs.precision || (userProfile.fourDecimalsInMoney ? 4 : 2));
         var lastValidValue;
 
         function round(num) {

@@ -1,9 +1,9 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .config(['$provide', function ($provide) {
     // Provide default format
-    $provide.decorator('currencyFilter', ['$delegate', function ($delegate) {
+    $provide.decorator('currencyFilter', ['$delegate', 'platformWebApp.userProfile', function ($delegate, userProfile) {
         var filter = function (currency, symbol, fractionSize) {
-            currency = $delegate.apply(this, [currency, "¤", fractionSize]);
+            currency = $delegate.apply(this, [currency, "¤", fractionSize || (userProfile.fourDecimalsInMoney ? 4 : 2)]);
             var result = currency ? currency.replace(/\s*¤\s*/g, "") : currency;
             if (result && symbol) {
                 result += "\u00a0" + symbol;

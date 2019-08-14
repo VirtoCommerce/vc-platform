@@ -1,21 +1,15 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
+using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
     public class DynamicPropertyObjectValueEntity : AuditableEntity
     {
-        public const string TypeShortText = "ShortText";
-        public const string TypeLongText = "LongText";
-        public const string TypeInteger = "Integer";
-        public const string TypeDecimal = "Decimal";
-        public const string TypeBoolean = "Boolean";
-        public const string TypeDateTime = "DateTime";
-        public const string TypeHtml = "Html";
-        public const string TypeImage = "Image";
-
         [StringLength(256)]
         [Index("IX_ObjectType_ObjectId", 1)]
         public string ObjectType { get; set; }
@@ -45,56 +39,121 @@ namespace VirtoCommerce.Platform.Data.Model
         public string DictionaryItemId { get; set; }
         public virtual DynamicPropertyDictionaryItemEntity DictionaryItem { get; set; }
 
+        public virtual DynamicPropertyObjectValue ToModel(DynamicPropertyObjectValue propValue)
+        {
+            if (propValue == null)
+            {
+                throw new ArgumentNullException(nameof(propValue));
+            }
 
-        public object RawValue()
+            propValue.Locale = Locale;
+            propValue.ObjectId = ObjectId;
+            propValue.ObjectType = ObjectType;
+            propValue.ValueType = EnumUtility.SafeParse(ValueType, DynamicPropertyValueType.LongText);
+
+            if (DictionaryItem != null)
+            {
+                propValue.ValueId = DictionaryItem.Id;
+                propValue.Value = DictionaryItem.ToModel(AbstractTypeFactory<DynamicPropertyDictionaryItem>.TryCreateInstance());
+            }
+            else
+            {
+                propValue.Value = GetValue(propValue.ValueType);
+            }
+            return propValue;
+        }
+
+        public virtual DynamicPropertyObjectValueEntity FromModel(DynamicPropertyObjectValue propValue)
+        {
+            if (propValue == null)
+            {
+                throw new ArgumentNullException(nameof(propValue));
+            }
+
+            Locale = propValue.Locale;
+            ObjectId = propValue.ObjectId;
+            ObjectType = propValue.ObjectType;
+            ValueType = propValue.ValueType.ToString();
+            DictionaryItemId = propValue.ValueId;
+
+            var dictItem = propValue.Value as DynamicPropertyDictionaryItem;
+            if (dictItem == null)
+            {
+                if (propValue.Value is JObject jObject)
+                {
+                    dictItem = jObject.ToObject<DynamicPropertyDictionaryItem>();
+                }
+            }
+
+            if (dictItem != null)
+            {
+                DictionaryItemId = dictItem.Id;
+            }
+            else
+            {
+                SetValue(propValue.ValueType, propValue.Value);
+            }
+
+            return this;
+        }
+
+        public virtual void Patch(DynamicPropertyObjectValueEntity target)
+        {
+            target.Locale = Locale;
+            target.LongTextValue = LongTextValue;
+            target.BooleanValue = BooleanValue;
+            target.DateTimeValue = DateTimeValue;
+            target.DecimalValue = DecimalValue;
+            target.DictionaryItemId = DictionaryItemId;
+            target.IntegerValue = IntegerValue;
+            target.ShortTextValue = ShortTextValue;
+        }
+
+        public virtual object GetValue(DynamicPropertyValueType valueType)
         {
             if (DictionaryItemId != null)
                 return DictionaryItemId;
 
-            switch (ValueType)
+            switch (valueType)
             {
-                case TypeBoolean:
+                case DynamicPropertyValueType.Boolean:
                     return BooleanValue;
-                case TypeDateTime:
+                case DynamicPropertyValueType.DateTime:
                     return DateTimeValue;
-                case TypeDecimal:
+                case DynamicPropertyValueType.Decimal:
                     return DecimalValue;
-                case TypeInteger:
+                case DynamicPropertyValueType.Integer:
                     return IntegerValue;
-                case TypeLongText:
-                case TypeHtml:
-                case TypeImage:
-                    return LongTextValue;
-                case TypeShortText:
+                case DynamicPropertyValueType.ShortText:
                     return ShortTextValue;
                 default:
-                    return null;
+                    return LongTextValue;
             }
         }
 
-        public string ToString(IFormatProvider formatProvider)
+        public virtual void SetValue(DynamicPropertyValueType valueType, object value)
         {
-            if (DictionaryItemId != null)
-                return DictionaryItemId;
-
-            switch (ValueType)
+            switch (valueType)
             {
-                case TypeBoolean:
-                    return BooleanValue == null ? null : BooleanValue.Value.ToString();
-                case TypeDateTime:
-                    return DateTimeValue == null ? null : DateTimeValue.Value.ToString("O", formatProvider);
-                case TypeDecimal:
-                    return DecimalValue == null ? null : DecimalValue.Value.ToString(formatProvider);
-                case TypeInteger:
-                    return IntegerValue == null ? null : IntegerValue.Value.ToString(formatProvider);
-                case TypeLongText:
-                case TypeHtml:
-                case TypeImage:
-                    return LongTextValue;
-                case TypeShortText:
-                    return ShortTextValue;
+                case DynamicPropertyValueType.ShortText:
+                    //Need to implicit cast to string because there is may be null values
+                    ShortTextValue = (string)value;
+                    break;
+                case DynamicPropertyValueType.Decimal:
+                    DecimalValue = value.ToNullable<decimal>();
+                    break;
+                case DynamicPropertyValueType.DateTime:
+                    DateTimeValue = value.ToNullable<DateTime>();
+                    break;
+                case DynamicPropertyValueType.Boolean:
+                    BooleanValue = value.ToNullable<bool>();
+                    break;
+                case DynamicPropertyValueType.Integer:
+                    IntegerValue = value.ToNullable<int>();
+                    break;
                 default:
-                    return base.ToString();
+                    LongTextValue = (string)value;
+                    break;
             }
         }
     }

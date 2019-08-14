@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Platform.Core.DynamicProperties
+namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
     public class DynamicPropertyName
     {
@@ -10,11 +10,7 @@
 
         public DynamicPropertyName Clone()
         {
-            return new DynamicPropertyName
-            {
-                Locale = Locale,
-                Name = Name,
-            };
+            return MemberwiseClone() as DynamicPropertyName;
         }
     }
 }

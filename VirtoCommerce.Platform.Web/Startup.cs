@@ -455,6 +455,7 @@ namespace VirtoCommerce.Platform.Web
                 if (redisConnectionString != null && redisCacheManager != null)
                 {
                     configuration = ConfigurationBuilder.LoadConfiguration(redisCacheManager.Name);
+                    configuration.BackplaneChannelName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Cache:Redis:ChannelName");
                 }
 
                 if (configuration != null)
@@ -652,7 +653,15 @@ namespace VirtoCommerce.Platform.Web
                                     "Quarters",
                                     "Years"
                                 }
-                            }
+                            },
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.UI.FourDecimalsInMoney",
+                                ValueType = ModuleSetting.TypeBoolean,
+                                Title = "Show 4 decimal digits for money",
+                                Description = "Set to true to show 4 decimal digits for money. By default - false, 2 decimal digits are shown.",
+                                DefaultValue = "false",
+                            },
                         }
                     },
                     new ModuleSettingsGroup
@@ -742,11 +751,7 @@ namespace VirtoCommerce.Platform.Web
             ISmsNotificationSendingGateway smsNotificationSendingGateway = null;
             var smsNotificationSendingGatewayName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway", "Default");
 
-            if (smsNotificationSendingGatewayName.EqualsInvariant("Default"))
-            {
-                smsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
-            }
-            else if (smsNotificationSendingGatewayName.EqualsInvariant("Twilio"))
+            if (smsNotificationSendingGatewayName.EqualsInvariant("Twilio"))
             {
                 smsNotificationSendingGateway = new TwilioSmsNotificationSendingGateway(new TwilioSmsGatewayOptions
                 {
@@ -765,11 +770,12 @@ namespace VirtoCommerce.Platform.Web
                     JsonApiUri = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Notifications:SmsGateway:ASPSMS:JsonApiUri"),
                 });
             }
-
-            if (smsNotificationSendingGateway != null)
+            else
             {
-                container.RegisterInstance(smsNotificationSendingGateway);
+                smsNotificationSendingGateway = new DefaultSmsNotificationSendingGateway();
             }
+
+            container.RegisterInstance(smsNotificationSendingGateway);
 
             #endregion
 
