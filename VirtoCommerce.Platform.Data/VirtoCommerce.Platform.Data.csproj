@@ -251,6 +251,10 @@
     <Compile Include="Repositories\Migrations\201907101025300_AddNotificationCcBccFields.Designer.cs">
       <DependentUpon>201907101025300_AddNotificationCcBccFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\Migrations\201908221604169_DynamicPropertyNameAddDescription.cs" />
+    <Compile Include="Repositories\Migrations\201908221604169_DynamicPropertyNameAddDescription.Designer.cs">
+      <DependentUpon>201908221604169_DynamicPropertyNameAddDescription.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repositories\Migrations\Configuration.cs" />
     <Compile Include="Repositories\PlatformDatabaseInitializer.cs" />
     <Compile Include="Repositories\PlatformRepository.cs" />
@@ -361,6 +365,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Repositories\Migrations\201907101025300_AddNotificationCcBccFields.resx">
       <DependentUpon>201907101025300_AddNotificationCcBccFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Repositories\Migrations\201908221604169_DynamicPropertyNameAddDescription.resx">
+      <DependentUpon>201908221604169_DynamicPropertyNameAddDescription.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

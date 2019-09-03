@@ -7,6 +7,7 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
         /// </summary>
         public string Locale { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
 
         public DynamicPropertyName Clone()
         {

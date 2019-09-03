@@ -13,6 +13,9 @@ namespace VirtoCommerce.Platform.Data.Model
         [StringLength(256)]
         public string Name { get; set; }
 
+        [StringLength(256)]
+        public string Description { get; set; }
+
         public string PropertyId { get; set; }
         public virtual DynamicPropertyEntity Property { get; set; }
 
@@ -25,6 +28,7 @@ namespace VirtoCommerce.Platform.Data.Model
 
             propName.Locale = Locale;
             propName.Name = Name;
+            propName.Description = Description;
 
             return propName;
         }
@@ -38,6 +42,7 @@ namespace VirtoCommerce.Platform.Data.Model
 
             Locale = propName.Locale;
             Name = propName.Name;
+            Description = propName.Description;
 
             return this;
         }

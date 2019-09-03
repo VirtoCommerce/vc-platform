@@ -127,7 +127,7 @@ namespace VirtoCommerce.Platform.Data.Model
             if (!DisplayNames.IsNullCollection())
             {
                 var comparer = AnonymousComparer.Create((DynamicPropertyNameEntity x) => string.Join("-", x.Locale, x.Name));
-                DisplayNames.Patch(target.DisplayNames, comparer, (sourceItem, targetItem) => { });
+                DisplayNames.Patch(target.DisplayNames, comparer, (sourceItem, targetItem) => targetItem.Description = sourceItem.Description);
             }
 
             if (!ObjectValues.IsNullCollection())

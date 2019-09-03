@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .config(['$stateProvider', function ($stateProvider) {
     $stateProvider
         .state('workspace.dynamicProperties', {
@@ -55,5 +55,14 @@
             retVal += ' (' + displayName.name + ')';
 
         return retVal;
+    }
+})
+.filter('localizeDynamicProperty', function () {
+    return function (input, lang, prop) {
+        var displayName = _.find(input.displayNames, function (obj) { return obj && obj.locale.startsWith(lang); });
+        if (displayName && displayName[prop])
+            return displayName[prop];
+        else
+            return '';
     }
 });
