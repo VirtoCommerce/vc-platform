@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -278,21 +278,31 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
             var result = defaultValue;
 
-            var setting = GetSettingByName(name);
+            // Check environment variables and appSettings first
+            var stringValues = ConfigurationHelper.SplitNullableAppSettingsStringValue(name);
 
-            if (setting != null)
+            if (stringValues != null)
             {
-                if (!setting.RawArrayValues.IsNullOrEmpty())
+                result = stringValues.Select(ConvertFromString<T>).ToArray();
+            }
+            else
+            {
+                var setting = GetSettingByName(name);
+
+                if (setting != null)
                 {
-                    result = setting.RawArrayValues.Cast<T>().ToArray();
-                }
-                else if (setting.RawValue != null)
-                {
-                    result = new[] { (T)setting.RawValue };
-                }
-                else if (setting.RawDefaultValue != null)
-                {
-                    result = new[] { (T)setting.RawDefaultValue };
+                    if (!setting.RawArrayValues.IsNullOrEmpty())
+                    {
+                        result = setting.RawArrayValues.Cast<T>().ToArray();
+                    }
+                    else if (setting.RawValue != null)
+                    {
+                        result = new[] { (T)setting.RawValue };
+                    }
+                    else if (setting.RawDefaultValue != null)
+                    {
+                        result = new[] { (T)setting.RawDefaultValue };
+                    }
                 }
             }
 
@@ -339,6 +349,31 @@ namespace VirtoCommerce.Platform.Data.Settings
         }
 
         #endregion
+
+
+        private static T ConvertFromString<T>(string stringValue)
+        {
+            T result;
+
+            var type = typeof(T);
+            var isNullable = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+
+            if (isNullable && string.IsNullOrWhiteSpace(stringValue))
+            {
+                result = (T)(object)null;
+            }
+            else
+            {
+                if (isNullable)
+                {
+                    type = Nullable.GetUnderlyingType(type);
+                }
+
+                result = (T)Convert.ChangeType(stringValue, type, CultureInfo.InvariantCulture);
+            }
+
+            return result;
+        }
 
         private void ClearCache(SettingEntry[] settings)
         {
