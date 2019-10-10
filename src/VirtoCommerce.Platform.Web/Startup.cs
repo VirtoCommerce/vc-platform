@@ -98,7 +98,7 @@ namespace VirtoCommerce.Platform.Web
                     //
                     // This issue is fixed in ASP.NET Core MVC 2.2. The following line is a workaround for 2.1.
                     // TODO: remove the following workaround after migrating to ASP.NET Core MVC 2.2
-                    mvcOptions.AllowCombiningAuthorizeFilters = false;
+                    //mvcOptions.AllowCombiningAuthorizeFilters = false;
 
                     //Disable 204 response for null result. https://github.com/aspnet/AspNetCore/issues/8847
                     var noContentFormatter = mvcOptions.OutputFormatters.OfType<HttpNoContentOutputFormatter>().FirstOrDefault();
