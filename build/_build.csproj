@@ -1,25 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <PackageId>VirtoCommerce.GlobalTool</PackageId>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <RootNamespace></RootNamespace>
         <PackAsTool>true</PackAsTool>
+        <IsPackable>true</IsPackable>
         <ToolCommandName>vc-build</ToolCommandName>
         <NoWarn>CS0649;CS0169</NoWarn>
         <PackageOutputPath>../artifacts</PackageOutputPath>
-
-        
+        <PackageIconUrl>https://github.com/VirtoCommerce/vc-community/raw/master/NuGet/icon.png</PackageIconUrl>
         <Title>VirtoCommerce build CLI</Title>
-        <Authors>VirtoCommerce</Authors>
-        <Company>VirtoCommerce</Company>
-        <Copyright>Copyright © VirtoCommerce 2011-2019</Copyright>
-        <Description>CLI for automate build tasks</Description>
+        <Description>Cross-platform  build automation system for VirtoCommerce projects</Description>
         <NeutralLanguage>en-US</NeutralLanguage>
-        <PackageIcon>vc-logo.ico</PackageIcon>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <PackageVersion>3.0.0-beta0003</PackageVersion>
     </PropertyGroup>
 
-    <ItemGroup>
+    <ItemGroup>      
         <PackageReference Include="Nuke.Common" Version="0.21.2" />
         <PackageReference Include="GitVersion.CommandLine.DotNetCore" Version="5.0.1">
             <PrivateAssets>all</PrivateAssets>
@@ -29,11 +28,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="../vc-logo.ico">
-            <Pack>True</Pack>
-            <PackagePath></PackagePath>
-        </None>
-
         <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**" />
         <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**" />
         <None Remove="*.csproj.DotSettings;*.ref.*.txt" />

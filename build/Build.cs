@@ -242,7 +242,7 @@ class Build : NukeBuild
              DeleteFile(ZipFilePath);
              //TODO: Exclude all dependencies of dependent modules
              CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => !ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase)
-                                                                                     && !ModuleManifest.Dependencies.Any(md => x.Name.StartsWith(md.Id, StringComparison.OrdinalIgnoreCase)));
+                                                                                     && !(ModuleManifest.Dependencies ?? Array.Empty< ManifestDependency>()).Any(md => x.Name.StartsWith(md.Id, StringComparison.OrdinalIgnoreCase)));
          }
          else
          {
@@ -264,19 +264,21 @@ class Build : NukeBuild
             {
                 GitTasks.Git($"pull", modulesLocalDirectory);
             }
+            var manifest = ModuleManifest;
+
             var modulesExternalManifests = JsonConvert.DeserializeObject<List<ExternalModuleManifest>>(TextTasks.ReadAllText(modulesJsonFile));
-            ModuleManifest.PackageUrl = ModulePackageUrl;
-            var existExternalManifest = modulesExternalManifests.FirstOrDefault(x => x.Id == ModuleManifest.Id);
+            manifest.PackageUrl = ModulePackageUrl;
+            var existExternalManifest = modulesExternalManifests.FirstOrDefault(x => x.Id == manifest.Id);
             if (existExternalManifest != null)
             {
-                existExternalManifest.PublishNewVersion(ModuleManifest);
+                existExternalManifest.PublishNewVersion(manifest);
             }
             else
             {
-                modulesExternalManifests.Add(ExternalModuleManifest.FromManifest(ModuleManifest));
+                modulesExternalManifests.Add(ExternalModuleManifest.FromManifest(manifest));
             }
             TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Formatting.Indented));
-            GitTasks.Git($"commit -am \"{ModuleManifest.Id} {ModuleSemVersion}\"", modulesLocalDirectory);
+            GitTasks.Git($"commit -am \"{manifest.Id} {ModuleSemVersion}\"", modulesLocalDirectory);
 
             GitTasks.Git($"push origin HEAD:master -f", modulesLocalDirectory);
         });
