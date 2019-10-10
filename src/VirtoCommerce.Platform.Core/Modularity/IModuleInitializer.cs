@@ -1,0 +1,25 @@
+using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace VirtoCommerce.Platform.Core.Modularity
+{
+    /// <summary>
+    /// Declares a service which initializes the modules into the application.
+    /// </summary>
+    public interface IModuleInitializer
+    {
+        /// <summary>
+        /// Initializes the specified module.
+        /// </summary>
+        /// <param name="moduleInfo">The module to initialize</param>
+        void Initialize(ModuleInfo moduleInfo);
+
+        /// <summary>
+        /// Initializes the module during second iteration through all modules.
+        /// </summary>
+        /// <param name="moduleInfo"></param>
+        /// <param name="serviceProvider"></param>
+        void PostInitialize(ModuleInfo moduleInfo, IApplicationBuilder serviceProvider);
+    }
+}

@@ -1,0 +1,20 @@
+<Project>
+  <!-- These properties will be shared for all projects -->
+
+  <PropertyGroup>
+    <Product>VirtoCommerce</Product>
+    <Copyright>Copyright © VirtoCommerce 2011-2019</Copyright>
+    <Authors>VirtoCommerce</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
+    <!-- Nuget Package Details -->
+    <PackageIcon>https://github.com/VirtoCommerce/vc-community/raw/master/NuGet/icon.png</PackageIcon>
+    <Description>Virto Commerce is a flexible B2B ecommerce solution that offers powerful tools for enterprise business users. https://virtocommerce.com</Description>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+
+</Project>

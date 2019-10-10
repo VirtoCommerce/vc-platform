@@ -1,53 +1,188 @@
-﻿# [VirtoCommerce Platform](https://virtocommerce.com) [![Share on Facebook](https://img.shields.io/badge/facebook--blue.svg?style=social&label=Share&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyNjYuODkzcHgiIGhlaWdodD0iMjY2Ljg5NXB4IiB2aWV3Qm94PSIwIDAgMjY2Ljg5MyAyNjYuODk1IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAyNjYuODkzIDI2Ni44OTUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwYXRoIGlkPSJCbHVlXzFfIiBmaWxsPSIjM0M1QTk5IiBkPSJNMjQ4LjA4MiwyNjIuMzA3YzcuODU0LDAsMTQuMjIzLTYuMzY5LDE0LjIyMy0xNC4yMjVWMTguODEyYzAtNy44NTctNi4zNjgtMTQuMjI0LTE0LjIyMy0xNC4yMjRIMTguODEyYy03Ljg1NywwLTE0LjIyNCw2LjM2Ny0xNC4yMjQsMTQuMjI0djIyOS4yN2MwLDcuODU1LDYuMzY2LDE0LjIyNSwxNC4yMjQsMTQuMjI1SDI0OC4wODJ6Ii8%2BPHBhdGggaWQ9ImYiIGZpbGw9IiNGRkZGRkYiIGQ9Ik0xODIuNDA5LDI2Mi4zMDd2LTk5LjgwM2gzMy40OTlsNS4wMTYtMzguODk1aC0zOC41MTVWOTguNzc3YzAtMTEuMjYxLDMuMTI3LTE4LjkzNSwxOS4yNzUtMTguOTM1bDIwLjU5Ni0wLjAwOVY0NS4wNDVjLTMuNTYyLTAuNDc0LTE1Ljc4OC0xLjUzMy0zMC4wMTItMS41MzNjLTI5LjY5NSwwLTUwLjAyNSwxOC4xMjYtNTAuMDI1LDUxLjQxM3YyOC42ODRoLTMzLjU4NXYzOC44OTVoMzMuNTg1djk5LjgwM0gxODIuNDA5eiIvPjwvc3ZnPg%3D%3D)](https://www.facebook.com/sharer.php?u=https://virtocommerce.com)&nbsp;[![Tweet](https://img.shields.io/twitter/url/https/virtocommerce.com.svg?style=social)](https://twitter.com/intent/tweet?text=%23VirtoCommerce%20puts%20the%20best%20of%20MS%20Azure%20Cloud%2C%20open%20source%20.Net%20code%20and%20agile%20development%20in%20a%20single%20enterprise%20%23ecommerce%20platform.) [![Latest release](https://img.shields.io/github/release/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/releases/latest) [![Total downloads](https://img.shields.io/github/downloads/VirtoCommerce/vc-platform/total.svg?colorB=007ec6)](https://github.com/VirtoCommerce/vc-platform/releases) [![License](https://img.shields.io/badge/license-VC%20OSL-blue.svg)](https://virtocommerce.com/open-source-license)
-[![Build status](http://ci.virtocommerce.com/buildStatus/icon?job=vc-2-org/vc-platform/master)](http://ci.virtocommerce.com/job/vc-2-org/job/vc-platform/job/master/) [![Quality Gate](https://sonar.virtocommerce.com/api/badges/gate?key=vc-platform%3Amaster&blinking=true)](https://sonar.virtocommerce.com/dashboard?id=vc-platform%3Amaster) [![Lines of code](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)](https://sonar.virtocommerce.com/api/badges/measure?key=vc-platform%3Amaster&metric=ncloc)&emsp;
-[![Documentation](https://img.shields.io/badge/docs-read-brightgreen.svg)](https://virtocommerce.com/docs)&nbsp;[![Ask question at https://stackoverflow.com/questions/tagged/virtocommerce](https://img.shields.io/badge/stackoverflow-ask%20question-orange.svg)](https://stackoverflow.com/questions/tagged/virtocommerce) [![Join the chat at https://gitter.im/VirtoCommerce/vc-community](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/VirtoCommerce/vc-community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Contributors](https://img.shields.io/github/contributors/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/graphs/contributors)
+# Meet the new 3.0 major version of Virto Commerce platform 
+Our development efforts were focused on moving to ASP.NET Core, performance, architecture improvements, further enhancements and fixing arhitectural bugs. 
 
-Enterprise .NET ecommerce platform for B2B and B2C solutions. Virto Commerce is based on .NET 4.6 (soon to be migrated to .net core) with extensive use of MVC, IoC, EF, Azure, Angular JS and many other cutting edge technologies. It can be deployed in Microsoft Cloud (Azure), Amazon Web Services (AWS) and on-premise. It also support Docker deployment and images can be found on docker.io.
+## What were our objective when starting development project on VC platform v3? 
 
-Virto Commerce is updated almost daily and new modules can be downloaded using "Modules" blade in admin console.
+- Change primary technology stack to .NET Core for the platform application and all key modules. 
+- Eliminate known technical and architecture design issues of 2.x version (Caching, Overloaded core module, Asynchronous code, Platform Complexity, Extensibility, Performance, Authentication and Authorization) 
+- Provide easy and clear migration from 2.x version by preserving complete backward compatibility for API and Database Schema 
+- The platform and 18 core modules were planned to be migrated. 
 
-![Virto Commerce](https://user-images.githubusercontent.com/7566324/48930498-8460bd80-eef9-11e8-810e-db11abe1989d.gif "Virto Commerce")
+## Release status note 
+- *We encourage you to try and investigate the new version of the product and give us your feedback*
+- *This is a beta release, which hasn't been verified on a production project yet*
+- *We have delivered a simple migration from 2.x version by preserving complete backward compatibility for API and Database Schema. You'll need an additional effort when there are custom changes in 2.x version. Please follow our migration guide during the project migration*
+- **_We cannot guarantee the backward compatibility of current beta version with the final 3.X release_**
 
-The [`Virto Commerce`](https://github.com/virtocommerce/vc-platform) repository is where we do development for the platform (you can see other repositories for various components/modules here - [`Virto Commerce Repositories`](https://github.com/VirtoCommerce)) and there are many ways you can participate in the project, for example:
+## The Virto Commerce Release Notes below are a subset of the larger list of changes in migration to ASP.NET Core. 
 
-* [Submit bugs and feature requests](https://github.com/virtocommerce/vc-platform/issues) and help us verify as they are checked in
-* Review [source code changes](https://github.com/virtocommerce/vc-platform/pulls)
-* Review the [documentation](https://virtocommerce.com/docs) and make pull requests for anything from typos to new content
+## What does Virto V3 provide to developers and architects?
+- Improved extensibility and unification.
+- Increase in development speed and decrease in time to market. 
+- Unified architecture and usage of good architecture practices leads to shorter learning curve for developers who are new to working with Virto Commerce.
 
-## Feedback
+## Used technological stack 
+- **ASP.NET Core 2.2.0** as base platform 
+- **EF Core 2.2.0** as primary ORM
+- **ASP.NET Core Identity 2.2.0** for authentification and authorization
+- **OpenIddict 2.0.0** for OAuth authorization
+- **WebPack** as primary design/runtime bundler and minifier
+- **Swashbuckle.AspNetCore.SwaggerGen** for Swagger docs and UI
+- **SignalR Core** for push notifcations
+- **AngularJS 1.4** as primary framework for SPA
+- **HangFire 1.6.21** for run background tasks
 
-* Ask a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/virtocommerce).
-* Vote for [popular feature requests](https://github.com/virtocommerce/vc-platform/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc).
-* File a bug in [GitHub Issues](https://github.com/virtocommerce/vc-platform/issues).
-* [Tweet](https://twitter.com/virtocommerce) us with other feedback.
+**Platform changes**:
+  - Configuration
+    - Use NET Core configuration paradigm (configuration providers and strongly types IOptions)
+  - Solution structure
+    - Split concrete implementations into projects (Modules, Assets etc)
+  - DI
+    - Replaced Unity DI with builtin .NET Core DI Microsoft.Extensions.DependencyInjection
+  - Modularity
+    - Completely reworked assembly and dependency loading into platform process
+    - Changed IModule abstraction to have only two methods Initialize and PostInitialize.
+    - Changed module.manifest file structure (removed settings and permissions sections)
+ - Security
+    - Completely migrate authentification and authorization to the default ASP.NET Identity without any extensions
+    - OpenIddict server to support all OAuth flows also used for token based authorization
+    - Removed Hmac and simple key authorization for call platform API
+    - Now permissions are defined only in design time in special fluent syntax
+    - Added localization for permissions
+    - The storefront switched to work with using barrier token authorization
+ - Persistent infrastructure
+    - New migrations
+    - TPH inheritence model only (map hierarchy to single table)
+    - DbContext now is defined separately from repository
+    - Using  DbContext triggers for auditing and change logging
+    - Switch to asynchronous calls of DbCOntext methods
+ - Settings
+    - Now settings are defined only in design time in special fluent syntax
+    - Added localization for settings
+    - Allow to change setting value through any .NET Core configuration provider
+ - Caching
+    - Replaced CacheManager with ASP.NET InMemory
+    - Strongly typed cache regions and cache dependencies 
+    - Allow to manage expiration time of cached objects and disable cache 
+    - Removed special CacheModule, now caching is implemented in place where it is needed. 
+ - Dynamic properties
+    - Changed registration logic, now using manual registration instead of using reflection as it was done in 2.x
+ - Logging
+    - Used builtin .NET Core  ILog abstraction and logic instead of ICommonLogging and NLog
+ - UI
+    - Replaced Gulp + Bower to Webpack + npm 
+     
+**Modules changes**:
+- Changed module solution structure (Core project, Constants, Caching)
+- Switched all DAL into asynchronous operations
+- Export/Import is now streamed for all modules
 
-Platform context
------------
-![platform context](https://user-images.githubusercontent.com/7566324/48930344-91c97800-eef8-11e8-999a-6f37a060bd64.png)
+**New modules**:
+- `Notifications module` (written from scratch) key features:
+    - Functionality which was spread across the system is shifted to dedicated module 
+    - Manage notification availability for each store
+    - Unlimited cannels types for sending notifications (Email, Sms, Social networks etc)
+    - Possibility to activate/deactivate each notification individually for each store 
+    - New flexible extendibility model 
+    - Allows to preview a notification template with data
+    - Support of LIQUID syntax for templates based on Scriban engine 
+    - The new notification messaged feed allows to search and preview individual messages 
+- `Tax module` key features:
+    - The tax calculation functionality which was spread across the system is shifted to a dedicated module which is now responsible for tax settings and calculation 
+    - The new module is a single integration point for third party software and custom extensions 
+- `Shipping module` key features:
+    -  The shipping costs calculation functionality which was spread across the system is shifted to a dedicated module which is now responsible for shipping methods, related settings and shipping costs calculation
+    - The new module is a single integration point for third party software and custom extensions 
+- `Payment module` key features:
+    - The payment methods functionality and integrations which were spread across the system are shifted to a dedicated module which is now responsible for payment methods and related settings 
+    - The new module is a single integration point for payment gateways integration
+- `Search module` key features:
+    - The new module is a single integration point for search engines integration and provides a generic UI and program components for indexed search
+    
+**Removed modules**: 
+-  ~~**VirtoCommerce.Domain**~~ project and nuget package (now each module defines self domain model and abstractions in Core project)
+-  ~~**VirtoCommerce.Cache**~~
+-  ~~**VirtoCommerce.DynamicExpressions**~~
 
-Architecture
------------
-![Virto Commerce architecture](https://virtocommerce.com/assets/images/features/architecture-circle.png "Virto Commerce architecture")
+**Next steps**:
+- Implement cache synchronization logic between multiple platform instances use `Redis` cache for this purposes 
+- Resource based authorization (scope bounded permissions)
+- Move module projects to GitHub repositiories
+- Remaining modules
+    - ElasticSearch
+    - AzureSearch
+    
+# Getting started:
 
-Video Manuals
------------
-[https://www.youtube.com/channel/UC4Mu_zoDThg2jvexT0py12w/videos](https://www.youtube.com/channel/UC4Mu_zoDThg2jvexT0py12w/videos)
+## Precompiled binary getting started
+- Download archive with platform precompiled version [VirtoCommerce.Platform.3.0.0.beta.zip](https://github.com/VirtoCommerce/vc-platform-core/releases/tag/v3.0.0.beta)
+- Unpack follow zip to local disk to path `C:\vc-platform-3`. In result you should get the folder which contains platform precompiled code. 
+- Run platform by command `dotnet.exe C:\vc-platform-3\VirtoCommerce.Platform.Web.dll`
+- Open in your browser follow url `https://localhost:5001` in the warning for not private connections that appears click advanced and continue work.
+- On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store`
 
-Online Demo
------------
-[http://virtocommerce.com/try-now/online-demo](http://virtocommerce.com/try-now/online-demo)
+## Source code  getting started
+   - Get the latest source code from `master` branch
+   - Make a symlink for Modules folder 
+   ```cmd 
+   mklink /d C:\vc-platform-3\VirtoCommerce.Platform.Web\Modules C:\vc-platform-3\Modules
+   ```
+   - Open and compile platform solution `VirtoCommerce.Platform.sln` in any preffered IDE
+   - Install Node.js dependencies. 
+   ```
+   npm install
+   ```
+   - build and pack js scripts and css for platform 
+   ```
+   npm run webpack:dev
+   ```
+   - repeat previous command for each module in `Modules` folder
+   
+## Run [storefront](https://github.com/VirtoCommerce/vc-storefront-core) with new platform version
+- Deploy  the latest storefront version from `dev` branch by any of preffered way described there https://virtocommerce.com/docs/vc2devguide/deployment/storefront-deployment
+- Make changes  in  `appsettings.json`    
+```json
+...
+//Comment the follow settings
+// "AppId": "...",
+// "SecretKey": "..."
+...
+//Uncomment the follow settings
+"UserName": "admin",
+"Password": "store"
+```
 
-Cloud Private Demo
------------
+## Run platform with Http in development mode
 
-Setup your own private Microsoft Cloud environment and evaluate the latest version of Virto Commerce, [read more](https://virtocommerce.com/docs/vc2devguide/deployment/platform-deployment/deploy-from-github-to-microsoft-cloud-azure).
+### Using CLI in development mode
+- Make shure that you have installed latest version of dot.net core SDK 2.2
+- To run platform navigate to `VirtoCommerce.Platform.Web` folder via CLI and run `dotnet run -c Development --no-launch-profile`. You can add `--no-build` flag to speed up start if you already compile solution.
+- Browse to `https://localhost:5001`
 
-[![Deploy to Azure](https://azuredeploy.net/deploybutton.svg "Deploy to Azure")](https://azuredeploy.net/)
+## Run platform with Https support
 
-## Developer resources
-* [Source Code Getting Started](https://virtocommerce.com/docs/vc2devguide/deployment/platform-deployment/source-code-getting-started)
-* [Platform settings](https://virtocommerce.com/docs/vc2devguide/deployment/platform-settings)
-* [Developing a custom solution](https://virtocommerce.com/docs/vc2devguide/development-scenarios/developing-a-custom-solution)
+### Using VisualStudio
+Open `VirtoCommerce.Platform.Web` project properties and in `Debug` section set checkbox - `Enable SSL`. VisualStudio can ask you to install Certificate, just accept and platform will be running with Https support.
+
+### Using CLI with Https
+- Make shure that you have installed latest version of dot.net core SDK 2.2
+- Install SSL certificate with CLI command `dotnet dev-certs https --trust`
+- Restart your machine
+- To run platform navigate to `VirtoCommerce.Platform.Web` folder via CLI and run `dotnet run -c Release --no-launch-profile`. You can add `--no-build` flag to speed up start if you already compile solution.
+- Browse to `https://localhost:5001`
+
+
+# How to debug module
+- Install and run platform as described in steps above.
+- Navigate into platform app directory and find `Modules` folder
+- Clone a module from GitHub into `Modules` folder, if module already installed as binary just replace it folder
+- Open and build  a module solution in Visual Studio
+- Run platform by using CLI `dotnet run -c Development --no-build --no-restore` as described in steps above
+- Attach debugger into `dotnet` process
+
+
+# How to migrate your solution from 2.x to 3.0 platform version
+- If your solution doesn't have any custom modules and extensions you just need to use the connection string to the old database for the new 3.0 platfrom version and after first run the update scripts will transfer all your data to the new scheme otherwise, you need to convert your models according to this instruction https://github.com/VirtoCommerce/vc-platform-core/wiki/Migrate-Extension-module-from-the-Platform-2.0-to-3.0-version.
 
 # License
 Copyright (c) Virto Solutions LTD.  All rights reserved.

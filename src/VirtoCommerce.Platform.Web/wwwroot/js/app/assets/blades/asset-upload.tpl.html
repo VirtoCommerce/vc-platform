@@ -1,0 +1,42 @@
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="inner">
+                <div class="sub-t">{{ 'platform.blades.asset-upload.labels.select-files' | translate }}</div>
+                <form class="form">
+                    <div ng-show="uploader.isHTML5">
+                        <!-- 3. ng-file-over | ng-file-over="className" -->
+                        <div class="well my-drop-zone panel drag-area" uploader="uploader" nv-file-drop nv-file-over>
+                            <div class="drag-content">
+                                {{ 'platform.blades.asset-upload.labels.drag-note' | translate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. ng-file-select | ng-file-select="options" -->
+                    <div class="form-input __file">
+                        <input id="assetUploader" type="file" multiple-attr="{{!blade.fileUploadOptions.singleFileMode}}" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1" accept="{{blade.fileUploadOptions.accept}}">
+                        <input type="text" style="z-index: 1; cursor: default;" readonly="">
+                        <button class="btn __file" type="button" onclick="$('#assetUploader').trigger('click')" title="Select asset file(s)">
+                            <i class="btn-ico fa fa-file"></i>
+                        </button>
+                    </div>
+
+                    <div class="form-input __file">
+                        <input ng-model="blade.newExternalImageUrl" type="url" placeholder="{{ 'platform.blades.asset-upload.placeholders.image-url' | translate }}" tabindex="-1">
+                        <button class="btn __file" type="button" ng-click="addImageFromUrl()" title="Add file by URL">
+                            <i class="btn-ico fa fa-plus"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <div ng-show="uploader.isUploading">
+                    <div class="sub-t">{{ 'platform.blades.asset-upload.labels.progress' | translate }}</div>
+                    <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}"></div>
+                </div>
+
+                <p class="note" ng-if="blade.uploadCompleted">{{ 'platform.blades.asset-upload.labels.asset-uploaded' | translate }}</p>
+            </div>
+        </div>
+    </div>
+</div>

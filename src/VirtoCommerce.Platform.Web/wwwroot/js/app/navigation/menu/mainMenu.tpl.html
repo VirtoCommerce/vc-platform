@@ -1,0 +1,54 @@
+<nav class="nav-bar" ng-class="{'__collapsed': menu.isCollapsed}"
+    ng-init="itemTemplateUrl = '$(Platform)/Scripts/app/navigation/menu/mainMenu-item.tpl.html'">
+
+    <ng-transclude> </ng-transclude>
+
+    <div class="bar">
+        <div class="wrapper">
+            <div class="list __items" va-tooltip-options tooltip-enable="menu.isCollapsed" tooltip-append-to-body="true"
+                tooltip-placement="{{$root.isRTL ? 'left' : 'right'}}" tooltip-animation="false">
+                <div class="list-item" ng-click="toggleCollapsed()">
+                    <a class="list-link">
+                        <i class="list-ico fa fa-fw fa-bars"></i>
+                    </a>
+                </div>
+                <ul>
+                    <li class="list-item"
+                        ng-class="{'__has-dropdown': menuItem.children.length > 0, '__animated': menuItem.isAnimated}"
+                        ng-repeat="menuItem in menu.items | filter: { path: '!more', isAlwaysOnBar: 'true', isFavorite: 'false' }"
+                        ng-include="itemTemplateUrl" ng-click="selectItem(menuItem)" va-tooltip
+                        tooltip="{{menuItem.title | translate}}" va-permission="{{menuItem.permission}}"></li>
+                </ul>
+                <div class="divider"></div>
+                <div class="outer-wrapper">
+                    <div class="inner-wrapper">
+                        <div class="content">
+                            <ul ng-model="dynamicMenuItems" ui-sortable="sortableOptions">
+                                <li class="list-item"
+                                    ng-class="{'__has-dropdown': menuItem.children.length > 0 || menuItem.path == 'more', '__animated': menuItem.isAnimated, '__draggable': !menuItem.isAlwaysOnBar, '__more': menuItem.path == 'more'}"
+                                    ng-repeat="menuItem in dynamicMenuItems" ng-include="itemTemplateUrl"
+                                    ng-click="selectItem(menuItem)" va-tooltip tooltip="{{menuItem.title | translate}}"
+                                    va-permission="{{menuItem.permission}}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dropdown" ng-class="{'__more': currentMenuItem.path == 'more', '__opened': showSubMenu}"
+        ng-init="searchText = { value: '' }">
+        <a class="dropdown-close" ng-click="showSubMenu = false">×</a>
+        <div class="dropdown-head" ng-if="!currentMenuItem.headerTemplate">
+        </div>
+        <ng-include src="currentMenuItem.headerTemplate"></ng-include>
+        <div class="dropdown-content" ng-if="!currentMenuItem.contentTemplate">
+            <ul class="list">
+                <li class="list-item" ng-repeat="menuItem in currentMenuItem.children" ng-include="itemTemplateUrl"
+                    ng-click="selectItem(menuItem)" va-permission="{{menuItem.permission}}">
+                </li>
+            </ul>
+        </div>
+        <ng-include src="currentMenuItem.contentTemplate"></ng-include>
+    </div>
+</nav>

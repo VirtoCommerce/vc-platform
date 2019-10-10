@@ -1,0 +1,19 @@
+<div class="header__nav-item" ng-class="{'header__nav-item--opened': dropDownOpened}" userProfileWidget
+    ng-click="toggleDropDown()">
+    <span class="account-user" va-tooltip tooltip="{{'platform.menu.user-profile' | translate}}"
+        tooltip-placement="bottom" tooltip-animation="false" tooltip-popup-delay="{{$parent.tooltipPopupDelay}}">
+        <span class="account-user__img">
+            <img src="/images/userpic.svg" alt="" class="account-user__pic">
+        </span>
+        <span class="account-user__info">
+            <span class="account-user__name">{{fullName || userLogin}}</span>
+            <span class="account-user__role">{{isAdministrator ? 'Administrator' : userType }}</span>
+        </span>
+        <span class="account-user__carret"></span>
+    </span>
+    <div class="dropdown-menu">
+        <a href="#" class="dropdown-menu__item"
+            ng-click="manageProfile()">{{ 'platform.commands.manage-profile' | translate }}</a>
+        <a href="#" class="dropdown-menu__item" ng-click="logout()">{{ 'platform.commands.sign-out' | translate }}</a>
+    </div>
+</div>

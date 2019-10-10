@@ -1,0 +1,112 @@
+<div class="blade-static" ng-class="{'__expanded': blade.mode==='available'}" ng-if="blade.currentEntities.length">
+    <div class="form-group">
+        <div class="form-input __search">
+            <input placeholder="{{'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
+            <button class="btn __other" style="position: relative;right: 45px;">
+                <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText='';gridApi.grid.queueGridRefresh()"></i>
+            </button>
+        </div>
+        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntitiesCount | number:0}}</span></p>
+
+        <div ng-if="blade.mode==='available'" style="margin-top:10px">
+            <div class="form-input">
+                <label class="form-label __switch">
+                    <input type="checkbox" ng-model="blade.isGrouped" />
+                    <span class="switch"></span>
+                </label>
+            </div>
+            <label class="form-label">{{ 'platform.blades.modules-list.labels.grouping' | translate }}</label>
+        </div>
+    </div>
+</div>
+<div class="blade-content __medium-wide">
+    <div class="blade-inner">
+        <div class="inner-block" ng-init="setGridOptions({
+                    rowTemplate: 'modules-list.row.html',
+                    virtualizationThreshold: 1000,
+                    rowHeight: 60,
+                    columnDefs: [
+                        { name: '$group', visible: false },
+                        {
+                            displayName: 'platform.blades.modules-list.labels.icon', name: 'iconUrl',
+                            enableColumnResizing: false, enableSorting: false, width: 60,
+                            cellTemplate: 'modules-list-icon.cell.html'
+                        },
+                        {
+                            displayName: 'platform.blades.modules-list.labels.module', name: 'customColumn', field: 'title',
+                            sort: { direction: uiGridConstants.ASC }, cellTemplate: 'modules-list-name.cell.html'
+                        },
+                        { name: 'version', displayName: 'platform.blades.modules-list.labels.version', enableSorting: false, width: 100, cellTemplate: 'modules-list-version.cell.html' }
+                    ]})">
+            <!--,
+            {
+            displayName: 'platform.blades.modules-list.labels.author', name: 'authors',
+            cellTemplate: 'modules-list-authors.cell.html'
+            }-->
+            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='update'">{{ 'platform.blades.modules-list.labels.no-updates' | translate }}</div>
+            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='available'">{{ 'platform.blades.modules-list.labels.no-modules-part1' | translate }}</div>
+            <div class="note" ng-if="!blade.currentEntities.length && blade.mode==='installed'">{{ 'platform.blades.modules-list.labels.no-installed-modules' | translate }}</div>
+            <div class="table-wrapper" ng-if="blade.currentEntities.length">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-grouping ui-grid-height></div>
+                <ul class="menu __context" role="menu" id="mdl_menu">
+                    <li class="menu-item" ng-click="confirmActionInDialog('update', [contextMenuEntity])" ng-if="blade.mode==='update'" va-permission="platform:module:manage">
+                        <i class="menu-ico fa fa-arrow-up"></i>{{'platform.commands.update' | translate}}
+                    </li>
+                    <li class="menu-item" ng-click="confirmActionInDialog('install', [contextMenuEntity])" ng-if="blade.mode==='available'" va-permission="platform:module:manage">
+                        <i class="menu-ico fa fa-plus"></i>{{'platform.commands.install' | translate}}
+                    </li>
+                    <li class="menu-item" ng-click="confirmActionInDialog('uninstall', [contextMenuEntity])" ng-if="blade.mode==='installed'" va-permission="platform:module:manage">
+                        <i class="menu-ico fa fa-trash-o"></i> {{'platform.commands.uninstall' | translate}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="modules-list.row.html">
+    <div ng-if="row.groupHeader && col.isRowHeader" ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell></div>
+    <div ng-if="row.groupHeader && !col.isRowHeader" ng-click='grid.appScope.toggleRow(row)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns | limitTo:1 track by col.uid" class="ui-grid-cell __filters">
+        <div class="ui-grid-cell-contents">
+            <div class="inner-contents"><span class="inner-t">{{grid.appScope.getGroupInfo(row.entity).groupVal | translate}}: <span class="count">{{grid.appScope.getGroupInfo(row.entity).value | number:0}}</span></span></div>
+        </div>
+    </div>
+    <div ng-if="!row.groupHeader" ng-click='col.isRowHeader || grid.appScope.blade.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="mdl_menu"></div>
+</script>
+
+<script type="text/ng-template" id="modules-list-icon.cell.html">
+    <div class="ui-grid-cell-contents">
+        <div class="product-img">
+            <img class="image" ng-src="{{COL_FIELD}}" ng-if="COL_FIELD">
+            <i class="table-ico fa fa-cubes" ng-if="!COL_FIELD"></i>
+            <img class="table-badge" src="/images/approval-32.png" ng-if="row.entity.$isOwnedByVirto" title="{{ 'platform.blades.module-detail.labels.official' | translate: row.entity }}" />
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="modules-list-name.cell.html">
+    <div class="ui-grid-cell-contents">
+        <div class="inner-contents">
+            <span class="table-t" title="{{COL_FIELD}}">{{COL_FIELD}}</span>
+            <span class="error" ng-if="row.entity.validationErrors.length"><span ng-repeat="x in row.entity.validationErrors"> {{x}};</span></span>
+            <span class="table-descr" title="{{row.entity.description}}" style="overflow: hidden; text-overflow: ellipsis;" ng-if="!row.entity.validationErrors.length">{{row.entity.description}}</span>
+            <div title="{{ 'platform.blades.module-detail.labels.owners' | translate: row.entity }}" style="overflow: hidden; text-overflow: ellipsis;" ng-if="!row.entity.validationErrors.length">
+                <span class="table-t"><span class="table-descr">{{ 'platform.blades.module-detail.labels.owners' | translate }}</span> {{ row.entity.$owner }}</span>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="modules-list-version.cell.html">
+    <div class="ui-grid-cell-contents">
+        <div class="inner-contents">
+            <i class="table-ico fa fa-check-square-o" ng-if="row.entity.isInstalled && !row.entity.$alternativeVersion" ng-attr-title="{{ 'platform.blades.modules-list.labels.up-to-date' | translate }}"></i>
+            <i class="table-ico fa fa-arrow-up" ng-if="row.entity.isInstalled && row.entity.$alternativeVersion" ng-attr-title="{{ 'platform.blades.modules-list.labels.update-available' | translate }}"></i>
+            <span class="table-info">
+                <span class="table-t" title="{{COL_FIELD}}">{{COL_FIELD}}</span>
+                <span class="table-descr">{{row.entity.$alternativeVersion}}</span>
+            </span>
+        </div>
+    </div>
+</script>
+<!--<script type="text/ng-template" id="modules-list-authors.cell.html">
+    <div class="ui-grid-cell-contents"><span ng-repeat="x in COL_FIELD">{{x}} </span></div>
+</script>-->

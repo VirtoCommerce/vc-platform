@@ -1,0 +1,22 @@
+﻿<div class="blade-static __bottom">
+    <button class="btn" ng-click="restarted=true; restart();" ng-disabled="!blade.currentEntity.finished || restarted">
+        <span>{{ 'platform.commands.restart' | translate }}</span>
+    </button>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="sub-t">{{blade.currentEntity.title}}</div>
+            <div class="block">
+                <p ng-if="blade.currentEntity.created" class="text no-data">{{ 'platform.blades.module-wizard-progress-step.labels.start' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.created | amParse | date:'mediumTime' }}</p>
+                <p ng-if="!blade.currentEntity.finished"><span class="list-bar progress-bar" data-role="progress-bar" data-value="30" style="margin-left: 0"></span></p>
+                <p ng-if="blade.currentEntity.finished" class="text no-data">{{ 'platform.blades.module-wizard-progress-step.labels.end' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.finished | amParse | date:'mediumTime' }}</p>
+            </div>
+            <div class="sub-t">{{ 'platform.blades.module-wizard-progress-step.labels.progress-messages' | translate }}</div>
+            <div class="log" scroll-glue>
+                <p ng-repeat="x in blade.currentEntity.progressLog " ng-class="{'__info' : x.level==='Info', '__warning': x.level==='Warning', '__debug': x.level==='Debug', '__error': x.level==='Error'}">{{x.message}}</p>
+            </div>
+            <p class="note" ng-if="blade.currentEntity.finished">{{ 'platform.blades.module-wizard-progress-step.labels.process-completed' | translate }} <br />{{ 'platform.blades.module-wizard-progress-step.labels.restart-application' | translate }}</p>
+        </div>
+    </div>
+</div>

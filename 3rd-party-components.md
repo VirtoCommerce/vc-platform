@@ -35,13 +35,8 @@
  underscore | JavaScript's utility | MIT | https://github.com/jashkenas/underscore |	Jeremy Ashkenas	| bower 
  uikit | A lightweight and modular front-end framework for developing fast and powerful web interfaces | MIT | http://getuikit.com | | bower 
  marked |	A markdown parser built for speed |	MIT | https://github.com/chjj/marked | 	Christopher Jeffrey	| bower 
- CacheManager  |  caching abstraction layer for .NET  | Apache | https://github.com/MichaCo/CacheManager | MichaCo | NuGet 
  Hangfire | background processing in .NET and .NET | [LGPL v3 License](https://www.hangfire.io/licenses.html) | https://www.hangfire.io | Sergey Odinokov | NuGet 
  Nlog | NLog is a flexible and free logging platform | BSD | http://nlog-project.org/ | | NuGet 
  Swashbuckle |  Seamlessly adds a swagger to WebApi projects | BSD 3-Clause | https://github.com/domaindrivendev/Swashbuckle | Richard Morris | NuGet 
- Unity | IoC and DI container | Apache | https://github.com/unitycontainer | | NuGet 
- ValueInjecter | convention based mapper | MIT | https://github.com/omuleanu/ValueInjecter | | NuGet 
  sendgrid-csharp | The Official SendGrid Led, Community Driven C# | MIT| https://github.com/sendgrid | | NuGet 
  DotLiquid | The templating system ported to the .net framework | Apache  | http://dotliquidmarkup.org/ | | NuGet 
- 
- 

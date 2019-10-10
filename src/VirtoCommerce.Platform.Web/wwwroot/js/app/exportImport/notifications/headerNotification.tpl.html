@@ -1,0 +1,10 @@
+﻿<div class="notice-list__ico" ng-class="{'error': model.errorCount}">
+    <i class="fa" ng-class="model.notifyType === 'PlatformExportPushNotification' ? 'fa-upload' : 'fa-download'"></i>
+</div>
+<div>
+    <div class="notice-list__date" am-time-ago="model.created"></div>
+    <div class="notice-list__name" ng-bind="model.title"></div>
+    <div class="notice-list__descr" ng-bind="model.description"></div>
+    <div class="notice-list__errors">Errors {{model.errorCount || 0}}</div>
+</div>
+<div ng-show="!model.finished" class="notice-list__bar progress-bar" data-role="progress-bar" data-value="30"></div>

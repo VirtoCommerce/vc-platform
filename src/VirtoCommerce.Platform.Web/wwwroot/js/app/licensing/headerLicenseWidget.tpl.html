@@ -1,0 +1,24 @@
+<div class="header__info">
+    <!-- DO NOT CHANGE THE CODE BELOW: COPYRIGHT VIOLATION -->
+    <div class="license" ng-if="!license">
+        <div class="license__text">
+            {{'platform.templates.licensing.community' | translate}}
+        </div>
+        <button class="btn btn--orange"
+            ng-click="showLicense()">{{'platform.templates.licensing.purchase' | translate}}</button>
+    </div>
+
+    <div class="license" ng-if="license && license.hasExpired">
+        <div class="license__text license__expired">
+            {{'platform.templates.licensing.expired' | translate: license}}
+        </div>
+        <button class="btn btn--orange"
+            ng-click="showLicense()">{{'platform.templates.licensing.renew' | translate}}</button>
+    </div>
+
+    <div class="license active" ng-if="license && !license.hasExpired" ng-click="showLicense()">
+        <div class="license__text">
+            {{'platform.templates.licensing.license-present' | translate: license}}
+        </div>
+    </div>
+</div>

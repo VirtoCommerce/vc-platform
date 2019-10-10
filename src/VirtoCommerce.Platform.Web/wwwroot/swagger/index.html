@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>%(DocumentTitle)</title>
+    <link href='/swagger/reset.css' media='screen' rel='stylesheet' type='text/css'/>
+    <link href='/swagger/screen.css' media='screen' rel='stylesheet' type='text/css'/>
+    <link href='/swagger/vc.css' media='screen' rel='stylesheet' type='text/css' />
+    <link href='/swagger/reset.css' media='print' rel='stylesheet' type='text/css'/>
+    <link href='/swagger/print.css' media='print' rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css">
+    <link href='//fonts.googleapis.com/css?family=Exo+2:400,300,500,600,400italic&amp;subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link rel="icon" type="image/png" href="/swagger/logo_small.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/swagger/logo_small.png" sizes="16x16" />
+    %(HeadContent)
+</head>
+
+<body class="swagger-section">
+    <div id="header">
+        <div class="swagger-ui-wrap">
+            <a id="logo" href="http://virtocommerce.com">
+                Virto Commerce
+            </a>
+            <form id='api_selector'>
+                <div class='input'><input placeholder="http://localhost/admin" id="input_baseUrl" name="baseUrl" type="text"/></div>
+                <div class='input'><a id="explore" class="header__btn" href="#" data-sw-translate>Explore</a></div>
+            </form>
+            
+        </div>
+    </div>
+
+    <div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
+    <div class="swagger-ui-wrap">
+        <div class="info" id="api_info">
+            <div class="info_title">VirtoCommerce Solution REST API documentation</div>
+            <div class="info_description markdown">
+                <p>For this sample, you can use the key to satisfy the authorization filters.</p>
+            </div>
+            
+            <div class="info_name">Created by Virto Commerce</div>
+            <div class="info_url">See more at <a href="http://virtocommerce.com">http://virtocommerce.com</a></div>
+            <div class="info_email"><a href="mailto:support@virtocommerce.com?subject=VirtoCommerce Solution REST API documentation">Contact the developer</a></div>
+            <div class="info_license"><a href="http://virtocommerce.com/opensourcelicense">Virto Commerce Open Software License 3.0</a></div>
+        </div>
+    </div>
+    <div id="swagger-ui-container" class="swagger-ui-wrap">
+        
+    </div>
+
+    <script src="./swagger-ui-bundle.js"> </script>
+    <script src="./swagger-ui-standalone-preset.js"> </script>
+    <script>
+        window.onload = function() {
+            var configObject = JSON.parse('%(ConfigObject)');
+            var oauthConfigObject = JSON.parse('%(OAuthConfigObject)');
+
+            // Apply mandatory parameters
+            configObject.dom_id = "#swagger-ui-container";
+            configObject.url = configObject.urls[0].url; // BaseLayout (default) requires singular url
+            //configObject.presets = [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset];
+            //configObject.layout = "StandaloneLayout";
+
+            // Use swagger-ui plugin system to hide the info component
+            // See https://github.com/swagger-api/swagger-ui/blob/master/docs/customization/overview.md
+            configObject.plugins = [
+                function (system) {
+                    return {
+                        components: {
+                            info: function () {
+                                return null;
+                            }
+                        }
+                    }
+                }
+            ];
+
+            // Build a system
+            const ui = SwaggerUIBundle(configObject);
+
+            // Apply OAuth config
+            ui.initOAuth(oauthConfigObject);
+        }
+    </script>
+</body>
+</html>

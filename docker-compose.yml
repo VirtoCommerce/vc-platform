@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  virtocommerce.platform.web:
+    image: virtocommerce.platform.web
+    build:
+      context: ./VirtoCommerce.Platform.Web
+      dockerfile: Dockerfile

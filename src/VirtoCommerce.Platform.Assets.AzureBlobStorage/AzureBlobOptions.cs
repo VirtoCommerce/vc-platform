@@ -1,0 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+using Microsoft.WindowsAzure.Storage.Blob;
+
+namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
+{
+    public class AzureBlobOptions
+    {
+        [Required]
+        public string ConnectionString { get; set; }
+        [Url]
+        public string CdnUrl { get; set; }
+        public BlobRequestOptions BlobRequestOptions { get; set; } = new BlobRequestOptions();
+    }
+}

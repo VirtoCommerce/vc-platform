@@ -1,0 +1,815 @@
+{
+    "platform": {
+        "menu": {
+            "home": "Главная",
+            "browse": "Просмотреть",
+            "configuration": "Конфигурация",
+            "notifications": "Уведомления",
+            "more": "Больше",
+            "settings": "Настройки",
+            "dynamic-properties": "Динамические свойства",
+            "security": "Безопасность",
+            "modules": "Модули",
+            "export-import": "Экспорт & Импорт",
+            "user-profile": "Профиль пользователя",
+            "assets": "Ресурсы",
+            "toggle-favorites": "Shift + Пробел для переключения избранного",
+            "help": "Помощь"
+        },
+        "navigation": {
+            "back": "Назад",
+            "bread-crumb-top": "Все"
+        },
+        "blades": {
+            "asset-list": {
+                "title": "Управление ресурсами",
+                "labels": {
+                    "picture": "Картинка",
+                    "name": "Название",
+                    "size": "Размер",
+                    "modified": "Изменено",
+                    "actions": "Действия",
+                    "group": "Группа",
+                    "language": "Язык" 
+                }
+            },
+            "asset-upload": {
+                "title": "Загрузка ресурса",
+                "labels": {
+                    "select-files": "Выбрать файлы",
+                    "drag-note": "Перетащите файлы сюда",
+                    "progress": "Прогресс",
+                    "asset-uploaded": "Загружено ресурсов."
+                },
+                "placeholders": {
+                    "image-url": "Вставьте URL файла"
+                }
+            },
+            "operation-list": {
+                "labels": {
+                    "login": "Вход",
+                    "details": "Подробности",
+                    "time": "Время"
+                }
+            },
+            "dynamicObject-list": {
+                "title": "Типы динамических объектов",
+                "subtitle": "Выбрать тип объекта для управления динамическими свойствами",
+                "labels": {
+                    "no-objects": "Нет объектов, поддерживающих динамические свойства."
+                }
+            },
+            "dynamicProperty-detail": {
+                "title": "Управление свойствами",
+                "subtitle": "Управление свойствами",
+                "subtitle-new": "Новое свойство",
+                "labels": {
+                    "property-name": "Название свойства",
+                    "required": "Обязательное",
+                    "multivalue": "Многозначное",
+                    "multilingual": "Многоязычное",
+                    "dictionary": "Словарь",
+                    "description": "Описание",
+                    "display-order": "Отображение заказа",
+                    "display-name": "Отображаемое название",
+                    "value-type": "Тип значения",
+                    "dictionary-values": "Значения словаря",
+                    "manage-dictionary": "Управление словарем"
+                },
+                "placeholders": {
+                    "description": "Введите описание свойства",
+                    "display-name": "Введите отображаемое название...",
+                    "display-order": "Отображение заказа"
+                },
+                "validations": {
+                    "multivalue": "Многозначное свойство может иметь тип ShortText, Integer или Decimal.",
+                    "multilingual": "Только текстовые значения или значения HTML могут быть многоязычными.",
+                    "dictionary": "Поддерживаются только словари типа ShortText."
+                }
+            },
+            "dynamicProperty-list": {
+                "subtitle": "Управление динамическими свойствами",
+                "labels": {
+                    "no-properties": "Нет динамических свойств."
+                }
+            },
+            "property-dictionary": {
+                "title": "Значения словаря",
+                "subtitle": "Управление значениями словаря",
+                "labels": {
+                    "edit-value": "Редактировать значение",
+                    "new-value": "Новое значение",
+                    "dictionary-name": "Название словаря",
+                    "localized-values": "Локализованные значения",
+                    "current-values": "Текущие значения",
+                    "name": "Название",
+                    "values": "Значения"
+                },
+                "validations": {
+                    "dictionary-name-required": "Обязательное",
+                    "dictionary-name": "Найдено дублирующее название",
+                    "localized-values-required": "Обязательное",
+                    "localized-values": "Найдено дублирующее название",
+                    "dictionary": "Поддерживаются только словари типа ShortText."
+                },
+                "placeholders": {
+                    "dictionary-name": "Введите название",
+                    "localized-values": "Введите значение"
+                }
+            },
+            "propertyValue-list": {
+                "title": "Значения свойств",
+                "subtitle": "Редактировать значения свойств",
+                "labels": {
+                    "no-properties": "У этого объекта еще нет динамических свойств. Нажмите 'Управление типами свойств' для создания новых. Закройте и откройте повторно текущий объект для загрузки динамических свойств."
+                }
+            },
+            "export-main": {
+                "title": "Экспорт данных",
+                "labels": {
+                    "platform-entries": "Позиции платформы",
+                    "choose-modules": "Выберите модули для экспорта",
+                    "download-url": "Загрузить Url",
+                    "errors": "Ошибки",
+                    "start-export": "Начать экспорт",
+                    "start": "Начало",
+                    "end": "Конец"
+                },
+                "menu": {
+                    "security": {
+                        "title": "Безопасность",
+                        "description": "Аккаунты и роли"
+                    },
+                    "binary": {
+                        "title": "Двоичный код",
+                        "description": "Двоичные данные"
+                    },
+                    "settings": {
+                        "title": "Настройки",
+                        "description": "Настройки платформы"
+                    }
+                }
+            },
+            "import-main": {
+                "title": "Импорт данных",
+                "labels": {
+                    "start-import": "Начать импорт",
+                    "select-file": "Выберите файл .zip для импорта. Файл должен быть создан путем экспорта данных Commerce Manager.",
+                    "upload-progress": "Прогресс загрузки",
+                    "import-data-information": "Информация об импорте данных",
+                    "author": "Автор",
+                    "data-file-created": "Создан файл с данными",
+                    "created-platform-version": "Создан в версии платформы",
+                    "platform-entries": "Позиции платформы",
+                    "choose-modules": "Выберите модули для импорта",
+                    "no-data": "Нет данных",
+                    "errors": "Ошибки",
+                    "start": "Начало",
+                    "end": "Конец"
+                },
+                "menu": {
+                    "security": {
+                        "title": "Безопасность",
+                        "description": "Аккаунты и роли"
+                    },
+                    "binary": {
+                        "title": "Двоичный код",
+                        "description": "Двоичные данные"
+                    },
+                    "settings": {
+                        "title": "Настройки",
+                        "description": "Настройки платформы"
+                    }
+                }
+            },
+            "exportImport-main": {
+                "title": "Экспорт и импорт данных",
+                "menu": {
+                    "export": {
+                        "title": "Экспорт",
+                        "description": "Данные будут сохранены в файл, чтобы впоследствии их можно было импортировать."
+                    },
+                    "import": {
+                        "title": "Импорт",
+                        "description": "Импорт данных из экспортированного файла."
+                    }
+                }
+            },
+            "notification-journal-details": {
+                "title": "Сведения об уведомлении",
+                "labels": {
+                    "notification-info": "Информация Уведомления",
+                    "display-name": "Отображаемое название",
+                    "source": "Источник",
+                    "sending-gateway": "Канал отправления",
+                    "active": "Активно",
+                    "not-active": "Неактивно",
+                    "start-sending-date": "Начать отправку данных",
+                    "sent-success": "Успешность отправки",
+                    "not-sent": "Не отправлено",
+                    "sent": "Отправлено",
+                    "sent-date": "Отправленные данные",
+                    "sender": "Отправитель",
+                    "recipient": "Получатель",
+                    "sending-attempts-count": "Количество попыток отправки",
+                    "last-fail-attempt-date": "Дата последней неудачной попытки",
+                    "last-fail-attempt-message": "Сообщение последней неудачной попытки"
+                }
+            },
+            "notifications-edit-template": {
+                "title": "Изменить шаблон уведомления",
+                "title-new": "Создать шаблон уведомления",
+                "labels": {
+                    "note": "Это список параметров уведомления. Вы можете вставить этот код, и значения параметров будут добавлены в Ваш шаблон",
+                    "parameter-name": "Название параметра",
+                    "parameter-description": "Описание параметра",
+                    "paremeter-code": "Код параметра в шаблоне (скопируйте этот код и вставьте в любом месте вашего шаблона)",
+                    "language": "Язык",
+                    "blank-note": "Оставьте поле пустым для использования языка по умолчанию",
+                    "sender": "Отправитель",
+                    "recipient": "Получатель",
+                    "subject": "Тема",
+                    "body": "Основной текст"
+                },
+                "placeholders": {
+                    "language": "Выбрать..."
+                }
+            },
+            "notifications-menu": {
+                "subtitle": "Работа с системой уведомлений"
+            },
+            "notification-templates-list": {
+                "title": "Шаблоны уведомлений",
+                "labels": {
+                    "subject": "Тема",
+                    "body": "Основной текст",
+                    "language": "Язык"
+                }
+            },
+            "notifications-test-resolve": {
+                "title": "Предварительный просмотр уведомления",
+                "subtitle": "Введите тестовые данные для {{type}}",
+                "labels": {
+                    "test": "Тест",
+                    "enter-test-data": "Введите тестовые данные"
+                }
+            },
+            "notifications-test-send": {
+                "title": "Отправка уведомлений",
+                "subtitle": "Введите тестовые данные для {{type}}",
+                "labels": {
+                    "send": "Отправка",
+                    "enter-test-data": "Введите тестовые данные"
+                }
+            },
+            "notifications-journal": {
+                "title": "История уведомлений",
+                "subtitle": "Просмотр истории уведомлений",
+                "labels": {
+                    "display-name": "Отображаемое название",
+                    "recipient": "Получатель",
+                    "sent-date": "Дата отправки",
+                    "channel": "Канал",
+                    "error": "Ошибка",
+                    "processing": "Обработка",
+                    "success": "Успех",
+                    "no-notifications": "Пока нет уведомлений"
+                }
+            },
+            "notifications-list": {
+                "title": "Уведомления",
+                "subtitle": "Просмотр шаблонов уведомлений",
+                "labels": {
+                    "no-notifications": "Пока нет зарегистрированных уведомлений"
+                }
+            },
+            "resolve-result": {
+                "title": "Предварительный просмотр результата",
+                "labels": {
+                    "subject": "Тема",
+                    "body": "Основной текст"
+                }
+            },
+            "module-settings-detail": {
+                "title": "Настройки модуля"
+            },
+            "module-wizard-progress-step": {
+                "title-install": "Установка модуля",
+                "title-update": "Обновление модуля",
+                "title-uninstall": "Деинсталляция модуля",
+                "labels": {
+                    "start": "Начало",
+                    "end": "Конец",
+                    "progress-messages": "Сообщение о ходе выполнения",
+                    "process-completed": "Процесс установки модуля завершен.",
+                    "restart-application": "Перезапустить приложение сейчас или позже."
+                }
+            },
+            "module-detail": {
+                "title": "Информация о модуле",
+              "labels": {
+                "i-accept-the": "Я принимаю",
+                "license-link": "лицензия",
+                "license": "Лицензия",
+                "agreement": "соглашение.",
+                "install-from-file": "Установить / обновить модуль из файла",
+                "select-module-file": "Загрузить файл модуля (.zip) за пределами центрального хранилища модулей",
+                "upload-progress": "Прогресс загрузки",
+                "module-info": "Информация о модуле",
+                "title": "Название",
+                "official": "Официальный модуль {{$owner}}",
+                "owners": "Разработан {{$owner}}",
+                "author": "Автор",
+                "authors": "Авторы",
+                "id": "ID",
+                "version": "Версия",
+                "project-information": "Информация о Проекте",
+                "description": "Описание",
+                "platform-version": "Версия Платформы",
+                "dependencies": "Зависимости",
+                "tags": "Теги",
+                "install-version": "Установленная версия",
+                "errors": "Ошибки"
+              }
+            },
+            "modules-main": {
+                "title": "Модули",
+                "labels": {
+                    "updates": "Обновления",
+                    "available": "Доступный",
+                    "installed": "Установленный",
+                    "withErrors": "Ошибки",
+                    "advanced": "Усовершенствованный"
+                }
+            },
+            "modules-list": {
+                "subtitle": "Управление Модулями",
+                "labels": {
+                    "grouping": "Показать связки Модулей",
+                    "ungrouped": "Другие",
+                    "no-updates": "Обновления не найдены.",
+                    "no-modules-part1": "Нет новых Модулей для установки.",
+                    "no-installed-modules": "Установленные Модули не найдены.",
+                    "icon": "Иконка",
+                    "up-to-date": "Модуль обновлен", 
+                    "update-available": "Доступно обновление для данного модуля", 
+                    "module": "Модуль",
+                    "version": "Версия",
+                    "author": "Автор"
+                }
+            },
+            "history": {
+                "title": "Системные события",
+                "subtitle": "История событий",
+                "labels": {
+                    "type": "Тип",
+                    "title": "Название",
+                    "created": "Создано"
+                }
+            },
+            "historyDetailDefault": {
+                "title": "Информация о событии",
+                "subtitle": "Информация о событии"
+            },
+            "menuHeader": {
+                "labels": {
+                    "history": "История",
+                    "clear-recent": "Очистить все последние"
+                }
+            },
+            "account-api": {
+                "title": "API аккаунт",
+                "title-new": "Новый API аккаунт",
+                "labels": {
+                    "is-active": "Активный",
+                    "account-name": "Имя Аккаунта",
+                    "account-type": "Тип аккаунта",
+                    "app-id": "ID приложения",
+                    "secret-key": "Секретный ключ"
+                },
+                "placeholders": {
+                    "account-name": "Введите имя",
+                    "account-type": "Выбрать...",
+                    "secret-key": "Создать секретный ключ",
+                    "app-id": "Создать..."
+                }
+            },
+            "account-api-list": {
+                "labels": {
+                    "is-active": "Активный",
+                    "name": "Имя"
+                }
+            },
+            "account-changePassword": {
+                "labels": {
+                    "current-password": "Текущий пароль",
+                    "new-password": "Новый пароль",
+                    "repeat-password": "Повторите пароль"
+                },
+                "validations": {
+                    "current-password": "Необходимо",
+                    "new-password": "Старый и новый пароли являются одинаковыми!",
+                    "repeat-password": "Новые пароли не совпадают!"
+                },
+                "placeholders": {
+                    "current-password": "Введите текущий пароль",
+                    "new-password": "Введите новый пароль",
+                    "repeat-password": "Повторите новый пароль"
+                }
+            },
+            "account-resetPassword": {
+                "subtitle": "Смена пароля",
+                "labels": {
+                    "new-password": "Новый пароль",
+                    "repeat-password": "Повторите пароль",
+                    "force-password-change": "Требовать смены пароля при следующем входе"
+                },
+                "validations": {
+                    "repeat-password": "Новые пароли не совпадают!",
+                    "invalid-token": "Токен смены пароля некорректен или срок его действия истёк",
+                    "password-too-weak": "Новый пароль не удовлетворяет одной или нескольким политикам безопасности паролей:",
+                    "passwordViolatesMinLength": "Длина паролей должна составлять {{minPasswordLength}} или более символов",
+                    "passwordMustHaveLowerCaseLetters": "Пароли должны содержать хотя бы одну строчную букву ('a'-'z')",
+                    "passwordMustHaveUpperCaseLetters": "Пароли должны содержать хотя бы одну заглавную букву ('A'-'Z')",
+                    "passwordMustHaveDigits": "Пароли должны содержать хотя бы одну цифру ('0'-'9')",
+                    "passwordMustHaveSpecialCharacters": "Пароли должны содержать хотя бы один знак препинания или другой специальный символ"
+                },
+                "placeholders": {
+                    "new-password": "Введите новый пароль",
+                    "repeat-password": "Повторите новый пароль"
+                }
+            },
+            "account-detail": {
+                "title-new": "Новая учётная запись",
+                "labels": {
+                    "user-information": "Информация о пользователе",
+                    "is-administrator": "Администратор",
+                    "account-type": "Тип аккаунта",
+                    "login": "Вход",
+                    "account-state": "Состояние аккаунта",
+                    "account-email": "Адрес электронной почты",
+                    "locked-state": "Заблокирован"
+                },
+                "placeholders": {
+                    "account-type": "Выбрать ...",
+                    "email": "Введите адрес электронной почты",
+                    "user-name": "Введите имя пользователя"
+                }
+            },
+            "account-list": {
+                "title": "Пользователи",
+                "subtitle": "Сервис безопасности",
+                "labels": {
+                    "name": "Имя",
+                    "account-type": "Тип аккаунта",
+                    "login": "Вход",
+                    "state": "Состояние"
+                }
+            },
+            "role-detail": {
+                "subtitle": "Сведения о роли",
+                "labels": {
+                    "summary": "Резюме",
+                    "name": "Название",
+                    "description": "Описание",
+                    "assigned-permissions": "Установленные права доступа",
+                    "permission-name": "Название",
+                    "assigned-scopes": "Установленная сфера действия",
+                    "no-permissions-assigned": "Права доступа не заданы"
+                },
+                "placeholders": {
+                    "name": "Введите название",
+                    "description": "Введите описание"
+                }
+            },
+            "account-roles": {
+                "subtitle": "Назначение ролей",
+                "labels": {
+                    "select-roles": "Выберите роль для назначения",
+                    "no-roles": "Роли для назначения отсутствуют."
+                }
+            },
+            "account-roles-list": {
+                "title": "",
+                "labels": {
+                    "assigned-roles": "Установленные роли",
+                    "no-assigned": "Роли не установлены."
+                }
+            },
+            "permission-scopes": {
+                "subtitle": "Конфигурация разрешенных сфер деятельности",
+                "labels": {
+                    "select-bounded-scopes": "Выбрать ограниченную сферу",
+                    "selected": "Выбраны",
+                    "scope-name": "Название и параметры сферы деятельности",
+                    "no-scopes": "Нет сфер деятельности."
+                }
+            },
+            "role-permissions": {
+                "subtitle": "Назначение прав доступа",
+                "labels": {
+                    "select-permissions": "Выберите права доступа для назначения"
+                }
+            },
+            "new-role-wizard": {
+                "title": "Новая Роль",
+                "labels": {
+                    "summary": "Резюме",
+                    "name": "Название",
+                    "description": "Описание",
+                    "assign-permissions": "Назначить права доступа"
+                },
+                "placeholders": {
+                    "name": "Введите название",
+                    "description": "Введите описание"
+                }
+            },
+            "role-list": {
+                "title": "Роли",
+                "subtitle": "Сервис безопасности",
+                "labels": {
+                    "name": "Название"
+                }
+            },
+            "login": {
+                "labels": {
+                    "sign-in": "Вход в {{title}} Менеджер",
+                    "login": "Логин",
+                    "password": "Пароль",
+                    "remember-me": "Запомнить меня",
+                    "external-sign-in": "Войти при помощи {{displayName}}",
+                    "forgot-password": "Забыли пароль?",
+                    "log-in": "Войти"
+                }
+            },
+            "forgotpassword": {
+                "title": "Забыли пароль?",
+                "labels": {
+                    "login": "Логин или адрес электронной почты",
+                    "description": "Мы вышлем Вам письмо с инструкциями по восстановлению пароля.",
+                    "success": "Письмо с инструкциями было отправлено.",
+                    "fail": "К сожалению, пароль для данного пользователя не может быть восстановлен.",
+                    "back": "Назад",
+                    "submit": "Принять"
+                },
+                "placeholders": {
+                    "login-or-email": "Пожалуйста, введите логин или адрес электронной почты"
+                }
+            },
+            "resetpassword": {
+                "title": "Восстановление пароля",
+                "labels": {
+                    "success": "Ваш пароль был восстановлен",
+                    "fail": "К сожалению, пароль для данного пользователя не может быть восстановлен.",
+                    "submit": "Восстановить",
+                    "log-in": "Войти"
+                }
+            },
+            "license": {
+                "title": "Текущая лицензия",
+                "title-new": "Новая активация лицензии",
+                "license-info": "Информация о лицензии",
+                "license-activation": "Активация лицензии",
+                "labels": {
+                    "info-running-no-license": "Эта лицензия Virto Commerce работает на",
+                    "info-open-source-license": "Лицензия Сообщества Open Source.",
+                    "info0": "Приобретение или продление лицензии:",
+                    "info1": "Отправить ",
+                    "info2": "Мы обработаем Ваш запрос и вскоре свяжемся с Вами.",
+                    "info3": "После получения \"Кода Активации\" и / или файла лицензии необходимо заполнить одно из полей активации ниже.",
+                    "info4": "Система отобразит новую информацию о лицензии. Просмотрите ее и нажмите \"Активировать\" для подтверждения.",
+                    "customer": "Лицензия выдана",
+                    "type": "Тип",
+                    "expiration": "Окончание",
+                    "email": "Электронная почта клиента",
+                    "request-license": "Форма запроса лицензии.",
+                    "code-descr": "Введите полученный с лицензией \"Код Активации\" и нажмите [Enter]. Это самый быстрый способ активировать лицензию. (Требуется подключение к Интернету)",
+                    "file-descr": "По желанию предоставляется файл с полученной Лицензией. (Активация оффлайн)",
+                    "upload-progress": "Прогресс загрузки",
+                    "errors": "Ошибка активации"
+                },
+                "placeholders": {
+                    "code": "Введите код активации"
+                }
+            },
+            "new-account-wizard": {
+                "labels": {
+                    "login": "Логин",
+                    "email": "Электронная почта",
+                    "password": "Пароль",
+                    "repeat-password": "Повторите пароль",
+                    "assign-roles": "Установленные роли"
+                },
+                "placeholders": {
+                    "email": "Введите адрес электронной почты",
+                    "login": "Введите логин",
+                    "password": "Введите новый пароль",
+                    "repeat-password": "Повторите новый пароль"
+                },
+                "validations": {
+                    "repeat-password": "Введённые пароли не совпадают!",
+                    "password-too-weak": "Введённый пароль не удовлетворяет одной или нескольким политикам безопасности паролей:"
+                }
+            },
+            "security-main": {
+                "title": "Безопасность",
+                "subtitle": "Управление пользователями"
+            },
+            "entitySetting-list": {
+                "title": "Настройки"
+            },
+            "setting-dictionary": {
+                "subtitle": "Управление значениями словаря",
+                "labels": {
+                    "new-value": "Пожалуйста, введите значение",
+                    "current-values": "Текущее значение",
+                    "value": "Значение"
+                },
+                "validations": {
+                    "new-value-required": "Необходимо",
+                    "new-value": "Найдено дублирующее значение"
+                },
+                "placeholders": {
+                    "new-value": "Пожалуйста, введите значение"
+                }
+            },
+            "settings-detail": {
+                "title": "Настройки значений"
+            },
+            "settingGroup-list": {
+                "title": "Настройки"
+            },
+            "user-profile": {
+                "title": "Профиль пользователя",
+                "labels": {
+                    "language": "Язык",
+                    "language-description": "Язык отображения. Clear to use browser or fallback language.",
+                    "regional-format": "Региональный формат",
+                    "regional-format-description": "Региональный формат номеров, валюты, даты и времени. Clear to use browser or fallback regional format.",
+                    "time-zone": "Часовой пояс",
+                    "time-zone-description": "Текущий часовой пояс пользователя в формате IANA (tz database). Выберите ближайший город в вашем часовом поясе. Clear to use browser or fallback time zone.",
+                    "use-time-ago": "Используйте time ago формат, если это возможно",
+                    "full-date-threshold-group": "Используйте полный формат даты для дат, раньше...",
+                    "full-date-threshold-description": "Числовое значение единиц времени",
+                    "full-date-threshold-unit-description": "Единица времени (то есть часы или годы)"
+                },
+                "placeholders": {
+                    "full-date-threshold": "Введите пороговое значение",
+                    "full-date-threshold-unit": "Выберите измерение для даты порогового значения"
+                },
+                "full-date-threshold-units": {
+                    "Never": "Никогда",
+                    "Seconds": "Секунды",
+                    "Minutes": "Минуты",
+                    "Hours": "Часы",
+                    "Days": "Дни",
+                    "Weeks": "Недели",
+                    "Months": "Месяцы",
+                    "Quarters": "Кварталы",
+                    "Years": "Годы"
+                }
+            }
+        },
+        "templates": {
+            "sampleDataChoose": {
+                "labels": {
+                    "choose-sample-data-type": "Выберите образец типа данных",
+                    "size": "размер",
+                    "version": "версия"
+                }
+            },
+            "sampleDataInitialization": {
+                "labels": {
+                    "sample-data-initialization": "Пример инициализации данных",
+                    "starting-initialization": "Запуск инициализации исходных данных...",
+                    "errors": "Ошибки",
+                    "start": "Начало",
+                    "end": "Конец"
+                }
+            },
+            "licensing": {
+                "license-absent": "Лицензия сообщества",
+                "license-present": "Лицензия {{type}}, действительно до {{expirationDate | amParse | date}}",
+                "community": "Работа с общественной версией, нажмите, чтобы запросить коммерческую лицензию.",
+                "expired": "Срок действия лицензии истёк {{expirationDate | amParse | date}}, пожалуйста, обновите.",
+                "purchase": "Купить",
+                "renew": "Обновить"
+            },
+            "modulesAutoInstallation": {
+                "labels": {
+                    "module-auto-installation": "Автоматическая установка модулей",
+                    "loading": "Поиск информации о модулях...",
+                    "finished": "Установка завершена. Нажмите Перезагрузить, чтобы продолжить.",
+                    "start": "Начало",
+                    "end": "Конец"
+                }
+            }
+        },
+        "widgets": {
+            "operations": {
+                "title": "Изменения",
+                "blade-subtitle": "История изменений"
+            },
+            "dynamicProperty": {
+                "title": "Динамические свойства"
+            },
+            "entitySettings": {
+                "title": "Настройки"
+            },
+            "accountApi": {
+                "title": "Аккаунты API",
+                "blade-subtitle": "Аккаунты API"
+            },
+            "accountRoles": {
+                "title": "Роли",
+                "blade-subtitle": "Управление ролями"
+            }
+        },
+      "dialogs": {
+        "folders-delete": {
+          "title": "Подтверждение удаления",
+          "message": "Вы уверены, что хотите удалить выбранные папки или файлы?"
+        },
+        "properties-save": {
+          "title": "Сохранение изменений",
+          "message": "Свойства были изменены. Вы хотите сохранить изменения?"
+        },
+        "notification-template-save": {
+          "title": "Сохранение изменений",
+          "message": "Шаблон уведомления был изменен. Вы хотите сохранить изменения?"
+        },
+        "role-save": {
+          "title": "Сохранение изменений",
+          "message": "Роль была изменена. Вы хотите сохранить изменения?"
+        },
+        "roles-delete": {
+          "title": "Подтверждение удаления",
+          "message": "Вы уверены, что хотите удалить выбранные Роли?"
+        },
+        "account-save": {
+          "title": "Сохранение изменений",
+          "message": "Аккаунт был изменен. Вы хотите сохранить изменения?"
+        },
+        "account-delete": {
+          "title": "Подтверждение удаления",
+          "message": "Вы уверены, что хотите удалить выбранные Аккаунты?"
+        },
+        "dynamic-property-delete": {
+          "title": "Подтверждение удаления",
+          "message": "Вы уверены, что хотите удалить это Динамическое Свойство?"
+        },
+        "settings-value-delete": {
+          "title": "Подтверждение удаления",
+          "message": "Вы уверены, что хотите удалить выбранные Значения?"
+        },
+        "settings-save": {
+          "title": "Сохранение изменений",
+          "message": "Настройки были изменены. Вы хотите сохранить изменения?"
+        },
+        "settings-delete": {
+          "title": "Подтверждение удаления",
+          "message": "Вы уверены, что хотите удалить выбранные Настройки?"
+        },
+        "email-sending-success": {
+          "title": "Успех отправки",
+          "message": "Письмо было успешно отправлено!"
+        },
+        "email-send-error": {
+          "title": "Ошибка при отправке",
+          "message": "Письмо не было отправлено! Ошибка: {{error}}"
+        },
+        "dictionary-items-delete": {
+          "title": "Подтверждение удаления",
+          "message": "Вы уверены, что хотите удалить {{quantity}} выбранных элементов словаря?"
+        },
+        "module-action": {
+          "title-install": "Подтверждение установки",
+          "title-update": "Подтверждение обновления",
+          "title-delete": "Подтверждение удаления",
+          "message0-install": "Вы собираетесь установить:",
+          "message0-update": "Вы собираетесь обновить:",
+          "message0-delete": "Вы собираетесь удалить:",
+          "message1-install": "Также будут установлены следующие зависимости:",
+          "message1-delete": "Также будут удалены следующие связанные модули:",
+          "message2-install": "Установить подбор и зависимости?",
+          "message2-update": "Обновить подбор и зависимости?",
+          "message2-delete": "Удалить этот и ВСЕ зависящие модули?"
+        },
+        "module-delete": {
+          "title": "Подтверждение удаления",
+          "message": "Вы уверены, что хотите удалить этот Модуль?"
+        },
+        "api-key-delete": {
+          "title": "Подтверждение удаления",
+          "message": "Вы уверены, что хотите удалить этот ключ API?"
+        },
+        "app-restart": {
+          "title": "Завершение работы приложения",
+          "message": "Перезагрузка платформы временно отключена, эта возможность появится в следующем главном обновлении платформы. Вместо рестарта платформа будет выключена. Пожалуйста запустити приложение самостоятельно или обратитесь к вашему системному администратору. Вы действительно хотите завершить работу приложения?"
+        },
+        "error-details": {
+          "title": "Сведения об ошибке"
+        }
+      }
+    }
+}

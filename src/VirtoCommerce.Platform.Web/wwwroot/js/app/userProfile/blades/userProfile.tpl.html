@@ -1,0 +1,71 @@
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form list __info">
+                <div class="form-group">
+                    <label class="form-label" ng-bind="'platform.blades.user-profile.labels.language' | translate"></label>
+                    <ui-select ng-model="userProfile.language" on-select="setLanguage()">
+                        <ui-select-match allow-clear="true" placeholder="{{ blade.currentLanguage }}">{{ $select.selected.name }}</ui-select-match>
+                        <ui-select-choices repeat="x.id as x in languages | filter: $select.search">
+                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <div class="list-descr" ng-bind="'platform.blades.user-profile.labels.language-description' | translate"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" ng-bind="'platform.blades.user-profile.labels.regional-format' | translate"></label>
+                    <ui-select ng-model="userProfile.regionalFormat" on-select="setRegionalFormat()">
+                        <ui-select-match allow-clear="true" placeholder="{{ blade.currentRegionalFormat }}">{{ $select.selected.name }}</ui-select-match>
+                        <ui-select-choices repeat="x.id as x in regionalFormats | filter: $select.search" position="down">
+                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <div class="list-descr" ng-bind="'platform.blades.user-profile.labels.regional-format-description' | translate"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" ng-bind="'platform.blades.user-profile.labels.time-zone' | translate"></label>
+                    <ui-select ng-model="userProfile.timeZone" on-select="setTimeZone()">
+                        <ui-select-match allow-clear="true" placeholder="{{ blade.currentTimeZone }}">{{ $select.selected.name }}</ui-select-match>
+                        <ui-select-choices repeat="x.id as x in timeZones | filter: $select.search">
+                            <span ng-bind-html="x.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <div class="list-descr" ng-bind="'platform.blades.user-profile.labels.time-zone-description' | translate"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" ng-bind="'platform.blades.user-profile.labels.use-time-ago' | translate"></label>
+                    <div class="form-input">
+                        <label class="form-label __switch">
+                            <input type="checkbox" ng-model="blade.currentTimeAgoSettings.useTimeAgo" ng-change="setTimeAgoSettings()" />
+                            <span class="switch"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form">
+                    <div class="form-group clearfix">
+                        <label class="form-label" ng-bind="'platform.blades.user-profile.labels.full-date-threshold-group' | translate"></label>
+                        <div class="column">
+                            <div class="form-group">
+                                <div class="form-input __number">
+                                    <input placeholder="{{'platform.blades.user-profile.placeholders.full-date-threshold' | translate}}" smart-float num-type="integer" min="1" ng-model="blade.currentTimeAgoSettings.threshold" ng-required="blade.currentTimeAgoSettings.useTimeAgo && blade.currentTimeAgoSettings.thresholdUnit != 'Never'" ng-disabled="!blade.currentTimeAgoSettings.useTimeAgo || blade.currentTimeAgoSettings.thresholdUnit == 'Never'" ng-change="setTimeAgoSettings()">
+                                </div>
+                                <div class="list-descr" ng-bind="'platform.blades.user-profile.labels.full-date-threshold-description' | translate"></div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="form-group">
+                                <ui-select ng-model="blade.currentTimeAgoSettings.thresholdUnit" ng-required="blade.currentTimeAgoSettings.useTimeAgo" on-select="setTimeAgoSettings()" ng-disabled="!blade.currentTimeAgoSettings.useTimeAgo">
+                                    <ui-select-match placeholder="{{'platform.blades.user-profile.placeholders.full-date-threshold-unit' | translate}}">{{ ('platform.blades.user-profile.full-date-threshold-units.' + $select.selected | translate) }}</ui-select-match>
+                                    <ui-select-choices repeat="x in userProfile.timeAgoSettings.thresholdUnits | filter: $select.search">
+                                        <span ng-bind-html="('platform.blades.user-profile.full-date-threshold-units.' + x | translate) | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <div class="list-descr" ng-bind="'platform.blades.user-profile.labels.full-date-threshold-unit-description' | translate"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+*
+    margin: 0
+    outline: none
+    padding: 0
+
+html,
+body
+    height: 100%
+    width: 100%
+
+html.hidden
+    overflow: hidden
+
+html
+    -webkit-text-size-adjust: none
+
+.clearfix:after
+    clear: both
+    content: ''
+    display: block
+    font-size: 0
+
+body
+    background: $baseBg
+    color: #333
+    direction: ltr
+    font-family: $font
+    font-size: $fontSize
+    line-height: 1.4
+    overflow-x: hidden
+
+pre, code, kbd, samp, tt
+  font-size: $monospaceFontSize
+
+// http://stackoverflow.com/questions/17408815/fieldset-resizes-wrong-appears-to-have-unremovable-min-width-min-content/17863685
+fieldset
+  min-width: 0
+  width: 100%
+@-moz-document url-prefix()
+  fieldset
+    display: table-cell
+
+ul,
+ol
+  padding: 0
+  margin: 0
+
+a
+  &:hover
+    text-decoration: none
+
+p
+  margin: 0

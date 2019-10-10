@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <g id="v3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="License-expired" transform="translate(-1075.000000, -50.000000)" fill="#FFFFFF">
+            <g id="Group-12" transform="translate(0.000000, 30.000000)">
+                <g id="Group-4" transform="translate(1075.000000, 20.000000)">
+                    <path d="M17.5,12.5 C17.224,12.5 17,12.724 17,13 L17,15.5 C17,17.43 15.43,19 13.5,19 L4.5,19 C2.57,19 1,17.43 1,15.5 L1,6.5 C1,4.57 2.57,3 4.5,3 L7,3 C7.276,3 7.5,2.776 7.5,2.5 C7.5,2.224 7.276,2 7,2 L4.5,2 C2.019,2 0,4.019 0,6.5 L0,15.5 C0,17.981 2.019,20 4.5,20 L13.5,20 C15.981,20 18,17.981 18,15.5 L18,13 C18,12.724 17.776,12.5 17.5,12.5" id="Fill-1"></path>
+                    <path d="M15,9 C12.794,9 11,7.206 11,5 C11,2.794 12.794,1 15,1 C17.206,1 19,2.794 19,5 C19,7.206 17.206,9 15,9 M15,0 C12.243,0 10,2.243 10,5 C10,7.757 12.243,10 15,10 C17.757,10 20,7.757 20,5 C20,2.243 17.757,0 15,0" id="Fill-3"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
