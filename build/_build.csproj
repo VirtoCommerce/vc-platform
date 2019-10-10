@@ -20,10 +20,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="GitVersionTask" Version="5.0.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="Nuke.Common" Version="0.21.2" />
         <PackageReference Include="GitVersion.CommandLine.DotNetCore" Version="5.0.1">
             <PrivateAssets>all</PrivateAssets>
