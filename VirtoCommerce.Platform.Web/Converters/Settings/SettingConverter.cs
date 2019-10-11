@@ -1,4 +1,4 @@
-﻿using Omu.ValueInjecter;
+using Omu.ValueInjecter;
 using webModel = VirtoCommerce.Platform.Web.Model.Settings;
 using moduleModel = VirtoCommerce.Platform.Core.Settings;
 
@@ -10,6 +10,7 @@ namespace VirtoCommerce.Platform.Web.Converters.Settings
         {
 			var retVal = new webModel.Setting();
 			retVal.InjectFrom(setting);
+            retVal.IsReadonly = setting.IsRuntime;
             return retVal;
         }
 
