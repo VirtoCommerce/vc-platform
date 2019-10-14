@@ -10,7 +10,6 @@ namespace VirtoCommerce.Platform.Web.Converters.Settings
         {
 			var retVal = new webModel.Setting();
 			retVal.InjectFrom(setting);
-            retVal.IsReadonly = setting.IsRuntime;
             return retVal;
         }
 

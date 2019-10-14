@@ -35,9 +35,5 @@ namespace VirtoCommerce.Platform.Web.Model.Settings
         /// </summary>
         public string Title { get; set; }
         public string Description { get; set; }
-        /// <summary>
-        /// Flag for runtime registered settings 
-        /// </summary>
-        public bool IsReadonly { get; set; }
     }
 }
