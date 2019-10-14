@@ -57,6 +57,12 @@ namespace VirtoCommerce.Platform.Data.Settings
             return _registeredTypeSettingsByNameDict[typeName] ?? Enumerable.Empty<SettingDescriptor>();
         }
 
+        public IEnumerable<SettingDescriptor> GetSettingsForTypes(string[] typeNames)
+        {
+            return _registeredTypeSettingsByNameDict.Where(x => typeNames.Contains(x.Key)).SelectMany(x => x.Value)
+                ?? Enumerable.Empty<SettingDescriptor>();
+        }
+
         public IEnumerable<SettingDescriptor> AllRegisteredSettings => _registeredSettingsByNameDict.Values;
 
         public void RegisterSettings(IEnumerable<SettingDescriptor> settings, string moduleId = null)
@@ -89,7 +95,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             {
                 throw new ArgumentNullException(nameof(names));
             }
-            var cacheKey = CacheKey.With(GetType(), "GetSettingByNamesAsync", string.Join(";", names), objectType, objectId);
+            var cacheKey = CacheKey.With(GetType(), "GetObjectSettingsAsync", string.Join(";", names), objectType, objectId);
             var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var resultObjectSettings = new List<ObjectSettingEntry>();
@@ -124,6 +130,49 @@ namespace VirtoCommerce.Platform.Data.Settings
 
                     //Add cache  expiration token for setting
                     cacheEntry.AddExpirationToken(SettingsCacheRegion.CreateChangeToken(objectSetting));
+                }
+                return resultObjectSettings;
+            });
+            return result;
+        }
+
+        public virtual async Task<IEnumerable<ObjectSettingEntry>> GetAllObjectSettingsByTypesAndIdsAsync(IEnumerable<string> names, string[] objectTypes = null, string[] objectIds = null)
+        {
+            if (names == null)
+            {
+                throw new ArgumentNullException(nameof(names));
+            }
+            var cacheKey = CacheKey.With(GetType(), "GetAllObjectSettingsByTypesAndIdsAsync", string.Join(";", names), string.Join(";", objectTypes), string.Join(";", objectIds));
+            var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            {
+                var resultObjectSettings = new List<ObjectSettingEntry>();
+                var dbStoredSettings = new List<SettingEntity>();
+
+                //Try to load setting value from DB
+                using (var repository = _repositoryFactory())
+                {
+                    repository.DisableChangesTracking();
+                    //try to load setting from db
+                    dbStoredSettings.AddRange(await repository.GetAllObjectSettingsByTypesAndIdsAsync(objectTypes, objectIds));
+                }
+
+                foreach (var name in names)
+                {
+                    var settingDescriptor = _registeredSettingsByNameDict[name];
+                    if (settingDescriptor == null)
+                    {
+                        throw new PlatformException($"Setting with name {name} is not registered");
+                    }
+
+                    resultObjectSettings.AddRange(dbStoredSettings.Where(x => x.Name.EqualsInvariant(name)).Select(x => {
+                        var objectSetting = AbstractTypeFactory<ObjectSettingEntry>.TryCreateInstance();
+                        objectSetting = x.ToModel(objectSetting);
+
+                        //Add cache  expiration token for setting
+                        cacheEntry.AddExpirationToken(SettingsCacheRegion.CreateChangeToken(objectSetting));
+
+                        return objectSetting;
+                    }));
                 }
                 return resultObjectSettings;
             });

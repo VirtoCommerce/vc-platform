@@ -35,6 +35,40 @@ namespace VirtoCommerce.Platform.Core.Settings
             }
         }
 
+        /// <summary>
+        /// Deep load and populate settings values for entries and all nested objects 
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="entries"></param>
+        public static async Task DeepLoadSettingsAsync(this ISettingsManager manager, IEnumerable<IHasSettings> entries)
+        {
+            if (entries == null)
+            {
+                throw new ArgumentNullException(nameof(entries));
+            }
+
+            var hasSettingsObjects = entries.GetFlatObjectsListWithInterface<IHasSettings>();
+            var settingTypeNames = hasSettingsObjects.Select(x => x.TypeName).ToArray();
+            var settingIds = hasSettingsObjects.Select(x => x.Id).ToArray();
+            var settingValues = manager.GetSettingsForTypes(settingTypeNames);
+            var settingsForEntries = await manager.GetAllObjectSettingsByTypesAndIdsAsync(settingValues.Select(t => t.Name), settingTypeNames, settingIds);
+
+            foreach (var hasSettingsObject in hasSettingsObjects)
+            {
+                var typeSettings = manager.GetSettingsForType(hasSettingsObject.TypeName);
+                if (typeSettings.IsNullOrEmpty())
+                {
+                    throw new SettingsTypeNotRegisteredException(hasSettingsObject.TypeName);
+                }
+
+                hasSettingsObject.Settings = settingsForEntries
+                    .Where(s => typeSettings.Select(t => t.Name).Contains(s.Name))
+                    .Where(s => s.ObjectType.EqualsInvariant(hasSettingsObject.TypeName))
+                    .Where(s => s.ObjectId.EqualsInvariant(hasSettingsObject.Id))
+                    .ToList();
+            }
+        }
+
         public static async Task DeepSaveSettingsAsync(this ISettingsManager manager, IHasSettings entry)
         {
             await manager.DeepSaveSettingsAsync(new[] { entry });

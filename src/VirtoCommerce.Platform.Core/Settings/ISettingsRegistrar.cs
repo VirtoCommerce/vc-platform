@@ -22,5 +22,12 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// <param name="typeName"></param>
         /// <returns></returns>
         IEnumerable<SettingDescriptor> GetSettingsForType(string typeName);
+
+        /// <summary>
+        /// Returns all settings descriptors for given type names
+        /// </summary>
+        /// <param name="typeNames"></param>
+        /// <returns></returns>
+        IEnumerable<SettingDescriptor> GetSettingsForTypes(string[] typeNames);
     }
 }

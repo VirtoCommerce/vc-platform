@@ -86,6 +86,16 @@ namespace VirtoCommerce.Platform.Data.Repositories
             return result;
         }
 
+        public virtual async Task<SettingEntity[]> GetAllObjectSettingsByTypesAndIdsAsync(string[] objectTypes, string[] objectIds)
+        {
+            var result = await Settings.Include(x => x.SettingValues)
+                                 .Where(x => objectTypes.Contains(x.ObjectType))
+                                 .Where(x => objectIds.Contains(x.ObjectId))
+                                 .OrderBy(x => x.Name)
+                                 .ToArrayAsync();
+            return result;
+        }
+
         public IQueryable<AssetEntryEntity> AssetEntries => DbContext.Set<AssetEntryEntity>();
 
         public async Task<AssetEntryEntity[]> GetAssetsByIdsAsync(string[] ids)
