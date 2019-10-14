@@ -1,0 +1,151 @@
+/* Drag and drop */
+.drag-area
+  background: $baseBrd
+  border: 2px dashed #a1c0d4
+  height: 100px
+  margin: 0 0 20px
+  padding: 0 20px
+  text-align: center
+  &::after
+    content: ''
+    display: inline-block
+    height: 100%
+    vertical-align: middle
+.drag-area.bd-blue
+  background: #d2e0e8
+.drag-content
+  color: #a1c0d4
+  display: inline-block
+  font-size: 18px
+  text-shadow: 1px 1px 1px $whiteColor
+  vertical-align: middle
+
+/* Dashboard */
+$dashboardHorizontalPadding: 90px
+$dashboardVerticalPadding: 22px
+$dashboardHeadHeight: 80px
+
+.dashboard
+  background: $baseBg
+  font-family: $font
+  position: relative
+  z-index: 50
+  .dashboard-head
+    height: $dashboardHeadHeight
+    position: relative
+  .dashboard-area
+    box-sizing: border-box
+    height: calc(100% - #{$dashboardHeadHeight})
+    margin: 0 3px 0 0
+    overflow: hidden
+    position: relative
+    width: 950px
+    &:hover
+      .dashboard-inner
+        overflow: auto
+  .dashboard-inner
+    height: calc(100% - #{$dashboardVerticalPadding})
+    padding: $dashboardVerticalPadding $dashboardHorizontalPadding 0
+    position: relative
+    .gridster-loaded
+      width: 770px
+  .dashboard-title
+    position: absolute
+    top: 30px
+    font-weight: 300
+    left: $dashboardHorizontalPadding
+    text-shadow: 1px 2px rgba(255,255,255,.5), 2px -2px rgba(255,255,255,.5), -2px 2px rgba(255,255,255,.5), -2px -2px rgba(255,255,255,.5)
+    h1,
+    .__logo
+      display: inline
+    .__logo
+      max-height: $h1FontSize
+      vertical-align: top
+
+/* Log */
+.log
+  border: 1px solid $baseBrd
+  font-size: 12px
+  height: 300px
+  line-height: 1.4
+  margin: 15px 0
+  overflow: auto
+  padding: 20px
+  overflow-wrap: break-word
+.log .__info
+  color: $baseColor
+.log .__warning
+  color: #f0a30a
+.log .__debug
+  color: #a6a6a6
+.log .__error
+  color: $genericErrorColor
+
+/* Loader */
+.loader
+  display: block
+  height: 75px
+  margin: 0 auto
+  left: 50%
+  position: absolute
+  transform: translate(-50%, -50%)
+  top: 50%
+  width: 350px
+  span
+    background: $baseBrd
+    height: 20px
+    position: absolute
+    top: 25px
+    width: 20px
+
+    animation: loader 2.5s infinite ease
+  @for $i from 1 through 4
+  span:nth-child(1)
+    animation-delay: .8s
+  span:nth-child(2)
+    left: 30px
+
+    animation-delay: .6s
+  span:nth-child(3)
+    left: 60px
+
+    animation-delay: .4s
+  span:nth-child(4)
+    left: 90px
+
+    animation-delay: .2s
+  span:nth-child(5)
+    left: 120px
+
+.uk-htmleditor-fullscreen
+  left: $mainMenuWidth !important
+  .has-demo-warning &
+    top: $demoWarningHeight !important
+  .nav-bar.__collapsed + .cnt &
+    left: $mainMenuCollapsedWidth !important
+
+.list-ico.__customers,
+.menu-ico.__customers,
+.blade-t_ico.__customers
+  text-align: center
+  i
+    bottom: 0
+    font-style: normal
+    left: 0
+    position: absolute
+    right: 0
+    top: 0
+    &:before,
+    &:after
+      content: ''
+      font-size: 16px
+      text-shadow: none
+      position: absolute
+      top: 2px
+    &:before
+      left: 0
+    &:after
+      right: 0
+.list-ico.__customers,
+.menu-ico.__customers
+  position: relative
