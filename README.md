@@ -124,7 +124,7 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
 
 ```console
 dotnet.exe VirtoCommerce.Platform.Web.dll
-`
+```
 
 - Open in your browser follow url `https://localhost:5001` in the warning for not private connections that appears click advanced and continue work. How to remove this error and use a trusted self-signed cerificate please read in this article [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
 
