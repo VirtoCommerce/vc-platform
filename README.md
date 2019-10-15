@@ -103,14 +103,6 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
 -  ~~**VirtoCommerce.Domain**~~ project and nuget package (now each module defines self domain model and abstractions in Core project)
 -  ~~**VirtoCommerce.Cache**~~
 -  ~~**VirtoCommerce.DynamicExpressions**~~
-
-**Next steps**:
-- Implement cache synchronization logic between multiple platform instances use `Redis` cache for this purposes 
-- Resource based authorization (scope bounded permissions)
-- Move module projects to GitHub repositiories
-- Remaining modules
-    - ElasticSearch
-    - AzureSearch
     
 # Getting started:
 
@@ -176,12 +168,22 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
 ## Module from source code getting started
    - Run platform from binary or source code as described in the steps above 
    - Run command `cd src\VirtoCommerce.Platform.Web\Modules`
-   - For an already exists module remove folder with desired module by command `rmdir \S {module-folder}`
-   - Clone module repository from GitHub into `src\VirtoCommerce.Platform.Web\Modules` folder
+   - For an already exists module remove folder with desired module by command 
+   
+   ```console 
+   rmdir \S {module-folder}
+   ```
+   
+   - Clone module repository from GitHub into 
+   
+   ```console 
+   git clone  https://github.com/VirtoCommerce/{module-name.git}  src\VirtoCommerce.Platform.Web\Modules\{module-name}
+   ```
+   
    - Run the follow commands to build module and scripts'
 
    ```console
-      cd src\VirtoCommerce.Platform.Web\Modules\{module-folder}\src\{ModuleId}.Web
+      cd src\VirtoCommerce.Platform.Web\Modules\{module-name}\src\{module-name}.Web
    ```
 
    build module code
