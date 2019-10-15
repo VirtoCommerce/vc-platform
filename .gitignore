@@ -267,7 +267,6 @@ __pycache__/
 
 # Cake - Uncomment if you are using it
 # tools/
-Modules/
 App_Data/
 /src/VirtoCommerce.Platform.Web/wwwroot/Modules
 /src/VirtoCommerce.Platform.Web/wwwroot/lib

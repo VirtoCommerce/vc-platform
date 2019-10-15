@@ -182,7 +182,7 @@ Open `VirtoCommerce.Platform.Web` project properties and in `Debug` section set 
 
 
 # How to migrate your solution from 2.x to 3.0 platform version
-- If your solution doesn't have any custom modules and extensions you just need to use the connection string to the old database for the new 3.0 platfrom version and after first run the update scripts will transfer all your data to the new scheme otherwise, you need to convert your models according to this instruction https://github.com/VirtoCommerce/vc-platform-core/wiki/Migrate-Extension-module-from-the-Platform-2.0-to-3.0-version.
+- If your solution doesn't have any custom modules and extensions you just need to use the connection string to the old database for the new 3.0 platfrom version and after first run the update scripts will transfer all your data to the new scheme otherwise, you need to convert your models according to this instruction https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/docs/Migrate-Extension-module-from-the-Platform-2.0-to-3.0-version.md.
 
 # License
 Copyright (c) Virto Solutions LTD.  All rights reserved.
