@@ -162,14 +162,18 @@ dotnet.exe VirtoCommerce.Platform.Web.dll
     npm run webpack:build
    ```
 
-   - Run platform by dotnet CLI. Note you can add `--no-build` flag to speed up start if you already compile solution.
+   - Run platform by dotnet CLI. 
+   
+   **Note:** you can add `--no-build` flag to speed up start if you already compile solution.
 
    ```console
     dotnet run -c Development --no-launch-profile
    ```
 
    - Open in your browser follow url `http://localhost:10645`.
-   - On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store` to sign in. Don't forget to change them after first sign in.
+   - On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store` to sign in. 
+  
+**Note:** Don't forget to change them after first sign in.
 
 ## Module from source code getting started
    - Run platform from binary or source code as described in the steps above 
@@ -179,14 +183,8 @@ dotnet.exe VirtoCommerce.Platform.Web.dll
    ```console
    cd src\VirtoCommerce.Platform.Web\Modules
    ```
-   
-   - For an already exists module remove folder with desired module by command 
-   
-   ```console 
-   rmdir \S {module-folder}
-   ```
-   
-   - Clone module repository from GitHub into 
+      
+   - Clone module repository from GitHub into `Modules` foldr
    
    ```console 
    git clone  https://github.com/VirtoCommerce/{module-name.git}  src\VirtoCommerce.Platform.Web\Modules\{module-name}
@@ -218,8 +216,9 @@ dotnet.exe VirtoCommerce.Platform.Web.dll
 
 # How to debug module
 - Install and run platform as described in steps above.
-- Setup module from source code as described above, open a moduel olution in Visual Studio and attach debugger to for one of dotnet.exe processes.
-  Note to distinguish between multiple dotnet.exe processes, If you're running in windows, you can use Task Manager. If you add the Command Line column to the Details tab, it will show you which app that dotnet.exe is running.
+- Setup module from source code as described above, open a module solution in Visual Studio and attach debugger for one of dotnet.exe processes.
+
+  **Note:** to distinguish between multiple dotnet.exe processes, If you're running in windows, you can use Task Manager. If you add the Command Line column to the Details tab, it will show you which app that dotnet.exe is running.
 
 
 ## Run [storefront](https://github.com/VirtoCommerce/vc-storefront-core) with new platform version
