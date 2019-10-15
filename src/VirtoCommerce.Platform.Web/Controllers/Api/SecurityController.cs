@@ -391,7 +391,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     user.PasswordExpired = resetPassword.ForcePasswordChangeOnNextSignIn;
 
-                    // TODO: publish UserChangingEvent/UserChangedEvent?
                     var userUpdateResult = await _userManager.UpdateAsync(user);
                 }
             }
@@ -428,7 +427,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     user.PasswordExpired = resetPasswordConfirm.ForcePasswordChangeOnNextSignIn;
 
-                    // TODO: publish UserChangingEvent/UserChangedEvent?
                     var userUpdateResult = await _userManager.UpdateAsync(user);
                 }
             }
@@ -465,7 +463,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     user.PasswordExpired = false;
 
-                    // TODO: publish UserChangingEvent/UserChangedEvent?
                     var userUpdateResult = await _userManager.UpdateAsync(user);
                 }
             }
