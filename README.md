@@ -120,13 +120,19 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
      
     },
 ```
-- Run the platform by command `dotnet.exe VirtoCommerce.Platform.Web.dll`
+- Run the platform by command 
+
+```console
+dotnet.exe VirtoCommerce.Platform.Web.dll
+`
+
 - Open in your browser follow url `https://localhost:5001` in the warning for not private connections that appears click advanced and continue work. How to remove this error and use a trusted self-signed cerificate please read in this article [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
+
 - On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store` to sign in
 
 ## Platform from source code getting started 
-   - Get the latest platform source code from [release/3.0.0](https://github.com/VirtoCommerce/vc-platform/tree/release/3.0.0)
-   - Set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images 
+   Get the latest platform source code from [release/3.0.0](https://github.com/VirtoCommerce/vc-platform/tree/release/3.0.0)
+   Set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images 
 
 ```json
 "Assets": {
@@ -138,7 +144,7 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
      
     },
 ```
-   - Open `VirtoCommerce.Platform.sln` solution in Visual Studion 2019 and press F5 or run via `dotnet` CLI by typing in the console the follow commands
+   Open `VirtoCommerce.Platform.sln` solution in Visual Studion 2019 and press F5 or run via `dotnet` CLI by typing in the console the follow commands
 
    ```console
     cd src\VirtoCommerce.Platform.Web
@@ -166,22 +172,26 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
    - On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store` to sign in. Don't forget to change them after first sign in.
 
 ## Module from source code getting started
-   - Run platform from binary or source code as described in the steps above 
-   - Run command `cd src\VirtoCommerce.Platform.Web\Modules`
-   - For an already exists module remove folder with desired module by command 
+   Run platform from binary or source code as described in the steps above 
+   
+   Run command to change the current directory
+   
+   ```console
+   cd src\VirtoCommerce.Platform.Web\Modules
+   ```
+   
+   For an already exists module remove folder with desired module by command 
    
    ```console 
    rmdir \S {module-folder}
    ```
    
-   - Clone module repository from GitHub into 
+   Clone module repository from GitHub into 
    
    ```console 
    git clone  https://github.com/VirtoCommerce/{module-name.git}  src\VirtoCommerce.Platform.Web\Modules\{module-name}
    ```
    
-   - Run the follow commands to build module and scripts'
-
    ```console
       cd src\VirtoCommerce.Platform.Web\Modules\{module-name}\src\{module-name}.Web
    ```
