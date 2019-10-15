@@ -114,30 +114,102 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
     
 # Getting started:
 
-## Precompiled binary getting started
-- Download archive with platform precompiled version [VirtoCommerce.Platform.3.0.0.rc.1.zip](https://github.com/VirtoCommerce/vc-platform/releases/tag/3.0.0-rc.1)
+## Platform from precompiled binary getting started
+- Download the archive with platform precompiled version [VirtoCommerce.Platform.3.0.0.rc.1.zip](https://github.com/VirtoCommerce/vc-platform/releases/tag/3.0.0-rc.1)
 - Unpack follow zip to local disk to path `C:\vc-platform-3`. In result you should get the folder which contains platform precompiled code. 
-- Run platform by command `dotnet.exe C:\vc-platform-3\VirtoCommerce.Platform.Web.dll`
-- Open in your browser follow url `https://localhost:5001` in the warning for not private connections that appears click advanced and continue work.
-- On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store`
+- Set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images 
+```Json
+"Assets": {
+        "Provider": "FileSystem",
+        "FileSystem": {
+            "RootPath": "~/assets",
+            "PublicUrl": "https://localhost:5001/assets/" <-- Set your platform application url with port localhost:5001
+        },
+     
+    },
+```
+- Run the platform by command `dotnet.exe VirtoCommerce.Platform.Web.dll`
+- Open in your browser follow url `https://localhost:5001` in the warning for not private connections that appears click advanced and continue work. How to remove this error and use a trusted self-signed cerificate please read in this article [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
+- On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store` to sign in
 
-## Source code  getting started
-   - Get the latest source code from `master` branch
-   - Make a symlink for Modules folder 
-   ```cmd 
-   mklink /d C:\vc-platform-3\VirtoCommerce.Platform.Web\Modules C:\vc-platform-3\Modules
+## Platform from source code getting started 
+   - Get the latest platform source code from [release/3.0.0](https://github.com/VirtoCommerce/vc-platform/tree/release/3.0.0)
+   - Set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images 
+
+```json
+"Assets": {
+        "Provider": "FileSystem",
+        "FileSystem": {
+            "RootPath": "~/assets",
+            "PublicUrl": "http://localhost:10645/assets/" <-- Set your platform application url with port localhost:10645
+        },
+     
+    },
+```
+   - Open `VirtoCommerce.Platform.sln` solution in Visual Studion 2019 and press F5 or run via `dotnet` CLI by typing in the console the follow commands
+
+   ```console
+    cd src\VirtoCommerce.Platform.Web
    ```
-   - Open and compile platform solution `VirtoCommerce.Platform.sln` in any preffered IDE
-   - Install Node.js dependencies. 
+
+   install all required npm packages
+
+   ```console
+    npm ci
    ```
-   npm install
+    
+   bundle all js scripts and css styles
+
+   ```console
+    npm run webpack:build
    ```
-   - build and pack js scripts and css for platform 
+
+   run platform by dotnet CLI. Note you can add `--no-build` flag to speed up start if you already compile solution.
+
+   ```console
+    dotnet run -c Development --no-launch-profile
    ```
-   npm run webpack:dev
+
+   - Open in your browser follow url `http://localhost:10645`.
+   - On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store` to sign in. Don't forget to change them after first sign in.
+
+## Module from source code getting started
+   - Run platform from binary or source code as described in the steps above 
+   - Run command `cd src\VirtoCommerce.Platform.Web\Modules`
+   - For an already exists module remove folder with desired module by command `rmdir \S {module-folder}`
+   - Clone module repository from GitHub into `src\VirtoCommerce.Platform.Web\Modules` folder
+   - Run the follow commands to build module and scripts'
+
+   ```console
+      cd src\VirtoCommerce.Platform.Web\Modules\{module-folder}\src\{ModuleId}.Web
    ```
-   - repeat previous command for each module in `Modules` folder
-   
+
+   build module code
+
+   ```console
+      dotnet build -c Development
+   ```
+
+      install all required npm packages
+
+   ```console
+      npm ci 
+   ```
+
+   bundle all js scripts and css styles
+
+   ```console
+      npm run webpack:build
+   ```
+
+   - Restart the platform to load new module assemblies into the application process
+
+# How to debug module
+- Install and run platform as described in steps above.
+- Open module solution in Visual Studio and attach debugger to for one of dotnet.exe processes.
+  Note to distinguish between multiple dotnet.exe processes, If you're running in windows, you can use Task Manager. If you add the Command Line column to the Details tab, it will show you which app that dotnet.exe is running.
+
+
 ## Run [storefront](https://github.com/VirtoCommerce/vc-storefront-core) with new platform version
 - Deploy  the latest storefront version from `dev` branch by any of preffered way described there https://virtocommerce.com/docs/vc2devguide/deployment/storefront-deployment
 - Make changes  in  `appsettings.json`    
@@ -151,34 +223,6 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
 "UserName": "admin",
 "Password": "store"
 ```
-
-## Run platform with Http in development mode
-
-### Using CLI in development mode
-- Make shure that you have installed latest version of dot.net core SDK 2.2
-- To run platform navigate to `VirtoCommerce.Platform.Web` folder via CLI and run `dotnet run -c Development --no-launch-profile`. You can add `--no-build` flag to speed up start if you already compile solution.
-- Browse to `https://localhost:5001`
-
-## Run platform with Https support
-
-### Using VisualStudio
-Open `VirtoCommerce.Platform.Web` project properties and in `Debug` section set checkbox - `Enable SSL`. VisualStudio can ask you to install Certificate, just accept and platform will be running with Https support.
-
-### Using CLI with Https
-- Make shure that you have installed latest version of dot.net core SDK 2.2
-- Install SSL certificate with CLI command `dotnet dev-certs https --trust`
-- Restart your machine
-- To run platform navigate to `VirtoCommerce.Platform.Web` folder via CLI and run `dotnet run -c Release --no-launch-profile`. You can add `--no-build` flag to speed up start if you already compile solution.
-- Browse to `https://localhost:5001`
-
-
-# How to debug module
-- Install and run platform as described in steps above.
-- Navigate into platform app directory and find `Modules` folder
-- Clone a module from GitHub into `Modules` folder, if module already installed as binary just replace it folder
-- Open and build  a module solution in Visual Studio
-- Run platform by using CLI `dotnet run -c Development --no-build --no-restore` as described in steps above
-- Attach debugger into `dotnet` process
 
 
 # How to migrate your solution from 2.x to 3.0 platform version
