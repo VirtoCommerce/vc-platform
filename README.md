@@ -179,14 +179,8 @@ dotnet.exe VirtoCommerce.Platform.Web.dll
    ```console
    cd src\VirtoCommerce.Platform.Web\Modules
    ```
-   
-   - For an already exists module remove folder with desired module by command 
-   
-   ```console 
-   rmdir \S {module-folder}
-   ```
-   
-   - Clone module repository from GitHub into 
+      
+   - Clone module repository from GitHub into `Modules` foldr
    
    ```console 
    git clone  https://github.com/VirtoCommerce/{module-name.git}  src\VirtoCommerce.Platform.Web\Modules\{module-name}
