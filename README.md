@@ -218,7 +218,7 @@ dotnet.exe VirtoCommerce.Platform.Web.dll
 
 # How to debug module
 - Install and run platform as described in steps above.
-- Open module solution in Visual Studio and attach debugger to for one of dotnet.exe processes.
+- Setup module from source code as described above, open a moduel olution in Visual Studio and attach debugger to for one of dotnet.exe processes.
   Note to distinguish between multiple dotnet.exe processes, If you're running in windows, you can use Task Manager. If you add the Command Line column to the Details tab, it will show you which app that dotnet.exe is running.
 
 
