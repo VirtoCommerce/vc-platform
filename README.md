@@ -149,7 +149,7 @@ dotnet.exe VirtoCommerce.Platform.Web.dll
    ```console
     cd src\VirtoCommerce.Platform.Web
    ```
-
+   
    install all required npm packages
 
    ```console
