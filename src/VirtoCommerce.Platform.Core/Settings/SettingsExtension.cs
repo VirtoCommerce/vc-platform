@@ -48,21 +48,14 @@ namespace VirtoCommerce.Platform.Core.Settings
             }
 
             var hasSettingsObjects = entries.GetFlatObjectsListWithInterface<IHasSettings>();
-            var settingTypeNames = hasSettingsObjects.Select(x => x.TypeName).ToArray();
-            var settingIds = hasSettingsObjects.Select(x => x.Id).ToArray();
+            var settingTypeNames = hasSettingsObjects.Select(x => x.TypeName).Distinct().ToArray();
             var settingValues = manager.GetSettingsForTypes(settingTypeNames);
-            var settingsForEntries = await manager.GetAllObjectSettingsByTypesAndIdsAsync(settingValues.Select(t => t.Name), settingTypeNames, settingIds);
+            var tenantIdentities = hasSettingsObjects.Select(s => new TenantIdentity(s.Id, s.TypeName)).ToArray();
+            var settingValuesForEntries = await manager.GetObjectSettingsByTypesAndTenantIdentitiesAsync(settingValues.Select(t => t.Name), tenantIdentities);
 
             foreach (var hasSettingsObject in hasSettingsObjects)
             {
-                var typeSettings = manager.GetSettingsForType(hasSettingsObject.TypeName);
-                if (typeSettings.IsNullOrEmpty())
-                {
-                    throw new SettingsTypeNotRegisteredException(hasSettingsObject.TypeName);
-                }
-
-                hasSettingsObject.Settings = settingsForEntries
-                    .Where(s => typeSettings.Select(t => t.Name).Contains(s.Name))
+                hasSettingsObject.Settings = settingValuesForEntries
                     .Where(s => s.ObjectType.EqualsInvariant(hasSettingsObject.TypeName))
                     .Where(s => s.ObjectId.EqualsInvariant(hasSettingsObject.Id))
                     .ToList();

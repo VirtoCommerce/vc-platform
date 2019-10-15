@@ -44,26 +44,29 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         {
             //Arrange
             var names = new[] { "name1", "name2" };
-            var objectTypes = new[] { "", "store" };
-            var objectIds = new[] { null, Guid.NewGuid().ToString() };
+            var tenantIdenties = new[]
+            {
+                new TenantIdentity(Guid.NewGuid().ToString(), "store"),
+                new TenantIdentity(null, null),
+            };
             var settingValues = new[]
             {
                 new SettingEntity
                 {
                     Name = names[0],
-                    ObjectType = objectTypes[0],
-                    ObjectId = objectIds[0],
+                    ObjectType = tenantIdenties[0].Type,
+                    ObjectId = tenantIdenties[0].Id,
                     SettingValues = new ObservableCollection<SettingValueEntity>()
                 },
                 new SettingEntity
                 {
                     Name = names[1],
-                    ObjectType = objectTypes[1],
-                    ObjectId = objectIds[1],
+                    ObjectType = tenantIdenties[1].Type,
+                    ObjectId = tenantIdenties[1].Id,
                     SettingValues = new ObservableCollection<SettingValueEntity>()
                 }
             };
-            _platformRepositoryMock.Setup(x => x.GetAllObjectSettingsByTypesAndIdsAsync(objectTypes, objectIds))
+            _platformRepositoryMock.Setup(x => x.GetAllObjectSettingsByTypesAndIdsAsync(tenantIdenties))
                 .ReturnsAsync(settingValues);
             _memoryCasheMock.Setup(pmc => pmc.CreateEntry(It.IsAny<object>())).Returns(_cacheEntryMock.Object);
 
@@ -71,11 +74,11 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
 
 
             //Act
-            var result = await _settingsManager.GetAllObjectSettingsByTypesAndIdsAsync(names, objectTypes, objectIds);
+            var result = await _settingsManager.GetObjectSettingsByTypesAndTenantIdentitiesAsync(names, tenantIdenties);
 
             //Assert
             Assert.NotNull(result);
-            Assert.Equal(2, result.Count());
+            Assert.Equal(4, result.Count());
         }
 
         [Fact]
@@ -83,32 +86,35 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         {
             //Arrange
             var names = new[] { "name1", "name2" };
-            var objectTypes = new[] { typeof(TestSettingEntry).Name, "type2" };
-            var objectIds = new[] { Guid.NewGuid().ToString(), null };
+            var tenantIdenties = new[]
+            {
+                new TenantIdentity(Guid.NewGuid().ToString(), typeof(TestSettingEntry).Name),
+                new TenantIdentity(null, "type2"),
+            };
             var settingValues = new[]
             {
                 new SettingEntity
                 {
                     Name = names[0],
-                    ObjectType = objectTypes[0],
-                    ObjectId = objectIds[0],
+                    ObjectType = tenantIdenties[0].Id,
+                    ObjectId = tenantIdenties[0].Type,
                     SettingValues = new ObservableCollection<SettingValueEntity>()
                 },
                 new SettingEntity
                 {
                     Name = names[1],
-                    ObjectType = objectTypes[1],
-                    ObjectId = objectIds[1],
+                    ObjectType = tenantIdenties[1].Id,
+                    ObjectId = tenantIdenties[1].Type,
                     SettingValues = new ObservableCollection<SettingValueEntity>()
                 }
             };
-            _platformRepositoryMock.Setup(x => x.GetAllObjectSettingsByTypesAndIdsAsync(new[] { objectTypes[0] }, new[] { objectIds[0] }))
+            _platformRepositoryMock.Setup(x => x.GetAllObjectSettingsByTypesAndIdsAsync(tenantIdenties))
                 .ReturnsAsync(settingValues);
             _memoryCasheMock.Setup(pmc => pmc.CreateEntry(It.IsAny<object>())).Returns(_cacheEntryMock.Object);
 
             _settingsManager.RegisterSettingsForType(names.Select(n => new SettingDescriptor { Name = n }), typeof(TestSettingEntry).Name);
             _settingsManager.RegisterSettings(names.Select(n => new SettingDescriptor { Name = n }));
-            var entries = new [] { new TestSettingEntry { Id = objectIds[0] } };
+            var entries = new [] { new TestSettingEntry { Id = tenantIdenties[0].Id } };
 
             //Act
             await SettingsExtension.DeepLoadSettingsAsync(_settingsManager, entries);

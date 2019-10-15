@@ -111,21 +111,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 
                 foreach (var name in names)
                 {
-                    var settingDescriptor = _registeredSettingsByNameDict[name];
-                    if (settingDescriptor == null)
-                    {
-                        throw new PlatformException($"Setting with name {name} is not registered");
-                    }
-                    var objectSetting = new ObjectSettingEntry(settingDescriptor)
-                    {
-                        ObjectType = objectType,
-                        ObjectId = objectId
-                    };
-                    var dbSetting = dbStoredSettings.FirstOrDefault(x => x.Name.EqualsInvariant(name));
-                    if (dbSetting != null)
-                    {
-                        objectSetting = dbSetting.ToModel(objectSetting);
-                    }
+                    var objectSetting = GenerateObjectSettingEntry(name, new TenantIdentity(objectId, objectType), dbStoredSettings);
                     resultObjectSettings.Add(objectSetting);
 
                     //Add cache  expiration token for setting
@@ -136,13 +122,13 @@ namespace VirtoCommerce.Platform.Data.Settings
             return result;
         }
 
-        public virtual async Task<IEnumerable<ObjectSettingEntry>> GetAllObjectSettingsByTypesAndIdsAsync(IEnumerable<string> names, string[] objectTypes = null, string[] objectIds = null)
+        public virtual async Task<IEnumerable<ObjectSettingEntry>> GetObjectSettingsByTypesAndTenantIdentitiesAsync(IEnumerable<string> names, TenantIdentity[] tenantIdentities = null)
         {
             if (names == null)
             {
                 throw new ArgumentNullException(nameof(names));
             }
-            var cacheKey = CacheKey.With(GetType(), "GetAllObjectSettingsByTypesAndIdsAsync", string.Join(";", names), string.Join(";", objectTypes), string.Join(";", objectIds));
+            var cacheKey = CacheKey.With(GetType(), "GetObjectSettingsByTypesAndTenantIdentitiesAsync", string.Join(";", names), string.Join(";", tenantIdentities.Select(t => t.CompositeIdAndTypeKey)));
             var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var resultObjectSettings = new List<ObjectSettingEntry>();
@@ -153,27 +139,21 @@ namespace VirtoCommerce.Platform.Data.Settings
                 {
                     repository.DisableChangesTracking();
                     //try to load setting from db
-                    dbStoredSettings.AddRange(await repository.GetAllObjectSettingsByTypesAndIdsAsync(objectTypes, objectIds));
+                    dbStoredSettings.AddRange(await repository.GetAllObjectSettingsByTypesAndIdsAsync(tenantIdentities));
                 }
 
                 foreach (var name in names)
                 {
-                    var settingDescriptor = _registeredSettingsByNameDict[name];
-                    if (settingDescriptor == null)
+                    var objectSettings = tenantIdentities.Select(x =>
                     {
-                        throw new PlatformException($"Setting with name {name} is not registered");
-                    }
-
-                    resultObjectSettings.AddRange(dbStoredSettings.Where(x => x.Name.EqualsInvariant(name)).Select(x => {
-                        var objectSetting = AbstractTypeFactory<ObjectSettingEntry>.TryCreateInstance();
-                        objectSetting = x.ToModel(objectSetting);
-
-                        //Add cache  expiration token for setting
+                        var objectSetting = GenerateObjectSettingEntry(name, x, dbStoredSettings);
                         cacheEntry.AddExpirationToken(SettingsCacheRegion.CreateChangeToken(objectSetting));
-
                         return objectSetting;
-                    }));
+                    });
+
+                    resultObjectSettings.AddRange(objectSettings);
                 }
+
                 return resultObjectSettings;
             });
             return result;
@@ -247,6 +227,38 @@ namespace VirtoCommerce.Platform.Data.Settings
             {
                 SettingsCacheRegion.ExpireSetting(setting);
             }
+        }
+
+
+        private ObjectSettingEntry GenerateObjectSettingEntry(string name, TenantIdentity tenantIdentity, IList<SettingEntity> dbStoredSettings)
+        {
+            var settingDescriptor = _registeredSettingsByNameDict[name];
+            if (settingDescriptor == null)
+            {
+                throw new PlatformException($"Setting with name {name} is not registered");
+            }
+
+            var result = new ObjectSettingEntry(settingDescriptor)
+            {
+                ObjectId = tenantIdentity.Id,
+                ObjectType = tenantIdentity.Type
+            };
+
+            var query = dbStoredSettings.AsQueryable();
+
+            if (!string.IsNullOrEmpty(tenantIdentity.Id) && !string.IsNullOrEmpty(tenantIdentity.Type))
+            {
+                query = query.Where(x => x.ObjectId.EqualsInvariant(tenantIdentity.Id) && x.ObjectType.EqualsInvariant(tenantIdentity.Type));
+            }
+
+            var dbSetting = query.FirstOrDefault(x => x.Name.EqualsInvariant(name));
+
+            if (dbSetting != null)
+            {
+                result = dbSetting.ToModel(result);
+            }
+
+            return result;
         }
 
 
