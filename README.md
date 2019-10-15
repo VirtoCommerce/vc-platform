@@ -115,7 +115,7 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
 # Getting started:
 
 ## Precompiled binary getting started
-- Download archive with platform precompiled version [VirtoCommerce.Platform.3.0.0.beta.zip](https://github.com/VirtoCommerce/vc-platform-core/releases/tag/v3.0.0.beta)
+- Download archive with platform precompiled version [VirtoCommerce.Platform.3.0.0.rc.1.zip](https://github.com/VirtoCommerce/vc-platform/releases/tag/3.0.0-rc.1)
 - Unpack follow zip to local disk to path `C:\vc-platform-3`. In result you should get the folder which contains platform precompiled code. 
 - Run platform by command `dotnet.exe C:\vc-platform-3\VirtoCommerce.Platform.Web.dll`
 - Open in your browser follow url `https://localhost:5001` in the warning for not private connections that appears click advanced and continue work.

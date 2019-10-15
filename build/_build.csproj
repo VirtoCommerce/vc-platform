@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <PackageId>VirtoCommerce.GlobalTool</PackageId>
         <OutputType>Exe</OutputType>
@@ -15,7 +15,7 @@
         <Description>Cross-platform  build automation system for VirtoCommerce projects</Description>
         <NeutralLanguage>en-US</NeutralLanguage>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <PackageVersion>3.0.0-beta0003</PackageVersion>
+        <PackageVersion>3.0.0-beta0004</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>      

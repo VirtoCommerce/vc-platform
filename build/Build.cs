@@ -78,8 +78,9 @@ class Build : NukeBuild
 
     string ZipFileName => IsModule ? ModuleManifest.Id + "_" + string.Join("-", ModuleManifest.Version, ModuleManifest.VersionTag) + ".zip" : "VirtoCommerce.Platform." + GitVersion.SemVer + ".zip";
     string ZipFilePath => ArtifactsDirectory / ZipFileName;
+    string GitRepositoryName => GitRepository.Identifier.Split('/')[1];
 
-    string ModulePackageUrl => $"https://virtocommerce.blob.core.windows.net/modules3/{ModuleManifest.Id}_{ModuleSemVersion}.zip";
+    string ModulePackageUrl => $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ModuleSemVersion}/{ModuleManifest.Id}_{ModuleSemVersion}.zip";
     GitRepository ModulesRepository => GitRepository.FromUrl("https://github.com/VirtoCommerce/vc-modules.git");
 
     bool IsModule => FileExists(ModuleManifestFile);
@@ -377,13 +378,12 @@ class Build : NukeBuild
              var tag = "v" + (IsModule ? ModuleSemVersion : GitVersion.SemVer);
              FinishReleaseOrHotfix(tag);
 
-             var repositoryName = GitRepository.Identifier.Split('/')[1];
              void RunGitHubRelease(string args)
              {
                  ProcessTasks.StartProcess("github-release", args, RootDirectory).AssertZeroExitCode();
              }
-             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {repositoryName} --tag {tag} "); //-c branch -d description
-             RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {repositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
+             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} "); //-c branch -d description
+             RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
          });
 
         void FinishReleaseOrHotfix(string tag)
