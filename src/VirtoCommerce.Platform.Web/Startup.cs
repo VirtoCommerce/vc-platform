@@ -188,7 +188,7 @@ namespace VirtoCommerce.Platform.Web
                 }
             }
 
-            services.Configure<Core.Security.AuthorizationOptions>(Configuration.GetSection("Authorization"));
+            services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
@@ -274,14 +274,15 @@ namespace VirtoCommerce.Platform.Web
             // Default password validation service implementation
             services.AddScoped<IPasswordCheckService, PasswordCheckService>();
 
-            var modulesDiscoveryPath = Path.GetFullPath("Modules");
-            services.AddModules(mvcBuilder, options =>
-            {
-                options.DiscoveryPath = modulesDiscoveryPath;
-                options.ProbingPath = "App_Data/Modules";
-            });
+            services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
+                    .PostConfigure(options =>
+                     {
+                          options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "Modules");
+                     })
+                    .ValidateDataAnnotations();   
+            services.AddModules(mvcBuilder);
 
-            services.Configure<ExternalModuleCatalogOptions>(Configuration.GetSection("ExternalModules"));
+            services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
                         
             //Add SignalR for push notifications
