@@ -109,6 +109,7 @@
     <Compile Include="Notifications\OrderNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\PasswordCheckServiceTests.cs" />
+    <Compile Include="Settings\SettingsManagerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj">

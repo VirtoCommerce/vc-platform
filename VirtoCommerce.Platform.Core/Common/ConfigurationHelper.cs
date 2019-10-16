@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
@@ -54,6 +54,11 @@ namespace VirtoCommerce.Platform.Core.Common
         public static string[] SplitAppSettingsStringValue(string name)
         {
             return SplitAppSettingsStringValue(name, string.Empty, _valuesSeparator, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static string[] SplitNullableAppSettingsStringValue(string name)
+        {
+            return GetAppSettingsValue(name)?.Split(_valuesSeparator, StringSplitOptions.None); // Keeping empty entries intentionally
         }
 
         public static string[] SplitAppSettingsStringValue(string name, string defaultValue, char[] separator, StringSplitOptions options)
