@@ -103,32 +103,13 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
 -  ~~**VirtoCommerce.Domain**~~ project and nuget package (now each module defines self domain model and abstractions in Core project)
 -  ~~**VirtoCommerce.Cache**~~
 -  ~~**VirtoCommerce.DynamicExpressions**~~
-    
+
 # Getting started:
 
 ## Platform from precompiled binary getting started
-- Download the archive with platform precompiled version [VirtoCommerce.Platform.3.0.0.rc.1.zip](https://github.com/VirtoCommerce/vc-platform/releases/tag/3.0.0-rc.1)
-- Unpack follow zip to local disk to path `C:\vc-platform-3`. In result you should get the folder which contains platform precompiled code. 
-- Set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images 
-```Json
-"Assets": {
-        "Provider": "FileSystem",
-        "FileSystem": {
-            "RootPath": "~/assets",
-            "PublicUrl": "https://localhost:5001/assets/" <-- Set your platform application url with port localhost:5001
-        },
-     
-    },
-```
-- Run the platform by command 
 
-```console
-dotnet.exe VirtoCommerce.Platform.Web.dll
-```
-
-- Open in your browser follow url `https://localhost:5001` in the warning for not private connections that appears click advanced and continue work. How to remove this error and use a trusted self-signed cerificate please read in this article [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
-
-- On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store` to sign in
+- Deploy Platform on [Windows](docs/deploy-from-precompiled-binaries-windows.md)
+-* Deploy Platform on [Linux](docs/deploy-from-precompiled-binaries-linux.md)
 
 ## Platform from source code getting started 
   - Get the latest platform source code from [release/3.0.0](https://github.com/VirtoCommerce/vc-platform/tree/release/3.0.0)
