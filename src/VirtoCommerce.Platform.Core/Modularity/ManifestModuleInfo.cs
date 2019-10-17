@@ -146,7 +146,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         public override string ToString()
         {
-            return Identity.ToString();
+            return $"{Identity.ToString()}{(!string.IsNullOrEmpty(VersionTag) ? "-"+VersionTag : "")}";
         }
 
         public override bool Equals(object obj)

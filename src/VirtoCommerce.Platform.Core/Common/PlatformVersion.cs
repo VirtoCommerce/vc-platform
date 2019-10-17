@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,5 +10,6 @@ namespace VirtoCommerce.Platform.Core.Common
 	public static class PlatformVersion
 	{
 		public static SemanticVersion CurrentVersion { get; set; }
+        public static string ProductVersion { get; set; }
 	}
 }

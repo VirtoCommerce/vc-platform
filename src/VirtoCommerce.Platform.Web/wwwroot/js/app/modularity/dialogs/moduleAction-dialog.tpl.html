@@ -8,14 +8,14 @@
     <p ng-if="action==='update'">{{ 'platform.dialogs.module-action.message0-update' | translate }}</p>
     <p ng-if="action==='uninstall'">{{ 'platform.dialogs.module-action.message0-delete' | translate }}</p>
     <ul class="item-list-clearfix">
-        <li ng-repeat="data in selection">{{data.id}} ({{action==='update' ? data.$alternativeVersion + ' &#8658; ' : ''}}{{data.version}})</li>
+        <li ng-repeat="data in selection">{{data.id}} ({{action==='update' ? data.$alternativeVersion + ' &#8658; ' : ''}}{{data.version}}<span ng-if="data.versionTag">-{{data.versionTag}}</span>)</li>
     </ul>
     <div ng-if="dependencies.length">
         <br>
         <p ng-if="action==='install' || action==='update'">{{ 'platform.dialogs.module-action.message1-install' | translate }}</p>
         <p ng-if="action==='uninstall'">{{ 'platform.dialogs.module-action.message1-delete' | translate }}</p>
         <ul style="max-height:530px;">
-            <li ng-repeat="data in dependencies">{{data.id}} ({{data.version}})</li>
+            <li ng-repeat="data in dependencies">{{data.id}} ({{data.version}}<span ng-if="data.versionTag">-{{data.versionTag}}</span>)</li>
         </ul>
     </div>
     <!--<br>
