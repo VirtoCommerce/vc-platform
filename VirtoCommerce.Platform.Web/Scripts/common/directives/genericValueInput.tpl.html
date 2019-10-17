@@ -186,9 +186,9 @@
         </ui-select>
     </div>
     <div ng-repeat="data in context.currentPropValues[0].displayNames | orderBy: 'locale'" style="margin:5px 0;">
-        <span ng-if="data.locale.length>2" class="flag flag-{{data.locale.substr(3, 2).toLowerCase()}}"></span>
-        <span ng-if="data.locale.length<=2" class="langCode">{{data.locale.toUpperCase()}}</span>
-        {{data.name}}
+        <div class="localized-name">
+            <label class="lang-code">{{data.locale}}</label> {{data.name}}
+        </div>
     </div>
 </script>
 <script type="text/ng-template" id="dShortText-dictionary-multivalue-multilang.html">
