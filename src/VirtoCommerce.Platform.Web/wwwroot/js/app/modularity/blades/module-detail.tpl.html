@@ -60,7 +60,7 @@
                     </li>
                     <li class="list-item">
                         <div class="list-t">{{ 'platform.blades.module-detail.labels.version' | translate }}</div>
-                        <div class="list-descr">{{blade.currentEntity.version}}-{{blade.currentEntity.versionTag}}</div>
+                        <div class="list-descr">{{blade.currentEntity.version}} <span ng-if='blade.currentEntity.versionTag'>-{{blade.currentEntity.versionTag}}</span></div>
                     </li>
                     <li class="list-item">
                         <a class="list-link" ng-if="blade.currentEntity.licenseUrl" ng-href="{{blade.currentEntity.licenseUrl}}" target="_blank">{{ 'platform.blades.module-detail.labels.license' | translate }}</a>
@@ -95,9 +95,9 @@
                         <label class="form-label">{{ 'platform.blades.module-detail.labels.install-version' | translate }}</label>
                         <div class="form-input">
                             <ui-select ng-model="blade.currentEntity">
-                                <ui-select-match>{{$select.selected.version}}</ui-select-match>
+                                <ui-select-match>{{$select.selected.version}}<span ng-if='blade.currentEntity.versionTag'>-{{blade.currentEntity.versionTag}}</span></ui-select-match>
                                 <ui-select-choices repeat="x in availableVersions | filter: {version: $select.search}">
-                                    <span ng-bind-html="x.version | highlight: $select.search"></span>
+                                    <span ng-bind-html="x.version + (x.versionTag ? '-'+x.versionTag : '') | highlight: $select.search"></span>
                                 </ui-select-choices>
                             </ui-select>
                         </div>
