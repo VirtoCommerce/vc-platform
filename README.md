@@ -109,7 +109,7 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
 ## Platform from precompiled binary getting started
 
 - Deploy Platform on [Windows](docs/deploy-from-precompiled-binaries-windows.md)
--* Deploy Platform on [Linux](docs/deploy-from-precompiled-binaries-linux.md)
+- Deploy Platform on [Linux](docs/deploy-from-precompiled-binaries-linux.md)
 
 ## Platform from source code getting started 
   - Get the latest platform source code from [release/3.0.0](https://github.com/VirtoCommerce/vc-platform/tree/release/3.0.0)
