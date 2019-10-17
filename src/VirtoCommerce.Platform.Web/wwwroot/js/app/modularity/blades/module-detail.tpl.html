@@ -60,7 +60,7 @@
                     </li>
                     <li class="list-item">
                         <div class="list-t">{{ 'platform.blades.module-detail.labels.version' | translate }}</div>
-                        <div class="list-descr">{{blade.currentEntity.version}}</div>
+                        <div class="list-descr">{{blade.currentEntity.version}}-{{blade.currentEntity.versionTag}}</div>
                     </li>
                     <li class="list-item">
                         <a class="list-link" ng-if="blade.currentEntity.licenseUrl" ng-href="{{blade.currentEntity.licenseUrl}}" target="_blank">{{ 'platform.blades.module-detail.labels.license' | translate }}</a>

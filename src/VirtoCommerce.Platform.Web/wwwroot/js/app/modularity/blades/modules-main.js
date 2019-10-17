@@ -39,8 +39,10 @@
                             if (m === foundInstalledModule) {
                                 if (m !== latest)
                                     m.$alternativeVersion = latest.version;
+                                    m.$alternativeVersionTag = latest.versionTag;
                             } else {
                                 m.$alternativeVersion = foundInstalledModule.version;
+                                m.$alternativeVersionTag = foundInstalledModule.versionTag;
                             }
                         });
                     }

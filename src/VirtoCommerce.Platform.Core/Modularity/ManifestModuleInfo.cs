@@ -62,6 +62,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
             Id = manifest.Id;
             Version = SemanticVersion.Parse(manifest.Version);
+            VersionTag = manifest.VersionTag;
             PlatformVersion = SemanticVersion.Parse(manifest.PlatformVersion);
             ReleaseNotes = manifest.ReleaseNotes;
             Ref = manifest.PackageUrl;

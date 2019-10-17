@@ -73,7 +73,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             EnsureModulesCatalogInitialized();
 
-            var retVal = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().OrderBy(x => x.Id).ThenBy(x => x.Version)
+            var retVal = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
+                                               .OrderBy(x => x.Id)
+                                               .ThenBy(x => x.Version)
+                                               .ThenBy(x => x.VersionTag)
                                                .Select(x => new ModuleDescriptor(x))
                                                .ToArray();
 
