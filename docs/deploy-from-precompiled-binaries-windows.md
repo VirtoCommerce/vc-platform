@@ -19,7 +19,7 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 * Navigate to the <a href="https://github.com/VirtoCommerce/vc-platform/releases">Releases section of Virto Commerce Platform in GitHub.</a>
 
-* You will find **VirtoCommerce.Platform.3.x.x.zip** file. In this file the site has already been built and can be run without additional compilation. It does not includes all the source code.
+* You will find **VirtoCommerce.Platform.3.x.x.zip** file. In this file the site has already been built and can be run without additional compilation. The source code is not included.
 
 * Unpack this zip to a local directory **C:\vc-platform-3**. After that you will have the directory with Platform precompiled files.
 
@@ -53,7 +53,7 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 * Install and trust HTTPS certificate
 
-To trust the .NET Core SDK HTTPS development certificate perform run:
+Run to trust the .NET Core SDK HTTPS development certificate:
 
 ```console
 dotnet.exe dev-certs https --trust
@@ -61,7 +61,7 @@ dotnet.exe dev-certs https --trust
 
 Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust)
 
-* Run the Platform by follow command
+* Run the Platform by following command:
 
 ```console
 dotnet.exe C:\vc-platform-3\VirtoCommerce.Platform.Web.dll
@@ -74,17 +74,19 @@ Now listening on: http://localhost:5000
 Now listening on: https://localhost:5001
 ```
 
-### First sign in
+### First run sign in
 
-* Open in your browser follow url `https://localhost:5001` in the warning for not private connections that appears click advanced and continue work. How to remove this error and use a trusted self-signed certificate please read in this article [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
-* On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials:
+* Open `https://localhost:5001` url in your browser. "Your connection is not private" might appear. Click "Advanced" and "Proceed to ...".
+Read more on removing this error and using a self-signed certificate: [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
+* The application will create and initialize database on the first request. After that you should see the sign in page. Use the following credentials:
   * Login: **admin**
   * Password: **store**
 
 ### Host on Windows with IIS
 
-VirtoCommerce.Platform project already include the **web.config** file with all necessary settings for running in IIS.
-How to configure IIS application to host ASP.NET Core site please learn more in the official Microsoft ASP.NET Core documentation
+VirtoCommerce.Platform project already include the **web.config** ffile is already included in the release package. It contains all the necessary settings for running in IIS.
+
+Read more in the official Microsoft ASP.NET Core documentation:
 [Host ASP.NET Core on Windows with IIS](https://docs.microsoft.com/en-us/aspnet/core/publishing/iis)
 
 Open the VirtoCommerce Platform application in the browser.

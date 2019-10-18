@@ -19,7 +19,7 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 * Navigate to the <a href="https://github.com/VirtoCommerce/vc-platform/releases">Releases section of Virto Commerce Platform in GitHub.</a>
 
-* You will find **VirtoCommerce.Platform.3.x.x.zip** file. In this file the site has already been built and can be run without additional compilation. It does not includes all the source code. Run command to download binaries:
+* You will find **VirtoCommerce.Platform.3.x.x.zip** file. In this file the site has already been built and can be run without additional compilation. The source code is not included. Run command to download binaries:
 
 ```console
 wget "https://github.com/VirtoCommerce/vc-platform/releases/download/3.x.x/VirtoCommerce.Platform.3.x.x.zip"
@@ -45,7 +45,7 @@ unzip VirtoCommerce.Platform.3.x.x.zip -d vc-platform-3
 
 ```
 
-* In the **Assets** section set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images
+* In the **Assets** section set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order to display images
 
 ```json
 "Assets": {
@@ -61,11 +61,11 @@ unzip VirtoCommerce.Platform.3.x.x.zip -d vc-platform-3
 
 * Install and trust HTTPS certificate
 
-To trust the .NET Core SDK HTTPS development certificate on Linux run steps described in the [article](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust-https-certificate-from-windows-subsystem-for-linux)
+Run steps described in this article[article](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust-https-certificate-from-windows-subsystem-for-linux) to trust the .NET Core SDK HTTPS development certificate on Linux.
 
 Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust)
 
-* Run the Platform by follow command
+* Run the Platform by following command:
 
 ```console
 export ASPNETCORE_URLS=http://+:5000
@@ -79,10 +79,11 @@ Now listening on: http://localhost:5000
 Now listening on: https://localhost:5001
 ```
 
-### First sign in
+### First run sign in
 
-* Open in your browser follow url `https://localhost:5001` in the warning for not private connections that appears click advanced and continue work. How to remove this error and use a trusted self-signed certificate please read in this article [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
-* On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials:
+* Open `https://localhost:5001` url in your browser. "Your connection is not private" might appear. Click "Advanced" and "Proceed to ...".
+Read more on removing this error and using a self-signed certificate: [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
+* The application will create and initialize database on the first request. After that you should see the sign in page. Use the following credentials:
   * Login: **admin**
   * Password: **store**
 
