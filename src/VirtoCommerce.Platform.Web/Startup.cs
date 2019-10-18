@@ -80,7 +80,7 @@ namespace VirtoCommerce.Platform.Web
             });
                        
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion);
-            PlatformVersion.ProductVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+            PlatformVersion.ProductVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();

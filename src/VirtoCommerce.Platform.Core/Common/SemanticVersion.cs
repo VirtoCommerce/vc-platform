@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace VirtoCommerce.Platform.Core.Common
@@ -6,8 +7,9 @@ namespace VirtoCommerce.Platform.Core.Common
     public class SemanticVersion : IComparable
     {
         private readonly Version _version;
+        private readonly string _prerelease;
 
-        public static readonly Regex SemanticVersionStrictRegex = new Regex(@"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})(?<Release>-([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+(\.([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+)*)?(?<Metadata>\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
+        public static readonly Regex SemanticVersionStrictRegex = new Regex(@"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})(?<Prerelease>-([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+(\.([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+)*)?(?<Metadata>\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
         public SemanticVersion(Version version)
         {
@@ -17,6 +19,18 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             _version = NormalizeVersionValue(version);
+            _prerelease = string.Empty;
+        }
+
+        public SemanticVersion(Version version, string prerelease = "")
+        {
+            if (version == null)
+            {
+                throw new ArgumentNullException(nameof(version));
+            }
+
+            _version = NormalizeVersionValue(version);
+            _prerelease = prerelease;
         }
 
         /// <summary>
@@ -33,6 +47,8 @@ namespace VirtoCommerce.Platform.Core.Common
         /// Patch version Z (x.y.Z)
         /// </summary>
         public int Patch { get { return _version.Build; } }
+
+        public string Prerelease { get { return _prerelease; } }
 
         public bool IsCompatibleWithBySemVer(SemanticVersion other)
         {
@@ -67,10 +83,19 @@ namespace VirtoCommerce.Platform.Core.Common
 
             var match = SemanticVersionStrictRegex.Match(value.Trim());
 
-            Version versionValue;
-            if (match.Success && Version.TryParse(match.Groups["Version"].Value, out versionValue))
+            if (match.Success)
             {
-                var normalizedVersion = NormalizeVersionValue(versionValue);
+                Version normalizedVersion = null;
+                if (Version.TryParse(match.Groups["Version"].Value, out var versionValue))
+                {
+                    normalizedVersion = NormalizeVersionValue(versionValue);
+                }
+
+                if (match.Groups.Any(x => x.Name.EqualsInvariant("Prerelease")))
+                {
+                    return new SemanticVersion(normalizedVersion, match.Groups["Prerelease"].Value);
+                }
+
                 return new SemanticVersion(normalizedVersion);
             }
 
@@ -78,6 +103,15 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         private static Version NormalizeVersionValue(Version version)
+        {
+            //Normalize version (need to use always only three properties (revision must be skipped) to prevent equality mismatches
+            //e.g 1.0.0 and 1.0.0.0 aren't the same
+            return new Version(version.Major,
+                               version.Minor,
+                               Math.Max(version.Build, 0));
+        }
+
+        private static Version NormalizeVersionValue(Version version, Version release)
         {
             //Normalize version (need to use always only three properties (revision must be skipped) to prevent equality mismatches
             //e.g 1.0.0 and 1.0.0.0 aren't the same
@@ -153,6 +187,11 @@ namespace VirtoCommerce.Platform.Core.Common
         public override string ToString()
         {
             return $"{Major}.{Minor}.{Patch}";
+        }
+
+        public string ToFullVersionString()
+        {
+            return $"{Major}.{Minor}.{Patch}{Prerelease}";
         }
     }
 }

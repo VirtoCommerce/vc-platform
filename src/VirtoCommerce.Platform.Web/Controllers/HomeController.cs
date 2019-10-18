@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var model = new IndexModel
             {
                 PlatformVersion = Core.Common.PlatformVersion.CurrentVersion.ToString(),
-                ProductVersion = Core.Common.PlatformVersion.ProductVersion.Substring(0, 20),
+                ProductVersion = Core.Common.PlatformVersion.ProductVersion.ToFullVersionString(),
                 DemoCredentials = _platformOptions.DemoCredentials,
                 DemoResetTime = _platformOptions.DemoResetTime,
                 WebAnalyticsOptions = _webAnalyticsOptions
