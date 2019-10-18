@@ -271,6 +271,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 }
 
                 ClearCache(settings);
+                SetRuntimeSettingValues(settings);
             }
         }
 
@@ -350,6 +351,19 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         #endregion
 
+        private void SetRuntimeSettingValues(SettingEntry[] settings)
+        {
+            var runtimeSettingsByKey = _runtimeModuleSettingsMap.Values.SelectMany(x => x).ToDictionary(y => string.Join("-", y.Name, y.ObjectType, y.ObjectId));
+
+            foreach (var setting in settings)
+            {
+                var key = string.Join("-", setting.Name, setting.ObjectType, setting.ObjectId);
+                if (runtimeSettingsByKey.TryGetValue(key, out var runtimeSetting))
+                {
+                    runtimeSetting.Value = setting.Value;
+                }
+            }
+        }
 
         private static T ConvertFromString<T>(string stringValue)
         {
