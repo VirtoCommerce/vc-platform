@@ -11,9 +11,9 @@ namespace VirtoCommerce.Platform.Security
     /// <summary>
     /// Custom UserCalimsPrincipalFactory responds to add claims with system roles based on user properties that can be used for authorization checks
     /// </summary>
-    public class CustomUserCalimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, Role>
+    public class CustomUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, Role>
     {
-        public CustomUserCalimsPrincipalFactory(UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager, IOptions<IdentityOptions> options)
+        public CustomUserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager, IOptions<IdentityOptions> options)
             : base(userManager, roleManager, options)
         {
 
