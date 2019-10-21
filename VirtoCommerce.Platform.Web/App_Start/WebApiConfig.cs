@@ -11,7 +11,6 @@ using System.Web.Http.OData.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data.Security;
@@ -25,8 +24,8 @@ namespace VirtoCommerce.Platform.Web
         public static void Register(HttpConfiguration config)
         {
             config.Filters.Add(new CheckPermissionAttribute { Permission = PredefinedPermissions.SecurityCallApi });
-            //Commented out for security reasons, use web.config system.webServer/httpProtocol/customHeaders section
-            config.SetupCors();
+
+            config.EnableCors();
 
             // Web API routes
             config.MapHttpAttributeRoutes();

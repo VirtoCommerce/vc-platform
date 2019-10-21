@@ -1,4 +1,4 @@
-﻿using Omu.ValueInjecter;
+using Omu.ValueInjecter;
 using webModel = VirtoCommerce.Platform.Web.Model.Settings;
 using moduleModel = VirtoCommerce.Platform.Core.Settings;
 

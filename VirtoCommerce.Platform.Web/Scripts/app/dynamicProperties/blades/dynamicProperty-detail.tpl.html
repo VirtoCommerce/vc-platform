@@ -1,4 +1,4 @@
-﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'" ng-if="blade.isNew"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
@@ -97,9 +97,10 @@
                 <div class="form-group">
                     <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.display-name' | translate }}</label>
                     <div class="form-input __langs" ng-repeat="data in blade.currentEntity.displayNames | orderBy: 'locale'">
-                        <span ng-if="data.locale.length>2" class="flag flag-{{data.locale.substr(3).toLowerCase()}}"></span>
-                        <span ng-if="data.locale.length<=2" class="langCode">{{data.locale.toUpperCase()}}</span>
-                        <input ng-model="data.name" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.display-name' | translate }}" />
+                        <div class="localized-name">
+                            <label class="lang-code">{{data.locale}}</label>
+                            <input ng-model="data.name" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.display-name' | translate }}" />
+                        </div>
                     </div>
                 </div>
             </form>

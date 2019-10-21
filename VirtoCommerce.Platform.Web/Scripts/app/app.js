@@ -154,6 +154,11 @@ angular.module('platformWebApp', AppDependencies).
         var httpErrorInterceptor = {};
 
         httpErrorInterceptor.request = function (config) {
+            // Need to pass localization request despite on the auth state
+            if (config.url == 'api/platform/localization') {
+                return config;
+            }                        
+
             config.headers = config.headers || {};
 
             return extractAuthData()
