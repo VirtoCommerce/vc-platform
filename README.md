@@ -195,29 +195,19 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
 
    - Restart the platform to load new module assemblies into the application process
 
-# How to debug module
+## How to debug module
+
 - Install and run platform as described in steps above.
 - Setup module from source code as described above, open a module solution in Visual Studio and attach debugger for one of dotnet.exe processes.
 
   **Note:** to distinguish between multiple dotnet.exe processes, If you're running in windows, you can use Task Manager. If you add the Command Line column to the Details tab, it will show you which app that dotnet.exe is running.
 
+## How to Run [Storefront](https://github.com/VirtoCommerce/vc-storefront-core) with new platform version
 
-## Run [storefront](https://github.com/VirtoCommerce/vc-storefront-core) with new platform version
-- Deploy  the latest storefront version from `dev` branch by any of preffered way described there https://virtocommerce.com/docs/vc2devguide/deployment/storefront-deployment
-- Make changes  in  `appsettings.json`    
-```json
-...
-//Comment the follow settings
-// "AppId": "...",
-// "SecretKey": "..."
-...
-//Uncomment the follow settings
-"UserName": "admin",
-"Password": "store"
-```
+- [Connect Storefront to Platform](docs/connect-storefront-to-platform-v3.md)
 
+## How to migrate your solution from 2.x to 3.0 platform version
 
-# How to migrate your solution from 2.x to 3.0 platform version
 - If your solution doesn't have any custom modules and extensions you just need to use the connection string to the old database for the new 3.0 platfrom version and after first run the update scripts will transfer all your data to the new scheme otherwise, you need to convert your models according to this instruction https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/docs/Migrate-Extension-module-from-the-Platform-2.0-to-3.0-version.md.
 
 # License
