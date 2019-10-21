@@ -246,7 +246,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
             if (settings != null && settings.Any())
             {
-                var settingKeys = settings.Select(x => String.Join("-", x.Name, x.ObjectType, x.ObjectId)).Distinct().ToArray();
+                var settingKeys = settings.Select(x => x.GenerateKey()).Distinct().ToArray();
 
                 using (var repository = _repositoryFactory())
                 using (var changeTracker = new ObservableChangeTracker())
@@ -264,13 +264,14 @@ namespace VirtoCommerce.Platform.Data.Settings
                     var source = new { Settings = new ObservableCollection<SettingEntity>(settings.Select(x => AbstractTypeFactory<SettingEntity>.TryCreateInstance().FromModel(x))) };
 
                     changeTracker.Attach(target);
-                    var settingComparer = AnonymousComparer.Create((SettingEntity x) => String.Join("-", x.Name, x.ObjectType, x.ObjectId));
+                    var settingComparer = AnonymousComparer.Create((SettingEntity x) => x.GenerateKey());
                     source.Settings.Patch(target.Settings, settingComparer, (sourceSetting, targetSetting) => sourceSetting.Patch(targetSetting));
 
                     repository.UnitOfWork.Commit();
                 }
 
                 ClearCache(settings);
+                SetRuntimeSettingValues(settings);
             }
         }
 
@@ -350,6 +351,18 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         #endregion
 
+        private void SetRuntimeSettingValues(SettingEntry[] settings)
+        {
+            var runtimeSettingsByKey = _runtimeModuleSettingsMap.Values.SelectMany(x => x).ToDictionary(y => y.GenerateKey());
+
+            foreach (var setting in settings)
+            {
+                if (runtimeSettingsByKey.TryGetValue(setting.GenerateKey(), out var runtimeSetting))
+                {
+                    runtimeSetting.Value = setting.Value;
+                }
+            }
+        }
 
         private static T ConvertFromString<T>(string stringValue)
         {
