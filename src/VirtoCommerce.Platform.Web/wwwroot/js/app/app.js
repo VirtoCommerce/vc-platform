@@ -39,7 +39,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             detail: ''
                         };
                         _.each(modulesWithErrors, function (x) {
-                            var moduleErrors = "<br/><br/><b>" + x.id + "</b> " + x.version + x.versionTag ? ("-" + x.versionTag):"" + "<br/>" + x.validationErrors.join("<br/>");
+                            var moduleErrors = "<br/><br/><b>" + x.id + "</b> " + x.version + x.versionTag ? ("-" + x.versionTag) : "" + "<br/>" + x.validationErrors.join("<br/>");
                             $scope.platformError.detail += moduleErrors;
                         });
                         $state.go('workspace.modularity');
