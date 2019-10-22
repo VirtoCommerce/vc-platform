@@ -16,6 +16,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Swagger;
 using VirtoCommerce.Platform.Core.Extensions;
+using Microsoft.OpenApi.Models;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
@@ -35,28 +36,28 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc(platformDocName, new Info
+                c.SwaggerDoc(platformDocName, new OpenApiInfo
                 {
                     Title = "VirtoCommerce Solution REST API documentation",
                     Version = "v1",
-                    TermsOfService = "",
+                    TermsOfService = new Uri("https://virtocommerce.com/terms"),
                     Description = "For this sample, you can use the",
-                    Contact = new Contact
+                    Contact = new OpenApiContact
                     {
                         Email = "support@virtocommerce.com",
                         Name = "Virto Commerce",
-                        Url = "http://virtocommerce.com"
+                        Url =  new Uri("https://virtocommerce.com")
                     },
-                    License = new License
+                    License = new OpenApiLicense
                     {
                         Name = "Virto Commerce Open Software License 3.0",
-                        Url = "http://virtocommerce.com/opensourcelicense"
+                        Url = new Uri("http://virtocommerce.com/opensourcelicense")
                     }
                 });
 
                 foreach (var module in modules)
                 {
-                    c.SwaggerDoc(module.ModuleName, new Info { Title = $"{module.Id}", Version = "v1" });
+                    c.SwaggerDoc(module.ModuleName, new OpenApiInfo { Title = $"{module.Id}", Version = "v1" });
                     c.OperationFilter<ModuleTagsFilter>(module.Id);
                 }
 
@@ -70,15 +71,20 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
                 c.OperationFilter<TagsFilter>();
                 c.DocumentFilter<TagsFilter>();
-                c.MapType<object>(() => new Schema { Type = "object" });
+                c.MapType<object>(() => new OpenApiSchema { Type = "object" });
                 c.AddModulesXmlComments(services);
-                c.CustomSchemaIds(type => (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id ?? type.FriendlyId());
-                c.AddSecurityDefinition(oauth2SchemeName, new OAuth2Scheme
+                c.CustomSchemaIds(type => (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id /*?? type.FriendlyId()*/);
+                c.AddSecurityDefinition(oauth2SchemeName, new OpenApiSecurityScheme
                 {
-                    Type = oauth2SchemeName,
-                    Description = "OAuth2 Resource Owner Password Grant flow",
-                    Flow = "password",
-                    TokenUrl = $"{httpContextAccessor.HttpContext?.Request?.Scheme}://{httpContextAccessor.HttpContext?.Request?.Host}/connect/token",
+                    Type = SecuritySchemeType.OAuth2,
+                    Description = "OAuth2 Resource Owner Password Grant flow",                    
+                    Flows = new OpenApiOAuthFlows()
+                    {
+                        Password = new OpenApiOAuthFlow()
+                        {
+                            TokenUrl = new Uri($"{httpContextAccessor.HttpContext?.Request?.Scheme}://{httpContextAccessor.HttpContext?.Request?.Host}/connect/token")
+                        }
+                    },                    
                 });
 
                 c.DocInclusionPredicate((docName, apiDesc) =>

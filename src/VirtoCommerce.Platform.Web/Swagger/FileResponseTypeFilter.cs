@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VirtoCommerce.Platform.Core.Common;
@@ -9,24 +11,28 @@ namespace VirtoCommerce.Platform.Web.Swagger
 {
     public class FileResponseTypeFilter : IOperationFilter
     {
-        public void Apply(Operation operation, OperationFilterContext context)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
+            // https://swagger.io/docs/specification/describing-responses/
             if (IsFileResponse(context))
             {
                 var key = ((int)HttpStatusCode.OK).ToString();
-                var responseSchema = new Schema { Format = "byte", Type = "file" };
-
+                var responseSchema = new OpenApiSchema { Format = "binary", Type = "file" };
+                
                 if (operation.Responses.TryGetValue(key, out var response))
                 {
-                    response.Schema = responseSchema;
+                    response.Content.FirstOrDefault().Value.Schema = responseSchema;
                     return;
                 }
 
-                operation.Responses.Add(key, new Response
+                var openApiResponse = new OpenApiResponse
                 {
                     Description = "OK",
-                    Schema = responseSchema
-                });
+                    Content = new Dictionary<string, OpenApiMediaType>()
+                };
+                // TODO: (AK) ? Consider to correct content key depending on real MIME
+                openApiResponse.Content.Add("multipart/form-data", new OpenApiMediaType() { Schema = responseSchema });
+                operation.Responses.Add(key, openApiResponse);
             }
         }
 
@@ -44,5 +50,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
             }
             return result;
         }
+
     }
 }

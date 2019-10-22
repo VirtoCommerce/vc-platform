@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Security.Services
     {
         private readonly IPermissionsRegistrar _knownPermissions;
         private readonly IPlatformMemoryCache _memoryCache;
-        private readonly MvcJsonOptions _jsonOptions;
+        private readonly MvcNewtonsoftJsonOptions _jsonOptions;
         public CustomRoleManager(
             IPermissionsRegistrar knownPermissions
             , IPlatformMemoryCache memoryCache
@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Security.Services
             , IdentityErrorDescriber errors
             , ILogger<RoleManager<Role>> logger
             , IHttpContextAccessor contextAccessor
-            , IOptions<MvcJsonOptions> jsonOptions)
+            , IOptions<MvcNewtonsoftJsonOptions> jsonOptions)
             : base(store, roleValidators, keyNormalizer, errors, logger, contextAccessor)
         {
             _knownPermissions = knownPermissions;

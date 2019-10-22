@@ -54,11 +54,14 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddSingleton<ITransactionFileManager, TransactionFileManager.TransactionFileManager>();
 
             services.AddTransient<IEmailSender, DefaultEmailSender>();
+
+             // TODO: (AK) 
             services.AddSingleton(js =>
             {
-                var serv = js.GetService<IOptions<MvcJsonOptions>>();
+                var serv = js.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
                 return JsonSerializer.Create(serv.Value.SerializerSettings);
             });
+            
 
             //Register dependencies for translation
             services.AddSingleton<ITranslationDataProvider, PlatformTranslationDataProvider>();

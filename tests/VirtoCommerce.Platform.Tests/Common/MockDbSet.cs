@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Tests.Common
         {
             var mockSet = new Mock<DbSet<T>>();
             mockSet.As<IAsyncEnumerable<T>>()
-                .Setup(m => m.GetEnumerator())
+                .Setup(m => m.GetAsyncEnumerator(default))
                 .Returns(new TestAsyncEnumerator<T>(entities.GetEnumerator()));
             mockSet.As<IQueryable<T>>()
                 .Setup(m => m.Provider)

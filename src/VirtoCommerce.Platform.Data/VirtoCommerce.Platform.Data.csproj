@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>  
-        <noWarn>1591</noWarn>    
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <noWarn>1591</noWarn>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -10,26 +11,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.1.1" />
         <PackageReference Include="GitVersionTask" Version="5.0.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.3" />
-        <PackageReference Include="Microsoft.Net.Http.Headers" Version="2.2.0" />
-        <PackageReference Include="Serialize.Linq" Version="1.7.3.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.App" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+        <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.2.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+        <PackageReference Include="Serialize.Linq" Version="1.8.1" />
     </ItemGroup>
 
     <ItemGroup>

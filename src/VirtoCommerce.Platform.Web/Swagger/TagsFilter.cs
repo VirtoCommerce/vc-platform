@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -19,18 +21,18 @@ namespace VirtoCommerce.Platform.Web.Swagger
         }
 
 
-        public void Apply(SwaggerDocument swaggerDoc, DocumentFilterContext context)
+        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             var tags = _moduleCatalog.Modules
                 .OfType<ManifestModuleInfo>()
-                .Select(x => new Tag
+                .Select(x => new OpenApiTag
                 {
                     Name = x.Title,
                     Description = x.Description
                 })
                 .ToList();
 
-            tags.Add(new Tag
+            tags.Add(new OpenApiTag
             {
                 Name = "VirtoCommerce platform",
                 Description = "Platform functionality represent common resources and operations"
@@ -39,7 +41,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             swaggerDoc.Tags = tags;
         }
 
-        public void Apply(Operation operation, OperationFilterContext context)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             var controllerTypeInfo = ((ControllerActionDescriptor)context.ApiDescription.ActionDescriptor).ControllerTypeInfo;
             var module = _moduleCatalog.Modules
@@ -49,11 +51,17 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             if (module != null)
             {
-                operation.Tags = new[] { module.Title };
+                operation.Tags = new List<OpenApiTag>
+                {
+                    new OpenApiTag() { Name = module.Title, Description = module.Description }
+                };
             }
             else if (controllerTypeInfo.Assembly.GetName().Name == "VirtoCommerce.Platform.Web")
             {
-                operation.Tags = new[] { "VirtoCommerce platform" };
+                operation.Tags = new List<OpenApiTag>
+                {
+                    new OpenApiTag() { Name = "VirtoCommerce platform" }
+                };
             }
         }
     }

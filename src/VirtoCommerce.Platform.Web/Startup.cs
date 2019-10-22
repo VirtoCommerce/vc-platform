@@ -93,9 +93,10 @@ namespace VirtoCommerce.Platform.Web
                     {
                         noContentFormatter.TreatNullValueAsNoContent = false;
                     }
+                    mvcOptions.EnableEndpointRouting = false;
                 }
             )
-            .AddJsonOptions(options =>
+            .AddNewtonsoftJson(options =>
                 {
                     //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
                     //we should register this converter globally.
@@ -119,7 +120,7 @@ namespace VirtoCommerce.Platform.Web
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 }
             )
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
@@ -381,6 +382,7 @@ namespace VirtoCommerce.Platform.Web
                 var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
                 securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
                 securityDbContext.Database.Migrate();
+                
             }
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
@@ -410,7 +412,7 @@ namespace VirtoCommerce.Platform.Web
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-            var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcJsonOptions>>();
+            var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             JobHelper.SetSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
         }
     }
