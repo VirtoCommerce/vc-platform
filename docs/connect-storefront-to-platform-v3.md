@@ -1,8 +1,14 @@
 # Connect Storefront to Platform
 
-* Deploy the latest storefront version as described [there](https://virtocommerce.com/docs/vc2devguide/deployment/storefront-deployment)
+* Deploy the latest storefront version as [described here](https://virtocommerce.com/docs/vc2devguide/deployment/storefront-deployment)
 
-Note if you deploy the Storefront on local environment with the Platform you should host it with IIS
+Note, if Platform and Storefront are deployed in the same on-premises environment, Storefront should be deployed on different port then Platform. You can do it by `dotnet run CLI`
+
+```console
+dotnet VirtoCommerce.Storefront.dll --urls=http://localhost:5002/
+```
+
+or host Storefront in IIS.
 
 * Make changes  in  `appsettings.json`
 
@@ -22,7 +28,7 @@ Note if you deploy the Storefront on local environment with the Platform you sho
     },
 ```
 
-* Trust the .Net Core Development Self-Signed Certificate. Example how to trust a self-signed certificate you can find in this [article](https://blogs.msdn.microsoft.com/robert_mcmurray/2013/11/15/how-to-trust-the-iis-express-self-signed-certificate/)
+* Trust the .Net Core Development Self-Signed Certificate. More details on trusting the self-signed certificate can be found [here](https://blogs.msdn.microsoft.com/robert_mcmurray/2013/11/15/how-to-trust-the-iis-express-self-signed-certificate/)
 
 ## License
 
