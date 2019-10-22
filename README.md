@@ -103,32 +103,13 @@ Our development efforts were focused on moving to ASP.NET Core, performance, arc
 -  ~~**VirtoCommerce.Domain**~~ project and nuget package (now each module defines self domain model and abstractions in Core project)
 -  ~~**VirtoCommerce.Cache**~~
 -  ~~**VirtoCommerce.DynamicExpressions**~~
-    
+
 # Getting started:
 
 ## Platform from precompiled binary getting started
-- Download the archive with platform precompiled version [VirtoCommerce.Platform.3.0.0.rc.1.zip](https://github.com/VirtoCommerce/vc-platform/releases/tag/3.0.0-rc.1)
-- Unpack follow zip to local disk to path `C:\vc-platform-3`. In result you should get the folder which contains platform precompiled code. 
-- Set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images 
-```Json
-"Assets": {
-        "Provider": "FileSystem",
-        "FileSystem": {
-            "RootPath": "~/assets",
-            "PublicUrl": "https://localhost:5001/assets/" <-- Set your platform application url with port localhost:5001
-        },
-     
-    },
-```
-- Run the platform by command 
 
-```console
-dotnet.exe VirtoCommerce.Platform.Web.dll
-```
-
-- Open in your browser follow url `https://localhost:5001` in the warning for not private connections that appears click advanced and continue work. How to remove this error and use a trusted self-signed cerificate please read in this article [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
-
-- On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store` to sign in
+- Deploy Platform on [Windows](docs/deploy-from-precompiled-binaries-windows.md)
+- Deploy Platform on [Linux](docs/deploy-from-precompiled-binaries-linux.md)
 
 ## Platform from source code getting started 
   - Get the latest platform source code from [release/3.0.0](https://github.com/VirtoCommerce/vc-platform/tree/release/3.0.0)
@@ -214,29 +195,19 @@ dotnet.exe VirtoCommerce.Platform.Web.dll
 
    - Restart the platform to load new module assemblies into the application process
 
-# How to debug module
+## How to debug module
+
 - Install and run platform as described in steps above.
 - Setup module from source code as described above, open a module solution in Visual Studio and attach debugger for one of dotnet.exe processes.
 
   **Note:** to distinguish between multiple dotnet.exe processes, If you're running in windows, you can use Task Manager. If you add the Command Line column to the Details tab, it will show you which app that dotnet.exe is running.
 
+## How to Run [Storefront](https://github.com/VirtoCommerce/vc-storefront-core) with new platform version
 
-## Run [storefront](https://github.com/VirtoCommerce/vc-storefront-core) with new platform version
-- Deploy  the latest storefront version from `dev` branch by any of preffered way described there https://virtocommerce.com/docs/vc2devguide/deployment/storefront-deployment
-- Make changes  in  `appsettings.json`    
-```json
-...
-//Comment the follow settings
-// "AppId": "...",
-// "SecretKey": "..."
-...
-//Uncomment the follow settings
-"UserName": "admin",
-"Password": "store"
-```
+- [Connect Storefront to Platform](docs/connect-storefront-to-platform-v3.md)
 
+## How to migrate your solution from 2.x to 3.0 platform version
 
-# How to migrate your solution from 2.x to 3.0 platform version
 - If your solution doesn't have any custom modules and extensions you just need to use the connection string to the old database for the new 3.0 platfrom version and after first run the update scripts will transfer all your data to the new scheme otherwise, you need to convert your models according to this instruction https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/docs/Migrate-Extension-module-from-the-Platform-2.0-to-3.0-version.md.
 
 # License
