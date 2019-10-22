@@ -61,7 +61,7 @@ unzip VirtoCommerce.Platform.3.x.x.zip -d vc-platform-3
 
 * Install and trust HTTPS certificate
 
-Run steps described in this article[article](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust-https-certificate-from-windows-subsystem-for-linux) to trust the .NET Core SDK HTTPS development certificate on Linux.
+Run steps described in [this article](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust-https-certificate-from-windows-subsystem-for-linux) to trust the .NET Core SDK HTTPS development certificate on Linux.
 
 Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust)
 
@@ -79,7 +79,7 @@ Now listening on: http://localhost:5000
 Now listening on: https://localhost:5001
 ```
 
-### First run sign in
+### First run and sign in
 
 * Open `https://localhost:5001` url in your browser. "Your connection is not private" might appear. Click "Advanced" and "Proceed to ...".
 Read more on removing this error and using a self-signed certificate: [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)

@@ -84,7 +84,7 @@ Read more on removing this error and using a self-signed certificate: [Trust the
 
 ### Host on Windows with IIS
 
-VirtoCommerce.Platform project already include the **web.config** ffile is already included in the release package. It contains all the necessary settings for running in IIS.
+The required web.config file was already included in the release package. It contains all the necessary settings for running in IIS.
 
 Read more in the official Microsoft ASP.NET Core documentation:
 [Host ASP.NET Core on Windows with IIS](https://docs.microsoft.com/en-us/aspnet/core/publishing/iis)
