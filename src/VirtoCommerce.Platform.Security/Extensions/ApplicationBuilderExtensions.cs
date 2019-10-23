@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Security
                     var adminUser = await userManager.FindByIdAsync(admin.Id);
                     if (adminUser == null)
                     {
-                        var result = await userManager.CreateAsync(admin);
+                        await userManager.CreateAsync(admin);
                     }
                 }
 

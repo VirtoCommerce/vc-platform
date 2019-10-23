@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Tests.Common
             return _inner.Execute<TResult>(expression);
         }
 
-        public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+        public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = default)
         {
             return Execute<TResult>(expression);
         }

@@ -6,7 +6,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Tests.Common
 {
-    public class MockDbSet
+    public static class MockDbSet
     {
         public static Mock<DbSet<T>> GetMockDbSet<T>(IQueryable<T> entities) where T : Entity
         {

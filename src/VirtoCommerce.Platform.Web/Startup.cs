@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage;
@@ -53,14 +54,14 @@ namespace VirtoCommerce.Platform.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             Configuration = configuration;
-            HostingEnvironment = hostingEnvironment;
+            WebHostEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment HostingEnvironment { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -74,7 +75,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<HangfireOptions>().Bind(Configuration.GetSection("VirtoCommerce:Jobs")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
-                options.PlatformTranslationFolderPath = HostingEnvironment.MapPath(options.PlatformTranslationFolderPath);
+                options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
             });
                        
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion);
@@ -237,7 +238,7 @@ namespace VirtoCommerce.Platform.Web
                     options.DisableScopeValidation();
 
                     // During development, you can disable the HTTPS requirement.
-                    if (HostingEnvironment.IsDevelopment())
+                    if (WebHostEnvironment.IsDevelopment())
                     {
                         options.DisableHttpsRequirement();
                     }
@@ -299,7 +300,7 @@ namespace VirtoCommerce.Platform.Web
                 services.AddOptions<FileSystemBlobOptions>().Bind(Configuration.GetSection("Assets:FileSystem")).ValidateDataAnnotations();
                 services.AddFileSystemBlobProvider(options =>
                 {
-                    options.RootPath = HostingEnvironment.MapPath(options.RootPath);
+                    options.RootPath = WebHostEnvironment.WebRootPath;
                 });
             }
 
@@ -319,7 +320,7 @@ namespace VirtoCommerce.Platform.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -347,7 +348,7 @@ namespace VirtoCommerce.Platform.Web
             //Handle all requests like a $(Platform) and Modules/$({ module.ModuleName }) as static files in correspond folder
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(env.MapPath("~/js")),
+                FileProvider = new PhysicalFileProvider(WebHostEnvironment.MapPath("~/js")),
                 RequestPath = new PathString($"/$(Platform)/Scripts")
             });
 
