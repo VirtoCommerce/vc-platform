@@ -1,9 +1,8 @@
-angular.module('platformWebApp')
-.controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings',
+angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings',
     function ($scope, bladeNavigationService, metaFormsService, accounts, roles, dialogService, settings) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:security:update';
-        blade.accountTypes = [];      
+        blade.accountTypes = [];
 
         blade.refresh = function (parentRefresh) {
             var entity = parentRefresh ? blade.currentEntity : blade.data;
@@ -13,9 +12,9 @@ angular.module('platformWebApp')
                     blade.parentBlade.refresh();
                 }
             },
-            function(error) {
-                 bladeNavigationService.setError(error, blade);
-            });
+                function (error) {
+                    bladeNavigationService.setError(error, blade);
+                });
         }
 
         function initializeBlade(data) {
@@ -23,7 +22,7 @@ angular.module('platformWebApp')
             blade.origEntity = data;
             isAccountlocked(blade.currentEntity.id).then(function (result) {
                 blade.accountLockedState = result.locked ? "Locked" : "Unlocked";
-            }); 
+            });
             blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
             userStateCommand.updateName();
             blade.isLoading = false;

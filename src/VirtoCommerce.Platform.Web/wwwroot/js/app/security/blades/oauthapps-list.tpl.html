@@ -1,0 +1,42 @@
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table __normal">
+                    <thead>
+                        <tr>
+                            <th class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()">
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col">{{ 'platform.blades.oauthapps.labels.displayName' | translate }}</th>
+                            <th class="table-col">{{ 'platform.blades.oauthapps.labels.type' | translate }}</th>
+                            <th class="table-col">{{ 'platform.blades.oauthapps.labels.clientId' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data === blade.selectedData}">
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.$selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col" ng-click='blade.selectedData=data; selectNode(data)'>
+                                <div class="table-t">{{data.displayName}}</div>
+                            </td>
+                            <td class="table-col" ng-click='blade.selectedData=data; selectNode(data)'>
+                                <div class="table-t">{{data.type}}</div>
+                            </td>
+                            <td class="table-col" ng-click='blade.selectedData=data; selectNode(data)'>
+                                <div class="table-t">{{data.clientId}}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

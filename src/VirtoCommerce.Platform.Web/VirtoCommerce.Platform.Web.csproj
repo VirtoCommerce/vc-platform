@@ -68,11 +68,20 @@
         <None Remove="wwwroot\cms-content\**" />
         <None Remove="App_Data\Modules\**" />
     </ItemGroup>
+    <ItemGroup>
+      <None Remove="Certificates\virtocommerce.crt" />
+      <None Remove="Certificates\virtocommerce.pfx" />
+    </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="wwwroot\swagger\index.html" />
         <None Include="wwwroot\swagger\logo_small.png" />
         <None Include="wwwroot\swagger\vc.css" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Certificates\virtocommerce.crt" />
+      <EmbeddedResource Include="Certificates\virtocommerce.pfx" />
     </ItemGroup>
 
     <ItemGroup>

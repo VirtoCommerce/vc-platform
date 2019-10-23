@@ -1,0 +1,50 @@
+﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block form">
+            <div class="form-group">
+                <label class="form-label">{{ 'platform.blades.oauthapps.labels.clientId' | translate }}</label>
+                <div class="form-input">
+                    <input ng-model="blade.currentEntity.clientId" placeholder="{{ 'platform.blades.oauthapps.placeholders.clientId' | translate }}" ng-readonly="!blade.isNew" required focus-on>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">{{ 'platform.blades.oauthapps.labels.displayName' | translate }}</label>
+                <div class="form-input">
+                    <input ng-model="blade.currentEntity.displayName" placeholder="{{ 'platform.blades.oauthapps.placeholders.displayName' | translate }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">{{ 'platform.blades.oauthapps.labels.type' | translate }}</label>
+                <div class="form-input">
+                    <input ng-model="blade.currentEntity.type" placeholder="{{ 'platform.blades.oauthapps.placeholders.type' | translate }}" readonly>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">{{ 'platform.blades.oauthapps.labels.clientSecret' | translate }}</label>
+                <div class="form-input">
+                    <input ng-model="blade.currentEntity.clientSecret" placeholder="{{ 'platform.blades.oauthapps.placeholders.clientSecret' | translate }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">{{ 'platform.blades.oauthapps.labels.assigned-permissions' | translate }}</label>
+                <div class="table-wrapper">
+                    <table class="table">
+                        <tbody>
+                            <tr class="table-item" ng-repeat="permission in blade.currentEntity.permissions">
+                                <td class="table-col">
+                                    <span class="table-t">{{permission}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -446,6 +446,29 @@
                     "name": "Name"
                 }
             },
+            "oauthapps": {
+                "labels": {
+                    "clientId": "Client id",
+                    "displayName": "Display name",
+                    "type": "Type",
+                    "clientSecret": "Client secret",
+                    "assigned-permissions": "Assigned permissions" 
+                },
+                "placeholders": {
+                    "clientId": "Input client id",
+                    "displayName": "Input display name",
+                    "type": "Input type",
+                    "clientSecret": "Input client secret"
+                }
+            },
+            "oauthapps-list": {
+                "title": "OAuth applications",
+                "subtitle": "Security service"
+            },
+            "oauthapps-detail": {
+                "title": "OAuth application",
+                "subtitle": "Security service"
+            },
             "login": {
                 "labels": {
                     "sign-in": "Sign in to {{title}} Manager",
@@ -676,6 +699,14 @@
             "account-delete": {
                 "title": "Delete confirmation",
                 "message": "Are you sure you want to delete selected Accounts?"
+            },
+            "oauthapps-save": {
+                "title": "Save changes",
+                "message": "The OAuth application has been modified. Do you want to save changes?"
+            },
+            "oauthapps-delete": {
+                "title": "Delete confirmation",
+                "message": "Are you sure you want to delete selected OAuth application?"
             },
             "dynamic-property-delete": {
                 "title": "Delete confirmation",
