@@ -69,7 +69,8 @@ Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-
 
 ```console
 export ASPNETCORE_URLS="http://+:5000;https://+:5001"
-dotnet.exe /vc-platform-3/VirtoCommerce.Platform.Web.dll
+cd vc-platform-3
+dotnet VirtoCommerce.Platform.Web.dll
 ```
 
 The output in the console will say something like:
