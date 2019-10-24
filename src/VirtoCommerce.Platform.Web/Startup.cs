@@ -175,7 +175,6 @@ namespace VirtoCommerce.Platform.Web
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
             authBuilder.AddJwtBearer(options =>
                     {
-                        //TODO: Add certificate validation if Configuration["Auth:Authority"] is not set
                         options.Authority = Configuration["Auth:Authority"];
                         options.Audience = Configuration["Auth:Audience"];
 
