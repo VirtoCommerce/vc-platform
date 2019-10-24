@@ -68,15 +68,15 @@ Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-
 * Run the Platform by following command:
 
 ```console
-export ASPNETCORE_URLS=http://+:5000
+export ASPNETCORE_URLS="http://+:5000;https://+:5001"
 dotnet.exe /vc-platform-3/VirtoCommerce.Platform.Web.dll
 ```
 
 The output in the console will say something like:
 
 ```console
-Now listening on: http://localhost:5000
-Now listening on: https://localhost:5001
+Now listening on: http://[::]:5000
+Now listening on: https://[::]:5001
 ```
 
 ### First run and sign in

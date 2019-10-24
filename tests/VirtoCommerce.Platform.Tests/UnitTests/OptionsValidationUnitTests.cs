@@ -67,7 +67,6 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
                 .Configure(o =>
                 {
                     o.ConnectionString = null;
-                    o.CdnUrl = "wrong url";
                 })
                 .ValidateDataAnnotations();
 
@@ -76,9 +75,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
 
             //Assert
             var error = Assert.Throws<OptionsValidationException>(() => sp.GetRequiredService<IOptions<AzureBlobOptions>>().Value);
-            ValidateFailure<AzureBlobOptions>(error, Options.DefaultName, 1,
-                $"DataAnnotation validation failed for members {nameof(AzureBlobOptions.ConnectionString)} with the error 'The {nameof(AzureBlobOptions.ConnectionString)} field is required.'.",
-                $"DataAnnotation validation failed for members {nameof(AzureBlobOptions.CdnUrl)} with the error 'The {nameof(AzureBlobOptions.CdnUrl)} field is not a valid fully-qualified http, https, or ftp URL.");
+            ValidateFailure<AzureBlobOptions>(error, Options.DefaultName, 1, $"DataAnnotation validation failed for members {nameof(AzureBlobOptions.ConnectionString)} with the error 'The {nameof(AzureBlobOptions.ConnectionString)} field is required.'.");
         }
 
 
