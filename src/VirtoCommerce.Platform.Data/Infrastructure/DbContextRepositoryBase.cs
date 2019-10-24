@@ -76,5 +76,6 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             DbContext.Dispose();
         }
         #endregion
+        
     }
 }

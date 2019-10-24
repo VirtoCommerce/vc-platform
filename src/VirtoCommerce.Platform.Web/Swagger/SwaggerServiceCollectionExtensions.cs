@@ -62,7 +62,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 }
 
                 c.TagActionsBy(api => api.GroupByModuleName(services));
-                c.DescribeAllEnumsAsStrings();
                 c.IgnoreObsoleteProperties();
                 c.IgnoreObsoleteActions();
                 c.OperationFilter<FileResponseTypeFilter>();

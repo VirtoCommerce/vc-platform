@@ -5,7 +5,6 @@ namespace VirtoCommerce.Platform.Core.Common
 {
     public abstract class Entity : IEntity
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
         public bool IsTransient()
