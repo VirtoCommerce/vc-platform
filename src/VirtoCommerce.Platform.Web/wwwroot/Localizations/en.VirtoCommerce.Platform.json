@@ -292,29 +292,6 @@
                     "clear-recent": "Clear all recent"
                 }
             },
-            "account-api": {
-                "title": "API account",
-                "title-new": "New API account",
-                "labels": {
-                    "is-active": "Is active",
-                    "account-name": "Account name",
-                    "account-type": "Account type",
-                    "app-id": "App ID",
-                    "secret-key": "Secret key"
-                },
-                "placeholders": {
-                    "account-name": "Enter name",
-                    "account-type": "Select...",
-                    "secret-key": "Generate secret key",
-                    "app-id": "Generate..."
-                }
-            },
-            "account-api-list": {
-                "labels": {
-                    "is-active": "Is active",
-                    "name": "Name"
-                }
-            },
             "account-changePassword": {
                 "labels": {
                     "current-password": "Current password",
