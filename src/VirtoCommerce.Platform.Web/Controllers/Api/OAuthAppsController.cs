@@ -62,6 +62,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             else
             {// update
+                //prevent changing client secret
+                descriptor.ClientSecret = app.ClientSecret;
+
                 await _manager.PopulateAsync(app, descriptor);
                 await _manager.UpdateAsync(app);
             }

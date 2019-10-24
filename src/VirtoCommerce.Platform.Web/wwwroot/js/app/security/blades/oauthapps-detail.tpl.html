@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div ng-if="blade.isNew" class="form-group">
                 <label class="form-label">{{ 'platform.blades.oauthapps.labels.clientSecret' | translate }}</label>
                 <div class="form-input">
                     <input ng-model="blade.currentEntity.clientSecret" placeholder="{{ 'platform.blades.oauthapps.placeholders.clientSecret' | translate }}">
