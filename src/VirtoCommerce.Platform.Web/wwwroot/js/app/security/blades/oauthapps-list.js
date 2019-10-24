@@ -3,11 +3,6 @@
     blade.updatePermission = 'platform:security:update';
     blade.allSelected = false;
 
-    function initializeBlade(data) {
-        blade.currentEntities = data;
-        blade.isLoading = false;
-    };
-
     blade.refresh = function () {
         blade.isLoading = true;
 
@@ -102,9 +97,9 @@
         return _.any(blade.currentEntities, function (x) { return x.$selected; });
     }
 
-    function toggleAll() {
+    $scope.toggleAll = function () {
         blade.allSelected = !blade.allSelected;
-        blade.currentEntities.array.forEach(x => x.$selected = blade.allSelected);
+        blade.currentEntities.forEach(x => x.$selected = blade.allSelected);
     }
 
     blade.refresh();
