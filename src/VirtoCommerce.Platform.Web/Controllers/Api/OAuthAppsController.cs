@@ -72,7 +72,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpDelete]
         [Route("")]
-        public async Task<ActionResult> Delete([FromQuery] string[] clientIds)
+        public async Task<ActionResult> DeleteAsync([FromQuery] string[] clientIds)
         {
             var apps = await _manager.ListAsync(x =>
                 x.Where(y => clientIds.Contains(y.ClientId))
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("search")]
-        public async Task<ActionResult<OAuthAppSearchResult>> Search(OAuthAppSearchCriteria criteria)
+        public async Task<ActionResult<OAuthAppSearchResult>> SearchAsync(OAuthAppSearchCriteria criteria)
         {
             var apps = await _manager.ListAsync(x =>
                 x.Take(criteria.Take).Skip(criteria.Skip).OrderBy(y => y.DisplayName));
