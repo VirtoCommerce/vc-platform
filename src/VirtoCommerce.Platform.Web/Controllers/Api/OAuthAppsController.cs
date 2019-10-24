@@ -78,8 +78,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult> DeleteAsync([FromQuery] string[] clientIds)
         {
             var apps = await _manager.ListAsync(x =>
-                x.Where(y => clientIds.Contains(y.ClientId))
-                 .OrderBy(y => y.DisplayName));
+                x.Where(y => clientIds.Contains(y.ClientId)));
 
             foreach (var app in apps)
             {
