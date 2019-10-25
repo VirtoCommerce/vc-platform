@@ -16,7 +16,6 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 
         public const string ProviderName = "AzureBlobStorage";
         public const string DefaultBlobContainerName = "default-container";
-        private readonly AzureBlobOptions _option;
 
         private readonly CloudBlobClient _cloudBlobClient;
         private readonly CloudStorageAccount _cloudStorageAccount;
@@ -24,12 +23,9 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 
         public AzureBlobProvider(IOptions<AzureBlobOptions> options)
         {
-            _option = options.Value;
-
-            _cloudStorageAccount = ParseConnectionString(_option.ConnectionString);
+            _cloudStorageAccount = ParseConnectionString(options.Value.ConnectionString);
             _cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            _cdnUrl = _option.CdnUrl;
-
+            _cdnUrl = options.Value.CdnUrl;
         }
 
         #region IBlobStorageProvider Members
