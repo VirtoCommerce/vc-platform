@@ -49,8 +49,9 @@ Price list assignment identifies the price list from which a product price is sh
 
 Thus, price configuring consists of the following actions:
 
-1. Create price list
-2. Add items to the price list
+1. Create pricelist
+2. Add items to the pricelist
+
 3. Create price list assignment
 4. Manage inventory
 
