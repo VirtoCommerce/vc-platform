@@ -30,12 +30,12 @@ To configure your store you must accomplish a set of actions:
 
 1. Create first store
 2. Select your catalog
-3. Setup theme
-4. Select available currency, languages
-5. Configure advanced properties:
+3. Select available currency, languages
+4. Configure advanced properties:
     1. Store description, emails and URLs
     2. Fulfillment centers
     3. Operational timezone
+5. Setup theme
 
 Check that new store is visible.
 
@@ -50,7 +50,8 @@ Price list assignment identifies the price list from which a product price is sh
 Thus, price configuring consists of the following actions:
 
 1. Create prise list
-2. Create price list assignment
+2. Add items to the price list
+3. Create price list assignment
 
 After this step completed, you can [Open new products in Virto Commerce Storefront](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/lesson2.md#open-new-products-in-virto-commerce-storefront-frontend) , browse the catalog, add product to shopping cart and create order. You can view customer order via admin UI.
 
@@ -77,19 +78,22 @@ Then you can play with extended e-commerce marketing, like 10% if product is in-
 
 You can find more details about how to create first promotions here:
 
+* [Managing promotions](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/marketing/promotions.md)
 * [Create a content publishing](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/marketing/how-to-add-an-advertising-spot-via-marketing/create-a-content-publishing.md)
 * [Dynamic content](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/marketing/dynamic-content.md)
-* [Managing promotions](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/marketing/promotions.md)
 * [Combine active promotions](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/marketing/combine-active-promotions.md)
 
 ## Step 6. Configure User Experience
 
 To enhance User Experience Virto Commerce contains a set of tools:
 
-* [Creating a new menu item in Virto Commerce Storefront](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/lesson2.md#creating-a-new-menu-item-in-virto-commerce-storefront-frontend)
-* Select catalog filters
-* Add a new currency, language
+* [Menu item in Virto Commerce Storefront](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/lesson2.md#creating-a-new-menu-item-in-virto-commerce-storefront-frontend)
+* Catalog filters in Virto Commerce Storefront
+* Currencies, languages
+* Link lists
+* Theme settings file
 * Login on behalf
+* Social login
 
 ## Step 7. Go to live with MVP and review additional cases and Virto Commerce
 
