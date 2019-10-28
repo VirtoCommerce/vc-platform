@@ -13,7 +13,7 @@ If you are new to Virto Commerce, follow these steps to set up and launch your s
 
 The catalog is what your customers are constantly working with. It is very important that the catalog is easy to browse and find the right products.
 
-Typically, to start working with the new catalog you should to follow several steps:
+Typically, to start working with the new catalog you should follow several steps:
 
 * [Creating new category and subcategory](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/lesson2.md#creating-new-category-and-subcategory)
 * [Import catalog data](https://virtocommerce.com/docs/vc2userguide/merchandise-management/catalog-import)
@@ -30,10 +30,12 @@ To configure your store you must accomplish a set of actions:
 
 1. Create first store
 2. Select your catalog
-3. Select available currency, languages
-4. Upload theme
-5. …
-6. Rebuild catalog index
+3. Setup theme
+4. Select available currency, languages
+5. Configure advanced properties:
+    1. Store description, emails and URLs
+    2. Fulfillment centers
+    3. Operational timezone
 
 Check that new store is visible.
 
@@ -45,13 +47,18 @@ In the Virto Commerce, a price list is a set of pricing details that can be assi
 
 Price list assignment identifies the price list from which a product price is shown for customers. Moreover, price list assignments can do much more than simply provide default list and sale prices for products. This feature allows you to provide custom prices to targeted customers according to customer's characteristics such as age, gender, geographic location and searched terms.
 
+Thus, price configuring consists of the following actions:
+
+1. Create prise list
+2. Create price list assignment
+
 After this step completed, you can [Open new products in Virto Commerce Storefront](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/lesson2.md#open-new-products-in-virto-commerce-storefront-frontend) , browse the catalog, add product to shopping cart and create order. You can view customer order via admin UI.
 
 ## Step 4. Configure payments, shipments, taxes
 
 By default, you see demo payment and shipmen methods. Virto Commerce provides the ready to use module which. You can set your own configurations:
 
-* Configure [Payments](TODO) method
+* Install Payment module (For example: PayPal)
 * Configure [Shipments](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/order-management/working-with-shipments.md) method
 * Configure [Taxes](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/order-management/working-with-taxes.md) method
 
@@ -61,14 +68,14 @@ Marketing your store is essential to gain your customers loyalty and raise aware
 
 There are several marketing tools in Virto Commerce: you can publish content, create personalized shopping experiences for customers, manage promotions.
 
-Start with Creation of two simple promotions:
+Start with creation of two simple promotions:
 
 1. 5% if cart subtotal > 100 $
 2. Add Gif product
 
 Then you can play with extended e-commerce marketing, like 10% if product is in-stock.
 
-You can find more details here:
+You can find more details about how to create first promotions here:
 
 * [Create a content publishing](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/marketing/how-to-add-an-advertising-spot-via-marketing/create-a-content-publishing.md)
 * [Dynamic content](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/marketing/dynamic-content.md)
