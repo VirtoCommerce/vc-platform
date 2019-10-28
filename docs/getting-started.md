@@ -1,6 +1,6 @@
 ---
 date: '2019-10-22'
-title: 'Virto commerce Getting started'
+title: 'Virto Commerce Getting started'
 layout: docs
 ---
 
@@ -15,10 +15,10 @@ The catalog is what your customers are constantly working with. It is very impor
 
 Typically, to start working with the new catalog you should follow several steps:
 
-* [Creating new category and subcategory](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/lesson2.md#creating-new-category-and-subcategory)
-* [Import catalog data](https://virtocommerce.com/docs/vc2userguide/merchandise-management/catalog-import)
-* [Open new products in Virto Commerce Platform](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/lesson2.md#open-new-products-in-virto-commerce-platform-backend)
-* [Build search index](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/lesson2.md#build-search-indexes-and-reset-cache)
+* Create a new catalogue
+* Create categories
+* Create a product
+* Create a product with variants
 
 Additionally you can read [Working with Products catalog](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md) article. It describes how to work with products [catalog](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#common-catalogs), [categories](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#categories), [items](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#items-products), product [properties](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#properties)), product [variations](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#variations) and [virtual catalogs](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#virtual-catalogs)
 
@@ -49,9 +49,10 @@ Price list assignment identifies the price list from which a product price is sh
 
 Thus, price configuring consists of the following actions:
 
-1. Create prise list
+1. Create price list
 2. Add items to the price list
 3. Create price list assignment
+4. Manage inventory
 
 After this step completed, you can [Open new products in Virto Commerce Storefront](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/lesson2.md#open-new-products-in-virto-commerce-storefront-frontend) , browse the catalog, add product to shopping cart and create order. You can view customer order via admin UI.
 
