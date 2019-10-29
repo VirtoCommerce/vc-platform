@@ -5,6 +5,7 @@
         <noWarn>1591</noWarn>
         <ApplicationIcon />
         <OutputType>Library</OutputType>
+        <IsPackable>True</IsPackable>
         <StartupObject />
     </PropertyGroup>
 
