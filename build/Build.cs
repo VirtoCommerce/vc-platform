@@ -61,6 +61,7 @@ class Build : NukeBuild
 
     [Parameter("GitHub user for release creation")] readonly string GitHubUser;
     [Parameter("GitHub user security token for release creation")] readonly string GitHubToken;
+    [Parameter("True - prerelease, False - release")] readonly bool PreRelease;
 
     [Parameter("Path to folder with  git clones of modules repositories")] readonly AbsolutePath ModulesFolderPath;
 
@@ -372,17 +373,18 @@ class Build : NukeBuild
     Target Release => _ => _
          .DependsOn(Clean, Compress)
          .Requires(() => GitHubUser, () => GitHubToken)
-         .Requires(() => GitRepository.IsOnReleaseBranch() && GitTasks.GitHasCleanWorkingCopy())
+         /*.Requires(() =>   GitRepository.IsOnReleaseBranch() && GitTasks.GitHasCleanWorkingCopy()) */
          .Executes(() =>
          {
              var tag = "v" + (IsModule ? ModuleSemVersion : GitVersion.SemVer);
-             FinishReleaseOrHotfix(tag);
+             //FinishReleaseOrHotfix(tag);
 
              void RunGitHubRelease(string args)
              {
                  ProcessTasks.StartProcess("github-release", args, RootDirectory).AssertZeroExitCode();
              }
-             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} "); //-c branch -d description
+             var prereleaseArg = PreRelease ? "--pre-release" : "";
+             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} {prereleaseArg}"); //-c branch -d description
              RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
          });
 

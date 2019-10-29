@@ -28,6 +28,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("")]
+        [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
         public async Task<ActionResult<ObjectSettingEntry>> GetAllGlobalSettings()
         {
             var result = await _settingsManager.GetObjectSettingsAsync(_settingsManager.AllRegisteredSettings.Select(x => x.Name));
