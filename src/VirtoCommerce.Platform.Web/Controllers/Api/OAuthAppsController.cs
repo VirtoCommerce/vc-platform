@@ -37,6 +37,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var app = new OpenIddictApplicationDescriptor
             {
+                DisplayName = "New application",
                 ClientId = Guid.NewGuid().ToString(),
                 ClientSecret = Guid.NewGuid().ToString(),
                 Type = OpenIddictConstants.ClientTypes.Confidential
@@ -92,14 +93,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("search")]
         public async Task<ActionResult<OAuthAppSearchResult>> SearchAsync(OAuthAppSearchCriteria criteria)
         {
+            if (criteria.Sort.IsNullOrEmpty())
+            {
+                criteria.Sort = "DisplayName:ASC";
+            }
+
             var apps = await _manager.ListAsync(x =>
-                x.Take(criteria.Take).Skip(criteria.Skip).OrderBy(y => y.DisplayName));
+                x.OrderBySortInfos(criteria.SortInfos).Skip(criteria.Skip).Take(criteria.Take));
 
             var appsTasks = apps.Select(async x =>
                 {
                     var descriptor = new OpenIddictApplicationDescriptor();
                     await _manager.PopulateAsync(descriptor, x);
-                    descriptor.ClientSecret = x.ClientSecret;
+                    descriptor.ClientSecret = "";
                     return descriptor;
                 }).ToList();
 

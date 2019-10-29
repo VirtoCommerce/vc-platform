@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp').controller('platformWebApp.oauthappsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', function ($scope, bladeNavigationService, dialogService, oauthapps) {
+﻿angular.module('platformWebApp').controller('platformWebApp.oauthappsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', function ($scope, bladeNavigationService, dialogService, oauthapps, bladeUtils, uiGridHelper) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:security:update';
     blade.allSelected = false;
@@ -7,22 +7,27 @@
         blade.isLoading = true;
 
         var criteria = {
-            skip: 0,
-            take: 99999
+            sort: uiGridHelper.getSortExpression($scope),
+            skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+            take: $scope.pageSettings.itemsPerPageCount
         };
 
         oauthapps.search(criteria, function (data) {
+            data.results.forEach(x => delete x.clientSecret);
             blade.isLoading = false;
             blade.currentEntities = data.results;
+            $scope.pageSettings.totalItems = data.totalCount;
         }, function (error) {
+            blade.isLoading = false;
             bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
 
-    $scope.selectNode = function (node) {
+    blade.selectNode = function (node) {
+        $scope.selectedNodeId = node.clientId;
         var newBlade = {
             subtitle: 'platform.blades.oauthapps-detail.title',
-            origEntity: node
+            data: node
         };
         openDetailsBlade(newBlade);
     };
@@ -39,6 +44,23 @@
         bladeNavigationService.showBlade(newBlade, blade);
     }
 
+    $scope.deleteList = function (selection) {
+        var dialog = {
+            id: "confirmDeleteItem",
+            title: "platform.dialogs.oauthapps-delete.title",
+            message: "platform.dialogs.oauthapps-delete.message",
+            callback: function (remove) {
+                if (remove) {
+                    bladeNavigationService.closeChildrenBlades(blade, function () {
+                        var clientIds = selection.map(x => x.clientId);
+                        oauthapps.delete({ clientIds }, blade.refresh());
+                    });
+                }
+            }
+        };
+        dialogService.showConfirmationDialog(dialog);
+    }
+
     blade.headIcon = 'fa-key';
 
     blade.toolbarCommands = [
@@ -52,55 +74,53 @@
         {
             name: "platform.commands.add", icon: 'fa fa-plus',
             executeMethod: function () {
-                blade.selectedData = undefined;
-                var newBlade = {
-                    subtitle: 'platform.blades.oauthapps-detail.title-new',
-                    isNew: true
-                };
-                openDetailsBlade(newBlade);
+                bladeNavigationService.closeChildrenBlades(blade, function () {
+                    blade.selectedData = undefined;
+                    var newBlade = {
+                        subtitle: 'platform.blades.oauthapps-detail.title-new',
+                        isNew: true
+                    };
+                    openDetailsBlade(newBlade);
+                });
             },
             canExecuteMethod: function () {
                 return true;
             },
-            permission: blade.updatePermission
+            permission: 'platform:security:create'
         },
         {
             name: "platform.commands.delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteChecked();
-            },
+            executeMethod: function () { $scope.deleteList($scope.gridApi.selection.getSelectedRows()); },
             canExecuteMethod: function () {
-                return isItemsChecked();
+                return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());
             },
-            permission: blade.updatePermission
+            permission: 'platform:security:delete'
         }
     ];
-
-    function deleteChecked() {
-        var dialog = {
-            id: "confirmDeleteItem",
-            title: "platform.dialogs.account-delete.title",
-            message: "platform.dialogs.account-delete.message",
-            callback: function (remove) {
-                if (remove) {
-                    var clientIds = blade.currentEntities.filter(x => x.$selected).map(x => x.clientId);
-                    oauthapps.delete({ clientIds }, result => {
-                        blade.refresh();
-                    });
-                }
-            }
-        };
-        dialogService.showConfirmationDialog(dialog);
-    }
-
-    function isItemsChecked() {
-        return _.any(blade.currentEntities, function (x) { return x.$selected; });
-    }
 
     $scope.toggleAll = function () {
         blade.allSelected = !blade.allSelected;
         blade.currentEntities.forEach(x => x.$selected = blade.allSelected);
     }
 
-    blade.refresh();
+    var filter = $scope.filter = {};
+    filter.criteriaChanged = function () {
+        if ($scope.pageSettings.currentPage > 1) {
+            $scope.pageSettings.currentPage = 1;
+        } else {
+            blade.refresh();
+        }
+    };
+
+    // ui-grid
+    $scope.setGridOptions = function (gridOptions) {
+        uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
+            uiGridHelper.bindRefreshOnSortChanged($scope);
+        });
+        bladeUtils.initializePagination($scope);
+    };
+
+    // actions on load
+    //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
+    // blade.refresh();
 }]);
