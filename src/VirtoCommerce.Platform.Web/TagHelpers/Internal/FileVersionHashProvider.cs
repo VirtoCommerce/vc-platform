@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Web.TagHelpers.Internal
         public FileVersionHashProvider(string rootPath, IPlatformMemoryCache platformMemoryCache)
         {
             _platformMemoryCache = platformMemoryCache;
-            _rootPath = rootPath.TrimEnd('\\') + '\\';
+            _rootPath = rootPath.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
             _fileSystemWatcher = new PhysicalFilesWatcher(_rootPath, new FileSystemWatcher(_rootPath), false);
         }
 
