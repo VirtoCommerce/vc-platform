@@ -1,4 +1,4 @@
-angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', function ($scope, bladeNavigationService, dialogService, oauthapps) {
+angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', 'platformWebApp.validators', function ($scope, bladeNavigationService, dialogService, oauthapps, validators) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:security:update';
 
@@ -112,10 +112,10 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
 
     $scope.editRedirectUris = function () {
         var newBlade = {
-            id: "editRedirectUrls",
+            id: "editRedirectUris",
             updatePermission: 'platform:security:update',
             data: blade.currentEntity.redirectUris,
-            type: "uri",
+            validator: validators.uriWithoutQuery,
             headIcon: 'fa-plus-square-o',
             title: 'platform.blades.oauthapps-detail.blades.edit-redirectUris.title',
             subtitle: 'platform.blades.oauthapps-detail.blades.edit-redirectUris.subtitle',
@@ -134,7 +134,7 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
             id: "editPostLogoutRedirectUris",
             updatePermission: 'platform:security:update',
             data: blade.currentEntity.postLogoutRedirectUris,
-            type: "uri",
+            validator: validators.uriWithoutQuery,
             headIcon: 'fa-plus-square-o',
             title: 'platform.blades.oauthapps-detail.blades.edit-postLogoutRedirectUris.title',
             subtitle: 'platform.blades.oauthapps-detail.blades.edit-postLogoutRedirectUris.subtitle',

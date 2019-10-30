@@ -137,6 +137,11 @@
             "short-text-dictionary-multilang": "Select value",
             "short-text-dictionary-multivalue-multilang": "Select value"
         }
-    }
+    },
+    "validators": {
+        "uriWithoutQuery": {
+            "error": "Invalid uri format. Make shure uri dosn't have query params."
+        }
+    } 
   }
 }

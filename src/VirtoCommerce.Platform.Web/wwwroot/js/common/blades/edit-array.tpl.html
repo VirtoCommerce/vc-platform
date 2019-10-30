@@ -2,19 +2,23 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            
-            <form class="form" ng-submit="add(pdForm)" name="pdForm" novalidate autocomplete="off">
+
+            <form class="form" ng-submit="add(addForm)" name="addForm" novalidate autocomplete="off">
                 <fieldset>
                     <legend>{{ 'platform.blades.edit-array.labels.new-value' | translate }}</legend>
                     <div class="form-group">
                         <div class="form-input">
-                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newItem.value" name="dictValue" focus-on="" placeholder="{{ 'platform.blades.edit-array.placeholders.value' | translate }}" />
+                            <input ng-class="{'error' : addForm.newItemValue.$invalid && !addForm.newItemValue.$pristine}" required ui-validate="'blade.validator($value)'" ng-model="newItem.value" name="newItemValue" focus-on="" placeholder="{{ 'platform.blades.edit-array.placeholders.value' | translate }}" />
+                        </div>
+                        <div class="form-error" ng-if="addForm.newItemValue.$dirty && addForm.newItemValue.$invalid">
+                            <span ng-if="addForm.newItemValue.$error.required">{{ 'platform.blades.edit-array.validations.new-value-required' | translate }}</span>
+                            <span ng-if="addForm.newItemValue.$error.validator">{{ 'platform.validators.'+blade.validator.name+'.error' | translate }}</span>
                         </div>
                     </div>
                 </fieldset>
 
                 <div class="form-group">
-                    <button class="btn" ng-disabled="pdForm.$invalid" type="submit">{{ 'platform.commands.add' | translate }}</button>
+                    <button class="btn" ng-disabled="addForm.$invalid" type="submit">{{ 'platform.commands.add' | translate }}</button>
                 </div>
             </form>
 
@@ -53,7 +57,7 @@
                     </form>
                 </div>
             </fieldset>
-            
+
         </div>
     </div>
 </div>
