@@ -443,8 +443,8 @@
                     "type": "Type",
                     "clientSecret": "Client secret",
                     "assigned-permissions": "Assigned permissions",
-                    "redirectUris": "Redirect uris",
-                    "postLogoutRedirectUris": "Post logout redirect uris"
+                    "redirectUris": "Redirect URIs",
+                    "postLogoutRedirectUris": "Post logout redirect URIs"
                 },
                 "placeholders": {
                     "clientId": "Input client id",
@@ -462,7 +462,7 @@
                 "title-new": "Create OAuth application",
                 "subtitle": "Security service",
                 "labels": {
-                    "clientSecret-warning": "Warning, copy client secret befor close this blade",
+                    "clientSecret-warning": "Warning! You must copy the secret now. It will be hidden after closing the blade.",
                     "urls": "Urls"
                 },
                 "blades": {

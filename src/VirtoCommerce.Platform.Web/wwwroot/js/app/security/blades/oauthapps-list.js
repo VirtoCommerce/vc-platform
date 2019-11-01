@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp').controller('platformWebApp.oauthappsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', function ($scope, bladeNavigationService, dialogService, oauthapps, bladeUtils, uiGridHelper) {
+angular.module('platformWebApp').controller('platformWebApp.oauthappsListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper', function ($scope, bladeNavigationService, dialogService, oauthapps, bladeUtils, uiGridHelper) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:security:update';
     blade.allSelected = false;
@@ -53,13 +53,13 @@
                 if (remove) {
                     bladeNavigationService.closeChildrenBlades(blade, function () {
                         var clientIds = selection.map(x => x.clientId);
-                        oauthapps.delete({ clientIds }, blade.refresh());
+                        oauthapps.delete({ clientIds }, blade.refresh);
                     });
                 }
             }
         };
         dialogService.showConfirmationDialog(dialog);
-    }
+    };
 
     blade.headIcon = 'fa-key';
 
@@ -101,7 +101,7 @@
     $scope.toggleAll = function () {
         blade.allSelected = !blade.allSelected;
         blade.currentEntities.forEach(x => x.$selected = blade.allSelected);
-    }
+    };
 
     var filter = $scope.filter = {};
     filter.criteriaChanged = function () {
@@ -115,6 +115,7 @@
     // ui-grid
     $scope.setGridOptions = function (gridOptions) {
         uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
+            $scope.gridApi = gridApi;
             uiGridHelper.bindRefreshOnSortChanged($scope);
         });
         bladeUtils.initializePagination($scope);
