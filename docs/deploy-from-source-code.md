@@ -94,4 +94,4 @@ npm run webpack:build
 - Install and run platform as described in steps above.
 - Setup module from source code as described above, open the module solution in Visual Studio and attach the debugger to the dotnet.exe process, running VC Platform.
 
-**Note:** to distinguish between multiple dotnet.exe processes, If running in Windows, use Task Manager to distinguish between multiple dotnet.exe processes: add "Command line" column to Details tab. This would show which app each dotnet.exe is running..
+**Note:** to distinguish between multiple dotnet.exe processes, If running in Windows, use Task Manager to distinguish between multiple dotnet.exe processes: add "Command line" column to Details tab. This would show which app each dotnet.exe is running.
