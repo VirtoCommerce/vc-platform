@@ -34,8 +34,8 @@ namespace VirtoCommerce.Platform.Modules
                 Directory.CreateDirectory(_options.ProbingPath);
             }
 
-            if (!discoveryPath.EndsWith(Path.DirectorySeparatorChar))
-                discoveryPath += Path.DirectorySeparatorChar;
+            if (!discoveryPath.EndsWith(Path.DirectorySeparatorChar) || !discoveryPath.EndsWith(Path.AltDirectorySeparatorChar))
+                discoveryPath += Path.AltDirectorySeparatorChar;
 
             var rootUri = new Uri(discoveryPath);
 
