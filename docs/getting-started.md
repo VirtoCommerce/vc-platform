@@ -20,7 +20,7 @@ Typically, to start working with the new catalog you should follow several steps
 * Create a product
 * Create a product with variants
 
-Additionally you can read [Working with Products catalog](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md) article. It describes how to work with products [catalog](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#common-catalogs), [categories](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#categories), [items](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#items-products), product [properties](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#properties)), product [variations](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#variations) and [virtual catalogs](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#virtual-catalogs)
+Additionally you can read [Working with Products catalog](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md) article. It describes how to work with products [catalog](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#common-catalogs), [categories](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#categories), [items](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#items-products), product [properties](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#properties), product [variations](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#variations) and [virtual catalogs](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/merchandise-management/products-catalog.md#virtual-catalogs)
 
 ## Step 2. Configure your store
 
@@ -28,7 +28,7 @@ Virto Commerce platform is 4-MULTI: multi-language, multi-currency, multi-theme 
 
 To configure your store you must accomplish a set of actions:
 
-1. Create first store
+1. Create first store (enter store code and name)
 2. Select your catalog
 3. Select available currency, languages
 4. Configure advanced properties:
@@ -37,20 +37,22 @@ To configure your store you must accomplish a set of actions:
     3. Operational timezone
 5. Setup theme
 
-Check that new store is visible.
+Open your first store in a browser.
 
 The [Managing stores](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/configuration/store.md) article helps you to configure your first store. Also at this step you should configure [Users, Roles and Role Assignment](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/users-management-roles-and-role-assignment.md)
 
 ## Step 3. Configure prices and inventory
 
-In the Virto Commerce, a price list is a set of pricing details that can be assigned to items. All prices are stored in a price list, which is associated with a catalog and a currency. When the price list is created in the Virto Commerce, you need to define which products will be included into this price list and what prices will be defined for them. You can do it by creating price list assignment.
+In the Virto Commerce, a price list is a set of pricing details that can be assigned to items. All prices are stored in a price list(s), which have specific currency set. When a price list is created, you define which products will be included into this price list and what prices will be defined for them.
+
+The way to apply the prices to products on Storefront is creating a Price list Assignment. It binds a catalog with price list and can add optional conditions for this binding.
 
 Price list assignment identifies the price list from which a product price is shown for customers. Moreover, price list assignments can do much more than simply provide default list and sale prices for products. This feature allows you to provide custom prices to targeted customers according to customer's characteristics such as age, gender, geographic location and searched terms.
 
 Thus, price configuring consists of the following actions:
 
-1. Create pricelist
-2. Add items to the pricelist
+1. Create price list
+2. Add items to the price list
 
 3. Create price list assignment
 4. Manage inventory
@@ -59,7 +61,7 @@ After this step completed, you can [Open new products in Virto Commerce Storefro
 
 ## Step 4. Configure payments, shipments, taxes
 
-By default, you see demo payment and shipmen methods. Virto Commerce provides the ready to use module which. You can set your own configurations:
+By default, you see demo payment and shipment methods. Virto Commerce provides the ready to use module which you can set your own configurations:
 
 * Install Payment module (For example: PayPal)
 * Configure [Shipments](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/order-management/working-with-shipments.md) method
@@ -73,8 +75,8 @@ There are several marketing tools in Virto Commerce: you can publish content, cr
 
 Start with creation of two simple promotions:
 
-1. 5% if cart subtotal > 100 $
-2. Add Gif product
+1. Each customer would receive a 5%  off if cart subtotal exceeded $100
+2. Add Gift product to shopping cart for every fifth customer order
 
 Then you can play with extended e-commerce marketing, like 10% if product is in-stock.
 
@@ -97,6 +99,6 @@ To enhance User Experience Virto Commerce contains a set of tools:
 * Login on behalf
 * Social login
 
-## Step 7. Go to live with MVP and review additional cases and Virto Commerce
+## Step 7. Go to live with MVP and review additional cases in Virto Commerce
 
 Now you are ready to launch your MVP store.
