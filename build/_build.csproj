@@ -24,7 +24,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.0.0-beta0004" />
+        <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.0.0-rc1-update0001" />
     </ItemGroup>
 
     <ItemGroup>
