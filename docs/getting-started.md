@@ -43,18 +43,18 @@ The [Managing stores](https://github.com/VirtoCommerce/vc-content/blob/deploy/pa
 
 ## Step 3. Configure prices and inventory
 
-In the Virto Commerce, a price list is a set of pricing details that can be assigned to items. All prices are stored in a price list(s), which have specific currency set. When a price list is created, you define which products will be included into this price list and what prices will be defined for them.
+In the Virto Commerce, a pricelist is a set of pricing details that can be assigned to items. All prices are stored in a pricelist(s), which have specific currency set. When a pricelist is created, you define which products will be included into this pricelist and what prices will be defined for them.
 
-The way to apply the prices to products on Storefront is creating a Price list Assignment. It binds a catalog with price list and can add optional conditions for this binding.
+The way to apply the prices to products on Storefront is creating a Pricelist Assignment. It binds a catalog with pricelist and can add optional conditions for this binding.
 
-Price list assignment identifies the price list from which a product price is shown for customers. Moreover, price list assignments can do much more than simply provide default list and sale prices for products. This feature allows you to provide custom prices to targeted customers according to customer's characteristics such as age, gender, geographic location and searched terms.
+Pricelist assignment identifies the pricelist from which a product price is shown for customers. Moreover, pricelist assignments can do much more than simply provide default list and sale prices for products. This feature allows you to provide custom prices to targeted customers according to customer's characteristics such as age, gender, geographic location and searched terms.
 
 Thus, price configuring consists of the following actions:
 
-1. Create price list
-2. Add items to the price list
+1. Create pricelist
+2. Add items to the pricelist
 
-3. Create price list assignment
+3. Create pricelist assignment
 4. Manage inventory
 
 After this step completed, you can [Open new products in Virto Commerce Storefront](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/lesson2.md#open-new-products-in-virto-commerce-storefront-frontend) , browse the catalog, add product to shopping cart and create order. You can view customer order via admin UI.
