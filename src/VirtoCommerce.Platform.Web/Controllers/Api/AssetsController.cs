@@ -41,6 +41,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("localstorage")]
         [DisableFormValueModelBinding]
+        [DisableRequestSizeLimit]
         [Authorize(PlatformConstants.Security.Permissions.AssetCreate)]
         public async Task<ActionResult<BlobInfo[]>> UploadAssetToLocalFileSystemAsync()
         {
@@ -56,7 +57,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 Directory.CreateDirectory(uploadPath);
             }
-            string targetFilePath = null;
 
             var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
             var reader = new MultipartReader(boundary, HttpContext.Request.Body);
@@ -71,7 +71,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
                     {
                         var fileName = contentDisposition.FileName.Value;
-                        targetFilePath = Path.Combine(uploadPath, fileName);
+                        var targetFilePath = Path.Combine(uploadPath, fileName);
 
                         if (!Directory.Exists(uploadPath))
                         {
@@ -137,8 +137,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             else
             {
-                string targetFilePath = null;
-
                 var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
                 var reader = new MultipartReader(boundary, HttpContext.Request.Body);
 
@@ -153,7 +151,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         {
                             var fileName = contentDisposition.FileName.Value;
 
-                            targetFilePath = folderUrl + "/" + fileName;
+                            var targetFilePath = folderUrl + "/" + fileName;
 
                             using (var targetStream = _blobProvider.OpenWrite(targetFilePath))
                             {
@@ -167,7 +165,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                             blobInfo.ContentType = MimeTypeResolver.ResolveContentType(fileName);
                             retVal.Add(blobInfo);
                         }
-
                     }
                 }
             }
