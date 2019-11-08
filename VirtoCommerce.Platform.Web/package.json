@@ -13,6 +13,6 @@
     "gulp-util": "^3.0.8",
     "main-bower-files": "2.9.0",
     "node-bourbon": "^4.2.3",
-    "node-sass": "^4.12.0"
+    "node-sass": "^4.13.0"
   }
 }
