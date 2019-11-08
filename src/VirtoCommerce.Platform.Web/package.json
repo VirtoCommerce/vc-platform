@@ -42,7 +42,7 @@
         "@aspnet/signalr": "^1.1.4",
         "@uirouter/angularjs": "^1.0.20",
         "angular": "^1.4.4",
-        "angular-animate": "^1.4.4",
+        "angular-animate": "^1.7.8",
         "angular-cookies": "^1.4.4",
         "angular-dynamic-locale": "^0.1.32",
         "angular-file-upload": "^2.5.0",
