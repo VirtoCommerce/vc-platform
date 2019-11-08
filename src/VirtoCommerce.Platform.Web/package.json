@@ -21,7 +21,7 @@
         "gulp-cssmin": "^0.2.0",
         "gulp-filter": "^5.0.0",
         "gulp-htmlmin": "^3.0.0",
-        "gulp-sass": "^3.1.0",
+        "gulp-sass": "^4.0.2",
         "gulp-sourcemaps": "^2.4.1",
         "gulp-sync": "0.1.4",
         "gulp-uglify": "^3.0.0",
