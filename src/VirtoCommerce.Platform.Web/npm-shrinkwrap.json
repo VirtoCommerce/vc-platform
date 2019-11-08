@@ -563,9 +563,9 @@
             "dev": true
         },
         "angular": {
-            "version": "1.4.4",
-            "resolved": "http://registry.npmjs.org/angular/-/angular-1.4.4.tgz",
-            "integrity": "sha1-msJKpdOIAjOa+Z/mPGSn6XhJWLg="
+            "version": "1.7.8",
+            "resolved": "https://registry.npmjs.org/angular/-/angular-1.7.8.tgz",
+            "integrity": "sha512-wtef/y4COxM7ZVhddd7JtAAhyYObq9YXKar9tsW7558BImeVYteJiTxCKeJOL45lJ/+7B4wrAC49j8gTFYEthg=="
         },
         "angular-animate": {
             "version": "1.4.4",
@@ -632,6 +632,13 @@
             "integrity": "sha1-+aPCuNXa6312yeLAH/PD1X/hK5A=",
             "requires": {
                 "angular": ">=1.2.26 <=1.6"
+            },
+            "dependencies": {
+                "angular": {
+                    "version": "1.6.10",
+                    "resolved": "https://registry.npmjs.org/angular/-/angular-1.6.10.tgz",
+                    "integrity": "sha512-PCZ5/hVdvPQiYyH0VwsPjrErPHRcITnaXxhksceOXgtJeesKHLA7KDu4X/yvcAi+1zdGgGF+9pDxkJvghXI9Wg=="
+                }
             }
         },
         "angular-translate-loader-url": {
@@ -2437,7 +2444,7 @@
                 },
                 "readable-stream": {
                     "version": "2.3.6",
-                    "resolved": "http://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz",
+                    "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz",
                     "integrity": "sha512-tQtKA9WIAhBF3+VLAseyMqZeBjW0AHJoxOtYqSUZNJxauErmLbVm2FW1y+J/YA9dUrAC39ITejlZWhVIwawkKw==",
                     "dev": true,
                     "requires": {
@@ -2563,7 +2570,7 @@
                 },
                 "readable-stream": {
                     "version": "2.3.6",
-                    "resolved": "http://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz",
+                    "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz",
                     "integrity": "sha512-tQtKA9WIAhBF3+VLAseyMqZeBjW0AHJoxOtYqSUZNJxauErmLbVm2FW1y+J/YA9dUrAC39ITejlZWhVIwawkKw==",
                     "dev": true,
                     "requires": {
@@ -5260,7 +5267,7 @@
         },
         "jsesc": {
             "version": "0.5.0",
-            "resolved": "http://registry.npmjs.org/jsesc/-/jsesc-0.5.0.tgz",
+            "resolved": "https://registry.npmjs.org/jsesc/-/jsesc-0.5.0.tgz",
             "integrity": "sha1-597mbjXW/Bb3EP6R1c9p9w8IkR0="
         },
         "json-parse-better-errors": {
@@ -5305,7 +5312,7 @@
         },
         "json5": {
             "version": "0.5.1",
-            "resolved": "http://registry.npmjs.org/json5/-/json5-0.5.1.tgz",
+            "resolved": "https://registry.npmjs.org/json5/-/json5-0.5.1.tgz",
             "integrity": "sha1-Hq3nrMASA0rYTiOWdn6tn6VJWCE="
         },
         "jsonify": {
@@ -5807,7 +5814,7 @@
                 },
                 "readable-stream": {
                     "version": "1.0.34",
-                    "resolved": "http://registry.npmjs.org/readable-stream/-/readable-stream-1.0.34.tgz",
+                    "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.34.tgz",
                     "integrity": "sha1-Elgg40vIQtLyqq+v5MKRbuMsFXw=",
                     "dev": true,
                     "requires": {
@@ -5819,7 +5826,7 @@
                 },
                 "through2": {
                     "version": "0.6.5",
-                    "resolved": "http://registry.npmjs.org/through2/-/through2-0.6.5.tgz",
+                    "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz",
                     "integrity": "sha1-QaucZ7KdVyCQcUEOHXp6lozTrUg=",
                     "dev": true,
                     "requires": {
@@ -6036,7 +6043,7 @@
                 },
                 "readable-stream": {
                     "version": "2.3.6",
-                    "resolved": "http://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz",
+                    "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz",
                     "integrity": "sha512-tQtKA9WIAhBF3+VLAseyMqZeBjW0AHJoxOtYqSUZNJxauErmLbVm2FW1y+J/YA9dUrAC39ITejlZWhVIwawkKw==",
                     "dev": true,
                     "requires": {
@@ -6364,7 +6371,7 @@
                 },
                 "lodash": {
                     "version": "4.17.4",
-                    "resolved": "http://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz",
+                    "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz",
                     "integrity": "sha1-eCA6TRwyiuHYbcpkYONptX9AVa4="
                 },
                 "yargs": {
@@ -7398,7 +7405,7 @@
                 },
                 "kind-of": {
                     "version": "1.1.0",
-                    "resolved": "http://registry.npmjs.org/kind-of/-/kind-of-1.1.0.tgz",
+                    "resolved": "https://registry.npmjs.org/kind-of/-/kind-of-1.1.0.tgz",
                     "integrity": "sha1-FAo9LUGjbS78+pN3tiwk+ElaXEQ=",
                     "dev": true
                 }
@@ -9128,7 +9135,7 @@
                 },
                 "readable-stream": {
                     "version": "2.3.6",
-                    "resolved": "http://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz",
+                    "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz",
                     "integrity": "sha512-tQtKA9WIAhBF3+VLAseyMqZeBjW0AHJoxOtYqSUZNJxauErmLbVm2FW1y+J/YA9dUrAC39ITejlZWhVIwawkKw==",
                     "dev": true,
                     "requires": {
@@ -10925,7 +10932,7 @@
                 },
                 "readable-stream": {
                     "version": "2.3.6",
-                    "resolved": "http://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz",
+                    "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz",
                     "integrity": "sha512-tQtKA9WIAhBF3+VLAseyMqZeBjW0AHJoxOtYqSUZNJxauErmLbVm2FW1y+J/YA9dUrAC39ITejlZWhVIwawkKw==",
                     "dev": true,
                     "requires": {
