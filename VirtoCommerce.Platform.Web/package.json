@@ -8,7 +8,7 @@
     "gulp-concat": "^2.6.0",
     "gulp-filter": "^5.0.0",
     "gulp-sass": "^4.0.2",
-    "gulp-sourcemaps": "^2.4.1",
+    "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "2.0.0",
     "gulp-util": "^3.0.8",
     "main-bower-files": "2.9.0",
