@@ -11,7 +11,7 @@
     "gulp-sourcemaps": "^2.4.1",
     "gulp-uglify": "2.0.0",
     "gulp-util": "^3.0.8",
-    "main-bower-files": "2.9.0",
+    "main-bower-files": "2.13.3",
     "node-bourbon": "^4.2.3",
     "node-sass": "^4.12.0"
   }
