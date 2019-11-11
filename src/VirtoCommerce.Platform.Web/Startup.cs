@@ -49,6 +49,7 @@ using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.JsonConverters;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Swagger;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -130,6 +131,18 @@ namespace VirtoCommerce.Platform.Web
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.
                 options.UseOpenIddict();
+            });
+
+            // Enable synchronous IO if using Kestrel:
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
+            // Enable synchronous IO if using IIS:
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
             });
 
             services.Configure<CookiePolicyOptions>(options =>
