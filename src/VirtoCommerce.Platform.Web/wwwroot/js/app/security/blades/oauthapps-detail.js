@@ -1,4 +1,4 @@
-angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', function ($scope, bladeNavigationService, dialogService, oauthapps) {
+angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.oauthapps', 'platformWebApp.validators', function ($scope, bladeNavigationService, dialogService, oauthapps, validators) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:security:update';
 
@@ -6,11 +6,12 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
         if (blade.isNew) {
             generateNew();
         } else {
-            initialize(blade.origEntity);
+            initialize(blade.data);
         }
     }
 
     function initialize(data) {
+        blade.origEntity = data;
         blade.currentEntity = angular.copy(data);
         blade.isLoading = false;
     };
@@ -34,6 +35,9 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
             angular.copy(blade.currentEntity, blade.origEntity);
             blade.parentBlade.refresh();
             $scope.bladeClose();
+        }, error => {
+            blade.isLoading = false;
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
     };
 
@@ -94,8 +98,54 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
             initialize(blade.origEntity);
             blade.isLoading = false;
         }, function (error) {
+            blade.isLoading = false;
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
+    };
+
+    $scope.copyToClipboard = function (elementId) {
+        var text = document.getElementById(elementId);
+        text.focus();
+        text.select();
+        document.execCommand('copy');
+    };
+
+    $scope.editRedirectUris = function () {
+        var newBlade = {
+            id: "editRedirectUris",
+            updatePermission: 'platform:security:update',
+            data: blade.currentEntity.redirectUris,
+            validator: validators.uriWithoutQuery,
+            headIcon: 'fa-plus-square-o',
+            title: 'platform.blades.oauthapps-detail.blades.edit-redirectUris.title',
+            subtitle: 'platform.blades.oauthapps-detail.blades.edit-redirectUris.subtitle',
+            controller: 'platformWebApp.editArrayController',
+            template: '$(Platform)/Scripts/common/blades/edit-array.tpl.html',
+            onChangesConfirmedFn: function (values) {
+                blade.currentEntity.redirectUris = angular.copy(values);
+            }
+        };
+
+        bladeNavigationService.showBlade(newBlade, blade);
+    };
+
+    $scope.editPostLogoutRedirectUris = function () {
+        var newBlade = {
+            id: "editPostLogoutRedirectUris",
+            updatePermission: 'platform:security:update',
+            data: blade.currentEntity.postLogoutRedirectUris,
+            validator: validators.uriWithoutQuery,
+            headIcon: 'fa-plus-square-o',
+            title: 'platform.blades.oauthapps-detail.blades.edit-postLogoutRedirectUris.title',
+            subtitle: 'platform.blades.oauthapps-detail.blades.edit-postLogoutRedirectUris.subtitle',
+            controller: 'platformWebApp.editArrayController',
+            template: '$(Platform)/Scripts/common/blades/edit-array.tpl.html',
+            onChangesConfirmedFn: function (values) {
+                blade.currentEntity.postLogoutRedirectUris = angular.copy(values);
+            }
+        };
+
+        bladeNavigationService.showBlade(newBlade, blade);
     };
 
     blade.refresh();

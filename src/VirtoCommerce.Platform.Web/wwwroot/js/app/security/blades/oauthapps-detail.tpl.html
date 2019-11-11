@@ -5,7 +5,20 @@
             <div class="form-group">
                 <label class="form-label">{{ 'platform.blades.oauthapps.labels.clientId' | translate }}</label>
                 <div class="form-input">
-                    <input ng-model="blade.currentEntity.clientId" placeholder="{{ 'platform.blades.oauthapps.placeholders.clientId' | translate }}" ng-readonly="!blade.isNew" required focus-on>
+                    <input ng-model="blade.currentEntity.clientId" id="clientId" placeholder="{{ 'platform.blades.oauthapps.placeholders.clientId' | translate }}" ng-readonly="!blade.isNew" required focus-on>
+                    <button class="btn __ico" type="button" ng-click="copyToClipboard('clientId')" title="{{ 'platform.commands.copy' | translate }}">
+                        <i class="btn-ico fa fa-clipboard"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div ng-if="blade.isNew" class="form-group">
+                <label class="form-label form-error"> {{ 'platform.blades.oauthapps-detail.labels.clientSecret-warning' | translate }} </label>
+                <div class="form-input">
+                    <input ng-model="blade.currentEntity.clientSecret" id="clientSecret" placeholder="{{ 'platform.blades.oauthapps.placeholders.clientSecret' | translate }}">
+                    <button class="btn __ico" type="button" ng-click="copyToClipboard('clientSecret')" title="{{ 'platform.commands.copy' | translate }}">
+                        <i class="btn-ico fa fa-clipboard"></i>
+                    </button>
                 </div>
             </div>
 
@@ -23,26 +36,66 @@
                 </div>
             </div>
 
-            <div ng-if="blade.isNew" class="form-group">
-                <label class="form-label">{{ 'platform.blades.oauthapps.labels.clientSecret' | translate }}</label>
-                <div class="form-input">
-                    <input ng-model="blade.currentEntity.clientSecret" placeholder="{{ 'platform.blades.oauthapps.placeholders.clientSecret' | translate }}">
-                </div>
+            <div class="form-group">
+                <fieldset>
+                    <legend>
+                        {{ 'platform.blades.oauthapps.labels.redirectUris' | translate }}
+                        <a href="" ng-click="editRedirectUris(blade.currentEntity.redirectUris)" class="form-edit">
+                            <i class="form-ico fa fa-pencil"></i>
+                        </a>
+                    </legend>
+                    <div ng-if="blade.currentEntity.redirectUris.length > 0" class="table-wrapper">
+                        <form name="formScope" class="form">
+                            <table class="table __indexed">
+                                <thead>
+                                    <tr>
+                                        <th class="table-col">{{ 'platform.blades.oauthapps-detail.labels.urls' | translate }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-item" ng-repeat="uri in blade.currentEntity.redirectUris track by $index">
+                                        <td class="table-col">
+                                            <div class="form-input">
+                                                <input ng-model="uri" type="text" readonly />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </fieldset>
             </div>
 
             <div class="form-group">
-                <label class="form-label">{{ 'platform.blades.oauthapps.labels.assigned-permissions' | translate }}</label>
-                <div class="table-wrapper">
-                    <table class="table">
-                        <tbody>
-                            <tr class="table-item" ng-repeat="permission in blade.currentEntity.permissions">
-                                <td class="table-col">
-                                    <span class="table-t">{{permission}}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <fieldset>
+                    <legend>
+                        {{ 'platform.blades.oauthapps.labels.postLogoutRedirectUris' | translate }}
+                        <a href="" ng-click="editPostLogoutRedirectUris(blade.currentEntity.postLogoutRedirectUris)" class="form-edit">
+                            <i class="form-ico fa fa-pencil"></i>
+                        </a>
+                    </legend>
+                    <div ng-if="blade.currentEntity.postLogoutRedirectUris.length > 0" class="table-wrapper">
+                        <form name="formScope" class="form">
+                            <table class="table __indexed">
+                                <thead>
+                                    <tr>
+                                        <th class="table-col">{{ 'platform.blades.oauthapps-detail.labels.urls' | translate }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-item" ng-repeat="uri in blade.currentEntity.postLogoutRedirectUris track by $index">
+                                        <td class="table-col">
+                                            <div class="form-input">
+                                                <input ng-model="uri" type="text" readonly />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </fieldset>
             </div>
 
         </div>

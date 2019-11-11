@@ -127,6 +127,19 @@
                     "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
                 }
             },
+            "edit-array": {
+                "validations": {
+                    "new-value-required": "Required"
+                },
+                "labels": {
+                    "new-value": "New value",
+                    "current-values": "Current values",
+                    "values": "Values"
+                },
+                "placeholders": {
+                    "value": "Enter value"
+                }
+            },
             "export-main": {
                 "title": "Data export",
                 "labels": {
@@ -429,7 +442,9 @@
                     "displayName": "Display name",
                     "type": "Type",
                     "clientSecret": "Client secret",
-                    "assigned-permissions": "Assigned permissions" 
+                    "assigned-permissions": "Assigned permissions",
+                    "redirectUris": "Redirect URIs",
+                    "postLogoutRedirectUris": "Post logout redirect URIs"
                 },
                 "placeholders": {
                     "clientId": "Input client id",
@@ -443,8 +458,23 @@
                 "subtitle": "Security service"
             },
             "oauthapps-detail": {
-                "title": "OAuth application",
-                "subtitle": "Security service"
+                "title": "Edit OAuth application",
+                "title-new": "Create OAuth application",
+                "subtitle": "Security service",
+                "labels": {
+                    "clientSecret-warning": "Warning! You must copy the secret now. It will be hidden after closing the blade.",
+                    "urls": "Urls"
+                },
+                "blades": {
+                    "edit-redirectUris": {
+                        "title": "Redirect uris",
+                        "subtitle": "Manage redirect uris"
+                    },
+                    "edit-postLogoutRedirectUris": {
+                        "title": "Post logout redirect uris",
+                        "subtitle": "Manage post logout redirect uris"
+                    }
+                }
             },
             "login": {
                 "labels": {
