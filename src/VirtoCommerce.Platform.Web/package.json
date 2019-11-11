@@ -71,7 +71,7 @@
         "font-awesome": "^4.7.0",
         "jquery": "^2.1.4",
         "marked": "0.3.6",
-        "moment": "^2.22.2",
+        "moment": "^2.24.0",
         "moment-timezone": "0.5.13",
         "ng-focus-on": "^0.2.2",
         "ng-tags-input": "^3.2.0",
