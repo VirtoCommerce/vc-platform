@@ -196,7 +196,7 @@ namespace VirtoCommerce.Platform.Web
                         {
                             NameClaimType = OpenIdConnectConstants.Claims.Subject,
                             RoleClaimType = OpenIdConnectConstants.Claims.Role,
-                            ValidateIssuer = !options.Authority.IsNullOrEmpty(),
+                            ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
                             ValidateIssuerSigningKey = true,
                             IssuerSigningKey = publicKey
                         };
