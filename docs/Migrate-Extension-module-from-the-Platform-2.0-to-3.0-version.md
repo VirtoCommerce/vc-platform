@@ -5,25 +5,33 @@ This article describes how to migrate existing extension module from 2.0 to 3.0 
 
 ### Migrating extension module to ASP.NET Core
 For example, have project with name _Cart2Module.Web.csproj_ for _CartModule_.
-* Create a new branch with  name: migrate-to-v3 then switch to the branch.
+* Create a new branch with  name: release/3.0.0 then switch to the branch.
 * Then create a new solution for extension module if not exists.
 * Then need to migrate the project from ASP.NET to ASP.NET Core.
 > please read this article https://docs.microsoft.com/en-us/aspnet/core/migration/proper-to-2x
 
 Need to make changes in the Core/Data/Web extension projects _Cart2Module.XXX.csproj_
-* Change xml signature to
+* Create a project VirtoCommerce.Cart2Module.Core.csproj
+* Change xml signature inside csproj to
 ```
 <Project Sdk="Microsoft.NET.Sdk"> </Project>
 ```
-* Then add _TargetFramework_, at the moment _netcoreapp2.2_ is latest as _PropertyGroup_ inside _Project_ 
+* Then add _TargetFramework_ as _PropertyGroup_ inside _Project_ 
 ```
 <TargetFramework>netcoreapp2.2</TargetFramework>
 ```
 * Add references NuGet packages(if you have) and dependencies from _module.manifest_ as _ItemGroup_
 ```
-<ProjectReference Include="..\..\VirtoCommerce.CartModule.Core\VirtoCommerce.CartModule.Core.csproj" />
-<ProjectReference Include="..\..\VirtoCommerce.CartModule.Data\VirtoCommerce.CartModule.Data.csproj" />
+<PackageReference Include="VirtoCommerce.Platform.Core" Version="3.0.0-rc0001" />
+<PackageReference Include="VirtoCommerce.CartModule.Core" Version="3.0.0-rc0001" />
 ``` 
+* Move all domain models/events and interfaces to Cart2Module.Core from Cart2Module.Data
+> look at example https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/VirtoCommerce.CartModule.Core/VirtoCommerce.CartModule.Core.csproj
+* Same action need to do with existing projects Cart2Module.Data, Cart2Module.Web and Cart2Module.Tests: 
+** Change xml signature inside csproj as sample in Core-project
+** Remove all files depending with .net framework 4.x (properties, packages, configs)
+** Add references
+
 > look at example https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/samples/VirtoCommerce.CustomerSampleModule.Web/VirtoCommerce.CustomerSampleModule.Web.csproj
 
 ### Create _Cart2DbContext.cs_
