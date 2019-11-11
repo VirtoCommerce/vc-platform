@@ -27,7 +27,7 @@ Need to make changes in the Core/Data/Web extension projects _Cart2Module.XXX.cs
 ``` 
 * Move all domain models/events and interfaces to Cart2Module.Core from Cart2Module.Data
 > look at example https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/VirtoCommerce.CartModule.Core/VirtoCommerce.CartModule.Core.csproj
-Some action need to do with existing projects Cart2Module.Data, Cart2Module.Web and Cart2Module.Tests: 
+## Some action need to do with existing projects Cart2Module.Data, Cart2Module.Web and Cart2Module.Tests: 
 - Change xml signature inside csproj as sample in Core-project
 - Remove all files depending with .net framework 4.x (properties, packages, configs)
 - Add references
