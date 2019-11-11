@@ -28,7 +28,7 @@
         "gulp-util": "^3.0.8",
         "imports-loader": "^0.8.0",
         "main-bower-files": "2.9.0",
-        "merge-stream": "^1.0.1",
+        "merge-stream": "^2.0.0",
         "mini-css-extract-plugin": "^0.4.5",
         "node-bourbon": "^1.2.3",
         "node-sass": "^4.11.0",
