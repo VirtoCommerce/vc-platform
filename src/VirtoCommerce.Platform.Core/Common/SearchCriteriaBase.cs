@@ -38,14 +38,33 @@ namespace VirtoCommerce.Platform.Core.Common
         public string Keyword { get; set; }
 
         /// <summary>
+        /// Property is left for backward compatibility
+        /// </summary>
+        public string SearchPhrase
+        {
+            get { return Keyword; }
+            set { Keyword = value; }
+        }
+
+        /// <summary>
         /// Search phrase language 
         /// </summary>
         public string LanguageCode { get; set; }
 
         public string Sort { get; set; }
 
-        [JsonIgnore]
-        public virtual IList<SortInfo> SortInfos => SortInfo.Parse(Sort).ToArray();
+        private  IList<SortInfo> _sortInfos;
+        public virtual IList<SortInfo> SortInfos
+        {
+            get
+            {
+                if(_sortInfos == null)
+                {
+                    _sortInfos = SortInfo.Parse(Sort).ToList();
+                }
+                return _sortInfos;
+            }
+       }
 
 
         public int Skip { get; set; }
