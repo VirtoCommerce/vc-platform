@@ -448,13 +448,13 @@ namespace VirtoCommerce.Platform.Web
                 var defaultCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("platformCache"));
                 if (defaultCacheManager != null)
                 {
-                    configuration = ConfigurationBuilder.LoadConfiguration(defaultCacheManager.Name);
+                    configuration = (CacheManagerConfiguration)ConfigurationBuilder.LoadConfiguration(defaultCacheManager.Name);
                 }
 
                 var redisCacheManager = cacheManagerSection.CacheManagers.FirstOrDefault(p => p.Name.EqualsInvariant("redisPlatformCache"));
                 if (redisConnectionString != null && redisCacheManager != null)
                 {
-                    configuration = ConfigurationBuilder.LoadConfiguration(redisCacheManager.Name);
+                    configuration = (CacheManagerConfiguration)ConfigurationBuilder.LoadConfiguration(redisCacheManager.Name);
                     configuration.BackplaneChannelName = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Cache:Redis:ChannelName");
                 }
 
@@ -704,7 +704,7 @@ namespace VirtoCommerce.Platform.Web
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 // Cache
-                RedisConfigurations.AddConfiguration(new RedisConfiguration("redisConnectionString", redisConnectionString));
+                RedisConfigurations.AddConfiguration(new RedisConfiguration("redisConnectionString", redisConnectionString, 0));
 
                 // SignalR
                 // https://stackoverflow.com/questions/29885470/signalr-scaleout-on-azure-rediscache-connection-issues

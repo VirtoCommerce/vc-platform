@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -45,12 +45,12 @@ namespace VirtoCommerce.Platform.Web.Cache
             RetryHelper2.Retry(() => this.Subscribe(), configuration.RetryTimeout, configuration.MaxRetries, this.logger);
         }
 
-        public override void NotifyChange(string key)
+        public override void NotifyChange(string key, CacheItemChangedEventAction action)
         {
             //this.PublishMessage(BackplaneMessage.ForChanged(this.identifier, key));
         }
 
-        public override void NotifyChange(string key, string region)
+        public override void NotifyChange(string key, string region, CacheItemChangedEventAction action)
         {
             //this.PublishMessage(BackplaneMessage.ForChanged(this.identifier, key, region));
         }
