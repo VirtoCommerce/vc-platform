@@ -45,12 +45,12 @@ namespace VirtoCommerce.Platform.Web.Cache
             RetryHelper2.Retry(() => this.Subscribe(), configuration.RetryTimeout, configuration.MaxRetries, this.logger);
         }
 
-        public override void NotifyChange(string key, CacheItemChangedEventAction action)
+        public override void NotifyChange(string key)
         {
             //this.PublishMessage(BackplaneMessage.ForChanged(this.identifier, key));
         }
 
-        public override void NotifyChange(string key, string region, CacheItemChangedEventAction action)
+        public override void NotifyChange(string key, string region)
         {
             //this.PublishMessage(BackplaneMessage.ForChanged(this.identifier, key, region));
         }
