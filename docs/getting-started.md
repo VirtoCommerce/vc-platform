@@ -63,9 +63,9 @@ After this step completed, you can [Open new products in Virto Commerce Storefro
 
 By default, you see demo payment and shipment methods. Virto Commerce provides the ready to use module which you can set your own configurations:
 
-* Install Payment module (For example: PayPal)
-* Configure [Shipments](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/order-management/working-with-shipments.md) method
-* Configure [Taxes](https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/vc2userguide/order-management/working-with-taxes.md) method
+* Install [Payment module](https://github.com/VirtoCommerce/vc-module-payment) (For example: [PayPal](https://virtocommerce.com/apps/extensions/paypal))
+* Install and configure [Shipments](https://github.com/VirtoCommerce/vc-module-shipping) method
+* Install and configure [Taxes](https://github.com/VirtoCommerce/vc-module-tax) method
 
 ## Step 5. Launch Marketing & promotional tools
 
@@ -73,12 +73,11 @@ Marketing your store is essential to gain your customers loyalty and raise aware
 
 There are several marketing tools in Virto Commerce: you can publish content, create personalized shopping experiences for customers, manage promotions.
 
-Start with creation of two simple promotions:
+Start with creation of three simple promotions:
 
-1. Each customer would receive a 5%  off if cart subtotal exceeded $100
-2. Add Gift product to shopping cart for every fifth customer order
-
-Then you can play with extended e-commerce marketing, like 10% if product is in-stock.
+1. Each customer would receive a 5% off if cart subtotal exceeded $100
+2. Add Gift product to shopping cart for a limited period of time
+3. Add 10% discount if product is in-stock
 
 You can find more details about how to create first promotions here:
 
