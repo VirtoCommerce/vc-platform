@@ -89,7 +89,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 {
                     if (docName.EqualsInvariant(platformUIDocName)) return true; // It's an UI endpoint, return all to correctly build swagger UI page
 
-                    if (((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.FullName.StartsWith(platformDocName)) return true; // It's a Platform endpoint. Return platform only
+                    if (((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.FullName.StartsWith(docName)) return true; // It's a Platform endpoint. Return platform only
 
                     // It's a module endpoint. 
                     var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly; 
