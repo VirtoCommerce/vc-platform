@@ -1,7 +1,7 @@
 ### VirtoCommerce.GlobalTool
 
 The official CLI [.NET Core GlobalTool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) for building, deploy releases, create and push packages, and manage environments for projects based on VirtoCommerce. Is powered by [nuke.build](https://nuke.build/) A cross-platform build automation system with C# DSL.
-### Publish new version
+### Publish a new version
 
 Incerment package version in _build.csproj
 
