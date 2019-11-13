@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -175,7 +175,6 @@ namespace VirtoCommerce.Platform.Web.Cache
 
         public override void Write(char value)
         {
-            throw new NotSupportedException();
         }
 
         public override void Write(string value)
