@@ -1,7 +1,21 @@
 ### VirtoCommerce.GlobalTool
 
 The official CLI [.NET Core GlobalTool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) for building, deploy releases, create and push packages, and manage environments for projects based on VirtoCommerce. Is powered by [nuke.build](https://nuke.build/) A cross-platform build automation system with C# DSL.
+### Publish new version
 
+Incerment package version in _build.csproj
+
+```console
+
+dotnet pack .\vc-platform\build\_build.csproj  --configuration Release --include-symbols --output .\vc-platform\artifacts /property:SymbolPackageFormat=snupkg
+
+```
+
+```console
+
+dotnet nuget push VirtoCommerce.GlobalTool.{version}.nupkg  -s https://api.nuget.org/v3/index.json -k {api key}
+
+```
 ### Installation
 
 To use VirtoCommerce.GlobalTool  install the  package:
