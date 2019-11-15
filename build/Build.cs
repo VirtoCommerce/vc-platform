@@ -138,7 +138,9 @@ class Build : NukeBuild
                   .SetPackageRequireLicenseAcceptance(false)
                   .SetDescription(ModuleManifest.Description)
                   .SetCopyright(ModuleManifest.Copyright);
-              settings = settings.SetProperty("UpdateVersionProperties", false);
+                  
+              //Fix for dotnet pack which ignores Version property because of GitVersionTask    
+              settings = settings.SetProperty("UpdateVersionProperties", false); 
           }
           DotNetPack(settings);
       });
