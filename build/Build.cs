@@ -138,6 +138,7 @@ class Build : NukeBuild
                   .SetPackageRequireLicenseAcceptance(false)
                   .SetDescription(ModuleManifest.Description)
                   .SetCopyright(ModuleManifest.Copyright);
+              settings = settings.SetProperty("UpdateVersionProperties", false);
           }
           DotNetPack(settings);
       });
