@@ -40,7 +40,7 @@ namespace VirtoCommerce.Platform.Security.Services
                 var user = await base.FindByLoginAsync(loginProvider, providerKey);
                 if (user != null)
                 {
-                    await LoadUserRolesAsync(user);
+                    await LoadUserDetailsAsync(user);
                     cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
                 }
                 return user;
@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Security.Services
                 var user = await base.FindByEmailAsync(email);
                 if (user != null)
                 {
-                    await LoadUserRolesAsync(user);
+                    await LoadUserDetailsAsync(user);
                     cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
                 }
                 return user;
@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Security.Services
                 var user = await base.FindByNameAsync(userName);
                 if (user != null)
                 {
-                    await LoadUserRolesAsync(user);
+                    await LoadUserDetailsAsync(user);
                     cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
                 }
                 return user;
@@ -89,7 +89,7 @@ namespace VirtoCommerce.Platform.Security.Services
                 var user = await base.FindByIdAsync(userId);
                 if (user != null)
                 {
-                    await LoadUserRolesAsync(user);
+                    await LoadUserDetailsAsync(user);
                     cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
                 }
                 return user;
@@ -195,7 +195,12 @@ namespace VirtoCommerce.Platform.Security.Services
             return result;
         }
 
-        protected virtual async Task LoadUserRolesAsync(ApplicationUser user)
+        /// <summary>
+        /// Load detailed user information: Roles, external logins, claims (permissions)
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        protected virtual async Task LoadUserDetailsAsync(ApplicationUser user)
         {
             if (user == null)
             {
@@ -210,6 +215,14 @@ namespace VirtoCommerce.Platform.Security.Services
                     user.Roles.Add(role);
                 }
             }
+
+            // Read claims and convert to permissions (compatibility with v2)
+            var claims = await base.GetClaimsAsync(user);
+            user.Permissions = claims.Select(x => x.Value).ToArray();
+
+            // Read associated logins (compatibility with v2)
+            var logins = await base.GetLoginsAsync(user);
+            user.Logins = logins.Select(x => new ApplicationUserLogin() { LoginProvider = x.LoginProvider, ProviderKey = x.ProviderKey }).ToArray();
         }
     }
 }

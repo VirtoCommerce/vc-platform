@@ -10,7 +10,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Produces("application/json")]
     [Route("api/platform/settings")]
-    [ApiExplorerSettings(IgnoreApi = true)]
     public class SettingController : Controller
     {
         private readonly ISettingsManager _settingsManager;

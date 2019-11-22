@@ -12,7 +12,17 @@ namespace VirtoCommerce.Platform.Core.Security
         private const char _scopeCharSeparator = '|';
 
         [Obsolete("Left for backward compatibility")]
-        public string Id => Name;
+        public string Id
+        {
+            get
+            {
+                return Name;
+            }
+            set
+            {
+                // Do not remove this empty set-accessor! It is needed for backward compatibility.
+            }
+        }
 
         public string Name { get; set; }
         /// <summary>
@@ -30,7 +40,7 @@ namespace VirtoCommerce.Platform.Core.Security
 
         public static Permission TryCreateFromClaim(Claim claim, JsonSerializerSettings jsonSettings)
         {
-            Permission result = null;            
+            Permission result = null;
             if (claim != null && claim.Type.EqualsInvariant(PlatformConstants.Security.Claims.PermissionClaimType))
             {
                 result = AbstractTypeFactory<Permission>.TryCreateInstance();
@@ -39,7 +49,7 @@ namespace VirtoCommerce.Platform.Core.Security
                 {
                     var parts = claim.Value.Split(_scopeCharSeparator);
                     result.Name = parts.First();
-                    result.AssignedScopes = JsonConvert.DeserializeObject<PermissionScope[]>(parts.Skip(1).FirstOrDefault(), jsonSettings);                                                        
+                    result.AssignedScopes = JsonConvert.DeserializeObject<PermissionScope[]>(parts.Skip(1).FirstOrDefault(), jsonSettings);
                 }
             }
             return result;
@@ -48,7 +58,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public virtual Claim ToClaim(JsonSerializerSettings jsonSettings)
         {
             var result = Name;
-            if(!AssignedScopes.IsNullOrEmpty())
+            if (!AssignedScopes.IsNullOrEmpty())
             {
                 result += _scopeCharSeparator + JsonConvert.SerializeObject(AssignedScopes, jsonSettings);
             }
@@ -59,9 +69,9 @@ namespace VirtoCommerce.Platform.Core.Security
         {
             yield return Name;
             yield return ModuleId;
-            if(!AssignedScopes.IsNullOrEmpty())
+            if (!AssignedScopes.IsNullOrEmpty())
             {
-                foreach(var scope in AssignedScopes)
+                foreach (var scope in AssignedScopes)
                 {
                     yield return scope;
                 }
