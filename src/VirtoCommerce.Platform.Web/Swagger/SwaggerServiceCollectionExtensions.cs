@@ -65,7 +65,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
                 c.TagActionsBy(api => api.GroupByModuleName(services));
                 c.DescribeAllEnumsAsStrings();
-                c.IgnoreObsoleteProperties();
                 c.IgnoreObsoleteActions();
                 c.OperationFilter<FileResponseTypeFilter>();
                 c.OperationFilter<OptionalParametersFilter>();
@@ -89,14 +88,13 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 {
                     if (docName.EqualsInvariant(platformUIDocName)) return true; // It's an UI endpoint, return all to correctly build swagger UI page
 
-                    // It's a platform or module endpoint. 
                     var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
+                    if (docName == platformDocName && currentAssembly.FullName.StartsWith(docName) ) return true; // It's a platform endpoint. 
+                    // It's a module endpoint. 
                     var module = modules.FirstOrDefault(m => m.ModuleName.EqualsInvariant(docName));
-                    return module != null && module.Assembly == currentAssembly || currentAssembly.FullName.StartsWith(docName);
+                    return module != null && module.Assembly == currentAssembly;
                 });
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-
-
             });
         }
 
