@@ -324,9 +324,6 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
-                    b.Property<int>("UserState")
-                        .HasMaxLength(16);
-
                     b.Property<string>("UserType")
                         .HasMaxLength(64);
 

@@ -41,6 +41,7 @@ namespace VirtoCommerce.Platform.Core.Security
             }
         }
 
+        [Obsolete("Left due to compatibility issues. Will be removed. Instead of, use properties: EmailConfirmed, LockoutEnd.")]
         [JsonConverter(typeof(StringEnumConverter))]
         public virtual AccountState UserState { get; set; }
 
