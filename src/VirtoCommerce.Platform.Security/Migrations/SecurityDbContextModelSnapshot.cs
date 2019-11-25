@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtoCommerce.Platform.Security.Repositories;
 
 namespace VirtoCommerce.Platform.Security.Migrations
@@ -295,6 +294,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
 
                     b.Property<string>("ModifiedBy")
                         .HasMaxLength(64);
+
                     b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("NormalizedEmail")
