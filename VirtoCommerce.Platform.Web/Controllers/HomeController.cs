@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             });
         }
 
-        private static License LoadLicense()
+        public static License LoadLicense()
         {
             License license = null;
 

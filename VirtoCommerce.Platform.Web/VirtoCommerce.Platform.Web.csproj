@@ -385,10 +385,15 @@
     <Compile Include="Cache\RetryHelper2.cs" />
     <Compile Include="Controllers\AiHandleErrorAttribute.cs" />
     <Compile Include="Controllers\Api\ChangeLogController.cs" />
+    <Compile Include="Controllers\Api\DiagnosticsController.cs" />
     <Compile Include="Controllers\Api\LicensingController.cs" />
     <Compile Include="Controllers\Api\ProfilesController.cs" />
     <Compile Include="Controllers\Api\AssetEntryController.cs" />
     <Compile Include="Controllers\ExternalLoginController.cs" />
+    <Compile Include="Converters\Diagnostics\InstalledModuleInfoConverter.cs" />
+    <Compile Include="Model\Diagnostics\InstalledModuleInfo.cs" />
+    <Compile Include="Model\Diagnostics\PlatformInfo.cs" />
+    <Compile Include="Model\Diagnostics\SystemInfo.cs" />
     <Compile Include="Model\Security\ExternalLoginProviderInfo.cs" />
     <Compile Include="Model\Security\ResetPasswordTokenInfo.cs" />
     <Compile Include="Converters\Modularity\ModuleDescriptorConverter.cs" />
