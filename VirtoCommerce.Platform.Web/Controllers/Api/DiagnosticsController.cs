@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// get system info data, such as the platform version, installed modules info, license info
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         [Route("systeminfo")]
         [ResponseType(typeof(SystemInfo))]
         public IHttpActionResult GetSystemInfo()
