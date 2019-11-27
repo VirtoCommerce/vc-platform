@@ -145,7 +145,7 @@ angular.module('platformWebApp', AppDependencies).
             };
 
             $scope.showVersionInfo = function () {
-                $state.go('workspace.versionInfo');
+                $state.go('workspace.systemInfo');
             };
 
         }])

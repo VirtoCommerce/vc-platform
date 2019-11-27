@@ -1,0 +1,36 @@
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">                        
+            <div ng-if="blade.currentEntity">
+                <ul class="list __info">
+                    <li class="list-item">
+                        <div class="list-t">{{ 'platform.blades.module-detail.labels.platform-version' | translate }}</div>
+                        <div class="list-descr">{{blade.currentEntity.platform.platformVersion}}</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">License</div>
+                        <div class="list-descr">
+                            <div>
+                                <span class="__link">Type</span> {{blade.currentEntity.license.type}}
+                            </div>
+                            <div>
+                                <span class="__link">Customer Name</span> {{blade.currentEntity.license.customerName}}
+                            </div>
+                            <div>
+                                <span class="__link">ExpirationDate</span> {{blade.currentEntity.license.expirationDate}}
+                            </div>                                                                                    
+                        </div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">Installed Modules</div>
+                        <div class="list-descr">
+                            <div ng-repeat="module in blade.currentEntity.installedModules">
+                                <span class="__link">{{module.id}}</span> {{module.version}}
+                            </div>
+                        </div>
+                    </li>                                        
+                </ul>                
+            </div>
+        </div>
+    </div>
+</div>
