@@ -7,18 +7,18 @@ angular.module('platformWebApp')
             blade.initializeBlade = function () {
                 modules.query({}, function (results) {
                     blade.isLoading = false;
-                    blade.title = "Installed modules";
-                    blade.currentEntity = JSON.stringify(results, null, "\t");                    
+                    blade.title = "VirtoCommerce Info";
+                    blade.currentEntity = JSON.stringify(results, null, "\t");
                     if (codemirrorEditor) {
-                         codemirrorEditor.refresh();
-                         codemirrorEditor.focus();
-                    }                                                          
-                })                                                      
+                        codemirrorEditor.refresh();
+                        codemirrorEditor.focus();
+                    }
+                });                                                      
             };            
 
-            $scope.downloadManifest = function () {
+            $scope.downloadInfo = function () {
                 var a = document.createElement("a");
-                var file = new Blob([JSON.stringify(blade.currentEntity, null, "\t")], { type: 'application/json' });
+                var file = new Blob([blade.currentEntity], { type: 'application/json' });
                 a.href = URL.createObjectURL(file);
                 a.download = 'manifest.json';
                 a.click();                
@@ -31,11 +31,18 @@ angular.module('platformWebApp')
 
             blade.toolbarCommands = [
                 {
-                    name: "Download VersionInfo", icon: 'fa fa-save',
-                    executeMethod: $scope.downloadManifest,
+                    name: "Download Info", icon: 'fa fa-download',
+                    executeMethod: $scope.downloadInfo,
                     canExecuteMethod: function () {
                         return true;
                     }                    
+                },
+                {
+                    name: "Copy Info", icon: 'fa fa-copy',
+                    executeMethod: $scope.downloadInfo,
+                    canExecuteMethod: function () {
+                        return true;
+                    }
                 }
             ];
 
@@ -51,7 +58,7 @@ angular.module('platformWebApp')
                 onLoad: function (_editor) {
                     codemirrorEditor = _editor;
                 },
-                value: blade.currentEntity,                
+                //value: blade.currentEntity,                
                 mode: { name: "javascript", json: true }
             };
 
