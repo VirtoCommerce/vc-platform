@@ -1,102 +1,97 @@
 ### Introduction
-This article describes how to migrate existing extension module from 2.0 to 3.0 version.
+This article describes how to migrate a existing module from 2.0 to 3.0 version.
 
 > NOTE: A sample module source code can be found here: https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/samples/VirtoCommerce.CustomerSampleModule.Web
 
-### Migrating extension module to ASP.NET Core
-For example, have project with name _Cart2Module.Web.csproj_ for _CartModule_.
-* Create a new branch with  name: release/3.0.0 then switch to the branch.
-* Then create a new solution for extension module if not exists.
-* Then need to migrate the project from ASP.NET to ASP.NET Core.
-> please read this article https://docs.microsoft.com/en-us/aspnet/core/migration/proper-to-2x
+## 1. Make correct structure in solution and projects
+1. For example, have the module [CustomerReviews](https://github.com/VirtoCommerce/vc-samples/tree/master/CustomerReviews).
+2. Create a new branch with  name: **_release/3.0.0_** then switch to the branch.
+3. Add **_src_** and **_tests_** Solution Folders (using Visual Studio)
+4. **_CustomerReviews.Core_**, **_CustomerReviews.Data_**, **_CustomerReviews.Web_** projects move to **_src_** 
+5. **_CustomerReviews.Test_** project move to **_tests_**
+6. Then the projects add to solution **_CustomerReviews.sln_** 
+7. Then need to migrate the projects from ASP.NET to ASP.NET Core. Read this [article](https://docs.microsoft.com/en-us/aspnet/core/migration/proper-to-2x).
+	1. Remove all files depending with .net framework 4.x (properties, packages, configs)
+	2. Need to make changes in **_*.csproj_** files
+		* Clear whole the file
+		* Change xml signature inside csproj to
+		```xml
+		<Project Sdk="Microsoft.NET.Sdk"> </Project>
+		```
+		* Then add _TargetFramework_ as _PropertyGroup_ inside _Project_ 
+		```xml
+		<PropertyGroup>
+			<TargetFramework>netcoreapp2.2</TargetFramework>
+		<PropertyGroup>
+		```
+		* Add project and package references packages(if you have) and dependencies from _module.manifest_ as _ItemGroup_
+		```xml
+		<ItemGroup>
+			<ProjectReference Include="..\CustomerReviews.Core\CustomerReviews.Core.csproj" />
+			<PackageReference Include="VirtoCommerce.Platform.Core" Version="3.0.0-rc0001" />
+		</ItemGroup>
+		``` 
 
-Need to make changes in the Core/Data/Web extension projects _Cart2Module.XXX.csproj_
-* Create a project VirtoCommerce.Cart2Module.Core.csproj
-* Change xml signature inside csproj to
-```
-<Project Sdk="Microsoft.NET.Sdk"> </Project>
-```
-* Then add _TargetFramework_ as _PropertyGroup_ inside _Project_ 
-```
-<TargetFramework>netcoreapp2.2</TargetFramework>
-```
-* Add references NuGet packages(if you have) and dependencies from _module.manifest_ as _ItemGroup_
-```
-<PackageReference Include="VirtoCommerce.Platform.Core" Version="3.0.0-rc0001" />
-<PackageReference Include="VirtoCommerce.CartModule.Core" Version="3.0.0-rc0001" />
-``` 
-* Move all domain models/events and interfaces to Cart2Module.Core from Cart2Module.Data
-> look at example https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/VirtoCommerce.CartModule.Core/VirtoCommerce.CartModule.Core.csproj
-#### Some action need to do with existing projects Cart2Module.Data, Cart2Module.Web and Cart2Module.Tests: 
-- Change xml signature inside csproj as sample in Core-project
-- Remove all files depending with .net framework 4.x (properties, packages, configs)
-- Add references
+## 2. Make changes in CustomerReviews.Core project
+1. If don't have class **_ModuleConstants.cs_** Add class **_ModuleConstants.cs_** for module constants
+	1. Inside **_ModuleConstants_** add sub-classes **_Security_** and **_Permissions_**
+	2. Add sub-classes **_Settings_** and **_General_** containing settings' definitions of type **_SettingDescriptor_**
+		> look at [example](https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Core/ModuleConstants.cs) in **_CustomerModule_**
+	3. Other constants.	
+2. If there is search service, then need to move **_SearchCriteria_** and **_SearchResult_** classes to **Search** sub-folder. And inherite from **_SearchCriteriaBase_** and **_GenericSearchResult<CustomerReview>_** accordingly.
 
-> look at example https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/samples/VirtoCommerce.CustomerSampleModule.Web/VirtoCommerce.CustomerSampleModule.Web.csproj
+## 3. Make changes in CustomerReviews.Data project
+1. **Repositories** folder: 
+	1. Create **_CustomerReviewsDbContext.cs_**
+		* Need to add **_CustomerReviewsDbContext_** inheritance from **_DbContextWithTriggers_**
+		* Add overriding _OnModelCreating_ method
+		* Then need to add mapping to modelBuilder
+			```cs
+			modelBuilder.Entity<CustomerReviewEntity>().ToTable("CustomerReview").HasKey(x => x.Id);
+			```
+		* Then set max length to Id
+			```cs
+			modelBuilder.Entity<CustomerReviewEntity>().Property(x => x.Id).HasMaxLength(128);
+			```
+		> look at [CustomerDbContext](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Repositories/CustomerDbContext.cs)
 
-### Create _Cart2DbContext.cs_
-* Need to add _Cart2DbContext_ inheritance from _CartDbContext_
-* Add overriding _OnModelCreating_ method
-* Then need to map all extended models. 
-If there are classes Cart2Entity.cs and _Cart2_ with signature:
-```
-public class Cart2 : ShoppingCart
-{
-    public string CartType { get; set; }
-}
-```
-Then need to add mapping to modelBuilder
-```
-modelBuilder.Entity<Cart2Entity>();
-```
-> look at example https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/samples/VirtoCommerce.CustomerSampleModule.Web/Repositories/CustomerSampleDbContext.cs
+	2. Create **_DesignTimeDbContextFactory.cs_**
+		> NOTE: A factory for creating derived Microsoft.EntityFrameworkCore.DbContext instances.
+		* Create a class **_DesignTimeDbContextFactory.cs_** and inherite from **_IDesignTimeDbContextFactory_**
+		* Need to implement **_CreateDbContext_** method with **_CustomerReviewsDbContext_**
+		* Change connection string for database in **_UseSqlServer_** method. It need for migration.
+		> look at [example](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Repositories/DesignTimeDbContextFactory.cs)
+	3. Change CustomerReviewsRepository
+		* The class have to derive from **_DbContextRepositoryBase_** and have constructor with the new **_CustomerReviewsDbContext_** dependency
+		* Add DbSet **_CustomerReviews_** to access data
+		```cs
+		public IQueryable<CustomerReviewEntity> CustomerReviews => DbContext.Set<CustomerReviewEntity>();
+		```
+		* Remove **_OnModelCreating_** method
+		* Add asynchrony to all methods
 
-### Create _DesignTimeDbContextFactory.cs_
-> NOTE: A factory for creating derived Microsoft.EntityFrameworkCore.DbContext instances.
-* Create a class _DesignTimeDbContextFactory.cs_
-* Inherite from _IDesignTimeDbContextFactory<Cart2DbContext>_
-* Add CreateDbContext method with Cart2DbContext, example code can copy from https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/samples/VirtoCommerce.CustomerSampleModule.Web/Repositories/DesignTimeDbContextFactory.cs#L8
-* Change connection string for database in _UseSqlServer_ method. It need for migration.
-> look at example: https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/samples/VirtoCommerce.CustomerSampleModule.Web/Repositories/DesignTimeDbContextFactory.cs
+2. **_Migrations_** folder:
+	1. Create **_Migration_**
+		* Remove old migrations in the folder **_Migrations_** which generated for v. 2.0
+		* Open **Package Manager Console**;
+		* Select "src\CustomerReviews.**Data**" as "**Default project**";
+		* Run command from **_Package Manager Console_**
+			```
+			Add-Migration InitialCustomerReviews -Context CustomerReviews.Data.Repositories.Cart2DbContext -StartupProject CustomerReviews.Data  -Verbose -OutputDir Migrations
+			```
+	2. Create Migration for backward compatibility v.2.0
+		* Need to create migration with name **_UpdateCustomerReviewsV2_** and rename the migration file name to **_20000000000000_UpdateCustomerReviewsV2_** 
+		> look at link https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs
+		* Add SQL Insert command to **_20000000000000_UpdateCustomerReviewsV2_** 
+		> look at https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs#L13 
 
-### Change Cart2Repository
-* The class have to derive from CartRepository and have constructor with the new Core2DbContext dependency
-* Add DbSet _Cart2_ to access data
-```
-public IQueryable<Cart2Entity> Cart2 => DbContext.Set<Cart2Entity>();
-```
-* Remove OnModelCreating method
-* Add overriding methods, if need to add some logic
-> look at example: https://github.com/VirtoCommerce/vc-module-order/tree/release/3.0.0/samples/VirtoCommerce.OrdersModule2.Web/Repositories/OrderRepository2.cs
+		and rename migration name to **_InitialCustomerReviews_** in sql-script. 
+		* Also need to rename **_UpdateCustomerReviewsV2.Designer_** to **_20000000000000_ UpdateCustomerReviewsV2.Designer_** and rename **_MigrationAttribute_** 
+		> look at example https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12
 
-### Create Migration
-* Remove old migrations in the folder Migrations which generated for v. 2.0
-* Create a migration with name _InitialCart2_, you could run a command from _Package Manager Console_
-```
-Add-Migration InitialCart2 -Context VirtoCommerce.Cart2Module.Web.Repositories.Cart2DbContext -StartupProject VirtoCommerce.Cart2Module.Web  -Verbose -OutputDir Migrations
-```
-* then need to remove the lines which depends CartDbContext(like Tables, FK, PK, Index)
-* If the entity Cart2 extend with a new property CartType, then need to add code:
-```
-migrationBuilder.AddColumn<string>(name: "CartType", table: "Cart", maxLength: 128, nullable: true);
-```
-and add line:
-```
-migrationBuilder.AddColumn<string>(name: "Discriminator", table: "Cart", nullable: false, maxLength: 128, defaultValue: "Cart2Entity");
-```
-> look at https://docs.microsoft.com/en-us/ef/core/modeling/relational/inheritance
-> example https://github.com/VirtoCommerce/vc-module-order/tree/release/3.0.0/samples/VirtoCommerce.OrdersModule2.Web/Migrations/20180724064542_InitialOrders2.cs
+2. **Caching** folder: add it, if data caching should be used. This folder is for the cache region classes. Typically, each model should have its own region. Derive CacheRegion from generic `CancellableCacheRegion<T>` class e.g., `public class CustomerReviewsCacheRegion : CancellableCacheRegion<CustomerReviewsCacheRegion>`.
 
-
-### Create Migration for backward compatibility v.2.0
-* Need to create migration with name UpdateCart2V2 and rename the migration file name to 20000000000000_UpdateCart2V2 
-> look at link https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs
-* Add SQL Insert command to 20000000000000_UpdateCart2V2 
-> look at https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs#L13 
-
-and rename migration name to _InitialCart2_ in sql-script. 
-* Also need to rename UpdateCart2V2.Designer to 20000000000000_ UpdateCart2V2.Designer and rename MigrationAttribute 
-> look at example https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12
+> TODO: !!!
 
 ### Change _modules.manifest_
 If there are extension settings/permission/localizations in module.manifest, need to do:
