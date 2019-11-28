@@ -8,7 +8,8 @@ angular.module('platformWebApp')
                     var blade = {
                         id: 'versionInfo',
                         controller: 'platformWebApp.systemInfoController',
-                        template: '$(Platform)/Scripts/app/systemInfo/blades/system-info.tpl.html'
+                        template: '$(Platform)/Scripts/app/systemInfo/blades/system-info.tpl.html',
+                        isClosingDisabled: true
                     };
                     bladeNavigationService.showBlade(blade);
                 }]
