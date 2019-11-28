@@ -343,19 +343,20 @@
             },
             "modules-list": {
                 "subtitle": "Управление Модулями",
-                "labels": {
-                    "grouping": "Показать связки Модулей",
-                    "ungrouped": "Другие",
-                    "no-updates": "Обновления не найдены.",
-                    "no-modules-part1": "Нет новых Модулей для установки.",
-                    "no-installed-modules": "Установленные Модули не найдены.",
-                    "icon": "Иконка",
-                    "up-to-date": "Модуль обновлен", 
-                    "update-available": "Доступно обновление для данного модуля", 
-                    "module": "Модуль",
-                    "version": "Версия",
-                    "author": "Автор"
-                }
+              "labels": {
+                "grouping": "Показать связки Модулей",
+                "ungrouped": "Другие",
+                "no-updates": "Обновления не найдены.",
+                "no-modules-part1": "Нет новых Модулей для установки.",
+                "no-installed-modules": "Установленные Модули не найдены.",
+                "icon": "Иконка",
+                "up-to-date": "Модуль обновлен",
+                "update-available": "Доступно обновление для данного модуля",
+                "module": "Модуль",
+                "version": "Версия",
+                "author": "Автор",
+                "installed": "Установленные модули"
+              }
             },
             "history": {
                 "title": "Системные события",
@@ -687,12 +688,13 @@
                     "end": "Конец"
                 }
             },
-            "licensing": {
-                "license-absent": "Лицензия сообщества",
-                "license-present": "Лицензия {{type}}",
-                "community": "Работа с общественной версией, нажмите, чтобы запросить коммерческую лицензию.",
-                "expired": "Срок действия лицензии истекает {{expirationDate | amParse | date}}, пожалуйста, обновите."
-            },
+          "licensing": {
+            "license-absent": "Лицензия сообщества",
+            "license-present": "Лицензия {{type}}",
+            "community": "Работа с общественной версией, нажмите, чтобы запросить коммерческую лицензию.",
+            "expired": "Срок действия лицензии истекает {{expirationDate | amParse | date}}, пожалуйста, обновите.",
+            "expiration-date": "Действительна до"
+          },
             "modulesAutoInstallation": {
                 "labels": {
                     "module-auto-installation": "Автоматическая установка модулей",

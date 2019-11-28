@@ -1,13 +1,14 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.systemInfoController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', '$timeout', 'platformWebApp.bladeNavigationService', '$http', 'platformWebApp.modules',
-        function ($scope, validators, dialogService, contentApi, $timeout, bladeNavigationService, $http, modules) {
+    .controller('platformWebApp.systemInfoController', ['$scope', 'platformWebApp.validators', 'platformWebApp.dialogService', 'virtoCommerce.contentModule.contentApi', '$timeout', 'platformWebApp.bladeNavigationService', '$http', 'platformWebApp.diagnostics',
+        function ($scope, validators, dialogService, contentApi, $timeout, bladeNavigationService, $http, diagnostics) {
             var blade = $scope.blade;           
 
             blade.initializeBlade = function () {
-                modules.query({}, function (results) {
+                diagnostics.getSystemInfo({}, function (results) {
                     blade.isLoading = false;
-                    blade.title = "VirtoCommerce Info";
-                    blade.currentEntity = $scope.stringify(results);                  
+                    blade.title = "VirtoCommerce Info";                    
+                    blade.currentEntity = results;
+                    blade.content = $scope.stringify(results);
                 });                                                      
             };
 
@@ -17,7 +18,7 @@ angular.module('platformWebApp')
 
             $scope.downloadInfo = function () {
                 var a = document.createElement("a");
-                var file = new Blob([blade.currentEntity], { type: 'application/json' });
+                var file = new Blob([blade.content], { type: 'application/json' });
                 a.href = URL.createObjectURL(file);
                 a.download = 'systemInfo.json';
                 a.click();                
@@ -26,7 +27,7 @@ angular.module('platformWebApp')
             $scope.copyToClipboard = function () {
                 var textarea = document.createElement("textarea");
                 document.body.appendChild(textarea);
-                textarea.value = blade.currentEntity;
+                textarea.value = blade.content;
                 textarea.select();
                 document.execCommand("copy");
                 document.body.removeChild(textarea);
@@ -57,20 +58,3 @@ angular.module('platformWebApp')
             blade.headIcon = 'fa-file-o';
             blade.initializeBlade();            
         }])
-
-
-    .config(['$stateProvider', function ($stateProvider) {
-        $stateProvider
-            .state('workspace.systemInfo', {
-                url: '/systeminfo',
-                templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
-                controller: ['platformWebApp.bladeNavigationService', function (bladeNavigationService) {
-                    var blade = {
-                        id: 'versionInfo',
-                        controller: 'platformWebApp.systemInfoController',
-                        template: '$(Platform)/Scripts/app/systemInfo/system-info.tpl.html'
-                    };
-                    bladeNavigationService.showBlade(blade);
-                }]
-            });
-    }]);

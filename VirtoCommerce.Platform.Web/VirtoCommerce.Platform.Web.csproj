@@ -460,9 +460,11 @@
     <Content Include="Scripts\app\security\services\authDataStorage.js" />
     <Content Include="Scripts\app\security\services\externalSignInService.js" />
     <Content Include="Scripts\app\security\services\passwordValidationService.js" />
+    <Content Include="Scripts\app\systemInfo\resources\diagnostics.js" />
+    <Content Include="Scripts\app\systemInfo\systemInfo.js" />
     <Content Include="Scripts\app\userProfile\userProfile.js" />
-    <Content Include="Scripts\app\systemInfo\system-info.js" />
-    <Content Include="Scripts\app\systemInfo\system-info.tpl.html" />
+    <Content Include="Scripts\app\systemInfo\blades\system-info.js" />
+    <Content Include="Scripts\app\systemInfo\blades\system-info.tpl.html" />
     <Content Include="Scripts\common\directives\angular-scroll-complete.js" />
     <Content Include="Scripts\common\directives\dateTime-picker.js" />
     <Content Include="Scripts\common\directives\chars-count.js" />
