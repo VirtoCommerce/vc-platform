@@ -10,7 +10,7 @@ angular.module('platformWebApp')
             blade.initializeBlade = function () {
                 diagnostics.getSystemInfo({}, function (results) {
                     blade.isLoading = false;
-                    blade.title = "Virto Commerce Info";
+                    blade.title = "Platform Info";
                     blade.currentEntity = results;
                     blade.content = stringify(results);
                 });
