@@ -15,7 +15,6 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Swagger;
-using VirtoCommerce.Platform.Core.Extensions;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
@@ -107,6 +106,10 @@ namespace VirtoCommerce.Platform.Web.Swagger
             applicationBuilder.UseSwagger(c =>
             {
                 c.RouteTemplate = "docs/{documentName}/swagger.json";
+                c.PreSerializeFilters.Add((swagger, httpReq) =>
+                {
+                    swagger.BasePath = $"{httpReq.Scheme}://{httpReq.Host.Value}";
+                });
             });
 
             var modules = applicationBuilder.ApplicationServices.GetService<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null).ToArray();
