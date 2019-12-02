@@ -1,4 +1,3 @@
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -281,7 +280,8 @@ namespace VirtoCommerce.Platform.Web
                     // encrypted format, the following lines are required:
                     options.UseJsonWebTokens();
 
-                    var privateKey = new X509Certificate2(Configuration["Auth:PrivateKeyPath"], Configuration["Auth:PrivateKeyPassword"]);
+                    var bytes = File.ReadAllBytes(Configuration["Auth:PrivateKeyPath"]);
+                    var privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
                     options.AddSigningCertificate(privateKey);
                 });
 
