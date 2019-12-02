@@ -1,118 +1,161 @@
 ### Introduction
-This article describes how to migrate a existing module from 2.0 to 3.0 version.
+This article describes how to migrate an existing [CustomerReviews sample](https://github.com/VirtoCommerce/vc-samples/tree/master/CustomerReviews) module from VC Platform version 2.x to 3.0.
 
-> NOTE: A sample module source code can be found here: https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/samples/VirtoCommerce.CustomerSampleModule.Web
+> NOTE: A sample module source code can be found here: https://github.com/VirtoCommerce/vc-samples/tree/release/3.0.0/CustomerReviews.
 
 ## 1. Make correct structure in solution and projects
-1. For example, have the module [CustomerReviews](https://github.com/VirtoCommerce/vc-samples/tree/master/CustomerReviews).
-2. Create a new branch with  name: **_release/3.0.0_** then switch to the branch.
-3. Add **_src_** and **_tests_** Solution Folders (using Visual Studio)
-4. **_CustomerReviews.Core_**, **_CustomerReviews.Data_**, **_CustomerReviews.Web_** projects move to **_src_** 
-5. **_CustomerReviews.Test_** project move to **_tests_**
-6. Then the projects add to solution **_CustomerReviews.sln_** 
-7. Then need to migrate the projects from ASP.NET to ASP.NET Core. Read this [article](https://docs.microsoft.com/en-us/aspnet/core/migration/proper-to-2x).
-	1. Remove all files depending with .net framework 4.x (properties, packages, configs)
-	2. Need to make changes in **_*.csproj_** files
-		* Clear whole the file
-		* Change xml signature inside csproj to
+1. If it exists, delete **_packages_** folder 
+2. Delete **Properties** folder from each of the projects' folder 
+3. Convert the projects from ASP&#46;NET to ASP&#46;NET Core:
+   1. Open each of the projects' **_*.csproj_** files in text editor (e.g., Notepad), clear whole file content and set it to this:
 		```xml
-		<Project Sdk="Microsoft.NET.Sdk"> </Project>
+		<Project Sdk="Microsoft.NET.Sdk">
+			<PropertyGroup>
+				<TargetFramework>netcoreapp2.2</TargetFramework>
+			</PropertyGroup>
+		</Project>
 		```
-		* Then add **_TargetFramework_** as **_PropertyGroup_** inside Project
-		```xml
-		<PropertyGroup>
-			<TargetFramework>netcoreapp2.2</TargetFramework>
-		<PropertyGroup>
-		```
-		* Add project and package references packages(if you have) and dependencies from **_module.manifest_** as **_ItemGroup_**, looks like this:
-		```xml
-		<ItemGroup>
-			<PackageReference Include="VirtoCommerce.Platform.Core" Version="3.0.0-rc0001" />
-			...
-		</ItemGroup>
-		<ItemGroup>
-			<ProjectReference Include="..\CustomerReviews.Core\CustomerReviews.Core.csproj" />
-			...
-		</ItemGroup>
-		``` 
+   1. Read [this article](https://docs.microsoft.com/en-us/aspnet/core/migration/proper-to-2x) for more info.
+3. Create **_src_** and **_tests_** subfolders in module's root folder (Windows Explorer)
+3. Move **_CustomerReviews.Core_**, **_CustomerReviews.Data_**, **_CustomerReviews&#46;Web_** projects to **_src_**
+3. Move **_CustomerReviews.Test_** project to **_tests_**
+2. Open **_CustomerReviews.sln_** solution in Visual Studio
+2. Remove all projects from the solution
+3. Add **_src_** and **_tests_** Solution Folders
+4. Add the existing **_CustomerReviews.Core_**, **_CustomerReviews.Data_**, **_CustomerReviews&#46;Web_** projects to **_src_** folder
+4. Add the existing **_CustomerReviews.Test_** project to **_tests_** folder
+5. Remove all files related to .NET Framework 4.x in **every project**:
+	* **App.config**
+	* **packages.config**
+	* **Web.config**, **Web.Debug.config**, **Web.Release.config**, **module.ignore**
+5. Add references to projects:
+   1. **CustomerReviews.Data**: add reference to CustomerReviews.Core project
+   1. **CustomerReviews&#46;Web**: add references to CustomerReviews.Core, CustomerReviews.Data projects
+   1. **CustomerReviews.Tests**: add references to CustomerReviews.Core, CustomerReviews.Data, CustomerReviews&#46;Web projects
+5. References to NuGet packages:
+   1. **CustomerReviews.Core**: add reference to the latest version 3 (3.x) **_VirtoCommerce.Platform.Core_** package.
+   1. **CustomerReviews.Data**: add reference to the latest version 3 (3.x) **_VirtoCommerce.Platform.Data_** package.
+5. References to NuGet packages in **_CustomerReviews&#46;Web_**:
+   1. (Double click in Visual Studio to) open _CustomerReviews.Web.csproj_ file for editing;
+   1. Add new ItemGroup:
+   ```
+   <ItemGroup>
+     <PackageReference Include="Microsoft.AspNetCore.App" />
+   </ItemGroup>
+   ```
+5. Add other NuGet dependency packages, if any exists in **_module.manifest_**.
 
 ## 2. Make changes in CustomerReviews.Core project
-1. If don't have class **_ModuleConstants.cs_** Add class **_ModuleConstants.cs_** for module constants
+1. If missing, add class **_ModuleConstants.cs_** for module constants:
 	1. Inside **_ModuleConstants_** add sub-classes **_Security_** and **_Permissions_**
-	2. Add sub-classes **_Settings_** and **_General_** containing settings' definitions of type **_SettingDescriptor_**
-		> look at [example](https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Core/ModuleConstants.cs) in **_CustomerModule_**
-	3. Other constants.	
-2. If there is search service, then need to move **_SearchCriteria_** and **_SearchResult_** classes to **Search** sub-folder. And inherite from **_SearchCriteriaBase_** and **_GenericSearchResult<CustomerReview>_** accordingly.
-3. **Events** folder: add model-related changing/changed events. Derive from the base `GenericChangedEntryEvent` class.
+	2. Add sub-classes **_Settings_** and **_General_** containing settings' definitions of type **_SettingDescriptor_**. Move settings definitions from module.manifest to this class
+		> Follow the structure as defined in [ModuleConstants.cs in CustomerModule](https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Core/ModuleConstants.cs).
+	3. Other constants.
 
-4. **Notifications** folder: define new types of **_Notifications_**, that your module would expose. Each class should inherit from **_EmailNotification_**/**_SmsNotification_** or own class, based on **_Notification_**.
+2. Update **ICustomerReviewService.cs**:
+	* Refactor all methods to **be asynchronous**: return `Task<>`
+	* Rename all methods to have suffix `Async`
+
+2. If there is a search service defined:
+	1. Move **_CustomerReviewSearchCriteria_** class to **Search** sub-folder;
+	1. Ensure, that CustomerReviewSearchCriteria inherits from `SearchCriteriaBase`; 
+	1. Create **_CustomerReviewSearchResult_** class in **Search** sub-folder;
+	1. Ensure, that CustomerReviewSearchResult inherits from `GenericSearchResult<CustomerReview>`.
+	1. Refactor **_ICustomerReviewSearchService_** to use CustomerReviewSearchResult, all methods be asynchronous, and end with **Async**: 
+	```cs
+	public interface ICustomerReviewSearchService
+    {
+        Task<CustomerReviewSearchResult> SearchCustomerReviewsAsync(CustomerReviewSearchCriteria criteria);
+    }
+	```
+
+3. If any model-related changing/changed events were defined in **Events** folder, ensure that each of them derive from the base `GenericChangedEntryEvent` class.
+
+4. If any custom Notifications were added to **Notifications** folder:
+	1. Add reference to NuGet **VirtoCommerce.NotificationsModule.Core** package;
+	1. Ensure that each defined Notification class inherits from **_EmailNotification_**/**_SmsNotification_** or own class, based on **_Notification_**.
 
 ## 3. Make changes in CustomerReviews.Data project
-1. **Repositories** folder: 
-	1. Create **_CustomerReviewsDbContext.cs_**
-		* Need to add **_CustomerReviewsDbContext_** inheritance from **_DbContextWithTriggers_**
-		* Add overriding _OnModelCreating_ method
-		* Then need to add mapping to modelBuilder
+1. **Repositories** folder
+	1. Create **CustomerReviewsDbContext.cs**
+		* Add new class **_CustomerReviewsDbContext_**
+		* Make it public and derive from `DbContextWithTriggers`
+		* Add 2 constructors, using [CustomerDbContext](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Repositories/CustomerDbContext.cs) as an example.
+		* Override _OnModelCreating_ method, add **CustomerReviewEntity** mapping to modelBuilder and set max length to Id:
 			```cs
 			modelBuilder.Entity<CustomerReviewEntity>().ToTable("CustomerReview").HasKey(x => x.Id);
-			```
-		* Then set max length to Id
-			```cs
 			modelBuilder.Entity<CustomerReviewEntity>().Property(x => x.Id).HasMaxLength(128);
 			```
-		> look at [CustomerDbContext](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Repositories/CustomerDbContext.cs)
-
-	2. Create **_DesignTimeDbContextFactory.cs_**
-		> NOTE: A factory for creating derived Microsoft.EntityFrameworkCore.DbContext instances.
-		* Create a class **_DesignTimeDbContextFactory.cs_** and inherite from **_IDesignTimeDbContextFactory_**
-		* Need to implement **_CreateDbContext_** method with **_CustomerReviewsDbContext_**
-		* Change connection string for database in **_UseSqlServer_** method. It need for migration.
-		> look at [example](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Repositories/DesignTimeDbContextFactory.cs)
-	3. Change CustomerReviewsRepository
-		* The class have to derive from **_DbContextRepositoryBase_** and have constructor with the new **_CustomerReviewsDbContext_** dependency
-		* Add DbSet **_CustomerReviews_** to access data
+	2. Create **DesignTimeDbContextFactory.cs**
+		> NOTE: a factory for creating derived Microsoft.EntityFrameworkCore.DbContext instances.
+		* Add new class **_DesignTimeDbContextFactory_** 
+		* Make it public and derive from `IDesignTimeDbContextFactory<CustomerReviewsDbContext>`
+		* Implement **_CreateDbContext_** method, using [CustomerModule.Data/Repositories/DesignTimeDbContextFactory.cs](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Repositories/DesignTimeDbContextFactory.cs) as an example
+		* Ensure that connection string to your development SQL Server in **_UseSqlServer_** method is correct. It would be used while generating code-first migrations. 
+	3. Update **ICustomerReviewsRepository.cs**
+		* Refactor all methods to **be asynchronous**: return `Task<>`
+		* Rename all methods to have suffix `Async`
+	3. Update **CustomerReviewsRepository.cs**
+		* Refactor **_CustomerReviewsRepository_** class to derive from `DbContextRepositoryBase<CustomerReviewsDbContext>`
+		* Refactor the constructors to leave only one, taking the only  **_CustomerReviewsDbContext_** parameter:
+		```cs
+		public CustomerReviewRepository(CustomerReviewsDbContext dbContext) : base(dbContext)
+        {
+        }
+		```
+		* Refactor **_CustomerReviews_** property to access data using DbSet like this:
 		```cs
 		public IQueryable<CustomerReviewEntity> CustomerReviews => DbContext.Set<CustomerReviewEntity>();
 		```
 		* Remove **_OnModelCreating_** method
-		* Add asynchronously to all methods
 
-2. **_Migrations_** folder:
-	1. Create **_Migration_**
-		* Remove old migrations in the folder **_Migrations_** which generated for v. 2.0
+2. **Caching** folder
+	1. If missing, create **Caching** folder. This folder is for the cache region classes. Typically, each model should have its own region.
+	2.  Derive CacheRegion from generic `CancellableCacheRegion<T>` class:
+	```cs
+	public class CustomerReviewCacheRegion : CancellableCacheRegion<CustomerReviewCacheRegion>
+    {
+    }
+	```
+
+2. **Services** folder
+	* All services: remove inheritance from **ServiceBase**
+	* Ensure that the signatures of the methods matches the ones defined in the corresponding interfaces
+	* Change response to `Task<CustomerReviewSearchResult>` in **_CustomerReviewSearchService_** service
+	* Refactor all methods to **be asynchronous**
+	* Add working with cache to all methods
+	> check this example for more details [VirtoCommerce.CustomerModule.Data.Services](https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Services).
+
+2. **_Migrations_** folder
+	1. Create **_InitialCustomerReviews_** migration
+		* Delete everything (all migrations and Configuration.cs) from **_Migrations_** folder
 		* Open **Package Manager Console**;
 		* Select "src\CustomerReviews.**Data**" as "**Default project**";
 		* Run command:
 			```
 			Add-Migration InitialCustomerReviews -Context CustomerReviews.Data.Repositories.CustomerReviewsDbContext -StartupProject CustomerReviews.Data  -Verbose -OutputDir Migrations
 			```
-	2. Create Migration for backward compatibility v.2.0
-		* Need to create migration with name **_UpdateCustomerReviewsV2_** and rename the migration file name to **_20000000000000_UpdateCustomerReviewsV2_** , look at [link](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs)
-		* Add SQL Insert command to **_20000000000000_UpdateCustomerReviewsV2_** , look at [line](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs#L13) 
+	2. Create Migration for backward compatibility with v2.x
+		* Add new migration with name **_UpdateCustomerReviewsV2_** and rename the migration **_filename_** to **_20000000000000_UpdateCustomerReviewsV2_**
+		* Add SQL command to the migration:
+		```cs
+		migrationBuilder.Sql(@"IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '__MigrationHistory'))
+                IF (EXISTS (SELECT * FROM __MigrationHistory WHERE ContextKey = 'CustomerReviews.Data.Migrations.Configuration'))
+                    BEGIN
+	                    INSERT INTO [dbo].[__EFMigrationsHistory] ([MigrationId],[ProductVersion]) VALUES ('20191129134041_InitialCustomerReviews', '2.2.3-servicing-35854')
+                    END");
+		```
+		> Note: the `ContextKey` value has to be constructed as "{ModuleId}.Data.Migrations.Configuration".
+		> Note2: the value for `MigrationId` has to be the name of your new migration, added in previous step. ('20191129134041_InitialCustomerReviews' in our case). Check [20000000000000_UpdateCoreV2.cs migration](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs#L12) as another example.
 
-		and rename migration name to **_InitialCustomerReviews_** in sql-script. 
-		* Also need to rename **_UpdateCustomerReviewsV2.Designer_** to **_20000000000000_ UpdateCustomerReviewsV2.Designer_** and rename **_MigrationAttribute_** , look at [example](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12)
+		* Open **_20000000000000_UpdateCustomerReviewsV2.Designer_** and change **_Migration_** attribute parameter value to the current migration ID ("20000000000000_UpdateCustomerReviewsV2" in this case). Check [20000000000000_UpdateCoreV2.Designer.cs](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12) as another example.
 
-3. **Caching** folder: add it, if data caching should be used. This folder is for the cache region classes. Typically, each model should have its own region. Derive CacheRegion from generic `CancellableCacheRegion<T>` class e.g., `public class CustomerReviewsCacheRegion : CancellableCacheRegion<CustomerReviewsCacheRegion>`.
-
-4. **Services** folder:
-	* Make separate services for Search and CRUD methods
-	* Remove inheritance from ServiceBase
-	* Change responses to CustomerReviewSearchResult in the Search Service
-	* Check that there are methods like GetByIds, SaveChanges, Delete
-	* Add asynchronously to all methods
-	* Add working with cache to all methods
-	> look at [VirtoCommerce.CustomerModule.Data.Services](https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Services)
-
-6. **ExportImport** folder: add class for data export/import. It should be called from **_Module.cs_** and contain implementation for module data export and import.
-7. **Handlers** folder: add handlers for the _domain events_, which were defined under **.Core/Events**.
-
-## 4. Make changes in CustomerReviews.Web project
-
-1. Make changes in **_modules.manifest_**.
-	* Versioning - prerelease version tag of a module:
+## 4. Make changes in CustomerReviews&#46;Web project
+1. Changes in **_module.manifest_**
+	* Versioning - increase module version and add prerelease tag (empty value for a release version):
     ```xml
-    <version-tag>v1</version-tag>
+    <version>3.0.0</version>
+    <version-tag></version-tag>
     ```
    * Required minimal version of VC Platform:
     ```xml
@@ -124,24 +167,25 @@ This article describes how to migrate a existing module from 2.0 to 3.0 version.
         <dependency id="VirtoCommerce.Core" version="3.0.0" />
     </dependencies>
     ```
-   * Move all localization of permossions/settings to **_Localizaton_** file, look at [example](https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Web/Localizations/en.VirtoCommerce.Customer.json)
-   * Remove groups permissions/settings
+   * Remove **styles**/**scripts** sections from the manifest file
+   * Move all localization of permissions/settings to **_Localizations/en.CustomerReviews.json_** file [as this](https://github.com/VirtoCommerce/vc-samples/blob/release/3.0.0/CustomerReviews/src/CustomerReviews.Web/Localizations/en.customerReviews.json#L18-L30)
+   * Remove **permissions**/**settings** definitions sections from the manifest file
 
-2. Change signature in **_Module.cs_**
-	* Need to change inheritance to interface **_IModule_** , then add implementation methods: **_Initialize, PostInitialize, Uninstall_** and property **_ModuleInfo_**
-	* Add all dependency injections to **_Initialize_** method, like as **_CustomerReviewDbContext, CustomerReviewRepository_**
-	> look at [sample](https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Web/Module.cs)
-	* Register settings using interface **_ISettingsRegistrar_** in PostInitialize method
+2. Changes in **_Module.cs_**
+	* Change the class inheritance to interface **_IModule_**, then add implementation methods: **_Initialize, PostInitialize, Uninstall_** and property **_ModuleInfo_**. Check [VirtoCommerce.CustomerModule.Web/Module.cs](https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Web/Module.cs) for another implementation example.
+	* Read the [Dependency injection in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.0) article for additional info.
+	* Register all the needed classes for dependency injection inside **_Initialize_** method, like **_CustomerReviewDbContext, CustomerReviewRepository_**, etc.
+	* Register settings using interface **_ISettingsRegistrar_** in PostInitialize method:
 	```cs
 	var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
 	settingsRegistrar.RegisterSettings(ModuleConstants.Settings.AllSettings, ModuleInfo.Id);
 	```
-	* Register permissions using interface **_IPermissionsRegistrar_** in PostInitialize method 
+	* Register permissions using interface **_IPermissionsRegistrar_** in PostInitialize method: 
 	```cs
 	var permissionsProvider = appBuilder.ApplicationServices.GetRequiredService<IPermissionsRegistrar>();
 	permissionsProvider.RegisterPermissions(ModuleConstants.Security.Permissions.AllPermissions.Select(x => new Permission() { GroupName = "CustomerReview", Name = x }).ToArray());
 	```
-	* Add three methods **_MigrateIfNotApplied, EnsureCreated, Migrate_** into PostInitialize method, need for insure creating migration 
+	* Add this code into PostInitialize method, needed to ensure that the migrations would be applied: 
 	```cs
 	using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
 	{
@@ -151,48 +195,79 @@ This article describes how to migrate a existing module from 2.0 to 3.0 version.
 		dbContext.Database.Migrate();
 	}
 	```
-	> NOTE: Extension MigrateIfNotApplied need for backward compatibility v.2.0. The extension allows don't generate initial migration, because there are already tables in the DataBase.
-	Look at [example](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Web/Module.cs#L70).
+	> NOTE: The **MigrateIfNotApplied** extension method is needed for the database backward compatibility with version 2.x. This extension enables to skip generating the initial migration, as there are changes (tables, indexes) in the database already.
 
-3. Authorization Requirement
-	If need to use authorization requirement then 
-	* create a class **_CustomerReviewAuthorizationRequirement_** in **_CustomerReviews.Data.Authorization_** and derived from **_PermissionAuthorizationRequirement_**, look at [example](https://github.com/VirtoCommerce/vc-module-store/blob/release/3.0.0/src/VirtoCommerce.StoreModule.Data/Authorization/StoreAuthorizationRequirement.cs)
-	* Add **_IAuthorizationService_** to **_CustomerReviewModuleController_** 
-	* Call method **_AuthorizeAsync_** in an action where to need, look at [example](https://github.com/VirtoCommerce/vc-module-store/blob/arelease/3.0.0/src/VirtoCommerce.StoreModule.Web/Controllers/Api/StoreModuleController.cs#L51)
-	* Then add condition for result 
-	```cs
-	if (!authorizationResult.Succeeded)
-	{
-		return Unauthorized();
-	}
-	```
+3. Changes to all API Controller(s) in **Controllers/Api** folder:
+	* Refactor controllers to derive from _Microsoft.AspNetCore.Mvc.**Controller**_.
+	* Change _RoutePrefix_ attribute to **_Route_** for all endpoints
+	* Remove _ResponseType_ attribute from all endpoints
+	* Change _CheckPermission_ attribute to **_Authorize_** for all endpoints
+    > If the endpoint should have a restricted access, an **_Authorize_** attribute with the required permission should be added. Use the **_ModuleConstants_** class, which was previously defined in **_CustomerReviews.Core_** project.
+	* Refactor all endpoints to **be asynchronous** (return `async Task<>`)
+	* Mark each complex type parameter with `[FromBody]` attribute for all endpoints. The attribute for Delete endpoint should be `[FromQuery]`.
+
+	> E.g., SearchCustomerReviews method converted to ASP&#46;NET Core MVC:
+    ```cs
+	[HttpPost]
+	[Route("search")]
+	[Authorize(ModuleConstants.Security.Permissions.Read)]
+	public async Task<ActionResult<CustomerReviewSearchResult>> SearchCustomerReviews([FromBody]CustomerReviewSearchCriteria criteria)
+    ```
 
 4. If there are any JavaScript or stylesheet files in the project:
-    1. Copy **package.json** from [sample package.json](https://github.com/VirtoCommerce/vc-module-order/blob/release/3.0.0/src/VirtoCommerce.OrdersModule.Web/package.json);
-    1. Copy **webpack.config.js** from [sample webpack.config.js](https://github.com/VirtoCommerce/vc-module-order/blob/release/3.0.0/src/VirtoCommerce.OrdersModule.Web/webpack.config.js);
+    1. Copy **package.json** from [sample package.json](https://raw.githubusercontent.com/VirtoCommerce/vc-module-order/release/3.0.0/src/VirtoCommerce.OrdersModule.Web/package.json);
+    1. Copy **webpack.config.js** from [sample webpack.config.js](https://raw.githubusercontent.com/VirtoCommerce/vc-module-order/release/3.0.0/src/VirtoCommerce.OrdersModule.Web/webpack.config.js);
     2. Change the namespace on line 36 in webpack.config.js to be equal to module's identifier:
     ```js
     namespace: 'CustomerReviews'
     ```
-    4. Open command prompt and navigate to DummyModule&#46;Web folder:
+    4. Open Command prompt and navigate to CustomerReviews&#46;Web folder:
         1. Run `npm install`
         1. Run `npm run webpack:dev`
-	5. Then need to add `dist/` line to `.gitignore` file.
+		> Note: fix any css errors, of the previous command would fail. For CustomerReviews sample also change line 12 in webpack.config.js to:
+		```js
+		...glob.sync('./Content/css/*.css', { nosort: true })
+		```
+	5. Add `dist/` line to `.gitignore` file
+	5. Add `node_modules/` line to `.gitignore` file.
 
-## 5. Fill CustomerReviews.Tests project
-1. **UnitTests** folder: add unit tests here.
-2. **IntegrationTests** folder: add integration tests here. Ensure, that each integration tests class is marked with **Trait** attribute:
+## 5. Make changes in CustomerReviews.Tests project
+1. Reference the required NuGet packages by adding this `ItemGroup` to project file:
+	```xml
+		<ItemGroup>
+			<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+			<PackageReference Include="Moq" Version="4.13.1" />
+			<PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
+			<PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
+			<PackageReference Include="xunit" Version="2.4.1" />
+			<PackageReference Include="xunit.runner.console" Version="2.4.1">
+				<PrivateAssets>all</PrivateAssets>
+				<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+			</PackageReference>
+			<PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+				<PrivateAssets>all</PrivateAssets>
+				<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+			</PackageReference>
+			<DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+		</ItemGroup>
+	```
+
+2. Add **_TestAsyncQueryProvider_** class under Common folder. Paste the class implementation [from here](https://raw.githubusercontent.com/VirtoCommerce/vc-samples/release/3.0.0/CustomerReviews/tests/CustomerReviews.Test/Common/TestAsyncQueryProvider.cs).
+2. Remove inheritance from **_FunctionalTestBase_**	for each tests class.
+
+2. Add the integration tests under **IntegrationTests** folder. Ensure, that each integration tests class is marked with this **Trait** attribute:
     ```cs
     [Trait("Category", "IntegrationTest")]		
 
 ## 6. Create module package
-1. Open command prompt
+1. Open Command prompt
 1. If _VirtoCommerce.GlobalTool_ isn't installed, run:
     ```
     dotnet tool install VirtoCommerce.GlobalTool -g --version 3.0.0-beta0006
     ```
    Reopen the command prompt after installing.
-1. Navigate to the module's root folder (**/CustomerReviews**) in the command prompt
+1. Navigate to the module's root folder (**/CustomerReviews**) in the Command prompt
 2. Create **.nuke** file and set your module's solution filename as its content: `CustomerReviews.sln`
 5. Run `vc-build compress`
-5. In order to install the module to VC Platform, navigate to **artifacts** folder and take _VirtoCommerce.Dummy_1.0.0-v1.zip_ package file.
+5. Add `artifacts/` line to `.gitignore` file
+5. In order to install the module to VC Platform, navigate to **artifacts** folder and take _CustomerReviews_3.0.0-.zip_ package file.
