@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AspNet.Security.OAuth.Validation;
 using AspNet.Security.OpenIdConnect.Primitives;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -84,6 +85,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Authorize]
         [Route("logout")]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Logout()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -220,6 +222,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpDelete]
         [Route("roles")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityDelete)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteRoles([FromQuery(Name = "ids")] string[] roleIds)
         {
             if (roleIds != null)
