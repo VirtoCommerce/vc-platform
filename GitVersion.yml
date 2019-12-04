@@ -7,7 +7,7 @@ branches:
   develop:
     tag: 'alpha'
   release:
-    tag: 'rc1-update'
+    tag: 'beta'
 
 ignore:
   sha: []

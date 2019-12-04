@@ -1,7 +1,9 @@
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
@@ -80,8 +82,8 @@ namespace VirtoCommerce.Platform.Web
             {
                 options.PlatformTranslationFolderPath = HostingEnvironment.MapPath(options.PlatformTranslationFolderPath);
             });
-
-            PlatformVersion.CurrentVersion = SemanticVersion.Parse(Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion);
+            //Get platform version from GetExecutingAssembly
+            PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
