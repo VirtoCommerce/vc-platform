@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.Extensions.Logging;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
@@ -17,11 +18,13 @@ namespace VirtoCommerce.Platform.Modules
         private readonly ILogger<LoadContextAssemblyResolver> _logger;
         private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
         private readonly bool _isDevelopmentEnvironment;
+        private readonly CustomAssemblyLoadContext _customAssemblyLoadContext;
 
         public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
         {
             _logger = logger;
             _isDevelopmentEnvironment = isDevelopmentEnvironment;
+            _customAssemblyLoadContext = new CustomAssemblyLoadContext();
         }
 
         /// <summary>
@@ -46,6 +49,12 @@ namespace VirtoCommerce.Platform.Modules
             var assembly = LoadAssemblyWithReferences(assemblyUri.LocalPath, BuildLoadContext(assemblyUri));
             return assembly;
         }
+
+        public IntPtr LoadUnmanagedLibrary(string assemblyPath)
+        {
+            return _customAssemblyLoadContext.LoadUnmanagedLibrary(assemblyPath);
+        }
+
 
         private ManagedAssemblyLoadContext BuildLoadContext(Uri assemblyUri)
         {

@@ -1,18 +1,21 @@
 using System;
+using System.IO;
+using System.Linq;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Bus;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Localizations;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.TransactionFileManager;
@@ -23,7 +26,6 @@ using VirtoCommerce.Platform.Data.Localizations;
 using VirtoCommerce.Platform.Data.PushNotifications;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Settings;
-using VirtoCommerce.Platform.Caching;
 
 namespace VirtoCommerce.Platform.Data.Extensions
 {
@@ -67,6 +69,30 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             return services;
 
+        }
+
+        public static IServiceCollection AddLibraries(this IServiceCollection services)
+        {
+            var providerSnapshot = services.BuildServiceProvider();
+            var assemblyResolver = providerSnapshot.GetRequiredService<IAssemblyResolver>();
+            var hostingEnvironment = providerSnapshot.GetRequiredService<IHostingEnvironment>();
+            var platformOptions = providerSnapshot.GetService<IOptions<PlatformOptions>>();
+
+            var librariesDir = Path.Combine(hostingEnvironment.ContentRootPath, platformOptions.Value.LibraryPath);
+            var architectureFolder = (IntPtr.Size == 8) ? "64 bit" : "32 bit";
+
+            if (Directory.Exists(librariesDir))
+            {
+                foreach (var sourceFilePath in Directory.EnumerateFiles(librariesDir, "*", SearchOption.AllDirectories)
+                                                        .Where(x => x.Contains(architectureFolder) &&
+                                                            x.EndsWith(PlatformInformation.NativeLibraryExtensions.FirstOrDefault())))
+                {
+
+                    assemblyResolver.LoadUnmanagedLibrary(sourceFilePath);
+                }
+            }
+
+            return services;
         }
     }
 }

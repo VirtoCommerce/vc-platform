@@ -76,7 +76,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 options.PlatformTranslationFolderPath = HostingEnvironment.MapPath(options.PlatformTranslationFolderPath);
             });
-                       
+
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion);
 
             services.AddPlatformServices(Configuration);
@@ -277,14 +277,14 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
                      {
-                          options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "Modules");
+                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "Modules");
                      })
-                    .ValidateDataAnnotations();   
+                    .ValidateDataAnnotations();
             services.AddModules(mvcBuilder);
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
-                        
+
             //Add SignalR for push notifications
             services.AddSignalR();
 
@@ -316,6 +316,8 @@ namespace VirtoCommerce.Platform.Web
 
             // Register the Swagger generator
             services.AddSwagger();
+
+            services.AddLibraries();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

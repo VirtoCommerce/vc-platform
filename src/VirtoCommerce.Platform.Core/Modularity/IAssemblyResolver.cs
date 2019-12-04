@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 
 namespace VirtoCommerce.Platform.Core.Modularity
@@ -10,6 +11,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// <summary>
         /// Load an assembly when it's required by the application. 
         /// </summary>
-        Assembly LoadAssemblyFrom(string  assemblyPath);
+        Assembly LoadAssemblyFrom(string assemblyPath);
+        IntPtr LoadUnmanagedLibrary(string assemblyPath);
     }
 }
