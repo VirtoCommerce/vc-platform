@@ -76,10 +76,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Certificates\virtocommerce.crt" />
-      <EmbeddedResource Include="Certificates\virtocommerce.pfx">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </EmbeddedResource>
+        <EmbeddedResource Include="Certificates\virtocommerce.crt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Certificates\virtocommerce.pfx">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
