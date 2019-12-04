@@ -127,6 +127,19 @@
                     "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
                 }
             },
+            "edit-array": {
+                "validations": {
+                    "new-value-required": "Required"
+                },
+                "labels": {
+                    "new-value": "New value",
+                    "current-values": "Current values",
+                    "values": "Values"
+                },
+                "placeholders": {
+                    "value": "Enter value"
+                }
+            },
             "export-main": {
                 "title": "Data export",
                 "labels": {
@@ -292,29 +305,6 @@
                     "clear-recent": "Clear all recent"
                 }
             },
-            "account-api": {
-                "title": "API account",
-                "title-new": "New API account",
-                "labels": {
-                    "is-active": "Is active",
-                    "account-name": "Account name",
-                    "account-type": "Account type",
-                    "app-id": "App ID",
-                    "secret-key": "Secret key"
-                },
-                "placeholders": {
-                    "account-name": "Enter name",
-                    "account-type": "Select...",
-                    "secret-key": "Generate secret key",
-                    "app-id": "Generate..."
-                }
-            },
-            "account-api-list": {
-                "labels": {
-                    "is-active": "Is active",
-                    "name": "Name"
-                }
-            },
             "account-changePassword": {
                 "labels": {
                     "current-password": "Current password",
@@ -444,6 +434,46 @@
                 "subtitle": "Security service",
                 "labels": {
                     "name": "Name"
+                }
+            },
+            "oauthapps": {
+                "labels": {
+                    "clientId": "Client id",
+                    "displayName": "Display name",
+                    "type": "Type",
+                    "clientSecret": "Client secret",
+                    "assigned-permissions": "Assigned permissions",
+                    "redirectUris": "Redirect URIs",
+                    "postLogoutRedirectUris": "Post logout redirect URIs"
+                },
+                "placeholders": {
+                    "clientId": "Input client id",
+                    "displayName": "Input display name",
+                    "type": "Input type",
+                    "clientSecret": "Input client secret"
+                }
+            },
+            "oauthapps-list": {
+                "title": "OAuth applications",
+                "subtitle": "Security service"
+            },
+            "oauthapps-detail": {
+                "title": "Edit OAuth application",
+                "title-new": "Create OAuth application",
+                "subtitle": "Security service",
+                "labels": {
+                    "clientSecret-warning": "Warning! You must copy the secret now. It will be hidden after closing the blade.",
+                    "urls": "Urls"
+                },
+                "blades": {
+                    "edit-redirectUris": {
+                        "title": "Redirect uris",
+                        "subtitle": "Manage redirect uris"
+                    },
+                    "edit-postLogoutRedirectUris": {
+                        "title": "Post logout redirect uris",
+                        "subtitle": "Manage post logout redirect uris"
+                    }
                 }
             },
             "login": {
@@ -676,6 +706,14 @@
             "account-delete": {
                 "title": "Delete confirmation",
                 "message": "Are you sure you want to delete selected Accounts?"
+            },
+            "oauthapps-save": {
+                "title": "Save changes",
+                "message": "The OAuth application has been modified. Do you want to save changes?"
+            },
+            "oauthapps-delete": {
+                "title": "Delete confirmation",
+                "message": "Are you sure you want to delete selected OAuth application?"
             },
             "dynamic-property-delete": {
                 "title": "Delete confirmation",

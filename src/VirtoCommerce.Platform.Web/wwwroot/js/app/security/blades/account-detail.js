@@ -1,8 +1,9 @@
-angular.module('platformWebApp')
-.controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings',
+angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings',
     function ($scope, bladeNavigationService, metaFormsService, accounts, roles, dialogService, settings) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:security:update';
+        blade.accountTypes = [];
+
         blade.refresh = function (parentRefresh) {
             var entity = parentRefresh ? blade.currentEntity : blade.data;
             accounts.get({ id: entity.userName }, function (data) {
@@ -11,9 +12,9 @@ angular.module('platformWebApp')
                     blade.parentBlade.refresh();
                 }
             },
-            function(error) {
-                 bladeNavigationService.setError(error, blade);
-            });
+                function (error) {
+                    bladeNavigationService.setError(error, blade);
+                });
         }
 
         function initializeBlade(data) {
@@ -21,7 +22,8 @@ angular.module('platformWebApp')
             blade.origEntity = data;
             isAccountlocked(blade.currentEntity.id).then(function (result) {
                 blade.accountLockedState = result.locked ? "Locked" : "Unlocked";
-            }); 
+            });
+            blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
             blade.isLoading = false;
         };
 
@@ -39,6 +41,19 @@ angular.module('platformWebApp')
         function canSave() {
             return isDirty() && $scope.formScope && $scope.formScope.$valid;
         }
+
+        blade.openAccountTypeSettingManagement = function () {
+            var newBlade = {
+                id: 'accountTypesDictionary',
+                isApiSave: true,
+                currentEntityId: 'VirtoCommerce.Platform.Security.AccountTypes',
+                parentRefresh: function (data) { blade.accountTypes = data; },
+                controller: 'platformWebApp.settingDictionaryController',
+                template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, blade);
+
+        };
 
         $scope.setForm = function (form) {
             $scope.formScope = form;
@@ -63,6 +78,7 @@ angular.module('platformWebApp')
 
         blade.headIcon = 'fa-key';
 
+       
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",
