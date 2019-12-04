@@ -32,7 +32,7 @@ This article describes how to tune email sending  in the Platform v.3
     * Then customize **_Smtp options_**:
         1. Fill SmtpServer `smtp.gmail.com` and Port `587`
         2. Turn `OFF` SSL: **_EnableSsl_** set **_false_** 
-        > NOTE: should read prerequiments in the SMTP server site
+        > NOTE: should read prerequiments in the SMTP server site and read the [article](https://docs.microsoft.com/en-us/dotnet/api/system.net.mail.smtpclient.enablessl?view=netcore-3.0) 
         3. Set **_Login_** and **_Password_**
         like this in **_appsttings.json_**:
             ```json
