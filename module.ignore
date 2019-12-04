@@ -60,9 +60,17 @@ VirtoCommerce.Smidge.dll
 System.ServiceModel.dll
 VirtoCommerce.Smidge.Nuglify.dll
 WindowsAzure.Storage.dll
+VirtoCommerce.Platform.Caching.dll
 VirtoCommerce.Platform.Core.dll
 VirtoCommerce.Platform.Data.dll
 VirtoCommerce.Platform.Assets.AzureBlobStorage.dll
 VirtoCommerce.Platform.Core.dll
 VirtoCommerce.Platform.Modules.dll
 VirtoCommerce.Platform.Security.dll
+StackExchange.Redis.dll
+Pipelines.Sockets.Unofficial.dll
+Polly.dll
+System.Runtime.CompilerServices.Unsafe.dll
+System.Security.Cryptography.ProtectedData.dll
+System.Configuration.ConfigurationManager.dll
+System.Diagnostics.PerformanceCounter.dll

@@ -22,6 +22,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
     public static class SwaggerServiceCollectionExtensions
     {
         private static string platformDocName = "VirtoCommerce.Platform";
+        private static string platformUIDocName = "PlatformUI";
         private static string oauth2SchemeName = "oauth2";
         /// <summary>
         /// 
@@ -35,7 +36,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc(platformDocName, new Info
+                var platformInfo = new Info
                 {
                     Title = "VirtoCommerce Solution REST API documentation",
                     Version = "v1",
@@ -52,27 +53,29 @@ namespace VirtoCommerce.Platform.Web.Swagger
                         Name = "Virto Commerce Open Software License 3.0",
                         Url = "http://virtocommerce.com/opensourcelicense"
                     }
-                });
+                };
+
+                c.SwaggerDoc(platformDocName, platformInfo);
+                c.SwaggerDoc(platformUIDocName, platformInfo);
 
                 foreach (var module in modules)
                 {
                     c.SwaggerDoc(module.ModuleName, new Info { Title = $"{module.Id}", Version = "v1" });
-                    c.OperationFilter<ModuleTagsFilter>(module.Id);
                 }
 
                 c.TagActionsBy(api => api.GroupByModuleName(services));
                 c.DescribeAllEnumsAsStrings();
-                c.IgnoreObsoleteProperties();
                 c.IgnoreObsoleteActions();
                 c.OperationFilter<FileResponseTypeFilter>();
                 c.OperationFilter<OptionalParametersFilter>();
                 c.OperationFilter<FileUploadOperationFilter>();
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
                 c.OperationFilter<TagsFilter>();
-                c.DocumentFilter<TagsFilter>();
                 c.MapType<object>(() => new Schema { Type = "object" });
                 c.AddModulesXmlComments(services);
                 c.CustomSchemaIds(type => (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id ?? type.FriendlyId());
+                c.CustomOperationIds(apiDesc =>
+                    apiDesc.TryGetMethodInfo(out var methodInfo) ? $"{((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerName}_{methodInfo.Name}" : null);
                 c.AddSecurityDefinition(oauth2SchemeName, new OAuth2Scheme
                 {
                     Type = oauth2SchemeName,
@@ -83,15 +86,15 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
                 c.DocInclusionPredicate((docName, apiDesc) =>
                 {
-                    if (docName.EqualsInvariant(platformDocName)) return true;
+                    if (docName.EqualsInvariant(platformUIDocName)) return true; // It's an UI endpoint, return all to correctly build swagger UI page
 
                     var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
+                    if (docName.EqualsInvariant(platformDocName) && currentAssembly.FullName.StartsWith(docName)) return true; // It's a platform endpoint. 
+                    // It's a module endpoint. 
                     var module = modules.FirstOrDefault(m => m.ModuleName.EqualsInvariant(docName));
                     return module != null && module.Assembly == currentAssembly;
                 });
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-
-
             });
         }
 
@@ -111,6 +114,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             applicationBuilder.UseSwaggerUI(c =>
             {
+                c.SwaggerEndpoint($"{platformUIDocName}/swagger.json", platformUIDocName);
                 c.SwaggerEndpoint($"{platformDocName}/swagger.json", platformDocName);
                 foreach (var module in modules)
                 {

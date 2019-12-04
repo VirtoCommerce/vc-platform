@@ -24,7 +24,6 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                 blade.accountLockedState = result.locked ? "Locked" : "Unlocked";
             });
             blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
-            userStateCommand.updateName();
             blade.isLoading = false;
         };
 
@@ -55,9 +54,11 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
             bladeNavigationService.showBlade(newBlade, blade);
 
         };
+
         $scope.setForm = function (form) {
             $scope.formScope = form;
         }
+
         $scope.saveChanges = function () {
             blade.isLoading = true;
 
@@ -77,26 +78,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
 
         blade.headIcon = 'fa-key';
 
-        var userStateCommand = {
-            updateName: function () {
-                return this.name = (blade.currentEntity && blade.currentEntity.userState === 'Approved') ? 'platform.commands.reject-user' : 'platform.commands.approve-user';
-            },
-            // name: this.updateName(),
-            icon: 'fa fa-dot-circle-o',
-            executeMethod: function () {
-                if (blade.currentEntity.userState === 'Approved') {
-                    blade.currentEntity.userState = 'Rejected';
-                } else {
-                    blade.currentEntity.userState = 'Approved';
-                }
-                this.updateName();
-            },
-            canExecuteMethod: function () {
-                return true;
-            },
-            permission: blade.updatePermission
-        };
-
+       
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",
@@ -112,12 +94,10 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                 icon: 'fa fa-undo',
                 executeMethod: function () {
                     angular.copy(blade.origEntity, blade.currentEntity);
-                    userStateCommand.updateName();
                 },
                 canExecuteMethod: isDirty,
                 permission: blade.updatePermission
             },
-            userStateCommand,
             {
                 name: "platform.commands.change-password",
                 icon: 'fa fa-refresh',

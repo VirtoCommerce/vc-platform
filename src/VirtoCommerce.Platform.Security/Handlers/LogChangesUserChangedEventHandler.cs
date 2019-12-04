@@ -71,13 +71,6 @@ namespace VirtoCommerce.Platform.Security.Handlers
             {
                 result.Add("Changes: {0}", $"user type: {oldUser.UserType} -> {newUser.UserType}");
             }
-
-            //todo add after the implementation
-            //if (newUser.UserState != oldUser.UserState)
-            //{
-            //    result.Add("Changes: {0}", $"account state: {oldUser.UserState} -> {newUser.UserState}");
-            //}
-
             if (newUser.IsAdministrator != oldUser.IsAdministrator)
             {
                 result.Add("Changes: {0}", $"root: {oldUser.IsAdministrator} -> {newUser.IsAdministrator}");
