@@ -20,7 +20,7 @@ angular.module('platformWebApp')
                 var a = document.createElement("a");
                 var file = new Blob([blade.content], { type: 'application/json' });
                 a.href = URL.createObjectURL(file);
-                a.download = 'vc-system-info.json';
+                a.download = 'vc-platform-info.json';
                 a.click();
             };
 
