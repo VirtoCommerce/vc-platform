@@ -22,6 +22,5 @@ namespace VirtoCommerce.Platform.Web.Converters.Diagnostics
             retVal.ValidationErrors = moduleInfo.Errors;
             return retVal;
         }
-
     }
 }

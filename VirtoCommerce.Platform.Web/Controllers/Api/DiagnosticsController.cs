@@ -18,11 +18,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _moduleCatalog = moduleCatalog;
         }
 
-
-        /// <summary>
-        /// get system info data, such as the platform version, installed modules info, license info
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [Route("systeminfo")]
         [ResponseType(typeof(SystemInfo))]
@@ -41,6 +36,5 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
             return Ok(result);
         }
-
     }
 }
