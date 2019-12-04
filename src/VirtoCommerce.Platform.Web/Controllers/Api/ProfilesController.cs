@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core.Common;
@@ -54,6 +55,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("currentuser")]
         [Authorize]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdateCurrentUserProfileAsync([FromBody] UserProfile userProfile)
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);

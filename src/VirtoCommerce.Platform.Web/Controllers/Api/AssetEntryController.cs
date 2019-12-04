@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Assets;
@@ -56,6 +57,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPut]
         [Route("")]
         [Authorize(PlatformConstants.Security.Permissions.AssetUpdate)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Update([FromBody]AssetEntry item)
         {
             await _assetService.SaveChangesAsync(new[] { item });
@@ -70,6 +72,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpDelete]
         [Route("")]
         [Authorize(PlatformConstants.Security.Permissions.AssetDelete)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete([FromQuery] string[] ids)
         {
             await _assetService.DeleteAsync(ids);

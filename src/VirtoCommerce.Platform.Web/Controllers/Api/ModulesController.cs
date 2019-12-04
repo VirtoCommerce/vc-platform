@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
@@ -56,6 +57,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("reload")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleQuery)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public ActionResult ReloadModules()
         {
             _externalModuleCatalog.Reload();
@@ -253,6 +255,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("restart")]
         [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public ActionResult Restart()
         {
             _platformRestarter.Restart();

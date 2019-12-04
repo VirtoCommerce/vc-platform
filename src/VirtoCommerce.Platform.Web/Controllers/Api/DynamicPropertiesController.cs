@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -66,12 +67,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Does nothing. Just a way to expose DynamicObjectProperty thru Swagger.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Produces(typeof(DynamicObjectProperty))]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+        public ActionResult ExposeDynamicObjectProperty()
+        {
+            return NoContent();
+        }
+
+        /// <summary>
         /// Update existing dynamic property
         /// </summary>
         /// <returns></returns>
         [HttpPut]
         [Route("properties")]
         [Authorize(PlatformConstants.Security.Permissions.DynamicPropertiesUpdate)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdatePropertyAsync([FromBody]DynamicProperty property)
         {
             await _dynamicPropertyService.SaveDynamicPropertiesAsync(new[] { property });
@@ -85,6 +99,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpDelete]
         [Route("properties")]
         [Authorize(PlatformConstants.Security.Permissions.DynamicPropertiesDelete)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeletePropertyAsync([FromQuery] string[] propertyIds)
         {
             await _dynamicPropertyService.DeleteDynamicPropertiesAsync(propertyIds);
@@ -113,6 +128,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("dictionaryitems")]
         [Authorize(PlatformConstants.Security.Permissions.DynamicPropertiesUpdate)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> SaveDictionaryItemsAsync([FromBody]DynamicPropertyDictionaryItem[] items)
         {
             await _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items);
@@ -127,6 +143,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpDelete]
         [Route("dictionaryitems")]
         [Authorize(PlatformConstants.Security.Permissions.DynamicPropertiesUpdate)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteDictionaryItemAsync([FromQuery] string[] ids)
         {
             await _dynamicPropertyDictionaryItemsService.DeleteDictionaryItemsAsync(ids);
@@ -167,6 +184,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPut]
         [Route("types/{typeName}/properties/{propertyId}")]
         [Authorize(PlatformConstants.Security.Permissions.DynamicPropertiesUpdate)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdateProperty([FromRoute] string typeName, [FromRoute] string propertyId, [FromBody] DynamicProperty property)
         {
             property.Id = propertyId;
@@ -184,6 +202,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Obsolete("use DELETE api/platform/dynamic/properties?propertyIds=  instead")]
         [Route("types/{typeName}/properties/{propertyId}")]
         [Authorize(PlatformConstants.Security.Permissions.DynamicPropertiesDelete)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteProperty([FromRoute] string typeName, [FromRoute] string propertyId)
         {
             await _dynamicPropertyService.DeleteDynamicPropertiesAsync(new[] { propertyId });
@@ -205,6 +224,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
         [Authorize(PlatformConstants.Security.Permissions.DynamicPropertiesUpdate)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> SaveDictionaryItems([FromRoute] string typeName, [FromRoute] string propertyId, [FromBody] DynamicPropertyDictionaryItem[] items)
         {
             foreach (var item in items)
@@ -220,6 +240,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpDelete]
         [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
         [Authorize(PlatformConstants.Security.Permissions.DynamicPropertiesUpdate)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteDictionaryItem([FromRoute] string typeName, [FromRoute] string propertyId, [FromQuery] string[] ids)
         {
             await _dynamicPropertyDictionaryItemsService.DeleteDictionaryItemsAsync(ids);
