@@ -20,6 +20,9 @@
       "bread-crumb-top": "All"
     },
     "blades": {
+      "system-info": {
+        "title": "Platform Information"
+      },
       "asset-list": {
         "title": "Asset management",
         "labels": {

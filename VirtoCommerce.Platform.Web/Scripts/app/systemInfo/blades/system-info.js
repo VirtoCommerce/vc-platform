@@ -10,7 +10,7 @@ angular.module('platformWebApp')
             blade.initializeBlade = function () {
                 diagnostics.getSystemInfo({}, function (results) {
                     blade.isLoading = false;
-                    blade.title = "Platform Info";
+                    blade.title = 'platform.blades.system-info.title';
                     blade.currentEntity = results;
                     blade.content = stringify(results);
                 });
@@ -50,7 +50,7 @@ angular.module('platformWebApp')
                 }
             ];
 
-            blade.headIcon = 'fa-file-o';
+            blade.headIcon = 'fa-info-circle';
             blade.initializeBlade();
         }]);
 

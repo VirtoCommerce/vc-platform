@@ -3,7 +3,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Web.Converters.Diagnostics;
+using VirtoCommerce.Platform.Web.Converters.Modularity;
 using VirtoCommerce.Platform.Web.Model.Diagnostics;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -23,14 +23,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ResponseType(typeof(SystemInfo))]
         public IHttpActionResult GetSystemInfo()
         {
-            var platformInfo = new PlatformInfo() { PlatformVersion = PlatformVersion.CurrentVersion.ToString() };
+            var platformVersion = PlatformVersion.CurrentVersion.ToString();
             var license = HomeController.LoadLicense(); //need to be refactored into platform v.3
+
             var installedModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).OrderBy(x => x.Id)
                                        .Select(x => x.ToWebModel())
                                        .ToArray();
+
             var result = new SystemInfo()
             {
-                Platform = platformInfo,
+                PlatformVersion = platformVersion,
                 License = license,
                 InstalledModules = installedModules
             };

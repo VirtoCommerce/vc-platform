@@ -20,6 +20,9 @@
       "bread-crumb-top": "Alle"
     },
     "blades": {
+      "system-info": {
+        "title": "Plattform Informationen"
+      },
       "asset-list": {
         "title": "Medien",
         "labels": {
@@ -564,7 +567,7 @@
       },
       "new-account-wizard": {
         "labels": {
-          "email":  "E-mail",
+          "email": "E-mail",
           "login": "Einloggen",
           "password": "Passwort",
           "repeat-password": "Passwort wiederholen",

@@ -390,9 +390,6 @@
     <Compile Include="Controllers\Api\ProfilesController.cs" />
     <Compile Include="Controllers\Api\AssetEntryController.cs" />
     <Compile Include="Controllers\ExternalLoginController.cs" />
-    <Compile Include="Converters\Diagnostics\InstalledModuleInfoConverter.cs" />
-    <Compile Include="Model\Diagnostics\InstalledModuleInfo.cs" />
-    <Compile Include="Model\Diagnostics\PlatformInfo.cs" />
     <Compile Include="Model\Diagnostics\SystemInfo.cs" />
     <Compile Include="Model\Security\ExternalLoginProviderInfo.cs" />
     <Compile Include="Model\Security\ResetPasswordTokenInfo.cs" />
