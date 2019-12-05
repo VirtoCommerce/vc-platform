@@ -1,7 +1,7 @@
-# How to upgrade RESTful clients to VirtoCommerce v3 in the Storefront 
+# How to upgrade AutoRest-generated clients to VirtoCommerce v3 in the Storefront 
 
 ## Summary
-Currently, storefront is compatible to both major versions of the Platform (v2, v3). This document describes how to upgrade Storefront RESTful API clients (for platform and modules) to the latest v3 interfaces. This action allow you to modernize storefront but break compatibility with v2.
+Currently, storefront is compatible to both major versions of the Platform (v2, v3). This document describes how to upgrade Storefront AutoRest-generated clients (for platform and modules) to the latest v3 interfaces. This action allow you to modernize storefront but break compatibility with v2.
 ## Contents
 
 ## Preconditions
@@ -26,7 +26,7 @@ Currently, storefront is compatible to both major versions of the Platform (v2, 
 
     It's useful to run Autorest from Package Manager Console with selected Virtocommerce.Storefront project.
 ___
-## Upgrading RESTful clients
+## Upgrading AutoRest-generated clients
 ___
 ### **Platform**
 Run Autorest for *$modules = @('Platform','Notifications')*. Wait while Autorest finishes. *'Notifications'* passed because in v3 notifications module was extracted from platform to separate module.
@@ -171,7 +171,7 @@ Run Autorest for *$modules = @('Catalog')*. Wait while Autorest finishes.
 |Error|Recommendation|
 |-|-|
 |The type or namespace name 'Product' does not exist|*Product* was renamed to *CatalogProduct*|
-Warning! Variations in platform v3 have new type *Variation* itstead of storefront code where variations is a products. Therefore we need to add in this file additional conversion method to convert RESTful *Variation* to the *Product* in storefront. Let's do it:
+Warning! Variations in platform v3 have new type *Variation* itstead of storefront code where variations is a products. Therefore we need to add in this file additional conversion method to convert AutoRest-generated *Variation* to the *Product* in storefront. Let's do it:
 
 ```Csharp
         public static Product ToProduct(this catalogDto.Variation variationDto, Language currentLanguage, Currency currentCurrency, Store store)
