@@ -144,6 +144,10 @@ angular.module('platformWebApp', AppDependencies).
                 $state.go('workspace.appLicense');
             };
 
+            $scope.showVersionInfo = function () {
+                $state.go('workspace.systemInfo');
+            };
+
         }])
     // Specify SignalR server URL (application URL)
     .factory('platformWebApp.signalRServerName', ['$location', function ($location) {
