@@ -156,7 +156,6 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 		> Note2: the value for `MigrationId` has to be the name of your new migration, added in previous step. ('20191129134041_InitialCustomerReviews' in our case). Check [20000000000000_UpdateCoreV2.cs migration](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs#L12) as another example.
 
 		* Open **_20000000000000_UpdateCustomerReviewsV2.Designer_** and change **_Migration_** attribute parameter value to the current migration ID ("20000000000000_UpdateCustomerReviewsV2" in this case). Check [20000000000000_UpdateCoreV2.Designer.cs](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12) as another example.
-		* Then need to add SQL command
 
 ## 4. Make changes in CustomerReviews&#46;Web project
 1. Changes in **_module.manifest_**
