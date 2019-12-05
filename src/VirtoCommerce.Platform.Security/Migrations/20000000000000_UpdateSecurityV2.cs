@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
 	                    END
 	                    
 	                    BEGIN
-		                    ALTER TABLE [AspNetUserLogins] ADD [ProviderDisplayNames] nvarchar(max);
+		                    ALTER TABLE [AspNetUserLogins] ADD [ProviderDisplayName] nvarchar(max);
 		                    ALTER TABLE [AspNetUsers] ADD [NormalizedUserName] nvarchar(256);
 		                    ALTER TABLE [AspNetUsers] ADD [NormalizedEmail] nvarchar(256);
 		                    ALTER TABLE [AspNetUsers] ADD [ConcurrencyStamp] nvarchar(max);
