@@ -1,10 +1,14 @@
+# Migrate a module from the Platfrom 2.0 to 3.0 version.
+
 ### Introduction
 This article describes how to migrate an existing [CustomerReviews sample](https://github.com/VirtoCommerce/vc-samples/tree/master/CustomerReviews) module from VC Platform version 2.x to 3.0.
 
 > NOTE: A sample module source code can be found here: https://github.com/VirtoCommerce/vc-samples/tree/release/3.0.0/CustomerReviews.
 
+
 ## 1. Make correct structure in solution and projects
-1. If it exists, delete **_packages_** folder 
+1. Ensure that installed latest version v.2 of the platform and all modules. Need to update  for latest version v.2
+2. If it exists, delete **_packages_** folder 
 2. Delete **Properties** folder from each of the projects' folder 
 3. Convert the projects from ASP&#46;NET to ASP&#46;NET Core:
    1. Open each of the projects' **_*.csproj_** files in text editor (e.g., Notepad), clear whole file content and set it to this:
@@ -93,10 +97,11 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 		* Implement **_CreateDbContext_** method, using [CustomerModule.Data/Repositories/DesignTimeDbContextFactory.cs](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Repositories/DesignTimeDbContextFactory.cs) as an example
 		* Ensure that connection string to your development SQL Server in **_UseSqlServer_** method is correct. It would be used while generating code-first migrations. 
 	3. Update **ICustomerReviewsRepository.cs**
+		* If the module is an extension then derive from derived module's interface repository.
 		* Refactor all methods to **be asynchronous**: return `Task<>`
 		* Rename all methods to have suffix `Async`
 	3. Update **CustomerReviewsRepository.cs**
-		* Refactor **_CustomerReviewsRepository_** class to derive from `DbContextRepositoryBase<CustomerReviewsDbContext>`
+		* Refactor **_CustomerReviewsRepository_** class to derive from `DbContextRepositoryBase<CustomerReviewsDbContext>` or if the module is an extension then derive from derived module's repository.
 		* Refactor the constructors to leave only one, taking the only  **_CustomerReviewsDbContext_** parameter:
 		```cs
 		public CustomerReviewRepository(CustomerReviewsDbContext dbContext) : base(dbContext)
@@ -135,6 +140,8 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 			```
 			Add-Migration InitialCustomerReviews -Context CustomerReviews.Data.Repositories.CustomerReviewsDbContext -StartupProject CustomerReviews.Data  -Verbose -OutputDir Migrations
 			```
+		* if there are extensions then need to remove the lines which depends extented entities(like Tables, FK, PK, Index) and then add the Discriminator column like [that](https://github.com/VirtoCommerce/vc-module-order/blob/ce72193f54ad0626c5c3d85b4682c9ee9ba812b1/samples/VirtoCommerce.OrdersModule2.Web/Migrations/20180724064542_InitialOrders2.cs#L11). Please read the [article about inheritance](https://docs.microsoft.com/en-us/ef/core/modeling/relational/inheritance).
+
 	2. Create Migration for backward compatibility with v2.x
 		* Add new migration with name **_UpdateCustomerReviewsV2_** and rename the migration **_filename_** to **_20000000000000_UpdateCustomerReviewsV2_**
 		* Add SQL command to the migration:
@@ -149,6 +156,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 		> Note2: the value for `MigrationId` has to be the name of your new migration, added in previous step. ('20191129134041_InitialCustomerReviews' in our case). Check [20000000000000_UpdateCoreV2.cs migration](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs#L12) as another example.
 
 		* Open **_20000000000000_UpdateCustomerReviewsV2.Designer_** and change **_Migration_** attribute parameter value to the current migration ID ("20000000000000_UpdateCustomerReviewsV2" in this case). Check [20000000000000_UpdateCoreV2.Designer.cs](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12) as another example.
+		* Then need to add SQL command
 
 ## 4. Make changes in CustomerReviews&#46;Web project
 1. Changes in **_module.manifest_**
