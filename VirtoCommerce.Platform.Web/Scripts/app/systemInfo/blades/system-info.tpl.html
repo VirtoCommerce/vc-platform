@@ -12,13 +12,16 @@
                         <div class="list-descr" ng-if="!blade.currentEntity.license">{{'platform.templates.licensing.license-absent' | translate}}</div>
                         <ul class="list" ng-if="blade.currentEntity.license">
                             <li class="list-item">
-                                <div class="list-descr">{{'platform.templates.licensing.license-present' | translate: blade.currentEntity.license.type}}</div>
-                            </li>
-                            <li class="list-item">
+                                <div class="list-t">{{ 'platform.blades.license.labels.customer' | translate }}</div>
                                 <div class="list-descr">{{blade.currentEntity.license.customerName}}</div>
                             </li>
                             <li class="list-item">
-                                <div class="list-descr">{{'platform.templates.licensing.expiration-date' | translate}}: {{blade.currentEntity.license.expirationDate}}</div>
+                                <div class="list-t">{{ 'platform.blades.license.labels.type' | translate }}</div>
+                                <div class="list-descr">{{'platform.templates.licensing.license-present' | translate: blade.currentEntity.license.type}}</div>
+                            </li>
+                            <li class="list-item">
+                                <div class="list-t">{{'platform.templates.licensing.expiration-date' | translate}}</div>
+                                <div class="list-descr">{{blade.currentEntity.license.expirationDate | amParse | date }}</div>
                             </li>
                         </ul>
                     </li>
