@@ -26,13 +26,13 @@
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="2.2.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.3" />
-        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="2.1.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.0" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
         <PackageReference Include="OpenIddict" Version="2.0.0" />
