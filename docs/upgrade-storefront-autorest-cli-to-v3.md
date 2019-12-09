@@ -2,7 +2,26 @@
 
 ## Summary
 Currently, storefront is compatible to both major versions of the Platform (v2, v3). This document describes how to upgrade Storefront AutoRest-generated clients (for platform and modules) to the latest v3 interfaces. This action allow you to modernize storefront but break compatibility with v2.
+An example of upgraded storefront (made during creation of this document) resides there: [Upgraded storefront branch](https://github.com/VirtoCommerce/vc-storefront-core/tree/upgrade/VP-1017-upgrade-RESTful-clients-to-v3).
+
 ## Contents
+- [Preconditions](#preconditions)
+- [Upgrading AutoRest-generated clients](#upgrading-autorest-generated-clients)
+    * [Platform](#platform)
+    * [Catalog module](#catalog-module)
+    * [Cart module](#cart-module)
+    * [Content module](#content-module)
+    * [Core and Tax modules](#core-and-tax-modules)
+    * [Customer module](#customer-module)
+    * [Inventory module](#inventory-module)
+    * [Marketing module](#marketing-module)
+    * [Orders module](#orders-module)
+    * [Pricing module](#pricing-module)
+    * [Shipping module](#shipping-module)
+    * [Payment module](#payment-module)
+    * [Sitemaps module](#sitemaps-module)
+    * [Store module](#store-module)
+    * [Subscription module](#subscription-module)
 
 ## Preconditions
 * Open solution with storefront source code;
