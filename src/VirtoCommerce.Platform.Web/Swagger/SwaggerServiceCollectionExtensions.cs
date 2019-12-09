@@ -108,7 +108,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.RouteTemplate = "docs/{documentName}/swagger.json";
                 c.PreSerializeFilters.Add((swagger, httpReq) =>
                 {
-                    swagger.BasePath = $"{httpReq.Scheme}://{httpReq.Host.Value}";
+                    //TODO
+                    //swagger.BasePath = $"{httpReq.Scheme}://{httpReq.Host.Value}";
                 });
             });
 
