@@ -78,7 +78,7 @@
                         <div class="list-t">{{ 'platform.blades.module-detail.labels.dependencies' | translate }}</div>
                         <div class="list-descr">
                             <div ng-repeat="dependency in blade.currentEntity.dependencies">
-                                <a class="__link" ng-click="openDependencyModule(dependency)">{{dependency.id}}</a> {{dependency.version}}
+                                <a class="__link" ng-click="openDependencyModule(dependency)">{{dependency.id}}</a> {{formDependencyVersion(dependency)}}
                             </div>
                         </div>
                     </li>
