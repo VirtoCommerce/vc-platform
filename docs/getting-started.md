@@ -76,7 +76,7 @@ There are several marketing tools in Virto Commerce: you can publish content, cr
 Start with creation of three simple promotions:
 
 1. Each customer would receive a 5% off if cart subtotal exceeded $100
-2. Add Gift product to shopping cart for a limited period of time
+2. Add Gift product for a first time buyer
 3. Add 10% discount if product is in-stock
 
 You can find more details about how to create first promotions here:
