@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Web
 
             var origins = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:CORS:AllowedOrigins");
 
-            if (origins != null)
+            if (!string.IsNullOrEmpty(origins))
             {
                 var corsPolicy = new CorsPolicy
                 {
