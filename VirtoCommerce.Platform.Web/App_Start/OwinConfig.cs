@@ -35,20 +35,16 @@ namespace VirtoCommerce.Platform.Web
             app.CreatePerOwinContext(() => container.Resolve<SecurityDbContext>());
             app.CreatePerOwinContext(() => container.Resolve<ApplicationUserManager>());
 
-            var corsPolicy = new CorsPolicy
-            {
-                AllowAnyMethod = true,
-                AllowAnyHeader = true
-            };
-
-            // Try and load allowed origins from web.config
-            // If none are specified we'll not allow any origins
-            corsPolicy.AllowAnyOrigin = false;
-
             var origins = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:CORS:AllowedOrigins");
 
             if (origins != null)
             {
+                var corsPolicy = new CorsPolicy
+                {
+                    AllowAnyMethod = true,
+                    AllowAnyHeader = true
+                };
+
                 var originsArray = origins.Split(';');
                 if (originsArray.Contains("*"))
                 {
@@ -61,20 +57,18 @@ namespace VirtoCommerce.Platform.Web
                         corsPolicy.Origins.Add(origin);
                     }
                 }
-            }
-            else
-            {
-                corsPolicy.AllowAnyOrigin = false;
-            }
-            var corsOptions = new CorsOptions
-            {
-                PolicyProvider = new CorsPolicyProvider
-                {
-                    PolicyResolver = context => Task.FromResult(corsPolicy)
-                }
-            };
 
-            app.UseCors(corsOptions);
+                var corsOptions = new CorsOptions
+                {
+                    PolicyProvider = new CorsPolicyProvider
+                    {
+                        PolicyResolver = context => Task.FromResult(corsPolicy)
+                    }
+                };
+
+                app.UseCors(corsOptions);
+            }
+
 
             var authenticationOptions = container.Resolve<AuthenticationOptions>();
 
