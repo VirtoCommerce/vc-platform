@@ -1,20 +1,22 @@
 using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Cors;
 using CacheManager.Core;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.Infrastructure;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Practices.Unity;
 using Owin;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Web.Security;
 using VirtoCommerce.Platform.Data;
-using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Security;
 using VirtoCommerce.Platform.Data.Security.Authentication.ApiKeys;
 using VirtoCommerce.Platform.Data.Security.Authentication.Hmac;
@@ -33,8 +35,40 @@ namespace VirtoCommerce.Platform.Web
             app.CreatePerOwinContext(() => container.Resolve<SecurityDbContext>());
             app.CreatePerOwinContext(() => container.Resolve<ApplicationUserManager>());
 
-            //Commented out for security reasons
-            //app.UseCors(CorsOptions.AllowAll);
+            var origins = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:CORS:AllowedOrigins");
+
+            if (!string.IsNullOrEmpty(origins))
+            {
+                var corsPolicy = new CorsPolicy
+                {
+                    AllowAnyMethod = true,
+                    AllowAnyHeader = true
+                };
+
+                var originsArray = origins.Split(';');
+                if (originsArray.Contains("*"))
+                {
+                    corsPolicy.AllowAnyOrigin = true;
+                }
+                else
+                {
+                    foreach (var origin in originsArray)
+                    {
+                        corsPolicy.Origins.Add(origin);
+                    }
+                }
+
+                var corsOptions = new CorsOptions
+                {
+                    PolicyProvider = new CorsPolicyProvider
+                    {
+                        PolicyResolver = context => Task.FromResult(corsPolicy)
+                    }
+                };
+
+                app.UseCors(corsOptions);
+            }
+
 
             var authenticationOptions = container.Resolve<AuthenticationOptions>();
 

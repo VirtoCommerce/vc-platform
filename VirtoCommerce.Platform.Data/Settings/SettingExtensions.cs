@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Settings
 {
@@ -88,6 +89,16 @@ namespace VirtoCommerce.Platform.Data.Settings
                 retVal = SettingValueType.Json;
             }
             return retVal;
+        }
+
+        public static string GenerateKey(this SettingEntry setting)
+        {
+            return string.Join("-", setting.Name, setting.ObjectType, setting.ObjectId);
+        }
+
+        public static string GenerateKey(this SettingEntity setting)
+        {
+            return string.Join("-", setting.Name, setting.ObjectType, setting.ObjectId);
         }
     }
 }

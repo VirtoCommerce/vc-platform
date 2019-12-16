@@ -1,10 +1,11 @@
-﻿<va-main-menu ng-model="mainMenu" on-menu-changed="onMainMenuChanged(mainMenu)">
+<va-main-menu ng-model="mainMenu" on-menu-changed="onMainMenuChanged(mainMenu)">
     <div class="info">
         <a class="info-license" ng-if="!license" href="" ng-click="showLicense()">{{'platform.templates.licensing.license-absent' | translate}}</a>
         <a class="info-license" ng-if="license" href="" ng-click="showLicense()" ng-class="{'__valid': !license.hasExpired}">{{'platform.templates.licensing.license-present' | translate: license}}</a>
     </div>
     <div class="info">
         <span class="info-version">{{platformVersion}}</span>
+        <a class="info-license" href="" ng-click="showVersionInfo()">{{ 'platform.blades.system-info.title' | translate }}</a>
     </div>
 </va-main-menu>
 <article class="cnt" role="main">

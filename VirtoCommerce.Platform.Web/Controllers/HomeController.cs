@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using System.Web.Hosting;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -27,7 +26,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var version = PlatformVersion.CurrentVersion.ToString();
             var demoCredentials = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:DemoCredentials");
             var resetTimeStr = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:DemoResetTime");
-            var license = LoadLicense();
+            var license = LicenseProvider.LoadLicense();
             var licenseString = JsonConvert.SerializeObject(license, new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
@@ -60,24 +59,6 @@ namespace VirtoCommerce.Platform.Web.Controllers
             });
         }
 
-        private static License LoadLicense()
-        {
-            License license = null;
-
-            var licenseFilePath = HostingEnvironment.MapPath(Startup.VirtualRoot + "/App_Data/VirtoCommerce.lic");
-            if (System.IO.File.Exists(licenseFilePath))
-            {
-                var rawLicense = System.IO.File.ReadAllText(licenseFilePath);
-                license = License.Parse(rawLicense);
-
-                if (license != null)
-                {
-                    license.RawLicense = null;
-                }
-            }
-
-            return license;
-        }
 
         private string GetFavIcon()
         {
