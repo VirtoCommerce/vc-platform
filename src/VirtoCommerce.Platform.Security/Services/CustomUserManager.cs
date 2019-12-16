@@ -138,7 +138,7 @@ namespace VirtoCommerce.Platform.Security.Services
         public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
         {
             //don't use FindByIdAsync with cache
-            var existUser = await base.FindByIdAsync(user.Id);
+            var existUser = await FindByIdAsync(user.Id);
 
             var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
             {
