@@ -88,12 +88,6 @@
                         <input class="form-input" num-type="integer" type="number" ng-min="0" min="0" ng-model="blade.currentEntity.displayOrder" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.display-order' | translate}}" />
                     </div>
                 </div>
-                <div class="form-group" hidden>
-                    <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.description' | translate }}</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.description" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.description' | translate}}" />
-                    </div>
-                </div>
                 <div class="form-group">
                     <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.display-name' | translate }}</label>
                     <div class="form-input __langs" ng-repeat="data in blade.currentEntity.displayNames | orderBy: 'locale'">
@@ -106,9 +100,10 @@
                 <div class="form-group">
                     <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.description' | translate }}</label>
                     <div class="form-input __langs" ng-repeat="data in blade.currentEntity.displayNames | orderBy: 'locale'">
-                        <span ng-if="data.locale.length>2" class="flag flag-{{data.locale.substr(3).toLowerCase()}}"></span>
-                        <span ng-if="data.locale.length<=2" class="langCode">{{data.locale.toUpperCase()}}</span>
-                        <input ng-model="data.description" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.description' | translate}}" />
+                        <div class="localized-name">
+                            <label class="lang-code">{{data.locale}}</label>
+                            <input ng-model="data.description" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.description' | translate}}" />
+                        </div>
                     </div>
                 </div>
             </form>

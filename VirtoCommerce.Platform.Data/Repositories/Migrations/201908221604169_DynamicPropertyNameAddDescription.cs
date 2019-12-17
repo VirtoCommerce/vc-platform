@@ -9,27 +9,20 @@ namespace VirtoCommerce.Platform.Data.Repositories.Migrations
         {
             AddColumn("dbo.PlatformDynamicPropertyName", "Description", c => c.String(maxLength: 256));
 
-            Sql(@"DECLARE @cursor CURSOR
-                    SET @cursor = CURSOR FOR
+            Sql(@"DECLARE @properties TABLE(
+                    [Id] NVARCHAR(64) NOT NULL,
+                    [Description] NVARCHAR(256) NULL);
+
+                    INSERT INTO @properties
                     SELECT
                     [Id],
                     [Description]
                     FROM [PlatformDynamicProperty]
                     WHERE [Description] IS NOT NULL
 
-                    DECLARE @id NVARCHAR(64)
-                    DECLARE @description NVARCHAR(256)
-
-                    OPEN @cursor
-                    FETCH NEXT FROM @cursor INTO @id, @description;
-                    WHILE @@FETCH_STATUS = 0
-                    BEGIN
-	                    UPDATE [PlatformDynamicPropertyName]
-	                    SET [Description] = @description
-	                    WHERE [PropertyId] = @id
-	                    FETCH NEXT FROM @cursor INTO @id, @description;
-                    END
-                    CLOSE @cursor");
+                    UPDATE [PlatformDynamicPropertyName]
+                    SET [Description] = (SELECT [Description] FROM @properties WHERE [Id] = [PropertyId])
+                    WHERE [PropertyId] = (SELECT [Id] FROM @properties WHERE [Id] = [PropertyId])");
         }
         
         public override void Down()
