@@ -2,7 +2,7 @@ angular.module('platformWebApp')
 .controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', 'FileUploader', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, modules, moduleHelper, FileUploader, settings) {
     var blade = $scope.blade;
 
-    function initializeBlade() {
+    function initializeBlade() {        
         if (blade.currentEntity.isInstalled) {
             var canUpdate = _.any(moduleHelper.allmodules, function (x) {
                 return x.id === blade.currentEntity.id && !x.isInstalled;
@@ -56,6 +56,10 @@ angular.module('platformWebApp')
             blade.isLoading = false;
         }
     }
+
+    $scope.formDependencyVersion = function (dependency) {
+        return dependency.version.major + '.' + dependency.version.minor + '.' + dependency.version.patch;
+    };
 
     $scope.openDependencyModule = function (dependency) {
         module = _.findWhere(moduleHelper.allmodules, { id: dependency.id, version: dependency.version }) ||
