@@ -61,10 +61,11 @@ dotnet.exe dev-certs https --trust
 
 Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust)
 
-* Run the Platform by following command:
+* Run the Platform by following commands:
 
 ```console
-dotnet.exe C:\vc-platform-3\VirtoCommerce.Platform.Web.dll
+cd C:\vc-platform-3\
+dotnet.exe VirtoCommerce.Platform.Web.dll
 ```
 
 The output in the console will say something like:
