@@ -12,7 +12,7 @@
             "RootPath": "~/assets",
             "PublicUrl": "http://localhost:10645/assets/" <-- Set your platform application url with port localhost:10645
         },
-     
+
     },
 ```
 
@@ -52,6 +52,17 @@ dotnet run -c Development --no-launch-profile
 - On the first request the application will create and initialize database. After that you should see the sign in page. Use the following credentials: `admin/store` to sign in.
 
 **Note:** Don't forget to change them after the first sign in.
+
+### Run via Docker
+
+- Open console
+
+```console
+docker-compose up
+```
+
+- Open  `http://localhost:20654` in the browser.
+
 
 ## Module from source code getting started
 

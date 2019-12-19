@@ -2,7 +2,23 @@ version: '3'
 
 services:
   virtocommerce.platform.web:
-    image: virtocommerce.platform.web
-    build:
-      context: ./VirtoCommerce.Platform.Web
-      dockerfile: Dockerfile
+    environment:
+      ConnectionStrings__VirtoCommerce: "Data Source=mssql;Initial Catalog=VirtoCommerce3;Persist Security Info=True;User ID=virto;Password=virto;MultipleActiveResultSets=True;Connect Timeout=30"
+    build: .
+    restart: on-failure
+    depends_on:
+      - mssql
+    ports:
+      - "20654:80"
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+    container_name: mssql
+    command: /bin/bash -c '/usr/src/app/mssql-docker-command.sh'
+    ports:
+      - 1433:1433
+    environment:
+      SA_PASSWORD: "Virto3.0"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - ./db:/usr/src/app
