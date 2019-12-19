@@ -15,7 +15,7 @@
         <Description>Cross-platform  build automation system for VirtoCommerce projects</Description>
         <NeutralLanguage>en-US</NeutralLanguage>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <PackageVersion>3.0.0-beta0004</PackageVersion>
+        <PackageVersion>3.0.0-beta0005</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>      

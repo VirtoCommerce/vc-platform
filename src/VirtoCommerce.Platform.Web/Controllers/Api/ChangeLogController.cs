@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.ChangeLog;
@@ -27,6 +28,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("~/api/changes/force")]
         [Authorize(PlatformConstants.Security.Permissions.ResetCache)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public ActionResult ForceChanges(ForceChangesRequest forceRequest)
         {
             _lastTimestamp = DateTime.UtcNow;

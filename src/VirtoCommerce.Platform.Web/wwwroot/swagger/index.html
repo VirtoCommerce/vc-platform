@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -59,6 +59,8 @@
             configObject.url = configObject.urls[0].url; // BaseLayout (default) requires singular url
             //configObject.presets = [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset];
             //configObject.layout = "StandaloneLayout";
+            configObject.tagsSorter = 'alpha';
+            configObject.filter = true;
 
             // Use swagger-ui plugin system to hide the info component
             // See https://github.com/swagger-api/swagger-ui/blob/master/docs/customization/overview.md
