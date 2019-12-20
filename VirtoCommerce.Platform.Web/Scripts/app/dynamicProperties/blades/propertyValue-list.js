@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.i18n', '$timeout', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, i18n, $timeout) {
+.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.i18n', '$timeout', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, i18n, $timeout, dynamicPropertiesApi) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
     blade.headIcon = 'fa-plus-square-o';
@@ -12,15 +12,17 @@
         var rawProperties = angular.copy(blade.currentEntity.dynamicProperties);
 
         _.each(rawProperties, function (x) {
-            x.values.sort(function (a, b) {
-                return a.value && b.value
-                    ? (a.value.name
-                        ? a.value.name.localeCompare(b.value.name)
-                        : angular.isString(a.value) && angular.isString(b.value)
-                            ? a.value.localeCompare(b.value)
-                            : a.value < b.value ? -1 : a.value > b.value ? 1 : 0)
-                    : -1;
-            });
+            if (x.values) {
+                x.values.sort(function (a, b) {
+                    return a.value && b.value
+                        ? (a.value.name
+                            ? a.value.name.localeCompare(b.value.name)
+                            : angular.isString(a.value) && angular.isString(b.value)
+                                ? a.value.localeCompare(b.value)
+                                : a.value < b.value ? -1 : a.value > b.value ? 1 : 0)
+                        : -1;
+                });
+            }
         });
 
         if (_.any(rawProperties, function (x) { return x.isMultilingual; })) {
@@ -39,6 +41,15 @@
         blade.isLoading = false;
     };
 
+    function refreshDynamicProperties(data)  { 
+        _.each(data, function (x) {
+            var existProperty = _.find(blade.currentEntity.dynamicProperties, function (y) { return y.id == x.id; });
+            if (!angular.isDefined(existProperty)) {
+                blade.currentEntity.dynamicProperties.push(x);
+            }
+        });
+    }
+
     function isDirty() {
         return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
     }
@@ -56,6 +67,7 @@
         if (isDirty()) {
             angular.copy(blade.currentEntities, blade.data.dynamicProperties);
             angular.copy(blade.currentEntities, blade.origEntity);
+            blade.currentEntity.dynamicProperties = blade.data.dynamicProperties;
         }
         $scope.bladeClose();
     };
@@ -96,7 +108,8 @@
 		            id: 'dynamicPropertyList',
 		            objectType: blade.data.objectType,
 		            controller: 'platformWebApp.dynamicPropertyListController',
-		            template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
+                    template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html',
+                    parentRefresh: refreshDynamicProperties
 		        };
 		        bladeNavigationService.showBlade(newBlade, blade);
 		    },

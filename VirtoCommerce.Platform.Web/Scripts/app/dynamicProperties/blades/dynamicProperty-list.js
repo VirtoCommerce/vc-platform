@@ -5,9 +5,9 @@
     blade.title = blade.objectType;
     blade.subtitle = 'platform.blades.dynamicProperty-list.subtitle';
 
-    blade.refresh = function (parentRefresh) {
+    blade.refresh = function (refreshState) {
         dynamicPropertiesApi.query({ id: blade.objectType }, function (results) {
-            if (parentRefresh && blade.parentRefresh) {
+            if (refreshState && blade.parentRefresh) {
                 blade.parentRefresh(results);
             }
 
