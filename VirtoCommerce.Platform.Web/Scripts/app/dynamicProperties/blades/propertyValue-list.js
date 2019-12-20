@@ -67,7 +67,6 @@
         if (isDirty()) {
             angular.copy(blade.currentEntities, blade.data.dynamicProperties);
             angular.copy(blade.currentEntities, blade.origEntity);
-            blade.currentEntity.dynamicProperties = blade.data.dynamicProperties;
         }
         $scope.bladeClose();
     };
