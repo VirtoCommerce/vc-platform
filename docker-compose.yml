@@ -4,6 +4,7 @@ services:
   virtocommerce.platform.web:
     environment:
       ConnectionStrings__VirtoCommerce: "Data Source=mssql;Initial Catalog=VirtoCommerce3;Persist Security Info=True;User ID=virto;Password=virto;MultipleActiveResultSets=True;Connect Timeout=30"
+      ASPNETCORE_ENVIRONMENT: Development
     build: .
     restart: on-failure
     depends_on:
