@@ -19,13 +19,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage;
@@ -55,7 +56,6 @@ using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.JsonConverters;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Swagger;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -194,7 +194,7 @@ namespace VirtoCommerce.Platform.Web
                         options.Authority = Configuration["Auth:Authority"];
                         options.Audience = Configuration["Auth:Audience"];
 
-                        if (HostingEnvironment.IsDevelopment())
+                        if (WebHostEnvironment.IsDevelopment())
                         {
                             options.RequireHttpsMetadata = false;
                         }

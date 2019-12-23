@@ -9,13 +9,12 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Swagger;
-using Microsoft.OpenApi.Models;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
@@ -36,7 +35,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             services.AddSwaggerGen(c =>
             {
-                var platformInfo = new Info
+                var platformInfo = new OpenApiInfo
                 {
                     Title = "VirtoCommerce Solution REST API documentation",
                     Version = "v1",
@@ -46,7 +45,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     {
                         Email = "support@virtocommerce.com",
                         Name = "Virto Commerce",
-                        Url =  new Uri("https://virtocommerce.com")
+                        Url = new Uri("https://virtocommerce.com")
                     },
                     License = new OpenApiLicense
                     {
@@ -75,17 +74,17 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.CustomSchemaIds(type => (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id /*?? type.FriendlyId()*/);
                 c.CustomOperationIds(apiDesc =>
                     apiDesc.TryGetMethodInfo(out var methodInfo) ? $"{((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerName}_{methodInfo.Name}" : null);
-                c.AddSecurityDefinition(oauth2SchemeName, new OAuth2Scheme
+                c.AddSecurityDefinition(oauth2SchemeName, new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Description = "OAuth2 Resource Owner Password Grant flow",                    
+                    Description = "OAuth2 Resource Owner Password Grant flow",
                     Flows = new OpenApiOAuthFlows()
                     {
                         Password = new OpenApiOAuthFlow()
                         {
                             TokenUrl = new Uri($"{httpContextAccessor.HttpContext?.Request?.Scheme}://{httpContextAccessor.HttpContext?.Request?.Host}/connect/token")
                         }
-                    },                    
+                    },
                 });
 
                 c.DocInclusionPredicate((docName, apiDesc) =>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -74,7 +75,7 @@ namespace VirtoCommerce.Platform.Core.Common
             {
                 var normalizedVersion = NormalizeVersionValue(versionValue);
                 var result = new SemanticVersion(normalizedVersion);
-                if (match.Groups.Any(x => x.Name.EqualsInvariant("Prerelease")))
+                if (((ICollection<Group>)match.Groups).Any(x => x.Name.EqualsInvariant("Prerelease")))
                 {
                     result.Prerelease = match.Groups["Prerelease"].Value;
                 }

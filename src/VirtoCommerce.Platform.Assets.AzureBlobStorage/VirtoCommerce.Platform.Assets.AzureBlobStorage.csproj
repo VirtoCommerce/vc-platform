@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <noWarn>1591</noWarn>
         <OutputType>Library</OutputType>
     </PropertyGroup>
@@ -15,7 +15,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
         <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     </ItemGroup>
 
