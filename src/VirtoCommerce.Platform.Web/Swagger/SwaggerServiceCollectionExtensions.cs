@@ -71,7 +71,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.OperationFilter<TagsFilter>();
                 c.MapType<object>(() => new OpenApiSchema { Type = "object" });
                 c.AddModulesXmlComments(services);
-                c.CustomSchemaIds(type => (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id /*?? type.FriendlyId()*/);
+                c.CustomSchemaIds(type => (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id ?? type.Name /*?? type.FriendlyId()*/);
                 c.CustomOperationIds(apiDesc =>
                     apiDesc.TryGetMethodInfo(out var methodInfo) ? $"{((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerName}_{methodInfo.Name}" : null);
                 c.AddSecurityDefinition(oauth2SchemeName, new OpenApiSecurityScheme

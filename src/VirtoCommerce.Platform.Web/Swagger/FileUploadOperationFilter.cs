@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace VirtoCommerce.Platform.Web.Swagger
@@ -25,16 +24,26 @@ namespace VirtoCommerce.Platform.Web.Swagger
                         Description = attr.Description,
                         In = ParameterLocation.Query,
                         Required = attr.Required,
-                        Schema = new OpenApiSchema() {Type = attr.Type }
+                        Schema = new OpenApiSchema() { Type = attr.Type }
                     });
                 }
 
                 if (requestAttributes.Any(x => x.Type == "file"))
                 {
                     // https://swagger.io/docs/specification/describing-request-body/file-upload/
-                    operation.RequestBody.Content = new Dictionary<string, OpenApiMediaType>();
-                    // TODO: (AK) ? Consider to correct content key depending on real MIME
-                    operation.RequestBody.Content.Add("multipart/form-data", new OpenApiMediaType() { Schema = new OpenApiSchema { Format = "binary", Type = "file" } });
+                    operation.RequestBody = new OpenApiRequestBody()
+                    {
+                        Content = { ["multipart/form-data"] =
+                            new OpenApiMediaType() {
+                                    Schema = new OpenApiSchema() { Type = "object",
+                                    Properties = { ["file"] = new OpenApiSchema() {
+                                            Description = "Select file", Type = "string", Format = "binary"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
                 }
             }
         }
