@@ -35,6 +35,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="2.2.5" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
         <PackageReference Include="OpenIddict" Version="2.0.1" />
         <PackageReference Include="OpenIddict.Core" Version="2.0.1" />
         <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="2.0.1" />

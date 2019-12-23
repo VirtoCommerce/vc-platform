@@ -52,6 +52,7 @@ using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.JsonConverters;
+using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Swagger;
 
@@ -87,6 +88,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
+            services.AddSingleton<LicenseProvider>();
 
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
