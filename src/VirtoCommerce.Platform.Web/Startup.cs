@@ -48,6 +48,7 @@ using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Azure;
+using VirtoCommerce.Platform.Web.Cors;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Infrastructure;
@@ -92,6 +93,9 @@ namespace VirtoCommerce.Platform.Web
 
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
+
+            services.AddCors();
+            services.AddOptions<CorsOptions>().Bind(Configuration.GetSection("Cors")).ValidateDataAnnotations();
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
                 {
@@ -373,7 +377,22 @@ namespace VirtoCommerce.Platform.Web
                 app.UseHsts();
             }
 
-            //Return all errors as Json response
+            // CORS
+            app.UseCors(builder => {
+                var corsOptions = Configuration.Get<CorsOptions>();                
+                if (corsOptions.AllowAnyOrigin == true)
+                {
+                    builder.AllowAnyOrigin();
+                }
+                else if (corsOptions.AllowedOrigins != null && corsOptions.AllowedOrigins.Any())
+                {
+                    builder.AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .WithOrigins(corsOptions.AllowedOrigins);
+                }                
+            });
+
+            // Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 
             // Engages the forwarded header support in the pipeline  (see description above)
