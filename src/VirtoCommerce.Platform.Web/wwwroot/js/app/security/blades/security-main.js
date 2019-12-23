@@ -1,11 +1,11 @@
-﻿angular.module('platformWebApp')
-.controller('platformWebApp.securityMainController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+﻿angular.module('platformWebApp').controller('platformWebApp.securityMainController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.selectedNodeId = null;
 
     function initializeBlade() {
         var entities = [
             { name: 'platform.blades.account-list.title', entityName: 'account', subtitle: 'platform.blades.account-list.subtitle' },
-            { name: 'platform.blades.role-list.title', entityName: 'role', subtitle: 'platform.blades.role-list.subtitle' }
+            { name: 'platform.blades.role-list.title', entityName: 'role', subtitle: 'platform.blades.role-list.subtitle' },
+            { name: 'platform.blades.oauthapps-list.title', entityName: 'oauthapps', subtitle: 'platform.blades.oauthapps-list.subtitle' }
         ];
         $scope.blade.currentEntities = entities;
         $scope.blade.isLoading = false;

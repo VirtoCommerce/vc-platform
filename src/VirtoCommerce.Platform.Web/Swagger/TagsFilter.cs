@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
-    public class TagsFilter : IDocumentFilter, IOperationFilter
+    public class TagsFilter : IOperationFilter
     {
         private readonly IModuleCatalog _moduleCatalog;
         private readonly ISettingsManager _settingManager;
@@ -18,27 +18,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
         {
             _moduleCatalog = moduleCatalog;
             _settingManager = settingManager;
-        }
-
-
-        public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
-        {
-            var tags = _moduleCatalog.Modules
-                .OfType<ManifestModuleInfo>()
-                .Select(x => new OpenApiTag
-                {
-                    Name = x.Title,
-                    Description = x.Description
-                })
-                .ToList();
-
-            tags.Add(new OpenApiTag
-            {
-                Name = "VirtoCommerce platform",
-                Description = "Platform functionality represent common resources and operations"
-            });
-
-            swaggerDoc.Tags = tags;
         }
 
         public void Apply(OpenApiOperation operation, OperationFilterContext context)

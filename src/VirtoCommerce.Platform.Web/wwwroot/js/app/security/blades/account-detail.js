@@ -1,9 +1,8 @@
-angular.module('platformWebApp')
-.controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings',
+angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings',
     function ($scope, bladeNavigationService, metaFormsService, accounts, roles, dialogService, settings) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:security:update';
-        blade.accountTypes = [];      
+        blade.accountTypes = [];
 
         blade.refresh = function (parentRefresh) {
             var entity = parentRefresh ? blade.currentEntity : blade.data;
@@ -13,9 +12,9 @@ angular.module('platformWebApp')
                     blade.parentBlade.refresh();
                 }
             },
-            function(error) {
-                 bladeNavigationService.setError(error, blade);
-            });
+                function (error) {
+                    bladeNavigationService.setError(error, blade);
+                });
         }
 
         function initializeBlade(data) {
@@ -23,9 +22,8 @@ angular.module('platformWebApp')
             blade.origEntity = data;
             isAccountlocked(blade.currentEntity.id).then(function (result) {
                 blade.accountLockedState = result.locked ? "Locked" : "Unlocked";
-            }); 
+            });
             blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
-            userStateCommand.updateName();
             blade.isLoading = false;
         };
 
@@ -56,9 +54,11 @@ angular.module('platformWebApp')
             bladeNavigationService.showBlade(newBlade, blade);
 
         };
+
         $scope.setForm = function (form) {
             $scope.formScope = form;
         }
+
         $scope.saveChanges = function () {
             blade.isLoading = true;
 
@@ -78,26 +78,7 @@ angular.module('platformWebApp')
 
         blade.headIcon = 'fa-key';
 
-        var userStateCommand = {
-            updateName: function () {
-                return this.name = (blade.currentEntity && blade.currentEntity.userState === 'Approved') ? 'platform.commands.reject-user' : 'platform.commands.approve-user';
-            },
-            // name: this.updateName(),
-            icon: 'fa fa-dot-circle-o',
-            executeMethod: function () {
-                if (blade.currentEntity.userState === 'Approved') {
-                    blade.currentEntity.userState = 'Rejected';
-                } else {
-                    blade.currentEntity.userState = 'Approved';
-                }
-                this.updateName();
-            },
-            canExecuteMethod: function () {
-                return true;
-            },
-            permission: blade.updatePermission
-        };
-
+       
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",
@@ -113,12 +94,10 @@ angular.module('platformWebApp')
                 icon: 'fa fa-undo',
                 executeMethod: function () {
                     angular.copy(blade.origEntity, blade.currentEntity);
-                    userStateCommand.updateName();
                 },
                 canExecuteMethod: isDirty,
                 permission: blade.updatePermission
             },
-            userStateCommand,
             {
                 name: "platform.commands.change-password",
                 icon: 'fa fa-refresh',

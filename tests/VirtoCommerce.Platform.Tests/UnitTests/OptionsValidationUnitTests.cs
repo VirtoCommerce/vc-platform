@@ -67,7 +67,6 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
                 .Configure(o =>
                 {
                     o.ConnectionString = null;
-                    o.CdnUrl = "wrong url";
                 })
                 .ValidateDataAnnotations();
 

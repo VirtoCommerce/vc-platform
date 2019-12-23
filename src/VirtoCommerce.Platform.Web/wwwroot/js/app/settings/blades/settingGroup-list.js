@@ -144,7 +144,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingGroupListCont
                             //$window.location.reload(); returns 400 bad request due server restarts
                         });
                     }
-                    catch{
+                    catch(err){
                     }
                     finally {
                         $window.location.reload();

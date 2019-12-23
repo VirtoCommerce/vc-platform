@@ -377,29 +377,6 @@
                     "clear-recent": "Очистить все последние"
                 }
             },
-            "account-api": {
-                "title": "API аккаунт",
-                "title-new": "Новый API аккаунт",
-                "labels": {
-                    "is-active": "Активный",
-                    "account-name": "Имя Аккаунта",
-                    "account-type": "Тип аккаунта",
-                    "app-id": "ID приложения",
-                    "secret-key": "Секретный ключ"
-                },
-                "placeholders": {
-                    "account-name": "Введите имя",
-                    "account-type": "Выбрать...",
-                    "secret-key": "Создать секретный ключ",
-                    "app-id": "Создать..."
-                }
-            },
-            "account-api-list": {
-                "labels": {
-                    "is-active": "Активный",
-                    "name": "Имя"
-                }
-            },
             "account-changePassword": {
                 "labels": {
                     "current-password": "Текущий пароль",

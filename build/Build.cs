@@ -54,13 +54,14 @@ class Build : NukeBuild
     [Parameter("ApiKey for the specified source")] readonly string ApiKey;
     [Parameter] readonly string Source = @"https://api.nuget.org/v3/index.json";
 
-    [Parameter] static string GlobalModuleIgnoreFileUrl = @"https://raw.githubusercontent.com/VirtoCommerce/vc-platform-core/release/3.0.0/module.ignore";
+    [Parameter] static string GlobalModuleIgnoreFileUrl = @"https://raw.githubusercontent.com/VirtoCommerce/vc-platform/release/3.0.0/module.ignore";
 
     [Parameter] readonly string SonarAuthToken = "";
     [Parameter] readonly string SonarUrl = "https://sonar.virtocommerce.com";
 
     [Parameter("GitHub user for release creation")] readonly string GitHubUser;
     [Parameter("GitHub user security token for release creation")] readonly string GitHubToken;
+    [Parameter("True - prerelease, False - release")] readonly bool PreRelease;
 
     [Parameter("Path to folder with  git clones of modules repositories")] readonly AbsolutePath ModulesFolderPath;
 
@@ -137,6 +138,9 @@ class Build : NukeBuild
                   .SetPackageRequireLicenseAcceptance(false)
                   .SetDescription(ModuleManifest.Description)
                   .SetCopyright(ModuleManifest.Copyright);
+
+              //Temporary disable GitVersionTask for module. Because version is taken from module.manifest.
+              settings = settings.SetProperty("DisableGitVersionTask", false); 
           }
           DotNetPack(settings);
       });
@@ -372,17 +376,18 @@ class Build : NukeBuild
     Target Release => _ => _
          .DependsOn(Clean, Compress)
          .Requires(() => GitHubUser, () => GitHubToken)
-         .Requires(() => GitRepository.IsOnReleaseBranch() && GitTasks.GitHasCleanWorkingCopy())
+         /*.Requires(() =>   GitRepository.IsOnReleaseBranch() && GitTasks.GitHasCleanWorkingCopy()) */
          .Executes(() =>
          {
              var tag = "v" + (IsModule ? ModuleSemVersion : GitVersion.SemVer);
-             FinishReleaseOrHotfix(tag);
+             //FinishReleaseOrHotfix(tag);
 
              void RunGitHubRelease(string args)
              {
                  ProcessTasks.StartProcess("github-release", args, RootDirectory).AssertZeroExitCode();
              }
-             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} "); //-c branch -d description
+             var prereleaseArg = PreRelease ? "--pre-release" : "";
+             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} {prereleaseArg}"); //-c branch -d description
              RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
          });
 

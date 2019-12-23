@@ -1,12 +1,17 @@
+using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
 using Hangfire;
 using Hangfire.Common;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,6 +24,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -78,8 +84,8 @@ namespace VirtoCommerce.Platform.Web
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
             });
-
-            PlatformVersion.CurrentVersion = SemanticVersion.Parse(Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion);
+            //Get platform version from GetExecutingAssembly
+            PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
@@ -118,7 +124,7 @@ namespace VirtoCommerce.Platform.Web
                         // Expose any JSON serialization exception as HTTP error
                         throw new JsonException(args.ErrorContext.Error.Message);
                     };
-                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 }
             )
@@ -152,7 +158,7 @@ namespace VirtoCommerce.Platform.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var authBuilder = services.AddAuthentication().AddCookie();
+            var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCookie();
             services.AddSecurityServices(options =>
             {
                 options.NonEditableUsers = new[] { "admin" };
@@ -181,6 +187,37 @@ namespace VirtoCommerce.Platform.Web
                 options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor;
             });
 
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+            authBuilder.AddJwtBearer(options =>
+                    {
+                        options.Authority = Configuration["Auth:Authority"];
+                        options.Audience = Configuration["Auth:Audience"];
+
+                        if (HostingEnvironment.IsDevelopment())
+                        {
+                            options.RequireHttpsMetadata = false;
+                        }
+
+                        options.IncludeErrorDetails = true;
+
+                        X509SecurityKey publicKey = null;
+                        if (!Configuration["Auth:PublicCertPath"].IsNullOrEmpty())
+                        {
+                            var publicCert = new X509Certificate2(Configuration["Auth:PublicCertPath"]);
+                            publicKey = new X509SecurityKey(publicCert);
+                        }
+
+                        options.TokenValidationParameters = new TokenValidationParameters()
+                        {
+                            NameClaimType = OpenIdConnectConstants.Claims.Subject,
+                            RoleClaimType = OpenIdConnectConstants.Claims.Role,
+                            ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = publicKey
+                        };
+                    });
+
             var azureAdSection = Configuration.GetSection("AzureAd");
 
             if (azureAdSection.GetChildren().Any())
@@ -203,7 +240,7 @@ namespace VirtoCommerce.Platform.Web
                 }
             }
 
-            services.Configure<Core.Security.AuthorizationOptions>(Configuration.GetSection("Authorization"));
+            services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
@@ -227,7 +264,8 @@ namespace VirtoCommerce.Platform.Web
                     // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
                     // can enable the other flows if you need to support implicit or client credentials.
                     options.AllowPasswordFlow()
-                        .AllowRefreshTokenFlow();
+                        .AllowRefreshTokenFlow()
+                        .AllowClientCredentialsFlow();
 
                     options.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
                     options.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
@@ -247,7 +285,6 @@ namespace VirtoCommerce.Platform.Web
                     // an external authentication provider like Google, Facebook or Twitter.
                     options.EnableRequestCaching();
 
-                    options.UseReferenceTokens();
                     options.DisableScopeValidation();
 
                     // During development, you can disable the HTTPS requirement.
@@ -258,11 +295,12 @@ namespace VirtoCommerce.Platform.Web
 
                     // Note: to use JWT access tokens instead of the default
                     // encrypted format, the following lines are required:
-                    //
-                    //options.UseJsonWebTokens();
-                    //TODO: Replace to X.509 certificate
-                    //options.AddEphemeralSigningKey();
-                }).AddValidation(options => options.UseReferenceTokens());
+                    options.UseJsonWebTokens();
+
+                    var bytes = File.ReadAllBytes(Configuration["Auth:PrivateKeyPath"]);
+                    var privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+                    options.AddSigningCertificate(privateKey);
+                });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
 
@@ -289,14 +327,15 @@ namespace VirtoCommerce.Platform.Web
             // Default password validation service implementation
             services.AddScoped<IPasswordCheckService, PasswordCheckService>();
 
-            var modulesDiscoveryPath = Path.GetFullPath("Modules");
-            services.AddModules(mvcBuilder, options =>
-            {
-                options.DiscoveryPath = modulesDiscoveryPath;
-                options.ProbingPath = "App_Data/Modules";
-            });
+            services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
+                    .PostConfigure(options =>
+                     {
+                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "Modules");
+                     })
+                    .ValidateDataAnnotations();
+            services.AddModules(mvcBuilder);
 
-            services.Configure<ExternalModuleCatalogOptions>(Configuration.GetSection("ExternalModules"));
+            services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
 
             //Add SignalR for push notifications

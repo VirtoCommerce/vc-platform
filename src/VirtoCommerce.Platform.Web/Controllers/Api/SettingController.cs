@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
@@ -10,7 +11,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Produces("application/json")]
     [Route("api/platform/settings")]
-    [ApiExplorerSettings(IgnoreApi = true)]
     public class SettingController : Controller
     {
         private readonly ISettingsManager _settingsManager;
@@ -28,6 +28,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("")]
+        [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
         public async Task<ActionResult<ObjectSettingEntry>> GetAllGlobalSettings()
         {
             var result = await _settingsManager.GetObjectSettingsAsync(_settingsManager.AllRegisteredSettings.Select(x => x.Name));
@@ -74,6 +75,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("")]
         [Authorize(PlatformConstants.Security.Permissions.SettingUpdate)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdateAsync([FromBody] ObjectSettingEntry[] objectSettings)
         {
             using (await AsyncLock.GetLockByKey("settings").LockAsync())

@@ -1,4 +1,4 @@
-﻿{
+{
   "platform": {
     "commands": {
       "add": "Add",
@@ -11,6 +11,7 @@
       "close": "Close",
       "confirm": "Confirm",
       "copy-link": "Copy link",
+      "copy": "Copy", 
       "create": "Create",
       "cut": "Cut",
       "delete": "Delete",
@@ -54,7 +55,6 @@
       "stop-sending": "Stop sending",
       "set-active": "Set Active",
       "reject-user": "Reject user",
-      "approve-user": "Approve user",
       "change-password": "Change password",
       "unlock-account": "Unlock account",
       "today": "Today",
@@ -136,6 +136,11 @@
             "short-text-dictionary-multilang": "Select value",
             "short-text-dictionary-multivalue-multilang": "Select value"
         }
-    }
+    },
+    "validators": {
+        "uriWithoutQuery": {
+            "error": "Invalid uri format. Make shure uri dosn't have query params."
+        }
+    } 
   }
 }

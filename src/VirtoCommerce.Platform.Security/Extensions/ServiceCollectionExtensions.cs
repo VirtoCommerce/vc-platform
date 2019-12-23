@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Security.Extensions
             services.TryAddScoped<UserManager<ApplicationUser>, CustomUserManager>();
             services.AddSingleton<Func<UserManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<UserManager<ApplicationUser>>());
             //Use custom ClaimsPrincipalFactory to add system roles claims for user principal
-            services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserCalimsPrincipalFactory>();
+            services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserClaimsPrincipalFactory>();
 
             if (setupAction != null)
             {
