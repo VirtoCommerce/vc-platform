@@ -109,6 +109,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             return x;
         };
 
+        $scope.showVersionInfo = function () {
+            $state.go('workspace.systemInfo');
+        };
+
     }])
     .factory('platformWebApp.httpErrorInterceptor', ['$q', '$rootScope', '$injector', 'platformWebApp.authDataStorage', function ($q, $rootScope, $injector, authDataStorage) {
         var httpErrorInterceptor = {};

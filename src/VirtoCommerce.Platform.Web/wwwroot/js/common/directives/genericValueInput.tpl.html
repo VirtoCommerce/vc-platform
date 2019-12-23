@@ -133,46 +133,42 @@
 
 </script>
 <script type="text/ng-template" id="dShortText-multilang.html">
-    <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
-        <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
-        <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
-        <input ng-required="currentEntity.isRequired"
-               ng-readonly="currentEntity.isReadOnly"
-               ng-model="propValue.value"
-               placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">
+    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">        
+            <label class="lang-code">{{propValue.locale}}</label>
+            <input ng-required="currentEntity.isRequired"
+                   ng-readonly="currentEntity.isReadOnly"
+                   ng-model="propValue.value"
+                   placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">        
     </div>
 </script>
 <script type="text/ng-template" id="dLongText-multilang.html">
-    <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
-        <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
-        <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
-        <textarea ng-required="currentEntity.isRequired"
-                  ng-readonly="currentEntity.isReadOnly"
-                  ng-model="propValue.value"
-                  placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
+    <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">        
+            <label>{{propValue.locale}}</label>
+            <textarea ng-required="currentEntity.isRequired"
+                      ng-readonly="currentEntity.isReadOnly"
+                      ng-model="propValue.value"
+                      placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />        
     </div>
 </script>
 <script type="text/ng-template" id="dCode-multilang.html">
-    <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
-        <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
-        <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
-        <ui-codemirror ng-required="currentEntity.isRequired"
-                       ng-readonly="currentEntity.isReadOnly"
-                       ng-model="propValue.value"
-                       ui-codemirror-opts="editorOptions"></ui-codemirror>
+    <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">        
+            <label>{{propValue.locale}}</label>
+            <ui-codemirror ng-required="currentEntity.isRequired"
+                           ng-readonly="currentEntity.isReadOnly"
+                           ng-model="propValue.value"
+                           ui-codemirror-opts="editorOptions"></ui-codemirror>        
     </div>
 </script>
 
 <script type="text/ng-template" id="dShortText-multivalue-multilang.html">
-    <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
-        <span ng-if="propValue.locale.length>2" class="flag flag-{{propValue.locale.substr(3).toLowerCase()}}"></span>
-        <span ng-if="propValue.locale.length<=2" class="langCode">{{propValue.locale.toUpperCase()}}</span>
-        <tags-input ng-model="propValue.values"
-                    min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
-                    min-length="1"
-                    display-property="value"
-                    placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multivalue-multilang' | translate}}">
-        </tags-input>
+    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">        
+            <label class="lang-code">{{propValue.locale}}</label>
+            <tags-input ng-model="propValue.values"
+                        min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
+                        min-length="1"
+                        display-property="value"
+                        placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multivalue-multilang' | translate}}">
+            </tags-input>        
     </div>
 </script>
 <script type="text/ng-template" id="dShortText-dictionary-multilang.html">
@@ -185,9 +181,7 @@
         </ui-select>
     </div>
     <div ng-repeat="data in context.currentPropValues[0].displayNames | orderBy: 'locale'" style="margin:5px 0;">
-        <span ng-if="data.locale.length>2" class="flag flag-{{data.locale.substr(3, 2).toLowerCase()}}"></span>
-        <span ng-if="data.locale.length<=2" class="langCode">{{data.locale.toUpperCase()}}</span>
-        {{data.name}}
+        <label class="lang-code">{{data.locale}}</label> {{data.name}}
     </div>
 </script>
 <script type="text/ng-template" id="dShortText-dictionary-multivalue-multilang.html">

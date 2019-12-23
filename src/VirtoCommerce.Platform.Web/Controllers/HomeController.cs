@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -18,12 +17,14 @@ namespace VirtoCommerce.Platform.Web.Controllers
         private readonly PlatformOptions _platformOptions;
         private readonly WebAnalyticsOptions _webAnalyticsOptions;
         private readonly IHostingEnvironment _hostEnv;
+        private readonly LicenseProvider _licenseProvider;
 
-        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, IHostingEnvironment hostEnv)
+        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, IHostingEnvironment hostEnv, LicenseProvider licenseProvider)
         {
             _platformOptions = platformOptions.Value;
             _webAnalyticsOptions = webAnalyticsOptions.Value;
             _hostEnv = hostEnv;
+            _licenseProvider = licenseProvider;
         }
 
         public ActionResult Index()
@@ -36,7 +37,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 WebAnalyticsOptions = _webAnalyticsOptions
             };
 
-            var license = LoadLicense();
+            var license = _licenseProvider.GetLicense();
 
             if (license != null)
             {
@@ -86,23 +87,6 @@ namespace VirtoCommerce.Platform.Web.Controllers
             return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private License LoadLicense()
-        {
-            License license = null;
 
-            var licenseFilePath = Path.GetFullPath(_platformOptions.LicenseFilePath);
-            if (System.IO.File.Exists(licenseFilePath))
-            {
-                var rawLicense = System.IO.File.ReadAllText(licenseFilePath);
-                license = License.Parse(rawLicense, Path.GetFullPath(_platformOptions.LicensePublicKeyPath));
-
-                if (license != null)
-                {
-                    license.RawLicense = null;
-                }
-            }
-
-            return license;
-        }
     }
 }

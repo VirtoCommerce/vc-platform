@@ -8,7 +8,7 @@
     <ItemGroup>
         <PackageReference Include="GitVersionTask" Version="5.0.1">
           <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     </ItemGroup>
