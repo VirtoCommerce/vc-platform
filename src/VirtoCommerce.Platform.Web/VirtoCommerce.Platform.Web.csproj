@@ -17,11 +17,12 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.6.22" />
-        <PackageReference Include="Hangfire.MemoryStorage" Version="1.6.0" />
-        <PackageReference Include="HangFire.SqlServer" Version="1.6.22" />
-        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.0-beta3" />
-        <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.11.0-beta2" />
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.7.8" />
+        <PackageReference Include="HangFire.Core" Version="1.7.8" />
+        <PackageReference Include="Hangfire.MemoryStorage" Version="1.6.3" />
+        <PackageReference Include="HangFire.SqlServer" Version="1.7.8" />
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.12.0" />
+        <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.12.0" />
         <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.2.0" />
@@ -31,13 +32,13 @@
         <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
         <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="2.1.0" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-        <PackageReference Include="OpenIddict" Version="2.0.0" />
-        <PackageReference Include="OpenIddict.Core" Version="2.0.0" />
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="2.0.0" />
+        <PackageReference Include="OpenIddict" Version="2.0.1" />
+        <PackageReference Include="OpenIddict.Core" Version="2.0.1" />
+        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="2.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />
         <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
