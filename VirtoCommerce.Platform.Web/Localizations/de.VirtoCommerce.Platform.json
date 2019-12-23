@@ -20,6 +20,9 @@
       "bread-crumb-top": "Alle"
     },
     "blades": {
+      "system-info": {
+        "title": "Plattform Informationen"
+      },
       "asset-list": {
         "title": "Medien",
         "labels": {
@@ -350,7 +353,8 @@
           "icon": "Symbol",
           "module": "Modul",
           "version": "Version",
-          "author": "Thema"
+          "author": "Thema",
+          "installed": "Installierte Module"
         }
       },
       "history": {
@@ -563,7 +567,7 @@
       },
       "new-account-wizard": {
         "labels": {
-          "email":  "E-mail",
+          "email": "E-mail",
           "login": "Einloggen",
           "password": "Passwort",
           "repeat-password": "Passwort wiederholen",
@@ -638,7 +642,8 @@
         "license-absent": "Common License",
         "license-present": "{{type}} Lizenz",
         "community": "Sie nutzen die Community Edition. klicken Sie hier um eine kommerzielle Lizenz zu beantragen.",
-        "expired": "Ihre Lizenz ist am {{expirationDate | amParse | date}} abgelaufen, bitte erneuern."
+        "expired": "Ihre Lizenz ist am {{expirationDate | amParse | date}} abgelaufen, bitte erneuern.",
+        "expiration-date": "Gültig bis"
       },
       "modulesAutoInstallation": {
         "labels": {

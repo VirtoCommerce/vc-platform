@@ -31,7 +31,7 @@ angular.module('platformWebApp')
                                 function (x) {
                                     $scope.loginProgress = false;
                                     if (angular.isDefined(x.status)) {
-                                        if (x.status == 401) {
+                                        if (x.status == 400 || x.status == 401) {
                                             $scope.authError = 'The login or password is incorrect.';
                                         } else {
                                             $scope.authError = 'Authentication error (code: ' + x.status + ').';
