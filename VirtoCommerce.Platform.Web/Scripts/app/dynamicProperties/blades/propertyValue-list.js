@@ -42,10 +42,10 @@
     };
 
     function refreshDynamicProperties(data)  { 
-        _.each(data, function (x) {
-            var existProperty = _.find(blade.currentEntity.dynamicProperties, function (y) { return y.id == x.id; });
+        _.each(data, function (dataItem) {
+            var existProperty = _.find(blade.currentEntity.dynamicProperties, function (property) { return property.id == dataItem.id; });
             if (!angular.isDefined(existProperty)) {
-                blade.currentEntity.dynamicProperties.push(x);
+                blade.currentEntity.dynamicProperties.push(dataItem);
             }
         });
     }
