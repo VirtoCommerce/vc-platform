@@ -9,46 +9,48 @@
 
     blade.refresh = function () {
         blade.data = blade.currentEntity;
-        var rawProperties = angular.copy(blade.currentEntity.dynamicProperties);
+        dynamicPropertiesApi.getAll({typeName: blade.currentEntity.objectType}, function (response) {
+            var rawProperties = response;
 
-        _.each(rawProperties, function (x) {
-            if (x.values) {
-                x.values.sort(function (a, b) {
-                    return a.value && b.value
-                        ? (a.value.name
-                            ? a.value.name.localeCompare(b.value.name)
-                            : angular.isString(a.value) && angular.isString(b.value)
-                                ? a.value.localeCompare(b.value)
-                                : a.value < b.value ? -1 : a.value > b.value ? 1 : 0)
-                        : -1;
-                });
-            }
-        });
+            _.each(rawProperties, function(property) {
+                property.values = [];
+                var filteredProperty = _.find(blade.currentEntity.dynamicProperties, function (item) { return item.id === property.id; });
+                if (filteredProperty) {
+                    property.values = filteredProperty.values;
+                }
+            })
 
-        if (_.any(rawProperties, function (x) { return x.isMultilingual; })) {
-            settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
-                $scope.languages = data;
-
-                // wait for va-generic-value-input to initialize empty values and repeat init
-                $timeout(function () {
-                    blade.origEntity = angular.copy(blade.currentEntities);
-                });
+            _.each(rawProperties, function (x) {
+                if (x.values) {
+                    x.values.sort(function (a, b) {
+                        return a.value && b.value
+                            ? (a.value.name
+                                ? a.value.name.localeCompare(b.value.name)
+                                : angular.isString(a.value) && angular.isString(b.value)
+                                    ? a.value.localeCompare(b.value)
+                                    : a.value < b.value ? -1 : a.value > b.value ? 1 : 0)
+                            : -1;
+                    });
+                }
             });
-        }
 
-        blade.origEntity = rawProperties;
-        blade.currentEntities = angular.copy(rawProperties);
-        blade.isLoading = false;
-    };
+            if (_.any(rawProperties, function (x) { return x.isMultilingual; })) {
+                settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
+                    $scope.languages = data;
 
-    function refreshDynamicProperties(data)  { 
-        _.each(data, function (dataItem) {
-            var existProperty = _.find(blade.currentEntity.dynamicProperties, function (property) { return property.id == dataItem.id; });
-            if (!angular.isDefined(existProperty)) {
-                blade.currentEntity.dynamicProperties.push(dataItem);
+                    // wait for va-generic-value-input to initialize empty values and repeat init
+                    $timeout(function () {
+                        blade.origEntity = angular.copy(blade.currentEntities);
+                    });
+                });
             }
-        });
-    }
+
+            blade.origEntity = rawProperties;
+            blade.currentEntities = angular.copy(rawProperties);
+            blade.isLoading = false;
+        })
+        
+    };
 
     function isDirty() {
         return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
@@ -108,7 +110,7 @@
 		            objectType: blade.data.objectType,
 		            controller: 'platformWebApp.dynamicPropertyListController',
                     template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html',
-                    parentRefresh: refreshDynamicProperties
+                    parentRefresh: blade.refresh
 		        };
 		        bladeNavigationService.showBlade(newBlade, blade);
 		    },
