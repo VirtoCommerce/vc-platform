@@ -20,9 +20,9 @@
                 }
             })
 
-            _.each(rawProperties, function (x) {
-                if (x.values) {
-                    x.values.sort(function (a, b) {
+            _.each(rawProperties, function (rawProperty) {
+                if (rawProperty.values) {
+                    rawProperty.values.sort(function (a, b) {
                         return a.value && b.value
                             ? (a.value.name
                                 ? a.value.name.localeCompare(b.value.name)
@@ -34,7 +34,7 @@
                 }
             });
 
-            if (_.any(rawProperties, function (x) { return x.isMultilingual; })) {
+            if (_.any(rawProperties, function (rawProperty) { return rawProperty.isMultilingual; })) {
                 settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
                     $scope.languages = data;
 
