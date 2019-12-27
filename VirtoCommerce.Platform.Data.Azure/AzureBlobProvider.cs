@@ -358,7 +358,7 @@ namespace VirtoCommerce.Platform.Data.Azure
 
         private BlobInfo ConvertCloudBlobToBlobInfo(ICloudBlob cloudBlob)
         {
-            var relativeUrl = cloudBlob.Uri.LocalPath; // blobInfo.RelativeUrl = blobInfo.Url.Replace(_cloudBlobClient.BaseUri.ToString(), string.Empty);
+            var relativeUrl = cloudBlob.Uri.LocalPath;
             var absoluteUrl = GetAbsoluteUrl(cloudBlob.Uri.PathAndQuery);
             var fileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString()));
             var contentType = MimeTypeResolver.ResolveContentType(fileName);
