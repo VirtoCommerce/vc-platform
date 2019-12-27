@@ -40,7 +40,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     Title = "VirtoCommerce Solution REST API documentation",
                     Version = "v1",
                     TermsOfService = new Uri("https://virtocommerce.com/terms"),
-                    Description = "For this sample, you can use the",
+                    Description = "For this sample, you can use the key to satisfy the authorization filters.",
                     Contact = new OpenApiContact
                     {
                         Email = "support@virtocommerce.com",

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -16,71 +16,43 @@
 </head>
 
 <body class="swagger-section">
-    <div id="header">
-        <div class="swagger-ui-wrap">
-            <a id="logo" href="http://virtocommerce.com">
-                Virto Commerce
-            </a>
-            <form id='api_selector'>
-                <div class='input'><input placeholder="http://localhost/admin" id="input_baseUrl" name="baseUrl" type="text"/></div>
-                <div class='input'><a id="explore" class="header__btn" href="#" data-sw-translate>Explore</a></div>
-            </form>
-            
-        </div>
-    </div>
 
-    <div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
-    <div class="swagger-ui-wrap">
-        <div class="info" id="api_info">
-            <div class="info_title">VirtoCommerce Solution REST API documentation</div>
-            <div class="info_description markdown">
-                <p>For this sample, you can use the key to satisfy the authorization filters.</p>
-            </div>
-            
-            <div class="info_name">Created by Virto Commerce</div>
-            <div class="info_url">See more at <a href="http://virtocommerce.com">http://virtocommerce.com</a></div>
-            <div class="info_email"><a href="mailto:support@virtocommerce.com?subject=VirtoCommerce Solution REST API documentation">Contact the developer</a></div>
-            <div class="info_license"><a href="http://virtocommerce.com/opensourcelicense">Virto Commerce Open Software License 3.0</a></div>
-        </div>
-    </div>
-    <div id="swagger-ui-container" class="swagger-ui-wrap">
-        
-    </div>
+    <!-- TODO: need to customize topbar https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1436 -->
+    <div id="swagger-ui"></div>
 
-    <script src="./swagger-ui-bundle.js"> </script>
-    <script src="./swagger-ui-standalone-preset.js"> </script>
+    <!-- Workaround for https://github.com/swagger-api/swagger-editor/issues/1371 -->
     <script>
-        window.onload = function() {
+        if (window.navigator.userAgent.indexOf("Edge") > -1) {
+            console.log("Removing native Edge fetch in favor of swagger-ui's polyfill")
+            window.fetch = undefined;
+        }
+    </script>
+
+    <script src="./swagger-ui-bundle.js"></script>
+    <script src="./swagger-ui-standalone-preset.js"></script>
+    <script>
+        window.onload = function () {
             var configObject = JSON.parse('%(ConfigObject)');
             var oauthConfigObject = JSON.parse('%(OAuthConfigObject)');
 
             // Apply mandatory parameters
-            configObject.dom_id = "#swagger-ui-container";
-            configObject.url = configObject.urls[0].url; // BaseLayout (default) requires singular url
-            //configObject.presets = [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset];
-            //configObject.layout = "StandaloneLayout";
-            configObject.tagsSorter = 'alpha';
-            configObject.filter = true;
+            configObject.dom_id = "#swagger-ui";
+            configObject.presets = [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset];
+            configObject.layout = "StandaloneLayout";
 
-            // Use swagger-ui plugin system to hide the info component
-            // See https://github.com/swagger-api/swagger-ui/blob/master/docs/customization/overview.md
-            configObject.plugins = [
-                function (system) {
-                    return {
-                        components: {
-                            info: function () {
-                                return null;
-                            }
-                        }
-                    }
-                }
-            ];
+            // If oauth2RedirectUrl isn't specified, use the built-in default
+            if (!configObject.hasOwnProperty("oauth2RedirectUrl"))
+                configObject.oauth2RedirectUrl = window.location.href.replace("index.html", "oauth2-redirect.html").split('#')[0];
 
-            // Build a system
+            // Begin Swagger UI call region
+
             const ui = SwaggerUIBundle(configObject);
 
-            // Apply OAuth config
             ui.initOAuth(oauthConfigObject);
+
+            // End Swagger UI call region
+
+            window.ui = ui
         }
     </script>
 </body>
