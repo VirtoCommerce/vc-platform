@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         private readonly IWebHostEnvironment _hostEnv;
         private readonly LicenseProvider _licenseProvider;
 
-        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, IWebHostEnvironment hostEnv)
+        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, IWebHostEnvironment hostEnv, LicenseProvider licenseProvider)
         {
             _platformOptions = platformOptions.Value;
             _webAnalyticsOptions = webAnalyticsOptions.Value;
