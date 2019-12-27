@@ -1,7 +1,7 @@
 <va-main-menu ng-model="mainMenu" on-menu-changed="onMainMenuChanged(mainMenu)">
     <div class="logo">
         <div class="logo-img">Virtocommerce</div>
-        <div class="logo-version">{{platformVersion}}</div>
+        <a class="logo-version" href="" ng-click="showVersionInfo()">{{platformVersion}}</a>
     </div>
 </va-main-menu>
 <article class="cnt" role="main">

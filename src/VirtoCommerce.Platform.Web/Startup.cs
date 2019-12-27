@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
@@ -54,6 +55,7 @@ using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.JsonConverters;
+using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Swagger;
 
@@ -89,6 +91,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
+            services.AddSingleton<LicenseProvider>();
 
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
@@ -298,7 +301,17 @@ namespace VirtoCommerce.Platform.Web
                     options.UseJsonWebTokens();
 
                     var bytes = File.ReadAllBytes(Configuration["Auth:PrivateKeyPath"]);
-                    var privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+                    X509Certificate2 privateKey;
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        // https://github.com/dotnet/corefx/blob/release/2.2/Documentation/architecture/cross-platform-cryptography.md
+                        // macOS cannot load certificate private keys without a keychain object, which requires writing to disk. Keychains are created automatically for PFX loading, and are deleted when no longer in use. Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
+                        privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet);
+                    }
+                    else
+                    {
+                        privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+                    }
                     options.AddSigningCertificate(privateKey);
                 });
 
@@ -322,7 +335,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddAuthorization();
             // register the AuthorizationPolicyProvider which dynamically registers authorization policies for each permission defined in module manifest
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
-            //Platform authorization handler for policies based on permissions 
+            //Platform authorization handler for policies based on permissions
             services.AddSingleton<IAuthorizationHandler, DefaultPermissionAuthorizationHandler>();
             // Default password validation service implementation
             services.AddScoped<IPasswordCheckService, PasswordCheckService>();
