@@ -22,13 +22,13 @@
                     <label>{{ 'platform.blades.property-dictionary.labels.localized-values' | translate }}</label>
                     <div class="form-group">
                         <div class="form-input __langs" ng-repeat="data in newValue.displayNames | orderBy: 'locale'">
-                            <ng-form name="valuesForm">                                
+                            <ng-form name="valuesForm">
                                     <label class="lang-code">{{data.locale}}</label>
                                     <input ng-model="data.name" class="form-control" ui-validate=" 'dictValueValidator($value, data)' " name="mValue" placeholder="{{ 'platform.blades.property-dictionary.placeholders.localized-values' | translate }}" />
                                     <div class="form-error" ng-if="valuesForm.mValue.$dirty && valuesForm.mValue.$invalid">
                                         <span ng-if="valuesForm.mValue.$error.required">{{ 'platform.blades.property-dictionary.validations.localized-values-required' | translate }}</span>
                                         <span ng-if="valuesForm.mValue.$error.validator">{{ 'platform.blades.property-dictionary.validations.localized-values' | translate }}</span>
-                                    </div>                               
+                                    </div>
                             </ng-form>
                         </div>
                     </div>

@@ -139,25 +139,25 @@
             <input ng-required="currentEntity.isRequired"
                    ng-readonly="currentEntity.isReadonly"
                    ng-model="propValue.value"
-                   placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">        
+                   placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">
     </div>
 </script>
 <script type="text/ng-template" id="dLongText-multilang.html">
-    <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">        
+    <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
             <label>{{propValue.locale}}</label>
             <textarea ng-required="currentEntity.isRequired"
                       ng-readonly="currentEntity.isReadonly"
                       ng-model="propValue.value"
-                      placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />        
+                      placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
     </div>
 </script>
 <script type="text/ng-template" id="dCode-multilang.html">
-    <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">        
+    <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
             <label>{{propValue.locale}}</label>
             <ui-codemirror ng-required="currentEntity.isRequired"
                            ng-readonly="currentEntity.isReadonly"
                            ng-model="propValue.value"
-                           ui-codemirror-opts="editorOptions"></ui-codemirror>        
+                           ui-codemirror-opts="editorOptions"></ui-codemirror>
     </div>
 </script>
 
@@ -169,7 +169,7 @@
                         min-length="1"
                         display-property="value"
                         placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multivalue-multilang' | translate}}">
-            </tags-input>        
+            </tags-input>
     </div>
 </script>
 <script type="text/ng-template" id="dShortText-dictionary-multilang.html">
@@ -181,8 +181,8 @@
             </ui-select-choices>
         </ui-select>
     </div>
-    <div ng-repeat="data in context.currentPropValues[0].displayNames | orderBy: 'locale'" style="margin:5px 0;">        
-            <label class="lang-code">{{data.locale}}</label> {{data.name}}        
+    <div ng-repeat="data in context.currentPropValues[0].displayNames | orderBy: 'locale'" style="margin:5px 0;">
+            <label class="lang-code">{{data.locale}}</label> {{data.name}}
     </div>
 </script>
 <script type="text/ng-template" id="dShortText-dictionary-multivalue-multilang.html">
