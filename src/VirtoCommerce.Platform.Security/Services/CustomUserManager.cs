@@ -195,6 +195,8 @@ namespace VirtoCommerce.Platform.Security.Services
             return result;
         }
 
+
+
         /// <summary>
         /// Load detailed user information: Roles, external logins, claims (permissions)
         /// </summary>
