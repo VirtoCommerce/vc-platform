@@ -104,7 +104,6 @@ namespace VirtoCommerce.Platform.Web
                     {
                         noContentFormatter.TreatNullValueAsNoContent = false;
                     }
-                    mvcOptions.EnableEndpointRouting = false;
                 }
             )
             .AddNewtonsoftJson(options =>
@@ -130,8 +129,7 @@ namespace VirtoCommerce.Platform.Web
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 }
-            )
-            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            );
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
@@ -420,6 +418,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+            app.UseRouting();
             app.UseCookiePolicy();
 
             //Handle all requests like a $(Platform) and Modules/$({ module.ModuleName }) as static files in correspond folder
@@ -442,12 +441,13 @@ namespace VirtoCommerce.Platform.Web
             app.UseDefaultFiles();
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
             //Force migrations
@@ -479,7 +479,7 @@ namespace VirtoCommerce.Platform.Web
             app.UsePlatformPermissions();
 
             //Setup SignalR hub
-            app.UseSignalR(routes =>
+            app.UseEndpoints(routes =>
             {
                 routes.MapHub<PushNotificationHub>("/pushNotificationHub");
             });
@@ -491,7 +491,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseSwagger();
 
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
-            JobHelper.SetSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
+            GlobalConfiguration.Configuration.UseSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
         }
     }
 }
