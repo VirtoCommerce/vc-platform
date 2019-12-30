@@ -18,21 +18,22 @@ namespace VirtoCommerce.Platform.Web.Swagger
             {
                 var key = ((int)HttpStatusCode.OK).ToString();
                 var responseSchema = new OpenApiSchema { Format = "binary", Type = "file" };
-                
-                if (operation.Responses.TryGetValue(key, out var response))
+
+                if (operation.Responses == null)
                 {
-                    response.Content.FirstOrDefault().Value.Schema = responseSchema;
-                    return;
+                    operation.Responses = new OpenApiResponses();
                 }
 
-                var openApiResponse = new OpenApiResponse
+                if (!operation.Responses.TryGetValue(key, out OpenApiResponse response))
                 {
-                    Description = "OK",
-                    Content = new Dictionary<string, OpenApiMediaType>()
-                };
+                    response = new OpenApiResponse();
+                }
+
+                response.Description = "OK";
+                response.Content = new Dictionary<string, OpenApiMediaType>();
+
                 // TODO: (AK) ? Consider to correct content key depending on real MIME
-                openApiResponse.Content.Add("multipart/form-data", new OpenApiMediaType() { Schema = responseSchema });
-                operation.Responses.Add(key, openApiResponse);
+                response.Content.Add("multipart/form-data", new OpenApiMediaType() { Schema = responseSchema });
             }
         }
 
