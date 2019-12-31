@@ -14,8 +14,7 @@ namespace VirtoCommerce.Platform.Data.Azure
     public class AzureBlobProvider : IBlobStorageProvider, IBlobUrlResolver
     {
         public const string ProviderName = "AzureBlobStorage";
-        public const string DefaultBlobContainerName = "default-container";
-
+        private const string BlobCacheControlPropertyValue = "public, max-age=604800";
         private readonly CloudBlobClient _cloudBlobClient;
         private readonly CloudStorageAccount _cloudStorageAccount;
         private readonly string _cdnUrl;
@@ -97,7 +96,7 @@ namespace VirtoCommerce.Platform.Data.Azure
             // Leverage Browser Caching - 7days
             // Setting Cache-Control on Azure Blobs can help reduce bandwidth and improve the performance by preventing consumers from having to continuously download resources. 
             // More Info https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
-            blob.Properties.CacheControl = "public, max-age=604800";
+            blob.Properties.CacheControl = BlobCacheControlPropertyValue;
 
             return blob.OpenWrite();
         }
@@ -200,8 +199,7 @@ namespace VirtoCommerce.Platform.Data.Azure
 
         public virtual void CreateFolder(BlobFolder folder)
         {
-            var path = (folder.ParentUrl != null ? folder.ParentUrl + "/" : string.Empty) + folder.Name;
-
+            var path = (folder.ParentUrl != null ? $"{folder.ParentUrl}/" : string.Empty) + folder.Name;
             var containerName = GetContainerNameFromUrl(path);
             var blobContainer = _cloudBlobClient.GetContainerReference(containerName);
             blobContainer.CreateIfNotExists(BlobContainerPublicAccessType.Blob);
@@ -282,7 +280,9 @@ namespace VirtoCommerce.Platform.Data.Azure
                 {
                     await target.StartCopyAsync(sourse);
                     if (!isCopy)
+                    {
                         await sourse.DeleteIfExistsAsync();
+                    }
                 }
             }
         }
@@ -291,10 +291,10 @@ namespace VirtoCommerce.Platform.Data.Azure
 
         #region IBlobUrlResolver Members
 
-        public string GetAbsoluteUrl(string relativeUrl)
+        public string GetAbsoluteUrl(string blobKey)
         {
-            var retVal = relativeUrl;
-            if (!relativeUrl.IsAbsoluteUrl())
+            var retVal = blobKey;
+            if (!blobKey.IsAbsoluteUrl())
             {
                 var baseUrl = _cloudStorageAccount.BlobEndpoint.AbsoluteUri;
 
@@ -304,7 +304,7 @@ namespace VirtoCommerce.Platform.Data.Azure
                     baseUrl = cdnUriBuilder.Uri.AbsoluteUri;
                 }
 
-                retVal = baseUrl.TrimEnd('/') + "/" + relativeUrl.TrimStart('/');
+                retVal = baseUrl.TrimEnd('/') + "/" + blobKey.TrimStart('/');
             }
             return retVal;
         }
@@ -344,7 +344,6 @@ namespace VirtoCommerce.Platform.Data.Azure
         private CloudBlobContainer GetBlobContainer(string name)
         {
             CloudBlobContainer retVal = null;
-            // Retrieve container reference.
             var container = _cloudBlobClient.GetContainerReference(name);
             if (container.Exists())
             {

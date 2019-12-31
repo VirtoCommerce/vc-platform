@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using VirtoCommerce.Platform.Core.Common;
 using coreModel = VirtoCommerce.Platform.Core.Assets;
 using webModel = VirtoCommerce.Platform.Web.Model.Asset;
 
