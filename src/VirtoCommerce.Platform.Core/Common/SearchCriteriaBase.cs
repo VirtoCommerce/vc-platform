@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -53,18 +52,18 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public string Sort { get; set; }
 
-        private  IList<SortInfo> _sortInfos;
+        private IList<SortInfo> _sortInfos;
         public virtual IList<SortInfo> SortInfos
         {
             get
             {
-                if(_sortInfos == null)
+                if (_sortInfos == null)
                 {
                     _sortInfos = SortInfo.Parse(Sort).ToList();
                 }
                 return _sortInfos;
             }
-       }
+        }
 
 
         public int Skip { get; set; }
