@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using VirtoCommerce.Platform.Core.Common;
@@ -30,7 +31,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
         public static void AddSwagger(this IServiceCollection services)
         {
             var provider = services.BuildServiceProvider();
-            var httpContextAccessor = provider.GetService<IHttpContextAccessor>();
             var modules = provider.GetService<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null).ToArray();
 
             services.AddSwaggerGen(c =>
@@ -82,7 +82,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     {
                         Password = new OpenApiOAuthFlow()
                         {
-                            TokenUrl = new Uri($"{httpContextAccessor.HttpContext?.Request?.Scheme}://{httpContextAccessor.HttpContext?.Request?.Host}/connect/token")
+                            TokenUrl = new Uri($"/connect/token", UriKind.Relative)
                         }
                     },
                 });
@@ -141,9 +141,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.ShowExtensions();
                 c.DocExpansion(DocExpansion.None);
                 c.DefaultModelsExpandDepth(-1);
-                c.OAuthClientId(string.Empty);
-                c.OAuthClientSecret(string.Empty);
-                c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
             });
         }
 

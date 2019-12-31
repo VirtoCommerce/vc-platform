@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 
-namespace VirtoCommerce.Platform.Data.PushNotifications
+namespace VirtoCommerce.Platform.Web.PushNotifications
 {
     public class PushNotificationHub : Hub
     {      

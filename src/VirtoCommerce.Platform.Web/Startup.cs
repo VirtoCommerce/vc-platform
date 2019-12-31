@@ -9,7 +9,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
 using Hangfire;
-using Hangfire.Common;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -39,15 +38,12 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
-using VirtoCommerce.Platform.Data.PushNotifications;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Modules;
-using VirtoCommerce.Platform.Modules.Extensions;
-using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
-using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Azure;
@@ -57,6 +53,7 @@ using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.JsonConverters;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
+using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Swagger;
 
 namespace VirtoCommerce.Platform.Web
@@ -79,6 +76,8 @@ namespace VirtoCommerce.Platform.Web
             // This custom provider allows able to use just [Authorize] instead of having to define [Authorize(AuthenticationSchemes = "Bearer")] above every API controller
             // without this Bearer authorization will not work
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
+
+            services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
             services.AddOptions<HangfireOptions>().Bind(Configuration.GetSection("VirtoCommerce:Jobs")).ValidateDataAnnotations();
@@ -130,6 +129,12 @@ namespace VirtoCommerce.Platform.Web
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 }
             );
+
+            services.AddSingleton(js =>
+            {
+                var serv = js.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
+                return JsonSerializer.Create(serv.Value.SerializerSettings);
+            });
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
@@ -360,11 +365,13 @@ namespace VirtoCommerce.Platform.Web
             }
             else
             {
-                services.AddOptions<FileSystemBlobOptions>().Bind(Configuration.GetSection("Assets:FileSystem")).ValidateDataAnnotations();
-                services.AddFileSystemBlobProvider(options =>
-                {
-                    options.RootPath = WebHostEnvironment.WebRootPath;
-                });
+                services.AddOptions<FileSystemBlobOptions>().Bind(Configuration.GetSection("Assets:FileSystem"))
+                      .PostConfigure(options =>
+                      {
+                          options.RootPath = WebHostEnvironment.MapPath(options.RootPath);
+                      }).ValidateDataAnnotations();
+
+                services.AddFileSystemBlobProvider();
             }
 
             var hangfireOptions = new HangfireOptions();

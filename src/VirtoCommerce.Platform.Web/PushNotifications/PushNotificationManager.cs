@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.SignalR;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
-namespace VirtoCommerce.Platform.Data.PushNotifications
+namespace VirtoCommerce.Platform.Web.PushNotifications
 {
     public class PushNotificationManager : IPushNotificationManager
     {
         private readonly List<PushNotification> _innerList = new List<PushNotification>();
-        private object _lockObject = new object();
+        private readonly object _lockObject = new object();
         private readonly IHubContext<PushNotificationHub> _hubContext;
         public PushNotificationManager(IHubContext<PushNotificationHub> hubContext)
         {

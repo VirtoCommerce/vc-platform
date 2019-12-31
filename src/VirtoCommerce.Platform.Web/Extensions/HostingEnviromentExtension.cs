@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
-namespace VirtoCommerce.Platform.Data.Extensions
+namespace VirtoCommerce.Platform.Web.Extensions
 {
     public static class HostingEnviromentExtension
     {

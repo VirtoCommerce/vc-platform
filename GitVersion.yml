@@ -6,6 +6,18 @@ branches:
     tag: ''
   develop:
     tag: 'alpha'
+  vp-851-core3:
+    mode: ContinuousDeployment
+    tag: rc2
+    increment: None
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: true
+    regex: v3/feature/vp-733-core3
+    source-branches: []
+    tracks-release-branches: true
+    is-release-branch: true
+    is-mainline: false
+    pre-release-weight: 30000
   release:
     tag: 'rc2'
     mode: ContinuousDeployment
