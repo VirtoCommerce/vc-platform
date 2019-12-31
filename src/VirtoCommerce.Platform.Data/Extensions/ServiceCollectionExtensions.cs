@@ -5,11 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Bus;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Localizations;
@@ -55,13 +52,12 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             services.AddTransient<IEmailSender, DefaultEmailSender>();
 
-             // TODO: (AK) 
             services.AddSingleton(js =>
             {
                 var serv = js.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
                 return JsonSerializer.Create(serv.Value.SerializerSettings);
             });
-            
+
 
             //Register dependencies for translation
             services.AddSingleton<ITranslationDataProvider, PlatformTranslationDataProvider>();

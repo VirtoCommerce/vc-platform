@@ -1,5 +1,4 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 
