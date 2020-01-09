@@ -23,14 +23,12 @@
                     <div class="form-group">
                         <div class="form-input __langs" ng-repeat="data in newValue.displayNames | orderBy: 'locale'">
                             <ng-form name="valuesForm">
-                                <div class="localized-name">
                                     <label class="lang-code">{{data.locale}}</label>
                                     <input ng-model="data.name" class="form-control" ui-validate=" 'dictValueValidator($value, data)' " name="mValue" placeholder="{{ 'platform.blades.property-dictionary.placeholders.localized-values' | translate }}" />
                                     <div class="form-error" ng-if="valuesForm.mValue.$dirty && valuesForm.mValue.$invalid">
                                         <span ng-if="valuesForm.mValue.$error.required">{{ 'platform.blades.property-dictionary.validations.localized-values-required' | translate }}</span>
                                         <span ng-if="valuesForm.mValue.$error.validator">{{ 'platform.blades.property-dictionary.validations.localized-values' | translate }}</span>
                                     </div>
-                                </div>
                             </ng-form>
                         </div>
                     </div>
@@ -78,10 +76,8 @@
                                         </ul>
                                     </td>
                                     <td class="table-col" ng-if="blade.currentEntity.isMultilingual">
-                                        <div ng-repeat="data in data.displayNames | orderBy: 'locale'" style="margin:5px 0;">
-                                            <div class="localized-name">
-                                                <strong><label class="lang-code">{{data.locale}}</label>:</strong> {{data.name}}
-                                            </div>
+                                        <div ng-repeat="data in data.displayNames | orderBy: 'locale'" style="margin:5px 0;">                                            
+                                                <strong><label class="lang-code">{{data.locale}}</label>:</strong> {{data.name}}                                            
                                         </div>
                                     </td>
                                 </tr>

@@ -1278,22 +1278,18 @@ fieldset + fieldset {
   height: 330px;
   min-height: 330px; }
 
-.form-input.__langs textarea,
 .form-input.__langs select {
   padding-left: 36px; }
 
-.form-input.__langs .localized-name {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-  margin-top: 10px; }
+.form-input.__langs input {
+  padding-right: 60px; }
 
-.form-input.__langs .localized-name .lang-code {
-  margin-top: 4px;
-  margin-right: 10px;
-  width: 54px; }
+.form-input.__langs label.lang-code {
+  position: absolute;
+  right: 0;
+  z-index: 100;
+  line-height: 34px;
+  padding-right: 15px; }
 
 .form-input.__currency input,
 .form-input.__currency textarea,
@@ -2953,9 +2949,6 @@ tags-input .tags {
 tags-input .tags.focused {
   border-color: #a1c0d4;
   box-shadow: none; }
-
-.form-input.__langs tags-input .tags {
-  padding: 0 0 0 36px; }
 
 /* Main */
 .nav-bar,
