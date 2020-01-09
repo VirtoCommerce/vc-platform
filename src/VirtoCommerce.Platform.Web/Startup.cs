@@ -392,18 +392,6 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // enable buffering for every request to allow multiply reading request body
-            // looks like after updating to .net core v3 some packages read from request body
-            // and do not reset body stream to zero position,
-            // some modules (like content) api read body stream and throw error - stream is closed
-            // so to fix this error we enable buffering
-            // todo: need to find what middleware reads from request body stream 
-            app.Use(async (context, next) =>
-            {
-                context.Request.EnableBuffering();
-                await next();
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
