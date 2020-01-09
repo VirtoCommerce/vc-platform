@@ -41,18 +41,23 @@ namespace VirtoCommerce.Platform.Data.Azure
         public virtual BlobInfo GetBlobInfo(string url)
         {
             if (string.IsNullOrEmpty(url))
+            {
                 throw new ArgumentNullException(nameof(url));
+            }           
 
             var uri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
             BlobInfo retVal = null;
             try
             {
                 var cloudBlob = _cloudBlobClient.GetBlobReferenceFromServer(uri);
+                var fileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString()));
+                var contentType = MimeTypeResolver.ResolveContentType(fileName);
+
                 retVal = new BlobInfo
                 {
                     Url = GetAbsoluteUrl(cloudBlob.Uri.PathAndQuery),
-                    FileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString())),
-                    ContentType = cloudBlob.Properties.ContentType,
+                    FileName = fileName,
+                    ContentType = contentType,
                     Size = cloudBlob.Properties.Length,
                     ModifiedDate = cloudBlob.Properties.LastModified?.DateTime,
                     RelativeUrl = cloudBlob.Uri.LocalPath
