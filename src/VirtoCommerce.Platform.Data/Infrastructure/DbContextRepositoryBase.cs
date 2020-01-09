@@ -1,4 +1,4 @@
-using System.Linq;
+using System;
 using Microsoft.EntityFrameworkCore;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
@@ -19,7 +19,8 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             dbContext.Database.SetCommandTimeout(connectionTimeout);
         }
 
-        public TContext DbContext { get; }
+      
+        public TContext DbContext { get; private set; }
 
         #region IRepository Members
         /// <summary>
@@ -28,7 +29,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// <value>
         /// The unit of work.
         /// </value>
-        public IUnitOfWork UnitOfWork { get; }
+        public IUnitOfWork UnitOfWork { get; private set; }
 
         /// <summary>
         /// Attaches the specified item.
@@ -71,11 +72,24 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             DbContext.Remove(item);
         }
 
+        // Dispose() calls Dispose(true)
         public void Dispose()
         {
-            DbContext.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // The bulk of the clean-up code is implemented in Dispose(bool)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && DbContext != null)
+            {
+                DbContext.Dispose();
+                DbContext = null;
+                UnitOfWork = null;
+            }
         }
         #endregion
-        
+
     }
 }
