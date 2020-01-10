@@ -176,21 +176,13 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
             foreach (var languageCode in languageCodes.Split(','))
             {
-                try
+                if (!string.IsNullOrEmpty(languageCode))
                 {
-                    if (!string.IsNullOrEmpty(languageCode))
-                    {
-                        var separator = Path.DirectorySeparatorChar;
-                        var localizationDirectoryPath = Path.Combine(sourceDirectoryPath, $"{languageCode}{separator}");
-                        var localizationTargetDirectoryPath = Path.Combine(targetDirectoryPath, $"{languageCode}{separator}");
+                    var separator = Path.DirectorySeparatorChar;
+                    var localizationDirectoryPath = Path.Combine(sourceDirectoryPath, $"{languageCode}{separator}");
+                    var localizationTargetDirectoryPath = Path.Combine(targetDirectoryPath, $"{languageCode}{separator}");
 
-                        CopyAssemblyFiles(localizationTargetDirectoryPath, localizationDirectoryPath);
-                    }
-                }
-
-                catch
-                {
-                    // IDLE
+                    CopyAssemblyFiles(localizationTargetDirectoryPath, localizationDirectoryPath);
                 }
             }
         }
