@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -170,11 +170,51 @@ namespace VirtoCommerce.Platform.Web.Modularity
             return result;
         }
 
+        private static void CopyAssembliesLocalizations(string sourceDirectoryPath, string targetDirectoryPath)
+        {
+
+            var languageCodes = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Localization:ServerLocalizationCodes");
+            foreach (var languageCode in languageCodes.Split(','))
+            {
+                try
+                {
+                    if (!string.IsNullOrEmpty(languageCode))
+                    {
+                        var localizationDirectoryPath = Path.Combine(sourceDirectoryPath, $"{languageCode}\\");
+                        var localizationTargetDirectoryPath = Path.Combine(targetDirectoryPath, $"{languageCode}\\");
+                        if (Directory.Exists(localizationDirectoryPath))
+                        {
+                            var localizationDirectoryUri = new Uri(localizationDirectoryPath);
+
+                            foreach (var localizationFilePath in Directory.EnumerateFiles(localizationDirectoryPath))
+                            {
+                                if (IsAssemblyFile(localizationFilePath))
+                                {
+                                    var relativePath = MakeRelativePath(localizationDirectoryUri, localizationFilePath);
+                                    var targetFilePath = Path.Combine(localizationTargetDirectoryPath, relativePath);
+
+                                    CopyFile(localizationFilePath, targetFilePath);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                catch
+                {
+                    // IDLE
+                }
+            }
+
+        }
+
         private static void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
         {
             if (sourceParentPath != null)
             {
                 var sourceDirectoryPath = Path.Combine(sourceParentPath, "bin\\");
+
+                CopyAssembliesLocalizations(sourceDirectoryPath, targetDirectoryPath);
 
                 if (Directory.Exists(sourceDirectoryPath))
                 {
