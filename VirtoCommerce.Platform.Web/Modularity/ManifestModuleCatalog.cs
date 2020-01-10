@@ -172,8 +172,8 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
         private static void CopyLocalizationAssemblies(string sourceDirectoryPath, string targetDirectoryPath)
         {
-
             var languageCodes = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Localization:ServerLocalizationCodes");
+
             foreach (var languageCode in languageCodes.Split(','))
             {
                 try
@@ -183,21 +183,8 @@ namespace VirtoCommerce.Platform.Web.Modularity
                         var separator = Path.DirectorySeparatorChar;
                         var localizationDirectoryPath = Path.Combine(sourceDirectoryPath, $"{languageCode}{separator}");
                         var localizationTargetDirectoryPath = Path.Combine(targetDirectoryPath, $"{languageCode}{separator}");
-                        if (Directory.Exists(localizationDirectoryPath))
-                        {
-                            var localizationDirectoryUri = new Uri(localizationDirectoryPath);
 
-                            foreach (var localizationFilePath in Directory.EnumerateFiles(localizationDirectoryPath))
-                            {
-                                if (IsAssemblyFile(localizationFilePath))
-                                {
-                                    var relativePath = MakeRelativePath(localizationDirectoryUri, localizationFilePath);
-                                    var targetFilePath = Path.Combine(localizationTargetDirectoryPath, relativePath);
-
-                                    CopyFile(localizationFilePath, targetFilePath);
-                                }
-                            }
-                        }
+                        CopyAssemblyFiles(localizationTargetDirectoryPath, localizationDirectoryPath);
                     }
                 }
 
@@ -206,7 +193,6 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     // IDLE
                 }
             }
-
         }
 
         private static void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
@@ -218,19 +204,24 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
                 CopyLocalizationAssemblies(sourceDirectoryPath, targetDirectoryPath);
 
-                if (Directory.Exists(sourceDirectoryPath))
+                CopyAssemblyFiles(targetDirectoryPath, sourceDirectoryPath);
+            }
+        }
+
+        private static void CopyAssemblyFiles(string targetDirectoryPath, string sourceDirectoryPath)
+        {
+            if (Directory.Exists(sourceDirectoryPath))
+            {
+                var sourceDirectoryUri = new Uri(sourceDirectoryPath);
+
+                foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath))
                 {
-                    var sourceDirectoryUri = new Uri(sourceDirectoryPath);
-
-                    foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath))
+                    if (IsAssemblyFile(sourceFilePath))
                     {
-                        if (IsAssemblyFile(sourceFilePath))
-                        {
-                            var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
-                            var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
+                        var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
+                        var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
 
-                            CopyFile(sourceFilePath, targetFilePath);
-                        }
+                        CopyFile(sourceFilePath, targetFilePath);
                     }
                 }
             }
