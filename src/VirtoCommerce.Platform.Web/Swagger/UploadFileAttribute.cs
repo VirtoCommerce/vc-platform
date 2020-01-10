@@ -20,9 +20,10 @@ namespace VirtoCommerce.Platform.Web.Swagger
         /// </summary>
         public string Description { get; set; } = "Upload File";
         /// <summary>
-        /// Parameter type (only File value supported)
+        /// Parameter type (only string value supported)
+        /// Accordingly to: // https://swagger.io/docs/specification/describing-request-body/file-upload/
         /// </summary>
-        public string Type { get; set; } = "file";
+        public string Type { get; set; } = "string";
         /// <summary>
         /// Set true for required parameter
         /// </summary>

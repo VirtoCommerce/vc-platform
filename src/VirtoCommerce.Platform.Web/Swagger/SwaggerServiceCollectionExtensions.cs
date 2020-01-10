@@ -64,6 +64,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
                 c.TagActionsBy(api => api.GroupByModuleName(services));
                 c.IgnoreObsoleteActions();
+                // This temporary filter removes broken "application/*+json" content-type.
+                // It seems it's some openapi/swagger bug, because Autorest fails.
+                c.OperationFilter<ConsumeFromBodyFilter>();
                 c.OperationFilter<FileResponseTypeFilter>();
                 c.OperationFilter<OptionalParametersFilter>();
                 c.OperationFilter<FileUploadOperationFilter>();
@@ -115,6 +118,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     //TODO
                     //swagger.BasePath = $"{httpReq.Scheme}://{httpReq.Host.Value}";
                 });
+
             });
 
             var modules = applicationBuilder.ApplicationServices.GetService<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null).ToArray();

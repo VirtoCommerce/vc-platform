@@ -13,11 +13,11 @@ namespace VirtoCommerce.Platform.Web.Swagger
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            // https://swagger.io/docs/specification/describing-responses/
             if (IsFileResponse(context))
             {
                 var key = ((int)HttpStatusCode.OK).ToString();
-                var responseSchema = new OpenApiSchema { Format = "binary", Type = "file" };
+                // Accordingly to: https://swagger.io/docs/specification/describing-responses/#response-that-returns-a-file
+                var responseSchema = new OpenApiSchema { Format = "binary", Type = "string" };
 
                 if (operation.Responses == null)
                 {
