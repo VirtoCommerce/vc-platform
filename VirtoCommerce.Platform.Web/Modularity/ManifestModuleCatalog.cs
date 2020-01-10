@@ -42,9 +42,9 @@ namespace VirtoCommerce.Platform.Web.Modularity
             {
                 Directory.CreateDirectory(_assembliesPath);
             }
-
-            if (!contentPhysicalPath.EndsWith("\\", StringComparison.OrdinalIgnoreCase))
-                contentPhysicalPath += "\\";
+            var separator = Path.DirectorySeparatorChar.ToString();
+            if (!contentPhysicalPath.EndsWith(separator, StringComparison.OrdinalIgnoreCase))
+                contentPhysicalPath += separator;
 
             var rootUri = new Uri(contentPhysicalPath);
 
@@ -180,8 +180,9 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 {
                     if (!string.IsNullOrEmpty(languageCode))
                     {
-                        var localizationDirectoryPath = Path.Combine(sourceDirectoryPath, $"{languageCode}\\");
-                        var localizationTargetDirectoryPath = Path.Combine(targetDirectoryPath, $"{languageCode}\\");
+                        var separator = Path.DirectorySeparatorChar;
+                        var localizationDirectoryPath = Path.Combine(sourceDirectoryPath, $"{languageCode}{separator}");
+                        var localizationTargetDirectoryPath = Path.Combine(targetDirectoryPath, $"{languageCode}{separator}");
                         if (Directory.Exists(localizationDirectoryPath))
                         {
                             var localizationDirectoryUri = new Uri(localizationDirectoryPath);
@@ -212,7 +213,8 @@ namespace VirtoCommerce.Platform.Web.Modularity
         {
             if (sourceParentPath != null)
             {
-                var sourceDirectoryPath = Path.Combine(sourceParentPath, "bin\\");
+                var separator = Path.DirectorySeparatorChar;
+                var sourceDirectoryPath = Path.Combine(sourceParentPath, $"bin{separator}");
 
                 CopyLocalizationAssemblies(sourceDirectoryPath, targetDirectoryPath);
 
