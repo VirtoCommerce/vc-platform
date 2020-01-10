@@ -170,7 +170,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             return result;
         }
 
-        private static void CopyAssembliesLocalizations(string sourceDirectoryPath, string targetDirectoryPath)
+        private static void CopyLocalizationAssemblies(string sourceDirectoryPath, string targetDirectoryPath)
         {
 
             var languageCodes = ConfigurationHelper.GetAppSettingsValue("VirtoCommerce:Localization:ServerLocalizationCodes");
@@ -214,7 +214,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             {
                 var sourceDirectoryPath = Path.Combine(sourceParentPath, "bin\\");
 
-                CopyAssembliesLocalizations(sourceDirectoryPath, targetDirectoryPath);
+                CopyLocalizationAssemblies(sourceDirectoryPath, targetDirectoryPath);
 
                 if (Directory.Exists(sourceDirectoryPath))
                 {
