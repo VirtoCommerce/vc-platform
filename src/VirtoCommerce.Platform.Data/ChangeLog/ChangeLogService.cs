@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
 
@@ -24,6 +24,8 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
         {
             using (var repository = _repositoryFactory())
             {
+                repository.DisableChangesTracking();
+
                 var existEntities = await repository.GetOperationLogsByIdsAsync(ids);
                 return existEntities.Select(x => x.ToModel(AbstractTypeFactory<OperationLog>.TryCreateInstance())).ToArray();
             }

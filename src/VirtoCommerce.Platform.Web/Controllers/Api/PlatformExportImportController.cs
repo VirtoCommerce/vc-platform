@@ -38,13 +38,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly ISettingsManager _settingsManager;
         private readonly IUserNameResolver _userNameResolver;
-        private readonly IHostingEnvironment _hostEnv;
+        private readonly IWebHostEnvironment _hostEnv;
         private readonly PlatformOptions _platformOptions;
 
         private static readonly object _lockObject = new object();
 
         public PlatformExportImportController(IPlatformExportImportManager platformExportManager, IPushNotificationManager pushNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver,
-            ISettingsManager settingManager, IUserNameResolver userNameResolver, IHostingEnvironment hostingEnvironment, IOptions<PlatformOptions> options)
+            ISettingsManager settingManager, IUserNameResolver userNameResolver, IWebHostEnvironment hostingEnvironment, IOptions<PlatformOptions> options)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
@@ -88,19 +88,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             lock (_lockObject)
             {
                 var sampleDataState = EnumUtility.SafeParse(_settingsManager.GetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Undefined.ToString()), SampleDataState.Undefined);
-                if (sampleDataState == SampleDataState.Undefined)
+                if (sampleDataState == SampleDataState.Undefined && Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 {
-                    //Sample data initialization
-                    if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
-                    {
-                        _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Processing);
-                        var pushNotification = new SampleDataImportPushNotification(User.Identity.Name);
-                        _pushNotifier.Send(pushNotification);
-                        var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(new Uri(url), Path.GetFullPath(_platformOptions.LocalUploadFolderPath), pushNotification, JobCancellationToken.Null, null));
-                        pushNotification.JobId = jobId;
+                    _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Processing);
+                    var pushNotification = new SampleDataImportPushNotification(User.Identity.Name);
+                    _pushNotifier.Send(pushNotification);
+                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(new Uri(url), Path.GetFullPath(_platformOptions.LocalUploadFolderPath), pushNotification, JobCancellationToken.Null, null));
+                    pushNotification.JobId = jobId;
 
-                        return Ok(pushNotification);
-                    }
+                    return Ok(pushNotification);
                 }
             }
 

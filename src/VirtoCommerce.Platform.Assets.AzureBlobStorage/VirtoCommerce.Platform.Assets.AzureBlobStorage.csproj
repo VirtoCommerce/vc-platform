@@ -1,8 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>     
-        <noWarn>1591</noWarn>     
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <noWarn>1591</noWarn>
+        <OutputType>Library</OutputType>
+		<IsPackable>True</IsPackable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;1705;1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,6 +16,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
         <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     </ItemGroup>
 

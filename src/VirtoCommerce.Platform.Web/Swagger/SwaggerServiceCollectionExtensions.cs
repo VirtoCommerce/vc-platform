@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using VirtoCommerce.Platform.Core.Common;
@@ -30,27 +31,26 @@ namespace VirtoCommerce.Platform.Web.Swagger
         public static void AddSwagger(this IServiceCollection services)
         {
             var provider = services.BuildServiceProvider();
-            var httpContextAccessor = provider.GetService<IHttpContextAccessor>();
             var modules = provider.GetService<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null).ToArray();
 
             services.AddSwaggerGen(c =>
             {
-                var platformInfo = new Info
+                var platformInfo = new OpenApiInfo
                 {
                     Title = "VirtoCommerce Solution REST API documentation",
                     Version = "v1",
-                    TermsOfService = "",
-                    Description = "For this sample, you can use the",
-                    Contact = new Contact
+                    TermsOfService = new Uri("https://virtocommerce.com/terms"),
+                    Description = "For this sample, you can use the key to satisfy the authorization filters.",
+                    Contact = new OpenApiContact
                     {
                         Email = "support@virtocommerce.com",
                         Name = "Virto Commerce",
-                        Url = "http://virtocommerce.com"
+                        Url = new Uri("https://virtocommerce.com")
                     },
-                    License = new License
+                    License = new OpenApiLicense
                     {
                         Name = "Virto Commerce Open Software License 3.0",
-                        Url = "http://virtocommerce.com/opensourcelicense"
+                        Url = new Uri("http://virtocommerce.com/opensourcelicense")
                     }
                 };
 
@@ -59,28 +59,35 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
                 foreach (var module in modules)
                 {
-                    c.SwaggerDoc(module.ModuleName, new Info { Title = $"{module.Id}", Version = "v1" });
+                    c.SwaggerDoc(module.ModuleName, new OpenApiInfo { Title = $"{module.Id}", Version = "v1" });
                 }
 
                 c.TagActionsBy(api => api.GroupByModuleName(services));
-                c.DescribeAllEnumsAsStrings();
                 c.IgnoreObsoleteActions();
+                // This temporary filter removes broken "application/*+json" content-type.
+                // It seems it's some openapi/swagger bug, because Autorest fails.
+                c.OperationFilter<ConsumeFromBodyFilter>();
                 c.OperationFilter<FileResponseTypeFilter>();
                 c.OperationFilter<OptionalParametersFilter>();
                 c.OperationFilter<FileUploadOperationFilter>();
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
                 c.OperationFilter<TagsFilter>();
-                c.MapType<object>(() => new Schema { Type = "object" });
+                c.MapType<object>(() => new OpenApiSchema { Type = "object" });
                 c.AddModulesXmlComments(services);
-                c.CustomSchemaIds(type => (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id ?? type.FriendlyId());
+                c.CustomSchemaIds(type => (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id ?? type.Name /*?? type.FriendlyId()*/);
                 c.CustomOperationIds(apiDesc =>
                     apiDesc.TryGetMethodInfo(out var methodInfo) ? $"{((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerName}_{methodInfo.Name}" : null);
-                c.AddSecurityDefinition(oauth2SchemeName, new OAuth2Scheme
+                c.AddSecurityDefinition(oauth2SchemeName, new OpenApiSecurityScheme
                 {
-                    Type = oauth2SchemeName,
+                    Type = SecuritySchemeType.OAuth2,
                     Description = "OAuth2 Resource Owner Password Grant flow",
-                    Flow = "password",
-                    TokenUrl = $"{httpContextAccessor.HttpContext?.Request?.Scheme}://{httpContextAccessor.HttpContext?.Request?.Host}/connect/token",
+                    Flows = new OpenApiOAuthFlows()
+                    {
+                        Password = new OpenApiOAuthFlow()
+                        {
+                            TokenUrl = new Uri($"/connect/token", UriKind.Relative)
+                        }
+                    },
                 });
 
                 c.DocInclusionPredicate((docName, apiDesc) =>
@@ -111,6 +118,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     //TODO
                     //swagger.BasePath = $"{httpReq.Scheme}://{httpReq.Host.Value}";
                 });
+
             });
 
             var modules = applicationBuilder.ApplicationServices.GetService<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null).ToArray();
@@ -137,9 +145,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.ShowExtensions();
                 c.DocExpansion(DocExpansion.None);
                 c.DefaultModelsExpandDepth(-1);
-                c.OAuthClientId(string.Empty);
-                c.OAuthClientSecret(string.Empty);
-                c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
             });
         }
 
