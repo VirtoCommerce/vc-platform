@@ -2,7 +2,7 @@
     <PropertyGroup>
         <PackageId>VirtoCommerce.GlobalTool</PackageId>
         <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <RootNamespace></RootNamespace>
         <PackAsTool>true</PackAsTool>
@@ -19,11 +19,11 @@
     </PropertyGroup>
 
     <ItemGroup>      
-        <PackageReference Include="Nuke.Common" Version="0.23.4" />
-        <PackageReference Include="GitVersion.CommandLine.DotNetCore" Version="5.0.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="GitVersion.CommandLine" Version="5.1.3">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>      
+        <PackageReference Include="Nuke.Common" Version="0.23.6" />
         <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.0.0-beta0004" />
     </ItemGroup>
 
