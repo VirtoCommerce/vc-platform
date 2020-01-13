@@ -97,10 +97,8 @@
                 <div class="form-group">
                     <label class="form-label" for="">{{ 'platform.blades.dynamicProperty-detail.labels.display-name' | translate }}</label>
                     <div class="form-input __langs" ng-repeat="data in blade.currentEntity.displayNames | orderBy: 'locale'">
-                        <div class="localized-name">
                             <label class="lang-code">{{data.locale}}</label>
                             <input ng-model="data.name" placeholder="{{ 'platform.blades.dynamicProperty-detail.placeholders.display-name' | translate }}" />
-                        </div>
                     </div>
                 </div>
             </form>
