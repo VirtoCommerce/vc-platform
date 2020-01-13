@@ -1,5 +1,5 @@
 ﻿angular.module('platformWebApp')
-.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.i18n', '$timeout', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, i18n, $timeout) {
+.controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.i18n', '$timeout', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, i18n, $timeout, dynamicPropertiesApi) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
     blade.headIcon = 'fa-plus-square-o';
@@ -9,34 +9,47 @@
 
     blade.refresh = function () {
         blade.data = blade.currentEntity;
-        var rawProperties = angular.copy(blade.currentEntity.dynamicProperties);
+        dynamicPropertiesApi.getAll({typeName: blade.currentEntity.objectType}, function (response) {
+            var rawProperties = response;
 
-        _.each(rawProperties, function (x) {
-            x.values.sort(function (a, b) {
-                return a.value && b.value
-                    ? (a.value.name
-                        ? a.value.name.localeCompare(b.value.name)
-                        : angular.isString(a.value) && angular.isString(b.value)
-                            ? a.value.localeCompare(b.value)
-                            : a.value < b.value ? -1 : a.value > b.value ? 1 : 0)
-                    : -1;
+            _.each(rawProperties, function(property) {
+                property.values = [];
+                var filteredProperty = _.find(blade.currentEntity.dynamicProperties, function (item) { return item.id === property.id; });
+                if (filteredProperty) {
+                    property.values = filteredProperty.values;
+                }
+            })
+
+            _.each(rawProperties, function (rawProperty) {
+                if (rawProperty.values) {
+                    rawProperty.values.sort(function (a, b) {
+                        return a.value && b.value
+                            ? (a.value.name
+                                ? a.value.name.localeCompare(b.value.name)
+                                : angular.isString(a.value) && angular.isString(b.value)
+                                    ? a.value.localeCompare(b.value)
+                                    : a.value < b.value ? -1 : a.value > b.value ? 1 : 0)
+                            : -1;
+                    });
+                }
             });
-        });
 
-        if (_.any(rawProperties, function (x) { return x.isMultilingual; })) {
-            settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
-                $scope.languages = data;
+            if (_.any(rawProperties, function (rawProperty) { return rawProperty.isMultilingual; })) {
+                settings.getValues({ id: 'VirtoCommerce.Core.General.Languages' }, function (data) {
+                    $scope.languages = data;
 
-                // wait for va-generic-value-input to initialize empty values and repeat init
-                $timeout(function () {
-                    blade.origEntity = angular.copy(blade.currentEntities);
+                    // wait for va-generic-value-input to initialize empty values and repeat init
+                    $timeout(function () {
+                        blade.origEntity = angular.copy(blade.currentEntities);
+                    });
                 });
-            });
-        }
+            }
 
-        blade.origEntity = rawProperties;
-        blade.currentEntities = angular.copy(rawProperties);
-        blade.isLoading = false;
+            blade.origEntity = rawProperties;
+            blade.currentEntities = angular.copy(rawProperties);
+            blade.isLoading = false;
+        })
+        
     };
 
     function isDirty() {
@@ -96,7 +109,8 @@
 		            id: 'dynamicPropertyList',
 		            objectType: blade.data.objectType,
 		            controller: 'platformWebApp.dynamicPropertyListController',
-		            template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
+                    template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html',
+                    parentRefresh: blade.refresh
 		        };
 		        bladeNavigationService.showBlade(newBlade, blade);
 		    },
