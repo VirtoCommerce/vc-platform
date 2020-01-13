@@ -92,6 +92,5 @@ npm run webpack:build
 ## How to debug module
 
 - Install and run platform as described in steps above.
-- Setup module from source code as described above, open the module solution in Visual Studio and attach the debugger to the dotnet.exe process, running VC Platform.
-
-**Note:** to distinguish between multiple dotnet.exe processes, If running in Windows, use Task Manager to distinguish between multiple dotnet.exe processes: add "Command line" column to Details tab. This would show which app each dotnet.exe is running.
+- Setup module from source code as described above, open the module solution in Visual Studio and attach the debugger to the `VirtoCommerce.Platform.Web.exe` process.
+![image](https://user-images.githubusercontent.com/7566324/72246321-1d213380-35fb-11ea-9819-c3fdb92d4e42.png)
