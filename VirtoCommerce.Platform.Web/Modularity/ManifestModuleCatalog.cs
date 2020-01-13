@@ -172,7 +172,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
         private static void CopyLocalizationAssemblies(string sourceDirectoryPath, string targetDirectoryPath)
         {
-            var cultureNames = ConfigurationHelper.SplitAppSettingsStringValue("VirtoCommerce:Resources:CultureNames");
+            var cultureNames = ConfigurationHelper.SplitAppSettingsStringValue("VirtoCommerce:Resources:CultureNames", string.Empty, new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var languageCode in cultureNames)
             {
