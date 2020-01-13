@@ -48,7 +48,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
             var rootUri = new Uri(contentPhysicalPath);
 
-            CopyAssemblies(_modulesLocalPath, _assembliesPath);
+            CopyAssemblies(_assembliesPath, _modulesLocalPath);
 
             foreach (var pair in GetModuleManifests())
             {
@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
                 var modulePath = Path.GetDirectoryName(manifestPath);
 
-                CopyAssemblies(modulePath, _assembliesPath);
+                CopyAssemblies(_assembliesPath, modulePath);
 
                 var moduleVirtualPath = GetModuleVirtualPath(rootUri, modulePath);
                 ConvertVirtualPath(manifest.Scripts, moduleVirtualPath);
@@ -187,7 +187,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             }
         }
 
-        private static void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
+        private static void CopyAssemblies(string targetDirectoryPath, string sourceParentPath)
         {
             if (sourceParentPath != null)
             {
