@@ -307,7 +307,7 @@ class Build : NukeBuild
               var projectPublishPath = ArtifactsDirectory / "publish" / $"{WebProject.Name}.dll";
               var swaggerJson = ArtifactsDirectory / "swagger.json";
               var currentDir = Directory.GetCurrentDirectory();
-              Directory.SetCurrentDirectory($"{RootDirectory.ToString()}/src/VirtoCommerce.Platform.Web");
+              Directory.SetCurrentDirectory(RootDirectory / "src" / "VirtoCommerce.Platform.Web");
               DotNet($"{swashbucklePath} tofile --output {swaggerJson} {projectPublishPath} VirtoCommerce.Platform");
               Directory.SetCurrentDirectory(currentDir);
 
