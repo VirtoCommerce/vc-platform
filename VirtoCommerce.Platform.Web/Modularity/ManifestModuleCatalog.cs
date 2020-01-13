@@ -48,7 +48,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
             var rootUri = new Uri(contentPhysicalPath);
 
-            CopyAssemblies(_assembliesPath, _modulesLocalPath);
+            CopyAssemblies(_modulesLocalPath, _assembliesPath);
 
             foreach (var pair in GetModuleManifests())
             {
@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
                 var modulePath = Path.GetDirectoryName(manifestPath);
 
-                CopyAssemblies(_assembliesPath, modulePath);
+                CopyAssemblies(modulePath, _assembliesPath);
 
                 var moduleVirtualPath = GetModuleVirtualPath(rootUri, modulePath);
                 ConvertVirtualPath(manifest.Scripts, moduleVirtualPath);
@@ -182,12 +182,12 @@ namespace VirtoCommerce.Platform.Web.Modularity
                     var localizationDirectoryPath = Path.Combine(sourceDirectoryPath, $"{languageCode}{separator}");
                     var localizationTargetDirectoryPath = Path.Combine(targetDirectoryPath, $"{languageCode}{separator}");
 
-                    CopyAssemblyFiles(localizationTargetDirectoryPath, localizationDirectoryPath);
+                    CopyAssemblyFiles(localizationDirectoryPath, localizationTargetDirectoryPath);
                 }
             }
         }
 
-        private static void CopyAssemblies(string targetDirectoryPath, string sourceParentPath)
+        private static void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
         {
             if (sourceParentPath != null)
             {
@@ -196,11 +196,11 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
                 CopyLocalizationAssemblies(sourceDirectoryPath, targetDirectoryPath);
 
-                CopyAssemblyFiles(targetDirectoryPath, sourceDirectoryPath);
+                CopyAssemblyFiles(sourceDirectoryPath, targetDirectoryPath);
             }
         }
 
-        private static void CopyAssemblyFiles(string targetDirectoryPath, string sourceDirectoryPath)
+        private static void CopyAssemblyFiles(string sourceDirectoryPath, string targetDirectoryPath)
         {
             if (Directory.Exists(sourceDirectoryPath))
             {
