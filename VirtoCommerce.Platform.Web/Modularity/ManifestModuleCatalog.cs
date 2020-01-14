@@ -43,8 +43,11 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 Directory.CreateDirectory(_assembliesPath);
             }
             var separator = Path.DirectorySeparatorChar.ToString();
+
             if (!contentPhysicalPath.EndsWith(separator, StringComparison.OrdinalIgnoreCase))
+            {
                 contentPhysicalPath += separator;
+            }
 
             var rootUri = new Uri(contentPhysicalPath);
 
@@ -172,17 +175,26 @@ namespace VirtoCommerce.Platform.Web.Modularity
 
         private static void CopyLocalizationAssemblies(string sourceDirectoryPath, string targetDirectoryPath)
         {
-            var cultureNames = ConfigurationHelper.SplitAppSettingsStringValue("VirtoCommerce:Resources:CultureNames");
-
-            foreach (var languageCode in cultureNames)
+            if (Directory.Exists(sourceDirectoryPath))
             {
-                if (!string.IsNullOrEmpty(languageCode))
+                foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath, "*.resources.dll", SearchOption.AllDirectories))
                 {
                     var separator = Path.DirectorySeparatorChar;
-                    var localizationDirectoryPath = Path.Combine(sourceDirectoryPath, $"{languageCode}{separator}");
-                    var localizationTargetDirectoryPath = Path.Combine(targetDirectoryPath, $"{languageCode}{separator}");
+                    var directory = Path.GetDirectoryName(sourceFilePath);
 
-                    CopyAssemblyFiles(localizationDirectoryPath, localizationTargetDirectoryPath);
+                    var languageCode = directory?.Split(separator).Last();
+
+                    if (!string.IsNullOrEmpty(languageCode))
+                    {
+                        var fullSourceDirectoryPath = Path.Combine(sourceDirectoryPath, $"{languageCode}{separator}");
+                        var fullTargetDirectoryPath = Path.Combine(targetDirectoryPath, $"{languageCode}{separator}");
+
+                        var sourceDirectoryUri = new Uri(fullSourceDirectoryPath);
+                        var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
+                        var targetFilePath = Path.Combine(fullTargetDirectoryPath, relativePath);
+
+                        CopyFile(sourceFilePath, targetFilePath);
+                    }
                 }
             }
         }
