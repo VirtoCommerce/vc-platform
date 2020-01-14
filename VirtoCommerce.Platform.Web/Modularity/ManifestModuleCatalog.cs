@@ -15,6 +15,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
         private readonly string _modulesLocalPath;
         private readonly string _contentVirtualPath;
         private readonly string _assembliesPath;
+        private static readonly string _localizationFilePattern = "*.resources.dll";
         private static readonly string[] _assemblyFileExtensions = { ".dll", ".pdb", ".exe", ".xml" };
 
         public ManifestModuleCatalog(string modulesLocalPath, string contentVirtualPath, string assembliesPath)
@@ -173,20 +174,15 @@ namespace VirtoCommerce.Platform.Web.Modularity
             return result;
         }
 
-        private static void CopyLocalizationAssemblies(string sourceDirectoryPath, string targetDirectoryPath)
+        private static List<string> GetAssembliesFiles(string sourceDirectoryPath)
         {
-            if (Directory.Exists(sourceDirectoryPath))
-            {
-                foreach (var sourceFilePath in Directory.EnumerateDirectories(sourceDirectoryPath).SelectMany(
-                    directory => Directory.EnumerateFiles(directory, "*.resources.dll")))
-                {
-                    var sourceDirectoryUri = new Uri(sourceDirectoryPath);
-                    var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
-                    var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
+            var result = new List<string>();
 
-                    CopyFile(sourceFilePath, targetFilePath);
-                }
-            }
+            result.AddRange(Directory.EnumerateFiles(sourceDirectoryPath));
+            result.AddRange(Directory.EnumerateDirectories(sourceDirectoryPath).SelectMany(
+                directory => Directory.EnumerateFiles(directory, _localizationFilePattern)));
+
+            return result;
         }
 
         private static void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
@@ -196,26 +192,19 @@ namespace VirtoCommerce.Platform.Web.Modularity
                 var separator = Path.DirectorySeparatorChar;
                 var sourceDirectoryPath = Path.Combine(sourceParentPath, $"bin{separator}");
 
-                CopyLocalizationAssemblies(sourceDirectoryPath, targetDirectoryPath);
-
-                CopyAssemblyFiles(sourceDirectoryPath, targetDirectoryPath);
-            }
-        }
-
-        private static void CopyAssemblyFiles(string sourceDirectoryPath, string targetDirectoryPath)
-        {
-            if (Directory.Exists(sourceDirectoryPath))
-            {
-                var sourceDirectoryUri = new Uri(sourceDirectoryPath);
-
-                foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath))
+                if (Directory.Exists(sourceDirectoryPath))
                 {
-                    if (IsAssemblyFile(sourceFilePath))
-                    {
-                        var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
-                        var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
+                    var sourceDirectoryUri = new Uri(sourceDirectoryPath);
 
-                        CopyFile(sourceFilePath, targetFilePath);
+                    foreach (var sourceFilePath in GetAssembliesFiles(sourceDirectoryPath))
+                    {
+                        if (IsAssemblyFile(sourceFilePath))
+                        {
+                            var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
+                            var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
+
+                            CopyFile(sourceFilePath, targetFilePath);
+                        }
                     }
                 }
             }
