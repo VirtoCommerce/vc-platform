@@ -177,24 +177,14 @@ namespace VirtoCommerce.Platform.Web.Modularity
         {
             if (Directory.Exists(sourceDirectoryPath))
             {
-                foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath, "*.resources.dll", SearchOption.AllDirectories))
+                foreach (var sourceFilePath in Directory.EnumerateDirectories(sourceDirectoryPath).SelectMany(
+                    directory => Directory.EnumerateFiles(directory, "*.resources.dll")))
                 {
-                    var separator = Path.DirectorySeparatorChar;
-                    var directory = Path.GetDirectoryName(sourceFilePath);
+                    var sourceDirectoryUri = new Uri(sourceDirectoryPath);
+                    var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
+                    var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
 
-                    var languageCode = directory?.Split(separator).Last();
-
-                    if (!string.IsNullOrEmpty(languageCode))
-                    {
-                        var fullSourceDirectoryPath = Path.Combine(sourceDirectoryPath, $"{languageCode}{separator}");
-                        var fullTargetDirectoryPath = Path.Combine(targetDirectoryPath, $"{languageCode}{separator}");
-
-                        var sourceDirectoryUri = new Uri(fullSourceDirectoryPath);
-                        var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
-                        var targetFilePath = Path.Combine(fullTargetDirectoryPath, relativePath);
-
-                        CopyFile(sourceFilePath, targetFilePath);
-                    }
+                    CopyFile(sourceFilePath, targetFilePath);
                 }
             }
         }
