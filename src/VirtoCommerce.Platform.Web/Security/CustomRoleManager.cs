@@ -15,13 +15,13 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Caching;
 
-namespace VirtoCommerce.Platform.Security.Services
+namespace VirtoCommerce.Platform.Web.Security
 {
     public class CustomRoleManager : AspNetRoleManager<Role>
     {
         private readonly IPermissionsRegistrar _knownPermissions;
         private readonly IPlatformMemoryCache _memoryCache;
-        private readonly MvcJsonOptions _jsonOptions;
+        private readonly MvcNewtonsoftJsonOptions _jsonOptions;
         public CustomRoleManager(
             IPermissionsRegistrar knownPermissions
             , IPlatformMemoryCache memoryCache
@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Security.Services
             , IdentityErrorDescriber errors
             , ILogger<RoleManager<Role>> logger
             , IHttpContextAccessor contextAccessor
-            , IOptions<MvcJsonOptions> jsonOptions)
+            , IOptions<MvcNewtonsoftJsonOptions> jsonOptions)
             : base(store, roleValidators, keyNormalizer, errors, logger, contextAccessor)
         {
             _knownPermissions = knownPermissions;
@@ -143,7 +143,7 @@ namespace VirtoCommerce.Platform.Security.Services
             {
                 role.Permissions = new List<Permission>();
                 //Load role claims and convert it to the permissions and assign to role
-                var storedPermissions = (await GetClaimsAsync(role)).Select(x=>Permission.TryCreateFromClaim(x, _jsonOptions.SerializerSettings)).OfType<Permission>().ToList();
+                var storedPermissions = (await GetClaimsAsync(role)).Select(x=>Permission.TryCreateFromClaim(x, _jsonOptions.SerializerSettings)).ToList();
                 var knownPermissionsDict = _knownPermissions.GetAllPermissions().Select(x=>x.Clone() as Permission).ToDictionary(x=>x.Name, x=>x).WithDefaultValue(null);
                 foreach (var storedPermission in storedPermissions)
                 {

@@ -29,10 +29,10 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
 
             //Assert
             var error = Assert.Throws<OptionsValidationException>(() => sp.GetRequiredService<IOptions<PlatformOptions>>().Value);
-            ValidateFailure<PlatformOptions>(error, Options.DefaultName, 1,
-                $"DataAnnotation validation failed for members {nameof(PlatformOptions.LocalUploadFolderPath)} with the error 'The {nameof(PlatformOptions.LocalUploadFolderPath)} field is required.'.",
-                $"DataAnnotation validation failed for members {nameof(PlatformOptions.LicenseActivationUrl)} with the error 'The {nameof(PlatformOptions.LicenseActivationUrl)} field is not a valid fully-qualified http, https, or ftp URL.",
-                $"DataAnnotation validation failed for members {nameof(PlatformOptions.SampleDataUrl)} with the error 'The {nameof(PlatformOptions.SampleDataUrl)} field is not a valid fully-qualified http, https, or ftp URL.");
+            ValidateFailure<PlatformOptions>(error, Options.DefaultName, 3,
+                $"DataAnnotation validation failed for members: '{nameof(PlatformOptions.LocalUploadFolderPath)}' with the error: 'The {nameof(PlatformOptions.LocalUploadFolderPath)} field is required.'.",
+                $"DataAnnotation validation failed for members: '{nameof(PlatformOptions.LicenseActivationUrl)}' with the error: 'The {nameof(PlatformOptions.LicenseActivationUrl)} field is not a valid fully-qualified http, https, or ftp URL.",
+                $"DataAnnotation validation failed for members: '{nameof(PlatformOptions.SampleDataUrl)}' with the error: 'The {nameof(PlatformOptions.SampleDataUrl)} field is not a valid fully-qualified http, https, or ftp URL.");
         }
 
         [Fact]
@@ -53,9 +53,9 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
 
             //Assert
             var error = Assert.Throws<OptionsValidationException>(() => sp.GetRequiredService<IOptions<FileSystemBlobOptions>>().Value);
-            ValidateFailure<FileSystemBlobOptions>(error, Options.DefaultName, 1,
-                $"DataAnnotation validation failed for members {nameof(FileSystemBlobOptions.RootPath)} with the error 'The {nameof(FileSystemBlobOptions.RootPath)} field is required.'.",
-                $"DataAnnotation validation failed for members {nameof(FileSystemBlobOptions.PublicUrl)} with the error 'The {nameof(FileSystemBlobOptions.PublicUrl)} field is not a valid fully-qualified http, https, or ftp URL.");
+            ValidateFailure<FileSystemBlobOptions>(error, Options.DefaultName, 2,
+                $"DataAnnotation validation failed for members: '{nameof(FileSystemBlobOptions.RootPath)}' with the error: 'The {nameof(FileSystemBlobOptions.RootPath)} field is required.'.",
+                $"DataAnnotation validation failed for members: '{nameof(FileSystemBlobOptions.PublicUrl)}' with the error: 'The {nameof(FileSystemBlobOptions.PublicUrl)} field is not a valid fully-qualified http, https, or ftp URL.");
         }
 
         [Fact]
@@ -75,7 +75,8 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
 
             //Assert
             var error = Assert.Throws<OptionsValidationException>(() => sp.GetRequiredService<IOptions<AzureBlobOptions>>().Value);
-            ValidateFailure<AzureBlobOptions>(error, Options.DefaultName, 1, $"DataAnnotation validation failed for members {nameof(AzureBlobOptions.ConnectionString)} with the error 'The {nameof(AzureBlobOptions.ConnectionString)} field is required.'.");
+            ValidateFailure<AzureBlobOptions>(error, Options.DefaultName, 1,
+                $"DataAnnotation validation failed for members: '{nameof(AzureBlobOptions.ConnectionString)}' with the error: 'The {nameof(AzureBlobOptions.ConnectionString)} field is required.'.");
         }
 
 

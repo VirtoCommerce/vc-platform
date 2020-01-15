@@ -13,7 +13,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security.Caching;
 
-namespace VirtoCommerce.Platform.Security.Services
+namespace VirtoCommerce.Platform.Web.Security
 {
     public class CustomUserManager : AspNetUserManager<ApplicationUser>
     {
@@ -194,6 +194,8 @@ namespace VirtoCommerce.Platform.Security.Services
             }
             return result;
         }
+
+
 
         /// <summary>
         /// Load detailed user information: Roles, external logins, claims (permissions)

@@ -21,6 +21,9 @@
             "bread-crumb-top": "Все"
         },
         "blades": {
+            "system-info": {
+                "title": "Информация о платформе"
+            },
             "asset-list": {
                 "title": "Управление ресурсами",
                 "labels": {
@@ -30,7 +33,7 @@
                     "modified": "Изменено",
                     "actions": "Действия",
                     "group": "Группа",
-                    "language": "Язык" 
+                    "language": "Язык"
                 }
             },
             "asset-upload": {
@@ -307,30 +310,30 @@
             },
             "module-detail": {
                 "title": "Информация о модуле",
-              "labels": {
-                "i-accept-the": "Я принимаю",
-                "license-link": "лицензия",
-                "license": "Лицензия",
-                "agreement": "соглашение.",
-                "install-from-file": "Установить / обновить модуль из файла",
-                "select-module-file": "Загрузить файл модуля (.zip) за пределами центрального хранилища модулей",
-                "upload-progress": "Прогресс загрузки",
-                "module-info": "Информация о модуле",
-                "title": "Название",
-                "official": "Официальный модуль {{$owner}}",
-                "owners": "Разработан {{$owner}}",
-                "author": "Автор",
-                "authors": "Авторы",
-                "id": "ID",
-                "version": "Версия",
-                "project-information": "Информация о Проекте",
-                "description": "Описание",
-                "platform-version": "Версия Платформы",
-                "dependencies": "Зависимости",
-                "tags": "Теги",
-                "install-version": "Установленная версия",
-                "errors": "Ошибки"
-              }
+                "labels": {
+                    "i-accept-the": "Я принимаю",
+                    "license-link": "лицензия",
+                    "license": "Лицензия",
+                    "agreement": "соглашение.",
+                    "install-from-file": "Установить / обновить модуль из файла",
+                    "select-module-file": "Загрузить файл модуля (.zip) за пределами центрального хранилища модулей",
+                    "upload-progress": "Прогресс загрузки",
+                    "module-info": "Информация о модуле",
+                    "title": "Название",
+                    "official": "Официальный модуль {{$owner}}",
+                    "owners": "Разработан {{$owner}}",
+                    "author": "Автор",
+                    "authors": "Авторы",
+                    "id": "ID",
+                    "version": "Версия",
+                    "project-information": "Информация о Проекте",
+                    "description": "Описание",
+                    "platform-version": "Версия Платформы",
+                    "dependencies": "Зависимости",
+                    "tags": "Теги",
+                    "install-version": "Установленная версия",
+                    "errors": "Ошибки"
+                }
             },
             "modules-main": {
                 "title": "Модули",
@@ -351,11 +354,12 @@
                     "no-modules-part1": "Нет новых Модулей для установки.",
                     "no-installed-modules": "Установленные Модули не найдены.",
                     "icon": "Иконка",
-                    "up-to-date": "Модуль обновлен", 
-                    "update-available": "Доступно обновление для данного модуля", 
+                    "up-to-date": "Модуль обновлен",
+                    "update-available": "Доступно обновление для данного модуля",
                     "module": "Модуль",
                     "version": "Версия",
-                    "author": "Автор"
+                    "author": "Автор",
+                    "installed": "Установленные модули"
                 }
             },
             "history": {
@@ -670,7 +674,8 @@
                 "community": "Работа с общественной версией, нажмите, чтобы запросить коммерческую лицензию.",
                 "expired": "Срок действия лицензии истёк {{expirationDate | amParse | date}}, пожалуйста, обновите.",
                 "purchase": "Купить",
-                "renew": "Обновить"
+                "renew": "Обновить",
+                "expiration-date": "Действительна до"
             },
             "modulesAutoInstallation": {
                 "labels": {

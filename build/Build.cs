@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
@@ -51,6 +54,8 @@ class Build : NukeBuild
     readonly string ReleaseBranchPrefix = "release";
     readonly string HotfixBranchPrefix = "hotfix";
 
+    private static readonly HttpClient httpClient = new HttpClient();
+    
     [Parameter("ApiKey for the specified source")] readonly string ApiKey;
     [Parameter] readonly string Source = @"https://api.nuget.org/v3/index.json";
 
@@ -58,6 +63,8 @@ class Build : NukeBuild
 
     [Parameter] readonly string SonarAuthToken = "";
     [Parameter] readonly string SonarUrl = "https://sonar.virtocommerce.com";
+
+    [Parameter] readonly string SwaggerValidationUrl = "http://validator.swagger.io/validator/debug";
 
     [Parameter("GitHub user for release creation")] readonly string GitHubUser;
     [Parameter("GitHub user security token for release creation")] readonly string GitHubToken;
@@ -187,8 +194,8 @@ class Build : NukeBuild
                .EnableNoRestore()
                .SetOutput(IsModule ? ModuleOutputDirectory / "bin" : ArtifactsDirectory / "publish")
                .SetConfiguration(Configuration)
-               .SetAssemblyVersion(IsModule ? ModuleManifest.Version : GitVersion.GetNormalizedAssemblyVersion())
-               .SetFileVersion(IsModule ? ModuleManifest.Version : GitVersion.GetNormalizedFileVersion())
+               .SetAssemblyVersion(IsModule ? ModuleManifest.Version : GitVersion.AssemblySemVer)
+               .SetFileVersion(IsModule ? ModuleManifest.Version : GitVersion.AssemblySemFileVer)
                .SetInformationalVersion(IsModule ? ModuleSemVersion : GitVersion.InformationalVersion));
 
        });
@@ -214,8 +221,8 @@ class Build : NukeBuild
             DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
-                .SetAssemblyVersion(IsModule ? ModuleManifest.Version : GitVersion.GetNormalizedAssemblyVersion())
-                .SetFileVersion(IsModule ? ModuleManifest.Version : GitVersion.GetNormalizedFileVersion())
+                .SetAssemblyVersion(IsModule ? ModuleManifest.Version : GitVersion.AssemblySemVer)
+                .SetFileVersion(IsModule ? ModuleManifest.Version : GitVersion.AssemblySemFileVer)
                 .SetInformationalVersion(IsModule ? ModuleSemVersion : GitVersion.InformationalVersion)
                 .EnableNoRestore());
         });
@@ -299,13 +306,30 @@ class Build : NukeBuild
               var swashbucklePath = swashbucklePackage.Directory / "lib" / "netcoreapp2.0" / "dotnet-swagger.dll";
               var projectPublishPath = ArtifactsDirectory / "publish" / $"{WebProject.Name}.dll";
               var swaggerJson = ArtifactsDirectory / "swagger.json";
+              var currentDir = Directory.GetCurrentDirectory();
+              Directory.SetCurrentDirectory(RootDirectory / "src" / "VirtoCommerce.Platform.Web");
               DotNet($"{swashbucklePath} tofile --output {swaggerJson} {projectPublishPath} VirtoCommerce.Platform");
+              Directory.SetCurrentDirectory(currentDir);
 
-              NpmTasks.NpmRun(s => s
-                 .SetWorkingDirectory(WebProject.Directory)
-                 .SetCommand($"swagger-cli")
-                 .SetArguments("validate", IsLocalBuild ? "-d" : "", swaggerJson)
-                 .SetLogOutput(true));
+              var swaggerScheme = File.ReadAllText(swaggerJson);
+              var requestContent = new StringContent(swaggerScheme, Encoding.UTF8, "application/json");
+              var request = new HttpRequestMessage(HttpMethod.Post, SwaggerValidationUrl);
+              request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+              request.Content = requestContent;
+              var response = httpClient.SendAsync(request).GetAwaiter().GetResult();
+              var responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+              var jsonObj = JObject.Parse(responseContent);
+              bool err = false;
+              foreach(var msg in jsonObj["schemaValidationMessages"])
+              {
+                  Logger.Normal(msg);
+                  if((string)msg["level"] == "error")
+                  {
+                      err = true;
+                  }
+              }
+              if(err)
+                 ControlFlow.Fail("Schema Validation Messages contains error");
           });
 
     Target SonarQubeStart => _ => _

@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VirtoCommerce.Platform.Core.Common;
@@ -9,24 +11,29 @@ namespace VirtoCommerce.Platform.Web.Swagger
 {
     public class FileResponseTypeFilter : IOperationFilter
     {
-        public void Apply(Operation operation, OperationFilterContext context)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             if (IsFileResponse(context))
             {
                 var key = ((int)HttpStatusCode.OK).ToString();
-                var responseSchema = new Schema { Format = "byte", Type = "file" };
+                // Accordingly to: https://swagger.io/docs/specification/describing-responses/#response-that-returns-a-file
+                var responseSchema = new OpenApiSchema { Format = "binary", Type = "string" };
 
-                if (operation.Responses.TryGetValue(key, out var response))
+                if (operation.Responses == null)
                 {
-                    response.Schema = responseSchema;
-                    return;
+                    operation.Responses = new OpenApiResponses();
                 }
 
-                operation.Responses.Add(key, new Response
+                if (!operation.Responses.TryGetValue(key, out OpenApiResponse response))
                 {
-                    Description = "OK",
-                    Schema = responseSchema
-                });
+                    response = new OpenApiResponse();
+                }
+
+                response.Description = "OK";
+                response.Content = new Dictionary<string, OpenApiMediaType>();
+
+                // TODO: (AK) ? Consider to correct content key depending on real MIME
+                response.Content.Add("multipart/form-data", new OpenApiMediaType() { Schema = responseSchema });
             }
         }
 
@@ -44,5 +51,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
             }
             return result;
         }
+
     }
 }

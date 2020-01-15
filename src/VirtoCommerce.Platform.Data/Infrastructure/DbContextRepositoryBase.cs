@@ -1,5 +1,6 @@
-using System.Linq;
+using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 
@@ -13,13 +14,22 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         protected DbContextRepositoryBase(TContext dbContext, IUnitOfWork unitOfWork = null)
         {
             DbContext = dbContext;
+
+            // Mitigations the breaking changes with cascade deletion introduced in EF Core 3.0
+            // https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes#cascade
+            // The new CascadeTiming.Immediate that is used by default in EF Core 3.0 is lead wrong track as Added  for Deleted dependent/child entities during
+            // work of Patch method for data entities  
+            DbContext.ChangeTracker.CascadeDeleteTiming = CascadeTiming.OnSaveChanges;
+            DbContext.ChangeTracker.DeleteOrphansTiming = CascadeTiming.OnSaveChanges;
+
             UnitOfWork = unitOfWork ?? new DbContextUnitOfWork(dbContext);
 
             var connectionTimeout = dbContext.Database.GetDbConnection().ConnectionTimeout;
             dbContext.Database.SetCommandTimeout(connectionTimeout);
         }
 
-        public TContext DbContext { get; }
+      
+        public TContext DbContext { get; private set; }
 
         #region IRepository Members
         /// <summary>
@@ -28,7 +38,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// <value>
         /// The unit of work.
         /// </value>
-        public IUnitOfWork UnitOfWork { get; }
+        public IUnitOfWork UnitOfWork { get; private set; }
 
         /// <summary>
         /// Attaches the specified item.
@@ -71,10 +81,24 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             DbContext.Remove(item);
         }
 
+        // Dispose() calls Dispose(true)
         public void Dispose()
         {
-            DbContext.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // The bulk of the clean-up code is implemented in Dispose(bool)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && DbContext != null)
+            {
+                DbContext.Dispose();
+                DbContext = null;
+                UnitOfWork = null;
+            }
         }
         #endregion
+
     }
 }

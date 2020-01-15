@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
 using Hangfire;
-using Hangfire.Common;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,10 +19,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -36,15 +38,12 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
-using VirtoCommerce.Platform.Data.PushNotifications;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Modules;
-using VirtoCommerce.Platform.Modules.Extensions;
-using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
-using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Azure;
@@ -52,21 +51,23 @@ using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.JsonConverters;
+using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
+using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Swagger;
 
 namespace VirtoCommerce.Platform.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             Configuration = configuration;
-            HostingEnvironment = hostingEnvironment;
+            WebHostEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment HostingEnvironment { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -76,17 +77,20 @@ namespace VirtoCommerce.Platform.Web
             // without this Bearer authorization will not work
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
 
+            services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
+
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
             services.AddOptions<HangfireOptions>().Bind(Configuration.GetSection("VirtoCommerce:Jobs")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
-                options.PlatformTranslationFolderPath = HostingEnvironment.MapPath(options.PlatformTranslationFolderPath);
+                options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
             });
             //Get platform version from GetExecutingAssembly
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
+            services.AddSingleton<LicenseProvider>();
 
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
@@ -101,7 +105,7 @@ namespace VirtoCommerce.Platform.Web
                     }
                 }
             )
-            .AddJsonOptions(options =>
+            .AddNewtonsoftJson(options =>
                 {
                     //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
                     //we should register this converter globally.
@@ -124,8 +128,13 @@ namespace VirtoCommerce.Platform.Web
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 }
-            )
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            );
+
+            services.AddSingleton(js =>
+            {
+                var serv = js.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
+                return JsonSerializer.Create(serv.Value.SerializerSettings);
+            });
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
@@ -134,6 +143,18 @@ namespace VirtoCommerce.Platform.Web
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.
                 options.UseOpenIddict();
+            });
+
+            // Enable synchronous IO if using Kestrel:
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
+            // Enable synchronous IO if using IIS:
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
             });
 
             services.Configure<CookiePolicyOptions>(options =>
@@ -179,7 +200,7 @@ namespace VirtoCommerce.Platform.Web
                         options.Authority = Configuration["Auth:Authority"];
                         options.Audience = Configuration["Auth:Audience"];
 
-                        if (HostingEnvironment.IsDevelopment())
+                        if (WebHostEnvironment.IsDevelopment())
                         {
                             options.RequireHttpsMetadata = false;
                         }
@@ -273,7 +294,7 @@ namespace VirtoCommerce.Platform.Web
                     options.DisableScopeValidation();
 
                     // During development, you can disable the HTTPS requirement.
-                    if (HostingEnvironment.IsDevelopment())
+                    if (WebHostEnvironment.IsDevelopment())
                     {
                         options.DisableHttpsRequirement();
                     }
@@ -283,7 +304,17 @@ namespace VirtoCommerce.Platform.Web
                     options.UseJsonWebTokens();
 
                     var bytes = File.ReadAllBytes(Configuration["Auth:PrivateKeyPath"]);
-                    var privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+                    X509Certificate2 privateKey;
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                    {
+                        // https://github.com/dotnet/corefx/blob/release/2.2/Documentation/architecture/cross-platform-cryptography.md
+                        // macOS cannot load certificate private keys without a keychain object, which requires writing to disk. Keychains are created automatically for PFX loading, and are deleted when no longer in use. Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
+                        privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet);
+                    }
+                    else
+                    {
+                        privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+                    }
                     options.AddSigningCertificate(privateKey);
                 });
 
@@ -307,7 +338,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddAuthorization();
             // register the AuthorizationPolicyProvider which dynamically registers authorization policies for each permission defined in module manifest
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
-            //Platform authorization handler for policies based on permissions 
+            //Platform authorization handler for policies based on permissions
             services.AddSingleton<IAuthorizationHandler, DefaultPermissionAuthorizationHandler>();
             // Default password validation service implementation
             services.AddScoped<IPasswordCheckService, PasswordCheckService>();
@@ -334,11 +365,13 @@ namespace VirtoCommerce.Platform.Web
             }
             else
             {
-                services.AddOptions<FileSystemBlobOptions>().Bind(Configuration.GetSection("Assets:FileSystem")).ValidateDataAnnotations();
-                services.AddFileSystemBlobProvider(options =>
-                {
-                    options.RootPath = HostingEnvironment.MapPath(options.RootPath);
-                });
+                services.AddOptions<FileSystemBlobOptions>().Bind(Configuration.GetSection("Assets:FileSystem"))
+                      .PostConfigure(options =>
+                      {
+                          options.RootPath = WebHostEnvironment.MapPath(options.RootPath);
+                      }).ValidateDataAnnotations();
+
+                services.AddFileSystemBlobProvider();
             }
 
             var hangfireOptions = new HangfireOptions();
@@ -357,7 +390,7 @@ namespace VirtoCommerce.Platform.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -380,12 +413,13 @@ namespace VirtoCommerce.Platform.Web
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+            app.UseRouting();
             app.UseCookiePolicy();
 
             //Handle all requests like a $(Platform) and Modules/$({ module.ModuleName }) as static files in correspond folder
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(env.MapPath("~/js")),
+                FileProvider = new PhysicalFileProvider(WebHostEnvironment.MapPath("~/js")),
                 RequestPath = new PathString($"/$(Platform)/Scripts")
             });
 
@@ -402,12 +436,13 @@ namespace VirtoCommerce.Platform.Web
             app.UseDefaultFiles();
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
             //Force migrations
@@ -420,6 +455,7 @@ namespace VirtoCommerce.Platform.Web
                 var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
                 securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
                 securityDbContext.Database.Migrate();
+
             }
 
             app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
@@ -438,7 +474,7 @@ namespace VirtoCommerce.Platform.Web
             app.UsePlatformPermissions();
 
             //Setup SignalR hub
-            app.UseSignalR(routes =>
+            app.UseEndpoints(routes =>
             {
                 routes.MapHub<PushNotificationHub>("/pushNotificationHub");
             });
@@ -449,8 +485,8 @@ namespace VirtoCommerce.Platform.Web
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-            var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcJsonOptions>>();
-            JobHelper.SetSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
+            var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
+            GlobalConfiguration.Configuration.UseSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
         }
     }
 }

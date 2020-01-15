@@ -31,10 +31,10 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<ApplicationUser>().Ignore(x => x.UserState);
             builder.Entity<ApplicationUser>().Property(x => x.UserType).HasMaxLength(64);
             builder.Entity<ApplicationUser>().Property(x => x.PhotoUrl).HasMaxLength(2048);
-            builder.Entity<ApplicationUser>().Property(x => x.Id).HasMaxLength(128);
+            builder.Entity<ApplicationUser>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             builder.Entity<ApplicationUser>().Property(x => x.StoreId).HasMaxLength(128);
             builder.Entity<ApplicationUser>().Property(x => x.MemberId).HasMaxLength(128);
-            builder.Entity<Role>().Property(x => x.Id).HasMaxLength(128);
+            builder.Entity<Role>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             builder.Entity<IdentityUserClaim<string>>().Property(x => x.UserId).HasMaxLength(128);
             builder.Entity<IdentityUserLogin<string>>().Property(x => x.UserId).HasMaxLength(128);
             builder.Entity<IdentityUserLogin<string>>().Property(x => x.LoginProvider).HasMaxLength(128);
