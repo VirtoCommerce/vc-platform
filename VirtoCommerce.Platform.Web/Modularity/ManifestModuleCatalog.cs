@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,6 +15,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
         private readonly string _modulesLocalPath;
         private readonly string _contentVirtualPath;
         private readonly string _assembliesPath;
+        private static readonly string _localizationFilePattern = "*.resources.dll";
         private static readonly string[] _assemblyFileExtensions = { ".dll", ".pdb", ".exe", ".xml" };
 
         public ManifestModuleCatalog(string modulesLocalPath, string contentVirtualPath, string assembliesPath)
@@ -42,9 +43,12 @@ namespace VirtoCommerce.Platform.Web.Modularity
             {
                 Directory.CreateDirectory(_assembliesPath);
             }
+            var separator = Path.DirectorySeparatorChar.ToString();
 
-            if (!contentPhysicalPath.EndsWith("\\", StringComparison.OrdinalIgnoreCase))
-                contentPhysicalPath += "\\";
+            if (!contentPhysicalPath.EndsWith(separator, StringComparison.OrdinalIgnoreCase))
+            {
+                contentPhysicalPath += separator;
+            }
 
             var rootUri = new Uri(contentPhysicalPath);
 
@@ -170,17 +174,29 @@ namespace VirtoCommerce.Platform.Web.Modularity
             return result;
         }
 
+        private static List<string> GetAssembliesFiles(string sourceDirectoryPath)
+        {
+            var result = new List<string>();
+
+            result.AddRange(Directory.EnumerateFiles(sourceDirectoryPath));
+            result.AddRange(Directory.EnumerateDirectories(sourceDirectoryPath).SelectMany(
+                directory => Directory.EnumerateFiles(directory, _localizationFilePattern)));
+
+            return result;
+        }
+
         private static void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
         {
             if (sourceParentPath != null)
             {
-                var sourceDirectoryPath = Path.Combine(sourceParentPath, "bin\\");
+                var separator = Path.DirectorySeparatorChar;
+                var sourceDirectoryPath = Path.Combine(sourceParentPath, $"bin{separator}");
 
                 if (Directory.Exists(sourceDirectoryPath))
                 {
                     var sourceDirectoryUri = new Uri(sourceDirectoryPath);
 
-                    foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath))
+                    foreach (var sourceFilePath in GetAssembliesFiles(sourceDirectoryPath))
                     {
                         if (IsAssemblyFile(sourceFilePath))
                         {
