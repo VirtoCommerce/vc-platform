@@ -34,7 +34,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public override async Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey)
         {
-            var cacheKey = CacheKey.With(GetType(), "FindByLoginAsync", loginProvider, providerKey);
+            var cacheKey = CacheKey.With(GetType(), nameof(FindByLoginAsync), loginProvider, providerKey);
             var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var user = await base.FindByLoginAsync(loginProvider, providerKey);
@@ -51,7 +51,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public override async Task<ApplicationUser> FindByEmailAsync(string email)
         {
-            var cacheKey = CacheKey.With(GetType(), "FindByEmailAsync", email);
+            var cacheKey = CacheKey.With(GetType(), nameof(FindByEmailAsync), email);
             var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var user = await base.FindByEmailAsync(email);
@@ -67,7 +67,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public override async Task<ApplicationUser> FindByNameAsync(string userName)
         {
-            var cacheKey = CacheKey.With(GetType(), "FindByNameAsync", userName);
+            var cacheKey = CacheKey.With(GetType(), nameof(FindByNameAsync), userName);
             var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var user = await base.FindByNameAsync(userName);
@@ -83,7 +83,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public override async Task<ApplicationUser> FindByIdAsync(string userId)
         {
-            var cacheKey = CacheKey.With(GetType(), "FindByIdAsync", userId);
+            var cacheKey = CacheKey.With(GetType(), nameof(FindByIdAsync), userId);
             var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var user = await base.FindByIdAsync(userId);
@@ -137,15 +137,23 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
         {
-            //don't use FindByIdAsync with cache
-            var existUser = await FindByIdAsync(user.Id);
+            //It is important to call base.FindByIdAsync method to avoid of update a cached user.
+            var existUser = await base.FindByIdAsync(user.Id);
+            //We cant update not existing user
+            if(existUser == null)
+            {
+                return IdentityResult.Failed(ErrorDescriber.DefaultError());
+            }
+
+            await LoadUserDetailsAsync(existUser);
 
             var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
             {
                 new GenericChangedEntry<ApplicationUser>(user, existUser, EntryState.Modified)
             };
             await _eventPublisher.Publish(new UserChangingEvent(changedEntries));
-
+            //We need to use Patch method to update already tracked by DbContent entity, unless the UpdateAsync for passed user will throw exception
+            //"The instance of entity type 'ApplicationUser' cannot be tracked because another instance with the same key value for {'Id'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached"
             user.Patch(existUser);
             var result = await base.UpdateAsync(existUser);
             if (result.Succeeded)
