@@ -18,6 +18,7 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model.Security;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -246,7 +247,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPut]
         [Route("roles")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
-        public async Task<ActionResult<IdentityResult>> UpdateRole([FromBody] Role role)
+        public async Task<ActionResult<SecurityResult>> UpdateRole([FromBody] Role role)
+        {
+            return (await DoUpdateRole(role)).ToSecurityResult();
+        }
+        private async Task<ActionResult<IdentityResult>> DoUpdateRole(Role role)
         {
             var result = IdentityResult.Success;
             var roleExists = await _roleManager.RoleExistsAsync(role.Name);
@@ -260,7 +265,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             return Ok(result);
         }
-
         /// <summary>
         /// SearchAsync users by keyword
         /// </summary>
@@ -336,11 +340,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/create")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityCreate)]
-        public async Task<ActionResult<IdentityResult>> Create([FromBody] ApplicationUser newUser)
+        public async Task<ActionResult<SecurityResult>> Create([FromBody] ApplicationUser newUser)
+        {
+            return (await DoCreate(newUser)).ToSecurityResult();
+        }
+
+        private async Task<ActionResult<IdentityResult>> DoCreate(ApplicationUser newUser)
         {
             var result = await _userManager.CreateAsync(newUser, newUser.Password);
             return Ok(result);
         }
+
 
         /// <summary>
         /// Change password
@@ -351,7 +361,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("users/{userName}/changepassword")]
         [ProducesResponseType(400)]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
-        public async Task<ActionResult<IdentityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
+        public async Task<ActionResult<SecurityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
+        {
+            return (await DoChangePassword(userName, changePassword)).ToSecurityResult();
+        }
+
+        private async Task<ActionResult<IdentityResult>> DoChangePassword(string userName, ChangePasswordRequest changePassword)
         {
             if (!IsUserEditable(userName))
             {
@@ -386,7 +401,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns>Result of password reset.</returns>
         [HttpPost]
         [Route("currentuser/resetpassword")]
-        public async Task<ActionResult<IdentityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
+        public async Task<ActionResult<SecurityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
+        {
+            return (await DoResetCurrentUserPassword(resetPassword)).ToSecurityResult();
+        }
+        private async Task<ActionResult<IdentityResult>> DoResetCurrentUserPassword(ResetPasswordConfirmRequest resetPassword)
         {
             var currentUserName = User.Identity.Name;
 
@@ -425,7 +444,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/{userName}/resetpassword")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
-        public async Task<ActionResult<IdentityResult>> ResetPassword([FromRoute] string userName, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
+        public async Task<ActionResult<SecurityResult>> ResetPassword([FromRoute] string userName, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
+        {
+            return (await DoResetPassword(userName, resetPasswordConfirm)).ToSecurityResult();
+        }
+        private async Task<ActionResult<IdentityResult>> DoResetPassword(string userName, ResetPasswordConfirmRequest resetPasswordConfirm)
         {
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
@@ -461,7 +484,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/{userId}/resetpasswordconfirm")]
         [AllowAnonymous]
-        public async Task<ActionResult<IdentityResult>> ResetPasswordByToken([FromRoute] string userId, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
+        public async Task<ActionResult<SecurityResult>> ResetPasswordByToken([FromRoute] string userId, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
+        {
+            return (await DoResetPasswordByToken(userId, resetPasswordConfirm)).ToSecurityResult();
+        }
+
+        private async Task<ActionResult<IdentityResult>> DoResetPasswordByToken(string userId, ResetPasswordConfirmRequest resetPasswordConfirm)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -550,7 +578,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPut]
         [Route("users")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
-        public async Task<ActionResult<IdentityResult>> Update([FromBody] ApplicationUser user)
+        public async Task<ActionResult<SecurityResult>> Update([FromBody] ApplicationUser user)
+        {
+            return (await DoUpdate(user)).ToSecurityResult();
+        }
+
+        private async Task<ActionResult<IdentityResult>> DoUpdate(ApplicationUser user)
         {
             if (user == null)
             {
@@ -625,7 +658,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/{id}/unlock")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
-        public async Task<ActionResult<IdentityResult>> UnlockUser([FromRoute] string id)
+        public async Task<ActionResult<SecurityResult>> UnlockUser([FromRoute] string id)
+        {
+            return (await DoUnlockUser(id)).ToSecurityResult();
+        }
+
+        private async Task<ActionResult<IdentityResult>> DoUnlockUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user != null)
@@ -639,7 +677,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         //TODO: Remove later
         #region Obsolete methods
-        [Obsolete("user /roles/search instead")]
+        [Obsolete("use /roles/search instead")]
         [HttpPost]
         [Route("roles")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityQuery)]
