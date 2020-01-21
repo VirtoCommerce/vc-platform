@@ -14,6 +14,7 @@ using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Extensions;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -259,7 +260,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 result = await _roleManager.UpdateAsync(role);
             }
-            return Ok(result).ToSecurityResult();
+            return Ok(result.ToSecurityResult());
         }
         /// <summary>
         /// SearchAsync users by keyword
@@ -339,7 +340,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<SecurityResult>> Create([FromBody] ApplicationUser newUser)
         {
             var result = await _userManager.CreateAsync(newUser, newUser.Password);
-            return Ok(result).ToSecurityResult();
+            return Ok(result.ToSecurityResult());
         }
 
 
@@ -356,12 +357,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             if (!IsUserEditable(userName))
             {
-                return BadRequest(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult();
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" })).ToSecurityResult();
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
 
             var result = await _signInManager.UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
@@ -377,7 +378,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            return Ok(result).ToSecurityResult();
+            return Ok(result.ToSecurityResult());
         }
 
         /// <summary>
@@ -394,11 +395,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await _userManager.FindByNameAsync(currentUserName);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" })).ToSecurityResult();
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
             if (!IsUserEditable(user.UserName))
             {
-                return BadRequest(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult();
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -415,7 +416,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            return Ok(result).ToSecurityResult();
+            return Ok(result.ToSecurityResult());
         }
 
         /// <summary>
@@ -431,11 +432,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" })).ToSecurityResult();
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
             if (!IsUserEditable(user.UserName))
             {
-                return BadRequest(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult();
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -451,7 +452,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            return Ok(result).ToSecurityResult();
+            return Ok(result.ToSecurityResult());
         }
 
         /// <summary>
@@ -467,11 +468,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" })).ToSecurityResult();
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
             if (!IsUserEditable(user.UserName))
             {
-                return BadRequest(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult();
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
             var result = await _signInManager.UserManager.ResetPasswordAsync(user, resetPasswordConfirm.Token, resetPasswordConfirm.NewPassword);
             if (result.Succeeded)
@@ -487,7 +488,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            return Ok(result).ToSecurityResult();
+            return Ok(result.ToSecurityResult());
         }
 
         /// <summary>
@@ -559,12 +560,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             if (!IsUserEditable(user.UserName))
             {
-                return Ok(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." })).ToSecurityResult();
+                return Ok(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
             var result = await _userManager.UpdateAsync(user);
 
 
-            return Ok(result).ToSecurityResult();
+            return Ok(result.ToSecurityResult());
         }
 
         /// <summary>
@@ -633,9 +634,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 await _userManager.ResetAccessFailedCountAsync(user);
                 var result = await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MinValue);
-                return Ok(result).ToSecurityResult();
+                return Ok(result.ToSecurityResult());
             }
-            return Ok(IdentityResult.Failed()).ToSecurityResult();
+            return Ok(IdentityResult.Failed().ToSecurityResult());
         }
 
         //TODO: Remove later
