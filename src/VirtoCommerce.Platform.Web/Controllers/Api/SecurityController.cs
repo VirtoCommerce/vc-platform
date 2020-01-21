@@ -253,7 +253,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
         private async Task<ActionResult<IdentityResult>> DoUpdateRole(Role role)
         {
-            var result = IdentityResult.Success;
+            IdentityResult result;
             var roleExists = await _roleManager.RoleExistsAsync(role.Name);
             if (!roleExists)
             {

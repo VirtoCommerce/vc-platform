@@ -22,8 +22,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
                 (actionResult as ObjectResult).Value = new SecurityResult()
                 {
                     Succeeded = identityResult.Succeeded,
-                    Errors = identityResult.Errors.Select(x => x.Description).ToArray()
-                    //IdentityErrors = identityResult.Errors;
+                    Errors = identityResult.Errors.Select(x => x.Description)
                 };
             }
             return actionResult;
@@ -36,7 +35,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
         /// <returns></returns>
         public static ActionResult<SecurityResult> ToSecurityResult(this ActionResult<IdentityResult> actionResult)
         {
-            return actionResult.ToSecurityResult();
+            return ToSecurityResult(actionResult.Result);
         }
 
     }

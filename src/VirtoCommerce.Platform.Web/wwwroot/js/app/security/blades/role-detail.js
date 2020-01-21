@@ -59,7 +59,7 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
                 blade.refresh(true);
             }
             else {
-                bladeNavigationService.setError(_.pluck(result.errors, 'description').join(), blade);
+                bladeNavigationService.setError(result.errors.join(), blade);
             }
         });
     };
