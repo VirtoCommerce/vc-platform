@@ -9,9 +9,10 @@
 
     blade.refresh = function () {
         blade.data = blade.currentEntity;
-
-        dynamicPropertiesApi.search({objectType: blade.currentEntity.objectType, take: 2^31},
+        blade.refreshWidgetCount(blade.currentEntity.objectType);
+        dynamicPropertiesApi.search({objectType: blade.currentEntity.objectType, take: blade.dynamicPropertyCount},
             function (response) {
+                // blade.setDynamicPropertyCount(response.totalCount);
                 var rawProperties = response.results;
                 _.each(response.results, function(prop) {
                     prop.values = [];
