@@ -10,7 +10,7 @@
     blade.refresh = function () {
         blade.data = blade.currentEntity;
 
-        dynamicPropertiesApi.search({objectType: blade.currentEntity.objectType, take: blade.dynamicPropertyCount}, 
+        dynamicPropertiesApi.search({objectType: blade.currentEntity.objectType, take: 2^31},
             function (response) {
                 var rawProperties = response.results;
                 _.each(response.results, function(prop) {
@@ -109,7 +109,8 @@
 		            id: 'dynamicPropertyList',
 		            objectType: blade.data.objectType,
 		            controller: 'platformWebApp.dynamicPropertyListController',
-		            template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html'
+		            template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html',
+		            parentRefresh: blade.refresh
 		        };
 		        bladeNavigationService.showBlade(newBlade, blade);
 		    },
