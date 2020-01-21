@@ -47,7 +47,7 @@ angular.module('platformWebApp')
                 blade.parentBlade.selectNode(postData);
             }
             else {
-                bladeNavigationService.setError(_.pluck(result.errors, 'description').join(), blade);
+                bladeNavigationService.setError(result.errors.join(), blade);
             }
         
         });

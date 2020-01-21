@@ -67,7 +67,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                     blade.refresh(true);
                 }
                 else {
-                    bladeNavigationService.setError(_.pluck(result.errors, 'description').join(), blade);
+                    bladeNavigationService.setError(result.errors.join(), blade);
                 }
             });
         };
