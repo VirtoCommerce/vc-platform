@@ -10,6 +10,10 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
+    /// <summary>
+    /// The workaround for openapi3/autorest query parameters serialization
+    /// See more: https://github.com/Azure/autorest/issues/3373, https://swagger.io/specification/
+    /// </summary>
     public class ArrayInQueryParametersFilter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
