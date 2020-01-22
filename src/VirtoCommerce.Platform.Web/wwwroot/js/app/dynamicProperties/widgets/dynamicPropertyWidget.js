@@ -13,10 +13,7 @@
             controller: 'platformWebApp.propertyValueListController',
 			template: '$(Platform)/Scripts/app/dynamicProperties/blades/propertyValue-list.tpl.html',
 			dynamicPropertyCount: $scope.dynamicPropertyCount,
-			refreshWidgetCount: $scope.refreshCount,
-			setDynamicPropertyCount: function (newCount) {
-				$scope.dynamicPropertyCount = newCount;
-			}
+			refreshWidgetCount: $scope.refreshCount
         };
         bladeNavigationService.showBlade(blade, $scope.blade);
     };
