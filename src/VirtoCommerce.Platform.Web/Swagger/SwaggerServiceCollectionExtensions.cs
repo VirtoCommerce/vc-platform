@@ -69,6 +69,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.OperationFilter<ConsumeFromBodyFilter>();
                 c.OperationFilter<FileResponseTypeFilter>();
                 c.OperationFilter<OptionalParametersFilter>();
+                c.OperationFilter<ArrayInQueryParametersFilter>();
                 c.OperationFilter<FileUploadOperationFilter>();
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
                 c.OperationFilter<TagsFilter>();
