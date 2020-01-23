@@ -251,7 +251,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<SecurityResult>> UpdateRole([FromBody] Role role)
         {
             IdentityResult result;
-            var roleExists = await _roleManager.RoleExistsAsync(role.Name);
+            var roleExists = string.IsNullOrEmpty(role.Id) ?
+                await _roleManager.RoleExistsAsync(role.Name) :
+                await _roleManager.FindByIdAsync(role.Id) != null;
             if (!roleExists)
             {
                 result = await _roleManager.CreateAsync(role);

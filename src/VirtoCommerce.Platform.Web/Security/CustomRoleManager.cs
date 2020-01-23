@@ -93,7 +93,9 @@ namespace VirtoCommerce.Platform.Web.Security
                 throw new ArgumentNullException(nameof(updateRole));
             }
 
-            var existRole = await base.FindByNameAsync(updateRole.Name);
+            var existRole = string.IsNullOrEmpty(updateRole.Id) ?
+                await base.FindByNameAsync(updateRole.Name) :
+                await base.FindByIdAsync(updateRole.Id);
             if (existRole != null)
             {
                 //Need to path exists tracked by EF  entity due to already being tracked exception 
@@ -143,13 +145,13 @@ namespace VirtoCommerce.Platform.Web.Security
             {
                 role.Permissions = new List<Permission>();
                 //Load role claims and convert it to the permissions and assign to role
-                var storedPermissions = (await GetClaimsAsync(role)).Select(x=>Permission.TryCreateFromClaim(x, _jsonOptions.SerializerSettings)).ToList();
-                var knownPermissionsDict = _knownPermissions.GetAllPermissions().Select(x=>x.Clone() as Permission).ToDictionary(x=>x.Name, x=>x).WithDefaultValue(null);
+                var storedPermissions = (await GetClaimsAsync(role)).Select(x => Permission.TryCreateFromClaim(x, _jsonOptions.SerializerSettings)).ToList();
+                var knownPermissionsDict = _knownPermissions.GetAllPermissions().Select(x => x.Clone() as Permission).ToDictionary(x => x.Name, x => x).WithDefaultValue(null);
                 foreach (var storedPermission in storedPermissions)
                 {
                     //Copy all meta information from registered to stored (for particular role) permission
                     var knownPermission = knownPermissionsDict[storedPermission.Name];
-                    if(knownPermission != null)
+                    if (knownPermission != null)
                     {
                         knownPermission.Patch(storedPermission);
                         role.Permissions.Add(storedPermission);
