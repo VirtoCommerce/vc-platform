@@ -93,7 +93,9 @@ namespace VirtoCommerce.Platform.Web.Security
                 throw new ArgumentNullException(nameof(updateRole));
             }
 
-            var existRole = await base.FindByIdAsync(updateRole.Id);
+            var existRole = string.IsNullOrEmpty(updateRole.Id) ?
+                await base.FindByNameAsync(updateRole.Name) :
+                await base.FindByIdAsync(updateRole.Id);
             if (existRole != null)
             {
                 //Need to path exists tracked by EF  entity due to already being tracked exception 
