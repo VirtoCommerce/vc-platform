@@ -125,7 +125,6 @@ namespace VirtoCommerce.Platform.Web
                         // Expose any JSON serialization exception as HTTP error
                         throw new JsonException(args.ErrorContext.Error.Message);
                     };
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 }
             );

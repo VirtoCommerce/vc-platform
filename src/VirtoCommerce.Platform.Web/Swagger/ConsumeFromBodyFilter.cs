@@ -9,6 +9,10 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
+    /// <summary>
+    /// This temporary filter removes broken "application/*+json" content-type.
+    /// It seems it's some openapi/swagger bug, because Autorest fails.        
+    /// </summary>
     public class ConsumeFromBodyFilter : IOperationFilter
     {
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
