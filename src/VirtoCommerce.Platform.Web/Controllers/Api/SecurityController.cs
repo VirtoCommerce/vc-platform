@@ -529,9 +529,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (user?.Email != null && IsUserEditable(user.UserName) && !(await _userManager.IsInRoleAsync(user, PlatformConstants.Security.SystemRoles.Customer)))
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = $"{Request.Scheme}{Request.Host}/api/platform/security/#/resetpassword/{user.Id}/{token}";
+                var callbackUrl = $"{Request.Scheme}://{Request.Host}/#/resetpassword/{user.Id}/{token}";
 
-                await _emailSender.SendEmailAsync(user.Email, "Reset password", callbackUrl);
+                await _emailSender.SendEmailAsync(user.Email, "Reset password", callbackUrl.ToString());
 
                 return Ok(callbackUrl);
             }
