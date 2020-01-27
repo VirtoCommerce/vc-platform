@@ -20,7 +20,7 @@ branches:
     pre-release-weight: 30000
   release:
     mode: ContinuousDeployment
-    tag: rc2
+    tag: rc.3
     increment: None
     prevent-increment-of-merged-branch-version: true
     track-merge-target: true
