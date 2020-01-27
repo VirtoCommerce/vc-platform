@@ -19,7 +19,6 @@ branches:
     is-mainline: false
     pre-release-weight: 30000
   release:
-    mode: ContinuousDeployment
     tag: rc.3
     increment: None
     prevent-increment-of-merged-branch-version: true
