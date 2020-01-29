@@ -235,6 +235,7 @@ class Build : NukeBuild
     Target Compress => _ => _
      .DependsOn(Clean, WebPackBuild, Test, Publish)
      .Executes(() =>
+
      {
          if (IsModule)
          {
@@ -305,8 +306,6 @@ class Build : NukeBuild
           .Requires(() => !IsModule)
           .Executes(() =>
           {
-              //dotnet %userprofile%\.nuget\packages\swashbuckle.aspnetcore.cli\4.0.1\lib\netcoreapp2.0\dotnet-swagger.dll tofile --output swagger.json bin/Debug/netcoreapp2.2/VirtoCommerce.Platform.Web.dll VirtoCommerce.Platform
-              //better use in the future a .Net Global Tool https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/README-v5.md#retrieve-swagger-directly-from-a-startup-assembly
               var swashbucklePackage = NuGetPackageResolver.GetGlobalInstalledPackage("swashbuckle.aspnetcore.cli", "5.0.0", "dotnet-swagger.dll");
               var swashbucklePath = swashbucklePackage.Directory / "tools" / "netcoreapp3.0" / "any" / "dotnet-swagger.dll";
               var projectPublishPath = ArtifactsDirectory / "publish" / $"{WebProject.Name}.dll";
