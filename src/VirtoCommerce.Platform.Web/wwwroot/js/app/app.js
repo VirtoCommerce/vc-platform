@@ -311,23 +311,23 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             $rootScope.$on('loginStatusChanged', function (event, authContext) {
                 //timeout need because $state not fully loading in run method and need to wait little time
                 $timeout(function () {
-                    if (authContext.isAuthenticated) {
-                        var currentState = $state.current;
-                        if (authContext.passwordExpired) {
-                            $state.go('changePasswordDialog', {
-                                onClose: function () {
-                                    if (!currentState.abstract
-                                        && currentState.name !== 'loginDialog'
-                                        && currentState.name !== 'changePasswordDialog') {
-                                        $state.go(currentState);
-                                    } else {
-                                        $state.go('workspace');
-                                    }
-                                }
-                            });
-                        }
-                    } else {
+                    var currentState = $state.current;
+                    if (!authContext.isAuthenticated) {
                         $state.go('loginDialog');
+                    } else if (authContext.passwordExpired) {
+                        $state.go('changePasswordDialog', {
+                            onClose: function () {
+                                if (!currentState.abstract
+                                    && currentState.name !== 'loginDialog'
+                                    && currentState.name !== 'changePasswordDialog') {
+                                    $state.go(currentState);
+                                } else {
+                                    $state.go('workspace');
+                                }
+                            }
+                        });
+                    } else if (!currentState.name || currentState.name === 'loginDialog') {
+                        $state.go('workspace');
                     }
                 }, 500);
             });
