@@ -400,7 +400,7 @@ angular.module('platformWebApp')
             if (blade && response) {
                 blade.isLoading = false;
                 blade.error = response.status && response.statusText ? response.status + ': ' + response.statusText : response;
-                blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody;
+                blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody || blade.error;
             }
         }
     };

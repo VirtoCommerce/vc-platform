@@ -77,6 +77,7 @@ angular.module('platformWebApp')
                 authService.validatepasswordresettoken($scope.viewModel).then(function (retVal) {
                     $scope.isValidToken = retVal;
                     $scope.isLoading = false;
+                    $scope.viewModel = { userId: $scope.viewModel.userId, code: $scope.viewModel.code, newPassword: '', newPassword2: ''}
                 }, function (response) {
                     $scope.isLoading = false;
                     $scope.errors = response.data.errors;
@@ -155,59 +156,55 @@ angular.module('platformWebApp')
     .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService',
         function ($rootScope, mainMenuService, metaFormsService, widgetService, $state, authService) {
 
-        //Register module in main menu
-        var menuItem = {
-            path: 'configuration/security',
-            icon: 'fa fa-key',
-            title: 'platform.menu.security',
-            priority: 5,
-            action: function () { $state.go('workspace.securityModule'); },
-            permission: 'platform:security:access'
-        };
-        mainMenuService.addMenuItem(menuItem);
+            //Register module in main menu
+            var menuItem = {
+                path: 'configuration/security',
+                icon: 'fa fa-key',
+                title: 'platform.menu.security',
+                priority: 5,
+                action: function () { $state.go('workspace.securityModule'); },
+                permission: 'platform:security:access'
+            };
+            mainMenuService.addMenuItem(menuItem);
 
-        metaFormsService.registerMetaFields("accountDetails",
-        [
-            {
-                name: "isAdministrator",
-                title: "platform.blades.account-detail.labels.is-administrator",
-                valueType: "Boolean",
-                priority: 0
-            },
-            {
-                name: "userName",
-                templateUrl: "accountUserName.html",
-                priority: 1,
-                isRequired: true
-            },
-            {
-                name: "email",
-                templateUrl: "accountEmail.html",
-                priority: 2
-            },
-            {
-                name: "accountType",
-                templateUrl: "accountTypeSelector.html",
-                priority: 3
-            },
-            {
-                name: "accountInfo",
-                templateUrl: "accountInfo.html",
-                priority: 4
-            }
-        ]);
+            metaFormsService.registerMetaFields("accountDetails",
+                [
+                    {
+                        name: "isAdministrator",
+                        title: "platform.blades.account-detail.labels.is-administrator",
+                        valueType: "Boolean",
+                        priority: 0
+                    },
+                    {
+                        name: "userName",
+                        templateUrl: "accountUserName.html",
+                        priority: 1,
+                        isRequired: true
+                    },
+                    {
+                        name: "email",
+                        templateUrl: "accountEmail.html",
+                        priority: 2
+                    },
+                    {
+                        name: "accountType",
+                        templateUrl: "accountTypeSelector.html",
+                        priority: 3
+                    },
+                    {
+                        name: "accountInfo",
+                        templateUrl: "accountInfo.html",
+                        priority: 4
+                    }
+                ]);
 
-        //Register widgets
-        widgetService.registerWidget({
-            controller: 'platformWebApp.accountRolesWidgetController',
-            template: '$(Platform)/Scripts/app/security/widgets/accountRolesWidget.tpl.html',
-        }, 'accountDetail');
-        widgetService.registerWidget({
-            controller: 'platformWebApp.accountApiWidgetController',
-            template: '$(Platform)/Scripts/app/security/widgets/accountApiWidget.tpl.html',
-        }, 'accountDetail');
-        widgetService.registerWidget({
-            controller: 'platformWebApp.changeLog.operationsWidgetController',
-            template: '$(Platform)/Scripts/app/changeLog/widgets/operations-widget.tpl.html'
-        }, 'accountDetail');
-    }]);
+            //Register widgets
+            widgetService.registerWidget({
+                controller: 'platformWebApp.accountRolesWidgetController',
+                template: '$(Platform)/Scripts/app/security/widgets/accountRolesWidget.tpl.html',
+            }, 'accountDetail');
+            widgetService.registerWidget({
+                controller: 'platformWebApp.changeLog.operationsWidgetController',
+                template: '$(Platform)/Scripts/app/changeLog/widgets/operations-widget.tpl.html'
+            }, 'accountDetail');
+        }]);

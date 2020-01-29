@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Data.Localizations
                 cacheEntry.AddExpirationToken(LocalizationCacheRegion.CreateChangeToken());
                 return InnerGetTranslationData(_options.FallbackLanguage);
             });
-      
+
             if (language != null && !language.EqualsInvariant(_options.FallbackLanguage))
             {
                 var cacheKey = CacheKey.With(GetType(), "RequestedLanguageJson", language);
@@ -41,7 +41,9 @@ namespace VirtoCommerce.Platform.Data.Localizations
                     //Add cache  expiration token
                     cacheEntry.AddExpirationToken(LocalizationCacheRegion.CreateChangeToken());
                     var langJson = InnerGetTranslationData(language);
-                    //Need merge default and requested localization json to resulting object
+                    // Make another instance of fallback language to avoid corruption of it in the memory cache
+                    result = (JObject)result.DeepClone();
+                    // Need merge default and requested localization json to resulting object
                     result.Merge(langJson, new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Merge });
                     return result;
                 });
@@ -58,7 +60,7 @@ namespace VirtoCommerce.Platform.Data.Localizations
                 return _providers.SelectMany(x => x.GetListOfInstalledLanguages()).Distinct().ToArray();
             });
             return result;
-        }      
+        }
 
 
         protected JObject InnerGetTranslationData(string language)
@@ -79,6 +81,6 @@ namespace VirtoCommerce.Platform.Data.Localizations
             return result;
         }
 
- 
+
     }
 }

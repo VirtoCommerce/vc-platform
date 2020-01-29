@@ -14,10 +14,12 @@ using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Extensions;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model.Security;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -246,10 +248,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPut]
         [Route("roles")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
-        public async Task<ActionResult<IdentityResult>> UpdateRole([FromBody] Role role)
+        public async Task<ActionResult<SecurityResult>> UpdateRole([FromBody] Role role)
         {
-            var result = IdentityResult.Success;
-            var roleExists = await _roleManager.RoleExistsAsync(role.Name);
+            IdentityResult result;
+            var roleExists = string.IsNullOrEmpty(role.Id) ?
+                await _roleManager.RoleExistsAsync(role.Name) :
+                await _roleManager.FindByIdAsync(role.Id) != null;
             if (!roleExists)
             {
                 result = await _roleManager.CreateAsync(role);
@@ -258,9 +262,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 result = await _roleManager.UpdateAsync(role);
             }
-            return Ok(result);
+            return Ok(result.ToSecurityResult());
         }
-
         /// <summary>
         /// SearchAsync users by keyword
         /// </summary>
@@ -336,11 +339,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/create")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityCreate)]
-        public async Task<ActionResult<IdentityResult>> Create([FromBody] ApplicationUser newUser)
+        public async Task<ActionResult<SecurityResult>> Create([FromBody] ApplicationUser newUser)
         {
             var result = await _userManager.CreateAsync(newUser, newUser.Password);
-            return Ok(result);
+            return Ok(result.ToSecurityResult());
         }
+
 
         /// <summary>
         /// Change password
@@ -351,16 +355,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("users/{userName}/changepassword")]
         [ProducesResponseType(400)]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
-        public async Task<ActionResult<IdentityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
+        public async Task<ActionResult<SecurityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
         {
             if (!IsUserEditable(userName))
             {
-                return BadRequest(new IdentityError { Description = "It is forbidden to edit this user." });
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }));
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
 
             var result = await _signInManager.UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
@@ -376,7 +380,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            return Ok(result);
+            return Ok(result.ToSecurityResult());
         }
 
         /// <summary>
@@ -386,18 +390,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns>Result of password reset.</returns>
         [HttpPost]
         [Route("currentuser/resetpassword")]
-        public async Task<ActionResult<IdentityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
+        public async Task<ActionResult<SecurityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
         {
             var currentUserName = User.Identity.Name;
 
             var user = await _userManager.FindByNameAsync(currentUserName);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }));
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
             if (!IsUserEditable(user.UserName))
             {
-                return BadRequest(new IdentityError { Description = "It is forbidden to edit this user." });
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -414,7 +418,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            return Ok(result);
+            return Ok(result.ToSecurityResult());
         }
 
         /// <summary>
@@ -425,16 +429,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/{userName}/resetpassword")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
-        public async Task<ActionResult<IdentityResult>> ResetPassword([FromRoute] string userName, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
+        public async Task<ActionResult<SecurityResult>> ResetPassword([FromRoute] string userName, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
         {
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }));
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
             if (!IsUserEditable(user.UserName))
             {
-                return BadRequest(new IdentityError { Description = "It is forbidden to edit this user." });
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -450,7 +454,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            return Ok(result);
+            return Ok(result.ToSecurityResult());
         }
 
         /// <summary>
@@ -461,16 +465,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/{userId}/resetpasswordconfirm")]
         [AllowAnonymous]
-        public async Task<ActionResult<IdentityResult>> ResetPasswordByToken([FromRoute] string userId, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
+        public async Task<ActionResult<SecurityResult>> ResetPasswordByToken([FromRoute] string userId, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }));
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
             if (!IsUserEditable(user.UserName))
             {
-                return BadRequest(new IdentityError { Description = "It is forbidden to edit this user." });
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
             var result = await _signInManager.UserManager.ResetPasswordAsync(user, resetPasswordConfirm.Token, resetPasswordConfirm.NewPassword);
             if (result.Succeeded)
@@ -486,7 +490,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
-            return Ok(result);
+            return Ok(result.ToSecurityResult());
         }
 
         /// <summary>
@@ -525,9 +529,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (user?.Email != null && IsUserEditable(user.UserName) && !(await _userManager.IsInRoleAsync(user, PlatformConstants.Security.SystemRoles.Customer)))
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = $"{Request.Scheme}{Request.Host}/api/platform/security/#/resetpassword/{user.Id}/{token}";
+                var callbackUrl = $"{Request.Scheme}://{Request.Host}/#/resetpassword/{user.Id}/{token}";
 
-                await _emailSender.SendEmailAsync(user.Email, "Reset password", callbackUrl);
+                await _emailSender.SendEmailAsync(user.Email, "Reset password", callbackUrl.ToString());
 
                 return Ok(callbackUrl);
             }
@@ -550,7 +554,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPut]
         [Route("users")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
-        public async Task<ActionResult<IdentityResult>> Update([FromBody] ApplicationUser user)
+        public async Task<ActionResult<SecurityResult>> Update([FromBody] ApplicationUser user)
         {
             if (user == null)
             {
@@ -558,12 +562,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             if (!IsUserEditable(user.UserName))
             {
-                return Ok(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }));
+                return Ok(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
             var result = await _userManager.UpdateAsync(user);
 
 
-            return Ok(result);
+            return Ok(result.ToSecurityResult());
         }
 
         /// <summary>
@@ -625,21 +629,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/{id}/unlock")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
-        public async Task<ActionResult<IdentityResult>> UnlockUser([FromRoute] string id)
+        public async Task<ActionResult<SecurityResult>> UnlockUser([FromRoute] string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
                 await _userManager.ResetAccessFailedCountAsync(user);
                 var result = await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MinValue);
-                return Ok(result);
+                return Ok(result.ToSecurityResult());
             }
-            return Ok(IdentityResult.Failed());
+            return Ok(IdentityResult.Failed().ToSecurityResult());
         }
 
         //TODO: Remove later
         #region Obsolete methods
-        [Obsolete("user /roles/search instead")]
+        [Obsolete("use /roles/search instead")]
         [HttpPost]
         [Route("roles")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityQuery)]

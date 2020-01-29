@@ -14,15 +14,15 @@ In our work, we always try to use advanced technologies. Our decision to choose 
 
 We decided to use the following stack of technologies:
 
-* ASP.NET Core 2.2.0 as base platform
-* EF Core 2.2.0 as primary ORM
-* ASP.NET Core Identity 2.2.0 for authentication and authorization
-* OpenIddict 2.0.0 for OAuth authorization
+* ASP.NET Core 3.1.0 as base platform
+* EF Core 3.1.0 as primary ORM
+* ASP.NET Core Identity 3.1.0 for authentication and authorization
+* OpenIddict 2.0.1 for OAuth authorization
 * WebPack as primary design/runtime bundler and minifier
 * Swashbuckle.AspNetCore.SwaggerGen for Swagger docs and UI
 * SignalR Core for push notifications
 * AngularJS 1.4 as primary framework for SPA
-* HangFire 1.6.21 for run background tasks
+* HangFire 1.7.8 for run background tasks
 
 ## Solution Architecture Principles Overview
 
@@ -48,7 +48,7 @@ These Virto Commerce docs help you learn and use the Virto Commerce platform, fr
   * [Deploy Platform 3 from source code](/docs/deploy-from-source-code.md)
   * [Connect Storefront to Platform](/docs/connect-storefront-to-platform-v3.md)
 * [Getting Started](/docs/getting-started.md)
-* [Migration from 2.0 to 3.0](/docs/Migrate-Extension-module-from-the-Platform-2.0-to-3.0-version.md)
+* [Migration from 2.0 to 3.0](/docs/Migrate-module-from-the-Platform-2.0-to-3.0-version.md)
 
 ## License
 

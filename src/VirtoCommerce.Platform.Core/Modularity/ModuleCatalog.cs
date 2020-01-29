@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
-using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {

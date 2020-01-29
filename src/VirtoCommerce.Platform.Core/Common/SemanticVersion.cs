@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace VirtoCommerce.Platform.Core.Common
@@ -7,8 +9,7 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         private readonly Version _version;
 
-        public static readonly Regex SemanticVersionStrictRegex = new Regex(@"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})(?<Release>-([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+(\.([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+)*)?(?<Metadata>\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
-
+        public static readonly Regex SemanticVersionStrictRegex = new Regex(@"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})(?<Prerelease>-([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+(\.([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+)*)?(?<Metadata>\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
         public SemanticVersion(Version version)
         {
             if (version == null)
@@ -33,6 +34,8 @@ namespace VirtoCommerce.Platform.Core.Common
         /// Patch version Z (x.y.Z)
         /// </summary>
         public int Patch { get { return _version.Build; } }
+
+        public string Prerelease { get; private set; }
 
         public bool IsCompatibleWithBySemVer(SemanticVersion other)
         {
@@ -67,11 +70,16 @@ namespace VirtoCommerce.Platform.Core.Common
 
             var match = SemanticVersionStrictRegex.Match(value.Trim());
 
-            Version versionValue;
-            if (match.Success && Version.TryParse(match.Groups["Version"].Value, out versionValue))
+
+            if (match.Success && Version.TryParse(match.Groups["Version"].Value, out var versionValue))
             {
                 var normalizedVersion = NormalizeVersionValue(versionValue);
-                return new SemanticVersion(normalizedVersion);
+                var result = new SemanticVersion(normalizedVersion);
+                if (((ICollection<Group>)match.Groups).Any(x => x.Name.EqualsInvariant("Prerelease")))
+                {
+                    result.Prerelease = match.Groups["Prerelease"].Value;
+                }
+                return result;
             }
 
             throw new FormatException();
@@ -152,7 +160,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public override string ToString()
         {
-            return $"{Major}.{Minor}.{Patch}";
+            return $"{Major}.{Minor}.{Patch}{Prerelease}";
         }
     }
 }

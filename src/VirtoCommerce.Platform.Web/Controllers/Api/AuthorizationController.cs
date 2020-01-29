@@ -110,7 +110,6 @@ namespace Mvc.Server
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
-
             else if (openIdConnectRequest.IsAuthorizationCodeGrantType() || openIdConnectRequest.IsRefreshTokenGrantType())
             {
                 // Retrieve the claims principal stored in the authorization code/refresh token.
@@ -192,6 +191,13 @@ namespace Mvc.Server
                 OpenIdConnectConstants.Destinations.AccessToken,
                 OpenIdConnectConstants.Destinations.IdentityToken);
 
+            // all clients act as administrator
+            identity.AddClaim(
+                OpenIdConnectConstants.Claims.Role,
+                PlatformConstants.Security.SystemRoles.Administrator,
+                OpenIdConnectConstants.Destinations.AccessToken,
+                OpenIdConnectConstants.Destinations.IdentityToken);
+
             // Create a new authentication ticket holding the user identity.
             var ticket = new AuthenticationTicket(
                 new ClaimsPrincipal(identity),
@@ -249,9 +255,9 @@ namespace Mvc.Server
 
                 // Only add the iterated claim to the id_token if the corresponding scope was granted to the client application.
                 // The other claims will only be added to the access_token, which is encrypted when using the default format.
-                if ((claim.Type == OpenIdConnectConstants.Claims.Name && ticket.HasScope(OpenIdConnectConstants.Scopes.Profile)) ||
-                    (claim.Type == OpenIdConnectConstants.Claims.Email && ticket.HasScope(OpenIdConnectConstants.Scopes.Email)) ||
-                    (claim.Type == OpenIdConnectConstants.Claims.Role && ticket.HasScope(OpenIddictConstants.Claims.Roles)))
+                if (claim.Type == OpenIdConnectConstants.Claims.Name && ticket.HasScope(OpenIdConnectConstants.Scopes.Profile) ||
+                    claim.Type == OpenIdConnectConstants.Claims.Email && ticket.HasScope(OpenIdConnectConstants.Scopes.Email) ||
+                    claim.Type == OpenIdConnectConstants.Claims.Role && ticket.HasScope(OpenIddictConstants.Claims.Roles))
                 {
                     destinations.Add(OpenIdConnectConstants.Destinations.IdentityToken);
                 }

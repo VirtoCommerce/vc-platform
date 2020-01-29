@@ -1,4 +1,4 @@
-﻿{
+{
   "platform": {
     "commands": {
       "add": "Add",
@@ -11,6 +11,7 @@
       "close": "Close",
       "confirm": "Confirm",
       "copy-link": "Copy link",
+      "copy": "Copy", 
       "create": "Create",
       "cut": "Cut",
       "delete": "Delete",
@@ -135,6 +136,11 @@
             "short-text-dictionary-multilang": "Select value",
             "short-text-dictionary-multivalue-multilang": "Select value"
         }
-    }
+    },
+    "validators": {
+        "uriWithoutQuery": {
+            "error": "Invalid uri format. Make shure uri dosn't have query params."
+        }
+    } 
   }
 }

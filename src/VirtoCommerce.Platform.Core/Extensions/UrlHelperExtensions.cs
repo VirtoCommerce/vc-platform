@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace VirtoCommerce.Platform.Core.Extensions
 {
@@ -38,7 +39,7 @@ namespace VirtoCommerce.Platform.Core.Extensions
                 throw new ArgumentNullException(nameof(urlHelper));
             }
 
-            return urlHelper.Action(actionName, controllerName, routeValues, urlHelper.ActionContext.HttpContext.Request.Scheme);
+            return urlHelper.Action(new UrlActionContext { Action = actionName, Controller=  controllerName, Values = routeValues, Protocol = urlHelper.ActionContext.HttpContext.Request.Scheme });
         }
 
         /// <summary>

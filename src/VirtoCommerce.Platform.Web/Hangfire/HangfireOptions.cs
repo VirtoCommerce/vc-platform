@@ -10,6 +10,6 @@ namespace VirtoCommerce.Platform.Web.Hangfire
     {
         Memory,
         SqlServer,
-        
+
     }
 }

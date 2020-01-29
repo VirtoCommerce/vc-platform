@@ -6,13 +6,13 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Tests.Common
 {
-    public class MockDbSet
+    public static class MockDbSet
     {
         public static Mock<DbSet<T>> GetMockDbSet<T>(IQueryable<T> entities) where T : Entity
         {
             var mockSet = new Mock<DbSet<T>>();
             mockSet.As<IAsyncEnumerable<T>>()
-                .Setup(m => m.GetEnumerator())
+                .Setup(m => m.GetAsyncEnumerator(default))
                 .Returns(new TestAsyncEnumerator<T>(entities.GetEnumerator()));
             mockSet.As<IQueryable<T>>()
                 .Setup(m => m.Provider)

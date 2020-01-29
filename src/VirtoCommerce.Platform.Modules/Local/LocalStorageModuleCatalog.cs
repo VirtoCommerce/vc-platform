@@ -59,7 +59,7 @@ namespace VirtoCommerce.Platform.Modules
                 }
                 else
                 {
-                    //Set module assembly physical path for future loading by IModuleTypeLoader instance 
+                    //Set module assembly physical path for future loading by IModuleTypeLoader instance
                     moduleInfo.Ref = GetFileAbsoluteUri(_options.ProbingPath, manifest.AssemblyFile);
                 }
 
@@ -173,7 +173,7 @@ namespace VirtoCommerce.Platform.Modules
         {
             if (sourceParentPath != null)
             {
-                var sourceDirectoryPath = Path.Combine(sourceParentPath, "bin\\");
+                var sourceDirectoryPath = Path.Combine(sourceParentPath, "bin");
 
                 if (Directory.Exists(sourceDirectoryPath))
                 {

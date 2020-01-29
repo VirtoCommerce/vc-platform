@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace VirtoCommerce.Platform.Web.Swagger
@@ -9,28 +9,41 @@ namespace VirtoCommerce.Platform.Web.Swagger
     //[CLSCompliant(false)]
     public class FileUploadOperationFilter : IOperationFilter
     {
-        public void Apply(Operation operation, OperationFilterContext context)
+        public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
             if (context.ApiDescription.TryGetMethodInfo(out var methodInfo))
             {
                 var requestAttributes = methodInfo.GetCustomAttributes<UploadFileAttribute>().ToArray();
-                operation.Parameters = operation.Parameters ?? new List<IParameter>();
+                operation.Parameters ??= new List<OpenApiParameter>();
 
                 foreach (var attr in requestAttributes)
                 {
-                    operation.Parameters.Add(new NonBodyParameter
+                    operation.Parameters.Add(new OpenApiParameter
                     {
                         Name = attr.Name,
                         Description = attr.Description,
-                        In = "formData",
+                        In = ParameterLocation.Query,
                         Required = attr.Required,
-                        Type = attr.Type
+                        Schema = new OpenApiSchema() { Type = attr.Type }
                     });
                 }
 
                 if (requestAttributes.Any(x => x.Type == "file"))
                 {
-                    operation.Consumes.Add("multipart/form-data");
+                    // https://swagger.io/docs/specification/describing-request-body/file-upload/
+                    operation.RequestBody = new OpenApiRequestBody()
+                    {
+                        Content = { ["multipart/form-data"] =
+                            new OpenApiMediaType() {
+                                    Schema = new OpenApiSchema() { Type = "object",
+                                    Properties = { ["file"] = new OpenApiSchema() {
+                                            Description = "Select file", Type = "string", Format = "binary"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
                 }
             }
         }

@@ -23,10 +23,12 @@ namespace VirtoCommerce.Platform.Modules
         {
             var obj = JObject.Load(reader);
 
-            var id = obj.GetValue("id", StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
-            var version = obj.GetValue("version", StringComparison.InvariantCultureIgnoreCase)?.ToObject<Version>();
-            if (id != null && version != null)
+            var id = obj.GetValue("id", StringComparison.InvariantCultureIgnoreCase)?.Value<string>();            
+            var versionToken = (JObject)obj.GetValue("version", StringComparison.InvariantCultureIgnoreCase);            
+
+            if (id != null && versionToken != null)
             {
+                var version = new Version(versionToken.GetValue("major").ToObject<int>(), versionToken.GetValue("minor").ToObject<int>(), versionToken.GetValue("patch").ToObject<int>());
                 var result = new ModuleIdentity(id, new SemanticVersion(version));
                 return result;
             }
