@@ -242,7 +242,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
             //Disable animation
             $animate.enabled(false);
-            
+
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
             $rootScope.$on('$stateChangeStart', function (event, toState) {
