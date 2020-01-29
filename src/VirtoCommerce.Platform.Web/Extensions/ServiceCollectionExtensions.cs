@@ -17,6 +17,9 @@ using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Web.Security;
+using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core;
+using System.IO;
 
 namespace VirtoCommerce.Platform.Modules
 {
@@ -104,6 +107,31 @@ namespace VirtoCommerce.Platform.Modules
             inProcessBus.RegisterHandler<UserResetPasswordEvent>(async (message, token) => await providerSnapshot.GetService<LogChangesUserChangedEventHandler>().Handle(message));
             inProcessBus.RegisterHandler<UserLoginEvent>(async (message, token) => await providerSnapshot.GetService<LogChangesUserChangedEventHandler>().Handle(message));
             inProcessBus.RegisterHandler<UserLogoutEvent>(async (message, token) => await providerSnapshot.GetService<LogChangesUserChangedEventHandler>().Handle(message));
+
+            return services;
+        }
+
+
+
+        public static IServiceCollection AddLibraries(this IServiceCollection services)
+        {
+            var providerSnapshot = services.BuildServiceProvider();
+            var assemblyResolver = providerSnapshot.GetRequiredService<IAssemblyResolver>();
+            var hostingEnvironment = providerSnapshot.GetRequiredService<IWebHostEnvironment>();
+            var platformOptions = providerSnapshot.GetService<IOptions<PlatformOptions>>();
+
+            var librariesDir = Path.Combine(hostingEnvironment.ContentRootPath, platformOptions.Value.LibraryPath);
+            var architectureFolder = (IntPtr.Size == 8) ? "64 bit" : "32 bit";
+
+            if (Directory.Exists(librariesDir))
+            {
+                foreach (var sourceFilePath in Directory.EnumerateFiles(librariesDir, "*", SearchOption.AllDirectories)
+                                                        .Where(x => x.Contains(architectureFolder) &&
+                                                            x.EndsWith(PlatformInformation.NativeLibraryExtensions.FirstOrDefault())))
+                {
+                    assemblyResolver.LoadUnmanagedLibrary(sourceFilePath);
+                }
+            }
 
             return services;
         }
