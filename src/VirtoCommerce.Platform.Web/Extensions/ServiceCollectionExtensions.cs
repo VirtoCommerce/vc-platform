@@ -20,6 +20,8 @@ using VirtoCommerce.Platform.Web.Security;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
 using System.IO;
+using VirtoCommerce.Platform.Web.Extensions;
+using VirtoCommerce.Platform.Data;
 
 namespace VirtoCommerce.Platform.Modules
 {
@@ -110,28 +112,14 @@ namespace VirtoCommerce.Platform.Modules
 
             return services;
         }
+        
 
-
-
-        public static IServiceCollection AddLibraries(this IServiceCollection services)
+        public static IServiceCollection AddUnmanagedLibraries(this IServiceCollection services)
         {
+            services.AddSingleton<UnmanagedLibraryLoader>();
             var providerSnapshot = services.BuildServiceProvider();
-            var assemblyResolver = providerSnapshot.GetRequiredService<IAssemblyResolver>();
-            var hostingEnvironment = providerSnapshot.GetRequiredService<IWebHostEnvironment>();
-            var platformOptions = providerSnapshot.GetService<IOptions<PlatformOptions>>();
-
-            var librariesDir = Path.Combine(hostingEnvironment.ContentRootPath, platformOptions.Value.LibraryPath);
-            var architectureFolder = (IntPtr.Size == 8) ? "64 bit" : "32 bit";
-
-            if (Directory.Exists(librariesDir))
-            {
-                foreach (var sourceFilePath in Directory.EnumerateFiles(librariesDir, "*", SearchOption.AllDirectories)
-                                                        .Where(x => x.Contains(architectureFolder) &&
-                                                            x.EndsWith(PlatformInformation.NativeLibraryExtensions.FirstOrDefault())))
-                {
-                    assemblyResolver.LoadUnmanagedLibrary(sourceFilePath);
-                }
-            }
+            var unmanagedLibraryLoader = providerSnapshot.GetService<UnmanagedLibraryLoader>();
+            unmanagedLibraryLoader.Load();
 
             return services;
         }

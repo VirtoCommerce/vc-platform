@@ -40,6 +40,7 @@ using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Data;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Modules;
@@ -79,7 +80,10 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
 
-            services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
+            services.AddOptions<PlatformOptions>()
+                    .Bind(Configuration.GetSection("VirtoCommerce"))
+                    .ValidateDataAnnotations()
+                    .Configure(options => options.LibraryPath = Path.Combine(WebHostEnvironment.ContentRootPath, options.LibraryPath));
             services.AddOptions<HangfireOptions>().Bind(Configuration.GetSection("VirtoCommerce:Jobs")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
@@ -387,7 +391,7 @@ namespace VirtoCommerce.Platform.Web
             // Register the Swagger generator
             services.AddSwagger();
 
-            services.AddLibraries();
+            services.AddUnmanagedLibraries();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
