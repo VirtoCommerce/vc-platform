@@ -82,8 +82,8 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddOptions<PlatformOptions>()
                     .Bind(Configuration.GetSection("VirtoCommerce"))
-                    .ValidateDataAnnotations()
-                    .Configure(options => options.LibraryPath = Path.Combine(WebHostEnvironment.ContentRootPath, options.LibraryPath));
+                    .Configure(options => options.LibraryPath = Path.Combine(WebHostEnvironment.ContentRootPath, options.LibraryPath))
+                    .ValidateDataAnnotations();
             services.AddOptions<HangfireOptions>().Bind(Configuration.GetSection("VirtoCommerce:Jobs")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
