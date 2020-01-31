@@ -17,11 +17,6 @@ using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Web.Security;
-using Microsoft.Extensions.Options;
-using VirtoCommerce.Platform.Core;
-using System.IO;
-using VirtoCommerce.Platform.Web.Extensions;
-using VirtoCommerce.Platform.Data;
 
 namespace VirtoCommerce.Platform.Modules
 {
@@ -109,17 +104,6 @@ namespace VirtoCommerce.Platform.Modules
             inProcessBus.RegisterHandler<UserResetPasswordEvent>(async (message, token) => await providerSnapshot.GetService<LogChangesUserChangedEventHandler>().Handle(message));
             inProcessBus.RegisterHandler<UserLoginEvent>(async (message, token) => await providerSnapshot.GetService<LogChangesUserChangedEventHandler>().Handle(message));
             inProcessBus.RegisterHandler<UserLogoutEvent>(async (message, token) => await providerSnapshot.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-
-            return services;
-        }
-        
-
-        public static IServiceCollection AddUnmanagedLibraries(this IServiceCollection services)
-        {
-            services.AddSingleton<UnmanagedLibraryLoader>();
-            var providerSnapshot = services.BuildServiceProvider();
-            var unmanagedLibraryLoader = providerSnapshot.GetService<UnmanagedLibraryLoader>();
-            unmanagedLibraryLoader.Load();
 
             return services;
         }

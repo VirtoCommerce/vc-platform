@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Data;
 
 namespace VirtoCommerce.Platform.Web.Extensions
 {
@@ -88,6 +89,14 @@ namespace VirtoCommerce.Platform.Web.Extensions
                 }
 
             }
+            return appBuilder;
+        }
+
+        public static IApplicationBuilder LoadUnmanagedLibraries(this IApplicationBuilder appBuilder)
+        {
+            var unmanagedLibraryLoader = appBuilder.ApplicationServices.GetService<UnmanagedLibraryLoader>();
+            unmanagedLibraryLoader.Load();
+
             return appBuilder;
         }
     }

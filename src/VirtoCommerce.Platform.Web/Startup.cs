@@ -390,8 +390,6 @@ namespace VirtoCommerce.Platform.Web
 
             // Register the Swagger generator
             services.AddSwagger();
-
-            services.AddUnmanagedLibraries();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -492,6 +490,8 @@ namespace VirtoCommerce.Platform.Web
 
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             GlobalConfiguration.Configuration.UseSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
+
+            app.LoadUnmanagedLibraries();
         }
     }
 }
