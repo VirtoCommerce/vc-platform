@@ -18,6 +18,7 @@ using Nuke.Common.Tools.Git;
 using Nuke.Common.Tools.GitReleaseManager;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.Npm;
+using Nuke.Common.Tools.OpenCover;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -68,8 +69,10 @@ class Build : NukeBuild
 
     [Parameter] readonly string SonarAuthToken = "";
     [Parameter] readonly string SonarUrl = "https://sonar.virtocommerce.com";
+    [Parameter] readonly AbsolutePath CoverageReportPath = RootDirectory / ".tmp" / "coverage.xml";
+    [Parameter] readonly string TestsFilter = "Category!=IntegrationTest";
 
-    [Parameter] readonly string SwaggerValidationUrl = "http://validator.swagger.io/validator/debug";
+    [Parameter("Url to Swagger Validation Api")] readonly string SwaggerValidationUrl = "http://validator.swagger.io/validator/debug";
 
     [Parameter("GitHub user for release creation")] readonly string GitHubUser;
     [Parameter("GitHub user security token for release creation")] readonly string GitHubToken;
@@ -161,15 +164,10 @@ class Build : NukeBuild
        .DependsOn(Compile)
        .Executes(() =>
        {
-           DotNetTest(s => s
-               .SetConfiguration(Configuration)
-               .EnableNoBuild()
-               .SetLogger("trx")
-               .SetFilter("Category!=IntegrationTest")
-               .SetResultsDirectory(ArtifactsDirectory)
-               .CombineWith(
-                   Solution.GetProjects("*.Tests"), (cs, v) => cs
-                       .SetProjectFile(v)));
+           var dotnetPath = ToolPathResolver.GetPathExecutable("dotnet");
+           var testProjectPath = Solution.GetProjects("*.Tests").First().Path;
+           var testArgs = $"{testProjectPath} --logger trx --filter {TestsFilter}";
+           OpenCoverTasks.OpenCover($"-target:\"{dotnetPath}\" -targetargs:\"test {testArgs}\" -register -output:\"{CoverageReportPath}\"");
        });
 
     Target PublishPackages => _ => _
@@ -348,8 +346,9 @@ class Build : NukeBuild
             var projectKeyParam = $"/k:\"{projectName}\"";
             var hostParam = $"/d:sonar.host.url={SonarUrl}";
             var tokenParam = $"/d:sonar.login={SonarAuthToken}";
+            var sonarReportPathParam = $"/d:sonar.cs.opencover.reportsPaths={CoverageReportPath}";
 
-            var startCmd = $"sonarscanner begin {branchParam} {projectNameParam} {projectKeyParam} {hostParam} {tokenParam}";
+            var startCmd = $"sonarscanner begin {branchParam} {projectNameParam} {projectKeyParam} {hostParam} {tokenParam} {sonarReportPathParam}";
 
             Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}")}");
 

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.0.0-beta0007] - 2020-01-13
 ### Added
+- Code Coverage
 - SwaggerValidationUrl parameter
 - changelog
 ### Changed
