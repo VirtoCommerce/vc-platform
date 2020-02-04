@@ -45,12 +45,13 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             try
             {
                 var cloudBlob = await _cloudBlobClient.GetBlobReferenceFromServerAsync(uri);
+                var fileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString()));
+                var contentType = MimeTypeResolver.ResolveContentType(fileName);
 
                 retVal = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
-
                 retVal.Url = Uri.EscapeUriString(cloudBlob.Uri.ToString());
-                retVal.Name = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString()));
-                retVal.ContentType = cloudBlob.Properties.ContentType;
+                retVal.Name = fileName;
+                retVal.ContentType = contentType;
                 retVal.Size = cloudBlob.Properties.Length;
                 retVal.ModifiedDate = cloudBlob.Properties.LastModified?.DateTime;
                 retVal.RelativeUrl = cloudBlob.Uri.LocalPath;
