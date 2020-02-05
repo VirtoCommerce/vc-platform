@@ -165,9 +165,13 @@ class Build : NukeBuild
        .Executes(() =>
        {
            var dotnetPath = ToolPathResolver.GetPathExecutable("dotnet");
-           var testProjectPath = Solution.GetProjects("*.Tests").First().Path;
-           var testArgs = $"{testProjectPath} --logger trx --filter {TestsFilter}";
-           OpenCoverTasks.OpenCover($"-target:\"{dotnetPath}\" -targetargs:\"test {testArgs}\" -register -output:\"{CoverageReportPath}\"");
+           var testProjects = Solution.GetProjects("*.Tests");
+           if(testProjects.Count() > 0)
+           {
+               var testProjectPath = testProjects.First().Path;
+               var testArgs = $"{testProjectPath} --logger trx --filter {TestsFilter}";
+               OpenCoverTasks.OpenCover($"-target:\"{dotnetPath}\" -targetargs:\"test {testArgs}\" -register -output:\"{CoverageReportPath}\"");
+           }
        });
 
     Target PublishPackages => _ => _
