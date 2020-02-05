@@ -99,7 +99,10 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public override async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword)
         {
-            var result = await base.ResetPasswordAsync(user, token, newPassword);
+            //It is important to call base.FindByIdAsync method to avoid of update a cached user.
+            var existUser = await base.FindByIdAsync(user.Id);
+
+            var result = await base.ResetPasswordAsync(existUser, token, newPassword);
             if (result == IdentityResult.Success)
             {
                 SecurityCacheRegion.ExpireUser(user);

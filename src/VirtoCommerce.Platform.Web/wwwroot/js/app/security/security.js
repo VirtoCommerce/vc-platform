@@ -11,7 +11,6 @@ angular.module('platformWebApp')
                             function (response) {
                                 $scope.externalLoginProviders = response.data;
                             });
-
                         $scope.user = {};
                         $scope.authError = null;
                         $scope.authReason = false;
@@ -49,15 +48,23 @@ angular.module('platformWebApp')
             {
                 url: '/forgotpassword',
                 templateUrl: '$(Platform)/Scripts/app/security/dialogs/forgotPasswordDialog.tpl.html',
-                controller: [
-                    '$scope', 'platformWebApp.authService', '$state', function ($scope, authService, $state) {
+                controller: ['$rootScope', '$scope', 'platformWebApp.authService', '$state', function ($rootScope, $scope, authService, $state) {
                         $scope.viewModel = {};
+                        $rootScope.preventLoginDialog = false;
                         $scope.ok = function () {
                             $scope.isLoading = true;
                             $scope.errorMessage = null;
                             authService.requestpasswordreset($scope.viewModel).then(function (retVal) {
                                 $scope.isLoading = false;
+                                $scope.succeeded = true;
                                 angular.extend($scope, retVal);
+                            }, function (response) {
+                                $scope.isLoading = false;
+                                $scope.errorMessage = response.data.message;
+                                if (!$scope.errors) {
+                                    $scope.errors = [];
+                                }
+                                $scope.errors.push(response.data.message);
                             });
                         };
                         $scope.close = function () {
