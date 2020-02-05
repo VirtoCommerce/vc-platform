@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
     {
 
         public const string ProviderName = "AzureBlobStorage";
-        public const string DefaultBlobContainerName = "default-container";
+        public const string BlobCacheControlPropertyValue = "public, max-age=604800";
 
         private readonly CloudBlobClient _cloudBlobClient;
         private readonly CloudStorageAccount _cloudStorageAccount;
@@ -31,29 +31,21 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         #region IBlobStorageProvider Members
 
         /// <summary>
-        /// Get blog info by url
+        /// Get blob info by url
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="blobUrl"></param>
         /// <returns></returns>
-        public virtual async Task<BlobInfo> GetBlobInfoAsync(string url)
+        public virtual async Task<BlobInfo> GetBlobInfoAsync(string blobUrl)
         {
-            if (string.IsNullOrEmpty(url))
-                throw new ArgumentNullException(nameof(url));
+            if (string.IsNullOrEmpty(blobUrl))
+                throw new ArgumentNullException(nameof(blobUrl));
 
-            var uri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
+            var uri = blobUrl.IsAbsoluteUrl() ? new Uri(blobUrl) : new Uri(_cloudBlobClient.BaseUri, blobUrl.TrimStart('/'));
             BlobInfo retVal = null;
             try
             {
                 var cloudBlob = await _cloudBlobClient.GetBlobReferenceFromServerAsync(uri);
-
-                retVal = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
-
-                retVal.Url = Uri.EscapeUriString(cloudBlob.Uri.ToString());
-                retVal.Name = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString()));
-                retVal.ContentType = cloudBlob.Properties.ContentType;
-                retVal.Size = cloudBlob.Properties.Length;
-                retVal.ModifiedDate = cloudBlob.Properties.LastModified?.DateTime;
-                retVal.RelativeUrl = cloudBlob.Uri.LocalPath;
+                retVal = ConvertBlobToBlobInfo(cloudBlob);
             }
             catch (Exception)
             {
@@ -64,18 +56,18 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         }
 
         /// <summary>
-        /// Open blob for read by relative or absolute url
+        /// Open stream for read blob by relative or absolute url
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="blobUrl"></param>
         /// <returns>blob stream</returns>
-        public virtual Stream OpenRead(string url)
+        public virtual Stream OpenRead(string blobUrl)
         {
-            if (string.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(blobUrl))
             {
-                throw new ArgumentNullException(nameof(url));
+                throw new ArgumentNullException(nameof(blobUrl));
             }
 
-            var uri = url.IsAbsoluteUrl() ? new Uri(url) : new Uri(_cloudBlobClient.BaseUri, url.TrimStart('/'));
+            var uri = blobUrl.IsAbsoluteUrl() ? new Uri(blobUrl) : new Uri(_cloudBlobClient.BaseUri, blobUrl.TrimStart('/'));
             var cloudBlob = _cloudBlobClient
                 .GetBlobReferenceFromServerAsync(new Uri(_cloudBlobClient.BaseUri, uri.AbsolutePath.TrimStart('/')))
                 .Result;
@@ -85,17 +77,17 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         /// <summary>
         /// Open blob for write by relative or absolute url
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="blobUrl"></param>
         /// <returns>blob stream</returns>
-        public virtual Stream OpenWrite(string url)
+        public virtual Stream OpenWrite(string blobUrl)
         {
             //Container name
-            var containerName = GetContainerNameFromUrl(url);
+            var containerName = GetContainerNameFromUrl(blobUrl);
             //directory path
-            var filePath = GetFilePathFromUrl(url);
+            var filePath = GetFilePathFromUrl(blobUrl);
             if (filePath == null)
             {
-                throw new ArgumentException(@"Cannot get file path from URL", nameof(url));
+                throw new ArgumentException(@"Cannot get file path from URL", nameof(blobUrl));
             }
 
             var container = _cloudBlobClient.GetContainerReference(containerName);
@@ -108,7 +100,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             // Leverage Browser Caching - 7days
             // Setting Cache-Control on Azure Blobs can help reduce bandwidth and improve the performance by preventing consumers from having to continuously download resources. 
             // More Info https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
-            blob.Properties.CacheControl = "public, max-age=604800";
+            blob.Properties.CacheControl = BlobCacheControlPropertyValue;
 
             return blob.OpenWriteAsync().Result;
         }
@@ -183,14 +175,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                         var directory = item as CloudBlobDirectory;
                         if (block != null)
                         {
-                            var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
-
-                            blobInfo.Url = Uri.EscapeUriString(block.Uri.ToString());
-                            blobInfo.Name = Path.GetFileName(Uri.UnescapeDataString(block.Uri.ToString()));
-                            blobInfo.ContentType = block.Properties.ContentType;
-                            blobInfo.Size = block.Properties.Length;
-                            blobInfo.ModifiedDate = block.Properties.LastModified?.DateTime;
-                            blobInfo.RelativeUrl = blobInfo.Url.Replace(_cloudBlobClient.BaseUri.ToString(), string.Empty);
+                            var blobInfo = ConvertBlobToBlobInfo(block);
                             //Do not return empty blob (created with directory because azure blob not support direct directory creation)
                             if (!string.IsNullOrEmpty(blobInfo.Name))
                             {
@@ -244,7 +229,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 
         public virtual async Task CreateFolderAsync(BlobFolder folder)
         {
-            var path = (folder.ParentUrl != null ? folder.ParentUrl + "/" : string.Empty) + folder.Name;
+            var path = (folder.ParentUrl != null ? $"{folder.ParentUrl}/" : string.Empty) + folder.Name;
 
             var containerName = GetContainerNameFromUrl(path);
             var blobContainer = _cloudBlobClient.GetContainerReference(containerName);
@@ -331,7 +316,9 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                 {
                     await target.StartCopyAsync(sourse);
                     if (!isCopy)
+                    {
                         await sourse.DeleteIfExistsAsync();
+                    }
                 }
             }
         }
@@ -340,10 +327,10 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 
         #region IBlobUrlResolver Members
 
-        public string GetAbsoluteUrl(string relativeUrl)
+        public string GetAbsoluteUrl(string blobKey)
         {
-            var retVal = relativeUrl;
-            if (!relativeUrl.IsAbsoluteUrl())
+            var retVal = blobKey;
+            if (!blobKey.IsAbsoluteUrl())
             {
                 var baseUrl = _cloudStorageAccount.BlobEndpoint.AbsoluteUri;
 
@@ -353,7 +340,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                     baseUrl = cdnUriBuilder.Uri.AbsoluteUri;
                 }
 
-                retVal = baseUrl.TrimEnd('/') + "/" + relativeUrl;
+                retVal = baseUrl.TrimEnd('/') + "/" + blobKey.TrimStart('/');
             }
 
             return retVal;
@@ -406,6 +393,24 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             }
 
             return retVal;
+        }
+
+        private BlobInfo ConvertBlobToBlobInfo(ICloudBlob cloudBlob)
+        {
+            var relativeUrl = cloudBlob.Uri.LocalPath;
+            var absoluteUrl = GetAbsoluteUrl(cloudBlob.Uri.PathAndQuery);
+            var fileName = Path.GetFileName(Uri.UnescapeDataString(cloudBlob.Uri.ToString()));
+            var contentType = MimeTypeResolver.ResolveContentType(fileName);
+
+            return new BlobInfo
+            {
+                Url = absoluteUrl,
+                Name = fileName,
+                ContentType = contentType,
+                Size = cloudBlob.Properties.Length,
+                ModifiedDate = cloudBlob.Properties.LastModified?.DateTime,
+                RelativeUrl = relativeUrl
+            };
         }
 
         private static CloudStorageAccount ParseConnectionString(string connectionString)

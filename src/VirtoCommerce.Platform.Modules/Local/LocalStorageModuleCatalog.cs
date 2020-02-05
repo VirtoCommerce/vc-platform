@@ -183,7 +183,11 @@ namespace VirtoCommerce.Platform.Modules
                         // Copy all assembly related files except assemblies that are inlcuded in TPA list
                         if (IsAssemblyRelatedFile(sourceFilePath) && !(IsAssemblyFile(sourceFilePath) && TPA.ContainsAssembly(Path.GetFileName(sourceFilePath))))
                         {
-                            var targetFilePath = Path.Combine(targetDirectoryPath, Path.GetFileName(sourceFilePath));
+                            // Copy localization resource files to related subfolders
+                            var targetFilePath = Path.Combine(
+                                IsLocalizationFile(sourceFilePath) ? Path.Combine(targetDirectoryPath, Path.GetFileName(Path.GetDirectoryName(sourceFilePath)))
+                                : targetDirectoryPath,
+                                Path.GetFileName(sourceFilePath));
                             CopyFile(sourceFilePath, targetFilePath);
                         }
                     }
@@ -222,6 +226,11 @@ namespace VirtoCommerce.Platform.Modules
         private bool IsAssemblyFile(string path)
         {
             return _options.AssemblyFileExtensions.Any(x => path.EndsWith(x, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private bool IsLocalizationFile(string path)
+        {
+            return _options.LocalizationFileExtensions.Any(x => path.EndsWith(x, StringComparison.OrdinalIgnoreCase));
         }
 
         private static string GetFileAbsoluteUri(string rootPath, string relativePath)
