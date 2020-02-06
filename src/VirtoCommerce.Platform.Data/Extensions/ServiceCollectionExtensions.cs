@@ -51,8 +51,6 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddSingleton<ITranslationDataProvider, ModulesTranslationDataProvider>();
             services.AddSingleton<ITranslationService, TranslationService>();
 
-            services.AddSingleton<UnmanagedLibraryLoader>();
-
             return services;
 
         }

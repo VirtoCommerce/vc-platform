@@ -91,14 +91,6 @@ namespace VirtoCommerce.Platform.Web.Extensions
             }
             return appBuilder;
         }
-
-        public static IApplicationBuilder LoadUnmanagedLibraries(this IApplicationBuilder appBuilder)
-        {
-            var unmanagedLibraryLoader = appBuilder.ApplicationServices.GetService<UnmanagedLibraryLoader>();
-            unmanagedLibraryLoader.Load();
-
-            return appBuilder;
-        }
     }
 
 }
