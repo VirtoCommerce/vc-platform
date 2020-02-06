@@ -15,11 +15,12 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 		```xml
 		<Project Sdk="Microsoft.NET.Sdk">
 			<PropertyGroup>
-				<TargetFramework>netcoreapp2.2</TargetFramework>
+				<TargetFramework>netcoreapp3.1</TargetFramework>
 			</PropertyGroup>
 		</Project>
 		```
-   1. Read [this article](https://docs.microsoft.com/en-us/aspnet/core/migration/proper-to-2x) for more info.
+   1. Set current support Target Framework (at this time is netcoreapp3.1)    
+   1. Read [this article](https://docs.microsoft.com/en-us/aspnet/core/migration/30-to-31) for more info.
 3. Create **_src_** and **_tests_** subfolders in module's root folder (Windows Explorer)
 3. Move **_CustomerReviews.Core_**, **_CustomerReviews.Data_**, **_CustomerReviews&#46;Web_** projects to **_src_**
 3. Move **_CustomerReviews.Test_** project to **_tests_**
@@ -37,8 +38,8 @@ This article describes how to migrate an existing [CustomerReviews sample](https
    1. **CustomerReviews&#46;Web**: add references to CustomerReviews.Core, CustomerReviews.Data projects
    1. **CustomerReviews.Tests**: add references to CustomerReviews.Core, CustomerReviews.Data, CustomerReviews&#46;Web projects
 5. References to NuGet packages:
-   1. **CustomerReviews.Core**: add reference to the latest version 3 (3.x) **_VirtoCommerce.Platform.Core_** package.
-   1. **CustomerReviews.Data**: add reference to the latest version 3 (3.x) **_VirtoCommerce.Platform.Data_** package.
+   1. **CustomerReviews.Core**: add reference to the latest version **_VirtoCommerce.Platform.Core_** package.
+   1. **CustomerReviews.Data**: add reference to the latest version **_VirtoCommerce.Platform.Data_** package.
 5. References to NuGet packages in **_CustomerReviews&#46;Web_**:
    1. (Double click in Visual Studio to) open _CustomerReviews.Web.csproj_ file for editing;
    1. Add new ItemGroup:
@@ -267,14 +268,4 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     [Trait("Category", "IntegrationTest")]		
 
 ## 6. Create module package
-1. Open Command prompt
-1. If _VirtoCommerce.GlobalTool_ isn't installed, run:
-    ```
-    dotnet tool install VirtoCommerce.GlobalTool -g --version 3.0.0-beta0006
-    ```
-   Reopen the command prompt after installing.
-1. Navigate to the module's root folder (**/CustomerReviews**) in the Command prompt
-2. Create **.nuke** file and set your module's solution filename as its content: `CustomerReviews.sln`
-5. Run `vc-build compress`
-5. Add `artifacts/` line to `.gitignore` file
-5. In order to install the module to VC Platform, navigate to **artifacts** folder and take _CustomerReviews_3.0.0-.zip_ package file.
+1. please read article about `vc-build` [link](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/build/README.md)

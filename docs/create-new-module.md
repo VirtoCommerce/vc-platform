@@ -14,14 +14,14 @@ How to create a new module from scratch? Follow the Dummy module example.
 3. In **_tests_** folder add a project using "_xUnit Test Project (.NET Core)_" template:
    1. Project name: **_DummyModule.Tests_** 
    2. Location: ...\\_DummyModule\\**tests**_ folder (create the missing **tests** folder).
-3. Set "Target framework" to ".NET Core 2.2" for all 4 projects.
+3. Set "Target framework" to ".NET Core 3.1" for all 4 projects.
 5. References to projects:
    1. **DummyModule.Data**: add reference to DummyModule.Core project
    1. **DummyModule.Web**: add references to DummyModule.Core, DummyModule.Data projects
    1. **DummyModule.Tests**: add references to DummyModule.Core, DummyModule.Data, DummyModule.Web projects
 5. References to NuGet packages:
-   1. **DummyModule.Core**: add reference to the latest version 3 (3.x) **_VirtoCommerce.Platform.Core_** package.
-   1. **DummyModule.Data**: add reference to the latest version 3 (3.x) **_VirtoCommerce.Platform.Data_** package.
+   1. **DummyModule.Core**: add reference to the latest version **_VirtoCommerce.Platform.Core_** package.
+   1. **DummyModule.Data**: add reference to the latest version **_VirtoCommerce.Platform.Data_** package.
 5. References to NuGet packages in **_VirtoCommerce.Platform.Web_**:
    1. (Double click in Visual Studio to) open _DummyModule.Web.csproj_ file for editing;
    1. Add new ItemGroup:
@@ -280,13 +280,4 @@ Typical structure of **.Web** project is:
     ```
 
 ## 6. Create module package
-1. Open command prompt
-1. If _VirtoCommerce.GlobalTool_ isn't installed, run:
-    ```
-    dotnet tool install VirtoCommerce.GlobalTool -g --version 3.0.0-beta0006
-    ```
-   Reopen the command prompt after installing.
-1. Navigate to the module's root folder (**/DummyModule**) in the command prompt
-2. Create **.nuke** file and set your module's solution filename as its content: `DummyModule.sln`
-5. Run `vc-build compress`
-5. In order to install the module to VC Platform, navigate to **artifacts** folder and take _VirtoCommerce.Dummy_1.0.0-v1.zip_ package file.
+1. please read the [article](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/build/README.md)
