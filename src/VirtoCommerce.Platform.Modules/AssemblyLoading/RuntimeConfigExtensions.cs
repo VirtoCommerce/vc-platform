@@ -7,7 +7,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using VirtoCommerce.Platform.Core;
 
 namespace VirtoCommerce.Platform.Modules.AssemblyLoading
 {
