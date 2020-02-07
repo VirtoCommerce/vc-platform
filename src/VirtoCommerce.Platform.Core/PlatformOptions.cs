@@ -25,7 +25,6 @@ namespace VirtoCommerce.Platform.Core
         //Default path to store export files 
         public string DefaultExportFolder = "App_Data/Export/";
         public string DefaultExportFileName = "exported_data.zip";
-        public string LibraryPath { get; set; } = "lib";
     }
 
 }
