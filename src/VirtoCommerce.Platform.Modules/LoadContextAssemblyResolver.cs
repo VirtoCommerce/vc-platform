@@ -151,7 +151,7 @@ namespace VirtoCommerce.Platform.Modules
             var assemblyFileName = Path.GetFileName(managedLibrary.AppLocalPath);
             if (TPA.ContainsAssembly(assemblyFileName))
             {
-                var defaultAssembly = AssemblyLoadContext.Default.LoadFromAssemblyName(managedLibrary.Name);
+                var defaultAssembly = loadContext.LoadFromAssemblyName(managedLibrary.Name);
                 if (defaultAssembly != null)
                 {
                     return defaultAssembly;
