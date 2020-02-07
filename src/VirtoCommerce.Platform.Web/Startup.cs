@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -41,7 +40,6 @@ using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Data;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Modules;
@@ -81,9 +79,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
 
-            services.AddOptions<PlatformOptions>()
-                    .Bind(Configuration.GetSection("VirtoCommerce"))
-                    .ValidateDataAnnotations();
+            services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
             services.AddOptions<HangfireOptions>().Bind(Configuration.GetSection("VirtoCommerce:Jobs")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
