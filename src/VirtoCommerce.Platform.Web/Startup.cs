@@ -192,6 +192,9 @@ namespace VirtoCommerce.Platform.Web
                 options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor;
             });
 
+            //Create backup of token handler before default claim maps are cleared
+            var defaultTokenHandler = new JwtSecurityTokenHandler();
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
             authBuilder.AddJwtBearer(options =>
@@ -241,6 +244,7 @@ namespace VirtoCommerce.Platform.Web
                             openIdConnectOptions.UseTokenLifetime = true;
                             openIdConnectOptions.RequireHttpsMetadata = false;
                             openIdConnectOptions.SignInScheme = IdentityConstants.ExternalScheme;
+                            openIdConnectOptions.SecurityTokenValidator = defaultTokenHandler;
                         });
                 }
             }
