@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using DotLiquid;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Notifications;
 
 namespace VirtoCommerce.Platform.Data.Notifications
@@ -30,6 +31,9 @@ namespace VirtoCommerce.Platform.Data.Notifications
             var parameters = ResolveNotificationParameters(notification);
 
             var myDict = new Dictionary<string, object>();
+
+            // Register predefined types (otherwise dotLiquid can't resolve members of these types)
+            RegisterTypeAsDrop(typeof(DynamicPropertyObjectValue));
 
             foreach (var parameter in parameters)
             {
