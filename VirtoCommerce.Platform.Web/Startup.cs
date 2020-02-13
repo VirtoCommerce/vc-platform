@@ -362,6 +362,7 @@ namespace VirtoCommerce.Platform.Web
             if (!string.IsNullOrEmpty(applicationInsightsInstrumentationKey))
             {
                 TelemetryConfiguration.Active.InstrumentationKey = applicationInsightsInstrumentationKey;
+                TelemetryConfiguration.Active.TelemetryInitializers.Add(new ApplicationInsights.CustomTelemetryInitializer());
             }
 
             // https://docs.microsoft.com/en-us/azure/application-insights/app-insights-live-stream#secure-the-control-channel
