@@ -15,8 +15,7 @@ namespace VirtoCommerce.Platform.Web.ApplicationInsights
             // Extend All telemetry with user identity context information.
             if (httpContext != null && httpContext.User!=null)
             {
-                if(httpContext.User)
-                    telemetry.Context.User.AuthenticatedUserId = httpContext.User.Identity.Name;
+                 telemetry.Context.User.AuthenticatedUserId = httpContext.User.Identity.Name;
             }
 
             // Extend Request telemetry with X-Response-Time value.
