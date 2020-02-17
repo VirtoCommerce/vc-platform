@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Web.Mvc;
@@ -21,15 +21,17 @@ namespace VirtoCommerce.Platform.Web
     /// </summary>
     public class ResponseTimeHeaderFilter : System.Web.Http.Filters.ActionFilterAttribute
     {
+        public const string XResponseTimeHeader = "X-Response-Time";
+
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            actionContext.Request.Properties["X-Response-Time"] = Stopwatch.StartNew();
+            actionContext.Request.Properties[XResponseTimeHeader] = Stopwatch.StartNew();
         }
 
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
             object timer;
-            if (actionExecutedContext != null && actionExecutedContext.Request != null && actionExecutedContext.Request.Properties.TryGetValue("X-Response-Time", out timer))
+            if (actionExecutedContext != null && actionExecutedContext.Request != null && actionExecutedContext.Request.Properties.TryGetValue(XResponseTimeHeader, out timer))
             {
                 var stopWatch = timer as Stopwatch;
                 if (stopWatch != null)
@@ -37,7 +39,7 @@ namespace VirtoCommerce.Platform.Web
                     stopWatch.Stop();
                     if (actionExecutedContext.Response != null)
                     {
-                        actionExecutedContext.Response.Headers.Add("X-Response-Time", stopWatch.ElapsedMilliseconds.ToString());
+                        actionExecutedContext.Response.Headers.Add(XResponseTimeHeader, stopWatch.ElapsedMilliseconds.ToString());
                     }
                 }
             }

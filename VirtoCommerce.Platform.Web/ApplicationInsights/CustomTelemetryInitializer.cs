@@ -13,18 +13,16 @@ namespace VirtoCommerce.Platform.Web.ApplicationInsights
             var httpContext = HttpContext.Current;
 
             // Extend All telemetry with user identity context information.
-            if (httpContext != null && httpContext.User!=null)
-            {
-                 telemetry.Context.User.AuthenticatedUserId = httpContext.User.Identity.Name;
-            }
+            telemetry.Context.User.AuthenticatedUserId = httpContext?.User?.Identity?.Name;
 
-            // Extend Request telemetry with X-Response-Time value.
+            // Extend Request telemetry with X-Re   sponse-Time value.
             var requestTelemetry = telemetry as RequestTelemetry;
 
             if (httpContext != null && requestTelemetry != null)
             {
-                var xRsponseTime = httpContext.Response.Headers["X-Response-Time"];
-                requestTelemetry.Properties.Add("X-Response-Time", xRsponseTime);
+                var xResponseTime = httpContext.Response.Headers[ResponseTimeHeaderFilter.XResponseTimeHeader];
+                if(!string.IsNullOrEmpty(xResponseTime))
+                    requestTelemetry.Properties.Add(ResponseTimeHeaderFilter.XResponseTimeHeader, xResponseTime);
             }
         }
     }
