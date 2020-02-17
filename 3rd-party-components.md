@@ -43,5 +43,6 @@
  ValueInjecter | convention based mapper | MIT | https://github.com/omuleanu/ValueInjecter | | NuGet 
  sendgrid-csharp | The Official SendGrid Led, Community Driven C# | MIT| https://github.com/sendgrid | | NuGet 
  DotLiquid | The templating system ported to the .net framework | Apache  | http://dotliquidmarkup.org/ | | NuGet 
+ wkhtmltopdf | wkhtmltopdf and wkhtmltoimage are command line tools to render HTML into PDF and various image formats using the QT Webkit rendering engine. |  GNU Lesser General Public License v3.0 | https://github.com/wkhtmltopdf/wkhtmltopdf | Ashish Kulkarni | NuGet
  
  
