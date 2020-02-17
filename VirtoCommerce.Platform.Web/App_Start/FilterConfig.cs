@@ -6,20 +6,20 @@ using VirtoCommerce.Platform.Web.Controllers;
 
 namespace VirtoCommerce.Platform.Web
 {
-    public class FilterConfig
+    public static class FilterConfig
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
-			filters.Add(new AiHandleErrorAttribute());
+            filters.Add(new AiHandleErrorAttribute());
 
-			System.Web.Http.GlobalConfiguration.Configuration.Filters.Add(new ResponseTimeHeaderFilter());
+            System.Web.Http.GlobalConfiguration.Configuration.Filters.Add(new ResponseTimeHeaderFilterAttribute());
         }
     }
     /// <summary>
     /// Filter add X-Response-Time header to response contains elapsed response time in milliseconds 
     /// </summary>
-    public class ResponseTimeHeaderFilter : System.Web.Http.Filters.ActionFilterAttribute
+    public class ResponseTimeHeaderFilterAttribute : System.Web.Http.Filters.ActionFilterAttribute
     {
         public const string XResponseTimeHeader = "X-Response-Time";
 

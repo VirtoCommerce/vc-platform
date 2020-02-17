@@ -18,11 +18,11 @@ namespace VirtoCommerce.Platform.Web.ApplicationInsights
             // Extend Request telemetry with X-Re   sponse-Time value.
             var requestTelemetry = telemetry as RequestTelemetry;
 
-            if (httpContext != null && requestTelemetry != null)
+            if (httpContext != null && requestTelemetry != null)    
             {
-                var xResponseTime = httpContext.Response.Headers[ResponseTimeHeaderFilter.XResponseTimeHeader];
+                var xResponseTime = httpContext.Response.Headers[ResponseTimeHeaderFilterAttribute.XResponseTimeHeader];
                 if(!string.IsNullOrEmpty(xResponseTime))
-                    requestTelemetry.Properties.Add(ResponseTimeHeaderFilter.XResponseTimeHeader, xResponseTime);
+                    requestTelemetry.Properties.Add(ResponseTimeHeaderFilterAttribute.XResponseTimeHeader, xResponseTime);
             }
         }
     }

@@ -81,6 +81,14 @@ namespace VirtoCommerce.Platform.Web
         public static bool IsApplication { get; private set; }
         public static string VirtualRoot { get; private set; }
 
+        private static void InitAssembliesPath(string virtualRoot)
+        {
+            VirtualRoot = virtualRoot;
+
+            _assembliesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Modules");
+        }
+
+
         public void Configuration(IAppBuilder app)
         {
             IsApplication = true;
@@ -89,9 +97,8 @@ namespace VirtoCommerce.Platform.Web
 
         public void Configuration(IAppBuilder app, string virtualRoot, string routePrefix)
         {
-            VirtualRoot = virtualRoot;
+            InitAssembliesPath(virtualRoot);
 
-            _assembliesPath = HostingEnvironment.MapPath(VirtualRoot + "/App_Data/Modules");
             HostingEnvironment.MapPath(VirtualRoot).EnsureEndSeparator();
             var modulesVirtualPath = VirtualRoot + "/Modules";
             var modulesPhysicalPath = HostingEnvironment.MapPath(modulesVirtualPath).EnsureEndSeparator();
@@ -716,7 +723,7 @@ namespace VirtoCommerce.Platform.Web
             var tempCounterManager = new TempPerformanceCounterManager();
             GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
             var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
-            app.MapSignalR("/" + moduleInitializerOptions.RoutePrefix + "signalr", hubConfiguration);
+            app.MapSignalR($"/{moduleInitializerOptions.RoutePrefix}signalr", hubConfiguration);
 
             var hubSignalR = GlobalHost.ConnectionManager.GetHubContext<ClientPushHub>();
             var notifier = new InMemoryPushNotificationManager(hubSignalR);
