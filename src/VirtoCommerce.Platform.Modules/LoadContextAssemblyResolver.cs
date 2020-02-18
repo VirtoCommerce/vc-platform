@@ -188,7 +188,7 @@ namespace VirtoCommerce.Platform.Modules
             path = null;
             return false;
         }
-        
+
         private static Uri GetFileUri(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))

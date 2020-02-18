@@ -31,22 +31,17 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
         /// <returns>Returns all assembly dependencies.</returns>
         public static IEnumerable<ManagedLibrary> ExtractDependencies(this DependencyContext dependencyContext)
         {
-            return ResolveRuntimeAssemblies(dependencyContext, GetRuntimeFallbacks(dependencyContext));
-        }
-
-        private static RuntimeFallbacks GetRuntimeFallbacks(DependencyContext dependencyContext)
-        {
             var ridGraph = dependencyContext.RuntimeGraph.Any()
-               ? dependencyContext.RuntimeGraph
-               : DependencyContext.Default.RuntimeGraph;
+                ? dependencyContext.RuntimeGraph
+                : DependencyContext.Default.RuntimeGraph;
 
             var rid = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment.GetRuntimeIdentifier();
             var fallbackRid = GetFallbackRid();
             var fallbackGraph = ridGraph.FirstOrDefault(g => g.Runtime == rid)
-                ?? ridGraph.FirstOrDefault(g => g.Runtime == fallbackRid)
-                ?? new RuntimeFallbacks("any");
+                                ?? ridGraph.FirstOrDefault(g => g.Runtime == fallbackRid)
+                                ?? new RuntimeFallbacks("any");
 
-            return fallbackGraph;
+            return ResolveRuntimeAssemblies(dependencyContext, fallbackGraph);
         }
 
 
