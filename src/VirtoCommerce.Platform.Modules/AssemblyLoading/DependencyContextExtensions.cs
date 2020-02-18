@@ -32,14 +32,14 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
         public static IEnumerable<ManagedLibrary> ExtractDependencies(this DependencyContext dependencyContext)
         {
             var ridGraph = dependencyContext.RuntimeGraph.Any()
-                ? dependencyContext.RuntimeGraph
-                : DependencyContext.Default.RuntimeGraph;
+               ? dependencyContext.RuntimeGraph
+               : DependencyContext.Default.RuntimeGraph;
 
             var rid = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment.GetRuntimeIdentifier();
             var fallbackRid = GetFallbackRid();
             var fallbackGraph = ridGraph.FirstOrDefault(g => g.Runtime == rid)
-                                ?? ridGraph.FirstOrDefault(g => g.Runtime == fallbackRid)
-                                ?? new RuntimeFallbacks("any");
+                ?? ridGraph.FirstOrDefault(g => g.Runtime == fallbackRid)
+                ?? new RuntimeFallbacks("any");
 
             return ResolveRuntimeAssemblies(dependencyContext, fallbackGraph);
         }
