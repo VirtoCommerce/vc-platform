@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Data.Helpers
             var startInfo = new ProcessStartInfo
             {
                 FileName = toolPath,
-                Arguments = string.Join(" ", arguments) ?? string.Empty,
+                Arguments = string.Join(" ", arguments),
                 WorkingDirectory = workingDirectory ?? Directory.GetCurrentDirectory(),
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Data.Helpers
 
         public static string GetToolPathViaManualInstallation(string toolName)
         {
-            string result = string.Empty;
+            var result = string.Empty;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
