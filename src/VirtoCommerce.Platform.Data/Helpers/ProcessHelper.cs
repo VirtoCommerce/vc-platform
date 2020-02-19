@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using VirtoCommerce.Platform.Core.ProcessSettings;
 
@@ -13,7 +10,7 @@ namespace VirtoCommerce.Platform.Data.Helpers
     {
         public static Process StartProcess(ProcessSettings toolSettings)
         {
-            return StartProcessInternal(GetToolPathViaManualInstallation(toolSettings.ToolPath),
+            return StartProcessInternal(toolSettings.ToolPath,
                 toolSettings.Arguments,
                 toolSettings.WorkingDirectory,
                 toolSettings.EnvironmentVariables);
@@ -86,34 +83,6 @@ namespace VirtoCommerce.Platform.Data.Helpers
                 startInfo.Environment[pair.Key] = pair.Value;
         }
 
-        public static string GetToolPathViaManualInstallation(string toolName)
-        {
-            var result = string.Empty;
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                result = Path.Combine(GetProgramFiles(), toolName, "bin", toolName);
-            }
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                result = new[]
-                {
-                    $"/usr/bin/{toolName}",
-                    $"/usr/local/bin/{toolName}",
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "bin", toolName)
-                }.FirstOrDefault(File.Exists);
-            }
-
-            return result;
-        }
-
-        private static string GetProgramFiles()
-        {
-            return Environment.GetFolderPath(
-                Environment.Is64BitOperatingSystem
-                    ? Environment.SpecialFolder.ProgramFiles
-                    : Environment.SpecialFolder.ProgramFilesX86);
-        }
+        
     }
 }

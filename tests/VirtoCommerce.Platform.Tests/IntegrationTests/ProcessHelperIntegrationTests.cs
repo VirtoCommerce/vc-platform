@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using VirtoCommerce.Platform.Core.ProcessSettings;
 using VirtoCommerce.Platform.Data.Helpers;
 using Xunit;
@@ -12,7 +9,7 @@ namespace VirtoCommerce.Platform.Tests.IntegrationTests
     public class ProcessHelperIntegrationTests
     {
         [Fact]
-        public void WkhtmlToPdfConvert()
+        public void StartProcess_ConvertHtmlToPdf()
         {
             var result = ProcessHelper.StartProcess(new WkHtmlToPdfSettings()
                     .SetWorkingDirectory(Directory.GetCurrentDirectory())
