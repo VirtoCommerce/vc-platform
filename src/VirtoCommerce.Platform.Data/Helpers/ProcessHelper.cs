@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using VirtoCommerce.Platform.Core.ProcessSettings;
 
@@ -11,7 +12,7 @@ namespace VirtoCommerce.Platform.Data.Helpers
         public static Process StartProcess(ProcessSettings toolSettings)
         {
             return StartProcessInternal(toolSettings.ToolPath,
-                toolSettings.Arguments,
+                toolSettings.Arguments.ToArray(),
                 toolSettings.WorkingDirectory,
                 toolSettings.EnvironmentVariables);
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.ProcessSettings
 {
@@ -22,10 +23,7 @@ namespace VirtoCommerce.Platform.Core.ProcessSettings
 
         public static ProcessSettings SetArguments(this ProcessSettings processSettings, string[] arguments)
         {
-            var target = new string[processSettings.Arguments.Length + arguments.Length];
-            processSettings.Arguments.CopyTo(target, 0);
-            arguments.CopyTo(target, processSettings.Arguments.Length);
-            processSettings.Arguments = target;
+            processSettings.Arguments.AddRange(arguments);
             return processSettings;
         }
 
