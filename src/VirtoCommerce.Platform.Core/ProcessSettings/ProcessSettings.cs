@@ -23,6 +23,6 @@ namespace VirtoCommerce.Platform.Core.ProcessSettings
         /// <summary>
         /// Arguments for running process
         /// </summary>
-        public IList<string> Arguments { get; internal set; }
+        public IList<string> Arguments { get; set; }
     }
 }
