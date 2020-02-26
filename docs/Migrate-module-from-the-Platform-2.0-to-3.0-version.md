@@ -42,12 +42,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
    1. **CustomerReviews.Data**: add reference to the latest version **_VirtoCommerce.Platform.Data_** package.
 5. References to NuGet packages in **_CustomerReviews&#46;Web_**:
    1. (Double click in Visual Studio to) open _CustomerReviews.Web.csproj_ file for editing;
-   1. Add new ItemGroup:
-   ```
-   <ItemGroup>
-     <PackageReference Include="Microsoft.AspNetCore.App" />
-   </ItemGroup>
-   ```
+   1. set Sdk="Microsoft.NET.Sdk.Web"
 5. Add other NuGet dependency packages, if any exists in **_module.manifest_**.
 
 ## 2. Make changes in CustomerReviews.Core project
