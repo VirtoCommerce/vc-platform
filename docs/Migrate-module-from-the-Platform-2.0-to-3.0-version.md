@@ -19,7 +19,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 			</PropertyGroup>
 		</Project>
 		```
-   1. For *_CustomerReviews&#46;Web_**:    
+   1. For **_CustomerReviews&#46;Web_**:    
         ```xml
 		<Project Sdk="Microsoft.NET.Sdk.Web">
 			<PropertyGroup>
