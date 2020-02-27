@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0-beta0008] - 2020-01-28
+### Added
+- Code Coverage
+### Changed
+- Updated dependencies
+### Fixed
+- Fixed issues with GitVersion and Nuke
+
 ## [3.0.0-beta0007] - 2020-01-13
 ### Added
 - SwaggerValidationUrl parameter
