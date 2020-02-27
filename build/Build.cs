@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,6 +18,7 @@ using Nuke.Common.Tools.Git;
 using Nuke.Common.Tools.GitReleaseManager;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.Npm;
+using Nuke.Common.Tools.OpenCover;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -36,6 +38,10 @@ class Build : NukeBuild
     ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///   - Microsoft VSCode           https://nuke.build/vscode
 
+    public Build()
+    {
+        ToolPathResolver.ExecutingAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+    }
     public static int Main() => Execute<Build>(x => x.Compile);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
@@ -55,7 +61,7 @@ class Build : NukeBuild
     readonly string HotfixBranchPrefix = "hotfix";
 
     private static readonly HttpClient httpClient = new HttpClient();
-    
+
     [Parameter("ApiKey for the specified source")] readonly string ApiKey;
     [Parameter] readonly string Source = @"https://api.nuget.org/v3/index.json";
 
@@ -63,8 +69,10 @@ class Build : NukeBuild
 
     [Parameter] readonly string SonarAuthToken = "";
     [Parameter] readonly string SonarUrl = "https://sonar.virtocommerce.com";
+    [Parameter] readonly AbsolutePath CoverageReportPath = RootDirectory / ".tmp" / "coverage.xml";
+    [Parameter] readonly string TestsFilter = "Category!=IntegrationTest";
 
-    [Parameter] readonly string SwaggerValidationUrl = "http://validator.swagger.io/validator/debug";
+    [Parameter("Url to Swagger Validation Api")] readonly string SwaggerValidationUrl = "http://validator.swagger.io/validator/debug";
 
     [Parameter("GitHub user for release creation")] readonly string GitHubUser;
     [Parameter("GitHub user security token for release creation")] readonly string GitHubToken;
@@ -147,7 +155,7 @@ class Build : NukeBuild
                   .SetCopyright(ModuleManifest.Copyright);
 
               //Temporary disable GitVersionTask for module. Because version is taken from module.manifest.
-              settings = settings.SetProperty("DisableGitVersionTask", false); 
+              settings = settings.SetProperty("DisableGitVersionTask", false);
           }
           DotNetPack(settings);
       });
@@ -156,15 +164,14 @@ class Build : NukeBuild
        .DependsOn(Compile)
        .Executes(() =>
        {
-           DotNetTest(s => s
-               .SetConfiguration(Configuration)
-               .EnableNoBuild()
-               .SetLogger("trx")
-               .SetFilter("Category!=IntegrationTest")
-               .SetResultsDirectory(ArtifactsDirectory)
-               .CombineWith(
-                   Solution.GetProjects("*.Tests"), (cs, v) => cs
-                       .SetProjectFile(v)));
+           var dotnetPath = ToolPathResolver.GetPathExecutable("dotnet");
+           var testProjects = Solution.GetProjects("*.Tests");
+           if (testProjects.Count() > 0)
+           {
+               var testProjectPath = testProjects.First().Path;
+               var testArgs = $"{testProjectPath} --logger trx --filter {TestsFilter}";
+               OpenCoverTasks.OpenCover($"-target:\"{dotnetPath}\" -targetargs:\"test {testArgs}\" -register -output:\"{CoverageReportPath}\"");
+           }
        });
 
     Target PublishPackages => _ => _
@@ -230,6 +237,7 @@ class Build : NukeBuild
     Target Compress => _ => _
      .DependsOn(Clean, WebPackBuild, Test, Publish)
      .Executes(() =>
+
      {
          if (IsModule)
          {
@@ -254,7 +262,7 @@ class Build : NukeBuild
              DeleteFile(ZipFilePath);
              //TODO: Exclude all dependencies of dependent modules
              CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => !ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase)
-                                                                                     && !(ModuleManifest.Dependencies ?? Array.Empty< ManifestDependency>()).Any(md => x.Name.StartsWith(md.Id, StringComparison.OrdinalIgnoreCase)));
+                                                                                     && !(ModuleManifest.Dependencies ?? Array.Empty<ManifestDependency>()).Any(md => x.Name.StartsWith($"{md.Id}Module", StringComparison.OrdinalIgnoreCase)));
          }
          else
          {
@@ -300,10 +308,8 @@ class Build : NukeBuild
           .Requires(() => !IsModule)
           .Executes(() =>
           {
-              //dotnet %userprofile%\.nuget\packages\swashbuckle.aspnetcore.cli\4.0.1\lib\netcoreapp2.0\dotnet-swagger.dll tofile --output swagger.json bin/Debug/netcoreapp2.2/VirtoCommerce.Platform.Web.dll VirtoCommerce.Platform
-              //better use in the future a .Net Global Tool https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/README-v5.md#retrieve-swagger-directly-from-a-startup-assembly
-              var swashbucklePackage = NuGetPackageResolver.GetGlobalInstalledPackage("swashbuckle.aspnetcore.cli", "4.0.1", "dotnet-swagger.dll");
-              var swashbucklePath = swashbucklePackage.Directory / "lib" / "netcoreapp2.0" / "dotnet-swagger.dll";
+              var swashbucklePackage = NuGetPackageResolver.GetGlobalInstalledPackage("swashbuckle.aspnetcore.cli", "5.0.0", "dotnet-swagger.dll");
+              var swashbucklePath = swashbucklePackage.Directory.GlobFiles("**/dotnet-swagger.dll").Last();
               var projectPublishPath = ArtifactsDirectory / "publish" / $"{WebProject.Name}.dll";
               var swaggerJson = ArtifactsDirectory / "swagger.json";
               var currentDir = Directory.GetCurrentDirectory();
@@ -320,16 +326,16 @@ class Build : NukeBuild
               var responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
               var jsonObj = JObject.Parse(responseContent);
               bool err = false;
-              foreach(var msg in jsonObj["schemaValidationMessages"])
+              foreach (var msg in jsonObj["schemaValidationMessages"])
               {
                   Logger.Normal(msg);
-                  if((string)msg["level"] == "error")
+                  if ((string)msg["level"] == "error")
                   {
                       err = true;
                   }
               }
-              if(err)
-                 ControlFlow.Fail("Schema Validation Messages contains error");
+              if (err)
+                  ControlFlow.Fail("Schema Validation Messages contains error");
           });
 
     Target SonarQubeStart => _ => _
@@ -344,8 +350,9 @@ class Build : NukeBuild
             var projectKeyParam = $"/k:\"{projectName}\"";
             var hostParam = $"/d:sonar.host.url={SonarUrl}";
             var tokenParam = $"/d:sonar.login={SonarAuthToken}";
+            var sonarReportPathParam = $"/d:sonar.cs.opencover.reportsPaths={CoverageReportPath}";
 
-            var startCmd = $"sonarscanner begin {branchParam} {projectNameParam} {projectKeyParam} {hostParam} {tokenParam}";
+            var startCmd = $"sonarscanner begin {branchParam} {projectNameParam} {projectKeyParam} {hostParam} {tokenParam} {sonarReportPathParam}";
 
             Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}")}");
 
@@ -415,17 +422,17 @@ class Build : NukeBuild
              RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
          });
 
-        void FinishReleaseOrHotfix(string tag)
-        {
-            Git($"checkout {MasterBranch}");
-            Git($"merge --no-ff --no-edit {GitRepository.Branch}");
-            Git($"tag {tag}");
+    void FinishReleaseOrHotfix(string tag)
+    {
+        Git($"checkout {MasterBranch}");
+        Git($"merge --no-ff --no-edit {GitRepository.Branch}");
+        Git($"tag {tag}");
 
-            Git($"checkout {DevelopBranch}");
-            Git($"merge --no-ff --no-edit {GitRepository.Branch}");
+        Git($"checkout {DevelopBranch}");
+        Git($"merge --no-ff --no-edit {GitRepository.Branch}");
 
-            //Uncomment to switch on armed mode 
-            //Git($"branch -D {GitRepository.Branch}");
-            //Git($"push origin {MasterBranch} {DevelopBranch} {tag}");
-        }
+        //Uncomment to switch on armed mode 
+        //Git($"branch -D {GitRepository.Branch}");
+        //Git($"push origin {MasterBranch} {DevelopBranch} {tag}");
+    }
 }
