@@ -61,7 +61,7 @@ class Build : NukeBuild
     readonly string HotfixBranchPrefix = "hotfix";
 
     private static readonly HttpClient httpClient = new HttpClient();
-    
+
     [Parameter("ApiKey for the specified source")] readonly string ApiKey;
     [Parameter] readonly string Source = @"https://api.nuget.org/v3/index.json";
 
@@ -155,7 +155,7 @@ class Build : NukeBuild
                   .SetCopyright(ModuleManifest.Copyright);
 
               //Temporary disable GitVersionTask for module. Because version is taken from module.manifest.
-              settings = settings.SetProperty("DisableGitVersionTask", false); 
+              settings = settings.SetProperty("DisableGitVersionTask", false);
           }
           DotNetPack(settings);
       });
@@ -166,7 +166,7 @@ class Build : NukeBuild
        {
            var dotnetPath = ToolPathResolver.GetPathExecutable("dotnet");
            var testProjects = Solution.GetProjects("*.Tests");
-           if(testProjects.Count() > 0)
+           if (testProjects.Count() > 0)
            {
                var testProjectPath = testProjects.First().Path;
                var testArgs = $"{testProjectPath} --logger trx --filter {TestsFilter}";
@@ -262,7 +262,7 @@ class Build : NukeBuild
              DeleteFile(ZipFilePath);
              //TODO: Exclude all dependencies of dependent modules
              CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => !ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase)
-                                                                                     && !(ModuleManifest.Dependencies ?? Array.Empty< ManifestDependency>()).Any(md => x.Name.StartsWith(md.Id, StringComparison.OrdinalIgnoreCase)));
+                                                                                     && !(ModuleManifest.Dependencies ?? Array.Empty<ManifestDependency>()).Any(md => x.Name.StartsWith($"{md.Id}Module", StringComparison.OrdinalIgnoreCase)));
          }
          else
          {
@@ -309,7 +309,7 @@ class Build : NukeBuild
           .Executes(() =>
           {
               var swashbucklePackage = NuGetPackageResolver.GetGlobalInstalledPackage("swashbuckle.aspnetcore.cli", "5.0.0", "dotnet-swagger.dll");
-              var swashbucklePath = swashbucklePackage.Directory / "tools" / "netcoreapp3.0" / "any" / "dotnet-swagger.dll";
+              var swashbucklePath = swashbucklePackage.Directory.GlobFiles("**/dotnet-swagger.dll").Last();
               var projectPublishPath = ArtifactsDirectory / "publish" / $"{WebProject.Name}.dll";
               var swaggerJson = ArtifactsDirectory / "swagger.json";
               var currentDir = Directory.GetCurrentDirectory();
@@ -326,16 +326,16 @@ class Build : NukeBuild
               var responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
               var jsonObj = JObject.Parse(responseContent);
               bool err = false;
-              foreach(var msg in jsonObj["schemaValidationMessages"])
+              foreach (var msg in jsonObj["schemaValidationMessages"])
               {
                   Logger.Normal(msg);
-                  if((string)msg["level"] == "error")
+                  if ((string)msg["level"] == "error")
                   {
                       err = true;
                   }
               }
-              if(err)
-                 ControlFlow.Fail("Schema Validation Messages contains error");
+              if (err)
+                  ControlFlow.Fail("Schema Validation Messages contains error");
           });
 
     Target SonarQubeStart => _ => _
@@ -422,17 +422,17 @@ class Build : NukeBuild
              RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
          });
 
-        void FinishReleaseOrHotfix(string tag)
-        {
-            Git($"checkout {MasterBranch}");
-            Git($"merge --no-ff --no-edit {GitRepository.Branch}");
-            Git($"tag {tag}");
+    void FinishReleaseOrHotfix(string tag)
+    {
+        Git($"checkout {MasterBranch}");
+        Git($"merge --no-ff --no-edit {GitRepository.Branch}");
+        Git($"tag {tag}");
 
-            Git($"checkout {DevelopBranch}");
-            Git($"merge --no-ff --no-edit {GitRepository.Branch}");
+        Git($"checkout {DevelopBranch}");
+        Git($"merge --no-ff --no-edit {GitRepository.Branch}");
 
-            //Uncomment to switch on armed mode 
-            //Git($"branch -D {GitRepository.Branch}");
-            //Git($"push origin {MasterBranch} {DevelopBranch} {tag}");
-        }
+        //Uncomment to switch on armed mode 
+        //Git($"branch -D {GitRepository.Branch}");
+        //Git($"push origin {MasterBranch} {DevelopBranch} {tag}");
+    }
 }
