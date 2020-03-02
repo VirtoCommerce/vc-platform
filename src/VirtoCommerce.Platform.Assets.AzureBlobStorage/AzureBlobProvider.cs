@@ -120,12 +120,22 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                 }
                 else
                 {
+
                     var blobDirectory = blobContainer.GetDirectoryReference(directoryPath);
+
                     //Remove all nested directory blobs
-                    foreach (var directoryBlob in blobDirectory.ListBlobsSegmentedAsync(null).Result.Results.Where(x => x is CloudBlockBlob).Cast<CloudBlockBlob>())
+                    BlobContinuationToken continuationToken = null;
+                    BlobListingDetails blobListingDetails = BlobListingDetails.None;
+                    int maxBlobsPerRequest = 500;
+                    do
                     {
-                        await directoryBlob.DeleteIfExistsAsync();
-                    }
+                        var listingResult = await blobDirectory.ListBlobsSegmentedAsync(true, blobListingDetails, maxBlobsPerRequest, continuationToken, null, null);
+                        continuationToken = listingResult.ContinuationToken;
+                        foreach (var contentBlob in listingResult.Results.Where(x => x is CloudBlob).Cast<CloudBlob>())
+                        {
+                            await contentBlob.DeleteIfExistsAsync();
+                        }
+                    } while (continuationToken != null);
 
                     //Remove blockBlobs if url not directory
                     /* http://stackoverflow.com/questions/29285239/delete-a-blob-from-windows-azure-in-c-sharp
