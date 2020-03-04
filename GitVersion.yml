@@ -17,6 +17,17 @@ branches:
     is-release-branch: true
     is-mainline: false
     pre-release-weight: 30000
-
+  vp-961-export-to-pdf-on-linux:
+    mode: ContinuousDeployment
+    tag: rc.3
+    increment: None
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: true
+    regex: bug/3.0.0/vp-961-export-to-pdf-on-linux
+    source-branches: []
+    tracks-release-branches: true
+    is-release-branch: true
+    is-mainline: false
+    pre-release-weight: 30000
 ignore:
   sha: []
