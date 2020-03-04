@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.i18n', '$timeout', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, i18n, $timeout, dynamicPropertiesApi) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
@@ -9,7 +9,7 @@
 
     blade.refresh = function () {
         blade.data = blade.currentEntity;
-        blade.refreshWidgetCount(blade.currentEntity.objectType);
+        if (blade.refreshWidgetCount) blade.refreshWidgetCount(blade.currentEntity.objectType);
         dynamicPropertiesApi.search({objectType: blade.currentEntity.objectType, take: blade.dynamicPropertyCount},
             function (response) {
                 var rawProperties = response.results;
