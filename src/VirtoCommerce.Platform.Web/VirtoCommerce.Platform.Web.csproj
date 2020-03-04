@@ -25,10 +25,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.2" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.2" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
