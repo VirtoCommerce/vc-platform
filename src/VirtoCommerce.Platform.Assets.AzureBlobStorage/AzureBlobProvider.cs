@@ -122,9 +122,9 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                 {
                     var blobDirectory = blobContainer.GetDirectoryReference(directoryPath);
                     //Remove all nested directory blobs
-                    foreach (var directoryBlob in blobDirectory.ListBlobsSegmentedAsync(null).Result.Results)
+                    foreach (var directoryBlob in blobDirectory.ListBlobsSegmentedAsync(null).Result.Results.Where(x => x is CloudBlockBlob).Cast<CloudBlockBlob>())
                     {
-                        await directoryBlob.Container.DeleteIfExistsAsync();
+                        await directoryBlob.DeleteIfExistsAsync();
                     }
 
                     //Remove blockBlobs if url not directory

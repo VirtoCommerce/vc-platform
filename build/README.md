@@ -31,14 +31,14 @@ dotnet tool install VirtoCommerce.GlobalTool  -g
 ```console
 
 error NU1103: Unable to find a stable package virtocommerce.globaltool with version
-error NU1103:   - Found 1 version(s) in nuget.org [ Nearest version: 3.0.0-beta0004 ]
+error NU1103:   - Found 1 version(s) in nuget.org [ Nearest version: 3.0.0-beta0006 ]
 
 ```
 Then for install a prerelease version you need to run this command and pass in `--version` parameter a latest pre-release version
 
 ```console
 
-dotnet tool install VirtoCommerce.GlobalTool --version 3.0.0-beta004  -g
+dotnet tool install VirtoCommerce.GlobalTool --version 3.0.0-beta0006  -g
 
 ```
 
