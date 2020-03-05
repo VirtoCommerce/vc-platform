@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
@@ -34,12 +35,10 @@ namespace VirtoCommerce.Platform.Modules
                 Directory.CreateDirectory(_options.ProbingPath);
             }
 
-            if (!discoveryPath.EndsWith(Path.DirectorySeparatorChar) || !discoveryPath.EndsWith(Path.AltDirectorySeparatorChar))
-                discoveryPath += Path.AltDirectorySeparatorChar;
+            if (!discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
+                discoveryPath += PlatformInformation.DirectorySeparator;
 
-            var rootUri = new Uri(discoveryPath);
-
-            CopyAssemblies(_options.DiscoveryPath, _options.ProbingPath);
+            CopyAssemblies(discoveryPath, _options.ProbingPath);
 
             foreach (var pair in GetModuleManifests())
             {

@@ -19,6 +19,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
                 ".ni.exe"
         };
         public static readonly string NuGetPackagesCache;
+        public static readonly char DirectorySeparator;
 
         [SuppressMessage("SonarLint", "S3963", Justification = "Such conditional initialization looks better in constructor, than inlined.")]
         static PlatformInformation()
@@ -28,18 +29,21 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
                 NativeLibraryPrefixes = new[] { "" };
                 NativeLibraryExtensions = new[] { ".dll" };
                 NuGetPackagesCache = Path.Combine(Environment.ExpandEnvironmentVariables("%userprofile%"), ".nuget", "packages");
+                DirectorySeparator = Path.DirectorySeparatorChar;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 NativeLibraryPrefixes = new[] { "", "lib", };
                 NativeLibraryExtensions = new[] { ".dylib" };
                 NuGetPackagesCache = Path.Combine("~", ".nuget", "packages");
+                DirectorySeparator = Path.AltDirectorySeparatorChar;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 NativeLibraryPrefixes = new[] { "", "lib" };
                 NativeLibraryExtensions = new[] { ".so", ".so.1" };
                 NuGetPackagesCache = Path.Combine("~", ".nuget", "packages");
+                DirectorySeparator = Path.AltDirectorySeparatorChar;
             }
             else
             {
@@ -47,6 +51,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
                 NativeLibraryPrefixes = Array.Empty<string>();
                 NativeLibraryExtensions = Array.Empty<string>();
                 NuGetPackagesCache = string.Empty;
+                DirectorySeparator = '\0';
             }
         }
     }

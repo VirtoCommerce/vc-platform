@@ -35,14 +35,15 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
                ? dependencyContext.RuntimeGraph
                : DependencyContext.Default.RuntimeGraph;
 
-            //var rid = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment.GetRuntimeIdentifier(); // TODO: (AK) This function removed from CORE3. Consider to replace to something(https://github.com/dotnet/core-setup/issues/5213)
+            var rid = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment.GetRuntimeIdentifier();
             var fallbackRid = GetFallbackRid();
-            var fallbackGraph = /*ridGraph.FirstOrDefault(g => g.Runtime == rid)
-                ?? */ridGraph.FirstOrDefault(g => g.Runtime == fallbackRid)
+            var fallbackGraph = ridGraph.FirstOrDefault(g => g.Runtime == rid)
+                ?? ridGraph.FirstOrDefault(g => g.Runtime == fallbackRid)
                 ?? new RuntimeFallbacks("any");
 
             return ResolveRuntimeAssemblies(dependencyContext, fallbackGraph);
         }
+
 
         private static string GetFallbackRid()
         {

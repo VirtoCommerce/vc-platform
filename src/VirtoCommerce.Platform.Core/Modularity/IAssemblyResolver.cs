@@ -10,6 +10,6 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// <summary>
         /// Load an assembly when it's required by the application. 
         /// </summary>
-        Assembly LoadAssemblyFrom(string  assemblyPath);
+        Assembly LoadAssemblyFrom(string assemblyPath);
     }
 }

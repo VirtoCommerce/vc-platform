@@ -47,6 +47,7 @@ namespace VirtoCommerce.Platform.Modules
             return assembly;
         }
 
+
         private ManagedAssemblyLoadContext BuildLoadContext(Uri assemblyUri)
         {
             var assemblyDirectory = Path.GetDirectoryName(assemblyUri.LocalPath);

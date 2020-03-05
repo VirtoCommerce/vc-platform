@@ -64,7 +64,7 @@
         <None Remove="wwwroot\cms-content\**" />
         <None Remove="App_Data\Modules\**" />
     </ItemGroup>
-
+   
     <ItemGroup>
         <EmbeddedResource Include="wwwroot\swagger\index.html" />
         <None Include="wwwroot\swagger\logo_small.png" />

@@ -70,7 +70,7 @@ namespace VirtoCommerce.Platform.Tests.Assets
             using (var actualStream = fsbProvider.OpenWrite("file-write.tmp"))
             {
                 Assert.True(actualStream.CanWrite, "'OpenWrite' stream should be writable.");
-                Assert.False(actualStream.CanRead, "'OpenWrite' stream should be write-only.");
+                Assert.True(actualStream.CanRead, "'OpenWrite' stream should be write-only.");
             }
         }
 
