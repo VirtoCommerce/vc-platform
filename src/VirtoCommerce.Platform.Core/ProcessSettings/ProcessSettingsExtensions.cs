@@ -39,11 +39,13 @@ namespace VirtoCommerce.Platform.Core.ProcessSettings
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
+                string toolnameexe = $"{toolName}.exe";
                 result = new[]
                 {
-                    Path.Combine(GetProgramFiles(), toolName, $"{toolName}.exe"),
-                    Path.Combine(GetProgramFiles(), toolName, "bin", $"{toolName}.exe")
+                    Path.Combine(GetProgramFiles(), toolName, toolnameexe),
+                    Path.Combine(GetProgramFiles(), toolName, "bin", toolnameexe)
                 }.FirstOrDefault(File.Exists);
+                result = string.IsNullOrEmpty(result) ? toolnameexe : result;
             }
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -54,6 +56,7 @@ namespace VirtoCommerce.Platform.Core.ProcessSettings
                     $"/usr/local/bin/{toolName}",
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "bin", toolName)
                 }.FirstOrDefault(File.Exists);
+                result = string.IsNullOrEmpty(result) ? toolName : result;
             }
 
             return result;
