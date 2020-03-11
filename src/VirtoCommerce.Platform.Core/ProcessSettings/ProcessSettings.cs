@@ -1,9 +1,22 @@
+using System.IO;
 using System.Collections.Generic;
 
 namespace VirtoCommerce.Platform.Core.ProcessSettings
 {
     public abstract class ProcessSettings
     {
+        private ProcessSettings()
+        {
+
+        }
+
+        public ProcessSettings(PlatformOptions platformOptions)
+        {
+            if (!string.IsNullOrEmpty(platformOptions.ProcessesPath))
+            {
+                ToolPath = Path.GetFullPath(Path.Combine(platformOptions.ProcessesPath));
+            }
+        }
         /// <summary>
         /// Name of process
         /// </summary>
@@ -23,6 +36,6 @@ namespace VirtoCommerce.Platform.Core.ProcessSettings
         /// <summary>
         /// Arguments for running process
         /// </summary>
-        public IList<string> Arguments { get; set; }
+        public IList<string> Arguments { get; set; } = new List<string>();
     }
 }

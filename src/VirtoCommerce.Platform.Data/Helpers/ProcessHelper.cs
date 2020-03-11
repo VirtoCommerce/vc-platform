@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Data.Helpers
     {
         public static Process StartProcess(ProcessSettings toolSettings)
         {
-            return StartProcessInternal(toolSettings.ToolPath,
+            return StartProcessInternal(toolSettings.GetFullPathTool(),
                 toolSettings.Arguments.ToArray(),
                 toolSettings.WorkingDirectory,
                 toolSettings.EnvironmentVariables);
@@ -83,7 +83,5 @@ namespace VirtoCommerce.Platform.Data.Helpers
             foreach (var pair in environmentVariables)
                 startInfo.Environment[pair.Key] = pair.Value;
         }
-
-        
     }
 }
