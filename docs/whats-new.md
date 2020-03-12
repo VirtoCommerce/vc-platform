@@ -48,7 +48,7 @@ Meet the new major version of Virto Commerce Platform. Our development efforts w
 - **Webpack**
 - **xUnit**
 - **Jenkins**
-- **Nuke** aka **VirtoCommerce.GlobalTools**
+- **Nuke** aka **VirtoCommerce.GlobalTool**
 - **Swagger UI**
 
 ### Techniques
@@ -69,7 +69,7 @@ Meet the new major version of Virto Commerce Platform. Our development efforts w
      - *Caching* should be defined and done in the *.Data* project
      - All v3 modules were refactored to follow the recommended structure
 - **DevOps**
-  - Nuke - Build Automation System for C#/.NET aka VirtoCommerce.GlobalTools
+  - Nuke - Build Automation System for C#/.NET aka [VirtoCommerce.GlobalTool](/build/README.md)
 - **Dynamic properties**
   - Dynamic properties registration logic changed. Now manual registration used instead of reflection
 - **Export/Import**
