@@ -27,7 +27,7 @@ function ($scope, $window, $modal, bladeNavigationService, $localStorage, valida
         $window.open(url, '_blank');
     }
 
-    function editLoginOnBehaldUrls() {
+    function editLoginOnBehalfUrls() {
         var newBlade = {
             id: "editRedirectUris",
             updatePermission: 'platform:security:update',
@@ -57,7 +57,7 @@ function ($scope, $window, $modal, bladeNavigationService, $localStorage, valida
         },
         {
             name: "platform.commands.manage", icon: 'fa fa-edit',
-            executeMethod: editLoginOnBehaldUrls,
+            executeMethod: editLoginOnBehalfUrls,
             canExecuteMethod: function () {
                 return true;
             },
