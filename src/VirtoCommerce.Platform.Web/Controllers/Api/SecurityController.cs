@@ -118,17 +118,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Id = user.Id,
                 isAdministrator = user.IsAdministrator,
                 UserName = user.UserName,
-                PasswordExpired = user.PasswordExpired
+                PasswordExpired = user.PasswordExpired,
+                Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray()
             };
-            var roleNames = await _userManager.GetRolesAsync(user);
-            foreach (var roleName in roleNames)
-            {
-                var role = await _roleManager.FindByNameAsync(roleName);
-                if (!role.Permissions.IsNullOrEmpty())
-                {
-                    result.Permissions.AddRange(role.Permissions.Select(x => x.Name));
-                }
-            }
+
             return Ok(result);
         }
 
