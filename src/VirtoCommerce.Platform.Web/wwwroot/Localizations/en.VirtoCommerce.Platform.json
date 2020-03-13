@@ -775,6 +775,10 @@
             },
             "error-details": {
                 "title": "The error details"
+            },
+            "asset-upload-error": {
+                "title": "Error in upload",
+                "message": "Need to choose a folder! Can't upload a file to the root!"
             }
         }
     },
