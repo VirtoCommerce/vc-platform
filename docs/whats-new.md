@@ -64,10 +64,16 @@ Meet the new major version of Virto Commerce Platform. Our development efforts w
   - Virto Commerce developmet switched to [GitFlow Workflow](https://nvie.com/posts/a-successful-git-branching-model/) model
   - [GitVersion](https://github.com/GitTools/GitVersion) tool to ease Semantic Versioning
   - Both Platform and all modules repository structure unified to have *build*, *docs*, *src*, *tests* folders on the top.
-  - The recommended structure of a module solution was updated
+  - The recommended structure of a module solution was updated:
      - *Permissions*, *Settings* and other constants should be defined in the *.Core* project
      - *Caching* should be defined and done in the *.Data* project
      - All v3 modules were refactored to follow the recommended structure
+  - All methods in search and CRUD services made asynchronous:
+     - Returning *async Task* or *async Task<T\>*
+     - The methods renamed to end with "Async"
+  - All API controller methods made asynchronous:
+     - Returning *async Task* or *async Task<T\>*
+     - The endpoint names left unchanged for backward compatibility (**not ending** with "Async")
 - **DevOps**
   - Nuke - Build Automation System for C#/.NET aka [VirtoCommerce.GlobalTool](/build/README.md)
 - **Dynamic properties**
