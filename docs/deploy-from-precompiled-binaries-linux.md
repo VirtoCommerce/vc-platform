@@ -57,6 +57,18 @@ unzip VirtoCommerce.Platform.3.x.x.zip -d vc-platform-3
     },
 ```
 
+* In the **Content** section set public url for content `Content:FileSystem:PublicUrl` with url of your application, this step is needed in order for configure CMS content storage
+
+```json
+"Content*": {
+        "Provider": "FileSystem",
+        "FileSystem": {
+            "RootPath": "~/cms-content",
+            "PublicUrl": "https://localhost:5001/cms-content/" <-- Set your platform application url with port localhost:5001
+        },
+    },
+```
+
 ### Running the Platform by CLI "dotnet"
 
 * Install and trust HTTPS certificate
