@@ -118,6 +118,28 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                 permission: blade.updatePermission
             },
             {
+                name: "platform.commands.lock-account",
+                icon: 'fa fa-lock',
+                executeMethod: function () {
+                    blade.isLoading = true;
+                    accounts.lock({ id: blade.currentEntity.id }, null, function (result) {
+                        if (result.succeeded) {
+                            blade.accountLockedState = "Locked";
+                        }
+                        blade.isLoading = false;
+                    }, function (error) {
+                        bladeNavigationService.setError(error, blade);
+                        blade.isLoading = false;
+                    });
+                },
+                canExecuteMethod: function () {
+                    if (blade.accountLockedState)
+                        return blade.accountLockedState === "Unlocked";
+                    return false;
+                },
+                permission: blade.updatePermission
+            },
+            {
                 name: "platform.commands.unlock-account",
                 icon: 'fa fa-unlock',
                 executeMethod: function () {
