@@ -69,6 +69,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                         var ids = await query.Skip(criteria.Skip)
                                          .Take(criteria.Take)
                                          .Select(x => x.Id)
+                                         .AsNoTracking()
                                          .ToListAsync();
 
                         var properties = await _dynamicPropertyService.GetDynamicPropertiesAsync(ids.ToArray());
