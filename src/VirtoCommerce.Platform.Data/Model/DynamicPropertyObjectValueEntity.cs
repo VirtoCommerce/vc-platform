@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -159,5 +161,44 @@ namespace VirtoCommerce.Platform.Data.Model
                     break;
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (GetType() != obj.GetType())
+                return false;
+            var other = obj as DynamicPropertyObjectValueEntity;
+            return other != null && GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return GetEqualityComponents().Aggregate(17, (current, obj) => current * 23 + (obj?.GetHashCode() ?? 0));
+            }
+        }
+
+        protected virtual IEnumerable<object> GetEqualityComponents()
+        {
+            //Do not use Id for equality calculation because of most of values are passed without Id and this will caused a duplications and necessary deletion and db fragmentation
+            yield return PropertyName;
+            yield return Locale;
+            yield return ObjectId;
+            yield return ObjectType;
+            yield return ValueType;
+            yield return ShortTextValue;
+            yield return LongTextValue;
+            yield return DecimalValue;
+            yield return IntegerValue;
+            yield return BooleanValue;
+            yield return DateTimeValue;
+            yield return DictionaryItemId;
+
+        }
+
     }
 }

@@ -10,7 +10,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         $scope.$on('httpError', function (event, error) {
             if (!event.defaultPrevented) {
                 if (bladeNavigationService.currentBlade) {
-                    bladeNavigationService.setError(error.status + ': ' + error.statusText, bladeNavigationService.currentBlade);
+                    bladeNavigationService.setError(error, bladeNavigationService.currentBlade);
                 }
             }
         });

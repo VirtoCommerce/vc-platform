@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.assets.assetUploadController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'FileUploader', function ($scope, assets, bladeNavigationService, FileUploader) {
+    .controller('platformWebApp.assets.assetUploadController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'FileUploader', 'platformWebApp.dialogService', function ($scope, assets, bladeNavigationService, FileUploader, dialogService) {
         var blade = $scope.blade;
         var currentEntities;
         if (!blade.fileUploadOptions) {
@@ -29,21 +29,30 @@ angular.module('platformWebApp')
                 }
 
                 uploader.onAfterAddingAll = function (addedItems) {
-                    blade.isLoading = true;
-                    blade.uploadCompleted = false;
-                    bladeNavigationService.setError(null, blade);
+                    if (folderUrl) {
+                        blade.isLoading = true;
+                        blade.uploadCompleted = false;
+                        bladeNavigationService.setError(null, blade);
 
-                    // check for asset duplicates
-                    assets.search({ folderUrl: folderUrl },
-                        function (data) {
-                            blade.isLoading = false;
-                            currentEntities = data.results;
+                        // check for asset duplicates
+                        assets.search({ folderUrl: folderUrl },
+                            function (data) {
+                                blade.isLoading = false;
+                                currentEntities = data.results;
 
-                            _.each(addedItems, promptUserDecision);
-                            uploader.uploadAll();
-                        }, function (error) {
-                            bladeNavigationService.setError('Error ' + error.status, blade);
+                                _.each(addedItems, promptUserDecision);
+                                uploader.uploadAll();
+                            }, function (error) {
+                                bladeNavigationService.setError('Error ' + error.status, blade);
+                            });
+                        
+                    } else {
+                        dialogService.showNotificationDialog({
+                            id: "error",
+                            title: "platform.dialogs.asset-upload-error.title",
+                            message: "platform.dialogs.asset-upload-error.message"
                         });
+                    }
                 };
 
                 uploader.onErrorItem = function (item, response, status, headers) {
