@@ -38,7 +38,7 @@ How to create a new module from scratch? Follow the Dummy module example.
 ## 2. Fill DummyModule.Core project
 
 1. Add class **_ModuleConstants.cs_** for module constants:
-   1. Inside **_ModuleConstants_** add sub-classes **_Security_** and **_Permissions_** like this:
+    1. Inside **_ModuleConstants_** add sub-classes **_Security_** and **_Permissions_** like this:
 
     ```cs
             public static class Security
@@ -90,17 +90,17 @@ How to create a new module from scratch? Follow the Dummy module example.
      1. Add class **_DummyDbContext_**, deriving from `DbContextWithTriggers`. Check and copy class contents from [sample DummyDbContext.cs](https://github.com/VirtoCommerce/vc-samples/.....).
      2. Add class **_DesignTimeDbContextFactory_**. Check and copy class contents from [sample DesignTimeDbContextFactory.cs](https://github.com/VirtoCommerce/vc-samples/.....). Double-check that connection to your development SQL server is correct.
      3. Add data repository abstraction (interface), deriving from **_IRepository_** for the defined persistency model.
-   4. Add the repository implementation class for the previously defined interface and deriving from `DbContextRepositoryBase<DummyDbContext>`.
+     4. Add the repository implementation class for the previously defined interface and deriving from `DbContextRepositoryBase<DummyDbContext>`.
 3. Generate code-first migrations:
    1. Open NuGet **Package Manager Console**;
    1. Select "src\DummyModule.**Data**" as "**Default project**";
    1. Run command:
 
-    ```
+```console
     Add-Migration Initial -Context DummyModule.Data.Repositories.DummyDbContext -StartupProject DummyModule.Data -Verbose -OutputDir Migrations
-    ```
+```
 
-    A new migration gets generated.
+A new migration gets generated.
 4. **Caching** folder: add it, if data caching should be used. This folder is for the cache region classes. Typically, each model should have its own region. Derive CacheRegion from generic `CancellableCacheRegion<T>` class e.g., `public class StoreCacheRegion : CancellableCacheRegion<StoreCacheRegion>`.
 5. **Services** folder: add implementations of the interfaces that were defined in the **.Core** project.
 6. **ExportImport** folder: add class for data export/import. It should be called from **_Module.cs_** and contain implementation for module data export and import.
@@ -180,11 +180,13 @@ Typical structure of **.Web** project is:
     ```
 
    * ProjectUrl - optional URL to get more details on the module:
+
     ```xml
     <projectUrl>https://github.com/VirtoCommerce/vc-samples</projectUrl>
     ```
 
    * IconUrl - optional icon for the module to display in Platform's module management UI:
+
     ```xml
     <iconUrl></iconUrl>
     ```
@@ -193,7 +195,7 @@ Typical structure of **.Web** project is:
 
     ```xml
     <releaseNotes>First version.</releaseNotes>
-    <copyright>Copyright &copy; 2011-2019 Virto Commerce. All rights reserved</copyright>
+    <copyright>Copyright &copy; 2011-2020 Virto Commerce. All rights reserved</copyright>
     <tags>sample</tags>
     ```
 
