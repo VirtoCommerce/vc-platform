@@ -91,16 +91,16 @@ namespace VirtoCommerce.Platform.Modules
                     throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath, ex);
                 }
             }
+            //TODO: Temporary commented because this code is produced exception
+            //foreach (var dependency in depsFilePath.ExtractNativeDependenciesFromPath())
+            //{
+            //    if (!_nativeLibraries.ContainsKey(dependency.Name))
+            //    {
+            //        _nativeLibraries.Add(dependency.Name, dependency);
 
-            foreach (var dependency in depsFilePath.ExtractNativeDependenciesFromPath())
-            {
-                if (!_nativeLibraries.ContainsKey(dependency.Name))
-                {
-                    _nativeLibraries.Add(dependency.Name, dependency);
-
-                    LoadUnmanagedLibrary(dependency, loadContext);
-                }
-            }
+            //        LoadUnmanagedLibrary(dependency, loadContext);
+            //    }
+            //}
 
             return mainAssembly;
         }
