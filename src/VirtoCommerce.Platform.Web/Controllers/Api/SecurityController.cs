@@ -118,17 +118,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Id = user.Id,
                 isAdministrator = user.IsAdministrator,
                 UserName = user.UserName,
-                PasswordExpired = user.PasswordExpired
+                PasswordExpired = user.PasswordExpired,
+                Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray()
             };
-            var roleNames = await _userManager.GetRolesAsync(user);
-            foreach (var roleName in roleNames)
-            {
-                var role = await _roleManager.FindByNameAsync(roleName);
-                if (!role.Permissions.IsNullOrEmpty())
-                {
-                    result.Permissions.AddRange(role.Permissions.Select(x => x.Name));
-                }
-            }
+
             return Ok(result);
         }
 
@@ -619,6 +612,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 result.Locked = await _userManager.IsLockedOutAsync(user);
             }
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Lock user
+        /// </summary>
+        /// <param name="id">>User id</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("users/{id}/lock")]
+        [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
+        public async Task<ActionResult<SecurityResult>> LockUser([FromRoute] string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                var result = await _userManager.SetLockoutEndDateAsync(user, DateTime.MaxValue);
+                return Ok(result.ToSecurityResult());
+            }
+            return Ok(IdentityResult.Failed().ToSecurityResult());
         }
 
         /// <summary>

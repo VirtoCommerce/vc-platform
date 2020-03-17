@@ -16,4 +16,4 @@
 
      * for details, look at [manual](https://wkhtmltopdf.org/index.html)
 3. Working with the Azure 
-   * **_coming soon.._**    
+   * **_coming soon.._**  

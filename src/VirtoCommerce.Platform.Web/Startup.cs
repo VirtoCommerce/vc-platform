@@ -490,6 +490,7 @@ namespace VirtoCommerce.Platform.Web
 
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             GlobalConfiguration.Configuration.UseSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
+
         }
     }
 }

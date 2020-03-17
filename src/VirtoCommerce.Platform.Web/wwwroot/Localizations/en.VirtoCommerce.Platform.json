@@ -794,6 +794,10 @@
 	            "placeholders": {
 	              "secure-url": "https://vcshop.com"
 	            }
+            },
+            "asset-upload-error": {
+                "title": "Error in upload",
+                "message": "Need to choose a folder! Can't upload a file to the root!"
             }
         },
         "commands": {

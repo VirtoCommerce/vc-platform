@@ -156,8 +156,8 @@ namespace VirtoCommerce.Platform.Web.Security
                     if (knownPermission != null)
                     {
                         knownPermission.Patch(storedPermission);
-                        role.Permissions.Add(storedPermission);
                     }
+                    role.Permissions.Add(storedPermission);
                 }
             }
         }
