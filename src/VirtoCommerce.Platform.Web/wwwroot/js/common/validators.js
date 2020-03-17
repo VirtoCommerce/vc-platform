@@ -8,7 +8,7 @@ angular.module('platformWebApp').factory('platformWebApp.validators', [function 
         try {
             new URL(value);
             // url without query path and special chars
-            var pattern = /[ !@#$%^&*()+\-=\[\]{}\\;'"|,<>?]/;
+            var pattern = /[ !@#$%^&*()+=\[\]{}\\;'"|,<>?]/;
             return !pattern.test(value);
         } catch (_) {
             return false;

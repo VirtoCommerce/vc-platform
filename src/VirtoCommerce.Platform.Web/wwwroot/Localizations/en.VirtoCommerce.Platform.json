@@ -625,6 +625,16 @@
                 "save": "Change password",
                 "postpone": "Postpone",
                 "force-change-info": "You must change the password to continue using the manager."
+            },
+            "loginOnBehalf-list": {
+                "title": "Login as {{name}}",
+                "labels": {
+                  "pick-url-to-login": "Pick a Login Url to login",
+                  "no-login-urls": "No Login Urls yet"
+                },
+                "validations": {
+                  "secure-url-missing": "Secure URL is missing. Click to enter Login secure URL manually."
+                }
             }
         },
         "templates": {
@@ -776,10 +786,22 @@
             "error-details": {
                 "title": "The error details"
             },
+            "enter-login-url": {
+	            "title": "Login on behalf",
+	            "labels": {
+	              "enter-login-url": "Please enter login secure URL"
+	            },
+	            "placeholders": {
+	              "secure-url": "https://vcshop.com"
+	            }
+            },
             "asset-upload-error": {
                 "title": "Error in upload",
                 "message": "Need to choose a folder! Can't upload a file to the root!"
             }
+        },
+        "commands": {
+          "login-on-behalf": "Login on behalf"
         }
     },
     "permissions": {
@@ -808,7 +830,8 @@
         "background_jobs:manage": "Allows to access to  the Hangfire console",
         "platform:exportImport:access": "Allows to see Export/Import in the main menu",
         "platform:import": "Allows to import platform and modules data",
-        "platform:export": "Allows to export platform and modules data"
+        "platform:export": "Allows to export platform and modules data",
+        "platform:security:loginOnBehalf": "Login on behalf of a customer"
     },
     "settings": {
         "VirtoCommerce": {

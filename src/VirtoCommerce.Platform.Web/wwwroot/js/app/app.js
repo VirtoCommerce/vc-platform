@@ -237,8 +237,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
             $compileProvider.debugInfoEnabled(false);
         }])
-    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile',
-        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile) {
+    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService',
+        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, bladeNavigationService) {
 
             //Disable animation
             $animate.enabled(false);
@@ -417,4 +417,25 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 var template = angular.element(response);
                 $compile(template);
             });
+
+            // register login-on-behalf command in platform account blade
+            var loginOnBehalfCommand = {
+                name: "platform.commands.login-on-behalf",
+                icon: 'fa fa-key',
+                executeMethod: function (blade) {
+                    var newBlade = {
+                        id: 'memberDetailChild',
+                        currentEntityId: blade.currentEntity.id,
+                        title: 'platform.blades.loginOnBehalf-list.title',
+                        titleValues: { name: blade.currentEntity.userName },
+                        controller: 'platformWebApp.securityLoginOnBehalfListController',
+                        template: '$(Platform)/Scripts/app/security/blades/loginOnBehalf-list.tpl.html'
+                    };
+                    bladeNavigationService.showBlade(newBlade, blade);
+                    },
+                canExecuteMethod: function () { return true; },
+                permission: 'platform:security:loginOnBehalf',
+                index: 4
+            };
+            toolbarService.register(loginOnBehalfCommand, 'platformWebApp.accountDetailController');
         }]);
