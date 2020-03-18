@@ -15,7 +15,7 @@ angular.module('platformWebApp')
                 var rawProperties = response.results;
                 _.each(response.results, function(prop) {
                     prop.values = [];
-                    var filteredProperty = _.find(blade.currentEntity.dynamicProperties, function (o) { return o.id === prop.id; });
+                    var filteredProperty = _.find(blade.currentEntity.dynamicProperties, function (o) { return o.name === prop.name; });
                     if (filteredProperty) {
                         prop.values = filteredProperty.values;
                     }

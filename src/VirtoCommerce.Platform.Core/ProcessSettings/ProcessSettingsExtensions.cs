@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Core.ProcessSettings
     {
         public static ProcessSettings SetToolPath(this ProcessSettings processSettings, string toolPath)
         {
-            processSettings.ToolPath = toolPath;
+            processSettings.ToolPath = Path.GetFullPath(toolPath);
             return processSettings;
         }
 
@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Core.ProcessSettings
             return processSettings;
         }
 
-        public static string GetToolPathViaManualInstallation(this ProcessSettings processSettings, string toolName)
+        public static string GetFullPathTool(this ProcessSettings processSettings)
         {
             var result = string.Empty;
 
@@ -41,8 +41,12 @@ namespace VirtoCommerce.Platform.Core.ProcessSettings
             {
                 result = new[]
                 {
-                    Path.Combine(GetProgramFiles(), toolName, $"{toolName}.exe"),
-                    Path.Combine(GetProgramFiles(), toolName, "bin", $"{toolName}.exe")
+                    !string.IsNullOrEmpty(processSettings.ToolPath) ? Path.Combine(processSettings.ToolPath, $"{processSettings.ToolName}.exe") : string.Empty,
+                    !string.IsNullOrEmpty(processSettings.ToolPath) ? Path.Combine(processSettings.ToolPath, "bin", $"{processSettings.ToolName}.exe") : string.Empty,
+                    !string.IsNullOrEmpty(processSettings.ToolPath) ? Path.Combine(processSettings.ToolPath, processSettings.ToolName, $"{processSettings.ToolName}.exe") : string.Empty,
+                    !string.IsNullOrEmpty(processSettings.ToolPath) ? Path.Combine(processSettings.ToolPath, processSettings.ToolName, "bin", $"{processSettings.ToolName}.exe") : string.Empty,
+                    Path.Combine(GetProgramFiles(), processSettings.ToolName, "bin", $"{processSettings.ToolName}.exe"),
+                    Path.Combine(GetProgramFiles(), processSettings.ToolName, $"{processSettings.ToolName}.exe")
                 }.FirstOrDefault(File.Exists);
             }
 
@@ -50,9 +54,11 @@ namespace VirtoCommerce.Platform.Core.ProcessSettings
             {
                 result = new[]
                 {
-                    $"/usr/bin/{toolName}",
-                    $"/usr/local/bin/{toolName}",
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "bin", toolName)
+                    $"/usr/bin/{processSettings.ToolName}",
+                    $"/usr/local/bin/{processSettings.ToolName}",
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "bin", processSettings.ToolName),
+                    !string.IsNullOrEmpty(processSettings.ToolPath) ? Path.Combine(processSettings.ToolPath, processSettings.ToolName, processSettings.ToolName) : string.Empty,
+                    !string.IsNullOrEmpty(processSettings.ToolPath) ? Path.Combine(processSettings.ToolPath, processSettings.ToolName) : string.Empty
                 }.FirstOrDefault(File.Exists);
             }
 

@@ -172,7 +172,9 @@ This article describes how to migrate an existing [CustomerReviews sample](https
                     END");
         ```
 
+
         > Note: the `ContextKey` value has to be constructed as "{ModuleId}.Data.Migrations.Configuration".
+
         > Note2: the value for `MigrationId` has to be the name of your new migration, added in previous step. ('20191129134041_InitialCustomerReviews' in our case). Check [20000000000000_UpdateCoreV2.cs migration](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs#L12) as another example.
 
         3. Open **_20000000000000_UpdateCustomerReviewsV2.Designer_** and change **_Migration_** attribute parameter value to the current migration ID ("20000000000000_UpdateCustomerReviewsV2" in this case). Check [20000000000000_UpdateCoreV2.Designer.cs](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12) as another example.
@@ -206,6 +208,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
    6. Remove **permissions**/**settings** definitions sections from the manifest file
 
 2. Changes in **_Module.cs_**
+
     1. Change the class inheritance to interface **_IModule_**, then add implementation methods: **_Initialize, PostInitialize, Uninstall_** and property **_ModuleInfo_**. Check [VirtoCommerce.CustomerModule.Web/Module.cs](https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Web/Module.cs) for another implementation example.
     2. Read the [Dependency injection in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.0) article for additional info.
     3. Register all the needed classes for dependency injection inside **_Initialize_** method, like **_CustomerReviewDbContext, CustomerReviewRepository_**, etc.
@@ -216,12 +219,14 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     settingsRegistrar.RegisterSettings(ModuleConstants.Settings.AllSettings, ModuleInfo.Id);
     ```
 
+
     5. Register permissions using interface **_IPermissionsRegistrar_** in PostInitialize method: 
 
     ```cs
     var permissionsProvider = appBuilder.ApplicationServices.GetRequiredService<IPermissionsRegistrar>();
     permissionsProvider.RegisterPermissions(ModuleConstants.Security.Permissions.AllPermissions.Select(x => new Permission() { GroupName = "CustomerReview", Name = x }).ToArray());
     ```
+
 
     6. Add this code into PostInitialize method, needed to ensure that the migrations would be applied: 
 
@@ -234,6 +239,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
         dbContext.Database.Migrate();
     }
     ```
+
 
     > NOTE: The **MigrateIfNotApplied** extension method is needed for the database backward compatibility with version 2.x. This extension enables to skip generating the initial migration, as there are changes (tables, indexes) in the database already.
 
@@ -309,4 +315,4 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 
 ## 6. Create module package
 
-1. Please read [topic](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/build/README.md) about `vc-build` tool
+1. Please, read the article about [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/build/README.md).

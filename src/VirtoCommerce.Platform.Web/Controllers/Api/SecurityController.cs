@@ -615,6 +615,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Lock user
+        /// </summary>
+        /// <param name="id">>User id</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("users/{id}/lock")]
+        [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
+        public async Task<ActionResult<SecurityResult>> LockUser([FromRoute] string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                var result = await _userManager.SetLockoutEndDateAsync(user, DateTime.MaxValue);
+                return Ok(result.ToSecurityResult());
+            }
+            return Ok(IdentityResult.Failed().ToSecurityResult());
+        }
+
+        /// <summary>
         /// Unlock user
         /// </summary>
         /// <param name="id">>User id</param>
