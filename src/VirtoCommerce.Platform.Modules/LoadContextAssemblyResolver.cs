@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.Extensions.Logging;
-using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
@@ -18,7 +16,6 @@ namespace VirtoCommerce.Platform.Modules
     {
         private readonly ILogger<LoadContextAssemblyResolver> _logger;
         private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
-        private readonly Dictionary<string, NativeLibrary> _nativeLibraries = new Dictionary<string, NativeLibrary>(StringComparer.Ordinal);
         private readonly bool _isDevelopmentEnvironment;
 
         public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
@@ -91,16 +88,6 @@ namespace VirtoCommerce.Platform.Modules
                     throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath, ex);
                 }
             }
-            //TODO: Temporary commented because this code is produced exception
-            //foreach (var dependency in depsFilePath.ExtractNativeDependenciesFromPath())
-            //{
-            //    if (!_nativeLibraries.ContainsKey(dependency.Name))
-            //    {
-            //        _nativeLibraries.Add(dependency.Name, dependency);
-
-            //        LoadUnmanagedLibrary(dependency, loadContext);
-            //    }
-            //}
 
             return mainAssembly;
         }
@@ -151,7 +138,6 @@ namespace VirtoCommerce.Platform.Modules
             var assemblyFileName = Path.GetFileName(managedLibrary.AppLocalPath);
             if (TPA.ContainsAssembly(assemblyFileName))
             {
-                //TODO: Temporary commented because this code is produced exception
                 var defaultAssembly = AssemblyLoadContext.Default.LoadFromAssemblyName(managedLibrary.Name);
                 if (defaultAssembly != null)
                 {
@@ -201,116 +187,6 @@ namespace VirtoCommerce.Platform.Modules
 
             path = null;
             return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="unmanagedDllName"></param>
-        /// <param name="loadContext"></param>
-        /// <returns></returns>
-        private IntPtr LoadUnmanagedLibrary(NativeLibrary nativeLibrary, ManagedAssemblyLoadContext loadContext)
-        {
-            var unmanagedDllName = nativeLibrary.Name;
-            foreach (var prefix in PlatformInformation.NativeLibraryPrefixes)
-            {
-                if (_nativeLibraries.TryGetValue(prefix + unmanagedDllName, out var library))
-                {
-                    if (SearchForLibrary(library, loadContext, prefix, out var path) && path != null)
-                    {
-                        return LoadUnmanagedDllFromResolvedPath(path, loadContext);
-                    }
-                }
-                else
-                {
-                    // coreclr allows code to use [DllImport("sni")] or [DllImport("sni.dll")]
-                    // This library treats the file name without the extension as the lookup name,
-                    // so this loop is necessary to check if the unmanaged name matches a library
-                    // when the file extension has been trimmed.
-                    foreach (var suffix in PlatformInformation.NativeLibraryExtensions)
-                    {
-                        if (!unmanagedDllName.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
-                        {
-                            continue;
-                        }
-
-                        // check to see if there is a library entry for the library without the file extension
-                        var trimmedName = unmanagedDllName.Substring(0, unmanagedDllName.Length - suffix.Length);
-
-                        if (_nativeLibraries.TryGetValue(prefix + trimmedName, out library))
-                        {
-                            if (SearchForLibrary(library, loadContext, prefix, out var path) && path != null)
-                            {
-                                return LoadUnmanagedDllFromResolvedPath(path, loadContext);
-                            }
-                        }
-                        else
-                        {
-                            // fallback to native assets which match the file name in the plugin base directory
-                            var localFile = Path.Combine(loadContext.BasePath, prefix + unmanagedDllName + suffix);
-                            if (File.Exists(localFile))
-                            {
-                                return LoadUnmanagedDllFromResolvedPath(localFile, loadContext);
-                            }
-
-                            var localFileWithoutSuffix = Path.Combine(loadContext.BasePath, prefix + unmanagedDllName);
-                            if (File.Exists(localFileWithoutSuffix))
-                            {
-                                return LoadUnmanagedDllFromResolvedPath(localFileWithoutSuffix, loadContext);
-                            }
-                        }
-                    }
-
-                }
-            }
-
-            return IntPtr.Zero;
-        }
-
-        private bool SearchForLibrary(NativeLibrary library, ManagedAssemblyLoadContext loadContext, string prefix, out string? path)
-        {
-            // 1. Search in base path
-            foreach (var ext in PlatformInformation.NativeLibraryExtensions)
-            {
-                var candidate = Path.Combine(loadContext.BasePath, $"{prefix}{library.Name}{ext}");
-                if (File.Exists(candidate))
-                {
-                    path = candidate;
-                    return true;
-                }
-            }
-
-            // 2. Search in base path + app local (for portable deployments of netcoreapp)
-            var local = Path.Combine(loadContext.BasePath, library.AppLocalPath);
-            if (File.Exists(local))
-            {
-                path = local;
-                return true;
-            }
-
-            // 3. Search additional probing paths
-            foreach (var searchPath in loadContext.AdditionalProdingPath)
-            {
-                var candidate = Path.Combine(searchPath, library.AdditionalProbingPath);
-                if (File.Exists(candidate))
-                {
-                    path = candidate;
-                    return true;
-                }
-            }
-
-            path = null;
-            return false;
-        }
-
-        private IntPtr LoadUnmanagedDllFromResolvedPath(string unmanagedDllPath, ManagedAssemblyLoadContext loadContext, bool normalizePath = true)
-        {
-            if (normalizePath)
-            {
-                unmanagedDllPath = Path.GetFullPath(unmanagedDllPath);
-            }
-
-            return loadContext.LoadUnmanagedLibrary(unmanagedDllPath);
         }
 
         private static Uri GetFileUri(string filePath)
