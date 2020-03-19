@@ -150,13 +150,20 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                                         {
                                             foreach (var role in items)
                                             {
-                                                if (await _roleManager.RoleExistsAsync(role.Name))
+                                                var roleExists = string.IsNullOrEmpty(role.Id) ? await _roleManager.RoleExistsAsync(role.Name) :
+                                                                 await _roleManager.FindByIdAsync(role.Id) != null;
+                                                IdentityResult result;
+                                                if (!roleExists)
                                                 {
-                                                    await _roleManager.UpdateAsync(role);
+                                                    result = await _roleManager.CreateAsync(role);
                                                 }
                                                 else
                                                 {
-                                                    await _roleManager.CreateAsync(role);
+                                                    result = await _roleManager.UpdateAsync(role);
+                                                }
+                                                if (!result.Succeeded)
+                                                {
+                                                    progressInfo.Errors.AddRange(result.Errors.Select(x => x.Description));
                                                 }
                                             }
                                         }, processedCount =>
@@ -171,14 +178,19 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                                         {
                                             foreach (var user in items)
                                             {
+                                                IdentityResult result;
                                                 var userExist = await _userManager.FindByIdAsync(user.Id);
                                                 if (userExist != null)
                                                 {
-                                                    await _userManager.UpdateAsync(user);
+                                                    result = await _userManager.UpdateAsync(user);
                                                 }
                                                 else
                                                 {
-                                                    await _userManager.CreateAsync(user);
+                                                    result = await _userManager.CreateAsync(user);
+                                                }
+                                                if (!result.Succeeded)
+                                                {
+                                                    progressInfo.Errors.AddRange(result.Errors.Select(x => x.Description));
                                                 }
                                             }
                                         }, processedCount =>
@@ -255,12 +267,10 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         var roles = _roleManager.Roles.ToList();
                         if (_roleManager.SupportsRoleClaims)
                         {
-                            var permissions = _permissionsProvider.GetAllPermissions().ToArray();
                             foreach (var role in roles)
                             {
-                                role.Permissions = (await _roleManager.GetClaimsAsync(role)).Join(permissions, c => c.Value, p => p.Name, (c, p) => p).ToArray();
-
-                                serializer.Serialize(writer, role);
+                                var fullyLoadedRole = await _roleManager.FindByIdAsync(role.Id);
+                                serializer.Serialize(writer, fullyLoadedRole);
                             }
 
                             writer.Flush();
