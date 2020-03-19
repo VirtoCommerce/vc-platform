@@ -43,7 +43,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             }
 
             var retVal = new SendNotificationResult();
-            var apiKey = _settingsManager.GetSettingByName(_sendGridApiKeySettingName).Value;
+            var apiKey = _settingsManager.GetValue(_sendGridApiKeySettingName, string.Empty);
             var sendGridClient = new SendGridClient(apiKey);
 
             var from = new EmailAddress(emailNotification.Sender);
