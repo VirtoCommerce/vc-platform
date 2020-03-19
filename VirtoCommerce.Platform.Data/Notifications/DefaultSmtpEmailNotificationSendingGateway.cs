@@ -2,17 +2,29 @@ using System;
 using System.Net.Mail;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
     public class DefaultSmtpEmailNotificationSendingGateway : IEmailNotificationSendingGateway
     {
+        private readonly ISettingsManager _settingsManager;
+
         private const string _smtpClientHostSettingName = "VirtoCommerce.Platform.Notifications.SmptClient.Host";
         private const string _smtpClientPortSettingName = "VirtoCommerce.Platform.Notifications.SmptClient.Port";
         private const string _smtpClientLoginSettingName = "VirtoCommerce.Platform.Notifications.SmptClient.Login";
         private const string _smtpClientPWDSettingName = "VirtoCommerce.Platform.Notifications.SmptClient.Password";
         private const string _smtpClientUseSslSettingName = "VirtoCommerce.Platform.Notifications.SmptClient.UseSsl";
 
+        public DefaultSmtpEmailNotificationSendingGateway(ISettingsManager settingsManager)
+        {
+            if (settingsManager == null)
+            {
+                throw new ArgumentNullException("settingsManager");
+            }
+
+            _settingsManager = settingsManager;
+        }
 
         public SendNotificationResult SendNotification(Notification notification)
         {
@@ -52,11 +64,11 @@ namespace VirtoCommerce.Platform.Data.Notifications
                         }
                     }
 
-                    var login = ConfigurationHelper.GetAppSettingsValue(_smtpClientLoginSettingName);
-                    var password = ConfigurationHelper.GetAppSettingsValue(_smtpClientPWDSettingName);
-                    var host = ConfigurationHelper.GetAppSettingsValue(_smtpClientHostSettingName);
-                    var port = ConfigurationHelper.GetAppSettingsValue(_smtpClientPortSettingName);
-                    var useSsl = ConfigurationHelper.GetAppSettingsValue(_smtpClientUseSslSettingName, false);
+                    var login = _settingsManager.GetSettingByName(_smtpClientLoginSettingName).Value;
+                    var password = _settingsManager.GetSettingByName(_smtpClientPWDSettingName).Value;
+                    var host = _settingsManager.GetSettingByName(_smtpClientHostSettingName).Value;
+                    var port = _settingsManager.GetSettingByName(_smtpClientPortSettingName).Value;
+                    var useSsl = _settingsManager.GetValue(_smtpClientUseSslSettingName, false);
 
                     using (var smtpClient = new SmtpClient(host, Convert.ToInt32(port)))
                     {
