@@ -6,20 +6,12 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Notifications;
-using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.Notifications
 {
     public class SendGridEmailNotificationSendingGateway : IEmailNotificationSendingGateway
     {
-        private readonly ISettingsManager _settingsManager;
-
         private const string _sendGridApiKeySettingName = "VirtoCommerce.Platform.Notifications.SendGrid.ApiKey";
-
-        public SendGridEmailNotificationSendingGateway(ISettingsManager settingsManager)
-        {
-            _settingsManager = settingsManager ?? throw new ArgumentNullException(nameof(settingsManager));
-        }
 
         public SendNotificationResult SendNotification(Notification notification)
         {
@@ -43,7 +35,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
             }
 
             var retVal = new SendNotificationResult();
-            var apiKey = _settingsManager.GetSettingByName(_sendGridApiKeySettingName).Value;
+            var apiKey = ConfigurationHelper.GetAppSettingsValue(_sendGridApiKeySettingName);
             var sendGridClient = new SendGridClient(apiKey);
 
             var from = new EmailAddress(emailNotification.Sender);

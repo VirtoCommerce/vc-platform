@@ -744,11 +744,11 @@ namespace VirtoCommerce.Platform.Web
 
             if (string.Equals(emailNotificationSendingGatewayName, "Default", StringComparison.OrdinalIgnoreCase))
             {
-                emailNotificationSendingGateway = new DefaultSmtpEmailNotificationSendingGateway(settingsManager);
+                emailNotificationSendingGateway = new DefaultSmtpEmailNotificationSendingGateway();
             }
             else if (string.Equals(emailNotificationSendingGatewayName, "SendGrid", StringComparison.OrdinalIgnoreCase))
             {
-                emailNotificationSendingGateway = new SendGridEmailNotificationSendingGateway(settingsManager);
+                emailNotificationSendingGateway = new SendGridEmailNotificationSendingGateway();
             }
 
             if (emailNotificationSendingGateway != null)
