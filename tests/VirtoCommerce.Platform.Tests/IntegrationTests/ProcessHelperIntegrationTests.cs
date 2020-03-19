@@ -5,6 +5,7 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.IntegrationTests
 {
+    [Trait("Category", "IntegrationTest")]
     public class ProcessHelperIntegrationTests
     {
         [Fact]

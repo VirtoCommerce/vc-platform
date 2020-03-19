@@ -49,7 +49,19 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
     },
 ```
 
-### Running the Platform by CLI "dotnet"
+* In the **Content** section set public url for content `Content:FileSystem:PublicUrl` with url of your application, this step is needed in order for configure CMS content storage
+
+```json
+"Content": {
+        "Provider": "FileSystem",
+        "FileSystem": {
+            "RootPath": "~/cms-content",
+            "PublicUrl": "https://localhost:5001/cms-content/" <-- Set your platform application url with port localhost:5001
+        },
+    },
+```
+
+### Running the Platform
 
 * Install and trust HTTPS certificate
 
@@ -61,7 +73,16 @@ dotnet.exe dev-certs https --trust
 
 Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust)
 
-* Run the Platform by following commands:
+* Run the Platform:
+
+You can start platform by run exe file
+
+```console
+cd C:\vc-platform-3\
+VirtoCommerce.Platform.Web.exe
+```
+
+or by CLI "dotnet"
 
 ```console
 cd C:\vc-platform-3\

@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyModel;
-using VirtoCommerce.Platform.Core;
 
 namespace VirtoCommerce.Platform.Modules.AssemblyLoading
 {
@@ -26,32 +24,12 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
             }
         }
 
-        public static IEnumerable<NativeLibrary> ExtractNativeDependenciesFromPath(this string depsFilePath)
-        {
-            var reader = new DependencyContextJsonReader();
-            using (var file = File.OpenRead(depsFilePath))
-            {
-                var deps = reader.Read(file);
-                return ExtractNativeDependencies(deps);
-            }
-        }
-
         /// <summary>
         /// Get dependency list form pre-parsed <see cref="DependencyContext" />.
         /// </summary>
         /// <param name="dependencyContext">The dependency context.</param>
         /// <returns>Returns all assembly dependencies.</returns>
         public static IEnumerable<ManagedLibrary> ExtractDependencies(this DependencyContext dependencyContext)
-        {
-            return ResolveRuntimeAssemblies(dependencyContext, GetRuntimeFallbacks(dependencyContext));
-        }
-
-        public static IEnumerable<NativeLibrary> ExtractNativeDependencies(this DependencyContext dependencyContext)
-        {
-            return ResolveNativeAssets(dependencyContext, GetRuntimeFallbacks(dependencyContext));
-        }
-
-        private static RuntimeFallbacks GetRuntimeFallbacks(DependencyContext dependencyContext)
         {
             var ridGraph = dependencyContext.RuntimeGraph.Any()
                ? dependencyContext.RuntimeGraph
@@ -63,7 +41,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
                 ?? ridGraph.FirstOrDefault(g => g.Runtime == fallbackRid)
                 ?? new RuntimeFallbacks("any");
 
-            return fallbackGraph;
+            return ResolveRuntimeAssemblies(dependencyContext, fallbackGraph);
         }
 
 
@@ -110,16 +88,6 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
         {
             var rids = GetRids(runtimeGraph);
             return depContext.RuntimeLibraries.SelectMany(x => SelectAssets(rids, x.RuntimeAssemblyGroups).Select(assetPath => ManagedLibrary.CreateFromPackage(x.Name, x.Version, assetPath)));
-        }
-
-        private static IEnumerable<NativeLibrary> ResolveNativeAssets(DependencyContext depContext, RuntimeFallbacks runtimeGraph)
-        {
-            var rids = GetRids(runtimeGraph);
-            return from library in depContext.RuntimeLibraries
-                   from assetPath in SelectAssets(rids, library.NativeLibraryGroups)
-                       // some packages include symbols alongside native assets, such as System.Native.a or pwshplugin.pdb
-                   where PlatformInformation.NativeLibraryExtensions.Contains(Path.GetExtension(assetPath), StringComparer.OrdinalIgnoreCase)
-                   select NativeLibrary.CreateFromPackage(library.Name, library.Version, assetPath);
         }
 
         private static IEnumerable<string> GetRids(RuntimeFallbacks runtimeGraph)
