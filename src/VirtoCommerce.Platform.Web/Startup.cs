@@ -54,6 +54,9 @@ using VirtoCommerce.Platform.Web.JsonConverters;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.PushNotifications;
+using VirtoCommerce.Platform.Web.Security;
+using VirtoCommerce.Platform.Web.Security.Authentication;
+using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
 
 namespace VirtoCommerce.Platform.Web
@@ -163,7 +166,10 @@ namespace VirtoCommerce.Platform.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddCookie();
+            var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                                      .AddCookie()
+                                      .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { });
+
             services.AddSecurityServices(options =>
             {
                 options.NonEditableUsers = new[] { "admin" };
@@ -338,7 +344,14 @@ namespace VirtoCommerce.Platform.Web
                 };
             });
 
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
+                                                                              .RequireAuthenticatedUser()
+                                                                             .Build();
+                https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/
+                options.DefaultPolicy = mutipleSchemaAuthPolicy;
+            });
             // register the AuthorizationPolicyProvider which dynamically registers authorization policies for each permission defined in module manifest
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
             //Platform authorization handler for policies based on permissions

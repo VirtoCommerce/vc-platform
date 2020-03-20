@@ -9,6 +9,9 @@ angular.module('platformWebApp').factory('platformWebApp.accounts', ['$resource'
         update: { method: 'PUT' },
         locked: { url: 'api/platform/security/users/:id/locked', method: 'GET' },
         unlock: { url: 'api/platform/security/users/:id/unlock', method: 'POST' },
-        lock: { url: 'api/platform/security/users/:id/lock', method: 'POST' }
+        lock: { url: 'api/platform/security/users/:id/lock', method: 'POST' },
+        getUserApiKeys: { url: 'api/platform/security/users/:id/apikeys', method: 'GET' },
+        saveUserApiKey: { url: 'api/platform/security/users/apikeys', method: 'POST' },
+        deleteUserApiKey: { url: 'api/platform/security/users/apikeys', method: 'DELETE' }
     });
 }]);

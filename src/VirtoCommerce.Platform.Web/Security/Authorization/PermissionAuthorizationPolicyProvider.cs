@@ -1,25 +1,26 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Security.Authorization;
+using VirtoCommerce.Platform.Web.Security.Authentication;
 
-namespace VirtoCommerce.Platform.Security.Authorization
+namespace VirtoCommerce.Platform.Web.Security.Authorization
 {
     /// <summary>
     /// https://www.jerriepelser.com/blog/creating-dynamic-authorization-policies-aspnet-core/
     /// </summary>
     public class PermissionAuthorizationPolicyProvider : DefaultAuthorizationPolicyProvider
     {
-        private readonly IConfiguration _configuration;
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IPlatformMemoryCache _memoryCache;
         public PermissionAuthorizationPolicyProvider(IOptions<Microsoft.AspNetCore.Authorization.AuthorizationOptions> options, IConfiguration configuration, IPermissionsRegistrar permissionsProvider, IPlatformMemoryCache memoryCache)
             : base(options)
         {
-            _configuration = configuration;
             _permissionsProvider = permissionsProvider;
             _memoryCache = memoryCache;
         }
@@ -46,7 +47,9 @@ namespace VirtoCommerce.Platform.Security.Authorization
                 var resultLookup = new Dictionary<string, AuthorizationPolicy>();
                 foreach (var permission in _permissionsProvider.GetAllPermissions())
                 {
-                    resultLookup[permission.Name] = new AuthorizationPolicyBuilder().AddRequirements(new PermissionAuthorizationRequirement(permission.Name)).Build();
+                    resultLookup[permission.Name] = new AuthorizationPolicyBuilder().AddRequirements(new PermissionAuthorizationRequirement(permission.Name))
+                                                                                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
+                                                                                    .Build();
                 }
                 return resultLookup;
             });
