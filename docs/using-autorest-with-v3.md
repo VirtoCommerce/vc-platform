@@ -20,7 +20,7 @@ $modules.ForEach( { autorest-core --debug --input-file=http://localhost:10645/do
 
 ```cs
     services.AddAutoRestClient((credentials, httpClient, disposeHttpClient, baseUri) => new TaxModuleApi(credentials, httpClient, disposeHttpClient) { BaseUri = baseUri });
-    services.AddSingleton<ITaxModule>(sp => sp.GetRequiredService<TaxModule>());
+    services.AddSingleton<ITaxModule>(sp => new TaxModule(sp.GetRequiredService<TaxModuleApi>()));
 ```
 
 
