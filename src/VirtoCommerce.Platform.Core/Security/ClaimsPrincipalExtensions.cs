@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Core.Security
 
             if (!result)
             {
-                result = principal.IsInRole(PlatformConstants.Security.SystemRoles.Customer) ||
+                result = !principal.IsInRole(PlatformConstants.Security.SystemRoles.Customer) &&
                          permissionName == PlatformConstants.Security.Permissions.SecurityCallApi;
                 if (!result)
                 {
