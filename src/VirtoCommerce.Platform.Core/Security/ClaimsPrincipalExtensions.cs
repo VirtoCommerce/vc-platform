@@ -22,14 +22,15 @@ namespace VirtoCommerce.Platform.Core.Security
 
         public static bool HasGlobalPermission(this ClaimsPrincipal principal, string permissionName)
         {
-            //TODO: Check cases with locked user
+            // TODO: Check cases with locked user
             var result = principal.IsInRole(PlatformConstants.Security.SystemRoles.Administrator);
 
             if (!result)
             {
-                result = !principal.IsInRole(PlatformConstants.Security.SystemRoles.Customer) &&
-                         permissionName == PlatformConstants.Security.Permissions.SecurityCallApi;
-                if (!result)
+                // Breaking change in v3:
+                // Do not allow users with Customer role login into platform
+                result = principal.IsInRole(PlatformConstants.Security.SystemRoles.Customer);
+                if (result)
                 {
                     result = principal.HasClaim(PlatformConstants.Security.Claims.PermissionClaimType, permissionName);
                 }
