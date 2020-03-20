@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Core.Security
             {
                 // Breaking change in v3:
                 // Do not allow users with Customer role login into platform
-                result = principal.IsInRole(PlatformConstants.Security.SystemRoles.Customer);
+                result = !principal.IsInRole(PlatformConstants.Security.SystemRoles.Customer);
                 if (result)
                 {
                     result = principal.HasClaim(PlatformConstants.Security.Claims.PermissionClaimType, permissionName);
