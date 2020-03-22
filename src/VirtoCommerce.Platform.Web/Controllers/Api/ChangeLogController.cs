@@ -43,6 +43,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("~/api/changes/lastmodifieddate")]
+        [AllowAnonymous]
         public async Task<ActionResult<LastModifiedResponse>> GetLastModifiedDate([FromQuery] string scope = null)
         {
             var criteria = new ChangeLogSearchCriteria

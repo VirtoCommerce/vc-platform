@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Security.Model;
 
 namespace VirtoCommerce.Platform.Security.Repositories
 {
@@ -19,6 +20,15 @@ namespace VirtoCommerce.Platform.Security.Repositories
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<UserApiKeyEntity>().ToTable("UserApiKey").HasKey(x => x.Id);
+            builder.Entity<UserApiKeyEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
+            builder.Entity<UserApiKeyEntity>().Property(x => x.ApiKey).HasMaxLength(128);
+            builder.Entity<UserApiKeyEntity>().HasIndex(x => new { x.ApiKey }).IsUnique();
+            builder.Entity<UserApiKeyEntity>().Property(x => x.CreatedBy).HasMaxLength(64);
+            builder.Entity<UserApiKeyEntity>().Property(x => x.ModifiedBy).HasMaxLength(64);
+
+
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
