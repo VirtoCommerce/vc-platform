@@ -12,6 +12,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Data.ExportImport
@@ -28,11 +29,23 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly IDynamicPropertySearchService _dynamicPropertySearchService;
         private readonly IPermissionsRegistrar _permissionsProvider;
+        private readonly IUserApiKeyService _userApiKeyService;
+        private readonly IUserApiKeySearchService _userApiKeySearchService;
         private readonly IDynamicPropertyDictionaryItemsService _dynamicPropertyDictionaryItemsService;
         private readonly IDynamicPropertyDictionaryItemsSearchService _dynamicPropertyDictionaryItemsSearchService;
 
-        public PlatformExportImportManager(UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager, IPermissionsRegistrar permissionsProvider, ISettingsManager settingsManager,
-                IDynamicPropertyService dynamicPropertyService, IDynamicPropertySearchService dynamicPropertySearchService, ILocalModuleCatalog moduleCatalog, IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService, IDynamicPropertyDictionaryItemsSearchService dynamicPropertyDictionaryItemsSearchService)
+        public PlatformExportImportManager(
+            UserManager<ApplicationUser> userManager
+            , RoleManager<Role> roleManager
+            , IPermissionsRegistrar permissionsProvider
+            , ISettingsManager settingsManager
+            , IDynamicPropertyService dynamicPropertyService
+            , IDynamicPropertySearchService dynamicPropertySearchService
+            , ILocalModuleCatalog moduleCatalog
+            , IDynamicPropertyDictionaryItemsService dynamicPropertyDictionaryItemsService
+            , IDynamicPropertyDictionaryItemsSearchService dynamicPropertyDictionaryItemsSearchService
+            , IUserApiKeyService userApiKeyService
+            , IUserApiKeySearchService userApiKeySearchService)
         {
             _dynamicPropertyService = dynamicPropertyService;
             _userManager = userManager;
@@ -43,6 +56,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             _dynamicPropertyDictionaryItemsSearchService = dynamicPropertyDictionaryItemsSearchService;
             _permissionsProvider = permissionsProvider;
             _dynamicPropertySearchService = dynamicPropertySearchService;
+            _userApiKeyService = userApiKeyService;
+            _userApiKeySearchService = userApiKeySearchService;
         }
 
         #region IPlatformExportImportManager Members
@@ -234,6 +249,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                                         progressCallback(progressInfo);
                                     }, cancellationToken);
                                 }
+                                else if (manifest.HandleSecurity && reader.Value.ToString() == "UserApiKeys")
+                                {
+                                    await reader.DeserializeJsonArrayWithPagingAsync<UserApiKey>(jsonSerializer, batchSize,
+                                        items => _userApiKeyService.SaveApiKeysAsync(items.ToArray()), processedCount =>
+                                        {
+                                            progressInfo.Description = $"{ processedCount } api keys have been imported";
+                                            progressCallback(progressInfo);
+                                        }, cancellationToken);
+                                }
                             }
                         }
                     }
@@ -257,6 +281,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
                     if (manifest.HandleSecurity)
                     {
+                        #region Roles
                         progressInfo.Description = "Roles exporting...";
                         progressCallback(progressInfo);
                         cancellationToken.ThrowIfCancellationRequested();
@@ -278,10 +303,12 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                             progressCallback(progressInfo);
                         }
 
-                        await writer.WriteEndArrayAsync();
+                        await writer.WriteEndArrayAsync(); 
+                        #endregion
 
                         cancellationToken.ThrowIfCancellationRequested();
 
+                        #region Users
                         await writer.WritePropertyNameAsync("Users");
                         await writer.WriteStartArrayAsync();
                         var usersResult = _userManager.Users.ToArray();
@@ -304,6 +331,30 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         progressCallback(progressInfo);
 
                         await writer.WriteEndArrayAsync();
+                        #endregion
+
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        #region UserApiKeys
+                        await writer.WritePropertyNameAsync("UserApiKeys");
+                        await writer.WriteStartArrayAsync();
+
+                        progressInfo.Description = "User Api keys: load keys...";
+                        progressCallback(progressInfo);
+
+                        var apiKeys = (await _userApiKeySearchService.SearchUserApiKeysAsync(new UserApiKeySearchCriteria { Take = int.MaxValue })).Results;
+                        foreach (var apiKey in apiKeys)
+                        {
+                            serializer.Serialize(writer, apiKey);
+                        }
+
+                        progressInfo.Description = $"User Api keys have been exported";
+                        progressCallback(progressInfo);
+                        await writer.WriteEndArrayAsync();
+
+                        #endregion
+
+
                     }
 
                     if (manifest.HandleSettings)

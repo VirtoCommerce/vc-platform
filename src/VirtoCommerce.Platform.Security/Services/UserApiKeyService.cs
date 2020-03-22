@@ -24,13 +24,30 @@ namespace VirtoCommerce.Platform.Security.Services
             _memoryCache = memoryCache;
         }
 
+        public async Task<UserApiKey> GetApiKeyByKeyAsync(string apiKey)
+        {
+            var cacheKey = CacheKey.With(GetType(), nameof(GetApiKeyByKeyAsync), apiKey);
+            return await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            {
+                //Add cache  expiration token
+                cacheEntry.AddExpirationToken(ApiKeyCacheRegion.CreateChangeToken());
+                using (var repository = _repositoryFactory())
+                {
+                    var result = await repository.UserApiKeys.Where(x => x.ApiKey == apiKey)
+                                                        .AsNoTracking()
+                                                        .FirstOrDefaultAsync();
+                    return result?.ToModel(AbstractTypeFactory<UserApiKey>.TryCreateInstance());
+                }
+            });
+        }
+
         public async Task<UserApiKey[]> GetAllUserApiKeysAsync(string userId)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(GetAllUserApiKeysAsync), userId);
             return await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 //Add cache  expiration token
-                cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeToken());
+                cacheEntry.AddExpirationToken(ApiKeyCacheRegion.CreateChangeToken());
                 using (var repository = _repositoryFactory())
                 {
                     var result = await repository.UserApiKeys.Where(x => x.UserId == userId)
@@ -52,7 +69,7 @@ namespace VirtoCommerce.Platform.Security.Services
             return await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 //Add cache  expiration token
-                cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeToken());
+                cacheEntry.AddExpirationToken(ApiKeyCacheRegion.CreateChangeToken());
                 using (var repository = _repositoryFactory())
                 {
                     var result = await repository.UserApiKeys.Where(x => ids.Contains(x.Id))
@@ -72,7 +89,7 @@ namespace VirtoCommerce.Platform.Security.Services
             var pkMap = new PrimaryKeyResolvingMap();
             using (var repository = _repositoryFactory())
             {
-                var ids = apiKeys.Where(x => x.IsTransient()).Select(x => x.Id).Distinct().ToArray();
+                var ids = apiKeys.Where(x => !x.IsTransient()).Select(x => x.Id).Distinct().ToArray();
                 var apiKeysEntities = await repository.UserApiKeys.Where(x => ids.Contains(x.Id))
                                                                   .ToArrayAsync();
                 foreach (var apiKey in apiKeys)
@@ -90,8 +107,7 @@ namespace VirtoCommerce.Platform.Security.Services
                 }
                 repository.UnitOfWork.Commit();
                 pkMap.ResolvePrimaryKeys();
-                //TODO: make more pacific validation
-                SecurityCacheRegion.ExpireRegion();
+                ApiKeyCacheRegion.ExpireRegion();
             }
             return apiKeys;
         }
@@ -115,7 +131,7 @@ namespace VirtoCommerce.Platform.Security.Services
 
                 await repository.UnitOfWork.CommitAsync();
 
-                SecurityCacheRegion.ExpireRegion();
+                ApiKeyCacheRegion.ExpireRegion();
             }
         }
 

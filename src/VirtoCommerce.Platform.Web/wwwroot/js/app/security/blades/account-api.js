@@ -1,11 +1,12 @@
 angular.module('platformWebApp')
 .controller('platformWebApp.accountApiController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.accounts', function ($scope, bladeNavigationService, dialogService, accounts) {
     var blade = $scope.blade;
+    blade.apiKeyAlreadyExists = false;
     blade.updatePermission = 'platform:security:update';
 
     function refresh() {
         accounts.getUserApiKeys({ id: blade.user.id }, function (data) {
-            initializeBlade(data[0]);
+            initializeBlade(data.length > 0 ? data[0] : { userId: blade.user.id, userName: blade.user.userName, isActive: true  });
         },
             function (error) {
                 bladeNavigationService.setError(error, blade);
@@ -13,10 +14,15 @@ angular.module('platformWebApp')
     }
 
     function initializeBlade(data) {
+        blade.isNew = !data.id;
         blade.currentEntity = angular.copy(data);
         blade.origEntity = data;
         blade.isLoading = false;
     };
+
+    $scope.setForm = function (form) {
+        $scope.formScope = form;
+    }
 
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
@@ -26,14 +32,14 @@ angular.module('platformWebApp')
         $scope.bladeClose();
     }
 
-    $scope.saveChanges = function () {
-        if (blade.confirmChangesFn) {
-            blade.confirmChangesFn(blade.currentEntity);
-        }
 
-        accounts.saveUserApiKey(blade.currentEntity);
-        $scope.bladeClose();
-    };
+    $scope.saveChanges = function () {
+        accounts.saveUserApiKey(blade.currentEntity, function () {
+            $scope.bladeClose();
+        }, function (error) {
+            bladeNavigationService.setError(error, blade);
+        });
+    }; 
 
     function deleteEntry() {
         var dialog = {

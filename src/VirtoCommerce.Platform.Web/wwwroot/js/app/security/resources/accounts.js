@@ -10,7 +10,7 @@ angular.module('platformWebApp').factory('platformWebApp.accounts', ['$resource'
         locked: { url: 'api/platform/security/users/:id/locked', method: 'GET' },
         unlock: { url: 'api/platform/security/users/:id/unlock', method: 'POST' },
         lock: { url: 'api/platform/security/users/:id/lock', method: 'POST' },
-        getUserApiKeys: { url: 'api/platform/security/users/:id/apikeys', method: 'GET' },
+        getUserApiKeys: { url: 'api/platform/security/users/:id/apikeys', method: 'GET', isArray: true},
         saveUserApiKey: { url: 'api/platform/security/users/apikeys', method: 'POST' },
         deleteUserApiKey: { url: 'api/platform/security/users/apikeys', method: 'DELETE' }
     });

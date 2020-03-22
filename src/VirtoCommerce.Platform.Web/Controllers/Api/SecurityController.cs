@@ -656,7 +656,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(IdentityResult.Failed().ToSecurityResult());
         }
 
-     
         [HttpGet]
         [Route("users/{id}/apikeys")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityQuery)]
@@ -678,9 +677,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpDelete]
         [Route("users/apikeys")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityDelete)]
-        public async Task<ActionResult<UserApiKey[]>> DeleteUserApiKeys([FromQuery] string ids)
+        public async Task<ActionResult<UserApiKey[]>> DeleteUserApiKeys([FromQuery] string[] ids)
         {
-            await _userApiKeyService.GetAllUserApiKeysAsync(ids);
+            await _userApiKeyService.DeleteApiKeysAsync(ids);
             return Ok();
         }
 

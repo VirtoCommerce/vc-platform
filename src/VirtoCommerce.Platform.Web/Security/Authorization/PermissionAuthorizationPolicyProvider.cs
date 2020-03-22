@@ -48,6 +48,7 @@ namespace VirtoCommerce.Platform.Web.Security.Authorization
                 foreach (var permission in _permissionsProvider.GetAllPermissions())
                 {
                     resultLookup[permission.Name] = new AuthorizationPolicyBuilder().AddRequirements(new PermissionAuthorizationRequirement(permission.Name))
+                    //Use the two schema (JwtBearer and ApiKey)  authentication for permission authorization policies.
                                                                                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
                                                                                     .Build();
                 }

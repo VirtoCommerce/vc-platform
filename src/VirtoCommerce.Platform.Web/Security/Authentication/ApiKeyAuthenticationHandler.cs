@@ -9,6 +9,10 @@ using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web.Security.Authentication
 {
+
+    /// <summary>
+    /// Handle the Api Key scheme authentication.
+    /// </summary>
     public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -31,6 +35,12 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
 
         }
 
+        /// This method gets called for every request that requires authentication.
+        //    The logic goes something like this:
+        //If no ApiKey is present on query string -> Return no result, let other handlers (if present) handle the request.
+        //If the api_key is present but null or empty -> Return no result.
+        //If the provided key does not exists -> Fail the authentication.
+        //If the key is valid, create a new identity based on associated with key user      
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             if (!Request.Query.TryGetValue(Options.ApiKeyParamName, out var apiKeyValues))
@@ -45,13 +55,13 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
                 return AuthenticateResult.NoResult();
             }
 
-            var apiKey = await _userApiKeyService.GetApiKeyByIdAsync(providedApiKey);
-            if(apiKey == null)
+            var apiKey = await _userApiKeyService.GetApiKeyByKeyAsync(providedApiKey);
+            if (apiKey == null)
             {
                 return AuthenticateResult.NoResult();
             }
 
-            var user = await _userManager.FindByIdAsync(apiKey.Id);
+            var user = await _userManager.FindByIdAsync(apiKey.UserId);
             if (user == null)
             {
                 return AuthenticateResult.Fail("Invalid authentication provided, access denied.");
@@ -60,6 +70,6 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
             var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
             var ticket = new AuthenticationTicket(claimsPrincipal, Options.Scheme);
             return AuthenticateResult.Success(ticket);
-        }       
+        }
     }
 }

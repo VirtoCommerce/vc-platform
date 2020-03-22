@@ -375,6 +375,15 @@
                     "state": "State"
                 }
             },
+            "account-api": {
+                "labels": {
+                    "api-key": "Api key",
+                    "is-active":  "is active"
+                },
+                "placeholders": {
+                    "api-key":  "Enter an Api key"
+                }
+            },
             "role-detail": {
                 "subtitle": "Role details",
                 "labels": {
@@ -629,11 +638,11 @@
             "loginOnBehalf-list": {
                 "title": "Login as {{name}}",
                 "labels": {
-                  "pick-url-to-login": "Pick a Login Url to login",
-                  "no-login-urls": "No Login Urls yet"
+                    "pick-url-to-login": "Pick a Login Url to login",
+                    "no-login-urls": "No Login Urls yet"
                 },
                 "validations": {
-                  "secure-url-missing": "Secure URL is missing. Click to enter Login secure URL manually."
+                    "secure-url-missing": "Secure URL is missing. Click to enter Login secure URL manually."
                 }
             }
         },
@@ -685,8 +694,8 @@
                 "title": "Settings"
             },
             "accountApi": {
-                "title": "API Accounts",
-                "blade-subtitle": "API acounts"
+                "title": "Api key",
+                "blade-subtitle": "Api key"
             },
             "accountRoles": {
                 "title": "Roles",

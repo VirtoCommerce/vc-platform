@@ -25,6 +25,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
 
             services.AddScoped<IUserApiKeyService, UserApiKeyService>();
+            services.AddScoped<IUserApiKeySearchService, UserApiKeySearchService>();
 
             services.AddScoped<IUserNameResolver, HttpContextUserResolver>();
             services.AddSingleton<IPermissionsRegistrar, DefaultPermissionProvider>();

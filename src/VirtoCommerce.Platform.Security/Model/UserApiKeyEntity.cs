@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 
@@ -21,6 +20,7 @@ namespace VirtoCommerce.Platform.Security.Model
 
             pkMap.AddPair(apiKey, this);
 
+            Id = apiKey.Id;
             ApiKey = apiKey.ApiKey;
             UserName = apiKey.UserName;
             UserId = apiKey.UserId;
@@ -34,6 +34,7 @@ namespace VirtoCommerce.Platform.Security.Model
             if (apiKey == null)
                 throw new ArgumentNullException(nameof(apiKey));
 
+            apiKey.Id = Id;
             apiKey.ApiKey = ApiKey;
             apiKey.UserName = UserName;
             apiKey.UserId = UserId;
