@@ -1,9 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Linq.Expressions;
-using System.Collections;
+using System.Reflection;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -85,7 +85,7 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             if (type == null)
             {
-                throw new ArgumentNullException("type");
+                throw new ArgumentNullException(nameof(type));
             }
 
             var retVal = type.BaseType != null;
