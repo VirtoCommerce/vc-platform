@@ -14,7 +14,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         private const string RefFilePrefix = "file://";
 
         private readonly IAssemblyResolver assemblyResolver;
-        private HashSet<Uri> downloadedUris = new HashSet<Uri>();
+        private readonly HashSet<Uri> downloadedUris = new HashSet<Uri>();
 
 
         /// <summary>
@@ -179,8 +179,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// <param name="disposing">When <see langword="true"/>, it is being called from the Dispose method.</param>
         protected virtual void Dispose(bool disposing)
         {
-            var disposableResolver = assemblyResolver as IDisposable;
-            if (disposableResolver != null)
+            if (assemblyResolver is IDisposable disposableResolver)
             {
                 disposableResolver.Dispose();
             }

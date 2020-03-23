@@ -18,7 +18,9 @@ namespace VirtoCommerce.Platform.Core.Security
             {
                 return Name;
             }
+#pragma warning disable S3237 // "value" parameters should be used
             set
+#pragma warning restore S3237 // "value" parameters should be used
             {
                 // Do not remove this empty set-accessor! It is needed for backward compatibility.
             }

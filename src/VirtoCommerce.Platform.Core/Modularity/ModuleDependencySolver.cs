@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
-using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
@@ -97,7 +95,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                     .SelectMany(p => p.Value.Select(m => new KeyValuePair<string, string>(m, p.Key)))
                     .GroupBy(p => p.Key)
                     .ToDictionary(g => g.Key, g => g.Select(p => p.Value));
-                throw new MissedModuleException(missedDependenciesMatrix,$"A module declared a dependency on another module which is not declared to be loaded. Missing module(s): {string.Join(", ", missedDependencies)}");
+                throw new MissedModuleException(missedDependenciesMatrix, $"A module declared a dependency on another module which is not declared to be loaded. Missing module(s): {string.Join(", ", missedDependencies)}");
             }
 
             return skip.ToArray();

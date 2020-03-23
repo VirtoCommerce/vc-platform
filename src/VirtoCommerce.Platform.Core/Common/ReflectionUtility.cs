@@ -1,9 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Linq.Expressions;
-using System.Collections;
+using System.Reflection;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -27,9 +27,8 @@ namespace VirtoCommerce.Platform.Core.Common
             {
                 var lambda = (LambdaExpression)propertyExpression;
                 MemberExpression memberExpression;
-                if (lambda.Body is UnaryExpression)
+                if (lambda.Body is UnaryExpression unaryExpression)
                 {
-                    var unaryExpression = (UnaryExpression)lambda.Body;
                     memberExpression = (MemberExpression)unaryExpression.Operand;
                 }
                 else
@@ -86,7 +85,7 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             if (type == null)
             {
-                throw new NullReferenceException();
+                throw new ArgumentNullException(nameof(type));
             }
 
             var retVal = type.BaseType != null;
@@ -152,7 +151,7 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             if (type == null)
             {
-                throw new NullReferenceException("type");
+                throw new ArgumentNullException("type");
             }
 
             var retVal = typeof(IDictionary).IsAssignableFrom(type);
