@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VirtoCommerce.Platform.Data.Migrations
@@ -12,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            // This method defined empty
+
         }
     }
 }

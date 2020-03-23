@@ -17,6 +17,15 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         #region IComparer<T>
 
+        /// <summary>Example:AnonymousComparer.Create&lt;int&gt;((x, y) => y - x)</summary>
+        public static IComparer<T> Create<T>(Func<T, T, int> compare)
+        {
+            if (compare == null)
+                throw new ArgumentNullException("compare");
+
+            return new Comparer<T>(compare);
+        }
+
         private class Comparer<T> : IComparer<T>
         {
             private readonly Func<T, T, int> compare;
@@ -35,15 +44,6 @@ namespace VirtoCommerce.Platform.Core.Common
         #endregion
 
         #region IEqualityComparer<T>
-
-        /// <summary>Example:AnonymousComparer.Create&lt;int&gt;((x, y) => y - x)</summary>
-        public static IComparer<T> Create<T>(Func<T, T, int> compare)
-        {
-            if (compare == null)
-                throw new ArgumentNullException("compare");
-
-            return new Comparer<T>(compare);
-        }
 
         /// <summary>Example:AnonymousComparer.Create((MyClass mc) => mc.MyProperty)</summary>
         public static IEqualityComparer<T> Create<T, TKey>(Func<T, TKey> compareKeySelector)

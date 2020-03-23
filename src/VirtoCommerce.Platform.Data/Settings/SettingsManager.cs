@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +22,7 @@ namespace VirtoCommerce.Platform.Data.Settings
     /// - Deep load all settings for entity
     /// - Mass update all entity settings
     /// </summary>
-    public class SettingsManager : ISettingsManager
+    public class SettingsManager : ISettingsManager, ISettingsRegistrar
     {
         private readonly Func<IPlatformRepository> _repositoryFactory;
         private readonly IPlatformMemoryCache _memoryCache;
@@ -165,7 +167,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .ToListAsync());
 
                 foreach (var setting in objectSettings.Where(x => x.ItHasValues))
-                {
+                {                   
 
                     var settingDescriptor = _registeredSettingsByNameDict[setting.Name];
                     if (settingDescriptor == null)

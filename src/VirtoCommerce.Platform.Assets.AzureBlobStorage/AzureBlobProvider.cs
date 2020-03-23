@@ -181,7 +181,9 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                     // Loop over items within the container and output the length and URI.
                     foreach (IListBlobItem item in listBlobs.Results)
                     {
-                        if (item is CloudBlockBlob block)
+                        var block = item as CloudBlockBlob;
+                        var directory = item as CloudBlobDirectory;
+                        if (block != null)
                         {
                             var blobInfo = ConvertBlobToBlobInfo(block);
                             //Do not return empty blob (created with directory because azure blob not support direct directory creation)
@@ -191,7 +193,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                             }
                         }
 
-                        if (item is CloudBlobDirectory directory)
+                        if (directory != null)
                         {
                             var folder = AbstractTypeFactory<BlobFolder>.TryCreateInstance();
 
@@ -252,14 +254,14 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 
         }
 
-        public virtual void Move(string srcUrl, string destUrl)
+        public virtual void Move(string oldUrl, string newUrl)
         {
-            MoveAsync(srcUrl, destUrl).GetAwaiter().GetResult();
+            MoveAsync(oldUrl, newUrl).GetAwaiter().GetResult();
         }
 
-        public virtual void Copy(string srcUrl, string destUrl)
+        public virtual void Copy(string oldUrl, string newUrl)
         {
-            MoveAsync(srcUrl, destUrl, true).GetAwaiter().GetResult();
+            MoveAsync(oldUrl, newUrl, true).GetAwaiter().GetResult();
         }
 
         protected virtual async Task MoveAsync(string oldUrl, string newUrl, bool isCopy = false)

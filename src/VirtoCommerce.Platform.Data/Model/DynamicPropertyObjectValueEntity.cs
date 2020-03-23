@@ -81,9 +81,12 @@ namespace VirtoCommerce.Platform.Data.Model
             DictionaryItemId = propValue.ValueId;
 
             var dictItem = propValue.Value as DynamicPropertyDictionaryItem;
-            if (dictItem == null && propValue.Value is JObject jObject)
+            if (dictItem == null)
             {
-                dictItem = jObject.ToObject<DynamicPropertyDictionaryItem>();
+                if (propValue.Value is JObject jObject)
+                {
+                    dictItem = jObject.ToObject<DynamicPropertyDictionaryItem>();
+                }
             }
 
             if (dictItem != null)

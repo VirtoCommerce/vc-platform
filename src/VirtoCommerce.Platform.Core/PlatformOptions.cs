@@ -23,8 +23,8 @@ namespace VirtoCommerce.Platform.Core
         [Url]
         public string SampleDataUrl { get; set; }
         //Default path to store export files 
-        public string DefaultExportFolder { get; set; } = "App_Data/Export/";
-        public string DefaultExportFileName { get; set; } = "exported_data.zip";
+        public string DefaultExportFolder = "App_Data/Export/";
+        public string DefaultExportFileName = "exported_data.zip";
         //Local path to running process like WkhtmlToPdf
         public string ProcessesPath { get; set; }
     }

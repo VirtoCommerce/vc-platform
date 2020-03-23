@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Core.Security;
 namespace VirtoCommerce.Platform.Web.Security
 {
     public static class ApplicationBuilderExtensions
-    {
+    {      
 
         public static IApplicationBuilder UsePlatformPermissions(this IApplicationBuilder appBuilder)
         {
@@ -32,7 +32,6 @@ namespace VirtoCommerce.Platform.Web.Security
 
                 if (await userManager.FindByNameAsync("admin") == null)
                 {
-#pragma warning disable S2068 // disable check: 'password' detected in this expression, review this potentially hardcoded credential
                     var admin = new ApplicationUser
                     {
                         Id = "1eb2fa8ac6574541afdb525833dadb46",
@@ -41,7 +40,6 @@ namespace VirtoCommerce.Platform.Web.Security
                         PasswordHash = "AHQSmKnSLYrzj9vtdDWWnUXojjpmuDW2cHvWloGL9UL3TC9UCfBmbIuR2YCyg4BpNg==",
                         PasswordExpired = true
                     };
-#pragma warning restore S2068 // disable check: 'password' detected in this expression, review this potentially hardcoded credential
                     var adminUser = await userManager.FindByIdAsync(admin.Id);
                     if (adminUser == null)
                     {

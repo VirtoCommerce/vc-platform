@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Core.Common
             var L = new List<T>();
 
             // Set of all nodes with no incoming edges
-            var S = new HashSet<T>(nodes.Where(n => edges.All(e => !e.Item2.Equals(n))));
+            var S = new HashSet<T>(nodes.Where(n => edges.All(e => e.Item2.Equals(n) == false)));
 
             // while S is non-empty do
             while (S.Any())
@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Core.Common
                     edges.Remove(e);
 
                     // if m has no other incoming edges then
-                    if (edges.All(me => !me.Item2.Equals(m)))
+                    if (edges.All(me => me.Item2.Equals(m) == false))
                     {
                         // insert m into S
                         S.Add(m);

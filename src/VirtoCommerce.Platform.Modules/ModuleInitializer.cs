@@ -103,7 +103,8 @@ namespace VirtoCommerce.Platform.Modules
                     moduleException = new ModuleInitializeException(moduleInfo.ModuleName, exception.Message, exception);
                 }
             }
-            if (moduleInfo is ManifestModuleInfo manifestModule)
+            var manifestModule = moduleInfo as ManifestModuleInfo;
+            if (manifestModule != null)
             {
                 manifestModule.Errors.Add(exception.ToString());
             }

@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
             var retVal = base.ToString();
             if (Values != null)
             {
-                retVal += string.Format("[{0}]", Values.Count);
+                retVal += string.Format("[{0}]", Values.Count());
             }
             return retVal;
         }

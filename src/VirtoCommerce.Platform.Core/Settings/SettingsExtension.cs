@@ -129,6 +129,7 @@ namespace VirtoCommerce.Platform.Core.Settings
 
         public static async Task SetValueAsync<T>(this ISettingsManager manager, string name, T value)
         {
+            var type = typeof(T);
             var objectSetting = await manager.GetObjectSettingAsync(name);
             objectSetting.Value = value;
             await manager.SaveObjectSettingsAsync(new[] { objectSetting });

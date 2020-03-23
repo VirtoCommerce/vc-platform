@@ -13,10 +13,6 @@ namespace VirtoCommerce.Platform.Core.Caching
         private static CancellationChangeToken _regionChangeToken;
         private static object _lock = new object();
 
-        protected CancellableCacheRegion()
-        {
-        }
-
         public static IChangeToken CreateChangeToken()
         {
             if (_regionChangeToken == null)

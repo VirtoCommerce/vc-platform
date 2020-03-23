@@ -64,7 +64,8 @@ namespace VirtoCommerce.Platform.Modules
         /// <returns></returns>
         protected override IEnumerable<ModuleInfo> GetDependentModulesInner(ModuleInfo moduleInfo)
         {
-            if (!(moduleInfo is ManifestModuleInfo manifestModule))
+            var manifestModule = moduleInfo as ManifestModuleInfo;
+            if (manifestModule == null)
             {
                 throw new ModularityException("moduleInfo is not ManifestModuleInfo type");
             }

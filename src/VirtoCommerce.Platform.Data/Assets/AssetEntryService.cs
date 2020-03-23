@@ -100,13 +100,13 @@ namespace VirtoCommerce.Platform.Data.Assets
             }
         }
 
-        public async Task SaveChangesAsync(IEnumerable<AssetEntry> items)
+        public async Task SaveChangesAsync(IEnumerable<AssetEntry> entries)
         {
             using (var repository = _platformRepository())
             {
-                var nonTransientEntryIds = items.Where(x => !x.IsTransient()).Select(x => x.Id).ToArray();
+                var nonTransientEntryIds = entries.Where(x => !x.IsTransient()).Select(x => x.Id).ToArray();
                 var originalDataEntities = repository.AssetEntries.Where(x => nonTransientEntryIds.Contains(x.Id)).ToList();
-                foreach (var entry in items)
+                foreach (var entry in entries)
                 {
                     var originalEntity = originalDataEntities.FirstOrDefault(x => x.Id == entry.Id);
                     var modifiedEntity = AbstractTypeFactory<AssetEntryEntity>.TryCreateInstance().FromModel(entry);
