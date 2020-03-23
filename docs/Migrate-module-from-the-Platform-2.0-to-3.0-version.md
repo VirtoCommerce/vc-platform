@@ -6,9 +6,15 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 
 > NOTE: A sample module source code can be found here: https://github.com/VirtoCommerce/vc-samples/tree/release/3.0.0/CustomerReviews.
 
+## 0. Before the migration
+1. Only migration from the latest VC v2.x versions is supported. Ensure that the latest v2 versions of the Platform and all modules are installed.
+1. Usually, you have more than one custom VC module. Create a dependency map between your and the VC modules **before the migration**. That helps to migrate the modules smoothly. 
+1. Ensure that all your **unit tests are current** and passing.
+1. In case of any question or issue, submit a new topic to [Virto Commerce Community](https://community.virtocommerce.com/c/bug/11)
+
 ## 1. Make correct structure in solution and projects
 
-1. Ensure that installed latest version v.2 of the platform and all modules. Need to update  for latest version v.2
+1. Open the folder of selected v2 module in file manager (e.g., Windows File Explorer).
 2. If it exists, delete **_packages_** folder
 3. Delete **Properties** folder from each of the projects' folder
 4. Convert the projects from ASP&#46;NET to ASP&#46;NET Core:
