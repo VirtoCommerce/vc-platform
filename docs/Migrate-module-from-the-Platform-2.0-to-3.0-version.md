@@ -6,6 +6,12 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 
 > NOTE: A sample module source code can be found here: https://github.com/VirtoCommerce/vc-samples/tree/release/3.0.0/CustomerReviews.
 
+## 0. Before migration
+1. Ensure that installed latest version v.2 of the platform and all modules. Need to update for latest version v.2.
+1. Usually, you have more than one custom VC modules. Before migration create a dependency map between your and VC modules, it helps you to migrate them properly. 
+1. Check that all unit tests passed.
+1. If you have any quesiont or problem, submit a new topic on [Virto Commerce Community](https://community.virtocommerce.com/c/bug/11)
+
 ## 1. Make correct structure in solution and projects
 
 1. Ensure that installed latest version v.2 of the platform and all modules. Need to update  for latest version v.2
