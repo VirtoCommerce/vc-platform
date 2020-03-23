@@ -99,16 +99,20 @@ namespace VirtoCommerce.Platform.Data.Model
                 DisplayNames = new ObservableCollection<DynamicPropertyNameEntity>(dynamicProp.DisplayNames.Select(x => AbstractTypeFactory<DynamicPropertyNameEntity>.TryCreateInstance().FromModel(x)));
             }
 
-            if (dynamicProp is DynamicObjectProperty dynamicObjectProp && dynamicObjectProp.Values != null)
+            if (dynamicProp is DynamicObjectProperty dynamicObjectProp)
             {
-                //Force set these properties from owned property object
-                foreach (var value in dynamicObjectProp.Values)
+                if (dynamicObjectProp.Values != null)
                 {
-                    value.ObjectId = dynamicObjectProp.ObjectId;
-                    value.ObjectType = dynamicObjectProp.ObjectType;
-                    value.ValueType = dynamicObjectProp.ValueType;
+                    //Force set these properties from owned property object
+                    foreach (var value in dynamicObjectProp.Values)
+                    {
+                        value.ObjectId = dynamicObjectProp.ObjectId;
+                        value.ObjectType = dynamicObjectProp.ObjectType;
+                        value.ValueType = dynamicObjectProp.ValueType;
+                    }
+                    //ObjectValues = new ObservableCollection<DynamicPropertyObjectValueEntity>(dynamicObjectProp.Values.Select(x => AbstractTypeFactory<DynamicPropertyObjectValueEntity>.TryCreateInstance().FromModel(x)));
+
                 }
-                //ObjectValues = new ObservableCollection<DynamicPropertyObjectValueEntity>(dynamicObjectProp.Values.Select(x => AbstractTypeFactory<DynamicPropertyObjectValueEntity>.TryCreateInstance().FromModel(x)));
             }
             return this;
         }

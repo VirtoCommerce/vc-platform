@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Claims;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
@@ -8,15 +9,15 @@ namespace VirtoCommerce.Platform.Core.Security
     {
         public static Permission FindPermission(this ClaimsPrincipal principal, string permissionName, JsonSerializerSettings jsonSettings)
         {
-            foreach (var claim in principal.Claims)
+            foreach(var claim in principal.Claims)
             {
                 var permission = Permission.TryCreateFromClaim(claim, jsonSettings);
                 if (permission != null && permission.Name.EqualsInvariant(permissionName))
                 {
                     return permission;
                 }
-            }
-            return null;
+            }          
+            return null;           
         }
 
         public static bool HasGlobalPermission(this ClaimsPrincipal principal, string permissionName)
@@ -33,7 +34,7 @@ namespace VirtoCommerce.Platform.Core.Security
                 {
                     result = principal.HasClaim(PlatformConstants.Security.Claims.PermissionClaimType, permissionName);
                 }
-            }
+            }       
             return result;
         }
     }

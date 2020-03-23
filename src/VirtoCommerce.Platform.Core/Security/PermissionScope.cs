@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
@@ -62,7 +64,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public virtual void Patch(PermissionScope target)
         {
             target.Label = Label;
-            target.Scope = Scope;
+            target.Scope = Scope;          
         }
 
     }

@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Core.Extensions
             }
             else
             {
-                throw new ArgumentException("Invalid XML RSA key.");
+                throw new Exception("Invalid XML RSA key.");
             }
 
             rsa.ImportParameters(parameters);

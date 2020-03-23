@@ -35,6 +35,11 @@ namespace VirtoCommerce.Platform.Core.Common
             return GetEnumerator();
         }
 
+        public void Add(KeyValuePair<TKey, TValue> item)
+        {
+            _dictionary.Add(item);
+        }
+
         public void Clear()
         {
             _dictionary.Clear();
@@ -48,6 +53,11 @@ namespace VirtoCommerce.Platform.Core.Common
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
             _dictionary.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(KeyValuePair<TKey, TValue> item)
+        {
+            return _dictionary.Remove(item);
         }
 
         public int Count
@@ -70,18 +80,9 @@ namespace VirtoCommerce.Platform.Core.Common
             _dictionary.Add(key, value);
         }
 
-        public void Add(KeyValuePair<TKey, TValue> item)
-        {
-            _dictionary.Add(item);
-        }
-
         public bool Remove(TKey key)
         {
             return _dictionary.Remove(key);
-        }
-        public bool Remove(KeyValuePair<TKey, TValue> item)
-        {
-            return _dictionary.Remove(item);
         }
 
         public bool TryGetValue(TKey key, out TValue value)

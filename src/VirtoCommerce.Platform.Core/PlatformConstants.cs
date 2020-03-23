@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Core
                     PlatformImport = "platform:import",
                     PlatformExport = "platform:export";
 
-                public static string[] AllPermissions { get; } = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
+                public static string[] AllPermissions = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
                                               SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
                                               SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, SecurityCallApi, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport};
             }
@@ -67,7 +67,7 @@ namespace VirtoCommerce.Platform.Core
         {
             public static class Security
             {
-                public static SettingDescriptor SecurityAccountTypes { get; } = new SettingDescriptor
+                public static SettingDescriptor SecurityAccountTypes = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.AccountTypes",
                     GroupName = "Platform|Security",
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Core
 
             public static class Setup
             {
-                public static SettingDescriptor SetupStep { get; } = new SettingDescriptor
+                public static SettingDescriptor SetupStep = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.SetupStep",
                     GroupName = "Platform|Setup",
@@ -96,14 +96,14 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = null
                 };
 
-                public static SettingDescriptor SampleDataState { get; } = new SettingDescriptor
+                public static SettingDescriptor SampleDataState = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.SampleDataState",
                     GroupName = "Platform|Setup",
                     ValueType = SettingValueType.ShortText,
                     DefaultValue = ExportImport.SampleDataState.Undefined
                 };
-                public static SettingDescriptor ModulesAutoInstallState { get; } = new SettingDescriptor
+                public static SettingDescriptor ModulesAutoInstallState = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.ModulesAutoInstallState",
                     GroupName = "Platform|Setup",
@@ -111,7 +111,7 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = AutoInstallState.Undefined
                 };
 
-                public static SettingDescriptor ModulesAutoInstalled { get; } = new SettingDescriptor
+                public static SettingDescriptor ModulesAutoInstalled = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.ModulesAutoInstalled",
                     GroupName = "Platform|Setup",
@@ -132,46 +132,46 @@ namespace VirtoCommerce.Platform.Core
 
             public static class UserProfile
             {
-                public static SettingDescriptor MainMenuState { get; } = new SettingDescriptor
+                public static SettingDescriptor MainMenuState = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.MainMenu.State",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.Json,
                 };
-                public static SettingDescriptor Language { get; } = new SettingDescriptor
+                public static SettingDescriptor Language = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.Language",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.ShortText,
                     DefaultValue = "en"
                 };
-                public static SettingDescriptor RegionalFormat { get; } = new SettingDescriptor
+                public static SettingDescriptor RegionalFormat = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.RegionalFormat",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.ShortText,
                     DefaultValue = "en"
                 };
-                public static SettingDescriptor TimeZone { get; } = new SettingDescriptor
+                public static SettingDescriptor TimeZone = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.TimeZone",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.ShortText
                 };
-                public static SettingDescriptor UseTimeAgo { get; } = new SettingDescriptor
+                public static SettingDescriptor UseTimeAgo = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.UseTimeAgo",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.Boolean,
                     DefaultValue = true
                 };
-                public static SettingDescriptor FullDateThreshold { get; } = new SettingDescriptor
+                public static SettingDescriptor FullDateThreshold = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.FullDateThreshold",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.Integer,
                 };
-                public static SettingDescriptor FullDateThresholdUnit { get; } = new SettingDescriptor
+                public static SettingDescriptor FullDateThresholdUnit = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.FullDateThresholdUnit",
                     ValueType = SettingValueType.ShortText,
@@ -191,7 +191,7 @@ namespace VirtoCommerce.Platform.Core
                                 }
                 };
 
-                public static SettingDescriptor ShowMeridian { get; } = new SettingDescriptor
+                public static SettingDescriptor ShowMeridian = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.ShowMeridian",
                     GroupName = "Platform|User Profile",
@@ -217,7 +217,7 @@ namespace VirtoCommerce.Platform.Core
 
             public static class UserInterface
             {
-                public static SettingDescriptor Customization { get; } = new SettingDescriptor
+                public static SettingDescriptor Customization = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.Customization",
                     GroupName = "Platform|User Interface",

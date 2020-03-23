@@ -31,16 +31,16 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             return RegisterType(typeof(T));
         }
-
+              
         public static TypeInfo<BaseType> RegisterType(Type type)
         {
-            if (type == null)
+            if(type == null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            var result = _typeInfos.FirstOrDefault(x => x.AllSubclasses.Contains(type));
-
+            var result = _typeInfos.FirstOrDefault(x=> x.AllSubclasses.Contains(type));
+            
             if (result == null)
             {
                 result = new TypeInfo<BaseType>(type);
@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Core.Common
             var existTypeInfo = _typeInfos.FirstOrDefault(x => x.Type == oldType);
             var newTypeInfo = new TypeInfo<BaseType>(newType);
             if (existTypeInfo != null)
-            {
+            {             
                 _typeInfos.Remove(existTypeInfo);
             }
 
@@ -145,7 +145,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public T GetService<T>()
         {
-            return Services.OfType<T>().FirstOrDefault();
+            return Services.OfType<T>().FirstOrDefault(); ;
         }
 
         public TypeInfo<BaseType> WithService<T>(T service)

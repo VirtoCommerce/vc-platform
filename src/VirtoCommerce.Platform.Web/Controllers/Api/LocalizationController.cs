@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Localizations;
+using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Web.Extensions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -38,7 +39,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public ActionResult<JObject> GetLocalization(string lang = null)
         {
             var result = _translationService.GetTranslationDataForLanguage(lang);
-
+            
             return Ok(result);
         }
 
@@ -78,7 +79,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             return Ok(formats);
         }
-
+              
 
         private string[] GetAllInternationalizationFiles(string searchPattern, string internationalizationsFolder)
         {

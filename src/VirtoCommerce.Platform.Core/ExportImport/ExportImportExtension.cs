@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using VirtoCommerce.Platform.Core.ExportImport.PushNotifications;
 
@@ -5,7 +6,7 @@ namespace VirtoCommerce.Platform.Core.ExportImport
 {
     public static class ExportImportExtension
     {
-        public static void Path(this PlatformExportImportPushNotification target, ExportImportProgressInfo sourse)
+        public static void Path(this PlatformExportImportPushNotification target, ExportImportProgressInfo  sourse )
         {
             target.Description = sourse.Description;
             target.Errors = sourse.Errors;
@@ -18,7 +19,7 @@ namespace VirtoCommerce.Platform.Core.ExportImport
         {
             var retVal = request.ExportManifest;
 
-            retVal.HandleBinaryData = request.HandleBinaryData;
+            retVal.HandleBinaryData =  request.HandleBinaryData;
             retVal.HandleSecurity = request.HandleSecurity;
             retVal.HandleSettings = request.HandleSettings;
 
