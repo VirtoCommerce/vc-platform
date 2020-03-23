@@ -157,8 +157,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             }
 
             // If parameter cannot be cast to ModuleIdentity return false.
-            var other = obj as ManifestModuleInfo;
-            if (other == null)
+            if (!(obj is ManifestModuleInfo other))
             {
                 return false;
             }

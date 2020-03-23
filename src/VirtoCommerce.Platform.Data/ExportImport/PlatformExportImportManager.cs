@@ -117,7 +117,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }
         }
 
-        public async Task ImportAsync(Stream stream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        public async Task ImportAsync(Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
             if (manifest == null)
             {
@@ -128,7 +128,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             progressInfo.Description = "Starting platform import...";
             progressCallback(progressInfo);
 
-            using (var zipArchive = new ZipArchive(stream, ZipArchiveMode.Read, true))
+            using (var zipArchive = new ZipArchive(inputStream, ZipArchiveMode.Read, true))
             using (EventSuppressor.SupressEvents())
             {
                 //Import selected platform entries
@@ -151,7 +151,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             {
                 using (var stream = platformZipEntries.Open())
                 {
-                    using (var streamReader = new StreamReader(stream))
+                    var streamReader = new StreamReader(stream);
                     using (var reader = new JsonTextReader(streamReader))
                     {
                         while (reader.Read())
@@ -303,7 +303,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                             progressCallback(progressInfo);
                         }
 
-                        await writer.WriteEndArrayAsync(); 
+                        await writer.WriteEndArrayAsync();
                         #endregion
 
                         cancellationToken.ThrowIfCancellationRequested();

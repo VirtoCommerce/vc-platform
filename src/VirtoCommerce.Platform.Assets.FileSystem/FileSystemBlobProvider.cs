@@ -29,17 +29,17 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
         /// <summary>
         /// Get blog info by url
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="blobUrl"></param>
         /// <returns></returns>
-        public virtual Task<BlobInfo> GetBlobInfoAsync(string url)
+        public virtual Task<BlobInfo> GetBlobInfoAsync(string blobUrl)
         {
-            if (string.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(blobUrl))
             {
-                throw new ArgumentNullException(nameof(url));
+                throw new ArgumentNullException(nameof(blobUrl));
             }
 
             BlobInfo retVal = null;
-            var filePath = GetStoragePathFromUrl(url);
+            var filePath = GetStoragePathFromUrl(blobUrl);
 
             ValidatePath(filePath);
 
@@ -62,11 +62,11 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
         /// <summary>
         /// Open blob for read by relative or absolute url
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="blobUrl"></param>
         /// <returns>blob stream</returns>
-        public virtual Stream OpenRead(string url)
+        public virtual Stream OpenRead(string blobUrl)
         {
-            var filePath = GetStoragePathFromUrl(url);
+            var filePath = GetStoragePathFromUrl(blobUrl);
 
             ValidatePath(filePath);
 
@@ -76,11 +76,11 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
         /// <summary>
         /// Open blob for write by relative or absolute url
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="blobUrl"></param>
         /// <returns>blob stream</returns>
-        public virtual Stream OpenWrite(string url)
+        public virtual Stream OpenWrite(string blobUrl)
         {
-            var filePath = GetStoragePathFromUrl(url);
+            var filePath = GetStoragePathFromUrl(blobUrl);
             var folderPath = Path.GetDirectoryName(filePath);
 
             ValidatePath(filePath);
@@ -205,10 +205,10 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
             return Task.CompletedTask;
         }
 
-        public virtual void Move(string srcUrl, string dstUrl)
+        public virtual void Move(string srcUrl, string destUrl)
         {
             var srcPath = GetStoragePathFromUrl(srcUrl);
-            var dstPath = GetStoragePathFromUrl(dstUrl);
+            var dstPath = GetStoragePathFromUrl(destUrl);
 
             if (srcPath != dstPath)
             {
@@ -254,17 +254,17 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
 
         #region IBlobUrlResolver Members
 
-        public virtual string GetAbsoluteUrl(string relativeUrl)
+        public virtual string GetAbsoluteUrl(string blobKey)
         {
-            if (relativeUrl == null)
+            if (blobKey == null)
             {
-                throw new ArgumentNullException(nameof(relativeUrl));
+                throw new ArgumentNullException(nameof(blobKey));
             }
 
-            var retVal = relativeUrl;
-            if (!relativeUrl.IsAbsoluteUrl())
+            var retVal = blobKey;
+            if (!blobKey.IsAbsoluteUrl())
             {
-                retVal = _basePublicUrl + "/" + relativeUrl.TrimStart('/').TrimEnd('/');
+                retVal = _basePublicUrl + "/" + blobKey.TrimStart('/').TrimEnd('/');
             }
             return new Uri(retVal).ToString();
         }

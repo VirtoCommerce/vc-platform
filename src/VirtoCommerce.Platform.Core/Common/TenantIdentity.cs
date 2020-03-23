@@ -3,7 +3,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
     public class TenantIdentity : ValueObject
     {
-        public static TenantIdentity Empty = new TenantIdentity(null, null);
+        public static TenantIdentity Empty { get; set; } = new TenantIdentity(null, null);
 
         public TenantIdentity(string id, string type)
         {

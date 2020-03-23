@@ -287,9 +287,8 @@ namespace VirtoCommerce.Platform.Modules
             if (moduleInfo == null)
                 throw new ArgumentNullException("moduleInfo");
 
-            ModuleTypeLoadingException moduleTypeLoadingException = exception as ModuleTypeLoadingException;
 
-            if (moduleTypeLoadingException == null)
+            if (!(exception is ModuleTypeLoadingException moduleTypeLoadingException))
             {
                 moduleTypeLoadingException = new ModuleTypeLoadingException(moduleInfo.ModuleName, exception.Message, exception);
             }
@@ -356,8 +355,7 @@ namespace VirtoCommerce.Platform.Modules
         {
             foreach (IModuleTypeLoader typeLoader in this.ModuleTypeLoaders)
             {
-                var disposableTypeLoader = typeLoader as IDisposable;
-                if (disposableTypeLoader != null)
+                if (typeLoader is IDisposable disposableTypeLoader)
                 {
                     disposableTypeLoader.Dispose();
                 }

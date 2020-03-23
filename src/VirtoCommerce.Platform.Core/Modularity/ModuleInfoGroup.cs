@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
@@ -199,57 +198,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
         bool IList.Contains(object value)
         {
             if (value == null) throw new ArgumentNullException("value");
-            ModuleInfo moduleInfo = value as ModuleInfo;
 
-            if (moduleInfo == null)
+            if (!(value is ModuleInfo moduleInfo))
                 throw new ArgumentException("The value must be of type ModuleInfo.", nameof(value));
 
             return this.Contains(moduleInfo);
-        }
-
-        /// <summary>
-        /// Determines the index of a specific item in the <see cref="ModuleInfoGroup"/>.
-        /// </summary>
-        /// <param name="value">
-        /// The <see cref="T:System.Object"/> to locate in the <see cref="ModuleInfoGroup"/>.
-        /// Must be of type <see cref="ModuleInfo"/>
-        /// </param>
-        /// <returns>
-        /// The index of <paramref name="value"/> if found in the list; otherwise, -1.
-        /// </returns>
-        public int IndexOf(object value)
-        {
-            return this.modules.IndexOf((ModuleInfo)value);
-        }
-
-        /// <summary>
-        /// Inserts an item to the <see cref="ModuleInfoGroup"/> at the specified index.
-        /// </summary>
-        /// <param name="index">The zero-based index at which <paramref name="value"/> should be inserted.</param>
-        /// <param name="value">
-        /// The <see cref="T:System.Object"/> to insert into the <see cref="ModuleInfoGroup"/>.
-        /// Must be of type <see cref="ModuleInfo"/>
-        /// </param>
-        /// <exception cref="T:System.ArgumentOutOfRangeException">
-        /// 	<paramref name="index"/> is not a valid index in the <see cref="ModuleInfoGroup"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// If <paramref name="value"/> is null.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// If <paramref name="value"/> is not of type <see cref="ModuleInfo"/>
-        /// </exception>
-        public void Insert(int index, object value)
-        {
-            if (value == null) 
-                throw new ArgumentNullException("value");
-
-            ModuleInfo moduleInfo = value as ModuleInfo;
-
-            if (moduleInfo == null)
-                throw new ArgumentException("The value must be of type ModuleInfo.", nameof(value));
-
-            this.modules.Insert(index, moduleInfo);
         }
 
         /// <summary>
@@ -361,6 +314,21 @@ namespace VirtoCommerce.Platform.Core.Modularity
         }
 
         /// <summary>
+        /// Determines the index of a specific item in the <see cref="ModuleInfoGroup"/>.
+        /// </summary>
+        /// <param name="value">
+        /// The <see cref="T:System.Object"/> to locate in the <see cref="ModuleInfoGroup"/>.
+        /// Must be of type <see cref="ModuleInfo"/>
+        /// </param>
+        /// <returns>
+        /// The index of <paramref name="value"/> if found in the list; otherwise, -1.
+        /// </returns>
+        public int IndexOf(object value)
+        {
+            return this.modules.IndexOf((ModuleInfo)value);
+        }
+
+        /// <summary>
         /// Inserts an item to the <see cref="T:System.Collections.Generic.IList`1"/> at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
@@ -371,6 +339,34 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public void Insert(int index, ModuleInfo item)
         {
             this.modules.Insert(index, item);
+        }
+
+        /// <summary>
+        /// Inserts an item to the <see cref="ModuleInfoGroup"/> at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index at which <paramref name="value"/> should be inserted.</param>
+        /// <param name="value">
+        /// The <see cref="T:System.Object"/> to insert into the <see cref="ModuleInfoGroup"/>.
+        /// Must be of type <see cref="ModuleInfo"/>
+        /// </param>
+        /// <exception cref="T:System.ArgumentOutOfRangeException">
+        /// 	<paramref name="index"/> is not a valid index in the <see cref="ModuleInfoGroup"/>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// If <paramref name="value"/> is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// If <paramref name="value"/> is not of type <see cref="ModuleInfo"/>
+        /// </exception>
+        public void Insert(int index, object value)
+        {
+            if (value == null)
+                throw new ArgumentNullException("value");
+
+            if (!(value is ModuleInfo moduleInfo))
+                throw new ArgumentException("The value must be of type ModuleInfo.", nameof(value));
+
+            this.modules.Insert(index, moduleInfo);
         }
 
         /// <summary>
