@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Core.Common
     /// <typeparam name="TValue">The type of the value held by lists.</typeparam>
     public sealed class ListDictionary<TKey, TValue> : IDictionary<TKey, IList<TValue>>
     {
-        Dictionary<TKey, IList<TValue>> innerValues = new Dictionary<TKey, IList<TValue>>();
+        readonly Dictionary<TKey, IList<TValue>> innerValues = new Dictionary<TKey, IList<TValue>>();
 
         #region Public Methods
 
@@ -167,7 +167,7 @@ namespace VirtoCommerce.Platform.Core.Common
             if (innerValues.ContainsKey(key))
             {
                 List<TValue> innerList = (List<TValue>)innerValues[key];
-                innerList.RemoveAll(delegate(TValue item)
+                innerList.RemoveAll(delegate (TValue item)
                                                {
                                                    return value.Equals(item);
                                                });
@@ -227,7 +227,7 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             get
             {
-                if (innerValues.ContainsKey(key) == false)
+                if (!innerValues.ContainsKey(key))
                 {
                     innerValues.Add(key, new List<TValue>());
                 }

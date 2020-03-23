@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -25,7 +24,7 @@ namespace VirtoCommerce.Platform.Core.Common
             if (GetRealObjectType(this) != GetRealObjectType(obj))
                 return false;
 
-          
+
             var other = obj as Entity;
             return other != null && Id == other.Id;
         }
@@ -34,7 +33,7 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             unchecked
             {
-                return IsTransient() ?  base.GetHashCode() : Id.GetHashCode();
+                return IsTransient() ? base.GetHashCode() : Id.GetHashCode();
             }
         }
         public static bool operator ==(Entity left, Entity right)

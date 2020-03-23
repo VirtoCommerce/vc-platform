@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Data.Localizations
             _options = options.Value;
         }
 
-        public JObject GetTranslationDataForLanguage(string language = null)
+        public JObject GetTranslationDataForLanguage(string lang = null)
         {
             //read fallback localization json object first
             var fallbackCacheKey = CacheKey.With(GetType(), "FallbackJson");
@@ -33,14 +33,14 @@ namespace VirtoCommerce.Platform.Data.Localizations
                 return InnerGetTranslationData(_options.FallbackLanguage);
             });
 
-            if (language != null && !language.EqualsInvariant(_options.FallbackLanguage))
+            if (lang != null && !lang.EqualsInvariant(_options.FallbackLanguage))
             {
-                var cacheKey = CacheKey.With(GetType(), "RequestedLanguageJson", language);
+                var cacheKey = CacheKey.With(GetType(), "RequestedLanguageJson", lang);
                 result = _memoryCache.GetOrCreateExclusive(cacheKey, cacheEntry =>
                 {
                     //Add cache  expiration token
                     cacheEntry.AddExpirationToken(LocalizationCacheRegion.CreateChangeToken());
-                    var langJson = InnerGetTranslationData(language);
+                    var langJson = InnerGetTranslationData(lang);
                     // Make another instance of fallback language to avoid corruption of it in the memory cache
                     result = (JObject)result.DeepClone();
                     // Need merge default and requested localization json to resulting object

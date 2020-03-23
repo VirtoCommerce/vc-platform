@@ -23,12 +23,9 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         public static void ExpireSetting(ObjectSettingEntry settingEntry)
         {
-            if (settingEntry != null)
+            if (settingEntry != null && _settingsRegionTokenLookup.TryRemove(settingEntry.GetCacheKey(), out var token))
             {
-                if (_settingsRegionTokenLookup.TryRemove(settingEntry.GetCacheKey(), out var token))
-                {
-                    token.Cancel();
-                }
+                token.Cancel();
             }
         }
     }

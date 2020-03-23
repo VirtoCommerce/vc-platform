@@ -1,6 +1,6 @@
 namespace VirtoCommerce.Platform.Core.Jobs
 {
-    public class JobPriority
+    public static class JobPriority
     {
         public const string High = "high";
         public const string Normal = "default";

@@ -120,8 +120,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public override bool Equals(object obj)
         {
             // If parameter cannot be cast to ModuleIdentity return false.
-            var other = obj as SemanticVersion;
-            if ((object)other == null)
+            if (!(obj is SemanticVersion other))
             {
                 return false;
             }

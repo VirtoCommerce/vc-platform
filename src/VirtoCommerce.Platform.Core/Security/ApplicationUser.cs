@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.Common;
@@ -28,7 +27,7 @@ namespace VirtoCommerce.Platform.Core.Security
         /// <summary>
         /// Obsolete. Use LockoutEnd. DateTime in UTC when lockout ends, any time in the past is considered not locked out.
         /// </summary>
-        [Obsolete("Left due to compatibility issues. Use LockoutEnd")]        
+        [Obsolete("Left due to compatibility issues. Use LockoutEnd")]
         public virtual DateTime? LockoutEndDateUtc
         {
             get

@@ -1,5 +1,3 @@
-using System;
-
 namespace VirtoCommerce.Platform.Core.Exceptions
 {
     public class SettingsTypeNotRegisteredException : PlatformException

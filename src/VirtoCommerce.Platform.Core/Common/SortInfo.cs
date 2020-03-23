@@ -70,8 +70,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public override bool Equals(object obj)
         {
-            var other = obj as SortInfo;
-            return other != null ? Equals(other) : ReferenceEquals(this, obj);
+            return obj is SortInfo other ? Equals(other) : ReferenceEquals(this, obj);
         }
 
         public override int GetHashCode()
