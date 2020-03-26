@@ -162,7 +162,7 @@ namespace VirtoCommerce.Platform.Web.Security
             if (result.Succeeded)
             {
                 await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
-                if (!user.Roles.IsNullOrEmpty())
+                if (user.Roles != null)
                 {
                     var targetRoles = (await GetRolesAsync(existUser));
                     var sourceRoles = user.Roles.Select(x => x.Name);
