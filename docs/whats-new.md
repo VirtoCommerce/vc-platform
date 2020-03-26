@@ -1,23 +1,26 @@
 What's new
 ==========
 ### Table of contents
+- [What's new](#whats-new)
+    - [Table of contents](#table-of-contents)
 - [Welcome to v3.0](#welcome-to-v30)
-- [What's new](#what-s-new-1)
-  * [Architectural and conceptual changes](#architectural-and-conceptual-changes)
-    + [For developers and architects](#for-developers-and-architects)
-    + [Technology stack](#technology-stack)
-      - [Application & Data](#application---data)
+- [What's new](#whats-new-1)
+  - [Architectural and conceptual changes](#architectural-and-conceptual-changes)
+    - [For developers and architects](#for-developers-and-architects)
+    - [Technology stack](#technology-stack)
+      - [Application & Data](#application--data)
       - [DevOps and Utilities](#devops-and-utilities)
-    + [Techniques](#techniques)
-  * [Changes in VC Platform](#changes-in-vc-platform)
-  * [New modules](#new-modules)
-  * [Major changes in modules](#major-changes-in-modules)
-  * [Removed modules](#removed-modules)
-  * [Platform v2 and v3 versions compatibility](#platform-v2-and-v3-versions-compatibility)
-    + [API](#api)
-    + [Database](#database)
-  * [Current v3 modules](#current-v3-modules)
-  * [Performance benchmark](#performance-benchmark)
+    - [Techniques](#techniques)
+  - [Changes in VC Platform](#changes-in-vc-platform)
+  - [New modules](#new-modules)
+  - [Major changes in modules](#major-changes-in-modules)
+  - [Removed modules](#removed-modules)
+  - [Platform v2 and v3 versions compatibility](#platform-v2-and-v3-versions-compatibility)
+    - [The list of code breaking changes](#the-list-of-code-breaking-changes)
+    - [API](#api)
+    - [Database](#database)
+  - [Current v3 modules](#current-v3-modules)
+  - [Performance benchmark](#performance-benchmark)
 
 # Welcome to v3.0
 
@@ -175,6 +178,9 @@ Meet the new major version of Virto Commerce Platform. Our development efforts w
   - Module specific functionality was split to corresponding modules (Marketing, Pricing, etc.)
 
 ## Platform v2 and v3 versions compatibility
+
+### The list of code breaking changes
+- The following [list of breaking changes](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/docs/code-breaking-changes-included-in-v3.md) have the potential to break existing solutions when upgrading them to 3.x
 
 ### API
 
