@@ -1,4 +1,4 @@
-# Migrate a module from the Platfrom 2.0 to 3.0 version
+# Migrate VC Platform Module from version 2.x to version 3
 
 ## Introduction
 
@@ -8,29 +8,20 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 
 ## 0. Before the migration
 1. Only migration from the latest VC v2.x versions is supported. Ensure that the latest v2 versions of the Platform and all modules are installed.
-1. Usually, you have more than one custom VC module. Create a dependency map between your and the VC modules **before the migration**. That helps to migrate the modules smoothly. 
-1. Ensure that all your **unit tests are current** and passing.
+1. Usually, you have more than one custom VC module. Create a **dependency map** between your and the VC modules **before the migration**. That helps to migrate the modules smoothly.
+1. Ensure that all your **unit tests are current** and passing
 1. In case of any question or issue, submit a new topic to [Virto Commerce Community](https://community.virtocommerce.com/c/bug/11)
 1. Please read the [The list of code breaking changes included in 3.0](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/docs/code-breaking-changes-included-in-v3.md)
 
+## 1. Prerequisites
+1. Visual Studio 2019 (v16.4 or later)
 
-## 1. Make correct structure in solution and projects
-
-1. Open the folder of selected v2 module in file manager (e.g., Windows File Explorer).
-2. If it exists, delete **_packages_** folder
-3. Delete **Properties** folder from each of the projects' folder
+## 2. Make correct structure in solution and projects
+1. Open the folder of selected v2 module in file manager (e.g., Windows Explorer).
+2. If exists, delete **_packages_** folder.
+3. Delete **Properties** folder from each of the projects' folder.
 4. Convert the projects from ASP&#46;NET to ASP&#46;NET Core:
-   1. Open each of the projects' **_*.csproj_** files in text editor (e.g., Notepad), clear whole file content and set it to this:
-
-        ```xml
-        <Project Sdk="Microsoft.NET.Sdk">
-            <PropertyGroup>
-                <TargetFramework>netcoreapp3.1</TargetFramework>
-            </PropertyGroup>
-        </Project>
-        ```
-
-   2. For **_CustomerReviews&#46;Web_**:
+   1. Open **_*.csproj_** file of **_CustomerReviews&#46;Web_** project in text editor (e.g., Notepad), clear whole file content and set it to this:
 
         ```xml
         <Project Sdk="Microsoft.NET.Sdk.Web">
@@ -40,8 +31,17 @@ This article describes how to migrate an existing [CustomerReviews sample](https
         </Project>
         ```
 
-   3. Set current support Target Framework (at this time is netcoreapp3.1)
-   4. Read [this article](https://docs.microsoft.com/en-us/aspnet/core/migration/30-to-31) for more info.
+   2. Replace all other **_*.csproj_** files' content with this:
+
+        ```xml
+        <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup>
+                <TargetFramework>netcoreapp3.1</TargetFramework>
+            </PropertyGroup>
+        </Project>
+        ```
+
+   3. Read [this article](https://docs.microsoft.com/en-us/aspnet/core/migration/30-to-31) for more info.
 5. Create **_src_** and **_tests_** subfolders in module's root folder (Windows Explorer)
 6. Move **_CustomerReviews.Core_**, **_CustomerReviews.Data_**, **_CustomerReviews&#46;Web_** projects to **_src_**
 7. Move **_CustomerReviews.Test_** project to **_tests_**
@@ -54,6 +54,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     * **App.config**
     * **packages.config**
     * **Web.config**, **Web.Debug.config**, **Web.Release.config**, **module.ignore**
+    * if exists, delete **CommonAssemblyInfo.cs** 
 14. Add references to projects:
     1. **CustomerReviews.Data**: add reference to CustomerReviews.Core project
     1. **CustomerReviews&#46;Web**: add references to CustomerReviews.Core, CustomerReviews.Data projects
@@ -63,7 +64,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     1. **CustomerReviews.Data**: add reference to the latest version **_VirtoCommerce.Platform.Data_** package.
 16. Add other NuGet dependency packages, if any exists in **_module.manifest_**.
 
-## 2. Make changes in CustomerReviews.Core project
+## 3. Make changes in CustomerReviews.Core project
 
 1. If missing, add class **_ModuleConstants.cs_** for module constants:
     1. Inside **_ModuleConstants_** add sub-classes **_Security_** and **_Permissions_**
@@ -95,13 +96,14 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     1. Add reference to NuGet **VirtoCommerce.NotificationsModule.Core** package;
     1. Ensure that each defined Notification class inherits from **_EmailNotification_**/**_SmsNotification_** or own class, based on **_Notification_**.
 
-## 3. Make changes in CustomerReviews.Data project
+## 4. Make changes in CustomerReviews.Data project
 
 1. **Repositories** folder
     1. Create **CustomerReviewsDbContext.cs**
         * Add new class **_CustomerReviewsDbContext_**
         * Make it public and derive from `DbContextWithTriggers`
         * Add 2 constructors, using [CustomerDbContext](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Repositories/CustomerDbContext.cs) as an example.
+        > NOTE: 1 constructor is **public** and another is **protected**.
         * Override _OnModelCreating_ method, add **CustomerReviewEntity** mapping to modelBuilder and set max length to Id:
 
             ```cs
@@ -166,7 +168,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
             Add-Migration InitialCustomerReviews -Context CustomerReviews.Data.Repositories.CustomerReviewsDbContext -StartupProject CustomerReviews.Data  -Verbose -OutputDir Migrations
             ```
 
-        5. if there are extensions then need to remove the lines which depends extented entities(like Tables, FK, PK, Index) and then add the Discriminator column like [that](https://github.com/VirtoCommerce/vc-module-order/blob/ce72193f54ad0626c5c3d85b4682c9ee9ba812b1/samples/VirtoCommerce.OrdersModule2.Web/Migrations/20180724064542_InitialOrders2.cs#L11). Please read the [article about inheritance](https://docs.microsoft.com/en-us/ef/core/modeling/relational/inheritance).
+        5. if there are extensions then need to remove the lines which depend on the extended entities (like Tables, FK, PK, Index) and then add the Discriminator column [like this](https://github.com/VirtoCommerce/vc-module-order/blob/ce72193f54ad0626c5c3d85b4682c9ee9ba812b1/samples/VirtoCommerce.OrdersModule2.Web/Migrations/20180724064542_InitialOrders2.cs#L11). Please, read the [article about inheritance](https://docs.microsoft.com/en-us/ef/core/modeling/relational/inheritance).
 
     2. Create Migration for backward compatibility with v2.x
         1. Add new migration with name **_UpdateCustomerReviewsV2_** and rename the migration **_filename_** to **_20000000000000_UpdateCustomerReviewsV2_**
@@ -185,9 +187,14 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 
         > Note2: the value for `MigrationId` has to be the name of your new migration, added in previous step. ('20191129134041_InitialCustomerReviews' in our case). Check [20000000000000_UpdateCoreV2.cs migration](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs#L12) as another example.
 
+        > Note3: value for `ProductVersion` should be taken from **_20000000000000_UpdateCustomerReviewsV2.Designer_** line 19:
+        ```cs
+        .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
+        ```
+
         3. Open **_20000000000000_UpdateCustomerReviewsV2.Designer_** and change **_Migration_** attribute parameter value to the current migration ID ("20000000000000_UpdateCustomerReviewsV2" in this case). Check [20000000000000_UpdateCoreV2.Designer.cs](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12) as another example.
 
-## 4. Make changes in CustomerReviews&#46;Web project
+## 5. Make changes in CustomerReviews&#46;Web project
 
 1. Changes in **_module.manifest_**
     1. Versioning - increase module version and add prerelease tag (empty value for a release version):
@@ -211,9 +218,10 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     </dependencies>
     ```
 
-   4. Remove **styles**/**scripts** sections from the manifest file
-   5. Move all localization of permissions/settings to **_Localizations/en.CustomerReviews.json_** file [as this](https://github.com/VirtoCommerce/vc-samples/blob/release/3.0.0/CustomerReviews/src/CustomerReviews.Web/Localizations/en.customerReviews.json#L18-L30)
-   6. Remove **permissions**/**settings** definitions sections from the manifest file
+   4. Remove **styles**, **scripts** sections from the manifest file
+   5. Add localizations for permissions/settings to **_Localizations/en.CustomerReviews.json_** file [as this](https://github.com/VirtoCommerce/vc-samples/blob/release/3.0.0/CustomerReviews/src/CustomerReviews.Web/Localizations/en.customerReviews.json#L18-L30).
+   > Sample resulting keys: `"permissions.customerReview:read"`, `"settings.CustomerReviews.CustomerReviewsEnabled.title"`. 
+   6. Remove **permissions**, **settings** definitions sections from the manifest file
 
 2. Changes in **_Module.cs_**
 
@@ -227,7 +235,6 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     settingsRegistrar.RegisterSettings(ModuleConstants.Settings.AllSettings, ModuleInfo.Id);
     ```
 
-
     5. Register permissions using interface **_IPermissionsRegistrar_** in PostInitialize method: 
 
     ```cs
@@ -235,19 +242,17 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     permissionsProvider.RegisterPermissions(ModuleConstants.Security.Permissions.AllPermissions.Select(x => new Permission() { GroupName = "CustomerReview", Name = x }).ToArray());
     ```
 
-
     6. Add this code into PostInitialize method, needed to ensure that the migrations would be applied: 
 
     ```cs
     using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
     {
         var dbContext = serviceScope.ServiceProvider.GetRequiredService<CustomerReviewsDbContext>();
-        dbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName(ModuleInfo.Id));
+        dbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationNameByOwnerName(ModuleInfo.Id, <<your company prefix in moduleId>>));
         dbContext.Database.EnsureCreated();
         dbContext.Database.Migrate();
     }
     ```
-
 
     > NOTE: The **MigrateIfNotApplied** extension method is needed for the database backward compatibility with version 2.x. This extension enables to skip generating the initial migration, as there are changes (tables, indexes) in the database already.
 
@@ -257,7 +262,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     3. Remove _ResponseType_ attribute from all endpoints
     4. Change _CheckPermission_ attribute to **_Authorize_** for all endpoints
     > If the endpoint should have a restricted access, an **_Authorize_** attribute with the required permission should be added. Use the **_ModuleConstants_** class, which was previously defined in **_CustomerReviews.Core_** project.
-    5. Refactor all endpoints to **be asynchronous** (return `async Task<>`)
+    5. Review the exposed endpoints and refactor to **be asynchronous** (return `async Task<>`), if needed
     6. Mark each complex type parameter with `[FromBody]` attribute for all endpoints. The attribute for Delete endpoint should be `[FromQuery]`.
 
     > E.g., SearchCustomerReviews method converted to ASP&#46;NET Core MVC:
@@ -268,7 +273,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     [Authorize(ModuleConstants.Security.Permissions.Read)]
     public async Task<ActionResult<CustomerReviewSearchResult>> SearchCustomerReviews([FromBody]CustomerReviewSearchCriteria criteria)
     ```
-
+    > Read [Controller action return types in ASP.NET Core web API](https://docs.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-3.1) for more info.
 4. If there are any JavaScript or stylesheet files in the project:
     1. Copy **package.json** from [sample package.json](https://raw.githubusercontent.com/VirtoCommerce/vc-module-order/release/3.0.0/src/VirtoCommerce.OrdersModule.Web/package.json);
     2. Copy **webpack.config.js** from [sample webpack.config.js](https://raw.githubusercontent.com/VirtoCommerce/vc-module-order/release/3.0.0/src/VirtoCommerce.OrdersModule.Web/webpack.config.js);
@@ -290,7 +295,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     5. Add `dist/` line to `.gitignore` file
     6. Add `node_modules/` line to `.gitignore` file.
 
-## 5. Make changes in CustomerReviews.Tests project
+## 6. Make changes in CustomerReviews.Tests project
 
 1. Reference the required NuGet packages by adding this `ItemGroup` to project file:
 
@@ -321,6 +326,6 @@ This article describes how to migrate an existing [CustomerReviews sample](https
     [Trait("Category", "IntegrationTest")]
     ```
 
-## 6. Create module package
+## 7. Create module package
 
 1. Please, read the article about [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/build/README.md).
