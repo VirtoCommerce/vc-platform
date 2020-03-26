@@ -86,6 +86,18 @@ namespace VirtoCommerce.Platform.Core.Common
             return (T)TryCreateInstance(typeof(T).Name);
         }
 
+        public static BaseType TryCreateInstance(string typeName, BaseType defaultObj)
+        {
+            var result = defaultObj;
+            var typeInfo = FindTypeInfoByName(typeName);
+            if (typeInfo != null)
+            {
+                result = TryCreateInstance(typeName);
+            }
+            return result;
+        }
+
+
         public static BaseType TryCreateInstance(string typeName)
         {
             BaseType result;
@@ -104,6 +116,11 @@ namespace VirtoCommerce.Platform.Core.Common
             }
             else
             {
+                var baseType = typeof(BaseType);
+                if (baseType.IsAbstract)
+                {
+                    throw new OperationCanceledException($"A type with {typeName} name is not registered in the AbstractFactory, you cannot create an instance of an abstract class {baseType.Name} because it does not have a complete implementation");
+                }
                 result = (BaseType)Activator.CreateInstance(typeof(BaseType));
             }
 

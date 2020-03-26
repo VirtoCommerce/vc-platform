@@ -97,15 +97,22 @@ angular.module('platformWebApp')
         $scope.addImageFromUrl = function () {
             if (blade.newExternalImageUrl) {
                 blade.uploadCompleted = false;
-
-                assets.uploadFromUrl({ folderUrl: folderUrl, url: blade.newExternalImageUrl }, function (data) {
-                    refreshParentBlade();
-                    if (blade.onUploadComplete) {
-                        blade.onUploadComplete(data);
-                    }
-                    blade.newExternalImageUrl = undefined;
-                    blade.uploadCompleted = true;
-                });
+                if (folderUrl) {                    
+                    assets.uploadFromUrl({ folderUrl: folderUrl, url: blade.newExternalImageUrl }, function (data) {
+                        refreshParentBlade();
+                        if (blade.onUploadComplete) {
+                            blade.onUploadComplete(data);
+                        }
+                        blade.newExternalImageUrl = undefined;
+                        blade.uploadCompleted = true;
+                    });
+                } else {
+                    dialogService.showNotificationDialog({
+                        id: "error",
+                        title: "platform.dialogs.asset-upload-error.title",
+                        message: "platform.dialogs.asset-upload-error.message"
+                    });
+                }
             }
         };
 
