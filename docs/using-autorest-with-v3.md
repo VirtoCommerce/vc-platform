@@ -14,7 +14,7 @@
         2. Run the following commands to generate API clients:
 ```cmd
 $modules = @('Cache','Cart','Catalog','Content','Core','Customer','Inventory','Marketing','Orders','Platform','Pricing','Quote','Sitemaps','Store','Subscription')
-$modules.ForEach( { autorest-core --debug --input-file=http://localhost:10645/docs/VirtoCommerce.$_/swagger.json --output-folder=VirtoCommerce.Storefront\AutoRestClients --output-file=$_`ModuleApi.cs --namespace=VirtoCommerce.Storefront.AutoRestClients.$_`ModuleApi --override-client-name=$_`ModuleApi --add-credentials --csharp })
+$modules.ForEach( { autorest-core --v3 --debug --input-file=http://localhost:10645/docs/VirtoCommerce.$_/swagger.json --output-folder=VirtoCommerce.Storefront\AutoRestClients --output-file=$_`ModuleApi.cs --namespace=VirtoCommerce.Storefront.AutoRestClients.$_`ModuleApi --override-client-name=$_`ModuleApi --add-credentials --csharp })
 ```
    4. Add the api client to [the ServiceColection](https://github.com/VirtoCommerce/vc-storefront-core/blob/master/VirtoCommerce.Storefront/DependencyInjection/ServiceCollectionExtension.cs)
 
