@@ -386,6 +386,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns>Result of password reset.</returns>
         [HttpPost]
         [Route("currentuser/resetpassword")]
+        [AllowAnonymous]
         public async Task<ActionResult<SecurityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
         {
             var currentUserName = User.Identity.Name;
@@ -537,6 +538,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("validatepassword")]
+        [Authorize]
         public async Task<ActionResult<PasswordValidationResult>> ValidatePassword([FromBody] string password)
         {
             var result = await _passwordCheckService.ValidatePasswordAsync(password);
