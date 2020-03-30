@@ -54,6 +54,7 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
                 if (blade.isNew) {
                     blade.parentBlade.refresh();
                     blade.parentBlade.selectNode(blade.currentEntity);
+                    blade.data = {};
                 }
                 blade.data.name = blade.currentEntity.name;
                 blade.refresh(true);
