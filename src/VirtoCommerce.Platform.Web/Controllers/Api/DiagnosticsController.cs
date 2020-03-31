@@ -1,6 +1,7 @@
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -11,6 +12,7 @@ using VirtoCommerce.Platform.Web.Modularity;
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Route("api/platform/diagnostics")]
+    [Authorize]
     public class DiagnosticsController : Controller
     {
         private readonly IModuleCatalog _moduleCatalog;

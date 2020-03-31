@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
@@ -6,6 +7,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Produces("application/json")]
     [Route("api/platform/pushnotifications")]
+    [Authorize]
     public class PushNotificationController : Controller
     {
         private readonly IPushNotificationManager _pushNotifier;

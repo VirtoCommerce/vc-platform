@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Web.Model;
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Route("api/platform")]
+    [Authorize]
     public class ChangeLogController : Controller
     {
         private static DateTime _lastTimestamp = DateTime.UtcNow;

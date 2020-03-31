@@ -25,6 +25,7 @@ using VirtoCommerce.Platform.Web.Modularity;
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Route("api/platform/modules")]
+    [Authorize]
     public class ModulesController : Controller
     {
         private readonly IExternalModuleCatalog _externalModuleCatalog;

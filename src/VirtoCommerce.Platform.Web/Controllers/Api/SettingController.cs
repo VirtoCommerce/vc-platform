@@ -11,6 +11,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Produces("application/json")]
     [Route("api/platform/settings")]
+    [Authorize]
     public class SettingController : Controller
     {
         private readonly ISettingsManager _settingsManager;

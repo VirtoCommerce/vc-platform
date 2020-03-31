@@ -28,6 +28,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Route("api/platform")]
     [ApiExplorerSettings(IgnoreApi = true)]
+    [Authorize]
     public class PlatformExportImportController : Controller
     {
         private static string _stringSampleDataUrl;

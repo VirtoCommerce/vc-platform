@@ -14,6 +14,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Produces("application/json")]
     [Route("api/platform/profiles")]
     [ApiExplorerSettings(IgnoreApi = true)]
+    [Authorize]
     public class ProfilesController : Controller
     {
         private readonly ISettingsManager _settingsManager;
@@ -33,7 +34,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("currentuser")]
-        [Authorize]
         public async Task<ActionResult> GetCurrentUserProfileAsync()
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -54,7 +54,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("currentuser")]
-        [Authorize]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdateCurrentUserProfileAsync([FromBody] UserProfile userProfile)
         {
