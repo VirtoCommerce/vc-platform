@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <PackageId>VirtoCommerce.GlobalTool</PackageId>
         <OutputType>Exe</OutputType>
@@ -15,21 +15,23 @@
         <Description>Cross-platform  build automation system for VirtoCommerce projects</Description>
         <NeutralLanguage>en-US</NeutralLanguage>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <PackageVersion>3.0.0-beta0008</PackageVersion>
+        <PackageVersion>3.0.0-beta0009</PackageVersion>
         <StartupObject>Build</StartupObject>
+        <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="GitVersion.CommandLine" Version="5.1.3">
+        <PackageReference Include="Virtocommerce.Platform.Core" Version="3.0.0-rc4-0190" />
+        <PackageReference Include="Nuke.Common" Version="0.24.7" />
+        <PackageReference Include="GitVersion.CommandLine" Version="5.2.4">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Nuke.Common" Version="0.23.7" />
         <PackageReference Include="OpenCover" Version="4.7.922" />
     </ItemGroup>
 
     <ItemGroup>
-        <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**" />
+        <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**;" />
         <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**" />
         <None Remove="*.csproj.DotSettings;*.ref.*.txt" />
 
@@ -48,10 +50,6 @@
         <None Include="..\Jenkinsfile" LinkBase="ci" Condition="Exists('..\Jenkinsfile')" />
         <None Include="..\appveyor.yml" LinkBase="ci" Condition="Exists('..\appveyor.yml')" />
         <None Include="..\.travis.yml" LinkBase="ci" Condition="Exists('..\.travis.yml')" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\src\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" />
     </ItemGroup>
 
 </Project>
