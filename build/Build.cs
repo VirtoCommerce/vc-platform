@@ -123,7 +123,6 @@ class Build : NukeBuild
         if (type == OutputType.Err) Logger.Error(text);
     }
 
-
     Target Clean => _ => _
         .Before(Restore)
         .Executes(() =>

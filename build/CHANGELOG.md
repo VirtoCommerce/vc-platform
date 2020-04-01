@@ -10,12 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ValidateSwaggerSchema Target
 - Support for Pull Request in SonarQubeStart Target
 ### Fixed
-- An issue with dependencies filter at Compress Target
-- An issue with packaging vc-build with 3rd party tools
+- An issue with dependencies filter in Compress Target
+- An issue with packaging vc-build with 3rd party tools https://github.com/nuke-build/nuke/issues/437
 ### Changed
 - NUKE Execution Engine updated to 0.24.7
 - GitVersion updated to 5.2.4
-- Virtocommerce.Platform dependency changed from ProjectReference to PackcageReference
+- Virtocommerce.Platform dependency changed from ProjectReference to PackageReference
 
 ## [3.0.0-beta0008] - 2020-01-28
 ### Added
