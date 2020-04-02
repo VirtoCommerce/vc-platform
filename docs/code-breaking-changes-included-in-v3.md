@@ -1,3 +1,7 @@
+# Breaking changes included in VirtoCommerce 3.0
+
+There were major refactorings made in VirtoCommerce version 3.0. The changes mapping below should help you finding the right class, API or behavior in the updated codebase.
+
 | V2 | V3 | Impact |
 | --- | --- | --- |
 | **vc-platform** |   |   |
