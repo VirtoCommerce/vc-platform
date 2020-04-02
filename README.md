@@ -50,9 +50,13 @@ These Virto Commerce docs help you learn and use the Virto Commerce platform, fr
 * [Getting Started](/docs/getting-started.md)
 * [Migrate VC Platform Module from version 2.x to 3](/docs/Migrate-module-from-the-Platform-2.0-to-3.0-version.md)
 
-## Modules 
+## Modules
 
 [Module Asset Management](/docs/assets-function.md)
+
+[Module Settings](/docs/settings.md)
+
+[Module Security](/docs/security.md)
 
 ## License
 
