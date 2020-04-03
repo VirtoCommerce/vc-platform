@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.RetryPolicies;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -91,7 +92,8 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             }
 
             var container = _cloudBlobClient.GetContainerReference(containerName);
-            container.CreateIfNotExistsAsync();
+            var requestOptions = new BlobRequestOptions() { RetryPolicy = new NoRetry() };
+            container.CreateIfNotExistsAsync(BlobContainerPublicAccessType.Blob, requestOptions, null).GetAwaiter().GetResult();
 
             var blob = container.GetBlockBlobReference(filePath);
 
