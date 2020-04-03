@@ -259,6 +259,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
+            var platformOptions = Configuration.GetSection("VirtoCommerce").Get<PlatformOptions>();
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
             // to replace the default OpenIddict entities.
@@ -305,7 +306,7 @@ namespace VirtoCommerce.Platform.Web
                     options.DisableScopeValidation();
 
                     // During development, you can disable the HTTPS requirement.
-                    if (WebHostEnvironment.IsDevelopment())
+                    if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp)
                     {
                         options.DisableHttpsRequirement();
                     }
