@@ -25,25 +25,7 @@ An example of upgraded storefront (made during creation of this document) reside
 
 ## Preconditions
 * Open solution with storefront source code;
-* Please check Autorest version by following:
-    - Open Package Manager Console in Visual Studio;
-    - Run *autorest --info*, check output:
-    
-            PM> autorest --info
-            AutoRest code generation utility [version: 2.0.4407; node: v10.16.0]
-            (C) 2018 Microsoft Corporation.
-            https://aka.ms/autorest
-
-        It must be 2.0.4 or above, install/upgrade Autorest if needed (https://github.com/Azure/AutoRest).
-* Remember the Autorest command to re-generate Restful interface client code:
-
-        $modules = @('Platform')
-        $modules.ForEach( { autoRest --debug --input-file=http://localhost:10645/docs/VirtoCommerce.$_/swagger.json --output-folder=VirtoCommerce.Storefront\AutoRestClients --output-file=$_`ModuleApi.cs --namespace=VirtoCommerce.Storefront.AutoRestClients.$_`ModuleApi --override-client-name=$_`ModuleClient --add-credentials --csharp })
-    The *$modules* is a list of modules API clients that will be regenerated. You can put there more than one, but it be harder to understand the changes. It is recommended to upgrade module by module.
-
-    Don't forget to modify endpoint in *--input-file* parameter.
-
-    It's useful to run Autorest from Package Manager Console with selected Virtocommerce.Storefront project.
+* [Learn how to install and use Autorest with v3](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/docs/using-autorest-with-v3.md).
 ___
 ## Upgrading AutoRest-generated clients
 ___

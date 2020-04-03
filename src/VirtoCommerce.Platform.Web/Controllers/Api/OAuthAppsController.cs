@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
@@ -14,6 +15,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Route("api/platform/oauthapps")]
     [ApiController]
+    [Authorize]
     public class OAuthAppsController : Controller
     {
         private readonly OpenIddictApplicationManager<OpenIddictApplication> _manager;
