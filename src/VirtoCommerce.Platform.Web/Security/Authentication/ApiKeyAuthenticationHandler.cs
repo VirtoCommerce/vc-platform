@@ -64,7 +64,7 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
             }
 
             var apiKey = await _userApiKeyService.GetApiKeyByKeyAsync(providedApiKey);
-            if (apiKey == null)
+            if (apiKey == null || !apiKey.IsActive)
             {
                 return AuthenticateResult.NoResult();
             }
