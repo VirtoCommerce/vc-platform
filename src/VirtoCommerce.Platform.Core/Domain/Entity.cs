@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             unchecked
             {
-                return IsTransient() ? base.GetHashCode() : Id.GetHashCode();
+                return IsTransient() ? GetHashCode() : Id.GetHashCode();
             }
         }
         public static bool operator ==(Entity left, Entity right)
