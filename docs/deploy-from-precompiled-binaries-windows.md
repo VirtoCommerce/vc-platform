@@ -61,7 +61,16 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
     },
 ```
 
-### Running the Platform
+
+### Running the Platform only on HTTP schema
+ 
+* In order to run the platform only at HTTP schema in production mode, it's enough to pass only HTTP URLs in `--urls` argument of the `dotnet` command.
+
+```console
+  dotnet VirtoCommerce.Platform.Web.dll --urls=http://localhost:5000
+```
+
+### Running the Platform on HTTPS schema
 
 * Install and trust HTTPS certificate
 
