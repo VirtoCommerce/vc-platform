@@ -165,8 +165,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                                         {
                                             foreach (var role in items)
                                             {
-                                                var roleExists = string.IsNullOrEmpty(role.Id) ? await _roleManager.RoleExistsAsync(role.Name) :
-                                                                 await _roleManager.FindByIdAsync(role.Id) != null;
+                                                var roleExists = false;
+                                                if (!string.IsNullOrEmpty(role.Id))
+                                                {
+                                                    roleExists = (await _roleManager.FindByIdAsync(role.Id)) != null;
+                                                }
+                                                if (!roleExists)
+                                                {
+                                                    roleExists = await _roleManager.RoleExistsAsync(role.Name);
+                                                }                                                                                              
                                                 IdentityResult result;
                                                 if (!roleExists)
                                                 {
@@ -194,8 +201,16 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                                             foreach (var user in items)
                                             {
                                                 IdentityResult result;
-                                                var userExist = await _userManager.FindByIdAsync(user.Id);
-                                                if (userExist != null)
+                                                var userExists = false;
+                                                if (!string.IsNullOrEmpty(user.Id))
+                                                {
+                                                    userExists = (await _userManager.FindByIdAsync(user.Id)) != null;
+                                                }
+                                                if (!userExists)
+                                                {
+                                                    userExists = (await _userManager.FindByNameAsync(user.UserName)) != null;
+                                                }
+                                                if (userExists)
                                                 {
                                                     result = await _userManager.UpdateAsync(user);
                                                 }
