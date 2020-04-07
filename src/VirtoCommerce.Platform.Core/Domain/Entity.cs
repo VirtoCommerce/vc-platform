@@ -33,7 +33,11 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             unchecked
             {
+
+#pragma warning disable S3249 // Classes directly extending "object" should not call "base" in "GetHashCode" or "Equals"
+                // For IEntities without Id we want to use object GetHashCode
                 return IsTransient() ? base.GetHashCode() : Id.GetHashCode();
+#pragma warning restore S3249 // Classes directly extending "object" should not call "base" in "GetHashCode" or "Equals"
             }
         }
         public static bool operator ==(Entity left, Entity right)
