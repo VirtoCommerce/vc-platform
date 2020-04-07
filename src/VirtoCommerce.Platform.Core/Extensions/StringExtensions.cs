@@ -275,11 +275,15 @@ namespace VirtoCommerce.Platform.Core.Common
             {
                 if (!string.IsNullOrEmpty(s) && s.Trim().Length > 0)
                 {
-                    TypeConverter conv = TypeDescriptor.GetConverter(typeof(T));
+                    var conv = TypeDescriptor.GetConverter(typeof(T));
                     result = (T)conv.ConvertFromInvariantString(s);
                 }
             }
-            catch { }
+            catch
+            {
+                // If GetConverter for type absent and trow exception method should return new Nullable<T> in an way.
+            }
+
             return result;
         }
 
