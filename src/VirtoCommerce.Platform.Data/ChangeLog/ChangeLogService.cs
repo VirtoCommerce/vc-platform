@@ -57,6 +57,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                     }
                 }
                 await repository.UnitOfWork.CommitAsync();
+                ChangeLogCacheRegion.ExpireRegion();
             }
         }
 
@@ -71,6 +72,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                     repository.Remove(entity);
                 }
                 await repository.UnitOfWork.CommitAsync();
+                ChangeLogCacheRegion.ExpireRegion();
             }
         }
 
