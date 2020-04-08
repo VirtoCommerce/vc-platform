@@ -270,16 +270,20 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static Nullable<T> ToNullable<T>(this string s) where T : struct
         {
-            Nullable<T> result = new Nullable<T>();
+            var result = new Nullable<T>();
             try
             {
                 if (!string.IsNullOrEmpty(s) && s.Trim().Length > 0)
                 {
-                    TypeConverter conv = TypeDescriptor.GetConverter(typeof(T));
-                    result = (T)conv.ConvertFromInvariantString(s);
+                    var conv = TypeDescriptor.GetConverter(typeof(T));
+                    result = (T)conv?.ConvertFromInvariantString(s);
                 }
             }
-            catch { }
+            catch
+            {
+                // Return default value in case of exception.
+            }
+
             return result;
         }
 
