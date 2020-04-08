@@ -109,6 +109,20 @@ npm ci
 npm run webpack:build
 ```
 
+**Note:** If you have node-sass issues, run this command
+
+```console
+npm rebuild node-sass
+```
+
+* Run to trust the .NET Core SDK HTTPS development certificate:
+
+```console
+dotnet.exe dev-certs https --trust
+```
+
+Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust)
+
 * Restart the Platform to load the new module assemblies into the Platform's application process
 
 ## How to debug module
