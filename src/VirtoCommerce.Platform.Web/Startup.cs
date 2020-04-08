@@ -305,7 +305,7 @@ namespace VirtoCommerce.Platform.Web
                     options.DisableScopeValidation();
 
                     // During development or when you explicitly run the platform in production mode without https, need to disable the HTTPS requirement.
-                    if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp)
+                    if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
                     {
                         options.DisableHttpsRequirement();
                     }

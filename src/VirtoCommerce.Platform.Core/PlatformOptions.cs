@@ -37,9 +37,9 @@ namespace VirtoCommerce.Platform.Core
         //Local path to running process like WkhtmlToPdf
         public string ProcessesPath { get; set; }
 
-        /// <summary>
-        /// Allows running platform without SSL certificate
-        /// </summary>
+        //This options controls how the OpenID Connect
+        //server (ASOS) handles the incoming requests to arriving on non-HTTPS endpoints should be rejected or not. By default, this property is set to false to help
+        //mitigate man-in-the-middle attacks.
         public bool AllowInsecureHttp { get; set; }
     }
 
