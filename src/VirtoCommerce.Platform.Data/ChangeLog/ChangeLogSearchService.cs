@@ -25,21 +25,26 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 
         public virtual async Task<ChangeLogSearchResult> SearchAsync(ChangeLogSearchCriteria criteria)
         {
-            var result = AbstractTypeFactory<ChangeLogSearchResult>.TryCreateInstance();
-
-            using (var repository = _repositoryFactory())
+            var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
+            var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
-                repository.DisableChangesTracking();
+                var searchResult = AbstractTypeFactory<ChangeLogSearchResult>.TryCreateInstance();
 
-                var sortInfos = GetSortInfos(criteria);
-                var query = GetQuery(repository, criteria, sortInfos);
-
-                result.TotalCount = await query.CountAsync();
-                if (criteria.Take > 0)
+                using (var repository = _repositoryFactory())
                 {
-                    result.Results = (await query.Skip(criteria.Skip).Take(criteria.Take).ToArrayAsync()).Select(x => x.ToModel(AbstractTypeFactory<OperationLog>.TryCreateInstance())).ToList();
+                    repository.DisableChangesTracking();
+
+                    var sortInfos = GetSortInfos(criteria);
+                    var query = GetQuery(repository, criteria, sortInfos);
+
+                    searchResult.TotalCount = await query.CountAsync();
+                    if (criteria.Take > 0)
+                    {
+                        searchResult.Results = (await query.AsNoTracking().Skip(criteria.Skip).Take(criteria.Take).ToArrayAsync()).Select(x => x.ToModel(AbstractTypeFactory<OperationLog>.TryCreateInstance())).ToList();
+                    }
                 }
-            }
+                return searchResult;
+            });
             return result;
         }
 

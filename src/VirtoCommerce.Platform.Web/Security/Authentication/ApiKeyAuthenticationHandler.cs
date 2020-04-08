@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Web.Security.Authentication
@@ -51,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
                 return AuthenticateResult.Success(new AuthenticationTicket(Context.User, "context.User"));
             }
 
-            if (!Request.Query.TryGetValue(Options.ApiKeyParamName, out var apiKeyValues))
+            if (!Request.Query.TryGetValue(Options.ApiKeyParamName, out var apiKeyValues) && !Request.Headers.TryGetValue(Options.ApiKeyParamName, out apiKeyValues))
             {
                 return AuthenticateResult.NoResult();
             }
