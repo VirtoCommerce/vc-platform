@@ -20,7 +20,8 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
         {
             _options = options.Value;
 
-            _storagePath = _options.RootPath.TrimEnd(Path.DirectorySeparatorChar);
+            // extra replace step to prevent windows path getting into linux environment
+            _storagePath = _options.RootPath.TrimEnd(Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar); 
             _basePublicUrl = _options.PublicUrl;
             _basePublicUrl = _basePublicUrl?.TrimEnd('/');
         }
