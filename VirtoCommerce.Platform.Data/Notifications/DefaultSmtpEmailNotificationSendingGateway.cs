@@ -64,10 +64,10 @@ namespace VirtoCommerce.Platform.Data.Notifications
                         }
                     }
 
-                    var login = _settingsManager.GetSettingByName(_smtpClientLoginSettingName).Value;
-                    var password = _settingsManager.GetSettingByName(_smtpClientPWDSettingName).Value;
-                    var host = _settingsManager.GetSettingByName(_smtpClientHostSettingName).Value;
-                    var port = _settingsManager.GetSettingByName(_smtpClientPortSettingName).Value;
+                    var login = _settingsManager.GetValue(_smtpClientLoginSettingName, string.Empty);
+                    var password = _settingsManager.GetValue(_smtpClientPWDSettingName, string.Empty);
+                    var host = _settingsManager.GetValue(_smtpClientHostSettingName, string.Empty);
+                    var port = _settingsManager.GetValue(_smtpClientPortSettingName, 465); // Default SMTP port with SSL
                     var useSsl = _settingsManager.GetValue(_smtpClientUseSslSettingName, false);
 
                     using (var smtpClient = new SmtpClient(host, Convert.ToInt32(port)))
