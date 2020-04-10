@@ -206,7 +206,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
 
                 if (criteria.IsActive)
                 {
-                    query = query.Where(n => n.IsActive && n.SentDate == null && (n.LastFailAttemptDate == null || DbFunctions.AddHours(n.LastFailAttemptDate, criteria.RepeatHoursIntervalForFail) < DateTime.UtcNow)
+                    query = query.Where(n => n.IsActive && n.SentDate == null && (n.LastFailAttemptDate == null || DbFunctions.AddMinutes(n.LastFailAttemptDate, criteria.RepeatMinutesIntervalForFail) < DateTime.UtcNow)
                                              && (n.StartSendingDate == null || n.StartSendingDate < DateTime.UtcNow));
                 }
                 retVal.TotalCount = query.Count();
@@ -251,7 +251,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
         {
             var retVal = GetNewNotification(entity.Type);
 
-            // Type may have been unregistered by now. 
+            // Type may have been unregistered by now.
             retVal?.InjectFrom(entity);
 
             if (retVal is EmailNotification emailNotification)

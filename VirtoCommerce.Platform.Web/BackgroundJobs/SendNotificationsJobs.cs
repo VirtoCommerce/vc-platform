@@ -12,17 +12,24 @@ namespace VirtoCommerce.Platform.Web.BackgroundJobs
 	{
 		private readonly INotificationManager _notificationManager;
 		private readonly int _sendingBatchSize;
+        private readonly int _settingsRepeatInterval;
 
 		public SendNotificationsJobs(INotificationManager notificationManager, ISettingsManager settingsManager)
         {
 			_notificationManager = notificationManager;
-	        _sendingBatchSize = settingsManager.GetValue("VirtoCommerce.Platform.Notifications.SendingJob.TakeCount", 20);          
+	        _sendingBatchSize = settingsManager.GetValue("VirtoCommerce.Platform.Notifications.SendingJob.TakeCount", 20);
+            _settingsRepeatInterval = settingsManager.GetValue("VirtoCommerce.Platform.Notifications.SendingJob.RepeatInterval", 60);
         }
 
         [DisableConcurrentExecution(60 * 60 * 24)]
         public void Process()
         {
-			var criteria = new SearchNotificationCriteria() { IsActive = true, Take = _sendingBatchSize };
+			var criteria = new SearchNotificationCriteria
+            {
+                IsActive = true,
+                Take = _sendingBatchSize,
+                RepeatMinutesIntervalForFail = _settingsRepeatInterval
+            };
 
 			var result = _notificationManager.SearchNotifications(criteria);
 			if(result != null && result.Notifications != null && result.Notifications.Count > 0)
@@ -45,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.BackgroundJobs
                     }
 
                     if (!sendResult.IsSuccess)
-                    { 
+                    {
 						if(notification.AttemptCount >= notification.MaxAttemptCount)
 						{
 							notification.IsActive = false;
