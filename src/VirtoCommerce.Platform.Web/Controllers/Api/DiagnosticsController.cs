@@ -1,8 +1,10 @@
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -24,9 +26,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _licenseProvider = licenseProvider;
 
         }
+
         [HttpGet]
         [Route("systeminfo")]
-        public ActionResult<License> GetSystemInfo()
+        public ActionResult<SystemInfo> GetSystemInfo()
         {
             var platformVersion = PlatformVersion.CurrentVersion.ToString();
             var license = _licenseProvider.GetLicense();
@@ -41,6 +44,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 License = license,
                 InstalledModules = installedModules
             };
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("environmentInfo")]
+        [Authorize(PlatformConstants.Security.Permissions.EnvironmentInfoQuery)]
+        public ActionResult<EnvironmentInfo> GetEnvironmentInfo()
+        {
+            var result = new EnvironmentInfo()
+            {
+                Version = Environment.Version.ToString(),
+                Is64BitOperatingSystem = Environment.Is64BitOperatingSystem,
+                Is64BitProcess = Environment.Is64BitProcess,
+            };
+
             return Ok(result);
         }
     }
