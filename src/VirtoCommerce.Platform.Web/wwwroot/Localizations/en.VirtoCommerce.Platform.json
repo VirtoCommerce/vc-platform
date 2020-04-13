@@ -22,7 +22,12 @@
         },
         "blades": {
             "system-info": {
-                "title": "Platform information"
+                "title": "Platform information",
+                "labels": {
+                    "clr-version": "CLR version",
+                    "is-64-bit-os": "64-bit operating system",
+                    "is-64-bit-process": "64-bit process"
+                }
             },
             "asset-list": {
                 "title": "Asset management",
@@ -840,8 +845,7 @@
         "platform:exportImport:access": "Allows to see Export/Import in the main menu",
         "platform:import": "Allows to import platform and modules data",
         "platform:export": "Allows to export platform and modules data",
-        "platform:security:loginOnBehalf": "Login on behalf of a customer",
-        "environment:read": "Allows to read environment information using API"
+        "platform:security:loginOnBehalf": "Login on behalf of a customer"
     },
     "settings": {
         "VirtoCommerce": {

@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -42,18 +41,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 PlatformVersion = platformVersion,
                 License = license,
-                InstalledModules = installedModules
-            };
-            return Ok(result);
-        }
-
-        [HttpGet]
-        [Route("environmentInfo")]
-        [Authorize(PlatformConstants.Security.Permissions.EnvironmentInfoQuery)]
-        public ActionResult<EnvironmentInfo> GetEnvironmentInfo()
-        {
-            var result = new EnvironmentInfo()
-            {
+                InstalledModules = installedModules,
                 Version = Environment.Version.ToString(),
                 Is64BitOperatingSystem = Environment.Is64BitOperatingSystem,
                 Is64BitProcess = Environment.Is64BitProcess,
