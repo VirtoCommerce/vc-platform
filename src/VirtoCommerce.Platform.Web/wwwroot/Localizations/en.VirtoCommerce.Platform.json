@@ -22,7 +22,12 @@
         },
         "blades": {
             "system-info": {
-                "title": "Platform information"
+                "title": "Platform information",
+                "labels": {
+                    "clr-version": "CLR version",
+                    "is-64-bit-os": "64-bit operating system",
+                    "is-64-bit-process": "64-bit process"
+                }
             },
             "asset-list": {
                 "title": "Asset management",
