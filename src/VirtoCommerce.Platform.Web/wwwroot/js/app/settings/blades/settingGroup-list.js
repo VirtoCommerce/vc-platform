@@ -1,5 +1,5 @@
-angular.module('platformWebApp').controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
-    function ($window, modules, $scope, settings, bladeNavigationService, dialogService) {
+angular.module('platformWebApp').controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$translate',
+    function ($window, modules, $scope, settings, bladeNavigationService, dialogService, $translate) {
     var settingsTree;
     var blade = $scope.blade;
 
@@ -33,6 +33,13 @@ angular.module('platformWebApp').controller('platformWebApp.settingGroupListCont
                     }
                 });
             });
+
+            _.each(blade.allSettings,
+                function(setting) {
+                    var translateKey = 'settings.' + setting.name + '.title';
+                    var result = $translate.instant(translateKey);
+                    setting.translatedName = result !== translateKey ? result : setting.name;
+                });
 
             blade.isLoading = false;
 
