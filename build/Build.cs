@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nuke.Common;
+using Nuke.Common.CI.Jenkins;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
@@ -39,7 +42,13 @@ class Build : NukeBuild
     {
         ToolPathResolver.ExecutingAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
     }
-    public static int Main() => Execute<Build>(x => x.Compile);
+    public static int Main()
+    {
+        var exitCode = Execute<Build>(x => x.Compile);
+        return ExitCode ?? exitCode;
+    }
+
+    private static int? ExitCode = null;
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -48,7 +57,7 @@ class Build : NukeBuild
 
     [Solution] readonly Solution Solution;
     [GitRepository] readonly GitRepository GitRepository;
-    [GitVersion] readonly GitVersion GitVersion;
+    [GitVersion(Framework = "netcoreapp3.1")] protected readonly GitVersion GitVersion;
 
     readonly Tool Git;
 
@@ -56,6 +65,7 @@ class Build : NukeBuild
     readonly string DevelopBranch = "develop";
     readonly string ReleaseBranchPrefix = "release";
     readonly string HotfixBranchPrefix = "hotfix";
+
 
     private static readonly HttpClient httpClient = new HttpClient();
 
@@ -69,13 +79,20 @@ class Build : NukeBuild
     [Parameter] readonly AbsolutePath CoverageReportPath = RootDirectory / ".tmp" / "coverage.xml";
     [Parameter] readonly string TestsFilter = "Category!=IntegrationTest";
 
-    [Parameter("Url to Swagger Validation Api")] readonly string SwaggerValidationUrl = "http://validator.swagger.io/validator/debug";
+    [Parameter("Url to Swagger Validation Api")] readonly string SwaggerValidatorUri = "http://validator.swagger.io/validator/debug";
 
     [Parameter("GitHub user for release creation")] readonly string GitHubUser;
     [Parameter("GitHub user security token for release creation")] readonly string GitHubToken;
     [Parameter("True - prerelease, False - release")] readonly bool PreRelease;
+    [Parameter("True - Pull Request")] readonly bool PullRequest;
 
     [Parameter("Path to folder with  git clones of modules repositories")] readonly AbsolutePath ModulesFolderPath;
+    [Parameter("Repo Organization/User")] readonly string RepoOrg = "VirtoCommerce";
+    [Parameter("Repo Name")] string RepoName;
+
+    [Parameter("Path to nuget config")] readonly AbsolutePath NugetConfig;
+
+    [Parameter("Swagger schema path")] readonly AbsolutePath SwaggerSchemaPath;
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
@@ -123,7 +140,10 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetRestore(s => s
-                .SetProjectFile(Solution));
+                .SetProjectFile(Solution)
+                .When(NugetConfig != null, c => c
+                    .SetConfigFile(NugetConfig))
+                );
         });
 
     Target Pack => _ => _
@@ -167,9 +187,18 @@ class Build : NukeBuild
            {
                var testProjectPath = testProjects.First().Path;
                var testArgs = $"{testProjectPath} --logger trx --filter {TestsFilter}";
-               OpenCoverTasks.OpenCover($"-target:\"{dotnetPath}\" -targetargs:\"test {testArgs}\" -register -output:\"{CoverageReportPath}\"");
+               OpenCoverTasks.OpenCover($"-target:\"{dotnetPath}\" -targetargs:\"test {testArgs}\" -register -output:\"{CoverageReportPath}\" -returntargetcode");
            }
        });
+
+    public void CustomDotnetLogger(OutputType type, string text)
+    {
+        Logger.Info(text);
+        if (text.Contains("error: Response status code does not indicate success: 409"))
+        {
+            ExitCode = 409;
+        }
+    }
 
     Target PublishPackages => _ => _
         .DependsOn(Pack)
@@ -178,6 +207,8 @@ class Build : NukeBuild
         {
             var packages = ArtifactsDirectory.GlobFiles("*.nupkg");
 
+            DotNetLogger = CustomDotnetLogger;
+            
             DotNetNuGetPush(s => s
                     .SetSource(Source)
                     .SetApiKey(ApiKey)
@@ -296,16 +327,16 @@ class Build : NukeBuild
             }
             TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Formatting.Indented));
             GitTasks.Git($"commit -am \"{manifest.Id} {ModuleSemVersion}\"", modulesLocalDirectory);
-
             GitTasks.Git($"push origin HEAD:master -f", modulesLocalDirectory);
         });
 
     Target SwaggerValidation => _ => _
           .DependsOn(Publish)
           .Requires(() => !IsModule)
-          .Executes(() =>
+          .Executes(async () =>
           {
-              var swashbucklePackage = NuGetPackageResolver.GetGlobalInstalledPackage("swashbuckle.aspnetcore.cli", "5.0.0", "dotnet-swagger.dll");
+              var swashbucklePackage = NuGetPackageResolver.GetGlobalInstalledPackage("swashbuckle.aspnetcore.cli", "5.2.1", ToolPathResolver.NuGetPackagesConfigFile);
+              
               var swashbucklePath = swashbucklePackage.Directory.GlobFiles("**/dotnet-swagger.dll").Last();
               var projectPublishPath = ArtifactsDirectory / "publish" / $"{WebProject.Name}.dll";
               var swaggerJson = ArtifactsDirectory / "swagger.json";
@@ -314,34 +345,65 @@ class Build : NukeBuild
               DotNet($"{swashbucklePath} tofile --output {swaggerJson} {projectPublishPath} VirtoCommerce.Platform");
               Directory.SetCurrentDirectory(currentDir);
 
-              var swaggerScheme = File.ReadAllText(swaggerJson);
-              var requestContent = new StringContent(swaggerScheme, Encoding.UTF8, "application/json");
-              var request = new HttpRequestMessage(HttpMethod.Post, SwaggerValidationUrl);
-              request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-              request.Content = requestContent;
-              var response = httpClient.SendAsync(request).GetAwaiter().GetResult();
-              var responseContent = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+              var responseContent = await SendSwaggerSchemaToValidator(httpClient, swaggerJson, SwaggerValidatorUri);
               var jsonObj = JObject.Parse(responseContent);
-              bool err = false;
               foreach (var msg in jsonObj["schemaValidationMessages"])
               {
                   Logger.Normal(msg);
-                  if ((string)msg["level"] == "error")
-                  {
-                      err = true;
-                  }
               }
-              if (err)
+              if (jsonObj["schemaValidationMessages"].Where(t => (string)t["level"] == "error").Any())
                   ControlFlow.Fail("Schema Validation Messages contains error");
           });
+
+    Target ValidateSwaggerSchema => _ => _
+        .Requires(() => SwaggerSchemaPath != null)
+        .Executes(async () =>
+        {
+            var responseContent = await SendSwaggerSchemaToValidator(httpClient, SwaggerSchemaPath, SwaggerValidatorUri);
+            var jsonObj = JObject.Parse(responseContent);
+            foreach (var msg in jsonObj["schemaValidationMessages"])
+            {
+                Logger.Normal(msg);
+            }
+            if (jsonObj["schemaValidationMessages"].Where(t => (string)t["level"]=="error").Any())
+                ControlFlow.Fail("Schema Validation Messages contains error");
+        });
+
+    private async Task<string> SendSwaggerSchemaToValidator(HttpClient httpClient, string schemaPath, string validatorUri)
+    {
+        var swaggerScheme = File.ReadAllText(schemaPath);
+        var requestContent = new StringContent(swaggerScheme, Encoding.UTF8, "application/json");
+        var request = new HttpRequestMessage(HttpMethod.Post, validatorUri);
+        request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+        request.Content = requestContent;
+        var response = await httpClient.SendAsync(request);
+        return await response.Content.ReadAsStringAsync();
+    }
 
     Target SonarQubeStart => _ => _
         .Executes(() =>
         {
             var dotNetPath = ToolPathResolver.TryGetEnvironmentExecutable("DOTNET_EXE") ?? ToolPathResolver.GetPathExecutable("dotnet");
+            Logger.Normal($"IsServerBuild = {IsServerBuild}");
             var branchName = GitRepository.Branch;
+            Logger.Info($"BRANCH_NAME = {branchName}");
             var projectName = Solution.Name;
-
+            var previewModeParam = "";
+            var prParam = "";
+            var repositoryParam = "";
+            var githubAuthParam = "";
+            if(PullRequest)
+            {
+                var prNumber = Environment.GetEnvironmentVariable("CHANGE_ID");
+                prParam = $"/d:sonar.github.pullRequest={prNumber}";
+                previewModeParam = "/d:sonar.analysis.mode=preview";
+                if(RepoName.IsNullOrEmpty())
+                {
+                    RepoName = Jenkins.Instance.JobName.Split("/")[1];
+                }
+                repositoryParam = $"/d:sonar.github.repository={RepoOrg}/{RepoName}";
+                githubAuthParam = $"/d:sonar.github.oauth={GitHubToken}";
+            }
             var branchParam = $"/d:\"sonar.branch={branchName}\"";
             var projectNameParam = $"/n:\"{projectName}\"";
             var projectKeyParam = $"/k:\"{projectName}\"";
@@ -349,9 +411,9 @@ class Build : NukeBuild
             var tokenParam = $"/d:sonar.login={SonarAuthToken}";
             var sonarReportPathParam = $"/d:sonar.cs.opencover.reportsPaths={CoverageReportPath}";
 
-            var startCmd = $"sonarscanner begin {branchParam} {projectNameParam} {projectKeyParam} {hostParam} {tokenParam} {sonarReportPathParam}";
+            var startCmd = $"sonarscanner begin {branchParam} {projectNameParam} {projectKeyParam} {hostParam} {tokenParam} {sonarReportPathParam} {previewModeParam} {prParam} {repositoryParam} {githubAuthParam}";
 
-            Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}")}");
+            Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}").Replace(GitHubToken, "{IS HIDDEN}")}");
 
             var processStart = ProcessTasks.StartProcess(dotNetPath, startCmd, customLogger: ErrorLogger, logInvocation: false)
                 .AssertWaitForExit().AssertZeroExitCode();
