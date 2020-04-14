@@ -34,6 +34,18 @@
                             </div>
                         </div>
                     </li>
+                    <li class="list-item">
+                        <div class="list-t">{{ 'platform.blades.system-info.labels.clr-version' | translate }}</div>
+                        <div class="list-descr">{{blade.currentEntity.version}}</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">{{ 'platform.blades.system-info.labels.is-64-bit-os' | translate }}</div>
+                        <div class="list-descr">{{blade.currentEntity.is64BitOperatingSystem}}</div>
+                    </li>
+                    <li class="list-item">
+                        <div class="list-t">{{ 'platform.blades.system-info.labels.is-64-bit-process' | translate }}</div>
+                        <div class="list-descr">{{blade.currentEntity.is64BitProcess}}</div>
+                    </li>
                 </ul>
             </div>
         </div>
