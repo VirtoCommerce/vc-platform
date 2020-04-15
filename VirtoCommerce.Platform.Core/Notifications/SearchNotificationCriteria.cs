@@ -6,6 +6,10 @@ namespace VirtoCommerce.Platform.Core.Notifications
 {
 	public class SearchNotificationCriteria : ValueObject
     {
+        public SearchNotificationCriteria()
+        {
+            RepeatMinutesIntervalForFail = 5 * 60;
+        }
         public int Take { get; set; }
 		public int Skip { get; set; }
         /// <summary>
