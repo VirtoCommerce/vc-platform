@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Web.BackgroundJobs
         {
 			_notificationManager = notificationManager;
 	        _sendingBatchSize = settingsManager.GetValue("VirtoCommerce.Platform.Notifications.SendingJob.TakeCount", 20);
-            _settingsRepeatInterval = settingsManager.GetValue("VirtoCommerce.Platform.Notifications.SendingJob.RepeatInterval", 60);
+            _settingsRepeatInterval = settingsManager.GetValue("VirtoCommerce.Platform.Notifications.SendingJob.RepeatInterval", 5*60);
         }
 
         [DisableConcurrentExecution(60 * 60 * 24)]

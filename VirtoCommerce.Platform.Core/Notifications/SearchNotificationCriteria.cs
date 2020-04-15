@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -20,5 +21,8 @@ namespace VirtoCommerce.Platform.Core.Notifications
         /// time interval used to evaluate  active notifications have failure delivery
         /// </summary>
         public int RepeatMinutesIntervalForFail { get; set; }
+
+        [Obsolete("This property is obsolete. Use RepeatMinutesIntervalForFail instead.")]
+        public int RepeatHoursIntervalForFail { get; set; }
 	}
 }
