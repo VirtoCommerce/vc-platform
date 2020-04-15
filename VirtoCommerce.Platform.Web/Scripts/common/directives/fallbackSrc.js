@@ -1,4 +1,4 @@
-﻿///https://github.com/dcohenb/angular-img-fallback
+///https://github.com/dcohenb/angular-img-fallback
 ///Angular directives that handles image loading, it has fallback-src to handle errors in image loading and loading-src for placeholder while the image is being loaded.
 angular.module('platformWebApp')
     .directive('fallbackSrc', ['imageService', function(imageService) {
@@ -27,7 +27,7 @@ angular.module('platformWebApp')
 
                 element.on('error', errorHandler);
 
-                scope.$on('$destroy', () => {
+                scope.$on('$destroy', function() {
                     element.off('error', errorHandler);
                 });
 
