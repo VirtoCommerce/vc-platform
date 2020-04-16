@@ -6,13 +6,21 @@
 
 To get started locally, follow these instructions:
 1. Make fork from the latest module source code from https://github.com/VirtoCommerce/{module-name}.git
-1. Clone to your local computer using `git`
-1. Make sure that you have All Prerequisites installed
+1. Clone to your local computer using `git` and and switch to the release/3.0.0 branch
+1. Make sure that you have Virto Commerce Platform installed
+
+```console
+git clone https://github.com/VirtoCommerce/{module-name}.git
+```
 
 ## Building Module
+<<<<<<< Updated upstream
 
 ### Build Backend
 
+=======
+### Build Backend from CLI
+>>>>>>> Stashed changes
 To make a local build:
 1. Open console
 
@@ -26,7 +34,7 @@ cd src/VirtoCommerce.{module-name}.Web
 dotnet build -c Development
 ```
 
-Or use Visual Studio:
+### Build Backend from Visual Studio
 1. Open VirtoCommerce.{module-name}.sln in Visual Studio 
 2. Build Solution
 
