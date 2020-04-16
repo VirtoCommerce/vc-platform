@@ -10,13 +10,18 @@ To get started locally, follow these instructions:
 1. Make sure that you have All Prerequisites installed
 
 ## Building Module
+
 ### Build Backend
+
 To make a local build:
 1. Open console
+
 ```console
 cd src/VirtoCommerce.{module-name}.Web
 ```
+
 2. Build 
+
 ```console
 dotnet build -c Development
 ```
@@ -26,13 +31,16 @@ Or use Visual Studio:
 2. Build Solution
 
 ### Build Frontend 
+
 To make a local build:
 1. Open console
+
 ```console
 cd src\VirtoCommerce.{module-name}.Web
 ```
 
 2. Install the dependencies
+
 ```console
 npm ci
 ```
@@ -50,12 +58,15 @@ npm run webpack:watch
 ```
 
 ## Initial Configuration 
+
 Add directory link to VirtoCommerce.Platform.Web\Modules, so the plarform can read module manifest and load it
+
 ```console
 mklink /d VirtoCommerce.Platform.Web\Modules src\VirtoCommerce.{module-name}.Web
 ```
 
 ## Running
+
 Restart the Platform to load the new module assemblies into the Platform's application process.
 
 ## Backend Debugging
@@ -65,6 +76,7 @@ Restart the Platform to load the new module assemblies into the Platform's appli
 ![image](media/backend-debug.png)
 
 ## Frontend Debugging
+
 * Frontend supports debugging in Chrome.
 * Open Developer Console
 * Open Source Tab
@@ -73,4 +85,5 @@ Restart the Platform to load the new module assemblies into the Platform's appli
 ![image](media/frontend-debug-chrome.png)
 
 ## Testing 
+
 There is `tests` folder with suites which can be run locally.
