@@ -801,17 +801,21 @@
                 "title": "The error details"
             },
             "enter-login-url": {
-	            "title": "Login on behalf",
-	            "labels": {
-	              "enter-login-url": "Please enter login secure URL"
-	            },
-	            "placeholders": {
-	              "secure-url": "https://vcshop.com"
-	            }
+                "title": "Login on behalf",
+                "labels": {
+                    "enter-login-url": "Please enter login secure URL"
+                },
+                "placeholders": {
+                    "secure-url": "https://vcshop.com"
+                }
             },
             "asset-upload-error": {
                 "title": "Error in upload",
                 "message": "Need to choose a folder! Can't upload a file to the root!"
+            },
+            "run-import": {
+                "title": "Import confirmation",
+                "message": "Are you sure you want to import sample data?"
             }
         },
         "commands": {

@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
     .config(['$stateProvider', function ($stateProvider) {
         $stateProvider.state('workspace.exportImport', {
             url: '/exportImport',
@@ -133,4 +133,14 @@
                 priority: 10
             });
 
+            // Register widget in Platform\Setup settings
+            widgetService.registerWidget({
+                isVisible: function (blade) {
+                    return blade.currentEntities && blade.currentEntities['Setup'] && blade.currentEntities['Setup'].length
+                        && blade.currentEntities['Setup'][0]['name'] === 'VirtoCommerce.SetupStep';
+                },
+                controller: 'platformWebApp.importSampleDataWidgetController',
+                template: '$(Platform)/Scripts/app/exportImport/widgets/sampleDataImportWidget.tpl.html'
+            },
+            'settingsDetail');
         }]);
