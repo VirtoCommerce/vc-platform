@@ -164,7 +164,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingGroupListCont
                 $window.location.reload();
             }
 
-            var url = "images/logo.png";
+            var url = "images/logo.png?now=" + Math.random();
             var img = new Image();
             img.src = url;
 
