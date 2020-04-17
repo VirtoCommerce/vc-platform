@@ -5,22 +5,21 @@
 ## Installation
 
 To get started locally, follow these instructions:
+
+1. Make sure that you have Virto Commerce Platform installed
 1. Make fork from the latest module source code from https://github.com/VirtoCommerce/{module-name}.git
 1. Clone to your local computer using `git` and and switch to the release/3.0.0 branch
-1. Make sure that you have Virto Commerce Platform installed
 
 ```console
 git clone https://github.com/VirtoCommerce/{module-name}.git
 ```
 
 ## Building Module
-<<<<<<< Updated upstream
 
 ### Build Backend
 
-=======
 ### Build Backend from CLI
->>>>>>> Stashed changes
+
 To make a local build:
 1. Open console
 
@@ -35,6 +34,7 @@ dotnet build -c Development
 ```
 
 ### Build Backend from Visual Studio
+
 1. Open VirtoCommerce.{module-name}.sln in Visual Studio 
 2. Build Solution
 
@@ -78,6 +78,7 @@ mklink /d VirtoCommerce.Platform.Web\Modules src\VirtoCommerce.{module-name}.Web
 Restart the Platform to load the new module assemblies into the Platform's application process.
 
 ## Backend Debugging
+
 * Install and run platform as described in steps above.
 * Open the module solution in Visual Studio and attach the debugger to the `VirtoCommerce.Platform.Web.exe` process.
 
