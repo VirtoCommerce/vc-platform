@@ -440,7 +440,7 @@ namespace VirtoCommerce.Platform.Web
 
             #region Caching
 
-            //Cure for System.Runtime.Caching.MemoryCache freezing 
+            //Cure for System.Runtime.Caching.MemoryCache freezing
             //https://www.zpqrtbnk.net/posts/appdomains-threads-cultureinfos-and-paracetamol
             app.SanitizeThreadCulture();
             ICacheManager<object> cacheManager = null;
@@ -523,6 +523,20 @@ namespace VirtoCommerce.Platform.Web
                                 ValueType = ModuleSetting.TypeInteger,
                                 Title = "Job Take Count",
                                 Description = "Take count for sending job"
+                            }
+                        }
+                    },
+                    new ModuleSettingsGroup
+                    {
+                        Name = "Platform|Notifications|SendingJob",
+                        Settings = new []
+                        {
+                            new ModuleSetting
+                            {
+                                Name = "VirtoCommerce.Platform.Notifications.SendingJob.RepeatInterval",
+                                ValueType = ModuleSetting.TypeInteger,
+                                Title = "Retry interval",
+                                Description = "Retry interval (minutes)"
                             }
                         }
                     },
@@ -719,7 +733,7 @@ namespace VirtoCommerce.Platform.Web
                 GlobalHost.DependencyResolver.UseRedis(new RedisScaleoutConfiguration(redisConnectionString, "VirtoCommerce.Platform.SignalR"));
             }
 
-            // SignalR 
+            // SignalR
             var tempCounterManager = new TempPerformanceCounterManager();
             GlobalHost.DependencyResolver.Register(typeof(IPerformanceCounterManager), () => tempCounterManager);
             var hubConfiguration = new HubConfiguration { EnableJavaScriptProxies = false };
