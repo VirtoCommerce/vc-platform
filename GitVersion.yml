@@ -8,7 +8,7 @@ branches:
     tag: 'alpha'
   release:
     mode: ContinuousDeployment
-    tag: rc.4
+    tag: rc.5
     increment: None
     prevent-increment-of-merged-branch-version: true
     track-merge-target: true
