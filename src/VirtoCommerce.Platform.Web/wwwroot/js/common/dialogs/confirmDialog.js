@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.confirmDialogController', ['$scope', '$modalInstance', 'dialog', function ($scope, $modalInstance, dialog) {
     angular.extend($scope, dialog);
 
@@ -40,7 +40,7 @@
             dlg.instance = $modal.open({
                 templateUrl: templateUrl,
                 controller: controller,
-                windowClass: cssClass ? cssClass : null,
+                windowClass: cssClass ? cssClass : 'modal-max-height',
                 resolve: {
                     dialog: function () {
                         return dialog;
