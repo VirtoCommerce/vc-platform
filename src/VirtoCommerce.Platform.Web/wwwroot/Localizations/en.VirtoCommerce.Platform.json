@@ -795,7 +795,7 @@
             },
             "app-restart": {
                 "title": "Application shutdown",
-                "message": "The platform restart feature is currently disabled, it will be available in the next major system update - instead of restarting it is turned off. Please start the application manually or contact your system administrator for help. Are you sure you want to shutdown the application?"
+                "message": "Are you sure you want to shutdown the application?"
             },
             "error-details": {
                 "title": "The error details"

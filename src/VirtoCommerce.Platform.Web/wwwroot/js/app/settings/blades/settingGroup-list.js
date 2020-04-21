@@ -1,5 +1,5 @@
-angular.module('platformWebApp').controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$translate',
-    function ($window, modules, $scope, settings, bladeNavigationService, dialogService, $translate) {
+angular.module('platformWebApp').controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$timeout', '$translate',
+    function ($window, modules, $scope, settings, bladeNavigationService, dialogService, $timeout, $translate) {
     var settingsTree;
     var blade = $scope.blade;
 
@@ -154,13 +154,40 @@ angular.module('platformWebApp').controller('platformWebApp.settingGroupListCont
                     catch(err){
                     }
                     finally {
-                        $window.location.reload();
+                        // delay initial start for 3 seconds
+                        $timeout(function () { }, 3000).then(function () {
+                            return waitForRestart(1000);
+                        });
                     }
                 }
             }
         }
         dialogService.showConfirmationDialog(dialog);
-    }
+        }
+
+        function waitForRestart(delay) {
+            if (delay > 60000) // if we waited for a minute, there is something wrong, so let user see
+            {
+                $window.location.reload();
+            }
+
+            var url = "images/logo.png?now=" + Math.random();
+            var img = new Image();
+            img.src = url;
+
+            img.onload = function () {
+                // If the server is up, do this.
+                $window.location.reload();
+            }
+
+            img.onerror = function () {
+                delay += 1000;
+                // If the server is down, do that.
+                return $timeout(function () { }, delay).then(function () {
+                    return waitForRestart(delay);
+                });
+            }
+        }
 
     // actions on load
     blade.refresh();

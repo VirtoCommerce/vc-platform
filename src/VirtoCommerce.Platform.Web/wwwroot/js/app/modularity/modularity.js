@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp').config(['$stateProvider', function ($stateProvider) {
+angular.module('platformWebApp').config(['$stateProvider', function ($stateProvider) {
     $stateProvider.state('workspace.modularity', {
         url: '/modules',
         templateUrl: '$(Platform)/Scripts/common/templates/home.tpl.html',
@@ -17,7 +17,7 @@
     $stateProvider.state('setupWizard.modulesInstallation', {
         url: '/modulesInstallation',
         templateUrl: '$(Platform)/Scripts/app/modularity/templates/modulesInstallation.tpl.html',
-        controller: ['$scope', '$state', '$stateParams', '$window', 'platformWebApp.modules', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($scope, $state, $stateParams, $window, modules, exportImportResourse, setupWizard) {
+        controller: ['$scope', '$state', '$stateParams', '$window', 'platformWebApp.modules', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', '$timeout', function ($scope, $state, $stateParams, $window, modules, exportImportResourse, setupWizard, $timeout) {
             $scope.notification = {};
             if ($stateParams.notification) {
                 $scope.notification = $stateParams.notification;
@@ -39,7 +39,10 @@
                 $scope.restarted = true;
                 modules.restart({}, function () {
                     setupWizard.showStep(step.nextStep);
-                    $window.location.reload();
+                    // delay initial start for 3 seconds
+                    $timeout(function () { }, 3000).then(function () {
+                        return waitForRestart(1000);
+                    });
                 });
             };
 
@@ -51,6 +54,31 @@
                     }
                 }
             });
+
+
+            function waitForRestart(delay) {
+                if (delay > 60000) // if we waited for a minute, there is something wrong, so let user see
+                {
+                    $window.location.reload();
+                }
+
+                var url = "images/logo.png?now=" + Math.random();
+                var img = new Image();
+                img.src = url;
+
+                img.onload = function () {
+                    // If the server is up, do this.
+                    $window.location.reload();
+                }
+
+                img.onerror = function () {
+                    delay += 1000;
+                    // If the server is down, do that.
+                    return $timeout(function () { }, delay).then(function () {
+                        return waitForRestart(delay);
+                    });
+                }
+            }
         }]
     });
 }])
