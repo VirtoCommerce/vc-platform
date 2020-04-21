@@ -22,7 +22,12 @@
         },
         "blades": {
             "system-info": {
-                "title": "Platform information"
+                "title": "Platform information",
+                "labels": {
+                    "clr-version": "CLR version",
+                    "is-64-bit-os": "64-bit operating system",
+                    "is-64-bit-process": "64-bit process"
+                }
             },
             "asset-list": {
                 "title": "Asset management",
@@ -796,17 +801,21 @@
                 "title": "The error details"
             },
             "enter-login-url": {
-	            "title": "Login on behalf",
-	            "labels": {
-	              "enter-login-url": "Please enter login secure URL"
-	            },
-	            "placeholders": {
-	              "secure-url": "https://vcshop.com"
-	            }
+                "title": "Login on behalf",
+                "labels": {
+                    "enter-login-url": "Please enter login secure URL"
+                },
+                "placeholders": {
+                    "secure-url": "https://vcshop.com"
+                }
             },
             "asset-upload-error": {
                 "title": "Error in upload",
                 "message": "Need to choose a folder! Can't upload a file to the root!"
+            },
+            "run-import": {
+                "title": "Import confirmation",
+                "message": "Are you sure you want to import sample data?"
             }
         },
         "commands": {
