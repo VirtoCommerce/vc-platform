@@ -87,7 +87,7 @@
       </None>
     </ItemGroup>
 
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
       <Exec Command="IF NOT EXIST &quot;./wwwroot/dist/app.js&quot; ( &#xD;&#xA;	npm run webpack:dev&#xD;&#xA;) ELSE (&#xD;&#xA;  IF NOT EXIST &quot;./wwwroot/dist/vendor.js&quot; (&#xD;&#xA;    npm run webpack:dev&#xD;&#xA;  ) ELSE (&#xD;&#xA;    IF NOT EXIST &quot;./wwwroot/dist/style.css&quot; (&#xD;&#xA;      npm run webpack:dev&#xD;&#xA;    )&#xD;&#xA;  )&#xD;&#xA;)&#xD;&#xA;" />
     </Target>
     <!--<Target Name="BuildFront" BeforeTargets="Build">
