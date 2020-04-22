@@ -17,7 +17,7 @@ angular.module('platformWebApp').config(['$stateProvider', function ($stateProvi
     $stateProvider.state('setupWizard.modulesInstallation', {
         url: '/modulesInstallation',
         templateUrl: '$(Platform)/Scripts/app/modularity/templates/modulesInstallation.tpl.html',
-        controller: ['$scope', '$state', '$stateParams', '$window', 'platformWebApp.modules', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', '$timeout', function ($scope, $state, $stateParams, $window, modules, exportImportResourse, setupWizard, $timeout) {
+        controller: ['$scope', '$state', '$stateParams', '$window', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', '$timeout', function ($scope, $state, $stateParams, $window, modules, waitForRestart, exportImportResourse, setupWizard, $timeout) {
             $scope.notification = {};
             if ($stateParams.notification) {
                 $scope.notification = $stateParams.notification;
@@ -54,31 +54,6 @@ angular.module('platformWebApp').config(['$stateProvider', function ($stateProvi
                     }
                 }
             });
-
-
-            function waitForRestart(delay) {
-                if (delay > 60000) // if we waited for a minute, there is something wrong, so let user see
-                {
-                    $window.location.reload();
-                }
-
-                var url = "images/logo.png?now=" + Math.random();
-                var img = new Image();
-                img.src = url;
-
-                img.onload = function () {
-                    // If the server is up, do this.
-                    $window.location.reload();
-                }
-
-                img.onerror = function () {
-                    delay += 1000;
-                    // If the server is down, do that.
-                    return $timeout(function () { }, delay).then(function () {
-                        return waitForRestart(delay);
-                    });
-                }
-            }
         }]
     });
 }])
