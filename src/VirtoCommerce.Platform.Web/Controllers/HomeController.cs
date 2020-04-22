@@ -68,20 +68,6 @@ namespace VirtoCommerce.Platform.Web.Controllers
             return View(model);
         }
 
-        public ActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
         public ActionResult Error()
         {
             return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

@@ -191,6 +191,31 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             withCredentials: false
         };
     })
+    .factory('platformWebApp.WaitForRestart', ['$window', '$timeout', function ($window, $timeout) {
+        return function waitForRestart(delay) {
+            if (delay > 60000) // if we waited for a minute, there is something wrong, so let user see
+            {
+                $window.location.reload();
+            }
+
+            var url = "images/logo.png?now=" + Math.random();
+            var img = new Image();
+            img.src = url;
+
+            img.onload = function () {
+                // If the server is up, do this.
+                $window.location.reload();
+            }
+
+            img.onerror = function () {
+                delay += 1000;
+                // If the server is down, do that.
+                return $timeout(function () { }, delay).then(function () {
+                    return waitForRestart(delay);
+                });
+            }
+        }
+    }])
     .config(['$provide', function ($provide) {
         $provide.decorator('FileUploader', ['$delegate', 'platformWebApp.authDataStorage', function (FileUploader, authDataStorage) {
             // inject auth header for all FileUploader instance
