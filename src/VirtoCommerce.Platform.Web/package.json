@@ -6,7 +6,6 @@
         "webpack:dev": "webpack --display-error-details",
         "webpack:build": "webpack --env.prod",
         "webpack:watch": "webpack --watch --progress --display-error-details",
-        "webpack:initialBuild": "node initialWebPackBuild.js",
         "swagger-cli": "swagger-cli"
     },
     "devDependencies": {
@@ -89,5 +88,4 @@
         "js-yaml": "3.13.1",
         "swagger-cli": "2.3.1"
     }
-, "-vs-binding":{"BeforeBuild":["webpack:initialBuild"]}
 }
