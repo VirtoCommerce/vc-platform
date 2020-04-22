@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Asse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Tests", "tests\VirtoCommerce.Platform.Tests\VirtoCommerce.Platform.Tests.csproj", "{057A8AA3-3526-4252-A04E-AB638E9F8EA5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{757E86F6-D70C-4EBC-9872-BC6A41B583B6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Caching", "src\VirtoCommerce.Platform.Caching\VirtoCommerce.Platform.Caching.csproj", "{E6585ACB-09CE-438D-9812-0F4B047FEC62}"
 EndProject
 Global
@@ -65,8 +63,6 @@ Global
 		{057A8AA3-3526-4252-A04E-AB638E9F8EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{057A8AA3-3526-4252-A04E-AB638E9F8EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{057A8AA3-3526-4252-A04E-AB638E9F8EA5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{757E86F6-D70C-4EBC-9872-BC6A41B583B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{757E86F6-D70C-4EBC-9872-BC6A41B583B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6585ACB-09CE-438D-9812-0F4B047FEC62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6585ACB-09CE-438D-9812-0F4B047FEC62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6585ACB-09CE-438D-9812-0F4B047FEC62}.Release|Any CPU.ActiveCfg = Release|Any CPU

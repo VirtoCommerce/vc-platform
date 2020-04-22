@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp').controller('platformWebApp.moduleInstallProgressController', ['$scope', '$window', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.dialogService', function ($scope, $window, bladeNavigationService, modules, dialogService) {
+﻿angular.module('platformWebApp').controller('platformWebApp.moduleInstallProgressController', ['$scope', '$window', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', 'platformWebApp.dialogService', '$timeout', function ($scope, $window, bladeNavigationService, modules, waitForRestart, dialogService, $timeout) {
     var blade = $scope.blade;
     blade.subtitle = 'Installation progress';
 
@@ -31,7 +31,10 @@
                     catch (err){
                     }
                     finally {
-                        $window.location.reload();
+                        // delay initial start for 3 seconds
+                        $timeout(function () { }, 3000).then(function () {
+                            return waitForRestart(1000);
+                        });
                     }
                 }
             }

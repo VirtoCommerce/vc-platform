@@ -10,12 +10,8 @@
         <ToolCommandName>vc-build</ToolCommandName>
         <NoWarn>CS0649;CS0169</NoWarn>
         <PackageOutputPath>../artifacts</PackageOutputPath>
-        <PackageIconUrl>https://github.com/VirtoCommerce/vc-community/raw/master/NuGet/icon.png</PackageIconUrl>
-        <Title>VirtoCommerce build CLI</Title>
-        <Description>Cross-platform  build automation system for VirtoCommerce projects</Description>
         <NeutralLanguage>en-US</NeutralLanguage>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <PackageVersion>3.0.0-beta0009</PackageVersion>
         <StartupObject>Build</StartupObject>
         <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
     </PropertyGroup>

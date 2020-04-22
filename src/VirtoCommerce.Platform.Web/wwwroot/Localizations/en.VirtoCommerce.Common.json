@@ -20,6 +20,7 @@
             "export": "Export",
             "generate": "Generate",
             "import": "Import",
+            "import-sample-data": "Import sample data",
             "install": "Install",
             "manage": "Manage",
             "more": "More",
