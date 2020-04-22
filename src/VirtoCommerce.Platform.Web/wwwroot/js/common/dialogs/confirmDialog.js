@@ -40,7 +40,7 @@ angular.module('platformWebApp')
             dlg.instance = $modal.open({
                 templateUrl: templateUrl,
                 controller: controller,
-                windowClass: cssClass ? cssClass : 'modal-max-height',
+                windowClass: cssClass ? cssClass : null,
                 resolve: {
                     dialog: function () {
                         return dialog;
