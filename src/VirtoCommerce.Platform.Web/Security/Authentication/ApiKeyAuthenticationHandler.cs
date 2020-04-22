@@ -75,7 +75,14 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
             {
                 return AuthenticateResult.Fail("Invalid authentication provided, access denied.");
             }
-
+            if (!await _signInManager.CanSignInAsync(user))
+            {
+                return AuthenticateResult.Fail($"User { user.UserName } is not allowed to login.");
+            }
+            if (_userManager.SupportsUserLockout && await _userManager.IsLockedOutAsync(user))
+            {
+                return AuthenticateResult.Fail($"User { user.UserName } is currently locked out.");
+            }
             var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
             var ticket = new AuthenticationTicket(claimsPrincipal, Options.Scheme);
             return AuthenticateResult.Success(ticket);
