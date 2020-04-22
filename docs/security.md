@@ -2,7 +2,7 @@
 
 ## Overview
 
-### Role based permissions
+### Role based security
 
 Role-based security allows Virtocommerce administrators to group users into roles for security purposes. Each role can be defined with specific granular permissions to allow access to different functionality within the software.
 

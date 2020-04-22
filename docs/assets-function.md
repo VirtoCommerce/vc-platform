@@ -1,4 +1,4 @@
-# Module Asset Management
+# Asset Management
 
 ## Overview
 
