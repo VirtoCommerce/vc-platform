@@ -2413,9 +2413,13 @@ tags-input
     right: 10px
     top: 10px
     z-index: 50
-  &.size-clearfix
+  &.size-clearfix 
     max-height: 530px
     overflow: auto
+  @media (max-height: 766px) 
+    &.size-clearfix 
+      max-height: 400px
+      overflow: auto
   .item-list-clearfix
     max-height: 530px
 .modal-body .gallery
