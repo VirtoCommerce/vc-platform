@@ -77,10 +77,11 @@ namespace VirtoCommerce.Platform.Data.Repositories
         }
 
 
-        public virtual async Task<SettingEntity[]> GetObjectSettingsAsync(string objectType, string objectId)
+        public virtual async Task<SettingEntity[]> GetObjectSettingsByNamesAsync(string[] names, string objectType, string objectId)
         {
             var result = await Settings.Include(x => x.SettingValues)
                                  .Where(x => x.ObjectId == objectId && x.ObjectType == objectType)
+                                 .Where(x => names.Contains(x.Name))
                                  .OrderBy(x => x.Name)
                                  .ToArrayAsync();
             return result;
