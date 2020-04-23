@@ -795,7 +795,7 @@
             },
             "app-restart": {
                 "title": "Application shutdown",
-                "message": "Are you sure you want to shutdown the application?"
+                "message": "To apply changes, it is need to restart the application. Depending on hosting service, the application will be restarted automatically or you should do it manually. Are you sure you want to shutdown the application now?"
             },
             "error-details": {
                 "title": "The error details"

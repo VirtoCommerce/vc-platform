@@ -162,7 +162,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingGroupListCont
                 }
             }
         }
-        dialogService.showConfirmationDialog(dialog);
+        dialogService.showAcceptanceDialog(dialog);
         }
 
     // actions on load
