@@ -5,9 +5,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nuke.Common;
@@ -63,14 +63,13 @@ class Build : NukeBuild
     [Solution] readonly Solution Solution;
     [GitRepository] readonly GitRepository GitRepository;
 
-    private VersionInfo VersionInfo = new VersionInfo(RootDirectory / "Directory.Build.Props");
-
     readonly Tool Git;
 
     readonly string MasterBranch = "master";
     readonly string DevelopBranch = "develop";
     readonly string ReleaseBranchPrefix = "release";
     readonly string HotfixBranchPrefix = "hotfix";
+
 
 
     private static readonly HttpClient httpClient = new HttpClient();
@@ -112,6 +111,11 @@ class Build : NukeBuild
     AbsolutePath ModuleManifestFile => WebProject.Directory / "module.manifest";
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
+    Microsoft.Build.Evaluation.Project MSBuildProject => WebProject.GetMSBuildProject();
+    string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix").EvaluatedValue;
+    string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix").EvaluatedValue;
+    string PackageVersion => MSBuildProject.GetProperty("PackageVersion").EvaluatedValue;
+
     ModuleManifest ModuleManifest => ManifestReader.Read(ModuleManifestFile);
     string ModuleSemVersion
     {
@@ -119,17 +123,7 @@ class Build : NukeBuild
         {
             if (!ModuleManifest.VersionTag.IsNullOrEmpty())
             {
-                string version = "";
-                if (ModuleManifest.VersionTag.EndsWith("$"))
-                {
-                    version = $"{ModuleManifest.Version}-{ModuleManifest.VersionTag.Replace("$", "")}";
-                }
-                else
-                {
-                    var build = BuildNumber.IsNullOrEmpty() ? "" : $".build{BuildNumber}";
-                    version = $"{ModuleManifest.Version}-{ModuleManifest.VersionTag}{build}";
-                }
-                return version;
+                return string.Join("-", ModuleManifest.Version, ModuleManifest.VersionTag);
             }
             return ModuleManifest.Version;
         }
@@ -137,7 +131,7 @@ class Build : NukeBuild
 
     AbsolutePath ModuleOutputDirectory => ArtifactsDirectory / (ModuleManifest.Id + ModuleSemVersion);
 
-    string ZipFileName => IsModule ? ModuleManifest.Id + "_" + ModuleSemVersion + ".zip" : "VirtoCommerce.Platform." + VersionInfo.SemVer + (BuildNumber.IsNullOrEmpty() ? "" : $".{BuildNumber}") + ".zip";
+    string ZipFileName => IsModule ? ModuleManifest.Id + "_" + ModuleSemVersion + ".zip" : "VirtoCommerce.Platform." + PackageVersion + (BuildNumber.IsNullOrEmpty() ? "" : $".{BuildNumber}") + ".zip";
     string ZipFilePath => ArtifactsDirectory / ZipFileName;
     string GitRepositoryName => GitRepository.Identifier.Split('/')[1];
 
@@ -191,7 +185,7 @@ class Build : NukeBuild
       .Executes(() =>
       {
           //For platform take nuget package description from Directory.Build.Props
-          var version = BuildNumber.IsNullOrEmpty() ? VersionInfo.SemVer : $"{VersionInfo.SemVer}.{BuildNumber}";
+          var version = BuildNumber.IsNullOrEmpty() ? PackageVersion : $"{PackageVersion}.{BuildNumber}";
           var settings = new DotNetPackSettings()
                .SetProject(Solution)
                   .EnableNoBuild()
@@ -211,9 +205,6 @@ class Build : NukeBuild
                   .SetPackageRequireLicenseAcceptance(false)
                   .SetDescription(ModuleManifest.Description)
                   .SetCopyright(ModuleManifest.Copyright);
-
-              //Temporary disable GitVersionTask for module. Because version is taken from module.manifest.
-              //settings = settings.SetProperty("DisableGitVersionTask", false);
           }
           DotNetPack(settings);
       });
@@ -540,7 +531,7 @@ class Build : NukeBuild
              if (IsModule)
                  tag = ModuleSemVersion;
              else
-                 tag = BuildNumber.IsNullOrEmpty() ? VersionInfo.SemVer : $"{VersionInfo.SemVer}.{BuildNumber}";
+                 tag = BuildNumber.IsNullOrEmpty() ? PackageVersion : $"{PackageVersion}.{BuildNumber}";
              //FinishReleaseOrHotfix(tag);
 
              void RunGitHubRelease(string args)
