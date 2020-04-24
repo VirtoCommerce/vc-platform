@@ -115,6 +115,7 @@ class Build : NukeBuild
     string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix").EvaluatedValue;
     string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix").EvaluatedValue;
     string PackageVersion => MSBuildProject.GetProperty("PackageVersion").EvaluatedValue;
+    string ReleaseVersion => BuildNumber.IsNullOrEmpty() ? PackageVersion : $"{PackageVersion}.{BuildNumber}";
 
     ModuleManifest ModuleManifest => ManifestReader.Read(ModuleManifestFile);
     string ModuleSemVersion
@@ -185,7 +186,7 @@ class Build : NukeBuild
       .Executes(() =>
       {
           //For platform take nuget package description from Directory.Build.Props
-          var version = BuildNumber.IsNullOrEmpty() ? PackageVersion : $"{PackageVersion}.{BuildNumber}";
+          var version = ReleaseVersion;
           var settings = new DotNetPackSettings()
                .SetProject(Solution)
                   .EnableNoBuild()
@@ -531,7 +532,7 @@ class Build : NukeBuild
              if (IsModule)
                  tag = ModuleSemVersion;
              else
-                 tag = BuildNumber.IsNullOrEmpty() ? PackageVersion : $"{PackageVersion}.{BuildNumber}";
+                 tag = ReleaseVersion;
              //FinishReleaseOrHotfix(tag);
 
              void RunGitHubRelease(string args)
