@@ -49,7 +49,7 @@ class Build : NukeBuild
 
     public static int Main()
     {
-        var exitCode = Execute<Build>(x => x.Pack);
+        var exitCode = Execute<Build>(x => x.Compile);
         return ExitCode ?? exitCode;
     }
 
