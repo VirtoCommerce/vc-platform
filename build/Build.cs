@@ -115,7 +115,8 @@ class Build : NukeBuild
     string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix").EvaluatedValue;
     string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix").EvaluatedValue;
     string PackageVersion => MSBuildProject.GetProperty("PackageVersion").EvaluatedValue;
-    string ReleaseVersion => BuildNumber.IsNullOrEmpty() ? PackageVersion : $"{PackageVersion}.{BuildNumber}";
+    string BuildNumberSuffix => BuildNumber.IsNullOrEmpty() ? "" : $".{BuildNumber}";
+    string ReleaseVersion => $"{PackageVersion}{BuildNumberSuffix}";
 
     ModuleManifest ModuleManifest => ManifestReader.Read(ModuleManifestFile);
     string ModuleSemVersion
@@ -132,7 +133,7 @@ class Build : NukeBuild
 
     AbsolutePath ModuleOutputDirectory => ArtifactsDirectory / (ModuleManifest.Id + ModuleSemVersion);
 
-    string ZipFileName => IsModule ? ModuleManifest.Id + "_" + ModuleSemVersion + ".zip" : "VirtoCommerce.Platform." + PackageVersion + (BuildNumber.IsNullOrEmpty() ? "" : $".{BuildNumber}") + ".zip";
+    string ZipFileName => IsModule ? ModuleManifest.Id + "_" + ModuleSemVersion + ".zip" : $"VirtoCommerce.Platform.{PackageVersion}{BuildNumberSuffix}.zip";
     string ZipFilePath => ArtifactsDirectory / ZipFileName;
     string GitRepositoryName => GitRepository.Identifier.Split('/')[1];
 
