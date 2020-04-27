@@ -5,6 +5,18 @@
 Platform settings are collected and delivered to Settings module by all platform modules.
 Each module can add settings to a standard UI by declaring them in the module manifest.
 
+In VC3 settings declaring moved to ModuleConstants.cs
+
+**Example,**
+
+public static SettingDescriptor ModuleNameEnabled { get; } = new SettingDescriptor
+                {
+                    Name = "ModuleName.ModuleNameEnabled",
+                    GroupName = "ModuleName|General",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = false
+                };
+
 To view the Platform settings go to VC admin->More->Settings.
 
 ![Settings](media/screen-settings.png)
@@ -21,6 +33,8 @@ Standard UI allows to view and edit simple settings. As an example, Catalog modu
 1. **Allowed value** (optional)- Defines a list of allowed values. Can contain multiple value elements. User can select one of the values in standard UI;
 1. **Default Value**- Defines the default value which will be returned by **GetValue()** method if the value has not been stored in database yet.
 1. **Is Dictionary**- is a Dictionary field type.
+
+You can see the settings definition code:
 
 https://github.com/VirtoCommerce/vc-module-catalog/blob/release/3.0.0/src/VirtoCommerce.CatalogModule.Core/ModuleConstants.cs#L30
 
