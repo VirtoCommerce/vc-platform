@@ -98,7 +98,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 {
                     repository.DisableChangesTracking();
                     //try to load setting from db
-                    dbStoredSettings.AddRange(await repository.GetObjectSettingsAsync(objectType, objectId));
+                    dbStoredSettings.AddRange(await repository.GetObjectSettingsByNamesAsync(names.ToArray(), objectType, objectId));
                 }
 
                 foreach (var name in names)

@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         Task<DynamicPropertyEntity[]> GetDynamicPropertiesByIdsAsync(string[] ids);
         Task<DynamicPropertyEntity[]> GetObjectDynamicPropertiesAsync(string[] objectTypes);
 
-        Task<SettingEntity[]> GetObjectSettingsAsync(string objectType, string objectId);
+        Task<SettingEntity[]> GetObjectSettingsByNamesAsync(string[] names, string objectType, string objectId);
 
         Task<AssetEntryEntity[]> GetAssetsByIdsAsync(string[] ids);
 
