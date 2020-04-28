@@ -59,7 +59,7 @@ Model extension is evitable in VC modules development. This article provides the
                   table: "OrderInvoice",
                   column: "CustomerOrder2Id");
          ```
-      1. any custom SQL scripts, if data migration is needed.
+      1. any custom SQL scripts, if data update is needed.
    1. The _Down()_ method should do the opposite of what _Up()_ does. That way you can apply and un-apply your changes quickly by `Update-Database` command in console.
 
 ## Changes in "_.Web_" project
