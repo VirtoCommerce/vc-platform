@@ -39,7 +39,8 @@ namespace VirtoCommerce.Platform.Web.Security
                         IsAdministrator = true,
                         UserName = "admin",
                         PasswordHash = "AHQSmKnSLYrzj9vtdDWWnUXojjpmuDW2cHvWloGL9UL3TC9UCfBmbIuR2YCyg4BpNg==",
-                        PasswordExpired = true
+                        PasswordExpired = true,
+                        Email = "admin@vc-demostore.com"
                     };
 #pragma warning restore S2068 // disable check: 'password' detected in this expression, review this potentially hardcoded credential
                     var adminUser = await userManager.FindByIdAsync(admin.Id);
