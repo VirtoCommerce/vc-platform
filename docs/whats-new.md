@@ -26,7 +26,7 @@ What's new
 
 Meet the new major version of Virto Commerce Platform. Our development efforts were focused on moving to ASP&#46;NET Core, performance, architecture improvements and further enhancements.
 
-**The changes below are a subset of the larger list of changes in update to ASP&#46;NET Core.** 
+**The changes below are a subset of the larger list of changes in migration to ASP&#46;NET Core.** 
 
 # What's new
 
@@ -120,7 +120,7 @@ Meet the new major version of Virto Commerce Platform. Our development efforts w
 - **Modularity**
   - Assembly and dependency loading completely reworked into platform process
 - **Security**
-  - Authentification and authorization fully updated to ASP&#46;NET Core Identity without any extensions
+  - Authentification and authorization fully migrated to ASP&#46;NET Core Identity without any extensions
   - OpenIddict used as an OpenID Connect server to support all OAuth flows; it's also used for token based authentication
   - OAuth2 Password and Client credentials flow for Machine to Machine (M2M) applications
   - HMAC and simple key authorization support removed for API calls
@@ -160,7 +160,7 @@ Meet the new major version of Virto Commerce Platform. Our development efforts w
 - **`Commerce core module`**
   - `VirtoCommerce.Domain` project removed
     - Now each module self-defines domain model and abstractions in corresponding `.Core` projects. Multiple packages from corresponding modules will be distributed instead.
-    - Nuget package `VirtoCommerce.Domain` was left unupdated from previous version. There won't be any update to v3, nor any replacement package in v3.
+    - Nuget package `VirtoCommerce.Domain` was left unmigrated from previous version. There won't be any migration to v3, nor any replacement package in v3.
   - Common functionality and model moved from `Virto Commerce dynamic expression library module`
 - **`Catalog module`**
   - support for model extending added

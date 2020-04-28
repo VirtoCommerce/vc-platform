@@ -4,14 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0-beta0010] - 2020-04-24
-### Fixed
-- An issue with opencover that fails when it runs not on build server.
-### Changed
-- NUKE Execution Engine updated to 0.24.10
-- Removed GitVersion dependency
-- The Version is going to be got from Project properties now instead of GitVersion
-
 ## [3.0.0-beta0009] - 2020-04-01
 ### Added
 - Custom logger for DotnetTasks

@@ -21,17 +21,17 @@ How to create a new module from scratch? Follow the Dummy module example.
    1. **DummyModule.Web**: add references to DummyModule.Core, DummyModule.Data projects
    1. **DummyModule.Tests**: add references to DummyModule.Core, DummyModule.Data, DummyModule.Web projects
 10. References to NuGet packages:
-    1. **DummyModule.Core**: add reference to the latest version **_VirtoCommerce.Platform.Core_** package.
-    1. **DummyModule.Data**: add reference to the latest version **_VirtoCommerce.Platform.Data_** package.
-11. **_(Outdated)_** References to NuGet packages in **_VirtoCommerce.Platform.Web_**:
-    1. (Double click in Visual Studio to) open _DummyModule.Web.csproj_ file for editing;
-    1. Add new ItemGroup:
+   1. **DummyModule.Core**: add reference to the latest version **_VirtoCommerce.Platform.Core_** package.
+   1. **DummyModule.Data**: add reference to the latest version **_VirtoCommerce.Platform.Data_** package.
+11. References to NuGet packages in **_VirtoCommerce.Platform.Web_**:
+   1. (Double click in Visual Studio to) open _DummyModule.Web.csproj_ file for editing;
+   1. Add new ItemGroup:
 
-    ```xml
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.App" />
-    </ItemGroup>
-    ```
+   ```xml
+   <ItemGroup>
+     <PackageReference Include="Microsoft.AspNetCore.App" />
+   </ItemGroup>
+   ```
 
 12. Compile the solution (there should be no warnings). 
 
@@ -45,13 +45,13 @@ How to create a new module from scratch? Follow the Dummy module example.
             {
                 public static class Permissions
                 {
-                    public const string Access = "dummy:access";
                     public const string Read =   "dummy:read";
                     public const string Create = "dummy:create";
+                    public const string Access = "dummy:access";
                     public const string Update = "dummy:update";
                     public const string Delete = "dummy:delete";
 
-                    public static string[] AllPermissions = { Access, Read, Create, Update, Delete };
+                    public static string[] AllPermissions = { Read, Create, Access, Update, Delete };
                 }
             }
     ```
@@ -68,7 +68,7 @@ How to create a new module from scratch? Follow the Dummy module example.
             };
     ```
 
-    Check sample [ModuleConstants.cs](https://github.com/VirtoCommerce/vc-samples/blob/v3/DummyModule/DummyModule/src/DummyModule.Core/ModuleConstants.cs) for complete code.
+    Check sample [ModuleConstants.cs](https://github.com/VirtoCommerce/vc-samples/.....) for complete code.
 
     3. Other constants.
 
@@ -87,22 +87,20 @@ How to create a new module from scratch? Follow the Dummy module example.
    1. define the DB table structure and restrictions;
    1. be able to convert from/to the corresponding Core model class.
 2. Add **Repositories** folder. Under it:
-     1. Add class **_DummyDbContext_**, deriving from `DbContextWithTriggers`. Check and copy class contents from [sample DummyDbContext.cs](https://github.com/VirtoCommerce/vc-samples/blob/v3/DummyModule/DummyModule/src/DummyModule.Data/Repositories/DummyDbContext.cs).
-     2. Add class **_DesignTimeDbContextFactory_**. Check and copy class contents from [sample DesignTimeDbContextFactory.cs](https://github.com/VirtoCommerce/vc-samples/blob/v3/DummyModule/DummyModule/src/DummyModule.Data/Repositories/DesignTimeDbContextFactory.cs). Double-check that connection to your development SQL server is correct.
+     1. Add class **_DummyDbContext_**, deriving from `DbContextWithTriggers`. Check and copy class contents from [sample DummyDbContext.cs](https://github.com/VirtoCommerce/vc-samples/.....).
+     2. Add class **_DesignTimeDbContextFactory_**. Check and copy class contents from [sample DesignTimeDbContextFactory.cs](https://github.com/VirtoCommerce/vc-samples/.....). Double-check that connection to your development SQL server is correct.
      3. Add data repository abstraction (interface), deriving from **_IRepository_** for the defined persistency model.
      4. Add the repository implementation class for the previously defined interface and deriving from `DbContextRepositoryBase<DummyDbContext>`.
-3. Generate code-first migration:
-   1. Execute "**Set as Startup Project**" on CustomerReviews.**Data** project in Solution Explorer
-   1. Open NuGet **Package Manager Console**
-   1. Select "src\DummyModule.**Data**" as "**Default project**"
+3. Generate code-first migrations:
+   1. Open NuGet **Package Manager Console**;
+   1. Select "src\DummyModule.**Data**" as "**Default project**";
    1. Run command:
 
 ```console
-    Add-Migration Initial -Verbose
+    Add-Migration Initial -Context DummyModule.Data.Repositories.DummyDbContext -StartupProject DummyModule.Data -Verbose -OutputDir Migrations
 ```
 
-A new EF migration gets generated. Read more details on extending an existing module's model: [How to extend the DB model of VC module](/extend-DB-model.md).
-
+A new migration gets generated.
 4. **Caching** folder: add it, if data caching should be used. This folder is for the cache region classes. Typically, each model should have its own region. Derive CacheRegion from generic `CancellableCacheRegion<T>` class e.g., `public class StoreCacheRegion : CancellableCacheRegion<StoreCacheRegion>`.
 5. **Services** folder: add implementations of the interfaces that were defined in the **.Core** project.
 6. **ExportImport** folder: add class for data export/import. It should be called from **_Module.cs_** and contain implementation for module data export and import.
@@ -237,15 +235,6 @@ Typical structure of **.Web** project is:
             permissionsProvider.RegisterPermissions(ModuleConstants.Security.Permissions.AllPermissions.Select(x =>
                 new Permission() { GroupName = "Dummy", Name = x }).ToArray());
 
-            // Ensure that any pending migrations are applied
-            using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
-            {
-                using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<DummyDbContext>())
-                {
-                    dbContext.Database.EnsureCreated();
-                    dbContext.Database.Migrate();
-                }
-            }
         }
 
         public void Uninstall()
