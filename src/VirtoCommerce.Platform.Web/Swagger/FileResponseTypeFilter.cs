@@ -15,19 +15,14 @@ namespace VirtoCommerce.Platform.Web.Swagger
             if (IsFileResponse(context))
             {
                 var key = ((int)HttpStatusCode.OK).ToString();
-                // Attention!
-                // Accordingly to: https://swagger.io/docs/specification/describing-responses/#response-that-returns-a-file
-                // the type of response must be "string" or "object" instead of "file".
-                // But by some mistake Autorest doesn't interpret it as a file and interprets it as a string.
-                // Therefore we are leaving there Type = "file".
-                var responseSchema = new OpenApiSchema { Format = "binary", Type = "file" };
+                var responseSchema = new OpenApiSchema { Format = "binary", Type = "string" };
 
                 if (operation.Responses == null)
                 {
                     operation.Responses = new OpenApiResponses();
                 }
 
-                if (!operation.Responses.TryGetValue(key, out OpenApiResponse response))
+                if (!operation.Responses.TryGetValue(key, out var response))
                 {
                     response = new OpenApiResponse();
                 }
