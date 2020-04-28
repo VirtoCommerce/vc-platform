@@ -28,7 +28,7 @@ We decided to use the following stack of technologies:
 
 <a class="crosslink" href="https://virtocommerce.com/glossary/what-is-b2b-ecommerce" target="_blank">Platform and modules</a> are written using <a href="https://en.wikipedia.org/wiki/Domain-driven_design" rel="nofollow">DDD</a>, <a href="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)" rel="nofollow">SOLID</a>, <a href="https://en.wikipedia.org/wiki/Test-driven_development" rel="nofollow">Test Driven Development</a> methodologies. For a presentation layer, we use <a href="https://en.wikipedia.org/wiki/Model_View_ViewModel" rel="nofollow">MVVM</a>.
 
-![Virto Commerce 3 Architecture](/docs/media/architecture-circle.png "Virto Commerce 3 Architecture")
+![Virto Commerce 3 Architecture](/docs/media/architecture-circle.png "Virto Commerce 3 Architecture" | width=200)
 
 ## Comparison with Platform 2.x
 
