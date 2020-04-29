@@ -15,6 +15,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
             if (IsFileResponse(context))
             {
                 var key = ((int)HttpStatusCode.OK).ToString();
+                // Accordingly to: https://swagger.io/docs/specification/describing-responses/#response-that-returns-a-file
+                // the type of response should have Format = "binary", Type = "string".
                 var responseSchema = new OpenApiSchema { Format = "binary", Type = "string" };
 
                 if (operation.Responses == null)
@@ -28,10 +30,12 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 }
 
                 response.Description = "OK";
-                response.Content = new Dictionary<string, OpenApiMediaType>();
+                response.Content = new Dictionary<string, OpenApiMediaType>
+                {
 
-                // TODO: (AK) ? Consider to correct content key depending on real MIME
-                response.Content.Add("multipart/form-data", new OpenApiMediaType() { Schema = responseSchema });
+                    // TODO: (AK) ? Consider to correct content key depending on real MIME
+                    { "multipart/form-data", new OpenApiMediaType() { Schema = responseSchema } }
+                };
             }
         }
 
