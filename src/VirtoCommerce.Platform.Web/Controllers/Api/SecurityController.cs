@@ -667,13 +667,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result);
         }
 
-        [HttpPost, HttpPut]
+        [HttpPost]
         [Route("users/apikeys")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
         public async Task<ActionResult<UserApiKey[]>> SaveUserApiKey([FromBody] UserApiKey userApiKey)
         {
             await _userApiKeyService.SaveApiKeysAsync(new[] { userApiKey });
             return Ok();
+        }
+
+        [HttpPut]
+        [Route("users/apikeys")]
+        [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
+        public Task<ActionResult<UserApiKey[]>> UpdateUserApiKey([FromBody] UserApiKey userApiKey)
+        {
+            return SaveUserApiKey(userApiKey);
         }
 
         [HttpDelete]
