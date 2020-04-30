@@ -43,13 +43,13 @@ Meet the new major version of Virto Commerce Platform. Our development efforts w
 
 #### Application & Data
 
-- **.NET Core** 3.1.2
-- **ASP&#46;NET Core** 3.1.2
+- **.NET Core** 3.1.X
+- **ASP&#46;NET Core** 3.1.X
     - ASP&#46;NET Core Identity
     - ASP&#46;NET Core SignalR
-- **OpenIddict** 2.0.1
-- **Entity Framework Core** 3.1.2
-- **HangFire** 1.7.9
+- **OpenIddict** 2.0.X
+- **Entity Framework Core** 3.1.X
+- **HangFire** 1.7.X
 - **AngularJS** 1.4
 
 #### DevOps and Utilities
@@ -59,7 +59,7 @@ Meet the new major version of Virto Commerce Platform. Our development efforts w
 - **Webpack**
 - **xUnit**
 - **Jenkins**
-- **Nuke** aka **VirtoCommerce.GlobalTool**
+- **Nuke**-based utility **VirtoCommerce.GlobalTool** (aka **vc-build**)
 - **Swagger UI**
 
 ### Techniques
@@ -180,7 +180,7 @@ Meet the new major version of Virto Commerce Platform. Our development efforts w
 ## Platform v2 and v3 versions compatibility
 
 ### The list of code breaking changes
-- The following [list of breaking changes](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/docs/code-breaking-changes-included-in-v3.md) have the potential to break existing solutions when upgrading them to 3.x
+- The following [list of breaking changes](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.X/docs/code-breaking-changes-included-in-v3.md) have the potential to break existing solutions when upgrading them to 3.x
 
 ### API
 
@@ -197,28 +197,28 @@ Meet the new major version of Virto Commerce Platform. Our development efforts w
 
 |  Id      |      Title    | Version |
 |:---------|:-------------:|:-------:|
-| [VirtoCommerce.Core](https://virtocommerce.com/apps/extensions/virto-core-module) | Commerce core module | 3.0.0 |
-| [VirtoCommerce.AzureSearch](https://virtocommerce.com/apps/extensions/virto-azure-search-module) | Azure Search module | 3.0.0 |
-| [VirtoCommerce.Cart](https://virtocommerce.com/apps/extensions/virto-shoppingcart-module) | Shopping cart module | 3.0.0 |
-| [VirtoCommerce.Catalog](https://virtocommerce.com/apps/extensions/virto-catalog-module) | Catalog module | 3.0.0 |
-| [VirtoCommerce.Content](https://virtocommerce.com/apps/extensions/virto-cms-module) | CMS Content module | 3.0.0 |
-| [VirtoCommerce.Customer](https://virtocommerce.com/apps/extensions/virto-customer-module) | Customer management module | 3.0.0 |
-| [VirtoCommerce.ElasticSearch](https://github.com/VirtoCommerce/vc-module-elastic-search) | Elastic Search module | 3.0.0 |
-| [VirtoCommerce.Export](https://github.com/VirtoCommerce/vc-module-export) | Export module | 3.0.0 |
-| [VirtoCommerce.ImageTools](https://virtocommerce.com/apps/extensions/image-tools-module) | Image tools module | 3.0.0 |
-| [VirtoCommerce.Inventory](https://github.com/VirtoCommerce/vc-module-inventory) | Inventory module | 3.0.0 |
-| [VirtoCommerce.LuceneSearch](https://virtocommerce.com/apps/extensions/virto-lucene-search-module) | Lucene Search module | 3.0.0 |
-| [VirtoCommerce.Marketing](https://virtocommerce.com/apps/extensions/virto-marketing-module) | Marketing module | 3.0.0 |
-| [VirtoCommerce.Notifications](https://github.com/VirtoCommerce/vc-module-notification) | Notifications module | 3.0.0 |
-| [VirtoCommerce.Orders](https://github.com/VirtoCommerce/vc-module-order) | Orders module | 3.0.0 |
-| [VirtoCommerce.Payment](https://github.com/VirtoCommerce/vc-module-payment) | Payment module | 3.0.0 |
-| [VirtoCommerce.Pricing](https://github.com/VirtoCommerce/vc-module-pricing) | Pricing module | 3.0.0 |
-| [VirtoCommerce.Search](https://virtocommerce.com/apps/extensions/indexed-search-module) | Search module | 3.0.0 |
-| [VirtoCommerce.Shipping](https://github.com/VirtoCommerce/vc-module-shipping) | Shipping module | 3.0.0 |
-| [VirtoCommerce.Sitemaps](https://virtocommerce.com/apps/extensions/automatic-sitemaps-module) | Sitemaps module | 3.0.0 |
-| [VirtoCommerce.Store](https://virtocommerce.com/apps/extensions/virto-store-module) | Store module | 3.0.0 |
-| [VirtoCommerce.Subscription](https://virtocommerce.com/apps/extensions/subscriptions-module) | Subscription module | 3.0.0 |
-| [VirtoCommerce.Tax](https://github.com/VirtoCommerce/vc-module-tax) | Tax module | 3.0.0 |
+| [VirtoCommerce.Core](https://virtocommerce.com/apps/extensions/virto-core-module) | Commerce core module | 3.0.X |
+| [VirtoCommerce.AzureSearch](https://virtocommerce.com/apps/extensions/virto-azure-search-module) | Azure Search module | 3.0.X |
+| [VirtoCommerce.Cart](https://virtocommerce.com/apps/extensions/virto-shoppingcart-module) | Shopping cart module | 3.0.X |
+| [VirtoCommerce.Catalog](https://virtocommerce.com/apps/extensions/virto-catalog-module) | Catalog module | 3.0.X |
+| [VirtoCommerce.Content](https://virtocommerce.com/apps/extensions/virto-cms-module) | CMS Content module | 3.0.X |
+| [VirtoCommerce.Customer](https://virtocommerce.com/apps/extensions/virto-customer-module) | Customer management module | 3.0.X |
+| [VirtoCommerce.ElasticSearch](https://github.com/VirtoCommerce/vc-module-elastic-search) | Elastic Search module | 3.0.X |
+| [VirtoCommerce.Export](https://github.com/VirtoCommerce/vc-module-export) | Export module | 3.0.X |
+| [VirtoCommerce.ImageTools](https://virtocommerce.com/apps/extensions/image-tools-module) | Image tools module | 3.0.X |
+| [VirtoCommerce.Inventory](https://github.com/VirtoCommerce/vc-module-inventory) | Inventory module | 3.0.X |
+| [VirtoCommerce.LuceneSearch](https://virtocommerce.com/apps/extensions/virto-lucene-search-module) | Lucene Search module | 3.0.X |
+| [VirtoCommerce.Marketing](https://virtocommerce.com/apps/extensions/virto-marketing-module) | Marketing module | 3.0.X |
+| [VirtoCommerce.Notifications](https://github.com/VirtoCommerce/vc-module-notification) | Notifications module | 3.0.X |
+| [VirtoCommerce.Orders](https://github.com/VirtoCommerce/vc-module-order) | Orders module | 3.0.X |
+| [VirtoCommerce.Payment](https://github.com/VirtoCommerce/vc-module-payment) | Payment module | 3.0.X |
+| [VirtoCommerce.Pricing](https://github.com/VirtoCommerce/vc-module-pricing) | Pricing module | 3.0.X |
+| [VirtoCommerce.Search](https://virtocommerce.com/apps/extensions/indexed-search-module) | Search module | 3.0.X |
+| [VirtoCommerce.Shipping](https://github.com/VirtoCommerce/vc-module-shipping) | Shipping module | 3.0.X |
+| [VirtoCommerce.Sitemaps](https://virtocommerce.com/apps/extensions/automatic-sitemaps-module) | Sitemaps module | 3.0.X |
+| [VirtoCommerce.Store](https://virtocommerce.com/apps/extensions/virto-store-module) | Store module | 3.0.X |
+| [VirtoCommerce.Subscription](https://virtocommerce.com/apps/extensions/subscriptions-module) | Subscription module | 3.0.X |
+| [VirtoCommerce.Tax](https://github.com/VirtoCommerce/vc-module-tax) | Tax module | 3.0.X |
 
 *List of currently released v3 modules till the moment of writing. Additional modules might have been added.* 
 
