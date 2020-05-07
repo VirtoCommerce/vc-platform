@@ -29,6 +29,11 @@ This article describes how to update an existing [CustomerReviews sample](https:
                 <TargetFramework>netcoreapp3.1</TargetFramework>
                 <OutputType>Library</OutputType>
             </PropertyGroup>
+            <ItemGroup>
+                <Compile Remove="dist\**" />
+                <EmbeddedResource Remove="dist\**" />
+                <None Remove="dist\**" />
+            </ItemGroup>
         </Project>
         ```
 
