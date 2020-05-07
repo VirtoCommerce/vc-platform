@@ -27,6 +27,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
         <Project Sdk="Microsoft.NET.Sdk.Web">
             <PropertyGroup>
                 <TargetFramework>netcoreapp3.1</TargetFramework>
+                <OutputType>Library</OutputType>
             </PropertyGroup>
         </Project>
         ```
