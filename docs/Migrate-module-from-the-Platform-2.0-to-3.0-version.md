@@ -114,7 +114,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
 
             ```cs
             modelBuilder.Entity<CustomerReviewEntity>().ToTable("CustomerReview").HasKey(x => x.Id);
-            modelBuilder.Entity<CustomerReviewEntity>().Property(x => x.Id).HasMaxLength(128);
+            modelBuilder.Entity<CustomerReviewEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             ```
 
     2. Create **DesignTimeDbContextFactory.cs**
@@ -175,7 +175,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
             Add-Migration InitialCustomerReviews -Verbose
             ```
 
-        5. In case of any existing module's extension is developed, study and follow the steps from [How to extend the DB model of VC module](/extend-DB-model.md) guide.
+        5. In case of any existing module's extension is developed, study and follow the steps from [How to extend the DB model of VC module](extend-DB-model.md) guide.
 
     2. Create Migration for backward compatibility with v2.x
         1. Add new migration with name **_UpdateCustomerReviewsV2_** and rename the migration **_filename_** to **_20000000000000_UpdateCustomerReviewsV2_**
@@ -200,6 +200,8 @@ This article describes how to update an existing [CustomerReviews sample](https:
         ```
 
         3. Open **_20000000000000_UpdateCustomerReviewsV2.Designer_** and change **_Migration_** attribute parameter value to the current migration ID ("20000000000000_UpdateCustomerReviewsV2" in this case). Check [20000000000000_UpdateCoreV2.Designer.cs](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12) as another example.
+
+5. If Dynamic Properties are used in the module, follow the steps in [Dynamic Property guide](Dynamic-Property.md).
 
 ## 5. Make changes in CustomerReviews&#46;Web project
 
