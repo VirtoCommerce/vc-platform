@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: adriangodong/actions-todo-bot@1.0.2
+    - uses: adriangodong/actions-todo-bot@1.0.0
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
