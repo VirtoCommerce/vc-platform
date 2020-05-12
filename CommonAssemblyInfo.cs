@@ -13,10 +13,10 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyCompany("VirtoCommerce")]
 [assembly: AssemblyProduct("Virto Commerce 2.13")]
-[assembly: AssemblyCopyright("Copyright © VirtoCommerce 2011-2019")]
+[assembly: AssemblyCopyright("Copyright © VirtoCommerce 2011-2020")]
 
-[assembly: AssemblyFileVersion("2.13.61.0")]
-[assembly: AssemblyVersion("2.13.61.0")]
+[assembly: AssemblyFileVersion("2.13.62.0")]
+[assembly: AssemblyVersion("2.13.62.0")]
 
 
 #if DEBUG
