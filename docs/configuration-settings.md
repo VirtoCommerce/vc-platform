@@ -56,4 +56,17 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 * In environment variables, a colon separator may not work on all platforms. A double underscore, `__`, is supported by all platforms and is automatically converted into a colon `:`.
 * In Azure Key Vault, hierarchical keys use `--` as a separator. The Azure Key Vault configuration provider automatically replaces `--` with a `:` when the secrets are loaded into the app's configuration.
 
+![Configure using appsettings.json file](media/configure-file.png "Configure using appsettings.json file")
+
+_Configuring ElasticSearch on localhost in **appsettings.json** file._
+
+![Environment variables (docker)](media/configure-docker.png "Configure using environment variables (docker)")
+
+_Configuring "**VirtoCommerce**" ConnectionString and other settings trough **environment variables** in docker-compose.yml file._
+
+![Application settings in Azure](media/configure-azure.png "Configure trough Application settings in Azure")
+
+_Configuring "**AzureSearch**" and other settings trough **Application settings** in **Azure**._
+
+
 Check [ASP.NET Core Configuration keys and values](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1#configuration-keys-and-values) for more details.
