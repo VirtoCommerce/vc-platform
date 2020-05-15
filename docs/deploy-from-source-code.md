@@ -37,7 +37,13 @@ Or use Visual Studio:
 
 ### Build Frontend 
 
-To make a local build:
+#### Note
+_While building the solution the first time from the Visual Studio, npm references should be installed and webpack should be built automatically. This would be done if Web project have this nuget package added - [VirtoCommerce.BuildWebpack](https://www.nuget.org/packages/VirtoCommerce.BuildWebpack/). It adds webpack build target to the project, which create frontend bundles on initial build._
+
+_In case of changing frontend part, explicit local build would be required to pack style/script bundles._
+
+
+#### To make a local build:
 1. Open console
 
 ```console
