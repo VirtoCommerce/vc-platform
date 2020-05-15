@@ -58,6 +58,10 @@ These Virto Commerce docs help you learn and use the Virto Commerce platform, fr
 
 [Module Security](/docs/security.md)
 
+[User Profile](/docs/user-profile.md)
+
+[Modules](/docs/modules.md)
+
 ## License
 
 Copyright (c) Virto Solutions LTD.  All rights reserved.
