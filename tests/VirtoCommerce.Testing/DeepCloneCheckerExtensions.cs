@@ -39,8 +39,8 @@ namespace VirtoCommerce.Testing
         {
             if (expected == null) throw new NullReferenceException("Expected object should not be null.");
 
-            var originalEnumerator = original.ObjectWalker().GetEnumerator();
-            var expectedEnumerator = expected.ObjectWalker().GetEnumerator();
+            var originalEnumerator = original.TraverseObjectGraph().GetEnumerator();
+            var expectedEnumerator = expected.TraverseObjectGraph().GetEnumerator();
 
             while (originalEnumerator.MoveNext() && expectedEnumerator.MoveNext())
             {

@@ -74,15 +74,15 @@ namespace VirtoCommerce.Platform.Core.Extensions
         /// </summary>
         /// <param name="original"></param>
         /// <returns></returns>
-        public static IEnumerable<KeyValuePair<string, object>> ObjectWalker(this object original)
+        public static IEnumerable<KeyValuePair<string, object>> TraverseObjectGraph(this object original)
         {
-            foreach (var result in original.ObjectWalker(new List<object>(), original.GetType().Name))
+            foreach (var result in original.TraverseObjectGraphRecursively(new List<object>(), original.GetType().Name))
             {
                 yield return result;
             }
         }
 
-        private static IEnumerable<KeyValuePair<string, object>> ObjectWalker(this object obj, List<object> visited, string memberPath)
+        private static IEnumerable<KeyValuePair<string, object>> TraverseObjectGraphRecursively(this object obj, List<object> visited, string memberPath)
         {
             yield return new KeyValuePair<string, object>(memberPath, obj);
             if (obj != null)
@@ -97,7 +97,7 @@ namespace VirtoCommerce.Platform.Core.Extensions
                         var iIdx = 0;
                         while (originalEnumerator.MoveNext())
                         {
-                            foreach (var result in originalEnumerator.Current.ObjectWalker(visited, $@"{memberPath}[{iIdx++}]"))
+                            foreach (var result in originalEnumerator.Current.TraverseObjectGraphRecursively(visited, $@"{memberPath}[{iIdx++}]"))
                             {
                                 yield return result;
                             }
@@ -107,7 +107,7 @@ namespace VirtoCommerce.Platform.Core.Extensions
                     {
                         foreach (var propInfo in typeOfOriginal.GetProperties(BindingFlags.Instance | BindingFlags.Public))
                         {
-                            foreach (var result in propInfo.GetValue(obj).ObjectWalker(visited, $@"{memberPath}.{propInfo.Name}"))
+                            foreach (var result in propInfo.GetValue(obj).TraverseObjectGraphRecursively(visited, $@"{memberPath}.{propInfo.Name}"))
                             {
                                 yield return result;
                             }
