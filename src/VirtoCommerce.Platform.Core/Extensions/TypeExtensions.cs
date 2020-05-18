@@ -4,9 +4,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
-using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.Platform.Core.Extensions
 {
@@ -73,84 +70,72 @@ namespace VirtoCommerce.Platform.Core.Extensions
 
 
         /// <summary>
-        /// Check object clone immutability and independency:
-        /// Ensures the data in object clone equial to original.
-        /// Ensures no shared references between original and cloned objects (each object is a fully independent).
+        /// Iterates recursively over each public property of object to gather member values.
         /// </summary>
         /// <param name="original"></param>
         /// <returns></returns>
-        public static async Task AssertCloneIndependency(this ICloneable original)
+        public static IEnumerable<KeyValuePair<string, object>> ObjectWalker(this object original)
         {
-            await Task.Run(() =>
+            foreach (var result in original.ObjectWalker(new List<object>(), original.GetType().Name))
             {
-                var clone = original.Clone();
-                var sOriginal = JsonSerializer.Serialize((object)original, new JsonSerializerOptions() { WriteIndented = true });
-                var sClone = JsonSerializer.Serialize(clone, new JsonSerializerOptions() { WriteIndented = true });
-                if (!sOriginal.Equals(sClone)) // Ensure data in objects is equal
-                {
-                    throw new PlatformException(@$"Clone check failed: object and clone not equal.");
-                }
-                original.AssertNoSharedRefsWith(clone); // Ensure no shared references between objects (each object is a fully independent)
-            });
+                yield return result;
+            }
         }
 
-        /// <summary>
-        /// Ensures no shared references with expected object (original and expected objects are fully independent from each other).
-        /// </summary>
-        /// <param name="original"></param>
-        /// <param name="expected"></param>
-        public static void AssertNoSharedRefsWith(this object original, object expected)
+        private static IEnumerable<KeyValuePair<string, object>> ObjectWalker(this object obj, List<object> visited, string memberPath)
         {
-            AssertNoSharedRefsWith(original, expected, new List<object>(), original.GetType().Name);
-        }
-
-        private static void AssertNoSharedRefsWith(object original, object expected, List<object> visited, string memberPath)
-        {
-            if (original != null && expected != null)
+            yield return new KeyValuePair<string, object>(memberPath, obj);
+            if (obj != null)
             {
-                var typeOfOriginal = original.GetType();
-                if (!IsPrimitive(typeOfOriginal) && !visited.Contains(original))
+                var typeOfOriginal = obj.GetType();
+                if (!IsPrimitive(typeOfOriginal) && !visited.Any(x => ReferenceEquals(obj, x))) // ReferenceEquals is a mandatory approach
                 {
-                    visited.Add(original);
-                    if (ReferenceEquals(original, expected))
+                    visited.Add(obj);
+                    if (obj is IEnumerable objEnum)
                     {
-                        throw new MemberAccessException(@$"Deep clone check failed: objects at path {memberPath} are reference equal.");
-                    }
-                    if (original is IEnumerable)
-                    {
-                        var originalEnumerator = ((IEnumerable)original).GetEnumerator();
-                        var expectedEnumerator = ((IEnumerable)expected).GetEnumerator();
+                        var originalEnumerator = objEnum.GetEnumerator();
                         var iIdx = 0;
                         while (originalEnumerator.MoveNext())
                         {
-                            expectedEnumerator.MoveNext();
-                            AssertNoSharedRefsWith(originalEnumerator.Current, expectedEnumerator.Current, visited, $@"{memberPath}[{iIdx++}]");
+                            foreach (var result in originalEnumerator.Current.ObjectWalker(visited, $@"{memberPath}[{iIdx++}]"))
+                            {
+                                yield return result;
+                            }
                         }
                     }
                     else
                     {
                         foreach (var propInfo in typeOfOriginal.GetProperties(BindingFlags.Instance | BindingFlags.Public))
                         {
-                            AssertNoSharedRefsWith(propInfo.GetValue(original), propInfo.GetValue(expected), visited, $@"{memberPath}.{propInfo.Name}");
+                            foreach (var result in propInfo.GetValue(obj).ObjectWalker(visited, $@"{memberPath}.{propInfo.Name}"))
+                            {
+                                yield return result;
+                            }
                         }
                     }
                 }
             }
-            else if ((original == null && expected != null) || (original != null && expected == null))
-            {
-                throw new MemberAccessException(@$"Deep clone check failed: one of objects at path {memberPath} is null.");
-            }
         }
 
         /// <summary>
-        /// Check if type is a value-type or string
+        /// Check if type is a value-type, primitive type or string
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
         private static bool IsPrimitive(this Type type)
         {
             if (type == typeof(string)) return true;
-            return (type.IsValueType & type.IsPrimitive);
+            return (type.IsValueType || type.IsPrimitive);
+        }
+
+        /// <summary>
+        /// Check if type is a value-type, primitive type  or string
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsPrimitive(this object obj)
+        {
+            return obj == null || obj.GetType().IsPrimitive();
         }
     }
 }
