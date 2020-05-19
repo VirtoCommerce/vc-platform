@@ -16,7 +16,7 @@ Add any other context or screenshots about the feature request here.
 - [ ] Check you did not introduce breaking changes in API and public models/services.
 - [ ] Respect extensibility - https://community.virtocommerce.com/t/extensibility-basics-the-domain-model-and-persistence-layer-extension/141
 - [ ] Follow [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) and [SOLID](https://en.wikipedia.org/wiki/SOLID) principles
-- [ ] For unit tests - follow ms best practices: https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
+- [ ] For unit tests - follow Microsoft best practices: https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
 - [ ] Consolidate solution dependencies in case you are using newer version, update VC module dependencies in module.manifest. Do not upgrade 3rd party packages that are shipped with the platform with the version newer than in the platform.
 - [ ] Check code style conventions - https://github.com/VirtoCommerce/styleguide/blob/master/csharp.md
 - [ ] Check PR have a concise and descriptive title, follow [git commit message rules](https://github.com/VirtoCommerce/styleguide/blob/master/gitcommits.md)
