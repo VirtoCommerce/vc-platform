@@ -22,7 +22,7 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Install VirtoCommerce.GlobalTool
-      run: dotnet tool install VirtoCommerce.GlobalTool  -g
+      run: dotnet tool install VirtoCommerce.GlobalTool --version 3.0.0-beta0006  -g
 
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
