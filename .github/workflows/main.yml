@@ -25,3 +25,6 @@ jobs:
 
     - name: Build
       run: vc-build Compile
+
+    - name: Unit Tests
+      run: vc-build Test -skip Restore+Compile
