@@ -66,6 +66,7 @@ namespace VirtoCommerce.Platform.Data.Security.Converters
             target.UserName = source.UserName;
             target.MemberId = source.MemberId;
             target.PasswordExpired = source.PasswordExpired;
+            target.StoreId = source.StoreId;
 
             if (!source.ApiAccounts.IsNullCollection())
             {
