@@ -27,7 +27,7 @@ jobs:
         repository: VirtoCommerce/jenkins-pipeline-scripts
         # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, defaults to `master`.
         ref: master
-        path: $GITHUB_WORKSPACE
+        path: ../jenkins-pipeline-scripts
 
     - name: tempLS
       run: ls
