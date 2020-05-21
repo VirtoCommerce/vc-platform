@@ -42,7 +42,7 @@ jobs:
       run: vc-build Compress -skip Clean+Restore+Compile+Test
 
     - name: Copy docker files
-      run: cp -r /jenkins-pipeline-scripts/resources/docker.core/windowsnano/platformCore/ /artifacts/publish/
+      run: cp -r jenkins-pipeline-scripts/resources/docker.core/windowsnano/platformCore/ artifacts/publish/
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v1.1.0
