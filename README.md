@@ -50,6 +50,12 @@ These Virto Commerce docs help you learn and use the Virto Commerce platform, fr
 * [Getting Started](/docs/getting-started.md)
 * [Migrate VC Platform Module from version 2.x to 3](/docs/Migrate-module-from-the-Platform-2.0-to-3.0-version.md)
 
+## Cloud Private Demo
+
+Setup your own private Microsoft Cloud environment and evaluate the latest version of Virto Commerce, [read more](https://virtocommerce.com/docs/vc2devguide/deployment/platform-deployment/deploy-from-github-to-microsoft-cloud-azure).
+
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.svg "Deploy to Azure")](https://azuredeploy.net/)
+
 ## License
 
 Copyright (c) Virto Solutions LTD.  All rights reserved.
