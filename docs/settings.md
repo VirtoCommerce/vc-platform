@@ -21,7 +21,7 @@ To view the Platform settings go to VC admin->More->Settings.
 
 ![Settings](media/screen-settings.png)
 
-Standard UI allows to view and edit simple settings. As an example, Catalog module settings are displayed on the screenshot below: 
+Standard UI allows to view and edit simple settings. As an example, Catalog module settings are displayed on the screenshot below:
 
 ![Catalog Settings](media/screen-settings-values.png)
 
@@ -35,8 +35,7 @@ Standard UI allows to view and edit simple settings. As an example, Catalog modu
 1. **Is Dictionary**- is a Dictionary field type.
 
 You can see the settings definition code:
-
-https://github.com/VirtoCommerce/vc-module-catalog/blob/release/3.0.0/src/VirtoCommerce.CatalogModule.Core/ModuleConstants.cs#L30
+[Example](https://github.com/VirtoCommerce/vc-module-catalog/blob/release/3.0.0/src/VirtoCommerce.CatalogModule.Core/ModuleConstants.cs#L30)
 
 
 
