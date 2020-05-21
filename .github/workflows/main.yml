@@ -45,6 +45,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    steps:
     - name: Copy docker files
       run: cp -r jenkins-pipeline-scripts/resources/docker.core/linux/platform/Dockerfile/ artifacts/publish/
 
