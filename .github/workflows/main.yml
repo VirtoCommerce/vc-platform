@@ -10,6 +10,10 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  env:
+    DOCKER_REGISTRY_USERNAME: leonidn
+    DOCKER_IMAGE_NAME: leonidn/platform
+
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
@@ -41,3 +45,23 @@ jobs:
     - name: Build Package
       run: vc-build Compress -skip Clean+Restore+Compile+Test
 
+    - name: Copy docker files
+      run: cp -r /jenkins-pipeline-scripts/resources/docker.core/windowsnano/platformCore/ /artifacts/publish/
+
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v1.1.0
+      with:
+        # Username used to log in to a Docker registry. If not set then no login will occur
+        username: $DOCKER_REGISTRY_USERNAME # optional
+        # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
+        password: ${{ secrets.DOCKER_REGISTRY_TOKEN }}
+        # Server address of Docker registry. If not set then will default to Docker Hub
+        registry: # optional
+        # Docker repository to tag the image with
+        repository: $DOCKER_IMAGE_NAME
+        # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
+        tags: 3.0-preview
+        # Path to the build context
+        path: # optional, default is .
+        # Path to the Dockerfile (Default is '{path}/Dockerfile')
+        dockerfile: /artifacts/publish/docker-compose.yml # optional
