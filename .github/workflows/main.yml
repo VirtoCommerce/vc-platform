@@ -20,15 +20,6 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: Checkout Dockerfiles
-      uses: actions/checkout@v2.1.1
-      with:
-        # Repository name with owner. For example, actions/checkout
-        repository: VirtoCommerce/jenkins-pipeline-scripts
-        # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, defaults to `master`.
-        ref: master
-        path: jenkins-pipeline-scripts
-
     - name: Install VirtoCommerce.GlobalTool
       run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
 
@@ -47,6 +38,15 @@ jobs:
     needs: build
 
     steps:
+    - name: Checkout Dockerfiles
+      uses: actions/checkout@v2.1.1
+      with:
+        # Repository name with owner. For example, actions/checkout
+        repository: VirtoCommerce/jenkins-pipeline-scripts
+        # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, defaults to `master`.
+        ref: master
+        path: jenkins-pipeline-scripts
+        
     - name: Copy docker files
       run: cp -r jenkins-pipeline-scripts/resources/docker.core/linux/platform/ artifacts/publish/
 
