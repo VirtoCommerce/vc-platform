@@ -1,14 +1,14 @@
-# Migrate VC Platform Module from version 2.x to version 3
+# Update VC Platform Module from version 2.x to version 3
 
 ## Introduction
 
-This article describes how to migrate an existing [CustomerReviews sample](https://github.com/VirtoCommerce/vc-samples/tree/master/CustomerReviews) module from VC Platform version 2.x to 3.0.
+This article describes how to update an existing [CustomerReviews sample](https://github.com/VirtoCommerce/vc-samples/tree/master/CustomerReviews) module from VC Platform version 2.x to 3.0.
 
 > NOTE: A sample module source code can be found here: https://github.com/VirtoCommerce/vc-samples/tree/release/3.0.0/CustomerReviews.
 
-## 0. Before the migration
-1. Only migration from the latest VC v2.x versions is supported. Ensure that the latest v2 versions of the Platform and all modules are installed.
-1. Usually, you have more than one custom VC module. Create a **dependency map** between your and the VC modules **before the migration**. That helps to migrate the modules smoothly.
+## 0. Before the update
+1. Only update from the latest VC v2.x versions is supported. Ensure that the latest v2 versions of the Platform and all modules are installed.
+1. Usually, you have more than one custom VC module. Create a **dependency map** between your and the VC modules **before the update**. That helps to update the modules smoothly.
 1. Ensure that all your **unit tests are current** and passing
 1. In case of any question or issue, submit a new topic to [Virto Commerce Community](https://community.virtocommerce.com/c/bug/11)
 1. Please read the [The list of code breaking changes included in 3.0](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/docs/code-breaking-changes-included-in-v3.md)
@@ -27,7 +27,13 @@ This article describes how to migrate an existing [CustomerReviews sample](https
         <Project Sdk="Microsoft.NET.Sdk.Web">
             <PropertyGroup>
                 <TargetFramework>netcoreapp3.1</TargetFramework>
+                <OutputType>Library</OutputType>
             </PropertyGroup>
+            <ItemGroup>
+                <Compile Remove="dist\**" />
+                <EmbeddedResource Remove="dist\**" />
+                <None Remove="dist\**" />
+            </ItemGroup>
         </Project>
         ```
 
@@ -108,7 +114,7 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 
             ```cs
             modelBuilder.Entity<CustomerReviewEntity>().ToTable("CustomerReview").HasKey(x => x.Id);
-            modelBuilder.Entity<CustomerReviewEntity>().Property(x => x.Id).HasMaxLength(128);
+            modelBuilder.Entity<CustomerReviewEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             ```
 
     2. Create **DesignTimeDbContextFactory.cs**
@@ -160,15 +166,16 @@ This article describes how to migrate an existing [CustomerReviews sample](https
 4. **Migrations** folder
     1. Create **_InitialCustomerReviews_** migration
         1. Delete everything (all migrations and Configuration.cs) from **_Migrations_** folder
-        2. Open **Package Manager Console**;
-        3. Select "src\CustomerReviews.**Data**" as "**Default project**";
+        1. Execute "**Set as Startup Project**" on CustomerReviews.**Data** project in Solution Explorer
+        2. Open NuGet **Package Manager Console**
+        3. Select "src\CustomerReviews.**Data**" as "**Default project**"
         4. Run command:
 
             ```console
-            Add-Migration InitialCustomerReviews -Context CustomerReviews.Data.Repositories.CustomerReviewsDbContext -StartupProject CustomerReviews.Data  -Verbose -OutputDir Migrations
+            Add-Migration InitialCustomerReviews -Verbose
             ```
 
-        5. if there are extensions then need to remove the lines which depend on the extended entities (like Tables, FK, PK, Index) and then add the Discriminator column [like this](https://github.com/VirtoCommerce/vc-module-order/blob/ce72193f54ad0626c5c3d85b4682c9ee9ba812b1/samples/VirtoCommerce.OrdersModule2.Web/Migrations/20180724064542_InitialOrders2.cs#L11). Please, read the [article about inheritance](https://docs.microsoft.com/en-us/ef/core/modeling/relational/inheritance).
+        5. In case of any existing module's extension is developed, study and follow the steps from [How to extend the DB model of VC module](extend-DB-model.md) guide.
 
     2. Create Migration for backward compatibility with v2.x
         1. Add new migration with name **_UpdateCustomerReviewsV2_** and rename the migration **_filename_** to **_20000000000000_UpdateCustomerReviewsV2_**
@@ -193,6 +200,8 @@ This article describes how to migrate an existing [CustomerReviews sample](https
         ```
 
         3. Open **_20000000000000_UpdateCustomerReviewsV2.Designer_** and change **_Migration_** attribute parameter value to the current migration ID ("20000000000000_UpdateCustomerReviewsV2" in this case). Check [20000000000000_UpdateCoreV2.Designer.cs](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12) as another example.
+
+5. If Dynamic Properties are used in the module, follow the steps in [Dynamic Property guide](Dynamic-Property.md).
 
 ## 5. Make changes in CustomerReviews&#46;Web project
 

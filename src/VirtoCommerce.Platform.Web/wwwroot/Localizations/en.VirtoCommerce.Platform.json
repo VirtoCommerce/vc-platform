@@ -22,7 +22,12 @@
         },
         "blades": {
             "system-info": {
-                "title": "Platform information"
+                "title": "Platform information",
+                "labels": {
+                    "clr-version": "CLR version",
+                    "is-64-bit-os": "64-bit operating system",
+                    "is-64-bit-process": "64-bit process"
+                }
             },
             "asset-list": {
                 "title": "Asset management",
@@ -790,23 +795,27 @@
             },
             "app-restart": {
                 "title": "Application shutdown",
-                "message": "The platform restart feature is currently disabled, it will be available in the next major system update - instead of restarting it is turned off. Please start the application manually or contact your system administrator for help. Are you sure you want to shutdown the application?"
+                "message": "To apply changes, it is need to restart the application. Depending on hosting service, the application will be restarted automatically or you should do it manually. Are you sure you want to shutdown the application now?"
             },
             "error-details": {
                 "title": "The error details"
             },
             "enter-login-url": {
-	            "title": "Login on behalf",
-	            "labels": {
-	              "enter-login-url": "Please enter login secure URL"
-	            },
-	            "placeholders": {
-	              "secure-url": "https://vcshop.com"
-	            }
+                "title": "Login on behalf",
+                "labels": {
+                    "enter-login-url": "Please enter login secure URL"
+                },
+                "placeholders": {
+                    "secure-url": "https://vcshop.com"
+                }
             },
             "asset-upload-error": {
                 "title": "Error in upload",
                 "message": "Need to choose a folder! Can't upload a file to the root!"
+            },
+            "run-import": {
+                "title": "Import confirmation",
+                "message": "Are you sure you want to import sample data?"
             }
         },
         "commands": {

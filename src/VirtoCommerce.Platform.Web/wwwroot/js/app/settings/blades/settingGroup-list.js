@@ -1,5 +1,5 @@
-angular.module('platformWebApp').controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService',
-    function ($window, modules, $scope, settings, bladeNavigationService, dialogService) {
+angular.module('platformWebApp').controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$timeout', '$translate',
+    function ($window, modules, waitForRestart, $scope, settings, bladeNavigationService, dialogService, $timeout, $translate) {
     var settingsTree;
     var blade = $scope.blade;
 
@@ -33,6 +33,13 @@ angular.module('platformWebApp').controller('platformWebApp.settingGroupListCont
                     }
                 });
             });
+
+            _.each(blade.allSettings,
+                function(setting) {
+                    var translateKey = 'settings.' + setting.name + '.title';
+                    var result = $translate.instant(translateKey);
+                    setting.translatedName = result !== translateKey ? result : setting.name;
+                });
 
             blade.isLoading = false;
 
@@ -147,13 +154,16 @@ angular.module('platformWebApp').controller('platformWebApp.settingGroupListCont
                     catch(err){
                     }
                     finally {
-                        $window.location.reload();
+                        // delay initial start for 3 seconds
+                        $timeout(function () { }, 3000).then(function () {
+                            return waitForRestart(1000);
+                        });
                     }
                 }
             }
         }
-        dialogService.showConfirmationDialog(dialog);
-    }
+        dialogService.showAcceptanceDialog(dialog);
+        }
 
     // actions on load
     blade.refresh();

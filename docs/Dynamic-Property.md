@@ -92,8 +92,8 @@ use the command in the Package Manage Console
 Add-Migration AddCart2DynamicPropertyObjectValue -Context VirtoCommerce.CartModule.Data.Repositories.CartDbContext -StartupProject VirtoCommerce.CartModule.Data  -Verbose -OutputDir Migrations
 ```
 
-> look at https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Migrations/20190628091513_AddCustomerDynamicPropertyObjectValue.cs
-
+> look at https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Migrations/20190628091513_AddCustomerDynamicPropertyObjectValue.cs.
+ There's custom SQL script added to the migration. It's recommended to combine this script in a single migration: https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Migrations/20000000000000_UpdateCustomerV2.cs#L61-L71
 
 
 
