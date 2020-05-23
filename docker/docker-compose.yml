@@ -1,0 +1,55 @@
+version: '3.4'
+
+services:
+
+  vc-db:
+    image: mcr.microsoft.com/mssql/server:2019-CU4-ubuntu-16.04
+    ports:
+      - "${DOCKER_SQL_PORT:-1433}:1433"
+    environment: 
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=v!rto_Labs!
+      - MSSQL_AGENT_ENABLED=true
+      - MSSQL_PID=Developer
+    networks:
+      - virto
+    restart: always
+
+  vc-platform-web:
+    image: virtocommerce/platform:${PLATFORM_DOCKER_TAG:-3.0-preview}
+    ports:
+      - "${DOCKER_PLATFORM_PORT:-8091}:80"
+    environment:
+      - ConnectionStrings:VirtoCommerce=Data Source=vc-db;Initial Catalog=VirtoCommerce3;Persist Security Info=True;User ID=sa;Password=v!rto_Labs!;MultipleActiveResultSets=True;Connect Timeout=30;
+      - Assets:Provider=FileSystem
+      - Assets:FileSystem:RootPath=~/App_Data/Assets
+      - Assets:FileSystem:PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/assets
+      - Search:ElasticSearch
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+;
+    depends_on:
+      - vc-db
+    networks:
+      - virto
+    restart: always
+
+  vc-storefront-web:
+    image: virtocommerce/storefront:${STOREFRONT_DOCKER_TAG:-3.0-preview}
+    ports:
+      - "${DOCKER_STOREFRONT_PORT:-8081}:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - VirtoCommerce:Endpoint:Url=http://vc-platform-web
+      - VirtoCommerce:Endpoint:UserName=admin
+      - VirtoCommerce:Endpoint:Password=store
+      - VirtoCommerce:DefaultStore=Electronics
+      - ConnectionStrings:ContentConnectionString=provider=LocalStorage;rootPath=~/cms-content
+    depends_on:
+      - vc-platform-web
+    networks:
+      - virto
+    restart: always
+
+networks:
+  virto:
+    driver: bridge

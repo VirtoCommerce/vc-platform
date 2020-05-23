@@ -66,3 +66,15 @@ jobs:
         tags: 3.0-preview
         path: artifacts/publish/
         build_args: SOURCE=.
+
+  test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run container
+      run: |
+        cd docker
+        docker-compose up -d
