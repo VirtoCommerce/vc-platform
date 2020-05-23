@@ -71,4 +71,4 @@ jobs:
         # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
         tags: 3.0-preview
         # Path to the build context
-        path: /artifacts/publish # optional, default is .
+        path: artifacts/publish # optional, default is .
