@@ -64,5 +64,5 @@ jobs:
         repository: leonidn/platform
         # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
         tags: 3.0-preview
-        path: artifacts/publish/
+        path: ./artifacts/publish/
         build_args: SOURCE=artifacts/publish/
