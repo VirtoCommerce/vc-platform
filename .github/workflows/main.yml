@@ -8,6 +8,11 @@ on:
   pull_request:
     branches: [ master, dev, dev-3.0.0, release/3.0.0 ]
 
+# Enables BuildKit
+env:
+  DOCKER_BUILDKIT: 1
+  DOCKER_IMAGE_NAME: leonidn/platform
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -68,5 +73,3 @@ jobs:
         tags: 3.0-preview
         # Path to the build context
         path: /artifacts/publish # optional, default is .
-      env:
-        DOCKER_IMAGE_NAME: leonidn/platform
