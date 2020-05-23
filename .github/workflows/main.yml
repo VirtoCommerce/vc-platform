@@ -37,6 +37,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install VirtoCommerce.GlobalTool
+      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
+
     - name: Build Package
       run: vc-build Compress -skip Test
 
