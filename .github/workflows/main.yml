@@ -47,19 +47,10 @@ jobs:
     - name: Build Package
       run: vc-build Compress -skip Test
 
-    - name: Checkout Dockerfiles
-      uses: actions/checkout@v2.1.1
-      with:
-        # Repository name with owner. For example, actions/checkout
-        repository: VirtoCommerce/jenkins-pipeline-scripts
-        # The branch, tag or SHA to checkout. When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.  Otherwise, defaults to `master`.
-        ref: master
-        path: jenkins-pipeline-scripts
-
-    - name: Copy docker files
+    - name: Copy Dockerfile
       run: |
-        cp -r jenkins-pipeline-scripts/resources/docker.core/linux/platform/ artifacts/publish/
         cd artifacts/publish/
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile Dockerfile"
         ls
 
     - name: Build and push Docker images
@@ -73,3 +64,4 @@ jobs:
         repository: leonidn/platform
         # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
         tags: 3.0-preview
+        path: artifacts/publish/
