@@ -10,7 +10,7 @@ on:
 
 # Enables BuildKit
 env:
-  DOCKER_BUILDKIT: 0
+  DOCKER_BUILDKIT: 1
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
