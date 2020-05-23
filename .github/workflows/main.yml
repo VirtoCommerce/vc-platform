@@ -11,7 +11,6 @@ on:
 # Enables BuildKit
 env:
   DOCKER_BUILDKIT: 1
-  DOCKER_IMAGE_NAME: leonidn/platform
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -68,7 +67,7 @@ jobs:
         # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
         password: ${{ secrets.DOCKER_TOKEN }}
         # Docker repository to tag the image with
-        repository: $DOCKER_IMAGE_NAME
+        repository: leonidn/platform
         # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
         tags: 3.0-preview
         # Path to the build context
