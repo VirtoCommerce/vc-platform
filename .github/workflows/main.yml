@@ -8,10 +8,6 @@ on:
   pull_request:
     branches: [ master, dev, dev-3.0.0, release/3.0.0 ]
 
-# Enables BuildKit
-env:
-  DOCKER_BUILDKIT: 1
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
