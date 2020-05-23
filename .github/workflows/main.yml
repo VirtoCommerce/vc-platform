@@ -49,9 +49,9 @@ jobs:
 
     - name: Copy Dockerfile
       run: |
-        cd artifacts/publish/
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile Dockerfile"
         ls
+        echo '${{ env.GITHUB_WORKSPACE }}'
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v1.1.0
@@ -64,5 +64,4 @@ jobs:
         repository: leonidn/platform
         # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
         tags: 3.0-preview
-        path: ./artifacts/publish/
-        build_args: 'SOURCE=${{ env.GITHUB_WORKSPACE }}/artifacts/publish/'
+        build_args: SOURCE='${{ env.GITHUB_WORKSPACE }}/artifacts/publish/'
