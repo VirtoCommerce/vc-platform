@@ -3,6 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using Xunit;
@@ -65,6 +68,27 @@ namespace VirtoCommerce.Platform.Tests.MemoryCacheExtensionTests
                 releaser.Dispose();
             });
             Assert.Equal(2, counter);
+        }
+
+
+        [Fact]
+        public void DefaultCachingOptions_Are_Applied()
+        {
+            var defaultOptions = Options.Create(new CachingOptions() { CacheSlidingExpiration = TimeSpan.FromMilliseconds(10) });
+            var logger = new Moq.Mock<ILogger<PlatformMemoryCache>>();
+            var sut = new PlatformMemoryCache(BuildCache(), defaultOptions, logger.Object);
+
+            sut.GetOrCreateExclusive("test-key", cacheOptions =>
+            {
+                Assert.Equal(cacheOptions.SlidingExpiration, TimeSpan.FromMilliseconds(10));
+                return 1;
+            });
+            Thread.Sleep(100);
+            var result = sut.GetOrCreateExclusive("test-key", cacheOptions =>
+            {
+                return 2;
+            });
+            Assert.Equal(2, result);
         }
 
     }
