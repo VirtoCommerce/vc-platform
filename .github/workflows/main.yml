@@ -51,7 +51,6 @@ jobs:
       run: |
         cd artifacts/publish/
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile Dockerfile"
-        ls
 
     - name: Build and push Docker images
       uses: docker/build-push-action@v1.1.0
@@ -78,3 +77,9 @@ jobs:
       run: |
         cd docker
         docker-compose up -d
+
+    - name: Setup modules
+      run: |
+        cd ${{ env.GITHUB_WORKSPACE }}
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-modules.ps1 -OutFile vc-setup-modules.ps1"
+        pwsh -command "./vc-setup-modules.ps1 -ApiUrl localhost:8081 -NeedRestart -ContainerId leonidn_vc-platform-web_1 -Verbose -Debug"
