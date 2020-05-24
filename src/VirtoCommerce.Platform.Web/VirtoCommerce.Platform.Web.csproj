@@ -12,26 +12,26 @@
 
     <ItemGroup>
         <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0" />
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.7.9" />
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.7.11" />
         <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
-        <PackageReference Include="HangFire.SqlServer" Version="1.7.9" />
-        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.13.1" />
-        <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.13.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.2" />
-        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.2" />
+        <PackageReference Include="HangFire.SqlServer" Version="1.7.11" />
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.14.0" />
+        <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.14.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
+        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.4" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
         <PackageReference Include="OpenIddict" Version="2.0.1" />
         <PackageReference Include="OpenIddict.Core" Version="2.0.1" />
         <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="2.0.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.1.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.0.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.1" />
         <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
         <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
     </ItemGroup>
