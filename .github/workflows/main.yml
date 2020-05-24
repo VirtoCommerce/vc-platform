@@ -82,4 +82,4 @@ jobs:
       run: |
         cd ${{ env.GITHUB_WORKSPACE }}
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-modules.ps1 -OutFile vc-setup-modules.ps1"
-        pwsh -command "./vc-setup-modules.ps1 -ApiUrl localhost:8081 -NeedRestart -ContainerId leonidn_vc-platform-web_1 -Verbose -Debug"
+        pwsh -command "./vc-setup-modules.ps1 -ApiUrl http://localhost:8081 -NeedRestart -ContainerId leonidn_vc-platform-web_1 -Verbose -Debug"
