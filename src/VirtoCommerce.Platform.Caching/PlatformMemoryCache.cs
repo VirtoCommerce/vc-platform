@@ -48,7 +48,7 @@ namespace VirtoCommerce.Platform.Caching
         protected TimeSpan? SlidingExpiration => _cachingOptions.CacheSlidingExpiration;
 
 
-        private MemoryCacheEntryOptions GetDefaultCacheEntryOptions()
+        public MemoryCacheEntryOptions GetDefaultCacheEntryOptions()
         {
             var result = new MemoryCacheEntryOptions();
 
