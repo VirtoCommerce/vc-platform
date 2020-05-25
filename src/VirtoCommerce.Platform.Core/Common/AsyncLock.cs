@@ -99,10 +99,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 if (m_toRelease != null)
                 {
                     m_toRelease.m_semaphore.Release();
-                    if (m_postReleaseAction != null)
-                    {
-                        m_postReleaseAction();
-                    }
+                    m_postReleaseAction?.Invoke();
                 }
             }
         }
