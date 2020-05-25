@@ -69,7 +69,7 @@
         "angularjs-scroll-glue": "^2.2.0",
         "codemirror": "^5.45.0",
         "font-awesome": "^4.7.0",
-        "jquery": "^2.1.4",
+        "jquery": "^3.5.0",
         "marked": "0.3.6",
         "moment": "^2.22.2",
         "moment-timezone": "0.5.13",
