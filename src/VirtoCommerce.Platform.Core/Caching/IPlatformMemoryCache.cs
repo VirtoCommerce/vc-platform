@@ -4,5 +4,6 @@ namespace VirtoCommerce.Platform.Core.Caching
 {
     public interface IPlatformMemoryCache : IMemoryCache
     {
+        MemoryCacheEntryOptions GetDefaultCacheEntryOptions();
     }
 }

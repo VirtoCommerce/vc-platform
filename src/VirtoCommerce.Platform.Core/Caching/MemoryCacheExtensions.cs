@@ -9,6 +9,9 @@ namespace VirtoCommerce.Platform.Core.Caching
     public static class MemoryCacheExtensions
     {
         private static ConcurrentDictionary<string, object> _lockLookup = new ConcurrentDictionary<string, object>();
+        /// <summary>
+        ///  It is async thread-safe wrapper on IMemoryCache and guarantees that the cacheable delegates (cache miss) only executes once
+        /// </summary>
         public static async Task<TItem> GetOrCreateExclusiveAsync<TItem>(this IMemoryCache cache, string key, Func<MemoryCacheEntryOptions, Task<TItem>> factory, bool cacheNullValue = true)
         {
             if (!cache.TryGetValue(key, out var result))
@@ -17,7 +20,7 @@ namespace VirtoCommerce.Platform.Core.Caching
                 {
                     if (!cache.TryGetValue(key, out result))
                     {
-                        var options = new MemoryCacheEntryOptions();
+                        var options = cache is IPlatformMemoryCache platformMemoryCache ? platformMemoryCache.GetDefaultCacheEntryOptions() : new MemoryCacheEntryOptions();
                         result = await factory(options);
                         if (result != null || cacheNullValue)
                         {
@@ -29,20 +32,30 @@ namespace VirtoCommerce.Platform.Core.Caching
             return (TItem)result;
         }
 
+        /// <summary>
+        ///  It is thread-safe wrapper on IMemoryCache and guarantees that the cacheable delegates (cache miss) only executes once
+        /// </summary>
         public static TItem GetOrCreateExclusive<TItem>(this IMemoryCache cache, string key, Func<MemoryCacheEntryOptions, TItem> factory, bool cacheNullValue = true)
         {
             if (!cache.TryGetValue(key, out var result))
             {
                 lock (_lockLookup.GetOrAdd(key, new object()))
                 {
-                    if (!cache.TryGetValue(key, out result))
+                    try
                     {
-                        var options = new MemoryCacheEntryOptions();
-                        result = factory(options);
-                        if (result != null || cacheNullValue)
+                        if (!cache.TryGetValue(key, out result))
                         {
-                            cache.Set(key, result, options);
+                            var options = cache is IPlatformMemoryCache platformMemoryCache ? platformMemoryCache.GetDefaultCacheEntryOptions() : new MemoryCacheEntryOptions();
+                            result = factory(options);
+                            if (result != null || cacheNullValue)
+                            {
+                                cache.Set(key, result, options);
+                            }
                         }
+                    }
+                    finally                        
+                    {
+                        _lockLookup.TryRemove(key, out var _);
                     }
                 }
             }
