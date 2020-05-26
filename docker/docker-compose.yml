@@ -16,7 +16,7 @@ services:
     restart: always
 
   vc-platform-web:
-    image: leonidn/platform:${PLATFORM_DOCKER_TAG:-3.0-preview}
+    image: virtocommerce/platform:${PLATFORM_DOCKER_TAG:-3.0-preview}
     ports:
       - "${DOCKER_PLATFORM_PORT:-8091}:80"
     environment:
