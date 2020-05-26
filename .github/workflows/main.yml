@@ -98,6 +98,7 @@ jobs:
     - name: Swagger Schema Validation
       run: |
         cd ${{ env.GITHUB_WORKSPACE }}
+        ls
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-get-swagger.ps1 -OutFile vc-get-swagger.ps1"
         pwsh -command "./vc-get-swagger.ps1 -ApiUrl http://localhost:8081 -OutFile swaggerSchema.json -Verbose -Debug"
         pwsh -command "vc-build ValidateSwaggerSchema -SwaggerSchemaPath swaggerSchema.json"
