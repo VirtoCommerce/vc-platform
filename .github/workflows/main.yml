@@ -80,10 +80,10 @@ jobs:
       run: |
         cd docker
         docker-compose up -d
+        cd ..
 
     - name: Install Modules
       run: |
-        cd ${{ env.GITHUB_WORKSPACE }}
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-modules.ps1 -OutFile vc-setup-modules.ps1"
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-check-installed-modules.ps1 -OutFile vc-check-installed-modules.ps1"
         pwsh -command "./vc-setup-modules.ps1 -ApiUrl http://localhost:8081 -NeedRestart -ContainerId leonidn_vc-platform-web_1 -Verbose -Debug"
@@ -91,13 +91,11 @@ jobs:
 
     - name: Install Sample Data
       run: |
-        cd ${{ env.GITHUB_WORKSPACE }}
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-sampledata.ps1 -OutFile vc-setup-sampledata.ps1"
         pwsh -command "./vc-setup-sampledata.ps1 -ApiUrl http://localhost:8081 -Verbose -Debug"
 
     - name: Swagger Schema Validation
       run: |
-        cd ${{ env.GITHUB_WORKSPACE }}/vc-platform
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-get-swagger.ps1 -OutFile vc-get-swagger.ps1"
         pwsh -command "./vc-get-swagger.ps1 -ApiUrl http://localhost:8081 -OutFile swaggerSchema.json -Verbose -Debug"
         pwsh -command "vc-build ValidateSwaggerSchema -SwaggerSchemaPath swaggerSchema.json"
