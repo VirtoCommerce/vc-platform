@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -58,6 +59,7 @@ using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -82,7 +84,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
-            services.AddOptions<HangfireOptions>().Bind(Configuration.GetSection("VirtoCommerce:Jobs")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
@@ -470,6 +471,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
                 platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
+                platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Hangfire"));
                 platformDbContext.Database.Migrate();
 
                 var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
