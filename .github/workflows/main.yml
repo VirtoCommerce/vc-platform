@@ -62,23 +62,14 @@ jobs:
         # Docker repository to tag the image with
         repository: leonidn/platform
         # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
-        tags: 3.0-preview
+        tags: 3.0-preview-linux-leonid
+        push: false
         path: artifacts/publish/
         build_args: SOURCE=.
 
-  test:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Install VirtoCommerce.GlobalTool
-      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
-
     - name: Run container
       run: |
-        cd docker
+        cd ../../docker
         docker-compose up -d
         cd ..
 
