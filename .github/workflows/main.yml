@@ -52,20 +52,8 @@ jobs:
         cd artifacts/publish/
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile Dockerfile"
 
-    - name: Build and push Docker images
-      uses: docker/build-push-action@v1.1.0
-      with:
-        # Username used to log in to a Docker registry. If not set then no login will occur
-        username: ${{ secrets.DOCKER_USERNAME }} # optional
-        # Password or personal access token used to log in to a Docker registry. If not set then no login will occur
-        password: ${{ secrets.DOCKER_TOKEN }}
-        # Docker repository to tag the image with
-        repository: leonidn/platform
-        # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
-        tags: 3.0-preview-linux-leonid
-        push: false
-        path: artifacts/publish/
-        build_args: SOURCE=.
+    - name: Build Docker Container
+      run: docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview-linux
 
     - name: Run container
       run: |
