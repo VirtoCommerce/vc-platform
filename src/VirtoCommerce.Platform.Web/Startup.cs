@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -57,7 +59,9 @@ using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
+using VirtoCommerce.Platform.Web.SignalR;
 using VirtoCommerce.Platform.Web.Swagger;
+using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -96,6 +100,7 @@ namespace VirtoCommerce.Platform.Web
 
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
+            services.AddApplicationInsightsTelemetryProcessor<IgnoreSignalRTelemetryProcessor>();
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
                 {
@@ -417,6 +422,9 @@ namespace VirtoCommerce.Platform.Web
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
+#if DEBUG
+                TelemetryDebugWriter.IsTracingDisabled = true;
+#endif
             }
             else
             {
