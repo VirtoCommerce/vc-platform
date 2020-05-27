@@ -153,7 +153,7 @@ namespace VirtoCommerce.Platform.Web.Security
             }
 
             //We cant update not existing user
-            if(existUser == null)
+            if (existUser == null)
             {
                 return IdentityResult.Failed(ErrorDescriber.DefaultError());
             }
@@ -216,7 +216,25 @@ namespace VirtoCommerce.Platform.Web.Security
             return result;
         }
 
+        public override async Task<IdentityResult> SetLockoutEndDateAsync(ApplicationUser user, DateTimeOffset? lockoutEnd)
+        {
+            var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
+            {
+                new GenericChangedEntry<ApplicationUser>(user, EntryState.Modified)
+            };
 
+            await _eventPublisher.Publish(new UserChangingEvent(changedEntries));
+
+            var result = await base.SetLockoutEndDateAsync(user, lockoutEnd);
+
+            if (result.Succeeded)
+            {
+                await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
+                SecurityCacheRegion.ExpireUser(user);
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Load detailed user information: Roles, external logins, claims (permissions)
