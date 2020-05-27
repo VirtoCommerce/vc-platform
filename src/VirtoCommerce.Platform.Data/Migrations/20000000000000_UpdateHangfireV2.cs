@@ -9,6 +9,7 @@ namespace VirtoCommerce.Platform.Data.Migrations
             migrationBuilder.Sql(@"IF ((EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '__MigrationHistory')) AND 
 	                (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'HangFire')))
                 IF (EXISTS (SELECT * FROM __MigrationHistory WHERE ContextKey = 'VirtoCommerce.Platform.Data.Repositories.Migrations.Configuration'))
+                    AND (SELECT TOP 1 Version FROM [HangFire].[Schema]) < 7
                     BEGIN
 	                    ALTER TABLE [HangFire].[State] DROP CONSTRAINT [FK_HangFire_State_Job];
                         ALTER TABLE [HangFire].[JobParameter] DROP CONSTRAINT [FK_HangFire_JobParameter_Job];
