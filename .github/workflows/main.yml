@@ -48,7 +48,7 @@ jobs:
       run: vc-build Compile
 
     - name: Build Package
-      run: vc-build Compress -skip Restore+Compile+Test
+      run: vc-build Compress -skip Clean+Restore+Compile+Test
 
     - name: Copy Dockerfile
       run: |
