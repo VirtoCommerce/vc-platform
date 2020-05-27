@@ -484,12 +484,15 @@ namespace VirtoCommerce.Platform.Web
                 securityDbContext.Database.Migrate();
 
             }
+
+            app.UseHangfireDashboard("/hangfire");
+            /*
             if (hangfireOptionsAccessor.CurrentValue.UseHangfireServer)
             {
                 //app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
-                app.UseHangfireDashboard("/hangfire");
-                app.UseHangfireServer(hangfireOptionsAccessor.CurrentValue.BackgroundJobServerOptions);
+                //app.UseHangfireServer(hangfireOptionsAccessor.CurrentValue.BackgroundJobServerOptions);
             }
+            */
             app.UseDbTriggers();
             //Register platform settings
             app.UsePlatformSettings();
