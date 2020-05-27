@@ -35,7 +35,6 @@ using VirtoCommerce.Platform.Assets.FileSystem;
 using VirtoCommerce.Platform.Assets.FileSystem.Extensions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Jobs;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
@@ -82,7 +81,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
-            services.AddOptions<HangfireOptions>().Bind(Configuration.GetSection("VirtoCommerce:Jobs")).ValidateDataAnnotations();
+            services.AddOptions<HangfireOptions>().Bind(Configuration.GetSection("VirtoCommerce:Hangfire")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
@@ -396,21 +395,29 @@ namespace VirtoCommerce.Platform.Web
 
             var hangfireOptions = new HangfireOptions();
             Configuration.GetSection("VirtoCommerce:Hangfire").Bind(hangfireOptions);
+
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = hangfireOptions.AutomaticRetryCount });          
             if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer)
             {
-                services.AddHangfire(config => config.UseSqlServerStorage(Configuration.GetConnectionString("VirtoCommerce")));
+                services.AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(Configuration.GetConnectionString("VirtoCommerce"), hangfireOptions.SqlServerStorageOptions));
             }
             else
             {
                 services.AddHangfire(config => config.UseMemoryStorage());
             }
-
+            if (hangfireOptions.UseHangfireServer)
+            {
+                services.AddHangfireServer();
+            }
             // Register the Swagger generator
             services.AddSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptionsMonitor<HangfireOptions> hangfireOptionsAccessor)
         {
             if (env.IsDevelopment())
             {
@@ -477,15 +484,12 @@ namespace VirtoCommerce.Platform.Web
                 securityDbContext.Database.Migrate();
 
             }
-
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
-            app.UseHangfireServer(new BackgroundJobServerOptions
+            if (hangfireOptionsAccessor.CurrentValue.UseHangfireServer)
             {
-                // Create some queues for job prioritization.
-                // Normal equals 'default', because Hangfire depends on it.
-                Queues = new[] { JobPriority.High, JobPriority.Normal, JobPriority.Low }
-            });
-
+                //app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
+                app.UseHangfireDashboard("/hangfire");
+                app.UseHangfireServer(hangfireOptionsAccessor.CurrentValue.BackgroundJobServerOptions);
+            }
             app.UseDbTriggers();
             //Register platform settings
             app.UsePlatformSettings();
