@@ -53,15 +53,20 @@ jobs:
         cd ../..
         docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview-linux  --tag virtocommerce/platform:3.0-preview-linux
 
+    - name: Docker Login
+      uses: azure/docker-login@v1
+      with:
+        login-server: docker.pkg.github.com
+        username: $GITHUB_ACTOR
+        password: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Push Docker Image to GitHub
       run: |
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} docker.pkg.github.com
         docker push leonidn/platform:3.0-preview-linux
 
     - name: Push Docker Image to GitHub (virtocommerce)
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} docker.pkg.github.com
-          docker push virtocommerce/platform:3.0-preview-linux
+      run: |
+        docker push virtocommerce/platform:3.0-preview-linux
 
     - name: Push Docker Image to GitHub
         run: |
