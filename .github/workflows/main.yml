@@ -24,7 +24,14 @@ jobs:
       run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
 
     - name: Build
-      run: vc-build Compile
+      run: |
+        ls
+        vc-build Compile
+
+    - name: Build Package
+      run: |
+        vc-build Compress -skip Clean+Restore+Compile+Test
+        ls artifacts/
 
     - name: Unit Tests
       run: vc-build Test -skip Restore+Compile
@@ -41,7 +48,9 @@ jobs:
       run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
 
     - name: Build
-      run: vc-build Compile
+      run: |
+        ls
+        vc-build Compile
 
     - name: Build Package
       run: |
