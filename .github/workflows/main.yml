@@ -97,12 +97,13 @@ jobs:
 
     - name: Run container
       run: |
-        docker tag docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }} leonidn/platform:3.0-preview-linux
+        mkdir docker
         cd docker
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/docker-compose.yml -OutFile docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/platform','docker.pkg.github.com/$GITHUB_REPOSITORY/platform') | Set-Content -Path docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'MultipleActiveResultSets=True','MultipleActiveResultSets=False') | Set-Content -Path docker-compose.yml"
         cat docker-compose.yml
+        echo PLATFORM_DOCKER_TAG=${{ github.sha }} >> .env
         docker-compose up -d
 
     - name: Install Modules
