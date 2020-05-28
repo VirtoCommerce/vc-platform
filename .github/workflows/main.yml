@@ -78,6 +78,7 @@ jobs:
 
     - name: Run container
       run: |
+        docker tag docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }} leonidn/platform:3.0-preview-linux
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/lnetrebskii/vc-platform/release/3.0.0/docker/docker-compose.yml -OutFile docker-compose.yml"
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/lnetrebskii/vc-platform/release/3.0.0/docker/.env -OutFile .env"
         docker-compose up -d
@@ -118,5 +119,6 @@ jobs:
 
     - name: Push Docker Image
       run: |
+        docker tag docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }} leonidn/platform:latest-linux
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
-        docker push virtocommerce/platform:3.0-preview-linux
+        docker push leonidn/platform:latest-linux
