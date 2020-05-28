@@ -22,7 +22,8 @@ jobs:
     - name: Install VirtoCommerce.GlobalTool
       run: |
         dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
-        mv Directory.Build.Props Directory.Build.props
+        mv Directory.Build.Props Directory.Build.props.bak
+        mv Directory.Build.props.bak Directory.Build.props
 
     - name: Build
       run: vc-build Compile
