@@ -69,8 +69,8 @@ jobs:
         docker push virtocommerce/platform:3.0-preview-linux
 
     - name: Push Docker Image to GitHub
-        run: |
-          docker push leonidn/platform:3.0-preview-linux
+      run: |
+        docker push leonidn/platform:3.0-preview-linux
 
     - name: Run container
       run: |
