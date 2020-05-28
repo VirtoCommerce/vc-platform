@@ -51,7 +51,22 @@ jobs:
         cd artifacts/publish/
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile Dockerfile"
         cd ../..
-        docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview-linux
+        docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview-linux  --tag virtocommerce/platform:3.0-preview-linux
+
+    - name: Push Docker Image to GitHub
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} docker.pkg.github.com
+        docker push leonidn/platform:3.0-preview-linux
+
+    - name: Push Docker Image to GitHub (virtocommerce)
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} docker.pkg.github.com
+          docker push virtocommerce/platform:3.0-preview-linux
+
+    - name: Push Docker Image to GitHub
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} docker.pkg.github.com
+          docker push leonidn/platform:3.0-preview-linux
 
     - name: Run container
       run: |
@@ -78,5 +93,5 @@ jobs:
 
     - name: Push Docker Image
       run: |
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} docker.pkg.github.com
         docker push leonidn/platform:3.0-preview-linux
