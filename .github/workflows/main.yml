@@ -20,7 +20,9 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install VirtoCommerce.GlobalTool
-      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
+      run: |
+        dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
+        mv Directory.Build.Props Directory.Build.props
 
     - name: Build
       run: vc-build Compile
