@@ -51,7 +51,7 @@ jobs:
         cd artifacts/publish/
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile Dockerfile"
         cd ../..
-        docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview-linux  --tag virtocommerce/platform:3.0-preview-linux
+        docker build artifacts/publish --build-arg SOURCE=. --tag "docker.pkg.github.com/$GITHUB_REPOSITORY/platform:3.0-preview-linux" --tag leonidn/platform:3.0-preview-linux
 
     - name: Docker Login
       uses: azure/docker-login@v1
@@ -62,15 +62,7 @@ jobs:
 
     - name: Push Docker Image to GitHub
       run: |
-        docker push leonidn/platform:3.0-preview-linux
-
-    - name: Push Docker Image to GitHub (virtocommerce)
-      run: |
-        docker push virtocommerce/platform:3.0-preview-linux
-
-    - name: Push Docker Image to GitHub
-      run: |
-        docker push leonidn/platform:3.0-preview-linux
+        docker push "docker.pkg.github.com/$GITHUB_REPOSITORY/platform:3.0-preview-linux"
 
     - name: Run container
       run: |
