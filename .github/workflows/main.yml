@@ -114,7 +114,7 @@ jobs:
       run: |
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-modules.ps1 -OutFile vc-setup-modules.ps1"
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-check-installed-modules.ps1 -OutFile vc-check-installed-modules.ps1"
-        pwsh -command "./vc-setup-modules.ps1 -ApiUrl http://localhost:8091 -NeedRestart -ContainerId virtocommerce_vc-platform-web_1 -Verbose -Debug"
+        pwsh -command "./vc-setup-modules.ps1 -ApiUrl http://localhost:8081 -NeedRestart -ContainerId virtocommerce_vc-platform-web_1 -Verbose -Debug"
         pwsh -command "./vc-check-installed-modules.ps1 -ApiUrl http://localhost:8081 -Verbose -Debug"
 
     - name: Install Sample Data
