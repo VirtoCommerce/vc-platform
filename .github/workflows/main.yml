@@ -64,6 +64,8 @@ jobs:
     needs: build-package
 
     steps:
+    - uses: actions/checkout@v2
+
     - name: Install VirtoCommerce.GlobalTool
       run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
 
@@ -80,8 +82,7 @@ jobs:
     - name: Run container
       run: |
         docker tag docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }} leonidn/platform:3.0-preview-linux
-        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/lnetrebskii/vc-platform/release/3.0.0/docker/docker-compose.yml -OutFile docker-compose.yml"
-        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/lnetrebskii/vc-platform/release/3.0.0/docker/.env -OutFile .env"
+        cd docker
         docker-compose up -d
 
     - name: Install Modules
