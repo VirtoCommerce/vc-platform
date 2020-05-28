@@ -10,7 +10,6 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   verify:
     # The type of runner that the job will run on
     runs-on: windows-latest
@@ -24,18 +23,44 @@ jobs:
       run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
 
     - name: Build
-      run: |
-        ls
-        vc-build Compile
-
-    - name: Build Package
-      run: |
-        vc-build Compress -skip Clean+Restore+Compile+Test
-        ls artifacts/
+      run: vc-build Compile
 
     - name: Unit Tests
       run: vc-build Test -skip Restore+Compile
 
+    - name: Build Package
+      run: vc-build Compress -skip Clean+Restore+Compile+Test
+
+    - name: Copy Dockerfile
+      run: |
+        cd artifacts/publish/
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile Dockerfile"
+
+    - name: Build Docker Container
+      run: docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview-linux
+
+    - name: Run container
+      run: |
+        cd docker
+        docker-compose up -d
+
+    - name: Install Modules
+      run: |
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-modules.ps1 -OutFile vc-setup-modules.ps1"
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-check-installed-modules.ps1 -OutFile vc-check-installed-modules.ps1"
+        pwsh -command "./vc-setup-modules.ps1 -ApiUrl http://localhost:8081 -NeedRestart -ContainerId leonidn_vc-platform-web_1 -Verbose -Debug"
+        pwsh -command "./vc-check-installed-modules.ps1 -ApiUrl http://localhost:8081 -Verbose -Debug"
+
+    - name: Install Sample Data
+      run: |
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-sampledata.ps1 -OutFile vc-setup-sampledata.ps1"
+        pwsh -command "./vc-setup-sampledata.ps1 -ApiUrl http://localhost:8081 -Verbose -Debug"
+
+    - name: Swagger Schema Validation
+      run: |
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-get-swagger.ps1 -OutFile vc-get-swagger.ps1"
+        pwsh -command "./vc-get-swagger.ps1 -ApiUrl http://localhost:8081 -OutFile swaggerSchema.json -Verbose -Debug"
+        pwsh -command "vc-build ValidateSwaggerSchema -SwaggerSchemaPath swaggerSchema.json"
 
   publish:
     # The type of runner that the job will run on
