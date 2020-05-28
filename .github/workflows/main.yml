@@ -70,7 +70,6 @@ jobs:
 
     - name: Push Docker Image to GitHub
         run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} docker.pkg.github.com
           docker push leonidn/platform:3.0-preview-linux
 
     - name: Run container
@@ -98,5 +97,4 @@ jobs:
 
     - name: Push Docker Image
       run: |
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }} docker.pkg.github.com
-        docker push leonidn/platform:3.0-preview-linux
+        docker push virtocommerce/platform:3.0-preview-linux
