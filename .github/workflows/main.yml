@@ -50,7 +50,7 @@ jobs:
     - name: Build Package
       run: |
         vc-build Compress -skip Clean+Restore+Compile+Test
-        cd artifacts/publish/
+        ls artifacts/
 
     - name: Copy Dockerfile
       run: |
