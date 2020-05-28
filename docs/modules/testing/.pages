@@ -1,0 +1,5 @@
+title: My catalog (.pages file)
+arrange:
+  - api
+  - ...
+  - lesson2.md

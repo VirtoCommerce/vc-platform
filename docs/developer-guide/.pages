@@ -1,0 +1,5 @@
+arrange:
+  - deploy-from-source-code.md
+  - deploy-module-from-source-code.md
+  - ...
+  - update-module-from-platform-2.0-to-version-3.md

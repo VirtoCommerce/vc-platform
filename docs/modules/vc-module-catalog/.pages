@@ -1,0 +1,5 @@
+title: Catalog
+arrange:
+#  - api
+  - ...
+  - glossary.md

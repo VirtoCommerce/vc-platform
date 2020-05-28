@@ -1,0 +1,8 @@
+arrange:
+  - index.md
+  - whats-new.md
+  - administrator-guide
+  - operator-manual
+#  - developer-guide
+  - ...
+  - license.md
