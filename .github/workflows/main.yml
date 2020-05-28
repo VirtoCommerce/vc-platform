@@ -55,6 +55,14 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        # Artifact name
+        name: Platform # optional
+        # A file, directory or wildcard pattern that describes what to upload
+        path: artifacts/publish/  
+
     - name: Push Docker Image to GitHub
       run:  docker push "docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }}"
 
@@ -69,8 +77,13 @@ jobs:
     - name: Install VirtoCommerce.GlobalTool
       run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
 
-    - name: Build Package
-      run: vc-build Compress -skip Test
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v2
+      with:
+        # Artifact name
+        name: Platform # optional
+        # Destination path
+        path: artifacts/publish/ # optional
 
     - name: Docker Login
       uses: azure/docker-login@v1
