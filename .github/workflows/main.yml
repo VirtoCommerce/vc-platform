@@ -81,22 +81,16 @@ jobs:
         mv Directory.Build.Props Directory.Build.props
 
     - name: Build
-      run: |
-        ls
-        vc-build Compile
+      run: vc-build Compile
 
     - name: Build Package
-      run: |
-        vc-build Compress -skip Clean+Restore+Compile+Test
-        ls artifacts/
+      run: vc-build Compress -skip Clean+Restore+Compile+Test
 
-    - name: Copy Dockerfile
+    - name: Build Docker Image
       run: |
         cd artifacts/publish/
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile Dockerfile"
-
-    - name: Build Docker Container
-      run: docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview-linux
+        docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview-linux
 
     - name: Run container
       run: |
@@ -120,3 +114,8 @@ jobs:
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-get-swagger.ps1 -OutFile vc-get-swagger.ps1"
         pwsh -command "./vc-get-swagger.ps1 -ApiUrl http://localhost:8081 -OutFile swaggerSchema.json -Verbose -Debug"
         pwsh -command "vc-build ValidateSwaggerSchema -SwaggerSchemaPath swaggerSchema.json"
+
+    - name: Push Docker Image
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+        docker push leonidn/platform:3.0-preview-linux
