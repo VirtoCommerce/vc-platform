@@ -69,8 +69,8 @@ jobs:
     - name: Install VirtoCommerce.GlobalTool
       run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
 
-    - name: Build
-      run: vc-build Compile
+    - name: Build Package
+      run: vc-build Compress -skip Test
 
     - name: Docker Login
       uses: azure/docker-login@v1
