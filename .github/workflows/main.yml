@@ -78,7 +78,8 @@ jobs:
 
     - name: Run container
       run: |
-        cd docker
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/lnetrebskii/vc-platform/release/3.0.0/docker/docker-compose.yml -OutFile docker-compose.yml"
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/lnetrebskii/vc-platform/release/3.0.0/docker/.env -OutFile .env"
         docker-compose up -d
 
     - name: Install Modules
