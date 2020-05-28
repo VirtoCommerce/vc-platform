@@ -396,7 +396,7 @@ namespace VirtoCommerce.Platform.Web
             var hangfireOptions = new HangfireOptions();
             Configuration.GetSection("VirtoCommerce:Hangfire").Bind(hangfireOptions);
 
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = hangfireOptions.AutomaticRetryCount });          
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = hangfireOptions.AutomaticRetryCount });
             if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer)
             {
                 services.AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
@@ -408,6 +408,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 services.AddHangfire(config => config.UseMemoryStorage());
             }
+            //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs  
             if (hangfireOptions.UseHangfireServer)
             {
                 services.AddHangfireServer();
@@ -417,7 +418,7 @@ namespace VirtoCommerce.Platform.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptionsMonitor<HangfireOptions> hangfireOptionsAccessor)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -485,14 +486,8 @@ namespace VirtoCommerce.Platform.Web
 
             }
 
-            app.UseHangfireDashboard("/hangfire");
-            /*
-            if (hangfireOptionsAccessor.CurrentValue.UseHangfireServer)
-            {
-                //app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
-                //app.UseHangfireServer(hangfireOptionsAccessor.CurrentValue.BackgroundJobServerOptions);
-            }
-            */
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
+            
             app.UseDbTriggers();
             //Register platform settings
             app.UsePlatformSettings();
