@@ -40,7 +40,7 @@ jobs:
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/windowsnano/PlatformCore/Dockerfile -OutFile Dockerfile"
 
     - name: Build Docker Container
-      run: docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview
+      run: docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:latest
 
     - name: Run container
       run: |
