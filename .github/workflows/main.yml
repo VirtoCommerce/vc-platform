@@ -34,14 +34,20 @@ jobs:
     - name: Copy Dockerfile
       run: |
         cd artifacts/publish/
-        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile Dockerfile"
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/windowsnano/PlatformCore/Dockerfile"
 
     - name: Build Docker Container
-      run: docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview-linux
+      run: docker build artifacts/publish --build-arg SOURCE=. --tag leonidn/platform:3.0-preview
 
     - name: Run container
       run: |
         cd docker
+        rm docker-compose.yml
+        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/windowsnano/docker-compose.yml" -OutFile docker-compose.yml
+        pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/platform','leonidn/platform') | Set-Content -Path docker-compose.yml"
+        cat docker-compose.yml
+        pwsh -command "((Get-Content -path .env -Raw) -replace '3.0-preview-linux','3.0-preview') | Set-Content -Path .env"
+        cat .env
         docker-compose up -d
 
     - name: Install Modules
