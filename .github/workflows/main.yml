@@ -144,9 +144,9 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set 3.0-linux-experimental docker tag for the "dev" branch
+    - name: Set image tag for the "master" branch
       run: echo ::set-env PLATFORM_DOCKER_TAG = 3.0-linux-experimental
-      if: {{ github.ref == 'ref/head/master' }}
+      if: ${{ github.ref == 'ref/head/master' }}
 
     - name: Pull Platform Docker Image from GitHub
       run:  docker pull "docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }}"
