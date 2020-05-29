@@ -17,22 +17,25 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    
-    - name: SonarCloud Scan PR fix
-      uses: NazmiAltun/dotnet-sonarscanner-action@1.0.6-beta
-      with:
-        # SonarQube/SonarCloud project key
-        project-key: VirtoCommerce_vc-platform
-        # Organization name on SonarQube/SonarCloud
-        organization: virto-commerce
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Install VirtoCommerce.GlobalTool
+      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
+
+    - name: Install dotnet-sonarscanner
+      run: dotnet tool install --global dotnet-sonarscanner
+
+    - name: SonarCloud Begin
+      run: dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /d:sonar.login="${{ secrets.SONAR_TOKEN }}""
+
+    - name: Build
+      run: vc-build Compile
+
+    - name: SonarCloud End
+      run: dotnet sonarscanner end
 
   unit-tests:
+    name: Unit Tests
     # The type of runner that the job will run on
     runs-on: windows-latest
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -41,8 +44,17 @@ jobs:
     - name: Install VirtoCommerce.GlobalTool
       run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
 
+    - name: Install dotnet-sonarscanner
+      run: dotnet tool install --global dotnet-sonarscanner
+
+    - name: SonarCloud Begin
+      run: dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /d:sonar.login="${{ secrets.SONAR_TOKEN }}""
+
     - name: Build
       run: vc-build Compile
+
+    - name: SonarCloud End
+      run: dotnet sonarscanner end
 
     - name: Unit Tests
       run: vc-build Test -skip Restore+Compile
