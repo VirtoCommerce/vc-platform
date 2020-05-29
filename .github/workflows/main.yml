@@ -133,7 +133,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-package, unit-tests, swagger-validation]
     if: ${{ github.event_name != 'pull_request' }}
-    env: PLATFORM_DOCKER_TAG = 3.0-dev-linux-experimental
+    env: 
+      PLATFORM_DOCKER_TAG: 3.0-dev-linux-experimental
 
     steps:
     - name: Docker Login
