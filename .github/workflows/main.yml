@@ -27,7 +27,7 @@ jobs:
       run: dotnet tool install --global dotnet-sonarscanner
 
     - name: SonarCloud Begin
-      run: dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /o:"virto-commerce" /d:sonar.cs.opencover.reportsPaths="${{ env.GITHUB_WORKSPACE }}/vp-platform/.tmp/coverage.xml" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      run: dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /o:"virto-commerce" /d:sonar.cs.opencover.reportsPaths=".tmp/coverage.xml" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
     - name: Build
       run: vc-build Compile
