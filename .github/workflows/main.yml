@@ -19,7 +19,12 @@ jobs:
 
     
     - name: SonarCloud Scan PR fix
-      uses: kundkingan/sonarcloud-github-action@1.4
+      uses: NazmiAltun/dotnet-sonarscanner-action@1.0.6-beta
+        # SonarQube/SonarCloud project key
+        project-key: VirtoCommerce_vc-platform
+        # Organization name on SonarQube/SonarCloud
+        organization: virto-commerce
+      
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
