@@ -30,7 +30,7 @@ jobs:
       run: vc-build Compile
 
     - name: SonarCloud End
-      run: dotnet sonarscanner end
+      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   unit-tests:
     name: Unit Tests
@@ -54,7 +54,7 @@ jobs:
       run: vc-build Compile
 
     - name: SonarCloud End
-      run: dotnet sonarscanner end
+      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
     - name: Unit Tests
       run: vc-build Test -skip Restore+Compile
