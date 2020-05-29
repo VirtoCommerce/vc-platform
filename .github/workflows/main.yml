@@ -18,8 +18,8 @@ jobs:
     - uses: actions/checkout@v2
 
     
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
+    - name: SonarCloud Scan PR fix
+      uses: kundkingan/sonarcloud-github-action@1.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
