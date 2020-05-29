@@ -32,11 +32,11 @@ jobs:
     - name: Build
       run: vc-build Compile
 
-    - name: SonarCloud End
-      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
     - name: Unit Tests
       run: vc-build Test -skip Restore+Compile
+
+    - name: SonarCloud End
+      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
   build-package:
     name: Build Package
