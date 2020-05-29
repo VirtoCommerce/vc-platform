@@ -45,8 +45,9 @@ jobs:
 
     - name: Build Docker Image
       run: |
+        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile artifacts/publish/Dockerfile"
-        docker build artifacts/publish --build-arg SOURCE=. --tag "docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }}" --tag leonidn/platform:3.0-preview-linux
+        docker build artifacts/publish --build-arg SOURCE=. --tag "docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }}" --tag leonidn/platform:3.0-preview-linux
 
     - name: Docker Login
       uses: azure/docker-login@v1
@@ -64,7 +65,9 @@ jobs:
         path: artifacts/publish/  
 
     - name: Push Docker Image to GitHub
-      run:  docker push "docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }}"
+      run: |
+        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
+        docker push "docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }}"
 
   swagger-validation:
     # The type of runner that the job will run on
@@ -93,7 +96,9 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Pull Platform Docker Image from GitHub
-      run:  docker pull "docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }}"
+      run: |
+        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
+        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }}"
 
     - name: Run container
       run: |
@@ -143,12 +148,15 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Pull Platform Docker Image from GitHub
-      run:  docker pull "docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }}"
+      run: |
+        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
+        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }}"
 
     - name: Push Docker Image to hub.docker.io
       run: |
+        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         PLATFORM_DOCKER_TAG='3.0-dev-linux-experimental'
         if [ '${{ github.ref }}' = 'refs/heads/master' ]; then PLATFORM_DOCKER_TAG=3.0-linux-experimental; fi
-        docker tag docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }} leonidn/platform:$PLATFORM_DOCKER_TAG
+        docker tag docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }} leonidn/platform:$PLATFORM_DOCKER_TAG
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
         docker push leonidn/platform:$PLATFORM_DOCKER_TAG
