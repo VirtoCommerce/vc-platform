@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Core.Exceptions
     {
         public static void ThrowFaultException(this Exception ex)
         {
-            throw new Exception(ex.ExpandExceptionMessage());
+            throw new PlatformException(ex.ExpandExceptionMessage());
         }
 
         public static string ExpandExceptionMessage(this Exception ex)
@@ -16,8 +16,9 @@ namespace VirtoCommerce.Platform.Core.Exceptions
 
             var separator = Environment.NewLine;
             var exception = ex;
-
-            while (exception != null)
+            var depthLevel = 0;
+            const int maxDepthLevel = 5;
+            while (exception != null && depthLevel++ < maxDepthLevel)
             {
                 if (builder.Length > 0)
                 {
