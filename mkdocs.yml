@@ -2,8 +2,8 @@ site_name: Virto Commerce Documentation
 theme:
     name: material
     language: en
-    features:
-        - instant
+#    features:
+#        - instant # (still experimental) feature fails to load images when folder changes
     favicon: media/favicon.ico
     logo: media/logo.png
     palette:
@@ -20,7 +20,7 @@ plugins:
  #   - autolinks
     - awesome-pages:
  #       strict: false
- #   - git-revision-date-localized
+    - git-revision-date-localized
  #   - minify:
  #       minify_html: true
     - redirects:
@@ -32,8 +32,7 @@ plugins:
 site_name: Virto Commerce
 site_description: Virto Commerce Documentation
 site_author: Virto Commerce
-# site_url: https://virtocommerce.com/
-# site_url: 
+site_url: https://virtocommerce.com/
 
 # Repository
 repo_name: VirtoCommerce/vc-platform
