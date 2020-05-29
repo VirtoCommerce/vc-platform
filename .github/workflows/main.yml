@@ -133,7 +133,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-package, unit-tests, swagger-validation]
     if: ${{ github.event_name != 'pull_request' }}
-    env: PLATFORM_DOCKER_TAG = 3.0-linux-experimental
+    env: PLATFORM_DOCKER_TAG = 3.0-dev-linux-experimental
 
     steps:
     - name: Docker Login
@@ -143,9 +143,9 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set 3.0-dev-linux-experimental docker tag for the "dev" branch
-      run: echo ::set-env PLATFORM_DOCKER_TAG = 3.0-dev-linux-experimental
-      if: {{ github.ref == 'ref/head/dev' }}
+    - name: Set 3.0-linux-experimental docker tag for the "dev" branch
+      run: echo ::set-env PLATFORM_DOCKER_TAG = 3.0-linux-experimental
+      if: {{ github.ref == 'ref/head/master' }}
 
     - name: Pull Platform Docker Image from GitHub
       run:  docker pull "docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }}"
