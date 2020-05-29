@@ -24,7 +24,7 @@ jobs:
       run: dotnet tool install --global dotnet-sonarscanner
 
     - name: SonarCloud Begin
-      run: dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      run: dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /o:"virto-commerce" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
     - name: Build
       run: vc-build Compile
@@ -48,7 +48,7 @@ jobs:
       run: dotnet tool install --global dotnet-sonarscanner
 
     - name: SonarCloud Begin
-      run: dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      run: dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /o:"virto-commerce" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
     - name: Build
       run: vc-build Compile
