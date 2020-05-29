@@ -146,7 +146,7 @@ jobs:
 
     - name: Set image tag for the "master" branch
       run: echo ::set-env PLATFORM_DOCKER_TAG = 3.0-linux-experimental
-      if: ${{ github.ref == 'ref/head/master' }}
+      if: github.ref == 'refs/heads/master'
 
     - name: Pull Platform Docker Image from GitHub
       run:  docker pull "docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }}"
