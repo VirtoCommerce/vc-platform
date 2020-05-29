@@ -147,8 +147,8 @@ jobs:
 
     - name: Push Docker Image to hub.docker.io
       run: |
-        PLATFORM_DOCKER_TAG = '3.0-dev-linux-experimental'
-        if [${{ github.ref }} -eq 'refs/heads/master'] then PLATFORM_DOCKER_TAG=3.0-linux-experimental
+        PLATFORM_DOCKER_TAG='3.0-dev-linux-experimental'
+        if [ ${{ github.ref }} = 'refs/heads/master' ]; then PLATFORM_DOCKER_TAG=3.0-linux-experimental; fi
         docker tag docker.pkg.github.com/$GITHUB_REPOSITORY/platform:${{ github.sha }} leonidn/platform:$PLATFORM_DOCKER_TAG
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
         docker push leonidn/platform:${{ env.PLATFORM_DOCKER_TAG }}
