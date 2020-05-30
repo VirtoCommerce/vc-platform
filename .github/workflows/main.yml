@@ -27,21 +27,13 @@ jobs:
       run: dotnet tool install --global dotnet-sonarscanner
 
     - name: SonarCloud Begin
-      run: dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /o:"virto-commerce" /d:sonar.cs.opencover.reportsPaths=".tmp/coverage.xml" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      run: dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /o:"virto-commerce" /d:sonar.cs.opencover.reportsPaths="$PWD/.tmp/coverage.xml" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /
 
     - name: Build
       run: vc-build Compile
 
     - name: Unit Tests
       run: vc-build Test -skip Restore+Compile
-
-    - name: Monitor coverage
-      id: coverage-monitor
-      if: github.event_name == 'pull_request'
-      uses: slavcodev/coverage-monitor-action@1.1.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        clover_file: ".tmp/coverage.xml"
 
     - name: SonarCloud End
       run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
