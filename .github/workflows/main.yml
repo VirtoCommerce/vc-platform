@@ -35,6 +35,14 @@ jobs:
     - name: Unit Tests
       run: vc-build Test -skip Restore+Compile
 
+    - name: Monitor coverage
+      id: coverage-monitor
+      if: github.event_name == 'pull_request'
+      uses: slavcodev/coverage-monitor-action@1.1.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        clover_file: ".tmp/coverage.xml"
+
     - name: SonarCloud End
       run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
