@@ -20,6 +20,11 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+
     - name: Install VirtoCommerce.GlobalTool
       run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
 
@@ -28,7 +33,7 @@ jobs:
 
     - name: SonarCloud Begin
       run: |
-        BRANCH_NAME=${{GITHUB_REF##*/}}
+        BRANCH_NAME=steps.extract_branch.outputs.branch
         dotnet sonarscanner begin /k:"VirtoCommerce_vc-platform" /o:"virto-commerce" /d:sonar.cs.opencover.reportsPaths="$PWD/.tmp/coverage.xml" /d:sonar.branch="$BRANCH_NAME" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /
 
     - name: Build
