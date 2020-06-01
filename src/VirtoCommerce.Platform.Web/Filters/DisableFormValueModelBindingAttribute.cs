@@ -17,10 +17,12 @@ namespace VirtoCommerce.Platform.Web.Helpers
             factories.RemoveType<FormValueProviderFactory>();
             factories.RemoveType<FormFileValueProviderFactory>();
             factories.RemoveType<JQueryFormValueProviderFactory>();
+            // TODO: Implement smth
         }
 
         public void OnResourceExecuted(ResourceExecutedContext context)
         {
+            // factories.RemoveType<JQueryFormValueProviderFactory>();
         }
     }
 }
