@@ -41,6 +41,7 @@ jobs:
         $CMD="$($CMD) /d:sonar.host.url='https://sonarcloud.io'"
         $CMD="$($CMD) /d:sonar.login='${{ secrets.SONAR_TOKEN }}'"
         $CMD = "$($CMD) /d:sonar.branch='$($BRANCH)'"
+        $CMD = "$($CMD) /d:sonar.github.oauth='${{ secrets.GITHUB_TOKEN }}"
         if ('${{ github.event_name }}' -eq 'pull_request' ) {
           $CMD="$($CMD) /d:sonar.pullrequest.base='$('${{ github.event.pull_request.base.ref }}')'"
           $CMD="$($CMD) /d:sonar.pullrequest.branch='${{ github.event.pull_request.title }}'"
