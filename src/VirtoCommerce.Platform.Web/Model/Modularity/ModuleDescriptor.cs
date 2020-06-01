@@ -20,6 +20,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             ProjectUrl = moduleInfo.ProjectUrl;
             IconUrl = moduleInfo.IconUrl;
             Version = moduleInfo.Version.ToString();
+            VersionTag = moduleInfo.VersionTag;
             RequireLicenseAcceptance = moduleInfo.RequireLicenseAcceptance;
             ReleaseNotes = moduleInfo.ReleaseNotes;
             Copyright = moduleInfo.Copyright;
@@ -48,6 +49,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
             }
         }
         public string Version { get; set; }
+        public string VersionTag { get; set; }
         public string PlatformVersion { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
