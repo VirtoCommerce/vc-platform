@@ -42,10 +42,9 @@ Virto Commerce Platform 3 helps you increase development speed and significantly
 These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
 
 * [What’s new](whats-new.md)
-* Setup
-  * [Deploy Platform 3 from precompiled binaries on Windows](administrator-guide/deployment/deploy-from-precompiled-binaries-windows.md)
-  * [Deploy Platform 3 from precompiled binaries on Linux](administrator-guide/deployment/deploy-from-precompiled-binaries-linux.md)
-  * [Deploy Platform 3 from source code](developer-guide/deploy-from-source-code.md)
-  * [Connect Storefront to Platform](administrator-guide/deployment/connect-storefront-to-platform-v3.md)
+* [Deploy Platform 3 from precompiled binaries on Windows](administrator-guide/deployment/deploy-from-precompiled-binaries-windows.md)
+* [Deploy Platform 3 from precompiled binaries on Linux](administrator-guide/deployment/deploy-from-precompiled-binaries-linux.md)
+* [Deploy Platform 3 from source code](developer-guide/deploy-from-source-code.md)
+* [Connect Storefront to Platform](administrator-guide/deployment/connect-storefront-to-platform-v3.md)
 * [Getting Started](operator-manual/getting-started.md)
 * [Migrate VC Platform Module from version 2.x to 3](developer-guide/update-module-from-platform-2.0-to-version-3.md)

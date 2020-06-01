@@ -7,9 +7,9 @@ theme:
     favicon: media/favicon.ico
     logo: media/logo.png
     palette:
-        primary: white
+        primary: red
     font:
-        text: Ubuntu
+        text: Roboto
         code: Ubuntu Mono
 markdown_extensions:
     - admonition # https://squidfunk.github.io/mkdocs-material/extensions/admonition/ (in material theme)
