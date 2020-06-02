@@ -206,14 +206,32 @@ jobs:
         docker push "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
 
     - name: Push Docker Image to hub.docker.io
-      if: ${{ env.DOCKER_USERNAME != 0 && env.DOCKER_TOKEN != 0 && github.event_name != 'pull_request' }}
+      shell: pwsh
+      if: ${{ env.DOCKER_USERNAME != 0 && env.DOCKER_TOKEN != 0 }}
       env:
         DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
         DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
       run: |
-        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        PLATFORM_DOCKER_TAG='dev-linux-experimental'
-        if [ '${{ github.ref }}' = 'refs/heads/master' ]; then PLATFORM_DOCKER_TAG=linux-experimental; fi
-        docker tag docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
+        $REPOSITORY = "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform"
+        $PLATFORM_DOCKER_TAG = ''
+        if ('${{ github.ref }}' -eq 'refs/heads/master') {
+          $PLATFORM_DOCKER_TAG = 'linux-experimental'
+        }
+        elseif ('${{ github.ref }}' -eq 'refs/heads/master') {
+          $PLATFORM_DOCKER_TAG = "$('${{ github.ref }}'.Replace('refs/heads/', ''))-linux-experimental"
+        }
+
+        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
+    
+        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
+        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
+        $version = "$($versionPrefixNode)-$($versionSuffixNode)-${{ github.run_number }}"
+
+        docker tag "$($REPOSITORY):${{ github.sha }}" "${{ secrets.DOCKER_USERNAME }}/platform:$($version)"
+
+        if ($PLATFORM_DOCKER_TAG -ne '') {
+          docker tag "$($REPOSITORY):${{ github.sha }}" "${{ secrets.DOCKER_USERNAME }}/platform:$($PLATFORM_DOCKER_TAG)"
+        }
+        
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
+        docker push ${{ secrets.DOCKER_USERNAME }}/platform
