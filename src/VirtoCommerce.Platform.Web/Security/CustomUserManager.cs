@@ -138,8 +138,7 @@ namespace VirtoCommerce.Platform.Web.Security
             return result;
         }
 
-        // VP-2538: This function is called on all user changes: https://github.com/dotnet/aspnetcore/blob/master/src/Identity/Extensions.Core/src/UserManager.cs#L2551
-        protected override async Task<IdentityResult> UpdateUserAsync(ApplicationUser user)
+        public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
         {
             ApplicationUser existUser = null;
             if (!string.IsNullOrEmpty(user.Id))
@@ -154,7 +153,7 @@ namespace VirtoCommerce.Platform.Web.Security
             }
 
             //We cant update not existing user
-            if (existUser == null)
+            if(existUser == null)
             {
                 return IdentityResult.Failed(ErrorDescriber.DefaultError());
             }
@@ -169,7 +168,7 @@ namespace VirtoCommerce.Platform.Web.Security
             //We need to use Patch method to update already tracked by DbContent entity, unless the UpdateAsync for passed user will throw exception
             //"The instance of entity type 'ApplicationUser' cannot be tracked because another instance with the same key value for {'Id'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached"
             user.Patch(existUser);
-            var result = await base.UpdateUserAsync(existUser);
+            var result = await base.UpdateAsync(existUser);
             if (result.Succeeded)
             {
                 await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
