@@ -259,7 +259,9 @@ jobs:
         cd vc-deploy-apps/platform-app/overlays/dev
 
         kustomize edit set image virtocommerce/platform=leonidn/platform:linux-experimental
-        cat kustomization.yaml
+
+        git config --global user.email "test@virtoway.com"
+        git config --global user.name "GitHub Actions"
 
         git add .
         git commit -m "Update the platform image version to linux-experimental"
