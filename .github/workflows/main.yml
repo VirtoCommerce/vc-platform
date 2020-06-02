@@ -259,6 +259,14 @@ jobs:
       with:
         kustomize-version: "3.1.0"
 
+    - name: start deployment
+      uses: bobheadxi/deployments@master
+      id: deployment
+      with:
+        step: start
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: Development
+
     - name: Commit environment change
       shell: pwsh
       run: |
@@ -290,3 +298,12 @@ jobs:
         chmod +x argocd
         ./argocd app sync platform-app
         ./argocd app wait platform-app
+
+    - name: update deployment status
+      uses: bobheadxi/deployments@master
+      if: always()
+      with:
+        step: finish
+        token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
