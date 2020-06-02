@@ -281,6 +281,9 @@ jobs:
       run: |
         export ARGOCD_SERVER=cd.govirto.com
         export ARGOCD_AUTH_TOKEN=${{ secrets.ARGOCD_TOKEN }}
-        curl -sSL -o /usr/local/bin/argocd https://cd.govirto.com/download/argocd-linux-amd64
+        cd ${{ github.workspace }}
+
+        Invoke-WebRequest -Uri https://cd.govirto.com/download/argocd-linux-amd64 -OutFile argocd
+        chmod +x argocd
         argocd app sync platform-app
         cd app wait platform-app
