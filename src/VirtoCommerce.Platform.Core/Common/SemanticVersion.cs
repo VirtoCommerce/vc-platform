@@ -151,9 +151,55 @@ namespace VirtoCommerce.Platform.Core.Common
                 return result;
 
             result = Patch.CompareTo(other.Patch);
+            if (result != 0)
+                return result;
 
-            return result;
+            return CompareComponent(Prerelease, other.Prerelease, true);
         }
+
+        private static int CompareComponent(string a, string b, bool nonemptyIsLower = false)
+        {
+            var aEmpty = string.IsNullOrEmpty(a);
+            var bEmpty = string.IsNullOrEmpty(b);
+            if (aEmpty && bEmpty)
+                return 0;
+
+            if (aEmpty)
+                return nonemptyIsLower ? 1 : -1;
+            if (bEmpty)
+                return nonemptyIsLower ? -1 : 1;
+
+            var aComps = a.Split('.');
+            var bComps = b.Split('.');
+
+            var minLen = Math.Min(aComps.Length, bComps.Length);
+            for (int i = 0; i < minLen; i++)
+            {
+                var ac = aComps[i];
+                var bc = bComps[i];
+                var aIsNum = int.TryParse(ac, out var aNum);
+                var bIsNum = int.TryParse(bc, out var bNum);
+                int r;
+                if (aIsNum && bIsNum)
+                {
+                    r = aNum.CompareTo(bNum);
+                    if (r != 0) return r;
+                }
+                else
+                {
+                    if (aIsNum)
+                        return -1;
+                    if (bIsNum)
+                        return 1;
+                    r = string.CompareOrdinal(ac, bc);
+                    if (r != 0)
+                        return r;
+                }
+            }
+
+            return aComps.Length.CompareTo(bComps.Length);
+        }
+
 
         #endregion
 
