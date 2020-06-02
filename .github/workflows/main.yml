@@ -307,3 +307,36 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         status: ${{ job.status }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+    - name: Parse Jira Keys from All Commits
+      id: jira_keys
+      if: always()
+      uses: HighwayThree/jira-extract-issue-keys@master
+      with:
+        is-pull-request: ${{ github.event_name == 'pull_request' }}
+        parse-all-commits: ${{ github.event_name == 'push' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+    - name: Push Deployment Info to Jira
+      if: ${{ steps.jira_keys.outputs.jira-keys != '' && always() }}
+      id: push_deployment_info_to_jira
+      uses: HighwayThree/jira-upload-deployment-info@master
+      with:
+        cloud-id: '${{ secrets.CLOUD_ID }}'
+        client-id: '${{ secrets.CLIENT_ID }}'
+        client-secret: '${{ secrets.CLIENT_SECRET }}'
+        deployment-sequence-number: '${{ github.run_id }}'
+        update-sequence-number: '${{ github.run_id }}'
+        issue-keys: "${{ steps.jira_keys.outputs.jira-keys }}"
+        display-name: "Deployment number asdf"
+        url: "${{github.event.repository.url}}/actions/runs/${{github.run_id}}"
+        description: "Deployment to the Development environment"
+        last-updated: '${{github.event.head_commit.timestamp}}'
+        state: ${{ job.status }}
+        pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
+        pipeline-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
+        pipeline-url: '${{github.event.repository.url}}/actions/runs/${{github.run_id}}'
+        environment-id: 'Development'
+        environment-display-name: 'Development'
+        environment-type: 'development'
