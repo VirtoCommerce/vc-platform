@@ -283,12 +283,15 @@ jobs:
 
   deploy:
     name: Deploy
+    needs: publish
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
       DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
     steps:
+    - uses: actions/checkout@v2
+
     - name: Setup Kustomize
       uses: imranismail/setup-kustomize@v1
       with:
@@ -306,17 +309,29 @@ jobs:
     - name: Commit environment change
       shell: pwsh
       run: |
+        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
+      
+        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
+        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
+        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
+        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
+        { 
+          $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
+        }  
+          
+        $version = "$($versionPrefix)$versionSuffix-${{ github.run_number }}"
+
         cd ${{ github.workspace }}
         git clone https://github.com/VirtoCommerce/vc-deploy-apps.git
         cd vc-deploy-apps/platform-app/overlays/dev
 
-        kustomize edit set image virtocommerce/platform=leonidn/platform:3.1.0-135
+        kustomize edit set image virtocommerce/platform=leonidn/platform:$version
 
         git config user.email "test@virtoway.com"
         git config user.name "GitHub Actions"
 
         git add .
-        git commit -m "Update the platform image version to 3.0.0-135"
+        git commit -m "Update the platform image version to $($version)"
 
         $remoteRepo="https://${{ github.actor }}:${{ secrets.REPO_TOKEN }}@github.com/VirtoCommerce/vc-deploy-apps.git"
 
