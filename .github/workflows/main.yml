@@ -262,14 +262,10 @@ jobs:
 
         git config user.email "test@virtoway.com"
         git config user.name "GitHub Actions"
-        git config github.token ${{ secrets.REPO_TOKEN }}
 
         git add .
         git commit -m "Update the platform image version to linux-experimental"
 
-    - name: GitHub Push
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
-        github_token: ${{ secrets.REPO_TOKEN }}
-        directory: ${{ github.workspace }}/vc-deploy-apps
+        $remoteRepo="https://${{ GITHUB_ACTOR }}:${{ secrets.REPO_TOKEN }}@github.com/VirtoCommerce/vc-deploy-apps.git"
+
+        git push $remoteRepo
