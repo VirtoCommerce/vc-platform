@@ -173,6 +173,8 @@ jobs:
     needs: [build-package, unit-tests, swagger-validation]
 
     steps:
+    - uses: actions/checkout@v2
+    
     - name: Docker Login
       uses: azure/docker-login@v1
       with:
