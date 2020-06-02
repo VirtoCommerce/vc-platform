@@ -35,21 +35,22 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
         [Theory]
         [InlineData("3.0.0", "3.0.0", "3.0.0", "", true)]
-        [InlineData("3.0.0", "3.1.0", "3.1.0", "", false)]
+        [InlineData("3.0.0", "3.0.1", "3.0.1", "", false)]
         [InlineData("3.0.0-alpha1", "3.0.0", "3.0.0", "", false)]
-        [InlineData("3.1.0-alpha1", "3.1.0", "3.1.0", "", false)]
-        [InlineData("3.1.0-alpha1", "3.1.0-alpha1", "3.1.0-alpha1", "3.0.0", false)]
-        public void Install_Release_Installed(string platformCurrentVersion, string modulePlatformVersion, string moduleVersion, string moduleInstalledVersion, bool isInstalled)
+        [InlineData("3.0.1-alpha1", "3.0.1", "3.0.1", "", false)]
+        [InlineData("3.0.1-alpha1", "3.0.1-alpha1", "3.0.1", "", true)]
+        [InlineData("3.0.1-alpha1", "3.0.1-alpha1", "3.0.1-alpha1", "3.0.0", true)]
+        public void Install_Release_Installed(string currentVersionPlatform, string platformVersionOfModule, string versionModule, string installedVersionModule, bool isInstalled)
         {
             //Arrange
             
-            PlatformVersion.CurrentVersion = SemanticVersion.Parse(platformCurrentVersion);
+            PlatformVersion.CurrentVersion = SemanticVersion.Parse(currentVersionPlatform);
             var progress = new Progress<ProgressMessage>();
             var manifest = new ModuleManifest
             {
                 Id = "SomeModule",
-                Version = moduleVersion,
-                PlatformVersion = modulePlatformVersion,
+                Version = versionModule,
+                PlatformVersion = platformVersionOfModule,
             };
             var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
             module.LoadFromManifest(manifest);
@@ -60,13 +61,13 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                 { Path.Combine(_options.DiscoveryPath, module.Id, $"{module.Id}_{module.Version}.zip"), new MockFileData("Testing is meh.") },
             });
 
-            if (!string.IsNullOrEmpty(moduleInstalledVersion))
+            if (!string.IsNullOrEmpty(installedVersionModule))
             {
                 var installedModuleManifest = new ModuleManifest
                 {
                     Id = "SomeModule",
-                    Version = moduleInstalledVersion,
-                    PlatformVersion = platformCurrentVersion,
+                    Version = installedVersionModule,
+                    PlatformVersion = currentVersionPlatform,
                 };
                 var installedModule = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
                 installedModule.LoadFromManifest(installedModuleManifest);
