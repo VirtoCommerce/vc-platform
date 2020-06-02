@@ -11,12 +11,12 @@ In VC3 settings are declared in ModuleConstants.cs
 
 ```C#
 public static SettingDescriptor ModuleNameEnabled { get; } = new SettingDescriptor
-                {
-                    Name = "ModuleName.ModuleNameEnabled",
-                    GroupName = "ModuleName|General",
-                    ValueType = SettingValueType.Boolean,
-                    DefaultValue = false
-                };
+{
+Name = "ModuleName.ModuleNameEnabled",
+GroupName = "ModuleName|General",
+ValueType = SettingValueType.Boolean,
+DefaultValue = false
+};
 ```                
 
 To view the Platform settings go to VC admin->More->Settings.
