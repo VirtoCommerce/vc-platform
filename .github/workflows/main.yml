@@ -45,7 +45,7 @@ jobs:
         $CMD = "$($CMD) /d:sonar.branch='$($BRANCH)'"
         if ('${{ github.event_name }}' -eq 'pull_request' ) {
           $CMD="$($CMD) /d:sonar.pullrequest.base='$('${{ github.event.pull_request.base.ref }}')'"
-          $CMD="$($CMD) /d:sonar.pullrequest.branch=$env:PULL_REQUEST_TITLE"
+          $CMD="$($CMD) /d:sonar.pullrequest.branch='$($env:PULL_REQUEST_TITLE)''"
           $CMD="$($CMD) /d:sonar.pullrequest.key=${{ github.event.number }}"
         }
         pwsh -command $CMD
