@@ -246,6 +246,9 @@ jobs:
       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
       DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
     steps:
+    - name: Setup Kustomize
+      uses: imranismail/setup-kustomize@v1.3.0
+
     - name: Deploy
       shell: pwsh
       if: ${{ env.DOCKER_USERNAME != 0 && env.DOCKER_TOKEN != 0 }}
