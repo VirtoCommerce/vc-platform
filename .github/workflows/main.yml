@@ -228,7 +228,7 @@ jobs:
         $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
         $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
         $version = "$($versionPrefixNode.InnerText.Trim())
-        if ([string]::IsNullOrEmpty($versionSuffixNode.InnerText)) 
+        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
         { 
           $version = "$($version)-$($versionSuffixNode.InnerText.Trim())" 
         }  
@@ -275,3 +275,12 @@ jobs:
         $remoteRepo="https://${{ github.actor }}:${{ secrets.REPO_TOKEN }}@github.com/VirtoCommerce/vc-deploy-apps.git"
 
         git push $remoteRepo
+
+    - name: Sync environment
+      shell: bashh
+      run: |
+        export ARGOCD_SERVER=cd.govirto.com
+        export ARGOCD_AUTH_TOKEN=${{ secrets.ARGOCD_TOKEN }}
+        curl -sSL -o /usr/local/bin/argocd https://cd.govirto.com/download/argocd-linux-amd64
+        argocd app sync platform-app
+        cd app wait platform-app
