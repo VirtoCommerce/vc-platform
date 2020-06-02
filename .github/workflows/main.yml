@@ -242,13 +242,13 @@ jobs:
     name: Deploy
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    if: ${{ env.DOCKER_USERNAME != 0 && env.DOCKER_TOKEN != 0 }}
     env:
       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
       DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
     steps:
     - name: Deploy
       shell: pwsh
+      if: ${{ env.DOCKER_USERNAME != 0 && env.DOCKER_TOKEN != 0 }}
       run: |
         cd ${{ github.workspace }}
         git clone https://github.com/VirtoCommerce/vc-deploy-apps
