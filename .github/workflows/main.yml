@@ -309,13 +309,13 @@ jobs:
         git clone https://github.com/VirtoCommerce/vc-deploy-apps.git
         cd vc-deploy-apps/platform-app/overlays/dev
 
-        kustomize edit set image virtocommerce/platform=leonidn/platform:3.0.0-123
+        kustomize edit set image virtocommerce/platform=leonidn/platform:3.0.0-135
 
         git config user.email "test@virtoway.com"
         git config user.name "GitHub Actions"
 
         git add .
-        git commit -m "Update the platform image version to 3.0.0-123"
+        git commit -m "Update the platform image version to 3.0.0-135"
 
         $remoteRepo="https://${{ github.actor }}:${{ secrets.REPO_TOKEN }}@github.com/VirtoCommerce/vc-deploy-apps.git"
 
