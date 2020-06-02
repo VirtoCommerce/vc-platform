@@ -8,7 +8,7 @@ Role-based security allows Virtocommerce administrators to group users into role
 
 Security system is composed of three main entities
 
-1. Permissions is a basic unit in security system. It describes particular right of action and has a string presentation which is used in permission checks. For example, orders:red, customer:access, customer:read, etc.
+1. Permissions is a basic unit in security system. It describes particular right of action and has a string presentation which is used in permission checks. For [example](https://github.com/VirtoCommerce/vc-module-order/blob/1079a4b308a42e6d0bec71fa545ed7bee911a9ed/src/VirtoCommerce.OrdersModule.Core/ModuleConstants.cs#L10), orders:read, customer:access, customer:read, etc.
 
 1. Roles are used to collect permissions that define a particular function within the platform, according to a particular scope. Roles can grant permissions to various functions within platform. A role is basically just a collection of permissions. Users that are assigned to the role will inherit these permissions.
 
@@ -85,7 +85,7 @@ Permissions are controlled by assigning Roles to users. A Role is a collection o
 1. On 'Manage roles' blade click 'Assign';
 1. Select the role to assign and click the 'OK' button;
 1. Save the changes;
-1. The new role will appear in user's account
+1. The new role will appear in user's account.
 
 ### Generate API key
 
@@ -145,7 +145,5 @@ To generate an API key, you should go through the following steps:
 ![Remove permissions](media/screen-remove-permissions.png)
 
 ## Documentation
-
-https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/src/VirtoCommerce.Platform.Web/appsettings.json#L56
 
 [Make secure Web API for Platform 3.0](https://community.virtocommerce.com/t/make-secure-web-api-for-platform-3-0/105)

@@ -5,10 +5,11 @@
 Platform settings are collected and delivered to Settings module by all platform modules.
 Each module can add settings to a standard UI by declaring them in the module manifest.
 
-In VC3 settings declaring moved to ModuleConstants.cs
+In VC3 settings are declared in ModuleConstants.cs
 
-**Example,**
+**Example**
 
+```C#
 public static SettingDescriptor ModuleNameEnabled { get; } = new SettingDescriptor
                 {
                     Name = "ModuleName.ModuleNameEnabled",
@@ -16,6 +17,7 @@ public static SettingDescriptor ModuleNameEnabled { get; } = new SettingDescript
                     ValueType = SettingValueType.Boolean,
                     DefaultValue = false
                 };
+```                
 
 To view the Platform settings go to VC admin->More->Settings.
 
