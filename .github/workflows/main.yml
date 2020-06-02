@@ -227,7 +227,13 @@ jobs:
     
         $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
         $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
-        $version = "$($versionPrefixNode.InnerText)$(if ($versionSuffixNode -ne "") { "-$($versionSuffixNode.InnerText)" } else { "" })-${{ github.run_number }}"
+        $version = "$($versionPrefixNode.InnerText.Trim())
+        if ([string]::IsNullOrEmpty($versionSuffixNode.InnerText)) 
+        { 
+          $version = "$($version)-$($versionSuffixNode.InnerText.Trim())" 
+        }  
+          
+        $version = "$($version)-${{ github.run_number }}"
 
         docker tag "$($REPOSITORY):${{ github.sha }}" "${{ secrets.DOCKER_USERNAME }}/platform:$($version)"
 
@@ -266,6 +272,6 @@ jobs:
         git add .
         git commit -m "Update the platform image version to linux-experimental"
 
-        $remoteRepo="https://${{ GITHUB_ACTOR }}:${{ secrets.REPO_TOKEN }}@github.com/VirtoCommerce/vc-deploy-apps.git"
+        $remoteRepo="https://${{ github.actor }}:${{ secrets.REPO_TOKEN }}@github.com/VirtoCommerce/vc-deploy-apps.git"
 
         git push $remoteRepo
