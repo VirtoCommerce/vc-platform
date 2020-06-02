@@ -309,7 +309,7 @@ jobs:
         git clone https://github.com/VirtoCommerce/vc-deploy-apps.git
         cd vc-deploy-apps/platform-app/overlays/dev
 
-        kustomize edit set image virtocommerce/platform=leonidn/platform:3.0.0-135
+        kustomize edit set image virtocommerce/platform=leonidn/platform:3.1.0-135
 
         git config user.email "test@virtoway.com"
         git config user.name "GitHub Actions"
