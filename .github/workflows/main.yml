@@ -334,14 +334,14 @@ jobs:
         deployment-sequence-number: '${{ github.run_id }}'
         update-sequence-number: '${{ github.run_id }}'
         issue-keys: "${{ steps.jira_keys.outputs.jira-keys }}"
-        display-name: "Deployment number asdf"
-        url: "${{github.event.repository.url}}/actions/runs/${{github.run_id}}"
+        display-name: "http://platform-platform.dev.govirto.com/f"
+        url: "http://platform-platform.dev.govirto.com/"
         description: "Deployment to the Development environment"
         last-updated: '${{github.event.head_commit.timestamp}}'
         state: "${{ env.BUILD_STATE }}"
         pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
         pipeline-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
-        pipeline-url: '${{github.event.repository.url}}/actions/runs/${{github.run_id}}'
+        pipeline-url: '${{github.event.repository.html_url}}/actions/runs/${{github.run_id}}'
         environment-id: 'Development'
         environment-display-name: 'Development'
         environment-type: 'development'
