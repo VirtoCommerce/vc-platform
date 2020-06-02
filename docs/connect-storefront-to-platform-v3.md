@@ -17,11 +17,11 @@ or host Storefront in IIS.
  "Endpoint": {
      //Specify platform url
      "Url": "https://localhost:5001",
-     //Comment the follow settings
+     //Comment the following settings
      //"AppId": "...",
      //"SecretKey":"...",
 
-     //Uncomment the follow settings
+     //Uncomment the following settings
       "UserName": "admin",
       "Password": "store",
       "RequestTimeout": "0:0:30"

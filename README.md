@@ -28,7 +28,7 @@ We decided to use the following stack of technologies:
 
 <a class="crosslink" href="https://virtocommerce.com/glossary/what-is-b2b-ecommerce" target="_blank">Platform and modules</a> are written using <a href="https://en.wikipedia.org/wiki/Domain-driven_design" rel="nofollow">DDD</a>, <a href="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)" rel="nofollow">SOLID</a>, <a href="https://en.wikipedia.org/wiki/Test-driven_development" rel="nofollow">Test Driven Development</a> methodologies. For a presentation layer, we use <a href="https://en.wikipedia.org/wiki/Model_View_ViewModel" rel="nofollow">MVVM</a>.
 
-![Virto Commerce 3 Architecture](/docs/media/architecture-circle.png "Virto Commerce 3 Architecture")
+<img src="/docs/media/architecture-circle.png" title="Virto Commerce 3 Architecture" width="400">
 
 ## Comparison with Platform 2.x
 
@@ -49,7 +49,7 @@ These Virto Commerce docs help you learn and use the Virto Commerce platform, fr
   * [Configure Platform and modules](/docs/configuration-settings.md)
   * [Connect Storefront to Platform](/docs/connect-storefront-to-platform-v3.md)
 * [Getting Started](/docs/getting-started.md)
-* [Migrate VC Platform Module from version 2.x to 3](/docs/Migrate-module-from-the-Platform-2.0-to-3.0-version.md)
+* [Update VC Platform Module from version 2.x to 3](/docs/Migrate-module-from-the-Platform-2.0-to-3.0-version.md)
 
 ## License
 

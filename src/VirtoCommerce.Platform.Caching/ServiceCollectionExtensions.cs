@@ -14,6 +14,9 @@ namespace VirtoCommerce.Platform.Caching
 
             var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
 
+            services.AddOptions<CachingOptions>().Bind(configuration.GetSection("Caching")).ValidateDataAnnotations();
+
+
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 services.AddOptions<RedisCachingOptions>().Bind(configuration.GetSection("Caching:Redis")).ValidateDataAnnotations();

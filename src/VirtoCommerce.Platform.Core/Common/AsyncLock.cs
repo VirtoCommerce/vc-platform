@@ -56,19 +56,21 @@ namespace VirtoCommerce.Platform.Core.Common
     // http://blogs.msdn.com/b/pfxteam/archive/2012/02/12/10266988.aspx
     public class AsyncLock
     {
+        private readonly string m_key;
         private readonly AsyncSemaphore m_semaphore;
         private readonly Task<Releaser> m_releaser;
         private static ConcurrentDictionary<string, AsyncLock> _lockMap = new ConcurrentDictionary<string, AsyncLock>();
 
-        public AsyncLock()
+        public AsyncLock(string key)
         {
             m_semaphore = new AsyncSemaphore(1);
-            m_releaser = Task.FromResult(new Releaser(this));
+            m_releaser = Task.FromResult(new Releaser(this, () => _lockMap.TryRemove(key, out var _)));
+            m_key = key;
         }
 
         public static AsyncLock GetLockByKey(string key)
         {
-            return _lockMap.GetOrAdd(key, (x) => new AsyncLock());
+            return _lockMap.GetOrAdd(key, (x) => new AsyncLock(key));
         }
 
         public Task<Releaser> LockAsync()
@@ -76,7 +78,7 @@ namespace VirtoCommerce.Platform.Core.Common
             var wait = m_semaphore.WaitAsync();
             return wait.IsCompleted ?
                 m_releaser :
-                wait.ContinueWith((_, state) => new Releaser((AsyncLock)state),
+                wait.ContinueWith((_, state) => new Releaser((AsyncLock)state, () => _lockMap.TryRemove(m_key, out var _)),
                     this, CancellationToken.None,
                     TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
         }
@@ -84,13 +86,21 @@ namespace VirtoCommerce.Platform.Core.Common
         public struct Releaser : IDisposable
         {
             private readonly AsyncLock m_toRelease;
+            private readonly Action m_postReleaseAction;
 
-            internal Releaser(AsyncLock toRelease) { m_toRelease = toRelease; }
+            internal Releaser(AsyncLock toRelease, Action postReleaseAction = null)
+            {
+                m_toRelease = toRelease;
+                m_postReleaseAction = postReleaseAction;
+            }
 
             public void Dispose()
             {
                 if (m_toRelease != null)
+                {
                     m_toRelease.m_semaphore.Release();
+                    m_postReleaseAction?.Invoke();
+                }
             }
         }
     }
