@@ -287,4 +287,4 @@ jobs:
         Invoke-WebRequest -Uri https://cd.govirto.com/download/argocd-linux-amd64 -OutFile argocd
         chmod +x argocd
         ./argocd app sync platform-app
-        cd app wait platform-app
+        ./argocd app wait platform-app
