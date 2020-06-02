@@ -332,7 +332,7 @@ jobs:
 
         Invoke-WebRequest -Uri https://cd.govirto.com/download/argocd-linux-amd64 -OutFile argocd
         chmod +x argocd
-        ./argocd app sync platform-app --grpc-web
+        ./argocd app sync platform-app --grpc-web --async
         ./argocd app wait platform-app --grpc-web
         echo "::set-env name=BUILD_STATE::successful"
 
