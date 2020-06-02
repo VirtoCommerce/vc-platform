@@ -277,7 +277,7 @@ jobs:
         git push $remoteRepo
 
     - name: Sync environment
-      shell: bashh
+      shell: bash
       run: |
         export ARGOCD_SERVER=cd.govirto.com
         export ARGOCD_AUTH_TOKEN=${{ secrets.ARGOCD_TOKEN }}
