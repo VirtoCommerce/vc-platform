@@ -259,7 +259,7 @@ jobs:
       with:
         kustomize-version: "3.1.0"
 
-    - name: start deployment
+    - name: Start deployment
       uses: bobheadxi/deployments@master
       id: deployment
       with:
@@ -298,8 +298,13 @@ jobs:
         chmod +x argocd
         ./argocd app sync platform-app
         ./argocd app wait platform-app
+        echo "::set-env name=BUILD_STATE::successful"
 
-    - name: update deployment status
+    - name: Failed Build
+      if: failure()
+      run: echo "::set-env name=BUILD_STATE::failed"
+
+    - name: Update GitHub deployment status
       uses: bobheadxi/deployments@master
       if: always()
       with:
@@ -333,7 +338,7 @@ jobs:
         url: "${{github.event.repository.url}}/actions/runs/${{github.run_id}}"
         description: "Deployment to the Development environment"
         last-updated: '${{github.event.head_commit.timestamp}}'
-        state: ${{ job.status }}
+        state: "${{ env.BUILD_STATE }}"
         pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
         pipeline-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
         pipeline-url: '${{github.event.repository.url}}/actions/runs/${{github.run_id}}'
