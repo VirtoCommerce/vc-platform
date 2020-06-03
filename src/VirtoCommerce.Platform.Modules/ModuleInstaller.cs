@@ -47,6 +47,13 @@ namespace VirtoCommerce.Platform.Modules
                     Report(progress, ProgressMessageLevel.Error, string.Format("Target Platform version {0} is incompatible with current {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
                     isValid = false;
                 }
+
+                if (!module.Version.IsCompatiblePrerelease(PlatformVersion.CurrentVersion))
+                {
+                    Report(progress, ProgressMessageLevel.Error, $"{module} is incompatible with current Platform version {PlatformVersion.CurrentVersion}");
+                    isValid = false;
+                }
+
                 var allInstalledModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).ToArray();
                 //Check that incompatible modules does not installed
                 if (!module.Incompatibilities.IsNullOrEmpty())
@@ -190,6 +197,7 @@ namespace VirtoCommerce.Platform.Modules
         }
         #endregion
 
+
         private void InnerInstall(ManifestModuleInfo module, IProgress<ProgressMessage> progress)
         {
             var dstModuleDir = Path.Combine(_options.DiscoveryPath, module.Id);
@@ -214,30 +222,11 @@ namespace VirtoCommerce.Platform.Modules
                 moduleZipPath = module.Ref;
             }
 
-            using (var archive = _zipFileWrapper.OpenRead(moduleZipPath))
-            {
-                foreach (var entry in archive.Entries.Where(e => !string.IsNullOrEmpty(e.Name)))
-                {
-                    var filePath = Path.Combine(dstModuleDir, entry.FullName);
-                    //Create directory if not exist
-                    var directoryPath = Path.GetDirectoryName(filePath);
-                    _fileManager.CreateDirectory(directoryPath);
-
-                    using (var entryStream = entry.Open())
-                    using (var fileStream = _fileSystem.File.Create(filePath))
-                    {
-                        entryStream.CopyTo(fileStream);
-                    }
-                    _fileSystem.File.SetLastWriteTime(filePath, entry.LastWriteTime.LocalDateTime);
-                }
-            }
+            _zipFileWrapper.Extract(moduleZipPath, dstModuleDir);
             
-
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
         }
-
-
-
+        
         private static void Report(IProgress<ProgressMessage> progress, ProgressMessageLevel level, string format, params object[] args)
         {
             if (progress != null)

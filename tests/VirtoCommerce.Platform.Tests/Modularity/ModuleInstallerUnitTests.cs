@@ -38,8 +38,9 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         [InlineData("3.0.0", "3.0.1", "3.0.1", "", false)]
         [InlineData("3.0.0-alpha1", "3.0.0", "3.0.0", "", false)]
         [InlineData("3.0.1-alpha1", "3.0.1", "3.0.1", "", false)]
-        [InlineData("3.0.1-alpha1", "3.0.1-alpha1", "3.0.1", "", true)]
+        [InlineData("3.0.1-alpha1", "3.0.1-alpha1", "3.0.1", "", false)]
         [InlineData("3.0.1-alpha1", "3.0.1-alpha1", "3.0.1-alpha1", "3.0.0", true)]
+        //[InlineData("3.0.0", "3.0.0", "3.0.1-alpha001", "3.0.0", false)]
         public void Install_Release_Installed(string currentVersionPlatform, string platformVersionOfModule, string versionModule, string installedVersionModule, bool isInstalled)
         {
             //Arrange
@@ -56,10 +57,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             module.LoadFromManifest(manifest);
             
             var modules = new List<ManifestModuleInfo> { module };
-            var fileSystemMock = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { Path.Combine(_options.DiscoveryPath, module.Id, $"{module.Id}_{module.Version}.zip"), new MockFileData("Testing is meh.") },
-            });
+            var fileSystemMock = new MockFileSystem();
 
             if (!string.IsNullOrEmpty(installedVersionModule))
             {
@@ -76,19 +74,10 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     .Returns(new List<ModuleInfo> { installedModule });
             }
 
-            var assembly = typeof(ModuleInstallerUnitTests).Assembly;
-            var zipFile = $"{typeof(ModuleInstallerUnitTests).Namespace}.{module.Id}.zip";
+            var service = GetModuleInstaller(fileSystemMock);
 
-            using (var stream = assembly.GetManifestResourceStream(zipFile))
-            {
-                var zip = new ZipArchive(stream, ZipArchiveMode.Read, true);
-                _zipFileWrapperMock.Setup(z => z.OpenRead(It.IsAny<string>()))
-                    .Returns(zip);
-                var service = GetModuleInstaller(fileSystemMock);
-
-                //Act
-                service.Install(modules, progress);
-            }
+            //Act
+            service.Install(modules, progress);
 
             //Assert
             Assert.Equal(isInstalled, module.IsInstalled);

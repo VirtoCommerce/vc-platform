@@ -33,9 +33,4 @@
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <None Remove="Modularity\SomeModule.zip" />
-        <EmbeddedResource Include="Modularity\SomeModule.zip" />
-    </ItemGroup>
-
 </Project>

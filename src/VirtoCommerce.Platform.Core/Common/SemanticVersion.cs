@@ -61,6 +61,25 @@ namespace VirtoCommerce.Platform.Core.Common
             return comparisonResult <= 0;
         }
 
+        public bool IsCompatiblePrerelease(SemanticVersion other)
+        {
+            var result = true;
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (string.IsNullOrEmpty(Prerelease) && string.IsNullOrEmpty(other.Prerelease))
+            {
+                result = true;
+            }
+            else if (string.IsNullOrEmpty(Prerelease) && !string.IsNullOrEmpty(other.Prerelease) ||
+                !string.IsNullOrEmpty(Prerelease) && string.IsNullOrEmpty(other.Prerelease))
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
         public static SemanticVersion Parse(string value)
         {
             if (string.IsNullOrEmpty(value))
