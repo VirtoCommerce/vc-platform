@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace VirtoCommerce.Platform.Core.Common
@@ -9,7 +10,7 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         private readonly Version _version;
 
-        public static readonly Regex SemanticVersionStrictRegex = new Regex(@"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})(?<Prerelease>-([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+(\.([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+)*)?(?<Metadata>\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
+        public static readonly Regex SemanticVersionStrictRegex = new Regex(@"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})(?>\-(?<Prerelease>([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+)(\.([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+)*)?(?<Metadata>\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$", RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
         public SemanticVersion(Version version)
         {
             if (version == null)
@@ -52,6 +53,12 @@ namespace VirtoCommerce.Platform.Core.Common
             return retVal;
         }
 
+        public SemanticVersion SetPrerelase(string prerelease)
+        {
+            Prerelease = prerelease;
+            return this;
+        }
+
         public bool IsCompatibleWith(SemanticVersion other)
         {
             if (other == null)
@@ -67,12 +74,9 @@ namespace VirtoCommerce.Platform.Core.Common
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
-            if (string.IsNullOrEmpty(Prerelease) && string.IsNullOrEmpty(other.Prerelease))
-            {
-                result = true;
-            }
-            else if (string.IsNullOrEmpty(Prerelease) && !string.IsNullOrEmpty(other.Prerelease) ||
-                !string.IsNullOrEmpty(Prerelease) && string.IsNullOrEmpty(other.Prerelease))
+            //VP-2336: The pre-release platform allows installing pre-release versions of modules
+            //VP-2336: The release (stable) platform allows installing release versions of modules only.
+            if (string.IsNullOrEmpty(Prerelease) && !string.IsNullOrEmpty(other.Prerelease))
             {
                 result = false;
             }
@@ -88,7 +92,6 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             var match = SemanticVersionStrictRegex.Match(value.Trim());
-
 
             if (match.Success && Version.TryParse(match.Groups["Version"].Value, out var versionValue))
             {
@@ -144,12 +147,17 @@ namespace VirtoCommerce.Platform.Core.Common
                 return false;
             }
 
-            // Return true if the fields match:
-            return _version == other._version;
+            return Major == other.Major
+                   && Minor == other.Minor
+                   && Patch == other.Patch
+                   && string.Equals(Prerelease, other.Prerelease, StringComparison.Ordinal);
         }
+
         public override int GetHashCode()
         {
-            return _version.GetHashCode();
+            int result = _version.GetHashCode();
+            result = result * 31 + Prerelease.GetHashCode();
+            return result;
         }
 
         #region IComparable Members
@@ -224,7 +232,18 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public override string ToString()
         {
-            return $"{Major}.{Minor}.{Patch}{Prerelease}";
+            var version = new StringBuilder();
+            version.Append(Major);
+            version.Append('.');
+            version.Append(Minor);
+            version.Append('.');
+            version.Append(Patch);
+            if (Prerelease.Length > 0)
+            {
+                version.Append('-');
+                version.Append(Prerelease);
+            }
+            return version.ToString();
         }
     }
 }

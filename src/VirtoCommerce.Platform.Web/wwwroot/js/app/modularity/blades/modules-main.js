@@ -38,9 +38,9 @@
                         _.each(vals, function (m) {
                             if (m === foundInstalledModule) {
                                 if (m !== latest)
-                                    m.$alternativeVersion = latest.version + (latest.versionTag ? '-' + latest.versionTag : '');
+                                    m.$alternativeVersion = latest.version;
                             } else {
-                                m.$alternativeVersion = foundInstalledModule.version + (foundInstalledModule.versionTag ? '-' + foundInstalledModule.versionTag : '');
+                                m.$alternativeVersion = foundInstalledModule.version;
                             }
                         });
                     }

@@ -48,7 +48,7 @@ namespace VirtoCommerce.Platform.Modules
                     isValid = false;
                 }
 
-                if (!module.Version.IsCompatiblePrerelease(PlatformVersion.CurrentVersion))
+                if (!PlatformVersion.CurrentVersion.IsCompatiblePrerelease(module.Version))
                 {
                     Report(progress, ProgressMessageLevel.Error, $"{module} is incompatible with current Platform version {PlatformVersion.CurrentVersion}");
                     isValid = false;

@@ -1,9 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.IO.Compression;
+using System.Linq;
+using FluentAssertions;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Common;
@@ -34,63 +37,137 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         }
 
         [Theory]
-        [InlineData("3.0.0", "3.0.0", "3.0.0", "", true)]
-        [InlineData("3.0.0", "3.0.1", "3.0.1", "", false)]
-        [InlineData("3.0.0-alpha1", "3.0.0", "3.0.0", "", false)]
-        [InlineData("3.0.1-alpha1", "3.0.1", "3.0.1", "", false)]
-        [InlineData("3.0.1-alpha1", "3.0.1-alpha1", "3.0.1", "", false)]
-        [InlineData("3.0.1-alpha1", "3.0.1-alpha1", "3.0.1-alpha1", "3.0.0", true)]
-        //[InlineData("3.0.0", "3.0.0", "3.0.1-alpha001", "3.0.0", false)]
-        public void Install_Release_Installed(string currentVersionPlatform, string platformVersionOfModule, string versionModule, string installedVersionModule, bool isInstalled)
+        [ClassData(typeof(ModularityTestData))]
+        public void Install_Release_Installed(string currentVersionPlatform, ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool isInstalled)
         {
             //Arrange
-            
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(currentVersionPlatform);
             var progress = new Progress<ProgressMessage>();
-            var manifest = new ModuleManifest
-            {
-                Id = "SomeModule",
-                Version = versionModule,
-                PlatformVersion = platformVersionOfModule,
-            };
-            var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-            module.LoadFromManifest(manifest);
+
+            var modules = GetManifestModuleInfos(moduleManifests);
+            var installedModules = GetManifestModuleInfos(installedModuleManifests);
             
-            var modules = new List<ManifestModuleInfo> { module };
-            var fileSystemMock = new MockFileSystem();
+            _extModuleCatalogMock.Setup(x => x.Modules)
+                .Returns(installedModules.Select(x => { x.IsInstalled = true; return x; }));
 
-            if (!string.IsNullOrEmpty(installedVersionModule))
-            {
-                var installedModuleManifest = new ModuleManifest
-                {
-                    Id = "SomeModule",
-                    Version = installedVersionModule,
-                    PlatformVersion = currentVersionPlatform,
-                };
-                var installedModule = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                installedModule.LoadFromManifest(installedModuleManifest);
-                installedModule.IsInstalled = true;
-                _extModuleCatalogMock.Setup(x => x.Modules)
-                    .Returns(new List<ModuleInfo> { installedModule });
-            }
-
-            var service = GetModuleInstaller(fileSystemMock);
+            var service = GetModuleInstaller();
 
             //Act
             service.Install(modules, progress);
 
             //Assert
-            Assert.Equal(isInstalled, module.IsInstalled);
+            modules.All(x => x.IsInstalled).Should().Be(isInstalled);
         }
 
-        private ModuleInstaller GetModuleInstaller(IFileSystem fileSystem)
+        private ManifestModuleInfo[] GetManifestModuleInfos(ModuleManifest[] moduleManifests)
+        {
+            return moduleManifests.Select(x =>
+            {
+                var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+                module.LoadFromManifest(x);
+                return module;
+            }).ToArray();
+        }
+
+        private ModuleInstaller GetModuleInstaller()
         {
             return new ModuleInstaller(_extModuleCatalogMock.Object,
                 _externalClientMock.Object,
                 _fileManagerMock.Object,
                 Options.Create(_options),
-                fileSystem,
+                new MockFileSystem(),
                 _zipFileWrapperMock.Object);
+        }
+
+
+        class ModularityTestData : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
+                yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.0.1", PlatformVersion = "3.0.1" } }, Array.Empty<ModuleManifest>(), false };
+                yield return new object[] { "3.0.0-alpha1", new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), false };
+                yield return new object[] { "3.0.0-alpha1", new[] { new ModuleManifest { Id = "A", Version = "3.0.1", PlatformVersion = "3.0.1" } }, Array.Empty<ModuleManifest>(), false };
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } },
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } }, //installed
+                    true
+                };
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } },
+                    new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, //installed
+                    true
+                };
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0" },
+                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } }
+                    },
+                    true
+                };
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.2.0", PlatformVersion = "3.0.0" },
+                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } } }
+                    },
+                    true
+                };
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "4.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "4.0.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0" },
+                        new ModuleManifest { Id = "C", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } },
+                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } }
+                    },
+                    true
+                };
+                yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
+                yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), false };
+                yield return new object[]
+                {
+                    "3.0.0-alpha001",
+                    new[] {new ModuleManifest {Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0-alpha001" } },
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0-alpha001" } }, //installed
+                    true
+                };
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] {new ModuleManifest {Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0" } },
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } }, //installed
+                    false
+                };
+                yield return new object[]
+                {
+                    "3.0.0-alpha001",
+                    new[] {new ModuleManifest {Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0" } },
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } }, //installed
+                    false
+                };
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
         }
     }
 }
