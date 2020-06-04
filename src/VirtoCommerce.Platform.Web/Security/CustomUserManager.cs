@@ -174,24 +174,21 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             var result = await base.UpdateAsync(user);
 
-            if (result.Succeeded)
+            if (result.Succeeded && user.Roles != null)
             {
-                if (user.Roles != null)
+                var targetRoles = (await GetRolesAsync(user));
+                var sourceRoles = user.Roles.Select(x => x.Name);
+
+                //Add
+                foreach (var newRole in sourceRoles.Except(targetRoles))
                 {
-                    var targetRoles = (await GetRolesAsync(user));
-                    var sourceRoles = user.Roles.Select(x => x.Name);
+                    await AddToRoleAsync(user, newRole);
+                }
 
-                    //Add
-                    foreach (var newRole in sourceRoles.Except(targetRoles))
-                    {
-                        await AddToRoleAsync(user, newRole);
-                    }
-
-                    //Remove
-                    foreach (var removeRole in targetRoles.Except(sourceRoles))
-                    {
-                        await RemoveFromRoleAsync(user, removeRole);
-                    }
+                //Remove
+                foreach (var removeRole in targetRoles.Except(sourceRoles))
+                {
+                    await RemoveFromRoleAsync(user, removeRole);
                 }
             }
 
