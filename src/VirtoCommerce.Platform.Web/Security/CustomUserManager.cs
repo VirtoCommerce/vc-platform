@@ -193,8 +193,6 @@ namespace VirtoCommerce.Platform.Web.Security
                         await RemoveFromRoleAsync(user, removeRole);
                     }
                 }
-
-                SecurityCacheRegion.ExpireUser(user);
             }
 
             return result;
