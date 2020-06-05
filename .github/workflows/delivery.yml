@@ -133,7 +133,7 @@ jobs:
 
     - name: Remove Deployment Pending Label
       uses: buildsville/add-remove-label@v1
-      if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'deployment pending') }}
+      if: ${{ always() && github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'deployment pending') }}
       with:
         token: ${{secrets.GITHUB_TOKEN}}
         label: 'deployment pending'
