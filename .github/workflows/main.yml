@@ -65,31 +65,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Create a repository dispatch event to trigger workflow
-      shell: pwsh
-      env:
-        GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
-      run: |
-        $pat = $env:GITHUB_PAT
-        $uri = "${{ github.event.repository.url }}/dispatches"
-        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "", $pat)))
-
-        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $headers.Add("Authorization", ("Basic {0}" -f $base64AuthInfo))
-        $headers.Add("Accept", "application/vnd.github.everest-preview+json")
-        $headers.Add("Content-Type", "application/json")
-
-        $body = "{
-          `"event_type`": `"test-repository-dispatch`",
-          `"client_payload`": {
-            `"unit`": false,
-            `"integration`": true
-          }
-        }"
-
-        $response = Invoke-RestMethod -Uri $uri -Headers $headers -Body $body -Method POST
-        $response | ConvertTo-Json
-
     - name: Get Image Tag
       shell: pwsh
       run: |
@@ -332,27 +307,9 @@ jobs:
         repo-url: '${{ github.event.repository.html_url }}'
         build-ref-url: '${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}'
 
-    - name: Create a repository dispatch event to trigger workflow
-      shell: pwsh
-      env:
-        GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
-      run: |
-        $pat = $env:GITHUB_PAT
-        $uri = "${{ github.event.repository.url }}/dispatches"
-        $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "", $pat)))
-
-        $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-        $headers.Add("Authorization", ("Basic {0}" -f $base64AuthInfo))
-        $headers.Add("Accept", "application/vnd.github.everest-preview+json")
-        $headers.Add("Content-Type", "application/json")
-
-        $body = "{
-          `"event_type`": `"test-repository-dispatch`",
-          `"client_payload`": {
-            `"unit`": false,
-            `"integration`": true
-          }
-        }"
-
-        $response = Invoke-RestMethod -Uri $uri -Headers $headers -Body $body -Method POST
-        $response | ConvertTo-Json
+    - name: Add Deployment Pending Label
+      uses: buildsville/add-remove-label@v1
+      with:
+        token: ${{secrets.GITHUB_TOKEN}}
+        label: 'deployment pending'
+        type: add

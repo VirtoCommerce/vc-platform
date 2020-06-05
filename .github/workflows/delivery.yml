@@ -3,8 +3,6 @@ name: Deploy
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  repository_dispatch:
-
   pull_request:
     types: [labeled]
 
@@ -14,7 +12,7 @@ jobs:
     name: Deploy
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'testing') }}
+    if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'testing') && contains(github.event.pull_request.labels.*.name, 'deployment pending') }}
     env:
       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
       DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
@@ -132,3 +130,11 @@ jobs:
         environment-id: 'development'
         environment-display-name: 'Dev'
         environment-type: 'development'
+
+    - name: Remove Testing Label
+      uses: buildsville/add-remove-label@v1
+      if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'deployment pending') }}
+      with:
+        token: ${{secrets.GITHUB_TOKEN}}
+        label: 'deployment pending'
+        type: remove
