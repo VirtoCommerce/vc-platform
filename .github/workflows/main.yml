@@ -247,7 +247,7 @@ jobs:
           $PLATFORM_DOCKER_TAG = 'linux-latest'
         }
         elseif ('${{ github.event_name }}' -eq 'pull_request') {
-          $PLATFORM_DOCKER_TAG = '${{ github.event.pull_request.head.ref }}'
+          $PLATFORM_DOCKER_TAG = 'pr${{ github.event.pull_request.number }}'
         }
         else {
           $PLATFORM_DOCKER_TAG = "$('${{ github.ref }}'.Replace('refs/heads/', ''))-linux-latest"
