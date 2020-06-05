@@ -1,4 +1,4 @@
-name: deploy
+name: Deploy
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -6,6 +6,7 @@ on:
   push:
     branches: [ dev ]
   pull_request:
+    types: [opened, synchronize, reopened, edited]
     branches: [ dev ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -14,7 +15,7 @@ jobs:
     name: Deploy
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.names, 'testing') }}
+    if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'testing') }}
     env:
       DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
       DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
