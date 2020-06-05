@@ -37,7 +37,7 @@ jobs:
         $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
 
         echo "::set-output name=tag::$version"
-        id: image
+      id: image
 
     - name: Setup Kustomize
       uses: imranismail/setup-kustomize@v1
