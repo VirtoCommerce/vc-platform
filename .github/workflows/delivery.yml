@@ -131,7 +131,7 @@ jobs:
         environment-display-name: 'Dev'
         environment-type: 'development'
 
-    - name: Remove Testing Label
+    - name: Remove Deployment Pending Label
       uses: buildsville/add-remove-label@v1
       if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'deployment pending') }}
       with:
