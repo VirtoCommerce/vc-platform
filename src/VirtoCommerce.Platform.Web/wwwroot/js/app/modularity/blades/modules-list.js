@@ -146,6 +146,19 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                     }
                 });
 
+                // toggle grouped rows selection	
+                gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                    if (row.internalRow) {
+                        _.each(row.treeNode.children, function (treeNode) {
+                            if (row.isSelected) {
+                                gridApi.selection.selectRow(treeNode.row.entity);
+                            } else {
+                                gridApi.selection.unSelectRow(treeNode.row.entity);
+                            }
+                        });
+                    }
+                });
+
                 $scope.toggleRow = function (row) {
                     gridApi.treeBase.toggleRowTreeState(row);
                 };
