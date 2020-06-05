@@ -78,7 +78,7 @@ jobs:
           $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
         }  
           
-        $version = "$($versionPrefix)$versionSuffix-$('{{ github.sha }}'.Substring(0, 8))"
+        $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
 
         echo ::set-output name=tag::$version
       id: image
@@ -156,7 +156,7 @@ jobs:
           $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
         }  
           
-        $version = "$($versionPrefix)$versionSuffix-$('{{ github.sha }}'.Substring(0, 8))"
+        $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
 
         echo ::set-output name=tag::$version
       id: image
@@ -226,7 +226,7 @@ jobs:
           $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
         }  
           
-        $version = "$($versionPrefix)$versionSuffix-$('{{ github.sha }}'.Substring(0, 8))"
+        $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
 
         echo ::set-output name=tag::$version
       id: image
