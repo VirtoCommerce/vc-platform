@@ -1,13 +1,10 @@
-# Deploy Platform from source code
-
-[Deploy Module from source code](deploy-module-from-source-code.md)
-
+# Deploy from source code
 
 ## Installation
 
 To get started locally, follow these instructions:
 
-1. Make sure that you have all [Prerequisites](deploy-from-precompiled-binaries-windows.md#prerequisites) installed 
+1. Make sure that you have all [Prerequisites](../getting-started/deploy-from-precompiled-binaries-windows.md#prerequisites) installed 
 1. Make fork from the latest platform source code from [latest release](https://github.com/VirtoCommerce/vc-platform/tree/release/3.0.0)
 1. Clone to your local computer using `git` and and switch to the release/3.0.0 branch
 

@@ -1,6 +1,4 @@
-# Deploy Module from source code
-
-[Deploy Platform from source code](deploy-from-source-code.md)
+# Deploy module from source code
 
 ## Installation
 
