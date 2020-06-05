@@ -62,9 +62,26 @@ jobs:
     name: Build Package
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
+
+    - name: Get Image Tag
+      shell: pwsh
+      run: |
+        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
+      
+        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
+        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
+        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
+        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
+        { 
+          $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
+        }  
+          
+        $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
+
+        echo "::set-output name=tag::$version"
+      id: image
 
     - name: Install VirtoCommerce.GlobalTool
       run: |
@@ -78,7 +95,7 @@ jobs:
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile artifacts/publish/Dockerfile"
-        docker build artifacts/publish --build-arg SOURCE=. --tag "docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }}"
+        docker build artifacts/publish --build-arg SOURCE=. --tag "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
 
     - name: Docker Login
       uses: azure/docker-login@v1
@@ -98,14 +115,13 @@ jobs:
     - name: Push Docker Image to GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker push "docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }}"
+        docker push "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
 
   swagger-validation:
     name: Swagger Schema Validation
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: build-package
-
     steps:
     - uses: actions/checkout@v2
 
@@ -127,10 +143,28 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Get Image Tag
+      shell: pwsh
+      run: |
+        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
+      
+        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
+        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
+        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
+        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
+        { 
+          $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
+        }  
+          
+        $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
+
+        echo "::set-output name=tag::$version"
+      id: image
+
     - name: Pull Platform Docker Image from GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }}"
+        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
 
     - name: Run container
       run: |
@@ -140,7 +174,7 @@ jobs:
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/docker-compose.yml -OutFile docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/platform','docker.pkg.github.com/$REPOSITORY/platform') | Set-Content -Path docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'MultipleActiveResultSets=True','MultipleActiveResultSets=False') | Set-Content -Path docker-compose.yml"
-        echo PLATFORM_DOCKER_TAG=${{ github.sha }} >> .env
+        echo PLATFORM_DOCKER_TAG=${{ steps.image.outputs.tag }} >> .env
         echo STOREFRONT_DOCKER_TAG=3.0-preview-linux >> .env
         echo DOCKER_PLATFORM_PORT=8081 >> .env
         echo DOCKER_STOREFRONT_PORT=8082 >> .env
@@ -171,8 +205,9 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: [build-package, unit-tests, swagger-validation]
-
     steps:
+    - uses: actions/checkout@v2
+
     - name: Docker Login
       uses: azure/docker-login@v1
       with:
@@ -180,10 +215,28 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Get Image Tag
+      shell: pwsh
+      run: |
+        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
+      
+        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
+        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
+        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
+        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
+        { 
+          $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
+        }  
+          
+        $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
+
+        echo "::set-output name=tag::$version"
+      id: image
+
     - name: Pull Platform Docker Image from GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }}"
+        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
 
     - name: Push Docker Image to docker.pkg.github.com
       shell: pwsh
@@ -194,7 +247,7 @@ jobs:
           $PLATFORM_DOCKER_TAG = 'linux-latest'
         }
         elseif ('${{ github.event_name }}' -eq 'pull_request') {
-          $PLATFORM_DOCKER_TAG = '${{ github.event.pull_request.head.ref }}'
+          $PLATFORM_DOCKER_TAG = 'pr${{ github.event.pull_request.number }}'
         }
         else {
           $PLATFORM_DOCKER_TAG = "$('${{ github.ref }}'.Replace('refs/heads/', ''))-linux-latest"
@@ -202,8 +255,9 @@ jobs:
 
         $PLATFORM_DOCKER_TAG = $PLATFORM_DOCKER_TAG.Replace('/', '_')
         
-        docker tag "$($REPOSITORY):${{ github.sha }}" "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
+        docker tag "$($REPOSITORY):${{ steps.image.outputs.tag }}" "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
         docker push "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
+        echo "::set-env name=BUILD_STATE::successful"
 
     - name: Push Docker Image to hub.docker.io
       if: ${{ env.DOCKER_USERNAME != 0 && env.DOCKER_TOKEN != 0 && github.event_name != 'pull_request' }}
@@ -214,6 +268,41 @@ jobs:
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         PLATFORM_DOCKER_TAG='dev-linux-experimental'
         if [ '${{ github.ref }}' = 'refs/heads/master' ]; then PLATFORM_DOCKER_TAG=linux-experimental; fi
-        docker tag docker.pkg.github.com/$REPOSITORY/platform:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
+        docker tag docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }} ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
         docker push ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
+        echo "::set-env name=BUILD_STATE::successful"
+
+    - name: Set Build status Failed
+      if: failure()
+      run: echo "::set-env name=BUILD_STATE::failed"
+
+    - name: Parse Jira Keys from Commit
+      id: jira_keys
+      if: always()
+      uses: HighwayThree/jira-extract-issue-keys@master
+      with:
+        is-pull-request: ${{ github.event_name == 'pull_request' }}
+        parse-all-commits: ${{ github.event_name == 'push' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push Build Info to Jira
+      if: steps.jira_keys.outputs.jira-keys != ''
+      id: push_build_info_to_jira
+      uses: HighwayThree/jira-upload-build-info@master
+      with:
+        cloud-instance-base-url: '${{ secrets.CLOUD_INSTANCE_BASE_URL }}'
+        client-id: '${{ secrets.CLIENT_ID }}'
+        client-secret: '${{ secrets.CLIENT_SECRET }}'
+        pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
+        build-number: ${{ github.run_number }}
+        build-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
+        build-state: "${{ env.BUILD_STATE }}"
+        build-url: '${{github.event.repository.html_url}}/actions/runs/${{github.run_id}}'
+        update-sequence-number: '${{ github.run_id }}'
+        last-updated: '${{github.event.head_commit.timestamp}}'
+        issue-keys: "${{ steps.jira_keys.outputs.jira-keys }}"
+        commit-id: '${{ github.sha }}'
+        repo-url: '${{ github.event.repository.html_url }}'
+        build-ref-url: '${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}'
