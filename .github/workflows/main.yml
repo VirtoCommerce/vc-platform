@@ -62,9 +62,6 @@ jobs:
     name: Build Package
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    env:
-      SHA8: ${ GITHUB_SHA:8 }
-
     steps:
     - uses: actions/checkout@v2
 
@@ -76,11 +73,30 @@ jobs:
     - name: Build Package
       run: vc-build Compress -skip Test
 
+    - name: Get Image Tag
+      shell: pwsh
+      run: |
+        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
+      
+        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
+        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
+        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
+        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
+        { 
+          $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
+        }  
+          
+        $version = "$($versionPrefix)$versionSuffix-$('{{ github.sha }}'.Substring(0, 8))"
+
+        echo ::set-output name=tag::$version
+      working-directory: ./src/github.com/argoproj/argo-cd
+      id: image
+
     - name: Build Docker Image
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile artifacts/publish/Dockerfile"
-        docker build artifacts/publish --build-arg SOURCE=. --tag "docker.pkg.github.com/$REPOSITORY/platform:$SHA8"
+        docker build artifacts/publish --build-arg SOURCE=. --tag "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
 
     - name: Docker Login
       uses: azure/docker-login@v1
@@ -100,16 +116,13 @@ jobs:
     - name: Push Docker Image to GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker push "docker.pkg.github.com/$REPOSITORY/platform:$SHA8"
+        docker push "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
 
   swagger-validation:
     name: Swagger Schema Validation
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: build-package
-    env:
-      SHA8: ${ GITHUB_SHA:8 }
-
     steps:
     - uses: actions/checkout@v2
 
@@ -131,10 +144,29 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Get Image Tag
+      shell: pwsh
+      run: |
+        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
+      
+        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
+        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
+        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
+        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
+        { 
+          $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
+        }  
+          
+        $version = "$($versionPrefix)$versionSuffix-$('{{ github.sha }}'.Substring(0, 8))"
+
+        echo ::set-output name=tag::$version
+      working-directory: ./src/github.com/argoproj/argo-cd
+      id: image
+
     - name: Pull Platform Docker Image from GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker pull "docker.pkg.github.com/$REPOSITORY/platform:$SHA8"
+        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
 
     - name: Run container
       run: |
@@ -144,7 +176,7 @@ jobs:
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/docker-compose.yml -OutFile docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/platform','docker.pkg.github.com/$REPOSITORY/platform') | Set-Content -Path docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'MultipleActiveResultSets=True','MultipleActiveResultSets=False') | Set-Content -Path docker-compose.yml"
-        echo PLATFORM_DOCKER_TAG=$SHA8 >> .env
+        echo PLATFORM_DOCKER_TAG=${{ steps.image.outputs.tag }} >> .env
         echo STOREFRONT_DOCKER_TAG=3.0-preview-linux >> .env
         echo DOCKER_PLATFORM_PORT=8081 >> .env
         echo DOCKER_STOREFRONT_PORT=8082 >> .env
@@ -175,9 +207,6 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: [build-package, unit-tests, swagger-validation]
-    env:
-      SHA8: ${ GITHUB_SHA:8 }
-
     steps:
     - name: Docker Login
       uses: azure/docker-login@v1
@@ -186,10 +215,29 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Get Image Tag
+      shell: pwsh
+      run: |
+        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
+      
+        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
+        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
+        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
+        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
+        { 
+          $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
+        }  
+          
+        $version = "$($versionPrefix)$versionSuffix-$('{{ github.sha }}'.Substring(0, 8))"
+
+        echo ::set-output name=tag::$version
+      working-directory: ./src/github.com/argoproj/argo-cd
+      id: image
+
     - name: Pull Platform Docker Image from GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker pull "docker.pkg.github.com/$REPOSITORY/platform:$SHA8"
+        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
 
     - name: Push Docker Image to docker.pkg.github.com
       shell: pwsh
@@ -208,7 +256,7 @@ jobs:
 
         $PLATFORM_DOCKER_TAG = $PLATFORM_DOCKER_TAG.Replace('/', '_')
         
-        docker tag "$($REPOSITORY):$($env.SHA8)" "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
+        docker tag "$($REPOSITORY):${{ steps.image.outputs.tag }}" "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
         docker push "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
 
     - name: Push Docker Image to hub.docker.io
@@ -220,6 +268,6 @@ jobs:
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         PLATFORM_DOCKER_TAG='dev-linux-experimental'
         if [ '${{ github.ref }}' = 'refs/heads/master' ]; then PLATFORM_DOCKER_TAG=linux-experimental; fi
-        docker tag docker.pkg.github.com/$REPOSITORY/platform:$SHA8 ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
+        docker tag docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }} ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
         docker push ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
