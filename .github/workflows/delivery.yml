@@ -59,7 +59,7 @@ jobs:
         cd vc-deploy-apps/platform-app/overlays/dev
 
         $REPOSITORY = "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform"
-        kustomize edit set image virtocommerce/platform=$REPOSITORY/platform:${{ steps.image.outputs.tag }}
+        kustomize edit set image virtocommerce/platform=$REPOSITORY:${{ steps.image.outputs.tag }}
 
         git config user.email "test@virtoway.com"
         git config user.name "GitHub Actions"
