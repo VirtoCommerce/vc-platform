@@ -1,0 +1,135 @@
+name: deploy
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy:
+    name: Deploy
+    needs: publish
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.names, 'testing') }}
+    env:
+      DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+      DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Get Image Tag
+        shell: pwsh
+        run: |
+        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
+        
+        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
+        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
+        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
+        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
+        { 
+            $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
+        }  
+            
+        $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
+
+        echo "::set-output name=tag::$version"
+        id: image
+
+    - name: Setup Kustomize
+      uses: imranismail/setup-kustomize@v1
+      with:
+        kustomize-version: "3.1.0"
+
+    - name: Start deployment
+      uses: bobheadxi/deployments@master
+      id: deployment
+      with:
+        step: start
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: Development
+        no_override: false
+
+    - name: Commit environment change
+      shell: pwsh
+      run: |
+        cd ${{ github.workspace }}
+        git clone https://github.com/VirtoCommerce/vc-deploy-apps.git
+        cd vc-deploy-apps/platform-app/overlays/dev
+
+        $REPOSITORY = "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform"
+        kustomize edit set image virtocommerce/platform=$REPOSITORY/platform:${{ steps.image.outputs.tag }}
+
+        git config user.email "test@virtoway.com"
+        git config user.name "GitHub Actions"
+
+        git add .
+        git commit -m "Update the platform image version to $($version)"
+
+        $remoteRepo="https://${{ github.actor }}:${{ secrets.REPO_TOKEN }}@github.com/VirtoCommerce/vc-deploy-apps.git"
+
+        git push $remoteRepo
+
+    - name: Sync environment
+      shell: pwsh
+      env:
+        ARGOCD_SERVER: cd.govirto.com
+        ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
+      run: |
+        cd ${{ github.workspace }}
+
+        Invoke-WebRequest -Uri https://cd.govirto.com/download/argocd-linux-amd64 -OutFile argocd
+        chmod +x argocd
+        ./argocd app sync platform-app --grpc-web --async
+        ./argocd app wait platform-app --grpc-web
+        echo "::set-env name=BUILD_STATE::successful"
+
+    - name: Failed Build
+      if: failure()
+      run: echo "::set-env name=BUILD_STATE::failed"
+
+    - name: Update GitHub deployment status
+      uses: bobheadxi/deployments@master
+      if: always()
+      with:
+        step: finish
+        token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+    - name: Parse Jira Keys from All Commits
+      id: jira_keys
+      if: always()
+      uses: HighwayThree/jira-extract-issue-keys@master
+      with:
+        is-pull-request: ${{ github.event_name == 'pull_request' }}
+        parse-all-commits: ${{ github.event_name == 'push' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+    - name: Push Deployment Info to Jira
+      if: ${{ steps.jira_keys.outputs.jira-keys != '' && always() }}
+      id: push_deployment_info_to_jira
+      uses: HighwayThree/jira-upload-deployment-info@master
+      with:
+        cloud-instance-base-url: '${{ secrets.CLOUD_INSTANCE_BASE_URL }}'
+        client-id: '${{ secrets.CLIENT_ID }}'
+        client-secret: '${{ secrets.CLIENT_SECRET }}'
+        deployment-sequence-number: '${{ github.run_id }}'
+        update-sequence-number: '${{ github.run_id }}'
+        issue-keys: "${{ steps.jira_keys.outputs.jira-keys }}"
+        display-name: "http://platform-platform.dev.govirto.com/f"
+        url: "http://platform-platform.dev.govirto.com/"
+        description: "Deployment to the Development environment"
+        last-updated: '${{github.event.head_commit.timestamp}}'
+        state: "${{ env.BUILD_STATE }}"
+        pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
+        pipeline-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
+        pipeline-url: '${{github.event.repository.html_url}}/actions/runs/${{github.run_id}}'
+        environment-id: 'development'
+        environment-display-name: 'Dev'
+        environment-type: 'development'
