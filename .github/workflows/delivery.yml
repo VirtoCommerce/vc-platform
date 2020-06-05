@@ -12,7 +12,6 @@ on:
 jobs:
   deploy:
     name: Deploy
-    needs: publish
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.names, 'testing') }}
