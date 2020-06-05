@@ -113,7 +113,6 @@ jobs:
         path: artifacts/publish/  
 
     - name: Push Docker Image to GitHub
-      shell: pwsh
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         docker push "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
