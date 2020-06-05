@@ -89,7 +89,6 @@ jobs:
         $version = "$($versionPrefix)$versionSuffix-$('{{ github.sha }}'.Substring(0, 8))"
 
         echo ::set-output name=tag::$version
-      working-directory: ./src/github.com/argoproj/argo-cd
       id: image
 
     - name: Build Docker Image
@@ -160,7 +159,6 @@ jobs:
         $version = "$($versionPrefix)$versionSuffix-$('{{ github.sha }}'.Substring(0, 8))"
 
         echo ::set-output name=tag::$version
-      working-directory: ./src/github.com/argoproj/argo-cd
       id: image
 
     - name: Pull Platform Docker Image from GitHub
@@ -231,7 +229,6 @@ jobs:
         $version = "$($versionPrefix)$versionSuffix-$('{{ github.sha }}'.Substring(0, 8))"
 
         echo ::set-output name=tag::$version
-      working-directory: ./src/github.com/argoproj/argo-cd
       id: image
 
     - name: Pull Platform Docker Image from GitHub
