@@ -48,6 +48,8 @@ namespace VirtoCommerce.Platform.Modules
                     isValid = false;
                 }
 
+                //VP-2336: The pre-release platform allows installing pre-release versions of modules
+                //VP-2336: The release (stable) platform allows installing release versions of modules only.
                 if (!PlatformVersion.CurrentVersion.IsCompatiblePrerelease(module.Version))
                 {
                     Report(progress, ProgressMessageLevel.Error, $"{module} is incompatible with current Platform version {PlatformVersion.CurrentVersion}");

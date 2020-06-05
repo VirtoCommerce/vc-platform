@@ -73,8 +73,6 @@ namespace VirtoCommerce.Platform.Core.Common
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
-            //VP-2336: The pre-release platform allows installing pre-release versions of modules
-            //VP-2336: The release (stable) platform allows installing release versions of modules only.
             var comparisonResult = CompareComponent(Prerelease, other.Prerelease, true);
             return comparisonResult <= 0;
         }
