@@ -5,7 +5,6 @@ name: Deploy
 on:
   push:
     branches: [ dev ]
-pull_request:
   pull_request:
     types: [labeled]
     branches: [ dev ]
