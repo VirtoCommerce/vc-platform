@@ -73,6 +73,9 @@ jobs:
         
         do {
           $appInfo = argocd app get platform-app
+
+          Write-Host $appInfo
+          
           $syncedUp = $appInfo.Contains("Health Status:      Healthy")
           
           if (-not $syncedUp) {
