@@ -67,9 +67,6 @@ jobs:
 
     - name: View directories Content
       run: |
-        ls
-        ls ./.github
-        ls ./.github/actions
         ls ./.github/actions/get-image-tag
 
     - name: Get Image Tag
