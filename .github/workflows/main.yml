@@ -65,9 +65,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: View sha
-      run: echo ${{ GITHUB_SHA }}
-
     - name: Get Image Tag
       uses: VirtoCommerce/vc-github-actions/get-image-tag@master
       id: image
