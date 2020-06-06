@@ -65,6 +65,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+
     - name: View head sha
       run: |
         echo ${{ github.sha }}
