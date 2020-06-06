@@ -24,11 +24,6 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: Get Image Tag
-      shell: pwsh
-      run: ./.github/scripts/get-image-tag ${{ github.sha }}
-      id: image
-
     - name: Install VirtoCommerce.GlobalTool
       run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
 
@@ -135,8 +130,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get Image Tag
-      shell: pwsh
-      run: ./.github/scripts/get-image-tag
+      uses: VirtoCommerce/vc-github-actions/get-image-tag@master
       id: image
 
     - name: Pull Platform Docker Image from GitHub
@@ -194,10 +188,8 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get Image Tag
-      shell: pwsh
-      run: ./.github/scripts/get-image-tag
+      uses: VirtoCommerce/vc-github-actions/get-image-tag@master
       id: image
-
 
     - name: Pull Platform Docker Image from GitHub
       run: |

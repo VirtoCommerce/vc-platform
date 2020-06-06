@@ -20,21 +20,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Get Image Tag
-      shell: pwsh
-      run: |
-        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
-        
-        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
-        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
-        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
-        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
-        { 
-            $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
-        }  
-            
-        $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
-
-        echo "::set-output name=tag::$version"
+      uses: VirtoCommerce/vc-github-actions/get-image-tag@master
       id: image
 
     - name: Setup Kustomize
