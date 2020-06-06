@@ -65,14 +65,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install dependentcies for action
-      run: |
-        cd ./.github/actions/get-image-tag
-        npm install
-
     - name: Get Image Tag
       shell: pwsh
-      run: ./.github/scripts/get-image-tag
+      uses: VirtoCommerce/vc-github-actions/get-image-tag@master
       id: image
 
     - name: Install VirtoCommerce.GlobalTool
