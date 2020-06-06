@@ -65,11 +65,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: "View pr"
-      shell: pwsh
+    - name: View head sha
       run: |
-        $sha = git rev-parse ${{ github.event.pull_request.head.ref }}
-        echo $sha
+        echo ${{ github.sha }}
+        echo ${{ github.head_ref }}
+        echo ${{ github.pull_request.head.ref }}
+        echo ${{ github.pull_request.head.sha }}
 
     - name: Get Image Tag
       uses: VirtoCommerce/vc-github-actions/get-image-tag@master
