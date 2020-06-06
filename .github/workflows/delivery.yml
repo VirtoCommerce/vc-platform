@@ -69,7 +69,19 @@ jobs:
         Invoke-WebRequest -Uri https://cd.govirto.com/download/argocd-linux-amd64 -OutFile argocd
         chmod +x argocd
         ./argocd app sync platform-app --grpc-web --async
-        ./argocd app wait platform-app --grpc-web
+        # ./argocd app wait platform-app --grpc-web # Doesn't work properly. Use workaround
+        
+        do {
+          $appInfo = argocd app get platform-app
+          $syncedUp = $appInfo.Contains("Health Status:      Healthy")
+          
+          if (-not $syncedUp) {
+            Write-Host "Sync pending..."
+          }
+        }
+        while (-not $syncedUp)
+
+
         echo "::set-env name=BUILD_STATE::successful"
 
     - name: Failed Build
