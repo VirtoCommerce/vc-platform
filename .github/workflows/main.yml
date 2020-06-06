@@ -65,6 +65,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: "View pr"
+      run: |
+        echo '${{ github.pull_request }}'
+        echo '${{ github.pull_request.sha }}'
+
     - name: Get Image Tag
       uses: VirtoCommerce/vc-github-actions/get-image-tag@master
       id: image
@@ -270,7 +275,7 @@ jobs:
       run: |
         $sha = '${{ github.sha }}'
         if ('${{ github.event_name }}' -eq 'pull_request') {
-          $sha = '${{ github.pull_request.head.sha }}'
+          $sha = '${{ github.pull_request.sha }}'
         }
 
         git tag passed-ci-${{ steps.image.outputs.tag }} $sha
