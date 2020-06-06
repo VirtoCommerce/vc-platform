@@ -16,7 +16,7 @@ fs.readFile('Directory.Build.Props', function (err, data) {
                 var prefix = json.Project.PropertyGroup[1].VersionPrefix[0].trim();
                 var suffix = json.Project.PropertyGroup[1].VersionSuffix[0].trim();
         
-                let version = prefix + (suffix != '' ? '-' + suffix : '') + github.sha.substring(0, 8)
+                let version = prefix + (suffix != '' ? '-' + suffix : '') + github.context.sha.substring(0, 8)
         
                 core.setOutput("tag", version);
         
