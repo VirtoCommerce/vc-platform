@@ -265,9 +265,7 @@ jobs:
         repo-url: '${{ github.event.repository.html_url }}'
         build-ref-url: '${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}'
 
-    - name: Add Deployment Pending Label
-      uses: buildsville/add-remove-label@v1
-      with:
-        token: ${{secrets.GITHUB_TOKEN}}
-        label: 'deployment pending'
-        type: add
+    - name: Add tag "passed-ci"
+      run: |
+        git tag passed-ci ${{ github.sha }} 
+        git push origin --tags
