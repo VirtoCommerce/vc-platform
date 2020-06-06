@@ -15,8 +15,8 @@ fs.readFile('Directory.Build.Props', function (err, data) {
             if (!err) {
                 console.log(json);
 
-                var prefix = json.Project.PropertyGroup[0].VersionPrefix.trim();
-                var suffix = json.Project.PropertyGroup[0].VersionSuffix[0].trim();
+                var prefix = json.Project.PropertyGroup[1].VersionPrefix.trim();
+                var suffix = json.Project.PropertyGroup[1].VersionSuffix[0].trim();
         
                 let version = prefix + (suffix != '' ? '-' + suffix : '') + github.sha.substring(0, 8)
         
