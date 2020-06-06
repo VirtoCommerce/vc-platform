@@ -65,10 +65,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: View directories Content
-      run: |
-        ls ./.github/actions/get-image-tag
-
     - name: Get Image Tag
       uses: ./.github/actions/get-image-tag
       id: image
