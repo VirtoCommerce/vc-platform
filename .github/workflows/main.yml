@@ -265,7 +265,7 @@ jobs:
         repo-url: '${{ github.event.repository.html_url }}'
         build-ref-url: '${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}'
 
-    - name: Commit tagger
+    - name: Add tag "passed-ci-${{ steps.image.outputs.tag }}"
       uses: tvdias/github-tagger@v0.0.2
       with:
         repo-token: ${{ secrets.REPO_TOKEN }}
