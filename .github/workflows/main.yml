@@ -62,8 +62,6 @@ jobs:
     name: Build Package
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - uses: actions/checkout@v2
 
@@ -85,6 +83,7 @@ jobs:
     - name: Commit tagger
       uses: tvdias/github-tagger@v0.0.2
       with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
         tag: passed-ci-${{ steps.image.outputs.tag }}
         # optional commit sha to apply the tag to
         commit-sha: ${{ steps.commit.outputs.tag }}
