@@ -265,7 +265,7 @@ jobs:
         repo-url: '${{ github.event.repository.html_url }}'
         build-ref-url: '${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}'
 
-    - name: Add tag "passed-ci"
+    - name: Add tag "passed-ci-${{ steps.image.outputs.tag }}"
       run: |
-        git tag passed-ci ${{ github.sha }} 
+        git tag passed-ci-${{ steps.image.outputs.tag }} ${{ github.sha }} 
         git push origin --tags
