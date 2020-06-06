@@ -270,7 +270,7 @@ jobs:
       run: |
         $sha = '${{ github.sha }}'
         if ('${{ github.event_name }}' -eq 'pull_request') {
-          $sha = {{ github.event.pull_request.head.sha }}
+          $sha = ${{ github.event.pull_request.head.sha }}
         }
 
         git tag passed-ci-${{ steps.image.outputs.tag }} $sha
