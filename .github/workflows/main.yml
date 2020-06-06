@@ -67,6 +67,7 @@ jobs:
 
     - name: View head sha
       run: |
+        git checkout ${{ github.pull_request.head.ref }}
         echo ${{ github.sha }}
         echo ${{ github.head_ref }}
         echo ${{ github.pull_request.head.ref }}
