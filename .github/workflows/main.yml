@@ -65,6 +65,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install dependentcies for action
+      run: |
+        cd ./.github/actions/get-image-tag
+        npm install
+
     - name: Get Image Tag
       uses: ./.github/actions/get-image-tag
       id: image
