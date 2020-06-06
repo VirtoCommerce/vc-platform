@@ -71,7 +71,8 @@ jobs:
         npm install
 
     - name: Get Image Tag
-      uses: ./.github/actions/get-image-tag
+      shell: pwsh
+      run: ./.github/scripts/get-image-tag
       id: image
 
     - name: Install VirtoCommerce.GlobalTool
@@ -136,20 +137,7 @@ jobs:
 
     - name: Get Image Tag
       shell: pwsh
-      run: |
-        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
-      
-        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
-        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
-        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
-        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
-        { 
-          $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
-        }  
-          
-        $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
-
-        echo "::set-output name=tag::$version"
+      run: ./.github/scripts/get-image-tag
       id: image
 
     - name: Pull Platform Docker Image from GitHub
@@ -208,21 +196,9 @@ jobs:
 
     - name: Get Image Tag
       shell: pwsh
-      run: |
-        [Xml]$buildPropsXml = Get-Content -Path 'Directory.Build.Props'
-      
-        $versionPrefixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionPrefix') | Select-Object -First 1
-        $versionSuffixNode = $buildPropsXml.SelectNodes('Project/PropertyGroup/VersionSuffix') | Select-Object -First 1
-        $versionPrefix = "$($versionPrefixNode.InnerText.Trim())"
-        if (-not ([string]::IsNullOrEmpty($versionSuffixNode.InnerText))) 
-        { 
-          $versionSuffix = "-$($versionSuffixNode.InnerText.Trim())" 
-        }  
-          
-        $version = "$($versionPrefix)$versionSuffix-$('${{ github.sha }}'.Substring(0, 8))"
-
-        echo "::set-output name=tag::$version"
+      run: ./.github/scripts/get-image-tag
       id: image
+
 
     - name: Pull Platform Docker Image from GitHub
       run: |
