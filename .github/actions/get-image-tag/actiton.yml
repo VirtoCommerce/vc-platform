@@ -1,0 +1,8 @@
+name: 'Get Image Tag'
+description: 'Determines docker image tag based on VP product version, branch and pull request'
+outputs:
+  tag: # id of output
+    description: 'Image tag'
+runs:
+  using: 'node12'
+  main: 'index.js'
