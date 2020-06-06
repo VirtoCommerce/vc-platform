@@ -72,7 +72,7 @@ jobs:
         # ./argocd app wait platform-app --grpc-web # Doesn't work properly. Use workaround
         
         do {
-          $appInfo = argocd app get platform-app
+          $appInfo = ./argocd app get platform-app
 
           Write-Host $appInfo
           
