@@ -72,7 +72,7 @@ jobs:
 
     - name: View head sha
       run: |
-        echo ${{ github.event.pull_request.sha }}
+        echo ${{ github.event.pull_request.head.sha }}
 
     - name: Get Image Tag
       uses: VirtoCommerce/vc-github-actions/get-image-tag@master
