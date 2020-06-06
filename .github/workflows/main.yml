@@ -65,9 +65,28 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Add tag "passed-ci-${{ steps.image.outputs.tag }}"
+      id: commit
+      shell: pwsh
+      run: |
+        $sha = '${{ github.sha }}'
+        if ('${{ github.event_name }}' -eq 'pull_request') {
+          $sha = '${{ github.event.pull_request.head.sha }}'
+        }
+
+        Write-Host "::set-output tag=$($sha)"
+
     - name: Get Image Tag
       uses: VirtoCommerce/vc-github-actions/get-image-tag@master
       id: image
+
+
+    - name: Commit tagger
+      uses: tvdias/github-tagger@v0.0.2
+      with:
+        tag: passed-ci-${{ steps.image.outputs.tag }}
+        # optional commit sha to apply the tag to
+        commit-sha: ${{ steps.commit.outputs.tag }}
 
     - name: Install VirtoCommerce.GlobalTool
       run: |
