@@ -65,15 +65,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
-
-    - name: View head sha
-      run: |
-        echo ${{ github.event.pull_request.head.sha }}
-
     - name: Get Image Tag
       uses: VirtoCommerce/vc-github-actions/get-image-tag@master
       id: image
@@ -279,7 +270,7 @@ jobs:
       run: |
         $sha = '${{ github.sha }}'
         if ('${{ github.event_name }}' -eq 'pull_request') {
-          $sha = git rev-parse ${{ github.event.pull_request.head.ref }}
+          $sha = {{ github.event.pull_request.head.sha }}
         }
 
         git tag passed-ci-${{ steps.image.outputs.tag }} $sha
