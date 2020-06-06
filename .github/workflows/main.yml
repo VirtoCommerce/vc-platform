@@ -71,6 +71,7 @@ jobs:
         echo ${{ github.head_ref }}
         echo ${{ github.pull_request.head.ref }}
         echo ${{ github.pull_request.head.sha }}
+        git rev-parse ${{ github.pull_request.head.ref }}
 
     - name: Get Image Tag
       uses: VirtoCommerce/vc-github-actions/get-image-tag@master
