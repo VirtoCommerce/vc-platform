@@ -72,16 +72,10 @@ jobs:
     - name: Commit tagger
       uses: tvdias/github-tagger@v0.0.2
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token: ${{ secrets.REPO_TOKEN }}
         tag: passed-ci-${{ steps.image.outputs.tag }}
         # optional commit sha to apply the tag to
         commit-sha: ${{ steps.image.outputs.sha }}
-
-    - name: Add tag "passed-ci-${{ steps.image.outputs.tag }}"
-      shell: pwsh
-      run: |
-        git tag passed-ci-${{ steps.image.outputs.tag }} ${{ steps.image.outputs.sha }}
-        git push origin --tags
 
     - name: Install VirtoCommerce.GlobalTool
       run: |
