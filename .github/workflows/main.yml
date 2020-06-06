@@ -65,6 +65,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: View sha
+      run: echo ${ GITHUB_SHA }
+
     - name: Get Image Tag
       uses: VirtoCommerce/vc-github-actions/get-image-tag@master
       id: image
@@ -267,5 +270,5 @@ jobs:
 
     - name: Add tag "passed-ci-${{ steps.image.outputs.tag }}"
       run: |
-        git tag passed-ci-${{ steps.image.outputs.tag }} ${{ github.sha }} 
+        git tag passed-ci-${{ steps.image.outputs.tag }} ${ GITHUB_SHA }
         git push origin --tags
