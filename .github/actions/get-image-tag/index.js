@@ -13,7 +13,7 @@ fs.readFile('Directory.Build.Props', function (err, data) {
 
         parser.parseString(data, function (err, json) {
             if (!err) {
-                console.log(json);
+                console.log(json.Project.PropertyGroup[1]);
 
                 var prefix = json.Project.PropertyGroup[1].VersionPrefix.trim();
                 var suffix = json.Project.PropertyGroup[1].VersionSuffix[0].trim();
