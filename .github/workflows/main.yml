@@ -62,8 +62,14 @@ jobs:
     name: Build Package
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - uses: actions/checkout@v2
+
+    - name: Get Image Tag
+      uses: VirtoCommerce/vc-github-actions/get-image-tag@master
+      id: image
 
     - name: Add tag "passed-ci-${{ steps.image.outputs.tag }}"
       id: commit
@@ -75,11 +81,6 @@ jobs:
         }
 
         Write-Host "::set-output tag=$($sha)"
-
-    - name: Get Image Tag
-      uses: VirtoCommerce/vc-github-actions/get-image-tag@master
-      id: image
-
 
     - name: Commit tagger
       uses: tvdias/github-tagger@v0.0.2
