@@ -70,6 +70,7 @@ jobs:
         Invoke-WebRequest -Uri "https://github.com/argoproj/argo-cd/releases/download/$($latestVersion)/argocd-linux-amd64" -OutFile argocd
         chmod +x argocd
         ./argocd app sync webstore-dev-app --grpc-web
+        ./argocd app wait webstore-dev-app --grpc-web
 
         echo "::set-env name=BUILD_STATE::successful"
 
