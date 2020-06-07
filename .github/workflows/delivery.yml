@@ -43,7 +43,7 @@ jobs:
       run: |
         cd ${{ github.workspace }}
         git clone https://github.com/VirtoCommerce/vc-deploy-apps.git
-        cd vc-deploy-apps/platform-app/overlays/dev
+        cd vc-deploy-apps/webstore-dev-app/overlays/dev
 
         $REPOSITORY = "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())"
         kustomize edit set image virtocommerce/platform=$REPOSITORY/platform:${{ steps.image.outputs.tag }}
@@ -66,13 +66,14 @@ jobs:
       run: |
         cd ${{ github.workspace }}
 
-        Invoke-WebRequest -Uri https://cd.govirto.com/download/argocd-linux-amd64 -OutFile argocd
+        $latestVersion = (Invoke-WebRequest -Uri "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | ConvertFrom-Json).tag_name
+        Invoke-WebRequest -Uri "https://github.com/argoproj/argo-cd/releases/download/$($latestVersion)/argocd-linux-amd64" -OutFile argocd
         chmod +x argocd
-        ./argocd app sync platform-app --grpc-web --async
-        # ./argocd app wait platform-app --grpc-web # Doesn't work properly. Use workaround
+        ./argocd app sync webstore-dev-app --grpc-web --async
+        # ./argocd app wait webstore-dev-app --grpc-web # Doesn't work properly. Use workaround
         
         do {
-          $appInfo = ./argocd app get platform-app
+          $appInfo = ./argocd app get webstore-dev-app --grpc-web
 
           Write-Host $appInfo
           
