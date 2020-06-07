@@ -69,7 +69,7 @@ jobs:
         $latestVersion = (Invoke-WebRequest -Uri "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | ConvertFrom-Json).tag_name
         Invoke-WebRequest -Uri "https://github.com/argoproj/argo-cd/releases/download/$($latestVersion)/argocd-linux-amd64" -OutFile argocd
         chmod +x argocd
-        ./argocd app sync webstore-dev-app
+        ./argocd app sync webstore-dev-app --grpc-web --async
         
         do {
           $statusBage = (Invoke-WebRequest -Uri "https://cd.govirto.com/api/badge?name=webstore-dev-app").Content
