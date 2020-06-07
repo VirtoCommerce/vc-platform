@@ -72,9 +72,9 @@ jobs:
         ./argocd app sync webstore-dev-app --grpc-web --async
         
         do {
-          $statusBage = (Invoke-WebRequest -Uri "https://cd.govirto.com/api/badge?name=webstore-dev-app").Content
+          Start-Sleep -s 15
 
-          Write-Host $appInfo
+          $statusBage = (Invoke-WebRequest -Uri "https://cd.govirto.com/api/badge?name=webstore-dev-app").Content
           
           $syncedAndHealthy = $statusBage.Contains('>Healthy<') -and $statusBage.Contains('>Synced<')
           
