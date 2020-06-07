@@ -69,8 +69,21 @@ jobs:
         $latestVersion = (Invoke-WebRequest -Uri "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | ConvertFrom-Json).tag_name
         Invoke-WebRequest -Uri "https://github.com/argoproj/argo-cd/releases/download/$($latestVersion)/argocd-linux-amd64" -OutFile argocd
         chmod +x argocd
-        ./argocd app sync webstore-dev-app --grpc-web
-        ./argocd app wait webstore-dev-app --grpc-web
+        ./argocd app sync webstore-dev-app
+        
+        do {
+          $appInfo = ./argocd app get webstore-dev-app
+
+          Write-Host $appInfo
+          
+          $syncedUp = $appInfo.Contains("Health Status:      Healthy")
+          
+          if (-not $syncedUp) {
+            Write-Host "Sync pending..."
+          }
+        }
+        while (-not $syncedUp)
+
 
         echo "::set-env name=BUILD_STATE::successful"
 
