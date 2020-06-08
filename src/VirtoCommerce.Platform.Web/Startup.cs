@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Azure.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -89,7 +90,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
-            });
+            });            
             //Get platform version from GetExecutingAssembly
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
@@ -379,7 +380,32 @@ namespace VirtoCommerce.Platform.Web
             services.AddExternalModules();
 
             //Add SignalR for push notifications
-            services.AddSignalR();
+            services.AddOptions<SignalROptions>().Bind(Configuration.GetSection("SignalR")).ValidateDataAnnotations();
+            var signalROptions = new SignalROptions();
+            Configuration.GetSection("SignalR").Bind(signalROptions);
+
+            var signalRServiceBuilder = services.AddSignalR();
+                
+            // SignalR scalability configuration
+            if (signalROptions.ScalabilityEnabled)
+            {
+                switch (signalROptions.ScalabilityType)
+                {
+                    case SignalRScalabilityType.AzureSignalRService:
+                        signalRServiceBuilder.AddAzureSignalR(options =>
+                        {
+                            options.Endpoints = new ServiceEndpoint[] { new ServiceEndpoint(signalROptions.AzureSignalRService.ConnectionString) };
+                        });                        
+                        break;
+                    case SignalRScalabilityType.RedisBackplane:
+                        var redisConnectionString = Configuration.GetConnectionString("RedisConnectionString");
+                        if (!redisConnectionString.IsNullOrEmpty())
+                        {
+                            signalRServiceBuilder.AddStackExchangeRedis(redisConnectionString);
+                        }
+                        break;
+                }
+            }
 
             var assetsProvider = Configuration.GetSection("Assets:Provider").Value;
             if (assetsProvider.EqualsInvariant(AzureBlobProvider.ProviderName))
