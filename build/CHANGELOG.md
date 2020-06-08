@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2020-06-05
+### Fixed
+- An issue with Storefront's project search
+- Modules version is getting from Project properties now
+### Added
+- CustomTagSuffix parameter
+### Changed
+- Updated dependencies
+
 ## [3.0.0-beta0010] - 2020-04-24
 ### Fixed
 - An issue with opencover that fails when it runs not on build server.
