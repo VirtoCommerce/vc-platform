@@ -12,8 +12,6 @@ namespace VirtoCommerce.Platform.Web.SignalR
         public AzureSignalRServiceOptions AzureSignalRService { get; set; } = new AzureSignalRServiceOptions();
     }
 
-
-
     public enum SignalRScalabilityType
     {
         AzureSignalRService,

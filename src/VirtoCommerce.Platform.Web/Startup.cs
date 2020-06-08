@@ -383,9 +383,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<SignalROptions>().Bind(Configuration.GetSection("SignalR")).ValidateDataAnnotations();
             var signalROptions = new SignalROptions();
             Configuration.GetSection("SignalR").Bind(signalROptions);
-
-            var signalRServiceBuilder = services.AddSignalR();
-                
+            var signalRServiceBuilder = services.AddSignalR();                
             // SignalR scalability configuration
             if (signalROptions.ScalabilityEnabled)
             {
