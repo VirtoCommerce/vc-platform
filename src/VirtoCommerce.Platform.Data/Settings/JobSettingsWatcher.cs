@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 {
     public class JobSettingsWatcher : IEventHandler<ObjectSettingChangedEvent>
     {
-        private readonly Dictionary<string, List<Expression<Func<Task>>>> _handlers = new Dictionary<string, List<Expression<Func<Task>>>>();
+        private readonly Dictionary<string, List<Expression<Func<Task>>>> _mapHandlers = new Dictionary<string, List<Expression<Func<Task>>>>();
 
         private readonly ISettingsManager _settingsManager;
 
@@ -27,9 +27,9 @@ namespace VirtoCommerce.Platform.Data.Settings
             foreach (var changedEntry in message.ChangedEntries.Where(x => x.EntryState == EntryState.Modified
                                               || x.EntryState == EntryState.Added))
             {
-                if (_handlers.TryGetValue(changedEntry.NewEntry.Name, out var settingSubscriptions))
+                if (_mapHandlers.TryGetValue(changedEntry.NewEntry.Name, out var handlers))
                 {
-                    foreach (var handler in settingSubscriptions)
+                    foreach (var handler in handlers)
                     {
                         var func = handler.Compile();
                         await func();
@@ -38,9 +38,9 @@ namespace VirtoCommerce.Platform.Data.Settings
             }
         }
 
-        public void WatchJobSetting(SettingDescriptor enablerSetting, SettingDescriptor cronSetting, string jobId, Expression<Func<Task>> methodCall)
+        public void WatchJobSetting<T>(SettingDescriptor enablerSetting, SettingDescriptor cronSetting, Expression<Func<T, Task>> methodCall)
         {
-            Expression<Func<Task>> handler = () => RunJob(enablerSetting, cronSetting, jobId, methodCall);
+            Expression<Func<Task>> handler = () => RunJob(enablerSetting, cronSetting, methodCall);
             RegisterHandler(enablerSetting.Name, handler);
             RegisterHandler(cronSetting.Name, handler);
         }
@@ -48,28 +48,28 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         private void RegisterHandler(string settingName, Expression<Func<Task>> handler)
         {
-            if (_handlers.TryGetValue(settingName, out var settingSubscriptions))
+            if (_mapHandlers.TryGetValue(settingName, out var settingSubscriptions))
             {
                 settingSubscriptions.Add(handler);
             }
             else
             {
-                _handlers.Add(settingName, new List<Expression<Func<Task>>> { handler });
+                _mapHandlers.Add(settingName, new List<Expression<Func<Task>>> { handler });
             }
         }
 
-        private async Task RunJob(SettingDescriptor enablerSetting, SettingDescriptor cronSetting, string jobId, Expression<Func<Task>> methodCall)
+        private async Task RunJob<T>(SettingDescriptor enablerSetting, SettingDescriptor cronSetting, Expression<Func<T, Task>> methodCall)
         {
             var processJobEnable = await _settingsManager.GetValueAsync(enablerSetting.Name, (bool)enablerSetting.DefaultValue);
             if (processJobEnable)
             {
-                RecurringJob.RemoveIfExists(jobId);
+                RecurringJob.RemoveIfExists(nameof(T));
                 var cronExpression = await _settingsManager.GetValueAsync(cronSetting.Name, cronSetting.DefaultValue.ToString());
-                RecurringJob.AddOrUpdate(jobId, methodCall, cronExpression);
+                RecurringJob.AddOrUpdate(methodCall, cronExpression);
             }
             else
             {
-                RecurringJob.RemoveIfExists(jobId);
+                RecurringJob.RemoveIfExists(nameof(T));
             }
         }
     }
