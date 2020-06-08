@@ -24,7 +24,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Get Image Tag
-      uses: VirtoCommerce/vc-github-actions/get-image-tag@master
+      uses: VirtoCommerce/vc-github-actions/get-image-tag@v1
       id: image
 
     - name: Setup Kustomize
@@ -82,15 +82,14 @@ jobs:
           
           $syncedAndHealthy = $statusBage.Contains('>Healthy<') -and $statusBage.Contains('>Synced<')
 
-
           if (-not $syncedAndHealthy) {
             Write-Host "Sync pending..."
+          } 
+          else {
+            Write-Host "::set-env name=BUILD_STATE::successful"
           }
         }
         while (-not $syncedAndHealthy)
-
-
-        echo "::set-env name=BUILD_STATE::successful"
 
     - name: Failed Build
       if: failure()
