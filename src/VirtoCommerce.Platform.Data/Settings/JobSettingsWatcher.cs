@@ -40,7 +40,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         public void WatchJobSetting<T>(SettingDescriptor enablerSetting, SettingDescriptor cronSetting, Expression<Func<T, Task>> methodCall)
         {
-            Expression<Func<Task>> handler = () => RunJob(enablerSetting, cronSetting, methodCall);
+            Expression<Func<Task>> handler = () => RunOrRemoveJob(enablerSetting, cronSetting, methodCall);
             RegisterHandler(enablerSetting.Name, handler);
             RegisterHandler(cronSetting.Name, handler);
         }
@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             }
         }
 
-        private async Task RunJob<T>(SettingDescriptor enablerSetting, SettingDescriptor cronSetting, Expression<Func<T, Task>> methodCall)
+        private async Task RunOrRemoveJob<T>(SettingDescriptor enablerSetting, SettingDescriptor cronSetting, Expression<Func<T, Task>> methodCall)
         {
             var processJobEnable = await _settingsManager.GetValueAsync(enablerSetting.Name, (bool)enablerSetting.DefaultValue);
             if (processJobEnable)
