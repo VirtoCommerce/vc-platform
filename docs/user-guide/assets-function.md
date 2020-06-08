@@ -1,4 +1,4 @@
-# Asset Management
+# Asset management
 
 ## Overview
 
@@ -15,7 +15,7 @@ Each Platform module works with it's own folder located in Assets.
 
 Asset Management can be implemented both on a physical disc or on Azure blob storage.
 
-![Assets](media/screen-assets.png)
+![Assets](../media/screen-assets.png)
 
 ## Upload file to Asset Management
 
@@ -27,4 +27,4 @@ You can upload the file using one of the following ways:
 1. Browse the file;
 1. Enter external file link.
 
-![Upload file](media/screen-upload-file.png)
+![Upload file](../media/screen-upload-file.png)

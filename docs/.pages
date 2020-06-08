@@ -3,6 +3,7 @@ arrange:
   - getting-started
   - user-guide
   - developer-guide
-  - ...
+  - techniques
   - release-information
+  - ...
   - license.md

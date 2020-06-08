@@ -14,7 +14,8 @@ pip install mkdocs-awesome-pages-plugin
 pip install mkdocs-git-revision-date-localized-plugin
 pip install mkdocs-material
 pip install mkdocs-minify-plugin
-pip install mkdocs-redirects                          
+pip install mkdocs-redirects
+pip install pymdown-extensions                    
 ```
 
 ## Serve (run)

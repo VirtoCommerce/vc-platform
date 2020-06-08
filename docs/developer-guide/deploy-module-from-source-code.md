@@ -19,17 +19,15 @@ git clone https://github.com/VirtoCommerce/{module-name}.git
 ### Build Backend from CLI
 
 To make a local build:
+
 1. Open console
-
-```console
-cd src/VirtoCommerce.{module-name}.Web
-```
-
+    ```console
+    cd src/VirtoCommerce.{module-name}.Web
+    ```
 2. Build 
-
-```console
-dotnet build -c Development
-```
+    ```console
+    dotnet build -c Development
+    ```
 
 ### Build Backend from Visual Studio
 
@@ -38,35 +36,28 @@ dotnet build -c Development
 
 ### Build Frontend 
 
-#### Note
-_While building the solution the first time from the Visual Studio, npm references should be installed and webpack should be built automatically. This would be done if Web project have this nuget package added - [VirtoCommerce.BuildWebpack](https://www.nuget.org/packages/VirtoCommerce.BuildWebpack/). It adds webpack build target to the project, which create frontend bundles on initial build._
+!!! note
+    While building the solution the first time from the Visual Studio, npm references should be installed and webpack should be built automatically. This would be done if Web project have this nuget package added - [VirtoCommerce.BuildWebpack](https://www.nuget.org/packages/VirtoCommerce.BuildWebpack/). It adds webpack build target to the project, which create frontend bundles on initial build._
+    In case of changing frontend part, explicit local build would be required to pack style/script bundles._
 
-_In case of changing frontend part, explicit local build would be required to pack style/script bundles._
+#### To make a local build
 
-#### To make a local build:
 1. Open console
-
-```console
-cd src\VirtoCommerce.{module-name}.Web
-```
-
+    ```console
+    cd src\VirtoCommerce.{module-name}.Web
+    ```
 2. Install the dependencies
-
-```console
-npm ci
-```
-
+    ```console
+    npm ci
+    ```
 3. Build frontend application
-
-```console
-npm run webpack:build
-```
-
+    ```console
+    npm run webpack:build
+    ```
 4. Watch changes
-
-```console
-npm run webpack:watch
-```
+    ```console
+    npm run webpack:watch
+    ```
 
 ## Initial Configuration 
 

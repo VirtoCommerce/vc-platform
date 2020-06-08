@@ -15,6 +15,9 @@ markdown_extensions:
     - admonition # https://squidfunk.github.io/mkdocs-material/extensions/admonition/ (in material theme)
     - codehilite
     - meta
+    # https://squidfunk.github.io/mkdocs-material/extensions/pymdown/
+    - pymdownx.superfences
+    - pymdownx.magiclink
 plugins:
     - search # necessary for search to work
  #   - autolinks

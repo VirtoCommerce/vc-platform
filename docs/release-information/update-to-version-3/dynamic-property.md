@@ -1,11 +1,12 @@
-# Update Dynamic Properties
+# Update dynamic properties
 
 ## Introduction
 Made changes in working with the Dynamic Properties, namely, have divided values and meta-info.
 It means, each model(which has dynamic properties) collect dynamic property values in separate table from meta-info.
 This allowed to improved performance and to separate the logic on working with the properties. Allowed to reduce the size of models/data-transfer-objects.
 
-> look at https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Model/MemberDynamicPropertyObjectValueEntity.cs
+!!! tips
+    Look at https://github.com/VirtoCommerce/vc-module-customer/tree/release/3.0.0/src/VirtoCommerce.CustomerModule.Data/Model/MemberDynamicPropertyObjectValueEntity.cs
 
 ## How to make changes for extension models
 E.g. There is a extension class ShoppingCart2.cs and ShoppingCart2Entity.cs
@@ -78,11 +79,11 @@ modelBuilder.Entity<ShoppingCart2DynamicPropertyObjectValueEntity>().HasIndex(x 
 
 ### Working with Cart2Repository
 Need to add IQueryable<ShoppingCart2DynamicPropertyObjectValueEntity>
-```
+```csharp
 protected IQueryable<ShoppingCartDynamicPropertyObjectValueEntity> DynamicPropertyObjectValues => DbContext.Set<ShoppingCartDynamicPropertyObjectValueEntity>();
 ```
 Then need to add a logic to GetShoppingCartsByIdsAsync which will collect values from database
-```
+```csharp
 await DynamicPropertyObjectValues.Where(x => ids.Contains(x.ObjectId)).ToArrayAsync()
 ```
 and if need to add a logic of working with ResponseGroup.
@@ -95,6 +96,7 @@ use the command in the Package Manage Console
 Add-Migration AddCart2DynamicPropertyObjectValue -Context VirtoCommerce.CartModule.Data.Repositories.CartDbContext -StartupProject VirtoCommerce.CartModule.Data  -Verbose -OutputDir Migrations
 ```
 
-!!! tips:
-    look at https://github.com/VirtoCommerce/vc-module-customer/tree/master/src/VirtoCommerce.CustomerModule.Data/Migrations/20190628091513_AddCustomerDynamicPropertyObjectValue.cs.
+!!! tips
+    Look at https://github.com/VirtoCommerce/vc-module-customer/tree/master/src/VirtoCommerce.CustomerModule.Data/Migrations/20190628091513_AddCustomerDynamicPropertyObjectValue.cs.
+
     There's custom SQL script added to the migration. It's recommended to combine this script in a single migration: https://github.com/VirtoCommerce/vc-module-customer/blob/master/src/VirtoCommerce.CustomerModule.Data/Migrations/20000000000000_UpdateCustomerV2.cs#L61-L71

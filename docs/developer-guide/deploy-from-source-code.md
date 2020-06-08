@@ -12,112 +12,100 @@ To get started locally, follow these instructions:
 git clone -b release/3.0.0 https://github.com/VirtoCommerce/vc-platform.git
 ```
 
+
 ## Building Platform
 
 ### Build Backend
 
-To make a local build:
+To make a local build
+
 1. Open console
+    ```console
+    cd src/VirtoCommerce.Platform.Web
+    ```
+1. Build 
+    ```console
+    dotnet build -c Development
+    ```
 
-```console
-cd src/VirtoCommerce.Platform.Web
-```
-2. Build 
+Or use Visual Studio
 
-```console
-dotnet build -c Development
-```
-
-Or use Visual Studio:
-1. Open VirtoCommerce.Platform.sln in Visual Studio
-2. Build Solution
+* Open VirtoCommerce.Platform.sln in Visual Studio
+* Build Solution
 
 ### Build Frontend 
 
-#### Note
-_While building the solution the first time from the Visual Studio, npm references should be installed and webpack should be built automatically. This would be done if Web project have this nuget package added - [VirtoCommerce.BuildWebpack](https://www.nuget.org/packages/VirtoCommerce.BuildWebpack/). It adds webpack build target to the project, which create frontend bundles on initial build._
-
-_In case of changing frontend part, explicit local build would be required to pack style/script bundles._
+!!! note
+    While building the solution the first time from the Visual Studio, npm references should be installed and webpack should be built automatically. This would be done if Web project have this nuget package added - [VirtoCommerce.BuildWebpack](https://www.nuget.org/packages/VirtoCommerce.BuildWebpack/). It adds webpack build target to the project, which create frontend bundles on initial build._
+    In case of changing frontend part, explicit local build would be required to pack style/script bundles._
 
 
 #### To make a local build:
 1. Open console
-
-```console
-cd src\VirtoCommerce.Platform.Web
-```
-
+    ```console
+    cd src\VirtoCommerce.Platform.Web
+    ```
 2. Install the dependencies
-
-```console
-npm ci
-```
-
+    ```console
+    npm ci
+    ```
 3. Build frontend application
-
-```console
-npm run webpack:build
-```
-
+    ```console
+    npm run webpack:build
+    ```
 4. Watch changes
-
-```console
-npm run webpack:watch
-```
+    ```console
+    npm run webpack:watch
+    ```
 
 ## Initial Configuration 
 
 1. Open the **appsettings.json** file in a text editor
 2. In the **ConnectionStrings** section change **VirtoCommerce** node (provided user should have permission to create new database):
-
-```json
-    "ConnectionStrings": {
-        "VirtoCommerce" : "Data Source={SQL Server URL};Initial Catalog={Database name};Persist Security Info=True;User ID={User name};Password={User password};MultipleActiveResultSets=True;Connect Timeout=30"
-    },
-```
-
+    ```json
+        "ConnectionStrings": {
+            "VirtoCommerce" : "Data Source={SQL Server URL};Initial Catalog={Database name};Persist Security Info=True;User ID={User name};Password={User password};MultipleActiveResultSets=True;Connect Timeout=30"
+        },
+    ```
 3. In the **Assets** section set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images
-
-```json
-"Assets": {
-        "Provider": "FileSystem",
-        "FileSystem": {
-            "RootPath": "~/assets",
-            "PublicUrl": "http://localhost:10645/assets/" <-- Set your platform application url with port localhost:10645
+    ```json
+    "Assets": {
+            "Provider": "FileSystem",
+            "FileSystem": {
+                "RootPath": "~/assets",
+                "PublicUrl": "http://localhost:10645/assets/" <-- Set your platform application url with port localhost:10645
+            },
         },
-    },
-```
-
+    ```
 4. In the **Content** section set public url for content `Content:FileSystem:PublicUrl` with url of your application, this step is needed in order for configure CMS content storage
-
-```json
-"Content*": {
-        "Provider": "FileSystem",
-        "FileSystem": {
-            "RootPath": "~/cms-content",
-            "PublicUrl": "http://localhost:10645/cms-content/" <-- Set your platform application url with port localhost:10645
+    ```json
+    "Content*": {
+            "Provider": "FileSystem",
+            "FileSystem": {
+                "RootPath": "~/cms-content",
+                "PublicUrl": "http://localhost:10645/cms-content/" <-- Set your platform application url with port localhost:10645
+            },
         },
-    },
-```
+    ```
 
 ## Running
 
 To run platform by dotnet CLI:
+
 1. Open console
-
-```console
-cd src\VirtoCommerce.Platform.Web
-```
-
+    ```console
+    cd src\VirtoCommerce.Platform.Web
+    ```
 2. Run
+    ```console
+    dotnet run -c Development --no-launch-profile
+    ```
 
-```console
-dotnet run -c Development --no-launch-profile
-```
-**Note:** you can add `--no-build` flag to speed the start, if you have compiled the solution already.
-
+!!! note
+    you can add `--no-build` flag to speed the start, if you have compiled the solution already.
 
 Or run from Visual Studio
+
 * Open `VirtoCommerce.Platform.sln` 
 * Set VirtoCommerce.Platform.Web as Startup Project
 * Go to Debug > Start Debugging (or Press F5)
@@ -154,21 +142,21 @@ Some additional tips for developing in specific IDEs.
 
 ### Visual Studio
 
-**Note:** If you have node-sass issues, run this command
+!!! note
+    If you have node-sass issues, run this command
+    ```console
+    npm rebuild node-sass
+    ```
 
-```console
-npm rebuild node-sass
-```
-
-* Run to trust the .NET Core SDK HTTPS development certificate:
+Run to trust the .NET Core SDK HTTPS development certificate:
 
 ```console
 dotnet.exe dev-certs https --trust
 ```
 
-Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust)
+Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust).
 
-* Restart the Platform to load the new module assemblies into the Platform's application process
+Restart the Platform to load the new module assemblies into the Platform's application process
 Recommend to install [WebPack Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.WebPackTaskRunner) and run webpack tasks from Visual Studio. 
 
 ## Troubleshooting

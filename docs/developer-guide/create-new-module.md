@@ -29,60 +29,50 @@ How to create a new module from scratch? Follow the Dummy module example.
 11. **_(Outdated)_** References to NuGet packages in **_VirtoCommerce.Platform.Web_**:
     1. (Double click in Visual Studio to) open _DummyModule.Web.csproj_ file for editing;
     1. Add new ItemGroup:
-
-```xml
-<ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-</ItemGroup>
-```
-
+    ```xml
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    ```
 12. Compile the solution (there should be no warnings). 
 
 ## 2. Fill DummyModule.Core project
 
-1. Add class **_ModuleConstants.cs_** for module constants:
-    1. Inside **_ModuleConstants_** add sub-classes **_Security_** and **_Permissions_** like this:
-
-```csharp
-        public static class Security
-        {
-            public static class Permissions
+1. Add class **_ModuleConstants.cs_** for module constants. 
+1. Inside **_ModuleConstants_** add sub-classes **_Security_** and **_Permissions_** like this:
+    ```csharp
+            public static class Security
             {
-                public const string Access = "dummy:access";
-                public const string Read =   "dummy:read";
-                public const string Create = "dummy:create";
-                public const string Update = "dummy:update";
-                public const string Delete = "dummy:delete";
+                public static class Permissions
+                {
+                    public const string Access = "dummy:access";
+                    public const string Read =   "dummy:read";
+                    public const string Create = "dummy:create";
+                    public const string Update = "dummy:update";
+                    public const string Delete = "dummy:delete";
 
-                public static string[] AllPermissions = { Access, Read, Create, Update, Delete };
+                    public static string[] AllPermissions = { Access, Read, Create, Update, Delete };
+                }
             }
-        }
-```
+    ```
+1. Add sub-classes **_Settings_** and **_General_** containing settings' definitions of type **_SettingDescriptor_**, e.g., for other constants.
+    ```csharp
+            public static SettingDescriptor DummyInteger = new SettingDescriptor
+            {
+                Name = "Dummy.Integer",
+                GroupName = "Dummy|General",
+                ValueType = SettingValueType.Integer,
+                DefaultValue = 50
+            };
+    ```
 
-
-   2. Add sub-classes **_Settings_** and **_General_** containing settings' definitions of type **_SettingDescriptor_**, e.g.,
-
-```csharp
-        public static SettingDescriptor DummyInteger = new SettingDescriptor
-        {
-            Name = "Dummy.Integer",
-            GroupName = "Dummy|General",
-            ValueType = SettingValueType.Integer,
-            DefaultValue = 50
-        };
-```
-
-   Check sample [ModuleConstants.cs](https://github.com/VirtoCommerce/vc-samples/blob/v3/DummyModule/DummyModule/src/DummyModule.Core/ModuleConstants.cs) for complete code.
-
-   3. Other constants.
+!!! tip
+    Check sample [ModuleConstants.cs](https://github.com/VirtoCommerce/vc-samples/blob/v3/DummyModule/DummyModule/src/DummyModule.Core/ModuleConstants.cs) for complete code.
 
 1. If there is any domain models in your module, add **Models** folder. All domain models should be defined in Models folder.
-   1. If there is any need for search services, add **Search** sub-folder. Add all **_SearchCriteria_** and **_SearchResult_** classes there.
-
+1. If there is any need for search services, add **Search** sub-folder. Add all **_SearchCriteria_** and **_SearchResult_** classes there.
 1. **Services** folder: in order to use the created models, create **interfaces** of the required services. Typically, interfaces containing CRUD and search operations are defined.
-
 1. **Events** folder: add model-related changing/changed events. Derive from the base `GenericChangedEntryEvent` class.
-
 1. **Notifications** folder: define new types of **_Notifications_**, that your module would expose. Each class should inherit from **_EmailNotification_**/**_SmsNotification_** or own class, based on **_Notification_**.
 
 ## 3. Fill DummyModule.Data project
@@ -100,12 +90,11 @@ How to create a new module from scratch? Follow the Dummy module example.
    1. Open NuGet **Package Manager Console**
    1. Select "src\DummyModule.**Data**" as "**Default project**"
    1. Run command:
+    ```console
+        Add-Migration Initial -Verbose
+    ```
 
-```console
-    Add-Migration Initial -Verbose
-```
-
-A new EF migration gets generated. Read more details on extending an existing module's model: [How to extend the DB model of VC module](extend-DB-model.md).
+A new EF migration gets generated. Read more details on extending an existing module's model: [How to extend the DB model of VC module](../techniques/extend-db-model.md).
 
 4. **Caching** folder: add it, if data caching should be used. This folder is for the cache region classes. Typically, each model should have its own region. Derive CacheRegion from generic `CancellableCacheRegion<T>` class e.g., `public class StoreCacheRegion : CancellableCacheRegion<StoreCacheRegion>`.
 5. **Services** folder: add implementations of the interfaces that were defined in the **.Core** project.
@@ -126,155 +115,128 @@ Typical structure of **.Web** project is:
 
 1. **_module.manifest_** (xml file)
    * Identifier - a module identifier, each modules' identifier should be unique:
-
-```xml
-<id>VirtoCommerce.Dummy</id>
-```
-
+    ```xml
+    <id>VirtoCommerce.Dummy</id>
+    ```
    * Versioning - actual version and (optional) prerelease version tag of a module:
-
-```xml
-<version>1.0.0</version>
-<version-tag>v1</version-tag>
-```
-
+    ```xml
+    <version>1.0.0</version>
+    <version-tag>v1</version-tag>
+    ```
    * Required minimal version of VC Platform:
-
-```xml
-<platformVersion>3.0.0</platformVersion>
-```
-
+    ```xml
+    <platformVersion>3.0.0</platformVersion>
+    ```
    * Module dependencies - list of modules (with versions), functions of which will be used in the new module:
-
-```xml
-<dependencies>
-    <dependency id="VirtoCommerce.Core" version="3.0.0" />
-</dependencies>
-```
-
+    ```xml
+    <dependencies>
+        <dependency id="VirtoCommerce.Core" version="3.0.0" />
+    </dependencies>
+    ```
    * Title and description - name and description of a new module that will be displayed in the Platform Manager and Swagger UI:
-
-```xml
-<title>Dummy module</title>
-<description>Sample module for training purposes.</description>
-```
-
+    ```xml
+    <title>Dummy module</title>
+    <description>Sample module for training purposes.</description>
+    ```
    * Authors - list of the developers, who wrote the module:
-
-```xml
-<authors>
-    <author>Andrei Kostyrin</author>
-    <author>Egidijus Mazeika</author>
-</authors>
-```
-
+    ```xml
+    <authors>
+        <author>Andrei Kostyrin</author>
+        <author>Egidijus Mazeika</author>
+    </authors>
+    ```
    * Owners - list of the module owners:
-
-```xml
-<owners>
-    <owner>Virto Commerce</owner>
-</owners>
-```
-
+    ```xml
+    <owners>
+        <owner>Virto Commerce</owner>
+    </owners>
+    ```
    * Module groups - optional, logical grouping of the modules:
-
-```xml
-<groups>
-    <group>samples</group>
-</groups>
-
-```
-
+    ```xml
+    <groups>
+        <group>samples</group>
+    </groups>
+    ```
    * ProjectUrl - optional URL to get more details on the module:
-
-```xml
-<projectUrl>https://github.com/VirtoCommerce/vc-samples</projectUrl>
-```
-
+    ```xml
+    <projectUrl>https://github.com/VirtoCommerce/vc-samples</projectUrl>
+    ```
    * IconUrl - optional icon for the module to display in Platform's module management UI:
-
-```xml
-<iconUrl></iconUrl>
-```
-
+    ```xml
+    <iconUrl></iconUrl>
+    ```
    * ReleaseNotes, copyright, tags - optional, additional information for the module:
-
-```xml
-<releaseNotes>First version.</releaseNotes>
-<copyright>Copyright &copy; 2011-2020 Virto Commerce. All rights reserved</copyright>
-<tags>sample</tags>
-```
-
+    ```xml
+    <releaseNotes>First version.</releaseNotes>
+    <copyright>Copyright &copy; 2011-2020 Virto Commerce. All rights reserved</copyright>
+    <tags>sample</tags>
+    ```
    * AssemblyFile and ModuleType - information for the module's managed code library loading into VC Platform:
-
-```xml
-<assemblyFile>DummyModule.Web.dll</assemblyFile>
-<moduleType>DummyModule.Web.Module, DummyModule.Web</moduleType>
-```
+    ```xml
+    <assemblyFile>DummyModule.Web.dll</assemblyFile>
+    <moduleType>DummyModule.Web.Module, DummyModule.Web</moduleType>
+    ```
 
 2. **JsonConverters** folder: add it, if polymorphic data should be accepted by the API methods and deserialized correctly. This folder should contain converter(s) for populating the JSON values onto the target object.
 
 3. **_Module.cs_** class: the main entry point for module managed code, containing database initialization, registration of new repositories, services, model types and overrides:
     1. Implement [_VirtoCommerce.Platform.Core.Modularity.IModule_](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/src/VirtoCommerce.Platform.Core/Modularity/IModule.cs) interface like this:
-
-```csharp
-public class Module : IModule
-{
-    public ManifestModuleInfo ModuleInfo { get; set; }
-
-    public void Initialize(IServiceCollection serviceCollection)
+    ```csharp
+    public class Module : IModule
     {
-        // database initialization
-        var configuration = serviceCollection.BuildServiceProvider().GetRequiredService<IConfiguration>();
-        var connectionString = configuration.GetConnectionString("VirtoCommerce.Dummy") ?? configuration.GetConnectionString("VirtoCommerce");
-        serviceCollection.AddDbContext<DummyDbContext>(options => options.UseSqlServer(connectionString));
-    }
+        public ManifestModuleInfo ModuleInfo { get; set; }
 
-    public void PostInitialize(IApplicationBuilder appBuilder)
-    {
-        // register settings
-        var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
-        settingsRegistrar.RegisterSettings(ModuleConstants.Settings.AllSettings, ModuleInfo.Id);
-
-        // register permissions
-        var permissionsProvider = appBuilder.ApplicationServices.GetRequiredService<IPermissionsRegistrar>();
-        permissionsProvider.RegisterPermissions(ModuleConstants.Security.Permissions.AllPermissions.Select(x =>
-            new Permission() { GroupName = "Dummy", Name = x }).ToArray());
-
-        // Ensure that any pending migrations are applied
-        using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
+        public void Initialize(IServiceCollection serviceCollection)
         {
-            using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<DummyDbContext>())
+            // database initialization
+            var configuration = serviceCollection.BuildServiceProvider().GetRequiredService<IConfiguration>();
+            var connectionString = configuration.GetConnectionString("VirtoCommerce.Dummy") ?? configuration.GetConnectionString("VirtoCommerce");
+            serviceCollection.AddDbContext<DummyDbContext>(options => options.UseSqlServer(connectionString));
+        }
+
+        public void PostInitialize(IApplicationBuilder appBuilder)
+        {
+            // register settings
+            var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
+            settingsRegistrar.RegisterSettings(ModuleConstants.Settings.AllSettings, ModuleInfo.Id);
+
+            // register permissions
+            var permissionsProvider = appBuilder.ApplicationServices.GetRequiredService<IPermissionsRegistrar>();
+            permissionsProvider.RegisterPermissions(ModuleConstants.Security.Permissions.AllPermissions.Select(x =>
+                new Permission() { GroupName = "Dummy", Name = x }).ToArray());
+
+            // Ensure that any pending migrations are applied
+            using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
             {
-                dbContext.Database.EnsureCreated();
-                dbContext.Database.Migrate();
+                using (var dbContext = serviceScope.ServiceProvider.GetRequiredService<DummyDbContext>())
+                {
+                    dbContext.Database.EnsureCreated();
+                    dbContext.Database.Migrate();
+                }
             }
         }
-    }
 
-    public void Uninstall()
-    {
-        // do nothing in here
+        public void Uninstall()
+        {
+            // do nothing in here
+        }
     }
-}
-```
+    ```
 
    2. If the module should support data export/import, implement [_IExportSupport_](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/src/VirtoCommerce.Platform.Core/ExportImport/IExportSupport.cs) and [_IImportSupport_](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/src/VirtoCommerce.Platform.Core/ExportImport/IImportSupport.cs) interfaces accordingly. Call the methods of the class(es), that were defined in **.Data/ExportImport** folder.
 4. Add **Controllers/Api** folder, if any API endpoints need to be exposed. Add API Controller(s), derived from _Microsoft.AspNetCore.Mvc.Controller_. Sample ASP.NET MVC endpoint:
-
-```csharp
-    [HttpGet]
-    [Route("getnew")]
-    [Authorize(ModuleConstants.Security.Permissions.Create)]
-    public ActionResult<DummyModel> GetNewDummyModel()
-```
+    ```csharp
+        [HttpGet]
+        [Route("getnew")]
+        [Authorize(ModuleConstants.Security.Permissions.Create)]
+        public ActionResult<DummyModel> GetNewDummyModel()
+    ```
 
    If the endpoint should have a restricted access, an **_Authorize_** attribute with the required permission should be provided. Use the **_ModuleConstants_** class, which was previously defined in **_Dummy.Core_** project.
 
 5. Optional **Content** folder: add module icon, stylesheets or any other optional content.
 
 6. Optional **Scripts** folder: add **_module.js_** and any required subfolders: blades, resources, widgets, etc. Sample **_module.js_** file:
-
     ```js
     //Call this to register our module to main application
     var moduleName = "virtoCommerce.dummy";
@@ -283,62 +245,57 @@ public class Module : IModule
         AppDependencies.push(moduleName);
     }
 
-    angular.module(moduleName, [])
-        ;
+    angular.module(moduleName, []);
     ```
 
 7. If there are any JavaScript or stylesheet files in the project:
     1. Copy **package.json** from [sample package.json](https://github.com/VirtoCommerce/vc-module-order/blob/release/3.0.0/src/VirtoCommerce.OrdersModule.Web/package.json);
     2. Copy **webpack.config.js** from [sample webpack.config.js](https://github.com/VirtoCommerce/vc-module-order/blob/release/3.0.0/src/VirtoCommerce.OrdersModule.Web/webpack.config.js);
     3. Change the namespace on line 36 in webpack.config.js to be equal to module's identifier:
-
     ```js
     namespace: 'VirtoCommerce.Dummy'
     ```
-
     4. Open command prompt and navigate to DummyModule&#46;Web folder:
         1. Run `npm install`
         1. Run `npm run webpack:dev`
 
 8. **Localizations** folder. Add **_en.VirtoCommerce.Dummy.json_** file:
-
-```json
-{
-    "permissions": {
-        "dummy:access": "Open Dummy menu",
-        "dummy:create": "Create Dummy related data",
-        "dummy:read": "View Dummy related data",
-        "dummy:update": "Update Dummy related data",
-        "dummy:delete": "Delete Dummy related data"
-    },
-    "settings": {
-        "Dummy": {
-            "ShortText": {
-                "title": "Dummy dictionary",
-                "description": "ShortText dummy dictionary setting"
-            },
-            "Integer": {
-                "title": "Dummy integer",
-                "description": "Dummy integer setting"
-            },
-            "DateTime": {
-                "title": "Dummy DateTime",
-                "description": "Dummy DateTime setting"
+    ```json
+    {
+        "permissions": {
+            "dummy:access": "Open Dummy menu",
+            "dummy:create": "Create Dummy related data",
+            "dummy:read": "View Dummy related data",
+            "dummy:update": "Update Dummy related data",
+            "dummy:delete": "Delete Dummy related data"
+        },
+        "settings": {
+            "Dummy": {
+                "ShortText": {
+                    "title": "Dummy dictionary",
+                    "description": "ShortText dummy dictionary setting"
+                },
+                "Integer": {
+                    "title": "Dummy integer",
+                    "description": "Dummy integer setting"
+                },
+                "DateTime": {
+                    "title": "Dummy DateTime",
+                    "description": "Dummy DateTime setting"
+                }
             }
         }
     }
-}
-```
+    ```
 
 ## 5. Fill DummyModule.Tests project
 
 1. **UnitTests** folder: add unit tests here.
 2. **IntegrationTests** folder: add integration tests here. Ensure, that each integration tests class is marked with **Trait** attribute:
-
-```csharp
-[Trait("Category", "IntegrationTest")]
-```
+    ```csharp
+    [Trait("Category", "IntegrationTest")]
+    ```
 
 ## 6. Create module package
-
-Please read the [article](build-package.md).
+    
+Please read the [article](global-tools.md).

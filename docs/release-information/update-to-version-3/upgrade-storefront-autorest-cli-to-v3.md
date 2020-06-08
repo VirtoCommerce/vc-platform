@@ -1,4 +1,4 @@
-# Update Storefront
+# Update storefront
 
 ## Summary
 Currently, storefront is compatible to both major versions of the Platform (v2, v3). This document describes how to upgrade Storefront AutoRest-generated clients (for platform and modules) to the latest v3 interfaces. This action allow you to modernize storefront but break compatibility with v2.
@@ -64,6 +64,7 @@ Try to compile solution. Look at the errors. Resolve errors and update code with
 |-|-|
 |The type or namespace name 'Setting' does not exist...|It was renamed to *ObjectSettingEntry*: <ul><li>remove<br>*using platformDto = VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi.Models;*</li><li>add<br>*using platformDto = VirtoCommerce.Storefront.AutoRestClients.PlatformModuleApi.Models;*</li><li>change type name *Setting* to *ObjectSettingEntry*.</li><li>Check *ObjectSettingEntry*'s members for nulls before converting to string.</li></ul>|
 |Issues inside *ToSettingEntry*|<ul><li>There is no *Description* and *Title* anymore. Not used, just remove assignments;</li><li>Convert *DefaultValue* and *Value* to string;</li><li>Set *IsArray* to **false**. It's not used;</li><li>Remove *ArrayValues* assignment. It's not used;</li><li>Convert each item of *AllowedValues* to string.</li></ul><br>As a result the method should look like:<br>|
+
 ```Csharp
     public static SettingEntry ToSettingEntry(this platformDto.ObjectSettingEntry settingDto)
     {

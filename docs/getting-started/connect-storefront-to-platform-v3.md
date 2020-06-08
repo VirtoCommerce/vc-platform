@@ -1,4 +1,4 @@
-# Connect Storefront
+# Connect storefront
 
 !!! note
     Deploy the latest storefront version as [described here](https://github.com/VirtoCommerce/vc-storefront-core/). If Platform and Storefront are deployed in the same on-premises environment, Storefront should be deployed on different port then Platform. You can do it by `dotnet run CLI`
