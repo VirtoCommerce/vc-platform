@@ -28,7 +28,7 @@ We decided to use the following stack of technologies:
 
 <a class="crosslink" href="https://virtocommerce.com/glossary/what-is-b2b-ecommerce" target="_blank">Platform and modules</a> are written using <a href="https://en.wikipedia.org/wiki/Domain-driven_design" rel="nofollow">DDD</a>, <a href="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)" rel="nofollow">SOLID</a>, <a href="https://en.wikipedia.org/wiki/Test-driven_development" rel="nofollow">Test Driven Development</a> methodologies. For a presentation layer, we use <a href="https://en.wikipedia.org/wiki/Model_View_ViewModel" rel="nofollow">MVVM</a>.
 
-<img src="/docs/media/architecture-circle.png" title="Virto Commerce 3 Architecture" width="400">
+<img src="docs/media/architecture-circle.png" title="Virto Commerce 3 Architecture" width="400">
 
 ## Comparison with Platform 2.x
 
@@ -41,14 +41,14 @@ Virto Commerce Platform 3 helps you increase development speed and significantly
 
 These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
 
-* [What’s new](/docs/whats-new.md)
+* [What’s new](docs/release-information/whats-new.md)
 * Setup
-  * [Deploy Platform 3 from precompiled binaries on Windows](/docs/deploy-from-precompiled-binaries-windows.md)
-  * [Deploy Platform 3 from precompiled binaries on Linux](/docs/deploy-from-precompiled-binaries-linux.md)
-  * [Deploy Platform 3 from source code](/docs/deploy-from-source-code.md)
-  * [Connect Storefront to Platform](/docs/connect-storefront-to-platform-v3.md)
-* [Getting Started](/docs/getting-started.md)
-* [Update VC Platform Module from version 2.x to 3](/docs/Migrate-module-from-the-Platform-2.0-to-3.0-version.md)
+  * [Deploy Platform 3 from precompiled binaries on Windows](docs/getting-started/deploy-from-precompiled-binaries-windows.md)
+  * [Deploy Platform 3 from precompiled binaries on Linux](docs/getting-started/deploy-from-precompiled-binaries-linux.md)
+  * [Connect Storefront to Platform](docs/getting-started/connect-storefront-to-platform-v3.md)
+  * [Deploy Platform 3 from source code](docs/developer-guide/deploy-from-source-code.md)
+* [Getting Started](docs/user-guide/getting-started.md)
+* [Update VC Platform Module from version 2.x to 3](docs/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
 
 ## License
 
