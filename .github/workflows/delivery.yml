@@ -51,7 +51,7 @@ jobs:
         $REPOSITORY = "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())"
         kustomize edit set image virtocommerce/platform=$REPOSITORY/platform:${{ steps.image.outputs.tag }}
 
-        git config user.email "test@virtoway.com"
+        git config user.email "github.actions@virtoway.com"
         git config user.name "GitHub Actions"
 
         git add .
@@ -116,9 +116,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
     - name: Push Deployment Info to Jira
-      if: ${{ steps.jira_keys.outputs.jira-keys != '' && always() }}
+      if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && env.BUILD_STATE != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
       id: push_deployment_info_to_jira
       uses: HighwayThree/jira-upload-deployment-info@master
+      env:
+        CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
+        CLIENT_ID: ${{secrets.CLIENT_ID}}
+        CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       with:
         cloud-instance-base-url: '${{ secrets.CLOUD_INSTANCE_BASE_URL }}'
         client-id: '${{ secrets.CLIENT_ID }}'

@@ -232,8 +232,10 @@ jobs:
         echo "::set-env name=BUILD_STATE::successful"
 
     - name: Add tag "passed-ci-${{ steps.image.outputs.tag }}"
-      if: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'testing') }}
+      if: ${{ env.REPO_TOKEN != 0 && (github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'testing')) }}
       uses: tvdias/github-tagger@v0.0.2
+      env:
+        REPO_TOKEN: ${{secrets.REPO_TOKEN}}
       with:
         repo-token: ${{ secrets.REPO_TOKEN }}
         tag: passed-ci-${{ steps.image.outputs.tag }}
