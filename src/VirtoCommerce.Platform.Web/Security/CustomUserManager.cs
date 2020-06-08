@@ -138,57 +138,60 @@ namespace VirtoCommerce.Platform.Web.Security
             return result;
         }
 
-        public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
+        protected override async Task<IdentityResult> UpdateUserAsync(ApplicationUser user)
         {
-            ApplicationUser existUser = null;
-            if (!string.IsNullOrEmpty(user.Id))
-            {
-                //It is important to call base.FindByIdAsync method to avoid of update a cached user.
-                existUser = await base.FindByIdAsync(user.Id);
-            }
-            if (existUser == null)
-            {
-                //It is important to call base.FindByNameAsync method to avoid of update a cached user.
-                existUser = await base.FindByNameAsync(user.UserName);
-            }
+            var existentUser = await LoadExistingUser(user);
 
             //We cant update not existing user
-            if(existUser == null)
+            if (existentUser == null)
             {
                 return IdentityResult.Failed(ErrorDescriber.DefaultError());
             }
 
-            await LoadUserDetailsAsync(existUser);
-
             var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
             {
-                new GenericChangedEntry<ApplicationUser>(user, existUser, EntryState.Modified)
+                new GenericChangedEntry<ApplicationUser>(user, existentUser, EntryState.Modified)
             };
+
             await _eventPublisher.Publish(new UserChangingEvent(changedEntries));
+
             //We need to use Patch method to update already tracked by DbContent entity, unless the UpdateAsync for passed user will throw exception
             //"The instance of entity type 'ApplicationUser' cannot be tracked because another instance with the same key value for {'Id'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached"
-            user.Patch(existUser);
-            var result = await base.UpdateAsync(existUser);
+            user.Patch(existentUser);
+
+            var result = await base.UpdateUserAsync(existentUser);
+
             if (result.Succeeded)
             {
                 await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
-                if (user.Roles != null)
-                {
-                    var targetRoles = (await GetRolesAsync(existUser));
-                    var sourceRoles = user.Roles.Select(x => x.Name);
-                    //Add
-                    foreach (var newRole in sourceRoles.Except(targetRoles))
-                    {
-                        await AddToRoleAsync(existUser, newRole);
-                    }
-                    //Remove
-                    foreach (var removeRole in targetRoles.Except(sourceRoles))
-                    {
-                        await RemoveFromRoleAsync(existUser, removeRole);
-                    }
-                }
-                SecurityCacheRegion.ExpireUser(existUser);
+                SecurityCacheRegion.ExpireUser(existentUser);
             }
+
+            return result;
+        }
+
+        public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
+        {
+            var result = await base.UpdateAsync(user);
+
+            if (result.Succeeded && user.Roles != null)
+            {
+                var targetRoles = (await GetRolesAsync(user));
+                var sourceRoles = user.Roles.Select(x => x.Name);
+
+                //Add
+                foreach (var newRole in sourceRoles.Except(targetRoles))
+                {
+                    await AddToRoleAsync(user, newRole);
+                }
+
+                //Remove
+                foreach (var removeRole in targetRoles.Except(sourceRoles))
+                {
+                    await RemoveFromRoleAsync(user, removeRole);
+                }
+            }
+
             return result;
         }
 
@@ -245,6 +248,34 @@ namespace VirtoCommerce.Platform.Web.Security
             // Read associated logins (compatibility with v2)
             var logins = await base.GetLoginsAsync(user);
             user.Logins = logins.Select(x => new ApplicationUserLogin() { LoginProvider = x.LoginProvider, ProviderKey = x.ProviderKey }).ToArray();
+        }
+
+        /// <summary>
+        /// Finds existing user and loads its details
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>Returns null, if no user found, otherwise user with details.</returns>
+        protected virtual async Task<ApplicationUser> LoadExistingUser(ApplicationUser user)
+        {
+            ApplicationUser result = null;
+
+            if (!string.IsNullOrEmpty(user.Id))
+            {
+                //It is important to call base.FindByIdAsync method to avoid of update a cached user.
+                result = await base.FindByIdAsync(user.Id);
+            }
+            if (result == null)
+            {
+                //It is important to call base.FindByNameAsync method to avoid of update a cached user.
+                result = await base.FindByNameAsync(user.UserName);
+            }
+
+            if (result != null)
+            {
+                await LoadUserDetailsAsync(result);
+            }
+
+            return result;
         }
     }
 }

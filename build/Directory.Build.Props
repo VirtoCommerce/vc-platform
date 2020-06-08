@@ -6,8 +6,8 @@
     <Copyright>Copyright © VirtoCommerce 2011-2020</Copyright>
   </PropertyGroup>
    <PropertyGroup>
-    <VersionPrefix>3.0.0</VersionPrefix>
-    <VersionSuffix>beta0010</VersionSuffix>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">   
