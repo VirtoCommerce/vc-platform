@@ -84,14 +84,15 @@ jobs:
 
           if (-not $syncedAndHealthy) {
             Write-Host "Sync pending..."
-          } 
-          else {
-            Write-Host "::set-env name=BUILD_STATE::successful"
           }
         }
         while (-not $syncedAndHealthy)
 
-    - name: Failed Build
+    - name: BUILD_STATE::successful
+      if: success()
+      run: echo "::set-env name=BUILD_STATE::successful"
+
+    - name: BUILD_STATE::failed
       if: failure()
       run: echo "::set-env name=BUILD_STATE::failed"
 
