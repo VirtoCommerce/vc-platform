@@ -33,6 +33,8 @@ jobs:
     - name: SonarCloud Begin
       if: ${{ env.SONAR_TOKEN != 0 }}
       shell: pwsh
+      env:
+        PULL_REQUEST_TITLE: ${{ github.event.pull_request.title }}
       run: |
         $BRANCH='${{ github.ref }}'.Replace('refs/heads', '')
         $CMD="dotnet sonarscanner begin /k:'VirtoCommerce_vc-platform'"
@@ -43,7 +45,7 @@ jobs:
         $CMD = "$($CMD) /d:sonar.branch='$($BRANCH)'"
         if ('${{ github.event_name }}' -eq 'pull_request' ) {
           $CMD="$($CMD) /d:sonar.pullrequest.base='$('${{ github.event.pull_request.base.ref }}')'"
-          $CMD="$($CMD) /d:sonar.pullrequest.branch='${{ github.event.pull_request.title }}'"
+          $CMD="$($CMD) /d:sonar.pullrequest.branch='$($env:PULL_REQUEST_TITLE)'"
           $CMD="$($CMD) /d:sonar.pullrequest.key=${{ github.event.number }}"
         }
         pwsh -command $CMD
