@@ -5,7 +5,7 @@ name: Deploy
 on:
   push:
     tags:
-      - passed-ci-*
+      - ver.*
 
   pull_request:
     types: [labeled]
