@@ -36,13 +36,16 @@ using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
 using VirtoCommerce.Platform.Assets.FileSystem;
 using VirtoCommerce.Platform.Assets.FileSystem.Extensions;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Settings;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -518,6 +521,8 @@ namespace VirtoCommerce.Platform.Web
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             GlobalConfiguration.Configuration.UseSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
 
+            var inProcessBus = app.ApplicationServices.GetService<IHandlerRegistrar>();
+            inProcessBus.RegisterHandler<ObjectSettingChangedEvent>(async (message, token) => await app.ApplicationServices.GetService<JobSettingsWatcher>().Handle(message));
         }
     }
 }
