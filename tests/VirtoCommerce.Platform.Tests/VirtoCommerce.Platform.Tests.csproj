@@ -22,6 +22,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Assets.AzureBlobStorage\VirtoCommerce.Platform.Assets.AzureBlobStorage.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Assets.FileSystem\VirtoCommerce.Platform.Assets.FileSystem.csproj" />
+        <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Caching\VirtoCommerce.Platform.Caching.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj" />

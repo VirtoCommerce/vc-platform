@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <noWarn>1591</noWarn>
+    <LangVersion>latest</LangVersion>
+    <IsPackable>True</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
+  </ItemGroup>
+</Project>  
