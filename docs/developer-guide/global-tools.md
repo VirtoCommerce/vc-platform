@@ -26,7 +26,6 @@ dotnet tool install VirtoCommerce.GlobalTool  -g
 
 ```
 
-
 ## Update to latest version 
 For update VirtoCommerce.GlobalTool to the latest version you need to run this command
 

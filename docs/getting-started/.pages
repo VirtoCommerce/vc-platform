@@ -1,0 +1,5 @@
+arrange:
+  - deploy-from-precompiled-binaries-windows.md
+  - deploy-from-precompiled-binaries-linux.md
+  - connect-storefront-to-platform-v3.md
+  - ...

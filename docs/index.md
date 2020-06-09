@@ -1,6 +1,6 @@
-# Platform 3 Overview
+# Overview
 
-## Overview
+## What Is Virto Commerce?
 
 Virto Commerce is a highly scalable eCommerce product for fast-growing and large companies. It provides powerful enterprise-class features right out-of-the-box and gives you the flexibility to create your own unique eCommerce solution while utilizing agile principles.
 
@@ -28,7 +28,7 @@ We decided to use the following stack of technologies:
 
 <a class="crosslink" href="https://virtocommerce.com/glossary/what-is-b2b-ecommerce" target="_blank">Platform and modules</a> are written using <a href="https://en.wikipedia.org/wiki/Domain-driven_design" rel="nofollow">DDD</a>, <a href="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)" rel="nofollow">SOLID</a>, <a href="https://en.wikipedia.org/wiki/Test-driven_development" rel="nofollow">Test Driven Development</a> methodologies. For a presentation layer, we use <a href="https://en.wikipedia.org/wiki/Model_View_ViewModel" rel="nofollow">MVVM</a>.
 
-<img src="docs/media/architecture-circle.png" title="Virto Commerce 3 Architecture" width="400">
+![Virto Commerce 3 Architecture](media/architecture-circle.png "Virto Commerce 3 Architecture")
 
 ## Comparison with Platform 2.x
 
@@ -41,26 +41,10 @@ Virto Commerce Platform 3 helps you increase development speed and significantly
 
 These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
 
-* [What’s new](docs/release-information/whats-new.md)
-* Setup
-  * [Deploy Platform 3 from precompiled binaries on Windows](docs/getting-started/deploy-from-precompiled-binaries-windows.md)
-  * [Deploy Platform 3 from precompiled binaries on Linux](docs/getting-started/deploy-from-precompiled-binaries-linux.md)
-  * [Connect Storefront to Platform](docs/getting-started/connect-storefront-to-platform-v3.md)
-  * [Deploy Platform 3 from source code](docs/developer-guide/deploy-from-source-code.md)
-* [Getting Started](docs/user-guide/getting-started.md)
-* [Update VC Platform Module from version 2.x to 3](docs/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
-
-## License
-
-Copyright (c) Virto Solutions LTD.  All rights reserved.
-
-Licensed under the Virto Commerce Open Software License (the "License"); you
-may not use this file except in compliance with the License. You may
-obtain a copy of the License at
-
-http://virtocommerce.com/opensourcelicense
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-implied.
+* [What’s new](release-information/whats-new.md)
+* [Deploy on Windows](getting-started/deploy-from-precompiled-binaries-windows.md)
+* [Deploy on Linux](getting-started/deploy-from-precompiled-binaries-linux.md)
+* [Connect Storefront to Platform](getting-started/connect-storefront-to-platform-v3)
+* [Deploy Platform 3 from source code](developer-guide/deploy-from-source-code.md)
+* [Getting Started](user-guide/getting-started.md)
+* [Update to version 3](release-information/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
