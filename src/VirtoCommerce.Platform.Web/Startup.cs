@@ -380,30 +380,33 @@ namespace VirtoCommerce.Platform.Web
             services.AddExternalModules();
 
             //Add SignalR for push notifications
-            services.AddOptions<SignalROptions>().Bind(Configuration.GetSection("SignalR")).ValidateDataAnnotations();
-            var signalROptions = new SignalROptions();
-            Configuration.GetSection("SignalR").Bind(signalROptions);
+            var signalRScalabilityProvider = Configuration.GetSection("SignalR:ScalabilityProvider")?.Value;            
             var signalRServiceBuilder = services.AddSignalR();                
-            // SignalR scalability configuration
-            if (signalROptions.ScalabilityEnabled)
+            // SignalR scalability configuration            
+            switch (signalRScalabilityProvider)
             {
-                switch (signalROptions.ScalabilityType)
-                {
-                    case SignalRScalabilityType.AzureSignalRService:
-                        signalRServiceBuilder.AddAzureSignalR(options =>
-                        {
-                            options.Endpoints = new ServiceEndpoint[] { new ServiceEndpoint(signalROptions.AzureSignalRService.ConnectionString) };
-                        });                        
-                        break;
-                    case SignalRScalabilityType.RedisBackplane:
-                        var redisConnectionString = Configuration.GetConnectionString("RedisConnectionString");
-                        if (!redisConnectionString.IsNullOrEmpty())
-                        {
-                            signalRServiceBuilder.AddStackExchangeRedis(redisConnectionString);
-                        }
-                        break;
-                }
-            }
+                case SignalR.Constants.AzureSignalRService:
+                    services.AddOptions<AzureSignalRServiceOptions>().Bind(Configuration.GetSection("SignalR:AzureSignalRService")).ValidateDataAnnotations();
+                    var azureSignalRServiceOptions = new AzureSignalRServiceOptions();
+                    Configuration.GetSection("SignalR").Bind(azureSignalRServiceOptions);
+
+                    signalRServiceBuilder.AddAzureSignalR(options =>
+                    {
+                        options.Endpoints = new ServiceEndpoint[] { new ServiceEndpoint(azureSignalRServiceOptions.ConnectionString) };
+                    });                    
+                    break;
+                case SignalR.Constants.RedisBackplane:
+                    var redisConnectionString = Configuration.GetConnectionString("RedisConnectionString");
+                    services.AddOptions<SignalRRedisBackplaneOptions>().Bind(Configuration.GetSection("SignalR:RedisBackplane")).ValidateDataAnnotations();
+                    var signalRRedisBackplaneOptions = new SignalRRedisBackplaneOptions();
+                    Configuration.GetSection("SignalR").Bind(signalRRedisBackplaneOptions);
+
+                    if (!redisConnectionString.IsNullOrEmpty())
+                    {
+                        signalRServiceBuilder.AddStackExchangeRedis(redisConnectionString, options=> options.Configuration.ChannelPrefix = signalRRedisBackplaneOptions.ChanelName);
+                    }
+                    break;
+            }            
 
             var assetsProvider = Configuration.GetSection("Assets:Provider").Value;
             if (assetsProvider.EqualsInvariant(AzureBlobProvider.ProviderName))
