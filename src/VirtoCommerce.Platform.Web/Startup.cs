@@ -388,7 +388,7 @@ namespace VirtoCommerce.Platform.Web
                 case SignalR.Constants.AzureSignalRService:
                     services.AddOptions<AzureSignalRServiceOptions>().Bind(Configuration.GetSection("SignalR:AzureSignalRService")).ValidateDataAnnotations();
                     var azureSignalRServiceOptions = new AzureSignalRServiceOptions();
-                    Configuration.GetSection("SignalR").Bind(azureSignalRServiceOptions);
+                    Configuration.GetSection("SignalR:AzureSignalRService").Bind(azureSignalRServiceOptions);
 
                     signalRServiceBuilder.AddAzureSignalR(options =>
                     {
@@ -399,7 +399,7 @@ namespace VirtoCommerce.Platform.Web
                     var redisConnectionString = Configuration.GetConnectionString("RedisConnectionString");
                     services.AddOptions<SignalRRedisBackplaneOptions>().Bind(Configuration.GetSection("SignalR:RedisBackplane")).ValidateDataAnnotations();
                     var signalRRedisBackplaneOptions = new SignalRRedisBackplaneOptions();
-                    Configuration.GetSection("SignalR").Bind(signalRRedisBackplaneOptions);
+                    Configuration.GetSection("SignalR:RedisBackplane").Bind(signalRRedisBackplaneOptions);
 
                     if (!redisConnectionString.IsNullOrEmpty())
                     {
