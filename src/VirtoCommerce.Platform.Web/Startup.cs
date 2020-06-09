@@ -379,35 +379,20 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
 
-            //Add SignalR for push notifications
+            //SignalR
             var signalRScalabilityProvider = Configuration.GetSection("SignalR:ScalabilityProvider")?.Value;            
-            var signalRServiceBuilder = services.AddSignalR();                
+            var signalRServiceBuilder = services.AddSignalR();
             // SignalR scalability configuration            
-            switch (signalRScalabilityProvider)
+            if (signalRScalabilityProvider == SignalR.Constants.AzureSignalRService)
             {
-                case SignalR.Constants.AzureSignalRService:
-                    services.AddOptions<AzureSignalRServiceOptions>().Bind(Configuration.GetSection("SignalR:AzureSignalRService")).ValidateDataAnnotations();
-                    var azureSignalRServiceOptions = new AzureSignalRServiceOptions();
-                    Configuration.GetSection("SignalR:AzureSignalRService").Bind(azureSignalRServiceOptions);
-
-                    signalRServiceBuilder.AddAzureSignalR(options =>
-                    {
-                        options.Endpoints = new ServiceEndpoint[] { new ServiceEndpoint(azureSignalRServiceOptions.ConnectionString) };
-                    });                    
-                    break;
-                case SignalR.Constants.RedisBackplane:
-                    var redisConnectionString = Configuration.GetConnectionString("RedisConnectionString");
-                    services.AddOptions<SignalRRedisBackplaneOptions>().Bind(Configuration.GetSection("SignalR:RedisBackplane")).ValidateDataAnnotations();
-                    var signalRRedisBackplaneOptions = new SignalRRedisBackplaneOptions();
-                    Configuration.GetSection("SignalR:RedisBackplane").Bind(signalRRedisBackplaneOptions);
-
-                    if (!redisConnectionString.IsNullOrEmpty())
-                    {
-                        signalRServiceBuilder.AddStackExchangeRedis(redisConnectionString, options=> options.Configuration.ChannelPrefix = signalRRedisBackplaneOptions.ChannelName);
-                    }
-                    break;
+                signalRServiceBuilder.AddAzureSignalR(Configuration);
+            }
+            else if (signalRScalabilityProvider == SignalR.Constants.RedisBackplane)
+            {
+                signalRServiceBuilder.AddRedisBackplane(Configuration);
             }            
 
+            //Assets
             var assetsProvider = Configuration.GetSection("Assets:Provider").Value;
             if (assetsProvider.EqualsInvariant(AzureBlobProvider.ProviderName))
             {
@@ -425,6 +410,7 @@ namespace VirtoCommerce.Platform.Web
                 services.AddFileSystemBlobProvider();
             }
 
+            //HangFire
             var hangfireOptions = new HangfireOptions();
             Configuration.GetSection("VirtoCommerce:Hangfire").Bind(hangfireOptions);
 
@@ -440,6 +426,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 services.AddHangfire(config => config.UseMemoryStorage());
             }
+
             //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs  
             if (hangfireOptions.UseHangfireServer)
             {
