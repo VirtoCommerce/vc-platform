@@ -403,7 +403,7 @@ namespace VirtoCommerce.Platform.Web
 
                     if (!redisConnectionString.IsNullOrEmpty())
                     {
-                        signalRServiceBuilder.AddStackExchangeRedis(redisConnectionString, options=> options.Configuration.ChannelPrefix = signalRRedisBackplaneOptions.ChanelName);
+                        signalRServiceBuilder.AddStackExchangeRedis(redisConnectionString, options=> options.Configuration.ChannelPrefix = signalRRedisBackplaneOptions.ChannelName);
                     }
                     break;
             }            
