@@ -1,4 +1,5 @@
 
+using System;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -11,28 +12,23 @@ namespace VirtoCommerce.Platform.Web.SignalR
     {
         public static void AddAzureSignalR(this ISignalRServerBuilder builder, IConfiguration configuration)
         {
-            var services = builder.Services;
-            services.AddOptions<AzureSignalRServiceOptions>().Bind(configuration.GetSection("SignalR:AzureSignalRService")).ValidateDataAnnotations();
-            var azureSignalRServiceOptions = new AzureSignalRServiceOptions();
-            configuration.GetSection("SignalR:AzureSignalRService").Bind(azureSignalRServiceOptions);
-
+            var azureSignalRConnectionString = configuration["SignalR:AzureSignalRService:ConnectionString"];
+            if (string.IsNullOrEmpty(azureSignalRConnectionString))
+            {
+                throw new InvalidOperationException("SignalR:AzureSignalRService:ConnectionString  must be set");
+            }
             builder.AddAzureSignalR(options =>
             {
-                options.Endpoints = new ServiceEndpoint[] { new ServiceEndpoint(azureSignalRServiceOptions.ConnectionString) };
+                options.Endpoints = new ServiceEndpoint[] { new ServiceEndpoint(azureSignalRConnectionString) };
             });
         }
 
         public static void AddRedisBackplane(this ISignalRServerBuilder builder, IConfiguration configuration)
         {
-            var services = builder.Services;
             var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
-            services.AddOptions<SignalRRedisBackplaneOptions>().Bind(configuration.GetSection("SignalR:RedisBackplane")).ValidateDataAnnotations();
-            var signalRRedisBackplaneOptions = new SignalRRedisBackplaneOptions();
-            configuration.GetSection("SignalR:RedisBackplane").Bind(signalRRedisBackplaneOptions);
-
-            if (!redisConnectionString.IsNullOrEmpty())
+            if (!string.IsNullOrEmpty(redisConnectionString))
             {
-                builder.AddStackExchangeRedis(redisConnectionString, options => options.Configuration.ChannelPrefix = signalRRedisBackplaneOptions.ChannelName );
+                builder.AddStackExchangeRedis(redisConnectionString, options => options.Configuration.ChannelPrefix = configuration["SignalR:RedisBackplane:ChannelName"] ?? "VirtoCommerceChannel");
             }
         }
     }

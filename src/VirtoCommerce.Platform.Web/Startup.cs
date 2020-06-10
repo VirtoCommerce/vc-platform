@@ -380,14 +380,15 @@ namespace VirtoCommerce.Platform.Web
             services.AddExternalModules();
 
             //SignalR
-            var signalRScalabilityProvider = Configuration.GetSection("SignalR:ScalabilityProvider")?.Value;            
+            var signalRScalabilityProvider = Configuration["SignalR:ScalabilityProvider"];            
             var signalRServiceBuilder = services.AddSignalR();
-            // SignalR scalability configuration            
+            // SignalR scalability configuration. RedisBackplane (default provider) will be activated only when RedisConnectionString is set
+            // otherwise no any SignalR scaling options will be used           
             if (signalRScalabilityProvider == SignalR.Constants.AzureSignalRService)
             {
                 signalRServiceBuilder.AddAzureSignalR(Configuration);
             }
-            else if (signalRScalabilityProvider == SignalR.Constants.RedisBackplane)
+            else 
             {
                 signalRServiceBuilder.AddRedisBackplane(Configuration);
             }            
