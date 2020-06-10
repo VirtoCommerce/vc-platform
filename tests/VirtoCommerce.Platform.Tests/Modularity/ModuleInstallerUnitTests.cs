@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using System.IO.Compression;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
@@ -16,9 +13,11 @@ using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.External;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
+    [Collection("Modularity"), Order(3)]
     public class ModuleInstallerUnitTests
     {
         private readonly LocalStorageModuleCatalogOptions _options;
@@ -36,7 +35,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             _zipFileWrapperMock = new Mock<IZipFileWrapper>();
         }
 
-        [Theory]
+        [Theory, Order(3)]
         [ClassData(typeof(ModularityTestData))]
         public void Install_Release_Installed(string currentVersionPlatform, ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool isInstalled)
         {

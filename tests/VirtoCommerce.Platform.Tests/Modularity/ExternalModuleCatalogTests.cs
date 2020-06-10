@@ -11,12 +11,14 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.External;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
+    [Collection("Modularity"), Order(1)]
     public class ExternalModuleCatalogTests
     {
-        [Fact]
+        [Fact, Order(1)]
         public void PublishNewVersionTest()
         {
             //Arrange
@@ -87,9 +89,9 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             Assert.True(extModuleManifest.Versions.Contains(ExternalModuleManifestVersion.FromManifest(v3_1_0)));
         }
 
-        [Theory]
+        [Theory, Order(1)]
         [InlineData("2.12.0", "1.4.0")]
-        [InlineData("3.1.0", "2.0.0")]      
+        [InlineData("3.1.0", "2.0.0")]
         public void CreateDirectory_CreateTestDirectory(string platformVersion, string effectiveModuleVersion)
         {
             //Arrange
