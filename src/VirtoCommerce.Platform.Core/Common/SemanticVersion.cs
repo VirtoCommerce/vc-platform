@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Core.Common
             if (other == null)
                 throw new ArgumentNullException(nameof(other));
 
-            var comparisonResult = CompareComponent(Prerelease, other.Prerelease, true);
+            var comparisonResult = ComparePrereleaseWithoutNumerical(Prerelease, other.Prerelease, true);
             return comparisonResult <= 0;
         }
 
@@ -218,6 +218,21 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             return aComps.Length.CompareTo(bComps.Length);
+        }
+
+        private static int ComparePrereleaseWithoutNumerical(string a, string b, bool nonemptyIsLower = false)
+        {
+            var aEmpty = string.IsNullOrEmpty(a);
+            var bEmpty = string.IsNullOrEmpty(b);
+            if (aEmpty && bEmpty)
+                return 0;
+
+            if (aEmpty)
+                return nonemptyIsLower ? 1 : -1;
+            if (bEmpty)
+                return nonemptyIsLower ? -1 : 1;
+
+            return 0;
         }
 
 
