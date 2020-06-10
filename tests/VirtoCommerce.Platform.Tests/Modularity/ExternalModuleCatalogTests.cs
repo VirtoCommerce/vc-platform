@@ -24,9 +24,9 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Arrange
             var v3_0_0_beta1 = new ModuleManifest
             {
-                 Version = "3.0.0",
-                 VersionTag = "beta1",
-                 PlatformVersion = "3.0.0"
+                Version = "3.0.0",
+                VersionTag = "beta1",
+                PlatformVersion = "3.0.0"
             };
             var v3_0_0 = new ModuleManifest
             {
@@ -53,8 +53,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
             var extModuleManifest = new ExternalModuleManifest
             {
-                Id = "A"           
-            };           
+                Id = "A"
+            };
 
             //Act
             extModuleManifest.PublishNewVersion(v3_0_0_beta1);
@@ -134,7 +134,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Assert
             var module = extCatalog.Modules.FirstOrDefault() as ManifestModuleInfo;
             Assert.NotNull(module);
-            Assert.Equal(module.Version, SemanticVersion.Parse(effectiveModuleVersion));
+            Assert.Equal(SemanticVersion.Parse(effectiveModuleVersion), module.Version);
         }
 
         private static ExternalModuleCatalog CreateExternalModuleCatalog(ExternalModuleManifest[] manifests)

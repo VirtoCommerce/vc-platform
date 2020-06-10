@@ -53,7 +53,7 @@ namespace VirtoCommerce.Platform.Core.Common
             return retVal;
         }
 
-        public SemanticVersion SetPrerelase(string prerelease)
+        public SemanticVersion SetPrerelease(string prerelease)
         {
             Prerelease = prerelease;
             return this;
