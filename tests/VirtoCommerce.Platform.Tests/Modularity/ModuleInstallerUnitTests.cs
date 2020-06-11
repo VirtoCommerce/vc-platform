@@ -17,6 +17,7 @@ using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
+    //the Order need for saparate runing UnitTests where use static Platform.CurrentVersion
     [Collection("Modularity"), Order(3)]
     public class ModuleInstallerUnitTests
     {
@@ -35,7 +36,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             _zipFileWrapperMock = new Mock<IZipFileWrapper>();
         }
 
-        [Theory, Order(3)]
+        [Theory]
         [ClassData(typeof(ModularityTestData))]
         public void Install_Release_Installed(string currentVersionPlatform, ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool isInstalled)
         {
@@ -52,7 +53,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var service = GetModuleInstaller();
 
             //Act
-            service.Install(modules, progress);
+            service.Install(modules, progress);            
 
             //Assert
             modules.All(x => x.IsInstalled).Should().Be(isInstalled);
@@ -83,8 +84,143 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         {
             public IEnumerator<object[]> GetEnumerator()
             {
+                //Scenario 1
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0" },
+                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } }
+                    },
+                    true
+                };
+                //2
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.2.0", PlatformVersion = "3.0.0" },
+                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } } }
+                    },
+                    true
+                };
+                //3
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "4.0.0", PlatformVersion = "3.0.0" }
+                    },
+                    true
+                };
+                //4
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "4.0.0", PlatformVersion = "3.0.0" }
+                    },
+                    true
+                };
+                //5
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "4.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "4.0.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0" },
+                        new ModuleManifest { Id = "C", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } },
+                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } }
+                    },
+                    true
+                };
+                //6
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[] { new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "4.0.0", PlatformVersion = "3.0.0" },
+                        new ModuleManifest { Id = "C", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "4.0.0" } } }
+                    },
+                    true
+                };
+                //7
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[]
+                    {
+                        new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }},
+                        new ModuleManifest { Id = "C", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "4.0.0" } }},
+                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } }}
+                    },
+                    Array.Empty<ModuleManifest>(),
+                    true
+                };
+                //8
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[]
+                    {
+                        new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }},
+                        new ModuleManifest { Id = "B", Version = "3.6.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "A", Version = "3.0.0" } }}
+                    },
+                    new[] { new ModuleManifest { Id = "B", Version = "3.0.0", PlatformVersion = "3.0.0" }},
+                    true
+                };
+                //9
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[]
+                    {
+                        new ModuleManifest { Id = "A", Version = "3.8.0", PlatformVersion = "3.0.0" }
+                    },
+                    new[]
+                    {
+                        new ModuleManifest { Id = "A", Version = "3.8.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "D", Version = "3.2.0" } }},
+                        new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "C", Version = "3.0.0" } }},
+                        new ModuleManifest { Id = "C", Version = "3.9.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "A", Version = "3.0.0" } }},
+                        new ModuleManifest { Id = "D", Version = "3.2.0", PlatformVersion = "3.0.0" }
+                    },
+                    true
+                };
+                //10
+                yield return new object[]
+                {
+                    "3.0.0",
+                    new[]
+                    {
+                        new ModuleManifest { Id = "A", Version = "4.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "4.0.0" } }}
+                    },
+                    new[]
+                    {
+                        new ModuleManifest { Id = "A", Version = "3.8.0", PlatformVersion = "3.0.0" },
+                        new ModuleManifest { Id = "C", Version = "3.9.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "A", Version = "3.0.0" } }}
+                    },
+                    false
+                };
+
                 yield return new object[] { "3.1.0-preview-5555", new[] { new ModuleManifest { Id = "A", Version = "3.2.0-prerelease-22", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
-                yield return new object[] { "3.1.0", new[] { new ModuleManifest { Id = "A", Version = "3.2.0-prerelease-22", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), false };
+                yield return new object[] { "3.1.0", new[] { new ModuleManifest { Id = "A", Version = "3.2.0-prerelease-22", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.0.1", PlatformVersion = "3.0.1" } }, Array.Empty<ModuleManifest>(), false };
                 yield return new object[] { "3.0.0-alpha1", new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), false };
@@ -103,45 +239,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, //installed
                     true
                 };
-                yield return new object[]
-                {
-                    "3.0.0",
-                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } }} },
-                    new[]
-                    {
-                        //installed
-                        new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0" },
-                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } }
-                    },
-                    true
-                };
-                yield return new object[]
-                {
-                    "3.0.0",
-                    new[] { new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }} },
-                    new[]
-                    {
-                        //installed
-                        new ModuleManifest { Id = "B", Version = "3.2.0", PlatformVersion = "3.0.0" },
-                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } } }
-                    },
-                    true
-                };
-                yield return new object[]
-                {
-                    "3.0.0",
-                    new[] { new ModuleManifest { Id = "A", Version = "4.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "4.0.0" } }} },
-                    new[]
-                    {
-                        //installed
-                        new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0" },
-                        new ModuleManifest { Id = "C", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } },
-                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } }
-                    },
-                    true
-                };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
-                yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), false };
+                yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
                 yield return new object[]
                 {
                     "3.0.0-alpha001",
@@ -154,7 +253,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     "3.0.0",
                     new[] {new ModuleManifest {Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } }, //installed
-                    false
+                    true
                 };
                 yield return new object[]
                 {

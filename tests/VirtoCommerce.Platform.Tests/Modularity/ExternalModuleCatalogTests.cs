@@ -15,10 +15,11 @@ using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
+    //the Order need for saparate runing UnitTests where use static Platform.CurrentVersion
     [Collection("Modularity"), Order(1)]
     public class ExternalModuleCatalogTests
     {
-        [Fact, Order(1)]
+        [Fact]
         public void PublishNewVersionTest()
         {
             //Arrange
@@ -65,7 +66,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Act
             extModuleManifest.PublishNewVersion(v3_0_0);
             //Assert
-            Assert.True(extModuleManifest.Versions.Count() == 1);
+            Assert.True(extModuleManifest.Versions.Count() == 2);
             Assert.True(extModuleManifest.Versions.Contains(ExternalModuleManifestVersion.FromManifest(v3_0_0)));
 
             //Act
@@ -85,11 +86,11 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Act
             extModuleManifest.PublishNewVersion(v3_1_0);
             //Assert
-            Assert.True(extModuleManifest.Versions.Count() == 1);
+            Assert.True(extModuleManifest.Versions.Count() == 2);
             Assert.True(extModuleManifest.Versions.Contains(ExternalModuleManifestVersion.FromManifest(v3_1_0)));
         }
 
-        [Theory, Order(1)]
+        [Theory]
         [InlineData("2.12.0", "1.4.0")]
         [InlineData("3.1.0", "2.0.0")]
         public void CreateDirectory_CreateTestDirectory(string platformVersion, string effectiveModuleVersion)
