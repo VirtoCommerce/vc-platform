@@ -119,7 +119,6 @@ namespace VirtoCommerce.Platform.Hangfire
             var processJobEnable = await settingsManager.GetValueAsync(settingCronJob.EnableSetting.Name, (bool)settingCronJob.EnableSetting.DefaultValue);
             if (processJobEnable)
             {
-                recurringJobManager.RemoveIfExists(settingCronJob.RecurringJobId);
                 var cronExpression = await settingsManager.GetValueAsync(settingCronJob.CronSetting.Name, settingCronJob.CronSetting.DefaultValue.ToString());
                 recurringJobManager.AddOrUpdate(
                     settingCronJob.RecurringJobId,
