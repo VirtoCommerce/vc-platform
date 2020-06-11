@@ -1,0 +1,8 @@
+arrange:
+  - getting-started.md
+  - modules.md
+  - settings.md
+  - user-profile.md
+  - security.md
+  - assets-function.md
+  - ...
