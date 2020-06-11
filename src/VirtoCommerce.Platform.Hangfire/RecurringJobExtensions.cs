@@ -26,8 +26,14 @@ namespace VirtoCommerce.Platform.Hangfire
             ISettingsManager settingsManager,
             SettingCronJob settingCronJob)
         {
-            if (recurringJobManager == null) throw new ArgumentNullException(nameof(recurringJobManager));
-            if (settingsManager == null) throw new ArgumentNullException(nameof(settingsManager));
+            if (recurringJobManager == null)
+            {
+                throw new ArgumentNullException(nameof(recurringJobManager));
+            }
+            if (settingsManager == null)
+            {
+                throw new ArgumentNullException(nameof(settingsManager));
+            }
 
             WatchJobSettingAsync(recurringJobManager, settingsManager, settingCronJob).GetAwaiter().GetResult();
         }
@@ -43,8 +49,14 @@ namespace VirtoCommerce.Platform.Hangfire
             ISettingsManager settingsManager,
             SettingCronJob settingCronJob)
         {
-            if (recurringJobManager == null) throw new ArgumentNullException(nameof(recurringJobManager));
-            if (settingsManager == null) throw new ArgumentNullException(nameof(settingsManager));
+            if (recurringJobManager == null)
+            {
+                throw new ArgumentNullException(nameof(recurringJobManager));
+            }
+            if (settingsManager == null)
+            {
+                throw new ArgumentNullException(nameof(settingsManager));
+            }
 
             _observedSettingsDict.AddOrUpdate(settingCronJob.EnableSetting.Name, settingCronJob, (settingName, сronJob) => settingCronJob);
             _observedSettingsDict.AddOrUpdate(settingCronJob.CronSetting.Name, settingCronJob, (settingName, сronJob) => settingCronJob);
@@ -72,8 +84,14 @@ namespace VirtoCommerce.Platform.Hangfire
             TimeZoneInfo timeZoneInfo,
             string queue)
         {
-            if (recurringJobManager == null) throw new ArgumentNullException(nameof(recurringJobManager));
-            if (settingsManager == null) throw new ArgumentNullException(nameof(settingsManager));
+            if (recurringJobManager == null)
+            {
+                throw new ArgumentNullException(nameof(recurringJobManager));
+            }
+            if (settingsManager == null)
+            {
+                throw new ArgumentNullException(nameof(settingsManager));
+            }
 
             var settingCronJob = new SettingCronJobBuilder(new SettingCronJob())
                 .SetEnablerSetting(enablerSetting)
@@ -84,11 +102,7 @@ namespace VirtoCommerce.Platform.Hangfire
                 .ToJob(methodCall)
                 .Build();
 
-            _observedSettingsDict.AddOrUpdate(settingCronJob.EnableSetting.Name, settingCronJob, (settingName, сronJob) => settingCronJob);
-
-            _observedSettingsDict.AddOrUpdate(settingCronJob.CronSetting.Name, settingCronJob, (settingName, сronJob) => settingCronJob);
-
-            RunOrRemoveJobAsync(recurringJobManager, settingsManager, settingCronJob).GetAwaiter().GetResult();
+            WatchJobSettingAsync(recurringJobManager, settingsManager, settingCronJob).GetAwaiter().GetResult();
         }
         
         /// <summary>
@@ -100,8 +114,14 @@ namespace VirtoCommerce.Platform.Hangfire
         /// <returns></returns>
         public static async Task HandleSettingChangeAsync(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, ObjectSettingChangedEvent message)
         {
-            if (recurringJobManager == null) throw new ArgumentNullException(nameof(recurringJobManager));
-            if (settingsManager == null) throw new ArgumentNullException(nameof(settingsManager));
+            if (recurringJobManager == null)
+            {
+                throw new ArgumentNullException(nameof(recurringJobManager));
+            }
+            if (settingsManager == null)
+            {
+                throw new ArgumentNullException(nameof(settingsManager));
+            }
 
             foreach (var changedEntry in message.ChangedEntries.Where(x => x.EntryState == EntryState.Modified
                                               || x.EntryState == EntryState.Added))

@@ -7,6 +7,8 @@ namespace VirtoCommerce.Platform.Hangfire
 {
     public class SettingCronJob
     {
+        internal SettingCronJob() {}
+
         public string RecurringJobId { get; set; }
         public SettingDescriptor EnableSetting { get; set; }
         public SettingDescriptor CronSetting { get; set; }
