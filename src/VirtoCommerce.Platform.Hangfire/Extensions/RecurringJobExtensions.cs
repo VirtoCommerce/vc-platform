@@ -4,17 +4,33 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Hangfire;
-using Hangfire.States;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
 
-namespace VirtoCommerce.Platform.Core.Jobs
+namespace VirtoCommerce.Platform.Hangfire
 {
     public static class RecurringJobExtensions
     {
         //key is the observed setting name, value is the object of setting job
         private static ConcurrentDictionary<string, SettingCronJob> _observedSettingsDict = new ConcurrentDictionary<string, SettingCronJob>();
+
+        /// <summary>
+        /// use SettingCronJobBuilder for preparing SettingCronJob
+        /// </summary>
+        /// <param name="recurringJobManager"></param>
+        /// <param name="settingsManager"></param>
+        /// <param name="settingCronJob"></param>
+        /// <returns></returns>
+        public static void WatchJobSetting(this IRecurringJobManager recurringJobManager,
+            ISettingsManager settingsManager,
+            SettingCronJob settingCronJob)
+        {
+            if (recurringJobManager == null) throw new ArgumentNullException(nameof(recurringJobManager));
+            if (settingsManager == null) throw new ArgumentNullException(nameof(settingsManager));
+
+            WatchJobSettingAsync(recurringJobManager, settingsManager, settingCronJob).GetAwaiter().GetResult();
+        }
 
         /// <summary>
         /// use SettingCronJobBuilder for preparing SettingCronJob
@@ -82,7 +98,7 @@ namespace VirtoCommerce.Platform.Core.Jobs
         /// <param name="settingsManager"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static async Task HandleSettingChange(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, ObjectSettingChangedEvent message)
+        public static async Task HandleSettingChangeAsync(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, ObjectSettingChangedEvent message)
         {
             if (recurringJobManager == null) throw new ArgumentNullException(nameof(recurringJobManager));
             if (settingsManager == null) throw new ArgumentNullException(nameof(settingsManager));

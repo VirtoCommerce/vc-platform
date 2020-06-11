@@ -1,8 +1,10 @@
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Hangfire.Common;
+using VirtoCommerce.Platform.Core.Settings;
 
-namespace VirtoCommerce.Platform.Core.Settings
+namespace VirtoCommerce.Platform.Hangfire
 {
     public class SettingCronJobBuilder
     {
@@ -50,7 +52,7 @@ namespace VirtoCommerce.Platform.Core.Settings
 
         public SettingCronJobBuilder ToJob<T>(Expression<Func<T, Task>> methodCall)
         {
-            _settingCronJob.Job = Hangfire.Common.Job.FromExpression(methodCall);
+            _settingCronJob.Job = Job.FromExpression(methodCall);
             _settingCronJob.RecurringJobId ??= $"{_settingCronJob.Job.Type.Name}.{_settingCronJob.Job.Method.Name}";
             return this;
         }

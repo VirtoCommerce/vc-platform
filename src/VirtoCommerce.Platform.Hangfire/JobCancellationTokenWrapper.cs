@@ -1,7 +1,7 @@
 using Hangfire;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Platform.Web.Hangfire
+namespace VirtoCommerce.Platform.Hangfire
 {
     /// <summary>
     /// Wrapper for Hangfire's IJobCancellationToken
