@@ -19,7 +19,6 @@ namespace VirtoCommerce.Platform.Web.Modularity
             LicenseUrl = moduleInfo.LicenseUrl;
             ProjectUrl = moduleInfo.ProjectUrl;
             IconUrl = moduleInfo.IconUrl;
-            Version = moduleInfo.Version.SetPrerelease(moduleInfo.VersionTag).ToString();
             RequireLicenseAcceptance = moduleInfo.RequireLicenseAcceptance;
             ReleaseNotes = moduleInfo.ReleaseNotes;
             Copyright = moduleInfo.Copyright;
