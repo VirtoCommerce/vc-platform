@@ -25,6 +25,7 @@ using Nuke.Common.Tools.Npm;
 using Nuke.Common.Tools.OpenCover;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
@@ -49,6 +50,18 @@ class Build : NukeBuild
 
     public static int Main()
     {
+        var nukeFile = Directory.GetFiles(Directory.GetCurrentDirectory(), ".nuke");
+        if(!nukeFile.Any())
+        {
+            Logger.Info("No .nuke file found!");
+            var solutions = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.sln");
+            if(solutions.Length == 1)
+            {
+                var solutionFileName = Path.GetFileName(solutions.First());
+                Logger.Info($"Solution found: {solutionFileName}");
+                File.WriteAllText(".nuke", solutionFileName);
+            }
+        }
         var exitCode = Execute<Build>(x => x.Compile);
         return ExitCode ?? exitCode;
     }
@@ -108,7 +121,7 @@ class Build : NukeBuild
    
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
-    AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+    [Parameter("Path to Artifacts Directory")] AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
     Project WebProject => Solution.AllProjects.FirstOrDefault(x => (x.SolutionFolder?.Name == "src" && x.Name.EndsWith("Web")) || x.Name.EndsWith("VirtoCommerce.Storefront"));
     AbsolutePath ModuleManifestFile => WebProject.Directory / "module.manifest";
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
@@ -121,9 +134,9 @@ class Build : NukeBuild
 
     ModuleManifest ModuleManifest => ManifestReader.Read(ModuleManifestFile);
 
-    AbsolutePath ModuleOutputDirectory => ArtifactsDirectory / (ModuleManifest.Id + ReleaseVersion);
-
-    string ZipFileName => IsModule ? $"{ModuleManifest.Id}_{ReleaseVersion}{CustomTagSuffix}.zip" : $"VirtoCommerce.Platform.{ReleaseVersion}{CustomTagSuffix}.zip";
+    AbsolutePath ModuleOutputDirectory => ArtifactsDirectory / ModuleManifest.Id;
+    
+    string ZipFileName => IsModule ? $"{ModuleManifest.Id}_{ReleaseVersion}{CustomTagSuffix}.zip" : $"{WebProject.Solution.Name}.{ReleaseVersion}{CustomTagSuffix}.zip";
     string ZipFilePath => ArtifactsDirectory / ZipFileName;
     string GitRepositoryName => GitRepository.Identifier.Split('/')[1];
 
