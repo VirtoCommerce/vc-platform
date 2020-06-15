@@ -25,7 +25,7 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                 //Handle only types which have any registered derived type
                 if (values?.Count > 0)
                 {
-                    type = abstractTypeFactory.GetMethods().Where(x => x.Name == "TryCreateInstance").First().Invoke(null, null).GetType();
+                    type = abstractTypeFactory.GetMethods().First(x => x.Name == "TryCreateInstance").Invoke(null, null)?.GetType();
                 }
             }
             return base.CreateProperties(type, memberSerialization);
