@@ -127,15 +127,31 @@ namespace VirtoCommerce.Platform.Modules
                             if (manifest.Versions != null)
                             {
                                 //Select from all versions of module the latest compatible by semVer with the current platform version.
-                                var latestPlatformCompatibleVersion = manifest.Versions.OrderByDescending(x => x.SemanticVersion)
+                                var latestStablePlatformCompatibleVersion = manifest.Versions.OrderByDescending(x => x.SemanticVersion)
                                                                                .FirstOrDefault(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion)
-                                                                                                    && (string.IsNullOrEmpty(x.VersionTag) || _options.IncludePrerelease));
-                                if (latestPlatformCompatibleVersion != null)
+                                                                                                    && string.IsNullOrEmpty(x.VersionTag));
+                                if (latestStablePlatformCompatibleVersion != null)
                                 {
                                     var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                                    moduleInfo.LoadFromExternalManifest(manifest, latestPlatformCompatibleVersion);
+                                    moduleInfo.LoadFromExternalManifest(manifest, latestStablePlatformCompatibleVersion);
                                     result.Add(moduleInfo);
                                 }
+
+                                if (_options.IncludePrerelease)
+                                {
+                                    //Select from all versions of module the latest compatible by semVer with the current platform version.
+                                    var latestPrereleasePlatformCompatibleVersion = manifest.Versions.OrderByDescending(x => x.SemanticVersion)
+                                                                                   .FirstOrDefault(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion)
+                                                                                                        && (!string.IsNullOrEmpty(x.VersionTag) && _options.IncludePrerelease));
+                                    if (latestPrereleasePlatformCompatibleVersion != null)
+                                    {
+                                        var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+                                        moduleInfo.LoadFromExternalManifest(manifest, latestPrereleasePlatformCompatibleVersion);
+                                        result.Add(moduleInfo);
+                                    }
+                                }
+
+                                
                             }
                             else
                             {

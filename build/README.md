@@ -1,7 +1,7 @@
-### VirtoCommerce.GlobalTool
+# Manage tools
 
 The official CLI [.NET Core GlobalTool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) for building, deploy releases, create and push packages, and manage environments for projects based on VirtoCommerce. Is powered by [nuke.build](https://nuke.build/) A cross-platform build automation system with C# DSL.
-### Publish a new version
+## Publish a new version
 
 Incerment package version in _build.csproj
 
@@ -16,7 +16,7 @@ dotnet pack .\vc-platform\build\_build.csproj  --configuration Release --include
 dotnet nuget push VirtoCommerce.GlobalTool.{version}.nupkg  -s https://api.nuget.org/v3/index.json -k {api key}
 
 ```
-### Installation
+## Installation
 
 To use VirtoCommerce.GlobalTool  install the  package:
 
@@ -26,24 +26,8 @@ dotnet tool install VirtoCommerce.GlobalTool  -g
 
 ```
 
-**Note:** For the VirtoCommerce.GlobalTool may not have a stable release at the moment then system will show you this error
 
-```console
-
-error NU1103: Unable to find a stable package virtocommerce.globaltool with version
-error NU1103:   - Found 1 version(s) in nuget.org [ Nearest version: 3.0.0-beta0006 ]
-
-```
-Then for install a prerelease version you need to run this command and pass in `--version` parameter a latest pre-release version
-
-```console
-
-dotnet tool install VirtoCommerce.GlobalTool --version 3.0.0-beta0006  -g
-
-```
-
-
-### Update to latest version 
+## Update to latest version 
 For update VirtoCommerce.GlobalTool to the latest version you need to run this command
 
 ```console
@@ -52,7 +36,7 @@ dotnet tool update VirtoCommerce.GlobalTool -g
 
 ```
 
-### Usage
+## Usage
 To use VirtoCommerce.GlobalTool by invoke the tool using the following command: `vc-build`
 
 To get the all list of targets 

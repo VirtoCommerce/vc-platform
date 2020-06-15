@@ -25,6 +25,7 @@ using Nuke.Common.Tools.Npm;
 using Nuke.Common.Tools.OpenCover;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
@@ -49,6 +50,18 @@ class Build : NukeBuild
 
     public static int Main()
     {
+        var nukeFile = Directory.GetFiles(Directory.GetCurrentDirectory(), ".nuke");
+        if(!nukeFile.Any())
+        {
+            Logger.Info("No .nuke file found!");
+            var solutions = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.sln");
+            if(solutions.Length == 1)
+            {
+                var solutionFileName = Path.GetFileName(solutions.First());
+                Logger.Info($"Solution found: {solutionFileName}");
+                File.WriteAllText(".nuke", solutionFileName);
+            }
+        }
         var exitCode = Execute<Build>(x => x.Compile);
         return ExitCode ?? exitCode;
     }
@@ -102,12 +115,14 @@ class Build : NukeBuild
     [Parameter("Path to modules.json")] readonly string ModulesJsonName = "modules_v3.json";
     [Parameter("Full uri to module artifact")] readonly string CustomModulePackageUri;
 
-    [Parameter("Build Number")] readonly string BuildNumber = "";
+    [Parameter("Custom Version Suffix")] readonly string CustomTagSuffix = "";
+
+    [Parameter("Path to Release Notes File")] readonly AbsolutePath ReleaseNotes;
    
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
-    AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
-    Project WebProject => Solution.AllProjects.FirstOrDefault(x => x.SolutionFolder?.Name == "src" && x.Name.EndsWith("Web"));
+    [Parameter("Path to Artifacts Directory")] AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
+    Project WebProject => Solution.AllProjects.FirstOrDefault(x => (x.SolutionFolder?.Name == "src" && x.Name.EndsWith("Web")) || x.Name.EndsWith("VirtoCommerce.Storefront"));
     AbsolutePath ModuleManifestFile => WebProject.Directory / "module.manifest";
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
@@ -115,30 +130,18 @@ class Build : NukeBuild
     string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix").EvaluatedValue;
     string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix").EvaluatedValue;
     string PackageVersion => MSBuildProject.GetProperty("PackageVersion").EvaluatedValue;
-    string BuildNumberSuffix => BuildNumber.IsNullOrEmpty() ? "" : $".{BuildNumber}";
-    string ReleaseVersion => $"{PackageVersion}{BuildNumberSuffix}";
+    string ReleaseVersion => PackageVersion;
 
     ModuleManifest ModuleManifest => ManifestReader.Read(ModuleManifestFile);
-    string ModuleSemVersion
-    {
-        get
-        {
-            if (!ModuleManifest.VersionTag.IsNullOrEmpty())
-            {
-                return string.Join("-", ModuleManifest.Version, ModuleManifest.VersionTag);
-            }
-            return ModuleManifest.Version;
-        }
-    }
 
-    AbsolutePath ModuleOutputDirectory => ArtifactsDirectory / (ModuleManifest.Id + ModuleSemVersion);
-
-    string ZipFileName => IsModule ? ModuleManifest.Id + "_" + ModuleSemVersion + ".zip" : $"VirtoCommerce.Platform.{PackageVersion}{BuildNumberSuffix}.zip";
+    AbsolutePath ModuleOutputDirectory => ArtifactsDirectory / ModuleManifest.Id;
+    
+    string ZipFileName => IsModule ? $"{ModuleManifest.Id}_{ReleaseVersion}{CustomTagSuffix}.zip" : $"{WebProject.Solution.Name}.{ReleaseVersion}{CustomTagSuffix}.zip";
     string ZipFilePath => ArtifactsDirectory / ZipFileName;
     string GitRepositoryName => GitRepository.Identifier.Split('/')[1];
 
     string ModulePackageUrl => CustomModulePackageUri.IsNullOrEmpty() ?
-        $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ModuleSemVersion}/{ModuleManifest.Id}_{ModuleSemVersion}.zip" : CustomModulePackageUri;
+        $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}/{ModuleManifest.Id}_{ReleaseVersion}.zip" : CustomModulePackageUri;
     GitRepository ModulesRepository => GitRepository.FromUrl("https://github.com/VirtoCommerce/vc-modules.git");
 
     bool IsModule => FileExists(ModuleManifestFile);
@@ -187,7 +190,6 @@ class Build : NukeBuild
       .Executes(() =>
       {
           //For platform take nuget package description from Directory.Build.Props
-          var version = ReleaseVersion;
           var settings = new DotNetPackSettings()
                .SetProject(Solution)
                   .EnableNoBuild()
@@ -195,11 +197,11 @@ class Build : NukeBuild
                   .EnableIncludeSymbols()
                   .SetSymbolPackageFormat(DotNetSymbolPackageFormat.snupkg)
                   .SetOutputDirectory(ArtifactsDirectory)
-                  .SetVersion(IsModule ? ModuleSemVersion : version);
+                  .SetVersion(ReleaseVersion);
 
           if (IsModule)
           {
-              //For platform take nuget package description from module manifest
+              //For module take nuget package description from module manifest
               settings.SetAuthors(ModuleManifest.Authors)
                   .SetPackageLicenseUrl(ModuleManifest.LicenseUrl)
                   .SetPackageProjectUrl(ModuleManifest.ProjectUrl)
@@ -267,7 +269,7 @@ class Build : NukeBuild
                .When(IsModule, ss => ss
                    .SetAssemblyVersion(ModuleManifest.Version)
                    .SetFileVersion(ModuleManifest.Version)
-                   .SetInformationalVersion(ModuleSemVersion)));
+                   .SetInformationalVersion(ReleaseVersion)));
 
        });
 
@@ -296,7 +298,7 @@ class Build : NukeBuild
                 .When(IsModule, ss => ss
                     .SetAssemblyVersion(ModuleManifest.Version)
                     .SetFileVersion(ModuleManifest.Version)
-                    .SetInformationalVersion(ModuleSemVersion)));
+                    .SetInformationalVersion(ReleaseVersion)));
         });
 
     Target Compress => _ => _
@@ -365,7 +367,7 @@ class Build : NukeBuild
                 modulesExternalManifests.Add(ExternalModuleManifest.FromManifest(manifest));
             }
             TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Formatting.Indented));
-            GitTasks.Git($"commit -am \"{manifest.Id} {ModuleSemVersion}\"", modulesLocalDirectory);
+            GitTasks.Git($"commit -am \"{manifest.Id} {ReleaseVersion}\"", modulesLocalDirectory);
             GitTasks.Git($"push origin HEAD:master -f", modulesLocalDirectory);
         });
 
@@ -529,11 +531,7 @@ class Build : NukeBuild
          /*.Requires(() =>   GitRepository.IsOnReleaseBranch() && GitTasks.GitHasCleanWorkingCopy()) */
          .Executes(() =>
          {
-             string tag;
-             if (IsModule)
-                 tag = ModuleSemVersion;
-             else
-                 tag = ReleaseVersion;
+             string tag = $"{ReleaseVersion}{CustomTagSuffix}";
              //FinishReleaseOrHotfix(tag);
 
              void RunGitHubRelease(string args)
@@ -541,7 +539,8 @@ class Build : NukeBuild
                  ProcessTasks.StartProcess("github-release", args, RootDirectory, customLogger: GitLogger).AssertZeroExitCode();
              }
              var prereleaseArg = PreRelease ? "--pre-release" : "";
-             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} {prereleaseArg}"); //-c branch -d description
+             var descriptionArg = File.Exists(ReleaseNotes) ? $"--description \"{File.ReadAllText(ReleaseNotes)}\"" : "";
+             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} {descriptionArg} {prereleaseArg}"); //-c branch -d description
              RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
          });
 

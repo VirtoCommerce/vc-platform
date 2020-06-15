@@ -1,0 +1,5 @@
+arrange:
+  - code-breaking-changes-included-in-v3.md
+  - update-module-from-platform-2.0-to-version-3.md
+  - upgrade-storefront-autorest-cli-to-v3.md
+  - ...

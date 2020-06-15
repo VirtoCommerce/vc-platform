@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Azure.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -85,7 +86,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
-            });
+            });            
             //Get platform version from GetExecutingAssembly
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
@@ -374,9 +375,21 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
 
-            //Add SignalR for push notifications
-            services.AddSignalR();
+            //SignalR
+            var signalRScalabilityProvider = Configuration["SignalR:ScalabilityProvider"];            
+            var signalRServiceBuilder = services.AddSignalR();
+            // SignalR scalability configuration. RedisBackplane (default provider) will be activated only when RedisConnectionString is set
+            // otherwise no any SignalR scaling options will be used           
+            if (signalRScalabilityProvider == SignalR.Constants.AzureSignalRService)
+            {
+                signalRServiceBuilder.AddAzureSignalR(Configuration);
+            }
+            else 
+            {
+                signalRServiceBuilder.AddRedisBackplane(Configuration);
+            }            
 
+            //Assets
             var assetsProvider = Configuration.GetSection("Assets:Provider").Value;
             if (assetsProvider.EqualsInvariant(AzureBlobProvider.ProviderName))
             {
@@ -394,8 +407,28 @@ namespace VirtoCommerce.Platform.Web
                 services.AddFileSystemBlobProvider();
             }
 
-            services.AddHangfire(Configuration);
+            //HangFire
+            var hangfireOptions = new HangfireOptions();
+            Configuration.GetSection("VirtoCommerce:Hangfire").Bind(hangfireOptions);
 
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = hangfireOptions.AutomaticRetryCount });
+            if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer)
+            {
+                services.AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(Configuration.GetConnectionString("VirtoCommerce"), hangfireOptions.SqlServerStorageOptions));
+            }
+            else
+            {
+                services.AddHangfire(config => config.UseMemoryStorage());
+            }
+
+            //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs  
+            if (hangfireOptions.UseHangfireServer)
+            {
+                services.AddHangfireServer();
+            }
             // Register the Swagger generator
             services.AddSwagger();
         }
