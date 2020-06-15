@@ -1,0 +1,54 @@
+site_name: Virto Commerce Documentation
+theme:
+    name: material
+    language: en
+#    features:
+#        - instant # (still experimental) feature fails to load images when folder changes
+    favicon: media/favicon.ico
+    logo: media/logo.png
+    palette:
+        primary: red
+    font:
+        text: Roboto
+        code: Ubuntu Mono
+markdown_extensions:
+    - admonition # https://squidfunk.github.io/mkdocs-material/extensions/admonition/ (in material theme)
+    - codehilite
+    - meta
+    # https://squidfunk.github.io/mkdocs-material/extensions/pymdown/
+    - pymdownx.superfences
+    - pymdownx.magiclink
+plugins:
+    - search # necessary for search to work
+ #   - autolinks
+    - awesome-pages:
+ #       strict: false
+    - git-revision-date-localized
+ #   - minify:
+ #       minify_html: true
+    - redirects:
+        redirect_maps:
+            'redir.md': 'index.md'
+#    - monorepo
+
+# Project information
+site_name: Virto Commerce
+site_description: Virto Commerce Documentation
+site_author: Virto Commerce
+site_url: https://virtocommerce.com/
+
+# Repository
+repo_name: VirtoCommerce/vc-platform
+repo_url: https://github.com/VirtoCommerce/vc-platform
+
+# Copyright
+copyright: Copyright &copy; 2020. All rights reserved.
+
+extra:
+    social:
+      - icon: fontawesome/brands/github-alt
+        link: https://github.com/VirtoCommerce
+      - icon: fontawesome/brands/twitter
+        link: https://twitter.com/virtocommerce?lang=en
+      - icon: fontawesome/brands/linkedin
+        link: https://www.linkedin.com/company/virto-commerce/
