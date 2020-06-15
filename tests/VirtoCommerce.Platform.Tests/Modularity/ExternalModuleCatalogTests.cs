@@ -11,9 +11,12 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.External;
 using Xunit;
+using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
+    //the Order need for saparate runing UnitTests where use static Platform.CurrentVersion
+    [Collection("Modularity"), Order(1)]
     public class ExternalModuleCatalogTests
     {
         [Fact]
@@ -22,9 +25,9 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Arrange
             var v3_0_0_beta1 = new ModuleManifest
             {
-                 Version = "3.0.0",
-                 VersionTag = "beta1",
-                 PlatformVersion = "3.0.0"
+                Version = "3.0.0",
+                VersionTag = "beta1",
+                PlatformVersion = "3.0.0"
             };
             var v3_0_0 = new ModuleManifest
             {
@@ -51,8 +54,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
             var extModuleManifest = new ExternalModuleManifest
             {
-                Id = "A"           
-            };           
+                Id = "A"
+            };
 
             //Act
             extModuleManifest.PublishNewVersion(v3_0_0_beta1);
@@ -63,7 +66,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Act
             extModuleManifest.PublishNewVersion(v3_0_0);
             //Assert
-            Assert.True(extModuleManifest.Versions.Count() == 1);
+            Assert.True(extModuleManifest.Versions.Count() == 2);
             Assert.True(extModuleManifest.Versions.Contains(ExternalModuleManifestVersion.FromManifest(v3_0_0)));
 
             //Act
@@ -83,13 +86,13 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Act
             extModuleManifest.PublishNewVersion(v3_1_0);
             //Assert
-            Assert.True(extModuleManifest.Versions.Count() == 1);
+            Assert.True(extModuleManifest.Versions.Count() == 2);
             Assert.True(extModuleManifest.Versions.Contains(ExternalModuleManifestVersion.FromManifest(v3_1_0)));
         }
 
         [Theory]
         [InlineData("2.12.0", "1.4.0")]
-        [InlineData("3.1.0", "2.0.0")]      
+        [InlineData("3.1.0", "2.0.0")]
         public void CreateDirectory_CreateTestDirectory(string platformVersion, string effectiveModuleVersion)
         {
             //Arrange
@@ -132,7 +135,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             //Assert
             var module = extCatalog.Modules.FirstOrDefault() as ManifestModuleInfo;
             Assert.NotNull(module);
-            Assert.Equal(module.Version, SemanticVersion.Parse(effectiveModuleVersion));
+            Assert.Equal(SemanticVersion.Parse(effectiveModuleVersion), module.Version);
         }
 
         private static ExternalModuleCatalog CreateExternalModuleCatalog(ExternalModuleManifest[] manifests)
