@@ -1,0 +1,6 @@
+arrange:
+  - deploy-from-source-code.md
+  - deploy-module-from-source-code.md
+  - create-new-module.md
+  - swagger-endpoints.md
+  - ...
