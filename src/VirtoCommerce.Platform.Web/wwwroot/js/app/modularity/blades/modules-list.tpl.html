@@ -77,7 +77,7 @@
 <script type="text/ng-template" id="modules-list-icon.cell.html">
     <div class="ui-grid-cell-contents">
         <div class="product-img">
-            <img class="image" ng-src="{{COL_FIELD}}" ng-if="COL_FIELD">
+            <img class="image" ng-src="{{COL_FIELD}}" fallback-src="/images/module-logo.png" ng-if="COL_FIELD">
             <i class="table-ico fa fa-cubes" ng-if="!COL_FIELD"></i>
             <img class="table-badge" src="/images/approval-32.png" ng-if="row.entity.$isOwnedByVirto" title="{{ 'platform.blades.module-detail.labels.official' | translate: row.entity }}" />
         </div>
