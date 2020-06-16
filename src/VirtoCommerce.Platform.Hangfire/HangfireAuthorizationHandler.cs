@@ -1,7 +1,7 @@
 using Hangfire.Dashboard;
 using VirtoCommerce.Platform.Core;
 
-namespace VirtoCommerce.Platform.Web.Hangfire
+namespace VirtoCommerce.Platform.Hangfire
 {
     public class HangfireAuthorizationHandler : IDashboardAuthorizationFilter
     {
