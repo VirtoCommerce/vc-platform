@@ -361,6 +361,18 @@ class Build : NukeBuild
             if (existExternalManifest != null)
             {
                 existExternalManifest.PublishNewVersion(manifest);
+                existExternalManifest.Title = manifest.Title;
+                existExternalManifest.Description = manifest.Description;
+                existExternalManifest.Authors = manifest.Authors;
+                existExternalManifest.Copyright = manifest.Copyright;
+                existExternalManifest.Groups = manifest.Groups;
+                existExternalManifest.IconUrl = manifest.IconUrl;
+                existExternalManifest.Id = manifest.Id;
+                existExternalManifest.LicenseUrl = manifest.LicenseUrl;
+                existExternalManifest.Owners = manifest.Owners;
+                existExternalManifest.ProjectUrl = manifest.ProjectUrl;
+                existExternalManifest.RequireLicenseAcceptance = manifest.RequireLicenseAcceptance;
+                existExternalManifest.Tags = manifest.Tags;
             }
             else
             {
