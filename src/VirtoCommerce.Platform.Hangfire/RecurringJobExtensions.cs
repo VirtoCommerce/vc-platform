@@ -26,42 +26,7 @@ namespace VirtoCommerce.Platform.Hangfire
             ISettingsManager settingsManager,
             SettingCronJob settingCronJob)
         {
-            if (recurringJobManager == null)
-            {
-                throw new ArgumentNullException(nameof(recurringJobManager));
-            }
-            if (settingsManager == null)
-            {
-                throw new ArgumentNullException(nameof(settingsManager));
-            }
-
             WatchJobSettingAsync(recurringJobManager, settingsManager, settingCronJob).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// use SettingCronJobBuilder for preparing SettingCronJob
-        /// </summary>
-        /// <param name="recurringJobManager"></param>
-        /// <param name="settingsManager"></param>
-        /// <param name="settingCronJob"></param>
-        /// <returns></returns>
-        public static Task WatchJobSettingAsync(this IRecurringJobManager recurringJobManager,
-            ISettingsManager settingsManager,
-            SettingCronJob settingCronJob)
-        {
-            if (recurringJobManager == null)
-            {
-                throw new ArgumentNullException(nameof(recurringJobManager));
-            }
-            if (settingsManager == null)
-            {
-                throw new ArgumentNullException(nameof(settingsManager));
-            }
-
-            _observedSettingsDict.AddOrUpdate(settingCronJob.EnableSetting.Name, settingCronJob, (settingName, сronJob) => settingCronJob);
-            _observedSettingsDict.AddOrUpdate(settingCronJob.CronSetting.Name, settingCronJob, (settingName, сronJob) => settingCronJob);
-
-            return RunOrRemoveJobAsync(recurringJobManager, settingsManager, settingCronJob);
         }
 
         /// <summary>
@@ -104,15 +69,17 @@ namespace VirtoCommerce.Platform.Hangfire
 
             WatchJobSettingAsync(recurringJobManager, settingsManager, settingCronJob).GetAwaiter().GetResult();
         }
-        
+
         /// <summary>
-        /// 
+        /// use SettingCronJobBuilder for preparing SettingCronJob
         /// </summary>
         /// <param name="recurringJobManager"></param>
         /// <param name="settingsManager"></param>
-        /// <param name="message"></param>
+        /// <param name="settingCronJob"></param>
         /// <returns></returns>
-        public static async Task HandleSettingChangeAsync(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, ObjectSettingChangedEvent message)
+        public static Task WatchJobSettingAsync(this IRecurringJobManager recurringJobManager,
+            ISettingsManager settingsManager,
+            SettingCronJob settingCronJob)
         {
             if (recurringJobManager == null)
             {
@@ -123,6 +90,34 @@ namespace VirtoCommerce.Platform.Hangfire
                 throw new ArgumentNullException(nameof(settingsManager));
             }
 
+            _observedSettingsDict.AddOrUpdate(settingCronJob.EnableSetting.Name, settingCronJob, (settingName, сronJob) => settingCronJob);
+            _observedSettingsDict.AddOrUpdate(settingCronJob.CronSetting.Name, settingCronJob, (settingName, сronJob) => settingCronJob);
+
+            return RunOrRemoveJobAsync(recurringJobManager, settingsManager, settingCronJob);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="recurringJobManager"></param>
+        /// <param name="settingsManager"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public static Task HandleSettingChangeAsync(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, ObjectSettingChangedEvent message)
+        {
+            if (recurringJobManager == null)
+            {
+                throw new ArgumentNullException(nameof(recurringJobManager));
+            }
+            if (settingsManager == null)
+            {
+                throw new ArgumentNullException(nameof(settingsManager));
+            }
+            return HandleSettingChangeAsyncIntnl(recurringJobManager, settingsManager, message);
+        }
+
+        private static async Task HandleSettingChangeAsyncIntnl(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, ObjectSettingChangedEvent message)
+        {
             foreach (var changedEntry in message.ChangedEntries.Where(x => x.EntryState == EntryState.Modified
                                               || x.EntryState == EntryState.Added))
             {
@@ -132,7 +127,6 @@ namespace VirtoCommerce.Platform.Hangfire
                 }
             }
         }
-
 
         private static async Task RunOrRemoveJobAsync(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, SettingCronJob settingCronJob)
         {
