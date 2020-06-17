@@ -80,10 +80,12 @@ jobs:
       run: vc-build Compress -skip Test
 
     - name: Build Docker Image
+      shell: pwsh
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile artifacts/publish/Dockerfile"
-        docker build artifacts/publish --build-arg SOURCE=. --tag "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile -OutFile artifacts/Dockerfile
+        Invoke-WebRequest -Uri https://github.com/VirtoCommerce/vc-docker/blob/master/linux/platform/wait-for-it.sh -OutFile artifacts/wait-for-it.sh
+        docker build artifacts --build-arg SOURCE=. --tag "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform:${{ steps.image.outputs.tag }}"
 
     - name: Docker Login
       uses: azure/docker-login@v1
