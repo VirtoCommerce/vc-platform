@@ -82,7 +82,6 @@ jobs:
     - name: Build Docker Image
       shell: pwsh
       run: |
-        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile -OutFile artifacts/Dockerfile
         Invoke-WebRequest -Uri https://github.com/VirtoCommerce/vc-docker/blob/master/linux/platform/wait-for-it.sh -OutFile artifacts/wait-for-it.sh
         docker build artifacts --build-arg SOURCE=. --tag "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform:${{ steps.image.outputs.tag }}"
