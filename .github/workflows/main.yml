@@ -80,10 +80,11 @@ jobs:
       run: vc-build Compress -skip Test
 
     - name: Build Docker Image
+      shell: pwsh
       run: |
-        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/platform/Dockerfile -OutFile artifacts/publish/Dockerfile"
-        docker build artifacts/publish --build-arg SOURCE=. --tag "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile -OutFile artifacts/Dockerfile
+        Invoke-WebRequest -Uri https://github.com/VirtoCommerce/vc-docker/blob/master/linux/platform/wait-for-it.sh -OutFile artifacts/wait-for-it.sh
+        docker build artifacts --build-arg SOURCE=. --tag "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform:${{ steps.image.outputs.tag }}"
 
     - name: Docker Login
       uses: azure/docker-login@v1
@@ -147,9 +148,10 @@ jobs:
         cd docker
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/docker-compose.yml -OutFile docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/platform','docker.pkg.github.com/$REPOSITORY/platform') | Set-Content -Path docker-compose.yml"
+        pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/storefront','docker.pkg.github.com/virtocommerce/vc-storefront-core/storefront') | Set-Content -Path docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'MultipleActiveResultSets=True','MultipleActiveResultSets=False') | Set-Content -Path docker-compose.yml"
         echo PLATFORM_DOCKER_TAG=${{ steps.image.outputs.tag }} >> .env
-        echo STOREFRONT_DOCKER_TAG=3.0-preview-linux >> .env
+        echo STOREFRONT_DOCKER_TAG=dev-linux-latest >> .env
         echo DOCKER_PLATFORM_PORT=8081 >> .env
         echo DOCKER_STOREFRONT_PORT=8082 >> .env
         echo DOCKER_SQL_PORT=8083 >> .env
