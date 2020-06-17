@@ -130,8 +130,8 @@ jobs:
         deployment-sequence-number: '${{ github.run_id }}'
         update-sequence-number: '${{ github.run_id }}'
         issue-keys: "${{ steps.jira_keys.outputs.jira-keys }}"
-        display-name: "http://platform-platform.dev.govirto.com/f"
-        url: "http://platform-platform.dev.govirto.com/"
+        display-name: "http://webstore-platform.dev.govirto.com/"
+        url: "http://webstore-platform.dev.govirto.com/"
         description: "Deployment to the Development environment"
         last-updated: '${{github.event.head_commit.timestamp}}'
         state: "${{ env.BUILD_STATE }}"

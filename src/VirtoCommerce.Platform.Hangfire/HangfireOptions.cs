@@ -1,8 +1,6 @@
-using Hangfire;
 using Hangfire.SqlServer;
-using VirtoCommerce.Platform.Core.Jobs;
 
-namespace VirtoCommerce.Platform.Web.Hangfire
+namespace VirtoCommerce.Platform.Hangfire
 {
     public class HangfireOptions
     {
