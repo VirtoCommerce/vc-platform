@@ -35,7 +35,7 @@ plugins:
 site_name: Virto Commerce
 site_description: Virto Commerce Documentation
 site_author: Virto Commerce
-site_url: https://virtocommerce.com/
+site_url: https://virtocommerce.com/docs/latest
 
 # Repository
 repo_name: VirtoCommerce/vc-platform
