@@ -143,7 +143,7 @@ class Build : NukeBuild
     string GitRepositoryName => GitRepository.Identifier.Split('/')[1];
 
     string ModulePackageUrl => CustomModulePackageUri.IsNullOrEmpty() ?
-        $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}/{ModuleManifest.Id}_{ReleaseVersion}.zip" : CustomModulePackageUri;
+        $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}{CustomTagSuffix}/{ModuleManifest.Id}_{ReleaseVersion}{CustomTagSuffix}.zip" : CustomModulePackageUri;
     GitRepository ModulesRepository => GitRepository.FromUrl("https://github.com/VirtoCommerce/vc-modules.git");
 
     bool IsModule => FileExists(ModuleManifestFile);
@@ -363,7 +363,8 @@ class Build : NukeBuild
             {
                 if(!manifest.VersionTag.IsNullOrEmpty() || !VersionTag.IsNullOrEmpty())
                 {
-                    manifest.VersionTag = manifest.VersionTag.IsNullOrEmpty() ? VersionTag : manifest.VersionTag; 
+                    var tag = manifest.VersionTag.IsNullOrEmpty() ? VersionTag : manifest.VersionTag;
+                    manifest.VersionTag = $"{tag}{CustomTagSuffix}"; 
                     var existPrereleaseVersions = existExternalManifest.Versions.Where(v => !v.VersionTag.IsNullOrEmpty());
                     if (existPrereleaseVersions.Any())
                     {
@@ -374,6 +375,7 @@ class Build : NukeBuild
                         prereleaseVersion.ReleaseNotes = manifest.ReleaseNotes;
                         prereleaseVersion.Version = manifest.Version;
                         prereleaseVersion.VersionTag = manifest.VersionTag;
+                        prereleaseVersion.PackageUrl = manifest.PackageUrl;
                     }
                     else
                     {
