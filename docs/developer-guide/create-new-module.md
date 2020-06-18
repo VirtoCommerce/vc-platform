@@ -94,7 +94,7 @@ How to create a new module from scratch? Follow the Dummy module example.
         Add-Migration Initial -Verbose
     ```
 
-A new EF migration gets generated. Read more details on extending an existing module's model: [How to extend the DB model of VC module](../techniques/extend-db-model.md).
+A new EF migration gets generated. Read more details on extending an existing module's model: [How to extend the DB model of VC module](../techniques/extend-DB-model.md).
 
 4. **Caching** folder: add it, if data caching should be used. This folder is for the cache region classes. Typically, each model should have its own region. Derive CacheRegion from generic `CancellableCacheRegion<T>` class e.g., `public class StoreCacheRegion : CancellableCacheRegion<StoreCacheRegion>`.
 5. **Services** folder: add implementations of the interfaces that were defined in the **.Core** project.
