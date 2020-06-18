@@ -1,0 +1,1 @@
+﻿INSERT INTO [Permission] ([PermissionId],[Name],[LastModified],[Created],[Discriminator]) VALUES (N'customers:customer:login',N'Login on behalf of a contact',N'20131220 13:47:56.577',N'20131220 13:47:56.577',N'Permission');

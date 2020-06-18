@@ -1,0 +1,7 @@
+arrange:
+  - index.md
+  - lessons
+  - developer-guide
+  - user-guide
+  - ...
+  - versions

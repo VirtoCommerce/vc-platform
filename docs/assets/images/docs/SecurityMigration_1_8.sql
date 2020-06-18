@@ -1,0 +1,2 @@
+INSERT [dbo].[Permission] ([PermissionId], [Name], [LastModified], [Created], [Discriminator]) VALUES (N'reporting:manage', N'Manage reports', CAST(0x0000A2C7008933AF AS DateTime), CAST(0x0000A2C7008933AF AS DateTime), N'Permission')
+INSERT [dbo].[Permission] ([PermissionId], [Name], [LastModified], [Created], [Discriminator]) VALUES (N'reporting:view', N'View reports', CAST(0x0000A2C7008933AF AS DateTime), CAST(0x0000A2C7008933AF AS DateTime), N'Permission')
