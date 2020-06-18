@@ -118,6 +118,8 @@ class Build : NukeBuild
     [Parameter("Custom Version Suffix")] readonly string CustomTagSuffix = "";
 
     [Parameter("Path to Release Notes File")] readonly AbsolutePath ReleaseNotes;
+
+    [Parameter("VersionTag for module.manifest")] readonly string VersionTag;
    
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
@@ -141,7 +143,7 @@ class Build : NukeBuild
     string GitRepositoryName => GitRepository.Identifier.Split('/')[1];
 
     string ModulePackageUrl => CustomModulePackageUri.IsNullOrEmpty() ?
-        $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}/{ModuleManifest.Id}_{ReleaseVersion}.zip" : CustomModulePackageUri;
+        $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}{CustomTagSuffix}/{ModuleManifest.Id}_{ReleaseVersion}{CustomTagSuffix}.zip" : CustomModulePackageUri;
     GitRepository ModulesRepository => GitRepository.FromUrl("https://github.com/VirtoCommerce/vc-modules.git");
 
     bool IsModule => FileExists(ModuleManifestFile);
@@ -356,11 +358,46 @@ class Build : NukeBuild
 
             var modulesExternalManifests = JsonConvert.DeserializeObject<List<ExternalModuleManifest>>(TextTasks.ReadAllText(modulesJsonFile));
             manifest.PackageUrl = ModulePackageUrl;
-            manifest.VersionTag = manifest.VersionTag.Replace("$", "");
             var existExternalManifest = modulesExternalManifests.FirstOrDefault(x => x.Id == manifest.Id);
             if (existExternalManifest != null)
             {
-                existExternalManifest.PublishNewVersion(manifest);
+                if(!manifest.VersionTag.IsNullOrEmpty() || !VersionTag.IsNullOrEmpty())
+                {
+                    var tag = manifest.VersionTag.IsNullOrEmpty() ? VersionTag : manifest.VersionTag;
+                    manifest.VersionTag = $"{tag}{CustomTagSuffix}"; 
+                    var existPrereleaseVersions = existExternalManifest.Versions.Where(v => !v.VersionTag.IsNullOrEmpty());
+                    if (existPrereleaseVersions.Any())
+                    {
+                        var prereleaseVersion = existPrereleaseVersions.First();
+                        prereleaseVersion.Dependencies = manifest.Dependencies;
+                        prereleaseVersion.Incompatibilities = manifest.Incompatibilities;
+                        prereleaseVersion.PlatformVersion = manifest.PlatformVersion;
+                        prereleaseVersion.ReleaseNotes = manifest.ReleaseNotes;
+                        prereleaseVersion.Version = manifest.Version;
+                        prereleaseVersion.VersionTag = manifest.VersionTag;
+                        prereleaseVersion.PackageUrl = manifest.PackageUrl;
+                    }
+                    else
+                    {
+                        existExternalManifest.Versions.Add(ExternalModuleManifestVersion.FromManifest(manifest));
+                    }
+                }
+                else
+                {
+                    existExternalManifest.PublishNewVersion(manifest);
+                }
+                existExternalManifest.Title = manifest.Title;
+                existExternalManifest.Description = manifest.Description;
+                existExternalManifest.Authors = manifest.Authors;
+                existExternalManifest.Copyright = manifest.Copyright;
+                existExternalManifest.Groups = manifest.Groups;
+                existExternalManifest.IconUrl = manifest.IconUrl;
+                existExternalManifest.Id = manifest.Id;
+                existExternalManifest.LicenseUrl = manifest.LicenseUrl;
+                existExternalManifest.Owners = manifest.Owners;
+                existExternalManifest.ProjectUrl = manifest.ProjectUrl;
+                existExternalManifest.RequireLicenseAcceptance = manifest.RequireLicenseAcceptance;
+                existExternalManifest.Tags = manifest.Tags;
             }
             else
             {
