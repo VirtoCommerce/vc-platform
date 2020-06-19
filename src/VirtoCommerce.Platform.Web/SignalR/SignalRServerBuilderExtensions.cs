@@ -5,6 +5,7 @@ using Microsoft.Azure.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Web.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.SignalR
 {
@@ -21,6 +22,7 @@ namespace VirtoCommerce.Platform.Web.SignalR
             {
                 options.Endpoints = new ServiceEndpoint[] { new ServiceEndpoint(azureSignalRConnectionString) };
             });
+            builder.Services.AddSingleton<PushNotificationSignalRSynchronizer>();
         }
 
         public static void AddRedisBackplane(this ISignalRServerBuilder builder, IConfiguration configuration)
@@ -29,6 +31,7 @@ namespace VirtoCommerce.Platform.Web.SignalR
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 builder.AddStackExchangeRedis(redisConnectionString, options => options.Configuration.ChannelPrefix = configuration["SignalR:RedisBackplane:ChannelName"] ?? "VirtoCommerceChannel");
+                builder.Services.AddSingleton<PushNotificationSignalRSynchronizer>();
             }
         }
     }

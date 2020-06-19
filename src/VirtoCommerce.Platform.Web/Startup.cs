@@ -82,6 +82,7 @@ namespace VirtoCommerce.Platform.Web
             // without this Bearer authorization will not work
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
 
+            services.AddSingleton<IPushNotificationStorage, PushNotificationInMemoryStorage>();
             services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
@@ -384,7 +385,7 @@ namespace VirtoCommerce.Platform.Web
             // otherwise no any SignalR scaling options will be used           
             if (signalRScalabilityProvider == SignalR.Constants.AzureSignalRService)
             {
-                signalRServiceBuilder.AddAzureSignalR(Configuration);
+                signalRServiceBuilder.AddAzureSignalR(Configuration);                
             }
             else 
             {
@@ -525,6 +526,11 @@ namespace VirtoCommerce.Platform.Web
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
+
+            var pushNotificationSignalRSynchronizer = app.ApplicationServices.GetService(typeof(PushNotificationSignalRSynchronizer)) as PushNotificationSignalRSynchronizer;
+            if (pushNotificationSignalRSynchronizer != null) {
+                pushNotificationSignalRSynchronizer.StartAsync().GetAwaiter().GetResult();
+            }
         }
     }
 }
