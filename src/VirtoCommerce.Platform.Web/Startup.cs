@@ -434,6 +434,10 @@ namespace VirtoCommerce.Platform.Web
             }
             // Register the Swagger generator
             services.AddSwagger();
+
+
+            //Hosted services
+            services.AddHostedService<PushNotificationSignalRSynchronizer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -527,10 +531,17 @@ namespace VirtoCommerce.Platform.Web
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-            var pushNotificationSignalRSynchronizer = app.ApplicationServices.GetService(typeof(PushNotificationSignalRSynchronizer)) as PushNotificationSignalRSynchronizer;
-            if (pushNotificationSignalRSynchronizer != null) {
-                pushNotificationSignalRSynchronizer.StartAsync().GetAwaiter().GetResult();
-            }
+            //app.Use(async (context, next) =>
+            //{
+            //    var pushNotificationSignalRSynchronizer = app.ApplicationServices.GetService(typeof(PushNotificationSignalRSynchronizer)) as PushNotificationSignalRSynchronizer;
+            //    if (pushNotificationSignalRSynchronizer != null) {
+            //        pushNotificationSignalRSynchronizer.StartAsync().GetAwaiter().GetResult();
+            //    }
+            //});
+            //var pushNotificationSignalRSynchronizer = app.ApplicationServices.GetService(typeof(PushNotificationSignalRSynchronizer)) as PushNotificationSignalRSynchronizer;
+            //if (pushNotificationSignalRSynchronizer != null) {
+            //    pushNotificationSignalRSynchronizer.StartAsync().GetAwaiter().GetResult();
+            //}
         }
     }
 }

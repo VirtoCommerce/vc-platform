@@ -99,6 +99,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             if (_hubContext != null)
             {
                 await _hubContext.Clients.All.SendCoreAsync("Send", new[] { notification });
+                await _hubContext.Clients.All.SendCoreAsync("Send2", new[] { notification.Id });
             }
         }
 
