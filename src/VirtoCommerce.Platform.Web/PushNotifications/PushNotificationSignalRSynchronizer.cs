@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 
@@ -24,11 +25,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
         { 
             _storage = storage;
             connection = new HubConnectionBuilder()
-               .AddJsonProtocol(options =>
-               {
-                   options.PayloadSerializerOptions.Converters.Add(new PushNotificationJsonConverter());
-               })
-               //.AddNewtonsoftJsonProtocol()
+               .AddNewtonsoftJsonProtocol(o => o.PayloadSerializerSettings.Converters.Add(new PolymorphJsonConverter()))
                // TODO: get Public Url from configuration
                .WithUrl("http://localhost:10645/pushNotificationHub") 
                .WithAutomaticReconnect()               
@@ -39,20 +36,12 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                 await Task.Delay(new Random().Next(0, 5) * 1000);
                 await connection.StartAsync();
             };
-
-            //for polymorphic need to do this
-            //https://docs.microsoft.com/ru-ru/dotnet/standard/serialization/system-text-json-converters-how-to#support-polymorphic-deserialization
-            //https://stackoverflow.com/questions/58074304/is-polymorphic-deserialization-possible-in-system-text-json/59744873#59744873
+                   
             connection.On<PushNotification>("Send", notification =>
-            { 
-                // TODO: Add custom converter to deserialization any derived from PushNotification class object               
-                _storage.AddOrUpdate(notification);
+            {
+                _storage.AddOrUpdate(notification);                
             });
-
-            //connection.On<ModulePushNotification>("Send", notification =>
-            //{
-            //    Debug.WriteLine(notification.Id);
-            //});
+            
         }
 
         public async Task StartAsync()

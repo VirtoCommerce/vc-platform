@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 
@@ -11,7 +12,7 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
 {
     public class PolymorphJsonConverter : JsonConverter
     {
-        private static readonly Type[] _knowTypes = { typeof(ObjectSettingEntry), typeof(DynamicProperty), typeof(ApplicationUser), typeof(Role), typeof(PermissionScope) };
+        private static readonly Type[] _knowTypes = { typeof(ObjectSettingEntry), typeof(DynamicProperty), typeof(ApplicationUser), typeof(Role), typeof(PermissionScope), typeof(PushNotification) };
 
         public override bool CanWrite => false;
         public override bool CanRead => true;
@@ -37,6 +38,19 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                 if (result == null)
                 {
                     throw new NotSupportedException("Unknown scopeType: " + scopeType);
+                }
+            } else if (typeof(PushNotification).IsAssignableFrom(objectType))
+            {
+                var noteType = objectType.Name;
+                var pt = obj["notifyType"] ?? obj["NotifyType"];
+                if (pt != null)
+                {
+                    noteType = pt.Value<string>();
+                }
+                result = AbstractTypeFactory<PushNotification>.TryCreateInstance(noteType);
+                if (result == null)
+                {
+                    throw new NotSupportedException("Unknown notification type: " + noteType);
                 }
             }
             else

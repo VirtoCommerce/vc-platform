@@ -40,6 +40,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Modularity.PushNotifications;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
@@ -82,8 +83,7 @@ namespace VirtoCommerce.Platform.Web
             // without this Bearer authorization will not work
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
 
-            services.AddSingleton<IPushNotificationStorage, PushNotificationInMemoryStorage>();
-            services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
+            services.AddPushNotifications();
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
@@ -380,9 +380,9 @@ namespace VirtoCommerce.Platform.Web
 
             //SignalR
             var signalRScalabilityProvider = Configuration["SignalR:ScalabilityProvider"];
-            var signalRServiceBuilder = services.AddSignalR();
-                //.AddNewtonsoftJsonProtocol();
-
+            var signalRServiceBuilder = services.AddSignalR()
+                .AddNewtonsoftJsonProtocol();
+            
             // SignalR scalability configuration. RedisBackplane (default provider) will be activated only when RedisConnectionString is set
             // otherwise no any SignalR scaling options will be used           
             if (signalRScalabilityProvider == SignalR.Constants.AzureSignalRService)
@@ -531,19 +531,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseDefaultUsersAsync().GetAwaiter().GetResult();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            //app.Use(async (context, next) =>
-            //{
-            //    var pushNotificationSignalRSynchronizer = app.ApplicationServices.GetService(typeof(PushNotificationSignalRSynchronizer)) as PushNotificationSignalRSynchronizer;
-            //    if (pushNotificationSignalRSynchronizer != null) {
-            //        pushNotificationSignalRSynchronizer.StartAsync().GetAwaiter().GetResult();
-            //    }
-            //});
-            //var pushNotificationSignalRSynchronizer = app.ApplicationServices.GetService(typeof(PushNotificationSignalRSynchronizer)) as PushNotificationSignalRSynchronizer;
-            //if (pushNotificationSignalRSynchronizer != null) {
-            //    pushNotificationSignalRSynchronizer.StartAsync().GetAwaiter().GetResult();
-            //}
+            app.UseSwagger();           
         }
     }
 }

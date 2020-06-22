@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
-namespace VirtoCommerce.Platform.Web.PushNotifications
+namespace VirtoCommerce.Platform.Core.PushNotifications
 {
     public interface IPushNotificationStorage
     {
