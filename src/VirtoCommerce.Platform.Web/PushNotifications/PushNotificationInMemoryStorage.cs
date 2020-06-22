@@ -81,8 +81,5 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
 
             return retVal;
         }
-
-
-       
     }
 }

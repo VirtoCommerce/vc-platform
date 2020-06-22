@@ -6,20 +6,31 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
+
 namespace VirtoCommerce.Platform.Web.PushNotifications
 {
+    /// <summary>
+    /// HostedService to synchronize PushNotification inner storage in scalable environment with multyple instances
+    /// </summary>
     public class PushNotificationSignalRSynchronizer : IHostedService
     {
-        private HubConnection connection;
+        private readonly HubConnection connection;
         private readonly IPushNotificationStorage _storage;
         public PushNotificationSignalRSynchronizer(IPushNotificationStorage storage)
-        {
+        { 
             _storage = storage;
             connection = new HubConnectionBuilder()
-               .WithUrl("http://localhost:10645/pushNotificationHub")
+               .AddJsonProtocol(options =>
+               {
+                   options.PayloadSerializerOptions.Converters.Add(new PushNotificationJsonConverter());
+               })
+               //.AddNewtonsoftJsonProtocol()
+               // TODO: get Public Url from configuration
+               .WithUrl("http://localhost:10645/pushNotificationHub") 
                .WithAutomaticReconnect()               
                .Build();
 
@@ -29,18 +40,19 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                 await connection.StartAsync();
             };
 
+            //for polymorphic need to do this
+            //https://docs.microsoft.com/ru-ru/dotnet/standard/serialization/system-text-json-converters-how-to#support-polymorphic-deserialization
+            //https://stackoverflow.com/questions/58074304/is-polymorphic-deserialization-possible-in-system-text-json/59744873#59744873
             connection.On<PushNotification>("Send", notification =>
-            {
-                //var str = doc.ToString();
-                //var notification = JsonSerializer.Deserialize<PushNotification>(str);
-                Debug.WriteLine(notification.ToString());
-                //_storage.AddOrUpdate(notification);
+            { 
+                // TODO: Add custom converter to deserialization any derived from PushNotification class object               
+                _storage.AddOrUpdate(notification);
             });
 
-            connection.On<string>("Send2", notification =>
-            {
-                Debug.WriteLine(notification);
-            });
+            //connection.On<ModulePushNotification>("Send", notification =>
+            //{
+            //    Debug.WriteLine(notification.Id);
+            //});
         }
 
         public async Task StartAsync()
