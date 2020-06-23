@@ -110,6 +110,9 @@ namespace VirtoCommerce.Platform.Redis
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
             _log.LogInformation($"{nameof(RedisPlatformMemoryCache)}: channel[{_redisCachingOptions.ChannelName }] sending a message with key:{key} from instance:{ _cacheId } to all subscribers");
+            
+            var message = new RedisCachingMessage { Id = _cacheId, CacheKeys = new[] { key } };
+            _bus.Publish(_redisCachingOptions.ChannelName, JsonConvert.SerializeObject(message));
 
             base.EvictionCallback(key, value, reason, state);
         }
