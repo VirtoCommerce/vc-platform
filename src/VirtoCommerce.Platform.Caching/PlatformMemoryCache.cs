@@ -46,19 +46,19 @@ namespace VirtoCommerce.Platform.Caching
         }
 
 
-        protected virtual bool CacheEnabled
+        public virtual bool CacheEnabled
         {
             get { return _cacheEnabled ?? _cachingOptions.CacheEnabled; }
             set { _cacheEnabled = _cachingOptions.CacheEnabled == value ? (bool?) null : value; }
         }
 
-        protected virtual TimeSpan? AbsoluteExpiration
+        public virtual TimeSpan? AbsoluteExpiration
         {
             get { return _absoluteExpiration ?? _cachingOptions.CacheAbsoluteExpiration; }
             set { _absoluteExpiration = _cachingOptions.CacheAbsoluteExpiration == value ? null : value; }
         }
 
-        protected virtual TimeSpan? SlidingExpiration
+        public virtual TimeSpan? SlidingExpiration
         {
             get { return _slidingExpiration ?? _cachingOptions.CacheSlidingExpiration; }
             set { _slidingExpiration = _cachingOptions.CacheSlidingExpiration == value ? null : value; }

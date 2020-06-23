@@ -24,14 +24,14 @@ namespace VirtoCommerce.Platform.Redis
         private static readonly string _cacheId = Guid.NewGuid().ToString("N");
         
 
-        public RedisPlatformMemoryCache(IMemoryCache memoryCache, IOptions<CachingOptions> options
+        public RedisPlatformMemoryCache(IMemoryCache memoryCache
             , IConnectionMultiplexer connection
             , ISubscriber bus
             , IOptions<CachingOptions> cachingOptions
             , IOptions<RedisCachingOptions> redisCachingOptions
             , ILogger<RedisPlatformMemoryCache> log
             , TelemetryClient telemetryClient
-            ) : base(memoryCache, options, log)
+            ) : base(memoryCache, cachingOptions, log)
        {
            _connection = connection;
            _log = log;
