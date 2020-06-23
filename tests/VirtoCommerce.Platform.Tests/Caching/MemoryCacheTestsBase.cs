@@ -11,12 +11,10 @@ namespace VirtoCommerce.Platform.Tests.Caching
     {
         private readonly Mock<ILogger<PlatformMemoryCache>> _logMock;
 
-        public Mock<IOptions<CachingOptions>> CachingOptionsMock { get; }
+        public IOptions<CachingOptions> CachingOptions => new OptionsWrapper<CachingOptions>(new CachingOptions { CacheEnabled = true });
 
         public MemoryCacheTestsBase()
         {
-            CachingOptionsMock = new Mock<IOptions<CachingOptions>>();
-            CachingOptionsMock.Setup(x => x.Value).Returns(new CachingOptions { CacheEnabled = true });
             _logMock = new Mock<ILogger<PlatformMemoryCache>>();
         }
 
@@ -35,7 +33,7 @@ namespace VirtoCommerce.Platform.Tests.Caching
 
         public PlatformMemoryCache GetPlatformMemoryCache()
         {
-            return new PlatformMemoryCache(CreateCache(), CachingOptionsMock.Object, _logMock.Object);
+            return new PlatformMemoryCache(CreateCache(), CachingOptions, _logMock.Object);
         }
     }
 }

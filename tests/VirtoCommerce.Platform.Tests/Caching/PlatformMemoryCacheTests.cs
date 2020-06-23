@@ -75,8 +75,7 @@ namespace VirtoCommerce.Platform.Tests.Caching
             Assert.True(callbackInvoked.WaitOne(TimeSpan.FromSeconds(30)), "Callback");
         }
     }
-
-
+    
     internal class TestExpirationToken : IChangeToken
     {
         private bool _hasChanged;

@@ -8,9 +8,8 @@ namespace VirtoCommerce.Platform.Caching
 {
     public class PlatformMemoryCache : IPlatformMemoryCache
     {
-        private readonly CachingOptions _cachingOptions;
         private readonly IMemoryCache _memoryCache;
-        private bool? _cacheEnabled;
+        private bool _cacheEnabled;
         private TimeSpan? _absoluteExpiration;
         private TimeSpan? _slidingExpiration;
         private bool _disposed;
@@ -19,7 +18,10 @@ namespace VirtoCommerce.Platform.Caching
         public PlatformMemoryCache(IMemoryCache memoryCache, IOptions<CachingOptions> options, ILogger<PlatformMemoryCache> log)
         {
             _memoryCache = memoryCache;
-            _cachingOptions = options.Value;
+            var cachingOptions = options.Value;
+            _cacheEnabled = cachingOptions.CacheEnabled;
+            _absoluteExpiration = cachingOptions.CacheAbsoluteExpiration;
+            _slidingExpiration = cachingOptions.CacheSlidingExpiration;
             _log = log;
         }
         
@@ -48,20 +50,20 @@ namespace VirtoCommerce.Platform.Caching
 
         public virtual bool CacheEnabled
         {
-            get { return _cacheEnabled ?? _cachingOptions.CacheEnabled; }
-            set { _cacheEnabled = _cachingOptions.CacheEnabled == value ? (bool?) null : value; }
+            get { return _cacheEnabled ; }
+            set { _cacheEnabled = value; }
         }
 
         public virtual TimeSpan? AbsoluteExpiration
         {
-            get { return _absoluteExpiration ?? _cachingOptions.CacheAbsoluteExpiration; }
-            set { _absoluteExpiration = _cachingOptions.CacheAbsoluteExpiration == value ? null : value; }
+            get { return _absoluteExpiration; }
+            set { _absoluteExpiration = value; }
         }
 
         public virtual TimeSpan? SlidingExpiration
         {
-            get { return _slidingExpiration ?? _cachingOptions.CacheSlidingExpiration; }
-            set { _slidingExpiration = _cachingOptions.CacheSlidingExpiration == value ? null : value; }
+            get { return _slidingExpiration; }
+            set { _slidingExpiration = value; }
         }
 
 
