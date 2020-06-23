@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Caching
                 services.AddOptions<RedisCachingOptions>().Bind(configuration.GetSection("Caching:Redis")).ValidateDataAnnotations();
 
                 var redis = ConnectionMultiplexer.Connect(_redisConnectionString);
-                services.AddSingleton(redis);
+                services.AddSingleton<IConnectionMultiplexer>(redis);
                 services.AddSingleton(redis.GetSubscriber());
                 services.AddSingleton<IPlatformMemoryCache, RedisPlatformMemoryCache>();
             }

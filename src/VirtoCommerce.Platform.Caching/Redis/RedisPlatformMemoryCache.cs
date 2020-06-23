@@ -25,7 +25,7 @@ namespace VirtoCommerce.Platform.Redis
         
 
         public RedisPlatformMemoryCache(IMemoryCache memoryCache, IOptions<CachingOptions> options
-            , ConnectionMultiplexer connection
+            , IConnectionMultiplexer connection
             , ISubscriber bus
             , IOptions<CachingOptions> cachingOptions
             , IOptions<RedisCachingOptions> redisCachingOptions
