@@ -1,4 +1,4 @@
-# Module settings
+# Settings
 
 ## Overview
 
