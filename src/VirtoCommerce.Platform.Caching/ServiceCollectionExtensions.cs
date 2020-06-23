@@ -8,21 +8,19 @@ namespace VirtoCommerce.Platform.Caching
 {
     public static class ServiceCollectionExtensions
     {
-        private static string _redisConnectionString;
-
         public static IServiceCollection AddCaching(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddMemoryCache();
-            _redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
+            var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
 
             services.AddOptions<CachingOptions>().Bind(configuration.GetSection("Caching")).ValidateDataAnnotations();
 
 
-            if (!string.IsNullOrEmpty(_redisConnectionString))
+            if (!string.IsNullOrEmpty(redisConnectionString))
             {
                 services.AddOptions<RedisCachingOptions>().Bind(configuration.GetSection("Caching:Redis")).ValidateDataAnnotations();
 
-                var redis = ConnectionMultiplexer.Connect(_redisConnectionString);
+                var redis = ConnectionMultiplexer.Connect(redisConnectionString);
                 services.AddSingleton<IConnectionMultiplexer>(redis);
                 services.AddSingleton(redis.GetSubscriber());
                 services.AddSingleton<IPlatformMemoryCache, RedisPlatformMemoryCache>();
