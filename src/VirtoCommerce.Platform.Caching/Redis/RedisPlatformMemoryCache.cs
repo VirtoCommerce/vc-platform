@@ -16,9 +16,11 @@ namespace VirtoCommerce.Platform.Redis
         private readonly ISubscriber _bus;
         private readonly CachingOptions _cachingOptions;
         private readonly RedisCachingOptions _redisCachingOptions;
+        private readonly IConnectionMultiplexer _connection;
         private readonly ILogger _log;
         private readonly TelemetryClient _telemetryClient;
 
+        private bool _disposed;
         private static readonly string _cacheId = Guid.NewGuid().ToString("N");
         
 
@@ -31,6 +33,7 @@ namespace VirtoCommerce.Platform.Redis
             , TelemetryClient telemetryClient
             ) : base(memoryCache, options, log)
        {
+           _connection = connection;
            _log = log;
             _telemetryClient = telemetryClient;
             _bus = bus;
@@ -112,6 +115,22 @@ namespace VirtoCommerce.Platform.Redis
             _bus.Publish(_redisCachingOptions.ChannelName, JsonConvert.SerializeObject(message), CommandFlags.FireAndForget);
 
             base.EvictionCallback(key, value, reason, state);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _bus.Unsubscribe(_redisCachingOptions.ChannelName, null, CommandFlags.FireAndForget);
+                    _connection.ConnectionFailed -= OnConnectionFailed;
+                    _connection.ConnectionRestored -= OnConnectionRestored;
+                }
+                _disposed = true;
+            }
+
+            base.Dispose(disposing);
         }
     }
 }
