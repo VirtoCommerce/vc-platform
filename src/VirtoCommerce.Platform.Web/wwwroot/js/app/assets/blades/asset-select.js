@@ -60,9 +60,11 @@ angular.module('platformWebApp')
                     name: name,
                     blade: blade,
                     navigate: function (breadcrumb) {
-                        breadcrumb.blade.searchKeyword = null;
-                        breadcrumb.blade.disableOpenAnimation = true;
-                        bladeNavigationService.showBlade(breadcrumb.blade, breadcrumb.blade.parentBlade);
+                        bladeNavigationService.closeBlade(blade,
+                            function () {
+                                blade.disableOpenAnimation = true;
+                                bladeNavigationService.showBlade(blade, blade.parentBlade);
+                            });
                     }
                 }
             }
