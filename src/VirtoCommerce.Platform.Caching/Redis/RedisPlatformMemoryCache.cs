@@ -7,7 +7,6 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using VirtoCommerce.Platform.Caching;
-using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Redis
