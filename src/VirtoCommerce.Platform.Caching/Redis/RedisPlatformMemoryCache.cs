@@ -15,7 +15,6 @@ namespace VirtoCommerce.Platform.Redis
     public class RedisPlatformMemoryCache : PlatformMemoryCache
     {
         private readonly ISubscriber _bus;
-        private readonly IMemoryCache _memoryCache;
         private readonly CachingOptions _cachingOptions;
         private readonly RedisCachingOptions _redisCachingOptions;
         private readonly ILogger _log;
@@ -33,8 +32,7 @@ namespace VirtoCommerce.Platform.Redis
             , TelemetryClient telemetryClient
             ) : base(memoryCache, options, log)
        {
-            _memoryCache = memoryCache;
-            _log = log;
+           _log = log;
             _telemetryClient = telemetryClient;
             _bus = bus;
 
