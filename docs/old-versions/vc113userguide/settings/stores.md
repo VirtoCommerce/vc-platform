@@ -136,8 +136,8 @@ Content Places define where the content will be placed on the store front. For e
 
 Open вЂњContent PlacesвЂќ tab of the Settings module to view the list of all content places added to the system. To add a content place use вЂњAddвЂќ button and fill in two fields as follows:
 
-* **Content place name** вЂ“ name of the content place in the database.
-* **Content place description** вЂ“ a description of the content place to identify which one is supposed.
+* **Content place name** - name of the content place in the database.
+* **Content place description** - a description of the content place to identify which one is supposed.
 
 To edit a content place click it in the list and use вЂњEditвЂќ Button. Delete a content place the same way with вЂњRemoveвЂќ button.
 

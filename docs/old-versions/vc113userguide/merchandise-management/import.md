@@ -9,7 +9,7 @@ priority: 4
 
 Catalog data can be created manually, but when catalogs consist of large amounts of data, manual data creationВ is an inappropriate and irrational option. That is why Virto Commerce Manager allows store administrators to import catalog data via special import manager tool from CSV (comma-separated value) files.
 
-Before importing data you need to create a catalog import job вЂ“ a special algorithm that describes how the data will be imported (from which CSV file, how the columns will be mapped to the data fields and other conditions).
+Before importing data you need to create a catalog import job - a special algorithm that describes how the data will be imported (from which CSV file, how the columns will be mapped to the data fields and other conditions).
 
 ## Importing Categories, Price Lists and Items
 

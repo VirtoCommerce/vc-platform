@@ -64,7 +64,7 @@ ValidatePostProcessRequest method:
 
 The important property of payment method is PaymentMethodType property. That property defines what actions will be executed by the front end to get a transaction registration result. There are two types of actions defined today. More will be implemented in future.
 
-Redirection вЂ“ use this type of action if payment method redirects the user to an outside url. In order to do that set that link to RedirectUrl property in the ProcessPaymentResult. The frontend will use it to redirect customer (example of such a behavior would be Paypal Express Checkout payment method).В PreparedForm вЂ“ use this type of action if payment method provides the html form to the user to fill-in required credentials. In order to do that set the HtmlForm property in the ProcessPaymentResult with the Html form that the outside payment system returns or with the generated form in our payment system (example of such a behavior would be Klarna Checkout payment method).
+Redirection - use this type of action if payment method redirects the user to an outside url. In order to do that set that link to RedirectUrl property in the ProcessPaymentResult. The frontend will use it to redirect customer (example of such a behavior would be Paypal Express Checkout payment method).В PreparedForm - use this type of action if payment method provides the html form to the user to fill-in required credentials. In order to do that set the HtmlForm property in the ProcessPaymentResult with the Html form that the outside payment system returns or with the generated form in our payment system (example of such a behavior would be Klarna Checkout payment method).
 
 ## Registering new payment method in the system
 

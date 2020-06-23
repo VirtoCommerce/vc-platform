@@ -24,11 +24,11 @@ Platform Manager UI for the Virto Commerce "Customer Reviews" module will be cre
 
 ### Glossary
 
-* VC вЂ“ Virto Commerce;
+* VC - Virto Commerce;
 * Platform - Virto Commerce Platform;
-* Platform Manager вЂ“ Virto Commerce Platform Manager, UI for Platform managing;
-* JS вЂ“ JavaScript;
-* VS вЂ“ Visual Studio.
+* Platform Manager - Virto Commerce Platform Manager, UI for Platform managing;
+* JS - JavaScript;
+* VS - Visual Studio.
 
 ## Create new module
 
@@ -349,7 +349,7 @@ In order to define the data access layer based on Entity Framework use the packa
 There is a command to enable migrations:
 
 ```cmd
-enable-migrations вЂ“MigrationsDirectory Migrations
+enable-migrations -MigrationsDirectory Migrations
 ```
 
 In the dropdown menu choose the **CustomerReviewsModule.Data** project. The command run will create a new migration configuration.

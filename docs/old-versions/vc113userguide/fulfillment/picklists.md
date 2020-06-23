@@ -18,7 +18,7 @@ The following details are included in the picklist by default:
 * SKU Code
 * Product Name
 * Quantity
-* Customer details вЂ“ Name, email, and shipping address
+* Customer details - Name, email, and shipping address
 
 Once a picklist has been created, the status of the shipment is changed to "Packing". A picklist is assigned to the user who created it. An administrator or worker can view the status of all picklists and, if necessary, to reprint a picklist.
 
