@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace VirtoCommerce.Platform.Core.Caching
