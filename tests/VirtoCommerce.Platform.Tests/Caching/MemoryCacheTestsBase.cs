@@ -20,12 +20,12 @@ namespace VirtoCommerce.Platform.Tests.Caching
             _logMock = new Mock<ILogger<PlatformMemoryCache>>();
         }
 
-        public IMemoryCache CreateCache()
+        public static IMemoryCache CreateCache()
         {
             return CreateCache(new SystemClock());
         }
 
-        public IMemoryCache CreateCache(ISystemClock clock)
+        public static IMemoryCache CreateCache(ISystemClock clock)
         {
             return new MemoryCache(new MemoryCacheOptions()
             {
