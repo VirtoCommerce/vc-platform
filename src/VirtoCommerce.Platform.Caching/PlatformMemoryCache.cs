@@ -9,9 +9,6 @@ namespace VirtoCommerce.Platform.Caching
     public class PlatformMemoryCache : IPlatformMemoryCache
     {
         private readonly IMemoryCache _memoryCache;
-        private bool _cacheEnabled;
-        private TimeSpan? _absoluteExpiration;
-        private TimeSpan? _slidingExpiration;
         private bool _disposed;
         private readonly ILogger _log;
 
@@ -19,9 +16,9 @@ namespace VirtoCommerce.Platform.Caching
         {
             _memoryCache = memoryCache;
             var cachingOptions = options.Value;
-            _cacheEnabled = cachingOptions.CacheEnabled;
-            _absoluteExpiration = cachingOptions.CacheAbsoluteExpiration;
-            _slidingExpiration = cachingOptions.CacheSlidingExpiration;
+            CacheEnabled = cachingOptions.CacheEnabled;
+            AbsoluteExpiration = cachingOptions.CacheAbsoluteExpiration;
+            SlidingExpiration = cachingOptions.CacheSlidingExpiration;
             _log = log;
         }
         
@@ -48,23 +45,11 @@ namespace VirtoCommerce.Platform.Caching
         }
 
 
-        public virtual bool CacheEnabled
-        {
-            get { return _cacheEnabled ; }
-            set { _cacheEnabled = value; }
-        }
+        protected bool CacheEnabled { get; set; }
 
-        public virtual TimeSpan? AbsoluteExpiration
-        {
-            get { return _absoluteExpiration; }
-            set { _absoluteExpiration = value; }
-        }
+        protected TimeSpan? AbsoluteExpiration { get; set; }
 
-        public virtual TimeSpan? SlidingExpiration
-        {
-            get { return _slidingExpiration; }
-            set { _slidingExpiration = value; }
-        }
+        protected TimeSpan? SlidingExpiration { get; set; }
 
 
         public virtual MemoryCacheEntryOptions GetDefaultCacheEntryOptions()

@@ -41,41 +41,38 @@ namespace VirtoCommerce.Platform.Tests.Caching
         }
 
         [Fact]
-        public void Should_Disable_Cache()
+        public void Should_Disable_And_Reset_Cache()
         {
             var redisPlatformMemoryCache = GetRedisPlatformMemoryCache();
 
             var firstValue = GetSampleValueWithCache(redisPlatformMemoryCache);
             var secondValue = GetSampleValueWithCache(redisPlatformMemoryCache);
 
-            Assert.True(redisPlatformMemoryCache.CacheEnabled);
             Assert.Equal(firstValue, secondValue);
 
             _connectionMock.Raise(x => x.ConnectionFailed += null, _getConnectionFailedEvenArgs);
 
             var thirdValue = GetSampleValueWithCache(redisPlatformMemoryCache);
+            var fourthValue = GetSampleValueWithCache(redisPlatformMemoryCache);
 
-            Assert.False(redisPlatformMemoryCache.CacheEnabled);
             Assert.NotEqual(firstValue, thirdValue);
+            Assert.NotEqual(thirdValue, fourthValue);
         }
 
         [Fact]
-        public void Should_Enable_Cache()
+        public void Should_Enable_And_Reset_Cache()
         {
             var redisPlatformMemoryCache = GetRedisPlatformMemoryCache();
 
             _connectionMock.Raise(x => x.ConnectionFailed += null, _getConnectionFailedEvenArgs);
 
             var firstValue = GetSampleValueWithCache(redisPlatformMemoryCache);
-
-            Assert.False(redisPlatformMemoryCache.CacheEnabled);
 
             _connectionMock.Raise(x => x.ConnectionRestored += null, _getConnectionFailedEvenArgs);
 
             var secondValue = GetSampleValueWithCache(redisPlatformMemoryCache);
             var thirdValue = GetSampleValueWithCache(redisPlatformMemoryCache);
 
-            Assert.True(redisPlatformMemoryCache.CacheEnabled);
             Assert.NotEqual(firstValue, secondValue);
             Assert.Equal(secondValue, thirdValue);
         }
