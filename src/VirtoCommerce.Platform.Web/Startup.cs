@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -438,6 +439,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 
