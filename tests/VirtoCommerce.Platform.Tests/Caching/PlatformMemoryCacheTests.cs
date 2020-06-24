@@ -1,33 +1,15 @@
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Internal;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-using Moq;
 using VirtoCommerce.Platform.Caching;
-using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Caching;
 using Xunit;
 
-
-namespace VirtoCommerce.Platform.Tests.UnitTests
+namespace VirtoCommerce.Platform.Tests.Caching
 {
-    public class PlatformMemoryCacheUnitTests
+    public class PlatformMemoryCacheTests: MemoryCacheTestsBase
     {
-        private readonly Mock<IOptions<CachingOptions>> _cachingOptionsMock;
-        private readonly Mock<ILogger<PlatformMemoryCache>> _log; 
-
-        public PlatformMemoryCacheUnitTests()
-        {
-            _cachingOptionsMock = new Mock<IOptions<CachingOptions>>();
-            _cachingOptionsMock.Setup(x => x.Value).Returns(new CachingOptions { CacheEnabled = true });
-            _log = new Mock<ILogger<PlatformMemoryCache>>();
-        }
-
-
         [Fact]
         public void SetWithTokenRegistersForNotification()
         {
@@ -92,30 +74,8 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             Assert.True(expirationToken.Registration.Disposed);
             Assert.True(callbackInvoked.WaitOne(TimeSpan.FromSeconds(30)), "Callback");
         }
-
-
-        private IMemoryCache CreateCache()
-        {
-            return CreateCache(new SystemClock());
-        }
-
-        private IMemoryCache CreateCache(ISystemClock clock)
-        {
-            return new MemoryCache(new MemoryCacheOptions()
-            {
-                Clock = clock,
-            });
-        }
-
-        private IPlatformMemoryCache GetPlatformMemoryCache()
-        {
-            return new PlatformMemoryCache(CreateCache(), _cachingOptionsMock.Object, _log.Object);
-        }
-
-
     }
-
-
+    
     internal class TestExpirationToken : IChangeToken
     {
         private bool _hasChanged;
