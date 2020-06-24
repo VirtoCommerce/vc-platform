@@ -47,7 +47,7 @@ Give your users more control and flexibility around product prices by adding a n
 
 **Effort (story points):**
 
-2 вЂ“ Small changes, development is required (1-2 days)
+2 - Small changes, development is required (1-2 days)
 
 
 ## For Team Lead

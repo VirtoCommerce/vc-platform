@@ -45,7 +45,7 @@ There are differences in schedulers realization's for Azure and Windows Server p
   ```
 2. Use "IJobContext.TraceContext.Trace()" method for tracing.
 
-Jobs doesn't have user interface so canвЂ™t report errors to the user directly.В You do not need to catch errors (system will do it for you) but if you need additional information then use tracing.В Each trace message contains correlation token вЂ“ special guid вЂ“ designed to easy reference all messages from "job started" til "job finished" events.
+Jobs doesn't have user interface so canвЂ™t report errors to the user directly.В You do not need to catch errors (system will do it for you) but if you need additional information then use tracing.В Each trace message contains correlation token - special guid - designed to easy reference all messages from "job started" til "job finished" events.
 
 3. Job constructor should be created using DI pattern and VirtoCommerce model's factories and builder should be injected into the constructor.
   ```

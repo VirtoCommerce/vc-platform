@@ -68,9 +68,9 @@ publicВ classВ PriceListViewModelВ :В ViewModelDetailAndWizardBase<Price
 
 Inherited properties are:
 
-* **OriginalItem** вЂ“ PriceList item before edit.
+* **OriginalItem** - PriceList item before edit.
 * **InnerItem** - Editing PriceList item into the viewmodel.
-* **IsWizardMode** вЂ“ get or set if the view is in Wizard mode, True means viewmodel object used as wizard step
+* **IsWizardMode** - get or set if the view is in Wizard mode, True means viewmodel object used as wizard step
 
 5. Add required variables as Dependencies
 
@@ -131,7 +131,7 @@ protected PriceListViewModel(
 
 8. Add implementation of ViewModelBase properties
 
-* **DisplayName** вЂ“ name for the PriceListViewModel item for navigation system and another visual elements.
+* **DisplayName** - name for the PriceListViewModel item for navigation system and another visual elements.
 
 ```
 publicВ overrideВ stringВ DisplayName
@@ -140,7 +140,7 @@ publicВ overrideВ stringВ DisplayName
 }
 ```
 
-* **ShellDetailItemMenuBrush** вЂ“ color of this item in top menu.
+* **ShellDetailItemMenuBrush** - color of this item in top menu.
 
 ```
 publicВ overrideВ BrushВ ShellDetailItemMenuBrush
@@ -155,13 +155,13 @@ publicВ overrideВ BrushВ ShellDetailItemMenuBrush
 
 9. Add implementation of ViewModelDetailAndWizardBase
 
-* **ExceptionContextIdentity** вЂ“ Identity of viewmodel object for fill info when exception occupied (usually name of viewmodel and DisplayName)
+* **ExceptionContextIdentity** - Identity of viewmodel object for fill info when exception occupied (usually name of viewmodel and DisplayName)
 
 ```
 publicВ overrideВ stringВ ExceptionContextIdentity {В getВ {В returnВ string.Format("Price list ({0})", DisplayName); } }
 ```
 
-* **GetRepository** вЂ“ return repository for PriceList itemВ 
+* **GetRepository** - return repository for PriceList itemВ 
 
 ```
 protectedВ overrideВ voidВ GetRepository()
@@ -170,7 +170,7 @@ protectedВ overrideВ voidВ GetRepository()
 }
 ```
 
-* **HasPermission** вЂ“ return true if has permission for edit PriceList item
+* **HasPermission** - return true if has permission for edit PriceList item
 
 ```
 protectedВ overrideВ boolВ HasPermission()
@@ -179,7 +179,7 @@ protectedВ overrideВ boolВ HasPermission()
 }
 ```
 
-* **IsValidForSave** вЂ“ valid item before save
+* **IsValidForSave** - valid item before save
 
 ```
 protectedВ overrideВ boolВ IsValidForSave()
@@ -188,7 +188,7 @@ protectedВ overrideВ boolВ IsValidForSave()
 }
 ```
 
-* **CancelConfirm** вЂ“ Return RefusedConfirmation for Cancel Confirm dialog
+* **CancelConfirm** - Return RefusedConfirmation for Cancel Confirm dialog
 
 ```
 protectedВ overrideВ RefusedConfirmationВ CancelConfirm()
@@ -201,7 +201,7 @@ protectedВ overrideВ RefusedConfirmationВ CancelConfirm()
 }
 ```
 
-* **LoadInnerItem** вЂ“ Load PriceList item (InnerItem) from repository with all dependencies
+* **LoadInnerItem** - Load PriceList item (InnerItem) from repository with all dependencies
 
 ```
 protectedВ overrideВ voidВ LoadInnerItem()
@@ -221,7 +221,7 @@ protectedВ overrideВ voidВ LoadInnerItem()
 }
 ```
 
-* **InitializePropertiesForViewing** вЂ“ Initialize some viewmodel properties after load InnerItem
+* **InitializePropertiesForViewing** - Initialize some viewmodel properties after load InnerItem
 
 ```
 protectedВ overrideВ voidВ InitializePropertiesForViewing()
@@ -233,7 +233,7 @@ protectedВ overrideВ voidВ InitializePropertiesForViewing()
 }
 ```
 
-* **AfterSaveChangesUI** вЂ“ Execute after DoSaveChanges() in UI thread. OriginalItem should be complete here
+* **AfterSaveChangesUI** - Execute after DoSaveChanges() in UI thread. OriginalItem should be complete here
 
 ```
 protectedВ overrideВ voidВ AfterSaveChangesUI()
@@ -242,7 +242,7 @@ protectedВ overrideВ voidВ AfterSaveChangesUI()
 }
 ```
 
-* **SetSubscriptionUI** вЂ“ Set subscription to tracking changes of ViewModel's properties or InnerItem's collections after load InnerItem
+* **SetSubscriptionUI** - Set subscription to tracking changes of ViewModel's properties or InnerItem's collections after load InnerItem
 
 ```
 protectedВ overrideВ voidВ SetSubscriptionUI()
@@ -254,7 +254,7 @@ protectedВ overrideВ voidВ SetSubscriptionUI()
 }
 ```
 
-* **CloseSubscriptionUI** вЂ“ Unsubscribe from tracking changes of ViewModel's properties or InnerItem's collections
+* **CloseSubscriptionUI** - Unsubscribe from tracking changes of ViewModel's properties or InnerItem's collections
 
 ```
 protectedВ overrideВ voidВ CloseSubscriptionUI()
@@ -266,7 +266,7 @@ protectedВ overrideВ voidВ CloseSubscriptionUI()
 }
 ```
 
-* **BeforeDelete**В вЂ“ Execute before remove item (PriceList) from repository
+* **BeforeDelete**В - Execute before remove item (PriceList) from repository
 
 ```
 protectedВ overrideВ boolВ BeforeDelete()
@@ -319,7 +319,7 @@ public class CreatePriceListViewModel : WizardContainerStepsViewModel, ICreatePr
 
 5. Implement IWizardStep interface.
 
-* **IsValid** вЂ“ true if step is valid
+* **IsValid** - true if step is valid
 
 ```
 publicВ overrideВ boolВ IsValid
@@ -335,7 +335,7 @@ publicВ overrideВ boolВ IsValid
 }
 ```
 
-* **IsLast** вЂ“ true if the step is the last step of the wizard
+* **IsLast** - true if the step is the last step of the wizard
 
 ```
 publicВ overrideВ boolВ IsLast {В getВ {В returnВ true; } }

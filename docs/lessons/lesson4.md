@@ -23,12 +23,12 @@ After completing this lesson, a Platform Manager UI for the Virto Commerce "Cust
 
 ### Glossary
 
-* JS вЂ“ JavaScript;
+* JS - JavaScript;
 * Platform - Virto Commerce Platform;
-* Platform Manager вЂ“ Virto Commerce Platform Manager, UI for Platform managing;
-* VC вЂ“ Virto Commerce;
-* VS вЂ“ Visual Studio;
-* UI вЂ“ User Interface.
+* Platform Manager - Virto Commerce Platform Manager, UI for Platform managing;
+* VC - Virto Commerce;
+* VS - Visual Studio;
+* UI - User Interface.
 
 ## Platform Manager UI elements
 

@@ -41,9 +41,9 @@ SlabInvoker is the helper class to use with BaseSlabContext or inherited classes
 
 **Write extension**
 
-Write(this EventSource, int EventCode, object Context) is an extension method over the EventSource class. It has two input parameters вЂ“ the EventCode to call the appropriate Event of the particular EventSource and the Context passed to log the event.
+Write(this EventSource, int EventCode, object Context) is an extension method over the EventSource class. It has two input parameters - the EventCode to call the appropriate Event of the particular EventSource and the Context passed to log the event.
 
-To use the Write extension method вЂ“ fill the information to be logged into the Context pass it with the EventCode into the method. The internal code will parse the context and match the Event method parameters with the Context properties by name (Case-Sensitive). If the Event with the code found in the EventSource and all the required parameters will be filled, the Event will be raised.
+To use the Write extension method - fill the information to be logged into the Context pass it with the EventCode into the method. The internal code will parse the context and match the Event method parameters with the Context properties by name (Case-Sensitive). If the Event with the code found in the EventSource and all the required parameters will be filled, the Event will be raised.
 
 ## Extending the Semantic Logging
 
