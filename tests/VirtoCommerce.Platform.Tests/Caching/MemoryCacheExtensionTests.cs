@@ -10,20 +10,16 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.MemoryCacheExtensionTests
+namespace VirtoCommerce.Platform.Tests.Caching
 {
     [Trait("Category", "Unit")]
-    public class MemoryCacheExtensionTests
+    public class MemoryCacheExtensionTests: MemoryCacheTestsBase
     {
-        private static IMemoryCache BuildCache()
-        {
-            return new MemoryCache(new MemoryCacheOptions());
-        }
 
         [Fact]
         public void GetOrCreateExclusive()
         {
-            var sut = BuildCache();
+            var sut = CreateCache();
             int counter = 0;
             Parallel.ForEach(Enumerable.Range(1, 10), i =>
             {
@@ -39,7 +35,7 @@ namespace VirtoCommerce.Platform.Tests.MemoryCacheExtensionTests
         [Fact]
         public void GetOrCreateExclusiveAsync()
         {
-            var sut = BuildCache();
+            var sut = CreateCache();
             int counter = 0;
             Parallel.ForEach(Enumerable.Range(1, 10), async i =>
             {
@@ -55,7 +51,7 @@ namespace VirtoCommerce.Platform.Tests.MemoryCacheExtensionTests
         [Fact]
         public void Named_AsyncLock_Exclusive_Access_For_One_Thread()
         {
-            var sut = BuildCache();
+            var sut = CreateCache();
             int counter = 0;
             Parallel.ForEach(Enumerable.Range(1, 10), async i =>
             {
@@ -76,7 +72,7 @@ namespace VirtoCommerce.Platform.Tests.MemoryCacheExtensionTests
         {
             var defaultOptions = Options.Create(new CachingOptions() { CacheSlidingExpiration = TimeSpan.FromMilliseconds(10) });
             var logger = new Moq.Mock<ILogger<PlatformMemoryCache>>();
-            var sut = new PlatformMemoryCache(BuildCache(), defaultOptions, logger.Object);
+            var sut = new PlatformMemoryCache(CreateCache(), defaultOptions, logger.Object);
 
             sut.GetOrCreateExclusive("test-key", cacheOptions =>
             {
