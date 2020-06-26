@@ -129,9 +129,9 @@ class Build : NukeBuild
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
     Microsoft.Build.Evaluation.Project MSBuildProject => WebProject.GetMSBuildProject();
-    string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix").EvaluatedValue;
-    string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix").EvaluatedValue;
-    string ReleaseVersion => MSBuildProject.GetProperty("PackageVersion").EvaluatedValue;
+    string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix")?.EvaluatedValue;
+    string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix")?.EvaluatedValue;
+    string ReleaseVersion => MSBuildProject.GetProperty("PackageVersion")?.EvaluatedValue ?? WebProject.GetProperty("Version");
 
     ModuleManifest ModuleManifest => ManifestReader.Read(ModuleManifestFile);
 
