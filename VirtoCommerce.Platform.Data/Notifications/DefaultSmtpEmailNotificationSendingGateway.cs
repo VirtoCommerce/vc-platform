@@ -70,6 +70,8 @@ namespace VirtoCommerce.Platform.Data.Notifications
                     var port = _settingsManager.GetValue(_smtpClientPortSettingName, 465); // Default SMTP port with SSL
                     var useSsl = _settingsManager.GetValue(_smtpClientUseSslSettingName, false);
 
+                    emailNotification.StartSendingDate = DateTime.UtcNow;
+
                     using (var smtpClient = new SmtpClient(host, Convert.ToInt32(port)))
                     {
                         smtpClient.Credentials = new System.Net.NetworkCredential(login, password);

@@ -65,6 +65,7 @@ namespace VirtoCommerce.Platform.Data.Notifications
                 }
             }
             mail.SetReplyTo(from);
+            emailNotification.StartSendingDate = DateTime.UtcNow;
 
             try
             {
