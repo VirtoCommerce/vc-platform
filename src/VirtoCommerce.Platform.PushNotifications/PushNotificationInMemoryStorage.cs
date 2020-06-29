@@ -1,25 +1,29 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
-namespace VirtoCommerce.Platform.Web.PushNotifications
+namespace VirtoCommerce.Platform.PushNotifications
 {
     public class PushNotificationInMemoryStorage : IPushNotificationStorage
     {
-
         private readonly List<PushNotification> _innerList = new List<PushNotification>();
         private readonly object _lockObject = new object();
 
-        public int Count => throw new NotImplementedException();
-
-        public bool IsReadOnly => throw new NotImplementedException();
-
-        public void AddOrUpdate(PushNotification notification)
+        public void SavePushNotification(PushNotification notification)
         {
+            SavePushNotificationAsync(notification).GetAwaiter().GetResult();
+        }
+
+        public Task SavePushNotificationAsync(PushNotification notification)
+        {
+            if (notification == null)
+            {
+                throw new ArgumentNullException(nameof(notification));
+            }
+
             lock (_lockObject)
             {
                 var alreadyExistNotify = _innerList.FirstOrDefault(x => x.Id == notification.Id);
@@ -43,10 +47,11 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                     }
                 }
             }
+            return Task.CompletedTask;
         }
 
 
-        public PushNotificationSearchResult SearchNotifies(string userId, PushNotificationSearchCriteria criteria)
+        public PushNotificationSearchResult SearchPushNotifications(string userId, PushNotificationSearchCriteria criteria)
         {
             var query = _innerList.OrderByDescending(x => x.Created).Where(x => x.Creator == userId).AsQueryable();
             if (criteria.Ids != null && criteria.Ids.Any())
@@ -76,7 +81,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             {
                 TotalCount = query.Count(),
                 NewCount = query.Count(x => x.IsNew),
-                NotifyEvents = query.Skip(criteria.Skip).Take(criteria.Take).ToList()
+                NotifyEvents = query.OrderBySortInfos(sortInfos).Skip(criteria.Skip).Take(criteria.Take).ToList()
             };
 
             return retVal;

@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Azure.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,13 +40,12 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Modularity.PushNotifications;
-using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Hangfire;
 using VirtoCommerce.Platform.Modules;
+using VirtoCommerce.Platform.PushNotifications;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
@@ -55,7 +54,7 @@ using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
-using VirtoCommerce.Platform.Web.PushNotifications;
+using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
@@ -83,7 +82,9 @@ namespace VirtoCommerce.Platform.Web
             // without this Bearer authorization will not work
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
 
-            services.AddPushNotifications();
+            services.AddRedis(Configuration);
+
+            services.AddPushNotifications(Configuration);
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
@@ -379,20 +380,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddExternalModules();
 
             //SignalR
-            var signalRScalabilityProvider = Configuration["SignalR:ScalabilityProvider"];
-            var signalRServiceBuilder = services.AddSignalR()
-                .AddNewtonsoftJsonProtocol();
-            
-            // SignalR scalability configuration. RedisBackplane (default provider) will be activated only when RedisConnectionString is set
-            // otherwise no any SignalR scaling options will be used           
-            if (signalRScalabilityProvider == SignalR.Constants.AzureSignalRService)
-            {
-                signalRServiceBuilder.AddAzureSignalR(Configuration);                
-            }
-            else 
-            {
-                signalRServiceBuilder.AddRedisBackplane(Configuration);
-            }            
+            services.AddSignalR(Configuration);
 
             //Assets
             var assetsProvider = Configuration.GetSection("Assets:Provider").Value;
@@ -436,10 +424,6 @@ namespace VirtoCommerce.Platform.Web
             }
             // Register the Swagger generator
             services.AddSwagger();
-
-
-            //Hosted services
-            services.AddHostedService<PushNotificationSignalRSynchronizer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -459,7 +443,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
+            
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 
@@ -531,7 +515,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseDefaultUsersAsync().GetAwaiter().GetResult();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();           
+            app.UseSwagger();
         }
     }
 }
