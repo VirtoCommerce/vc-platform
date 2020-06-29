@@ -1,4 +1,4 @@
-# Essential Modulatiry
+# Essential Modularity
 
 Virto Commerce is the modular application that consists of divided into a set of loosely coupled functional units (named modules) that are loaded into the process of platform application. 
 
