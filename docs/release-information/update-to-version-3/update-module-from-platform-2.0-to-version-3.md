@@ -164,7 +164,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
         ```console
         Add-Migration InitialCustomerReviews -Verbose
         ```
-        5. In case of any existing module's extension is developed, study and follow the steps from [How to extend the DB model of VC module](../../techniques/extend-db-model.md) guide.
+        5. In case of any existing module's extension is developed, study and follow the steps from [How to extend the DB model of VC module](../../techniques/extend-DB-model.md) guide.
 
     2. Create Migration for backward compatibility with v2.x
         1. Add new migration with name **_UpdateCustomerReviewsV2_** and rename the migration **_filename_** to **_20000000000000_UpdateCustomerReviewsV2_**

@@ -8,7 +8,6 @@ namespace VirtoCommerce.Platform.Caching
 {
     public class PlatformMemoryCache : IPlatformMemoryCache
     {
-        private readonly CachingOptions _cachingOptions;
         private readonly IMemoryCache _memoryCache;
         private bool _disposed;
         private readonly ILogger _log;
@@ -16,7 +15,10 @@ namespace VirtoCommerce.Platform.Caching
         public PlatformMemoryCache(IMemoryCache memoryCache, IOptions<CachingOptions> options, ILogger<PlatformMemoryCache> log)
         {
             _memoryCache = memoryCache;
-            _cachingOptions = options.Value;
+            var cachingOptions = options.Value;
+            CacheEnabled = cachingOptions.CacheEnabled;
+            AbsoluteExpiration = cachingOptions.CacheAbsoluteExpiration;
+            SlidingExpiration = cachingOptions.CacheSlidingExpiration;
             _log = log;
         }
         
@@ -43,12 +45,14 @@ namespace VirtoCommerce.Platform.Caching
         }
 
 
-        protected bool CacheEnabled => _cachingOptions.CacheEnabled;
-        protected TimeSpan? AbsoluteExpiration => _cachingOptions.CacheAbsoluteExpiration;
-        protected TimeSpan? SlidingExpiration => _cachingOptions.CacheSlidingExpiration;
+        protected bool CacheEnabled { get; set; }
+
+        protected TimeSpan? AbsoluteExpiration { get; set; }
+
+        protected TimeSpan? SlidingExpiration { get; set; }
 
 
-        public MemoryCacheEntryOptions GetDefaultCacheEntryOptions()
+        public virtual MemoryCacheEntryOptions GetDefaultCacheEntryOptions()
         {
             var result = new MemoryCacheEntryOptions();
 
@@ -66,6 +70,8 @@ namespace VirtoCommerce.Platform.Caching
                 {
                     result.SlidingExpiration = SlidingExpiration;
                 }
+
+                result.AddExpirationToken(GlobalCacheRegion.CreateChangeToken());
             }
 
             return result;
