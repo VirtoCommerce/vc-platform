@@ -137,7 +137,8 @@ This solution has the following benefits:
 * Administration UI can be implemented to easily edit roles and permissions.
 
 Virto platform support the two main types of authorization strategy for permission authorization:
-* **Global** permissions - the permissions that are checked without taking into account requested resources. To check this sort of permissions you need to operate only permission names e.g Authorize("permission-name"). 
+
+* **Global** permissions - the permissions that are checked without taking into account requested resources. To check this sort of permissions you need to operate only permission names e.g Authorize("permission-name").   
 * **Scoped** or **Imperative** or **Resource-based** permissions - the permissions  are checked  depends upon the resource being accessed, you need to always use requested. Consider a document that has an author property. Only the author is allowed to update the document. Consequently, the document must be retrieved from the data store before authorization evaluation can occur. Read more [Resource-based authorization in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/resourcebased?view=aspnetcore-3.1)
 
 
@@ -317,7 +318,8 @@ Thanks to  Virto security is based on the default ASP.NET Core security mechanic
 
 ```
 
-In the following example, the **CustomerOrderSearchCriteria**  to be secured an **AuthorizeAsync** overload is invoked to determine whether the current user is allowed to query the orders by the provided search criteria. To **AuthorizeAsync** are passed the following tree parameters 
+In the following example, the **CustomerOrderSearchCriteria**  to be secured an **AuthorizeAsync** overload is invoked to determine whether the current user is allowed to query the orders by the provided search criteria. To **AuthorizeAsync** are passed the following tree parameters:
+
 * **User** – currently authenticated  user  with claims
 * **Criteria** – as an object that is secured and probably changed inside authorization handler in accordance with user restrictions
 * The new instance of **OrderAuthorizationRequirement**  type with permission that needs to be checked 
