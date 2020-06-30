@@ -410,27 +410,8 @@ namespace VirtoCommerce.Platform.Web
             }
 
             //HangFire
-            var hangfireOptions = new HangfireOptions();
-            Configuration.GetSection("VirtoCommerce:Hangfire").Bind(hangfireOptions);
+            services.AddHangfire(Configuration);
 
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = hangfireOptions.AutomaticRetryCount });
-            if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer)
-            {
-                services.AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(Configuration.GetConnectionString("VirtoCommerce"), hangfireOptions.SqlServerStorageOptions));
-            }
-            else
-            {
-                services.AddHangfire(config => config.UseMemoryStorage());
-            }
-
-            //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs  
-            if (hangfireOptions.UseHangfireServer)
-            {
-                services.AddHangfireServer();
-            }
             // Register the Swagger generator
             services.AddSwagger();
         }
