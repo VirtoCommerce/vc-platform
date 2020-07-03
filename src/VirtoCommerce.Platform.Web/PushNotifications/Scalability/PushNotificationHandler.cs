@@ -43,14 +43,8 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         // An alternative is to use health checks, but it's not our case
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _log.LogInformation($"{nameof(PushNotificationHandler)}: attempt connecting to {_pushNotificationsOptions.Scalability.HubUrl} hub" +
-                                $" with {ScalablePushNotificationManager.ServerId} server ID an {_hubConnection.ConnectionId} connection ID");
-            _telemetryClient.TrackEvent("PushNotificationsHubConnecting", new Dictionary<string, string>
-            {
-                {"hubUrl", _pushNotificationsOptions.Scalability.HubUrl},
-                {"serverId", ScalablePushNotificationManager.ServerId},
-                {"connectionId", _hubConnection.ConnectionId}
-            });
+            _log.LogInformation($"{nameof(PushNotificationHandler)}: attempt connecting to {GetLogData()}");
+            _telemetryClient.TrackEvent("PushNotificationsHubConnecting", GetEventData());
 
             await _hubConnection.StartAsync(stoppingToken);
         }
@@ -68,36 +62,23 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
 
         private Task OnReconnecting(Exception arg)
         {
-            _log.LogInformation($"{nameof(PushNotificationHandler)}: attempt reconnecting to {_pushNotificationsOptions.Scalability.HubUrl} hub" +
-                                $" with {ScalablePushNotificationManager.ServerId} server ID an {_hubConnection.ConnectionId} connection ID");
-            _telemetryClient.TrackEvent("PushNotificationsHubReconnecting", new Dictionary<string, string>
-            {
-                {"hubUrl", _pushNotificationsOptions.Scalability.HubUrl},
-                {"serverId", ScalablePushNotificationManager.ServerId},
-                {"connectionId", _hubConnection.ConnectionId}
-            });
+            _log.LogInformation($"{nameof(PushNotificationHandler)}: attempt reconnecting to {GetLogData()}");
+            _telemetryClient.TrackEvent("PushNotificationsHubReconnecting", GetEventData());
 
             return Task.CompletedTask;
         }
 
         private Task OnReconnected(string arg)
         {
-            _log.LogInformation($"{nameof(PushNotificationHandler)}: successfully connected to {_pushNotificationsOptions.Scalability.HubUrl} hub" +
-                                $" with {ScalablePushNotificationManager.ServerId} server ID an {_hubConnection.ConnectionId} connection ID");
-            _telemetryClient.TrackEvent("PushNotificationsHubReconnected", new Dictionary<string, string>
-            {
-                {"hubUrl", _pushNotificationsOptions.Scalability.HubUrl},
-                {"serverId", ScalablePushNotificationManager.ServerId},
-                {"connectionId", _hubConnection.ConnectionId}
-            });
+            _log.LogInformation($"{nameof(PushNotificationHandler)}: successfully connected to {GetLogData()}");
+            _telemetryClient.TrackEvent("PushNotificationsHubReconnected", GetEventData());
 
             return Task.CompletedTask;
         }
 
         private Task OnClosed(Exception arg)
         {
-            var message = $"{nameof(PushNotificationHandler)}: failed connection to {_pushNotificationsOptions.Scalability.HubUrl} hub" +
-                          $" with {ScalablePushNotificationManager.ServerId} server ID an {_hubConnection.ConnectionId} connection ID";
+            var message = $"{nameof(PushNotificationHandler)}: failed connection to {GetLogData()}";
 
             if (_stoppingOrDisposing)
             {
@@ -108,26 +89,15 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
                 _log.LogError(message);
             }
 
-            _telemetryClient.TrackEvent("PushNotificationsHubConnectionFailed", new Dictionary<string, string>
-            {
-                {"hubUrl", _pushNotificationsOptions.Scalability.HubUrl},
-                {"serverId", ScalablePushNotificationManager.ServerId},
-                {"connectionId", _hubConnection.ConnectionId}
-            });
+            _telemetryClient.TrackEvent("PushNotificationsHubConnectionFailed", GetEventData());
 
             return Task.CompletedTask;
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            _log.LogInformation($"{nameof(PushNotificationHandler)}: attempt disconnecting to {_pushNotificationsOptions.Scalability.HubUrl} hub" +
-                                $" with {ScalablePushNotificationManager.ServerId} server ID an {_hubConnection.ConnectionId} connection ID");
-            _telemetryClient.TrackEvent("PushNotificationsHubDisconnecting", new Dictionary<string, string>
-            {
-                {"hubUrl", _pushNotificationsOptions.Scalability.HubUrl},
-                {"serverId", ScalablePushNotificationManager.ServerId},
-                {"connectionId", _hubConnection.ConnectionId}
-            });
+            _log.LogInformation($"{nameof(PushNotificationHandler)}: attempt disconnecting to {GetLogData()}");
+            _telemetryClient.TrackEvent("PushNotificationsHubDisconnecting", GetEventData());
 
             _stoppingOrDisposing = true;
 
@@ -150,6 +120,21 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         {
             DisposeAsync().GetAwaiter().GetResult();
             base.Dispose();
+        }
+
+        private string GetLogData()
+        {
+            return $"{_pushNotificationsOptions.Scalability.HubUrl} hub with {ScalablePushNotificationManager.ServerId} server ID an {_hubConnection.ConnectionId} connection ID";
+        }
+
+        private IDictionary<string, string> GetEventData()
+        {
+            return new Dictionary<string, string>
+            {
+                {"hubUrl", _pushNotificationsOptions.Scalability.HubUrl},
+                {"serverId", ScalablePushNotificationManager.ServerId},
+                {"connectionId", _hubConnection.ConnectionId}
+            };
         }
     }
 }
