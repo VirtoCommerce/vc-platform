@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
     {
         private readonly object _lockObject = new object();
 
-        private List<PushNotification> _storage = new List<PushNotification>();
+        private readonly List<PushNotification> _storage = new List<PushNotification>();
 
         public virtual void SavePushNotification(PushNotification notification)
         {
