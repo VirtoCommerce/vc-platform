@@ -69,7 +69,7 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 Run to trust the .NET Core SDK HTTPS development certificate:
 
 ```console
-dotnet.exe dev-certs https --trust
+    dotnet dev-certs https --trust
 ```
 
 Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust)
