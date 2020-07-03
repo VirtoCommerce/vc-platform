@@ -1,6 +1,4 @@
-using VirtoCommerce.Platform.Web.PushNotifications.Scalability;
-
-namespace VirtoCommerce.Platform.Web.PushNotifications
+namespace VirtoCommerce.Platform.Core.PushNotifications
 {
     public class PushNotificationOptions
     {

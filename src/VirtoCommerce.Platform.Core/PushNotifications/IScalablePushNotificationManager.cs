@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
+namespace VirtoCommerce.Platform.Core.PushNotifications
 {
     public interface IScalablePushNotificationManager
     {
