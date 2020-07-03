@@ -9,15 +9,16 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
 {
     public class PushNotificationInMemoryStorage : IPushNotificationStorage
     {
-        private readonly List<PushNotification> _innerList = new List<PushNotification>();
         private readonly object _lockObject = new object();
 
-        public void SavePushNotification(PushNotification notification)
+        private List<PushNotification> _storage = new List<PushNotification>();
+
+        public virtual void SavePushNotification(PushNotification notification)
         {
             SavePushNotificationAsync(notification).GetAwaiter().GetResult();
         }
 
-        public Task SavePushNotificationAsync(PushNotification notification)
+        public virtual Task SavePushNotificationAsync(PushNotification notification)
         {
             if (notification == null)
             {
@@ -26,15 +27,15 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
 
             lock (_lockObject)
             {
-                var alreadyExistNotify = _innerList.FirstOrDefault(x => x.Id == notification.Id);
+                var alreadyExistNotify = _storage.FirstOrDefault(x => x.Id == notification.Id);
                 if (alreadyExistNotify != null)
                 {
-                    _innerList.Remove(alreadyExistNotify);
-                    _innerList.Add(notification);
+                    _storage.Remove(alreadyExistNotify);
+                    _storage.Add(notification);
                 }
                 else
                 {
-                    var lastEvent = _innerList.OrderByDescending(x => x.Created).FirstOrDefault();
+                    var lastEvent = _storage.OrderByDescending(x => x.Created).FirstOrDefault();
                     if (lastEvent != null && lastEvent.ItHasSameContent(notification))
                     {
                         lastEvent.IsNew = true;
@@ -43,7 +44,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                     }
                     else
                     {
-                        _innerList.Add(notification);
+                        _storage.Add(notification);
                     }
                 }
             }
@@ -51,9 +52,9 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
         }
 
 
-        public PushNotificationSearchResult SearchPushNotifications(string userId, PushNotificationSearchCriteria criteria)
+        public virtual PushNotificationSearchResult SearchPushNotifications(string userId, PushNotificationSearchCriteria criteria)
         {
-            var query = _innerList.OrderByDescending(x => x.Created).Where(x => x.Creator == userId).AsQueryable();
+            var query = _storage.OrderByDescending(x => x.Created).Where(x => x.Creator == userId).AsQueryable();
             if (criteria.Ids != null && criteria.Ids.Any())
             {
                 query = query.Where(x => criteria.Ids.Contains(x.Id));
