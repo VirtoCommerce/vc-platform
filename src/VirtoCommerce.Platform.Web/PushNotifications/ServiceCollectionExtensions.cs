@@ -20,6 +20,8 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             var pushNotificationsOptions = new PushNotificationOptions();
             pushNotificationsSection.Bind(pushNotificationsOptions);
 
+            services.AddOptions<PushNotificationOptions>().Bind(configuration.GetSection("PushNotifications")).ValidateDataAnnotations();
+
             services.AddSingleton<IPushNotificationStorage, PushNotificationInMemoryStorage>();
 
             var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");

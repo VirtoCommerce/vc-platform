@@ -10,12 +10,14 @@ namespace VirtoCommerce.Platform.Web.SignalR
 {
     public static class ServiceCollectionExtensions
     {
-        public static readonly SignalROptions _signalROptions = new SignalROptions();
+        private static readonly SignalROptions _signalROptions = new SignalROptions();
 
         public static void AddSignalR(this IServiceCollection services, IConfiguration configuration)
         {
             var signalRSection = configuration.GetSection("SignalR");
             signalRSection.Bind(_signalROptions);
+
+            services.AddOptions<SignalROptions>().Bind(configuration.GetSection("SignalR")).ValidateDataAnnotations();
 
             var signalRServiceBuilder = services.AddSignalR().AddNewtonsoftJsonProtocol();
 
