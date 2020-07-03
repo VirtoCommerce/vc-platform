@@ -25,9 +25,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
             if (signalROptions.ScalabilityProvider == SignalRScalabilityProvider.AzureSignalRService || !string.IsNullOrEmpty(redisConnectionString))
             {
-                services.AddSingleton<ScalablePushNotificationManager>();
-                services.AddSingleton<IPushNotificationManager>(c => c.GetService<ScalablePushNotificationManager>());
-                services.AddSingleton<IScalablePushNotificationManager>(c => c.GetService<ScalablePushNotificationManager>());
+                services.AddSingleton<IPushNotificationManager,ScalablePushNotificationManager>();
 
                 services.AddSingleton(new HubConnectionBuilder()
                     .AddNewtonsoftJsonProtocol(o => o.PayloadSerializerSettings.Converters.Add(new PolymorphJsonConverter()))

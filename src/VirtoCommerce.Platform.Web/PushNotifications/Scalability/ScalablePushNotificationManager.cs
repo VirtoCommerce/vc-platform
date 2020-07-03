@@ -5,9 +5,9 @@ using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
 {
-    public class ScalablePushNotificationManager: PushNotificationManager, IScalablePushNotificationManager
+    public class ScalablePushNotificationManager: PushNotificationManager
     {
-        public string ServerId { get; set; } = Guid.NewGuid().ToString("N");
+        public static string ServerId { get; } = Guid.NewGuid().ToString("N");
 
         public ScalablePushNotificationManager(IPushNotificationStorage storage, IHubContext<PushNotificationHub> hubContext) : base(storage, hubContext)
         {
