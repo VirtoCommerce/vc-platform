@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.SignalR;
-using VirtoCommerce.Platform.PushNotifications.Scalability;
+using VirtoCommerce.Platform.Web.PushNotifications.Scalability;
 
-namespace VirtoCommerce.Platform.PushNotifications
+namespace VirtoCommerce.Platform.Web.PushNotifications
 {
     public static class ServiceCollectionExtensions
     {
@@ -25,11 +25,15 @@ namespace VirtoCommerce.Platform.PushNotifications
             var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
             if (signalROptions.ScalabilityProvider == SignalRScalabilityProvider.AzureSignalRService || !string.IsNullOrEmpty(redisConnectionString))
             {
-                services.AddSingleton<IHubConnectionBuilder>(new HubConnectionBuilder()
+                services.AddSingleton<ScalablePushNotificationManager>();
+                services.AddSingleton<IPushNotificationManager>(c => c.GetService<ScalablePushNotificationManager>());
+                services.AddSingleton<IScalablePushNotificationManager>(c => c.GetService<ScalablePushNotificationManager>());
+
+                services.AddSingleton(new HubConnectionBuilder()
                     .AddNewtonsoftJsonProtocol(o => o.PayloadSerializerSettings.Converters.Add(new PolymorphJsonConverter()))
                     .WithUrl(pushNotificationsOptions.Scalability.HubUrl)
                     .WithAutomaticReconnect());
-                services.AddSingleton<IPushNotificationManager, ScalablePushNotificationManager>();
+                services.AddHostedService<PushNotificationHandler>();
             }
             else
             {

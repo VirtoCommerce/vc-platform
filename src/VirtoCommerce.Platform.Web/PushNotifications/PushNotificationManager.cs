@@ -1,8 +1,9 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
-namespace VirtoCommerce.Platform.PushNotifications
+namespace VirtoCommerce.Platform.Web.PushNotifications
 {
     public class PushNotificationManager : IPushNotificationManager
     {

@@ -29,8 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Testing", "te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Hangfire", "src\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj", "{0ACDFABF-CD6E-4984-98FE-2099108D3F4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.PushNotifications", "src\VirtoCommerce.Platform.PushNotifications\VirtoCommerce.Platform.PushNotifications.csproj", "{88305756-A723-4D1F-AC30-E333FCADAEB6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,10 +79,6 @@ Global
 		{0ACDFABF-CD6E-4984-98FE-2099108D3F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0ACDFABF-CD6E-4984-98FE-2099108D3F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0ACDFABF-CD6E-4984-98FE-2099108D3F4A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{88305756-A723-4D1F-AC30-E333FCADAEB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{88305756-A723-4D1F-AC30-E333FCADAEB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{88305756-A723-4D1F-AC30-E333FCADAEB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{88305756-A723-4D1F-AC30-E333FCADAEB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,7 +95,6 @@ Global
 		{E6585ACB-09CE-438D-9812-0F4B047FEC62} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{EC079077-1D1B-4F23-A3E2-E54BDEB64A92} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 		{0ACDFABF-CD6E-4984-98FE-2099108D3F4A} = {90F6E3EE-475A-4844-A4C4-078613591F81}
-		{88305756-A723-4D1F-AC30-E333FCADAEB6} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01A94F38-27D1-412F-A4F4-F00991D1157C}

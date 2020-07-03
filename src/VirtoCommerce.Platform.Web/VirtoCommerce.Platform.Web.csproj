@@ -5,6 +5,7 @@
         <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
         <noWarn>1591</noWarn>
         <IsPackable>false</IsPackable>
+        <UserSecretsId>53876a76-4e13-4fe9-a4cb-208ee000a5e8</UserSecretsId>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <NoWarn>1701;1702;1705;1591</NoWarn>
@@ -46,7 +47,6 @@
         <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
         <ProjectReference Include="..\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj" />
         <ProjectReference Include="..\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj" />
-        <ProjectReference Include="..\VirtoCommerce.Platform.PushNotifications\VirtoCommerce.Platform.PushNotifications.csproj" />
         <ProjectReference Include="..\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
     </ItemGroup>
     <ItemGroup>
