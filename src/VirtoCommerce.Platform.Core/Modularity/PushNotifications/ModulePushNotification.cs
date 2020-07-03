@@ -7,12 +7,6 @@ namespace VirtoCommerce.Platform.Core.Modularity.PushNotifications
 {
     public class ModulePushNotification : PushNotification
     {
-        public ModulePushNotification()
-            :base(null)
-        {
-           
-        }
-
         public ModulePushNotification(string creator)
             : base(creator)
         {

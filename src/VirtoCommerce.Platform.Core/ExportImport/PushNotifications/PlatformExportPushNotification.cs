@@ -4,10 +4,6 @@ namespace VirtoCommerce.Platform.Core.ExportImport.PushNotifications
 {
     public class PlatformExportPushNotification : PlatformExportImportPushNotification
     {
-        public PlatformExportPushNotification()
-            : base(null)
-        {
-        }
         public PlatformExportPushNotification(string creator)
             : base(creator)
         {

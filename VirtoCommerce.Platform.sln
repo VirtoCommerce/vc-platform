@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Cach
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Testing", "tests\VirtoCommerce.Testing\VirtoCommerce.Testing.csproj", "{EC079077-1D1B-4F23-A3E2-E54BDEB64A92}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Hangfire", "src\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj", "{0ACDFABF-CD6E-4984-98FE-2099108D3F4A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Hangfire", "src\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj", "{0ACDFABF-CD6E-4984-98FE-2099108D3F4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
