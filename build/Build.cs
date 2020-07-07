@@ -8,6 +8,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nuke.Common;
@@ -115,11 +117,9 @@ class Build : NukeBuild
     [Parameter("Path to modules.json")] readonly string ModulesJsonName = "modules_v3.json";
     [Parameter("Full uri to module artifact")] readonly string CustomModulePackageUri;
 
-    [Parameter("Custom Version Suffix")] readonly string CustomTagSuffix = "";
-
     [Parameter("Path to Release Notes File")] readonly AbsolutePath ReleaseNotes;
 
-    [Parameter("VersionTag for module.manifest")] readonly string VersionTag;
+    [Parameter("VersionTag for module.manifest")] readonly string CustomVersionSuffix;
    
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
@@ -129,21 +129,22 @@ class Build : NukeBuild
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
     Microsoft.Build.Evaluation.Project MSBuildProject => WebProject.GetMSBuildProject();
-    string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix").EvaluatedValue;
-    string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix").EvaluatedValue;
-    string PackageVersion => MSBuildProject.GetProperty("PackageVersion").EvaluatedValue;
-    string ReleaseVersion => PackageVersion;
+    string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix")?.EvaluatedValue;
+    string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix")?.EvaluatedValue;
+    string ReleaseVersion => MSBuildProject.GetProperty("PackageVersion")?.EvaluatedValue ?? WebProject.GetProperty("Version");
 
     ModuleManifest ModuleManifest => ManifestReader.Read(ModuleManifestFile);
 
     AbsolutePath ModuleOutputDirectory => ArtifactsDirectory / ModuleManifest.Id;
+
+    AbsolutePath DirectoryBuildPropsPath => Solution.Directory / "Directory.Build.props";
     
-    string ZipFileName => IsModule ? $"{ModuleManifest.Id}_{ReleaseVersion}{CustomTagSuffix}.zip" : $"{WebProject.Solution.Name}.{ReleaseVersion}{CustomTagSuffix}.zip";
+    string ZipFileName => IsModule ? $"{ModuleManifest.Id}_{ReleaseVersion}.zip" : $"{WebProject.Solution.Name}.{ReleaseVersion}.zip";
     string ZipFilePath => ArtifactsDirectory / ZipFileName;
     string GitRepositoryName => GitRepository.Identifier.Split('/')[1];
 
     string ModulePackageUrl => CustomModulePackageUri.IsNullOrEmpty() ?
-        $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}{CustomTagSuffix}/{ModuleManifest.Id}_{ReleaseVersion}{CustomTagSuffix}.zip" : CustomModulePackageUri;
+        $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}/{ModuleManifest.Id}_{ReleaseVersion}.zip" : CustomModulePackageUri;
     GitRepository ModulesRepository => GitRepository.FromUrl("https://github.com/VirtoCommerce/vc-modules.git");
 
     bool IsModule => FileExists(ModuleManifestFile);
@@ -161,7 +162,7 @@ class Build : NukeBuild
         }
     }
 
-    Target Clean => _ => _
+   Target Clean => _ => _
         .Before(Restore)
         .Executes(() =>
         {
@@ -258,6 +259,47 @@ class Build : NukeBuild
                 completeOnFailure: true);
         });
 
+    public class Utf8StringWriter : StringWriter
+    {
+        // Use UTF8 encoding but write no BOM to the wire
+        public override Encoding Encoding => new UTF8Encoding(false);
+    }
+
+
+    protected override void OnTargetStart(string target)
+    {
+        if(VersionSuffix.IsNullOrEmpty() && !CustomVersionSuffix.IsNullOrEmpty())
+        {
+            //module.manifest
+            if(IsModule)
+            {
+                var manifest = ModuleManifest.Clone();
+                manifest.VersionTag = CustomVersionSuffix;
+                using (var writer = new Utf8StringWriter())
+                {
+                    XmlSerializer xml = new XmlSerializer(typeof(ModuleManifest));
+                    xml.Serialize(writer, manifest);
+                    File.WriteAllText(ModuleManifestFile, writer.ToString(), Encoding.UTF8);
+                }
+            }
+            
+            //directory.Build.Props
+            var xmlDoc = new XmlDocument()
+            {
+                PreserveWhitespace = true
+            };
+            xmlDoc.LoadXml(File.ReadAllText(DirectoryBuildPropsPath));
+            var suffix = xmlDoc.GetElementsByTagName("VersionSuffix");
+            suffix[0].InnerText = CustomVersionSuffix;
+            using(var writer = new Utf8StringWriter())
+            {
+                xmlDoc.Save(writer);
+                File.WriteAllText(DirectoryBuildPropsPath, writer.ToString());
+            }
+        }
+        base.OnTargetStart(target);
+    }
+
     Target Publish => _ => _
        .DependsOn(Compile)
        .After(WebPackBuild, Test)
@@ -267,11 +309,7 @@ class Build : NukeBuild
                .SetWorkingDirectory(WebProject.Directory)
                .EnableNoRestore()
                .SetOutput(IsModule ? ModuleOutputDirectory / "bin" : ArtifactsDirectory / "publish")
-               .SetConfiguration(Configuration)
-               .When(IsModule, ss => ss
-                   .SetAssemblyVersion(ModuleManifest.Version)
-                   .SetFileVersion(ModuleManifest.Version)
-                   .SetInformationalVersion(ReleaseVersion)));
+               .SetConfiguration(Configuration));
 
        });
 
@@ -296,11 +334,7 @@ class Build : NukeBuild
             DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
-                .EnableNoRestore()
-                .When(IsModule, ss => ss
-                    .SetAssemblyVersion(ModuleManifest.Version)
-                    .SetFileVersion(ModuleManifest.Version)
-                    .SetInformationalVersion(ReleaseVersion)));
+                .EnableNoRestore());
         });
 
     Target Compress => _ => _
@@ -361,10 +395,10 @@ class Build : NukeBuild
             var existExternalManifest = modulesExternalManifests.FirstOrDefault(x => x.Id == manifest.Id);
             if (existExternalManifest != null)
             {
-                if(!manifest.VersionTag.IsNullOrEmpty() || !VersionTag.IsNullOrEmpty())
+                if(!manifest.VersionTag.IsNullOrEmpty() || !CustomVersionSuffix.IsNullOrEmpty())
                 {
-                    var tag = manifest.VersionTag.IsNullOrEmpty() ? VersionTag : manifest.VersionTag;
-                    manifest.VersionTag = $"{tag}{CustomTagSuffix}"; 
+                    var tag = manifest.VersionTag.IsNullOrEmpty() ? CustomVersionSuffix : manifest.VersionTag;
+                    manifest.VersionTag = tag;
                     var existPrereleaseVersions = existExternalManifest.Versions.Where(v => !v.VersionTag.IsNullOrEmpty());
                     if (existPrereleaseVersions.Any())
                     {
@@ -403,7 +437,7 @@ class Build : NukeBuild
             {
                 modulesExternalManifests.Add(ExternalModuleManifest.FromManifest(manifest));
             }
-            TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Formatting.Indented));
+            TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Newtonsoft.Json.Formatting.Indented));
             GitTasks.Git($"commit -am \"{manifest.Id} {ReleaseVersion}\"", modulesLocalDirectory);
             GitTasks.Git($"push origin HEAD:master -f", modulesLocalDirectory);
         });
@@ -568,7 +602,7 @@ class Build : NukeBuild
          /*.Requires(() =>   GitRepository.IsOnReleaseBranch() && GitTasks.GitHasCleanWorkingCopy()) */
          .Executes(() =>
          {
-             string tag = $"{ReleaseVersion}{CustomTagSuffix}";
+             string tag = ReleaseVersion;
              //FinishReleaseOrHotfix(tag);
 
              void RunGitHubRelease(string args)

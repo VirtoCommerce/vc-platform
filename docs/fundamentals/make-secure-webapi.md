@@ -57,7 +57,7 @@ When the user authorized in the platform, the system is intersected all user per
 
 You can configure which permissions can be stored in “limited_permissions" cookies by change this setting **Authorization: LimitedCookiePermissions**
 
-#### **VirtoCommerce.Platform.Web/appsetings.json**
+*VirtoCommerce.Platform.Web/appsetings.json*
 ```JSON
  "Authorization": {
         ...
@@ -82,7 +82,7 @@ JWT stands for "JSON Web Token" and is a common security token format (defined b
 The Virto platform has some  settings that can be used to configure a resource server to consume such tokens
 
 
-#### **`VirtoCommerce.Platform.Web\Controllers\Api\appsettings.json`**
+*`VirtoCommerce.Platform.Web\Controllers\Api\appsettings.json`*
 ```JSON
 ...
  "Auth": {
@@ -106,7 +106,8 @@ The Virto platform has some  settings that can be used to configure a resource s
 After authentication, ASP.NET Core Web APIs need to authorize access. This process allows a service to make APIs available to some authenticated users, but not to all. Authorization can be done based on users’ roles or based on custom policy, which might include inspecting claims or other heuristics.
 
 Restricting access to an ASP.NET Core MVC route is as easy as applying an Authorize attribute to the action method (or to the controller’s class if all the controller’s actions require authorization), as shown in the following example
-#### **`VirtoCommerce.Platform.Web\Controllers\Api\SecurityController.cs`**
+
+*`VirtoCommerce.Platform.Web\Controllers\Api\SecurityController.cs`*
 ```C#
         [HttpGet]
         [Authorize]
@@ -145,7 +146,8 @@ Virto platform support the two main types of authorization strategy for permissi
 ## Permissions
 
 In VC all permissions are defined on design time (from code)  for each action grouped by a feature area. In this example, we are defining two feature areas with CRUD permissions. We are using constants because we will use these later in attributes, which require constant expressions.
-#### **`ModuleConstants.cs`**
+
+*`ModuleConstants.cs`*
 ```C#
   public class ModuleConstants
     {
@@ -167,7 +169,7 @@ In VC all permissions are defined on design time (from code)  for each action gr
 
 You have to register the permissions in the system in order to be able to use them in authorization checks and for role assignments in UI.
 
-#### **`module.cs`**
+*`module.cs`*
 ```C#
  public void PostInitialize(IApplicationBuilder appBuilder)
  {
@@ -190,7 +192,7 @@ As the quantity of all permissions that can be defined is not determined, we nee
 
 The platform code registers the permission policy provider in startup
 
-#### **`Startup.cs`**
+*`Startup.cs`*
 ```C#
 public void ConfigureServices(IServiceCollection services)
 {
@@ -204,7 +206,7 @@ public void ConfigureServices(IServiceCollection services)
 ## Global permissions authorization
 Global permissions is that permissions that not required any context resources for authorization check, to use such permissions for authorization of your controllers methods you  can use the **AuthorizeAttribute** to check particular permission with just adding Authorize attribute with required permission name as policy:
 
-#### **`VirtoCommerce.OrdersModule.Web/Controllers/Api/OrderModuleController.cs`**
+*`VirtoCommerce.OrdersModule.Web/Controllers/Api/OrderModuleController.cs`*
 ```C#
         [HttpPost]
         [Route("")]
@@ -229,7 +231,7 @@ We need to restrict user access to the only orders created in a particular store
 
 Define the new **OrderSelectedStoreScope** class derived from **PermissionScope**, the object of this type will be used  in role management UI and hold a store identifier selected by user and can be used for future authorization check.
 
-#### **`VirtoCommerce.OrdersModule.Web/Authorization/OrderSelectedStoreScope.cs`**
+*`VirtoCommerce.OrdersModule.Web/Authorization/OrderSelectedStoreScope.cs`*
 ```C#
      /// <summary>
     /// Restricts access rights to orders that belong to a particular store
@@ -244,7 +246,7 @@ Property **StoreId** will contain a store id of selected by the user on the role
 
 To register the scope and make the “**global**” permission to become “**scope-based**” you need to add the following code to your **Module.cs**
 
-#### **`VirtoCommerce.OrdersModule.Web/Scripts/module.cs`**
+*`VirtoCommerce.OrdersModule.Web/Scripts/module.cs`*
 ```C#
 public void PostInitialize(IApplicationBuilder appBuilder)
     {
@@ -258,7 +260,7 @@ public void PostInitialize(IApplicationBuilder appBuilder)
 By this code you register the permission `order:read` in system and associate it with `OrderSelectedStoreScope` scope.
 The next step is register the presentation template for `OrderSelectedStoreScope` is allows to user configure permission scope setting  in the manager.
 
-#### **`VirtoCommerce.OrdersModule.Web/Scripts/order.js`**
+*`VirtoCommerce.OrdersModule.Web/Scripts/order.js`*
 ```JS
 //Big part of exists code is removed for clarity reasone
 angular.module(moduleName, []).run( ['platformWebApp.permissionScopeResolver', 'platformWebApp.bladeNavigationService', function(scopeResolver, bladeNavigationService) {
@@ -294,7 +296,7 @@ In this step we understand how to declare a `scope-based` permissions  in the co
 ### Use scope-based authorization
 Thanks to  Virto security is based on the default ASP.NET Core security mechanics, for any imperative authorization check we can use  [IAuthorizationService](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.authorization.iauthorizationservice) and custom authorization policy handlers.
 
-#### **`VirtoCommerce.OrdersModule.Web/Controllers/Api/OrderModuleController.cs`**
+*`VirtoCommerce.OrdersModule.Web/Controllers/Api/OrderModuleController.cs`*
 ```C#
         [HttpGet]
         [Route("{id}")]
@@ -330,7 +332,7 @@ As a result, the authorization handler will check and change the criteria to ret
 
 Writing a handler for resource-based authorization isn't much different than writing a plain requirements handler. Create a custom requirement class, and implement a requirement handler class derived from `PermissionAuthorizationHandlerBase`
 
-#### **`VirtoCommerce.OrdersModule.Web/Authorization/OrderAuthorizationHandler.cs`**
+*`VirtoCommerce.OrdersModule.Web/Authorization/OrderAuthorizationHandler.cs`*
 ```C#
 public sealed class OrderAuthorizationHandler : PermissionAuthorizationHandlerBase<OrderAuthorizationRequirement>
 {
@@ -372,7 +374,7 @@ Virto platform manager support localization resources for text, captions, tips e
 
 See example:
 
-#### **`VirtoCommerce.OrdersModule.Web/Localization/en.VirtoCommerce.Orders.json`** 
+*`VirtoCommerce.OrdersModule.Web/Localization/en.VirtoCommerce.Orders.json`*
 ```JSON
 ...
  "permissions": {
