@@ -63,18 +63,8 @@ jobs:
 
     - name: Wait for environment is up
       shell: pwsh
-      env:
-        ARGOCD_SERVER: cd.govirto.com
-        ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_TOKEN }}
       timeout-minutes: 5
-      run: |
-        cd ${{ github.workspace }}
-
-        $latestVersion = (Invoke-WebRequest -Uri "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | ConvertFrom-Json).tag_name
-        Invoke-WebRequest -Uri "https://github.com/argoproj/argo-cd/releases/download/$($latestVersion)/argocd-linux-amd64" -OutFile argocd
-        chmod +x argocd
-        ./argocd app sync webstore-dev-app --grpc-web --async
-        
+      run: | 
         do {
           Start-Sleep -s 15
 
@@ -130,8 +120,8 @@ jobs:
         deployment-sequence-number: '${{ github.run_id }}'
         update-sequence-number: '${{ github.run_id }}'
         issue-keys: "${{ steps.jira_keys.outputs.jira-keys }}"
-        display-name: "http://platform-platform.dev.govirto.com/f"
-        url: "http://platform-platform.dev.govirto.com/"
+        display-name: "http://webstore-platform.dev.govirto.com/"
+        url: "http://webstore-platform.dev.govirto.com/"
         description: "Deployment to the Development environment"
         last-updated: '${{github.event.head_commit.timestamp}}'
         state: "${{ env.BUILD_STATE }}"

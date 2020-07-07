@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
 using Hangfire;
 using Hangfire.MemoryStorage;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,6 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Azure.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,21 +37,21 @@ using VirtoCommerce.Platform.Assets.FileSystem;
 using VirtoCommerce.Platform.Assets.FileSystem.Extensions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Hangfire;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Extensions;
-using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Infrastructure;
-using VirtoCommerce.Platform.Web.JsonConverters;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.PushNotifications;
@@ -85,11 +85,10 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
-            services.AddOptions<HangfireOptions>().Bind(Configuration.GetSection("VirtoCommerce:Hangfire")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
-            });
+            });            
             //Get platform version from GetExecutingAssembly
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
@@ -378,9 +377,21 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
 
-            //Add SignalR for push notifications
-            services.AddSignalR();
+            //SignalR
+            var signalRScalabilityProvider = Configuration["SignalR:ScalabilityProvider"];            
+            var signalRServiceBuilder = services.AddSignalR();
+            // SignalR scalability configuration. RedisBackplane (default provider) will be activated only when RedisConnectionString is set
+            // otherwise no any SignalR scaling options will be used           
+            if (signalRScalabilityProvider == SignalR.Constants.AzureSignalRService)
+            {
+                signalRServiceBuilder.AddAzureSignalR(Configuration);
+            }
+            else 
+            {
+                signalRServiceBuilder.AddRedisBackplane(Configuration);
+            }            
 
+            //Assets
             var assetsProvider = Configuration.GetSection("Assets:Provider").Value;
             if (assetsProvider.EqualsInvariant(AzureBlobProvider.ProviderName))
             {
@@ -398,26 +409,9 @@ namespace VirtoCommerce.Platform.Web
                 services.AddFileSystemBlobProvider();
             }
 
-            var hangfireOptions = new HangfireOptions();
-            Configuration.GetSection("VirtoCommerce:Hangfire").Bind(hangfireOptions);
+            //HangFire
+            services.AddHangfire(Configuration);
 
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = hangfireOptions.AutomaticRetryCount });
-            if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer)
-            {
-                services.AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(Configuration.GetConnectionString("VirtoCommerce"), hangfireOptions.SqlServerStorageOptions));
-            }
-            else
-            {
-                services.AddHangfire(config => config.UseMemoryStorage());
-            }
-            //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs  
-            if (hangfireOptions.UseHangfireServer)
-            {
-                services.AddHangfireServer();
-            }
             // Register the Swagger generator
             services.AddSwagger();
         }
@@ -491,11 +485,9 @@ namespace VirtoCommerce.Platform.Web
                 var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
                 securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
                 securityDbContext.Database.Migrate();
-
             }
 
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
-            
+            app.UseHangfire();
             app.UseDbTriggers();
             //Register platform settings
             app.UsePlatformSettings();
@@ -514,10 +506,6 @@ namespace VirtoCommerce.Platform.Web
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-
-            var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
-            GlobalConfiguration.Configuration.UseSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
-
         }
     }
 }

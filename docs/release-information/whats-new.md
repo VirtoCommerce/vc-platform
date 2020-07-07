@@ -154,7 +154,7 @@
 ## Platform v2 and v3 versions compatibility
 
 ### The list of code breaking changes
-- The following [list of breaking changes](../developer-guide/code-breaking-changes-included-in-v3.md) have the potential to break existing solutions when upgrading them to 3.x
+- The following [list of breaking changes](../update-to-version-3/code-breaking-changes-included-in-v3) have the potential to break existing solutions when upgrading them to 3.x
 
 ### API
 

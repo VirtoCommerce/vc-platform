@@ -52,7 +52,12 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 
         protected virtual IQueryable<OperationLogEntity> GetQuery(IPlatformRepository repository, ChangeLogSearchCriteria criteria, IEnumerable<SortInfo> sortInfos)
         {
-            var query = repository.OperationLogs.Where(x => (criteria.StartDate == null || x.ModifiedDate >= criteria.StartDate) && (criteria.EndDate == null || x.ModifiedDate <= criteria.EndDate));
+            var query = repository.OperationLogs.Where(x => (criteria.StartDate == null || x.ModifiedDate >= criteria.StartDate)&& (criteria.EndDate == null || x.ModifiedDate <= criteria.EndDate));
+            if (!criteria.OperationTypes.IsNullOrEmpty())
+            {
+                var operationTypes = criteria.OperationTypes.Select(x => x.ToString());
+                query = query.Where(x => operationTypes.Contains(x.OperationType));
+            }
             if (!criteria.ObjectIds.IsNullOrEmpty())
             {
                 query = query.Where(x => criteria.ObjectIds.Contains(x.ObjectId));

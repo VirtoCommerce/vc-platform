@@ -121,7 +121,7 @@ Or run from Visual Studio
 * Install and run platform as described in steps above
 * Open the module solution in Visual Studio and attach the debugger to the `VirtoCommerce.Platform.Web.exe` process
 
-![image](/../media/backend-debug.png)
+![image](../media/backend-debug.png)
 
 ## Frontend Debugging
 
@@ -131,7 +131,7 @@ Or run from Visual Studio
 * Navigate to `{module-name}/./Script/`
 * Debug code
 
-![image](/../media/frontend-debug-chrome.png)
+![image](../media/frontend-debug-chrome.png)
 
 ## Testing 
 There is `tests` folder with suites which can be run locally.
