@@ -5,54 +5,49 @@ using Microsoft.Azure.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.SignalR;
+using VirtoCommerce.Platform.Web.Redis;
 
 namespace VirtoCommerce.Platform.Web.SignalR
 {
     public static class ServiceCollectionExtensions
     {
-        private static readonly SignalROptions _signalROptions = new SignalROptions();
-
         public static void AddSignalR(this IServiceCollection services, IConfiguration configuration)
         {
-            var signalRSection = configuration.GetSection("SignalR");
-            signalRSection.Bind(_signalROptions);
+            var section = configuration.GetSection(SignalRConfiguration.SectionName);
 
-            services.AddOptions<SignalROptions>().Bind(configuration.GetSection("SignalR")).ValidateDataAnnotations();
-
-            var signalRServiceBuilder = services.AddSignalR().AddNewtonsoftJsonProtocol();
+            var serviceBuilder = services.AddSignalR().AddNewtonsoftJsonProtocol();
 
             // SignalR scalability configuration. RedisBackplane (default provider) will be activated only when RedisConnectionString is set
             // otherwise no any SignalR scaling options will be used
-            if (_signalROptions.ScalabilityProvider == SignalRScalabilityProvider.AzureSignalRService)
+            if (section[SignalRConfiguration.ScalabilityProvider] == SignalRConfiguration.AzureSignalRService)
             {
-                signalRServiceBuilder.AddAzureSignalR(configuration);
+                serviceBuilder.AddAzureSignalR(services, configuration);
             }
             else
             {
-                signalRServiceBuilder.AddRedisBackplane(configuration);
+                serviceBuilder.AddRedisBackplane(services, configuration);
             }
         }
 
-        public static void AddAzureSignalR(this ISignalRServerBuilder builder, IConfiguration configuration)
+        public static void AddAzureSignalR(this ISignalRServerBuilder builder, IServiceCollection services, IConfiguration configuration)
         {
-            var azureSignalRConnectionString = _signalROptions.AzureSignalRService.ConnectionString;
+            var options = new AzureSignalROptions();
+
+            var sectionName = $"{SignalRConfiguration.SectionName}:{SignalRConfiguration.AzureSignalRService}";
+            var section = configuration.GetSection(sectionName);
+            section.Bind(options);
+
+            services.AddOptions<AzureSignalROptions>().Bind(section).ValidateDataAnnotations();
+
+            var azureSignalRConnectionString = options.ConnectionString;
             if (string.IsNullOrEmpty(azureSignalRConnectionString))
             {
-                throw new InvalidOperationException("SignalR:AzureSignalRService:ConnectionString  must be set");
+                throw new InvalidOperationException($"{sectionName}  must be set");
             }
-            builder.AddAzureSignalR(options =>
+            builder.AddAzureSignalR(o =>
             {
-                options.Endpoints = new [] { new ServiceEndpoint(azureSignalRConnectionString) };
+                o.Endpoints = new [] { new ServiceEndpoint(azureSignalRConnectionString) };
             });
-        }
-
-        public static void AddRedisBackplane(this ISignalRServerBuilder builder, IConfiguration configuration)
-        {
-            var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
-            if (!string.IsNullOrEmpty(redisConnectionString))
-            {
-                builder.AddStackExchangeRedis(redisConnectionString, options => options.Configuration.ChannelPrefix = _signalROptions.RedisBackplane.ChannelName ?? "VirtoCommerceChannel");
-            }
         }
     }
 }

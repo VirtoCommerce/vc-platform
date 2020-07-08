@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VirtoCommerce.Platform.Core.JsonConverters;
+using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.PushNotifications;
+using VirtoCommerce.Platform.Core.Redis;
 using VirtoCommerce.Platform.Core.SignalR;
 using VirtoCommerce.Platform.Web.PushNotifications.Scalability;
 
@@ -12,27 +13,18 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
     {
         public static IServiceCollection AddPushNotifications(this IServiceCollection services, IConfiguration configuration)
         {
-            var signalRSection = configuration.GetSection("SignalR");
-            var signalROptions = new SignalROptions();
-            signalRSection.Bind(signalROptions);
-
-            var pushNotificationsSection = configuration.GetSection("PushNotifications");
-            var pushNotificationsOptions = new PushNotificationOptions();
-            pushNotificationsSection.Bind(pushNotificationsOptions);
+            var signalRSection = configuration.GetSection(SignalRConfiguration.SectionName);
 
             services.AddOptions<PushNotificationOptions>().Bind(configuration.GetSection("PushNotifications")).ValidateDataAnnotations();
 
             services.AddSingleton<IPushNotificationStorage, PushNotificationInMemoryStorage>();
 
-            var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
-            if (signalROptions.ScalabilityProvider == SignalRScalabilityProvider.AzureSignalRService || !string.IsNullOrEmpty(redisConnectionString))
+            var redisConnectionString = configuration.GetConnectionString(RedisConfiguration.ConnectionStringName);
+            if (signalRSection[SignalRConfiguration.ScalabilityProvider] == SignalRConfiguration.AzureSignalRService || !string.IsNullOrEmpty(redisConnectionString))
             {
                 services.AddSingleton<IPushNotificationManager,ScalablePushNotificationManager>();
 
-                services.AddSingleton(new HubConnectionBuilder()
-                    .AddNewtonsoftJsonProtocol(o => o.PayloadSerializerSettings.Converters.Add(new PolymorphJsonConverter()))
-                    .WithUrl(pushNotificationsOptions.Scalability.HubUrl)
-                    .WithAutomaticReconnect());
+                services.AddSingleton<IHubConnectionBuilder>(new HubConnectionBuilder());
                 services.AddHostedService<PushNotificationHandler>();
             }
             else

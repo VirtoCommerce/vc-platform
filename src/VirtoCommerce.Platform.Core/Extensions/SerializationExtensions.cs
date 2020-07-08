@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
+using Newtonsoft.Json.Utilities;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -102,6 +103,44 @@ namespace VirtoCommerce.Platform.Core.Common
                     return result;
                 }
             }
+        }
+
+        public static JsonSerializerSettings Clone(this JsonSerializerSettings settings)
+        {
+            var result = new JsonSerializerSettings
+            {
+                Converters = settings.Converters,
+                TypeNameHandling = settings.TypeNameHandling,
+                MetadataPropertyHandling = settings.MetadataPropertyHandling,
+                TypeNameAssemblyFormatHandling = settings.TypeNameAssemblyFormatHandling,
+                PreserveReferencesHandling = settings.PreserveReferencesHandling,
+                ReferenceLoopHandling = settings.ReferenceLoopHandling,
+                MissingMemberHandling = settings.MissingMemberHandling,
+                ObjectCreationHandling = settings.ObjectCreationHandling,
+                NullValueHandling = settings.NullValueHandling,
+                DefaultValueHandling = settings.DefaultValueHandling,
+                ConstructorHandling = settings.ConstructorHandling,
+                Context = settings.Context,
+                CheckAdditionalContent = settings.CheckAdditionalContent,
+                Error = settings.Error,
+                ContractResolver = settings.ContractResolver,
+                ReferenceResolverProvider = settings.ReferenceResolverProvider,
+                TraceWriter = settings.TraceWriter,
+                EqualityComparer = settings.EqualityComparer,
+                SerializationBinder = settings.SerializationBinder,
+                Formatting = settings.Formatting,
+                DateFormatHandling = settings.DateFormatHandling,
+                DateTimeZoneHandling = settings.DateTimeZoneHandling,
+                DateParseHandling = settings.DateParseHandling,
+                DateFormatString = settings.DateFormatString,
+                FloatFormatHandling = settings.FloatFormatHandling,
+                FloatParseHandling = settings.FloatParseHandling,
+                StringEscapeHandling = settings.StringEscapeHandling,
+                Culture = settings.Culture,
+                MaxDepth = settings.MaxDepth
+            };
+
+            return result;
         }
 
         private static JsonSerializer GetDefaultSerializer()

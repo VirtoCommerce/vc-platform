@@ -1,41 +1,53 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
 {
     public class PushNotificationHandler: BackgroundService, IAsyncDisposable
     {
+        private readonly IServer _server;
         private readonly IPushNotificationStorage _storage;
+        private readonly IHubConnectionBuilder _hubConnectionBuilder;
+        private readonly MvcNewtonsoftJsonOptions _jsonOptions;
         private readonly PushNotificationOptions _pushNotificationsOptions;
         private readonly ILogger<PushNotificationHandler> _log;
         private readonly TelemetryClient _telemetryClient;
-        private readonly HubConnection _hubConnection;
-        private readonly IDisposable _subscription;
+        private HubConnection _hubConnection;
+        private IDisposable _subscription;
         private bool _stoppingOrDisposing;
 
-        public PushNotificationHandler(IPushNotificationStorage storage
+        public PushNotificationHandler(IServer server
+            , IPushNotificationStorage storage
             , IHubConnectionBuilder hubConnectionBuilder
             , IOptions<PushNotificationOptions> pushNotificationsOptions
+            , IOptions<MvcNewtonsoftJsonOptions> jsonOptions
             , ILogger<PushNotificationHandler> log
             , TelemetryClient telemetryClient)
         {
+            _server = server;
             _storage = storage;
+            _hubConnectionBuilder = hubConnectionBuilder;
+            _jsonOptions = jsonOptions.Value;
             _pushNotificationsOptions = pushNotificationsOptions.Value;
             _log = log;
             _telemetryClient = telemetryClient;
-            _hubConnection = hubConnectionBuilder.Build();
-            _subscription = _hubConnection.On<PushNotification>("Send", OnSend);
-            _hubConnection.Reconnecting += OnReconnecting;
-            _hubConnection.Reconnected += OnReconnected;
-            _hubConnection.Closed += OnClosed;
         }
 
         // Why not in StartAsync? Because we connect to same server, so we need to wait application start
@@ -43,13 +55,36 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         // An alternative is to use health checks, but it's not our case
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _log.LogInformation($"{nameof(PushNotificationHandler)}: attempt connecting to {GetLogData()}");
-            _telemetryClient.TrackEvent("PushNotificationsHubConnecting", GetEventData());
+            var pushNotificationHubUrl = _pushNotificationsOptions.Scalability.HubUrl;
 
+            _log.LogInformation($"{nameof(PushNotificationHandler)}: attempt connecting to {pushNotificationHubUrl} hub with {ScalablePushNotificationManager.ServerId} server ID");
+            _telemetryClient.TrackEvent("PushNotificationsHubConnecting", new Dictionary<string, string>
+            {
+                {"hubUrl", pushNotificationHubUrl},
+                {"serverId", ScalablePushNotificationManager.ServerId}
+            });
+
+            _hubConnection = _hubConnectionBuilder
+                .AddNewtonsoftJsonProtocol(o =>
+                {
+                    o.PayloadSerializerSettings = _jsonOptions.SerializerSettings.Clone();
+                    o.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+                    o.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
+                })
+                .WithUrl(pushNotificationHubUrl)
+                .WithAutomaticReconnect()
+                .Build();
+            _subscription = _hubConnection.On<DistributedPushNotification>("Send", OnSend);
+            _hubConnection.Reconnecting += OnReconnecting;
+            _hubConnection.Reconnected += OnReconnected;
+            _hubConnection.Closed += OnClosed;
             await _hubConnection.StartAsync(stoppingToken);
+            
+            _log.LogInformation($"{nameof(PushNotificationHandler)}: connected to {GetLogData()}");
+            _telemetryClient.TrackEvent("PushNotificationsHubConnected", GetEventData());
         }
 
-        protected virtual async Task OnSend(PushNotification notification)
+        protected virtual async Task OnSend(DistributedPushNotification notification)
         {
             if (notification.ServerId != ScalablePushNotificationManager.ServerId)
             {
@@ -113,7 +148,10 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         {
             _stoppingOrDisposing = true;
 
-            await _hubConnection.DisposeAsync();
+            if (_hubConnection != null)
+            {
+                await _hubConnection.DisposeAsync();
+            }
         }
 
         public override void Dispose()
@@ -124,7 +162,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
 
         private string GetLogData()
         {
-            return $"{_pushNotificationsOptions.Scalability.HubUrl} hub with {ScalablePushNotificationManager.ServerId} server ID an {_hubConnection.ConnectionId} connection ID";
+            return $"{_pushNotificationsOptions.Scalability.HubUrl} hub with {ScalablePushNotificationManager.ServerId} server ID and {_hubConnection.ConnectionId} connection ID";
         }
 
         private IDictionary<string, string> GetEventData()

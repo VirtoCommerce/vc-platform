@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 
@@ -12,13 +11,7 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
 {
     public class PolymorphJsonConverter : JsonConverter
     {
-        private static readonly Type[] _knowTypes = { typeof(ObjectSettingEntry), typeof(DynamicProperty), typeof(ApplicationUser), typeof(Role), typeof(PermissionScope), typeof(PushNotification) };
-
-        private static readonly Lazy<Type[]> _pushNotificationTypes = new Lazy<Type[]>(
-            () => AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(domainAssembly => domainAssembly.GetTypes())
-                .Where(assemblyType => assemblyType.IsSubclassOf(typeof(PushNotification)) && !assemblyType.IsAbstract)
-                .Except(new[] {typeof(PushNotification)}).ToArray());
+        private static readonly Type[] _knowTypes = { typeof(ObjectSettingEntry), typeof(DynamicProperty), typeof(ApplicationUser), typeof(Role), typeof(PermissionScope) };
 
         public override bool CanWrite => false;
         public override bool CanRead => true;
@@ -44,19 +37,6 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                 if (result == null)
                 {
                     throw new NotSupportedException("Unknown scopeType: " + scopeType);
-                }
-            } else if (typeof(PushNotification).IsAssignableFrom(objectType))
-            {
-                var pushNotificationType = objectType.Name;
-                var pt = obj["notifyType"] ?? obj["NotifyType"];
-                if (pt != null)
-                {
-                    pushNotificationType = pt.Value<string>();
-                }
-                result = Activator.CreateInstance(_pushNotificationTypes.Value.First(x => x.Name.EqualsInvariant(pushNotificationType)), new object[] { null });
-                if (result == null)
-                {
-                    throw new NotSupportedException("Unknown notification type: " + pushNotificationType);
                 }
             }
             else

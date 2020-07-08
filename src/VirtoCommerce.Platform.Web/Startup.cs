@@ -37,6 +37,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -115,13 +116,15 @@ namespace VirtoCommerce.Platform.Web
                     //we should register this converter globally.
                     options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
                     //Next line allow to use polymorph types as parameters in API controller methods
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
                     options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
+                    options.SerializerSettings.Converters.Add(new DistributedPushNotificationJsonConverter());
+                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+
                     options.SerializerSettings.Formatting = Formatting.None;
 
                     options.SerializerSettings.Error += (sender, args) =>
@@ -129,7 +132,6 @@ namespace VirtoCommerce.Platform.Web
                         // Expose any JSON serialization exception as HTTP error
                         throw new JsonException(args.ErrorContext.Error.Message);
                     };
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 }
             );
 
