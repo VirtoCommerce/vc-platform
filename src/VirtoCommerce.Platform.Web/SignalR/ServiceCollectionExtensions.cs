@@ -1,5 +1,6 @@
 
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.SignalR;
 using Microsoft.Extensions.Configuration;

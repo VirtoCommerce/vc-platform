@@ -6,6 +6,7 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
     {
         public DistributedPushNotification() : base(null)
         {
+            AdditionalProperties = new Dictionary<string, object>();
         }
 
         public string ServerId { get; set; }

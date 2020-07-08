@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
@@ -26,13 +25,13 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
             {
                 Id = (string)notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.Id), default(string)),
                 ServerId = (string)notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.ServerId), default(string)),
-                Created = (DateTime)notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.Created), DateTime.UtcNow),
+                Created = Convert.ToDateTime(notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.Created), DateTime.UtcNow)),
                 Creator = (string)notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.Creator), default(string)),
-                IsNew = (bool)notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.IsNew), true),
+                IsNew = Convert.ToBoolean(notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.IsNew), true)),
                 NotifyType = (string)notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.NotifyType), default(string)),
                 Description = (string)notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.Description), default(string)),
                 Title = (string)notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.Title), default(string)),
-                RepeatCount = (int)notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.RepeatCount), default(int)),
+                RepeatCount = Convert.ToInt32(notificationProperties.GetValueOrDefault(nameof(DistributedPushNotification.RepeatCount), default(int))),
                 AdditionalProperties = notificationProperties.Where(x => !_knownProperties.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value)
             };
             return result;

@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -486,6 +487,7 @@ namespace VirtoCommerce.Platform.Web
             app.UsePlatformPermissions();
 
             //Setup SignalR hub
+            app.UseSignalR();
             app.UseEndpoints(routes =>
             {
                 routes.MapHub<PushNotificationHub>("/pushNotificationHub");

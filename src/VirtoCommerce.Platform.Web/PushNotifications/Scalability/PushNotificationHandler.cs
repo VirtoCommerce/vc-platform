@@ -1,21 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
@@ -65,12 +59,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
             });
 
             _hubConnection = _hubConnectionBuilder
-                .AddNewtonsoftJsonProtocol(o =>
-                {
-                    o.PayloadSerializerSettings = _jsonOptions.SerializerSettings.Clone();
-                    o.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
-                    o.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
-                })
+                .AddNewtonsoftJsonProtocol(o => o.PayloadSerializerSettings = _jsonOptions.SerializerSettings)
                 .WithUrl(pushNotificationHubUrl)
                 .WithAutomaticReconnect()
                 .Build();

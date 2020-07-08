@@ -105,42 +105,44 @@ namespace VirtoCommerce.Platform.Core.Common
             }
         }
 
-        public static JsonSerializerSettings Clone(this JsonSerializerSettings settings)
+        public static void CopyTo(this JsonSerializerSettings source, JsonSerializerSettings destination)
         {
-            var result = new JsonSerializerSettings
+            if (!source.Converters.IsNullOrEmpty())
             {
-                Converters = settings.Converters,
-                TypeNameHandling = settings.TypeNameHandling,
-                MetadataPropertyHandling = settings.MetadataPropertyHandling,
-                TypeNameAssemblyFormatHandling = settings.TypeNameAssemblyFormatHandling,
-                PreserveReferencesHandling = settings.PreserveReferencesHandling,
-                ReferenceLoopHandling = settings.ReferenceLoopHandling,
-                MissingMemberHandling = settings.MissingMemberHandling,
-                ObjectCreationHandling = settings.ObjectCreationHandling,
-                NullValueHandling = settings.NullValueHandling,
-                DefaultValueHandling = settings.DefaultValueHandling,
-                ConstructorHandling = settings.ConstructorHandling,
-                Context = settings.Context,
-                CheckAdditionalContent = settings.CheckAdditionalContent,
-                Error = settings.Error,
-                ContractResolver = settings.ContractResolver,
-                ReferenceResolverProvider = settings.ReferenceResolverProvider,
-                TraceWriter = settings.TraceWriter,
-                EqualityComparer = settings.EqualityComparer,
-                SerializationBinder = settings.SerializationBinder,
-                Formatting = settings.Formatting,
-                DateFormatHandling = settings.DateFormatHandling,
-                DateTimeZoneHandling = settings.DateTimeZoneHandling,
-                DateParseHandling = settings.DateParseHandling,
-                DateFormatString = settings.DateFormatString,
-                FloatFormatHandling = settings.FloatFormatHandling,
-                FloatParseHandling = settings.FloatParseHandling,
-                StringEscapeHandling = settings.StringEscapeHandling,
-                Culture = settings.Culture,
-                MaxDepth = settings.MaxDepth
-            };
+                for (var i = 0; i < source.Converters.Count; i++)
+                {
+                    destination.Converters.Insert(i, source.Converters[i]);
+                }
+            }
 
-            return result;
+            destination.TypeNameHandling = source.TypeNameHandling;
+            destination.MetadataPropertyHandling = source.MetadataPropertyHandling;
+            destination.TypeNameAssemblyFormatHandling = source.TypeNameAssemblyFormatHandling;
+            destination.PreserveReferencesHandling = source.PreserveReferencesHandling;
+            destination.ReferenceLoopHandling = source.ReferenceLoopHandling;
+            destination.MissingMemberHandling = source.MissingMemberHandling;
+            destination.ObjectCreationHandling = source.ObjectCreationHandling;
+            destination.NullValueHandling = source.NullValueHandling;
+            destination.DefaultValueHandling = source.DefaultValueHandling;
+            destination.ConstructorHandling = source.ConstructorHandling;
+            destination.Context = source.Context;
+            destination.CheckAdditionalContent = source.CheckAdditionalContent;
+            destination.Error = source.Error;
+            destination.ContractResolver = source.ContractResolver;
+            destination.ReferenceResolverProvider = source.ReferenceResolverProvider;
+            destination.TraceWriter = source.TraceWriter;
+            destination.EqualityComparer = source.EqualityComparer;
+            destination.SerializationBinder = source.SerializationBinder;
+            destination.Formatting = source.Formatting;
+            destination.DateFormatHandling = source.DateFormatHandling;
+            destination.DateTimeZoneHandling = source.DateTimeZoneHandling;
+            destination.DateParseHandling = source.DateParseHandling;
+            destination.DateFormatString = source.DateFormatString;
+            destination.FloatFormatHandling = source.FloatFormatHandling;
+            destination.FloatParseHandling = source.FloatParseHandling;
+            destination.StringEscapeHandling = source.StringEscapeHandling;
+            destination.Culture = source.Culture;
+            destination.MaxDepth = source.MaxDepth;
         }
 
         private static JsonSerializer GetDefaultSerializer()
