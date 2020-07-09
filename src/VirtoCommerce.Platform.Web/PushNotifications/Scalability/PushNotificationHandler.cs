@@ -35,8 +35,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         {
             _storage = storage;
             _hubConnectionBuilder = hubConnectionBuilder;
-            _hubConnectionString =
-                configuration.GetConnectionString(PushNotificationsConfiguration.HubConnectionStringName);
+            _hubConnectionString = configuration.GetConnectionString(PushNotificationsConfiguration.HubConnectionStringName);
             _jsonOptions = jsonOptions.Value;
             _log = log;
             _telemetryClient = telemetryClient;
