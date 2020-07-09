@@ -1,10 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
@@ -17,13 +14,10 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
 
         public ScalablePushNotificationManager(IPushNotificationStorage storage
             , IHubContext<PushNotificationHub> hubContext
-            , IOptions<MvcNewtonsoftJsonOptions> jsonOptions
             , ILogger<ScalablePushNotificationManager> log)
             : base(storage, hubContext)
         {
             _log = log;
-
-            JsonSerializer.CreateDefault(jsonOptions.Value.SerializerSettings);
         }
 
 
