@@ -305,5 +305,6 @@ namespace VirtoCommerce.Platform.Core.Common
             }
             return input.First().ToString().ToUpper() + input.Substring(1);
         }
+
     }
 }
