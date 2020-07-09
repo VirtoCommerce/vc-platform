@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 
@@ -11,7 +12,7 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
 {
     public class PolymorphJsonConverter : JsonConverter
     {
-        private static readonly Type[] _knowTypes = { typeof(ObjectSettingEntry), typeof(DynamicProperty), typeof(ApplicationUser), typeof(Role), typeof(PermissionScope) };
+        private static readonly Type[] _knowTypes = { typeof(ObjectSettingEntry), typeof(DynamicProperty), typeof(ApplicationUser), typeof(Role), typeof(PermissionScope), typeof(PushNotification) };
 
         public override bool CanWrite => false;
         public override bool CanRead => true;
@@ -24,9 +25,9 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             object result;
-            var obj = JObject.Load(reader);
             if (typeof(PermissionScope).IsAssignableFrom(objectType))
             {
+                var obj = JObject.Load(reader);
                 var scopeType = objectType.Name;
                 var pt = obj["type"] ?? obj["Type"];
                 if (pt != null)
@@ -38,14 +39,29 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                 {
                     throw new NotSupportedException("Unknown scopeType: " + scopeType);
                 }
+                serializer.Populate(obj.CreateReader(), result);
+            }
+            else if (typeof(PushNotification).IsAssignableFrom(objectType))
+            {
+                var typeNameHandling = serializer.TypeNameHandling;
+                var typeNameAssemblyFormatHandling = serializer.TypeNameAssemblyFormatHandling;
+
+                serializer.TypeNameHandling = TypeNameHandling.Auto;
+                serializer.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
+
+                result = serializer.Deserialize(reader);
+
+                serializer.TypeNameHandling = typeNameHandling;
+                serializer.TypeNameAssemblyFormatHandling = typeNameAssemblyFormatHandling;
             }
             else
             {
+                var obj = JObject.Load(reader);
                 var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethods().FirstOrDefault(x => x.Name.EqualsInvariant("TryCreateInstance") && x.GetParameters().Length == 0);
                 result = tryCreateInstance?.Invoke(null, null);
+                serializer.Populate(obj.CreateReader(), result);
             }
 
-            serializer.Populate(obj.CreateReader(), result);
             return result;
         }
 

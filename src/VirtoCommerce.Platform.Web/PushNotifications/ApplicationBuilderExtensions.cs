@@ -16,7 +16,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             var hubJsonOptions = services.GetService<IOptions<NewtonsoftJsonHubProtocolOptions>>().Value;
             var mvcJsonOptions = services.GetService<IOptions<MvcNewtonsoftJsonOptions>>().Value;
             mvcJsonOptions.SerializerSettings.CopyTo(hubJsonOptions.PayloadSerializerSettings);
-            hubJsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+            hubJsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.All;
             hubJsonOptions.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
             return appBuilder;
         }

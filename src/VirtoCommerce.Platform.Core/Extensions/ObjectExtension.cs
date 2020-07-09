@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -109,19 +107,6 @@ namespace VirtoCommerce.Platform.Core.Common
                 objType = Nullable.GetUnderlyingType(objType);
             }
             return (T)Convert.ChangeType(obj, objType);
-        }
-
-        public static TTarget JsonConvert<TTarget>(this object source, JsonSerializer jsonSerializer = null)
-        {
-            var serializer = jsonSerializer ?? JsonSerializer.CreateDefault();
-            var jObject = JObject.FromObject(source, serializer);
-            var result = jObject.ToObject<TTarget>(serializer);
-            return result;
-        }
-
-        public static T JsonClone<T>(this T source, JsonSerializer jsonSerializer = null)
-        {
-            return source.JsonConvert<T>(jsonSerializer);
         }
     }
 }

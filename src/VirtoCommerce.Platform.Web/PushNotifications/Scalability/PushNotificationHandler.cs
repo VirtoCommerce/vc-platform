@@ -63,7 +63,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
                 .WithUrl(pushNotificationHubUrl)
                 .WithAutomaticReconnect()
                 .Build();
-            _subscription = _hubConnection.On<DistributedPushNotification>("Send", OnSend);
+            _subscription = _hubConnection.On<PushNotification>("Send", OnSend);
             _hubConnection.Reconnecting += OnReconnecting;
             _hubConnection.Reconnected += OnReconnected;
             _hubConnection.Closed += OnClosed;
@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
             _telemetryClient.TrackEvent("PushNotificationsHubConnected", GetEventData());
         }
 
-        protected virtual async Task OnSend(DistributedPushNotification notification)
+        protected virtual async Task OnSend(PushNotification notification)
         {
             if (notification.ServerId != ScalablePushNotificationManager.ServerId)
             {

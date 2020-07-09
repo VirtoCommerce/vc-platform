@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
@@ -14,10 +13,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
     {
         public static string ServerId { get; } = Guid.NewGuid().ToString("N");
 
-        private readonly IPushNotificationStorage _storage;
-        private readonly IHubContext<PushNotificationHub> _hubContext;
         private readonly ILogger<ScalablePushNotificationManager> _log;
-        private readonly JsonSerializer _jsonSerializer;
 
         public ScalablePushNotificationManager(IPushNotificationStorage storage
             , IHubContext<PushNotificationHub> hubContext
@@ -25,27 +21,19 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
             , ILogger<ScalablePushNotificationManager> log)
             : base(storage, hubContext)
         {
-            _storage = storage;
-            _hubContext = hubContext;
             _log = log;
 
-            _jsonSerializer = JsonSerializer.CreateDefault(jsonOptions.Value.SerializerSettings);
+            JsonSerializer.CreateDefault(jsonOptions.Value.SerializerSettings);
         }
 
 
         public override async Task SendAsync(PushNotification notification)
         {
-            await _storage.SavePushNotificationAsync(notification);
+            notification.ServerId = ServerId;
 
-            var distributedNotification = notification.JsonConvert<DistributedPushNotification>(_jsonSerializer);
-            distributedNotification.ServerId = ServerId;
-            
-            if (_hubContext != null)
-            {
-                await _hubContext.Clients.All.SendAsync("Send", distributedNotification);
-            }
+            await base.SendAsync(notification);
 
-            _log.LogInformation($"{nameof(PushNotificationManager)}: sending push notification with {distributedNotification.Id} ID of type {distributedNotification.NotifyType} to {distributedNotification.ServerId} server");
+            _log.LogInformation($"{nameof(PushNotificationManager)}: sending push notification with {notification.Id} ID of type {notification.NotifyType} to {notification.ServerId} server");
         }
     }
 }
