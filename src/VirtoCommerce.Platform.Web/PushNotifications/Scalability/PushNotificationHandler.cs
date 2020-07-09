@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -18,24 +19,25 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         private readonly IPushNotificationStorage _storage;
         private readonly IHubConnectionBuilder _hubConnectionBuilder;
         private readonly MvcNewtonsoftJsonOptions _jsonOptions;
-        private readonly PushNotificationOptions _pushNotificationsOptions;
         private readonly ILogger<PushNotificationHandler> _log;
         private readonly TelemetryClient _telemetryClient;
+        private readonly string _hubConnectionString;
         private HubConnection _hubConnection;
         private IDisposable _subscription;
         private bool _stoppingOrDisposing;
 
         public PushNotificationHandler(IPushNotificationStorage storage
             , IHubConnectionBuilder hubConnectionBuilder
-            , IOptions<PushNotificationOptions> pushNotificationsOptions
+            , IConfiguration configuration
             , IOptions<MvcNewtonsoftJsonOptions> jsonOptions
             , ILogger<PushNotificationHandler> log
             , TelemetryClient telemetryClient)
         {
             _storage = storage;
             _hubConnectionBuilder = hubConnectionBuilder;
+            _hubConnectionString =
+                configuration.GetConnectionString(PushNotificationsConfiguration.HubConnectionStringName);
             _jsonOptions = jsonOptions.Value;
-            _pushNotificationsOptions = pushNotificationsOptions.Value;
             _log = log;
             _telemetryClient = telemetryClient;
         }
@@ -45,18 +47,16 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         // An alternative is to use health checks, but it's not our case
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var pushNotificationHubUrl = _pushNotificationsOptions.Scalability.HubUrl;
-
-            _log.LogInformation($"{nameof(PushNotificationHandler)}: attempt connecting to {pushNotificationHubUrl} hub with {ScalablePushNotificationManager.ServerId} server ID");
+            _log.LogInformation($"{nameof(PushNotificationHandler)}: attempt connecting to {_hubConnectionString} hub with {ScalablePushNotificationManager.ServerId} server ID");
             _telemetryClient.TrackEvent("PushNotificationsHubConnecting", new Dictionary<string, string>
             {
-                {"hubUrl", pushNotificationHubUrl},
+                {"hubUrl", _hubConnectionString},
                 {"serverId", ScalablePushNotificationManager.ServerId}
             });
 
             _hubConnection = _hubConnectionBuilder
                 .AddNewtonsoftJsonProtocol(o => o.PayloadSerializerSettings = _jsonOptions.SerializerSettings)
-                .WithUrl(pushNotificationHubUrl)
+                .WithUrl(_hubConnectionString)
                 .WithAutomaticReconnect()
                 .Build();
             _subscription = _hubConnection.On<PushNotification>("Send", OnSend);
@@ -147,14 +147,14 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
 
         private string GetLogData()
         {
-            return $"{_pushNotificationsOptions.Scalability.HubUrl} hub with {ScalablePushNotificationManager.ServerId} server ID and {_hubConnection.ConnectionId} connection ID";
+            return $"{_hubConnectionString} hub with {ScalablePushNotificationManager.ServerId} server ID and {_hubConnection.ConnectionId} connection ID";
         }
 
         private IDictionary<string, string> GetEventData()
         {
             return new Dictionary<string, string>
             {
-                {"hubUrl", _pushNotificationsOptions.Scalability.HubUrl},
+                {"hubUrl", _hubConnectionString},
                 {"serverId", ScalablePushNotificationManager.ServerId},
                 {"connectionId", _hubConnection.ConnectionId}
             };

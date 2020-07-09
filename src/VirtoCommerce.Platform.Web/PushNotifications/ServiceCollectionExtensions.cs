@@ -14,8 +14,6 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
         {
             var signalRSection = configuration.GetSection(SignalRConfiguration.SectionName);
 
-            services.AddOptions<PushNotificationOptions>().Bind(configuration.GetSection("PushNotifications")).ValidateDataAnnotations();
-
             services.AddSingleton<IPushNotificationStorage, PushNotificationInMemoryStorage>();
 
             var redisConnectionString = configuration.GetConnectionString(RedisConfiguration.ConnectionStringName);
