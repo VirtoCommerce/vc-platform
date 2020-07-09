@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +15,6 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
 {
     public class PushNotificationHandler: BackgroundService, IAsyncDisposable
     {
-        private readonly IServer _server;
         private readonly IPushNotificationStorage _storage;
         private readonly IHubConnectionBuilder _hubConnectionBuilder;
         private readonly MvcNewtonsoftJsonOptions _jsonOptions;
@@ -27,15 +25,13 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         private IDisposable _subscription;
         private bool _stoppingOrDisposing;
 
-        public PushNotificationHandler(IServer server
-            , IPushNotificationStorage storage
+        public PushNotificationHandler(IPushNotificationStorage storage
             , IHubConnectionBuilder hubConnectionBuilder
             , IOptions<PushNotificationOptions> pushNotificationsOptions
             , IOptions<MvcNewtonsoftJsonOptions> jsonOptions
             , ILogger<PushNotificationHandler> log
             , TelemetryClient telemetryClient)
         {
-            _server = server;
             _storage = storage;
             _hubConnectionBuilder = hubConnectionBuilder;
             _jsonOptions = jsonOptions.Value;
