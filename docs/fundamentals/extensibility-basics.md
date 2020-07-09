@@ -44,7 +44,7 @@ Let’s demonstrate how the domain model extension works, extending the `Custome
 
 First step what we should do is define new subclass `CustomerOrder2` derived from original `CustomerOrder` class.
 
-#### **`VirtoCommerce.OrdersModule2.Web/Model/CustomerOrder2.cs`**
+*`VirtoCommerce.OrdersModule2.Web/Model/CustomerOrder2.cs`*
 ```C#
     public class CustomerOrder2 : CustomerOrder
     {
@@ -59,7 +59,7 @@ First step what we should do is define new subclass `CustomerOrder2` derived fro
 
 Now, we need to register the newly defined `CustomerOrder2` type in the `AbstractFactory<>` in order to tell the system that `CustomerOrder2` is now overlying (replace) the original `CustomerOrder` class and will be used everywhere instead of it.
 
-#### **`VirtoCommerce.OrdersModule2.Web/Module.cs`**
+*`VirtoCommerce.OrdersModule2.Web/Module.cs`*
 ```C#
     public class Module : IModule
     {
@@ -85,7 +85,7 @@ That’s how the magic with types extension works!
 
 You just saw how to extend the exists `CustomerOrder`  in class  with a new class `CustomerOrder2` with new  properties. But, how can you actually change the current DB schema and persist these new types into the database through Entity Framework (EF) Core? To solve this task we can also  use the inheritance technics here, and define and derive  the new   `Order2DbContext`  from original `OrderDbContext` along with `OrderRepository2` derived from `OrderRepository`.
 
-#### **`VirtoCommerce.OrdersModule2.Web/Repositories/Order2DbContext.cs`**
+*`VirtoCommerce.OrdersModule2.Web/Repositories/Order2DbContext.cs`*
 ```C#
     //Derive custom DB context from the OrderDbContext
     public class Order2DbContext : OrderDbContext
@@ -100,7 +100,7 @@ You just saw how to extend the exists `CustomerOrder`  in class  with a new clas
     }
 ```
 
-#### **`VirtoCommerce.OrdersModule2.Web/Repositories/OrderRepository2.cs`**
+*`VirtoCommerce.OrdersModule2.Web/Repositories/OrderRepository2.cs`*
 ```C#
  public class OrderRepository2 : OrderRepository
     {
@@ -119,7 +119,7 @@ The each domain type has its own representation in the database, it is the speci
 
 Now let’s define the new persistence `CustomerOrder2Entity` type that will represent the persistence schema model of the new `CustomerOrder2` class.
 
-#### **`VirtoCommerce.OrdersModule2.Web/Model/CustomerOrder2Entity.cs`**
+*`VirtoCommerce.OrdersModule2.Web/Model/CustomerOrder2Entity.cs`*
 ```C#
     public class CustomerOrder2Entity : CustomerOrderEntity
     {
@@ -145,7 +145,7 @@ Add-Migration InitialOrder2 -Context VirtoCommerce.OrdersModule2.Web.Repositorie
 
 The result of this command execution will be `Migrations/XXXXXX_InitialOrder2.cs` file that will also contains the original (extendable) order module DB schema along with a new one. Thus, you need manually edit the resulting `InitialOrder2.cs` file and left only DB schema changes that relevant to your extension.
 
-#### **`VirtoCommerce.OrdersModule2.Web/Migrations/20200324130250_InitialOrders2.cs`** 
+*`VirtoCommerce.OrdersModule2.Web/Migrations/20200324130250_InitialOrders2.cs`*
 ```C#
     public partial class InitialOrders2 : Migration
     {
@@ -158,7 +158,7 @@ The result of this command execution will be `Migrations/XXXXXX_InitialOrder2.cs
 
 And the final step is to register our derived `OrderRepository2` and `Order2DbContext` in DI container. By registration the new `OrderRepository2` in DI we override the base `OrderRepository`  that is defined in `CustomerOrder.Module`.
 
-#### **`VirtoCommerce.OrdersModule2.Web/Module.cs`**
+*`VirtoCommerce.OrdersModule2.Web/Module.cs`*
 ```C#
     public class Module : IModule
     {
@@ -175,7 +175,7 @@ And the final step is to register our derived `OrderRepository2` and `Order2DbCo
 
 Also is so important to register our new persistent schema representation `CustomerOrder2Entity` in `AbstractTypeFactory<>` and override the base `CustomerOrderEntity` with new type.
 
-#### **`VirtoCommerce.OrdersModule2.Web/Module.cs`**
+*`VirtoCommerce.OrdersModule2.Web/Module.cs`*
 ```C#
     public class Module : IModule
     {
@@ -217,7 +217,7 @@ Add-Migration BumpVersionEmptyMigration -Context {{ full type name with namespac
 In the previous paragraphs, we are considered how to extend the domain types and persistent layer but, in some cases, it is not enough. Especially when your domain types are used as DTO (Data Transfer Object) in public API contacts and can use as result or parameters in the API endpoints. In order to force ASP.NET Core API Json serializer to understand our domain extensions, we use the special `PolymorphicOperationJsonConverter` class. Its primary responsibility is an instantiation of the right “effective” type instance from incoming JSON (deserialization) data. Looking to implementation it uses the `AbstractTypeFactory<>`  and reflection to construct the proper type instance based on base type or discriminator is used from JSON request body.
 
 
-#### **`VirtoCommerce.OrdersModule.Web/JsonConverters/PolymorphicOperationJsonConverter.cs`**
+*`VirtoCommerce.OrdersModule.Web/JsonConverters/PolymorphicOperationJsonConverter.cs`*
 ```C#
     public class PolymorphicOperationJsonConverter : JsonConverter
     {
@@ -236,7 +236,7 @@ In the previous paragraphs, we are considered how to extend the domain types and
 ```
 The many base VirtoCommerce modules have such PolymorphicOperationJsonConverter for their own types that support extensions and register it in their `Module.cs` in this way.
 
-#### **`VirtoCommerce.OrdersModule.Web/Module.cs`**
+*`VirtoCommerce.OrdersModule.Web/Module.cs`*
 ```C#
     public class Module : IModule
     {

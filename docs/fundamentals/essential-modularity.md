@@ -120,7 +120,7 @@ along with this, each module has a dependency to a specific platform version.
 
 All module and platform dependencies must be described in `module.manifest` file in the `dependencies` element.
 
-#### **`module.manifest`**
+*`module.manifest`*
 ```XML
 <?xml version="1.0" encoding="utf-8"?>
 <module>
@@ -152,7 +152,7 @@ Virto has two different install and update modes for modules: **Runtime** and  *
 
 **Runtime**  - this mode is used for update and install modules on working system or in first time setup and this process based on request to special resource file modules.json that can be on public or internal access and it contains information about all modules and their latest major versions (minor and patch versions history not stored). Path to this file can be set by a special setting in the platform `appsettings.json` file.
 
-#### **`module.manifest`**
+*`module.manifest`*
 ```JSON
 ...
 "ExternalModules": {
