@@ -49,6 +49,10 @@ You can set this connection string in one of the following ways:
     ```console
     mklink /d C:\vc-storefront\VirtoCommerce.Storefront\wwwroot\cms-content C:\vc-platform\VirtoCommerce.Platform.Web\App_Data\cms-content
     ```
+On Mac OS and Linux:
+    ```console
+    ln -s ~/vc-storefront/wwwroot/cms-content ~/vc-platform/wwwroot/cms-content
+    ```
 1. If you did not install sample data with your platform, you need to create new store in platform manager and download themes as it described in this article: [Theme development](../fundamentals/theme-development.md)
 
 ### Running the Storefront only on HTTP schema
