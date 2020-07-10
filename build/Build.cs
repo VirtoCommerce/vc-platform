@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -19,21 +17,17 @@ using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Git;
-using Nuke.Common.Tools.GitReleaseManager;
-using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.Npm;
-using Nuke.Common.Tools.OpenCover;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using static Nuke.Common.Tools.Git.GitTasks;
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
@@ -225,9 +219,30 @@ class Build : NukeBuild
            if (testProjects.Count() > 0)
            {
                var testProjectPath = testProjects.First().Path;
-               var testArgs = $"{testProjectPath} --logger trx --filter {TestsFilter}";
-               var registerArg = IsServerBuild ? "-register" : "-register:user";
-               OpenCoverTasks.OpenCover($"-target:\"{dotnetPath}\" -targetargs:\"test {testArgs}\" {registerArg} -output:\"{CoverageReportPath}\" -returntargetcode");
+               var OutPath = RootDirectory / ".tmp";
+               var testSetting = new DotNetTestSettings()
+                    .SetProjectFile(testProjectPath)
+                    .SetConfiguration(Configuration)
+                    .SetLogger("trx")
+                    .SetFilter(TestsFilter)
+                    .SetNoBuild(true)
+                    .SetCollectCoverage(true)
+                    .SetLogOutput(true)
+                    .SetResultsDirectory(OutPath);
+               var testProjectBinDir = testProjects.First().Directory / "bin" / Configuration;
+               var testAssemblies = testProjectBinDir.GlobFiles($"**/{Solution.Name}.Tests.dll");
+               if(testAssemblies.Count() > 0)
+               {
+                   var testAssemblyPath = testAssemblies.First();
+
+                   CoverletTasks.Coverlet(s => s
+                       .SetTargetSettings(testSetting)
+                       .SetAssembly(testAssemblyPath)
+                       .SetTarget(dotnetPath)
+                       .SetOutput(CoverageReportPath)
+                       .SetFormat(CoverletOutputFormat.opencover)
+                       );
+               }
            }
        });
 
