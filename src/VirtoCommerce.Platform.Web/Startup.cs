@@ -8,8 +8,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
-using Hangfire;
-using Hangfire.MemoryStorage;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,7 +19,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Azure.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +37,6 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -55,6 +51,7 @@ using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.PushNotifications;
+using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
@@ -82,7 +79,9 @@ namespace VirtoCommerce.Platform.Web
             // without this Bearer authorization will not work
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
 
-            services.AddSingleton<IPushNotificationManager, PushNotificationManager>();
+            services.AddRedis(Configuration);
+
+            services.AddSignalR().AddPushNotifications(Configuration);
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
@@ -116,13 +115,14 @@ namespace VirtoCommerce.Platform.Web
                     //we should register this converter globally.
                     options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
                     //Next line allow to use polymorph types as parameters in API controller methods
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
                     options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
+                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+
                     options.SerializerSettings.Formatting = Formatting.None;
 
                     options.SerializerSettings.Error += (sender, args) =>
@@ -130,7 +130,6 @@ namespace VirtoCommerce.Platform.Web
                         // Expose any JSON serialization exception as HTTP error
                         throw new JsonException(args.ErrorContext.Error.Message);
                     };
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 }
             );
 
@@ -377,20 +376,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
 
-            //SignalR
-            var signalRScalabilityProvider = Configuration["SignalR:ScalabilityProvider"];            
-            var signalRServiceBuilder = services.AddSignalR();
-            // SignalR scalability configuration. RedisBackplane (default provider) will be activated only when RedisConnectionString is set
-            // otherwise no any SignalR scaling options will be used           
-            if (signalRScalabilityProvider == SignalR.Constants.AzureSignalRService)
-            {
-                signalRServiceBuilder.AddAzureSignalR(Configuration);
-            }
-            else 
-            {
-                signalRServiceBuilder.AddRedisBackplane(Configuration);
-            }            
-
             //Assets
             var assetsProvider = Configuration.GetSection("Assets:Provider").Value;
             if (assetsProvider.EqualsInvariant(AzureBlobProvider.ProviderName))
@@ -433,7 +418,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
+            
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 

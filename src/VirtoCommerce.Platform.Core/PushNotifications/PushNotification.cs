@@ -13,6 +13,7 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
             Creator = creator;
             NotifyType = GetType().Name;
         }
+        public string ServerId { get; set; }
         public string Creator { get; set; }
         public DateTime Created { get; set; }
         public bool IsNew { get; set; }

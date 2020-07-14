@@ -7,6 +7,5 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
         void Send(PushNotification notification);
         Task SendAsync(PushNotification notification);
         PushNotificationSearchResult SearchNotifies(string userId, PushNotificationSearchCriteria criteria);
-
     }
 }
