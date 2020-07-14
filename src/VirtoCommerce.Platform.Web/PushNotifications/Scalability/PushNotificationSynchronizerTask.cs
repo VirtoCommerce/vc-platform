@@ -50,7 +50,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
                     }
                     catch
                     {
-                        //Wait until platform starts
+                        //Wait until platform is started
                     }
                 }
                 await Task.Delay(1000);

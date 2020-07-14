@@ -5,7 +5,6 @@
         <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
         <noWarn>1591</noWarn>
         <IsPackable>false</IsPackable>
-        <UserSecretsId>53876a76-4e13-4fe9-a4cb-208ee000a5e8</UserSecretsId>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <NoWarn>1701;1702;1705;1591</NoWarn>
