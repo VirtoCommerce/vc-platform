@@ -1,23 +1,18 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
 {
     public class ScalablePushNotificationManager: PushNotificationManager
     {
-        public static string ServerId { get; } = Guid.NewGuid().ToString("N");
-
-        private readonly ILogger<ScalablePushNotificationManager> _log;
+        public static string ServerId { get; } = $"{Environment.MachineName}_{Guid.NewGuid():N}";
 
         public ScalablePushNotificationManager(IPushNotificationStorage storage
-            , IHubContext<PushNotificationHub> hubContext
-            , ILogger<ScalablePushNotificationManager> log)
+            , IHubContext<PushNotificationHub> hubContext)
             : base(storage, hubContext)
         {
-            _log = log;
         }
 
 
@@ -26,8 +21,6 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
             notification.ServerId = ServerId;
 
             await base.SendAsync(notification);
-
-            _log.LogInformation($"{nameof(PushNotificationManager)}: sending push notification with {notification.Id} ID of type {notification.NotifyType} to {notification.ServerId} server");
         }
     }
 }

@@ -81,7 +81,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddRedis(Configuration);
 
-            services.AddPushNotifications(Configuration);
+            services.AddSignalR().AddPushNotifications(Configuration);
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
             services.AddOptions<TranslationOptions>().Configure(options =>
@@ -376,9 +376,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
 
-            //SignalR
-            services.AddSignalR(Configuration);
-
             //Assets
             var assetsProvider = Configuration.GetSection("Assets:Provider").Value;
             if (assetsProvider.EqualsInvariant(AzureBlobProvider.ProviderName))
@@ -484,7 +481,6 @@ namespace VirtoCommerce.Platform.Web
             app.UsePlatformPermissions();
 
             //Setup SignalR hub
-            app.UseSignalR();
             app.UseEndpoints(routes =>
             {
                 routes.MapHub<PushNotificationHub>("/pushNotificationHub");

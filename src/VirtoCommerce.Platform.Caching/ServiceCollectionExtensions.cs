@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Caching;
-using VirtoCommerce.Platform.Core.Redis;
 using VirtoCommerce.Platform.Redis;
 
 namespace VirtoCommerce.Platform.Caching
@@ -12,7 +11,7 @@ namespace VirtoCommerce.Platform.Caching
         {
             services.AddMemoryCache();
 
-            var redisConnectionString = configuration.GetConnectionString(RedisConfiguration.ConnectionStringName);
+            var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
 
             services.AddOptions<CachingOptions>().Bind(configuration.GetSection("Caching")).ValidateDataAnnotations();
 
