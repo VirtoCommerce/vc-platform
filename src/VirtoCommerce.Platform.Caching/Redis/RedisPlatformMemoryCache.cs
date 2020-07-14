@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Redis
 {
     public class RedisPlatformMemoryCache : PlatformMemoryCache
     {
-        public static string ServerId { get; } = Guid.NewGuid().ToString("N");
+        public static string ServerId { get; } = $"{Environment.MachineName}_{Guid.NewGuid():N}";
 
         private readonly ISubscriber _bus;
         private readonly CachingOptions _cachingOptions;
