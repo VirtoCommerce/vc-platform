@@ -11,6 +11,8 @@ services:
       - ACCEPT_EULA=Y
       - MSSQL_PID=Express
       - SA_PASSWORD=v!rto_Labs!
+    volumes:
+      - db-volume:/var/opt/mssql   
     networks:
       - virto
 
@@ -27,6 +29,10 @@ services:
     entrypoint: ["vc-db:1433", "-t", "120", "--", "dotnet", "VirtoCommerce.Platform.Web.dll"]
     networks:
       - virto
+
+volumes:
+  db-volume:
+    name: db-volume
 
 networks:
   virto:
