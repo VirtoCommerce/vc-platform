@@ -48,7 +48,7 @@ These Virto Commerce docs help you learn and use the Virto Commerce platform, fr
   * [Connect Storefront to Platform](docs/getting-started/connect-storefront-to-platform-v3.md)
   * [Deploy Platform 3 from source code](docs/developer-guide/deploy-from-source-code.md)
 * [Getting Started](docs/user-guide/getting-started.md)
-* [Update VC Platform Module from version 2.x to 3](docs/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
+* [Update VC Platform Module from version 2.x to 3](docs/release-information/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
 
 ## License
 
