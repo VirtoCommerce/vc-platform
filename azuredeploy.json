@@ -73,10 +73,12 @@
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageName')]",
             "location": "[parameters('sqlServerLocation')]",
-            "apiVersion": "2018-11-01",
-            "properties": {
-                "accountType": "[variables('storageType')]"
-            }
+            "apiVersion": "2019-06-01",
+            "sku": {
+                "name": "[variables('storageType')]",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2"
         },
         {
             "type": "Microsoft.Sql/servers",
