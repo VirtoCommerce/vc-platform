@@ -127,7 +127,7 @@
             "properties": {
                 "name": "[parameters('hostingPlanName')]",
                 "sku": "[parameters('sku')]",
-                "workerSize": "[parameters('workerSize')]",
+                "workerSiz  e": "[parameters('workerSize')]",
                 "numberOfWorkers": 1
             }
         },
@@ -135,13 +135,14 @@
             "type": "Microsoft.Web/sites",
             "name": "[parameters('siteName')]",
             "location": "[parameters('sqlServerLocation')]",
-            "apiVersion": "2014-06-01",
+            "apiVersion": "2018-11-01",
             "dependsOn": [
                 "[concat('Microsoft.Web/serverFarms/', parameters('hostingPlanName'))]"
             ],
             "tags": {
                 "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
             },
+            "kind": "app",
             "properties": {
                 "name": "[parameters('siteName')]",
                 "serverFarm": "[parameters('hostingPlanName')]"
@@ -149,10 +150,10 @@
             "resources": [
                 {
                     "type": "Microsoft.Web/sites/config",
-                    "name": "web",
+                    "name": "[concat(parameters('siteName'), '/web')]",
                     "apiVersion": "2018-11-01",
                     "dependsOn": [
-                        "[concat('Microsoft.Web/Sites/', parameters('siteName'))]",
+                        "[concat('Microsoft.Web/sites/', parameters('siteName'))]",
                         "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]"
                     ],
                     "properties": {
@@ -174,14 +175,38 @@
                             }
                         ],
                         "appSettings": [
-                            { "name": "ExternalModules:AutoInstallModuleBundles", "value": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]" },
-                            { "name": "Assets:Provider", "value": "AzureBlobStorage" },
-                            { "name": "Assets:AzureBlobStorage:ConnectionString", "value": "[concat('provider=AzureBlobStorage;rootPath=assets;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]" },
-                            { "name": "Content:Provider", "value": "AzureBlobStorage" },
-                            { "name": "Content:AzureBlobStorage:ConnectionString", "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]" },
-                            { "name": "Content:AzureBlobStorage:RootPath", "value": "cms" },
-                            { "name": "Search:Provider", "value": "Lucene" },
-                            { "name": "Search:Lucene:Path", "value": "/App_Data/Lucene" }
+                            {
+                                "name": "ExternalModules:AutoInstallModuleBundles",
+                                "value": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
+                            },
+                            {
+                                "name": "Assets:Provider",
+                                "value": "AzureBlobStorage"
+                            },
+                            {
+                                "name": "Assets:AzureBlobStorage:ConnectionString",
+                                "value": "[concat('provider=AzureBlobStorage;rootPath=assets;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]"
+                            },
+                            {
+                                "name": "Content:Provider",
+                                "value": "AzureBlobStorage"
+                            },
+                            {
+                                "name": "Content:AzureBlobStorage:ConnectionString",
+                                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]"
+                            },
+                            {
+                                "name": "Content:AzureBlobStorage:RootPath",
+                                "value": "cms"
+                            },
+                            {
+                                "name": "Search:Provider",
+                                "value": "Lucene"
+                            },
+                            {
+                                "name": "Search:Lucene:Path",
+                                "value": "/App_Data/Lucene"
+                            }
                         ],
                         "connectionStrings": [
                             {
