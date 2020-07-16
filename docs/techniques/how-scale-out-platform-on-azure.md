@@ -172,7 +172,7 @@ Platform : 64 bit
 
 *Azure app General settings*
 ```
-ARR affinity : Off
+ARR affinity : On
 Platform : 64 bit
 ```
 
