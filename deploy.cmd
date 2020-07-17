@@ -6,7 +6,7 @@
 :: ----------------------
 
 :: Prerequisites
-dotnet tool install VirtoCommerce.GlobalTool
+dotnet tool install --global VirtoCommerce.GlobalTool
 
 :: Build
 :: -------------
