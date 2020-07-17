@@ -1,2 +1,2 @@
 [config]
-project = src/VirtoCommerce.Platform.Web/VirtoCommerce.Platform.Web.csproj
+command = deploy.cmd
