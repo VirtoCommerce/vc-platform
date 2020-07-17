@@ -158,7 +158,7 @@
                         },
                         {
                             "name": "Assets:AzureBlobStorage:ConnectionString",
-                            "value": "[concat('provider=AzureBlobStorage;rootPath=assets;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1), ';EndpointSuffix=core.windows.net']"
+                            "value": "[concat('provider=AzureBlobStorage;rootPath=assets;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
                         },
                         {
                             "name": "Content:Provider",
