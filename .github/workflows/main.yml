@@ -235,17 +235,6 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
         echo "::set-env name=BUILD_STATE::successful"
 
-    - name: Add tag "ver.${{ steps.image.outputs.tag }}"
-      if: ${{ env.REPO_TOKEN != 0 && (github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'testing')) }}
-      uses: tvdias/github-tagger@v0.0.2
-      env:
-        REPO_TOKEN: ${{secrets.REPO_TOKEN}}
-      with:
-        repo-token: ${{ secrets.REPO_TOKEN }}
-        tag: ver.${{ steps.image.outputs.tag }}
-        # optional commit sha to apply the tag to
-        commit-sha: ${{ steps.image.outputs.sha }}
-
     - name: Set Build status Failed
       if: failure()
       run: echo "::set-env name=BUILD_STATE::failed"
