@@ -11,9 +11,19 @@
                 "Free",
                 "Shared",
                 "Basic",
-                "Standard"
+                "Standard",
+                "Premium"
             ],
             "defaultValue": "Free"
+        },
+        "workerSize": {
+            "type": "string",
+            "allowedValues": [
+                "0",
+                "1",
+                "2"
+            ],
+            "defaultValue": "0"
         },
         "sqlServerLocation": {
             "type": "string",
@@ -210,10 +220,6 @@
                                 {
                                     "virtualPath": "/modules",
                                     "physicalPath": "site\\wwwroot\\modules"
-                                },
-                                {
-                                    "virtualPath": "/Lucene",
-                                    "physicalPath": "site\\wwwroot\\Lucene"
                                 }
                             ]
                         }
