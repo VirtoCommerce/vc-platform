@@ -1,6 +1,6 @@
-call :ExecuteCmd "npm ci --prefix %DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web"
+npm ci --prefix %DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web
 
-call :ExecuteCmd "npm run webpack:build --prefix %DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web"
+npm run webpack:build --prefix %DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web
 
 dotnet restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.Platform.sln"
 
