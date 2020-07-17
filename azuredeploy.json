@@ -179,6 +179,10 @@
                         {
                             "name": "Search:Lucene:Path",
                             "value": "/App_Data/Lucene"
+                        },
+                        {
+                            "name": "VirtoCommerce:DiscoveryPath",
+                            "value": "../modules"
                         }
                     ],
                     "connectionStrings": [
@@ -223,8 +227,8 @@
                     "properties": {
                         "RepoUrl": "[parameters('repoUrl')]",
                         "branch": "[parameters('branch')]",
-                        "IsManualIntegration": true,
-                    },
+                        "IsManualIntegration": true
+                    }
                 }
             ]
         }
