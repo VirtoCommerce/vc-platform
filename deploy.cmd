@@ -10,7 +10,7 @@ dotnet tool update --global VirtoCommerce.GlobalTool
 
 :: Build
 :: -------------
-vc-build publish
+%USERPROFILE%\.dotnet\tools\vc-build publish
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
