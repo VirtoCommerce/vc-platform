@@ -45,15 +45,6 @@
         },
         "hostingPlanName": {
             "type": "string"
-        },
-        "workerSize": {
-            "type": "string",
-            "allowedValues": [
-                "0",
-                "1",
-                "2"
-            ],
-            "defaultValue": "0"
         }
     },
     "variables": {
@@ -70,10 +61,10 @@
     },
     "resources": [
         {
+            "apiVersion": "2019-06-01",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageName')]",
             "location": "[parameters('sqlServerLocation')]",
-            "apiVersion": "2019-06-01",
             "sku": {
                 "name": "[variables('storageType')]",
                 "tier": "Standard"
@@ -81,10 +72,10 @@
             "kind": "StorageV2"
         },
         {
+            "apiVersion": "2014-04-01",
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('sqlServerName')]",
             "location": "[parameters('sqlServerLocation')]",
-            "apiVersion": "2014-04-01",
             "properties": {
                 "version": "12.0",
                 "administratorLogin": "[parameters('sqlAdministratorLogin')]",
@@ -92,10 +83,10 @@
             },
             "resources": [
                 {
+                    "apiVersion": "2014-04-01",
                     "type": "databases",
                     "name": "[parameters('siteName')]",
                     "location": "[parameters('sqlServerLocation')]",
-                    "apiVersion": "2014-04-01",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
                     ],
@@ -122,102 +113,118 @@
             ]
         },
         {
+            "apiVersion": "2018-02-01",
             "type": "Microsoft.Web/serverfarms",
             "name": "[parameters('hostingPlanName')]",
             "location": "[parameters('sqlServerLocation')]",
-            "apiVersion": "2014-06-01",
+            "kind": "app",
+            "sku": {
+                "tier": "Basic",
+                "name": "B1",
+                "capacity": 1
+            },
             "properties": {
                 "name": "[parameters('hostingPlanName')]",
-                "sku": "[parameters('sku')]",
-                "workerSiz  e": "[parameters('workerSize')]",
-                "numberOfWorkers": 1
+                "workerSize": "0",
+                "workerSizeId": "0",
+                "numberOfWorkers": "1",
+                "reserved": false
             }
         },
         {
+            "apiVersion": "2018-11-01",
             "type": "Microsoft.Web/sites",
             "name": "[parameters('siteName')]",
             "location": "[parameters('sqlServerLocation')]",
-            "apiVersion": "2018-11-01",
+            "kind": "app",
             "dependsOn": [
                 "[concat('Microsoft.Web/serverFarms/', parameters('hostingPlanName'))]"
             ],
             "tags": {
                 "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
             },
-            "kind": "app",
             "properties": {
                 "name": "[parameters('siteName')]",
-                "serverFarm": "[parameters('hostingPlanName')]"
+                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "ExternalModules:AutoInstallModuleBundles",
+                            "value": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
+                        },
+                        {
+                            "name": "Assets:Provider",
+                            "value": "AzureBlobStorage"
+                        },
+                        {
+                            "name": "Assets:AzureBlobStorage:ConnectionString",
+                            "value": "[concat('provider=AzureBlobStorage;rootPath=assets;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]"
+                        },
+                        {
+                            "name": "Content:Provider",
+                            "value": "AzureBlobStorage"
+                        },
+                        {
+                            "name": "Content:AzureBlobStorage:ConnectionString",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]"
+                        },
+                        {
+                            "name": "Content:AzureBlobStorage:RootPath",
+                            "value": "cms"
+                        },
+                        {
+                            "name": "Search:Provider",
+                            "value": "Lucene"
+                        },
+                        {
+                            "name": "Search:Lucene:Path",
+                            "value": "/App_Data/Lucene"
+                        }
+                    ],
+                    "connectionStrings": [
+                        {
+                            "name": "VirtoCommerce",
+                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
+                            "type": "SQLAzure"
+                        }
+                    ],
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ],
+                    "virtualApplications": [
+                        {
+                            "virtualPath": "/",
+                            "physicalPath": "site\\wwwroot\\platform",
+                            "virtualDirectories": [
+                                {
+                                    "virtualPath": "/modules",
+                                    "physicalPath": "site\\wwwroot\\modules"
+                                },
+                                {
+                                    "virtualPath": "/Lucene",
+                                    "physicalPath": "site\\wwwroot\\Lucene"
+                                }
+                            ]
+                        }
+                    ]
+                }
             },
             "resources": [
                 {
-                    "type": "Microsoft.Web/sites/config",
-                    "name": "[concat(parameters('siteName'), '/web')]",
-                    "apiVersion": "2018-11-01",
+                    "apiVersion": "2016-08-01",
+                    "name": "web",
+                    "type": "sourcecontrols",
                     "dependsOn": [
-                        "[concat('Microsoft.Web/sites/', parameters('siteName'))]",
-                        "[concat('Microsoft.Storage/storageAccounts/', variables('storageName'))]"
+                        "[resourceId('Microsoft.Web/sites/', parameters('siteName'))]"
                     ],
                     "properties": {
-                        "netFrameworkVersion": "v4.0",
-                        "virtualApplications": [
-                            {
-                                "virtualPath": "/",
-                                "physicalPath": "site\\wwwroot\\platform",
-                                "virtualDirectories": [
-                                    {
-                                        "virtualPath": "/modules",
-                                        "physicalPath": "site\\wwwroot\\modules"
-                                    },
-                                    {
-                                        "virtualPath": "/Lucene",
-                                        "physicalPath": "site\\wwwroot\\Lucene"
-                                    }
-                                ]
-                            }
-                        ],
-                        "appSettings": [
-                            {
-                                "name": "ExternalModules:AutoInstallModuleBundles",
-                                "value": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
-                            },
-                            {
-                                "name": "Assets:Provider",
-                                "value": "AzureBlobStorage"
-                            },
-                            {
-                                "name": "Assets:AzureBlobStorage:ConnectionString",
-                                "value": "[concat('provider=AzureBlobStorage;rootPath=assets;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]"
-                            },
-                            {
-                                "name": "Content:Provider",
-                                "value": "AzureBlobStorage"
-                            },
-                            {
-                                "name": "Content:AzureBlobStorage:ConnectionString",
-                                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]"
-                            },
-                            {
-                                "name": "Content:AzureBlobStorage:RootPath",
-                                "value": "cms"
-                            },
-                            {
-                                "name": "Search:Provider",
-                                "value": "Lucene"
-                            },
-                            {
-                                "name": "Search:Lucene:Path",
-                                "value": "/App_Data/Lucene"
-                            }
-                        ],
-                        "connectionStrings": [
-                            {
-                                "name": "VirtoCommerce",
-                                "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
-                                "type": "SQLAzure"
-                            }
-                        ]
-                    }
+                        "RepoUrl": "[parameters('repoUrl')]",
+                        "branch": "[parameters('branch')]",
+                        "IsManualIntegration": true,
+                    },
                 }
             ]
         }
