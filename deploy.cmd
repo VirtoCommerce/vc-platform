@@ -5,13 +5,10 @@
 echo Handling .NET Web Application deployment.
 
 :: 0. Install npm packages
-IF EXIST "%DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web\package.json"(
-    pushd "%DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web"
-    call npm install
-    call npm run webpack:build
-    IF!ERRORLEVEL! NEQ 0 goto error
-    popd
-)
+pushd "%DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web"
+call npm install
+call npm run webpack:build
+popd
 
 dotnet restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.Platform.sln"
 
