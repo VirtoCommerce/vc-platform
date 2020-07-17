@@ -1,2 +1,2 @@
 [config]
-project = VirtoCommerce.Platform.sln
+project = src/VirtoCommerce.Platform.Web/VirtoCommerce.Platform.Web.csproj
