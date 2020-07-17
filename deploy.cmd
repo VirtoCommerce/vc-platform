@@ -6,7 +6,7 @@ echo Handling .NET Web Application deployment.
 
 :: 0. Install npm packages
 pushd "%DEPLOYMENT_SOURCE%\src\VirtoCommerce.Platform.Web"
-call npm install
+call npm ci
 call npm run webpack:build
 popd
 
