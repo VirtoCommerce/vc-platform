@@ -71,8 +71,8 @@ echo Handling .NET Web Application deployment.
 :: 0. Install npm packages
 IF EXIST "%DEPLOYMENT_TARGET%\src\VirtoCommerce.Platform.Web\package.json"(
     pushd "%DEPLOYMENT_TARGET%\src\VirtoCommerce.Platform.Web"
-    call : ExecuteCmd!NPM_CMD! install
-    call : ExecuteCmd!NPM_CMD! run webpack:build
+    call nmp install
+    call nmp run webpack:build
     IF!ERRORLEVEL! NEQ 0 goto error
     popd
 )
