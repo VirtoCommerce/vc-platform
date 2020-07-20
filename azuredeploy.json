@@ -5,16 +5,26 @@
         "siteName": {
             "type": "string"
         },
-        "sku": {
+        "appServicePlanSkuName": {
             "type": "string",
+            "defaultValue": "S1",
             "allowedValues": [
-                "Free",
-                "Shared",
-                "Basic",
-                "Standard",
-                "Premium"
+                "F1",
+                "D1",
+                "B1",
+                "B2",
+                "B3",
+                "S1",
+                "S2",
+                "S3",
+                "P1",
+                "P2",
+                "P3",
+                "P4"
             ],
-            "defaultValue": "Free"
+            "metadata": {
+                "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
+            }
         },
         "workerSize": {
             "type": "string",
@@ -46,7 +56,6 @@
             ],
             "defaultValue": "Commerce"
         },
-
         "repoUrl": {
             "type": "string"
         },
@@ -129,14 +138,11 @@
             "location": "[parameters('sqlServerLocation')]",
             "kind": "app",
             "sku": {
-                "tier": "Basic",
-                "name": "B1",
+                "name": "[parameters('appServicePlanSkuName')]",
                 "capacity": 1
             },
             "properties": {
                 "name": "[parameters('hostingPlanName')]",
-                "workerSize": "0",
-                "workerSizeId": "0",
                 "numberOfWorkers": "1",
                 "reserved": false
             }
@@ -168,7 +174,7 @@
                         },
                         {
                             "name": "Assets:AzureBlobStorage:ConnectionString",
-                            "value": "[concat('provider=AzureBlobStorage;rootPath=assets;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
                         },
                         {
                             "name": "Content:Provider",
@@ -176,7 +182,7 @@
                         },
                         {
                             "name": "Content:AzureBlobStorage:ConnectionString",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
                         },
                         {
                             "name": "Content:AzureBlobStorage:RootPath",
