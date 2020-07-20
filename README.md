@@ -2,8 +2,6 @@
 
 [![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
 
-## Overview
-
 Virto Commerce is a highly scalable eCommerce product for fast-growing and large companies. It provides powerful enterprise-class features right out-of-the-box and gives you the flexibility to create your own unique eCommerce solution while utilizing agile principles.
 
 Our Virto Commerce 3 development efforts were focused on moving to ASP.NET Core, performance, architecture improvements, further enhancements and fixing architectural bugs.
@@ -45,8 +43,10 @@ These Virto Commerce docs help you learn and use the Virto Commerce platform, fr
 
 * [What’s new](docs/release-information/whats-new.md)
 * Setup
-  * [Deploy Platform 3 from precompiled binaries on Windows](docs/getting-started/deploy-from-precompiled-binaries-windows.md)
-  * [Deploy Platform 3 from precompiled binaries on Linux](docs/getting-started/deploy-from-precompiled-binaries-linux.md)
+  * [Deploy on Windows](docs/getting-started/deploy-from-precompiled-binaries-windows.md)
+  * [Deploy on Linux](docs/getting-started/deploy-from-precompiled-binaries-linux.md)
+  * [Deploy to Azure](docs/getting-started/deploy-from-precompiled-binaries-azure.md) 
+  * [Deploy on MacOS](docs/getting-started/deploy-from-precompiled-binaries-MacOS.md) 
   * [Connect Storefront to Platform](docs/getting-started/connect-storefront-to-platform-v3.md)
   * [Deploy Platform 3 from source code](docs/developer-guide/deploy-from-source-code.md)
 * [Getting Started](docs/user-guide/getting-started.md)

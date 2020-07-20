@@ -194,7 +194,7 @@
                         },
                         {
                             "name": "Search:Lucene:Path",
-                            "value": "/App_Data/Lucene"
+                            "value": "App_Data/Lucene"
                         },
                         {
                             "name": "VirtoCommerce:DiscoveryPath",
