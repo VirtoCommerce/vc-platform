@@ -26,7 +26,7 @@
                 "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
             }
         },
-        "location": {
+        "siteLocation": {
             "type": "string",
             "defaultValue": "West US",
             "metadata": {
@@ -83,7 +83,7 @@
             "apiVersion": "2019-06-01",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageName')]",
-            "location": "[parameters('location')]",
+            "location": "[parameters('siteLocation')]",
             "sku": {
                 "name": "[variables('storageType')]",
                 "tier": "Standard"
@@ -94,7 +94,7 @@
             "apiVersion": "2014-04-01",
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('sqlServerName')]",
-            "location": "[parameters('location')]",
+            "location": "[parameters('siteLocation')]",
             "properties": {
                 "version": "12.0",
                 "administratorLogin": "[parameters('sqlAdministratorLogin')]",
@@ -105,7 +105,7 @@
                     "apiVersion": "2014-04-01",
                     "type": "databases",
                     "name": "[parameters('siteName')]",
-                    "location": "[parameters('location')]",
+                    "location": "[parameters('siteLocation')]",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
                     ],
@@ -119,7 +119,7 @@
                 {
                     "type": "firewallrules",
                     "name": "AllowAllWindowsAzureIps",
-                    "location": "[parameters('location')]",
+                    "location": "[parameters('siteLocation')]",
                     "apiVersion": "2014-04-01",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
@@ -135,7 +135,7 @@
             "apiVersion": "2018-02-01",
             "type": "Microsoft.Web/serverfarms",
             "name": "[parameters('hostingPlanName')]",
-            "location": "[parameters('location')]",
+            "location": "[parameters('siteLocation')]",
             "kind": "app",
             "sku": {
                 "name": "[parameters('appServicePlanSkuName')]",
@@ -151,7 +151,7 @@
             "apiVersion": "2018-11-01",
             "type": "Microsoft.Web/sites",
             "name": "[parameters('siteName')]",
-            "location": "[parameters('location')]",
+            "location": "[parameters('siteLocation')]",
             "kind": "app",
             "dependsOn": [
                 "[concat('Microsoft.Web/serverFarms/', parameters('hostingPlanName'))]"
