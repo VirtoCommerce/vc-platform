@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                 builder.AddNewtonsoftJsonProtocol(jsonOptions =>
                 {
                     jsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.All;
-                    jsonOptions.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
+                    jsonOptions.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
                 });          
               
                 builder.Services.AddSingleton<IPushNotificationManager, ScalablePushNotificationManager>();

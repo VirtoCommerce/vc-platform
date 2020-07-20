@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
             _hubConnection = new HubConnectionBuilder().AddNewtonsoftJsonProtocol(jsonOptions =>
             {
                 jsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.All;
-                jsonOptions.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full;
+                jsonOptions.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
             })
              .WithAutomaticReconnect()
              .WithUrl(options.Value.HubUrl)
