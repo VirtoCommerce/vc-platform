@@ -59,7 +59,7 @@ Virto Commerce Platform 3 helps you increase development speed and significantly
 * Virto Commerce Documentation: https://www.virtocommerce.com/docs/latest/
 * Home: https://virtocommerce.com
 * Community: https://www.virtocommerce.org
-* [Download Latest Release](releases/latest)
+* [Download Latest Release](https://github.com/VirtoCommerce/vc-platform/releases/latest)
 
 ## License
 

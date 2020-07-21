@@ -4,7 +4,7 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 !!! note
     You can install modules and sample data later from Virto Commerce Admin UI.
 
-Virto Commerce Team creates default ARM template [azuredeploy.json](https://github.com/VirtoCommerce/vc-platform/azuredeploy.json) to simplify deployment of Virto Commerce Platform to Azure.
+Virto Commerce Team creates default ARM template [azuredeploy.json](https://github.com/VirtoCommerce/vc-platform/blob/master/azuredeploy.json) to simplify deployment of Virto Commerce Platform to Azure.
 You can use this template as base for your custom solution.
 Read [Azure Resource Manager documentation](https://docs.microsoft.com/en-us/azure/azure-resource-manager/).
 
@@ -60,7 +60,7 @@ This sections describes how to deploy Virto Commerce Platform from Custom ARM Te
    ![Deploy to azure - custom template](../media/deploy-to-azure-customtemplate.png)
 1. Select **Build your own template in the editor**.
    ![Deploy to azure - custom template](../media/deploy-to-azure-customtemplate-owntemplate.png)
-1. Load template file from [azuredeploy.json](https://github.com/VirtoCommerce/vc-platform/azuredeploy.json).
+1. Load template file from [azuredeploy.json](zuredeploy.json).
 1. Select **Save**.
     ![Deploy to azure - custom template](../media/deploy-to-azure-custom-wizard.png)
 1. Select Subscription and Fill required parameters.  
@@ -81,8 +81,8 @@ This sections describes how to deploy Virto Commerce Platform from Custom ARM Te
 
 ## Deploy to Azure via PowerShell
 Read [Azure Resource Manager documentation](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-powershell) to
-deploy Virto Commerce Platform from Custom Template [azuredeploy.json](https://github.com/VirtoCommerce/vc-platform/azuredeploy.json) to Azure via PowerShell.
+deploy Virto Commerce Platform from Custom Template [azuredeploy.json](https://github.com/VirtoCommerce/vc-platform/blob/master/azuredeploy.json) to Azure via PowerShell.
 
 ## Deploy to Azure via Azure CLI
 Read  [Azure Resource Manager documentation](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-cli) to
-deploy Virto Commerce Platform from Custom Template [azuredeploy.json](https://github.com/VirtoCommerce/vc-platform/azuredeploy.json)  to Azure via CLI.
+deploy Virto Commerce Platform from Custom Template [azuredeploy.json](https://github.com/VirtoCommerce/vc-platform/blob/master/azuredeploy.json)  to Azure via CLI.
