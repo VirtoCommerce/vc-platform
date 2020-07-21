@@ -44,6 +44,8 @@ These Virto Commerce docs help you learn and use the Virto Commerce platform, fr
 * [What’s new](release-information/whats-new.md)
 * [Deploy on Windows](getting-started/deploy-from-precompiled-binaries-windows.md)
 * [Deploy on Linux](getting-started/deploy-from-precompiled-binaries-linux.md)
+* [Deploy to Azure](getting-started/deploy-from-precompiled-binaries-azure.md)
+* [Deploy on MacOS](getting-started/deploy-from-precompiled-binaries-MacOS.md)
 * [Connect Storefront to Platform](getting-started/connect-storefront-to-platform-v3)
 * [Deploy Platform 3 from source code](developer-guide/deploy-from-source-code.md)
 * [Getting Started](user-guide/getting-started.md)
