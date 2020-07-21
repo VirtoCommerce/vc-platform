@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +17,7 @@ using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.CloudFoundry;
 using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Git;
@@ -349,6 +349,7 @@ class Build : NukeBuild
         });
 
     Target CompleteRelease => _ => _
+        .After(StartRelease)
         .Executes(() =>
         {
             //workaround for run from sources
@@ -367,8 +368,14 @@ class Build : NukeBuild
             GitTasks.Git("add .");
             GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
             GitTasks.Git($"push origin dev");
+            //remove release branch
+            GitTasks.Git($"branch -d {currentBranch}");
+            GitTasks.Git($"push origin --delete {currentBranch}");
             Directory.SetCurrentDirectory(currentDir);
         });
+
+    Target QuickRelease => _ => _
+        .DependsOn(StartRelease, CompleteRelease);
 
     Target StartHotfix => _ => _
         .Executes(() =>
@@ -388,6 +395,7 @@ class Build : NukeBuild
         });
 
     Target CompleteHotfix => _ => _
+        .After(StartHotfix)
         .Executes(() =>
         {
             //workaround for run from sources
@@ -399,6 +407,9 @@ class Build : NukeBuild
             GitTasks.Git($"merge {currentBranch}");
             GitTasks.Git($"tag {VersionPrefix}");
             GitTasks.Git("push origin master");
+            //remove hotfix branch
+            GitTasks.Git($"branch -d {currentBranch}");
+            GitTasks.Git($"push origin --delete {currentBranch}");
             Directory.SetCurrentDirectory(currentDir);
         });
 
