@@ -1,6 +1,6 @@
 # Platform 3 Overview
 
-## Overview
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
 
 Virto Commerce is a highly scalable eCommerce product for fast-growing and large companies. It provides powerful enterprise-class features right out-of-the-box and gives you the flexibility to create your own unique eCommerce solution while utilizing agile principles.
 
@@ -30,6 +30,13 @@ We decided to use the following stack of technologies:
 
 <img src="docs/media/architecture-circle.png" title="Virto Commerce 3 Architecture" width="400">
 
+## Introduction to Virto Commerce
+
+These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
+
+* [Virto Commerce Documentation](https://virtocommerce.com/docs/latest/)
+* [View on GitHub](docs/index.md)
+
 ## Comparison with Platform 2.x
 
 In the new version, we change primary technology stack to .NET Core for the platform application and all key modules. Eliminate known technical and architecture design issues of 2.x version (Caching, Overloaded core module, Asynchronous code, Platform Complexity, Extensibility, Performance, Authentication and Authorization)
@@ -37,18 +44,22 @@ Improve the extensibility and unification of the application. Unified architectu
 
 Virto Commerce Platform 3 helps you increase development speed and significantly reduce time to market.
 
-## Introduction to Virto Commerce
-
-These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
+## References
 
 * [What’s new](docs/release-information/whats-new.md)
-* Setup
-  * [Deploy Platform 3 from precompiled binaries on Windows](docs/getting-started/deploy-from-precompiled-binaries-windows.md)
-  * [Deploy Platform 3 from precompiled binaries on Linux](docs/getting-started/deploy-from-precompiled-binaries-linux.md)
+* Deploy
+  * [Deploy on Windows](docs/getting-started/deploy-from-precompiled-binaries-windows.md)
+  * [Deploy on Linux](docs/getting-started/deploy-from-precompiled-binaries-linux.md)
+  * [Deploy to Azure](docs/getting-started/deploy-from-precompiled-binaries-azure.md) 
+  * [Deploy on MacOS](docs/getting-started/deploy-from-precompiled-binaries-MacOS.md) 
   * [Connect Storefront to Platform](docs/getting-started/connect-storefront-to-platform-v3.md)
   * [Deploy Platform 3 from source code](docs/developer-guide/deploy-from-source-code.md)
 * [Getting Started](docs/user-guide/getting-started.md)
-* [Update VC Platform Module from version 2.x to 3](docs/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
+* [Update VC Platform Module from version 2.x to 3](docs/release-information/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
+* Virto Commerce Documentation: https://www.virtocommerce.com/docs/latest/
+* Home: https://virtocommerce.com
+* Community: https://www.virtocommerce.org
+* [Download Latest Release](releases/latest)
 
 ## License
 

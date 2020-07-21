@@ -12,8 +12,9 @@ This reference architecture shows proven practices for improving scalability and
 
 **Components:**
 
-- **Commerce services (backend for frontend)** - The platform Web Apps runs in multiple regions, accessible to web and mobile browsers, and is scaled out across multiple server instances. The primary responsibility is to serve all requests from frontends to a commercial API with high reliability and performance. 
+- **Commerce services (backend for frontend)**  - The platform Web Apps runs in multiple regions, accessible to web and mobile browsers, and is scaled out across multiple server instances. The primary responsibility is to serve all requests from frontends to a commercial API with high reliability and performance. 
 - **Authoring services (backend)** - The platform Web App is used to process background jobs, integrate with third-party services, commerce data management by users through the platform’s SPA manager. It is decoupled from  platform Web Apps from commercial services in order to avoid affecting their performance and resource consumption.
+- **Storefront (frontend)** - The commerce site and the main touchpoint for customers. Powered by VC Storefront.
 - **Redis server** - provides broadcasting (backplane) messages between multiple platform Web App from each layer to keep their local memory caches in the consistent state.
 - **Hangfire server** - one or multiple platform instances are configured to process Hangfire background jobs.
    
@@ -48,19 +49,36 @@ The following example shows how to setup using the Redis backplane for memory ca
     },
 ```
 
-##  SignalR Push notification. Use the Redis server backplane
+##  Scaling push notifications
 The push notification that is used in the manager is built on the [SignalR](https://docs.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-3.1) library.
-In order to be able to see all push notifications on the manager that even emits by different platform instances, you need to configure you platform to use Redis server backplane for SignalR messages. You can read more details how it works underhood by this link [Set up a Redis backplane for ASP.NET Core SignalR scale-out](https://docs.microsoft.com/en-us/aspnet/core/signalr/redis-backplane?view=aspnetcore-3.1)
+In order to be able to see all push notifications on the manager that even emits by different platform instances, you can use the two scaling modes to configure you platform to use **Redis server backplane** or use **Azure SignalR** services. You can read more details how it works underhood by this link [Set up a Redis backplane for ASP.NET Core SignalR scale-out](https://docs.microsoft.com/en-us/aspnet/core/signalr/redis-backplane?view=aspnetcore-3.1)
 
+When SignalR is running on a server farm (multiple servers), "sticky sessions" must be used. "Sticky sessions" are also called session affinity by some load balancers. Azure App Service uses Application Request Routing (ARR) to route requests. Enabling the "ARR Affinity" setting in your Azure App Service will enable "sticky sessions".
+
+> "ARR Affinity" setting must be enabled for all Azure apps services where users work with platform  manager UI.
+
+Here is the example of how to configure scaling for push notifications with using **Redis backplane** mode. 
 *appsettings.json*
 ```json
-"SignalR": {
-        //Possible values: RedisBackplane (default) | AzureSignalRService
-        //RedisBackplane will be activated only when RedisConnectionString is set otherwise no any SignalR scaling options will be used 
-        "ScalabilityProvider": "RedisBackplane",
+...
+"ConnectionStrings": {
+        ...
+        //Add RedisConnectionString value to start using Redis server as backplane for memory cache synchronization
+        "RedisConnectionString": "vc.redis.cache.windows.net:6380,password={password}=,ssl=True,abortConnect=False"
+        ...
+    },
+...
+"PushNotifications": {
+        //Possible values: RedisBackplane | AzureSignalRService | None
+        "ScalabilityMode": "RedisBackplane",
+        //The URL is used to connect the platform SignalR /pushNotificationHub hub as client to be able sync the local notifications storage with notifications that are produced by other platform instances
+        //Need to replace this value to a full URL to  /pushNotificationHub on the production server e.g https://your-app-name.azurewebsites.net/pushNotificationHub
+        "HubUrl": "https://{your-app-name}.azurewebsites.net/pushNotificationHub",      
         "RedisBackplane": {
             "ChannelName": "VirtoCommerceChannel"
         }
+    }
+...
 ```
 
 ## Configure the Hangfire server to processing background jobs into another process
@@ -70,72 +88,34 @@ In order to do that you need to configure one platform instance  (*Commerce serv
 
 > Ensure that all of your Client/Servers use the same job storage and JobStorageType, only **SqlServer** is allowed and have the same code base. If client enqueues a job based on the SomeClass that is absent in server’s code, the latter will simply throw a performance exception.
 
-Here is the config of how to switch the platform instance to works as Hangfire client and only enqueues the background jobs into a queue.
-
 *appsettings.json*
 ```json
 ...
     "VirtoCommerce": {
-         "Hangfire": {
+         "Hangfire": {               
               "JobStorageType": "SqlServer",
-               "UseHangfireServer": false, //Set value to false for the platform instance that you want to stop processing the background jobs
+               //Stop processing background jobs
+               "UseHangfireServer": false,
                ...
          }
          ...
     }
 ```
 
-Here is the config of how to switch platform instance to works as Hangfire server and process the background jobs.
+## Configuration examples
 
-*appsettings.json*
-```json
-...
-    "VirtoCommerce": {
-         "Hangfire": {
-              "JobStorageType": "SqlServer",
-               "UseHangfireServer": true, //Set value to true for the platform instance that you want to process the background jobs
-               ...
-         }
-         ...
-    }
+**Authoring app** [https://vc-admin.azurewebsites.net]() 
+
+*Azure app General settings*
 ```
-
-
-## The resulting configuration for **Commerce Service** platform instances
+ARR affinity : On
+Platform : 64 bit
+```
 
 *appsettings.json*
 ```json
  "ConnectionStrings": {
          "VirtoCommerce": "Data Source=tcp:dev-odt.database.windows.net,1433;Initial Catalog={db-name};User ID={db-admin-name};Password={password};MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;"
-        //Add RedisConnectionString value to start using Redis server as backplane for memory cache synchronization
-        "RedisConnectionString": "vc.redis.cache.windows.net:6380,password={password}=,ssl=True,abortConnect=False"
-    },
-    ...
-     "VirtoCommerce": {
-         "Hangfire": {
-              "JobStorageType": "SqlServer",
-               "UseHangfireServer": false, //Set value to false for the platform instance that you want to stop processing the background jobs
-               ...
-         }
-         ...
-     "SignalR": {
-        //Possible values: RedisBackplane (default) | AzureSignalRService
-        //RedisBackplane will be activated only when RedisConnectionString is set otherwise no any SignalR scaling options will be used 
-        "ScalabilityProvider": "RedisBackplane",
-        "RedisBackplane": {
-            "ChannelName": "VirtoCommerceChannel"
-        }
-        ...
-
-```
-
-## The resulting configuration for **Authoring** platform instances
-
-*appsettings.json*
-```json
- "ConnectionStrings": {
-         "VirtoCommerce": "Data Source=tcp:dev-odt.database.windows.net,1433;Initial Catalog={db-name};User ID={db-admin-name};Password={password};MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;"
-        //Add RedisConnectionString value to start using Redis server as backplane for memory cache synchronization
         "RedisConnectionString": "vc.redis.cache.windows.net:6380,password={password}=,ssl=True,abortConnect=False"
     },
     ...
@@ -146,16 +126,64 @@ Here is the config of how to switch platform instance to works as Hangfire serve
                ...
          }
          ...
-     "SignalR": {
-        //Possible values: RedisBackplane (default) | AzureSignalRService
-        //RedisBackplane will be activated only when RedisConnectionString is set otherwise no any SignalR scaling options will be used 
-        "ScalabilityProvider": "RedisBackplane",
+   "PushNotifications": {
+        "ScalabilityMode": "RedisBackplane",     
+        "HubUrl": "https://vc-admin.azurewebsites.net/pushNotificationHub",      
         "RedisBackplane": {
             "ChannelName": "VirtoCommerceChannel"
         }
+    }
         ...
 
 ```
+
+**Commerce service app** [https://bff-vc-admin.azurewebsites.net]()
+
+*Azure app General settings*
+```
+ARR affinity : Off
+Platform : 64 bit
+```
+
+*appsettings.json*
+```json
+ "ConnectionStrings": {
+         "VirtoCommerce": "Data Source=tcp:dev-odt.database.windows.net,1433;Initial Catalog={db-name};User ID={db-admin-name};Password={password};MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;"
+        //Add RedisConnectionString value to start using Redis server as backplane for memory cache synchronization
+        "RedisConnectionString": "vc.redis.cache.windows.net:6380,password={password}=,ssl=True,abortConnect=False"
+    },
+    ...
+     "VirtoCommerce": {
+         "Hangfire": {
+              "JobStorageType": "SqlServer",
+               "UseHangfireServer": false, //Set value to false for the platform instance that you want to stop processing the background jobs
+               ...
+         }
+         ...
+     "PushNotifications": {
+        //These instances aren't produced any push notifications and don't use for work directly through the platform manager web interface. Therefore, we don't need to use scaling mode for push notifications 
+        "ScalabilityMode": "None"
+    }
+        ...
+
+```
+
+**Frontend app** [https://vc-store.azurewebsites.net]()
+
+*Azure app General settings*
+```
+ARR affinity : On
+Platform : 64 bit
+```
+
+*appsettings.json*
+```json
+ "ConnectionStrings": {        
+        "RedisConnectionString": "vc.redis.cache.windows.net:6380,password={password}=,ssl=True,abortConnect=False"
+    },
+    ...
+```
+
 
 ## Additional Resources
 
