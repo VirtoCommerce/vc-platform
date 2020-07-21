@@ -3,12 +3,11 @@ name: Deploy
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  push:
-    tags:
-      - ver.*
-
-  pull_request:
-    types: [labeled]
+   workflow_dispatch:
+    inputs:
+      versionTag:
+        description: 'Image version tag'
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -22,10 +21,6 @@ jobs:
       DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
     steps:
     - uses: actions/checkout@v2
-
-    - name: Get Image Tag
-      uses: VirtoCommerce/vc-github-actions/get-image-tag@v1
-      id: image
 
     - name: Setup Kustomize
       uses: imranismail/setup-kustomize@v1
@@ -49,7 +44,7 @@ jobs:
         cd vc-deploy-apps/webstore-app/overlays/dev
 
         $REPOSITORY = "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())"
-        kustomize edit set image virtocommerce/platform=$REPOSITORY/platform:${{ steps.image.outputs.tag }}
+        kustomize edit set image virtocommerce/platform=$REPOSITORY/platform:${{ github.event.inputs.versionTag }}
 
         git config user.email "github.actions@virtoway.com"
         git config user.name "GitHub Actions"
