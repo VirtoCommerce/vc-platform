@@ -44,7 +44,6 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                 var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethods().FirstOrDefault(x => x.Name.EqualsInvariant("TryCreateInstance") && x.GetParameters().Length == 0);
                 result = tryCreateInstance?.Invoke(null, null);
             }
-
             serializer.Populate(obj.CreateReader(), result);
             return result;
         }

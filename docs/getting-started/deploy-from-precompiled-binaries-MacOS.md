@@ -6,7 +6,7 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 * [.NET Core SDK on Mac OS](https://docs.microsoft.com/en-us/dotnet/core/install/macos)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-2017-editions)
 
-## Instalation .NET Core SDK
+## Installation .NET Core SDK
 
 * Navigate to the <a href="https://dotnet.microsoft.com/download/dotnet-core">Download .NET Core SDK</a>
 

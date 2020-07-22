@@ -1,0 +1,252 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "siteName": {
+            "type": "string"
+        },
+        "appServicePlanSkuName": {
+            "type": "string",
+            "defaultValue": "S1",
+            "allowedValues": [
+                "F1",
+                "D1",
+                "B1",
+                "B2",
+                "B3",
+                "S1",
+                "S2",
+                "S3",
+                "P1",
+                "P2",
+                "P3",
+                "P4"
+            ],
+            "metadata": {
+                "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
+            }
+        },
+        "siteLocation": {
+            "type": "string",
+            "defaultValue": "West US",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "sqlServerName": {
+            "type": "string"
+        },
+        "sqlAdministratorLogin": {
+            "type": "string",
+            "metadata": {
+                "description": "The administrator username of the SQL logical server."
+            }
+        },
+        "sqlAdministratorPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The administrator password of the SQL logical server."
+            }
+        },
+        "installModuleBundle": {
+            "type": "string",
+            "allowedValues": [
+                "Commerce",
+                "None"
+            ],
+            "defaultValue": "Commerce"
+        },
+        "repoUrl": {
+            "type": "string"
+        },
+        "branch": {
+            "type": "string"
+        },
+        "hostingPlanName": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "storageName": "[replace(parameters('siteName'), '-', '')]",
+        "storageType": "Standard_LRS",
+        "moduleBundles": {
+            "Commerce": {
+                "configValue": "commerce"
+            },
+            "None": {
+                "configValue": ""
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2019-06-01",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageName')]",
+            "location": "[parameters('siteLocation')]",
+            "sku": {
+                "name": "[variables('storageType')]",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2"
+        },
+        {
+            "apiVersion": "2014-04-01",
+            "type": "Microsoft.Sql/servers",
+            "name": "[parameters('sqlServerName')]",
+            "location": "[parameters('siteLocation')]",
+            "properties": {
+                "version": "12.0",
+                "administratorLogin": "[parameters('sqlAdministratorLogin')]",
+                "administratorLoginPassword": "[parameters('sqlAdministratorPassword')]"
+            },
+            "resources": [
+                {
+                    "apiVersion": "2014-04-01",
+                    "type": "databases",
+                    "name": "[parameters('siteName')]",
+                    "location": "[parameters('siteLocation')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
+                    ],
+                    "properties": {
+                        "edition": "Basic",
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "maxSizeBytes": "1073741824",
+                        "requestedServiceObjectiveId": "DD6D99BB-F193-4EC1-86F2-43D3BCCBC49C"
+                    }
+                },
+                {
+                    "type": "firewallrules",
+                    "name": "AllowAllWindowsAzureIps",
+                    "location": "[parameters('siteLocation')]",
+                    "apiVersion": "2014-04-01",
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
+                    ],
+                    "properties": {
+                        "endIpAddress": "0.0.0.0",
+                        "startIpAddress": "0.0.0.0"
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "2018-02-01",
+            "type": "Microsoft.Web/serverfarms",
+            "name": "[parameters('hostingPlanName')]",
+            "location": "[parameters('siteLocation')]",
+            "kind": "app",
+            "sku": {
+                "name": "[parameters('appServicePlanSkuName')]",
+                "capacity": 1
+            },
+            "properties": {
+                "name": "[parameters('hostingPlanName')]",
+                "numberOfWorkers": "1",
+                "reserved": false
+            }
+        },
+        {
+            "apiVersion": "2018-11-01",
+            "type": "Microsoft.Web/sites",
+            "name": "[parameters('siteName')]",
+            "location": "[parameters('siteLocation')]",
+            "kind": "app",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverFarms/', parameters('hostingPlanName'))]"
+            ],
+            "tags": {
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
+            },
+            "properties": {
+                "name": "[parameters('siteName')]",
+                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "ExternalModules:AutoInstallModuleBundles",
+                            "value": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
+                        },
+                        {
+                            "name": "Assets:Provider",
+                            "value": "AzureBlobStorage"
+                        },
+                        {
+                            "name": "Assets:AzureBlobStorage:ConnectionString",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
+                            "name": "Content:Provider",
+                            "value": "AzureBlobStorage"
+                        },
+                        {
+                            "name": "Content:AzureBlobStorage:ConnectionString",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                        },
+                        {
+                            "name": "Content:AzureBlobStorage:RootPath",
+                            "value": "cms"
+                        },
+                        {
+                            "name": "Search:Provider",
+                            "value": "Lucene"
+                        },
+                        {
+                            "name": "Search:Lucene:Path",
+                            "value": "App_Data/Lucene"
+                        },
+                        {
+                            "name": "VirtoCommerce:DiscoveryPath",
+                            "value": "../modules"
+                        },
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "12.18.0"
+                        }
+                    ],
+                    "connectionStrings": [
+                        {
+                            "name": "VirtoCommerce",
+                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
+                            "type": "SQLAzure"
+                        }
+                    ],
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ],
+                    "virtualApplications": [
+                        {
+                            "virtualPath": "/",
+                            "physicalPath": "site\\wwwroot\\platform",
+                            "virtualDirectories": [
+                                {
+                                    "virtualPath": "/modules",
+                                    "physicalPath": "site\\wwwroot\\modules"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "apiVersion": "2016-08-01",
+                    "name": "web",
+                    "type": "sourcecontrols",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', parameters('siteName'))]"
+                    ],
+                    "properties": {
+                        "RepoUrl": "[parameters('repoUrl')]",
+                        "branch": "[parameters('branch')]",
+                        "IsManualIntegration": true
+                    }
+                }
+            ]
+        }
+    ]
+}
