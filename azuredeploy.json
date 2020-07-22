@@ -199,7 +199,7 @@
                             "value": "../modules"
                         },
                         {
-                            "name": "WEBSITE_NODE_  DEFAULT_VERSION",
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
                             "value": "12.18.0"
                         }
                     ],
