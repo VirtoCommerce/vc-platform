@@ -2,6 +2,12 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "appServicePlanName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of application service plan."
+            }
+        },
         "siteName": {
             "type": "string"
         },
@@ -26,26 +32,19 @@
                 "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
             }
         },
-        "siteLocation": {
-            "type": "string",
-            "defaultValue": "West US",
-            "metadata": {
-                "description": "Location for all resources."
-            }
-        },
         "sqlServerName": {
             "type": "string"
         },
         "sqlAdministratorLogin": {
             "type": "string",
             "metadata": {
-                "description": "The administrator username of the SQL logical server."
+                "description": "The administrator username of the SQL logical server. Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.)"
             }
         },
         "sqlAdministratorPassword": {
             "type": "securestring",
             "metadata": {
-                "description": "The administrator password of the SQL logical server."
+                "description": "The administrator password of the SQL logical server. Your password must be at least 8 characters in length. Your password must contain characters from three of the following categories – English uppercase letters, English lowercase letters, numbers (0-9), and non-alphanumeric characters (!, $, #, %, etc.)."
             }
         },
         "installModuleBundle": {
@@ -57,13 +56,12 @@
             "defaultValue": "Commerce"
         },
         "repoUrl": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "https://github.com/VirtoCommerce/vc-platform"
         },
         "branch": {
-            "type": "string"
-        },
-        "hostingPlanName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "master"
         }
     },
     "variables": {
@@ -83,7 +81,7 @@
             "apiVersion": "2019-06-01",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageName')]",
-            "location": "[parameters('siteLocation')]",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "[variables('storageType')]",
                 "tier": "Standard"
@@ -94,7 +92,7 @@
             "apiVersion": "2014-04-01",
             "type": "Microsoft.Sql/servers",
             "name": "[parameters('sqlServerName')]",
-            "location": "[parameters('siteLocation')]",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "version": "12.0",
                 "administratorLogin": "[parameters('sqlAdministratorLogin')]",
@@ -105,7 +103,7 @@
                     "apiVersion": "2014-04-01",
                     "type": "databases",
                     "name": "[parameters('siteName')]",
-                    "location": "[parameters('siteLocation')]",
+                    "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
                     ],
@@ -119,7 +117,7 @@
                 {
                     "type": "firewallrules",
                     "name": "AllowAllWindowsAzureIps",
-                    "location": "[parameters('siteLocation')]",
+                    "location": "[resourceGroup().location]",
                     "apiVersion": "2014-04-01",
                     "dependsOn": [
                         "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
@@ -134,15 +132,15 @@
         {
             "apiVersion": "2018-02-01",
             "type": "Microsoft.Web/serverfarms",
-            "name": "[parameters('hostingPlanName')]",
-            "location": "[parameters('siteLocation')]",
+            "name": "[parameters('appServicePlanName')]",
+            "location": "[resourceGroup().location]",
             "kind": "app",
             "sku": {
                 "name": "[parameters('appServicePlanSkuName')]",
                 "capacity": 1
             },
             "properties": {
-                "name": "[parameters('hostingPlanName')]",
+                "name": "[parameters('appServicePlanName')]",
                 "numberOfWorkers": "1",
                 "reserved": false
             }
@@ -151,17 +149,17 @@
             "apiVersion": "2018-11-01",
             "type": "Microsoft.Web/sites",
             "name": "[parameters('siteName')]",
-            "location": "[parameters('siteLocation')]",
+            "location": "[resourceGroup().location]",
             "kind": "app",
             "dependsOn": [
-                "[concat('Microsoft.Web/serverFarms/', parameters('hostingPlanName'))]"
+                "[concat('Microsoft.Web/serverFarms/', parameters('appServicePlanName'))]"
             ],
             "tags": {
-                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServicePlanName'))]": "empty"
             },
             "properties": {
                 "name": "[parameters('siteName')]",
-                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServicePlanName'))]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -201,7 +199,7 @@
                             "value": "../modules"
                         },
                         {
-                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "name": "WEBSITE_NODE_  DEFAULT_VERSION",
                             "value": "12.18.0"
                         }
                     ],
