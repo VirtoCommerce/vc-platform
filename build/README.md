@@ -100,3 +100,18 @@ Total                              0:23
 
 ```
 
+## StartRelease, CompleteRelease, QuickRelease, StartHotfix, CompleteHotfix
+Used to automate the routine operations with release branches
+#### StartRelease:
+- creates and pushes the new branch release/*version* from dev
+#### CompleteRelease:
+- merges release/*version* into master and pushes
+- merges into dev branch, increments version's minor and pushes
+#### QuickRelease: 
+- Triggers StartRelease and then CompleteRelease
+#### StartHotfix:
+- Increments version's patch in master
+- Creates and pushes the new branch hotfix/*version*
+#### CompleteHotfix:
+- Merges hotfix branch into master
+- Adds tag and pushes
