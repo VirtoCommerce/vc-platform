@@ -1,26 +1,25 @@
 using System;
-using System.Collections.Generic;
-using Microsoft.ApplicationInsights;
+using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using VirtoCommerce.Platform.Caching;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Redis
 {
     public class RedisPlatformMemoryCache : PlatformMemoryCache
     {
-        public static string ServerId { get; } = $"{Environment.MachineName}_{Guid.NewGuid():N}";
+        private static string _instanceId { get; } = $"{Environment.MachineName}_{Guid.NewGuid():N}";
 
         private readonly ISubscriber _bus;
         private readonly CachingOptions _cachingOptions;
         private readonly RedisCachingOptions _redisCachingOptions;
         private readonly IConnectionMultiplexer _connection;
         private readonly ILogger _log;
-        private readonly TelemetryClient _telemetryClient;
 
         private bool _disposed;
 
@@ -30,12 +29,10 @@ namespace VirtoCommerce.Platform.Redis
             , IOptions<CachingOptions> cachingOptions
             , IOptions<RedisCachingOptions> redisCachingOptions
             , ILogger<RedisPlatformMemoryCache> log
-            , TelemetryClient telemetryClient
             ) : base(memoryCache, cachingOptions, log)
        {
            _connection = connection;
            _log = log;
-            _telemetryClient = telemetryClient;
             _bus = bus;
 
             _cachingOptions = cachingOptions.Value;
@@ -44,27 +41,23 @@ namespace VirtoCommerce.Platform.Redis
             connection.ConnectionFailed += OnConnectionFailed;
             connection.ConnectionRestored += OnConnectionRestored;
 
+            CacheCancellableTokensRegistry.OnTokenCancelled = CacheCancellableTokensRegistry_OnTokenCancelled;
+
             _bus.Subscribe(_redisCachingOptions.ChannelName, OnMessage, CommandFlags.FireAndForget);
 
-            _log.LogInformation($"{nameof(RedisPlatformMemoryCache)}: subscribe to channel {_redisCachingOptions.ChannelName } current instance:{ ServerId }");
-            _telemetryClient.TrackEvent("RedisSubscribed", new Dictionary<string, string>
-            {
-                {"channelName", _redisCachingOptions.ChannelName},
-                {"cacheId", ServerId}
-            });
+            _log.LogTrace($"subscribe to Redis backplane channel {_redisCachingOptions.ChannelName } with instance id:{ _instanceId }");
+        }
+
+        private void CacheCancellableTokensRegistry_OnTokenCancelled(TokenCancelledEventArgs e)
+        {
+            var message = new RedisCachingMessage { Id = _instanceId, IsToken = true, CacheKeys = new[] { e.TokenKey } };
+            Publish(message);
+            _log.LogTrace($"Published cancellation message for token with key: {e.TokenKey}");
         }
 
         protected virtual void OnConnectionFailed(object sender, ConnectionFailedEventArgs e)
         {
-            _log.LogError($"Redis disconnected from instance { ServerId }. Endpoint is {e.EndPoint}, failure type is {e.FailureType}");
-            _telemetryClient.TrackException(e.Exception);
-            _telemetryClient.TrackEvent("RedisDisconnected", new Dictionary<string, string>
-            {
-                {"channelName", _redisCachingOptions.ChannelName},
-                {"cacheId", ServerId},
-                {"endpoint", e.EndPoint.ToString()},
-                {"failureType", e.FailureType.ToString()}
-            });
+            _log.LogError($"Redis disconnected from instance { _instanceId }. Endpoint is {e.EndPoint}, failure type is {e.FailureType}");
 
             // If we have no connection to Redis, we can't invalidate cache on another platform instances,
             // so the better idea is to disable cache at all for data consistence
@@ -76,12 +69,7 @@ namespace VirtoCommerce.Platform.Redis
 
         protected virtual void OnConnectionRestored(object sender, ConnectionFailedEventArgs e)
         {
-            _log.LogInformation($"Redis connection restored for instance { ServerId }");
-            _telemetryClient.TrackEvent("RedisConnectionRestored", new Dictionary<string, string>
-            {
-                {"channelName", _redisCachingOptions.ChannelName},
-                {"cacheId", ServerId}
-            });
+            _log.LogTrace($"Redis backplane connection restored for instance { _instanceId }");
 
             // Return cache to the same state as it was initially.
             // Don't set directly true because it may be disabled in app settings
@@ -96,23 +84,32 @@ namespace VirtoCommerce.Platform.Redis
         {
             var message = JsonConvert.DeserializeObject<RedisCachingMessage>(redisValue);
 
-            if (!string.IsNullOrEmpty(message.Id) && !message.Id.EqualsInvariant(ServerId))
+            if (!string.IsNullOrEmpty(message.Id) && !message.Id.EqualsInvariant(_instanceId))
             {
-                foreach (var item in message.CacheKeys)
-                {
-                    base.Remove(item);
+                _log.LogInformation($"Received RedisCachingMessage from instance: {message.Id}");
 
-                    _log.LogInformation($"{nameof(RedisPlatformMemoryCache)}: channel[{_redisCachingOptions.ChannelName }] remove local cache that cache key is {item} from instance:{ ServerId }");
+                foreach (var key in message.CacheKeys?.OfType<string>() ?? Array.Empty<string>())
+                {
+                    if (message.IsToken)
+                    {
+                        _log.LogTrace($"Trying to cancel token with key: {key}");
+                        CacheCancellableTokensRegistry.TryCancelToken(key, raiseEvent: false);
+                    }
+                    else
+                    {
+                        _log.LogTrace($"Remove cache entry with key: {key} from in-memory cache of instance: {_instanceId}");
+                        base.Remove(key);
+                    }
                 }
             }
         }
 
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
-            _log.LogInformation($"{nameof(RedisPlatformMemoryCache)}: channel[{_redisCachingOptions.ChannelName }] sending a message with key:{key} from instance:{ ServerId } to all subscribers");
+            _log.LogTrace($"Publishing a message with key:{key} from instance:{ _instanceId } to all subscribers");
             
-            var message = new RedisCachingMessage { Id = ServerId, CacheKeys = new[] { key } };
-            _bus.Publish(_redisCachingOptions.ChannelName, JsonConvert.SerializeObject(message), CommandFlags.FireAndForget);
+            var message = new RedisCachingMessage { Id = _instanceId, CacheKeys = new[] { key } };
+            Publish(message);
 
             base.EvictionCallback(key, value, reason, state);
         }
@@ -131,6 +128,11 @@ namespace VirtoCommerce.Platform.Redis
             }
 
             base.Dispose(disposing);
+        }
+
+        private void Publish(RedisCachingMessage message)
+        {
+            _bus.Publish(_redisCachingOptions.ChannelName, JsonConvert.SerializeObject(message), CommandFlags.FireAndForget);
         }
     }
 }
