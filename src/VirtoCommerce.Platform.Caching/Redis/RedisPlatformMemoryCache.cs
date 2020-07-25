@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Redis
 
             _bus.Subscribe(_redisCachingOptions.ChannelName, OnMessage, CommandFlags.FireAndForget);
 
-            _log.LogTrace($"subscribe to Redis backplane channel {_redisCachingOptions.ChannelName } with instance id:{ _instanceId }");
+            _log.LogTrace($"Successfully subscribed to Redis backplane channel {_redisCachingOptions.ChannelName } with instance id:{ _instanceId }");
         }
 
         private void CacheCancellableTokensRegistry_OnTokenCancelled(TokenCancelledEventArgs e)
@@ -86,8 +86,6 @@ namespace VirtoCommerce.Platform.Redis
 
             if (!string.IsNullOrEmpty(message.Id) && !message.Id.EqualsInvariant(_instanceId))
             {
-                _log.LogInformation($"Received RedisCachingMessage from instance: {message.Id}");
-
                 foreach (var key in message.CacheKeys?.OfType<string>() ?? Array.Empty<string>())
                 {
                     if (message.IsToken)
@@ -97,7 +95,7 @@ namespace VirtoCommerce.Platform.Redis
                     }
                     else
                     {
-                        _log.LogTrace($"Remove cache entry with key: {key} from in-memory cache of instance: {_instanceId}");
+                        _log.LogTrace($"Trying to remove cache entry with key: {key} from in-memory cache of instance: {_instanceId}");
                         base.Remove(key);
                     }
                 }
@@ -106,10 +104,10 @@ namespace VirtoCommerce.Platform.Redis
 
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
-            _log.LogTrace($"Publishing a message with key:{key} from instance:{ _instanceId } to all subscribers");
-            
+          
             var message = new RedisCachingMessage { Id = _instanceId, CacheKeys = new[] { key } };
             Publish(message);
+            _log.LogTrace($"Published message to remove from cache an entry with key:{key}");
 
             base.EvictionCallback(key, value, reason, state);
         }
