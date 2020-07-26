@@ -148,7 +148,7 @@ jobs:
         cd docker
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/docker-compose.yml -OutFile docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/platform','docker.pkg.github.com/$REPOSITORY/platform') | Set-Content -Path docker-compose.yml"
-        pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/storefront','docker.pkg.github.com/virtocommerce/vc-storefront-core/storefront') | Set-Content -Path docker-compose.yml"
+        pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/storefront','docker.pkg.github.com/virtocommerce/vc-storefront/storefront') | Set-Content -Path docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'MultipleActiveResultSets=True','MultipleActiveResultSets=False') | Set-Content -Path docker-compose.yml"
         echo PLATFORM_DOCKER_TAG=${{ steps.image.outputs.tag }} >> .env
         echo STOREFRONT_DOCKER_TAG=dev-linux-latest >> .env
