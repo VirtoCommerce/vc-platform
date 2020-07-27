@@ -1,6 +1,6 @@
 # Platform 3 Overview
 
-[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fmaster%2Fazuredeploy.json)
 
 Virto Commerce is a highly scalable eCommerce product for fast-growing and large companies. It provides powerful enterprise-class features right out-of-the-box and gives you the flexibility to create your own unique eCommerce solution while utilizing agile principles.
 
@@ -59,7 +59,7 @@ Virto Commerce Platform 3 helps you increase development speed and significantly
 * Virto Commerce Documentation: https://www.virtocommerce.com/docs/latest/
 * Home: https://virtocommerce.com
 * Community: https://www.virtocommerce.org
-* [Download Latest Release](releases/latest)
+* [Download Latest Release](https://github.com/VirtoCommerce/vc-platform/releases/latest)
 
 ## License
 
