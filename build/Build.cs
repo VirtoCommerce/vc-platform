@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -19,21 +17,18 @@ using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.CloudFoundry;
+using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Git;
-using Nuke.Common.Tools.GitReleaseManager;
-using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.Npm;
-using Nuke.Common.Tools.OpenCover;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using static Nuke.Common.Tools.Git.GitTasks;
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
@@ -53,11 +48,11 @@ class Build : NukeBuild
     public static int Main()
     {
         var nukeFile = Directory.GetFiles(Directory.GetCurrentDirectory(), ".nuke");
-        if(!nukeFile.Any())
+        if (!nukeFile.Any())
         {
             Logger.Info("No .nuke file found!");
             var solutions = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.sln");
-            if(solutions.Length == 1)
+            if (solutions.Length == 1)
             {
                 var solutionFileName = Path.GetFileName(solutions.First());
                 Logger.Info($"Solution found: {solutionFileName}");
@@ -119,8 +114,11 @@ class Build : NukeBuild
 
     [Parameter("Path to Release Notes File")] readonly AbsolutePath ReleaseNotes;
 
-    [Parameter("VersionTag for module.manifest")] readonly string CustomVersionSuffix;
-   
+    [Parameter("VersionTag for module.manifest and Directory.Build.Props")]  string CustomVersionPrefix;
+    [Parameter("VersionSuffix for module.manifest and Directory.Build.Props")]  string CustomVersionSuffix;
+
+    [Parameter("Release branch")] readonly string ReleaseBranch;
+
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
     [Parameter("Path to Artifacts Directory")] AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
@@ -138,7 +136,7 @@ class Build : NukeBuild
     AbsolutePath ModuleOutputDirectory => ArtifactsDirectory / ModuleManifest.Id;
 
     AbsolutePath DirectoryBuildPropsPath => Solution.Directory / "Directory.Build.props";
-    
+
     string ZipFileName => IsModule ? $"{ModuleManifest.Id}_{ReleaseVersion}.zip" : $"{WebProject.Solution.Name}.{ReleaseVersion}.zip";
     string ZipFilePath => ArtifactsDirectory / ZipFileName;
     string GitRepositoryName => GitRepository.Identifier.Split('/')[1];
@@ -162,21 +160,21 @@ class Build : NukeBuild
         }
     }
 
-   Target Clean => _ => _
-        .Before(Restore)
-        .Executes(() =>
-        {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            if (DirectoryExists(TestsDirectory))
-            {
-                TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            }
+    Target Clean => _ => _
+         .Before(Restore)
+         .Executes(() =>
+         {
+             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+             if (DirectoryExists(TestsDirectory))
+             {
+                 TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+             }
             //if (DirectoryExists(TestsDirectory))
             //{
             //    WebProject.Directory.GlobDirectories("**/node_modules").ForEach(DeleteDirectory);
             //}
             EnsureCleanDirectory(ArtifactsDirectory);
-        });
+         });
 
     Target Restore => _ => _
         .Executes(() =>
@@ -225,9 +223,30 @@ class Build : NukeBuild
            if (testProjects.Count() > 0)
            {
                var testProjectPath = testProjects.First().Path;
-               var testArgs = $"{testProjectPath} --logger trx --filter {TestsFilter}";
-               var registerArg = IsServerBuild ? "-register" : "-register:user";
-               OpenCoverTasks.OpenCover($"-target:\"{dotnetPath}\" -targetargs:\"test {testArgs}\" {registerArg} -output:\"{CoverageReportPath}\" -returntargetcode");
+               var OutPath = RootDirectory / ".tmp";
+               var testSetting = new DotNetTestSettings()
+                    .SetProjectFile(testProjectPath)
+                    .SetConfiguration(Configuration)
+                    .SetLogger("trx")
+                    .SetFilter(TestsFilter)
+                    .SetNoBuild(true)
+                    .SetCollectCoverage(true)
+                    .SetLogOutput(true)
+                    .SetResultsDirectory(OutPath);
+               var testProjectBinDir = testProjects.First().Directory / "bin" / Configuration;
+               var testAssemblies = testProjectBinDir.GlobFiles($"**/{Solution.Name}.Tests.dll");
+               if (testAssemblies.Count() > 0)
+               {
+                   var testAssemblyPath = testAssemblies.First();
+
+                   CoverletTasks.Coverlet(s => s
+                       .SetTargetSettings(testSetting)
+                       .SetAssembly(testAssemblyPath)
+                       .SetTarget(dotnetPath)
+                       .SetOutput(CoverageReportPath)
+                       .SetFormat(CoverletOutputFormat.opencover)
+                       );
+               }
            }
        });
 
@@ -265,40 +284,162 @@ class Build : NukeBuild
         public override Encoding Encoding => new UTF8Encoding(false);
     }
 
-
-    protected override void OnTargetStart(string target)
+    public void ChangeProjectVersion(string prefix = null, string suffix = null)
     {
-        if(VersionSuffix.IsNullOrEmpty() && !CustomVersionSuffix.IsNullOrEmpty())
+        //module.manifest
+        if (IsModule)
         {
-            //module.manifest
-            if(IsModule)
+            var manifest = ModuleManifest.Clone();
+            if(!String.IsNullOrEmpty(prefix))
+                manifest.Version = prefix;
+            if(!String.IsNullOrEmpty(suffix))
+                manifest.VersionTag = suffix;
+            using (var writer = new Utf8StringWriter())
             {
-                var manifest = ModuleManifest.Clone();
-                manifest.VersionTag = CustomVersionSuffix;
-                using (var writer = new Utf8StringWriter())
-                {
-                    XmlSerializer xml = new XmlSerializer(typeof(ModuleManifest));
-                    xml.Serialize(writer, manifest);
-                    File.WriteAllText(ModuleManifestFile, writer.ToString(), Encoding.UTF8);
-                }
-            }
-            
-            //directory.Build.Props
-            var xmlDoc = new XmlDocument()
-            {
-                PreserveWhitespace = true
-            };
-            xmlDoc.LoadXml(File.ReadAllText(DirectoryBuildPropsPath));
-            var suffix = xmlDoc.GetElementsByTagName("VersionSuffix");
-            suffix[0].InnerText = CustomVersionSuffix;
-            using(var writer = new Utf8StringWriter())
-            {
-                xmlDoc.Save(writer);
-                File.WriteAllText(DirectoryBuildPropsPath, writer.ToString());
+                XmlSerializer xml = new XmlSerializer(typeof(ModuleManifest));
+                xml.Serialize(writer, manifest);
+                File.WriteAllText(ModuleManifestFile, writer.ToString(), Encoding.UTF8);
             }
         }
-        base.OnTargetStart(target);
+
+        //directory.Build.Props
+        var xmlDoc = new XmlDocument()
+        {
+            PreserveWhitespace = true
+        };
+        xmlDoc.LoadXml(File.ReadAllText(DirectoryBuildPropsPath));
+        if (!String.IsNullOrEmpty(prefix))
+        {
+            var prefixNodex = xmlDoc.GetElementsByTagName("VersionPrefix");
+            prefixNodex[0].InnerText = prefix;
+        }
+        if (String.IsNullOrEmpty(VersionSuffix) && !String.IsNullOrEmpty(suffix))
+        {
+            var suffixNodes = xmlDoc.GetElementsByTagName("VersionSuffix");
+            suffixNodes[0].InnerText = suffix;
+        }
+        using (var writer = new Utf8StringWriter())
+        {
+            xmlDoc.Save(writer);
+            File.WriteAllText(DirectoryBuildPropsPath, writer.ToString());
+        }
     }
+
+    Target ChangeVersion => _ => _
+        .Requires(() => !CustomVersionPrefix.IsNullOrEmpty() || !CustomVersionSuffix.IsNullOrEmpty())
+        .Executes(() =>
+        {
+            if ((String.IsNullOrEmpty(VersionSuffix) && !CustomVersionSuffix.IsNullOrEmpty()) || !CustomVersionPrefix.IsNullOrEmpty())
+            {
+                ChangeProjectVersion(prefix: CustomVersionPrefix, suffix: CustomVersionSuffix);
+            }
+        });
+
+    Target StartRelease => _ => _
+        .Executes(() =>
+        {
+            var currentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(Solution.Path.Parent);
+            GitTasks.Git("checkout dev");
+            var releaseBranchName = $"release/{ReleaseVersion}";
+            Logger.Info(Directory.GetCurrentDirectory());
+            GitTasks.Git($"checkout -b {releaseBranchName}");
+            GitTasks.Git($"push -u origin {releaseBranchName}");
+            Directory.SetCurrentDirectory(currentDir);
+        });
+
+    Target CompleteRelease => _ => _
+        .After(StartRelease)
+        .Executes(() =>
+        {
+            //workaround for run from sources
+            var currentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(Solution.Path.Parent);
+            var currentBranch = GitTasks.GitCurrentBranch();
+            //Master
+            GitTasks.Git("checkout master");
+            GitTasks.Git($"merge {currentBranch}");
+            GitTasks.Git("push origin master");
+            //Dev
+            GitTasks.Git("checkout dev");
+            GitTasks.Git($"merge {currentBranch}");
+            IncrementVersionMinor();
+            ChangeProjectVersion(prefix: CustomVersionPrefix);
+            GitTasks.Git("add .");
+            GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
+            GitTasks.Git($"push origin dev");
+            //remove release branch
+            GitTasks.Git($"branch -d {currentBranch}");
+            GitTasks.Git($"push origin --delete {currentBranch}");
+            Directory.SetCurrentDirectory(currentDir);
+        });
+
+    Target QuickRelease => _ => _
+        .DependsOn(StartRelease, CompleteRelease);
+
+    Target StartHotfix => _ => _
+        .Executes(() =>
+        {
+            var currentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(Solution.Path.Parent);
+            GitTasks.Git("checkout master");
+            IncrementVersionPatch();
+            var hotfixBranchName = $"hotfix/{CustomVersionPrefix}";
+            Logger.Info(Directory.GetCurrentDirectory());
+            GitTasks.Git($"checkout -b {hotfixBranchName}");
+            ChangeProjectVersion(prefix: CustomVersionPrefix);
+            GitTasks.Git("add .");
+            GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
+            GitTasks.Git($"push -u origin {hotfixBranchName}");
+            Directory.SetCurrentDirectory(currentDir);
+        });
+
+    Target CompleteHotfix => _ => _
+        .After(StartHotfix)
+        .Executes(() =>
+        {
+            //workaround for run from sources
+            var currentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(Solution.Path.Parent);
+            var currentBranch = GitTasks.GitCurrentBranch();
+            //Master
+            GitTasks.Git("checkout master");
+            GitTasks.Git($"merge {currentBranch}");
+            GitTasks.Git($"tag {VersionPrefix}");
+            GitTasks.Git("push origin master");
+            //remove hotfix branch
+            GitTasks.Git($"branch -d {currentBranch}");
+            GitTasks.Git($"push origin --delete {currentBranch}");
+            Directory.SetCurrentDirectory(currentDir);
+        });
+
+    public void IncrementVersionMinor()
+    {
+        Version v = new Version(VersionPrefix);
+        var newPrefix = $"{v.Major}.{v.Minor + 1}.{v.Build}";
+        CustomVersionPrefix = newPrefix;
+    }
+
+    public void IncrementVersionPatch()
+    {
+        Version v = new Version(VersionPrefix);
+        var newPrefix = $"{v.Major}.{v.Minor}.{v.Build + 1}";
+        CustomVersionPrefix = newPrefix;
+    }
+
+    Target IncrementMinor => _ => _
+        .Triggers(ChangeVersion)
+        .Executes(() =>
+        {
+            IncrementVersionMinor();
+        });
+
+    Target IncremenPatch => _ => _
+        .Triggers(ChangeVersion)
+        .Executes(() =>
+        {
+            IncrementVersionPatch();
+        });
 
     Target Publish => _ => _
        .DependsOn(Compile)
@@ -610,8 +751,9 @@ class Build : NukeBuild
                  ProcessTasks.StartProcess("github-release", args, RootDirectory, customLogger: GitLogger).AssertZeroExitCode();
              }
              var prereleaseArg = PreRelease ? "--pre-release" : "";
+             var targetBranchArg = ReleaseBranch.IsNullOrEmpty() ? "" : $"--target \"{ReleaseBranch}\"";
              var descriptionArg = File.Exists(ReleaseNotes) ? $"--description \"{File.ReadAllText(ReleaseNotes)}\"" : "";
-             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} {descriptionArg} {prereleaseArg}"); //-c branch -d description
+             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} {targetBranchArg} --tag {tag} {descriptionArg} {prereleaseArg}"); //-c branch -d description
              RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
          });
 
