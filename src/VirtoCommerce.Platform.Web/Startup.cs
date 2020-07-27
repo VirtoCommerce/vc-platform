@@ -175,7 +175,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddSecurityServices(options =>
             {
-                options.NonEditableUsers = new[] { "admin" };
+                
             });
 
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
