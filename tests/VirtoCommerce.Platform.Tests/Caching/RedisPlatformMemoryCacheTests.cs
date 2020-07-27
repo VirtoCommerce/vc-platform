@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Tests.Caching
         public RedisPlatformMemoryCache GetRedisPlatformMemoryCache()
         {
             _redisCachingOptionsMock.Setup(x => x.Value).Returns(new RedisCachingOptions { ChannelName = "TestChannel" });
-            return new RedisPlatformMemoryCache(CreateCache(), _connectionMock.Object, _subscriberMock.Object, CachingOptions, _redisCachingOptionsMock.Object, _logMock.Object, _telemetryClient);
+            return new RedisPlatformMemoryCache(CreateCache(), _connectionMock.Object, _subscriberMock.Object, CachingOptions, _redisCachingOptionsMock.Object, _logMock.Object);
         }
 
         [Fact]
