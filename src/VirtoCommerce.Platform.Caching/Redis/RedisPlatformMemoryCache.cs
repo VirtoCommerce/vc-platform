@@ -14,13 +14,13 @@ namespace VirtoCommerce.Platform.Redis
     public class RedisPlatformMemoryCache : PlatformMemoryCache
     {
         private static string _instanceId { get; } = $"{Environment.MachineName}_{Guid.NewGuid():N}";
-
+        private bool _isSubscribed;
         private readonly ISubscriber _bus;
         private readonly CachingOptions _cachingOptions;
         private readonly RedisCachingOptions _redisCachingOptions;
         private readonly IConnectionMultiplexer _connection;
         private readonly ILogger _log;
-
+        private readonly object _lock = new object();
         private bool _disposed;
 
         public RedisPlatformMemoryCache(IMemoryCache memoryCache
@@ -38,21 +38,14 @@ namespace VirtoCommerce.Platform.Redis
             _cachingOptions = cachingOptions.Value;
             _redisCachingOptions = redisCachingOptions.Value;
 
-            connection.ConnectionFailed += OnConnectionFailed;
-            connection.ConnectionRestored += OnConnectionRestored;
-
             CacheCancellableTokensRegistry.OnTokenCancelled = CacheCancellableTokensRegistry_OnTokenCancelled;
-
-            _bus.Subscribe(_redisCachingOptions.ChannelName, OnMessage, CommandFlags.FireAndForget);
-
-            _log.LogTrace($"Successfully subscribed to Redis backplane channel {_redisCachingOptions.ChannelName } with instance id:{ _instanceId }");
         }
-
+       
         private void CacheCancellableTokensRegistry_OnTokenCancelled(TokenCancelledEventArgs e)
         {
-            var message = new RedisCachingMessage { Id = _instanceId, IsToken = true, CacheKeys = new[] { e.TokenKey } };
+            var message = new RedisCachingMessage { InstanceId = _instanceId, IsToken = true, CacheKeys = new[] { e.TokenKey } };
             Publish(message);
-            _log.LogTrace($"Published cancellation message for token with key: {e.TokenKey}");
+            _log.LogTrace($"Published token cancellation message {message.ToString()}");
         }
 
         protected virtual void OnConnectionFailed(object sender, ConnectionFailedEventArgs e)
@@ -84,8 +77,10 @@ namespace VirtoCommerce.Platform.Redis
         {
             var message = JsonConvert.DeserializeObject<RedisCachingMessage>(redisValue);
 
-            if (!string.IsNullOrEmpty(message.Id) && !message.Id.EqualsInvariant(_instanceId))
+            if (!string.IsNullOrEmpty(message.InstanceId) && !message.InstanceId.EqualsInvariant(_instanceId))
             {
+                _log.LogTrace($"Received message {message.ToString()}");
+
                 foreach (var key in message.CacheKeys?.OfType<string>() ?? Array.Empty<string>())
                 {
                     if (message.IsToken)
@@ -95,19 +90,26 @@ namespace VirtoCommerce.Platform.Redis
                     }
                     else
                     {
-                        _log.LogTrace($"Trying to remove cache entry with key: {key} from in-memory cache of instance: {_instanceId}");
+                        _log.LogTrace($"Trying to remove cache entry with key: {key} from in-memory cache");
                         base.Remove(key);
                     }
                 }
             }
         }
 
-        protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
+        public override bool TryGetValue(object key, out object value)
         {
-          
-            var message = new RedisCachingMessage { Id = _instanceId, CacheKeys = new[] { key } };
+            //We can't do subscription in the ctor due to the fact that it can be called multiple times despite the fact that it registered as a singleton.
+            //So we have delayed the connection and subscription to the Redis server until the first cache call.
+            EnsureRedisServerConnection();
+            return base.TryGetValue(key, out value);
+        }
+
+        protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
+        {          
+            var message = new RedisCachingMessage { InstanceId = _instanceId, CacheKeys = new[] { key } };
             Publish(message);
-            _log.LogTrace($"Published message to remove from cache an entry with key:{key}");
+            _log.LogTrace($"Published message {message} to the Redis backplane");
 
             base.EvictionCallback(key, value, reason, state);
         }
@@ -130,7 +132,29 @@ namespace VirtoCommerce.Platform.Redis
 
         private void Publish(RedisCachingMessage message)
         {
+             EnsureRedisServerConnection();
             _bus.Publish(_redisCachingOptions.ChannelName, JsonConvert.SerializeObject(message), CommandFlags.FireAndForget);
+        }
+
+        private void EnsureRedisServerConnection()
+        {
+            if(!_isSubscribed)
+            {
+                lock(_lock)
+                {
+                    if (!_isSubscribed)
+                    {
+                        _connection.ConnectionFailed += OnConnectionFailed;
+                        _connection.ConnectionRestored += OnConnectionRestored;
+
+                        _bus.Subscribe(_redisCachingOptions.ChannelName, OnMessage, CommandFlags.FireAndForget);
+
+                        _log.LogTrace($"Successfully subscribed to Redis backplane channel {_redisCachingOptions.ChannelName } with instance id:{ _instanceId }");
+                        _isSubscribed = true;
+                    }
+                }
+            }
+         
         }
     }
 }
