@@ -26,7 +26,7 @@ services:
      - Content__FileSystem__PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/cms-content/
     depends_on:
       - vc-db
-    entrypoint: ["vc-db:1433", "-t", "120", "--", "dotnet", "VirtoCommerce.Platform.Web.dll"]
+    entrypoint: ["/wait-for-it.sh", "vc-db:1433", "-t", "120", "--", "dotnet", "VirtoCommerce.Platform.Web.dll"]
     volumes:
       - ${CMS_CONTENT_VOLUME}:/app/wwwroot/cms-content
       - ${MODULES_VOLUME}:/app/Modules

@@ -26,4 +26,6 @@ RUN dotnet publish "VirtoCommerce.Platform.Web.csproj" -c Release -o /app/publis
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
 ENTRYPOINT ["dotnet", "VirtoCommerce.Platform.Web.dll"]
