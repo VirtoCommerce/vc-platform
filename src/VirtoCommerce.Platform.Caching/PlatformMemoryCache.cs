@@ -108,7 +108,7 @@ namespace VirtoCommerce.Platform.Caching
         
         protected virtual void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
-            _log.LogInformation($"EvictionCallback: Cache with key {key} has expired.");
+            _log.LogTrace($"EvictionCallback: Cache entry with key:{key} has been removed.");
         }        
     }
 }
