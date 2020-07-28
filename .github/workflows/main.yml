@@ -67,8 +67,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Get Image Tag
-      uses: VirtoCommerce/vc-github-actions/get-image-tag@v1
+    - name: Get Image Version
+      uses: VirtoCommerce/vc-github-actions/get-image-version@v3.0.1
       id: image
 
     - name: Install VirtoCommerce.GlobalTool
@@ -84,7 +84,7 @@ jobs:
       run: |
         Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile -OutFile artifacts/Dockerfile
         Invoke-WebRequest -Uri https://github.com/VirtoCommerce/vc-docker/blob/master/linux/platform/wait-for-it.sh -OutFile artifacts/wait-for-it.sh
-        docker build artifacts --build-arg SOURCE=. --tag "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform:${{ steps.image.outputs.tag }}"
+        docker build artifacts --build-arg SOURCE=. --tag "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform:${{ steps.image.outputs.taggedVersion }}"
 
     - name: Docker Login
       uses: azure/docker-login@v1
@@ -104,7 +104,7 @@ jobs:
     - name: Push Docker Image to GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker push "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
+        docker push "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.taggedVersion }}"
 
   swagger-validation:
     name: Swagger Schema Validation
@@ -139,7 +139,7 @@ jobs:
     - name: Pull Platform Docker Image from GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
+        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.taggedVersion }}"
 
     - name: Run container
       run: |
@@ -150,7 +150,7 @@ jobs:
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/platform','docker.pkg.github.com/$REPOSITORY/platform') | Set-Content -Path docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/storefront','docker.pkg.github.com/virtocommerce/vc-storefront/storefront') | Set-Content -Path docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'MultipleActiveResultSets=True','MultipleActiveResultSets=False') | Set-Content -Path docker-compose.yml"
-        echo PLATFORM_DOCKER_TAG=${{ steps.image.outputs.tag }} >> .env
+        echo PLATFORM_DOCKER_TAG=${{ steps.image.outputs.taggedVersion }} >> .env
         echo STOREFRONT_DOCKER_TAG=dev-linux-latest >> .env
         echo DOCKER_PLATFORM_PORT=8081 >> .env
         echo DOCKER_STOREFRONT_PORT=8082 >> .env
@@ -198,7 +198,7 @@ jobs:
     - name: Pull Platform Docker Image from GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }}"
+        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.taggedVersion }}"
 
     - name: Push Docker Image to docker.pkg.github.com
       shell: pwsh
@@ -217,7 +217,7 @@ jobs:
 
         $PLATFORM_DOCKER_TAG = $PLATFORM_DOCKER_TAG.Replace('/', '_')
         
-        docker tag "$($REPOSITORY):${{ steps.image.outputs.tag }}" "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
+        docker tag "$($REPOSITORY):${{ steps.image.outputs.taggedVersion }}" "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
         docker push "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
         echo "::set-env name=BUILD_STATE::successful"
 
@@ -230,10 +230,17 @@ jobs:
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         PLATFORM_DOCKER_TAG='dev-linux-experimental'
         if [ '${{ github.ref }}' = 'refs/heads/master' ]; then PLATFORM_DOCKER_TAG=linux-experimental; fi
-        docker tag docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.tag }} ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
+        docker tag docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.taggedVersion }} ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
         docker push ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
         echo "::set-env name=BUILD_STATE::successful"
+
+    - name: Invoke deploy to cd.govirto.com
+      uses: benc-uk/workflow-dispatch@v1
+      with:
+        workflow: Deploy
+        token: ${{ secrets.REPO_TOKEN }}
+        inputs: '{ "versionTag": "{{ steps.image.outputs.taggedVersion }}" }'
 
     - name: Set Build status Failed
       if: failure()
