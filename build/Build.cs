@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nuke.Common;
@@ -16,13 +17,14 @@ using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.CloudFoundry;
+using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Git;
-using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.Npm;
-using Nuke.Common.Tools.OpenCover;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
@@ -42,8 +44,21 @@ class Build : NukeBuild
     {
         ToolPathResolver.ExecutingAssemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
     }
+
     public static int Main()
     {
+        var nukeFile = Directory.GetFiles(Directory.GetCurrentDirectory(), ".nuke");
+        if (!nukeFile.Any())
+        {
+            Logger.Info("No .nuke file found!");
+            var solutions = Directory.GetFiles(Directory.GetCurrentDirectory(), "*.sln");
+            if (solutions.Length == 1)
+            {
+                var solutionFileName = Path.GetFileName(solutions.First());
+                Logger.Info($"Solution found: {solutionFileName}");
+                File.WriteAllText(".nuke", solutionFileName);
+            }
+        }
         var exitCode = Execute<Build>(x => x.Compile);
         return ExitCode ?? exitCode;
     }
@@ -57,7 +72,6 @@ class Build : NukeBuild
 
     [Solution] readonly Solution Solution;
     [GitRepository] readonly GitRepository GitRepository;
-    [GitVersion(Framework = "netcoreapp3.1")] protected readonly GitVersion GitVersion;
 
     readonly Tool Git;
 
@@ -65,6 +79,7 @@ class Build : NukeBuild
     readonly string DevelopBranch = "develop";
     readonly string ReleaseBranchPrefix = "release";
     readonly string HotfixBranchPrefix = "hotfix";
+
 
 
     private static readonly HttpClient httpClient = new HttpClient();
@@ -94,47 +109,72 @@ class Build : NukeBuild
 
     [Parameter("Swagger schema path")] readonly AbsolutePath SwaggerSchemaPath;
 
+    [Parameter("Path to modules.json")] readonly string ModulesJsonName = "modules_v3.json";
+    [Parameter("Full uri to module artifact")] readonly string CustomModulePackageUri;
+
+    [Parameter("Path to Release Notes File")] readonly AbsolutePath ReleaseNotes;
+
+    [Parameter("VersionTag for module.manifest and Directory.Build.Props")]  string CustomVersionPrefix;
+    [Parameter("VersionSuffix for module.manifest and Directory.Build.Props")]  string CustomVersionSuffix;
+
+    [Parameter("Release branch")] readonly string ReleaseBranch;
+
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
-    AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
-    Project WebProject => Solution.AllProjects.FirstOrDefault(x => x.SolutionFolder?.Name == "src" && x.Name.EndsWith("Web"));
+    [Parameter("Path to Artifacts Directory")] AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
+    Project WebProject => Solution.AllProjects.FirstOrDefault(x => (x.SolutionFolder?.Name == "src" && x.Name.EndsWith("Web")) || x.Name.EndsWith("VirtoCommerce.Storefront"));
     AbsolutePath ModuleManifestFile => WebProject.Directory / "module.manifest";
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
+    Microsoft.Build.Evaluation.Project MSBuildProject => WebProject.GetMSBuildProject();
+    string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix")?.EvaluatedValue;
+    string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix")?.EvaluatedValue;
+    string ReleaseVersion => MSBuildProject.GetProperty("PackageVersion")?.EvaluatedValue ?? WebProject.GetProperty("Version");
+
     ModuleManifest ModuleManifest => ManifestReader.Read(ModuleManifestFile);
-    string ModuleSemVersion => string.Join("-", ModuleManifest.Version, ModuleManifest.VersionTag);
 
-    AbsolutePath ModuleOutputDirectory => ArtifactsDirectory / (ModuleManifest.Id + ModuleSemVersion);
+    AbsolutePath ModuleOutputDirectory => ArtifactsDirectory / ModuleManifest.Id;
 
-    string ZipFileName => IsModule ? ModuleManifest.Id + "_" + string.Join("-", ModuleManifest.Version, ModuleManifest.VersionTag) + ".zip" : "VirtoCommerce.Platform." + GitVersion.SemVer + ".zip";
+    AbsolutePath DirectoryBuildPropsPath => Solution.Directory / "Directory.Build.props";
+
+    string ZipFileName => IsModule ? $"{ModuleManifest.Id}_{ReleaseVersion}.zip" : $"{WebProject.Solution.Name}.{ReleaseVersion}.zip";
     string ZipFilePath => ArtifactsDirectory / ZipFileName;
     string GitRepositoryName => GitRepository.Identifier.Split('/')[1];
 
-    string ModulePackageUrl => $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ModuleSemVersion}/{ModuleManifest.Id}_{ModuleSemVersion}.zip";
+    string ModulePackageUrl => CustomModulePackageUri.IsNullOrEmpty() ?
+        $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}/{ModuleManifest.Id}_{ReleaseVersion}.zip" : CustomModulePackageUri;
     GitRepository ModulesRepository => GitRepository.FromUrl("https://github.com/VirtoCommerce/vc-modules.git");
 
     bool IsModule => FileExists(ModuleManifestFile);
 
-    void ErrorLogger(OutputType type, string text)
+    void SonarLogger(OutputType type, string text)
     {
-        if (type == OutputType.Err) Logger.Error(text);
+        switch (type)
+        {
+            case OutputType.Err:
+                Logger.Error(text);
+                break;
+            case OutputType.Std:
+                Logger.Info(text);
+                break;
+        }
     }
 
     Target Clean => _ => _
-        .Before(Restore)
-        .Executes(() =>
-        {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            if (DirectoryExists(TestsDirectory))
-            {
-                TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            }
+         .Before(Restore)
+         .Executes(() =>
+         {
+             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+             if (DirectoryExists(TestsDirectory))
+             {
+                 TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+             }
             //if (DirectoryExists(TestsDirectory))
             //{
             //    WebProject.Directory.GlobDirectories("**/node_modules").ForEach(DeleteDirectory);
             //}
             EnsureCleanDirectory(ArtifactsDirectory);
-        });
+         });
 
     Target Restore => _ => _
         .Executes(() =>
@@ -150,7 +190,7 @@ class Build : NukeBuild
       .DependsOn(Test)
       .Executes(() =>
       {
-          //For platform take nuget package description from Directory.Build.Props 
+          //For platform take nuget package description from Directory.Build.Props
           var settings = new DotNetPackSettings()
                .SetProject(Solution)
                   .EnableNoBuild()
@@ -158,11 +198,11 @@ class Build : NukeBuild
                   .EnableIncludeSymbols()
                   .SetSymbolPackageFormat(DotNetSymbolPackageFormat.snupkg)
                   .SetOutputDirectory(ArtifactsDirectory)
-                  .SetVersion(IsModule ? ModuleSemVersion : GitVersion.NuGetVersionV2);
+                  .SetVersion(ReleaseVersion);
 
           if (IsModule)
           {
-              //For platform take nuget package description from module manifest
+              //For module take nuget package description from module manifest
               settings.SetAuthors(ModuleManifest.Authors)
                   .SetPackageLicenseUrl(ModuleManifest.LicenseUrl)
                   .SetPackageProjectUrl(ModuleManifest.ProjectUrl)
@@ -170,9 +210,6 @@ class Build : NukeBuild
                   .SetPackageRequireLicenseAcceptance(false)
                   .SetDescription(ModuleManifest.Description)
                   .SetCopyright(ModuleManifest.Copyright);
-
-              //Temporary disable GitVersionTask for module. Because version is taken from module.manifest.
-              settings = settings.SetProperty("DisableGitVersionTask", false);
           }
           DotNetPack(settings);
       });
@@ -186,8 +223,30 @@ class Build : NukeBuild
            if (testProjects.Count() > 0)
            {
                var testProjectPath = testProjects.First().Path;
-               var testArgs = $"{testProjectPath} --logger trx --filter {TestsFilter}";
-               OpenCoverTasks.OpenCover($"-target:\"{dotnetPath}\" -targetargs:\"test {testArgs}\" -register -output:\"{CoverageReportPath}\" -returntargetcode");
+               var OutPath = RootDirectory / ".tmp";
+               var testSetting = new DotNetTestSettings()
+                    .SetProjectFile(testProjectPath)
+                    .SetConfiguration(Configuration)
+                    .SetLogger("trx")
+                    .SetFilter(TestsFilter)
+                    .SetNoBuild(true)
+                    .SetCollectCoverage(true)
+                    .SetLogOutput(true)
+                    .SetResultsDirectory(OutPath);
+               var testProjectBinDir = testProjects.First().Directory / "bin" / Configuration;
+               var testAssemblies = testProjectBinDir.GlobFiles($"**/{Solution.Name}.Tests.dll");
+               if (testAssemblies.Count() > 0)
+               {
+                   var testAssemblyPath = testAssemblies.First();
+
+                   CoverletTasks.Coverlet(s => s
+                       .SetTargetSettings(testSetting)
+                       .SetAssembly(testAssemblyPath)
+                       .SetTarget(dotnetPath)
+                       .SetOutput(CoverageReportPath)
+                       .SetFormat(CoverletOutputFormat.opencover)
+                       );
+               }
            }
        });
 
@@ -208,7 +267,7 @@ class Build : NukeBuild
             var packages = ArtifactsDirectory.GlobFiles("*.nupkg");
 
             DotNetLogger = CustomDotnetLogger;
-            
+
             DotNetNuGetPush(s => s
                     .SetSource(Source)
                     .SetApiKey(ApiKey)
@@ -217,6 +276,169 @@ class Build : NukeBuild
                             .SetTargetPath(v)),
                 degreeOfParallelism: 5,
                 completeOnFailure: true);
+        });
+
+    public class Utf8StringWriter : StringWriter
+    {
+        // Use UTF8 encoding but write no BOM to the wire
+        public override Encoding Encoding => new UTF8Encoding(false);
+    }
+
+    public void ChangeProjectVersion(string prefix = null, string suffix = null)
+    {
+        //module.manifest
+        if (IsModule)
+        {
+            var manifest = ModuleManifest.Clone();
+            if(!String.IsNullOrEmpty(prefix))
+                manifest.Version = prefix;
+            if(!String.IsNullOrEmpty(suffix))
+                manifest.VersionTag = suffix;
+            using (var writer = new Utf8StringWriter())
+            {
+                XmlSerializer xml = new XmlSerializer(typeof(ModuleManifest));
+                xml.Serialize(writer, manifest);
+                File.WriteAllText(ModuleManifestFile, writer.ToString(), Encoding.UTF8);
+            }
+        }
+
+        //directory.Build.Props
+        var xmlDoc = new XmlDocument()
+        {
+            PreserveWhitespace = true
+        };
+        xmlDoc.LoadXml(File.ReadAllText(DirectoryBuildPropsPath));
+        if (!String.IsNullOrEmpty(prefix))
+        {
+            var prefixNodex = xmlDoc.GetElementsByTagName("VersionPrefix");
+            prefixNodex[0].InnerText = prefix;
+        }
+        if (String.IsNullOrEmpty(VersionSuffix) && !String.IsNullOrEmpty(suffix))
+        {
+            var suffixNodes = xmlDoc.GetElementsByTagName("VersionSuffix");
+            suffixNodes[0].InnerText = suffix;
+        }
+        using (var writer = new Utf8StringWriter())
+        {
+            xmlDoc.Save(writer);
+            File.WriteAllText(DirectoryBuildPropsPath, writer.ToString());
+        }
+    }
+
+    Target ChangeVersion => _ => _
+        .Requires(() => !CustomVersionPrefix.IsNullOrEmpty() || !CustomVersionSuffix.IsNullOrEmpty())
+        .Executes(() =>
+        {
+            if ((String.IsNullOrEmpty(VersionSuffix) && !CustomVersionSuffix.IsNullOrEmpty()) || !CustomVersionPrefix.IsNullOrEmpty())
+            {
+                ChangeProjectVersion(prefix: CustomVersionPrefix, suffix: CustomVersionSuffix);
+            }
+        });
+
+    Target StartRelease => _ => _
+        .Executes(() =>
+        {
+            var currentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(Solution.Path.Parent);
+            GitTasks.Git("checkout dev");
+            var releaseBranchName = $"release/{ReleaseVersion}";
+            Logger.Info(Directory.GetCurrentDirectory());
+            GitTasks.Git($"checkout -b {releaseBranchName}");
+            GitTasks.Git($"push -u origin {releaseBranchName}");
+            Directory.SetCurrentDirectory(currentDir);
+        });
+
+    Target CompleteRelease => _ => _
+        .After(StartRelease)
+        .Executes(() =>
+        {
+            //workaround for run from sources
+            var currentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(Solution.Path.Parent);
+            var currentBranch = GitTasks.GitCurrentBranch();
+            //Master
+            GitTasks.Git("checkout master");
+            GitTasks.Git($"merge {currentBranch}");
+            GitTasks.Git("push origin master");
+            //Dev
+            GitTasks.Git("checkout dev");
+            GitTasks.Git($"merge {currentBranch}");
+            IncrementVersionMinor();
+            ChangeProjectVersion(prefix: CustomVersionPrefix);
+            GitTasks.Git("add .");
+            GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
+            GitTasks.Git($"push origin dev");
+            //remove release branch
+            GitTasks.Git($"branch -d {currentBranch}");
+            GitTasks.Git($"push origin --delete {currentBranch}");
+            Directory.SetCurrentDirectory(currentDir);
+        });
+
+    Target QuickRelease => _ => _
+        .DependsOn(StartRelease, CompleteRelease);
+
+    Target StartHotfix => _ => _
+        .Executes(() =>
+        {
+            var currentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(Solution.Path.Parent);
+            GitTasks.Git("checkout master");
+            IncrementVersionPatch();
+            var hotfixBranchName = $"hotfix/{CustomVersionPrefix}";
+            Logger.Info(Directory.GetCurrentDirectory());
+            GitTasks.Git($"checkout -b {hotfixBranchName}");
+            ChangeProjectVersion(prefix: CustomVersionPrefix);
+            GitTasks.Git("add .");
+            GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
+            GitTasks.Git($"push -u origin {hotfixBranchName}");
+            Directory.SetCurrentDirectory(currentDir);
+        });
+
+    Target CompleteHotfix => _ => _
+        .After(StartHotfix)
+        .Executes(() =>
+        {
+            //workaround for run from sources
+            var currentDir = Directory.GetCurrentDirectory();
+            Directory.SetCurrentDirectory(Solution.Path.Parent);
+            var currentBranch = GitTasks.GitCurrentBranch();
+            //Master
+            GitTasks.Git("checkout master");
+            GitTasks.Git($"merge {currentBranch}");
+            GitTasks.Git($"tag {VersionPrefix}");
+            GitTasks.Git("push origin master");
+            //remove hotfix branch
+            GitTasks.Git($"branch -d {currentBranch}");
+            GitTasks.Git($"push origin --delete {currentBranch}");
+            Directory.SetCurrentDirectory(currentDir);
+        });
+
+    public void IncrementVersionMinor()
+    {
+        Version v = new Version(VersionPrefix);
+        var newPrefix = $"{v.Major}.{v.Minor + 1}.{v.Build}";
+        CustomVersionPrefix = newPrefix;
+    }
+
+    public void IncrementVersionPatch()
+    {
+        Version v = new Version(VersionPrefix);
+        var newPrefix = $"{v.Major}.{v.Minor}.{v.Build + 1}";
+        CustomVersionPrefix = newPrefix;
+    }
+
+    Target IncrementMinor => _ => _
+        .Triggers(ChangeVersion)
+        .Executes(() =>
+        {
+            IncrementVersionMinor();
+        });
+
+    Target IncremenPatch => _ => _
+        .Triggers(ChangeVersion)
+        .Executes(() =>
+        {
+            IncrementVersionPatch();
         });
 
     Target Publish => _ => _
@@ -228,10 +450,7 @@ class Build : NukeBuild
                .SetWorkingDirectory(WebProject.Directory)
                .EnableNoRestore()
                .SetOutput(IsModule ? ModuleOutputDirectory / "bin" : ArtifactsDirectory / "publish")
-               .SetConfiguration(Configuration)
-               .SetAssemblyVersion(IsModule ? ModuleManifest.Version : GitVersion.AssemblySemVer)
-               .SetFileVersion(IsModule ? ModuleManifest.Version : GitVersion.AssemblySemFileVer)
-               .SetInformationalVersion(IsModule ? ModuleSemVersion : GitVersion.InformationalVersion));
+               .SetConfiguration(Configuration));
 
        });
 
@@ -256,9 +475,6 @@ class Build : NukeBuild
             DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
-                .SetAssemblyVersion(IsModule ? ModuleManifest.Version : GitVersion.AssemblySemVer)
-                .SetFileVersion(IsModule ? ModuleManifest.Version : GitVersion.AssemblySemFileVer)
-                .SetInformationalVersion(IsModule ? ModuleSemVersion : GitVersion.InformationalVersion)
                 .EnableNoRestore());
         });
 
@@ -302,8 +518,9 @@ class Build : NukeBuild
     Target PublishModuleManifest => _ => _
         .Executes(() =>
         {
+            GitTasks.GitLogger = GitLogger;
             var modulesLocalDirectory = ArtifactsDirectory / "vc-modules";
-            var modulesJsonFile = modulesLocalDirectory / "modules_v3.json";
+            var modulesJsonFile = modulesLocalDirectory / ModulesJsonName;
             if (!DirectoryExists(modulesLocalDirectory))
             {
                 GitTasks.Git($"clone {ModulesRepository.HttpsUrl} {modulesLocalDirectory}");
@@ -319,14 +536,50 @@ class Build : NukeBuild
             var existExternalManifest = modulesExternalManifests.FirstOrDefault(x => x.Id == manifest.Id);
             if (existExternalManifest != null)
             {
-                existExternalManifest.PublishNewVersion(manifest);
+                if(!manifest.VersionTag.IsNullOrEmpty() || !CustomVersionSuffix.IsNullOrEmpty())
+                {
+                    var tag = manifest.VersionTag.IsNullOrEmpty() ? CustomVersionSuffix : manifest.VersionTag;
+                    manifest.VersionTag = tag;
+                    var existPrereleaseVersions = existExternalManifest.Versions.Where(v => !v.VersionTag.IsNullOrEmpty());
+                    if (existPrereleaseVersions.Any())
+                    {
+                        var prereleaseVersion = existPrereleaseVersions.First();
+                        prereleaseVersion.Dependencies = manifest.Dependencies;
+                        prereleaseVersion.Incompatibilities = manifest.Incompatibilities;
+                        prereleaseVersion.PlatformVersion = manifest.PlatformVersion;
+                        prereleaseVersion.ReleaseNotes = manifest.ReleaseNotes;
+                        prereleaseVersion.Version = manifest.Version;
+                        prereleaseVersion.VersionTag = manifest.VersionTag;
+                        prereleaseVersion.PackageUrl = manifest.PackageUrl;
+                    }
+                    else
+                    {
+                        existExternalManifest.Versions.Add(ExternalModuleManifestVersion.FromManifest(manifest));
+                    }
+                }
+                else
+                {
+                    existExternalManifest.PublishNewVersion(manifest);
+                }
+                existExternalManifest.Title = manifest.Title;
+                existExternalManifest.Description = manifest.Description;
+                existExternalManifest.Authors = manifest.Authors;
+                existExternalManifest.Copyright = manifest.Copyright;
+                existExternalManifest.Groups = manifest.Groups;
+                existExternalManifest.IconUrl = manifest.IconUrl;
+                existExternalManifest.Id = manifest.Id;
+                existExternalManifest.LicenseUrl = manifest.LicenseUrl;
+                existExternalManifest.Owners = manifest.Owners;
+                existExternalManifest.ProjectUrl = manifest.ProjectUrl;
+                existExternalManifest.RequireLicenseAcceptance = manifest.RequireLicenseAcceptance;
+                existExternalManifest.Tags = manifest.Tags;
             }
             else
             {
                 modulesExternalManifests.Add(ExternalModuleManifest.FromManifest(manifest));
             }
-            TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Formatting.Indented));
-            GitTasks.Git($"commit -am \"{manifest.Id} {ModuleSemVersion}\"", modulesLocalDirectory);
+            TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Newtonsoft.Json.Formatting.Indented));
+            GitTasks.Git($"commit -am \"{manifest.Id} {ReleaseVersion}\"", modulesLocalDirectory);
             GitTasks.Git($"push origin HEAD:master -f", modulesLocalDirectory);
         });
 
@@ -336,7 +589,7 @@ class Build : NukeBuild
           .Executes(async () =>
           {
               var swashbucklePackage = NuGetPackageResolver.GetGlobalInstalledPackage("swashbuckle.aspnetcore.cli", "5.2.1", ToolPathResolver.NuGetPackagesConfigFile);
-              
+
               var swashbucklePath = swashbucklePackage.Directory.GlobFiles("**/dotnet-swagger.dll").Last();
               var projectPublishPath = ArtifactsDirectory / "publish" / $"{WebProject.Name}.dll";
               var swaggerJson = ArtifactsDirectory / "swagger.json";
@@ -365,7 +618,7 @@ class Build : NukeBuild
             {
                 Logger.Normal(msg);
             }
-            if (jsonObj["schemaValidationMessages"].Where(t => (string)t["level"]=="error").Any())
+            if (jsonObj["schemaValidationMessages"].Where(t => (string)t["level"] == "error").Any())
                 ControlFlow.Fail("Schema Validation Messages contains error");
         });
 
@@ -392,12 +645,12 @@ class Build : NukeBuild
             var prParam = "";
             var repositoryParam = "";
             var githubAuthParam = "";
-            if(PullRequest)
+            if (PullRequest)
             {
                 var prNumber = Environment.GetEnvironmentVariable("CHANGE_ID");
                 prParam = $"/d:sonar.github.pullRequest={prNumber}";
                 previewModeParam = "/d:sonar.analysis.mode=preview";
-                if(RepoName.IsNullOrEmpty())
+                if (RepoName.IsNullOrEmpty())
                 {
                     RepoName = Jenkins.Instance.JobName.Split("/")[1];
                 }
@@ -415,7 +668,7 @@ class Build : NukeBuild
 
             Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}").Replace(GitHubToken, "{IS HIDDEN}")}");
 
-            var processStart = ProcessTasks.StartProcess(dotNetPath, startCmd, customLogger: ErrorLogger, logInvocation: false)
+            var processStart = ProcessTasks.StartProcess(dotNetPath, startCmd, customLogger: SonarLogger, logInvocation: false)
                 .AssertWaitForExit().AssertZeroExitCode();
             processStart.Output.EnsureOnlyStd();
         });
@@ -431,7 +684,7 @@ class Build : NukeBuild
 
             Logger.Normal($"Execute: {endCmd.Replace(SonarAuthToken, "{IS HIDDEN}")}");
 
-            var processEnd = ProcessTasks.StartProcess(dotNetPath, endCmd, customLogger: ErrorLogger, logInvocation: false)
+            var processEnd = ProcessTasks.StartProcess(dotNetPath, endCmd, customLogger: SonarLogger, logInvocation: false)
                 .AssertWaitForExit().AssertZeroExitCode();
             processEnd.Output.EnsureOnlyStd();
         });
@@ -463,21 +716,44 @@ class Build : NukeBuild
             }
         });
 
+    void GitLogger(OutputType type, string text)
+    {
+        if (text.Contains("github returned 422 Unprocessable Entity"))
+        {
+            ExitCode = 422;
+        }
+        if (text.Contains("nothing to commit, working tree clean"))
+        {
+            ExitCode = 423;
+        }
+        switch (type)
+        {
+            case OutputType.Err:
+                Logger.Error(text);
+                break;
+            case OutputType.Std:
+                Logger.Info(text);
+                break;
+        }
+    }
+
     Target Release => _ => _
          .DependsOn(Clean, Compress)
          .Requires(() => GitHubUser, () => GitHubToken)
          /*.Requires(() =>   GitRepository.IsOnReleaseBranch() && GitTasks.GitHasCleanWorkingCopy()) */
          .Executes(() =>
          {
-             var tag = "v" + (IsModule ? ModuleSemVersion : GitVersion.SemVer);
+             string tag = ReleaseVersion;
              //FinishReleaseOrHotfix(tag);
 
              void RunGitHubRelease(string args)
              {
-                 ProcessTasks.StartProcess("github-release", args, RootDirectory).AssertZeroExitCode();
+                 ProcessTasks.StartProcess("github-release", args, RootDirectory, customLogger: GitLogger).AssertZeroExitCode();
              }
              var prereleaseArg = PreRelease ? "--pre-release" : "";
-             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} {prereleaseArg}"); //-c branch -d description
+             var targetBranchArg = ReleaseBranch.IsNullOrEmpty() ? "" : $"--target \"{ReleaseBranch}\"";
+             var descriptionArg = File.Exists(ReleaseNotes) ? $"--description \"{File.ReadAllText(ReleaseNotes)}\"" : "";
+             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} {targetBranchArg} --tag {tag} {descriptionArg} {prereleaseArg}"); //-c branch -d description
              RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
          });
 

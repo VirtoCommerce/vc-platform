@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -26,11 +28,13 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly IDictionary<string, SettingDescriptor> _registeredSettingsByNameDict = new Dictionary<string, SettingDescriptor>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
         private readonly IDictionary<string, IEnumerable<SettingDescriptor>> _registeredTypeSettingsByNameDict = new Dictionary<string, IEnumerable<SettingDescriptor>>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
+        private readonly IEventPublisher _eventPublisher;
 
-        public SettingsManager(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache)
+        public SettingsManager(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
+            _eventPublisher = eventPublisher;
         }
 
 
@@ -156,6 +160,8 @@ namespace VirtoCommerce.Platform.Data.Settings
                 throw new ArgumentNullException(nameof(objectSettings));
             }
 
+            var changedEntries = new List<GenericChangedEntry<ObjectSettingEntry>>();
+
             using (var repository = _repositoryFactory())
             {
                 var settingNames = objectSettings.Select(x => x.Name).Distinct().ToArray();
@@ -180,11 +186,13 @@ namespace VirtoCommerce.Platform.Data.Settings
 
                     if (originalEntity != null)
                     {
+                        changedEntries.Add(new GenericChangedEntry<ObjectSettingEntry>(setting, originalEntity.ToModel(AbstractTypeFactory<ObjectSettingEntry>.TryCreateInstance()), EntryState.Modified));
                         modifiedEntity.Patch(originalEntity);
                     }
                     else
                     {
                         repository.Add(modifiedEntity);
+                        changedEntries.Add(new GenericChangedEntry<ObjectSettingEntry>(setting, EntryState.Added));
                     }
                 }
 
@@ -192,6 +200,8 @@ namespace VirtoCommerce.Platform.Data.Settings
             }
 
             ClearCache(objectSettings);
+
+            await _eventPublisher.Publish(new ObjectSettingChangedEvent(changedEntries));
         }
 
         #endregion

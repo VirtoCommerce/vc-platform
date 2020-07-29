@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public string Version { get; set; }
         public string VersionTag { get; set; }
         [JsonIgnore]
-        public SemanticVersion SemanticVersion => SemanticVersion.Parse(Version);
+        public SemanticVersion SemanticVersion => SemanticVersion.Parse(string.Join("-", new[] { Version , VersionTag }).TrimEnd('-'));
 
         public string PlatformVersion { get; set; }
         [JsonIgnore]

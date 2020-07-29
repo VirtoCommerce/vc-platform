@@ -10,6 +10,8 @@
         <ToolCommandName>vc-build</ToolCommandName>
         <NoWarn>CS0649;CS0169</NoWarn>
         <PackageOutputPath>../artifacts</PackageOutputPath>
+        <Title>VirtoCommerce build CLI</Title>
+        <Description>Cross-platform  build automation system for VirtoCommerce projects</Description>
         <NeutralLanguage>en-US</NeutralLanguage>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <StartupObject>Build</StartupObject>
@@ -17,13 +19,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Virtocommerce.Platform.Core" Version="3.0.0-rc4-0190" />
-        <PackageReference Include="Nuke.Common" Version="0.24.7" />
-        <PackageReference Include="GitVersion.CommandLine" Version="5.2.4">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PackageReference Include="Virtocommerce.Platform.Core" Version="3.2.0" />
+        <PackageReference Include="Nuke.Common" Version="0.24.11" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.console" Version="1.7.2">
+            <ExcludeAssets>all</ExcludeAssets>
         </PackageReference>
-        <PackageReference Include="OpenCover" Version="4.7.922" />
     </ItemGroup>
 
     <ItemGroup>
@@ -46,6 +49,10 @@
         <None Include="..\Jenkinsfile" LinkBase="ci" Condition="Exists('..\Jenkinsfile')" />
         <None Include="..\appveyor.yml" LinkBase="ci" Condition="Exists('..\appveyor.yml')" />
         <None Include="..\.travis.yml" LinkBase="ci" Condition="Exists('..\.travis.yml')" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Properties\" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout',
 function ($scope, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper, moduleHelper, $timeout) {
     $scope.uiGridConstants = uiGridConstants;
@@ -146,7 +146,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                     }
                 });
 
-                // toggle grouped rows selection
+                // toggle grouped rows selection	
                 gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                     if (row.internalRow) {
                         _.each(row.treeNode.children, function (treeNode) {

@@ -1,12 +1,12 @@
 # Platform 3 Overview
 
-## Overview
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fmaster%2Fazuredeploy.json)
 
 Virto Commerce is a highly scalable eCommerce product for fast-growing and large companies. It provides powerful enterprise-class features right out-of-the-box and gives you the flexibility to create your own unique eCommerce solution while utilizing agile principles.
 
 Our Virto Commerce 3 development efforts were focused on moving to ASP.NET Core, performance, architecture improvements, further enhancements and fixing architectural bugs.
 
-Virto Commerce 3 is a major release and it consists of Virto Commerce Platform and Virto Commerce Modules. It provides easy and clear migration from 2.x version by preserving complete backward compatibility for API and Database Schema. During development, the platform and 18 core modules were moved.
+Virto Commerce 3 is a major release and it consists of Virto Commerce Platform and Virto Commerce Modules. It provides easy and clear way to update from 2.x version by preserving complete backward compatibility for API and Database Schema. During development, the platform and 18+ core modules were moved.
 
 ## Technology Stack Used
 
@@ -28,7 +28,14 @@ We decided to use the following stack of technologies:
 
 <a class="crosslink" href="https://virtocommerce.com/glossary/what-is-b2b-ecommerce" target="_blank">Platform and modules</a> are written using <a href="https://en.wikipedia.org/wiki/Domain-driven_design" rel="nofollow">DDD</a>, <a href="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)" rel="nofollow">SOLID</a>, <a href="https://en.wikipedia.org/wiki/Test-driven_development" rel="nofollow">Test Driven Development</a> methodologies. For a presentation layer, we use <a href="https://en.wikipedia.org/wiki/Model_View_ViewModel" rel="nofollow">MVVM</a>.
 
-![Virto Commerce 3 Architecture](/docs/media/architecture-circle.png "Virto Commerce 3 Architecture")
+<img src="docs/media/architecture-circle.png" title="Virto Commerce 3 Architecture" width="400">
+
+## Introduction to Virto Commerce
+
+These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
+
+* [Virto Commerce Documentation](https://virtocommerce.com/docs/latest/)
+* [View on GitHub](docs/index.md)
 
 ## Comparison with Platform 2.x
 
@@ -37,18 +44,22 @@ Improve the extensibility and unification of the application. Unified architectu
 
 Virto Commerce Platform 3 helps you increase development speed and significantly reduce time to market.
 
-## Introduction to Virto Commerce
+## References
 
-These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
-
-* [What’s new](/docs/whats-new.md)
-* Setup
-  * [Deploy Platform 3 from precompiled binaries on Windows](/docs/deploy-from-precompiled-binaries-windows.md)
-  * [Deploy Platform 3 from precompiled binaries on Linux](/docs/deploy-from-precompiled-binaries-linux.md)
-  * [Deploy Platform 3 from source code](/docs/deploy-from-source-code.md)
-  * [Connect Storefront to Platform](/docs/connect-storefront-to-platform-v3.md)
-* [Getting Started](/docs/getting-started.md)
-* [Migrate VC Platform Module from version 2.x to 3](/docs/Migrate-module-from-the-Platform-2.0-to-3.0-version.md)
+* [What’s new](docs/release-information/whats-new.md)
+* Deploy
+  * [Deploy on Windows](docs/getting-started/deploy-from-precompiled-binaries-windows.md)
+  * [Deploy on Linux](docs/getting-started/deploy-from-precompiled-binaries-linux.md)
+  * [Deploy to Azure](docs/getting-started/deploy-from-precompiled-binaries-azure.md) 
+  * [Deploy on MacOS](docs/getting-started/deploy-from-precompiled-binaries-MacOS.md) 
+  * [Connect Storefront to Platform](docs/getting-started/connect-storefront-to-platform-v3.md)
+  * [Deploy Platform 3 from source code](docs/developer-guide/deploy-from-source-code.md)
+* [Getting Started](docs/user-guide/getting-started.md)
+* [Update VC Platform Module from version 2.x to 3](docs/release-information/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
+* Virto Commerce Documentation: https://www.virtocommerce.com/docs/latest/
+* Home: https://virtocommerce.com
+* Community: https://www.virtocommerce.org
+* [Download Latest Release](https://github.com/VirtoCommerce/vc-platform/releases/latest)
 
 ## License
 
