@@ -36,7 +36,9 @@ namespace VirtoCommerce.Platform.Web.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = null;
-            var sucesfullyLoadedModules = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.Errors.IsNullOrEmpty());
+            //It is very important to use CompleteListWithDependencies, because of this method returns modules that are sorted according to their dependencies (Topological sort)
+            //and this keep the proper order for scripts includes on the index page.
+            var sucesfullyLoadedModules = _localModuleCatalog.CompleteListWithDependencies(_localModuleCatalog.Modules).OfType<ManifestModuleInfo>().Where(x => x.State == ModuleState.Initialized && x.Errors.IsNullOrEmpty());
             foreach (var module in sucesfullyLoadedModules)
             {
                 var normalizedBundlePath = BundlePath.Replace("~/", "").Replace("\\", "/").TrimStart('/');

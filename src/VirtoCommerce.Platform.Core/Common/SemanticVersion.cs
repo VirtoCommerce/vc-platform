@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace VirtoCommerce.Platform.Core.Common
@@ -9,7 +10,11 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         private readonly Version _version;
 
-        public static readonly Regex SemanticVersionStrictRegex = new Regex(@"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})(?<Prerelease>-([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+(\.([0]\b|[0]$|[0][0-9]*[A-Za-z-]+|[1-9A-Za-z-][0-9A-Za-z-]*)+)*)?(?<Metadata>\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
+        public static readonly Regex SemanticVersionStrictRegex = new Regex(
+                @"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})" +
+                @"(?>\-(?<Prerelease>[0-9A-Za-z\-\.]+))?$"
+                , RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
+
         public SemanticVersion(Version version)
         {
             if (version == null)
@@ -50,7 +55,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 retVal = Minor <= other.Minor;
             }
             return retVal;
-        }
+        }      
 
         public bool IsCompatibleWith(SemanticVersion other)
         {
@@ -69,7 +74,6 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             var match = SemanticVersionStrictRegex.Match(value.Trim());
-
 
             if (match.Success && Version.TryParse(match.Groups["Version"].Value, out var versionValue))
             {
@@ -125,12 +129,17 @@ namespace VirtoCommerce.Platform.Core.Common
                 return false;
             }
 
-            // Return true if the fields match:
-            return _version == other._version;
+            return Major == other.Major
+                   && Minor == other.Minor
+                   && Patch == other.Patch
+                   && string.Equals(Prerelease, other.Prerelease, StringComparison.Ordinal);
         }
+
         public override int GetHashCode()
         {
-            return _version.GetHashCode();
+            int result = _version.GetHashCode();
+            result = result * 31 + Prerelease.GetHashCode();
+            return result;
         }
 
         #region IComparable Members
@@ -151,15 +160,71 @@ namespace VirtoCommerce.Platform.Core.Common
                 return result;
 
             result = Patch.CompareTo(other.Patch);
+            if (result != 0)
+                return result;
 
-            return result;
+            return CompareComponent(Prerelease, other.Prerelease, true);
         }
+
+        private static int CompareComponent(string a, string b, bool nonemptyIsLower = false)
+        {
+            var aEmpty = string.IsNullOrEmpty(a);
+            var bEmpty = string.IsNullOrEmpty(b);
+            if (aEmpty && bEmpty)
+                return 0;
+
+            if (aEmpty)
+                return nonemptyIsLower ? 1 : -1;
+            if (bEmpty)
+                return nonemptyIsLower ? -1 : 1;
+
+            var aComps = a.Split('.');
+            var bComps = b.Split('.');
+
+            var minLen = Math.Min(aComps.Length, bComps.Length);
+            for (int i = 0; i < minLen; i++)
+            {
+                var ac = aComps[i];
+                var bc = bComps[i];
+                var aIsNum = int.TryParse(ac, out var aNum);
+                var bIsNum = int.TryParse(bc, out var bNum);
+                int r;
+                if (aIsNum && bIsNum)
+                {
+                    r = aNum.CompareTo(bNum);
+                    if (r != 0) return r;
+                }
+                else
+                {
+                    if (aIsNum)
+                        return -1;
+                    if (bIsNum)
+                        return 1;
+                    r = string.CompareOrdinal(ac, bc);
+                    if (r != 0)
+                        return r;
+                }
+            }
+
+            return aComps.Length.CompareTo(bComps.Length);
+        }       
 
         #endregion
 
         public override string ToString()
         {
-            return $"{Major}.{Minor}.{Patch}{Prerelease}";
+            var version = new StringBuilder();
+            version.Append(Major);
+            version.Append('.');
+            version.Append(Minor);
+            version.Append('.');
+            version.Append(Patch);
+            if (Prerelease.Length > 0)
+            {
+                version.Append('-');
+                version.Append(Prerelease);
+            }
+            return version.ToString();
         }
     }
 }

@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.IO.Compression;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Transactions;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.TransactionFileManager;
+using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules.External;
 
 namespace VirtoCommerce.Platform.Modules
@@ -19,16 +20,18 @@ namespace VirtoCommerce.Platform.Modules
         private readonly LocalStorageModuleCatalogOptions _options;
         private readonly IExternalModulesClient _externalClient;
         private readonly ITransactionFileManager _fileManager;
-
-
         private readonly IExternalModuleCatalog _extModuleCatalog;
+        private readonly IFileSystem _fileSystem;
+        private readonly IZipFileWrapper _zipFileWrapper;
 
-        public ModuleInstaller(IExternalModuleCatalog extModuleCatalog, IExternalModulesClient externalClient, ITransactionFileManager txFileManager, IOptions<LocalStorageModuleCatalogOptions> localOptions)
+        public ModuleInstaller(IExternalModuleCatalog extModuleCatalog, IExternalModulesClient externalClient, ITransactionFileManager txFileManager, IOptions<LocalStorageModuleCatalogOptions> localOptions, IFileSystem fileSystem, IZipFileWrapper zipFileWrapper)
         {
             _extModuleCatalog = extModuleCatalog;
             _externalClient = externalClient;
             _options = localOptions.Value;
             _fileManager = txFileManager;
+            _fileSystem = fileSystem;
+            _zipFileWrapper = zipFileWrapper;
         }
 
         #region IModuleInstaller Members
@@ -44,6 +47,7 @@ namespace VirtoCommerce.Platform.Modules
                     Report(progress, ProgressMessageLevel.Error, string.Format("Target Platform version {0} is incompatible with current {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
                     isValid = false;
                 }
+           
                 var allInstalledModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).ToArray();
                 //Check that incompatible modules does not installed
                 if (!module.Incompatibilities.IsNullOrEmpty())
@@ -187,6 +191,7 @@ namespace VirtoCommerce.Platform.Modules
         }
         #endregion
 
+
         private void InnerInstall(ManifestModuleInfo module, IProgress<ProgressMessage> progress)
         {
             var dstModuleDir = Path.Combine(_options.DiscoveryPath, module.Id);
@@ -199,43 +204,23 @@ namespace VirtoCommerce.Platform.Modules
             {
                 var moduleUrl = new Uri(module.Ref);
 
-                using (var fileStream = File.OpenWrite(moduleZipPath))
+                using (var fileStream = _fileSystem.File.OpenWrite(moduleZipPath))
                 using (var webStream = _externalClient.OpenRead(moduleUrl))
                 {
                     Report(progress, ProgressMessageLevel.Info, "Downloading '{0}' ", module.Ref);
                     webStream.CopyTo(fileStream);
                 }
             }
-            else if (File.Exists(module.Ref))
+            else if (_fileSystem.File.Exists(module.Ref))
             {
                 moduleZipPath = module.Ref;
             }
 
-            using (var zipStream = File.Open(moduleZipPath, FileMode.Open))
-            using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Read))
-            {
-                foreach (var entry in archive.Entries.Where(e => !string.IsNullOrEmpty(e.Name)))
-                {
-                    //Report(progress, ProgressMessageLevel.Info, "Extracting '{0}' ", entry.FullName);
-                    var filePath = Path.Combine(dstModuleDir, entry.FullName);
-                    //Create directory if not exist
-                    var directoryPath = Path.GetDirectoryName(filePath);
-                    _fileManager.CreateDirectory(directoryPath);
-
-                    using (var entryStream = entry.Open())
-                    using (var fileStream = File.Create(filePath))
-                    {
-                        entryStream.CopyTo(fileStream);
-                    }
-                    File.SetLastWriteTime(filePath, entry.LastWriteTime.LocalDateTime);
-                }
-            }
-
+            _zipFileWrapper.Extract(moduleZipPath, dstModuleDir);
+            
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
         }
-
-
-
+        
         private static void Report(IProgress<ProgressMessage> progress, ProgressMessageLevel level, string format, params object[] args)
         {
             if (progress != null)
