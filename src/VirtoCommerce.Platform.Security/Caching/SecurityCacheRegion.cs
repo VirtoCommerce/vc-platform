@@ -9,23 +9,20 @@ namespace VirtoCommerce.Platform.Security.Caching
 {
     public class SecurityCacheRegion : CancellableCacheRegion<SecurityCacheRegion>
     {
-        private static readonly ConcurrentDictionary<string, CancellationTokenSource> _usersRegionTokenLookup = new ConcurrentDictionary<string, CancellationTokenSource>();
-
         public static IChangeToken CreateChangeTokenForUser(ApplicationUser user)
         {
             if (user == null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
-            var cancellationTokenSource = _usersRegionTokenLookup.GetOrAdd(user.Id, new CancellationTokenSource());
-            return new CompositeChangeToken(new[] { CreateChangeToken(), new CancellationChangeToken(cancellationTokenSource.Token) });
+            return CreateChangeTokenForKey(user.Id);
         }
 
         public static void ExpireUser(ApplicationUser user)
         {
-            if (_usersRegionTokenLookup.TryRemove(user.Id, out var token))
+            if (user != null)
             {
-                token.Cancel();
+                ExpireTokenForKey(user.Id);
             }
         }
     }

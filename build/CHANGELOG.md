@@ -3,6 +3,48 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.3.0] - 2020-07-20
+### Added
+- Targets: StartRelease, CompleteRelease, QuickRelease, StartHotfix, CompleteHotfix, IncrementMinor, IncrementPatch, ChangeVersion
+### Changed
+- OnTargetStart event handler was replaced with ChangeVersion Target
+### Fixed
+- Hash and Sources of github releases (VP-3628)
+
+## [1.2.0] - 2020-07-07
+### Changed
+- Opencover is replaced with Coverlet
+
+## [1.1.1] - 2020-06-26
+### Fixed
+- An issue when there is no Directory.Build.Props file
+
+## [1.1.0] - 2020-06-25
+### Changed
+- Parameters VersionTag and CustomTagSuffix were replaced with CustomVersionSuffix
+
+## [1.0.2] - 2020-06-18
+### Added
+- Support for prereleases in modules manifest
+### Fixed
+- Updating of modules properties in the manifest
+
+## [1.0.1] - 2020-06-11
+### Fixed
+- Artifact name of Storefront
+- Name of artifacts directory of Modules
+### Added
+- .nuke file will be created if it doesn't exist and there is solution file in current directory
+- ArtifactsDirectory Parameter to customize artifact directory
+
+## [1.0.0] - 2020-06-05
+### Fixed
+- An issue with Storefront's project search
+- Modules version is getting from Project properties now
+### Added
+- CustomTagSuffix parameter
+### Changed
+- Updated dependencies
 
 ## [3.0.0-beta0010] - 2020-04-24
 ### Fixed
