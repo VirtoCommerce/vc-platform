@@ -330,8 +330,8 @@ angular.module('platformWebApp')
             blade.parentBlade = parentBlade;
             blade.childrenBlades = [];
             if (parentBlade) {
-                blade.headIcon = parentBlade.headIcon;
-                blade.updatePermission = parentBlade.updatePermission;
+                blade.headIcon = blade.headIcon || parentBlade.headIcon;
+                blade.updatePermission = blade.updatePermission || parentBlade.updatePermission;
             }
             //copy securityscopes from parent blade
             if (parentBlade != null && parentBlade.securityScopes) {
