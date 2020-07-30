@@ -68,7 +68,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Get Image Version
-      uses: VirtoCommerce/vc-github-actions/get-image-version@v3.0.1
+      uses: VirtoCommerce/vc-github-actions/get-image-version@master
       id: image
 
     - name: Install VirtoCommerce.GlobalTool
