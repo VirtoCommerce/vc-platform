@@ -10,7 +10,7 @@ services:
     environment: 
       - ACCEPT_EULA=Y
       - MSSQL_PID=Express
-      - SA_PASSWORD=v!rto_Labs!
+      - SA_PASSWORD=${DB_PASS}
     volumes:
       - db-volume:/var/opt/mssql   
     networks:
@@ -21,7 +21,7 @@ services:
       - "${DOCKER_PLATFORM_PORT:-8090}:80"
     environment:
      - VirtoCommerce:AllowInsecureHttp=true
-     - ConnectionStrings__VirtoCommerce=Data Source=vc-db;Initial Catalog=VirtoCommerce3docker;Persist Security Info=True;User ID=sa;Password=v!rto_Labs!;MultipleActiveResultSets=False;
+     - ConnectionStrings__VirtoCommerce=Data Source=vc-db;Initial Catalog=VirtoCommerce3docker;Persist Security Info=True;User ID=sa;Password=${DB_PASS};MultipleActiveResultSets=False;
      - Assets__FileSystem__PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/assets/
      - Content__FileSystem__PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/cms-content/
     depends_on:

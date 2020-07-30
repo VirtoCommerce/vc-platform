@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Use this script to test if a given TCP host/port are available
+# Origin https://github.com/VirtoCommerce/vc-docker/blob/master/linux/platform/wait-for-it.sh
 
 WAITFORIT_cmdname=${0##*/}
 
