@@ -78,7 +78,8 @@ namespace VirtoCommerce.Platform.Core.Security
             target.LockoutEnd = LockoutEnd;
             target.UserState = UserState;
             target.AccessFailedCount = AccessFailedCount;
-
+            target.PhoneNumber = PhoneNumber;
+            target.PhoneNumberConfirmed = PhoneNumberConfirmed;
             target.MemberId = MemberId;
             target.StoreId = StoreId;
             target.PhotoUrl = PhotoUrl;
