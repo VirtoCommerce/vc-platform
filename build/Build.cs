@@ -90,7 +90,7 @@ class Build : NukeBuild
     [Parameter] static string GlobalModuleIgnoreFileUrl = @"https://raw.githubusercontent.com/VirtoCommerce/vc-platform/release/3.0.0/module.ignore";
 
     [Parameter] readonly string SonarAuthToken = "";
-    [Parameter] readonly string SonarUrl = "https://sonar.virtocommerce.com";
+    [Parameter] readonly string SonarUrl = "https://sonarcloud.io";
     [Parameter] readonly AbsolutePath CoverageReportPath = RootDirectory / ".tmp" / "coverage.xml";
     [Parameter] readonly string TestsFilter = "Category!=IntegrationTest";
 
@@ -104,6 +104,8 @@ class Build : NukeBuild
     [Parameter("Path to folder with  git clones of modules repositories")] readonly AbsolutePath ModulesFolderPath;
     [Parameter("Repo Organization/User")] readonly string RepoOrg = "VirtoCommerce";
     [Parameter("Repo Name")] string RepoName;
+
+    [Parameter("Sonar Organization (\"virto-commerce\" by default)")] readonly string SonarOrg = "virto-commerce";
 
     [Parameter("Path to nuget config")] readonly AbsolutePath NugetConfig;
 
@@ -341,6 +343,7 @@ class Build : NukeBuild
             var currentDir = Directory.GetCurrentDirectory();
             Directory.SetCurrentDirectory(Solution.Path.Parent);
             GitTasks.Git("checkout dev");
+            GitTasks.Git("pull");
             var releaseBranchName = $"release/{ReleaseVersion}";
             Logger.Info(Directory.GetCurrentDirectory());
             GitTasks.Git($"checkout -b {releaseBranchName}");
@@ -358,6 +361,7 @@ class Build : NukeBuild
             var currentBranch = GitTasks.GitCurrentBranch();
             //Master
             GitTasks.Git("checkout master");
+            GitTasks.Git("pull");
             GitTasks.Git($"merge {currentBranch}");
             GitTasks.Git("push origin master");
             //Dev
@@ -365,7 +369,8 @@ class Build : NukeBuild
             GitTasks.Git($"merge {currentBranch}");
             IncrementVersionMinor();
             ChangeProjectVersion(prefix: CustomVersionPrefix);
-            GitTasks.Git("add .");
+            var manifestArg = IsModule ? RootDirectory.GetRelativePathTo(ModuleManifestFile) : "";
+            GitTasks.Git($"add Directory.Build.Props {manifestArg}");
             GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
             GitTasks.Git($"push origin dev");
             //remove release branch
@@ -383,12 +388,14 @@ class Build : NukeBuild
             var currentDir = Directory.GetCurrentDirectory();
             Directory.SetCurrentDirectory(Solution.Path.Parent);
             GitTasks.Git("checkout master");
+            GitTasks.Git("pull");
             IncrementVersionPatch();
             var hotfixBranchName = $"hotfix/{CustomVersionPrefix}";
             Logger.Info(Directory.GetCurrentDirectory());
             GitTasks.Git($"checkout -b {hotfixBranchName}");
             ChangeProjectVersion(prefix: CustomVersionPrefix);
-            GitTasks.Git("add .");
+            var manifestArg = IsModule ? RootDirectory.GetRelativePathTo(ModuleManifestFile) : "";
+            GitTasks.Git($"add Directory.Build.Props {manifestArg}");
             GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
             GitTasks.Git($"push -u origin {hotfixBranchName}");
             Directory.SetCurrentDirectory(currentDir);
@@ -641,32 +648,31 @@ class Build : NukeBuild
             var branchName = GitRepository.Branch;
             Logger.Info($"BRANCH_NAME = {branchName}");
             var projectName = Solution.Name;
-            var previewModeParam = "";
-            var prParam = "";
-            var repositoryParam = "";
-            var githubAuthParam = "";
+            var prBaseParam = "";
+            var prBranchParam = "";
+            var prKeyParam = "";
             if (PullRequest)
             {
+                var prBase = Environment.GetEnvironmentVariable("CHANGE_TARGET");
+                prBaseParam = $"/d:sonar.pullrequest.base='{prBase}'";
+
+                var changeTitle = Environment.GetEnvironmentVariable("CHANGE_TITLE");
+                prBranchParam = $"/d:sonar.pullrequest.branch='{changeTitle}'";
+
                 var prNumber = Environment.GetEnvironmentVariable("CHANGE_ID");
-                prParam = $"/d:sonar.github.pullRequest={prNumber}";
-                previewModeParam = "/d:sonar.analysis.mode=preview";
-                if (RepoName.IsNullOrEmpty())
-                {
-                    RepoName = Jenkins.Instance.JobName.Split("/")[1];
-                }
-                repositoryParam = $"/d:sonar.github.repository={RepoOrg}/{RepoName}";
-                githubAuthParam = $"/d:sonar.github.oauth={GitHubToken}";
+                prKeyParam = $"/d:sonar.pullrequest.key={prNumber}";
+                
             }
-            var branchParam = $"/d:\"sonar.branch={branchName}\"";
-            var projectNameParam = $"/n:\"{projectName}\"";
-            var projectKeyParam = $"/k:\"{projectName}\"";
+            var branchParam = $"/d:\"sonar.branch.name={branchName}\"";
+            var projectKeyParam = $"/k:\"{RepoOrg}_{RepoName}\"";
             var hostParam = $"/d:sonar.host.url={SonarUrl}";
             var tokenParam = $"/d:sonar.login={SonarAuthToken}";
             var sonarReportPathParam = $"/d:sonar.cs.opencover.reportsPaths={CoverageReportPath}";
+            var orgParam = $"/o:{SonarOrg}";
 
-            var startCmd = $"sonarscanner begin {branchParam} {projectNameParam} {projectKeyParam} {hostParam} {tokenParam} {sonarReportPathParam} {previewModeParam} {prParam} {repositoryParam} {githubAuthParam}";
+            var startCmd = $"sonarscanner begin {orgParam} {branchParam} {projectKeyParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam}";
 
-            Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}").Replace(GitHubToken, "{IS HIDDEN}")}");
+            Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}")}");
 
             var processStart = ProcessTasks.StartProcess(dotNetPath, startCmd, customLogger: SonarLogger, logInvocation: false)
                 .AssertWaitForExit().AssertZeroExitCode();
