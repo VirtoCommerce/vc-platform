@@ -3,4 +3,5 @@ arrange:
   - deploy-module-from-source-code.md
   - create-new-module.md
   - swagger-endpoints.md
+  - docker-app-development-workflow.md
   - ...
