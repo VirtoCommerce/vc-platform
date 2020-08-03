@@ -1,35 +1,43 @@
-# Virto Commerce - Extensible Ecommerce Applications
+# Virto Commerce Platform - Extensible Ecommerce Applications
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fmaster%2Fazuredeploy.json)
 
+Virto Commerce is a platform to build extensible e-commerce applications.
 
-Virto Commerce is set of extensible e-commerce applications. Open-Source, .NET Core, API-first, Headless, Cloud Native. 
-Designed to build complex digital commerce solutions for B2B, B2C or B2B2C business, marketplaces and derived SaaS commerce platforms.
+Open-Source, .NET Core, API-first, Headless, Cloud Native.
 
+Our modular architecture was designed to build complex digital commerce solutions for B2B, B2C or B2B2C business, marketplaces and derived SaaS commerce platforms.
+
+Iterate quickly, and run new business models at a global scale.
+
+## Principles
+Main principle is help development team to focus on implementation of business features and don’t worry about the common tasks, like:
+
+* **CLEAN ARCHITECTURE** - Allows to create, customize, scale and maintain e-commerce applications.
+* **CLOUD NATIVE** - Deploy custom solution to Azure, AWS, Google cloud and native integration with cloud services.
+* **MODULARITY** – Every application is built from modules. Applications and modules are not limited to the composite applications, they can be used for building any other application and hence are functionally independent. 
+* **SINGLE RESPONSIBILITY** – Every module should be as simple as possible, so a new developer can support and improve it.
+* **HEADLESS** – All business logic are accessible via API: Rest and GraphQL.
+* **EXTENSIBILITY** – The API and Persistent models can be extended. Business logic can be customized. 
+* **SCALABILITY** – The solution should grow up with the business.
+* **SECURITY** – Role-based security as core functionality of the Virto Commerce.
+* **PERSONALIZATION** – Configure personalized Catalogs, Prices, Promotions, etc. based on organization structure, contracts and dynamic conditions.
 
 ## Architecture Overview
-The following diagram illustrates the high-level architecture and main areas of Virto Commerce solutions.
+The following diagram illustrates the high-level architecture and main areas of Virto Commerce solutions:
 
 ![Architecture Reference](docs/media/vc-architecture-reference.png)
 
-1. **Commerce Applications** - Extensible e-commerce applications. Like Digital Catalog, Order Management, Marketing, Page Builder, etc. 
-1. **Custom Extensions** - Allow to extend API models, Persistent models and business logic in Commerce Applications. 
-1. **External Commerce Applications** - 3rd party e-commerce applications and services. 
-1. **Touchpoints** - Sell in your products on website, mobile application, chatbot or any through 3rd party services: Marketplace, Drop shipping, or whatever you create.
-  Virto Commerce Storefront allows to manage different brands and different stores. Under the same environment and with same features.
-1. **Admin SPA** - Extensible Admin SPA for Commerce Applications. Intuitive user interface lets you manage data in Commerce Applications for all channels.
-1. **Integration middleware** - for Async integration with Non Real-time and legacy services.
-1. **Legacy Software** - Legacy services. 
-
-### Principles
-Main principle is help development team to focus on implementation of business features and e-commerce applications and don’t worry about the common tasks, like:
-
-* **CLEAN ARCHITECTURE** - that allows to create, customize, scale and maintain e-commerce applications.
-* **SINGLE RESPONSIBILITY** – Every unit should be SIMPLE AS POSSIBLE, SO A NEW DEVELOPER can SUPPORT AND IMPROVE IT.
-* **HEADLESS** – All business logic are accessible via API: Rest and GraphQL.
-* **SCALABILITY** – the solution should grow up with the business.
-* **SECURITY** – as Core functionality of the Platform.
-* **PERSONALIZATION** – important part of B2B solutions.
+1. **Virto Commerce Platform** - Cloud and On-premise launcher of e-commerce applications. 
+1. **Commerce Applications** - API-based, Modular and Extensible e-commerce applications. Each of the apps is complete by itself and not dependent on the functioning of the application. 
+The constituent apps have their own consumers and interaction points. Consists of one or several `Virto Commerce Modules`. 
+1. **Custom Extensions** - Allow to extend API-model, Persistent model and business logic in Commerce Applications. Implemented as `Virto Commerce Module`.
+1. **External Commerce Applications** - 3rd-party e-commerce applications and services. 
+1. **Touchpoints** - Sell in your products on website, mobile application, chatbot or any through 3rd party services: Marketplace, Dropshipping, or whatever you create.
+  Virto Commerce Storefront allows managing different brands and stores. Under the same environment and with same features.
+1. **Admin SPA** - Virto Commerce has extensible and intuitive admin user interface. It lets you manage data in Commerce Applications for all channels.
+1. **Integration middleware** - Asynchronous integration middleware for declarative integration with Non-Real-time and legacy services.
+1. **Legacy Software** - Legacy and Non-Real-time services and software. 
 
 
 ## Technology Stack Used
@@ -47,12 +55,6 @@ We decided to use the following stack of technologies:
 * SignalR Core for push notifications
 * AngularJS 1.4 as primary framework for SPA
 * HangFire 1.7.8 for run background tasks
-
-## Solution Architecture Principles Overview
-
-<a class="crosslink" href="https://virtocommerce.com/glossary/what-is-b2b-ecommerce" target="_blank">Platform and modules</a> are written using <a href="https://en.wikipedia.org/wiki/Domain-driven_design" rel="nofollow">DDD</a>, <a href="https://en.wikipedia.org/wiki/SOLID_(object-oriented_design)" rel="nofollow">SOLID</a>, <a href="https://en.wikipedia.org/wiki/Test-driven_development" rel="nofollow">Test Driven Development</a> methodologies. For a presentation layer, we use <a href="https://en.wikipedia.org/wiki/Model_View_ViewModel" rel="nofollow">MVVM</a>.
-
-<img src="docs/media/architecture-circle.png" title="Virto Commerce 3 Architecture" width="400">
 
 ## Introduction to Virto Commerce
 
