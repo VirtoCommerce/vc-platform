@@ -16,4 +16,6 @@
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
   </ItemGroup>
+  <Target Name="Pack">
+  </Target>
 </Project>
