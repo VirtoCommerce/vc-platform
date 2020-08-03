@@ -11,16 +11,16 @@ Our modular architecture was designed to build complex digital commerce solution
 Iterate quickly, and run new business models at a global scale.
 
 ## Principles
-Main principle is help development team to focus on implementation of business features and don’t worry about the common tasks, like:
+The main principle is help development team to focus on the implementation of business features and don’t worry about the common tasks, like:
 
 * **CLEAN ARCHITECTURE** - Allows to create, customize, scale and maintain e-commerce applications.
-* **CLOUD NATIVE** - Deploy custom solution to Azure, AWS, Google cloud and native integration with cloud services.
+* **CLOUD NATIVE** - Deploy the custom solution to Azure, AWS, Google cloud and native integration with cloud services.
 * **MODULARITY** – Every application is built from modules. Applications and modules are not limited to the composite applications, they can be used for building any other application and hence are functionally independent. 
 * **SINGLE RESPONSIBILITY** – Every module should be as simple as possible, so a new developer can support and improve it.
-* **HEADLESS** – All business logic are accessible via API: Rest or GraphQL.
+* **HEADLESS** – All business logic is accessible via API: Rest or GraphQL.
 * **EXTENSIBILITY** – The API and Persistent models can be extended. Business logic can be customized. 
 * **SCALABILITY** – The solution should grow up with the business.
-* **SECURITY** – Role-based security as core functionality of the Virto Commerce.
+* **SECURITY** – Role-based security as the core functionality of the Virto Commerce.
 * **PERSONALIZATION** – Configure personalized Catalogs, Prices, Promotions, etc. based on organization structure, contracts and dynamic conditions.
 
 ## Architecture Overview
@@ -48,11 +48,11 @@ Brings System functionality, like modularity, dependency resolving, role-based s
 
 ![Architecture Reference](media/vc-architecture-application.png)
 
-Each of the application is complete by itself and not dependent on the functioning of the application. The constituent apps have their own consumers and interaction points.
+Each of the application is complete by itself and not dependent on the functioning of the application. The constituent apps have their consumers and interaction points.
 
-The different applications can be deployed launched in different isolated environments.
+The different applications can be deployed and launched in different isolated environments.
 
-The Commerce Application are built from Virto Commerce Modules which are running in same process. So, it's allow to 
+The Commerce Application are built from Virto Commerce Modules which are running in same process. 
 
 The applications can be extended. You can extend API model, Persistent model and business logic in Commerce Applications. 
 
