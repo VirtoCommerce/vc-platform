@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -14,10 +15,12 @@ namespace VirtoCommerce.Platform.Modules
     public class LocalStorageModuleCatalog : ModuleCatalog, ILocalModuleCatalog
     {
         private readonly LocalStorageModuleCatalogOptions _options;
+        private readonly ILogger<LocalStorageModuleCatalog> _logger;
 
-        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options)
+        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
+            _logger = logger;
         }
 
         protected override void InnerLoad()
@@ -193,7 +196,7 @@ namespace VirtoCommerce.Platform.Modules
             }
         }
 
-        private static void CopyFile(string sourceFilePath, string targetFilePath)
+        private void CopyFile(string sourceFilePath, string targetFilePath)
         {
             var sourceFileInfo = new FileInfo(sourceFilePath);
             var targetFileInfo = new FileInfo(targetFilePath);
@@ -208,11 +211,29 @@ namespace VirtoCommerce.Platform.Modules
                 targetVersion = new Version(targetFileVersionInfo.FileMajorPart, targetFileVersionInfo.FileMinorPart, targetFileVersionInfo.FileBuildPart, targetFileVersionInfo.FilePrivatePart);
             }
 
-            if (!targetFileInfo.Exists || sourceVersion > targetVersion || (sourceVersion == targetVersion && targetFileInfo.LastWriteTimeUtc < sourceFileInfo.LastWriteTimeUtc))
+            var versionsAreSameButLaterDate = (sourceVersion == targetVersion && targetFileInfo.Exists && sourceFileInfo.Exists && targetFileInfo.LastWriteTimeUtc < sourceFileInfo.LastWriteTimeUtc);
+            if (!targetFileInfo.Exists || sourceVersion > targetVersion || versionsAreSameButLaterDate)
             {
                 var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
                 Directory.CreateDirectory(targetDirectoryPath);
-                File.Copy(sourceFilePath, targetFilePath, true);
+
+                try
+                {
+                    File.Copy(sourceFilePath, targetFilePath, true);
+                }
+                catch (IOException)
+                {
+                    // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
+                    // We should not fail platform sart in that case - just add warning into the log. In case of unability to place newer version - should fail platform start.
+                    if (versionsAreSameButLaterDate)
+                    {
+                        _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
         }
 

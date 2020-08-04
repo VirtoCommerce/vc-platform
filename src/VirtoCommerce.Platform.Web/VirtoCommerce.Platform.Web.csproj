@@ -5,6 +5,9 @@
         <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
         <noWarn>1591</noWarn>
         <IsPackable>false</IsPackable>
+        <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <NoWarn>1701;1702;1705;1591</NoWarn>
@@ -30,6 +33,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.5" />
         <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.5" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
         <PackageReference Include="OpenIddict" Version="2.0.1" />
         <PackageReference Include="OpenIddict.Core" Version="2.0.1" />

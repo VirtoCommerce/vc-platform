@@ -1,12 +1,39 @@
-# Platform 3 Overview
+# Virto Commerce - Extensible Ecommerce Applications
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fmaster%2Fazuredeploy.json)
 
-Virto Commerce is a highly scalable eCommerce product for fast-growing and large companies. It provides powerful enterprise-class features right out-of-the-box and gives you the flexibility to create your own unique eCommerce solution while utilizing agile principles.
+Virto Commerce is Extensible e-commerce applications. Open-Source, .NET Core, API-first, Headless, Cloud Native. 
+Designed to build complex digital commerce solutions for B2B, B2C or B2B2C business, marketplaces and derived SaaS commerce platforms.
 
-Our Virto Commerce 3 development efforts were focused on moving to ASP.NET Core, performance, architecture improvements, further enhancements and fixing architectural bugs.
 
-Virto Commerce 3 is a major release and it consists of Virto Commerce Platform and Virto Commerce Modules. It provides easy and clear way to update from 2.x version by preserving complete backward compatibility for API and Database Schema. During development, the platform and 18+ core modules were moved.
+## Architecture Overview
+The following diagram illustrates the high-level architecture and main areas of Virto Commerce solutions.
+
+![Architecture Reference](docs/media/vc-architecture-reference.png)
+
+1. **Commerce Applications** - Extensible e-commerce applications. Each of the apps is complete by itself and not dependent on the functioning of the application. 
+The constituent apps have their own consumers and interaction points.
+1. **Custom Extensions** - Allow to extend API models, Persistent models and business logic in Commerce Applications. 
+1. **External Commerce Applications** - 3rd party e-commerce applications and services. 
+1. **Touchpoints** - Sell in your products on website, mobile application, chatbot or any through 3rd party services: Marketplace, Dropshipping, or whatever you create.
+  Virto Commerce Storefront allows managing different brands and stores. Under the same environment and with same features.
+1. **Admin SPA** - Extensible and intuitive user interface lets you manage data in Commerce Applications for all channels.
+1. **Integration middleware** - Asynchronous integration middleware for declarative integration with Non-Real-time and legacy services.
+1. **Legacy Software** - Legacy and Non-Real-time services and software. 
+
+### Principles
+Main principle is help development team to focus on implementation of business features and don’t worry about the common tasks, like:
+
+* **CLEAN ARCHITECTURE** - Allows to create, customize, scale and maintain e-commerce applications.
+* **CLOUD NATIVE** - Deploy custom solution to Azure, AWS, Google cloud and native integration with cloud services.
+* **MODULARITY** – Every application is built from modules. Applications and modules are not limited to the composite applications, they can be used for building any other application and hence are functionally independent. 
+* **SINGLE RESPONSIBILITY** – Every module should be as simple as possible, so a new developer can support and improve it.
+* **HEADLESS** – All business logic are accessible via API: Rest and GraphQL.
+* **EXTENSIBILITY** – The API and Persistent models can be extended. Business logic can be customized. 
+* **SCALABILITY** – The solution should grow up with the business.
+* **SECURITY** – Role-based security as core functionality of the Virto Commerce.
+* **PERSONALIZATION** – Configure personalized Catalogs, Prices, Promotions, etc. based on organization structure, contracts and dynamic conditions.
+
 
 ## Technology Stack Used
 
@@ -37,7 +64,7 @@ These Virto Commerce docs help you learn and use the Virto Commerce platform, fr
 * [Virto Commerce Documentation](https://virtocommerce.com/docs/latest/)
 * [View on GitHub](docs/index.md)
 
-## Comparison with Platform 2.x
+## Comparison with 2.x
 
 In the new version, we change primary technology stack to .NET Core for the platform application and all key modules. Eliminate known technical and architecture design issues of 2.x version (Caching, Overloaded core module, Asynchronous code, Platform Complexity, Extensibility, Performance, Authentication and Authorization)
 Improve the extensibility and unification of the application. Unified architecture and good architecture practices usage reduce the training time for developers who just start to work with Virto Commerce.
