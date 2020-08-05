@@ -65,12 +65,21 @@ The module is built on few principles:
 
 The following diagram illustrates the different type of modules:
 
-![Types of Virto Commerce Headless Microservice](media/vc-architecture-module-types.png)
+**Single Responsibility** - allows to implement an isolated business feature. For example: Pricing.
+ 
+![Single Responsibility-Types of Virto Commerce Headless Microservice](media/vc-architecture-module-types-1.png)
 
-1. **Single Responsibility** - allows to implement an isolated business feature. For example: Pricing.
-1. **Multiservices** - host of several microservices, for example Bundle microservice uses Catalog as primary data-storage.
-1. **Extensions** - The API model, persistence model, business logic can be extended as needed without deploying and re-deploying solution. 
-1. **The orchestration** - aggregate information from multiple microservices and provide one API, for-example provide access to Personalized Offers.
+**Multiservices** - host of several microservices, for example Bundle microservice uses Catalog as primary data-storage.
+
+![Multiservices-Types of Virto Commerce Headless Microservice](media/vc-architecture-module-types-2.png)
+
+**Extensions** - The API model, persistence model, business logic can be extended as needed without deploying and re-deploying solution. 
+
+![Extensions-Types of Virto Commerce Headless Microservice](media/vc-architecture-module-types-3.png)
+
+**The orchestration** - aggregate information from multiple microservices and provide one API, for-example provide access to Personalized Offers.
+
+![Orchestration-Types of Virto Commerce Headless Microservice](media/vc-architecture-module-types-4.png)
 
 ### Inner Structure of the Module
 
