@@ -2,14 +2,11 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "appServicePlanName": {
+        "name": {
             "type": "string",
             "metadata": {
-                "description": "The name of application service plan."
+                "description": "Web App Name. .azurewebsites.net",
             }
-        },
-        "siteName": {
-            "type": "string"
         },
         "appServicePlanSkuName": {
             "type": "string",
@@ -31,9 +28,6 @@
             "metadata": {
                 "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
             }
-        },
-        "sqlServerName": {
-            "type": "string"
         },
         "sqlAdministratorLogin": {
             "type": "string",
@@ -65,7 +59,7 @@
         }
     },
     "variables": {
-        "storageName": "[replace(parameters('siteName'), '-', '')]",
+        "storageName": "[replace(parameters('name'), '-', '')]",
         "storageType": "Standard_LRS",
         "moduleBundles": {
             "Commerce": {
@@ -91,7 +85,7 @@
         {
             "apiVersion": "2014-04-01",
             "type": "Microsoft.Sql/servers",
-            "name": "[parameters('sqlServerName')]",
+            "name": "[parameters('name')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "version": "12.0",
@@ -102,10 +96,10 @@
                 {
                     "apiVersion": "2014-04-01",
                     "type": "databases",
-                    "name": "[parameters('siteName')]",
+                    "name": "[parameters('name')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
+                        "[concat('Microsoft.Sql/servers/', parameters('name'))]"
                     ],
                     "properties": {
                         "edition": "Basic",
@@ -120,7 +114,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2014-04-01",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
+                        "[concat('Microsoft.Sql/servers/', parameters('name'))]"
                     ],
                     "properties": {
                         "endIpAddress": "0.0.0.0",
@@ -132,7 +126,7 @@
         {
             "apiVersion": "2018-02-01",
             "type": "Microsoft.Web/serverfarms",
-            "name": "[parameters('appServicePlanName')]",
+            "name": "[parameters('name')]",
             "location": "[resourceGroup().location]",
             "kind": "app",
             "sku": {
@@ -140,7 +134,7 @@
                 "capacity": 1
             },
             "properties": {
-                "name": "[parameters('appServicePlanName')]",
+                "name": "[parameters('name')]",
                 "numberOfWorkers": "1",
                 "reserved": false
             }
@@ -148,18 +142,18 @@
         {
             "apiVersion": "2018-11-01",
             "type": "Microsoft.Web/sites",
-            "name": "[parameters('siteName')]",
+            "name": "[parameters('name')]",
             "location": "[resourceGroup().location]",
             "kind": "app",
             "dependsOn": [
-                "[concat('Microsoft.Web/serverFarms/', parameters('appServicePlanName'))]"
+                "[concat('Microsoft.Web/serverFarms/', parameters('name'))]"
             ],
             "tags": {
-                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServicePlanName'))]": "empty"
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('name'))]": "empty"
             },
             "properties": {
-                "name": "[parameters('siteName')]",
-                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServicePlanName'))]",
+                "name": "[parameters('name')]",
+                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('name'))]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -206,7 +200,7 @@
                     "connectionStrings": [
                         {
                             "name": "VirtoCommerce",
-                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('siteName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('sqlServerName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
+                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('name'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('name'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('name'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
                             "type": "SQLAzure"
                         }
                     ],
@@ -236,7 +230,7 @@
                     "name": "web",
                     "type": "sourcecontrols",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites/', parameters('siteName'))]"
+                        "[resourceId('Microsoft.Web/sites/', parameters('name'))]"
                     ],
                     "properties": {
                         "RepoUrl": "[parameters('repoUrl')]",
