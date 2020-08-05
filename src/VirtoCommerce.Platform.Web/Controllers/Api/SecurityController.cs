@@ -337,7 +337,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformConstants.Security.Permissions.SecurityCreate)]
         public async Task<ActionResult<SecurityResult>> Create([FromBody] ApplicationUser newUser)
         {
-            var result = await _userManager.CreateAsync(newUser, newUser.Password);
+            IdentityResult result;
+
+            if (string.IsNullOrEmpty(newUser.Password))
+            {
+                result = await _userManager.CreateAsync(newUser);
+            }
+            else
+            {
+                result = await _userManager.CreateAsync(newUser, newUser.Password);
+            }
+
             return Ok(result.ToSecurityResult());
         }
 
