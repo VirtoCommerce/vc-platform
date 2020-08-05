@@ -5,7 +5,7 @@
         "name": {
             "type": "string",
             "metadata": {
-                "description": "Web App Name. .azurewebsites.net",
+                "description": "Web App Name. .azurewebsites.net"
             }
         },
         "appServicePlanSkuName": {
@@ -166,7 +166,7 @@
                         },
                         {
                             "name": "Assets:AzureBlobStorage:ConnectionString",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key, ';EndpointSuffix=core.windows.net')]"
                         },
                         {
                             "name": "Content:Provider",
@@ -174,7 +174,7 @@
                         },
                         {
                             "name": "Content:AzureBlobStorage:ConnectionString",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key, ';EndpointSuffix=core.windows.net')]"
                         },
                         {
                             "name": "Content:AzureBlobStorage:RootPath",
