@@ -33,8 +33,6 @@ jobs:
     - name: Get Image Version
       uses: VirtoCommerce/vc-github-actions/get-image-version@dev
       id: image
-    
-    - name: Set env
       env:
         IMAGE_VERSION: ${{ steps.image.outputs.taggedVersion }}
 
