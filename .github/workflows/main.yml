@@ -144,8 +144,8 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Get Image Tag
-      uses: VirtoCommerce/vc-github-actions/get-image-tag@v1
+    - name: Get Image Version
+      uses: VirtoCommerce/vc-github-actions/get-image-version@dev
       id: image
 
     - name: Pull Platform Docker Image from GitHub
@@ -203,8 +203,8 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Get Image Tag
-      uses: VirtoCommerce/vc-github-actions/get-image-tag@v1
+    - name: Get Image Version
+      uses: VirtoCommerce/vc-github-actions/get-image-version@dev
       id: image
 
     - name: Pull Platform Docker Image from GitHub
