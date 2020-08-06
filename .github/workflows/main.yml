@@ -35,27 +35,13 @@ jobs:
       id: image
       env:
         IMAGE_VERSION: ${{ steps.image.outputs.taggedVersion }}
+      
+        run: echo "Tags are > ${IMAGE_VERSION}"
   
   build-package:
     name: Build Package
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Get Image Version
-      uses: VirtoCommerce/vc-github-actions/get-image-version@dev
-      id: image
-
-    - name: Install VirtoCommerce.GlobalTool
-      run: |
-        dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
-        mv Directory.Build.Props Directory.Build.props
-
-    - name: Build Package
-      run: vc-build Compress -skip Test
-
     - name: Build Docker Image
-      shell: pwsh
-      run: |
-        Write-Output ${IMAGE_VERSION}
+      run: echo "Tags are > ${IMAGE_VERSION}"
