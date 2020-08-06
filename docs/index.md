@@ -127,6 +127,3 @@ Virto Commerce uses following stack of technologies:
 * SignalR Core for push notifications
 * AngularJS 1.4 as primary framework for SPA
 * HangFire 1.7.8 for run background tasks
-
-## Getting Started
-* [Getting Started](getting-started/deploy-from-precompiled-binaries-azure.md)
