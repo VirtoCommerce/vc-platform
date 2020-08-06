@@ -47,4 +47,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Build Docker Image
-      run: echo "Tags are > ${IMAGE_VERSION}"
+      run: echo "Tags are > ${{ env.IMAGE_VERSION }}"
