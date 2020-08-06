@@ -33,10 +33,13 @@ jobs:
     - name: Get Image Version
       uses: VirtoCommerce/vc-github-actions/get-image-version@dev
       id: image
+    
+    - name: Set env
       env:
         IMAGE_VERSION: ${{ steps.image.outputs.taggedVersion }}
-      
-        run: echo "Tags are > ${IMAGE_VERSION}"
+
+    - name: Show IMAGE_VERSION
+      run: echo "Tags are > ${IMAGE_VERSION}"
   
   build-package:
     name: Build Package
