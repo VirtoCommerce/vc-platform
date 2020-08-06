@@ -2,10 +2,10 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "name": {
+        "appServiceName": {
             "type": "string",
             "metadata": {
-                "description": "Web App Name. .azurewebsites.net"
+                "description": "Unique Web App Name of the VirtoCommerce platform to create in .azurewebsites.net"
             }
         },
         "appServicePlanSkuName": {
@@ -62,7 +62,7 @@
         }
     },
     "variables": {
-        "storageName": "[replace(parameters('name'), '-', '')]",
+        "storageName": "[replace(parameters('appServiceName'), '-', '')]",
         "storageType": "Standard_LRS",
         "moduleBundles": {
             "Commerce": {
@@ -88,7 +88,7 @@
         {
             "apiVersion": "2014-04-01",
             "type": "Microsoft.Sql/servers",
-            "name": "[parameters('name')]",
+            "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "version": "12.0",
@@ -99,10 +99,10 @@
                 {
                     "apiVersion": "2014-04-01",
                     "type": "databases",
-                    "name": "[parameters('name')]",
+                    "name": "[parameters('appServiceName')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('name'))]"
+                        "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
                     ],
                     "properties": {
                         "edition": "Basic",
@@ -117,7 +117,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2014-04-01",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('name'))]"
+                        "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
                     ],
                     "properties": {
                         "endIpAddress": "0.0.0.0",
@@ -129,7 +129,7 @@
         {
             "apiVersion": "2018-02-01",
             "type": "Microsoft.Web/serverfarms",
-            "name": "[parameters('name')]",
+            "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
             "kind": "app",
             "sku": {
@@ -137,7 +137,7 @@
                 "capacity": 1
             },
             "properties": {
-                "name": "[parameters('name')]",
+                "name": "[parameters('appServiceName')]",
                 "numberOfWorkers": "1",
                 "reserved": false
             }
@@ -145,18 +145,18 @@
         {
             "apiVersion": "2018-11-01",
             "type": "Microsoft.Web/sites",
-            "name": "[parameters('name')]",
+            "name": "[parameters('appServiceName')]",
             "location": "[resourceGroup().location]",
             "kind": "app",
             "dependsOn": [
-                "[concat('Microsoft.Web/serverFarms/', parameters('name'))]"
+                "[concat('Microsoft.Web/serverFarms/', parameters('appServiceName'))]"
             ],
             "tags": {
-                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('name'))]": "empty"
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServiceName'))]": "empty"
             },
             "properties": {
-                "name": "[parameters('name')]",
-                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('name'))]",
+                "name": "[parameters('appServiceName')]",
+                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServiceName'))]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -169,7 +169,7 @@
                         },
                         {
                             "name": "Assets:AzureBlobStorage:ConnectionString",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key, ';EndpointSuffix=core.windows.net')]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
                         },
                         {
                             "name": "Content:Provider",
@@ -177,7 +177,7 @@
                         },
                         {
                             "name": "Content:AzureBlobStorage:ConnectionString",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key, ';EndpointSuffix=core.windows.net')]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
                         },
                         {
                             "name": "Content:AzureBlobStorage:RootPath",
@@ -203,7 +203,7 @@
                     "connectionStrings": [
                         {
                             "name": "VirtoCommerce",
-                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('name'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('name'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('name'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
+                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('appServiceName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('appServiceName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('appServiceName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
                             "type": "SQLAzure"
                         }
                     ],
@@ -229,11 +229,11 @@
             },
             "resources": [
                 {
-                    "apiVersion": "2016-08-01",
+                    "apiVersion": "2018-11-01",
                     "name": "web",
                     "type": "sourcecontrols",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites/', parameters('name'))]"
+                        "[resourceId('Microsoft.Web/sites/', parameters('appServiceName'))]"
                     ],
                     "properties": {
                         "RepoUrl": "[parameters('repoUrl')]",
@@ -243,5 +243,19 @@
                 }
             ]
         }
-    ]
+    ],
+    "outputs": {
+        "url": {
+            "type": "string",
+            "value": "[concat('https://', parameters('appServiceName'), '.azurewebsites.net')]"
+        },
+        "defaultAdminLogin": {
+            "type": "string",
+            "value": "admin"
+        },
+        "contentStorageConnectionString": {
+            "type": "string",
+            "value": "[concat('provider=AzureBlobStorage;rootPath=cms;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+        }
+    }
 }
