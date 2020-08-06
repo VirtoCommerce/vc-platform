@@ -66,7 +66,7 @@ jobs:
       run: vc-build Compile
 
     - name: Unit Tests
-      run: vc-build Test -skip Restore+Compile
+      run: vc-build Test -skip
 
     - name: SonarCloud End
       if: ${{ env.SONAR_TOKEN != 0 }}
