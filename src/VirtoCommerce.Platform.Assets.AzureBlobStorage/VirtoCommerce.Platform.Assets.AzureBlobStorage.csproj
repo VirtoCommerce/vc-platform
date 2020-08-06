@@ -14,6 +14,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.2" />
+	<PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     </ItemGroup>
 
     <ItemGroup>
