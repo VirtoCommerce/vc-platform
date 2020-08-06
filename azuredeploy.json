@@ -47,7 +47,10 @@
                 "Commerce",
                 "None"
             ],
-            "defaultValue": "Commerce"
+            "defaultValue": "Commerce",
+            "metadata": {
+                "description": "Group(s) of modules to install automatically during initial Platform setup. Select None to install empty platform."
+            }
         },
         "repoUrl": {
             "type": "string",

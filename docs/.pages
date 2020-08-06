@@ -1,5 +1,6 @@
 arrange:
   - index.md
+  - getting-started-with-vc.md
   - getting-started
   - user-guide
   - developer-guide
