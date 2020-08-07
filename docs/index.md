@@ -1,43 +1,122 @@
 # Overview
 
-## Virto Commerce - Extensible E-commerce Applications
+Virto Commerce is an open-source platform for an extensible e-commerce applications.
 
-Virto Commerce is Extensible e-commerce applications. Open-Source, .NET Core, API-first, Headless, Cloud Native. 
-Designed to build complex digital commerce solutions for B2B, B2C or B2B2C business, marketplaces and derived SaaS commerce platforms.
+Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplaces and derived SaaS commerce platforms.
+
+Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
+
+## Principles
+The main principle is to help the development team to focus on the implementation of business features and don’t worry about **CLEAN ARCHITECTURE**.
+
+* **MICROSERVICES** – Every application is built from headless microservices (modules). Applications and microservices are not limited to the composite applications, they can be used for building any other application and hence are functionally independent. 
+* **API-FIRST** – E-commerce service with the right API design. All business logic is accessible via API: Rest or GraphQL. 
+* **CLOUD NATIVE** – E-commerce service is delivered in the SaaS model. Get significant benefits for the business from: 
+    1. *On-demand* - Use e-commerce service as a whole or its separate components as needed; 
+    1. *Scalability* - In the cloud, it can be easily scaled to support peak demand and long-term business growth; 
+    1. *Reliability* - Can leverage a solution deployed across multiple data centers and availability zones to maximize up-time and reduce potential revenue losses.
+* **HEADLESS** – Allows an enterprise to support omnichannel journeys across traditional and digital touchpoints as well as new business models.
+* **EXTENSIBILITY** – The API model, persistence model, business logic can be extended as needed without deploying and re-deploying solution. This provides superior business agility and keeps up to date.
 
 ## Architecture Overview
-The following diagram illustrates the high-level architecture and main areas of Virto Commerce solutions.
+The following diagram illustrates the high-level architecture and main areas of Virto Commerce solutions:
 
-![Architecture Reference](media/vc-architecture-reference.png)
+![Virto Commerce Architecture Reference](media/vc-architecture-reference.png)
 
-1. **Commerce Applications** - Extensible e-commerce applications. Each of the apps is complete by itself and not dependent on the functioning of the application. 
-The constituent apps have their own consumers and interaction points.
-1. **Custom Extensions** - Allow to extend API models, Persistent models and business logic in Commerce Applications. 
-1. **External Commerce Applications** - 3rd party e-commerce applications and services. 
-1. **Touchpoints** - Sell in your products on website, mobile application, chatbot or any through 3rd party services: Marketplace, Dropshipping, or whatever you create.
-  Virto Commerce Storefront allows managing different brands and stores. Under the same environment and with same features.
-1. **Admin SPA** - Extensible and intuitive user interface lets you manage data in Commerce Applications for all channels.
-1. **Integration middleware** - Asynchronous integration middleware for declarative integration with Non-Real-time and legacy services.
-1. **Legacy Software** - Legacy and Non-Real-time services and software. 
+**Virto Commerce Platform** - Launcher of e-commerce applications in the public, hybrid and private cloud. 
 
-### Principles
-Main principle is help development team to focus on implementation of business features and don’t worry about the common tasks, like:
+**Commerce Applications** - API-based, Modular and Extensible logical set of one or several headless microservices (modules) with focus on the implementation of the business feature, like Digital Catalog, Order Management, Content Management, Marketing, etc.
 
-* **CLEAN ARCHITECTURE** - Allows to create, customize, scale and maintain e-commerce applications.
-* **CLOUD NATIVE** - Deploy custom solution to Azure, AWS, Google cloud and native integration with cloud services.
-* **MODULARITY** – Every application is built from modules. Applications and modules are not limited to the composite applications, they can be used for building any other application and hence are functionally independent. 
+**Custom Extensions** - Virto Commerce Module which allows extending API-model, Persistent model, Business logic and Admin UI in Commerce Applications.
+
+**External Commerce Applications** - 3rd-party e-commerce applications and services. 
+
+**Touchpoints** - Sell in your products on the website, mobile application, chatbot or any through 3rd party services: Marketplace, Dropshipping, or whatever you create. Virto Commerce Storefront Kit allows managing different brands and store under the same environment and with same features.
+
+**Admin SPA** - Virto Commerce has an extensible and intuitive admin user interface. It lets you manage data in Commerce Applications for all channels.
+
+**Integration middleware** - Asynchronous integration middleware for declarative integration with Non-Real-time and legacy services.
+
+
+### Platform
+**Virto Commerce Platform** - is launcher of e-commerce applications in the cloud. It brings system functionality, modularity, dependency resolving, role-based security, API, etc.  
+
+### Applications
+**Commerce Application** - is API-based, Modular and Extensible logical set of one or several headless microservices (modules) with focus on the implementation of the business feature, like Digital Catalog, Order Management, Content Management, Marketing, etc.
+
+The following diagram illustrates the high-level architecture of Digital Catalog application, which by default consist of Catalog, Search, Pricing, Inventory, Personalization and Store modules:
+
+![Virto Commerce Application Architecture Reference](media/vc-architecture-application.png)
+
+Each of the applications is complete by itself and not dependent on the functioning of other applications. The constituent apps have their own consumers and interaction points. Selecting Commerce Application, you can configure the ecosystem based on your requirements. 
+
+The different applications can be deployed / launched in different isolated environments. The application can be scaled and run on multiple instances.
+
+The applications can be extended with custom modules. You can extend API model, persistence model, business logic and admin UI. For example, architecture reference includes Pricing Extensions which extend API model, Persistence model and Admin UI with the Recommended price field.
+
+### Modules
+**Virto Commerce Headless Microservice (Module)** - is a development unit. Can consist of one or several microservice. A module must fulfill a single purpose that is narrowly defined and easy to understand.
+
+The module is built on few principles:
+
 * **SINGLE RESPONSIBILITY** – Every module should be as simple as possible, so a new developer can support and improve it.
-* **HEADLESS** – All business logic are accessible via API: Rest and GraphQL.
-* **EXTENSIBILITY** – The API and Persistent models can be extended. Business logic can be customized. 
-* **SCALABILITY** – The solution should grow up with the business.
-* **SECURITY** – Role-based security as core functionality of the Virto Commerce.
-* **PERSONALIZATION** – Configure personalized Catalogs, Prices, Promotions, etc. based on organization structure, contracts and dynamic conditions.
+* **SECURITY** – Role-based security as the core functionality.
+* **FLEXIABILITY** – Configure data and relations based on organization structure, contracts and dynamic conditions.
 
-## Technology Stack Used
+The following diagram illustrates the different type of modules:
+
+**Single Responsibility** - allows to implement an isolated business feature. For example: Pricing.
+ 
+![Single Responsibility-Types of Virto Commerce Headless Microservice](media/vc-architecture-module-types-1.png)
+
+**Multiservices** - host of several microservices, for example Bundle microservice uses Catalog as primary data-storage.
+
+![Multiservices-Types of Virto Commerce Headless Microservice](media/vc-architecture-module-types-3.png)
+
+**Extensions** - The API model, persistence model, business logic can be extended as needed without deploying and re-deploying solution. 
+
+![Extensions-Types of Virto Commerce Headless Microservice](media/vc-architecture-module-types-2.png)
+
+**The orchestration** - aggregate information from multiple microservices and provide one API, for-example provide access to Personalized Offers.
+
+![Orchestration-Types of Virto Commerce Headless Microservice](media/vc-architecture-module-types-4.png)
+
+### Inner Structure of the Module
+
+The module can use a lot out-of-the box additional services from Virto Commerce Platform. The following diagram illustrates the inner structure and services which are accessible for developers:
+
+![Architecture Reference](media/vc-architecture-module.png)
+
+1. **Module Manifest** - gives the information about the module, such as the most important files, dependencies and the capabilities the extension might use.
+1. **Tests and Documentation** - an important part of any module, which helps a new developer to learn and improve it.
+1. **API** - All business logic accessible via API: Rest or GraphQL.
+1. **Security** - access to API is limited by permissions.
+1. **Admin UI (optional)** - the module provides the intuitive admin user interface. It lets you manage data in Admin SPA. 
+1. **Cache (optional)** - From the business logic, you can use distributed cache to improve performance. 
+1. **Business Logic** - The module solution structure is constructed using N-Tier and DDD principle and it is a business unit that is able to fully provide a set of desired features.
+1. **Events (optional)** - From the business logic, you can send internal and external events (Webhooks).
+1. **Database** - The module has a repository and doesn't have a connection with other modules on the database layer. The module can have custom connection string and store data in the custom database. 
+1. **Background Jobs (optional)** - The module can run long-running operations as Background Jobs.
+1. **Log/Monitoring** - The module has native integration with Azure Application Insights service, as Native monitoring tool for .NET Core applications.
+
+## Scalability
+In the cloud, the Virto Commerce Applications can be easily scaled to support peak demand and long-term business growth.
+With auto-scale, you no longer have to worry about scaling services manually. 
+
+## Monitoring
+Virto Commerce Applications has native integrations with [Azure Application Insights](https://azure.microsoft.com/en-us/services/monitor/).
+
+Azure Application Insights is an extensible Application Performance Management (APM) service for developers and DevOps professionals.
+You use it to monitor live applications. It will automatically detect performance anomalies, and includes powerful analytics tools to help you diagnose issues and to understand what users actually do with your app.
+It's designed to help you continuously improve performance and usability.
+It works for apps on a wide variety of platforms including .NET, Node.js, Java, and Python hosted on-premises, hybrid, or any public cloud.
+It integrates with DevOps process, and has connection points to a variety of development tools.
+
+## Technology Stack
 
 In our work, we always try to use advanced technologies. Our decision to choose technologies described below was the result of our extensive experience working with Microsoft products.
 
-We decided to use the following stack of technologies:
+Virto Commerce uses following stack of technologies:
 
 * ASP.NET Core 3.1.0
 * EF Core 3.1.0 as primary ORM
@@ -48,24 +127,3 @@ We decided to use the following stack of technologies:
 * SignalR Core for push notifications
 * AngularJS 1.4 as primary framework for SPA
 * HangFire 1.7.8 for run background tasks
-
-## Comparison with Platform 2.x
-
-In the new version, we change primary technology stack to .NET Core for the platform application and all key modules. Eliminate known technical and architecture design issues of 2.x version (Caching, Overloaded core module, Asynchronous code, Platform Complexity, Extensibility, Performance, Authentication and Authorization)
-Improve the extensibility and unification of the application. Unified architecture and good architecture practices usage reduce the training time for developers who just start to work with Virto Commerce.
-
-Virto Commerce Platform 3 helps you increase development speed and significantly reduce time to market.
-
-## Introduction to Virto Commerce
-
-These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
-
-* [What’s new](release-information/whats-new.md)
-* [Deploy on Windows](getting-started/deploy-from-precompiled-binaries-windows.md)
-* [Deploy on Linux](getting-started/deploy-from-precompiled-binaries-linux.md)
-* [Deploy to Azure](getting-started/deploy-from-precompiled-binaries-azure.md)
-* [Deploy on MacOS](getting-started/deploy-from-precompiled-binaries-MacOS.md)
-* [Connect Storefront to Platform](getting-started/connect-storefront-to-platform-v3)
-* [Deploy Platform 3 from source code](developer-guide/deploy-from-source-code.md)
-* [Getting Started](user-guide/getting-started.md)
-* [Update to version 3](release-information/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
