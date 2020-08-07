@@ -3,16 +3,29 @@ name: CI
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
+  workflow_dispatch:
   push:
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'build/**'
+      - 'README.md'
+      - 'LICENSE'
     branches: [ master, dev ]
   pull_request:
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'build/**'
+      - 'README.md'
+      - 'LICENSE'
     branches: [ master, dev ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  unit-tests:
-    name: Unit Tests
+  sonar-analyze:
+    name: Sonar Analyze
     # The type of runner that the job will run on
     runs-on: windows-latest
     env:
@@ -25,7 +38,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install VirtoCommerce.GlobalTool
-      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
+      run: dotnet tool install --global VirtoCommerce.GlobalTool
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
@@ -49,12 +62,11 @@ jobs:
           $CMD="$($CMD) /d:sonar.pullrequest.key=${{ github.event.number }}"
         }
         pwsh -command $CMD
-
     - name: Build
       run: vc-build Compile
 
     - name: Unit Tests
-      run: vc-build Test -skip Restore+Compile
+      run: vc-build Test -skip
 
     - name: SonarCloud End
       if: ${{ env.SONAR_TOKEN != 0 }}
@@ -62,20 +74,21 @@ jobs:
 
   build-package:
     name: Build Package
+    outputs:
+        taggedVersion: ${{ steps.image.outputs.taggedVersion }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
 
     - name: Get Image Version
-      uses: VirtoCommerce/vc-github-actions/get-image-version@master
+      uses: VirtoCommerce/vc-github-actions/get-image-version@dev
       id: image
 
     - name: Install VirtoCommerce.GlobalTool
       run: |
-        dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
+        dotnet tool install --global VirtoCommerce.GlobalTool
         mv Directory.Build.Props Directory.Build.props
-
     - name: Build Package
       run: vc-build Compress -skip Test
 
@@ -85,7 +98,6 @@ jobs:
         Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile -OutFile artifacts/Dockerfile
         Invoke-WebRequest -Uri https://github.com/VirtoCommerce/vc-docker/blob/master/linux/platform/wait-for-it.sh -OutFile artifacts/wait-for-it.sh
         docker build artifacts --build-arg SOURCE=. --tag "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform:${{ steps.image.outputs.taggedVersion }}"
-
     - name: Docker Login
       uses: azure/docker-login@v1
       with:
@@ -105,7 +117,7 @@ jobs:
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         docker push "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.taggedVersion }}"
-
+  
   swagger-validation:
     name: Swagger Schema Validation
     # The type of runner that the job will run on
@@ -115,7 +127,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install VirtoCommerce.GlobalTool
-      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0-beta0010
+      run: dotnet tool install --global VirtoCommerce.GlobalTool
 
     - name: Download a Build Artifact
       uses: actions/download-artifact@v2
@@ -132,15 +144,10 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Get Image Tag
-      uses: VirtoCommerce/vc-github-actions/get-image-tag@v1
-      id: image
-
     - name: Pull Platform Docker Image from GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.taggedVersion }}"
-
+        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ needs.build-package.outputs.taggedVersion }}"
     - name: Run container
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
@@ -150,37 +157,34 @@ jobs:
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/platform','docker.pkg.github.com/$REPOSITORY/platform') | Set-Content -Path docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/storefront','docker.pkg.github.com/virtocommerce/vc-storefront/storefront') | Set-Content -Path docker-compose.yml"
         pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'MultipleActiveResultSets=True','MultipleActiveResultSets=False') | Set-Content -Path docker-compose.yml"
-        echo PLATFORM_DOCKER_TAG=${{ steps.image.outputs.taggedVersion }} >> .env
+        echo PLATFORM_DOCKER_TAG=${{ needs.build-package.outputs.taggedVersion }} >> .env
         echo STOREFRONT_DOCKER_TAG=dev-linux-latest >> .env
         echo DOCKER_PLATFORM_PORT=8081 >> .env
         echo DOCKER_STOREFRONT_PORT=8082 >> .env
         echo DOCKER_SQL_PORT=8083 >> .env
         echo COMPOSE_PROJECT_NAME=virtocommerce >> .env
         docker-compose up -d
-
     - name: Install Modules
       run: |
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-modules.ps1 -OutFile vc-setup-modules.ps1"
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-check-installed-modules.ps1 -OutFile vc-check-installed-modules.ps1"
         pwsh -command "./vc-setup-modules.ps1 -ApiUrl http://localhost:8081 -NeedRestart -ContainerId virtocommerce_vc-platform-web_1 -Verbose -Debug"
         pwsh -command "./vc-check-installed-modules.ps1 -ApiUrl http://localhost:8081 -Verbose -Debug"
-
     - name: Install Sample Data
       run: |
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-sampledata.ps1 -OutFile vc-setup-sampledata.ps1"
         pwsh -command "./vc-setup-sampledata.ps1 -ApiUrl http://localhost:8081 -Verbose -Debug"
-
     - name: Swagger Schema Validation
       run: |
         pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-get-swagger.ps1 -OutFile vc-get-swagger.ps1"
         pwsh -command "./vc-get-swagger.ps1 -ApiUrl http://localhost:8081 -OutFile swaggerSchema.json -Verbose -Debug"
         pwsh -command "vc-build ValidateSwaggerSchema -SwaggerSchemaPath swaggerSchema.json"
-
+  
   publish:
     name: Publish image
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    needs: [build-package, unit-tests, swagger-validation]
+    needs: [build-package, sonar-analyze, swagger-validation]
     steps:
     - uses: actions/checkout@v2
 
@@ -191,15 +195,10 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Get Image Tag
-      uses: VirtoCommerce/vc-github-actions/get-image-tag@v1
-      id: image
-
     - name: Pull Platform Docker Image from GitHub
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.taggedVersion }}"
-
+        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ needs.build-package.outputs.taggedVersion }}"
     - name: Push Docker Image to docker.pkg.github.com
       shell: pwsh
       run: |
@@ -214,13 +213,11 @@ jobs:
         else {
           $PLATFORM_DOCKER_TAG = "$('${{ github.ref }}'.Replace('refs/heads/', ''))-linux-latest"
         }
-
         $PLATFORM_DOCKER_TAG = $PLATFORM_DOCKER_TAG.Replace('/', '_')
         
-        docker tag "$($REPOSITORY):${{ steps.image.outputs.taggedVersion }}" "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
+        docker tag "$($REPOSITORY):${{ needs.build-package.outputs.taggedVersion }}" "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
         docker push "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
         echo "::set-env name=BUILD_STATE::successful"
-
     - name: Push Docker Image to hub.docker.io
       if: ${{ env.DOCKER_USERNAME != 0 && env.DOCKER_TOKEN != 0 && github.event_name != 'pull_request' }}
       env:
@@ -230,17 +227,16 @@ jobs:
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         PLATFORM_DOCKER_TAG='dev-linux-experimental'
         if [ '${{ github.ref }}' = 'refs/heads/master' ]; then PLATFORM_DOCKER_TAG=linux-experimental; fi
-        docker tag docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.taggedVersion }} ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
+        docker tag docker.pkg.github.com/$REPOSITORY/platform:${{ needs.build-package.outputs.taggedVersion }} ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
         docker push ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
         echo "::set-env name=BUILD_STATE::successful"
-
     - name: Invoke deploy to cd.govirto.com
       uses: benc-uk/workflow-dispatch@v1
       with:
         workflow: Deploy
         token: ${{ secrets.REPO_TOKEN }}
-        inputs: '{ "versionTag": "{{ steps.image.outputs.taggedVersion }}" }'
+        inputs: '{ "versionTag": "{{ needs.build-package.outputs.taggedVersion }}" }'
 
     - name: Set Build status Failed
       if: failure()
