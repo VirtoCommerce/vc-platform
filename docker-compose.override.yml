@@ -1,12 +1,43 @@
-version: '3'
+version: '3.4'
 
 services:
-  virtocommerce.platform.web:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+  vc-db:
+    image: mcr.microsoft.com/mssql/server:latest
     ports:
-      - "80"
+      - "${DOCKER_SQL_PORT:-1433}:1433"
+    expose:  
+      - 1433  
+    environment: 
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - SA_PASSWORD=${DB_PASS}
+    volumes:
+      - db-volume:/var/opt/mssql   
+    networks:
+      - virto
+
+  virtocommerce.platform.web:
+    ports:
+      - "${DOCKER_PLATFORM_PORT:-8090}:80"
+    environment:
+     - VirtoCommerce:AllowInsecureHttp=true
+     - ConnectionStrings__VirtoCommerce=Data Source=vc-db;Initial Catalog=VirtoCommerce3docker;Persist Security Info=True;User ID=sa;Password=${DB_PASS};MultipleActiveResultSets=False;
+     - Assets__FileSystem__PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/assets/
+     - Content__FileSystem__PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/cms-content/
+    depends_on:
+      - vc-db
+    entrypoint: ["/wait-for-it.sh", "vc-db:1433", "-t", "120", "--", "dotnet", "VirtoCommerce.Platform.Web.dll"]
+    volumes:
+      - ${CMS_CONTENT_VOLUME}:/app/wwwroot/cms-content
+      - ${MODULES_VOLUME}:/app/Modules
+    networks:
+      - virto
+
+volumes:
+  db-volume:
+    name: db-volume
+
 networks:
-  default:
-    external:
-      name: nat
+  virto:
+     external:
+        name: nat
