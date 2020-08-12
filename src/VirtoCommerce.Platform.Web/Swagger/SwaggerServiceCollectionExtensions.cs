@@ -104,6 +104,9 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 });
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
+            //This is important line switches the SwaggerGenerator to use the Newtonsoft contract resolver that uses the globally registered PolymorphJsonContractResolver
+            //to propagate up to the resulting OpenAPI schema the derived types instead of base domain types
+            services.AddSwaggerGenNewtonsoftSupport();
 
         }
 
