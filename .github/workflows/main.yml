@@ -80,6 +80,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
 
     - name: Get Image Version
       uses: VirtoCommerce/vc-github-actions/get-image-version@dev
@@ -148,15 +150,29 @@ jobs:
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ needs.build-package.outputs.taggedVersion }}"
+    - name: Pull docker-compose.yml 
+      shell: pwsh
+      run: |
+        New-Item -ItemType Directory -Force -Path docker
+        cd docker
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/docker-compose.yml -OutFile docker-compose.yml
+        $FileContent = Get-Content -path docker-compose.yml
+        $FileContent = $FileContent -replace 'virtocommerce/platform','docker.pkg.github.com/$REPOSITORY/platform'
+        $FileContent = $FileContent -replace 'virtocommerce/storefront','docker.pkg.github.com/virtocommerce/vc-storefront/storefront'
+        $FileContent = $FileContent -replace 'MultipleActiveResultSets=True','MultipleActiveResultSets=False'
+        $FileContent = $FileContent -replace 'Connect Timeout=30','Connect Timeout=300'
+        $NewFileContent = @()
+        foreach ($Line in $FileContent) {
+            if($Line -match 'ElasticSearch'){
+                $NewFileContent += '      - VirtoCommerce:Hangfire:JobStorageType:Memory'
+            }
+            $NewFileContent += $Line
+        }
+        $NewFileContent | Out-File 'docker-compose.yml'    
     - name: Run container
+      working-directory: ./docker
       run: |
         REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        mkdir docker
-        cd docker
-        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/docker-compose.yml -OutFile docker-compose.yml"
-        pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/platform','docker.pkg.github.com/$REPOSITORY/platform') | Set-Content -Path docker-compose.yml"
-        pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'virtocommerce/storefront','docker.pkg.github.com/virtocommerce/vc-storefront/storefront') | Set-Content -Path docker-compose.yml"
-        pwsh -command "((Get-Content -path docker-compose.yml -Raw) -replace 'MultipleActiveResultSets=True','MultipleActiveResultSets=False') | Set-Content -Path docker-compose.yml"
         echo PLATFORM_DOCKER_TAG=${{ needs.build-package.outputs.taggedVersion }} >> .env
         echo STOREFRONT_DOCKER_TAG=dev-linux-latest >> .env
         echo DOCKER_PLATFORM_PORT=8081 >> .env
