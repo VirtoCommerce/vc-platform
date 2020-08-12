@@ -24,14 +24,28 @@ services:
      - ConnectionStrings__VirtoCommerce=Data Source=vc-db;Initial Catalog=VirtoCommerce3docker;Persist Security Info=True;User ID=sa;Password=${DB_PASS};MultipleActiveResultSets=False;
      - Assets__FileSystem__PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/assets/
      - Content__FileSystem__PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/cms-content/
+     - Search__Provider=${SEARCH_PROVIDER}
+     - Search__Scope=platformindex
+     - Search__ElasticSearch__Server=http://elastic:9200
     depends_on:
       - vc-db
+      - elastic
     entrypoint: ["/wait-for-it.sh", "vc-db:1433", "-t", "120", "--", "dotnet", "VirtoCommerce.Platform.Web.dll"]
     volumes:
       - ${CMS_CONTENT_VOLUME}:/app/wwwroot/cms-content
       - ${MODULES_VOLUME}:/app/Modules
     networks:
       - virto
+
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    container_name: elastic
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    networks:
+      - virto   
 
 volumes:
   db-volume:
