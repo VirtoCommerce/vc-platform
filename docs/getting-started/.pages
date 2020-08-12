@@ -1,7 +1,7 @@
 arrange:
+  - deploy-from-precompiled-binaries-azure.md
   - deploy-from-precompiled-binaries-windows.md
   - deploy-from-precompiled-binaries-linux.md
   - deploy-from-precompiled-binaries-MacOS.md
-  - deploy-from-precompiled-binaries-azure.md
   - connect-storefront-to-platform-v3.md
   - ...
