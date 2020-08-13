@@ -4,9 +4,9 @@ FROM docker.pkg.github.com/virtocommerce/vc-platform/platform:${platform_arg}
 
 WORKDIR /opt/virtocommerce/platform
 
-RUN apt-get update && apt-get install -y openssh-server
-
+RUN apt-get update && apt-get install -y openssh-server bash
 COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
+RUN sed $'s/\r$//' /wait-for-it.sh > /wait-for-it.sh.unix \
+    && mv /wait-for-it.sh.unix /wait-for-it.sh && chmod +x /wait-for-it.sh
 
 ENTRYPOINT ["dotnet", "VirtoCommerce.Platform.Web.dll"]
