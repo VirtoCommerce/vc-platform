@@ -157,10 +157,10 @@ jobs:
         cd docker
         Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/docker-compose.yml -OutFile docker-compose.yml
         $FileContent = Get-Content -path docker-compose.yml
-        $FileContent = $FileContent -replace 'virtocommerce/platform','docker.pkg.github.com/$REPOSITORY/platform'
-        $FileContent = $FileContent -replace 'virtocommerce/storefront','docker.pkg.github.com/virtocommerce/vc-storefront/storefront'
-        $FileContent = $FileContent -replace 'MultipleActiveResultSets=True','MultipleActiveResultSets=False'
-        $FileContent = $FileContent -replace 'Connect Timeout=30','Connect Timeout=300'
+        $FileContent = $FileContent -replace "virtocommerce/platform","docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform"
+        $FileContent = $FileContent -replace "virtocommerce/storefront","docker.pkg.github.com/virtocommerce/vc-storefront/storefront"
+        $FileContent = $FileContent -replace "MultipleActiveResultSets=True","MultipleActiveResultSets=False"
+        $FileContent = $FileContent -replace "Connect Timeout=30","Connect Timeout=300"
         $NewFileContent = @()
         foreach ($Line in $FileContent) {
             if($Line -match 'ElasticSearch'){
@@ -172,7 +172,6 @@ jobs:
     - name: Run container
       working-directory: ./docker
       run: |
-        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
         echo PLATFORM_DOCKER_TAG=${{ needs.build-package.outputs.taggedVersion }} >> .env
         echo STOREFRONT_DOCKER_TAG=dev-linux-latest >> .env
         echo DOCKER_PLATFORM_PORT=8081 >> .env
