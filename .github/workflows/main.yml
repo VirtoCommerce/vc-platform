@@ -90,7 +90,7 @@ jobs:
     - name: Install VirtoCommerce.GlobalTool
       run: |
         dotnet tool install --global VirtoCommerce.GlobalTool
-        mv Directory.Build.Props Directory.Build.props
+
     - name: Build Package
       run: vc-build Compress -skip Test
 
