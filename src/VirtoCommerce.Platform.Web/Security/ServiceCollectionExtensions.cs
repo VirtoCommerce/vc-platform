@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Web.Security
 {
     public static class ServiceCollectionExtensions
     {
-      
+
         public static IServiceCollection AddSecurityServices(this IServiceCollection services, Action<AuthorizationOptions> setupAction = null)
         {
             services.AddTransient<ISecurityRepository, SecurityRepository>();
@@ -37,6 +37,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.TryAddScoped<RoleManager<Role>, CustomRoleManager>();
             services.TryAddScoped<UserManager<ApplicationUser>, CustomUserManager>();
             services.AddSingleton<Func<UserManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<UserManager<ApplicationUser>>());
+            services.AddSingleton<Func<SignInManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<SignInManager<ApplicationUser>>());
             //Use custom ClaimsPrincipalFactory to add system roles claims for user principal
             services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserClaimsPrincipalFactory>();
 
