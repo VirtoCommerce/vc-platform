@@ -6,4 +6,4 @@ services:
     image: ${DOCKER_REGISTRY-}virtocommerceplatformweb
     build:
       context: .
-      dockerfile: ../src/VirtoCommerce.Platform.Web/Dockerfile 
+      dockerfile: src/VirtoCommerce.Platform.Web/Dockerfile 
