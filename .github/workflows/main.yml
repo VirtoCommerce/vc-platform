@@ -63,17 +63,19 @@ jobs:
 
     - name: Packaging
       run: vc-build Compress -skip Clean+Restore+Compile+Test
-      
+
     - name: Swagger Schema Validation
       run: vc-build SwaggerValidation -skip
 
     - name: Build Docker Image
+      if: ${{ github.ref == 'ref/head/master' }}
       id: dockerBuild
       uses: VirtoCommerce/vc-github-actions/build-docker-image@dev
       with:
         tag: ${{ steps.image.outputs.taggedVersion }}
 
     - name: Docker Login
+      if: ${{ github.ref == 'ref/head/master' }}
       uses: azure/docker-login@v1
       with:
         login-server: docker.pkg.github.com
@@ -81,6 +83,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish Docker Image
+      if: ${{ github.ref == 'ref/head/master' }}
       uses: VirtoCommerce/vc-github-actions/publish-docker-image@dev
       with:
           image: ${{ steps.dockerBuild.outputs.imageName }}
