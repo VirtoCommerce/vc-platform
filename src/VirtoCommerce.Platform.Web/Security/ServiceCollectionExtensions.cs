@@ -39,7 +39,6 @@ namespace VirtoCommerce.Platform.Web.Security
             services.TryAddScoped<UserManager<ApplicationUser>, CustomUserManager>();
             services.AddSingleton<Func<UserManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<UserManager<ApplicationUser>>());
             services.AddSingleton<Func<SignInManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<SignInManager<ApplicationUser>>());
-            services.AddSingleton<IPasswordHasher<ApplicationUser>, CustomPasswordHasher>();
             services.AddSingleton<IUserPasswordHasher, DefaultUserPasswordHasher>();
             //Use custom ClaimsPrincipalFactory to add system roles claims for user principal
             services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserClaimsPrincipalFactory>();
