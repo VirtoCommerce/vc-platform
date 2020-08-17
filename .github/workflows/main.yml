@@ -23,16 +23,15 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build-package:
-    name: CI
+  ci:
     runs-on: ubuntu-latest
     env:
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       NUGET_KEY: ${{ secrets.NUGET_KEY }}
       BLOB_SAS: ${{ secrets.BLOB_TOKEN }}
-    steps:
 
+    steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
