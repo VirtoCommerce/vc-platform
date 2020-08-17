@@ -68,8 +68,8 @@ jobs:
     - name: Packaging
       run: vc-build Compress -skip Clean+Restore+Compile+Test
 
-    - name: Swagger Schema Validation
-      run: vc-build SwaggerValidation -skip
+    #- name: Swagger Schema Validation
+    #  run: vc-build SwaggerValidation -skip
 
     - name: Build Docker Image
       if: ${{ github.ref == 'ref/head/master' }}
