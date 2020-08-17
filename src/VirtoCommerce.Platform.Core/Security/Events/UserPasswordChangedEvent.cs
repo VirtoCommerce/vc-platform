@@ -4,10 +4,10 @@ namespace VirtoCommerce.Platform.Core.Security.Events
 {
     public class UserPasswordChangedEvent : DomainEvent
     {
-        public UserPasswordChangedEvent(string userId, string hashedPassword)
+        public UserPasswordChangedEvent(string userId, string сustomPasswordHash)
         {
             UserId = userId;
-            HashedPassword = hashedPassword;
+            CustomPasswordHash = сustomPasswordHash;
         }
 
         public string UserId { get; set; }
@@ -15,6 +15,6 @@ namespace VirtoCommerce.Platform.Core.Security.Events
         /// <summary>
         /// Password hash for external hash storage. This provided as workaround until password hash storage would implemented
         /// </summary>         
-        public string HashedPassword { get; set; }
+        public string CustomPasswordHash { get; set; }
     }
 }
