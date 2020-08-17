@@ -70,6 +70,14 @@ jobs:
 
     #- name: Swagger Schema Validation
     #  run: vc-build SwaggerValidation -skip
+          
+    - name: Publish Nuget
+      uses: VirtoCommerce/vc-github-actions/publish-nuget@dev
+      
+    - name: Publish Github Release
+      with:
+        changelog: ${{ steps.changelog.outputs.changelog }}
+      uses: VirtoCommerce/vc-github-actions/publish-github-release@dev
 
     - name: Build Docker Image
       if: ${{ github.ref == 'ref/head/master' }}
