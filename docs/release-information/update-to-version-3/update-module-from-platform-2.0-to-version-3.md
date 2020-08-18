@@ -22,7 +22,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
 2. If exists, delete **_packages_** folder.
 3. Delete **Properties** folder from each of the projects' folder.
 4. Convert the projects from ASP&#46;NET to ASP&#46;NET Core:
-   1. Open **_*.csproj_** file of **_CustomerReviews&#46;Web_** project in text editor (e.g., Notepad), clear whole file content and set it to this:
+    1. Open **_*.csproj_** file of **_CustomerReviews&#46;Web_** project in text editor (e.g., Notepad), clear whole file content and set it to this:
     ```xml
     <Project Sdk="Microsoft.NET.Sdk.Web">
         <PropertyGroup>
@@ -36,7 +36,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
         </ItemGroup>
     </Project>
     ```
-   2. Replace all other **_*.csproj_** files' content with this:
+    2. Replace all other **_*.csproj_** files' content with this:
     ```xml
     <Project Sdk="Microsoft.NET.Sdk">
         <PropertyGroup>
@@ -44,11 +44,12 @@ This article describes how to update an existing [CustomerReviews sample](https:
         </PropertyGroup>
     </Project>
     ```
+    3. Read [this article](https://docs.microsoft.com/en-us/aspnet/core/migration/30-to-31) for more info.
 
-   3. Read [this article](https://docs.microsoft.com/en-us/aspnet/core/migration/30-to-31) for more info.
 5. Create **_src_** and **_tests_** subfolders in module's root folder (Windows Explorer)
 6. Move **_CustomerReviews.Core_**, **_CustomerReviews.Data_**, **_CustomerReviews&#46;Web_** projects to **_src_**
 7. Move **_CustomerReviews.Test_** project to **_tests_**
+7. If exists, move **module.ignore** from _CustomerReviews**&#46;Web**_ project up to the same folder as _CustomerReviews**.sln**_ is.
 8. Open **_CustomerReviews.sln_** solution in Visual Studio
 9. Remove all projects from the solution
 10. Add **_src_** and **_tests_** Solution Folders
@@ -57,15 +58,18 @@ This article describes how to update an existing [CustomerReviews sample](https:
 13. Remove all files related to .NET Framework 4.x in **every project**:
     * **App.config**
     * **packages.config**
-    * **Web.config**, **Web.Debug.config**, **Web.Release.config**, **module.ignore**
+    * **Web.config**, **Web.Debug.config**, **Web.Release.config**
     * if exists, delete **CommonAssemblyInfo.cs** 
+    * if exists, delete all ***.nuspec** files. (NuGet packages are now released without using this file.)
 14. Add references to projects:
     1. **CustomerReviews.Data**: add reference to CustomerReviews.Core project
     1. **CustomerReviews&#46;Web**: add references to CustomerReviews.Core, CustomerReviews.Data projects
     1. **CustomerReviews.Tests**: add references to CustomerReviews.Core, CustomerReviews.Data, CustomerReviews&#46;Web projects
 15. References to NuGet packages:
-    1. **CustomerReviews.Core**: add reference to the latest version **_VirtoCommerce.Platform.Core_** package.
-    1. **CustomerReviews.Data**: add reference to the latest version **_VirtoCommerce.Platform.Data_** package.
+    1. **CustomerReviews.Core**: add reference to **_VirtoCommerce.Platform.Core_** package (latest version).
+    1. **CustomerReviews.Data**: 
+        1. add reference to **_VirtoCommerce.Platform.Data_** package (latest version).
+        1. add reference to **_Microsoft.EntityFrameworkCore.Tools_** package (same version as referenced in _VirtoCommerce.Platform.Data_).
 16. Add other NuGet dependency packages, if any exists in **_module.manifest_**.
 
 ## 3. Make changes in CustomerReviews.Core project
@@ -156,7 +160,9 @@ This article describes how to update an existing [CustomerReviews sample](https:
 
 4. **Migrations** folder
     1. Create **_InitialCustomerReviews_** migration
+        1. Open Configuration.cs and copy the namespace to your notes. (Will need it in the next section.)
         1. Delete everything (all migrations and Configuration.cs) from **_Migrations_** folder
+        1. Execute "**Unload Project**" on CustomerReviews.**Web** project in Solution Explorer (or the solution would fail to build in this step due to the errors in this project).
         1. Execute "**Set as Startup Project**" on CustomerReviews.**Data** project in Solution Explorer
         2. Open NuGet **Package Manager Console**
         3. Select "src\CustomerReviews.**Data**" as "**Default project**"
@@ -167,7 +173,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
         5. In case of any existing module's extension is developed, study and follow the steps from [How to extend the DB model of VC module](../../techniques/extend-DB-model.md) guide.
 
     2. Create Migration for backward compatibility with v2.x
-        1. Add new migration with name **_UpdateCustomerReviewsV2_** and rename the migration **_filename_** to **_20000000000000_UpdateCustomerReviewsV2_**
+        1. Add new migration with name **_UpdateCustomerReviewsV2_** and rename the migration **_filename_** to **_20000000000000_UpdateCustomerReviewsV2_**. Mind the name format: _"20000000000000_Update{ModuleName}V2"_.
         2. Add SQL command to the migration:
         ```csharp
         migrationBuilder.Sql(@"IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '__MigrationHistory'))
@@ -176,7 +182,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
                         INSERT INTO [dbo].[__EFMigrationsHistory] ([MigrationId],[ProductVersion]) VALUES ('20191129134041_InitialCustomerReviews', '2.2.3-servicing-35854')
                     END");
         ```
-          * the `ContextKey` value has to be constructed as "{ModuleId}.Data.Migrations.Configuration".
+          * the `ContextKey` value is the V2 migration Configuration name, including namespace. Retrieve the namespace from your notes, as you put it there in the previous section. Typically, the value is "{ModuleId}.Data.Migrations.Configuration".
           * the value for `MigrationId` has to be the name of your new migration, added in previous step. ('20191129134041_InitialCustomerReviews' in our case). Check [20000000000000_UpdateCoreV2.cs migration](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.cs#L12) as another example.
           * value for `ProductVersion` should be taken from **_20000000000000_UpdateCustomerReviewsV2.Designer_** line 19:
         ```csharp
@@ -187,27 +193,27 @@ This article describes how to update an existing [CustomerReviews sample](https:
 5. If Dynamic Properties are used in the module, follow the steps in [Update Dynamic Property](dynamic-property.md).
 
 ## 5. Make changes in CustomerReviews&#46;Web project
-
+1. Execute "**Reload Project**" on CustomerReviews.**Web** project in Solution Explorer (as it was unloaded earlier).
 1. Changes in **_module.manifest_**
-    1. Versioning - increase module version and add prerelease tag (empty value for a release version):
+    1. Versioning - increase major module version and add prerelease tag (empty value for a release version):
     ```xml
     <version>3.0.0</version>
     <version-tag></version-tag>
     ```
-   2. Required minimal version of VC Platform:
+    2. Required minimal version of VC Platform:
     ```xml
     <platformVersion>3.0.0</platformVersion>
     ```
-   3. Module dependencies - change to actual versions:
+    3. Module dependencies - change to actual versions:
     ```xml
     <dependencies>
-        <dependency id="VirtoCommerce.Core" version="3.0.0" />
+        <dependency id="VirtoCommerce.Core" version="3.1.0" />
     </dependencies>
     ```
-   4. Remove **styles**, **scripts** sections from the manifest file
-   5. Add localizations for permissions/settings to **_Localizations/en.CustomerReviews.json_** file [as this](https://github.com/VirtoCommerce/vc-samples/blob/release/3.0.0/CustomerReviews/src/CustomerReviews.Web/Localizations/en.customerReviews.json#L18-L30).
+    4. Remove **styles**, **scripts** sections from the manifest file.
+2. Add localizations for permissions/settings to **_Localizations/en.CustomerReviews.json_** file [as this](https://github.com/VirtoCommerce/vc-samples/blob/release/3.0.0/CustomerReviews/src/CustomerReviews.Web/Localizations/en.customerReviews.json#L18-L30).
    Sample resulting keys: `"permissions.customerReview:read"`, `"settings.CustomerReviews.CustomerReviewsEnabled.title"`. 
-   6. Remove **permissions**, **settings** definitions sections from the manifest file
+2. Remove **permissions**, **settings** definitions sections from the manifest file.
 
 2. Changes in **_Module.cs_**
 
@@ -235,10 +241,10 @@ This article describes how to update an existing [CustomerReviews sample](https:
     }
     ```
 
-!!! note
-    The **MigrateIfNotApplied** extension method is needed for the database backward compatibility with version 2.x. This extension enables to skip generating the initial migration, as there are changes (tables, indexes) in the database already.
+    !!! note
+        The **MigrateIfNotApplied** extension method is needed for the database backward compatibility with version 2.x. This extension enables to skip generating the initial migration, as there are changes (tables, indexes) in the database already.
 
-3. Changes to all API Controller(s) in **Controllers/Api** folder:
+3. Changes to all API Controllers in **Controllers/Api** folder:
     1. Refactor controllers to derive from _Microsoft.AspNetCore.Mvc.**Controller**_.
     2. Change _RoutePrefix_ attribute to **_Route_** for all endpoints
     3. Remove _ResponseType_ attribute from all endpoints
@@ -255,6 +261,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
     public async Task<ActionResult<CustomerReviewSearchResult>> SearchCustomerReviews([FromBody]CustomerReviewSearchCriteria criteria)
     ```
     Read [Controller action return types in ASP.NET Core web API](https://docs.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-3.1) for more info.
+
 4. If there are any JavaScript or stylesheet files in the project:
     1. Copy **package.json** from [sample package.json](https://raw.githubusercontent.com/VirtoCommerce/vc-module-order/release/3.0.0/src/VirtoCommerce.OrdersModule.Web/package.json);
     2. Copy **webpack.config.js** from [sample webpack.config.js](https://raw.githubusercontent.com/VirtoCommerce/vc-module-order/release/3.0.0/src/VirtoCommerce.OrdersModule.Web/webpack.config.js);
@@ -262,16 +269,27 @@ This article describes how to update an existing [CustomerReviews sample](https:
     ```js
     namespace: 'CustomerReviews'
     ```
-    4. Open Command prompt and navigate to CustomerReviews&#46;Web folder:
-        1. Run `npm install`
-        1. Run `npm run webpack:dev`
+    4. Open Command prompt and navigate to CustomerReviews&#46;Web folder. Run:
+        ```
+        npm install
+        ```
+
         !!! note
-            fix any css errors, of the previous command would fail. For CustomerReviews sample also change line 12 in webpack.config.js to:
+            fix any css errors, if the previous command would fail. For CustomerReviews sample also change line 12 in webpack.config.js to:
             ```js
             ...glob.sync('./Content/css/*.css', { nosort: true })
             ```
-    5. Add `dist/` line to `.gitignore` file
-    6. Add `node_modules/` line to `.gitignore` file.
+
+    5. Add `dist/` line to `.gitignore` file;
+    6. Add `node_modules/` line to `.gitignore` file;
+    6. Install [WebPack Task Runner](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.WebPackTaskRunner) extension to Visual Studio (restart required);
+    6. Build the scripts:
+        1. Locate and right-click on **webpack.config.js** in Solution Explorer
+        1. Execute "Task Runner Explorer"
+        1. Double-click "Run - Development" in "Task Runner Explorer"
+
+        !!! note
+            The resulting file(s) (*app.js*, *style.css*) were generated to ***.Web/dist** folder.
 
 ## 6. Make changes in CustomerReviews.Tests project
 
@@ -304,3 +322,5 @@ This article describes how to update an existing [CustomerReviews sample](https:
 ## 7. Create module package
 
 1. Please, read the article about [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/build/README.md).
+1. Add **.nuke** file to be able to use VirtoCommerce.GlobalTool. It should contain the solution filename, e.g., [.nuke in vc-module-customer](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/.nuke)
+1. Add **Directory.Build.props** file to be able to configure package release versions. Check [Directory.Build.props in vc-module-customer](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/Directory.Build.Props) for details.

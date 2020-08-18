@@ -69,12 +69,10 @@ namespace VirtoCommerce.Platform.Core.Caching
 
         public static void ExpireTokenForKey(string key)
         {
-            if (string.IsNullOrEmpty(key))
+            if (!string.IsNullOrEmpty(key))
             {
-                throw new ArgumentNullException(nameof(key));
+                CacheCancellableTokensRegistry.TryCancelToken(GenerateRegionTokenKey(key));
             }
-
-            CacheCancellableTokensRegistry.TryCancelToken(GenerateRegionTokenKey(key));
         }
 
         public static void ExpireRegion()
