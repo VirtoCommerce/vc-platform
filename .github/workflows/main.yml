@@ -63,7 +63,7 @@ jobs:
       run: vc-build Test -skip
 
     - name: SonarCloud End
-      run: vc-build SonarQubeEnd -SonarAuthToken ${{ secrets.SONAR_TOKEN }} -skip
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@dev
 
     - name: Packaging
       run: vc-build Compress -skip Clean+Restore+Compile+Test
