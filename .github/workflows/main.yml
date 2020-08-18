@@ -63,7 +63,7 @@ jobs:
       run: vc-build Test -skip
 
     - name: SonarCloud End
-      uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@dev
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@dev
 
     - name: Packaging
       run: vc-build Compress -skip Clean+Restore+Compile+Test
