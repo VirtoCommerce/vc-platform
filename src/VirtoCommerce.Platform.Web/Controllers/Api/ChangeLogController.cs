@@ -14,11 +14,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class ChangeLogController : Controller
     {
-        private static DateTime _lastTimestamp = DateTime.UtcNow;
         private readonly IChangeLogSearchService _changeLogSearchService;
-        public ChangeLogController(IChangeLogSearchService changeLogSearchService)
+        private readonly ILastModifiedDateTime _lastModifiedDateTime;
+
+        public ChangeLogController(IChangeLogSearchService changeLogSearchService, ILastModifiedDateTime lastModifiedDateTime)
         {
             _changeLogSearchService = changeLogSearchService;
+            _lastModifiedDateTime = lastModifiedDateTime;
         }
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public ActionResult ForceChanges(ForceChangesRequest forceRequest)
         {
-            _lastTimestamp = DateTime.UtcNow;
+            _lastModifiedDateTime.Reset();
             return NoContent();
         }
 
@@ -45,19 +47,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("~/api/changes/lastmodifieddate")]
         [AllowAnonymous]
-        public async Task<ActionResult<LastModifiedResponse>> GetLastModifiedDate([FromQuery] string scope = null)
+        public ActionResult<LastModifiedResponse> GetLastModifiedDate([FromQuery] string scope = null)
         {
-            var criteria = new ChangeLogSearchCriteria
-            {
-                Take = 1
-            };
-            // Get latest change  from operation log
-            var latestChange = (await _changeLogSearchService.SearchAsync(criteria)).Results.FirstOrDefault();
-
             var result = new LastModifiedResponse
             {
                 Scope = scope,
-                LastModifiedDate = new DateTime(Math.Max((latestChange?.ModifiedDate ?? _lastTimestamp).Ticks, _lastTimestamp.Ticks))
+                LastModifiedDate = _lastModifiedDateTime.LastModified.UtcDateTime
             };
 
             return Ok(result);
