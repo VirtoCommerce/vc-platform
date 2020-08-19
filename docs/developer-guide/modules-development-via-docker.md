@@ -38,7 +38,7 @@ SEARCH_PROVIDER=ElasticSearch
 > The solution is launched and built using the command:
 
 ```
-docker-compose -f docker-compose.yml run --build -d
+docker-compose -f docker-compose.yml up --build -d
 ```
 
 ## Installing and debugging the module
