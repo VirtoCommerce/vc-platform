@@ -23,19 +23,18 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
-  sonar-analyze:
-    name: Sonar Analyze
-    # The type of runner that the job will run on
-    runs-on: windows-latest
+  ci:
+    runs-on: ubuntu-latest
     env:
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      BLOB_SAS: ${{ secrets.BLOB_TOKEN }}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
       run: dotnet tool install --global VirtoCommerce.GlobalTool
@@ -43,25 +42,20 @@ jobs:
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
 
+    - name: Get Image Version
+      uses: VirtoCommerce/vc-github-actions/get-image-version@dev
+      id: image
+
+    - name: Get changelog
+      id: changelog
+      uses: VirtoCommerce/vc-github-actions/changelog-generator@dev
+
+    - name: Add version suffix
+      uses: VirtoCommerce/vc-github-actions/add-version-suffix@dev
+
     - name: SonarCloud Begin
-      if: ${{ env.SONAR_TOKEN != 0 }}
-      shell: pwsh
-      env:
-        PULL_REQUEST_TITLE: ${{ github.event.pull_request.title }}
-      run: |
-        $BRANCH='${{ github.ref }}'.Replace('refs/heads', '')
-        $CMD="dotnet sonarscanner begin /k:'VirtoCommerce_vc-platform'"
-        $CMD="$($CMD) /o:'virto-commerce'"
-        $CMD="$($CMD) /d:sonar.cs.opencover.reportsPaths='$PWD/.tmp/coverage.xml'"
-        $CMD="$($CMD) /d:sonar.host.url='https://sonarcloud.io'"
-        $CMD="$($CMD) /d:sonar.login='${{ secrets.SONAR_TOKEN }}'"
-        $CMD = "$($CMD) /d:sonar.branch='$($BRANCH)'"
-        if ('${{ github.event_name }}' -eq 'pull_request' ) {
-          $CMD="$($CMD) /d:sonar.pullrequest.base='$('${{ github.event.pull_request.base.ref }}')'"
-          $CMD="$($CMD) /d:sonar.pullrequest.branch='$($env:PULL_REQUEST_TITLE)'"
-          $CMD="$($CMD) /d:sonar.pullrequest.key=${{ github.event.number }}"
-        }
-        pwsh -command $CMD
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@dev
+
     - name: Build
       run: vc-build Compile
 
@@ -69,224 +63,42 @@ jobs:
       run: vc-build Test -skip
 
     - name: SonarCloud End
-      if: ${{ env.SONAR_TOKEN != 0 }}
-      run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@dev
 
-  build-package:
-    name: Build Package
-    outputs:
-        taggedVersion: ${{ steps.image.outputs.taggedVersion }}
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
+    - name: Packaging
+      run: vc-build Compress -skip Clean+Restore+Compile+Test
+
+    #- name: Swagger Schema Validation
+    #  run: vc-build SwaggerValidation -skip
+          
+    - name: Publish Nuget
+      uses: VirtoCommerce/vc-github-actions/publish-nuget@dev
+      
+    - name: Publish Github Release
       with:
-        fetch-depth: 1
-
-    - name: Get Image Version
-      uses: VirtoCommerce/vc-github-actions/get-image-version@dev
-      id: image
-
-    - name: Install VirtoCommerce.GlobalTool
-      run: |
-        dotnet tool install --global VirtoCommerce.GlobalTool
-
-    - name: Build Package
-      run: vc-build Compress -skip Test
+        changelog: ${{ steps.changelog.outputs.changelog }}
+      uses: VirtoCommerce/vc-github-actions/publish-github-release@dev
 
     - name: Build Docker Image
-      shell: pwsh
-      run: |
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile -OutFile artifacts/Dockerfile
-        Invoke-WebRequest -Uri https://github.com/VirtoCommerce/vc-docker/blob/master/linux/platform/wait-for-it.sh -OutFile artifacts/wait-for-it.sh
-        docker build artifacts --build-arg SOURCE=. --tag "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform:${{ steps.image.outputs.taggedVersion }}"
+      if: ${{ github.ref == 'ref/head/master' }}
+      id: dockerBuild
+      uses: VirtoCommerce/vc-github-actions/build-docker-image@dev
+      with:
+        tag: ${{ steps.image.outputs.taggedVersion }}
+
     - name: Docker Login
+      if: ${{ github.ref == 'ref/head/master' }}
       uses: azure/docker-login@v1
       with:
         login-server: docker.pkg.github.com
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2
+    - name: Publish Docker Image
+      if: ${{ github.ref == 'ref/head/master' }}
+      uses: VirtoCommerce/vc-github-actions/publish-docker-image@dev
       with:
-        # Artifact name
-        name: Platform # optional
-        # A file, directory or wildcard pattern that describes what to upload
-        path: artifacts/publish/  
-
-    - name: Push Docker Image to GitHub
-      run: |
-        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker push "docker.pkg.github.com/$REPOSITORY/platform:${{ steps.image.outputs.taggedVersion }}"
-  
-  swagger-validation:
-    name: Swagger Schema Validation
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    needs: build-package
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Install VirtoCommerce.GlobalTool
-      run: dotnet tool install --global VirtoCommerce.GlobalTool
-
-    - name: Download a Build Artifact
-      uses: actions/download-artifact@v2
-      with:
-        # Artifact name
-        name: Platform # optional
-        # Destination path
-        path: artifacts/publish/ # optional
-
-    - name: Docker Login
-      uses: azure/docker-login@v1
-      with:
-        login-server: docker.pkg.github.com
-        username: $GITHUB_ACTOR
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Pull Platform Docker Image from GitHub
-      run: |
-        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ needs.build-package.outputs.taggedVersion }}"
-    - name: Pull docker-compose.yml 
-      shell: pwsh
-      run: |
-        New-Item -ItemType Directory -Force -Path docker
-        cd docker
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker.core/linux/docker-compose.yml -OutFile docker-compose.yml
-        $FileContent = Get-Content -path docker-compose.yml
-        $FileContent = $FileContent -replace "virtocommerce/platform","docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform"
-        $FileContent = $FileContent -replace "virtocommerce/storefront","docker.pkg.github.com/virtocommerce/vc-storefront/storefront"
-        $FileContent = $FileContent -replace "MultipleActiveResultSets=True","MultipleActiveResultSets=False"
-        $FileContent = $FileContent -replace "Connect Timeout=30","Connect Timeout=300"
-        $NewFileContent = @()
-        foreach ($Line in $FileContent) {
-            if($Line -match 'ElasticSearch'){
-                $NewFileContent += '      - VirtoCommerce:Hangfire:JobStorageType:Memory'
-            }
-            $NewFileContent += $Line
-        }
-        $NewFileContent | Out-File 'docker-compose.yml'    
-    - name: Run container
-      working-directory: ./docker
-      run: |
-        echo PLATFORM_DOCKER_TAG=${{ needs.build-package.outputs.taggedVersion }} >> .env
-        echo STOREFRONT_DOCKER_TAG=dev-linux-latest >> .env
-        echo DOCKER_PLATFORM_PORT=8081 >> .env
-        echo DOCKER_STOREFRONT_PORT=8082 >> .env
-        echo DOCKER_SQL_PORT=8083 >> .env
-        echo COMPOSE_PROJECT_NAME=virtocommerce >> .env
-        docker-compose up -d
-    - name: Install Modules
-      run: |
-        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-modules.ps1 -OutFile vc-setup-modules.ps1"
-        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-check-installed-modules.ps1 -OutFile vc-check-installed-modules.ps1"
-        pwsh -command "./vc-setup-modules.ps1 -ApiUrl http://localhost:8081 -NeedRestart -ContainerId virtocommerce_vc-platform-web_1 -Verbose -Debug"
-        pwsh -command "./vc-check-installed-modules.ps1 -ApiUrl http://localhost:8081 -Verbose -Debug"
-    - name: Install Sample Data
-      run: |
-        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-setup-sampledata.ps1 -OutFile vc-setup-sampledata.ps1"
-        pwsh -command "./vc-setup-sampledata.ps1 -ApiUrl http://localhost:8081 -Verbose -Debug"
-    - name: Swagger Schema Validation
-      run: |
-        pwsh -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/VirtoCommerce/jenkins-pipeline-scripts/master/resources/docker_v3/vc-get-swagger.ps1 -OutFile vc-get-swagger.ps1"
-        pwsh -command "./vc-get-swagger.ps1 -ApiUrl http://localhost:8081 -OutFile swaggerSchema.json -Verbose -Debug"
-        pwsh -command "vc-build ValidateSwaggerSchema -SwaggerSchemaPath swaggerSchema.json"
-  
-  publish:
-    name: Publish image
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    needs: [build-package, sonar-analyze, swagger-validation]
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Docker Login
-      uses: azure/docker-login@v1
-      with:
-        login-server: docker.pkg.github.com
-        username: $GITHUB_ACTOR
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Pull Platform Docker Image from GitHub
-      run: |
-        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        docker pull "docker.pkg.github.com/$REPOSITORY/platform:${{ needs.build-package.outputs.taggedVersion }}"
-    - name: Push Docker Image to docker.pkg.github.com
-      shell: pwsh
-      run: |
-        $REPOSITORY = "docker.pkg.github.com/$('${{ github.repository }}'.ToLower())/platform"
-        $PLATFORM_DOCKER_TAG = ''
-        if ('${{ github.ref }}' -eq 'refs/heads/master') {
-          $PLATFORM_DOCKER_TAG = 'linux-latest'
-        }
-        elseif ('${{ github.event_name }}' -eq 'pull_request') {
-          $PLATFORM_DOCKER_TAG = 'pr${{ github.event.pull_request.number }}'
-        }
-        else {
-          $PLATFORM_DOCKER_TAG = "$('${{ github.ref }}'.Replace('refs/heads/', ''))-linux-latest"
-        }
-        $PLATFORM_DOCKER_TAG = $PLATFORM_DOCKER_TAG.Replace('/', '_')
-        
-        docker tag "$($REPOSITORY):${{ needs.build-package.outputs.taggedVersion }}" "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
-        docker push "$($REPOSITORY):$($PLATFORM_DOCKER_TAG)"
-        echo "::set-env name=BUILD_STATE::successful"
-    - name: Push Docker Image to hub.docker.io
-      if: ${{ env.DOCKER_USERNAME != 0 && env.DOCKER_TOKEN != 0 && github.event_name != 'pull_request' }}
-      env:
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
-      run: |
-        REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]') 
-        PLATFORM_DOCKER_TAG='dev-linux-experimental'
-        if [ '${{ github.ref }}' = 'refs/heads/master' ]; then PLATFORM_DOCKER_TAG=linux-experimental; fi
-        docker tag docker.pkg.github.com/$REPOSITORY/platform:${{ needs.build-package.outputs.taggedVersion }} ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/platform:$PLATFORM_DOCKER_TAG
-        echo "::set-env name=BUILD_STATE::successful"
-    - name: Invoke deploy to cd.govirto.com
-      uses: benc-uk/workflow-dispatch@v1
-      with:
-        workflow: Deploy
-        token: ${{ secrets.REPO_TOKEN }}
-        inputs: '{ "versionTag": "{{ needs.build-package.outputs.taggedVersion }}" }'
-
-    - name: Set Build status Failed
-      if: failure()
-      run: echo "::set-env name=BUILD_STATE::failed"
-
-    - name: Parse Jira Keys from Commit
-      id: jira_keys
-      if: always()
-      uses: HighwayThree/jira-extract-issue-keys@master
-      with:
-        is-pull-request: ${{ github.event_name == 'pull_request' }}
-        parse-all-commits: ${{ github.event_name == 'push' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Push Build Info to Jira
-      if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && env.BUILD_STATE != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
-      id: push_build_info_to_jira
-      uses: HighwayThree/jira-upload-build-info@master
-      env:
-        CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
-        CLIENT_ID: ${{secrets.CLIENT_ID}}
-        CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
-      with:
-        cloud-instance-base-url: '${{ secrets.CLOUD_INSTANCE_BASE_URL }}'
-        client-id: '${{ secrets.CLIENT_ID }}'
-        client-secret: '${{ secrets.CLIENT_SECRET }}'
-        pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
-        build-number: ${{ github.run_number }}
-        build-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
-        build-state: "${{ env.BUILD_STATE }}"
-        build-url: '${{github.event.repository.html_url}}/actions/runs/${{github.run_id}}'
-        update-sequence-number: '${{ github.run_id }}'
-        last-updated: '${{github.event.head_commit.timestamp}}'
-        issue-keys: "${{ steps.jira_keys.outputs.jira-keys }}"
-        commit-id: '${{ github.sha }}'
-        repo-url: '${{ github.event.repository.html_url }}'
-        build-ref-url: '${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}'
+          image: ${{ steps.dockerBuild.outputs.imageName }}
+          tag: ${{ steps.image.outputs.taggedVersion }}
+          docker_user: ${{ secrets.DOCKER_USERNAME }}
+          docker_token: ${{ secrets.DOCKER_TOKEN }}
