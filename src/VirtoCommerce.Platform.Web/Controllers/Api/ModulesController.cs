@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
@@ -329,7 +330,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                                 };
                                 //reset finished date
                                 notification.Finished = null;
-                                BackgroundJob.Enqueue(() => ModuleBackgroundJob(options, notification));
+
+                                // can't use Hangfire.BackgroundJob.Enqueue(...), because Hangfire tables might be missing in new DB
+                                new Thread(() =>
+                                {
+                                    Thread.CurrentThread.IsBackground = true;
+                                    ModuleBackgroundJob(options, notification);
+                                }).Start();
                             }
                         }
                     }
