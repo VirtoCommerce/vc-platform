@@ -4,7 +4,7 @@
 
 Virto Commerce is a scalable e-commerce solution and designed to build large and complex digital commerce solutions for B2B, B2C or B2B2C business, marketplaces and derived SaaS commerce platforms. 
 
-This topic shows the scalability of Virto Commerce Solutions from Smal to Extra Large and helps you choose the right Azure services and price plans.  
+This topic shows the scalability of Virto Commerce Solutions from Small to Extra Large and helps you choose the right Azure services and price plans.
 
 ## Scalability
 This section describes how to scale solution based on Virto Commerce platform and Virto Commerce Storefront Kit.
@@ -67,7 +67,7 @@ This data based on best practices and feedback from multiple custom e-commerce s
 |**XL**||||
 
 
-|**Size**|**Azure Web Site Price Plane**|**Frontend Azure Web Site Instance Count**|**Backend Azure Web Site Instance Count**|**Azure SQL Price Plane**|**Azure SQL Count**|**Azure Virtual Machine (Elastic Search)**|**ES Cluster**|
+|**Size**|**Azure Web Site Price Plan**|**Frontend Azure Web Site Instance Count**|**Backend Azure Web Site Instance Count**|**Azure SQL Price Plan**|**Azure SQL Count**|**Azure Virtual Machine (Elastic Search)**|**ES Cluster**|
 | --- | --- | --- | --- | --- | --- | --- | --- |
 |**S**|**S2**|**1**|**1**|**S2**|**50 DTU**|**A2**|**No**|
 |**M**|**S2**|**2**|**2**|**S3**|**100 DTU**|**A3**|**Yes**|

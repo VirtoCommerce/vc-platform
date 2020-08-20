@@ -19,7 +19,6 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
-using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model.Security;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -39,11 +38,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEmailSender _emailSender;
         private readonly IEventPublisher _eventPublisher;
         private readonly IUserApiKeyService _userApiKeyService;
+        private readonly IUserPasswordHasher _userPasswordHasher;
 
         public SecurityController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager,
                 IPermissionsRegistrar permissionsProvider, IUserSearchService userSearchService, IRoleSearchService roleSearchService,
                 IOptions<Core.Security.AuthorizationOptions> securityOptions, IPasswordCheckService passwordCheckService, IEmailSender emailSender,
-                IEventPublisher eventPublisher, IUserApiKeyService userApiKeyService)
+                IEventPublisher eventPublisher, IUserApiKeyService userApiKeyService, IUserPasswordHasher userPasswordHasher)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -56,6 +56,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _emailSender = emailSender;
             _eventPublisher = eventPublisher;
             _userApiKeyService = userApiKeyService;
+            _userPasswordHasher = userPasswordHasher;
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("login")]
         [AllowAnonymous]
-        public async Task<ActionResult<SignInResult>> Login([FromBody]LoginRequest request)
+        public async Task<ActionResult<SignInResult>> Login([FromBody] LoginRequest request)
         {
             var loginResult = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe, true);
             if (loginResult.Succeeded)
@@ -322,7 +323,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("users/login/external")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityQuery)]
-        public async Task<ActionResult<ApplicationUser>> GetUserByLogin([FromRoute]string loginProvider, [FromRoute]string providerKey)
+        public async Task<ActionResult<ApplicationUser>> GetUserByLogin([FromRoute] string loginProvider, [FromRoute] string providerKey)
         {
             var result = await _userManager.FindByLoginAsync(loginProvider, providerKey);
             return Ok(result);
@@ -376,7 +377,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = await _signInManager.UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
             if (result.Succeeded)
             {
-                await _eventPublisher.Publish(new UserPasswordChangedEvent(user.Id));
+                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
+                var customPasswordHash = _userPasswordHasher.HashPassword(user, changePassword.NewPassword);
+                await _eventPublisher.Publish(new UserPasswordChangedEvent(user.Id, customPasswordHash));
 
                 // If the password change was required for the user, now it is not needed anymore - the password is changed.
                 if (user.PasswordExpired)
@@ -415,7 +418,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = await _signInManager.UserManager.ResetPasswordAsync(user, token, resetPassword.NewPassword);
             if (result.Succeeded)
             {
-                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id));
+                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
+                var customPasswordHash = _userPasswordHasher.HashPassword(user, resetPassword.NewPassword);
+                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
 
                 if (user.PasswordExpired != resetPassword.ForcePasswordChangeOnNextSignIn)
                 {
@@ -452,7 +457,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = await _userManager.ResetPasswordAsync(user, token, resetPasswordConfirm.NewPassword);
             if (result.Succeeded)
             {
-                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id));
+                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
+                var customPasswordHash = _userPasswordHasher.HashPassword(user, resetPasswordConfirm.NewPassword);
+                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
                 if (user.PasswordExpired != resetPasswordConfirm.ForcePasswordChangeOnNextSignIn)
                 {
                     user.PasswordExpired = resetPasswordConfirm.ForcePasswordChangeOnNextSignIn;
@@ -486,7 +493,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = await _signInManager.UserManager.ResetPasswordAsync(user, resetPasswordConfirm.Token, resetPasswordConfirm.NewPassword);
             if (result.Succeeded)
             {
-                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id));
+                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
+                var customPasswordHash = _userPasswordHasher.HashPassword(user, resetPasswordConfirm.NewPassword);
+                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
 
                 // If the password reset was required for the user, now it is not needed anymore - the password is changed now.
                 if (user.PasswordExpired)
@@ -673,7 +682,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformConstants.Security.Permissions.SecurityQuery)]
         public async Task<ActionResult<UserApiKey[]>> GetUserApiKeys([FromRoute] string id)
         {
-            var result = await _userApiKeyService.GetAllUserApiKeysAsync(id);          
+            var result = await _userApiKeyService.GetAllUserApiKeysAsync(id);
             return Ok(result);
         }
 
