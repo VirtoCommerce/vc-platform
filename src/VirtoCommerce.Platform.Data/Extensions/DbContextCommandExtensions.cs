@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.Platform.Data.Extensions
 {
@@ -36,20 +34,6 @@ namespace VirtoCommerce.Platform.Data.Extensions
             }
         }
 
-        public static T ExecuteScalar<T>(this DbContext context, string rawSql, params object[] parameters)
-        {
-            var conn = context.Database.GetDbConnection();
-            using (var command = conn.CreateCommand())
-            {
-                command.CommandText = rawSql;
-                if (parameters != null)
-                    foreach (var p in parameters)
-                        command.Parameters.Add(p);
-                conn.Open();
-                return (T)command.ExecuteScalar();
-            }
-        }
-
         public static async Task<T[]> ExecuteArrayAsync<T>(this DbContext context, string rawSql, params object[] parameters)
         {
             var conn = context.Database.GetDbConnection();
@@ -69,20 +53,6 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 reader.Close();
 
                 return result.ToArray();
-            }
-        }
-
-        public static bool ExistTable(this DbContext context, string tableName)
-        {
-            var countTables = ExecuteScalar<int>(context, "SELECT COUNT(OBJECT_ID(@table, 'U'))", new SqlParameter($"@table", tableName));
-            return countTables > 0;
-        }
-
-        public static void ThrowIfNotExistTable(this DbContext context, string tableName)
-        {
-            if (!ExistTable(context, tableName))
-            {
-                throw new PlatformException($"There is no {tableName} table");
             }
         }
     }
