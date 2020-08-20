@@ -78,13 +78,9 @@ namespace VirtoCommerce.Platform.Data.Extensions
             return countTables > 0;
         }
 
-        public static bool ExistTableAndThrow(this DbContext context, string tableName)
+        public static void ThrowIfNotExistTable(this DbContext context, string tableName)
         {
-            if (ExistTable(context, tableName))
-            {
-                return true;
-            }
-            else
+            if (!ExistTable(context, tableName))
             {
                 throw new PlatformException($"There is no {tableName} table");
             }
