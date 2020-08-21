@@ -1,14 +1,14 @@
-# Prepare distributed databases for VC v3
+# Prepare separated databases for VC v3
 
 This article is relevant to you if you are:
 
 * migrating VirtoCommerce (VC) from v2 to v3
-* multiple databases (DB) are used by the solution (some of the VC modules use distributed DB).
+* multiple databases (DB) are used by the solution (some of the VC modules use own, separate DB).
 
 ## Prepare SeoUrlKeyword table
 
 1. Make DB backups
-1. Identify the modules which use **SeoUrl** functionality and use distributed DB. E.g., Catalog, Customer, Store modules.
+1. Identify the modules which use **SeoUrl** functionality and use different DB than VC Platform. E.g., Catalog, Customer, Store modules.
 1. Run the script in each of the previously identified module DB:
 
     ```sql
@@ -53,7 +53,7 @@ This article is relevant to you if you are:
 ## Prepare PlatformDynamicPropertyObjectValue table
 
 1. Make DB backups
-1. Identify the modules where entities support **DynamicProperty** and use distributed DB. E.g., Customer, Cart, Order, Store modules.
+1. Identify the modules where entities support **DynamicProperty** and use different DB than VC Platform. E.g., Customer, Cart, Order, Store modules.
 1. Run the script in each of the previously identified module DB:
     
     ```sql
