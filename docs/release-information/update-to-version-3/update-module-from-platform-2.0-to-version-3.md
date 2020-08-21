@@ -191,6 +191,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
         3. Open **_20000000000000_UpdateCustomerReviewsV2.Designer_** and change **_Migration_** attribute parameter value to the current migration ID ("20000000000000_UpdateCustomerReviewsV2" in this case). Check [20000000000000_UpdateCoreV2.Designer.cs](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12) as another example.
 
 5. If Dynamic Properties are used in the module, follow the steps in [Update Dynamic Property](dynamic-property.md).
+5. If multiple databases are used by the solution, follow the steps in [Prepare distributed databases for VC v3](prepare-distibuted-databases-for-v3.md).
 
 ## 5. Make changes in CustomerReviews&#46;Web project
 1. Execute "**Reload Project**" on CustomerReviews.**Web** project in Solution Explorer (as it was unloaded earlier).

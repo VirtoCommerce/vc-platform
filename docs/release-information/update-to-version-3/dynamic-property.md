@@ -35,11 +35,11 @@ Then make changes in ShoppingCart2Entity:
 ```csharp
 cart.DynamicProperties = DynamicPropertyObjectValues.GroupBy(g => g.PropertyId).Select(x =>
 {
-	var property = AbstractTypeFactory<DynamicObjectProperty>.TryCreateInstance();
-	property.Id = x.Key;
-	property.Name = x.FirstOrDefault()?.PropertyName;
-	property.Values = x.Select(v => v.ToModel(AbstractTypeFactory<DynamicPropertyObjectValue>.TryCreateInstance())).ToArray();
-	return property;
+    var property = AbstractTypeFactory<DynamicObjectProperty>.TryCreateInstance();
+    property.Id = x.Key;
+    property.Name = x.FirstOrDefault()?.PropertyName;
+    property.Values = x.Select(v => v.ToModel(AbstractTypeFactory<DynamicPropertyObjectValue>.TryCreateInstance())).ToArray();
+    return property;
 }).ToArray();
 ```
 
@@ -48,8 +48,8 @@ cart.DynamicProperties = DynamicPropertyObjectValues.GroupBy(g => g.PropertyId).
 ```csharp
 if (cart.DynamicProperties != null)
 {
-	DynamicPropertyObjectValues = new ObservableCollection<ShoppingCart2DynamicPropertyObjectValueEntity>(cart.DynamicProperties.SelectMany(p => p.Values
-		.Select(v => AbstractTypeFactory<ShoppingCart2DynamicPropertyObjectValueEntity>.TryCreateInstance().FromModel(v, cart, p))).OfType<Shopping2CartDynamicPropertyObjectValueEntity>());
+    DynamicPropertyObjectValues = new ObservableCollection<ShoppingCart2DynamicPropertyObjectValueEntity>(cart.DynamicProperties.SelectMany(p => p.Values
+        .Select(v => AbstractTypeFactory<ShoppingCart2DynamicPropertyObjectValueEntity>.TryCreateInstance().FromModel(v, cart, p))).OfType<Shopping2CartDynamicPropertyObjectValueEntity>());
 }
 ```
 
@@ -58,7 +58,7 @@ if (cart.DynamicProperties != null)
 ```csharp
 if (!DynamicPropertyObjectValues.IsNullCollection())
 {
-	DynamicPropertyObjectValues.Patch(target.DynamicPropertyObjectValues, (sourceDynamicPropertyObjectValues, targetDynamicPropertyObjectValues) => sourceDynamicPropertyObjectValues.Patch(targetDynamicPropertyObjectValues));
+    DynamicPropertyObjectValues.Patch(target.DynamicPropertyObjectValues, (sourceDynamicPropertyObjectValues, targetDynamicPropertyObjectValues) => sourceDynamicPropertyObjectValues.Patch(targetDynamicPropertyObjectValues));
 }
 ```
 
@@ -70,11 +70,11 @@ modelBuilder.Entity<ShoppingCart2DynamicPropertyObjectValueEntity>().ToTable("Ca
 modelBuilder.Entity<ShoppingCart2DynamicPropertyObjectValueEntity>().Property(x => x.Id).HasMaxLength(128);
 modelBuilder.Entity<ShoppingCart2DynamicPropertyObjectValueEntity>().Property(x => x.DecimalValue).HasColumnType("decimal(18,5)");
 modelBuilder.Entity<ShoppingCart2DynamicPropertyObjectValueEntity>().HasOne(p => p.ShoppingCart)
-	.WithMany(s => s.DynamicPropertyObjectValues).HasForeignKey(k => k.ObjectId)
-	.OnDelete(DeleteBehavior.Cascade);
+    .WithMany(s => s.DynamicPropertyObjectValues).HasForeignKey(k => k.ObjectId)
+    .OnDelete(DeleteBehavior.Cascade);
 modelBuilder.Entity<ShoppingCart2DynamicPropertyObjectValueEntity>().HasIndex(x => new { x.ObjectType, x.ObjectId })
-	.IsUnique(false)
-	.HasName("IX_ObjectType_ObjectId");
+    .IsUnique(false)
+    .HasName("IX_ObjectType_ObjectId");
 ```
 
 ### Working with Cart2Repository
@@ -90,7 +90,7 @@ and if need to add a logic of working with ResponseGroup.
 
 ### Migration
 Then need to add migration which will create a table Cart2DynamicPropertyObjectValue and collect values to the table.
-use the command in the Package Manage Console
+Run the command in the Package Manager Console:
 
 ```console
 Add-Migration AddCart2DynamicPropertyObjectValue -Context VirtoCommerce.CartModule.Data.Repositories.CartDbContext -StartupProject VirtoCommerce.CartModule.Data  -Verbose -OutputDir Migrations
