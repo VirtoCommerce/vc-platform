@@ -1,11 +1,12 @@
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Bus;
-using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Settings.Events;
+using VirtoCommerce.Platform.Hangfire.Suspend;
 
 namespace VirtoCommerce.Platform.Hangfire
 {
@@ -22,6 +23,8 @@ namespace VirtoCommerce.Platform.Hangfire
             var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
             var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
             inProcessBus.RegisterHandler<ObjectSettingChangedEvent>(async (message, token) => await recurringJobManager.HandleSettingChangeAsync(settingsManager, message));
+
+            appBuilder.ApplicationServices.GetRequiredService<IHangfireStartSuspend>().Suspend = false; // Resume hangfire jobs working
 
             return appBuilder;
         }
