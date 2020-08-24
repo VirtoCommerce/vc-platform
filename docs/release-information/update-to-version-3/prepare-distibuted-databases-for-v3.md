@@ -57,6 +57,27 @@ This article is relevant to you if you are:
 1. Run the script in each of the previously identified module DB:
     
     ```sql
+    CREATE TABLE [dbo].[PlatformDynamicProperty](
+        [Id] [nvarchar](64) NOT NULL,
+        [ObjectType] [nvarchar](256) NULL,
+        [Name] [nvarchar](256) NULL,
+        [ValueType] [nvarchar](64) NOT NULL,
+        [IsArray] [bit] NOT NULL,
+        [IsDictionary] [bit] NOT NULL,
+        [IsMultilingual] [bit] NOT NULL,
+        [IsRequired] [bit] NOT NULL,
+        [CreatedDate] [datetime] NOT NULL,
+        [ModifiedDate] [datetime] NULL,
+        [CreatedBy] [nvarchar](64) NULL,
+        [ModifiedBy] [nvarchar](64) NULL,
+        [Description] [nvarchar](256) NULL,
+        [DisplayOrder] [int] NULL,
+     CONSTRAINT [PK_dbo.PlatformDynamicProperty] PRIMARY KEY CLUSTERED 
+    (
+        [Id] ASC
+    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+    ) ON [PRIMARY]
+
     CREATE TABLE [dbo].[PlatformDynamicPropertyObjectValue](
     	[Id] [nvarchar](64) NOT NULL,
     	[ObjectType] [nvarchar](256) NULL,
