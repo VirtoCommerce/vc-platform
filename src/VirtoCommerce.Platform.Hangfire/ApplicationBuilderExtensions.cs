@@ -1,11 +1,11 @@
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Bus;
-using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Settings.Events;
 
 namespace VirtoCommerce.Platform.Hangfire
 {

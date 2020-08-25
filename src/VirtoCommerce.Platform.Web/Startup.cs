@@ -87,7 +87,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
-            });            
+            });
             //Get platform version from GetExecutingAssembly
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
@@ -175,7 +175,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddSecurityServices(options =>
             {
-                
+
             });
 
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
@@ -394,9 +394,6 @@ namespace VirtoCommerce.Platform.Web
                 services.AddFileSystemBlobProvider();
             }
 
-            //HangFire
-            services.AddHangfire(Configuration);
-
             // Register the Swagger generator
             services.AddSwagger();
         }
@@ -418,7 +415,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-            
+
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 
@@ -472,11 +469,14 @@ namespace VirtoCommerce.Platform.Web
                 securityDbContext.Database.Migrate();
             }
 
-            app.UseHangfire();
             app.UseDbTriggers();
             //Register platform settings
             app.UsePlatformSettings();
             app.UseModules();
+
+            // Complete hangfire init & resume jobs run
+            app.UseHangfire();
+
             //Register platform permissions
             app.UsePlatformPermissions();
 
