@@ -73,6 +73,7 @@ namespace VirtoCommerce.Platform.Core.Security
             target.PasswordHash = PasswordHash;
             target.SecurityStamp = SecurityStamp;
             target.PhoneNumberConfirmed = PhoneNumberConfirmed;
+            target.PhoneNumber = PhoneNumber;
             target.TwoFactorEnabled = TwoFactorEnabled;
             target.LockoutEnabled = LockoutEnabled;
             target.LockoutEnd = LockoutEnd;
