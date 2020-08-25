@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
-using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,7 +41,6 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Hangfire;
-using VirtoCommerce.Platform.Hangfire.Suspend;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -395,14 +393,6 @@ namespace VirtoCommerce.Platform.Web
 
                 services.AddFileSystemBlobProvider();
             }
-
-            // HangFire
-            // Pause hangfire jobs until the platform completes startup
-            var hangfireStartSuspend = new HangfireStartSuspendFilter();
-            services.AddSingleton<IHangfireStartSuspend>(hangfireStartSuspend);
-            GlobalJobFilters.Filters.Add(hangfireStartSuspend);
-            // Add & start hangfire server
-            services.AddHangfire(Configuration);
 
             // Register the Swagger generator
             services.AddSwagger();
