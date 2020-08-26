@@ -7,7 +7,7 @@ Purposes of this tool:
 
 ## 1. How to run
 ```
-vc-build GrabMigrator --grab-migrator-config  <configfile>
+vc-build GrabMigrator --grab-migrator-config <configfile>
 ```
 
 ## 2. Grabbing migrations from platform and modules

@@ -127,7 +127,7 @@ namespace GrabMigrator
             else
             {
                 OutInfo("Usage:");
-                OutInfo("SQLGrabMigrator --grab-migrator-config <configfile>");
+                OutInfo("vc-build GrabMigrator --grab-migrator-config <configfile>");
                 OutError("Configuration file required!");
             }
         }
