@@ -45,6 +45,7 @@ Nodes explanation:
     "VirtoCommerce.TaxModule",
     "VirtoCommerce.InventoryModule",
     "VirtoCommerce.ImageToolsModule",
+    "VirtoCommerce.NotificationsModule",
     "VirtoCommerce.ContentModule",
     "VirtoCommerce.Payment",
     "VirtoCommerce.StoreModule",
@@ -60,6 +61,7 @@ Nodes explanation:
     "VirtoCommerce.CustomerReviews",
     "VirtoCommerce.CatalogPersonalizationModule",
     "VirtoCommerce.CatalogPublishingModule",
+    "VirtoCommerce.DynamicAssociationsModule",
     "VirtoCommerce.QuoteModule"
   ],
   "PlatformConfigFile": "D:\\AK\\Code\\Projects\\VC3-DEV-CORE3\\vc-platform\\src\\VirtoCommerce.Platform.Web\\appsettings.json",
