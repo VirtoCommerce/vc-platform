@@ -3,11 +3,11 @@ Purposes of this tool:
 1. Grab EF-migrations from platform and modules as SQL idempotent scripts (safe to apply repeatedly over early applied);
 1. Apply migrations accordingly to specific data sources and in specific order without installed platform and source codes;
 1. Two grabbing modes: v2->v3 upgrade scripts, all scripts;
-1. Scripts applying in one transaction per each module.
+1. Apply scripts in one transaction per each module.
 
 ## 1. How to run
 ```
-SQLGrabMigrator.exe <configfile>
+vc-build GrabMigrator --grab-migrator-config  <configfile>
 ```
 
 ## 2. Grabbing migrations from platform and modules
@@ -76,10 +76,10 @@ Nodes explanation:
 | - | -- |
 | ApplyingOrder | An order the tool will use to apply scripts sequentally |
 | PlatformConfigFile | A place where platform config is. This used to discover connection strings for every module |
-| StatementsDirectory | There stores previously grabbed sql statements. One file for every module. |
+| StatementsDirectory | There stored previously grabbed sql statements. One file for every module. |
 | CommandTimeout | Command timeout in seconds |
-| Grab | Switches the tool to apply mode |
-| Apply | Switches the tool to apply mode |
+| Grab | Switches the tool to grab mode (if true) |
+| Apply | Switches the tool to apply mode (if true) |
 
 ### 3 Copy node ConnectionStringsRefs from grab config file to apply config file.
 ### 4. Run the tool
