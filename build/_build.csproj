@@ -27,6 +27,9 @@
         <PackageReference Include="coverlet.console" Version="1.7.2">
             <ExcludeAssets>all</ExcludeAssets>
         </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="5.5.1">
+            <ExcludeAssets>all</ExcludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>

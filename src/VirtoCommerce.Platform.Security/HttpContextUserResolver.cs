@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 using Microsoft.AspNetCore.Http;
 using VirtoCommerce.Platform.Core.Security;
 
@@ -17,7 +15,7 @@ namespace VirtoCommerce.Platform.Security
 
         public string GetCurrentUserName()
         {
-            string result = "unknown";
+            var result = Thread.CurrentPrincipal?.Identity?.Name ?? "unknown";
 
             var context = _httpContextAccessor.HttpContext;
             if (context != null && context.Request != null && context.User != null)
