@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                 //Enable to store in the json the full type information to be able deserialize a push notifications types on the other instances
                 builder.AddNewtonsoftJsonProtocol(jsonOptions =>
                 {
-                    jsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.All;
+                    jsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
                     jsonOptions.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
                 });          
               
