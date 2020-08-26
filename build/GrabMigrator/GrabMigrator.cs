@@ -18,23 +18,23 @@ namespace GrabMigrator
     {
         public void Do(string configFilePath)
         {
-            OutInfoWithBox($@"VirtoCommerce EF-migration grabbing and automated applying tool.");
+            OutBox($@"VirtoCommerce EF-migration grabbing and applying tool.");
             if (!string.IsNullOrEmpty(configFilePath))
             {
                 if (File.Exists(configFilePath))
                 {
                     try
                     {
-                        OutInfo($@"Read config file...");
+                        Out($@"Read config file...");
 
                         var config = (Config)JsonSerializer.Deserialize(File.ReadAllText(configFilePath), typeof(Config));
 
                         Dictionary<string, List<string>> sqlStatements = null;
                         if (config.Grab)
                         {
-                            OutInfoWithBox("Grab mode");
+                            OutBox("Grab mode");
 
-                            OutInfo($@"Refresh connection strings references...");
+                            Out($@"Refresh connection strings references...");
                             config.ConnectionStringsRefs = new Dictionary<string, List<string>>();
                             foreach (var migrationDirectory in config.MigrationDirectories)
                             {
@@ -42,13 +42,13 @@ namespace GrabMigrator
                             }
                             File.WriteAllText(configFilePath, JsonSerializer.Serialize(config, new JsonSerializerOptions() { WriteIndented = true }));
 
-                            OutInfo($@"Looking for migrations in migration directories recursively...");
+                            Out($@"Looking for migrations in migration directories recursively...");
                             sqlStatements = GrabSQLStatements(config);
                         }
 
                         if (config.Apply)
                         {
-                            OutInfoWithBox("Apply mode");
+                            OutBox("Apply mode");
 
                             if (sqlStatements == null)
                             {
@@ -58,17 +58,17 @@ namespace GrabMigrator
                             if (sqlStatements != null)
                             {
 
-                                OutInfo($@"Read platform config file...");
+                                Out($@"Read platform config file...");
 
                                 var connStrings = GrabConnectionStrings(config.PlatformConfigFile);
 
                                 foreach (var module in config.ApplyingOrder)
                                 {
-                                    OutInfoWithBox($@"Applying scripts for module: {module}...");
+                                    OutBox($@"Applying scripts for module: {module}...");
 
                                     if (!sqlStatements.ContainsKey(module))
                                     {
-                                        OutInfo($@"Warning! There is no SQL expressions for module: {module}");
+                                        Out($@"Warning! There is no SQL expressions for module: {module}");
                                         continue;
                                     }
 
@@ -80,6 +80,7 @@ namespace GrabMigrator
                                             connString = connStrings.ContainsKey(moduleConnStringKey) ? connStrings[moduleConnStringKey] : string.Empty;
                                             if (!string.IsNullOrEmpty(connString)) break;
                                         }
+                                    // Fallback connection string key is always "VirtoCommerce"
                                     connString = string.IsNullOrEmpty(connString) ? connStrings["VirtoCommerce"] : connString;
 
                                     using (var conn = (IDbConnection)new SqlConnection(connString))
@@ -91,7 +92,7 @@ namespace GrabMigrator
                                         {
                                             foreach (var commandText in sqlStatements[module])
                                             {
-                                                OutInfo($@"SQL: {commandText}");
+                                                Out($@"Run SQL statement:{Environment.NewLine}{commandText}");
                                                 var cmd = conn.CreateCommand();
                                                 cmd.Transaction = tran;
                                                 cmd.CommandTimeout = config.CommandTimeout;
@@ -99,36 +100,35 @@ namespace GrabMigrator
                                                 cmd.ExecuteNonQuery();
                                             }
                                             tran.Commit();
+                                            Out($@"Successfully applied for module: {module}!");
                                         }
                                         catch
                                         {
                                             tran.Rollback();
-                                            OutError($@"Statement not executed. Transaction for module {module} rolled back.");
+                                            Out($@"Statement not executed. Transaction for module {module} rolled back.");
                                             throw;
                                         }
                                     }
-
-                                    OutInfo($@"Success!");
                                 }
                             }
                         }
-                        OutInfoWithBox($@"Complete!");
+                        OutBox($@"Complete!");
                     }
                     catch (Exception exc)
                     {
-                        OutError($@"An exception occured: {exc}");
+                        Fail($@"An exception occured: {exc}");
                     }
                 }
                 else
                 {
-                    OutError($@"Configuration file {configFilePath} not found!");
+                    Fail($@"Configuration file {configFilePath} not found!");
                 }
             }
             else
             {
-                OutInfo("Usage:");
-                OutInfo("vc-build GrabMigrator --grab-migrator-config <configfile>");
-                OutError("Configuration file required!");
+                Out("Usage:");
+                Out("vc-build GrabMigrator --grab-migrator-config <configfile>");
+                Fail("Configuration file required!");
             }
         }
 
@@ -199,7 +199,7 @@ namespace GrabMigrator
                 migrationFiles = migrationFiles.GroupBy(x => new FileInfo(x).Directory.FullName).Select(x => x.FirstOrDefault()).ToArray();
             }
 
-            OutInfo($@"Found {migrationFiles.Count()} migrations in directory {migrationDirectory}");
+            Out($@"Found {migrationFiles.Count()} migrations in directory {migrationDirectory}");
             foreach (var migrationFile in migrationFiles)
             {
                 var moduleName = moduleRegex.Match(migrationFile).Groups["module"].Value;
@@ -211,7 +211,7 @@ namespace GrabMigrator
 
                 var tempfile = Path.Combine(new DirectoryInfo(config.StatementsDirectory).FullName, $@"{moduleName}.sql");
 
-                OutInfo($@"Extract migrations for module {moduleName}...");
+                Out($@"Extract migrations for module {moduleName}...");
 
                 // Run dotnet-ef to extract migrations in idempotent manner
                 var fi = new FileInfo(migrationFile);
@@ -220,7 +220,7 @@ namespace GrabMigrator
 
                 sqlStatements.Add(moduleName, SplitStatements(File.ReadAllText(tempfile)));
 
-                OutInfo($@"OK.");
+                Out($@"OK.");
             }
         }
 
@@ -253,21 +253,21 @@ namespace GrabMigrator
             return result;
         }
 
-        private void OutError(string text)
+        private void Fail(string text)
         {
             ControlFlow.Fail($@"{DateTime.Now}: {text}");
         }
 
-        private void OutInfo(string text)
+        private void Out(string text)
         {
             Logger.Normal($@"{DateTime.Now}: {text}");
         }
 
-        private void OutInfoWithBox(string text)
+        private void OutBox(string text)
         {
-            OutInfo(new string('=', text.Length));
-            OutInfo(text);
-            OutInfo(new string('=', text.Length));
+            Out(new string('=', text.Length));
+            Out(text);
+            Out(new string('=', text.Length));
         }
     }
 }
