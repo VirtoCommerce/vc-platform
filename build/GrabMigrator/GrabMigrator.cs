@@ -103,7 +103,7 @@ namespace GrabMigrator
                                         catch
                                         {
                                             tran.Rollback();
-                                            OutInfo($@"Statement not executed. Transaction for module {module} rolled back.");
+                                            OutError($@"Statement not executed. Transaction for module {module} rolled back.");
                                             throw;
                                         }
                                     }
