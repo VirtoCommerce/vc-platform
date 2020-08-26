@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using VirtoCommerce.Platform.Hangfire;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -27,7 +28,12 @@ namespace VirtoCommerce.Platform.Web
                 {
                     webBuilder.UseStartup<Startup>();
                     webBuilder.ConfigureKestrel((context, options) => { options.Limits.MaxRequestBodySize = null; });
-                });
+                })
+            .ConfigureServices((hostingContext, services) =>
+            {
+                // Add & start hangfire server
+                services.AddHangfire(hostingContext.Configuration);
+            });
 
     }
 }
