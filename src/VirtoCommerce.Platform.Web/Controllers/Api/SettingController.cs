@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
         public async Task<ActionResult<ObjectSettingEntry>> GetAllGlobalSettings()
         {
-            var result = await _settingsManager.GetObjectSettingsAsync(_settingsManager.AllRegisteredSettings.Select(x => x.Name));
+            var result = await _settingsManager.GetObjectSettingsAsync(_settingsManager.AllRegisteredSettings.Where(x => !x.IsHidden).Select(x => x.Name));
             return Ok(result);
         }
 
@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Take = int.MaxValue
             };
             var result = await _settingsSearchService.SearchSettingsAsync(criteria);
-            return Ok(result.Results);
+            return Ok(result.Results.Where(x=>!x.IsHidden).ToList());
         }
 
         /// <summary>
