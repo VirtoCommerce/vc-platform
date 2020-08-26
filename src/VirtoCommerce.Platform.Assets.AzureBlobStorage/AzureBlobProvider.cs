@@ -14,7 +14,6 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 {
     public class AzureBlobProvider : IBlobStorageProvider, IBlobUrlResolver
     {
-
         public const string ProviderName = "AzureBlobStorage";
         public const string BlobCacheControlPropertyValue = "public, max-age=604800";
 
@@ -100,7 +99,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             blob.Properties.ContentType = MimeTypeResolver.ResolveContentType(Path.GetFileName(filePath));
 
             // Leverage Browser Caching - 7days
-            // Setting Cache-Control on Azure Blobs can help reduce bandwidth and improve the performance by preventing consumers from having to continuously download resources. 
+            // Setting Cache-Control on Azure Blobs can help reduce bandwidth and improve the performance by preventing consumers from having to continuously download resources.
             // More Info https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
             blob.Properties.CacheControl = BlobCacheControlPropertyValue;
 
@@ -122,7 +121,6 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                 }
                 else
                 {
-
                     var blobDirectory = blobContainer.GetDirectoryReference(directoryPath);
 
                     //Remove all nested directory blobs
@@ -229,7 +227,6 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                         retVal.Results.Add(folder);
                     }
                 } while (listbContinuationToken != null);
-
             }
 
             retVal.TotalCount = retVal.Results.Count();
@@ -251,7 +248,6 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                 //Need upload empty blob because azure blob storage not support direct directory creation
                 await blobContainer.GetBlockBlobReference(directoryPath).UploadFromByteArrayAsync(new byte[0], 0, 0);
             }
-
         }
 
         public virtual void Move(string srcUrl, string destUrl)
@@ -268,8 +264,6 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         {
             string oldPath, newPath;
             var isFolderRename = string.IsNullOrEmpty(Path.GetFileName(oldUrl));
-
-            var moveItems = new Dictionary<string, string>();
 
             var containerName = GetContainerNameFromUrl(oldUrl);
 
@@ -296,12 +290,9 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                     ? listBlobItem.Uri.AbsoluteUri
                     : listBlobItem.StorageUri.PrimaryUri.ToString();
 
-                moveItems.Add(blobName, blobName.Replace(oldPath, newPath));
-            }
+                var newBlobName = blobName.Replace(oldPath, newPath);
 
-            foreach (var item in moveItems)
-            {
-                await MoveBlob(blobContainer, item.Key, item.Value, isCopy);
+                await MoveBlob(blobContainer, blobName, newBlobName, isCopy);
             }
         }
 
@@ -333,7 +324,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             }
         }
 
-        #endregion
+        #endregion IBlobStorageProvider Members
 
         #region IBlobUrlResolver Members
 
@@ -356,7 +347,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             return retVal;
         }
 
-        #endregion
+        #endregion IBlobUrlResolver Members
 
         /// <summary>
         /// Return outline folder from absolute or relative url
