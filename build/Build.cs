@@ -115,8 +115,8 @@ partial class Build : NukeBuild
 
     [Parameter("Path to Release Notes File")] readonly AbsolutePath ReleaseNotes;
 
-    [Parameter("VersionTag for module.manifest and Directory.Build.Props")] string CustomVersionPrefix;
-    [Parameter("VersionSuffix for module.manifest and Directory.Build.Props")] string CustomVersionSuffix;
+    [Parameter("VersionTag for module.manifest and Directory.Build.props")] string CustomVersionPrefix;
+    [Parameter("VersionSuffix for module.manifest and Directory.Build.props")] string CustomVersionSuffix;
 
     [Parameter("Release branch")] readonly string ReleaseBranch;
 
