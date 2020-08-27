@@ -1,10 +1,8 @@
 using Hangfire;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using VirtoCommerce.Platform.Hangfire;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -34,9 +32,8 @@ namespace VirtoCommerce.Platform.Web
                 })
             .ConfigureServices((hostingContext, services) =>
             {
-                var hangfireOptions = services.BuildServiceProvider().GetService<IOptions<HangfireOptions>>().Value;
                 //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs  
-                if (hangfireOptions.UseHangfireServer)
+                if (hostingContext.Configuration.GetValue("VirtoCommerce:Hangfire:UseHangfireServer", true))
                 {
                     // Add & start hangfire server immediately.
                     // We do this there after all services initialize, to have dependencies in hangfire tasks correctly resolved.
