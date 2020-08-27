@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
+using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -394,6 +395,9 @@ namespace VirtoCommerce.Platform.Web
                 services.AddFileSystemBlobProvider();
             }
 
+            //HangFire
+            services.AddHangfire(Configuration);
+
             // Register the Swagger generator
             services.AddSwagger();
         }
@@ -472,6 +476,11 @@ namespace VirtoCommerce.Platform.Web
             app.UseDbTriggers();
             //Register platform settings
             app.UsePlatformSettings();
+
+            // Fake resolve Hangfire.IGlobalConfiguration to enforce correct initialization of Hangfire giblets before modules init.
+            // Don't remove next line, it will cause issues with modules startup at hangfire-less (UseHangfireServer=false) platform instances.
+            app.ApplicationServices.GetRequiredService<IGlobalConfiguration>();
+
             app.UseModules();
 
             // Complete hangfire init & resume jobs run
