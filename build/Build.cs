@@ -116,15 +116,15 @@ class Build : NukeBuild
 
     [Parameter("Path to Release Notes File")] readonly AbsolutePath ReleaseNotes;
 
-    [Parameter("VersionTag for module.manifest and Directory.Build.Props")]  string CustomVersionPrefix;
-    [Parameter("VersionSuffix for module.manifest and Directory.Build.Props")]  string CustomVersionSuffix;
+    [Parameter("VersionTag for module.manifest and Directory.Build.props")]  string CustomVersionPrefix;
+    [Parameter("VersionSuffix for module.manifest and Directory.Build.props")]  string CustomVersionSuffix;
 
     [Parameter("Release branch")] readonly string ReleaseBranch;
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
     [Parameter("Path to Artifacts Directory")] AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
-    Project WebProject => Solution.AllProjects.FirstOrDefault(x => (x.SolutionFolder?.Name == "src" && x.Name.EndsWith("Web")) || x.Name.EndsWith("VirtoCommerce.Storefront"));
+    Project WebProject => Solution.AllProjects.FirstOrDefault(x => x.Name.EndsWith($"{Solution.Name}.Web") || x.Name.EndsWith("VirtoCommerce.Storefront"));
     AbsolutePath ModuleManifestFile => WebProject.Directory / "module.manifest";
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
@@ -192,7 +192,7 @@ class Build : NukeBuild
       .DependsOn(Test)
       .Executes(() =>
       {
-          //For platform take nuget package description from Directory.Build.Props
+          //For platform take nuget package description from Directory.Build.props
           var settings = new DotNetPackSettings()
                .SetProject(Solution)
                   .EnableNoBuild()
@@ -222,34 +222,35 @@ class Build : NukeBuild
        {
            var dotnetPath = ToolPathResolver.GetPathExecutable("dotnet");
            var testProjects = Solution.GetProjects("*.Tests");
-           if (testProjects.Count() > 0)
+           //
+           var OutPath = RootDirectory / ".tmp";
+           testProjects.ForEach((testProject, index) =>
            {
-               var testProjectPath = testProjects.First().Path;
-               var OutPath = RootDirectory / ".tmp";
                var testSetting = new DotNetTestSettings()
-                    .SetProjectFile(testProjectPath)
-                    .SetConfiguration(Configuration)
-                    .SetLogger("trx")
-                    .SetFilter(TestsFilter)
-                    .SetNoBuild(true)
-                    .SetCollectCoverage(true)
-                    .SetLogOutput(true)
-                    .SetResultsDirectory(OutPath);
-               var testProjectBinDir = testProjects.First().Directory / "bin" / Configuration;
-               var testAssemblies = testProjectBinDir.GlobFiles($"**/{Solution.Name}.Tests.dll");
-               if (testAssemblies.Count() > 0)
+                .SetProjectFile(testProject.Path)
+                .SetConfiguration(Configuration)
+                .SetLogger("trx")
+                .SetFilter(TestsFilter)
+                .SetNoBuild(true)
+                .SetCollectCoverage(true)
+                .SetLogOutput(true)
+                .SetResultsDirectory(OutPath);
+               var testProjectBinDir = testProject.Directory / "bin";
+               var testAssemblies = testProjectBinDir.GlobFiles($"**/{testProject.Name}.dll");
+               if(testAssemblies.Count < 1)
                {
-                   var testAssemblyPath = testAssemblies.First();
-
-                   CoverletTasks.Coverlet(s => s
-                       .SetTargetSettings(testSetting)
-                       .SetAssembly(testAssemblyPath)
-                       .SetTarget(dotnetPath)
-                       .SetOutput(CoverageReportPath)
-                       .SetFormat(CoverletOutputFormat.opencover)
-                       );
+                   ControlFlow.Fail("Tests Assemblies not found!");
                }
-           }
+               CoverletTasks.Coverlet(s => s
+                .SetTargetSettings(testSetting)
+                .SetAssembly(testAssemblies.First())
+                .SetTarget(dotnetPath)
+                .When(index == 0, ss => ss.SetOutput(CoverageReportPath))
+                .When(index > 0 && index < testProjects.Count() - 1, ss => ss.SetMergeWith(CoverageReportPath))
+                .When(index == testProjects.Count() - 1, ss => ss.SetOutput(CoverageReportPath).SetFormat(CoverletOutputFormat.opencover))
+                );
+
+           });
        });
 
     public void CustomDotnetLogger(OutputType type, string text)
@@ -304,7 +305,7 @@ class Build : NukeBuild
             }
         }
 
-        //directory.Build.Props
+        //Directory.Build.props
         var xmlDoc = new XmlDocument()
         {
             PreserveWhitespace = true
@@ -370,7 +371,7 @@ class Build : NukeBuild
             IncrementVersionMinor();
             ChangeProjectVersion(prefix: CustomVersionPrefix);
             var manifestArg = IsModule ? RootDirectory.GetRelativePathTo(ModuleManifestFile) : "";
-            GitTasks.Git($"add Directory.Build.Props {manifestArg}");
+            GitTasks.Git($"add Directory.Build.props {manifestArg}");
             GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
             GitTasks.Git($"push origin dev");
             //remove release branch
@@ -395,7 +396,7 @@ class Build : NukeBuild
             GitTasks.Git($"checkout -b {hotfixBranchName}");
             ChangeProjectVersion(prefix: CustomVersionPrefix);
             var manifestArg = IsModule ? RootDirectory.GetRelativePathTo(ModuleManifestFile) : "";
-            GitTasks.Git($"add Directory.Build.Props {manifestArg}");
+            GitTasks.Git($"add Directory.Build.props {manifestArg}");
             GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
             GitTasks.Git($"push -u origin {hotfixBranchName}");
             Directory.SetCurrentDirectory(currentDir);
@@ -595,14 +596,12 @@ class Build : NukeBuild
           .Requires(() => !IsModule)
           .Executes(async () =>
           {
-              var swashbucklePackage = NuGetPackageResolver.GetGlobalInstalledPackage("swashbuckle.aspnetcore.cli", "5.2.1", ToolPathResolver.NuGetPackagesConfigFile);
-
-              var swashbucklePath = swashbucklePackage.Directory.GlobFiles("**/dotnet-swagger.dll").Last();
+              var swashbuckle = ToolResolver.GetPackageTool("Swashbuckle.AspNetCore.Cli", "dotnet-swagger.dll", framework:"netcoreapp3.0");
               var projectPublishPath = ArtifactsDirectory / "publish" / $"{WebProject.Name}.dll";
               var swaggerJson = ArtifactsDirectory / "swagger.json";
               var currentDir = Directory.GetCurrentDirectory();
               Directory.SetCurrentDirectory(RootDirectory / "src" / "VirtoCommerce.Platform.Web");
-              DotNet($"{swashbucklePath} tofile --output {swaggerJson} {projectPublishPath} VirtoCommerce.Platform");
+              swashbuckle.Invoke($"tofile --output {swaggerJson} {projectPublishPath} VirtoCommerce.Platform");
               Directory.SetCurrentDirectory(currentDir);
 
               var responseContent = await SendSwaggerSchemaToValidator(httpClient, swaggerJson, SwaggerValidatorUri);
@@ -654,16 +653,17 @@ class Build : NukeBuild
             if (PullRequest)
             {
                 var prBase = Environment.GetEnvironmentVariable("CHANGE_TARGET");
-                prBaseParam = $"/d:sonar.pullrequest.base='{prBase}'";
+                prBaseParam = $"/d:sonar.pullrequest.base=\"{prBase}\"";
 
                 var changeTitle = Environment.GetEnvironmentVariable("CHANGE_TITLE");
-                prBranchParam = $"/d:sonar.pullrequest.branch='{changeTitle}'";
+                prBranchParam = $"/d:sonar.pullrequest.branch=\"{changeTitle}\"";
 
                 var prNumber = Environment.GetEnvironmentVariable("CHANGE_ID");
                 prKeyParam = $"/d:sonar.pullrequest.key={prNumber}";
                 
             }
-            var branchParam = $"/d:\"sonar.branch.name={branchName}\"";
+            var branchParam = PullRequest ? "" : $"/d:\"sonar.branch.name={branchName}\"";
+
             var projectKeyParam = $"/k:\"{RepoOrg}_{RepoName}\"";
             var hostParam = $"/d:sonar.host.url={SonarUrl}";
             var tokenParam = $"/d:sonar.login={SonarAuthToken}";

@@ -1,0 +1,73 @@
+version: '3.4'
+
+services:
+  vc-db:
+    image: mcr.microsoft.com/mssql/server:latest
+    ports:
+      - "${DOCKER_SQL_PORT:-1433}:1433"
+    expose:  
+      - 1433  
+    environment: 
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - SA_PASSWORD=${DB_PASS}
+    volumes:
+      - db-volume:/var/opt/mssql   
+    networks:
+      - virto
+
+  virtocommerce.platform.web:
+    build: 
+        context: .
+        dockerfile: Platform.Dockerfile
+        args:
+          platform_arg: ${PLATFORM_VERSION}
+    ports:
+      - "${DOCKER_PLATFORM_PORT:-8090}:80"
+    environment:
+     - VirtoCommerce:AllowInsecureHttp=true
+     - ConnectionStrings:VirtoCommerce=Data Source=vc-db;Initial Catalog=VirtoCommerce3docker;Persist Security Info=True;User ID=sa;Password=${DB_PASS};MultipleActiveResultSets=False;
+     - ConnectionStrings:RedisConnectionString=redis,password=${REDIS_PASS}
+     - Assets:FileSystem:PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/assets/
+     - Content:FileSystem:PublicUrl=http://localhost:${DOCKER_PLATFORM_PORT:-8090}/cms-content/
+     - Search:Provider=${SEARCH_PROVIDER}
+     - Search:Scope=platformindex
+     - Search:ElasticSearch:Server=http://elastic:9200
+    depends_on:
+      - vc-db
+      - elastic
+      - redis
+    entrypoint: ["/wait-for-it.sh", "vc-db:1433", "-t", "120", "--", "dotnet", "VirtoCommerce.Platform.Web.dll"]
+    volumes:
+      - ${MODULES_VOLUME}:/opt/virtocommerce/platform/Modules
+      - ${APP_DATA_MODULES}:/opt/virtocommerce/platform/App_Data/Modules
+    networks:
+      - virto
+
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    networks:
+      - virto
+ 
+  redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass ${REDIS_PASS}
+    ports:
+        - "6379:6379"
+    environment:
+        - REDIS_REPLICATION_MODE=master  
+    networks:
+        - virto       
+
+volumes:
+  db-volume:
+    name: db-volume
+
+networks:
+  virto:
+     external:
+        name: nat

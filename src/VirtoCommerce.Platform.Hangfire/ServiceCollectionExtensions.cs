@@ -27,12 +27,6 @@ namespace VirtoCommerce.Platform.Hangfire
                 services.AddHangfire(config => config.UseMemoryStorage());
             }
 
-            //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs  
-            if (hangfireOptions.UseHangfireServer)
-            {
-                services.AddHangfireServer();
-            }
-
             return services;
         }
     }

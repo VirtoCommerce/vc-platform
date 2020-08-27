@@ -402,35 +402,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<ActionResult<SecurityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
         {
-            var currentUserName = User.Identity.Name;
-
-            var user = await _userManager.FindByNameAsync(currentUserName);
-            if (user == null)
-            {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
-            }
-            if (!IsUserEditable(user.UserName))
-            {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
-            }
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var result = await _signInManager.UserManager.ResetPasswordAsync(user, token, resetPassword.NewPassword);
-            if (result.Succeeded)
-            {
-                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _userPasswordHasher.HashPassword(user, resetPassword.NewPassword);
-                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
-
-                if (user.PasswordExpired != resetPassword.ForcePasswordChangeOnNextSignIn)
-                {
-                    user.PasswordExpired = resetPassword.ForcePasswordChangeOnNextSignIn;
-
-                    var userUpdateResult = await _userManager.UpdateAsync(user);
-                }
-            }
-
-            return Ok(result.ToSecurityResult());
+            return await ResetPassword(User.Identity.Name, resetPassword);
         }
 
         /// <summary>
@@ -457,14 +429,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = await _userManager.ResetPasswordAsync(user, token, resetPasswordConfirm.NewPassword);
             if (result.Succeeded)
             {
+                user = await _userManager.FindByNameAsync(userName);
+
                 // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
                 var customPasswordHash = _userPasswordHasher.HashPassword(user, resetPasswordConfirm.NewPassword);
                 await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
+
                 if (user.PasswordExpired != resetPasswordConfirm.ForcePasswordChangeOnNextSignIn)
                 {
                     user.PasswordExpired = resetPasswordConfirm.ForcePasswordChangeOnNextSignIn;
 
-                    var userUpdateResult = await _userManager.UpdateAsync(user);
+                    await _userManager.UpdateAsync(user);
                 }
             }
 

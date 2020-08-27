@@ -10,10 +10,10 @@ using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
 {
-   /// <summary>
-   /// This background task connects to the signalR hub (push notifications) to be able receive the notifications from other platform instances and actualize them
-   /// into the local notifications storage   
-   /// </summary>
+    /// <summary>
+    /// This background task connects to the signalR hub (push notifications) to be able receive the notifications from other platform instances and actualize them
+    /// into the local notifications storage   
+    /// </summary>
     public class PushNotificationSynchronizerTask: BackgroundService
     {
         private readonly IPushNotificationStorage _storage;
@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
         {
             _hubConnection = new HubConnectionBuilder().AddNewtonsoftJsonProtocol(jsonOptions =>
             {
-                jsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.All;
+                jsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
                 jsonOptions.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
             })
              .WithAutomaticReconnect()
