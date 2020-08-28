@@ -74,9 +74,6 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/build-docker-image@dev
       with:
         tag: ${{ steps.image.outputs.taggedVersion }}
-
-    - name: Run Docker Environment
-      uses: VirtoCommerce/vc-github-actions/run-docker-env@dev
           
     - name: Publish Nuget
       uses: VirtoCommerce/vc-github-actions/publish-nuget@dev
