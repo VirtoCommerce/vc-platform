@@ -40,7 +40,7 @@ This article is relevant to you if you are:
 
 1. Copy data from the main DB to each newly created table:
 
-    1.1 script for catalog
+    a) script for catalog
     ```sql
     INSERT INTO [SeoUrlKeyword]
         ([Id], [CreatedDate], [ModifiedDate], [CreatedBy], [ModifiedBy], [Keyword], [StoreId], [IsActive], [Language], [Title], [MetaDescription], [MetaKeywords],  [ImageAltDescription], [ObjectId], [ObjectType])
@@ -56,7 +56,7 @@ This article is relevant to you if you are:
     WHERE ObjectType = 'CatalogProduct'
     ```
 
-    1.1 script for Store and Customer
+    b) script for Store and Customer
     ```sql
     INSERT INTO [SeoUrlKeyword]
     	([Id], [CreatedDate], [ModifiedDate], [CreatedBy], [ModifiedBy], [Keyword], [StoreId], [IsActive], [Language], [Title], [MetaDescription], [MetaKeywords], [ImageAltDescription], [ObjectId], [ObjectType])
