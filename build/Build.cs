@@ -11,7 +11,6 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Nuke.Common;
-using Nuke.Common.CI.Jenkins;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
@@ -32,7 +31,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
-class Build : NukeBuild
+partial class Build : NukeBuild
 {
     /// Support plugins are available for:
     ///   - JetBrains ReSharper        https://nuke.build/resharper
@@ -55,7 +54,7 @@ class Build : NukeBuild
             if (solutions.Length == 1)
             {
                 var solutionFileName = Path.GetFileName(solutions.First());
-                Logger.Info($"Solution found: {solutionFileName}");
+                Logger.Info($"Solution found: {solutionFileName}"); 
                 File.WriteAllText(".nuke", solutionFileName);
             }
         }
@@ -116,8 +115,8 @@ class Build : NukeBuild
 
     [Parameter("Path to Release Notes File")] readonly AbsolutePath ReleaseNotes;
 
-    [Parameter("VersionTag for module.manifest and Directory.Build.props")]  string CustomVersionPrefix;
-    [Parameter("VersionSuffix for module.manifest and Directory.Build.props")]  string CustomVersionSuffix;
+    [Parameter("VersionTag for module.manifest and Directory.Build.props")] string CustomVersionPrefix;
+    [Parameter("VersionSuffix for module.manifest and Directory.Build.props")] string CustomVersionSuffix;
 
     [Parameter("Release branch")] readonly string ReleaseBranch;
 
@@ -171,11 +170,11 @@ class Build : NukeBuild
              {
                  TestsDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
              }
-            //if (DirectoryExists(TestsDirectory))
-            //{
-            //    WebProject.Directory.GlobDirectories("**/node_modules").ForEach(DeleteDirectory);
-            //}
-            EnsureCleanDirectory(ArtifactsDirectory);
+             //if (DirectoryExists(TestsDirectory))
+             //{
+             //    WebProject.Directory.GlobDirectories("**/node_modules").ForEach(DeleteDirectory);
+             //}
+             EnsureCleanDirectory(ArtifactsDirectory);
          });
 
     Target Restore => _ => _
@@ -293,9 +292,9 @@ class Build : NukeBuild
         if (IsModule)
         {
             var manifest = ModuleManifest.Clone();
-            if(!String.IsNullOrEmpty(prefix))
+            if (!String.IsNullOrEmpty(prefix))
                 manifest.Version = prefix;
-            if(!String.IsNullOrEmpty(suffix))
+            if (!String.IsNullOrEmpty(suffix))
                 manifest.VersionTag = suffix;
             using (var writer = new Utf8StringWriter())
             {
@@ -544,7 +543,7 @@ class Build : NukeBuild
             var existExternalManifest = modulesExternalManifests.FirstOrDefault(x => x.Id == manifest.Id);
             if (existExternalManifest != null)
             {
-                if(!manifest.VersionTag.IsNullOrEmpty() || !CustomVersionSuffix.IsNullOrEmpty())
+                if (!manifest.VersionTag.IsNullOrEmpty() || !CustomVersionSuffix.IsNullOrEmpty())
                 {
                     var tag = manifest.VersionTag.IsNullOrEmpty() ? CustomVersionSuffix : manifest.VersionTag;
                     manifest.VersionTag = tag;
@@ -660,7 +659,7 @@ class Build : NukeBuild
 
                 var prNumber = Environment.GetEnvironmentVariable("CHANGE_ID");
                 prKeyParam = $"/d:sonar.pullrequest.key={prNumber}";
-                
+
             }
             var branchParam = PullRequest ? "" : $"/d:\"sonar.branch.name={branchName}\"";
 
