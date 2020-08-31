@@ -305,15 +305,25 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         /// <param name="isCopy"></param>
         private async Task MoveBlob(CloudBlobContainer container, string oldUrl, string newUrl, bool isCopy)
         {
-            var target = container.GetBlockBlobReference(GetFilePathFromUrl(newUrl));
+            var targetPath = oldUrl.EndsWith(_cloudBlobClient.DefaultDelimiter)
+                ? GetDirectoryPathFromUrl(newUrl)
+                : GetFilePathFromUrl(newUrl);
+
+            var target = container.GetBlockBlobReference(targetPath);
 
             await container.CreateIfNotExistsAsync();
 
             if (!await target.ExistsAsync())
             {
-                var sourse = container.GetBlockBlobReference(GetFilePathFromUrl(oldUrl));
+                var soursePath = oldUrl.EndsWith(_cloudBlobClient.DefaultDelimiter)
+                    ? GetDirectoryPathFromUrl(oldUrl)
+                    : GetFilePathFromUrl(oldUrl);
 
-                if (await sourse.ExistsAsync())
+                var sourse = container.GetBlockBlobReference(soursePath);
+
+                var sourceExists = await sourse.ExistsAsync();
+
+                if (sourceExists)
                 {
                     await target.StartCopyAsync(sourse);
                     if (!isCopy)
@@ -416,8 +426,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 
         private static CloudStorageAccount ParseConnectionString(string connectionString)
         {
-            CloudStorageAccount cloudStorageAccount;
-            if (!CloudStorageAccount.TryParse(connectionString, out cloudStorageAccount))
+            if (!CloudStorageAccount.TryParse(connectionString, out var cloudStorageAccount))
             {
                 throw new InvalidOperationException("Failed to get valid connection string");
             }
