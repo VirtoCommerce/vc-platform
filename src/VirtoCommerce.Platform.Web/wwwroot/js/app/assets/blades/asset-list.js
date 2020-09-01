@@ -69,7 +69,6 @@ angular.module('platformWebApp')
 
                 if (result != null) {
                     if (blade.currentEntity.url) {
-                        console.log(blade.currentEntity);
                         createFolder(result);
                     } else {
                         if (result.length < 3 || result.length > 63 || !result.match(/^[a-z0-9]+(-[a-z0-9]+)*$/)) {
