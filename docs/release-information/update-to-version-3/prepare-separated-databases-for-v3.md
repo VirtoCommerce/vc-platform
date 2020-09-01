@@ -40,6 +40,23 @@ This article is relevant to you if you are:
 
 1. Copy data from the main DB to each newly created table:
 
+    a) script for catalog
+    ```sql
+    INSERT INTO [SeoUrlKeyword]
+        ([Id], [CreatedDate], [ModifiedDate], [CreatedBy], [ModifiedBy], [Keyword], [StoreId], [IsActive], [Language], [Title], [MetaDescription], [MetaKeywords],  [ImageAltDescription], [ObjectId], [ObjectType])
+    SELECT seo.[Id], seo.[CreatedDate], seo.[ModifiedDate], seo.[CreatedBy], seo.[ModifiedBy], seo.[Keyword], seo.[StoreId], seo.[IsActive], seo.[Language], seo.[Title], seo.[MetaDescription], seo.[MetaKeywords], seo.[ImageAltDescription], seo.[ObjectId], seo.[ObjectType]
+    FROM [<vc-v2-main>].[dbo].[SeoUrlKeyword] seo 
+    INNER JOIN Category ON Category.Id = seo.ObjectId
+    WHERE ObjectType = 'Category'
+
+    INSERT INTO [SeoUrlKeyword] ([Id], [CreatedDate], [ModifiedDate], [CreatedBy], [ModifiedBy], [Keyword], [StoreId], [IsActive], [Language], [Title], [MetaDescription], [MetaKeywords], [ImageAltDescription], [ObjectId], [ObjectType])
+    SELECT seo.[Id], seo.[CreatedDate], seo.[ModifiedDate], seo.[CreatedBy], seo.[ModifiedBy], seo.[Keyword], seo.[StoreId], seo.[IsActive], seo.[Language], seo.[Title], seo.[MetaDescription], seo.[MetaKeywords], seo.[ImageAltDescription], seo.[ObjectId], seo.[ObjectType]
+    FROM [<vc-v2-main>].[dbo].[SeoUrlKeyword] seo
+    INNER JOIN Item ON Item.Id = seo.ObjectId
+    WHERE ObjectType = 'CatalogProduct'
+    ```
+
+    b) script for Store and Customer
     ```sql
     INSERT INTO [SeoUrlKeyword]
     	([Id], [CreatedDate], [ModifiedDate], [CreatedBy], [ModifiedBy], [Keyword], [StoreId], [IsActive], [Language], [Title], [MetaDescription], [MetaKeywords], [ImageAltDescription], [ObjectId], [ObjectType])
