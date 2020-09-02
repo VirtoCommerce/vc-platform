@@ -66,21 +66,27 @@ angular.module('platformWebApp')
 
             function newFolder(value, prefix) {
                 var result = prompt(prefix ? prefix + "\n\nEnter folder name:" : "Enter folder name:", value);
+
                 if (result != null) {
                     if (blade.currentEntity.url) {
-                        assets.createFolder({ name: result, parentUrl: blade.currentEntity.url },
-                            blade.refresh,
-                            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                        createFolder(result);
                     } else {
                         if (result.length < 3 || result.length > 63 || !result.match(/^[a-z0-9]+(-[a-z0-9]+)*$/)) {
                             newFolder(result, "A folder name must conform to the following naming rules:\n  Folder name must be from 3 through 63 characters long.\n  Folder name must start with a letter or number, and can contain only letters, numbers, and the dash (-) character.\n  Every dash (-) character must be immediately preceded and followed by a letter or number; consecutive dashes are not permitted.\n  All letters in a folder name must be lowercase.");
                         } else {
-                            assets.createFolder({ name: result, parentUrl: blade.currentEntity.url },
-                                blade.refresh,
-                                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                            createFolder(result)
                         }
                     }
                 }
+            }
+
+            function createFolder(result) {
+                assets.createFolder({ name: result, parentUrl: blade.currentEntity.url },
+                    blade.refresh,
+                    function (error) {
+                        var text = error.data.map(x => "ErrorCode: " + x.errorCode + " Message: " + x.errorMessage).join('\n');
+                        bladeNavigationService.setError('Error ' + error.status + '\n' + text, blade);
+                    });
             }
 
             $scope.copyUrl = function (data) {

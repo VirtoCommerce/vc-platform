@@ -16,6 +16,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Helpers;
 using VirtoCommerce.Platform.Web.Helpers;
 using VirtoCommerce.Platform.Web.Swagger;
+using VirtoCommerce.Platform.Web.Validators;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -86,12 +87,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                         var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
                         blobInfo.Name = fileName;
-                        //Use only file name as Url, for further access to these files need use PlatformOptions.LocalUploadFolderPath 
+                        //Use only file name as Url, for further access to these files need use PlatformOptions.LocalUploadFolderPath
                         blobInfo.Url = fileName;
                         blobInfo.ContentType = MimeTypeResolver.ResolveContentType(fileName);
                         retVal.Add(blobInfo);
                     }
-
                 }
             }
             return Ok(retVal.ToArray());
@@ -112,7 +112,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [DisableFormValueModelBinding]
         [Authorize(PlatformConstants.Security.Permissions.AssetCreate)]
         [UploadFile]
-        public async Task<ActionResult<BlobInfo[]>> UploadAssetAsync([FromQuery] string folderUrl, [FromQuery]string url = null, [FromQuery]string name = null)
+        public async Task<ActionResult<BlobInfo[]>> UploadAssetAsync([FromQuery] string folderUrl, [FromQuery] string url = null, [FromQuery] string name = null)
         {
             // https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-3.1
             if (url == null && !MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
@@ -194,11 +194,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <param name="folderUrl"></param>
         /// <param name="keyword"></param>
-        /// <returns></returns> 
+        /// <returns></returns>
         [HttpGet]
         [Route("")]
         [Authorize(PlatformConstants.Security.Permissions.AssetRead)]
-        public async Task<ActionResult<BlobEntrySearchResult>> SearchAssetItemsAsync([FromQuery]string folderUrl = null, [FromQuery] string keyword = null)
+        public async Task<ActionResult<BlobEntrySearchResult>> SearchAssetItemsAsync([FromQuery] string folderUrl = null, [FromQuery] string keyword = null)
         {
             var result = await _blobProvider.SearchAsync(folderUrl, keyword);
             return Ok(result);
@@ -213,8 +213,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("folder")]
         [Authorize(PlatformConstants.Security.Permissions.AssetCreate)]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> CreateBlobFolderAsync([FromBody]BlobFolder folder)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> CreateBlobFolderAsync([FromBody] BlobFolder folder)
         {
+            var validation = new BlobFolderValidator().Validate(folder);
+
+            if (!validation.IsValid)
+            {
+                return BadRequest(validation.Errors);
+            }
+
             await _blobProvider.CreateFolderAsync(folder);
             return NoContent();
         }
