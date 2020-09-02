@@ -65,19 +65,19 @@ angular.module('platformWebApp')
             }
 
             function newFolder() {
-                var text = "A folder name must conform to the following naming rules:\n  Folder name must be from 3 through 63 characters long.\n  Folder name must start with a letter or number, and can contain only letters, numbers, and the dash (-) character.\n  Every dash (-) character must be immediately preceded and followed by a letter or number; consecutive dashes are not permitted.\n  All letters in a folder name must be lowercase.";
-                var result = prompt(text + "\n\nEnter folder name:");
+                var tooltip = "A folder name must conform to the following naming rules:\n  Folder name must be from 3 through 63 characters long.\n  Folder name must start with a letter or number, and can contain only letters, numbers, and the dash (-) character.\n  Every dash (-) character must be immediately preceded and followed by a letter or number; consecutive dashes are not permitted.\n  All letters in a folder name must be lowercase.";
+                var result = prompt(tooltip + "\n\nEnter folder name:");
 
                 if (result != null) {
                     assets.createFolder({
                         name: result,
                         parentUrl: blade.currentEntity.url
                     },
-                    blade.refresh,
-                    function (error) {
-                        var text = error.data.map(x => "ErrorCode: " + x.errorCode + " Message: " + x.errorMessage).join('\n');
-                        bladeNavigationService.setError('Error ' + error.status + '\n' + text, blade);
-                    });
+                        blade.refresh,
+                        function (error) {
+                            var text = error.data.map(x => "ErrorCode: " + x.errorCode + " Message: " + x.errorMessage).join('\n');
+                            bladeNavigationService.setError('Error ' + error.status + '\n' + text, blade);
+                        });
                 }
             }
 
