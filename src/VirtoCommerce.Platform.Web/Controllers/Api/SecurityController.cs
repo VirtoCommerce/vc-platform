@@ -321,7 +321,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="providerKey"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("users/login/external")]
+        [Route("users/login/external/{loginProvider}/{providerKey}")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityQuery)]
         public async Task<ActionResult<ApplicationUser>> GetUserByLogin([FromRoute] string loginProvider, [FromRoute] string providerKey)
         {
@@ -347,6 +347,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             else
             {
                 result = await _userManager.CreateAsync(newUser, newUser.Password);
+            }
+
+            if (result.Succeeded && !newUser.Logins.IsNullOrEmpty())
+            {
+                foreach (var login in newUser.Logins)
+                {
+                    var newExternalLogin = new UserLoginInfo(login.LoginProvider, login.ProviderKey, null);
+                    result = await _userManager.AddLoginAsync(newUser, newExternalLogin);
+
+                    if (!result.Succeeded)
+                    {
+                        break;
+                    }
+                }
             }
 
             return Ok(result.ToSecurityResult());
