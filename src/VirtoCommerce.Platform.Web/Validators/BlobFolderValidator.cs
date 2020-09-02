@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Web.Validators
                 .WithMessage("Folder name must not ends with dash symbol.")
                 .Must(x => !x.Contains("--"))
                 .WithMessage("Folder name must not conatin consecutive dash symbols.")
-                .Must(x => new Regex("[0-9a-z -]").IsMatch(x))
+                .Must(x => !new Regex("[^0-9a-z -]").IsMatch(x))
                 .WithMessage("Folder name must not conatin specsymbols.");
         }
     }
