@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
     public static class SwaggerServiceCollectionExtensions
     {
         public static string platformDocName { get; } = "VirtoCommerce.Platform";
-        public static string platformAllDocsName { get; } = "Platform.All";
+        public static string platformUIDocName { get; } = "PlatformUI";
         private static string oauth2SchemeName = "oauth2";
         /// <summary>
         /// 
@@ -54,7 +54,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 };
 
                 c.SwaggerDoc(platformDocName, platformInfo);
-                c.SwaggerDoc(platformAllDocsName, platformInfo);
+                c.SwaggerDoc(platformUIDocName, platformInfo);
 
                 foreach (var module in modules)
                 {
@@ -93,7 +93,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
                 c.DocInclusionPredicate((docName, apiDesc) =>
                 {
-                    if (docName.EqualsInvariant(platformAllDocsName)) return true; // It's an UI endpoint, return all to correctly build swagger UI page
+                    if (docName.EqualsInvariant(platformUIDocName)) return true; // It's an UI endpoint, return all to correctly build swagger UI page
 
                     var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
                     if (docName.EqualsInvariant(platformDocName) && currentAssembly.FullName.StartsWith(docName)) return true; // It's a platform endpoint. 
@@ -137,7 +137,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             applicationBuilder.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"./{platformAllDocsName}/swagger.json", platformAllDocsName);
+                c.SwaggerEndpoint($"./{platformUIDocName}/swagger.json", platformUIDocName);
                 c.SwaggerEndpoint($"./{platformDocName}/swagger.json", platformDocName);
                 foreach (var module in modules)
                 {

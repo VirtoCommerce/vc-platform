@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 type =>
                 (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id ??
                 (
-                    _documentName == SwaggerServiceCollectionExtensions.platformAllDocsName ?
+                    _documentName == SwaggerServiceCollectionExtensions.platformUIDocName ?
                      type.FullName :
                     oldSchemaIdSelector.Invoke(type)
                 )
