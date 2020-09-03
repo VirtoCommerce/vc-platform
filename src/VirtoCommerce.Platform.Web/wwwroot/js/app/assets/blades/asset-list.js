@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.assets.assetListController', ['$scope', '$translate', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$sessionStorage', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper',
-        function ($scope, translate, assets, bladeNavigationService, dialogService, $storage, bladeUtils, uiGridHelper) {
+        function ($scope, $translate, assets, bladeNavigationService, dialogService, $storage, bladeUtils, uiGridHelper) {
             var blade = $scope.blade;
             blade.title = 'platform.blades.asset-list.title';
             if (!blade.currentEntity) {
@@ -65,7 +65,7 @@ angular.module('platformWebApp')
             }
 
             function newFolder() {
-                var tooltip = translate.instant('platform.dialogs.create-folder.title');
+                var tooltip = $translate.instant('platform.dialogs.create-folder.title');
 
                 var result = prompt(tooltip + "\n\nEnter folder name:");
 
