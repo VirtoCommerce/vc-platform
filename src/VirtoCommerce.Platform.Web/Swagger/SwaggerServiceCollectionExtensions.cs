@@ -105,7 +105,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             });
 
             // Unfortunately, we can't use .CustomSchemaIds, because it changes schema ids for all documents (impossible to change ids depending on document name).
-            // But we need this, because Platform.All document should contain ref schema ids as type.FullName to avoid conflict with same type names in different modules.
+            // But we need this, because PlatformUI document should contain ref schema ids as type.FullName to avoid conflict with same type names in different modules.
             // As a solution we use custom swagger generator that catches document name and generates schemaids depending on it
             services.AddTransient<ISwaggerProvider, CustomSwaggerGenerator>();
 
