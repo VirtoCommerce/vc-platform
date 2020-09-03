@@ -290,6 +290,8 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                     ? listBlobItem.Uri.AbsoluteUri
                     : listBlobItem.StorageUri.PrimaryUri.ToString();
 
+                blobName = blobName.Replace("%20", " ");
+
                 var newBlobName = blobName.Replace(oldPath, newPath);
 
                 await MoveBlob(blobContainer, blobName, newBlobName, isCopy);
