@@ -349,20 +349,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 result = await _userManager.CreateAsync(newUser, newUser.Password);
             }
 
-            if (result.Succeeded && !newUser.Logins.IsNullOrEmpty())
-            {
-                foreach (var login in newUser.Logins)
-                {
-                    var newExternalLogin = new UserLoginInfo(login.LoginProvider, login.ProviderKey, null);
-                    result = await _userManager.AddLoginAsync(newUser, newExternalLogin);
-
-                    if (!result.Succeeded)
-                    {
-                        break;
-                    }
-                }
-            }
-
             return Ok(result.ToSecurityResult());
         }
 
