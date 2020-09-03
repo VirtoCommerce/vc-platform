@@ -21,16 +21,16 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // We change schema generator options to replace SchemaIdSelector function to a document-dependent implementation
             // Unfortunately this member declared as private, there is no another way to obtain options in this member.
             var optionsFieldInfo = schemaGenerator.GetType().GetField("_generatorOptions", BindingFlags.Instance | BindingFlags.NonPublic);
-
             var schemaGeneratorOptions = (SchemaGeneratorOptions)optionsFieldInfo.GetValue(schemaGenerator);
-            var oldSchemaIdSelector = schemaGeneratorOptions.SchemaIdSelector;
+
+            var defaultSchemaIdSelectorMethodInfo = schemaGeneratorOptions.GetType().GetMethod("DefaultSchemaIdSelector", BindingFlags.Instance | BindingFlags.NonPublic);
             schemaGeneratorOptions.SchemaIdSelector = (
                 type =>
                 (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id ??
                 (
                     _documentName == SwaggerServiceCollectionExtensions.platformUIDocName ?
                      type.FullName :
-                    oldSchemaIdSelector.Invoke(type)
+                    (string)defaultSchemaIdSelectorMethodInfo.Invoke(schemaGeneratorOptions, new object[] { type })
                 )
                 );
 
