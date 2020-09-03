@@ -1,0 +1,169 @@
+body
+{
+    font-family: 'Exo 2';
+}
+.swagger-ui {
+    font-family: 'Exo 2';
+}
+.swagger-section .swagger-ui-wrap,
+.swagger-ui .wrapper {
+    font-family: 'Exo 2';
+    line-height: 1;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.swagger-section #header,
+.swagger-ui .topbar {
+    background-color: rgba(0,0,0,.05);
+    border-bottom: 1px solid #ddd;
+    /* padding: 0; */
+}
+.swagger-section #header form#api_selector
+{
+    /* padding: 13px 0; */
+}
+.swagger-section #header a#logo {
+  /* display: inline-block; */
+  font-size: 1.2em;
+  font-weight: bold;
+  text-decoration: none;
+  background: transparent url(../swagger/logo_small.png) no-repeat left center;
+  /* padding: 20px 0 20px 40px; */
+  color: #666;
+}
+.swagger-section #header form#api_selector .input a#explore
+{
+    background: #43b0e6 none repeat scroll 0 0;
+    border: medium none;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: inherit;
+    font-size: 13px;
+    /* height: 34px; */
+    /* line-height: 34px; */
+    padding: 20 20px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    /* vertical-align: top; */
+
+    -webkit-border-radius: 0;
+            border-radius: 0;
+}
+.swagger-section #header form#api_selector .input a#explore:hover
+{
+    opacity: .8;
+    text-decoration: none;
+}
+.swagger-section #header form#api_selector .input input
+{
+  /* border: 1px solid #a1c0d4; */
+  /* height: 34px; */
+  padding: 3px;
+  margin: 3px;
+
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.apiDescriptionInfo
+{
+    display: block;
+    color: #222;
+    margin: 5px 0 0;
+    font-size: 0.75em;
+    font-weight: 300;
+}
+
+.swagger-section .swagger-ui-wrap ul#resources li.resource div.heading h2
+{
+    font-family: 'Exo 2';
+}
+
+.swagger-section .swagger-ui-wrap ul#resources li.resource div.heading ul.options
+{
+    margin: 10px 10px 0 0;
+}
+
+.swagger-section .swagger-ui-wrap ul#resources li.resource div.heading h2 a
+{
+    color: #4c4c4c;
+}
+
+.swagger-section .swagger-ui-wrap ul#resources,
+.swagger-ui .opblock-tag,
+.swagger-ui .opblock-tag small
+.swagger-ui .opblock .opblock-summary-operation-id,
+.swagger-ui .opblock .opblock-summary-path,
+.swagger-ui .opblock .opblock-summary-path__deprecated,
+.swagger-ui .opblock .opblock-section-header h4,
+.swagger-ui table thead tr td, .swagger-ui table thead tr th
+.swagger-ui .opblock .opblock-section-header label,
+.swagger-ui .opblock .opblock-summary-operation-id,
+.swagger-ui .opblock .opblock-summary-path,
+.swagger-ui .opblock .opblock-summary-path__deprecated
+.swagger-ui .opblock .opblock-summary-method,
+.swagger-ui .parameter__name,
+.swagger-ui .parameter__type,
+.swagger-ui .parameter__deprecated,
+.swagger-ui .parameter__extension,
+.swagger-ui .parameter__in,
+.swagger-section .swagger-ui-wrap table tbody tr td,
+.swagger-ui table thead tr td, .swagger-ui table thead tr th,
+.swagger-ui .tab li,
+.swagger-ui .opblock-body pre,
+.swagger-ui .info,
+.swagger-ui .info p,
+.swagger-ui .info a
+{
+    font-family: 'Exo 2';
+}
+
+.swagger-ui .wrapper{
+    padding: 0;
+}
+
+.swagger-ui .opblock-tag
+{
+    /* display: block; */
+    clear: none;
+    float: left;
+    font-weight: bold;
+    font-size: 1.3em;
+    padding: 10px 0 10px 0;
+}
+
+.swagger-ui .opblock
+{
+    border-radius: 0px;
+}
+
+.swagger-ui .opblock .opblock-summary-operation-id, 
+.swagger-ui .opblock .opblock-summary-path, 
+.swagger-ui .opblock .opblock-summary-path__deprecated,
+.swagger-ui .opblock .opblock-summary-method 
+{
+    font-family: 'Exo 2';
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.swagger-ui .opblock .opblock-summary-method 
+{
+    padding: 5px;
+    border-radius:0;
+    font-family: 'Exo 2';
+}
+
+
+.topbar-wrapper img {
+    content: url('logo_small.png');
+}
+
+.swagger-ui .info .title {
+    padding-bottom: 10px;
+    font-weight: bold;
+    font-size: 25px;
+    font-family: 'Exo 2';
+}

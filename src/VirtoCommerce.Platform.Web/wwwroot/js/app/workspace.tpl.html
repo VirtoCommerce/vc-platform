@@ -1,0 +1,26 @@
+<va-main-menu ng-model="mainMenu" on-menu-changed="onMainMenuChanged(mainMenu)">
+    <div class="logo">
+        <div class="logo-img">Virtocommerce</div>
+        <a class="logo-version" href="" ng-click="showVersionInfo()">{{platformVersion}}</a>
+    </div>
+</va-main-menu>
+<article class="cnt" role="main">
+    <va-header></va-header>
+    <div class="cnt-inner">
+        <div class="dashboard" ng-if="$state.current.name === 'workspace'">
+            <header class="dashboard-head">
+                <div class="dashboard-title">
+                    <img class="__logo" ng-src="{{uiCustomization.logo || '/images/logo.png'}}" />
+                    <h1>{{uiCustomization.title || 'Virto Commerce'}}</h1>
+                </div>
+            </header>
+            <div class="dashboard-area">
+                <div class="dashboard-inner">
+                    <va-widget-container group="mainDashboard" gridster-opts="{columns: 6, minRows: 4}">
+                    </va-widget-container>
+                </div>
+            </div>
+        </div>
+        <ui-view />
+    </div>
+</article>

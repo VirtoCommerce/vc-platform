@@ -1,0 +1,91 @@
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel2.tpl.html'" ng-if="!blade.isApiSave"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" ng-submit="add(pdForm)" name="pdForm" novalidate autocomplete="off">
+                <fieldset>
+                    <legend ng-show="selectedItem && blade.currentEntity.isMultilingual">{{ 'platform.blades.property-dictionary.labels.edit-value' | translate }}</legend>
+                    <legend ng-hide="selectedItem && blade.currentEntity.isMultilingual">{{ 'platform.blades.property-dictionary.labels.new-value' | translate }}</legend>
+                    <label>{{ 'platform.blades.property-dictionary.labels.dictionary-name' | translate }}</label>
+                    <div class="form-group">
+                        <div class="form-input">
+                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.name" ui-validate=" 'dictItemNameValidator($value)' " name="dictValue" focus-on="" placeholder="{{ 'platform.blades.property-dictionary.placeholders.dictionary-name' | translate }}" />
+                        </div>
+                        <div class="form-error" ng-if="pdForm.dictValue.$dirty && pdForm.dictValue.$invalid">
+                            <span ng-if="pdForm.dictValue.$error.required">{{ 'platform.blades.property-dictionary.validations.dictionary-name-required' | translate }}</span>
+                            <span ng-if="pdForm.dictValue.$error.validator">{{ 'platform.blades.property-dictionary.validations.dictionary-name' | translate }}</span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset ng-if="blade.currentEntity.isMultilingual">
+                    <label>{{ 'platform.blades.property-dictionary.labels.localized-values' | translate }}</label>
+                    <div class="form-group">
+                        <div class="form-input __langs" ng-repeat="data in newValue.displayNames | orderBy: 'locale'">
+                            <ng-form name="valuesForm">                                
+                                    <label class="lang-code">{{data.locale}}</label>
+                                    <input ng-model="data.name" class="form-control" ui-validate=" 'dictValueValidator($value, data)' " name="mValue" placeholder="{{ 'platform.blades.property-dictionary.placeholders.localized-values' | translate }}" />
+                                    <div class="form-error" ng-if="valuesForm.mValue.$dirty && valuesForm.mValue.$invalid">
+                                        <span ng-if="valuesForm.mValue.$error.required">{{ 'platform.blades.property-dictionary.validations.localized-values-required' | translate }}</span>
+                                        <span ng-if="valuesForm.mValue.$error.validator">{{ 'platform.blades.property-dictionary.validations.localized-values' | translate }}</span>
+                                    </div>                                
+                            </ng-form>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-group">
+                    <button class="btn" ng-if="selectedItem && blade.currentEntity.isMultilingual" ng-click="cancel()">{{ 'platform.commands.cancel' | translate }}</button>
+                    <button class="btn" ng-disabled="pdForm.$invalid" type="submit">{{selectedItem && blade.currentEntity.isMultilingual ? 'Ok' : 'Add'}}</button>
+                </div>
+            </form>
+            <fieldset ng-if="blade.currentEntities.length > 0">
+                <legend>{{ 'platform.blades.property-dictionary.labels.current-values' | translate }}</legend>
+                <div class="table-wrapper">
+                    <form name="formScope" class="form">
+                        <table class="table __indexed" ng-init="setForm(formScope)">
+                            <thead>
+                                <tr>
+                                    <th class="table-col">
+                                        <label class="form-control __checkbox">
+                                            <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()" />
+                                            <span class="check"></span>
+                                        </label>
+                                    </th>
+                                    <th class="table-col">{{ 'platform.blades.property-dictionary.labels.name' | translate }}</th>
+                                    <th class="table-col" ng-if="blade.currentEntity.isMultilingual">{{ 'platform.blades.property-dictionary.labels.values' | translate }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-item" ng-repeat="data in blade.currentEntities" ng-class="{'__selected': data === selectedItem}" context-menu data-target="pd_menu_{{$index}}" ng-click='selectItem(data)'>
+                                    <td class="table-col">
+                                        <label class="form-control __checkbox">
+                                            <input type="checkbox" ng-model="data.$selected">
+                                            <span class="check"></span>
+                                        </label>
+                                    </td>
+                                    <td class="table-col">
+                                        <div ng-if="blade.currentEntity.isMultilingual">{{data.name}}</div>
+                                        <div class="form-input" ng-if="!blade.currentEntity.isMultilingual">
+                                            <input required ng-model="data.name" type="text" />
+                                        </div>
+                                        <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
+                                            <li class="menu-item" ng-click='delete($index)'>
+                                                <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td class="table-col" ng-if="blade.currentEntity.isMultilingual">
+                                        <div ng-repeat="data in data.displayNames | orderBy: 'locale'" style="margin:5px 0;">                                            
+                                             <strong><label class="lang-code">{{data.locale}}</label>:</strong> {{data.name}}                                            
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,439 @@
+/* Nav bar - Left navigation menu */
+.nav-bar
+  font-family: $font
+  left: 0
+  width: $mainMenuWidth
+  z-index: 100
+  &.__collapsed
+    width: $mainMenuCollapsedWidth
+    & ~ .cnt
+      left: $mainMenuCollapsedWidth
+    & ~ .cnt .header
+      padding-left: $mainMenuCollapsedWidth
+    .logo-img
+      background-image: url('/images/logo-small.svg')
+      background-size: auto
+    .logo-version
+        display: none
+    .bar
+      .__items
+        .list-item,
+        .list-item.__more
+          width: $mainMenuIcoSize
+        .list-item.__more
+          padding: 10px $listItemHorizontalPadding 10px $listItemHorizontalPadding
+        .list-ico
+          margin: 0
+        .list-name
+          display: none
+        .list-count
+          left: 44px
+    .dropdown.__opened
+      transform: translateX($mainMenuCollapsedWidth)
+  .logo
+    height: $headerHeight
+    width: 100%
+    z-index: 50
+    align-items: center
+    display: flex
+    background: $headerBg
+    &-img
+      background: url('/images/logo.svg') no-repeat scroll 15px 15px $headerBg
+      background-size: 127px 30px
+      width: 70%
+      font-size: 0
+      height: $headerHeight
+    &-version
+      color: #838d9a;
+      font-size: 10px;
+      text-overflow: ellipsis;
+      width: 30%;
+  .bar
+    background: $navbarBg
+    box-shadow: 1px 0 0 0 $baseBrd
+    box-sizing: border-box
+    display: table
+    width: 100%
+    height: 100%
+    position: relative
+    z-index: 50
+    .wrapper
+      display: table-row
+      height: 100%
+    .list
+      display: table
+      margin: 0
+      width: 100%
+      height: 100%
+      .outer-wrapper
+        display: table-row
+        height: 100%
+      .inner-wrapper
+        position: relative
+        height: calc(100% - 120px)
+        overflow-x: hidden
+        overflow-y: hidden
+        &:hover
+          overflow-y: auto
+        &::-webkit-scrollbar
+          background: transparent
+        &::-webkit-scrollbar-track-piece
+            background: #545454
+        &::-webkit-scrollbar-thumb
+            background: #434343
+        -ms-scrollbar-arrow-color: #545454
+        -ms-scrollbar-face-color: #434343
+        -ms-scrollbar-shadow-color: #434343
+        -ms-scrollbar-track-color: #545454
+        .content
+          position: absolute
+          left: 0
+          right: 0
+          top: 0
+          bottom: 0
+    .__items
+      .list-item
+        background: $navbarItemBg
+        border-bottom: 1px solid $baseBrd
+        height: 20px
+        width: auto
+        &:hover
+          .list-t,
+          .list-name,
+          .list-ico
+            text-shadow: none
+          .list-ico
+            color: $colorText
+        &:not(.__more)
+          padding: 10px $listItemHorizontalPadding
+        &.__hovered
+          background: $navbarItemBg
+        &.__animated
+          animation: notify ease 1 1.5s
+          .list-ico,
+          &:hover .list-ico
+            animation: bell ease-in-out 1s .5s
+          .list-name,
+          .list-t,
+          &:hover .list-name,
+          &:hover .list-t
+            color: #fff
+            text-shadow: none
+        &.__draggable
+          &:before
+            color: #a6a6a6
+            content: "\f142"
+            cursor: move
+            font-family: "FontAwesome"
+            font-size: 24px
+            opacity: 0
+            display: none
+            position: absolute
+            left: 0
+            top: 50%
+            padding: 7px
+            width: 6px
+
+            transform: translateY(-50%)
+            transition: opacity .25s ease-in-out 0s
+          &:hover:before
+            opacity: 1
+            display: block
+        &.__more
+          height: 20px
+          width: auto
+          .list-ico
+            display: none
+            margin: 0
+      .list-name
+        color: $colorText
+      .list-ico
+        color: $colorText
+        font-size: 20px
+        height: 20px
+        line-height: 1
+        margin: 0 6px 0 0
+        text-shadow: none
+        width: 20px
+        &::before
+          display: block
+          height: 100%
+          width: 100%
+        // &::before
+        //   content: ' '
+        //   display: block
+        //   height: 100%
+        //   width: 100%
+        // &.fa-home::before
+        //   background: url('../images/navbar/home.svg') no-repeat scroll
+        // &.fa-bars::before
+        //   background: url('../images/navbar/minimize_menu.svg') no-repeat scroll
+        // &.fa-folder::before
+        //   background: url('../images/navbar/catalog.svg') no-repeat scroll
+      .list-count
+        background: $whiteColor
+        height: 14px
+        font-size: 10px
+        line-height: 14px
+        text-align: center
+        min-width: 14px
+        position: absolute
+        left: 42px
+        top: 8px
+        border-radius: 50%
+    .divider
+      border: none
+      height: 0
+      margin: 0
+    .info
+      background: $navbarBg
+      font-size: 0
+      text-align: center
+      padding: 5px 0 0 0
+      z-index: 50
+    .info-version
+      display: block
+      font-size: 12px
+      padding: 0 0 5px 0
+  .menu-item
+    text-align: center
+  .menu-link
+    color: #c2c2c2
+    display: block
+    font-size: 13px
+    padding: 15px 0
+    position: relative
+  .menu-item.__done
+    left: 0
+    position: absolute
+    right: 0
+    top: 0
+  .menu-item.__done .menu-link
+    background: $baseColor
+    color: #fff
+    cursor: pointer
+  .menu-link
+    &:hover
+      color: $baseColor
+  .__selected .menu-link
+    background-color: #383838
+    color: $baseColor
+  .menu-ico
+    display: block
+    font-size: 24px
+    height: 20px
+    margin: 0 0 10px
+
+  /* Dropdown - dropdown menu navigation */
+  .dropdown
+    background: $whiteColor
+    bottom: 0
+    box-shadow: 1px 0 0 0 $baseBrd
+    margin-top: $headerHeight
+    position: fixed
+    top: 0
+    width: $mainMenuDropdownWidth
+    z-index: 25
+
+    transform: translateX(-$mainMenuDropdownWidth)
+    &.__more
+      background: $whiteColor
+    &.__opened
+      transform: translateX($mainMenuWidth)
+.dropdown
+  .dropdown-close
+    color: #c2c2c2
+    cursor: pointer
+    font-family: caption
+    font-size: 22px
+    font-weight: bold
+    line-height: 1
+    position: absolute
+    right: 15px
+    top: 30px
+    &:hover
+      color: $whiteColor
+  &.__more .dropdown-close
+    color: #a6a6a6
+    top: 10px
+    right: 10px
+    &:hover
+      color: #333
+  .dropdown-head
+    padding: 85px 20px 14px
+    text-align: right
+  &.__more .dropdown-head
+    background: $bladeHeadBg
+    border-color: $bladeHeadBrd
+    border-style: solid
+    border-width: 0 0 1px
+    text-align: left
+    padding: 0
+    height: 124px
+    box-sizing: border-box
+    .form-group,
+    .form
+      margin: 0 20px
+      padding: 17px 0
+      position: relative
+    .form-group .form-hint
+      padding: 5px 0
+    .form-input.__search
+      top: 30px
+  .menu-item
+    margin: 0 0 0 20px
+    text-align: left
+  .menu-link
+    cursor: pointer
+    font-size: 14px
+    &:hover
+      color: #fff
+  .menu-ico
+    display: inline-block
+    font-size: 18px
+    margin: 0 5px 0 0
+  .dropdown-content
+    height: calc(100% - 149px)
+    padding: 0 20px
+    overflow: hidden
+    &:hover
+      overflow-y: auto
+  &.__more
+    .dropdown-content
+      height: calc(100% - 100px)
+      -ms-scrollbar-arrow-color: #f9f9f9
+      -ms-scrollbar-face-color: #e6e6e6
+      -ms-scrollbar-shadow-color: #e6e6e6
+      -ms-scrollbar-track-color: #f9f9f9
+    .dropdown-content::-webkit-scrollbar-track-piece
+      background: #f9f9f9
+    .dropdown-content::-webkit-scrollbar-thumb
+      background: #e6e6e6
+    .list
+      width: 360px
+    .list-group
+      font-weight: bold
+      padding: 10px $listItemHorizontalPadding
+    .list-group:after
+      right: $listItemHorizontalPadding
+    .list-item
+      padding: 10px $listItemHorizontalPadding
+    .list-item:after
+      display: none
+    .list-ico
+      color: #dfe3e8
+      font-size: 20px
+      height: 20px
+      line-height: 1
+      margin: 0 6px 0 0
+      width: 20px
+      &::before
+        display: block
+        height: 100%
+        width: 100%
+    .list-fav
+      display: block
+      font-size: $fontSize
+      font-weight: 300
+      position: absolute
+      right: 0
+      top: 50%
+      transform: translateY(-50%)
+      padding: 10px $listItemHorizontalPadding
+      .list-ico
+        font-size: $fontSize
+        text-align: center
+        margin: 0
+        top: 0
+        width: $fontSize
+        &.favorite
+          color: $menuIconFavoriteColor
+  &:not(.__more) .dropdown-content
+    -ms-scrollbar-arrow-color: #545454
+    -ms-scrollbar-face-color: #434343
+    -ms-scrollbar-shadow-color: #434343
+    -ms-scrollbar-track-color: #545454
+    .list
+      width: 315px
+    .list-item
+      border-top: 1px solid #606060
+    .list-link
+      color: #c2c2c2
+      display: block
+      font-size: 16px
+      font-weight: 300
+      line-height: 26px
+      padding: 20px
+      text-transform: uppercase
+      &:hover
+        background: rgba(0,0,0,.2)
+        color: $whiteColor
+    .__selected .list-link
+      background: none
+      color: $baseColor
+    .list-ico
+      font-size: $mainMenuIcoFontSize
+      height: 24px
+      margin: 0 20px 0 0
+      position: relative
+      top: 2px
+      width: $mainMenuIcoSize
+    .info
+      .list-ico
+        color: $baseColor
+    .error
+      .list-ico
+        color: $genericErrorColor
+    .warning
+      .list-ico
+        color: $genericWarningColor
+    .error,
+    .warning
+      .list-ico
+        &::after
+          background: $whiteColor
+          content: ''
+          height: 12px
+          left: 11px
+          position: absolute
+          top: 7px
+          width: 3px
+          z-index: -1
+  &::-webkit-scrollbar
+    background-color: transparent
+  &::-webkit-scrollbar-track-piece
+    background: #545454
+  &::-webkit-scrollbar-thumb
+    background: #434343
+  .list-t,
+  .list-date,
+  .list-descr
+    color: $whiteColor
+    text-transform: none
+  .list-date,
+  .list-descr
+    display: block
+    font-size: 12px
+  .list-t
+    font-size: 14px
+  .list-descr
+    display: block
+    margin: 0 0 0 55px
+  .list-date
+    color: #c2c2c2
+    margin: 5px 0 0 55px
+    padding: 0 0 0 25px
+    position: relative
+    &::after
+      color: #c2c2c2
+      content: ''
+      font-family: $fontAw
+      font-size: 14px
+      left: 0
+      position: absolute
+      top: 0
+  .list-bar
+    background-color: $baseColor
+    display: block
+    height: 10px
+    margin-left: 55px

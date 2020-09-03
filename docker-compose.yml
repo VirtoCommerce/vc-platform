@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+
+  virtocommerce.platform.web:
+    image: ${DOCKER_REGISTRY-}virtocommerceplatformweb
+    build:
+      context: .
+      dockerfile: src/VirtoCommerce.Platform.Web/Dockerfile 

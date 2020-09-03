@@ -1,0 +1,563 @@
+input::-ms-clear
+  display: none
+.__error
+  color: $genericErrorColor
+.form-input input.ng-invalid,
+.form-input input.ng-invalid.form-input,
+.form-input textarea.ng-invalid,
+.ui-select-container.ng-invalid .select2-choice,
+.ui-select-container.ng-invalid .select2-choices,
+.form-input input.ng-invalid:focus,
+.form-input textarea.ng-invalid:focus
+  background: #fef8f7
+  border-color: #fce7e6
+  color: $genericErrorColor
+fieldset
+  border: none
+  legend
+    border-bottom: 1px solid $baseBrd
+    display: block
+    font-size: 24px
+    font-weight: 300
+    padding: 0 0 5px
+    width: 100%
+fieldset + fieldset
+  margin: 15px 0 0
+.__gray fieldset legend,
+.__gray .form-label
+  color: $colorText
+.form
+  padding: 15px 0
+  .chars-counter
+    float: right
+    margin-bottom: 5px // by label
+    font-size: 14px
+  & > .form-group:first-child
+    margin-top: 0
+    & > .column > .form-group:first-child,
+        margin-top: 0;
+.form-group.__head
+  border-bottom: 1px solid $baseBrd
+.__inline .form-group
+  display: inline-block
+.form-group
+  margin: 15px 0 0
+.__inline .form-group + .form-group
+  margin-left: 15px
+.form-group .form-hint
+  color: #999
+  font-size: 12px
+.form-error
+  color: $genericErrorColor
+  font-size: 12px
+  line-height: 1.4
+  padding: 5px 0
+  *
+    display: block
+.form .columns
+  padding: 0
+.form-group .form-input ~ .form-error,
+.form-group .form-input ~ .form-hint
+  margin: 5px 0 0
+.form-input
+  position: relative
+.form
+  .form-input + .form-input
+    margin: 15px 0 0
+  .form-count
+    font-size: 14px
+.count
+  color: $baseColor
+  font-weight: 600
+.form-input.__number
+  height: 34px
+  position: relative
+.form-group .form-t
+  background: $lightBg
+  border: 1px solid $baseBrd
+  margin: 0 0 5px
+  padding: 5px
+  .__link
+    float: right
+    margin: 4px 0 0
+.form-input input,
+.form-input textarea,
+.form-input select
+  box-sizing: border-box
+  color: #4c4c4c
+  font-family: inherit
+  font-size: 13px
+  vertical-align: top
+  width: 100%
+.form-input.__mini
+  width: 68px
+.form-input.__inline
+  display: inline-block
+  vertical-align: middle
+.table-col
+  .form-input
+    &.__mini
+      margin: 5px 0 0
+    .form-text
+      margin: 5px 0 0
+  .table-space
+    height: 17px;
+.form-input input,
+.form-input select,
+.form-input .form-text
+  height: 34px
+.form-input input,
+.form-input textarea,
+.form-input select
+  border: 1px solid $baseBrd
+  padding: 5px 10px
+.form-input textarea
+  height: 110px
+  max-width: 100%
+  min-height: 110px
+  min-width: 100%
+  overflow: auto
+  padding-top: 8px
+.form-input textarea.__small
+  height: 55px
+  min-height: 55px
+.form-input textarea.__large
+  height: 220px
+  min-height: 220px
+.form-input textarea.__xlarge
+  height: 330px
+  min-height: 330px
+.form-input.__langs select
+  padding-left: 36px
+.form-input.__langs input
+  padding-right: 60px
+.form-input.__langs label.lang-code
+  position: absolute
+  right: 0
+  z-index: 100
+  line-height: 34px
+  padding-right: 15px
+.form-input.__currency input,
+.form-input.__currency textarea,
+.form-input.__currency select
+  padding-right: 40px
+.form-input.__number input
+  padding-right: 20px
+.form-input.__calendar input,
+.form-input.__file input,
+.form-input.__info input,
+.form-input.__other input
+  padding-right: 45px
+.form-input select
+  position: relative
+.form-input input,
+.form-input textarea,
+.form-input select
+  &:focus
+    border-color: #a1c0d4
+.form-input input[type=file]
+  height: 0
+  position: absolute
+  visibility: hidden
+  width: 0
+  z-index: 0
+
+  filter: alpha(opacity=0)
+.form-input.__number .down,
+.form-input.__number .up
+  background: $lightBg
+  border: 1px solid $baseBrd
+  box-sizing: border-box
+  cursor: pointer
+  height: 14px
+  right: 2px
+  position: absolute
+  width: 16px
+.form-input.__number .up
+  top: 2px
+  &::after
+    border-color: transparent transparent $baseColor
+    bottom: 4px
+.form-input.__number .down
+  bottom: 2px
+  &::after
+    border-color: $baseColor transparent transparent
+    top: 4px
+.form-input.__number .down,
+.form-input.__number .up
+  &::after
+    border-style: solid
+    border-width: 4px
+    content: ''
+    left: 50%
+    position: absolute
+
+    transform: translateX(-50%)
+.form-input.__langs .flag
+  left: 11px
+  position: absolute
+  top: 11px
+  z-index: 50
+.form-input.__langs .langCode
+  left: 8px
+  position: absolute
+  top: 6px
+  z-index: 50
+.form-input.__currency
+  position: relative
+  .currency
+    color: $baseColor
+    font-size: 12px
+    right: 10px
+    position: absolute
+    top: 10px
+    z-index: 50
+.form-label
+  display: inline-block
+  font-size: 14px
+  margin: 0 0 5px
+.form-edit
+  display: inline-block
+  margin: 0 0 0 5px
+  .form-ico
+    vertical-align: 2px
+.form-label + .form-nav
+  float: right
+  *
+    display: inline-block
+    font-size: 14px
+    margin: 0 0 0 5px
+.form-input .btn
+  background: none
+  bottom: 0
+  color: #4c4c4c
+  height: 34px
+  line-height: 1
+  min-width: 45px
+  padding: 0
+  position: absolute
+  right: 0
+  top: 0
+  &:hover
+    background: none
+.form-input .form-text
+  font-size: 14px
+  line-height: 34px
+.form-input .btn-ico
+  color: $baseColor
+  font-size: 24px
+  height: 26px
+  padding: 0 10px
+.form-input.__info .btn-ico
+  color: $whiteColor
+  font-size: 16px
+  height: auto
+  text-shadow: none
+  width: 20px
+  &::before
+    background: $baseColor
+    border-radius: 50%
+    display: block
+    height: 20px
+    line-height: 20px
+.form-input .btn.__other .btn-ico
+  font-size: 12px
+  line-height: 24px
+.form-input .btn.__ico .btn-ico
+  font-size: 1.2rem;
+  line-height: 2rem;
+.form-control .form-label
+  display: inline-block
+  font-size: 11px
+  font-weight: 500
+  line-height: 1.5
+  position: relative
+.form-control .form-label + .form-label
+  margin-left: 10px
+label.form-control
+  display: inline-block
+  height: 12px
+  position: relative
+  top: -2px
+  vertical-align: middle
+  width: 12px
+.form-control
+  min-height: 12px
+  position: relative
+.form-control.__inline
+  display: inline-block
+  margin: 0 20px 0 0
+  vertical-align: middle
+.form-control.__checkbox,
+.form-control.__radio
+  height: 13px
+.blade-static .form-control.__checkbox,
+.blade-static .form-control.__radio
+  margin: 0 0 10px
+.form-control.__checkbox + .form-control,
+.form-control.__radio + .form-control
+  margin-top: 5px
+.form-control.__checkbox .form-label,
+.form-control.__radio .form-label
+  line-height: 1.1
+  margin-bottom: 0
+  vertical-align: top
+.form-control
+  input
+    position: absolute
+    visibility: hidden
+  .check
+    background: $whiteColor
+    border: 1px solid #a1c0d4
+    box-sizing: border-box
+    height: 13px
+    left: 0
+    position: absolute
+    top: 0
+    width: 13px
+.form-control.__radio .check
+  border-radius: 50%
+.form-control .form-label:hover .check,
+.form-control :checked ~ .check
+  border-color: #80a0b5
+.form-control :checked ~ .check:after
+  content: ''
+  position: absolute
+.form-control.__checkbox :checked ~ .check:after
+  bottom: 0
+  color: #43b0e6
+  content: ''
+  font-family: $fontAw
+  font-size: 11px
+  font-weight: normal
+  left: 0
+  line-height: 1.3
+  position: absolute
+  top: -1px
+.form-control.__radio :checked ~ .check:after
+  background: $baseColor
+  border-radius: 50%
+  height: 7px
+  left: 2px
+  top: 2px
+  width: 7px
+.form-control .name
+  color: $colorText
+  display: inline-block
+  margin: 0 0 0 18px
+  vertical-align: 2px
+
+/* Switch */
+.__switch
+  cursor: pointer
+  display: inline-block
+  margin: 0
+  position: relative
+  vertical-align: top
+  width: 60px
+  input
+    display: none
+  .switch
+    background: #555
+    border-radius: 3px
+    box-shadow: 0 0 3px rgba(0,0,0,.15)
+    display: block
+    height: 20px
+    width: 60px
+
+    transition: background .15s ease
+    &::after
+      background: $whiteColor
+      border-radius: 3px
+      color: #ccc
+      content: '|||'
+      font-size: 11px
+      height: 18px
+      left: 0
+      line-height: 16px
+      margin: 1px 0 0 1px
+      position: absolute
+      text-align: center
+      text-indent: -1px
+      width: 25px
+
+      transition: margin-left .15s ease
+    &::before
+      color: $whiteColor
+      content: ''
+      font-family: $fontAw
+      font-size: 12px
+      font-weight: normal
+      line-height: 20px
+      position: absolute
+      right: 0
+      text-align: center
+      text-transform: uppercase
+      width: 35px
+.__switch.__two
+  &::after,
+  &::before
+    content: ''
+    position: absolute
+    top: 6px
+  &::after
+    background: #999
+    height: 10px
+    right: -7px
+    width: 1px
+  &::before
+    border: 1px solid #999
+    border-radius: 50%
+    box-sizing: border-box
+    height: 8px
+    left: -15px
+    width: 8px
+.__switch :checked ~ .switch
+  background: $baseColor
+.__switch :checked ~ .switch::after
+  margin-left: 34px
+.__switch :checked ~ .switch::before
+  content: ''
+  left: 0
+  right: auto
+
+/* Editable */
+.editable
+  font-size: 14px
+  .btn
+    padding: 0 10px
+  .btn-toolbar
+    background: $baseColor
+  .ta-scroll-window.form-control
+    border: 1px solid $baseBrd
+.ta-root.focussed > .ta-scroll-window.form-control
+  border-color: #a1c0d4
+  box-shadow: none
+.ta-editor.ta-html,
+.ta-scroll-window.form-control
+  border: 1px solid #a1c0d4
+  box-sizing: border-box
+  max-width: 100%
+  min-width: 100%
+  width: 100%
+
+/* Buttons */
+.btn
+  background: $baseColor
+  border: none;
+  color: $whiteColor
+  cursor: pointer
+  display: inline-block
+  font-family: inherit
+  font-size: 13px
+  height: 30px
+  line-height: 28px
+  padding: 0 20px
+  text-shadow: 1px 1px rgba(0, 0, 0, .1)
+  vertical-align: top
+  &:hover
+    color: $whiteColor
+    opacity: .8
+
+    filter: alpha(opacity=80)
+button.btn
+  padding: 0 17px
+.btn.__loading
+  font-size: 0
+  min-width: 132px
+  pointer-events: none
+  position: relative
+  vertical-align: top
+  &::after
+    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0))
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0))
+    background-size: 30px 30px
+    bottom: 0
+    content: ''
+    left: 0
+    opacity: .8
+    position: absolute
+    right: 0
+    top: 0
+
+    filter: alpha(opacity=80)
+    animation: linear 2s infinite progress
+.btn.__cancel
+  background-color: #a6a6a6
+  &:hover
+    background-color: #a0a0a0
+
+/* Editors */
+.md-editor
+  background: $lightBg
+  border: 1px solid $baseBrd
+  margin: -1px -20px 0
+  textarea
+    background: none
+    border: none
+    box-sizing: border-box
+    color: #333
+    height: 300px
+    padding: 10px
+    width: 100%
+  .btn-toolbar
+    background: $baseBrd
+    padding: 10px
+    overflow: hidden
+    .btn-group
+      float: left
+      margin: 0 5px 0 0
+      .btn
+        padding: 0 10px
+      .btn.hidden
+        display: none !important
+        visibility: hidden !important
+      .btn + .btn
+        border-left: 1px solid rgba(255,255,255,.35)
+    .md-controls
+      float: right
+      margin: 3px 10px 0 0
+.md-editor.md-fullscreen-mode
+  background: #ffffff !important
+  border: 0 none !important
+  box-sizing: border-box
+  height: 100%
+  left: 0
+  margin: 0
+  padding: 60px 30px 15px
+  position: fixed
+  top: 0
+  width: 100%
+  z-index: 99999
+.md-editor.active
+  border-color: #66afe9
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6)
+  outline: 0 none
+.md-fullscreen-controls
+  display: none
+  .md-header
+    background: none
+    position: fixed
+    text-align: center
+    top: 20px
+    width: 100%
+  .btn-group
+    display: inline-block
+    float: none
+  .md-fullscreen-controls
+    display: block
+    position: absolute
+    right: 20px
+    text-align: right
+    top: 20px
+    z-index: 1002
+    a
+      clear: right
+      color: #b3b3b3
+      height: 30px
+      margin: 10px
+      text-align: center
+      width: 30px
+.md-editor.md-fullscreen-mode .md-input,
+.md-editor.md-fullscreen-mode .md-preview
+  padding: 20px 20px 20px 120px !important

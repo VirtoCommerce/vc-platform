@@ -1,0 +1,30 @@
+<div class="dropdown-content">
+    <div class="list __items" ng-if="searchText.value==''" va-favorites>
+        <div class="list-group" ng-class="{'__opened': !group.isCollapsed}"
+            ng-init="group = (menu.items | filter: { path: groupPath }: true)[0]"
+            ng-repeat-start="(groupPath, groupItems) in menu.items | filter: { isAlwaysOnBar: 'false' } | omit: 'group == null' | orderBy: 'group.priority' | groupBy: 'group.path'"
+            ng-click="group.isCollapsed = !group.isCollapsed">
+            {{group.title | translate}}
+        </div>
+        <ul class="list __sub" ng-repeat-end>
+            <li class="list-item" ng-class="{'__animated': menuItem.isAnimated}" ng-repeat="menuItem in groupItems"
+                ng-include="'listItemTemplate.html'" tabindex="1" ng-click="selectItem(menuItem)"
+                va-permission="{{menuItem.permission}}"></li>
+        </ul>
+    </div>
+    <ul class="list __items" ng-if="searchText.value != ''"
+        ng-init="searchItems = (menu.items | filter: { isAlwaysOnBar: 'false' } | omit: 'group == null' | orderBy: 'group.priority' | map: '{ path: path, title: (title | translate) }')"
+        va-favorites>
+        <li class="list-item" ng-class="{'__animated': menuItem.isAnimated}"
+            ng-init="menuItem = (menu.items | filter: { path: item.path })[0]"
+            ng-repeat="item in searchItems | filter: { title: searchText.value }" ng-include="'listItemTemplate.html'"
+            ng-click="selectItem(menuItem)" tabindex="1" va-permission="{{menuItem.permission}}">
+        </li>
+    </ul>
+    <script type="text/ng-template" id="listItemTemplate.html">
+        <div class="list-fav" ng-click="toggleFavorite(menuItem); $event.stopPropagation();">
+            <i class="list-ico fa" ng-class="[menuItem.isFavorite ? 'fa-star' : 'fa-star-o', {'favorite': menuItem.isFavorite}]" ></i>
+        </div>
+        <ng-include src="itemTemplateUrl"></ng-include>
+    </script>
+</div>

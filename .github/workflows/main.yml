@@ -1,0 +1,104 @@
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'build/**'
+      - 'README.md'
+      - 'LICENSE'
+    branches: [ master, dev ]
+  pull_request:
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'build/**'
+      - 'README.md'
+      - 'LICENSE'
+    branches: [ master, dev ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      BLOB_SAS: ${{ secrets.BLOB_TOKEN }}
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Install VirtoCommerce.GlobalTool
+      run: dotnet tool install --global VirtoCommerce.GlobalTool
+
+    - name: Install dotnet-sonarscanner
+      run: dotnet tool install --global dotnet-sonarscanner
+
+    - name: Get Image Version
+      uses: VirtoCommerce/vc-github-actions/get-image-version@dev
+      id: image
+
+    - name: Get changelog
+      id: changelog
+      uses: VirtoCommerce/vc-github-actions/changelog-generator@dev
+
+    - name: Add version suffix
+      uses: VirtoCommerce/vc-github-actions/add-version-suffix@dev
+
+    - name: SonarCloud Begin
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@dev
+
+    - name: Build
+      run: vc-build Compile
+
+    - name: Unit Tests
+      run: vc-build Test -skip
+
+    - name: SonarCloud End
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@dev
+
+    - name: Packaging
+      run: vc-build Compress -skip Clean+Restore+Compile+Test
+
+    #- name: Swagger Schema Validation
+    #  run: vc-build SwaggerValidation -skip
+          
+    - name: Publish Nuget
+      uses: VirtoCommerce/vc-github-actions/publish-nuget@dev
+      
+    - name: Publish Github Release
+      with:
+        changelog: ${{ steps.changelog.outputs.changelog }}
+      uses: VirtoCommerce/vc-github-actions/publish-github-release@dev
+
+    - name: Build Docker Image
+      if: ${{ github.ref == 'ref/head/master' }}
+      id: dockerBuild
+      uses: VirtoCommerce/vc-github-actions/build-docker-image@dev
+      with:
+        tag: ${{ steps.image.outputs.taggedVersion }}
+
+    - name: Docker Login
+      if: ${{ github.ref == 'ref/head/master' }}
+      uses: azure/docker-login@v1
+      with:
+        login-server: docker.pkg.github.com
+        username: $GITHUB_ACTOR
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish Docker Image
+      if: ${{ github.ref == 'ref/head/master' }}
+      uses: VirtoCommerce/vc-github-actions/publish-docker-image@dev
+      with:
+          image: ${{ steps.dockerBuild.outputs.imageName }}
+          tag: ${{ steps.image.outputs.taggedVersion }}
+          docker_user: ${{ secrets.DOCKER_USERNAME }}
+          docker_token: ${{ secrets.DOCKER_TOKEN }}

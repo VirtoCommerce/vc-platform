@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>%(DocumentTitle)</title>
+    <link href='/swagger/reset.css' media='screen' rel='stylesheet' type='text/css'/>
+    <link href='/swagger/screen.css' media='screen' rel='stylesheet' type='text/css'/>
+    <link href='/swagger/vc.css' media='screen' rel='stylesheet' type='text/css' />
+    <link href='/swagger/reset.css' media='print' rel='stylesheet' type='text/css'/>
+    <link href='/swagger/print.css' media='print' rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css">
+    <link href='//fonts.googleapis.com/css?family=Exo+2:400,300,500,600,400italic&amp;subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link rel="icon" type="image/png" href="/swagger/logo_small.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/swagger/logo_small.png" sizes="16x16" />
+    %(HeadContent)
+</head>
+
+<body class="swagger-section">
+
+    <!-- TODO: need to customize topbar https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1436 -->
+    <div id="swagger-ui"></div>
+
+    <!-- Workaround for https://github.com/swagger-api/swagger-editor/issues/1371 -->
+    <script>
+        if (window.navigator.userAgent.indexOf("Edge") > -1) {
+            console.log("Removing native Edge fetch in favor of swagger-ui's polyfill")
+            window.fetch = undefined;
+        }
+    </script>
+
+    <script src="./swagger-ui-bundle.js"></script>
+    <script src="./swagger-ui-standalone-preset.js"></script>
+    <script>
+        window.onload = function () {
+            var configObject = JSON.parse('%(ConfigObject)');
+            var oauthConfigObject = JSON.parse('%(OAuthConfigObject)');
+
+            // Apply mandatory parameters
+            configObject.dom_id = "#swagger-ui";
+            configObject.presets = [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset];
+            configObject.layout = "StandaloneLayout";
+
+            // If oauth2RedirectUrl isn't specified, use the built-in default
+            if (!configObject.hasOwnProperty("oauth2RedirectUrl"))
+                configObject.oauth2RedirectUrl = window.location.href.replace("index.html", "oauth2-redirect.html").split('#')[0];
+
+            // Begin Swagger UI call region
+
+            const ui = SwaggerUIBundle(configObject);
+
+            ui.initOAuth(oauthConfigObject);
+
+            // End Swagger UI call region
+
+            window.ui = ui
+        }
+    </script>
+</body>
+</html>

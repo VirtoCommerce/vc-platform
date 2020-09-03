@@ -1,0 +1,59 @@
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="formScope">
+                <fieldset>
+                    <legend>{{ 'platform.blades.role-detail.labels.summary' | translate }}</legend>
+                    <div class="form-group" ng-init="setForm(formScope)">
+                        <label class="form-label">{{ 'platform.blades.role-detail.labels.name' | translate }}</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.name" placeholder="{{ 'platform.blades.role-detail.placeholders.name' | translate }}" focus-on required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">{{ 'platform.blades.role-detail.labels.description' | translate }}</label>
+                        <div class="form-input">
+                            <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="{{ 'platform.blades.role-detail.placeholders.description' | translate }}"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </form>
+            <div class="sub-t">{{ 'platform.blades.role-detail.labels.assigned-permissions' | translate }}</div>
+            <div class="table-wrapper">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="blade.selectedAll" ng-change="toggleAll()">
+                                    <span class="check"></span>
+                                </label>
+                            </th>
+                            <th class="table-col">{{ 'platform.blades.role-detail.labels.permission-name' | translate }}</th>
+                        </tr>
+                        <tr class="table-item" ng-repeat="data in blade.currentEntity.permissions | orderBy:'name' track by data.name " ng-class="{'__selected': data.name === selectedNodeId}" context-menu data-target="rd_menu_{{$index}}">
+                            <td class="table-col">
+                                <label class="form-control __checkbox">
+                                    <input type="checkbox" ng-model="data.$selected">
+                                    <span class="check"></span>
+                                </label>
+                            </td>
+                            <td class="table-col" ng-click='selectNode(data)'>
+                                <span class="table-t">{{data.name}}</span>
+                                <span class="table-descr">{{'permissions.' + data.name | translate }}</span>
+                                <span class="table-descr alt-description" ng-if="data.availableScopes.length">{{ 'platform.blades.role-detail.labels.assigned-scopes' | translate }}: {{(data.assignedScopes.length ? data.assignedScopes.length : 0) | number:0 }}</span>
+                                <ul role="menu" class="menu __context" id="rd_menu_{{$index}}">
+                                    <li class="menu-item" ng-click='delete($index)'>
+                                        <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text no-data" ng-if="!blade.currentEntity.permissions.length">{{ 'platform.blades.role-detail.labels.no-permissions-assigned' | translate }}</p>
+        </div>
+    </div>
+</div>

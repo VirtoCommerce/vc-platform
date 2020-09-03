@@ -1,0 +1,140 @@
+﻿{
+  "platform": {
+    "commands": {
+      "add": "Добавить",
+      "activate": "Активировать",
+      "assign": "Назначить",
+      "cancel": "Закрыть",
+      "clear": "Очистить",
+      "clear-all": "Очистить все",
+      "clone": "Скопировать",
+      "close": "Закрыть",
+      "confirm": "Подтвердить",
+      "copy-link": "Скопировать ссылку",
+      "create": "Создать",
+      "cut": "Вырезать",
+      "delete": "Удалить",
+      "download": "Скачать",
+      "edit": "Редактировать",
+      "export": "Экспортировать",
+      "generate": "Создать",
+      "import": "Импортировать",
+      "install": "Установить",
+      "manage": "Управлять",
+      "more": "Больше",
+      "no": "Нет",
+      "new-folder": "Новая папка",
+      "new-license": "Продлить лицензию",
+      "ok": "Ок",
+      "paste": "Вставить",
+      "pick-selected": "Выбрать выделенные",
+      "preview": "Предварительный просмотр",
+      "open-browser": "Открыть в браузере",
+      "redo": "Переделать",
+      "refresh": "Обновить",
+      "remove": "Удалить",
+      "reset": "Сбросить",
+      "restart": "Перезагрузить",
+      "save": "Сохранить",
+      "send": "Отправить",
+      "select-all": "Выбрать Все",
+      "settings": "Настройки",
+      "sign-out": "Выход",
+      "undo": "Отменить",
+      "uninstall": "Деинсталлировать",
+      "unselect-all": "Отменить выделение Всех",
+      "update": "Обновить",
+      "upload": "Загрузить",
+      "yes": "Да",
+      "add-new-property": "Добавить новое свойство",
+      "manage-type-properties": "Управление типом свойств",
+      "manage-profile": "Управление профилем",
+      "minimize": "Минимизировать",
+      "maximize": "Максимизировать",
+      "stop-sending": "Остановить отправку",
+      "set-active": "Сделать Активным",
+      "reject-user": "Отклонить пользователя",
+      "change-password": "Изменить пароль",
+      "unlock-account": "Разблокировать учетную запись",
+      "today": "Сегодня",
+      "time": "Время",
+      "now": "Сейчас",
+      "date": "Дата",
+      "see-details": "посмотреть Подробности"
+    },
+    "list": {
+      "no-data": "Нет данных",
+      "count": "Количество"
+    },
+    "placeholders": {
+        "n-a": "N/A",
+        "no-file": "Выбрать файл",
+        "search-keyword": "Поиск по ключевому слову..."
+    },
+    "dialogs": {
+      "delete": {
+        "title": "Подтверждение удаления",
+        "message": "Вы уверены, что хотите удалить выбранные записи?"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "Короткий текст",
+        "description": "Текстовые значения менее 1024 символов."
+      },
+      "long-text": {
+        "title": "Длинный текст.",
+        "description": "Текст без ограничения размера."
+      },
+      "integer": {
+        "title": "Целое",
+        "description": "Целое число."
+      },
+      "decimal": {
+        "title": "Десятичное Число",
+        "description": "Десятичное число с точностью 18 и шкалой 2."
+      },
+      "date-time": {
+        "title": "Дата и время",
+        "description": "Выбрать дату."
+      },
+      "boolean": {
+        "title": "Логический тип данных",
+        "description": "Тип переключения."
+      },
+      "html": {
+        "title": "HTML",
+        "description": "Разметка HTML."
+      },
+      "undefined": {
+        "title": "Не определено"
+      },
+      "image": {
+        "title": "Изображение",
+        "description": "Тип изображения."
+      } 
+    },
+    "genericValueInput": {
+        "placeholders": {
+            "short-text": "Введите короткий текст",
+            "secure-string": "Введите секретный текст",
+            "email": "Введите адрес электронной почты",
+            "url": "Введите URL",
+            "long-text": "Введите длинный текст",
+            "integer": "Введите целое число",
+            "number": "Введите десятичное число",
+            "date-time": "Выберите дату",
+            "short-text-multivalue": "Добавить значение",
+            "integer-multivalue": "Добавить целое число",
+            "number-multivalue": "Добавить десятичное число",
+            "short-text-dictionary": "Выбрать значение",
+            "short-text-dictionary-multivalue": "Выбрать значение",
+            "short-text-multilang": "Ввести значение",
+            "long-text-multilang": "Ввести значение",
+            "short-text-multivalue-multilang": "Добавить значение",
+            "short-text-dictionary-multilang": "Выбрать значение",
+            "short-text-dictionary-multivalue-multilang": "Выбрать значение"
+        }
+    }
+  }
+}

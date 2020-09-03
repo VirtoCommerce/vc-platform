@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="platformWebApp" ng-strict-di>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Virto Commerce @ViewData["Title"]</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <!-- Application insight snippet https://github.com/Microsoft/ApplicationInsights-aspnetcore/wiki/Getting-Started-with-Application-Insights-for-ASP.NET-Core-->
+    @*@Html.Raw(snippet.FullScript)*@
+
+    @if (@ViewData["GoogleContainerId"] != null)
+    {
+        <!-- Google Tag Manager -->
+        <script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window, document, 'script', 'dataLayer', '@ViewData["GoogleContainerId"]');
+        </script>
+        <!-- End Google Tag Manager -->
+    }
+
+
+    <link rel="stylesheet" href="~/dist/style.css" asp-append-version="true" />
+    <modules-style-bundle bundle-path="~/dist/style.css" asp-append-version="true"></modules-style-bundle>
+
+
+    <meta name="viewport" content="width=device-width" />
+    <base href="~/" />
+
+    <partial name="_FacebookTrackerPartial" />
+
+</head>
+@*DO NOT CHANGE THE CODE BELOW: COPYRIGHT VIOLATION*@
+<body ng-class="{'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = '@(Model.DemoCredentials)'; demoResetTime = '@(Model.DemoResetTime)'; license = initExpiration(@(Model.License))">
+    @if (@ViewData["GoogleContainerId"] != null)
+    {
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="@("https://www.googletagmanager.com/ns.html?id=" + @ViewData["GoogleContainerId"])"
+                    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    }
+    @RenderBody()
+
+    <partial name="_AppDependencies" />
+
+    <script src="~/dist/vendor.js" type="text/javascript" asp-append-version="true"></script>
+    <script src="~/dist/app.js" type="text/javascript" asp-append-version="true"></script>
+    <modules-script-bundle bundle-path="~/dist/app.js" asp-append-version="true"></modules-script-bundle>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

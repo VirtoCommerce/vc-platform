@@ -1,0 +1,56 @@
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <div class="t __divider">{{ 'platform.blades.account-detail.labels.user-information' | translate }}</div>
+            <form name="formScope">
+                <va-metaform registered-inputs="blade.metaFields" blade="blade" column-count="1" ng-init="setForm(formScope)"></va-metaform>
+            </form>
+            <va-widget-container group="accountDetail" blade="blade" gridster-opts="{columns: 3}"></va-widget-container>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="accountTypeSelector.html">
+    <div class="form-label">
+        {{ 'platform.blades.account-detail.labels.account-type' | translate }}
+        <a href="" ng-click="blade.openAccountTypeSettingManagement()" class="form-edit">
+            <i class="form-ico fa fa-pencil"></i>
+        </a>
+    </div>
+    <div class="form-input">
+        <ui-select ng-model="blade.currentEntity.userType">
+            <ui-select-match placeholder="{{ 'platform.blades.account-detail.placeholders.account-type' | translate }}">{{$select.selected}}</ui-select-match>
+            <ui-select-choices repeat="x as x in blade.accountTypes | filter: $select.search ">
+                <span ng-bind-html="x | highlight: $select.search"></span>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+</script>
+
+<script type="text/ng-template" id="accountInfo.html">
+    <ul class="list __info">
+        <li class="list-item">
+            <div class="list-t">{{ 'platform.blades.account-detail.labels.locked-state' | translate }}</div>
+            <div class="list-descr">{{blade.accountLockedState}}</div>
+        </li>
+    </ul>
+</script>
+
+<script type="text/ng-template" id="accountEmail.html">
+    <div class="form-label">
+        {{ 'platform.blades.account-detail.labels.account-email' | translate }}
+    </div>
+    <div class="form-input">
+        <input type="email" ng-model="blade.currentEntity.email" placeholder="{{'platform.blades.account-detail.placeholders.email' | translate}}" />
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="accountUserName.html">
+    <div class="form-label">
+        {{ 'platform.blades.account-detail.labels.login' | translate }}
+    </div>
+    <div class="form-input">
+        <input type="text" ng-model="blade.currentEntity.userName" placeholder="{{'platform.blades.account-detail.placeholders.user-name' | translate}}" required />
+    </div>
+</script>

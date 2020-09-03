@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <noWarn>1591</noWarn>
+        <OutputType>Library</OutputType>
+        <IsPackable>True</IsPackable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;1705;1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.2.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.2" />
+        <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.2" />
+        <PackageReference Include="Serialize.Linq" Version="1.8.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\VirtoCommerce.Platform.Caching\VirtoCommerce.Platform.Caching.csproj" />
+        <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
+    </ItemGroup>
+
+</Project>

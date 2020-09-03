@@ -1,0 +1,102 @@
+﻿<div class="blade-static __bottom">
+    <button class="btn" ng-click="startProcess()" ng-disabled="!canStartProcess() || blade.notification">
+        <span>{{ 'platform.blades.import-main.labels.start-import' | translate }}</span>
+    </button>
+</div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" ng-if="!blade.notification">
+                <fieldset>
+                    <div>
+                        <label class="form-label">{{ 'platform.blades.import-main.labels.select-file' | translate }}</label>
+                        <div class="form-input">
+                            <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+                            <input type="text" placeholder="Upload import zip" readonly="" ng-model="importRequest.fileName">
+                            <button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
+                                <i class="btn-ico fa fa-file-archive-o"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div ng-show="uploader.isUploading">
+                        <div class="sub-t">{{ 'platform.blades.import-main.labels.upload-progress' | translate }}</div>
+                        <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}" style="width: 0%;"></div>
+                    </div>
+                </fieldset>
+            </form>
+            <div class="sub-t" ng-if="importRequest.exportManifest">{{ 'platform.blades.import-main.labels.import-data-information' | translate }}</div>
+            <ul class="list __info" ng-if="importRequest.exportManifest">
+                <li class="list-item">
+                    <div class="list-t">{{ 'platform.blades.import-main.labels.author' | translate }}</div>
+                    <div class="list-descr">{{importRequest.exportManifest.author}}</div>
+                </li>
+                <li class="list-item">
+                    <div class="list-t">{{ 'platform.blades.import-main.labels.data-file-created' | translate }}</div>
+                    <div class="list-descr" am-time-ago="importRequest.exportManifest.created"></div>
+                </li>
+                <li class="list-item">
+                    <div class="list-t">{{ 'platform.blades.import-main.labels.created-platform-version' | translate }}</div>
+                    <div class="list-descr">{{importRequest.exportManifest.platformVersion}}</div>
+                </li>
+            </ul>
+            
+            <form class="form ng-pristine ng-valid" ng-if="importRequest.exportManifest && !blade.notification">
+                <fieldset>
+                    <legend>{{ 'platform.blades.import-main.labels.platform-entries' | translate }}</legend>
+                    <div class="list __items">
+                        <label class="list-item" ng-class="{ '__disabled' : !importRequest.exportManifest.handleSecurity }">
+                            <input type="checkbox" ng-model="importRequest.handleSecurity">
+                            <span class="switch"></span>
+                            <span class="list-name">{{ 'platform.blades.import-main.menu.security.title' | translate }}</span>
+                            <span class="list-descr">{{ 'platform.blades.import-main.menu.security.description' | translate }}</span>
+                        </label>
+                        <label class="list-item" ng-class="{ '__disabled' : !importRequest.exportManifest.handleBinaryData }">
+                            <input type="checkbox" ng-model="importRequest.handleBinaryData">
+                            <span class="switch"></span>
+                            <span class="list-name">{{ 'platform.blades.import-main.menu.binary.title' | translate }}</span>
+                            <span class="list-descr">{{ 'platform.blades.import-main.menu.binary.description' | translate }}</span>
+                        </label>
+                        <label class="list-item" ng-class="{ '__disabled' : !importRequest.exportManifest.handleSettings }">
+                            <input type="checkbox" ng-model="importRequest.handleSettings">
+                            <span class="switch"></span>
+                            <span class="list-name">{{ 'platform.blades.import-main.menu.settings.title' | translate }}</span>
+                            <span class="list-descr">{{ 'platform.blades.import-main.menu.settings.description' | translate }}</span>
+                        </label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>{{ 'platform.blades.import-main.labels.choose-modules' | translate }}</legend>
+                    <div class="list __items">
+                        <label class="list-item" ng-repeat="data in importRequest.exportManifest.modules">
+                            <input type="checkbox" ng-model="data.isChecked" ng-change="updateModuleSelection()">
+                            <span class="switch"></span>
+                            <span class="list-name">{{data.id}}</span>
+                            <span class="list-descr">{{'module.' + data.id + '.description' | translate}}</span>
+                        </label>
+                    </div>
+                    <div class="note" ng-if="blade.currentEntities.length == 0">
+                        {{ 'platform.blades.import-main.labels.no-data' | translate }}
+                    </div>
+                </fieldset>
+            </form>
+            <div class="form" ng-if="blade.notification">
+                <div class="block">
+                    <div>
+                        <div class="sub-t">{{blade.notification.description}}</div>
+                        <div class="block" ng-if="blade.notification.created || blade.notification.finished">
+                            <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">{{ 'platform.blades.import-main.labels.start' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.created | amParse | date:'mediumTime' }}</p>
+                            <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">{{ 'platform.blades.import-main.labels.end' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.finished | amParse | date:'mediumTime' }}</p>
+                        </div>
+
+                        <div ng-if="blade.notification.errorCount > 0">
+                            <span class="sub-t">{{ 'platform.blades.import-main.labels.errors' | translate }}</span>
+                            <div class="log">
+                                <p ng-repeat="error in blade.notification.errors track by $index" class="error">{{error}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

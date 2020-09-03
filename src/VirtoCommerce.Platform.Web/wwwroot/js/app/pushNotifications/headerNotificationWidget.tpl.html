@@ -1,0 +1,22 @@
+<div class="header__nav-item" ng-class="{'header__nav-item--opened': dropDownOpened}" notificationWidget>
+    <span class="header__nav-ico"
+        ng-class="{'header__nav-ico--notice-give' : newAviable(), 'header__nav-ico--notice' : !newAviable(), '__animated': isAnimated()}"
+        ng-click="toggleDropDown()" va-tooltip tooltip="{{'platform.menu.notifications' | translate}}"
+        tooltip-placement="bottom" tooltip-animation="false" tooltip-popup-delay="{{$parent.tooltipPopupDelay}}"></span>
+    <div class="dropdown-menu">
+        <div class="notice" ng-if="!getNotifications().length">
+            <div class="notice__bg"></div>
+            <div class="notice__t">Nothing to see here</div>
+            <div class="notice__descr">When an event happens, you will see it here</div>
+            <button class="btn btn--orange" ng-click="viewHistory()">View all notifications</button>
+            <button class="btn btn--orange" ng-click="close()">Close</button>
+        </div>
+        <div class="notice-list" ng-if="getNotifications().length">
+            <div class="notice-list__item" ng-repeat="model in getNotifications() | orderBy: 'created' | limitTo:10"
+                ng-click="notificationClick(model)" ng-include="model.template">
+            </div>
+            <button class="btn btn--orange" ng-click="viewHistory()">View all notifications</button>
+            <button class="btn btn--orange" ng-click="clearRecent()">Clear recent</button>
+        </div>
+    </div>
+</div>

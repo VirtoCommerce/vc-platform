@@ -1,0 +1,37 @@
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="formScope">
+                <fieldset>
+                    <legend>{{ 'platform.blades.new-role-wizard.labels.summary' | translate }}</legend>
+                    <div class="form-group" ng-init="setForm(formScope)">
+                        <label class="form-label">{{ 'platform.blades.new-role-wizard.labels.name' | translate }}</label>
+                        <div class="form-input">
+                            <input ng-model="blade.currentEntity.name" placeholder="{{ 'platform.blades.new-role-wizard.placeholders.name' | translate }}" focus-on required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">{{ 'platform.blades.new-role-wizard.labels.description' | translate }}</label>
+                        <div class="form-input">
+                            <textarea class="form-control" cols="30" rows="3" ng-model="blade.currentEntity.description" placeholder="{{ 'platform.blades.new-role-wizard.placeholders.description' | translate }}"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+          
+            </form>
+            <div class="sub-t">{{ 'platform.blades.new-role-wizard.labels.assign-permissions' | translate }}</div>
+            <div class="list __items" ng-init="openItems=[]">
+                <div class="list-group" ng-class="{'__opened': openItems[$index]}" ng-click="openItems[$index]=!openItems[$index]" ng-repeat-start="(key,values) in blade.currentEntities">{{key}}</div>
+                <div class="list __sub" ng-repeat-end>
+                    <label class="list-item" ng-repeat="data in values">
+                        <input type="checkbox" ng-model="data.isChecked">
+                        <span class="switch"></span>
+                        <span class="list-name">{{ data.name }}</span>
+                        <span class="list-descr">{{ 'permissions.' + data.name | translate}}</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

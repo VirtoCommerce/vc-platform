@@ -1,0 +1,148 @@
+{
+    "platform": {
+        "commands": {
+            "add": "Add",
+            "activate": "Activate",
+            "assign": "Assign",
+            "cancel": "Cancel",
+            "clear": "Clear",
+            "clear-all": "Clear all",
+            "clone": "Clone",
+            "close": "Close",
+            "confirm": "Confirm",
+            "copy-link": "Copy link",
+            "copy": "Copy",
+            "create": "Create",
+            "cut": "Cut",
+            "delete": "Delete",
+            "download": "Download",
+            "edit": "Edit",
+            "export": "Export",
+            "generate": "Generate",
+            "import": "Import",
+            "import-sample-data": "Import sample data",
+            "install": "Install",
+            "manage": "Manage",
+            "more": "More",
+            "no": "No",
+            "new-folder": "New folder",
+            "new-license": "Renew license",
+            "ok": "Ok",
+            "paste": "Paste",
+            "pick-selected": "Pick selected",
+            "preview": "Preview",
+            "open-browser": "Open in browser",
+            "redo": "Redo",
+            "refresh": "Refresh",
+            "remove": "Remove",
+            "reset": "Reset",
+            "restart": "Restart",
+            "save": "Save",
+            "send": "Send",
+            "select-all": "Select All",
+            "settings": "Settings",
+            "sign-out": "Sign out",
+            "undo": "Undo",
+            "uninstall": "Uninstall",
+            "unselect-all": "Unselect All",
+            "update": "Update",
+            "upload": "Upload",
+            "yes": "Yes",
+            "add-new-property": "Add new property",
+            "manage-type-properties": "Manage type properties",
+            "manage-profile": "Manage profile",
+            "minimize": "Minimize",
+            "maximize": "Maximize",
+            "stop-sending": "Stop sending",
+            "set-active": "Set Active",
+            "reject-user": "Reject user",
+            "change-password": "Change password",
+            "unlock-account": "Unlock account",
+            "lock-account": "Lock account",
+            "today": "Today",
+            "time": "Time",
+            "now": "Now",
+            "date": "Date",
+            "see-details": "see Details"
+        },
+        "list": {
+            "no-data": "No data",
+            "count": "Count"
+        },
+        "placeholders": {
+            "n-a": "N/A",
+            "no-file": "Choose file",
+            "search-keyword": "Search keyword..."
+        },
+        "dialogs": {
+            "delete": {
+                "title": "Delete confirmation",
+                "message": "Are you sure you want to delete selected entries?"
+            }
+        },
+        "properties": {
+            "short-text": {
+                "title": "Short Text",
+                "description": "Text values less than 1024 chars."
+            },
+            "long-text": {
+                "title": "Long Text",
+                "description": "Huge amount text without size limit."
+            },
+            "integer": {
+                "title": "Integer",
+                "description": "Integer number."
+            },
+            "decimal": {
+                "title": "Decimal Number",
+                "description": "Decimal number with precision 18 and scale 2."
+            },
+            "date-time": {
+                "title": "Date time",
+                "description": "Select date."
+            },
+            "boolean": {
+                "title": "Boolean",
+                "description": "Switch type."
+            },
+            "html": {
+                "title": "HTML",
+                "description": "HTML markup."
+            },
+            "undefined": {
+                "title": "Undefined"
+            },
+            "image": {
+                "title": "Image",
+                "description": "Image type."
+            }
+        },
+        "genericValueInput": {
+            "placeholders": {
+                "short-text": "Enter short text",
+                "secure-string": "Enter secret text",
+                "email": "Enter email",
+                "url": "Enter URL",
+                "long-text": "Enter long text",
+                "integer": "Enter integer number",
+                "number": "Enter decimal number",
+                "date-time": "Choose date",
+                "short-text-multivalue": "Add value",
+                "integer-multivalue": "Add integer",
+                "number-multivalue": "Add decimal",
+                "short-text-dictionary": "Select value",
+                "short-text-dictionary-multivalue": "Select value",
+                "short-text-multilang": "Enter value",
+                "long-text-multilang": "Enter value",
+                "short-text-multivalue-multilang": "Add value",
+                "short-text-dictionary-multilang": "Select value",
+                "short-text-dictionary-multivalue-multilang": "Select value"
+            }
+        },
+        "validators": {
+            "uriWithoutQuery": {
+                "error": "Invalid uri format. Make shure uri dosn't have query params."
+            }
+        }
+    }
+}

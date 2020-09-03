@@ -1,0 +1,7 @@
+﻿{
+  "platform": {
+    "commands": {
+      "test": "Test success",
+		}
+	}
+}

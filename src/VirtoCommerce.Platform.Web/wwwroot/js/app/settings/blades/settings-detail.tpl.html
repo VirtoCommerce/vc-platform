@@ -1,0 +1,26 @@
+<div class="blade-static __bottom" ng-if="blade.isSavingToParentObject" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="formScope" class="form">
+                <fieldset ng-repeat="groupName in blade.groupNames" ng-init="setForm(formScope)">
+                    <legend>{{groupName==='undefined'?'General':groupName}}</legend>
+                    <div class="list __info form-group" ng-repeat="data in blade.currentEntities[groupName]">
+                        <label class="form-label">{{ 'settings.' + data.name + '.title' | translate }} <a href="" ng-click="editArray(data);" ng-if="data.isDictionary" class="form-edit"><i class="form-ico fa fa-pencil"></i></a></label>
+                        <va-generic-value-input ng-model="data" get-dictionary-values="getDictionaryValues" ng-if="!data.isDictionary && !data.allowedValues"></va-generic-value-input>
+                        <div class="form-input" ng-if="!data.isDictionary && data.allowedValues">
+                            <ui-select ng-model="data.values[0]">
+                                <ui-select-match placeholder="{{ 'platform.genericValueInput.placeholders.short-text-dictionary' | translate}}">{{$select.selected.value}}</ui-select-match>
+                                <ui-select-choices repeat="propValue in data.allowedValues | filter: {value: $select.search} | orderBy: 'value'">
+                                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="list-descr"> {{ 'settings.' + data.name + '.description' | translate }} </div>
+                    </div>
+                </fieldset>
+            </form>
+            <va-widget-container group="settingsDetail" blade="blade"></va-widget-container>
+        </div>
+    </div>
+</div>
