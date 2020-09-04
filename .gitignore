@@ -279,3 +279,5 @@ App_Data/
 .vscode
 
 /src/VirtoCommerce.Platform.Web/Modules
+# mkdocs output
+/site
