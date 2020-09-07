@@ -120,10 +120,12 @@ partial class Build : NukeBuild
 
     [Parameter("Release branch")] readonly string ReleaseBranch;
 
+    [Parameter("Branch Name for SonarQube")] readonly string SonarBranchName;
+
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
     [Parameter("Path to Artifacts Directory")] AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
-    Project WebProject => Solution.AllProjects.FirstOrDefault(x => x.Name.EndsWith($"{Solution.Name}.Web") || x.Name.EndsWith("VirtoCommerce.Storefront"));
+    Project WebProject => Solution.AllProjects.FirstOrDefault(x => x.Name.EndsWith(".Web") || x.Name.EndsWith("VirtoCommerce.Storefront"));
     AbsolutePath ModuleManifestFile => WebProject.Directory / "module.manifest";
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
@@ -643,7 +645,7 @@ partial class Build : NukeBuild
         {
             var dotNetPath = ToolPathResolver.TryGetEnvironmentExecutable("DOTNET_EXE") ?? ToolPathResolver.GetPathExecutable("dotnet");
             Logger.Normal($"IsServerBuild = {IsServerBuild}");
-            var branchName = GitRepository.Branch;
+            var branchName = String.IsNullOrEmpty(SonarBranchName) ? GitRepository.Branch : SonarBranchName;
             Logger.Info($"BRANCH_NAME = {branchName}");
             var projectName = Solution.Name;
             var prBaseParam = "";
@@ -661,7 +663,7 @@ partial class Build : NukeBuild
                 prKeyParam = $"/d:sonar.pullrequest.key={prNumber}";
 
             }
-            var branchParam = PullRequest ? "" : $"/d:\"sonar.branch.name={branchName}\"";
+            var branchParam = PullRequest ? "" : $"/d:\"sonar.branch={branchName}\"";
 
             var projectKeyParam = $"/k:\"{RepoOrg}_{RepoName}\"";
             var hostParam = $"/d:sonar.host.url={SonarUrl}";
