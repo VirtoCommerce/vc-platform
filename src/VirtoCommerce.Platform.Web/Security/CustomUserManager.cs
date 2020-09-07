@@ -174,21 +174,40 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             var result = await base.UpdateAsync(user);
 
-            if (result.Succeeded && user.Roles != null)
+            if (result.Succeeded)
             {
-                var targetRoles = (await GetRolesAsync(user));
-                var sourceRoles = user.Roles.Select(x => x.Name);
-
-                //Add
-                foreach (var newRole in sourceRoles.Except(targetRoles))
+                if (user.Roles != null)
                 {
-                    await AddToRoleAsync(user, newRole);
+                    var targetRoles = await GetRolesAsync(user);
+                    var sourceRoles = user.Roles.Select(x => x.Name);
+
+                    //Add
+                    foreach (var newRole in sourceRoles.Except(targetRoles))
+                    {
+                        await AddToRoleAsync(user, newRole);
+                    }
+
+                    //Remove
+                    foreach (var removeRole in targetRoles.Except(sourceRoles))
+                    {
+                        await RemoveFromRoleAsync(user, removeRole);
+                    }
                 }
 
-                //Remove
-                foreach (var removeRole in targetRoles.Except(sourceRoles))
+                if (user.Logins != null)
                 {
-                    await RemoveFromRoleAsync(user, removeRole);
+                    var targetLogins = await GetLoginsAsync(user);
+                    var sourceLogins = user.Logins.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, null));
+
+                    foreach (var item in sourceLogins.Where(x => targetLogins.All(y => x.LoginProvider + x.ProviderKey != y.LoginProvider + y.ProviderKey)))
+                    {
+                        await AddLoginAsync(user, item);
+                    }
+
+                    foreach (var item in targetLogins.Where(x => sourceLogins.All(y => x.LoginProvider + x.ProviderKey != y.LoginProvider + y.ProviderKey)))
+                    {
+                        await RemoveLoginAsync(user, item.LoginProvider, item.ProviderKey);
+                    }
                 }
             }
 
@@ -214,6 +233,16 @@ namespace VirtoCommerce.Platform.Web.Security
                         await AddToRoleAsync(user, newRole.Name);
                     }
                 }
+
+                // add external logins
+                if (!user.Logins.IsNullOrEmpty())
+                {
+                    foreach (var login in user.Logins)
+                    {
+                        await AddLoginAsync(user, new UserLoginInfo(login.LoginProvider, login.ProviderKey, null));
+                    }
+                }
+
                 SecurityCacheRegion.ExpireUser(user);
             }
             return result;
@@ -245,7 +274,7 @@ namespace VirtoCommerce.Platform.Web.Security
             // Read claims and convert to permissions (compatibility with v2)
             user.Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray();
 
-            // Read associated logins (compatibility with v2)
+            // Read associated logins
             var logins = await base.GetLoginsAsync(user);
             user.Logins = logins.Select(x => new ApplicationUserLogin() { LoginProvider = x.LoginProvider, ProviderKey = x.ProviderKey }).ToArray();
         }

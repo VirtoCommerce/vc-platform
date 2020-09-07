@@ -321,7 +321,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="providerKey"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("users/login/external")]
+        [Route("users/login/external/{loginProvider}/{providerKey}")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityQuery)]
         public async Task<ActionResult<ApplicationUser>> GetUserByLogin([FromRoute] string loginProvider, [FromRoute] string providerKey)
         {
