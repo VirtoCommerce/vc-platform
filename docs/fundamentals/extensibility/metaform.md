@@ -58,7 +58,7 @@ blade.metaFields = [
 },
 {
   name: 'startDate',
-  isReadonly: true,
+  isReadOnly: true,
   title: "Data created",
   valueType: "DateTime"
 },
@@ -95,7 +95,7 @@ Single meta-field has the following structure:
 |title|Label value. Can be simple text or a key to localized resource.|
 |valueType|Type of auto generated input control. Supported values: ShortText, LongText, Integer, Decimal, DateTime, Boolean, SecureString, Url, Email, Html.|
 |isRequired|The *required* property value of auto generated input control. (*false* by default)|
-|isReadonly|The flag to disable value changing of auto generated input control. (*false* by default)|
+|isReadOnly|The flag to disable value changing of auto generated input control. (*false* by default)|
 |templateUrl|URL for custom content template. If specified, this template is rendered instead of auto-generated content.|
 |isVisibleFn|Function to control meta-field visibility. Meta-field gets rendered only if this function returns *true* or this function is not defined.|
 
