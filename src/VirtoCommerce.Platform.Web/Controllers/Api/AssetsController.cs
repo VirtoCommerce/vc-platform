@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
@@ -220,7 +221,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!validation.IsValid)
             {
-                return BadRequest(validation.Errors);
+                return BadRequest(new
+                {
+                    Message = string.Join(" ", validation.Errors.Select(x => x.ErrorMessage)),
+                    Errors = validation.Errors
+                });
             }
 
             await _blobProvider.CreateFolderAsync(folder);
