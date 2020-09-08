@@ -70,15 +70,7 @@ angular.module('platformWebApp')
                 var result = prompt(tooltip + "\n\nEnter folder name:");
 
                 if (result != null) {
-                    assets.createFolder({
-                        name: result,
-                        parentUrl: blade.currentEntity.url
-                    },
-                        blade.refresh,
-                        function (error) {
-                            var text = error.data.map(x => "ErrorCode: " + x.errorCode + " Message: " + x.errorMessage).join('\n');
-                            bladeNavigationService.setError('Error ' + error.status + '\n' + text, blade);
-                        });
+                    assets.createFolder({ name: result, parentUrl: blade.currentEntity.url }, blade.refresh);
                 }
             }
 
