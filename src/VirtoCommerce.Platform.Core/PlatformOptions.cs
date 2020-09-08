@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Core
         //Default path to store export files 
         public string DefaultExportFolder { get; set; } = "App_Data/Export/";
 
-        public string DefaultExportFileName { get; set; } = "exported_data.zip";
+        public string DefaultExportFileName { get; set; } = "exported_{0:yyyyMMddHHmmss}.zip";
 
         //Local path to running process like WkhtmlToPdf
         public string ProcessesPath { get; set; }
