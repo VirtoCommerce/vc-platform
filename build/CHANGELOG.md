@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.4.3] - 2020-09-07
+### Added
+- SonarBranchName parameter
+### Fixed
+- Search of Web-projects
+- sonar.branch.name parameter changed to sonar.branch
+
+## [1.4.0] - 2020-08-31
+### Added
+ - GrabMigrator Target
+
 ## [1.3.7] - 2020-08-25
 ### Fixed
 - Directory.Build.props search
