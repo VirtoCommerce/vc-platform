@@ -10,18 +10,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Swagger;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
     public static class SwaggerServiceCollectionExtensions
     {
-        private static string platformDocName = "VirtoCommerce.Platform";
-        private static string platformUIDocName = "PlatformUI";
+        public static string platformDocName { get; } = "VirtoCommerce.Platform";
+        public static string platformUIDocName { get; } = "PlatformUI";
         private static string oauth2SchemeName = "oauth2";
         /// <summary>
         /// 
@@ -76,7 +76,6 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.SchemaFilter<SwaggerIgnoreFilter>();
                 c.MapType<object>(() => new OpenApiSchema { Type = "object" });
                 c.AddModulesXmlComments(services);
-                c.CustomSchemaIds(type => (Attribute.GetCustomAttribute(type, typeof(SwaggerSchemaIdAttribute)) as SwaggerSchemaIdAttribute)?.Id ?? type.Name /*?? type.FriendlyId()*/);
                 c.CustomOperationIds(apiDesc =>
                     apiDesc.TryGetMethodInfo(out var methodInfo) ? $"{((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerName}_{methodInfo.Name}" : null);
                 c.AddSecurityDefinition(oauth2SchemeName, new OpenApiSecurityScheme
@@ -104,6 +103,12 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 });
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
+
+            // Unfortunately, we can't use .CustomSchemaIds, because it changes schema ids for all documents (impossible to change ids depending on document name).
+            // But we need this, because PlatformUI document should contain ref schema ids as type.FullName to avoid conflict with same type names in different modules.
+            // As a solution we use custom swagger generator that catches document name and generates schemaids depending on it
+            services.AddTransient<ISwaggerProvider, CustomSwaggerGenerator>();
+
             //This is important line switches the SwaggerGenerator to use the Newtonsoft contract resolver that uses the globally registered PolymorphJsonContractResolver
             //to propagate up to the resulting OpenAPI schema the derived types instead of base domain types
             services.AddSwaggerGenNewtonsoftSupport();

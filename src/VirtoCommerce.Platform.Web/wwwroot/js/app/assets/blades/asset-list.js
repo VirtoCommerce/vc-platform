@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.assets.assetListController', ['$scope', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$sessionStorage', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper',
-        function ($scope, assets, bladeNavigationService, dialogService, $storage, bladeUtils, uiGridHelper) {
+    .controller('platformWebApp.assets.assetListController', ['$scope', '$translate', 'platformWebApp.assets.api', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$sessionStorage', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper',
+        function ($scope, $translate, assets, bladeNavigationService, dialogService, $storage, bladeUtils, uiGridHelper) {
             var blade = $scope.blade;
             blade.title = 'platform.blades.asset-list.title';
             if (!blade.currentEntity) {
@@ -64,22 +64,13 @@ angular.module('platformWebApp')
                 }
             }
 
-            function newFolder(value, prefix) {
-                var result = prompt(prefix ? prefix + "\n\nEnter folder name:" : "Enter folder name:", value);
+            function newFolder() {
+                var tooltip = $translate.instant('platform.dialogs.create-folder.title');
+
+                var result = prompt(tooltip + "\n\nEnter folder name:");
+
                 if (result != null) {
-                    if (blade.currentEntity.url) {
-                        assets.createFolder({ name: result, parentUrl: blade.currentEntity.url },
-                            blade.refresh,
-                            function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-                    } else {
-                        if (result.length < 3 || result.length > 63 || !result.match(/^[a-z0-9]+(-[a-z0-9]+)*$/)) {
-                            newFolder(result, "A folder name must conform to the following naming rules:\n  Folder name must be from 3 through 63 characters long.\n  Folder name must start with a letter or number, and can contain only letters, numbers, and the dash (-) character.\n  Every dash (-) character must be immediately preceded and followed by a letter or number; consecutive dashes are not permitted.\n  All letters in a folder name must be lowercase.");
-                        } else {
-                            assets.createFolder({ name: result, parentUrl: blade.currentEntity.url },
-                                blade.refresh,
-                                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
-                        }
-                    }
+                    assets.createFolder({ name: result, parentUrl: blade.currentEntity.url }, blade.refresh);
                 }
             }
 
