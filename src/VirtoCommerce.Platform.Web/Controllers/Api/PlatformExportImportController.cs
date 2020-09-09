@@ -84,7 +84,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/import")]
         [Authorize(Permissions.PlatformImport)]
-        public ActionResult<SampleDataImportPushNotification> ImportSampleData([FromQuery]string url = null)
+        public ActionResult<SampleDataImportPushNotification> ImportSampleData([FromQuery] string url = null)
         {
             lock (_lockObject)
             {
@@ -127,7 +127,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet]
         [Route("export/manifest/load")]
-        public ActionResult<PlatformExportManifest> LoadExportManifest([FromQuery]string fileUrl)
+        public ActionResult<PlatformExportManifest> LoadExportManifest([FromQuery] string fileUrl)
         {
             if (string.IsNullOrEmpty(fileUrl))
             {
@@ -147,7 +147,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("export")]
         [Authorize(Permissions.PlatformImport)]
-        public ActionResult<PlatformExportPushNotification> ProcessExport([FromBody]PlatformImportExportRequest exportRequest)
+        public ActionResult<PlatformExportPushNotification> ProcessExport([FromBody] PlatformImportExportRequest exportRequest)
         {
             var notification = new PlatformExportPushNotification(_userNameResolver.GetCurrentUserName())
             {
@@ -164,7 +164,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("import")]
         [Authorize(Permissions.PlatformImport)]
-        public ActionResult<PlatformImportPushNotification> ProcessImport([FromBody]PlatformImportExportRequest importRequest)
+        public ActionResult<PlatformImportPushNotification> ProcessImport([FromBody] PlatformImportExportRequest importRequest)
         {
             var notification = new PlatformImportPushNotification(_userNameResolver.GetCurrentUserName())
             {
@@ -194,7 +194,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public ActionResult DownloadExportFile([FromRoute] string fileName)
         {
             var localTmpFolder = Path.GetFullPath(Path.Combine(_platformOptions.DefaultExportFolder));
-            var localPath = Path.Combine(localTmpFolder, Path.GetFileName(_platformOptions.DefaultExportFileName));
+            var localPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
 
             //Load source data only from local file system 
             using (var stream = System.IO.File.Open(localPath, FileMode.Open))
@@ -360,8 +360,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             try
             {
+                var fileName = string.Format(_platformOptions.DefaultExportFileName, DateTime.UtcNow);
                 var localTmpFolder = Path.GetFullPath(Path.Combine(_platformOptions.DefaultExportFolder));
-                var localTmpPath = Path.Combine(localTmpFolder, Path.GetFileName(_platformOptions.DefaultExportFileName));
+                var localTmpPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
 
                 if (!Directory.Exists(localTmpFolder))
                 {
@@ -376,7 +377,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     var manifest = exportRequest.ToManifest();
                     await _platformExportManager.ExportAsync(stream, manifest, progressCallback, new JobCancellationTokenWrapper(cancellationToken));
-                    pushNotification.DownloadUrl = $"api/platform/export/download/{_platformOptions.DefaultExportFileName}";
+                    pushNotification.DownloadUrl = $"api/platform/export/download/{fileName}";
                 }
             }
             catch (JobAbortedException)

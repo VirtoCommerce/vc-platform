@@ -25,6 +25,11 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Flag indicates that this setting doesn't need to be displayed on the UI
+        /// </summary>
+        public bool IsHidden { get; set; }
+
         public SettingValueType ValueType { get; set; }
         public object[] AllowedValues { get; set; }
         public object DefaultValue { get; set; }

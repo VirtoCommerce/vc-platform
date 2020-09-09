@@ -51,9 +51,8 @@ namespace VirtoCommerce.Platform.Core.Security
         public virtual string[] Permissions { get; set; }
 
         /// <summary>
-        /// Obsolete. External provider logins.
+        /// External provider logins.
         /// </summary>
-        [Obsolete("Left due to compatibility issues")]
         public virtual ApplicationUserLogin[] Logins { get; set; }
 
         /// <summary>
@@ -73,6 +72,7 @@ namespace VirtoCommerce.Platform.Core.Security
             target.PasswordHash = PasswordHash;
             target.SecurityStamp = SecurityStamp;
             target.PhoneNumberConfirmed = PhoneNumberConfirmed;
+            target.PhoneNumber = PhoneNumber;
             target.TwoFactorEnabled = TwoFactorEnabled;
             target.LockoutEnabled = LockoutEnabled;
             target.LockoutEnd = LockoutEnd;

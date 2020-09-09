@@ -4,4 +4,5 @@ arrange:
   - create-new-module.md
   - swagger-endpoints.md
   - docker-app-development-workflow.md
+  - modules-development-via-docker.md
   - ...
