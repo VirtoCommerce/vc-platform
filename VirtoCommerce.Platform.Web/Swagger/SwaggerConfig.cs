@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -159,10 +160,23 @@ namespace VirtoCommerce.Platform.Web.Swagger
             }
         }
 
+        //private static string[] GetXmlFilesPaths(string virtualDirectoryPath)
+        //{
+        //    var physicalPath = HostingEnvironment.MapPath(virtualDirectoryPath);
+        //    return physicalPath != null ? Directory.GetFiles(physicalPath, "*.Web.XML") : new string[] { };
+        //}
+
         private static string[] GetXmlFilesPaths(string virtualDirectoryPath)
         {
             var physicalPath = HostingEnvironment.MapPath(virtualDirectoryPath);
-            return physicalPath != null ? Directory.GetFiles(physicalPath, "*.Web.XML") : new string[] { };
+            string[] ext = new string[2] { "*.Web.XML", "*.Core.XML" };
+
+            var r = from searchPattern in ext
+                    from f in Directory.GetFiles(physicalPath, searchPattern)
+                    select f;
+
+            return r.ToArray();            
         }
     }
 }
+
