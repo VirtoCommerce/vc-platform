@@ -133,6 +133,12 @@ angular.module('platformWebApp')
                 priority: 10
             });
 
+            //register next step so that the wizard doesn't get stuck in 'sampleDataInstallation'
+            setupWizard.registerStep({
+                state: "workspace",
+                priority: 99
+            });
+
             // Register widget in Platform\Setup settings
             widgetService.registerWidget({
                 isVisible: function (blade) {
