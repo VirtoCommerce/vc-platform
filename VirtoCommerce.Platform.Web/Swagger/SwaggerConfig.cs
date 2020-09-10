@@ -162,7 +162,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
         private static string[] GetXmlFilesPaths(string virtualDirectoryPath)
         {
             var physicalPath = HostingEnvironment.MapPath(virtualDirectoryPath);
-            var patterns = new string[] { "*.Web.XML", "*.Core.XML" };
+            var patterns = new string[] { "*.Web.XML", "*.Core.XML", "*.Data.XML" };
 
             return physicalPath != null ? patterns.SelectMany(x => Directory.GetFiles(physicalPath, x)).ToArray() : Array.Empty<string>();
         }
