@@ -18,18 +18,17 @@ angular.module('platformWebApp')
         $stateProvider.state('setupWizard.sampleDataInstallation', {
             url: '/sampleDataInstallation',
             templateUrl: '$(Platform)/Scripts/app/exportImport/templates/sampleDataInstallation.tpl.html',
-            controller: ['$scope', '$state', '$window', '$stateParams', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($scope, $state, $window, $stateParams, exportImportResourse, setupWizard) {
+            controller: ['$scope', '$state', '$stateParams', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($scope, $state, $stateParams, exportImportResourse, setupWizard) {
                 $scope.notification = {};
                 if ($stateParams.notification) {
                     $scope.notification = $stateParams.notification;
                 }
                 $scope.sampleDataInfos = {};
-                //thats need when state direct open by url or push notification
+                //that's needed when state directly opened by url or push notification
                 var step = setupWizard.findStepByState($state.current.name);
 
                 $scope.close = function () {
                     setupWizard.showStep(step.nextStep);
-                    $window.location.reload();
                 };
 
                 //copy notification to scope
