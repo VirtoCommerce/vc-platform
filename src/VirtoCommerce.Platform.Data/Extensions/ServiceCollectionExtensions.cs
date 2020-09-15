@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.ChangeLog;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.Localizations;
@@ -27,7 +28,17 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
         public static IServiceCollection AddPlatformServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<PlatformDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("VirtoCommerce")));
+
+            // Create a separate instance of Platform DbContext and force to migrate immediately ensuring DB is prepared to start.
+            // Especially for HangFire start, because it requires an EXISTING database
+            var platformConnectionString = configuration.GetConnectionString("VirtoCommerce");
+            var platformDBcontextoptions = new DbContextOptionsBuilder<PlatformDbContext>().UseSqlServer(platformConnectionString);
+            var platformDbContext = new PlatformDbContext(platformDBcontextoptions.Options);
+            platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
+            platformDbContext.Database.Migrate();
+
+            services.AddDbContext<PlatformDbContext>(options => options.UseSqlServer(platformConnectionString));
+
             services.AddTransient<IPlatformRepository, PlatformRepository>();
             services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());
 
@@ -49,7 +60,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             services.AddTransient<IEmailSender, DefaultEmailSender>();
 
-         
+
             //Register dependencies for translation
             services.AddSingleton<ITranslationDataProvider, PlatformTranslationDataProvider>();
             services.AddSingleton<ITranslationDataProvider, ModulesTranslationDataProvider>();
