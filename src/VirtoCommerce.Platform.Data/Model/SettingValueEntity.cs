@@ -49,41 +49,31 @@ namespace VirtoCommerce.Platform.Data.Model
         {
             ValueType = valueType.ToString();
 
-            if (valueType == SettingValueType.Boolean)
+            switch (valueType)
             {
-                BooleanValue = Convert.ToBoolean(value);
-            }
-            else if (valueType == SettingValueType.DateTime)
-            {
-                DateTimeValue = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
-            }
-            else if (valueType == SettingValueType.Decimal)
-            {
-                DecimalValue = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
-            }
-            else if (valueType == SettingValueType.Integer)
-            {
-                IntegerValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
-            }
-            else if (valueType == SettingValueType.LongText)
-            {
-                LongTextValue = Convert.ToString(value);
-            }
-            else if (valueType == SettingValueType.Json)
-            {
-                LongTextValue = Convert.ToString(value);
-            }
-            else if (valueType == SettingValueType.SecureString)
-            {
-                ShortTextValue = Convert.ToString(value);
-            }
-            else
-            {
-                ShortTextValue = Convert.ToString(value);
+                case SettingValueType.Boolean:
+                    BooleanValue = Convert.ToBoolean(value);
+                    break;
+                case SettingValueType.DateTime:
+                    DateTimeValue = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                    break;
+                case SettingValueType.Decimal:
+                    DecimalValue = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+                    break;
+                case SettingValueType.Integer:
+                    IntegerValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+                    break;
+                case SettingValueType.LongText:
+                case SettingValueType.Json:
+                    LongTextValue = Convert.ToString(value);
+                    break;
+                default:
+                    // SettingValueType.ShortText
+                    // SettingValueType.SecureString
+                    ShortTextValue = Convert.ToString(value);
+                    break;
             }
 
-            ShortTextValue = string.IsNullOrWhiteSpace(ShortTextValue) ? null : ShortTextValue;
-            LongTextValue = string.IsNullOrWhiteSpace(LongTextValue) ? null : LongTextValue;
             return this;
         }
 
