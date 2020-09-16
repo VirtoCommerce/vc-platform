@@ -73,7 +73,9 @@ jobs:
       id: dockerBuild
       uses: VirtoCommerce/vc-github-actions/build-docker-image@dev
       with:
+        imageName: "platform"
         tag: ${{ steps.image.outputs.taggedVersion }}
+        dockerFiles: "https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh"
           
     - name: Publish Nuget
       uses: VirtoCommerce/vc-github-actions/publish-nuget@dev
