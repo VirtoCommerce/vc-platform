@@ -76,14 +76,6 @@ jobs:
         imageName: "platform"
         tag: ${{ steps.image.outputs.taggedVersion }}
         dockerFiles: "https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh"
-          
-    - name: Publish Nuget
-      uses: VirtoCommerce/vc-github-actions/publish-nuget@master
-      
-    - name: Publish Github Release
-      with:
-        changelog: ${{ steps.changelog.outputs.changelog }}
-      uses: VirtoCommerce/vc-github-actions/publish-github-release@master
 
     - name: Docker Login
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' }}
@@ -92,6 +84,23 @@ jobs:
         login-server: docker.pkg.github.com
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Docker Environment
+      uses: VirtoCommerce/vc-github-actions/docker-env@dev
+      with:
+        githubUser: ${{ env.GITHUB_ACTOR }}
+        githubToken: ${{ env.GITHUB_TOKEN }}
+        dockerTag: ${{ steps.image.outputs.taggedVersion }}
+        platformImage: docker.pkg.github.com/virtocommerce/vc-platform/platform
+        storefrontImage: docker.pkg.github.com/virtocommerce/vc-storefront/storefront
+          
+    - name: Publish Nuget
+      uses: VirtoCommerce/vc-github-actions/publish-nuget@master
+      
+    - name: Publish Github Release
+      with:
+        changelog: ${{ steps.changelog.outputs.changelog }}
+      uses: VirtoCommerce/vc-github-actions/publish-github-release@master
 
     - name: Publish Docker Image
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' }}
