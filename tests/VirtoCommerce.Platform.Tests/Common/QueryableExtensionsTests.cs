@@ -234,7 +234,7 @@ namespace VirtoCommerce.Platform.Tests.Common
         }
 
         [Fact]
-        public void OrderBySortInfos_MultipleRegistrations_NotSorted()
+        public void OrderBy_MultipleRegistrations_NotSorted()
         {
             // Arrange
             AbstractTypeFactory<Base>.RegisterType<Derived1>();
@@ -249,5 +249,27 @@ namespace VirtoCommerce.Platform.Tests.Common
             Assert.Equal(_mutliRegistrationList.Count, orderedList.Count);
         }
 
+        [Fact]
+        public void OrderBySortInfos_MultipleRegistrations_NotSorted()
+        {
+            // Arrange
+            AbstractTypeFactory<Base>.RegisterType<Derived1>();
+            AbstractTypeFactory<Base>.RegisterType<Derived2>();
+            var sortInfos = new[]
+            {
+                new SortInfo
+                {
+                    SortColumn = nameof(Base.Prop),
+                }
+            };
+
+            // Act
+            var orderedList = _mutliRegistrationList.AsQueryable().OrderBySortInfos(sortInfos).ToList();
+
+            // Assert
+            var firstBase = orderedList.First();
+            Assert.Equal(2, firstBase.Prop);
+            Assert.Equal(_mutliRegistrationList.Count, orderedList.Count);
+        }
     }
 }

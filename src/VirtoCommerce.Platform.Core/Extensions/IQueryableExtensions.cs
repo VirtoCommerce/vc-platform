@@ -91,6 +91,17 @@ namespace VirtoCommerce.Platform.Core.Common
             return ApplyOrder<T, IQueryable<T>>(source, property, methodName, true);
         }
 
+        /// <summary>
+        /// Applies ordering to the IQueryable, based on property string
+        /// </summary>
+        /// <typeparam name="TElement">IQueryable element type</typeparam>
+        /// <typeparam name="TQueryable">IQueryable specific type (e.g. could be <see cref="IOrderedQueryable{T}"/>)</typeparam>
+        /// <param name="source">IQueryable to sort</param>
+        /// <param name="property">Property string, e.g. Student.Address.City</param>
+        /// <param name="methodName">Sort method name from <see cref="Queryable"/> class - e.g. OrderBy, ThenBy, etc.</param>
+        /// <param name="castToEffectiveType">Set to true to cast collection to type registered in <see cref="AbstractTypeFactory{BaseType}"/>.
+        /// NOTE! After casting with <see cref="Queryable.OfType{TResult}(IQueryable)"/> <typeparamref name="TQueryable"/> becomes IQueryable, so then it cannot be passed to methods that accept e.g. <see cref="IOrderedQueryable{T}"/></param>
+        /// <returns></returns>
         public static IOrderedQueryable<TElement> ApplyOrder<TElement, TQueryable>(TQueryable source, string property, string methodName, bool castToEffectiveType) where TQueryable : IQueryable<TElement>
         {
             if (property == null)
