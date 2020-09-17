@@ -170,7 +170,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .Where(x => settingNames.Contains(x.Name))
                     .ToListAsync());
 
-                foreach (var setting in objectSettings)
+                foreach (var setting in objectSettings.Where(x => x.ItHasValues))
                 {
 
                     var settingDescriptor = _registeredSettingsByNameDict[setting.Name];
