@@ -13,17 +13,20 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             return ApplyOrder<T>(source, property, nameof(OrderBy));
         }
+
         public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string property)
         {
             return ApplyOrder<T>(source, property, nameof(OrderByDescending));
         }
+
         public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> source, string property)
         {
-            return ApplyOrder<T>(source, property, nameof(ThenBy));
+            return ApplyOrder<T, IOrderedQueryable<T>>(source, property, nameof(ThenBy), false);
         }
+
         public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> source, string property)
         {
-            return ApplyOrder<T>(source, property, nameof(ThenByDescending));
+            return ApplyOrder<T, IOrderedQueryable<T>>(source, property, nameof(ThenByDescending), false);
         }
 
 
@@ -34,7 +37,6 @@ namespace VirtoCommerce.Platform.Core.Common
                 throw new ArgumentNullException(nameof(sortInfos));
             }
 
-            IOrderedQueryable<T> result;
             IQueryable<T> sourceOfEffectiveType = source;
 
             var effectiveType = GetEffectiveType<T>();
@@ -57,9 +59,11 @@ namespace VirtoCommerce.Platform.Core.Common
             var firstSortInfo = sortInfos.First();
             var methodName = (firstSortInfo.SortDirection == SortDirection.Descending) ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
 
-            result = (IOrderedQueryable<T>)InvokeGenericMethod(typeof(IQueryableExtensions), methodName, new[] { effectiveType }, new object[] { sourceOfEffectiveType, firstSortInfo.SortColumn });
+            var firstSortResult = InvokeGenericMethod(typeof(IQueryableExtensions), methodName, new[] { effectiveType }, new object[] { sourceOfEffectiveType, firstSortInfo.SortColumn });
+            var remainingSortInfos = sortInfos.Skip(1).ToArray();
+            var result = InvokeGenericMethod(typeof(IQueryableExtensions), nameof(IQueryableExtensions.ThenBySortInfos), new[] { effectiveType }, new object[] { firstSortResult, remainingSortInfos });
 
-            return result.ThenBySortInfos(sortInfos.Skip(1).ToArray());
+            return (IOrderedQueryable<T>)result;
         }
 
         public static IOrderedQueryable<T> ThenBySortInfos<T>(this IOrderedQueryable<T> source, SortInfo[] sortInfos)
@@ -84,44 +88,54 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
         {
+            return ApplyOrder<T, IQueryable<T>>(source, property, methodName, true);
+        }
+
+        public static IOrderedQueryable<TElement> ApplyOrder<TElement, TQueryable>(TQueryable source, string property, string methodName, bool castToEffectiveType) where TQueryable : IQueryable<TElement>
+        {
             if (property == null)
             {
                 throw new ArgumentNullException(nameof(property));
             }
 
-            IOrderedQueryable<T> result = null;
-            IQueryable<T> sourceOfEffectiveType = source;
+            IOrderedQueryable<TElement> result = null;
+            TQueryable sourceOfEffectiveType = source;
 
-            var effectiveType = GetEffectiveType<T>();
-            // If we cannot deduce real type - no sorting applied
-            if (effectiveType == null)
+            var effectiveType = GetEffectiveType<TElement>();
+
+            if (castToEffectiveType)
             {
-                return source.OrderBy(x => 1);
-            }
-            // If registered type is not T - need to cast collection to allow to use registered type own properties
-            else if (effectiveType != typeof(T))
-            {
-                // sourceOfEffectiveType = source.OfType<"effectiveType">()
-                sourceOfEffectiveType = (IQueryable<T>)InvokeGenericMethod(typeof(Queryable), nameof(Queryable.OfType), new[] { effectiveType }, new[] { source });
-            }
-            else
-            {
-                // no cast needed - use T
+                // If we cannot deduce real type - no sorting applied
+                if (effectiveType == null)
+                {
+                    return source.OrderBy(x => 1);
+                }
+                // If registered type is not T - need to cast collection to allow to use registered type own properties
+                else if (effectiveType != typeof(TElement))
+                {
+                    // sourceOfEffectiveType = source.OfType<"effectiveType">()
+                    sourceOfEffectiveType = (TQueryable)InvokeGenericMethod(typeof(Queryable), nameof(Queryable.OfType), new[] { effectiveType }, new object[] { source });
+                }
+                else
+                {
+                    // no cast needed - use T
+                }
             }
 
-            var expressionArgument = Expression.Parameter(typeof(T));
-            var expr = (effectiveType == typeof(T)) ? (Expression)expressionArgument : Expression.Convert(expressionArgument, effectiveType);
+            var expressionArgument = Expression.Parameter(typeof(TElement));
+            var expr = (effectiveType == typeof(TElement)) ? (Expression)expressionArgument : Expression.Convert(expressionArgument, effectiveType);
             var propertyExpression = GetPropertyExpression(property, expr);
+
             if (propertyExpression == null)
             {
                 return source.OrderBy(x => 1);
             }
 
             var propertyType = propertyExpression.Type;
-            var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), propertyType);
+            var delegateType = typeof(Func<,>).MakeGenericType(typeof(TElement), propertyType);
             var lambda = Expression.Lambda(delegateType, propertyExpression, expressionArgument);
 
-            result = (IOrderedQueryable<T>)InvokeGenericMethod(typeof(Queryable), methodName, new[] { typeof(T), propertyType }, new object[] { sourceOfEffectiveType, lambda });
+            result = (IOrderedQueryable<TElement>)InvokeGenericMethod(typeof(Queryable), methodName, new[] { typeof(TElement), propertyType }, new object[] { sourceOfEffectiveType, lambda });
 
             return result;
         }

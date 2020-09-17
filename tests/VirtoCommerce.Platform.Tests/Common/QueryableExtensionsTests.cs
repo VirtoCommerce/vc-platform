@@ -14,14 +14,16 @@ namespace VirtoCommerce.Platform.Tests.Common
         class B : A
         {
             public int Prop { get; set; }
+            public int Prop2 { get; set; }
         }
 
         readonly List<A> _derivedClassList = new List<A>
         {
-            new B{Prop = 8},
-            new B{Prop = 3},
-            new B{Prop = 10},
-            new B{Prop = 5}
+            new B{Prop = 8, Prop2 = 3},
+            new B{Prop = 3, Prop2 = 2},
+            new B{Prop = 10, Prop2 = 1},
+            new B{Prop = 5, Prop2 = 4},
+            new B{Prop = 3, Prop2 = 10},
         };
 
         readonly List<B> _declaredClassList = new List<B>
@@ -29,7 +31,7 @@ namespace VirtoCommerce.Platform.Tests.Common
             new B{Prop = 8},
             new B{Prop = 3},
             new B{Prop = 10},
-            new B{Prop = 5}
+            new B{Prop = 5},
         };
 
         public QueryableExtensionsTests()
@@ -43,7 +45,7 @@ namespace VirtoCommerce.Platform.Tests.Common
         [Theory]
         [InlineData(SortDirection.Ascending, 3)]
         [InlineData(SortDirection.Descending, 10)]
-        public void OrderBy_DerivedClassList_IsSorted(SortDirection direction, int expected)
+        public void OrderBySortInfos_DerivedClassList_IsSorted(SortDirection direction, int expected)
         {
             // Arrange
             var sortInfo = new[]
@@ -67,7 +69,7 @@ namespace VirtoCommerce.Platform.Tests.Common
         [Theory]
         [InlineData(SortDirection.Ascending, 3)]
         [InlineData(SortDirection.Descending, 10)]
-        public void OrderBy_DeclaredClassList_IsSorted(SortDirection direction, int expected)
+        public void OrderBySortInfos_DeclaredClassList_IsSorted(SortDirection direction, int expected)
         {
             // Arrange
             var sortInfo = new[]
@@ -93,7 +95,7 @@ namespace VirtoCommerce.Platform.Tests.Common
         [InlineData("12.234.22", SortDirection.Descending, 8)]
         [InlineData("Prop.Value", SortDirection.Descending, 8)]
         [InlineData("!#$@5^%#$&^$%*", SortDirection.Descending, 8)]
-        public void OrderBy_DeclaredClassListWrongProperty_IsUntouched(string propertyName, SortDirection direction, int expected)
+        public void OrderBySortInfos_DeclaredClassListWrongProperty_IsUntouched(string propertyName, SortDirection direction, int expected)
         {
             // Arrange
             var sortInfo = new[]
@@ -115,7 +117,35 @@ namespace VirtoCommerce.Platform.Tests.Common
         }
 
         [Fact]
-        public void OrderBy_DeclaredClassListNullProperty_Throws()
+        public void OrderBySortInfos_TwoSortInfosDerivedClassList_IsSorted()
+        {
+            // Arrange
+            var sortInfo = new[]
+            {
+                new SortInfo
+                {
+                    SortColumn = nameof(B.Prop),
+                    SortDirection = SortDirection.Ascending
+                },
+                new SortInfo
+                {
+                    SortColumn = nameof(B.Prop2),
+                    SortDirection = SortDirection.Descending
+                }
+            };
+
+            // Act
+            var orderedList = _derivedClassList.AsQueryable().OrderBySortInfos(sortInfo).ToList();
+
+            // Assert
+            var firstB = (B)orderedList.First();
+            Assert.Equal(3, firstB.Prop);
+            Assert.Equal(10, firstB.Prop2);
+            Assert.Equal(_derivedClassList.Count, orderedList.Count);
+        }
+
+        [Fact]
+        public void OrderBySortInfos_DeclaredClassListNullProperty_Throws()
         {
             // Arrange
             var sortInfo = new[]
@@ -133,5 +163,62 @@ namespace VirtoCommerce.Platform.Tests.Common
             // Assert
             Assert.Throws<ArgumentNullException>(action);
         }
+
+        [Fact]
+        public void OrderBy_DerivedClassList_IsSorted()
+        {
+            // Arrange
+
+            // Act
+            var orderedList = _derivedClassList.AsQueryable().OrderBy(nameof(B.Prop)).ToList();
+
+            // Assert
+            var firstB = (B)orderedList.First();
+            Assert.Equal(3, firstB.Prop);
+            Assert.Equal(_derivedClassList.Count, orderedList.Count);
+        }
+
+        [Fact]
+        public void OrderByDescending_DerivedClassList_IsSorted()
+        {
+            // Arrange
+
+            // Act
+            var orderedList = _derivedClassList.AsQueryable().OrderByDescending(nameof(B.Prop)).ToList();
+
+            // Assert
+            var firstB = (B)orderedList.First();
+            Assert.Equal(10, firstB.Prop);
+            Assert.Equal(_derivedClassList.Count, orderedList.Count);
+        }
+
+        [Fact]
+        public void ThenBy_DerivedClassList_IsSorted()
+        {
+            // Arrange
+
+            // Act
+            var orderedList = _derivedClassList.AsQueryable().OrderBy(nameof(B.Prop)).ThenBy(nameof(B.Prop2)).ToList();
+
+            // Assert
+            var firstB = (B)orderedList.First();
+            Assert.Equal(2, firstB.Prop2);
+            Assert.Equal(_derivedClassList.Count, orderedList.Count);
+        }
+
+        [Fact]
+        public void ThenByDescending_DerivedClassList_IsSorted()
+        {
+            // Arrange
+
+            // Act
+            var orderedList = _derivedClassList.AsQueryable().OrderBy(nameof(B.Prop)).ThenByDescending(nameof(B.Prop2)).ToList();
+
+            // Assert
+            var firstB = (B)orderedList.First();
+            Assert.Equal(10, firstB.Prop2);
+            Assert.Equal(_derivedClassList.Count, orderedList.Count);
+        }
+
     }
 }
