@@ -40,6 +40,7 @@ using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
+using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Hangfire;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
@@ -463,6 +464,10 @@ namespace VirtoCommerce.Platform.Web
             //Force migrations
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
+                var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
+                platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
+                platformDbContext.Database.Migrate();
+
                 var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
                 securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
                 securityDbContext.Database.Migrate();
@@ -472,14 +477,11 @@ namespace VirtoCommerce.Platform.Web
             //Register platform settings
             app.UsePlatformSettings();
 
-            // Fake resolve Hangfire.IGlobalConfiguration to enforce correct initialization of Hangfire giblets before modules init.
-            // Don't remove next line, it will cause issues with modules startup at hangfire-less (UseHangfireServer=false) platform instances.
-            app.ApplicationServices.GetRequiredService<IGlobalConfiguration>();
+            // Complete hangfire init 
+            app.UseHangfire(Configuration);
 
             app.UseModules();
 
-            // Complete hangfire init & resume jobs run
-            app.UseHangfire();
 
             //Register platform permissions
             app.UsePlatformPermissions();
