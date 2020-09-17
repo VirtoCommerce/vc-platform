@@ -17,6 +17,13 @@ namespace VirtoCommerce.Platform.Tests.Common
             public int Prop2 { get; set; }
         }
 
+        class Base
+        {
+            public int Prop { get; set; }
+        }
+        class Derived1 : Base { }
+        class Derived2 : Base { }
+
         readonly List<A> _derivedClassList = new List<A>
         {
             new B{Prop = 8, Prop2 = 3},
@@ -32,6 +39,12 @@ namespace VirtoCommerce.Platform.Tests.Common
             new B{Prop = 3},
             new B{Prop = 10},
             new B{Prop = 5},
+        };
+
+        readonly List<Base> _mutliRegistrationList = new List<Base>
+        {
+            new Derived1{Prop = 2},
+            new Derived1{Prop = 1},
         };
 
         public QueryableExtensionsTests()
@@ -218,6 +231,22 @@ namespace VirtoCommerce.Platform.Tests.Common
             var firstB = (B)orderedList.First();
             Assert.Equal(10, firstB.Prop2);
             Assert.Equal(_derivedClassList.Count, orderedList.Count);
+        }
+
+        [Fact]
+        public void OrderBySortInfos_MultipleRegistrations_NotSorted()
+        {
+            // Arrange
+            AbstractTypeFactory<Base>.RegisterType<Derived1>();
+            AbstractTypeFactory<Base>.RegisterType<Derived2>();
+
+            // Act
+            var orderedList = _mutliRegistrationList.AsQueryable().OrderBy(nameof(Base.Prop)).ToList();
+
+            // Assert
+            var firstBase = orderedList.First();
+            Assert.Equal(2, firstBase.Prop);
+            Assert.Equal(_mutliRegistrationList.Count, orderedList.Count);
         }
 
     }
