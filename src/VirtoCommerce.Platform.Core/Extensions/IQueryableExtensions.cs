@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
@@ -10,19 +11,19 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, string property)
         {
-            return ApplyOrder<T>(source, property, "OrderBy");
+            return ApplyOrder<T>(source, property, nameof(OrderBy));
         }
         public static IOrderedQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string property)
         {
-            return ApplyOrder<T>(source, property, "OrderByDescending");
+            return ApplyOrder<T>(source, property, nameof(OrderByDescending));
         }
         public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> source, string property)
         {
-            return ApplyOrder<T>(source, property, "ThenBy");
+            return ApplyOrder<T>(source, property, nameof(ThenBy));
         }
         public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> source, string property)
         {
-            return ApplyOrder<T>(source, property, "ThenByDescending");
+            return ApplyOrder<T>(source, property, nameof(ThenByDescending));
         }
 
 
@@ -30,75 +31,177 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             if (sortInfos.IsNullOrEmpty())
             {
-                throw new ArgumentNullException("sortInfos");
+                throw new ArgumentNullException(nameof(sortInfos));
             }
-            IOrderedQueryable<T> retVal = null;
-            var firstSortInfo = sortInfos.First();
-            if (firstSortInfo.SortDirection == SortDirection.Descending)
+
+            IOrderedQueryable<T> result;
+            IQueryable<T> sourceOfEffectiveType = source;
+
+            var effectiveType = GetEffectiveType<T>();
+            // If we cannot deduce real type - no sorting applied
+            if (effectiveType == null)
             {
-                retVal = source.OrderByDescending(firstSortInfo.SortColumn);
+                return source.OrderBy(x => 1);
+            }
+            // If registered type is not T - need to cast collection to allow to use registered type own properties
+            else if (effectiveType != typeof(T))
+            {
+                // sourceOfEffectiveType = source.OfType<"effectiveType">()
+                sourceOfEffectiveType = (IQueryable<T>)InvokeGenericMethod(typeof(Queryable), nameof(Queryable.OfType), new[] { effectiveType }, new object[] { source });
             }
             else
             {
-                retVal = source.OrderBy(firstSortInfo.SortColumn);
+                // no cast needed - use T
             }
-            return retVal.ThenBySortInfos(sortInfos.Skip(1).ToArray());
+
+            var firstSortInfo = sortInfos.First();
+            var methodName = (firstSortInfo.SortDirection == SortDirection.Descending) ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
+
+            result = (IOrderedQueryable<T>)InvokeGenericMethod(typeof(IQueryableExtensions), methodName, new[] { effectiveType }, new object[] { sourceOfEffectiveType, firstSortInfo.SortColumn });
+
+            return result.ThenBySortInfos(sortInfos.Skip(1).ToArray());
         }
 
         public static IOrderedQueryable<T> ThenBySortInfos<T>(this IOrderedQueryable<T> source, SortInfo[] sortInfos)
         {
-            var retVal = source;
+            var result = source;
             if (!sortInfos.IsNullOrEmpty())
             {
                 foreach (var sortInfo in sortInfos)
                 {
                     if (sortInfo.SortDirection == SortDirection.Descending)
                     {
-                        retVal = retVal.ThenByDescending(sortInfo.SortColumn);
+                        result = result.ThenByDescending(sortInfo.SortColumn);
                     }
                     else
                     {
-                        retVal = retVal.ThenBy(sortInfo.SortColumn);
+                        result = result.ThenBy(sortInfo.SortColumn);
                     }
                 }
             }
-            return retVal;
+            return result;
         }
 
         public static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
         {
             if (property == null)
-                throw new ArgumentNullException("property");
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
 
-            string[] props = property.Split('.');
-            Type type = typeof(T);
-            ParameterExpression arg = Expression.Parameter(type, "x");
-            Expression expr = arg;
-            foreach (string prop in props)
+            IOrderedQueryable<T> result = null;
+            IQueryable<T> sourceOfEffectiveType = source;
+
+            var effectiveType = GetEffectiveType<T>();
+            // If we cannot deduce real type - no sorting applied
+            if (effectiveType == null)
+            {
+                return source.OrderBy(x => 1);
+            }
+            // If registered type is not T - need to cast collection to allow to use registered type own properties
+            else if (effectiveType != typeof(T))
+            {
+                // sourceOfEffectiveType = source.OfType<"effectiveType">()
+                sourceOfEffectiveType = (IQueryable<T>)InvokeGenericMethod(typeof(Queryable), nameof(Queryable.OfType), new[] { effectiveType }, new[] { source });
+            }
+            else
+            {
+                // no cast needed - use T
+            }
+
+            var expressionArgument = Expression.Parameter(typeof(T));
+            var expr = (effectiveType == typeof(T)) ? (Expression)expressionArgument : Expression.Convert(expressionArgument, effectiveType);
+            var propertyExpression = GetPropertyExpression(property, expr);
+            if (propertyExpression == null)
+            {
+                return source.OrderBy(x => 1);
+            }
+
+            var propertyType = propertyExpression.Type;
+            var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), propertyType);
+            var lambda = Expression.Lambda(delegateType, propertyExpression, expressionArgument);
+
+            result = (IOrderedQueryable<T>)InvokeGenericMethod(typeof(Queryable), methodName, new[] { typeof(T), propertyType }, new object[] { sourceOfEffectiveType, lambda });
+
+            return result;
+        }
+
+        private static object InvokeGenericMethod(Type methodType, string methodName, Type[] genericTypeArguments, object[] methodArguments, object instance = null)
+        {
+            try
+            {
+                return methodType.GetMethods()
+                    .Single(method => method.Name == methodName
+                        && method.IsGenericMethodDefinition
+                        && method.GetGenericArguments().Length == genericTypeArguments.Length
+                        && method.GetParameters().Length == methodArguments.Length)
+                    .MakeGenericMethod(genericTypeArguments)
+                    .Invoke(instance, methodArguments);
+            }
+            catch (TargetInvocationException ex)
+            {
+                ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets type registered in <see cref="AbstractTypeFactory{T}"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>Returns single registered type, or <typeparamref name="T"/> if no types registered, or <code>null</code> if more than one registered</returns>
+        private static Type GetEffectiveType<T>()
+        {
+            Type result;
+            var registeredTypes = AbstractTypeFactory<T>.AllTypeInfos.ToList();
+
+            // If there is more than one type registered in AbstractTypeFactory<T> = we cannot deduce real type
+            if (registeredTypes.Count > 1)
+            {
+                result = null;
+            }
+            // If only one registered type - return it
+            else if (registeredTypes.Count == 1)
+            {
+                result = registeredTypes[0].Type;
+            }
+            else
+            {
+                // Means no types registered or it is T
+                result = typeof(T);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets property expression of the last property in chain for the object expression of given type 
+        /// </summary>
+        /// <param name="propertyString">Property chain, e.g. "Date.Year" for the DateTime type</param>
+        /// <param name="objectExpression">Linq expression with the object variable</param>
+        /// <returns></returns>
+        private static Expression GetPropertyExpression(string propertyString, Expression objectExpression)
+        {
+            var result = objectExpression;
+            var propertyType = objectExpression.Type;
+            var props = propertyString.Split('.');
+            foreach (var prop in props)
             {
                 // use reflection (not ComponentModel) to mirror LINQ
-                PropertyInfo pi = type.GetProperty(prop, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                var pi = propertyType.GetProperty(prop, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                 if (pi != null)
                 {
-                    expr = Expression.Property(expr, pi);
-                    type = pi.PropertyType;
+                    result = Expression.Property(result, pi);
+                    propertyType = pi.PropertyType;
                 }
                 else
                 {
-                    return source.OrderBy(x => 1);
+                    result = null;
+                    break;
                 }
             }
-            Type delegateType = typeof(Func<,>).MakeGenericType(typeof(T), type);
-            LambdaExpression lambda = Expression.Lambda(delegateType, expr, arg);
 
-            object result = typeof(Queryable).GetMethods().Single(
-                    method => method.Name == methodName
-                            && method.IsGenericMethodDefinition
-                            && method.GetGenericArguments().Length == 2
-                            && method.GetParameters().Length == 2)
-                    .MakeGenericMethod(typeof(T), type)
-                    .Invoke(null, new object[] { source, lambda });
-            return (IOrderedQueryable<T>)result;
+            return result;
         }
 
     }
