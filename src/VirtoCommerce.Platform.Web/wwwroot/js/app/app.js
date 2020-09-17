@@ -1,4 +1,6 @@
-angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService',
+angular.module('mainApp', AppDependencies);
+
+angular.module('platformWebApp', []).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService',
     'platformWebApp.i18n', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings',
     function ($rootScope, $scope, $window, mainMenuService,
         i18n, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
@@ -118,7 +120,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         var httpErrorInterceptor = {};
 
         httpErrorInterceptor.request = function (config) {
-	    // Need to pass localization request despite on the auth state
+        // Need to pass localization request despite on the auth state
             if (config.url == 'api/platform/localization') {
                 return config;
             }
