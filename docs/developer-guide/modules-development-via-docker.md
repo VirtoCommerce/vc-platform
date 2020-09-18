@@ -55,7 +55,7 @@ docker network create nat
 3. Parameterize values in the *.env* file.
 
 ```cmd
-CMS_CONTENT_VOLUME=/Path/to/folder/cms-content
+CMS_CONTENT_VOLUME=c:\path\to\folder\cms-content
 APP_DATA_MODULES=/Path/to/folder/modules
 ```
 
@@ -73,7 +73,7 @@ SEARCH_PROVIDER=ElasticSearch
 docker-compose -f docker-compose.yml up --build -d
 ```
 
-5. Run Virto Commerce Platform Manager (configure modules an sample data)
+5. Run Virto Commerce Platform Manager (configure modules as sample data)
 6. [Create new module](./create-new-module.md) as described in the article
 7. Write code for new module
 8. Build new module
