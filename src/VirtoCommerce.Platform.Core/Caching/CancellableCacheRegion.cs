@@ -46,7 +46,7 @@ namespace VirtoCommerce.Platform.Core.Caching
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class CancellableCacheRegion<T>
-    {   
+    {
         private static readonly string _regionName = typeof(T).Name;
 
         protected CancellableCacheRegion()
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 
         public static IChangeToken CreateChangeTokenForKey(string key)
         {
-            if (string.IsNullOrEmpty(key))
+            if (key is null)
             {
                 throw new ArgumentNullException(nameof(key));
             }
@@ -69,7 +69,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 
         public static void ExpireTokenForKey(string key)
         {
-            if (!string.IsNullOrEmpty(key))
+            if (!(key is null))
             {
                 CacheCancellableTokensRegistry.TryCancelToken(GenerateRegionTokenKey(key));
             }
@@ -82,7 +82,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 
         private static string GenerateRegionTokenKey(string key = null)
         {
-            if (!string.IsNullOrEmpty(key))
+            if (!(key is null))
             {
                 return $"{_regionName}:{key}";
             }
