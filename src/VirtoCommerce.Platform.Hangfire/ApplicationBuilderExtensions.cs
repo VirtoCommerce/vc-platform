@@ -23,10 +23,10 @@ namespace VirtoCommerce.Platform.Hangfire
             // The standard database schema initialization way described at the page https://docs.hangfire.io/en/latest/configuration/using-sql-server.html works on an existing database only.
             // Therefore we create SqlServerStorage for Hangfire manually here.
             // This way we ensure Hangfire schema will be applied to storage AFTER platform database creation.            
-            var hangfireOptions = appBuilder.ApplicationServices.GetRequiredService<IOptions<HangfireOptions>>();
-            if (hangfireOptions.Value.JobStorageType == HangfireJobStorageType.SqlServer)
+            var hangfireOptions = appBuilder.ApplicationServices.GetRequiredService<IOptions<HangfireOptions>>().Value;
+            if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer)
             {
-                var storage = new SqlServerStorage(configuration.GetConnectionString("VirtoCommerce"), hangfireOptions.Value.SqlServerStorageOptions);
+                var storage = new SqlServerStorage(configuration.GetConnectionString("VirtoCommerce"), hangfireOptions.SqlServerStorageOptions);
                 hangfireGlobalConfiguration.UseStorage(storage);
             }
 
