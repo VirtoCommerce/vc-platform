@@ -477,14 +477,11 @@ namespace VirtoCommerce.Platform.Web
             //Register platform settings
             app.UsePlatformSettings();
 
-            // Fake resolve Hangfire.IGlobalConfiguration to enforce correct initialization of Hangfire giblets before modules init.
-            // Don't remove next line, it will cause issues with modules startup at hangfire-less (UseHangfireServer=false) platform instances.
-            app.ApplicationServices.GetRequiredService<IGlobalConfiguration>();
+            // Complete hangfire init 
+            app.UseHangfire(Configuration);
 
             app.UseModules();
 
-            // Complete hangfire init & resume jobs run
-            app.UseHangfire();
 
             //Register platform permissions
             app.UsePlatformPermissions();
