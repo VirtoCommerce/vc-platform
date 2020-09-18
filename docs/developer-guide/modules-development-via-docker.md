@@ -13,6 +13,8 @@ Virto Commerce Team have created [docker-compose.yml](https://github.com/VirtoCo
 
 VC Platform Manager web app was containerized as several services: Web service (Platform manager), External services for MS SQL Server, Elastic Search and Redis. It's run as a multi-container app and orchestrated by using _Docker Compose_.
 
+![Developing inside a Container](../media/developing-inside-container.png)
+
 > _Storefront_ and _Theme_ are not included in this solution.
 
 Web service container is based on *virtocommerce/platform* latest Linux image.
