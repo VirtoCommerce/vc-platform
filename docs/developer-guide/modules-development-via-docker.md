@@ -53,7 +53,7 @@ docker network create nat
 3. Parameterize values in the *.env* file.
 
 ```cmd
-CMS_CONTENT_VOLUME=/Path/to/folder/cms-content
+CMS_CONTENT_VOLUME=c:\path\to\folder\cms-content
 APP_DATA_MODULES=/Path/to/folder/modules
 ```
 
