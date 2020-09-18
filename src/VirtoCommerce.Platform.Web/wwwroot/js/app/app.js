@@ -118,7 +118,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         var httpErrorInterceptor = {};
 
         httpErrorInterceptor.request = function (config) {
-	    // Need to pass localization request despite on the auth state
+        // Need to pass localization request despite on the auth state
             if (config.url == 'api/platform/localization') {
                 return config;
             }
@@ -462,5 +462,5 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 permission: 'platform:security:loginOnBehalf',
                 index: 4
             };
-            toolbarService.register(loginOnBehalfCommand, 'platformWebApp.accountDetailController');
+            toolbarService.tryRegister(loginOnBehalfCommand, 'platformWebApp.accountDetailController');
         }]);
