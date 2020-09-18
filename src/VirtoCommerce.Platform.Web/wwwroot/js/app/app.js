@@ -464,5 +464,5 @@ angular.module('platformWebApp', []).controller('platformWebApp.appCtrl', ['$roo
                 permission: 'platform:security:loginOnBehalf',
                 index: 4
             };
-            toolbarService.register(loginOnBehalfCommand, 'platformWebApp.accountDetailController');
+            toolbarService.tryRegister(loginOnBehalfCommand, 'platformWebApp.accountDetailController');
         }]);
