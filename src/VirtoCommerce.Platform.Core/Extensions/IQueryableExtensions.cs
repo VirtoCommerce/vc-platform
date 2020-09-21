@@ -38,24 +38,15 @@ namespace VirtoCommerce.Platform.Core.Common
                 throw new ArgumentNullException(nameof(sortInfos));
             }
 
-            var effectiveType = GetEffectiveType<T>();
-
-            // If we cannot deduce real type - no sorting applied
-            if (effectiveType == null)
-            {
-                return source.OrderBy(x => 1);
-            }
-
-            var sourceOfEffectiveType = ConvertCollectionToType(source, effectiveType);
-
+            var elementType = typeof(T);
             var firstSortInfo = sortInfos.First();
             var methodName = (firstSortInfo.SortDirection == SortDirection.Descending) ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
 
-            // sourceOfEffectiveType.OrderBy/OrderByDescending<effectiveType>(firstSortInfo.SortColumn)
-            var firstSortResult = InvokeGenericMethod(typeof(IQueryableExtensions), methodName, new[] { effectiveType }, new object[] { sourceOfEffectiveType, firstSortInfo.SortColumn });
+            // sourceOfEffectiveType.OrderBy/OrderByDescending<T>(firstSortInfo.SortColumn)
+            var firstSortResult = InvokeGenericMethod(typeof(IQueryableExtensions), methodName, new[] { elementType }, new object[] { source, firstSortInfo.SortColumn });
             var remainingSortInfos = sortInfos.Skip(1).ToArray();
-            // firstSortResult.ThenBySortInfos<effectiveType>(remainingSortInfos)
-            var result = InvokeGenericMethod(typeof(IQueryableExtensions), nameof(IQueryableExtensions.ThenBySortInfos), new[] { effectiveType }, new object[] { firstSortResult, remainingSortInfos });
+            // firstSortResult.ThenBySortInfos<T>(remainingSortInfos)
+            var result = InvokeGenericMethod(typeof(IQueryableExtensions), nameof(IQueryableExtensions.ThenBySortInfos), new[] { elementType }, new object[] { firstSortResult, remainingSortInfos });
 
             return (IOrderedQueryable<T>)result;
         }
@@ -141,6 +132,13 @@ namespace VirtoCommerce.Platform.Core.Common
             return result;
         }
 
+        /// <summary>
+        /// Converts <see cref="IQueryable{T}"/> of one type to <see cref="IQueryable{EffectiveType}"/> of another type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="effectiveType"></param>
+        /// <returns></returns>
         private static IQueryable<T> ConvertCollectionToType<T>(IQueryable<T> source, Type effectiveType)
         {
             var result = source;
