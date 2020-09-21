@@ -21,6 +21,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> source, string property)
         {
+            // We are intentionally skipping casting to effective type as we are already working with IOrderedQueryable, and OfType produces IQueryable, for which e.g. ThenBy is not applied
             return ApplyOrder<T, IOrderedQueryable<T>>(source, property, nameof(ThenBy), false);
         }
 
@@ -59,8 +60,10 @@ namespace VirtoCommerce.Platform.Core.Common
             var firstSortInfo = sortInfos.First();
             var methodName = (firstSortInfo.SortDirection == SortDirection.Descending) ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
 
+            // sourceOfEffectiveType.OrderBy/OrderByDescending<effectiveType>(firstSortInfo.SortColumn)
             var firstSortResult = InvokeGenericMethod(typeof(IQueryableExtensions), methodName, new[] { effectiveType }, new object[] { sourceOfEffectiveType, firstSortInfo.SortColumn });
             var remainingSortInfos = sortInfos.Skip(1).ToArray();
+            // firstSortResult.ThenBySortInfos<effectiveType>(remainingSortInfos)
             var result = InvokeGenericMethod(typeof(IQueryableExtensions), nameof(IQueryableExtensions.ThenBySortInfos), new[] { effectiveType }, new object[] { firstSortResult, remainingSortInfos });
 
             return (IOrderedQueryable<T>)result;
@@ -144,13 +147,24 @@ namespace VirtoCommerce.Platform.Core.Common
 
             var propertyType = propertyExpression.Type;
             var delegateType = typeof(Func<,>).MakeGenericType(typeof(TElement), propertyType);
+            // It is expression for getting property value on each object from collection - e.g. for Student: x => x.Address.City
             var lambda = Expression.Lambda(delegateType, propertyExpression, expressionArgument);
 
+            // Calling existing System.Linq.Queryable sorting method, e.g. for methodName = OrderBy: sourceOfEffectiveType.OrderBy(x => x.Address.City)
             result = (IOrderedQueryable<TElement>)InvokeGenericMethod(typeof(Queryable), methodName, new[] { typeof(TElement), propertyType }, new object[] { sourceOfEffectiveType, lambda });
 
             return result;
         }
 
+        /// <summary>
+        /// Invokes generic method with the given params
+        /// </summary>
+        /// <param name="methodType"></param>
+        /// <param name="methodName"></param>
+        /// <param name="genericTypeArguments"></param>
+        /// <param name="methodArguments"></param>
+        /// <param name="instance"></param>
+        /// <returns></returns>
         private static object InvokeGenericMethod(Type methodType, string methodName, Type[] genericTypeArguments, object[] methodArguments, object instance = null)
         {
             try
@@ -163,6 +177,7 @@ namespace VirtoCommerce.Platform.Core.Common
                     .MakeGenericMethod(genericTypeArguments)
                     .Invoke(instance, methodArguments);
             }
+            // This catch is needed to get unwrapped exception, like calling method without reflection. Otherwise it would be TargetInvocationException with meaningful inner exception
             catch (TargetInvocationException ex)
             {
                 ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
