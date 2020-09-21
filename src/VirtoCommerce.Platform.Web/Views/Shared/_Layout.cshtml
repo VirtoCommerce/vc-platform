@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" ng-app="platformWebApp" ng-strict-di>
 <head>
     <meta charset="utf-8" />
@@ -34,7 +34,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 </head>
 @*DO NOT CHANGE THE CODE BELOW: COPYRIGHT VIOLATION*@
-<body ng-class="{'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = '@(Model.DemoCredentials)'; demoResetTime = '@(Model.DemoResetTime)'; license = initExpiration(@(Model.License))">
+<body ng-class="{'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime); license = initExpiration(@(Model.License))">
     @if (@ViewData["GoogleContainerId"] != null)
     {
         <!-- Google Tag Manager (noscript) -->

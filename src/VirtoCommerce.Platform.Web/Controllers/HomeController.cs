@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -31,9 +32,9 @@ namespace VirtoCommerce.Platform.Web.Controllers
         {
             var model = new IndexModel
             {
-                PlatformVersion = Core.Common.PlatformVersion.CurrentVersion.ToString(),
-                DemoCredentials = _platformOptions.DemoCredentials,
-                DemoResetTime = _platformOptions.DemoResetTime,
+                PlatformVersion = new HtmlString(Core.Common.PlatformVersion.CurrentVersion.ToString()),
+                DemoCredentials = new HtmlString(_platformOptions.DemoCredentials ?? "''"),
+                DemoResetTime = new HtmlString(_platformOptions.DemoResetTime ?? "''"),
                 WebAnalyticsOptions = _webAnalyticsOptions
             };
 
@@ -41,17 +42,17 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             if (license != null)
             {
-                model.License = JsonConvert.SerializeObject(license, new JsonSerializerSettings
+                model.License = new HtmlString(JsonConvert.SerializeObject(license, new JsonSerializerSettings
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver(),
                     DateTimeZoneHandling = DateTimeZoneHandling.Utc
-                }).Replace("\"", "'");
+                }).Replace("\"", "'"));
             }
 
-            if (!string.IsNullOrEmpty(model.DemoResetTime))
+            if (!string.IsNullOrEmpty(model.DemoResetTime.Value))
             {
                 TimeSpan timeSpan;
-                if (TimeSpan.TryParse(model.DemoResetTime, out timeSpan))
+                if (TimeSpan.TryParse(model.DemoResetTime.Value, out timeSpan))
                 {
                     var now = DateTime.UtcNow;
                     var resetTime = new DateTime(now.Year, now.Month, now.Day, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, DateTimeKind.Utc);
@@ -61,7 +62,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                         resetTime = resetTime.AddDays(1);
                     }
 
-                    model.DemoResetTime = JsonConvert.SerializeObject(resetTime).Replace("\"", "'");
+                    model.DemoResetTime = new HtmlString(JsonConvert.SerializeObject(resetTime).Replace("\"", "'") ?? "''");
                 }
             }
 
