@@ -77,7 +77,7 @@ docker-compose -f docker-compose.yml up --build -d
 6. [Create new module](./create-new-module.md) as described in the article
 7. Write code for new module
 8. Build new module
-9. Connect new module with the platform
+9. Copy built module to `Modules` folder
 10. Debug new module
 
 ## Run Virto Commerce Platform Manager
@@ -86,19 +86,11 @@ Once the containers are started, open VC Platform Manager - http://localhost:809
 
 ![Choose sample data](../media/screen-sample-data.png)
 
-## Connect new module with the platform
+## Copy built module to Modules folder
 
-Use symbolic link to connect newly created solution folder to the Platform ~/Modules:
-
-* Run Command Prompt as an administrator.
-* Navigate to the physical location folder of `./Modules` folder on host machine.
-* Run the following command:
-
-```cmd
-mklink /d <your_module_name> <full_path_to_your_module_project>
-```
-
-* Restart Virto Commerce Platform after new module have been connected to the platform.
+* Navigate to the `Modules` folder on local host
+* Create folder for newly created module
+* Copy `your_module_project.Web` folder to the created folder
 
 ## Debugging the module
 
@@ -118,10 +110,27 @@ mklink /d <your_module_name> <full_path_to_your_module_project>
 
 ![image](../media/attach_to_process_3.png)
 
+If the new module has been rebuilt:
+
+* Overwrite folder for newly created module by `your_module_project.Web`
+* Restart the platform - click Setigns->Restart on Platform manager UI:
+
+![Reststrt platform](../media/screen-restart-platform.png)
+
+## Cleanup environment after debugging
+
 When debugging process has finished, stop `docker-compose` by command:
 
 ```cmd
 docker-compose down
+ ```
+
+Don't forget to delete newly created module from the `Modules` and `Modules\AppData` folders.
+
+If you need to recreate platform database for next debug session, remove `db-volume` by command:
+
+```cmd
+docker volume rm db-volume
  ```
 
 ## How to
