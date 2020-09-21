@@ -56,7 +56,7 @@ docker network create nat
 
 ```cmd
 CMS_CONTENT_VOLUME=c:\path\to\folder\cms-content
-APP_DATA_MODULES=/Path/to/folder/modules
+APP_DATA_MODULES=c:\path\to\folder\modules
 ```
 
 You can also parameterize the platform version and search provider in the .env file
