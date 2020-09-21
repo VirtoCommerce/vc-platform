@@ -38,24 +38,15 @@ namespace VirtoCommerce.Platform.Core.Common
                 throw new ArgumentNullException(nameof(sortInfos));
             }
 
-            IQueryable<T> sourceOfEffectiveType = source;
-
             var effectiveType = GetEffectiveType<T>();
+
             // If we cannot deduce real type - no sorting applied
             if (effectiveType == null)
             {
                 return source.OrderBy(x => 1);
             }
-            // If registered type is not T - need to cast collection to allow to use registered type own properties
-            else if (effectiveType != typeof(T))
-            {
-                // sourceOfEffectiveType = source.OfType<"effectiveType">()
-                sourceOfEffectiveType = (IQueryable<T>)InvokeGenericMethod(typeof(Queryable), nameof(Queryable.OfType), new[] { effectiveType }, new object[] { source });
-            }
-            else
-            {
-                // no cast needed - use T
-            }
+
+            var sourceOfEffectiveType = ConvertCollectionToType(source, effectiveType);
 
             var firstSortInfo = sortInfos.First();
             var methodName = (firstSortInfo.SortDirection == SortDirection.Descending) ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
@@ -103,7 +94,8 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <param name="property">Property string, e.g. Student.Address.City</param>
         /// <param name="methodName">Sort method name from <see cref="Queryable"/> class - e.g. OrderBy, ThenBy, etc.</param>
         /// <param name="castToEffectiveType">Set to true to cast collection to type registered in <see cref="AbstractTypeFactory{BaseType}"/>.
-        /// NOTE! After casting with <see cref="Queryable.OfType{TResult}(IQueryable)"/> <typeparamref name="TQueryable"/> becomes IQueryable, so then it cannot be passed to methods that accept e.g. <see cref="IOrderedQueryable{T}"/></param>
+        /// NOTE! After casting with <see cref="Queryable.OfType{TResult}(IQueryable)"/> <typeparamref name="TQueryable"/> (e.g. <see cref="IOrderedQueryable{T}"/>) becomes <see cref="IQueryable{T}"/>,
+        /// so then it cannot be passed to methods that accept e.g. <see cref="IOrderedQueryable{T}"/></param>
         /// <returns></returns>
         public static IOrderedQueryable<TElement> ApplyOrder<TElement, TQueryable>(TQueryable source, string property, string methodName, bool castToEffectiveType) where TQueryable : IQueryable<TElement>
         {
@@ -113,27 +105,20 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             IOrderedQueryable<TElement> result = null;
-            TQueryable sourceOfEffectiveType = source;
 
             var effectiveType = GetEffectiveType<TElement>();
 
+            // If we cannot deduce real type - no sorting applied
+            if (effectiveType == null)
+            {
+                return source.OrderBy(x => 1);
+            }
+
+            var sourceOfEffectiveType = source;
+
             if (castToEffectiveType)
             {
-                // If we cannot deduce real type - no sorting applied
-                if (effectiveType == null)
-                {
-                    return source.OrderBy(x => 1);
-                }
-                // If registered type is not T - need to cast collection to allow to use registered type own properties
-                else if (effectiveType != typeof(TElement))
-                {
-                    // sourceOfEffectiveType = source.OfType<"effectiveType">()
-                    sourceOfEffectiveType = (TQueryable)InvokeGenericMethod(typeof(Queryable), nameof(Queryable.OfType), new[] { effectiveType }, new object[] { source });
-                }
-                else
-                {
-                    // no cast needed - use T
-                }
+                sourceOfEffectiveType = (TQueryable)ConvertCollectionToType(source, effectiveType);
             }
 
             var expressionArgument = Expression.Parameter(typeof(TElement));
@@ -152,6 +137,24 @@ namespace VirtoCommerce.Platform.Core.Common
 
             // Calling existing System.Linq.Queryable sorting method, e.g. for methodName = OrderBy: sourceOfEffectiveType.OrderBy(x => x.Address.City)
             result = (IOrderedQueryable<TElement>)InvokeGenericMethod(typeof(Queryable), methodName, new[] { typeof(TElement), propertyType }, new object[] { sourceOfEffectiveType, lambda });
+
+            return result;
+        }
+
+        private static IQueryable<T> ConvertCollectionToType<T>(IQueryable<T> source, Type effectiveType)
+        {
+            var result = source;
+
+            // If registered type is not T - need to cast collection to allow to use registered type own properties
+            if (effectiveType != typeof(T))
+            {
+                // sourceOfEffectiveType = source.OfType<"effectiveType">()
+                result = (IQueryable<T>)InvokeGenericMethod(typeof(Queryable), nameof(Queryable.OfType), new[] { effectiveType }, new object[] { source });
+            }
+            else
+            {
+                // no cast needed - use T
+            }
 
             return result;
         }
@@ -243,6 +246,5 @@ namespace VirtoCommerce.Platform.Core.Common
 
             return result;
         }
-
     }
 }
