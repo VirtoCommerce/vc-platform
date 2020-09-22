@@ -34,7 +34,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**;GrabMigrator\**;" />
+        <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**;GrabMigrator\**;Properties\*.*" />
         <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**" />
         <None Remove="*.csproj.DotSettings;*.ref.*.txt" />
 
@@ -53,6 +53,7 @@
         <None Include="..\Jenkinsfile" LinkBase="ci" Condition="Exists('..\Jenkinsfile')" />
         <None Include="..\appveyor.yml" LinkBase="ci" Condition="Exists('..\appveyor.yml')" />
         <None Include="..\.travis.yml" LinkBase="ci" Condition="Exists('..\.travis.yml')" />
+
     </ItemGroup>
 
     <ItemGroup>
