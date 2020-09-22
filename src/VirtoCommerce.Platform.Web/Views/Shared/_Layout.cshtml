@@ -9,19 +9,17 @@
     <!-- Application insight snippet https://github.com/Microsoft/ApplicationInsights-aspnetcore/wiki/Getting-Started-with-Application-Insights-for-ASP.NET-Core-->
     @*@Html.Raw(snippet.FullScript)*@
 
-    @if (@ViewData["GoogleContainerId"] != null)
+    @if (Model.SendDiagnosticData)
     {
         <!-- Google Tag Manager -->
         <script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window, document, 'script', 'dataLayer', '@ViewData["GoogleContainerId"]');
-        </script>
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-NSRWZFS');</script>
         <!-- End Google Tag Manager -->
     }
-
 
     <link rel="stylesheet" href="~/dist/style.css" asp-append-version="true" />
     <modules-style-bundle bundle-path="~/dist/style.css" asp-append-version="true"></modules-style-bundle>
@@ -35,11 +33,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 @*DO NOT CHANGE THE CODE BELOW: COPYRIGHT VIOLATION*@
 <body ng-class="{'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime); license = initExpiration(@(Model.License))">
-    @if (@ViewData["GoogleContainerId"] != null)
+    @if (Model.SendDiagnosticData)
     {
         <!-- Google Tag Manager (noscript) -->
         <noscript>
-            <iframe src="@("https://www.googletagmanager.com/ns.html?id=" + @ViewData["GoogleContainerId"])"
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NSRWZFS"
                     height="0" width="0" style="display:none;visibility:hidden"></iframe>
         </noscript>
         <!-- End Google Tag Manager (noscript) -->

@@ -872,6 +872,10 @@
                 "title": "Sample data state",
                 "description": "The current state of sample data wizard"
             },
+            "SendDiagnosticData": {
+                "title": "Send diagnostic data",
+                "description": "Send VC Platform diagnostic data to VC. Can switch off only if a paid license acquired."
+            },
             "Platform": {
                 "Security": {
                     "AccountTypes": {

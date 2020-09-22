@@ -10,5 +10,6 @@ namespace VirtoCommerce.Platform.Web.Model.Home
         public HtmlString DemoCredentials { get; set; }
         public HtmlString DemoResetTime { get; set; }
         public HtmlString License { get; set; }
+        public bool SendDiagnosticData { get; internal set; } = true;
     }
 }
