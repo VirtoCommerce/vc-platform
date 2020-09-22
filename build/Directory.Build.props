@@ -5,7 +5,7 @@
     <Product>VirtoCommerce</Product>
     <Copyright>Copyright © VirtoCommerce 2011-2020</Copyright>
   </PropertyGroup>
-   <PropertyGroup>
+  <PropertyGroup>
     <VersionPrefix>1.4.7</VersionPrefix>
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
