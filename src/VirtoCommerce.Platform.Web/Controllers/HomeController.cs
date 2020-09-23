@@ -1,15 +1,17 @@
 using System;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Model.Home;
+using static VirtoCommerce.Platform.Core.PlatformConstants.Settings;
 
 namespace VirtoCommerce.Platform.Web.Controllers
 {
@@ -17,18 +19,18 @@ namespace VirtoCommerce.Platform.Web.Controllers
     {
         private readonly PlatformOptions _platformOptions;
         private readonly WebAnalyticsOptions _webAnalyticsOptions;
-        private readonly IWebHostEnvironment _hostEnv;
         private readonly LicenseProvider _licenseProvider;
+        private readonly ISettingsManager _settingsManager;
 
-        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, IWebHostEnvironment hostEnv, LicenseProvider licenseProvider)
+        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, LicenseProvider licenseProvider, ISettingsManager settingsManager)
         {
             _platformOptions = platformOptions.Value;
             _webAnalyticsOptions = webAnalyticsOptions.Value;
-            _hostEnv = hostEnv;
             _licenseProvider = licenseProvider;
+            _settingsManager = settingsManager;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var model = new IndexModel
             {
@@ -42,6 +44,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             if (license != null)
             {
+                model.SendDiagnosticData = license.ExpirationDate < DateTime.UtcNow || await _settingsManager.GetValueAsync(Setup.SendDiagnosticData.Name, (bool)Setup.SendDiagnosticData.DefaultValue);
                 model.License = new HtmlString(JsonConvert.SerializeObject(license, new JsonSerializerSettings
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver(),

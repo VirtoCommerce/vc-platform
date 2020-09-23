@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -57,6 +58,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             //try yo take an user name from claims
             var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn);
+
             if (string.IsNullOrWhiteSpace(userName))
             {
                 throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
@@ -75,15 +77,24 @@ namespace VirtoCommerce.Platform.Web.Controllers
                     platformUser = new ApplicationUser
                     {
                         UserName = userName,
-
+                        Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? userName
                         // TODO: somehow access the AzureAd configuration section and read the default user type from there
                         //UserType = _authenticationOptions.AzureAdDefaultUserType
                     };
 
+                    try
+                    {
+                        _ = new MailAddress(platformUser.Email);
+                    }
+                    catch (FormatException)
+                    {
+                        throw new InvalidOperationException($@"Email for user {platformUser.UserName} was not set. We tried to cast the user name as an email but it is not an email-string.");
+                    }
+
                     var result = await _userManager.CreateAsync(platformUser);
                     if (!result.Succeeded)
                     {
-                        var joinedErrors = string.Join(Environment.NewLine, result.Errors);
+                        var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
                         throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
                     }
                 }
