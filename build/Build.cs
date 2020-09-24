@@ -281,6 +281,7 @@ partial class Build : NukeBuild
             DotNetNuGetPush(s => s
                     .SetSource(Source)
                     .SetApiKey(ApiKey)
+                    .SetSkipDuplicate(true)
                     .CombineWith(
                         packages, (cs, v) => cs
                             .SetTargetPath(v)),
