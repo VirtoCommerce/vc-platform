@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Core.Common
             var firstSortInfo = sortInfos.First();
             var methodName = (firstSortInfo.SortDirection == SortDirection.Descending) ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
 
-            // sourceOfEffectiveType.OrderBy/OrderByDescending<T>(firstSortInfo.SortColumn)
+            // source.OrderBy/OrderByDescending<T>(firstSortInfo.SortColumn)
             var firstSortResult = InvokeGenericMethod(typeof(IQueryableExtensions), methodName, new[] { elementType }, new object[] { source, firstSortInfo.SortColumn });
             var remainingSortInfos = sortInfos.Skip(1).ToArray();
             // firstSortResult.ThenBySortInfos<T>(remainingSortInfos)
@@ -98,12 +98,6 @@ namespace VirtoCommerce.Platform.Core.Common
             IOrderedQueryable<TElement> result = null;
 
             var effectiveType = GetEffectiveType<TElement>();
-
-            // If we cannot deduce real type - no sorting applied
-            if (effectiveType == null)
-            {
-                return source.OrderBy(x => 1);
-            }
 
             var sourceOfEffectiveType = source;
 
@@ -196,19 +190,13 @@ namespace VirtoCommerce.Platform.Core.Common
             Type result;
             var registeredTypes = AbstractTypeFactory<T>.AllTypeInfos.ToList();
 
-            // If there is more than one type registered in AbstractTypeFactory<T> = we cannot deduce real type
-            if (registeredTypes.Count > 1)
-            {
-                result = null;
-            }
             // If only one registered type - return it
-            else if (registeredTypes.Count == 1)
+            if (registeredTypes.Count == 1)
             {
                 result = registeredTypes[0].Type;
             }
             else
             {
-                // Means no types registered or it is T
                 result = typeof(T);
             }
 
