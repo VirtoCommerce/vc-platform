@@ -125,6 +125,14 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = false
                 };
 
+                public static SettingDescriptor SendDiagnosticData { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.SendDiagnosticData",
+                    GroupName = "Platform|Setup",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true
+                };
+
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
@@ -133,6 +141,7 @@ namespace VirtoCommerce.Platform.Core
                         yield return SampleDataState;
                         yield return ModulesAutoInstallState;
                         yield return ModulesAutoInstalled;
+                        yield return SendDiagnosticData;
                     }
                 }
             }

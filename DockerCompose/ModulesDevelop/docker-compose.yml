@@ -43,6 +43,7 @@ services:
       - ${APP_DATA_MODULES}:/opt/virtocommerce/platform/App_Data/Modules
     networks:
       - virto
+    restart: unless-stopped
 
   elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
