@@ -523,8 +523,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 var callbackUrl = $"{Request.Scheme}://{Request.Host}/#/resetpassword/{user.Id}/{token}";
 
                 await _emailSender.SendEmailAsync(user.Email, "Reset password", callbackUrl.ToString());
-
-                return Ok(callbackUrl);
             }
 
             return Ok();

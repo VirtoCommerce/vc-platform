@@ -33,19 +33,22 @@ namespace VirtoCommerce.Platform.Modules
         {
             lock (_lockObject)
             {
-                var externalModuleInfos = LoadModulesManifests(_options.ModulesManifestUrl);
-                foreach (var externalModuleInfo in externalModuleInfos)
+                if (_options.ModulesManifestUrl != null)
                 {
-                    if (!Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
+                    var externalModuleInfos = LoadModulesManifests(_options.ModulesManifestUrl);
+                    foreach (var externalModuleInfo in externalModuleInfos)
                     {
-                        var alreadyInstalledModule = _installedModules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(externalModuleInfo));
-                        if (alreadyInstalledModule != null)
+                        if (!Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
                         {
-                            externalModuleInfo.IsInstalled = alreadyInstalledModule.IsInstalled;
-                            externalModuleInfo.Errors.AddRange(alreadyInstalledModule.Errors);
+                            var alreadyInstalledModule = _installedModules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(externalModuleInfo));
+                            if (alreadyInstalledModule != null)
+                            {
+                                externalModuleInfo.IsInstalled = alreadyInstalledModule.IsInstalled;
+                                externalModuleInfo.Errors.AddRange(alreadyInstalledModule.Errors);
+                            }
+                            externalModuleInfo.InitializationMode = InitializationMode.OnDemand;
+                            AddModule(externalModuleInfo);
                         }
-                        externalModuleInfo.InitializationMode = InitializationMode.OnDemand;
-                        AddModule(externalModuleInfo);
                     }
                 }
 
@@ -111,62 +114,59 @@ namespace VirtoCommerce.Platform.Modules
 
         private IEnumerable<ManifestModuleInfo> LoadModulesManifests(Uri manifestUrl)
         {
-            var result = new List<ManifestModuleInfo>();
-
-            try
+            if (manifestUrl == null)
             {
-                _logger.LogDebug("Download module manifests from " + manifestUrl);
+                throw new ArgumentNullException(nameof(manifestUrl));
+            }
+            
+            var result = new List<ManifestModuleInfo>();
+            
+            _logger.LogDebug("Download module manifests from " + manifestUrl);
 
-                using (var stream = _externalClient.OpenRead(manifestUrl))
+            using (var stream = _externalClient.OpenRead(manifestUrl))
+            {
+                var manifests = stream.DeserializeJson<List<ExternalModuleManifest>>();
+                if (!manifests.IsNullOrEmpty())
                 {
-                    var manifests = stream.DeserializeJson<List<ExternalModuleManifest>>();
-                    if (!manifests.IsNullOrEmpty())
+                    foreach (var manifest in manifests)
                     {
-                        foreach(var manifest in manifests)
+                        if (manifest.Versions != null)
                         {
-                            if (manifest.Versions != null)
+                            //Select from all versions of module the latest compatible by semVer with the current platform version.
+                            var latestStablePlatformCompatibleVersion = manifest.Versions.OrderByDescending(x => x.SemanticVersion)
+                                                                           .FirstOrDefault(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion)
+                                                                                                && string.IsNullOrEmpty(x.VersionTag));
+                            if (latestStablePlatformCompatibleVersion != null)
+                            {
+                                var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+                                moduleInfo.LoadFromExternalManifest(manifest, latestStablePlatformCompatibleVersion);
+                                result.Add(moduleInfo);
+                            }
+
+                            if (_options.IncludePrerelease)
                             {
                                 //Select from all versions of module the latest compatible by semVer with the current platform version.
-                                var latestStablePlatformCompatibleVersion = manifest.Versions.OrderByDescending(x => x.SemanticVersion)
+                                var latestPrereleasePlatformCompatibleVersion = manifest.Versions.OrderByDescending(x => x.SemanticVersion)
                                                                                .FirstOrDefault(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion)
-                                                                                                    && string.IsNullOrEmpty(x.VersionTag));
-                                if (latestStablePlatformCompatibleVersion != null)
+                                                                                                    && (!string.IsNullOrEmpty(x.VersionTag) && _options.IncludePrerelease));
+                                if (latestPrereleasePlatformCompatibleVersion != null)
                                 {
                                     var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                                    moduleInfo.LoadFromExternalManifest(manifest, latestStablePlatformCompatibleVersion);
+                                    moduleInfo.LoadFromExternalManifest(manifest, latestPrereleasePlatformCompatibleVersion);
                                     result.Add(moduleInfo);
                                 }
-
-                                if (_options.IncludePrerelease)
-                                {
-                                    //Select from all versions of module the latest compatible by semVer with the current platform version.
-                                    var latestPrereleasePlatformCompatibleVersion = manifest.Versions.OrderByDescending(x => x.SemanticVersion)
-                                                                                   .FirstOrDefault(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion)
-                                                                                                        && (!string.IsNullOrEmpty(x.VersionTag) && _options.IncludePrerelease));
-                                    if (latestPrereleasePlatformCompatibleVersion != null)
-                                    {
-                                        var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                                        moduleInfo.LoadFromExternalManifest(manifest, latestPrereleasePlatformCompatibleVersion);
-                                        result.Add(moduleInfo);
-                                    }
-                                }
-
-                                
                             }
-                            else
-                            {
-                                _logger.LogError($"module {manifest.Id} has  invalid  format, missed 'versions'");
-                            }
+
+
+                        }
+                        else
+                        {
+                            _logger.LogError($"module {manifest.Id} has  invalid  format, missed 'versions'");
                         }
                     }
                 }
+            }
 
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-                throw;
-            }
             return result;
         }
 
