@@ -147,7 +147,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             client.Setup(x => x.OpenRead(Moq.It.IsAny<Uri>())).Returns(new MemoryStream(Encoding.UTF8.GetBytes(json ?? "")));
             var logger = new Moq.Mock<ILogger<ExternalModuleCatalog>>();
 
-            var options = Options.Create(new ExternalModuleCatalogOptions());
+            var options = Options.Create(new ExternalModuleCatalogOptions() { ModulesManifestUrl = new Uri("http://nowhere.mock") });
             var result = new ExternalModuleCatalog(localModulesCatalog.Object, client.Object, options, logger.Object);
             return result;
         }
