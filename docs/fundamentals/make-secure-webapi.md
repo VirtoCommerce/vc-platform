@@ -61,7 +61,7 @@ You can configure which permissions can be stored in “limited_permissions" coo
 ```JSON
  "Authorization": {
         ...
-        "LimitedCookiePermissions": "security:call_api;platform:asset:read;platform:export;content:read;platform:asset:create;licensing:issue;export:download"
+        "LimitedCookiePermissions": "platform:asset:read;platform:export;content:read;platform:asset:create;licensing:issue;export:download"
         ...
     },
 ```
