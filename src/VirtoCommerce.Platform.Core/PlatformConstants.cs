@@ -29,37 +29,42 @@ namespace VirtoCommerce.Platform.Core
             public static class Permissions
             {
                 public const string ResetCache = "cache:reset";
+
                 public const string AssetAccess = "platform:asset:access",
-                  AssetDelete = "platform:asset:delete",
-                  AssetUpdate = "platform:asset:update",
-                  AssetCreate = "platform:asset:create",
-                  AssetRead = "platform:asset:read";
+                                    AssetDelete = "platform:asset:delete",
+                                    AssetUpdate = "platform:asset:update",
+                                    AssetCreate = "platform:asset:create",
+                                    AssetRead = "platform:asset:read";
 
                 public const string ModuleQuery = "platform:module:read",
-                    ModuleAccess = "platform:module:access",
-                    ModuleManage = "platform:module:manage";
+                                    ModuleAccess = "platform:module:access",
+                                    ModuleManage = "platform:module:manage";
+
                 public const string SettingQuery = "platform:setting:read",
-                    SettingAccess = "platform:setting:access",
-                    SettingUpdate = "platform:setting:update";
+                                    SettingAccess = "platform:setting:access",
+                                    SettingUpdate = "platform:setting:update";
+
                 public const string DynamicPropertiesQuery = "platform:dynamic_properties:read",
-                    DynamicPropertiesCreate = "platform:dynamic_properties:create",
-                    DynamicPropertiesAccess = "platform:dynamic_properties:access",
-                    DynamicPropertiesUpdate = "platform:dynamic_properties:update",
-                    DynamicPropertiesDelete = "platform:dynamic_properties:delete";
+                                    DynamicPropertiesCreate = "platform:dynamic_properties:create",
+                                    DynamicPropertiesAccess = "platform:dynamic_properties:access",
+                                    DynamicPropertiesUpdate = "platform:dynamic_properties:update",
+                                    DynamicPropertiesDelete = "platform:dynamic_properties:delete";
+
                 public const string SecurityQuery = "platform:security:read",
-                    SecurityCreate = "platform:security:create",
-                    SecurityAccess = "platform:security:access",
-                    SecurityUpdate = "platform:security:update",
-                    SecurityDelete = "platform:security:delete";
-                public const string SecurityCallApi = "security:call_api";
+                                    SecurityCreate = "platform:security:create",
+                                    SecurityAccess = "platform:security:access",
+                                    SecurityUpdate = "platform:security:update",
+                                    SecurityDelete = "platform:security:delete";
+
                 public const string BackgroundJobsManage = "background_jobs:manage";
+
                 public const string PlatformExportImportAccess = "platform:exportImport:access",
-                    PlatformImport = "platform:import",
-                    PlatformExport = "platform:export";
+                                    PlatformImport = "platform:import",
+                                    PlatformExport = "platform:export";
 
                 public static string[] AllPermissions { get; } = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
                                               SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
-                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, SecurityCallApi, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport};
+                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport};
             }
         }
 
@@ -103,6 +108,7 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.ShortText,
                     DefaultValue = ExportImport.SampleDataState.Undefined
                 };
+
                 public static SettingDescriptor ModulesAutoInstallState { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.ModulesAutoInstallState",
@@ -148,6 +154,7 @@ namespace VirtoCommerce.Platform.Core
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.Json,
                 };
+
                 public static SettingDescriptor Language { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.Language",
@@ -155,6 +162,7 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.ShortText,
                     DefaultValue = "en"
                 };
+
                 public static SettingDescriptor RegionalFormat { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.RegionalFormat",
@@ -162,12 +170,14 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.ShortText,
                     DefaultValue = "en"
                 };
+
                 public static SettingDescriptor TimeZone { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.TimeZone",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.ShortText
                 };
+
                 public static SettingDescriptor UseTimeAgo { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.UseTimeAgo",
@@ -175,12 +185,14 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.Boolean,
                     DefaultValue = true
                 };
+
                 public static SettingDescriptor FullDateThreshold { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.FullDateThreshold",
                     GroupName = "Platform|User Profile",
                     ValueType = SettingValueType.Integer,
                 };
+
                 public static SettingDescriptor FullDateThresholdUnit { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.UI.FullDateThresholdUnit",
@@ -238,6 +250,7 @@ namespace VirtoCommerce.Platform.Core
                                                "  \"contrast_logo\": \"/images/contrast-logo.png\"\n" +
                                                "}"
                 };
+
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
