@@ -1,6 +1,7 @@
 {
   "ApplyingOrder": [
     "VirtoCommerce.Platform",
+    "VirtoCommerce.Platform.Security",
     "VirtoCommerce.CoreModule",
     "VirtoCommerce.TaxModule",
     "VirtoCommerce.InventoryModule",

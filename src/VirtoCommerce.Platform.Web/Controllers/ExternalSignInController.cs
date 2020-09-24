@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
-using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -77,19 +77,10 @@ namespace VirtoCommerce.Platform.Web.Controllers
                     platformUser = new ApplicationUser
                     {
                         UserName = userName,
-                        Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? userName
+                        Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? (userName.IsValidEmail() ? userName : null)
                         // TODO: somehow access the AzureAd configuration section and read the default user type from there
                         //UserType = _authenticationOptions.AzureAdDefaultUserType
                     };
-
-                    try
-                    {
-                        _ = new MailAddress(platformUser.Email);
-                    }
-                    catch (FormatException)
-                    {
-                        throw new InvalidOperationException($@"Email for user {platformUser.UserName} was not set. We tried to cast the user name as an email but it is not an email-string.");
-                    }
 
                     var result = await _userManager.CreateAsync(platformUser);
                     if (!result.Succeeded)

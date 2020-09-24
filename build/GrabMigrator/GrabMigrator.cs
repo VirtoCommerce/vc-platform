@@ -38,6 +38,7 @@ namespace GrabMigrator
                             config.ConnectionStringsRefs = new Dictionary<string, List<string>>();
                             foreach (var migrationDirectory in config.MigrationDirectories)
                             {
+                                Out($@"Looking in {migrationDirectory}...");
                                 GrabConnectionStringsRefsFromModules(config.ConnectionStringsRefs, migrationDirectory);
                             }
                             File.WriteAllText(configFilePath, JsonSerializer.Serialize(config, new JsonSerializerOptions() { WriteIndented = true }));
@@ -154,6 +155,7 @@ namespace GrabMigrator
 
             foreach (var moduleFile in moduleFiles)
             {
+                Out($@"Parse file {moduleFile}...");
                 var moduleName = moduleRegex.Match(moduleFile).Groups["module"].Value;
                 var content = File.ReadAllText(moduleFile);
                 var matches = connKeyRegex.Matches(content);
@@ -184,7 +186,7 @@ namespace GrabMigrator
         private void GrabSQLStatementsWithEFTool(Dictionary<string, List<string>> sqlStatements, string migrationDirectory, Config config)
         {
             Directory.CreateDirectory(config.StatementsDirectory);
-            var moduleRegex = new Regex(@"[\\\w^\.-]*\\(?<module>.+)\..*\\Migrations");
+            var moduleRegex = new Regex(@"[\\\w^\.-]*\\(?<module>.+)\\Migrations");
             var migrationNameRegex = new Regex(@"\[Migration\(""(?<migration>.+)""\)\]");
             string[] migrationFiles;
             if (config.GrabMode == GrabMode.V2V3)
@@ -203,6 +205,11 @@ namespace GrabMigrator
             foreach (var migrationFile in migrationFiles)
             {
                 var moduleName = moduleRegex.Match(migrationFile).Groups["module"].Value;
+                if (moduleName.EndsWith(@".Data"))
+                {
+                    var moduleRegexData = new Regex(@"(?<module>.+)\.Data");
+                    moduleName = moduleRegexData.Match(moduleName).Groups["module"].Value;
+                }
 
                 // Set migrations range to extract. Leave it empty for all migrations
                 var migrationName = config.GrabMode == GrabMode.V2V3 ?
