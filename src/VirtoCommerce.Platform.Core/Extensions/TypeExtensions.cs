@@ -137,5 +137,35 @@ namespace VirtoCommerce.Platform.Core.Extensions
         {
             return obj == null || obj.GetType().IsPrimitive();
         }
+
+        public static Type UnwrapNullableType(this Type type) => Nullable.GetUnderlyingType(type) ?? type;
+
+        public static bool IsNullableType(this Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+
+            return !typeInfo.IsValueType
+                   || typeInfo.IsGenericType
+                   && typeInfo.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
+        public static Type UnwrapEnumType(this Type type)
+        {
+            var isNullable = type.IsNullableType();
+            var underlyingNonNullableType = isNullable ? type.UnwrapNullableType() : type;
+            if (!underlyingNonNullableType.GetTypeInfo().IsEnum)
+            {
+                return type;
+            }
+
+            var underlyingEnumType = Enum.GetUnderlyingType(underlyingNonNullableType);
+            return isNullable ? MakeNullable(underlyingEnumType) : underlyingEnumType;
+        }
+
+        public static Type MakeNullable(this Type type, bool nullable = true)
+          => type.IsNullableType() == nullable
+              ? type
+              : nullable
+                  ? typeof(Nullable<>).MakeGenericType(type)
+                  : type.UnwrapNullableType();
     }
 }
