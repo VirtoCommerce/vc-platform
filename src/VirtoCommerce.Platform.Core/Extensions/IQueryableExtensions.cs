@@ -21,12 +21,12 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static IOrderedQueryable<T> ThenBy<T>(this IOrderedQueryable<T> source, string property)
         {
-            return ApplyOrder<T, IOrderedQueryable<T>>(source, property, nameof(ThenBy));
+            return ApplyOrder<T>(source, property, nameof(ThenBy));
         }
 
         public static IOrderedQueryable<T> ThenByDescending<T>(this IOrderedQueryable<T> source, string property)
         {
-            return ApplyOrder<T, IOrderedQueryable<T>>(source, property, nameof(ThenByDescending));
+            return ApplyOrder<T>(source, property, nameof(ThenByDescending));
         }
 
 
@@ -70,35 +70,28 @@ namespace VirtoCommerce.Platform.Core.Common
             return result;
         }
 
-        public static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
-        {
-            return ApplyOrder<T, IQueryable<T>>(source, property, methodName);
-        }
-
         /// <summary>
         /// Applies ordering to the IQueryable, based on property string
         /// </summary>
-        /// <typeparam name="TElement">IQueryable element type</typeparam>
+        /// <typeparam name="T">IQueryable element type</typeparam>
         /// <typeparam name="TQueryable">IQueryable specific type (e.g. could be <see cref="IOrderedQueryable{T}"/>)</typeparam>
         /// <param name="source">IQueryable to sort</param>
         /// <param name="property">Property string, e.g. Student.Address.City</param>
         /// <param name="methodName">Sort method name from <see cref="Queryable"/> class - e.g. OrderBy, ThenBy, etc.</param>
         /// <returns></returns>
-        public static IOrderedQueryable<TElement> ApplyOrder<TElement, TQueryable>(TQueryable source, string property, string methodName) where TQueryable : IQueryable<TElement>
+        public static IOrderedQueryable<T> ApplyOrder<T>(IQueryable<T> source, string property, string methodName)
         {
             if (property == null)
             {
                 throw new ArgumentNullException(nameof(property));
             }
 
-            IOrderedQueryable<TElement> result = null;
+            IOrderedQueryable<T> result = null;
 
-            var effectiveType = GetEffectiveType<TElement>();
+            var effectiveType = GetEffectiveType<T>();
 
-            var sourceOfEffectiveType = source;
-
-            var expressionArgument = Expression.Parameter(typeof(TElement));
-            var expr = (effectiveType == typeof(TElement)) ? (Expression)expressionArgument : Expression.Convert(expressionArgument, effectiveType);
+            var expressionArgument = Expression.Parameter(typeof(T));
+            var expr = (effectiveType == typeof(T)) ? (Expression)expressionArgument : Expression.Convert(expressionArgument, effectiveType);
             var propertyExpression = GetPropertyExpression(property, expr);
 
             if (propertyExpression == null)
@@ -107,12 +100,12 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             var propertyType = propertyExpression.Type;
-            var delegateType = typeof(Func<,>).MakeGenericType(typeof(TElement), propertyType);
+            var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), propertyType);
             // It is expression for getting property value on each object from collection - e.g. for Student: x => x.Address.City
             var lambda = Expression.Lambda(delegateType, propertyExpression, expressionArgument);
 
             // Calling existing System.Linq.Queryable sorting method, e.g. for methodName = OrderBy: sourceOfEffectiveType.OrderBy(x => x.Address.City)
-            result = (IOrderedQueryable<TElement>)InvokeGenericMethod(typeof(Queryable), methodName, new[] { typeof(TElement), propertyType }, new object[] { sourceOfEffectiveType, lambda });
+            result = (IOrderedQueryable<T>)InvokeGenericMethod(typeof(Queryable), methodName, new[] { typeof(T), propertyType }, new object[] { source, lambda });
 
             return result;
         }
