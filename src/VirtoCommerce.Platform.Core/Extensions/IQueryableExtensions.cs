@@ -74,7 +74,6 @@ namespace VirtoCommerce.Platform.Core.Common
         /// Applies ordering to the IQueryable, based on property string
         /// </summary>
         /// <typeparam name="T">IQueryable element type</typeparam>
-        /// <typeparam name="TQueryable">IQueryable specific type (e.g. could be <see cref="IOrderedQueryable{T}"/>)</typeparam>
         /// <param name="source">IQueryable to sort</param>
         /// <param name="property">Property string, e.g. Student.Address.City</param>
         /// <param name="methodName">Sort method name from <see cref="Queryable"/> class - e.g. OrderBy, ThenBy, etc.</param>
