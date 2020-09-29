@@ -8,6 +8,8 @@ namespace VirtoCommerce.Platform.Security
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        public const string USER_NAME_THREAD_SLOT_NAME = "UserName";
+
         public HttpContextUserResolver(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -15,7 +17,7 @@ namespace VirtoCommerce.Platform.Security
 
         public string GetCurrentUserName()
         {
-            var result = Thread.CurrentPrincipal?.Identity?.Name ?? "unknown";
+            var result = Thread.GetData(Thread.GetNamedDataSlot(USER_NAME_THREAD_SLOT_NAME)) as string ?? "unknown";
 
             var context = _httpContextAccessor.HttpContext;
             if (context != null && context.Request != null && context.User != null)
@@ -31,7 +33,6 @@ namespace VirtoCommerce.Platform.Security
                 }
             }
             return result;
-
         }
     }
 }

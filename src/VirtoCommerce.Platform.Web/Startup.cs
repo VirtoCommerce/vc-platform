@@ -51,6 +51,7 @@ using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
+using VirtoCommerce.Platform.Web.Middleware.Hangfire;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
@@ -69,6 +70,7 @@ namespace VirtoCommerce.Platform.Web
             Configuration = configuration;
             WebHostEnvironment = hostingEnvironment;
         }
+
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment WebHostEnvironment { get; }
 
@@ -173,10 +175,8 @@ namespace VirtoCommerce.Platform.Web
                                       .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
                                       .AddCookie();
 
-
             services.AddSecurityServices(options =>
             {
-
             });
 
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
@@ -477,11 +477,14 @@ namespace VirtoCommerce.Platform.Web
             //Register platform settings
             app.UsePlatformSettings();
 
-            // Complete hangfire init 
+            // Complete hangfire init
             app.UseHangfire(Configuration);
 
-            app.UseModules();
+            // Add Hangfire filters/middlewares
+            var contextAccessor = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
+            GlobalJobFilters.Filters.Add(new HangfireUserContextMiddleware(contextAccessor));
 
+            app.UseModules();
 
             //Register platform permissions
             app.UsePlatformPermissions();
@@ -500,5 +503,3 @@ namespace VirtoCommerce.Platform.Web
         }
     }
 }
-
-
