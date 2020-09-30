@@ -11,7 +11,7 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Hangfire.Middleware;
 
-namespace VirtoCommerce.Platform.Hangfire
+namespace VirtoCommerce.Platform.Hangfire.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
