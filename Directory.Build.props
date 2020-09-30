@@ -1,28 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?><Project>
-  <!-- These properties will be shared for all projects -->
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <!-- These properties will be shared for all projects -->
 
-  <PropertyGroup>
-    <Product>VirtoCommerce</Product>
-    <Copyright>Copyright © VirtoCommerce 2011-2020</Copyright>
-    <Authors>VirtoCommerce</Authors>
-  </PropertyGroup>
-   <PropertyGroup>
-    <VersionPrefix>3.23.0</VersionPrefix>
-    <VersionSuffix></VersionSuffix>
-    <VersionSuffix Condition=" '$(VersionSuffix)' != '' AND '$(BuildNumber)' != '' ">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Product>VirtoCommerce</Product>
+        <Copyright>Copyright © VirtoCommerce 2011-2020</Copyright>
+        <Authors>VirtoCommerce</Authors>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
-      <!-- Nuget Package Details -->
-    <PackageVersion>$(VersionPrefix)</PackageVersion>
-    <PackageVersion Condition=" '$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
+    <PropertyGroup>
+        <VersionPrefix>3.23.0</VersionPrefix>
+        <VersionSuffix></VersionSuffix>
+        <VersionSuffix Condition=" '$(VersionSuffix)' != '' AND '$(BuildNumber)' != '' ">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
+        <NoWarn>$(NoWarn);S3875</NoWarn>
+    </PropertyGroup>
 
-    <PackageIconUrl>https://github.com/VirtoCommerce/vc-community/raw/master/NuGet/icon.png</PackageIconUrl>
-    <Description>Virto Commerce is a flexible B2B ecommerce solution that offers powerful tools for enterprise business users. https://virtocommerce.com</Description>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
-
-
+    <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
+        <!-- Nuget Package Details -->
+        <PackageVersion>$(VersionPrefix)</PackageVersion>
+        <PackageVersion Condition=" '$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
+        <PackageIconUrl>https://github.com/VirtoCommerce/vc-community/raw/master/NuGet/icon.png</PackageIconUrl>
+        <Description>Virto Commerce is a flexible B2B ecommerce solution that offers powerful tools for enterprise business users. https://virtocommerce.com</Description>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
 </Project>
