@@ -1,5 +1,6 @@
-﻿angular.module('platformWebApp').controller('platformWebApp.permissionScopesController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.permissionScopeResolver', function ($q, $scope, bladeNavigationService, dialogService, permissionScopeResolver) {
+angular.module('platformWebApp').controller('platformWebApp.permissionScopesController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.permissionScopeResolver', function ($q, $scope, bladeNavigationService, dialogService, permissionScopeResolver) {
     var blade = $scope.blade;
+    blade.headIcon = 'fa-key';
 
     function initializeBlade() {
         var tmpScopes = [];
@@ -35,7 +36,7 @@
 
     function getNodeAssignedScopesLabels(node) {
         return _.map(node.assignedScopes, function (x) { return angular.isDefined(x.label) ? x.label : ''; });
-    };
+    }
 
     $scope.cancelChanges = function () {
         $scope.bladeClose();
@@ -53,6 +54,5 @@
         $scope.bladeClose();
     };
 
-    blade.headIcon = 'fa-key';
     initializeBlade();
 }]);

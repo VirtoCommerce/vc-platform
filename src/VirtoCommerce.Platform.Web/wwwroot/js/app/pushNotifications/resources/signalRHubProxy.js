@@ -1,4 +1,4 @@
-﻿import * as signalR from '@aspnet/signalr';
+import * as signalR from '@aspnet/signalr';
 
 angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$rootScope', function ($rootScope) {
     function signalRHubProxyFactory() {
@@ -26,7 +26,7 @@ angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$ro
                     start();
                 }, reconnectionIntervals[reconnectionIndex]);
             }
-        };
+        }
 
         connection.onclose(async () => await start());
 
@@ -60,7 +60,7 @@ angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$ro
                     });
             },
             connection: connection
-        };
+        }
     };
 
     return signalRHubProxyFactory;
