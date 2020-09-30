@@ -22,7 +22,7 @@ angular.module('platformWebApp')
                 var start = $scope.pageSettings.currentPage * $scope.pageSettings.itemsPerPageCount - $scope.pageSettings.itemsPerPageCount;
                 notifications.query({ skip: start, take: $scope.pageSettings.itemsPerPageCount, sort: getOrderByExpression() }, function (data, status, headers, config) {
                     angular.forEach(data.notifyEvents, function (x) {
-                        notificationTemplate = eventTemplateResolver.resolve(x, 'history');
+                        const notificationTemplate = eventTemplateResolver.resolve(x, 'history');
                         x.template = notificationTemplate.template;
                         x.action = notificationTemplate.action;
                     });
