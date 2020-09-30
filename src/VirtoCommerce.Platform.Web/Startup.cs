@@ -51,7 +51,6 @@ using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
-using VirtoCommerce.Platform.Web.Middleware.Hangfire;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
@@ -479,10 +478,6 @@ namespace VirtoCommerce.Platform.Web
 
             // Complete hangfire init
             app.UseHangfire(Configuration);
-
-            // Add Hangfire filters/middlewares
-            var contextAccessor = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
-            GlobalJobFilters.Filters.Add(new HangfireUserContextMiddleware(contextAccessor));
 
             app.UseModules();
 
