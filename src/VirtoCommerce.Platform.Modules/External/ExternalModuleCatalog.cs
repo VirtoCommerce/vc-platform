@@ -36,6 +36,14 @@ namespace VirtoCommerce.Platform.Modules
                 if (_options.ModulesManifestUrl != null)
                 {
                     var externalModuleInfos = LoadModulesManifests(_options.ModulesManifestUrl);
+                    if(!_options.ExtraModulesManifestUrls.IsNullOrEmpty())
+                    {
+                        foreach (var extraUrl in _options.ExtraModulesManifestUrls)
+                        {
+                            var extraManifests = LoadModulesManifests(extraUrl);
+                            externalModuleInfos = externalModuleInfos.Concat(extraManifests).Distinct();
+                        }
+                    }
                     foreach (var externalModuleInfo in externalModuleInfos)
                     {
                         if (!Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
