@@ -42,19 +42,18 @@ angular.module('platformWebApp')
                 currentEntity: blade.currentEntity
             };
 
-            switch (childType) {
-                case 'dict':
-                    newBlade.isApiSave = !blade.isNew;
-                    newBlade.controller = 'platformWebApp.propertyDictionaryController';
-                    newBlade.template = '$(Platform)/Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html';
-                    if (blade.isNew) {
-                        newBlade.data = localDictionaryValues;
-                        newBlade.onChangesConfirmedFn = function (data) {
-                            localDictionaryValues = data;
-                        }
+            if (childType == 'dict') {
+                newBlade.isApiSave = !blade.isNew;
+                newBlade.controller = 'platformWebApp.propertyDictionaryController';
+                newBlade.template = '$(Platform)/Scripts/app/dynamicProperties/blades/property-dictionary.tpl.html';
+                if (blade.isNew) {
+                    newBlade.data = localDictionaryValues;
+                    newBlade.onChangesConfirmedFn = function (data) {
+                        localDictionaryValues = data;
                     }
-                    break;
+                }
             }
+
             bladeNavigationService.showBlade(newBlade, blade);
             $scope.currentChild = childType;
         }
