@@ -37,10 +37,6 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
             return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
         }
 
-        function canSave() {
-            return isDirty() && $scope.formScope && $scope.formScope.$valid;
-        }
-
         blade.openAccountTypeSettingManagement = function () {
             var newBlade = {
                 id: 'accountTypesDictionary',

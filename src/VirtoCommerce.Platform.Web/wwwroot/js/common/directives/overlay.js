@@ -21,7 +21,6 @@ angular.module('platformWebApp')
                 var overlayContainer = null,
                     timerPromise = null,
                     timerPromiseHide = null,
-                    inSession = false,
                     queue = [];
 
                 init();
