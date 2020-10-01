@@ -34,6 +34,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly IDynamicPropertyDictionaryItemsService _dynamicPropertyDictionaryItemsService;
         private readonly IDynamicPropertyDictionaryItemsSearchService _dynamicPropertyDictionaryItemsSearchService;
 
+        private readonly int _batchSize = 20;
+
         public PlatformExportImportManager(
             UserManager<ApplicationUser> userManager
             , RoleManager<Role> roleManager
@@ -144,7 +146,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         {
             var progressInfo = new ExportImportProgressInfo();
             var jsonSerializer = GetJsonSerializer();
-            var batchSize = 20;
 
             var platformZipEntries = zipArchive.GetEntry(PlatformZipEntryName);
             if (platformZipEntries is null)
@@ -167,11 +168,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 switch (token)
                 {
                     case "Roles" when manifest.HandleSecurity:
-                        await ImportRolesInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
+                        await ImportRolesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
                         break;
 
                     case "Users" when manifest.HandleSecurity:
-                        await ImportUsersInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
+                        await ImportUsersInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
                         break;
 
                     case "Settings" when manifest.HandleSettings:
@@ -179,15 +180,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         break;
 
                     case "DynamicProperties" when manifest.HandleSettings:
-                        await ImportDynamicPropertiesInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
+                        await ImportDynamicPropertiesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
                         break;
 
                     case "DynamicPropertyDictionaryItems" when manifest.HandleSettings:
-                        await ImportDynamicPropertyDictionaryItemsInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
+                        await ImportDynamicPropertyDictionaryItemsInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
                         break;
 
                     case "UserApiKeys" when manifest.HandleSecurity:
-                        await ImportUserApiKeysInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
+                        await ImportUserApiKeysInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
                         break;
 
                     default:
@@ -196,9 +197,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }
         }
 
-        private async Task ImportRolesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, int batchSize, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private async Task ImportRolesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeJsonArrayWithPagingAsync<Role>(jsonSerializer, batchSize, async items =>
+            await reader.DeserializeJsonArrayWithPagingAsync<Role>(jsonSerializer, _batchSize, async items =>
             {
                 foreach (var role in items)
                 {
@@ -221,9 +222,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }, cancellationToken);
         }
 
-        private async Task ImportUsersInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, int batchSize, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private async Task ImportUsersInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeJsonArrayWithPagingAsync<ApplicationUser>(jsonSerializer, batchSize, async items =>
+            await reader.DeserializeJsonArrayWithPagingAsync<ApplicationUser>(jsonSerializer, _batchSize, async items =>
             {
                 foreach (var user in items)
                 {
@@ -262,9 +263,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }, cancellationToken);
         }
 
-        private async Task ImportDynamicPropertiesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, int batchSize, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private async Task ImportDynamicPropertiesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeJsonArrayWithPagingAsync<DynamicProperty>(jsonSerializer, batchSize,
+            await reader.DeserializeJsonArrayWithPagingAsync<DynamicProperty>(jsonSerializer, _batchSize,
                 items => _dynamicPropertyService.SaveDynamicPropertiesAsync(items.ToArray()),
                 processedCount =>
                 {
@@ -273,9 +274,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }, cancellationToken);
         }
 
-        private async Task ImportDynamicPropertyDictionaryItemsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, int batchSize, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private async Task ImportDynamicPropertyDictionaryItemsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeJsonArrayWithPagingAsync<DynamicPropertyDictionaryItem>(jsonSerializer, batchSize,
+            await reader.DeserializeJsonArrayWithPagingAsync<DynamicPropertyDictionaryItem>(jsonSerializer, _batchSize,
                 items => _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items.ToArray()),
                 processedCount =>
                 {
@@ -284,9 +285,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }, cancellationToken);
         }
 
-        private async Task ImportUserApiKeysInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, int batchSize, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        private async Task ImportUserApiKeysInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeJsonArrayWithPagingAsync<UserApiKey>(jsonSerializer, batchSize,
+            await reader.DeserializeJsonArrayWithPagingAsync<UserApiKey>(jsonSerializer, _batchSize,
                 items => _userApiKeyService.SaveApiKeysAsync(items.ToArray()),
                 processedCount =>
                 {
