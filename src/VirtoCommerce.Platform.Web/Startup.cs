@@ -369,7 +369,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
                      {
-                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "Modules");
+                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
                      })
                     .ValidateDataAnnotations();
             services.AddModules(mvcBuilder);
@@ -445,7 +445,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
-                    RequestPath = new PathString($"/Modules/$({ module.ModuleName })")
+                    RequestPath = new PathString($"/modules/$({ module.ModuleName })")
                 });
             }
 

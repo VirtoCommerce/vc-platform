@@ -33,7 +33,7 @@ services:
     entrypoint: ["/wait-for-it.sh", "vc-db:1433", "-t", "120", "--", "dotnet", "VirtoCommerce.Platform.Web.dll"]
     volumes:
       - ${CMS_CONTENT_VOLUME}:/app/wwwroot/cms-content
-      - ${MODULES_VOLUME}:/app/Modules
+      - ${MODULES_VOLUME}:/app/modules
     networks:
       - virto
 
