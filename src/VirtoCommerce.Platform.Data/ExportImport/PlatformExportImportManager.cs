@@ -135,7 +135,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             }
         }
 
-        #endregion IPlatformExportImportManager Members
+        #endregion
 
         private async Task ImportPlatformEntriesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
@@ -144,152 +144,137 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             var batchSize = 20;
 
             var platformZipEntries = zipArchive.GetEntry(PlatformZipEntryName);
-            if (platformZipEntries is null || !manifest.HandleSecurity)
+            if (platformZipEntries != null)
             {
-                return;
-            }
-
-            using var stream = platformZipEntries.Open();
-            var streamReader = new StreamReader(stream);
-            using var reader = new JsonTextReader(streamReader);
-            while (reader.Read())
-            {
-                if (reader.TokenType != JsonToken.PropertyName)
+                using (var stream = platformZipEntries.Open())
                 {
-                    continue;
-                }
-
-                var token = reader.Value.ToString();
-
-                switch (token)
-                {
-                    case "Roles":
-                        await ImportRolesInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
-                        break;
-
-                    case "Users":
-                        await ImportUsersInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
-                        break;
-
-                    case "Settings":
-                        await ImportSettingsInternalAsync(reader, jsonSerializer, manifest, progressInfo, progressCallback, cancellationToken);
-                        break;
-
-                    case "DynamicProperties":
-                        await ImportDynamicPropertiesInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
-                        break;
-
-                    case "DynamicPropertyDictionaryItems":
-                        await ImportDynamicPropertyDictionaryItemsInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
-                        break;
-
-                    case "UserApiKeys":
-                        await ImportUserApiKeysInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
-                        break;
-
-                    default:
-                        continue;
-                }
-            }
-        }
-
-        private async Task ImportRolesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, int batchSize, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
-        {
-            await reader.DeserializeJsonArrayWithPagingAsync<Role>(jsonSerializer, batchSize, async items =>
-            {
-                foreach (var role in items)
-                {
-                    var roleExists = !(string.IsNullOrEmpty(role.Id) || await _roleManager.FindByIdAsync(role.Id) is null)
-                        || await _roleManager.RoleExistsAsync(role.Name);
-
-                    var result = roleExists
-                        ? await _roleManager.UpdateAsync(role)
-                        : await _roleManager.CreateAsync(role);
-
-                    if (!result.Succeeded)
+                    var streamReader = new StreamReader(stream);
+                    using (var reader = new JsonTextReader(streamReader))
                     {
-                        progressInfo.Errors.AddRange(result.Errors.Select(x => x.Description));
+                        while (reader.Read())
+                        {
+                            if (reader.TokenType == JsonToken.PropertyName)
+                            {
+                                if (manifest.HandleSecurity && reader.Value.ToString().EqualsInvariant("Roles"))
+                                {
+
+                                    await reader.DeserializeJsonArrayWithPagingAsync<Role>(jsonSerializer, batchSize, async items =>
+                                        {
+                                            foreach (var role in items)
+                                            {
+                                                var roleExists = false;
+                                                if (!string.IsNullOrEmpty(role.Id))
+                                                {
+                                                    roleExists = (await _roleManager.FindByIdAsync(role.Id)) != null;
+                                                }
+                                                if (!roleExists)
+                                                {
+                                                    roleExists = await _roleManager.RoleExistsAsync(role.Name);
+                                                }                                                                                              
+                                                IdentityResult result;
+                                                if (!roleExists)
+                                                {
+                                                    result = await _roleManager.CreateAsync(role);
+                                                }
+                                                else
+                                                {
+                                                    result = await _roleManager.UpdateAsync(role);
+                                                }
+                                                if (!result.Succeeded)
+                                                {
+                                                    progressInfo.Errors.AddRange(result.Errors.Select(x => x.Description));
+                                                }
+                                            }
+                                        }, processedCount =>
+                                    {
+                                        progressInfo.Description = $"{ processedCount } roles have been imported";
+                                        progressCallback(progressInfo);
+                                    }, cancellationToken);
+                                }
+                                else if (manifest.HandleSecurity && reader.Value.ToString().EqualsInvariant("Users"))
+                                {
+                                    await reader.DeserializeJsonArrayWithPagingAsync<ApplicationUser>(jsonSerializer, batchSize, async items =>
+                                        {
+                                            foreach (var user in items)
+                                            {
+                                                IdentityResult result;
+                                                var userExists = false;
+                                                if (!string.IsNullOrEmpty(user.Id))
+                                                {
+                                                    userExists = (await _userManager.FindByIdAsync(user.Id)) != null;
+                                                }
+                                                if (!userExists)
+                                                {
+                                                    userExists = (await _userManager.FindByNameAsync(user.UserName)) != null;
+                                                }
+                                                if (userExists)
+                                                {
+                                                    result = await _userManager.UpdateAsync(user);
+                                                }
+                                                else
+                                                {
+                                                    result = await _userManager.CreateAsync(user);
+                                                }
+                                                if (!result.Succeeded)
+                                                {
+                                                    progressInfo.Errors.AddRange(result.Errors.Select(x => x.Description));
+                                                }
+                                            }
+                                        }, processedCount =>
+                                        {
+                                            progressInfo.Description = $"{ processedCount } roles have been imported";
+                                            progressCallback(progressInfo);
+                                        }, cancellationToken);
+
+                                }
+                                else if (manifest.HandleSettings && reader.Value.ToString() == "Settings")
+                                {
+                                    await reader.DeserializeJsonArrayWithPagingAsync<ObjectSettingEntry>(jsonSerializer, int.MaxValue,
+                                        async items =>
+                                        {
+                                            var arrayItems = items.ToArray();
+                                            foreach (var module in manifest.Modules)
+                                            {
+                                                await _settingsManager.SaveObjectSettingsAsync(arrayItems.Where(x => x.ModuleId == module.Id).ToArray());
+                                            }
+                                        }, processedCount =>
+                                    {
+                                        progressInfo.Description = $"{ processedCount } coupons have been imported";
+                                        progressCallback(progressInfo);
+                                    }, cancellationToken);
+                                }
+                                else if (manifest.HandleSettings && reader.Value.ToString() == "DynamicProperties")
+                                {
+                                    await reader.DeserializeJsonArrayWithPagingAsync<DynamicProperty>(jsonSerializer, batchSize,
+                                        items => _dynamicPropertyService.SaveDynamicPropertiesAsync(items.ToArray()), processedCount =>
+                                    {
+                                        progressInfo.Description = $"{ processedCount } coupons have been imported";
+                                        progressCallback(progressInfo);
+                                    }, cancellationToken);
+                                }
+                                else if (manifest.HandleSettings && reader.Value.ToString() == "DynamicPropertyDictionaryItems")
+                                {
+                                    await reader.DeserializeJsonArrayWithPagingAsync<DynamicPropertyDictionaryItem>(jsonSerializer, batchSize,
+                                        items => _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items.ToArray()), processedCount =>
+                                    {
+                                        progressInfo.Description = $"{ processedCount } coupons have been imported";
+                                        progressCallback(progressInfo);
+                                    }, cancellationToken);
+                                }
+                                else if (manifest.HandleSecurity && reader.Value.ToString() == "UserApiKeys")
+                                {
+                                    await reader.DeserializeJsonArrayWithPagingAsync<UserApiKey>(jsonSerializer, batchSize,
+                                        items => _userApiKeyService.SaveApiKeysAsync(items.ToArray()), processedCount =>
+                                        {
+                                            progressInfo.Description = $"{ processedCount } api keys have been imported";
+                                            progressCallback(progressInfo);
+                                        }, cancellationToken);
+                                }
+                            }
+                        }
                     }
                 }
-            }, processedCount =>
-            {
-                progressInfo.Description = $"{ processedCount } roles have been imported";
-                progressCallback(progressInfo);
-            }, cancellationToken);
-        }
-
-        private async Task ImportUsersInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, int batchSize, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
-        {
-            await reader.DeserializeJsonArrayWithPagingAsync<ApplicationUser>(jsonSerializer, batchSize, async items =>
-            {
-                foreach (var user in items)
-                {
-                    var userExists = !(string.IsNullOrEmpty(user.Id) || await _userManager.FindByIdAsync(user.Id) is null)
-                        || (await _userManager.FindByNameAsync(user.UserName)) != null;
-
-                    var result = userExists
-                        ? await _userManager.UpdateAsync(user)
-                        : await _userManager.CreateAsync(user);
-
-                    if (!result.Succeeded)
-                    {
-                        progressInfo.Errors.AddRange(result.Errors.Select(x => x.Description));
-                    }
-                }
-            }, processedCount =>
-            {
-                progressInfo.Description = $"{ processedCount } roles have been imported";
-                progressCallback(progressInfo);
-            }, cancellationToken);
-        }
-
-        private async Task ImportSettingsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
-        {
-            await reader.DeserializeJsonArrayWithPagingAsync<ObjectSettingEntry>(jsonSerializer, int.MaxValue, async items =>
-            {
-                var arrayItems = items.ToArray();
-                foreach (var module in manifest.Modules)
-                {
-                    await _settingsManager.SaveObjectSettingsAsync(arrayItems.Where(x => x.ModuleId == module.Id).ToArray());
-                }
-            }, processedCount =>
-            {
-                progressInfo.Description = $"{ processedCount } coupons have been imported";
-                progressCallback(progressInfo);
-            }, cancellationToken);
-        }
-
-        private async Task ImportDynamicPropertiesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, int batchSize, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
-        {
-            await reader.DeserializeJsonArrayWithPagingAsync<DynamicProperty>(jsonSerializer, batchSize,
-                items => _dynamicPropertyService.SaveDynamicPropertiesAsync(items.ToArray()),
-                processedCount =>
-                {
-                    progressInfo.Description = $"{ processedCount } coupons have been imported";
-                    progressCallback(progressInfo);
-                }, cancellationToken);
-        }
-
-        private async Task ImportDynamicPropertyDictionaryItemsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, int batchSize, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
-        {
-            await reader.DeserializeJsonArrayWithPagingAsync<DynamicPropertyDictionaryItem>(jsonSerializer, batchSize,
-                items => _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items.ToArray()),
-                processedCount =>
-                {
-                    progressInfo.Description = $"{ processedCount } coupons have been imported";
-                    progressCallback(progressInfo);
-                }, cancellationToken);
-        }
-
-        private async Task ImportUserApiKeysInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, int batchSize, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
-        {
-            await reader.DeserializeJsonArrayWithPagingAsync<UserApiKey>(jsonSerializer, batchSize,
-                items => _userApiKeyService.SaveApiKeysAsync(items.ToArray()),
-                processedCount =>
-                {
-                    progressInfo.Description = $"{ processedCount } api keys have been imported";
-                    progressCallback(progressInfo);
-                }, cancellationToken);
+            }
         }
 
         private async Task ExportPlatformEntriesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
@@ -309,7 +294,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     if (manifest.HandleSecurity)
                     {
                         #region Roles
-
                         progressInfo.Description = "Roles exporting...";
                         progressCallback(progressInfo);
                         cancellationToken.ThrowIfCancellationRequested();
@@ -332,13 +316,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         }
 
                         await writer.WriteEndArrayAsync();
-
-                        #endregion Roles
+                        #endregion
 
                         cancellationToken.ThrowIfCancellationRequested();
 
                         #region Users
-
                         await writer.WritePropertyNameAsync("Users");
                         await writer.WriteStartArrayAsync();
                         var usersResult = _userManager.Users.ToArray();
@@ -361,13 +343,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         progressCallback(progressInfo);
 
                         await writer.WriteEndArrayAsync();
-
-                        #endregion Users
+                        #endregion
 
                         cancellationToken.ThrowIfCancellationRequested();
 
                         #region UserApiKeys
-
                         await writer.WritePropertyNameAsync("UserApiKeys");
                         await writer.WriteStartArrayAsync();
 
@@ -384,7 +364,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         progressCallback(progressInfo);
                         await writer.WriteEndArrayAsync();
 
-                        #endregion UserApiKeys
+                        #endregion
+
+
                     }
 
                     if (manifest.HandleSettings)
@@ -476,7 +458,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         {
                             try
                             {
-                                //TODO: Add JsonConverter which will be materialized concrete ExportImport option type
+                                //TODO: Add JsonConverter which will be materialized concrete ExportImport option type 
                                 var options = manifest.Options
                                     .DefaultIfEmpty(new ExportImportOptions { HandleBinaryData = manifest.HandleBinaryData, ModuleIdentity = new ModuleIdentity(moduleDescriptor.Identity.Id, moduleDescriptor.Identity.Version) })
                                     .FirstOrDefault(x => x.ModuleIdentity.Id == moduleDescriptor.Identity.Id);
@@ -555,5 +537,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             };
             return serializer;
         }
+
     }
 }
