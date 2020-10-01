@@ -147,7 +147,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             var batchSize = 20;
 
             var platformZipEntries = zipArchive.GetEntry(PlatformZipEntryName);
-            if (platformZipEntries is null || !manifest.HandleSecurity)
+            if (platformZipEntries is null)
             {
                 return;
             }
@@ -166,27 +166,27 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
                 switch (token)
                 {
-                    case "Roles":
+                    case "Roles" when manifest.HandleSecurity:
                         await ImportRolesInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
                         break;
 
-                    case "Users":
+                    case "Users" when manifest.HandleSecurity:
                         await ImportUsersInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
                         break;
 
-                    case "Settings":
+                    case "Settings" when manifest.HandleSettings:
                         await ImportSettingsInternalAsync(reader, jsonSerializer, manifest, progressInfo, progressCallback, cancellationToken);
                         break;
 
-                    case "DynamicProperties":
+                    case "DynamicProperties" when manifest.HandleSettings:
                         await ImportDynamicPropertiesInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
                         break;
 
-                    case "DynamicPropertyDictionaryItems":
+                    case "DynamicPropertyDictionaryItems" when manifest.HandleSettings:
                         await ImportDynamicPropertyDictionaryItemsInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
                         break;
 
-                    case "UserApiKeys":
+                    case "UserApiKeys" when manifest.HandleSecurity:
                         await ImportUserApiKeysInternalAsync(reader, jsonSerializer, batchSize, progressInfo, progressCallback, cancellationToken);
                         break;
 
