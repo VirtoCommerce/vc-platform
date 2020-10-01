@@ -113,7 +113,8 @@ We can do that by run this command in *Nuget* package version console in *Visual
 Add-Migration InitialOrder2 -Context VirtoCommerce.OrdersModule2.Web.Repositories. Order2DbContext   -Verbose -OutputDir Migrations -Project VirtoCommerce.OrdersModule2.Web -StartupProject VirtoCommerce.OrdersModule2.Web -Debug
 ```
 
-The result of this command execution will be `Migrations/XXXXXX_InitialOrder2.cs` file that will also contains the original (extendable) order module DB schema along with a new one. Thus, you need manually edit the resulting `InitialOrder2.cs` file and left only DB schema changes that relevant to your extension.
+The result of this command execution will be `Migrations/XXXXXX_InitialOrder2.cs` file that will also contains the original (extendable) order module DB schema along with a new one. Thus, you need manually edit the resulting `InitialOrder2.cs` file and left only DB schema changes that relevant to your extension. 
+
 
 *`VirtoCommerce.OrdersModule2.Web/Migrations/20200324130250_InitialOrders2.cs`*
 ```C#
@@ -125,6 +126,9 @@ The result of this command execution will be `Migrations/XXXXXX_InitialOrder2.cs
         }
     }
 ```
+
+>Note: In order to avoid complex process of editing the resulting migration that will contain an original and custom schema, we recommend initially create an empty initial migration first for derived DbContext class has no changes, then you can just cleanup the resulting  migration cs file and leave the Up and Down methods empty. 
+Then you can make changes to the custom "derived" DbContext and generate a new migration  that contains only your custom changes, so you can avoid the complex manual editing of the initial migration.
 
 And the final step is to register our derived `OrderRepository2` and `Order2DbContext` in DI container. By registration the new `OrderRepository2` in DI we override the base `OrderRepository`  that is defined in `CustomerOrder.Module`.
 
