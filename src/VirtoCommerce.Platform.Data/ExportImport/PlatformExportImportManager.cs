@@ -28,7 +28,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         private readonly ISettingsManager _settingsManager;
         private readonly IDynamicPropertyService _dynamicPropertyService;
         private readonly IDynamicPropertySearchService _dynamicPropertySearchService;
-        private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserApiKeyService _userApiKeyService;
         private readonly IUserApiKeySearchService _userApiKeySearchService;
         private readonly IDynamicPropertyDictionaryItemsService _dynamicPropertyDictionaryItemsService;
@@ -39,7 +38,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
         public PlatformExportImportManager(
             UserManager<ApplicationUser> userManager
             , RoleManager<Role> roleManager
-            , IPermissionsRegistrar permissionsProvider
             , ISettingsManager settingsManager
             , IDynamicPropertyService dynamicPropertyService
             , IDynamicPropertySearchService dynamicPropertySearchService
@@ -56,7 +54,6 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             _moduleCatalog = moduleCatalog;
             _dynamicPropertyDictionaryItemsService = dynamicPropertyDictionaryItemsService;
             _dynamicPropertyDictionaryItemsSearchService = dynamicPropertyDictionaryItemsSearchService;
-            _permissionsProvider = permissionsProvider;
             _dynamicPropertySearchService = dynamicPropertySearchService;
             _userApiKeyService = userApiKeyService;
             _userApiKeySearchService = userApiKeySearchService;
