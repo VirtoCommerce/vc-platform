@@ -39,8 +39,8 @@ services:
       - redis
     entrypoint: ["/wait-for-it.sh", "vc-db:1433", "-t", "120", "--", "dotnet", "VirtoCommerce.Platform.Web.dll"]
     volumes:
-      - ${MODULES_VOLUME}:/opt/virtocommerce/platform/Modules
-      - ${APP_DATA_MODULES}:/opt/virtocommerce/platform/App_Data/Modules
+      - ${MODULES_VOLUME}:/opt/virtocommerce/platform/modules
+      - ${APP_DATA_MODULES}:/opt/virtocommerce/platform/app_data/modules
     networks:
       - virto
     restart: unless-stopped

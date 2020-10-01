@@ -55,23 +55,23 @@
         <ProjectReference Include="..\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Remove="Modules\**" />
+        <Compile Remove="modules\**" />
         <Compile Remove="wwwroot\assets\**" />
         <Compile Remove="wwwroot\cms-content\**" />
         
         <Content Remove="wwwroot\assets\**" />
-        <Content Remove="App_Data\Modules\** " /> 
+        <Content Remove="app_data\modules\** " /> 
         <Content Remove="wwwroot\cms-content\**" />
-        <Content Remove="Modules\**" />
+        <Content Remove="modules\**" />
           
-        <EmbeddedResource Remove="Modules\**" />
+        <EmbeddedResource Remove="modules\**" />
         <EmbeddedResource Remove="wwwroot\assets\**" />
         <EmbeddedResource Remove="wwwroot\cms-content\**" />
-        <EmbeddedResource Remove="App_Data\Modules\**" />
-        <None Remove="Modules\**" />
+        <EmbeddedResource Remove="app_data\modules\**" />
+        <None Remove="modules\**" />
         <None Remove="wwwroot\assets\**" />
         <None Remove="wwwroot\cms-content\**" />
-        <None Remove="App_Data\Modules\**" />
+        <None Remove="app_data\modules\**" />
     </ItemGroup>
    
     <ItemGroup>
@@ -82,16 +82,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Certificates\virtocommerce.crt">
+        <EmbeddedResource Include="certificates\virtocommerce.crt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Certificates\virtocommerce.pfx">
+        <EmbeddedResource Include="certificates\virtocommerce.pfx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="App_Data\public.key">
+      <None Update="app_data\public.key">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
