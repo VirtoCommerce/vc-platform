@@ -28,17 +28,17 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <summary>
         /// Major version X (X.y.z)
         /// </summary>
-        public int Major { get { return _version.Major; } }
+        public int Major => _version.Major;
 
         /// <summary>
         /// Minor version Y (x.Y.z)
         /// </summary>
-        public int Minor { get { return _version.Minor; } }
+        public int Minor => _version.Minor;
 
         /// <summary>
         /// Patch version Z (x.y.Z)
         /// </summary>
-        public int Patch { get { return _version.Build; } }
+        public int Patch => _version.Build;
 
         public string Prerelease { get; private set; }
 
@@ -144,13 +144,37 @@ namespace VirtoCommerce.Platform.Core.Common
 
         #region IComparable Members
 
-        public static bool operator >=(SemanticVersion a, SemanticVersion b) => a.CompareTo(b) >= 0;
+        public static bool operator >=(SemanticVersion a, SemanticVersion b) => (a, b) switch
+        {
+            (null, null) => true,
+            (null, _) => false,
+            (_, null) => false,
+            (_, _) => a.CompareTo(b) >= 0
+        };
 
-        public static bool operator <=(SemanticVersion a, SemanticVersion b) => a.CompareTo(b) <= 0;
+        public static bool operator <=(SemanticVersion a, SemanticVersion b) => (a, b) switch
+        {
+            (null, null) => true,
+            (null, _) => false,
+            (_, null) => false,
+            (_, _) => a.CompareTo(b) <= 0
+        };
 
-        public static bool operator >(SemanticVersion a, SemanticVersion b) => a.CompareTo(b) > 0;
+        public static bool operator >(SemanticVersion a, SemanticVersion b) => (a, b) switch
+        {
+            (null, null) => false,
+            (null, _) => false,
+            (_, null) => false,
+            (_, _) => a.CompareTo(b) > 0
+        };
 
-        public static bool operator <(SemanticVersion a, SemanticVersion b) => a.CompareTo(b) < 0;
+        public static bool operator <(SemanticVersion a, SemanticVersion b) => (a, b) switch
+        {
+            (null, null) => false,
+            (null, _) => false,
+            (_, null) => false,
+            (_, _) => a.CompareTo(b) < 0
+        };
 
         public int CompareTo(object obj)
         {
