@@ -9,6 +9,8 @@ namespace VirtoCommerce.Platform.Data.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
+        public const string UNKNOWN_USERNAME = "unknown";
+
         public static IApplicationBuilder UseDbTriggers(this IApplicationBuilder appBuilder)
         {
             Triggers<IAuditable>.Inserting += entry =>
@@ -19,8 +21,12 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
                 entry.Entity.CreatedDate = entry.Entity.CreatedDate == default ? currentTime : entry.Entity.CreatedDate;
                 entry.Entity.ModifiedDate = entry.Entity.CreatedDate;
-                entry.Entity.CreatedBy = entry.Entity.CreatedBy ?? userName;
-                entry.Entity.ModifiedBy = entry.Entity.CreatedBy;
+
+                if (userName != UNKNOWN_USERNAME)
+                {
+                    entry.Entity.CreatedBy = entry.Entity.CreatedBy ?? userName;
+                    entry.Entity.ModifiedBy = entry.Entity.CreatedBy;
+                }
             };
 
             Triggers<IAuditable>.Updating += entry =>
@@ -30,7 +36,11 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 var userName = currentUserNameResolver.GetCurrentUserName();
 
                 entry.Entity.ModifiedDate = currentTime;
-                entry.Entity.ModifiedBy = userName;
+
+                if (userName != UNKNOWN_USERNAME)
+                {
+                    entry.Entity.ModifiedBy = userName;
+                }
             };
             return appBuilder;
         }
