@@ -1,7 +1,7 @@
-using System.Threading;
 using Hangfire.Client;
 using Hangfire.Server;
 using Microsoft.AspNetCore.Http;
+using VirtoCommerce.Platform.Core.Common;
 using static VirtoCommerce.Platform.Core.Common.ThreadSlotNames;
 
 namespace VirtoCommerce.Platform.Hangfire.Middleware
@@ -13,8 +13,13 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
     public class HangfireUserContextMiddleware : IClientFilter, IServerFilter
     {
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IHangfireDataTransferService _hangfireDataTransferService;
 
-        public HangfireUserContextMiddleware(IHttpContextAccessor contextAccessor) => _contextAccessor = contextAccessor;
+        public HangfireUserContextMiddleware(IHttpContextAccessor contextAccessor, IHangfireDataTransferService hangfireDataTransferService)
+        {
+            _contextAccessor = contextAccessor;
+            _hangfireDataTransferService = hangfireDataTransferService;
+        }
 
         private string ContextUserName => _contextAccessor?.HttpContext?.User?.Identity?.Name;
 
@@ -40,13 +45,15 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
         public void OnPerforming(PerformingContext filterContext)
         {
             var userName = filterContext.GetJobParameter<string>(USER_NAME);
-
-            Thread.SetData(Thread.GetNamedDataSlot(USER_NAME), userName);
+            if (userName != null)
+            {
+                _hangfireDataTransferService.UserName = userName;
+            }
         }
 
         public void OnPerformed(PerformedContext filterContext)
         {
-            // Pass
+            _hangfireDataTransferService.UserName = null;
         }
 
         #endregion IServerFilter Members

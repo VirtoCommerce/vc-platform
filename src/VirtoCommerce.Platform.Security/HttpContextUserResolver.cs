@@ -1,4 +1,3 @@
-using System.Threading;
 using Microsoft.AspNetCore.Http;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
@@ -8,15 +7,17 @@ namespace VirtoCommerce.Platform.Security
     public class HttpContextUserResolver : IUserNameResolver
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHangfireDataTransferService _hangfireDataTransferService;
 
-        public HttpContextUserResolver(IHttpContextAccessor httpContextAccessor)
+        public HttpContextUserResolver(IHttpContextAccessor httpContextAccessor, IHangfireDataTransferService hangfireDataTransferService)
         {
             _httpContextAccessor = httpContextAccessor;
+            _hangfireDataTransferService = hangfireDataTransferService;
         }
 
         public string GetCurrentUserName()
         {
-            var result = Thread.GetData(Thread.GetNamedDataSlot(ThreadSlotNames.USER_NAME)) as string ?? "unknown";
+            var result = _hangfireDataTransferService.UserName ?? "unknown";
 
             var context = _httpContextAccessor.HttpContext;
             if (context != null && context.Request != null && context.User != null)

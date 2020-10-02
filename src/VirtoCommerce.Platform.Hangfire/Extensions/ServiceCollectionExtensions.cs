@@ -3,6 +3,7 @@ using Hangfire.MemoryStorage;
 using Hangfire.SqlServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Hangfire.Extensions
 {
@@ -10,6 +11,8 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
     {
         public static IServiceCollection AddHangfire(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<IHangfireDataTransferService, HangfireDataTransferService>();
+
             var section = configuration.GetSection("VirtoCommerce:Hangfire");
             var hangfireOptions = new HangfireOptions();
             section.Bind(hangfireOptions);

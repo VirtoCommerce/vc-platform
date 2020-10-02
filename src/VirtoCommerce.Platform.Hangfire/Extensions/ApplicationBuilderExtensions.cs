@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Bus;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Hangfire.Middleware;
@@ -44,7 +45,8 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
 
             // Add Hangfire filters/middlewares
             var contextAccessor = appBuilder.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
-            GlobalJobFilters.Filters.Add(new HangfireUserContextMiddleware(contextAccessor));
+            var dataTransfer = appBuilder.ApplicationServices.GetRequiredService<IHangfireDataTransferService>();
+            GlobalJobFilters.Filters.Add(new HangfireUserContextMiddleware(contextAccessor, dataTransfer));
 
             return appBuilder;
         }
