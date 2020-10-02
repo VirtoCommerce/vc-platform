@@ -2,7 +2,6 @@ using Hangfire.Client;
 using Hangfire.Server;
 using Microsoft.AspNetCore.Http;
 using VirtoCommerce.Platform.Core.Common;
-using static VirtoCommerce.Platform.Core.Common.ThreadSlotNames;
 
 namespace VirtoCommerce.Platform.Hangfire.Middleware
 {
@@ -14,6 +13,8 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
     {
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IHangfireDataTransferService _hangfireDataTransferService;
+
+        private const string USER_NAME = "UserName";
 
         public HangfireUserContextMiddleware(IHttpContextAccessor contextAccessor, IHangfireDataTransferService hangfireDataTransferService)
         {
