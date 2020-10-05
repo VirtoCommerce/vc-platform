@@ -4,7 +4,7 @@ using Hangfire.SqlServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace VirtoCommerce.Platform.Hangfire
+namespace VirtoCommerce.Platform.Hangfire.Extensions
 {
     public static class ServiceCollectionExtensions
     {
