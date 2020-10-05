@@ -267,10 +267,10 @@ __pycache__/
 
 # Cake - Uncomment if you are using it
 # tools/
-App_Data/
-/src/VirtoCommerce.Platform.Web/wwwroot/Modules
+app_data/
+/src/VirtoCommerce.Platform.Web/wwwroot/modules
 /src/VirtoCommerce.Platform.Web/wwwroot/lib
-/src/VirtoCommerce.Platform.Web/wwwroot/App_Data
+/src/VirtoCommerce.Platform.Web/wwwroot/app_data
 /src/VirtoCommerce.Platform.Web/wwwroot/maps
 /src/VirtoCommerce.Platform.Web/wwwroot/cms-content
 /src/VirtoCommerce.Platform.Web/wwwroot/assets
@@ -278,6 +278,6 @@ App_Data/
 
 .vscode
 
-/src/VirtoCommerce.Platform.Web/Modules
+/src/VirtoCommerce.Platform.Web/modules
 # mkdocs output
 /site

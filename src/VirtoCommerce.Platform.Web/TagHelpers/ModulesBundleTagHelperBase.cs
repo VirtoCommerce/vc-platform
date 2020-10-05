@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Web.TagHelpers
             foreach (var module in sucesfullyLoadedModules)
             {
                 var normalizedBundlePath = BundlePath.Replace("~/", "").Replace("\\", "/").TrimStart('/');
-                var moduleBundleVirtualPath = $"/Modules/$({module.ModuleName})/{normalizedBundlePath}";
+                var moduleBundleVirtualPath = $"/modules/$({module.ModuleName})/{normalizedBundlePath}";
                 var bundlePhysicalPath = Path.Combine(module.FullPhysicalPath, normalizedBundlePath);
                 if (File.Exists(bundlePhysicalPath))
                 {
