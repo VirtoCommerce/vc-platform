@@ -4,13 +4,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using static VirtoCommerce.Platform.Data.Constants.DefaultEntityNames;
 
 namespace VirtoCommerce.Platform.Data.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public const string UNKNOWN_USERNAME = "unknown";
-
         public static IApplicationBuilder UseDbTriggers(this IApplicationBuilder appBuilder)
         {
             Triggers<IAuditable>.Inserting += entry =>
@@ -42,6 +41,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
                     entry.Entity.ModifiedBy = userName;
                 }
             };
+
             return appBuilder;
         }
     }
