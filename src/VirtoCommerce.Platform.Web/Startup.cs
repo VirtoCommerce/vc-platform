@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -427,11 +428,15 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseHttpsRedirection();
 
+            // Add default wwwroot static files bindings
             app.UseStaticFiles();
 
-            var liquidContentTypeProvider = new FileExtensionContentTypeProvider();
-            liquidContentTypeProvider.Mappings[".liquid"] = "text/html";
-            app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = liquidContentTypeProvider });
+            // Add additional bindings
+            var fileExtensionsBindings = Configuration.GetSection("Content").GetSection("FileExtensionsBindings").Get<Dictionary<string, string>>();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = new FileExtensionContentTypeProvider(fileExtensionsBindings)
+            });
 
             app.UseRouting();
             app.UseCookiePolicy();
