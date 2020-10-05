@@ -91,19 +91,19 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             return retVal;
         }
 
-        public async Task ExportAsync(Stream outStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        public async Task ExportAsync(Stream outStream, PlatformExportManifest exportOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
         {
-            if (manifest == null)
+            if (exportOptions == null)
             {
-                throw new ArgumentNullException(nameof(manifest));
+                throw new ArgumentNullException(nameof(exportOptions));
             }
 
             using (var zipArchive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
             {
                 //Export all selected platform entries
-                await ExportPlatformEntriesInternalAsync(zipArchive, manifest, progressCallback, cancellationToken);
+                await ExportPlatformEntriesInternalAsync(zipArchive, exportOptions, progressCallback, сancellationToken);
                 //Export all selected  modules
-                await ExportModulesInternalAsync(zipArchive, manifest, progressCallback, cancellationToken);
+                await ExportModulesInternalAsync(zipArchive, exportOptions, progressCallback, сancellationToken);
 
                 //Write system information about exported modules
                 var manifestZipEntry = zipArchive.CreateEntry(ManifestZipEntryName, CompressionLevel.Optimal);
@@ -111,16 +111,16 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 //After all modules exported need write export manifest part
                 using (var stream = manifestZipEntry.Open())
                 {
-                    manifest.SerializeJson(stream, GetJsonSerializer());
+                    exportOptions.SerializeJson(stream, GetJsonSerializer());
                 }
             }
         }
 
-        public async Task ImportAsync(Stream inputStream, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
+        public async Task ImportAsync(Stream inputStream, PlatformExportManifest importOptions, Action<ExportImportProgressInfo> progressCallback, ICancellationToken сancellationToken)
         {
-            if (manifest == null)
+            if (importOptions == null)
             {
-                throw new ArgumentNullException(nameof(manifest));
+                throw new ArgumentNullException(nameof(importOptions));
             }
 
             var progressInfo = new ExportImportProgressInfo();
@@ -131,9 +131,9 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             using (EventSuppressor.SupressEvents())
             {
                 //Import selected platform entries
-                await ImportPlatformEntriesInternalAsync(zipArchive, manifest, progressCallback, cancellationToken);
+                await ImportPlatformEntriesInternalAsync(zipArchive, importOptions, progressCallback, сancellationToken);
                 //Import selected modules
-                await ImportModulesInternalAsync(zipArchive, manifest, progressCallback, cancellationToken);
+                await ImportModulesInternalAsync(zipArchive, importOptions, progressCallback, сancellationToken);
             }
         }
 

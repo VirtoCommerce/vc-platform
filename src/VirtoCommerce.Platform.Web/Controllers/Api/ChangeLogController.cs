@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Force set changes last modified date 
+        /// Force set changes last modified date
         /// </summary>
         /// <param name="forceRequest">Force changes request</param>
         /// <returns></returns>
@@ -60,7 +59,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("changelog/search")]
-        public async Task<ActionResult<ChangeLogSearchResult>> SearchChanges([FromBody]ChangeLogSearchCriteria criteria)
+        public async Task<ActionResult<ChangeLogSearchResult>> SearchChanges([FromBody] ChangeLogSearchCriteria criteria)
         {
             // Get changes count from operation log
             var result = await _changeLogSearchService.SearchAsync(criteria);

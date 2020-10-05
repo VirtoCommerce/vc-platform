@@ -14,11 +14,11 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
         blade.origEntity = data;
         blade.currentEntity = angular.copy(data);
         blade.isLoading = false;
-    };
+    }
 
     function isDirty() {
         return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
-    };
+    }
 
     blade.onClose = function (closeCallback) {
         bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "platform.dialogs.oauthapps-save.title", "platform.dialogs.oauthapps-save.message");
@@ -101,7 +101,7 @@ angular.module('platformWebApp').controller('platformWebApp.oAuthAppsController'
             blade.isLoading = false;
             bladeNavigationService.setError('Error ' + error.status, $scope.blade);
         });
-    };
+    }
 
     $scope.copyToClipboard = function (elementId) {
         var text = document.getElementById(elementId);
