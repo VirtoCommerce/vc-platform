@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -79,6 +78,7 @@ namespace VirtoCommerce.Platform.Security.Services
                 }
             });
         }
+
         public async Task<UserApiKey[]> SaveApiKeysAsync(UserApiKey[] apiKeys)
         {
             if (apiKeys == null)
@@ -121,7 +121,6 @@ namespace VirtoCommerce.Platform.Security.Services
 
             using (var repository = _repositoryFactory())
             {
-
                 foreach (var id in ids)
                 {
                     var apiKey = new UserApiKeyEntity { Id = id };
@@ -134,7 +133,5 @@ namespace VirtoCommerce.Platform.Security.Services
                 ApiKeyCacheRegion.ExpireRegion();
             }
         }
-
-     
     }
 }

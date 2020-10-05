@@ -28,17 +28,17 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <summary>
         /// Major version X (X.y.z)
         /// </summary>
-        public int Major { get { return _version.Major; } }
+        public int Major => _version.Major;
 
         /// <summary>
         /// Minor version Y (x.Y.z)
         /// </summary>
-        public int Minor { get { return _version.Minor; } }
+        public int Minor => _version.Minor;
 
         /// <summary>
         /// Patch version Z (x.y.Z)
         /// </summary>
-        public int Patch { get { return _version.Build; } }
+        public int Patch => _version.Build;
 
         public string Prerelease { get; private set; }
 
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 retVal = Minor <= other.Minor;
             }
             return retVal;
-        }      
+        }
 
         public bool IsCompatibleWith(SemanticVersion other)
         {
@@ -107,7 +107,7 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             // If one is null, but not both, return false.
-            if ((object)a == null || (object)b == null)
+            if (a is null || b is null)
             {
                 return false;
             }
@@ -137,12 +137,44 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public override int GetHashCode()
         {
-            int result = _version.GetHashCode();
+            var result = _version.GetHashCode();
             result = result * 31 + Prerelease.GetHashCode();
             return result;
         }
 
         #region IComparable Members
+
+        public static bool operator >=(SemanticVersion a, SemanticVersion b) => (a, b) switch
+        {
+            (null, null) => true,
+            (null, _) => false,
+            (_, null) => false,
+            (_, _) => a.CompareTo(b) >= 0
+        };
+
+        public static bool operator <=(SemanticVersion a, SemanticVersion b) => (a, b) switch
+        {
+            (null, null) => true,
+            (null, _) => false,
+            (_, null) => false,
+            (_, _) => a.CompareTo(b) <= 0
+        };
+
+        public static bool operator >(SemanticVersion a, SemanticVersion b) => (a, b) switch
+        {
+            (null, null) => false,
+            (null, _) => false,
+            (_, null) => false,
+            (_, _) => a.CompareTo(b) > 0
+        };
+
+        public static bool operator <(SemanticVersion a, SemanticVersion b) => (a, b) switch
+        {
+            (null, null) => false,
+            (null, _) => false,
+            (_, null) => false,
+            (_, _) => a.CompareTo(b) < 0
+        };
 
         public int CompareTo(object obj)
         {
@@ -182,7 +214,7 @@ namespace VirtoCommerce.Platform.Core.Common
             var bComps = b.Split('.');
 
             var minLen = Math.Min(aComps.Length, bComps.Length);
-            for (int i = 0; i < minLen; i++)
+            for (var i = 0; i < minLen; i++)
             {
                 var ac = aComps[i];
                 var bc = bComps[i];
@@ -207,9 +239,9 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             return aComps.Length.CompareTo(bComps.Length);
-        }       
+        }
 
-        #endregion
+        #endregion IComparable Members
 
         public override string ToString()
         {

@@ -146,7 +146,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var claims = new JObject
             {
-
                 //TODO: replace to PrinciplaClaims
 
                 // Note: the "sub" claim is a mandatory claim and must be included in the JSON response.
@@ -261,6 +260,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             return Ok(result.ToSecurityResult());
         }
+
         /// <summary>
         /// SearchAsync users by keyword
         /// </summary>
@@ -313,7 +313,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result);
         }
 
-
         /// <summary>
         /// Get user details by external login provider
         /// </summary>
@@ -351,7 +350,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             return Ok(result.ToSecurityResult());
         }
-
 
         /// <summary>
         /// Change password
@@ -461,10 +459,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
+
             if (!IsUserEditable(user.UserName))
             {
                 return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
+
             var result = await _signInManager.UserManager.ResetPasswordAsync(user, resetPasswordConfirm.Token, resetPasswordConfirm.NewPassword);
             if (result.Succeeded)
             {
@@ -477,7 +477,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     user.PasswordExpired = false;
 
-                    var userUpdateResult = await _userManager.UpdateAsync(user);
+                    await _userManager.UpdateAsync(user);
                 }
             }
 
@@ -555,7 +555,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return Ok(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
             var result = await _userManager.UpdateAsync(user);
-
 
             return Ok(result.ToSecurityResult());
         }
@@ -685,9 +684,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok();
         }
 
-
         //TODO: Remove later
+
         #region Obsolete methods
+
         [Obsolete("use /roles/search instead")]
         [HttpPost]
         [Route("roles")]
@@ -698,7 +698,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result);
         }
 
-        #endregion
+        #endregion Obsolete methods
 
         private bool IsUserEditable(string userName)
         {

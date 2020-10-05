@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp').controller('platformWebApp.propertyDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, dialogService, bladeNavigationService, settings, dictionaryItemsApi) {
+angular.module('platformWebApp').controller('platformWebApp.propertyDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, dialogService, bladeNavigationService, settings, dictionaryItemsApi) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
     blade.headIcon = 'fa-plus-square-o';
@@ -134,7 +134,7 @@
 
     function isDirty() {
         return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
-    };
+    }
 
     $scope.saveChanges = function () {
         if (blade.isApiSave) {

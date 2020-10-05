@@ -6,7 +6,7 @@ namespace VirtoCommerce.Platform.Data.TransactionFileManager.Operations
     /// <summary>
     /// Creates all directories in the specified path.
     /// </summary>
-    sealed class CreateDirectory : IRollbackableOperation
+    internal sealed class CreateDirectory : IRollbackableOperation
     {
         private readonly string path;
         private string backupPath;
@@ -23,8 +23,8 @@ namespace VirtoCommerce.Platform.Data.TransactionFileManager.Operations
         public void Execute()
         {
             // find the topmost directory which must be created
-            string children = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-            string parent = Path.GetDirectoryName(children);
+            var children = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            var parent = Path.GetDirectoryName(children);
             while (parent != null /* children is a root directory */
                    && !Directory.Exists(parent))
             {
@@ -32,12 +32,7 @@ namespace VirtoCommerce.Platform.Data.TransactionFileManager.Operations
                 parent = Path.GetDirectoryName(children);
             }
 
-            if (Directory.Exists(children))
-            {
-                // nothing to do
-                return;
-            }
-            else
+            if (!Directory.Exists(children))
             {
                 Directory.CreateDirectory(path);
                 backupPath = children;
