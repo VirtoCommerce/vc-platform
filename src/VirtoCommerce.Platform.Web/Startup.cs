@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -427,6 +428,11 @@ namespace VirtoCommerce.Platform.Web
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+
+            var liquidContentTypeProvider = new FileExtensionContentTypeProvider();
+            liquidContentTypeProvider.Mappings[".liquid"] = "text/html";
+            app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = liquidContentTypeProvider });
+
             app.UseRouting();
             app.UseCookiePolicy();
 
