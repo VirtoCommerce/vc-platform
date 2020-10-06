@@ -48,8 +48,6 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | Provider | `"FileSystem"` | Current Content (files) Provider. Supported values: FileSystem, AzureBlobStorage.
 |  | FileSystem | E.g., <br> "FileSystem": {<br> "RootPath": "~/cms-content",<br>"PublicUrl": "http://localhost:10645/cms-content/"<br>}  | File system based content provider configuration. This is the default provider, used if `AzureBlobStorage` is not set as current provider.
 |  | AzureBlobStorage | E.g., <br> "AzureBlobStorage": {<br> "ConnectionString": "",<br>"CdnUrl": ""<br>}  | Azure Blob Storage based content provider configuration. Used, if `"Provider": "AzureBlobStorage"`.
-|  | FileExtensionsBindings | E.g., <br>"FileExtensionsBindings": {<br> ".liquid": "text/html",<br>".md": "text/html"<br>} | Pass extension with mime type to allow static file provider return this types of files. You don`t need to write default file extensions like "txt, html, png, etc.".
-
 
 **_Note:_** Each setting is optional, if it's not marked as **Required.**
 

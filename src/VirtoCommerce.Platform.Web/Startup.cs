@@ -428,14 +428,25 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseHttpsRedirection();
 
-            // Add default wwwroot static files bindings
-            app.UseStaticFiles();
+            // Add default MimeTypes with additional bindings
+            var fileExtensionsBindings = new Dictionary<string, string>()
+            {
+                { ".liquid", "text/html"},
+                { ".md", "text/html"}
+            };
 
-            // Add additional bindings
-            var fileExtensionsBindings = Configuration.GetSection("Content").GetSection("FileExtensionsBindings").Get<Dictionary<string, string>>();
+            // Create default provider (with default Mime types)
+            var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+
+            // Add custom bindings
+            foreach (var binding in fileExtensionsBindings)
+            {
+                fileExtensionContentTypeProvider.Mappings[binding.Key] = binding.Value;
+            }
+
             app.UseStaticFiles(new StaticFileOptions
             {
-                ContentTypeProvider = new FileExtensionContentTypeProvider(fileExtensionsBindings)
+                ContentTypeProvider = fileExtensionContentTypeProvider
             });
 
             app.UseRouting();
