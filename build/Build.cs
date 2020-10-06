@@ -128,10 +128,13 @@ partial class Build : NukeBuild
     [Parameter("Github Repository for SonarQube")] readonly string SonarGithubRepo;
     [Parameter("PR Provider for SonarQube")] readonly string SonarPRProvider;
 
+    [Parameter("Push Changes")] readonly bool PushChanges = true;
+    [Parameter("Modules.json repo url")] readonly string ModulesJsonRepoUrl = "https://github.com/VirtoCommerce/vc-modules.git";
+
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
     [Parameter("Path to Artifacts Directory")] AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
-    Project WebProject => Solution.AllProjects.FirstOrDefault(x => x.Name.EndsWith(".Web") || x.Name.EndsWith("VirtoCommerce.Storefront"));
+    Project WebProject => Solution.AllProjects.FirstOrDefault(x => (x.Name.EndsWith(".Web") && !x.Path.ToString().Contains("samples")) || x.Name.EndsWith("VirtoCommerce.Storefront"));
     AbsolutePath ModuleManifestFile => WebProject.Directory / "module.manifest";
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
@@ -152,7 +155,7 @@ partial class Build : NukeBuild
 
     string ModulePackageUrl => CustomModulePackageUri.IsNullOrEmpty() ?
         $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}/{ModuleManifest.Id}_{ReleaseVersion}.zip" : CustomModulePackageUri;
-    GitRepository ModulesRepository => GitRepository.FromUrl("https://github.com/VirtoCommerce/vc-modules.git");
+    GitRepository ModulesRepository => GitRepository.FromUrl(ModulesJsonRepoUrl);
 
     bool IsModule => FileExists(ModuleManifestFile);
 
@@ -595,8 +598,11 @@ partial class Build : NukeBuild
                 modulesExternalManifests.Add(ExternalModuleManifest.FromManifest(manifest));
             }
             TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Newtonsoft.Json.Formatting.Indented));
-            GitTasks.Git($"commit -am \"{manifest.Id} {ReleaseVersion}\"", modulesLocalDirectory);
-            GitTasks.Git($"push origin HEAD:master -f", modulesLocalDirectory);
+            if(PushChanges)
+            {
+                GitTasks.Git($"commit -am \"{manifest.Id} {ReleaseVersion}\"", modulesLocalDirectory);
+                GitTasks.Git($"push origin HEAD:master -f", modulesLocalDirectory);
+            }
         });
 
     Target SwaggerValidation => _ => _
@@ -742,7 +748,7 @@ partial class Build : NukeBuild
 
     void GitLogger(OutputType type, string text)
     {
-        if (text.Contains("github returned 422 Unprocessable Entity"))
+        if (text.Contains("github returned 422 Unprocessable Entity") && text.Contains("already_exists"))
         {
             ExitCode = 422;
         }
