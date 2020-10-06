@@ -25,10 +25,12 @@ angular.module('platformWebApp').config(
         function register(template) {
             notificationTemplates.push(template);
             notificationTemplates.sort(function (a, b) { return a.priority - b.priority; });
-        };
+        }
+
         function resolve(notification, place) {
             return _.find(notificationTemplates, function (x) { return x.satisfy(notification, place); });
-        };
+        }
+
         var retVal = {
             register: register,
             resolve: resolve,
@@ -84,5 +86,4 @@ angular.module('platformWebApp').config(
             });
 
             return {};
-
         }]);

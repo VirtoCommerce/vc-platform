@@ -47,6 +47,6 @@ namespace GrabMigrator
         /// <summary>
         /// A map: module->connection string keys. Grabbed from sources and stored to config file in grab mode.
         /// </summary>
-        public Dictionary<string, List<string>> ConnectionStringsRefs { get; set; }
+        public Dictionary<string, List<string>> ConnectionStringsRefs { get; set; } = new Dictionary<string, List<string>>();
     }
 }

@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
-using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -41,7 +40,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
-using VirtoCommerce.Platform.Hangfire;
+using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -69,6 +68,7 @@ namespace VirtoCommerce.Platform.Web
             Configuration = configuration;
             WebHostEnvironment = hostingEnvironment;
         }
+
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment WebHostEnvironment { get; }
 
@@ -173,10 +173,8 @@ namespace VirtoCommerce.Platform.Web
                                       .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
                                       .AddCookie();
 
-
             services.AddSecurityServices(options =>
             {
-
             });
 
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
@@ -369,7 +367,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
                      {
-                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "Modules");
+                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
                      })
                     .ValidateDataAnnotations();
             services.AddModules(mvcBuilder);
@@ -445,7 +443,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
-                    RequestPath = new PathString($"/Modules/$({ module.ModuleName })")
+                    RequestPath = new PathString($"/modules/$({ module.ModuleName })")
                 });
             }
 
@@ -477,14 +475,10 @@ namespace VirtoCommerce.Platform.Web
             //Register platform settings
             app.UsePlatformSettings();
 
-            // Fake resolve Hangfire.IGlobalConfiguration to enforce correct initialization of Hangfire giblets before modules init.
-            // Don't remove next line, it will cause issues with modules startup at hangfire-less (UseHangfireServer=false) platform instances.
-            app.ApplicationServices.GetRequiredService<IGlobalConfiguration>();
+            // Complete hangfire init
+            app.UseHangfire(Configuration);
 
             app.UseModules();
-
-            // Complete hangfire init & resume jobs run
-            app.UseHangfire();
 
             //Register platform permissions
             app.UsePlatformPermissions();
@@ -503,5 +497,3 @@ namespace VirtoCommerce.Platform.Web
         }
     }
 }
-
-

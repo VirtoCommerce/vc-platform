@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp').controller('platformWebApp.securityMainController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
+angular.module('platformWebApp').controller('platformWebApp.securityMainController', ['$scope', 'platformWebApp.bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.selectedNodeId = null;
 
     function initializeBlade() {
@@ -11,7 +11,7 @@
         $scope.blade.isLoading = false;
 
         $scope.blade.openBlade(entities[0]);
-    };
+    }
 
     $scope.blade.openBlade = function (data) {
         $scope.selectedNodeId = data.name;

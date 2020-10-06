@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -57,6 +58,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             //try yo take an user name from claims
             var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn);
+
             if (string.IsNullOrWhiteSpace(userName))
             {
                 throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
@@ -75,7 +77,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                     platformUser = new ApplicationUser
                     {
                         UserName = userName,
-
+                        Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? (userName.IsValidEmail() ? userName : null)
                         // TODO: somehow access the AzureAd configuration section and read the default user type from there
                         //UserType = _authenticationOptions.AzureAdDefaultUserType
                     };
@@ -83,7 +85,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                     var result = await _userManager.CreateAsync(platformUser);
                     if (!result.Succeeded)
                     {
-                        var joinedErrors = string.Join(Environment.NewLine, result.Errors);
+                        var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
                         throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
                     }
                 }
