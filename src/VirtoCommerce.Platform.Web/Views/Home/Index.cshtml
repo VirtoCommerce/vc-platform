@@ -25,7 +25,7 @@
 
             if (msg.startsWith('Uncaught Error: [$injector:')) {
                 $("div.error-feature").show();
-                $("#scriptError").text(msg);
+                $("#scriptError").text(error && error.stack ? error.stack : msg);
 
                 $.ajax({
                     type: "GET",
@@ -36,11 +36,27 @@
                             $("div.error-content").show();
 
                             modulesWithErrors.forEach(module => {
-                                $("#moduleInfo").append(`<li><span style="color: black; font-weight: 500; font-size: 18px; padding: 10px 0 5px 0px;"> ${module.title}:</span> <br> <span> ${module.validationErrors.join(';')} </span> </li>`);
+                                $("#moduleInfo").append(` <button type="button" class="collapsible">${module.title}</button> <div class="content"> ${module.validationErrors.join(';')} </div>`);
                             });
+                            addListenersToButton();
                         }
                     },
                     failure: (errMsg) => $("#scriptError").text(errMsg)
+                });
+            }
+        }
+
+        addListenersToButton = function () {
+            const coll = document.getElementsByClassName("collapsible");
+            for (let i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    let content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
                 });
             }
         }
@@ -75,14 +91,60 @@
 
 <div class="error-feature" style="display:none">
     <h1 style="padding-top: 50px; padding-left: 50px; ">Startup error</h1>
-
     <p style="padding: 15px 0 10px 50px; font-size: 24px">The script injection error occurred:</p>
-
-    <p id="scriptError" style="color: red; padding-left: 100px;"></p>
+    <textarea  id="scriptError" class="textarea-error error-text" readonly></textarea>
     <div class="error-content" style="display:none">
-        <h3 style="padding-top: 80px; padding-left: 50px;">The following modules were loaded with errors:</h3>
-        <ul id="moduleInfo" style="color: red; padding-left: 100px;"></ul>
+        <p style="padding-top: 10px; padding-left: 50px; font-size: 24px;">The following modules were loaded with errors:</p>
+        <div id="moduleInfo" class="error-text">
+        </div>
     </div>
 </div>
 <ui-view></ui-view>
+
+
+<style>
+    .error-text {
+        margin-left: 50px;
+        width: 90%;
+    }
+
+    .textarea-error {
+        color: red;
+        height: 300px;
+        overflow: auto;
+        outline: none;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        resize: none;
+        font-size: 16px;
+        background: transparent;
+        overflow-y: scroll;
+    }
+
+    .collapsible {
+        background-color: #777;
+        color: white;
+        cursor: pointer;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        margin-top: 10px;
+    }
+
+    .active, .collapsible:hover {
+        background-color: #555;
+    }
+
+    .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        color: red;
+    }
+</style>
+
 
