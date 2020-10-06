@@ -2,7 +2,7 @@
 VC Platform is ASP&#46;NET Core application, and it's configurable as described in [Configuration in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1).
 
 ## Configuration settings
-The configuration keys are hierarchical. This structure is most convenient to manage in _appsettings.json_ file: 
+The configuration keys are hierarchical. This structure is most convenient to manage in _appsettings.json_ file:
 
 | Top Configuration node | Child node(s) | Default OR sample value  | Description  |
 | ---------------------- | ------------- | ------------------------ | ------------ |
@@ -25,8 +25,8 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 | IdentityOptions | | | Options to configure the ASP&#46;NET Core Identity system. Check [Configure ASP.NET Core Identity](https://github.com/dotnet/AspNetCore.Docs/blob/master/aspnetcore/security/authentication/identity-configuration.md#configure-aspnet-core-identity) for details.
 | ExternalModules | | | Configure external source to install modules.
 |  | IncludePrerelease | `false` | Show module versions marked as *Prerelease* if value is `true`.
-|  | ModulesManifestUrl | E.g., `"https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules_v3.json"` | Url to *.json* file containing modules' manifests. 
-|  | AuthorizationToken | | Authorization token to access *ModulesManifestUrl*. Added to *Authorization* header, if specified. 
+|  | ModulesManifestUrl | E.g., `"https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules_v3.json"` | Url to *.json* file containing modules' manifests.
+|  | AuthorizationToken | | Authorization token to access *ModulesManifestUrl*. Added to *Authorization* header, if specified.
 |  | AutoInstallModuleBundles | `["commerce"]` | Group(s) of modules to install automatically during initial Platform setup. Provide empty array to install none.
 | Caching |  |  | Caching configuration
 |  | Redis | E.g., <br>"Redis": {<br>"ChannelName": "VirtoCommerceChannel",<br>"BusRetryCount": 3<br>} | Redis configuration, incl. the message channel to use and number of times to retry.
@@ -48,7 +48,6 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | Provider | `"FileSystem"` | Current Content (files) Provider. Supported values: FileSystem, AzureBlobStorage.
 |  | FileSystem | E.g., <br> "FileSystem": {<br> "RootPath": "~/cms-content",<br>"PublicUrl": "http://localhost:10645/cms-content/"<br>}  | File system based content provider configuration. This is the default provider, used if `AzureBlobStorage` is not set as current provider.
 |  | AzureBlobStorage | E.g., <br> "AzureBlobStorage": {<br> "ConnectionString": "",<br>"CdnUrl": ""<br>}  | Azure Blob Storage based content provider configuration. Used, if `"Provider": "AzureBlobStorage"`.
-
 
 **_Note:_** Each setting is optional, if it's not marked as **Required.**
 
