@@ -36,7 +36,7 @@
                             $("div.error-content").show();
 
                             modulesWithErrors.forEach(module => {
-                                $("#moduleInfo").append(` <button type="button" class="collapsible">${module.id} - v:${module.version}</button> <div class="content"> ${module.validationErrors.join(';')} </div>`);
+                                $("#moduleInfo").append(` <button type="button" class="collapsible">${module.id} - version:${module.version}</button> <div class="content"> ${module.validationErrors.join(';')} </div>`);
                             });
                             addListenersToButton();
                         }
