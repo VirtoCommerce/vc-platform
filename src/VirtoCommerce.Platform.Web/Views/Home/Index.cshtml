@@ -5,20 +5,47 @@
 }
 
 @section scripts
-    {
+{
     <script>
-        $(function () {
-            $('.main-content').on("mousewheel DOMMouseScroll", function (e) {
-                var delta = parseInt(e.originalEvent.wheelDelta || -e.originalEvent.detail);
-                if (Math.abs(delta) >= 120) {
-                    delta = delta / 40;
-                }
-                this.scrollLeft -= (delta * 30);
-                e.preventDefault();
-            });
+        $(function() {
+            $('.main-content')
+                .on("mousewheel DOMMouseScroll",
+                    function(e) {
+                        var delta = parseInt(e.originalEvent.wheelDelta || -e.originalEvent.detail);
+                        if (Math.abs(delta) >= 120) {
+                            delta = delta / 40;
+                        }
+                        this.scrollLeft -= (delta * 30);
+                        e.preventDefault();
+                    });
         });
+    </script>
 
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            console.log("isScriptsLoaded:", isScriptsLoaded);
+            if (msg.startsWith('Uncaught Error: [$injector:')) {
 
+                $("div.error-feature").show();
+                $("#scriptError").text(msg);
+
+                $.ajax({
+                    type: "GET",
+                    url: "api/platform/modules/errors",
+                    success: (data) => {
+                        var modulesWithErrors = data;
+                        if (modulesWithErrors.length > 0) {
+                            $("div.error-content").show();
+
+                            modulesWithErrors.forEach(module => {
+                                $("#moduleInfo").append(`<li><span style="color: black; font-weight: 500; font-size: 18px; padding: 10px 0 5px 0px;"> ${module.title}:</span> <br> <span> ${module.validationErrors.join(';')} </span> </li>`);
+                            });
+                        }
+                    },
+                    failure: (errMsg) => $("#scriptError").text(errMsg)
+                });
+            }
+        }
     </script>
 }
 
@@ -47,5 +74,17 @@
     <div class="error-detail" ng-if="platformError.detailVisible" ng-bind-html="platformError.detail"></div>
 </div>
 
+
+<div class="error-feature" style="display:none">
+    <h1 style="padding-top: 50px; padding-left: 50px; ">Startup error</h1>
+
+    <p style="padding: 15px 0 10px 50px; font-size: 24px">The script injection error occurred:</p>
+
+    <p id="scriptError" style="color: red; padding-left: 100px;"></p>
+    <div class="error-content" style="display:none">
+        <h3 style="padding-top: 80px; padding-left: 50px;">The following modules were loaded with errors:</h3>
+        <ul id="moduleInfo" style="color: red; padding-left: 100px;"></ul>
+    </div>
+</div>
 <ui-view></ui-view>
 

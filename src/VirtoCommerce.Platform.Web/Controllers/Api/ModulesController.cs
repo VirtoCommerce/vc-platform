@@ -85,6 +85,28 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Get installed modules with errors
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("errors")]
+        [AllowAnonymous]
+        public ActionResult<ModuleDescriptor[]> GetModulesErrors()
+        {
+            EnsureModulesCatalogInitialized();
+
+            var result = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
+                .Where(x => !x.Errors.IsNullOrEmpty())
+                .OrderBy(x => x.Id)
+                .ThenBy(x => x.Version)
+                .Select(x => new ModuleDescriptor(x))
+                .ToArray();
+
+            return Ok(result);
+        }
+
+
+        /// <summary>
         /// Get all dependent modules for module
         /// </summary>
         /// <param name="moduleDescriptors">modules descriptors</param>
