@@ -29,9 +29,8 @@ namespace VirtoCommerce.Platform.Web.Middleware
                 //Need handle only storefront api errors
                 if (!context.Response.HasStarted && context.Request.Path.ToString().Contains("/api/"))
                 {
-                    _logger.LogError(ex, ex.Message);
-
-                    var message = ex.Message;
+                    var message = ex.ToString();
+                    _logger.LogError(ex, message);
                     var httpStatusCode = HttpStatusCode.InternalServerError;
                     var json = JsonConvert.SerializeObject(new { message, stackTrace = ex.StackTrace });
                     context.Response.ContentType = "application/json";
