@@ -29,7 +29,7 @@
 
                 $.ajax({
                     type: "GET",
-                    url: "api/platform/modules/errors",
+                    url: "api/platform/diagnostics/errors",
                     success: (data) => {
                         var modulesWithErrors = data;
                         if (modulesWithErrors.length > 0) {
