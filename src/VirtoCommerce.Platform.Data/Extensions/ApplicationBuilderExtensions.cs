@@ -20,12 +20,8 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
                 entry.Entity.CreatedDate = entry.Entity.CreatedDate == default ? currentTime : entry.Entity.CreatedDate;
                 entry.Entity.ModifiedDate = entry.Entity.CreatedDate;
-
-                if (userName != UNKNOWN_USERNAME)
-                {
-                    entry.Entity.CreatedBy = entry.Entity.CreatedBy ?? userName;
-                    entry.Entity.ModifiedBy = entry.Entity.CreatedBy;
-                }
+                entry.Entity.CreatedBy = entry.Entity.CreatedBy ?? userName;
+                entry.Entity.ModifiedBy = entry.Entity.CreatedBy;
             };
 
             Triggers<IAuditable>.Updating += entry =>
