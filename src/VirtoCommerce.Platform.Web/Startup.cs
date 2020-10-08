@@ -125,14 +125,7 @@ namespace VirtoCommerce.Platform.Web
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
                     options.SerializerSettings.Formatting = Formatting.None;
-
-                    options.SerializerSettings.Error += (sender, args) =>
-                    {
-                        // Expose any JSON serialization exception as HTTP error
-                        throw new JsonException(args.ErrorContext.Error.Message);
-                    };
                 }
             );
 
