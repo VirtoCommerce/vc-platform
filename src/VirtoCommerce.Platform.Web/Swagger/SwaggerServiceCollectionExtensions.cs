@@ -102,6 +102,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     return module != null && module.Assembly == currentAssembly;
                 });
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+                c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
             });
 
             // Unfortunately, we can't use .CustomSchemaIds, because it changes schema ids for all documents (impossible to change ids depending on document name).
