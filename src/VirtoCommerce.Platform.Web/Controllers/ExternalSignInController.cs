@@ -48,6 +48,12 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
+            var decodedReturnUrl = System.Web.HttpUtility.UrlDecode(returnUrl, System.Text.Encoding.Default);
+            if (!Uri.TryCreate(decodedReturnUrl, UriKind.Absolute, out var parsedReturnUrl))
+            {
+                throw new ArgumentException("}:<");
+            }
+
             var externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
             if (externalLoginInfo == null)
             {
@@ -64,8 +70,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
             }
 
-            var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider,
-                externalLoginInfo.ProviderKey, false);
+            var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, false);
             if (!externalLoginResult.Succeeded)
             {
                 //Need handle the two cases
@@ -90,8 +95,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
                     }
                 }
 
-                var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey,
-                    externalLoginInfo.ProviderDisplayName);
+                var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
+
                 await _userManager.AddLoginAsync(platformUser, newExternalLogin);
 
                 //SignIn  user in the system
@@ -103,11 +108,14 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 // TODO: handle user lock-out and two-factor authentication
                 return RedirectToAction("Index", "Home");
             }
+
             if (platformUser == null)
             {
                 platformUser = await _userManager.FindByNameAsync(userName);
             }
+
             await _eventPublisher.Publish(new UserLoginEvent(platformUser));
+
             return Redirect(returnUrl);
         }
 
