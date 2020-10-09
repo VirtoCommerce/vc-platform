@@ -51,7 +51,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             var decodedReturnUrl = System.Web.HttpUtility.UrlDecode(returnUrl, System.Text.Encoding.Default);
             if (!Uri.TryCreate(decodedReturnUrl, UriKind.Absolute, out var parsedReturnUrl))
             {
-                throw new ArgumentException("}:<");
+                return RedirectToAction("Index", "Home");
             }
 
             var externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
