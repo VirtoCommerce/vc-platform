@@ -51,7 +51,6 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
-            //var decodedReturnUrl = HttpUtility.UrlDecode(returnUrl, System.Text.Encoding.Default);
             if (!_urlHelper.IsLocalUrl(returnUrl))
             {
                 return RedirectToAction("Index", "Home");
