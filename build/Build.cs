@@ -537,7 +537,7 @@ partial class Build : NukeBuild
          }
      });
 
-    Target GetManifest => _ => _
+    Target GetManifestGit => _ => _
         .Before(UpdateManifest)
         .Executes(() =>
         {
@@ -554,11 +554,10 @@ partial class Build : NukeBuild
         });
 
     Target UpdateManifest => _ => _
-        .Before(PublishManifest)
-        .After(GetManifest)
+        .Before(PublishManifestGit)
+        .After(GetManifestGit)
         .Executes(() =>
         {
-            GitTasks.GitLogger = GitLogger;
             var modulesJsonFile = ModulesLocalDirectory / ModulesJsonName;
             var manifest = ModuleManifest;
 
@@ -612,7 +611,7 @@ partial class Build : NukeBuild
             TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Newtonsoft.Json.Formatting.Indented));
         });
 
-    Target PublishManifest => _ => _
+    Target PublishManifestGit => _ => _
         .After(UpdateManifest)
         .Executes(() =>
         {
@@ -625,7 +624,7 @@ partial class Build : NukeBuild
         });
 
     Target PublishModuleManifest => _ => _
-        .DependsOn(GetManifest, UpdateManifest, PublishManifest);
+        .DependsOn(GetManifestGit, UpdateManifest, PublishManifestGit);
 
     Target SwaggerValidation => _ => _
           .DependsOn(Publish)
