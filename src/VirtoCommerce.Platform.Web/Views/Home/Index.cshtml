@@ -4,20 +4,62 @@
 }
 
 @section scripts
-    {
+{
     <script>
-        $(function () {
-            $('.main-content').on("mousewheel DOMMouseScroll", function (e) {
-                var delta = parseInt(e.originalEvent.wheelDelta || -e.originalEvent.detail);
-                if (Math.abs(delta) >= 120) {
-                    delta = delta / 40;
-                }
-                this.scrollLeft -= (delta * 30);
-                e.preventDefault();
-            });
+        $(function() {
+            $('.main-content')
+                .on("mousewheel DOMMouseScroll",
+                    function(e) {
+                        var delta = parseInt(e.originalEvent.wheelDelta || -e.originalEvent.detail);
+                        if (Math.abs(delta) >= 120) {
+                            delta = delta / 40;
+                        }
+                        this.scrollLeft -= (delta * 30);
+                        e.preventDefault();
+                    });
         });
+    </script>
 
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
 
+            if (msg.startsWith('Uncaught Error: [$injector:')) {
+                $("div.error-feature").show();
+                $("#scriptError").text(error && error.stack ? error.stack : msg);
+
+                $.ajax({
+                    type: "GET",
+                    url: "api/platform/diagnostics/errors",
+                    success: (data) => {
+                        var modulesWithErrors = data;
+                        if (modulesWithErrors.length > 0) {
+                            $("div.error-content").show();
+
+                            modulesWithErrors.forEach(module => {
+                                $("#moduleInfo").append(` <button type="button" class="collapsible">${module.id} - version:${module.version}</button> <div class="content"> ${module.validationErrors.join(';')} </div>`);
+                            });
+                            addListenersToButton();
+                        }
+                    },
+                    failure: (errMsg) => $("#scriptError").text(errMsg)
+                });
+            }
+        }
+
+        addListenersToButton = function () {
+            const coll = document.getElementsByClassName("collapsible");
+            for (let i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    let content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+        }
     </script>
 }
 
@@ -46,5 +88,15 @@
     <div class="error-detail" ng-if="platformError.detailVisible" ng-bind-html="platformError.detail"></div>
 </div>
 
-<ui-view></ui-view>
 
+<div class="error-feature" style="display:none">
+    <h1 style="padding-top: 50px; padding-left: 50px; ">Startup error</h1>
+    <p style="padding: 15px 0 10px 50px; font-size: 24px">The script injection error occurred:</p>
+    <textarea  id="scriptError" class="textarea-error error-text" readonly></textarea>
+    <div class="error-content" style="display:none">
+        <p style="padding-top: 10px; padding-left: 50px; font-size: 24px;">The following modules were loaded with errors:</p>
+        <div id="moduleInfo" class="error-text">
+        </div>
+    </div>
+</div>
+<ui-view></ui-view>

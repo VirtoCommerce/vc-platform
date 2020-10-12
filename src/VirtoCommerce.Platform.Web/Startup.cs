@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -8,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
-using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,7 +42,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
-using VirtoCommerce.Platform.Hangfire;
+using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -69,6 +70,7 @@ namespace VirtoCommerce.Platform.Web
             Configuration = configuration;
             WebHostEnvironment = hostingEnvironment;
         }
+
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment WebHostEnvironment { get; }
 
@@ -123,14 +125,7 @@ namespace VirtoCommerce.Platform.Web
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
                     options.SerializerSettings.Formatting = Formatting.None;
-
-                    options.SerializerSettings.Error += (sender, args) =>
-                    {
-                        // Expose any JSON serialization exception as HTTP error
-                        throw new JsonException(args.ErrorContext.Error.Message);
-                    };
                 }
             );
 
@@ -173,10 +168,8 @@ namespace VirtoCommerce.Platform.Web
                                       .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
                                       .AddCookie();
 
-
             services.AddSecurityServices(options =>
             {
-
             });
 
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
@@ -369,7 +362,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
                      {
-                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "Modules");
+                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
                      })
                     .ValidateDataAnnotations();
             services.AddModules(mvcBuilder);
@@ -428,7 +421,27 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles();
+            // Add default MimeTypes with additional bindings
+            var fileExtensionsBindings = new Dictionary<string, string>()
+            {
+                { ".liquid", "text/html"},
+                { ".md", "text/html"}
+            };
+
+            // Create default provider (with default Mime types)
+            var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+
+            // Add custom bindings
+            foreach (var binding in fileExtensionsBindings)
+            {
+                fileExtensionContentTypeProvider.Mappings[binding.Key] = binding.Value;
+            }
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = fileExtensionContentTypeProvider
+            });
+
             app.UseRouting();
             app.UseCookiePolicy();
 
@@ -445,7 +458,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
-                    RequestPath = new PathString($"/Modules/$({ module.ModuleName })")
+                    RequestPath = new PathString($"/modules/$({ module.ModuleName })")
                 });
             }
 
@@ -477,11 +490,10 @@ namespace VirtoCommerce.Platform.Web
             //Register platform settings
             app.UsePlatformSettings();
 
-            // Complete hangfire init 
+            // Complete hangfire init
             app.UseHangfire(Configuration);
 
             app.UseModules();
-
 
             //Register platform permissions
             app.UsePlatformPermissions();
@@ -500,5 +512,3 @@ namespace VirtoCommerce.Platform.Web
         }
     }
 }
-
-

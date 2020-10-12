@@ -208,7 +208,6 @@ angular.module('platformWebApp')
         }
     }])
     .factory('platformWebApp.bladeNavigationService', ['platformWebApp.authService', '$timeout', '$state', 'platformWebApp.dialogService', function (authService, $timeout, $state, dialogService) {
-
         function showConfirmationIfNeeded(showConfirmation, canSave, blade, saveChangesCallback, closeCallback, saveTitle, saveMessage) {
             if (showConfirmation) {
                 var dialog = { id: "confirmCurrentBladeClose" };
@@ -270,7 +269,7 @@ angular.module('platformWebApp')
                         }
                         if (angular.isFunction(callback)) {
                             callback();
-                        };
+                        }
                     };
 
                     if (angular.isFunction(blade.onClose)) {
@@ -324,7 +323,6 @@ angular.module('platformWebApp')
                 return found;
             },
             showBlade: function (blade, parentBlade) {
-
                 //If it is first blade for state try to open saved blades
                 //var firstStateBlade = service.stateBlades($state.current.name)[0];
                 //if (angular.isDefined(firstStateBlade) && firstStateBlade.id == blade.id) {
