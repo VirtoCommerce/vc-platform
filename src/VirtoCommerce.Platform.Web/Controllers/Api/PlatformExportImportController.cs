@@ -200,46 +200,59 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private IEnumerable<SampleDataInfo> InnerDiscoverSampleData()
         {
-            var retVal = new List<SampleDataInfo>();
-
             var sampleDataUrl = _platformOptions.SampleDataUrl;
-            if (!string.IsNullOrEmpty(sampleDataUrl))
+            if (string.IsNullOrEmpty(sampleDataUrl))
             {
-                //Discovery mode
-                if (!sampleDataUrl.EndsWith(".zip"))
+                return Enumerable.Empty<SampleDataInfo>();
+            }
+
+            //Direct file mode
+            if (sampleDataUrl.EndsWith(".zip"))
+            {
+                return new List<SampleDataInfo>
                 {
-                    var manifestUrl = sampleDataUrl + "\\manifest.json";
-                    using (var client = new WebClient())
-                    using (var stream = client.OpenRead(new Uri(manifestUrl)))
+                    new SampleDataInfo { Url = sampleDataUrl }
+                };
+            }
+
+            //Discovery mode
+            var manifestUrl = sampleDataUrl + "\\manifest.json";
+            using (var client = new WebClient())
+            using (var stream = client.OpenRead(new Uri(manifestUrl)))
+            {
+                //Add empty template
+                var retVal = new List<SampleDataInfo>
+                {
+                    new SampleDataInfo { Name = "Empty" }
+                };
+
+                //Need filter unsupported versions and take one most new sample data
+                var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>()
+                    .Select(x => new
                     {
-                        //Add empty template
-                        retVal.Add(new SampleDataInfo { Name = "Empty" });
-                        var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>();
-                        //Need filter unsupported versions and take one most new sample data
-                        sampleDataInfos = sampleDataInfos.Select(x => new { Version = SemanticVersion.Parse(x.PlatformVersion), x.Name, Data = x })
-                                                         .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
-                                                         .GroupBy(x => x.Name)
-                                                         .Select(x => x.OrderByDescending(y => y.Version).First().Data)
-                                                         .ToList();
-                        //Convert relative  sample data urls to absolute
-                        foreach (var sampleDataInfo in sampleDataInfos)
-                        {
-                            if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
-                            {
-                                var uri = new Uri(sampleDataUrl);
-                                sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
-                            }
-                        }
-                        retVal.AddRange(sampleDataInfos);
+                        Version = SemanticVersion.Parse(x.PlatformVersion),
+                        x.Name,
+                        Data = x
+                    })
+                    .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
+                    .GroupBy(x => x.Name)
+                    .Select(x => x.OrderByDescending(y => y.Version).First().Data)
+                    .ToList();
+
+                //Convert relative  sample data urls to absolute
+                foreach (var sampleDataInfo in sampleDataInfos)
+                {
+                    if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
+                    {
+                        var uri = new Uri(sampleDataUrl);
+                        sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
                     }
                 }
-                else
-                {
-                    //Direct file mode
-                    retVal.Add(new SampleDataInfo { Url = sampleDataUrl });
-                }
+
+                retVal.AddRange(sampleDataInfos);
+
+                return retVal;
             }
-            return retVal;
         }
 
         public async Task SampleDataImportBackgroundAsync(Uri url, string tmpPath, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
