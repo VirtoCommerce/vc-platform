@@ -1,7 +1,4 @@
-using System.Diagnostics;
-using System.Threading;
 using Microsoft.Extensions.Hosting;
-using VirtoCommerce.Platform.Core.Extensions;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {

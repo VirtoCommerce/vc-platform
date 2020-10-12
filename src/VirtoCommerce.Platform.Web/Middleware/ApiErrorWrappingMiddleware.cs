@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -31,11 +29,10 @@ namespace VirtoCommerce.Platform.Web.Middleware
                 //Need handle only storefront api errors
                 if (!context.Response.HasStarted && context.Request.Path.ToString().Contains("/api/"))
                 {
-                    _logger.LogError(ex, ex.Message);
-
-                    var message = ex.Message;
+                    var message = $@"An exception occurred while processing the request [{context.Request.Path}]: {ex} ";
+                    _logger.LogError(ex, message);
                     var httpStatusCode = HttpStatusCode.InternalServerError;
-                    var json = JsonConvert.SerializeObject(new {  message, stackTrace = ex.StackTrace });
+                    var json = JsonConvert.SerializeObject(new { message, stackTrace = ex.StackTrace });
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = (int)httpStatusCode;
                     await context.Response.WriteAsync(json);
