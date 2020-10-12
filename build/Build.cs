@@ -134,6 +134,9 @@ partial class Build : NukeBuild
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
     [Parameter("Path to Artifacts Directory")] AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
+
+    [Parameter("Directory containing modules.json")] string ModulesJsonDirectoryName = "vc-modules";
+    AbsolutePath ModulesLocalDirectory => ArtifactsDirectory / ModulesJsonDirectoryName;
     Project WebProject => Solution.AllProjects.FirstOrDefault(x => (x.Name.EndsWith(".Web") && !x.Path.ToString().Contains("samples")) || x.Name.EndsWith("VirtoCommerce.Storefront"));
     AbsolutePath ModuleManifestFile => WebProject.Directory / "module.manifest";
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
@@ -534,20 +537,29 @@ partial class Build : NukeBuild
          }
      });
 
-    Target PublishModuleManifest => _ => _
+    Target GetManifest => _ => _
+        .Before(UpdateManifest)
         .Executes(() =>
         {
             GitTasks.GitLogger = GitLogger;
-            var modulesLocalDirectory = ArtifactsDirectory / "vc-modules";
-            var modulesJsonFile = modulesLocalDirectory / ModulesJsonName;
-            if (!DirectoryExists(modulesLocalDirectory))
+            var modulesJsonFile = ModulesLocalDirectory / ModulesJsonName;
+            if (!DirectoryExists(ModulesLocalDirectory))
             {
-                GitTasks.Git($"clone {ModulesRepository.HttpsUrl} {modulesLocalDirectory}");
+                GitTasks.Git($"clone {ModulesRepository.HttpsUrl} {ModulesLocalDirectory}");
             }
             else
             {
-                GitTasks.Git($"pull", modulesLocalDirectory);
+                GitTasks.Git($"pull", ModulesLocalDirectory);
             }
+        });
+
+    Target UpdateManifest => _ => _
+        .Before(PublishManifest)
+        .After(GetManifest)
+        .Executes(() =>
+        {
+            GitTasks.GitLogger = GitLogger;
+            var modulesJsonFile = ModulesLocalDirectory / ModulesJsonName;
             var manifest = ModuleManifest;
 
             var modulesExternalManifests = JsonConvert.DeserializeObject<List<ExternalModuleManifest>>(TextTasks.ReadAllText(modulesJsonFile));
@@ -598,12 +610,22 @@ partial class Build : NukeBuild
                 modulesExternalManifests.Add(ExternalModuleManifest.FromManifest(manifest));
             }
             TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Newtonsoft.Json.Formatting.Indented));
-            if(PushChanges)
+        });
+
+    Target PublishManifest => _ => _
+        .After(UpdateManifest)
+        .Executes(() =>
+        {
+            GitTasks.GitLogger = GitLogger;
+            if (PushChanges)
             {
-                GitTasks.Git($"commit -am \"{manifest.Id} {ReleaseVersion}\"", modulesLocalDirectory);
-                GitTasks.Git($"push origin HEAD:master -f", modulesLocalDirectory);
+                GitTasks.Git($"commit -am \"{ModuleManifest.Id} {ReleaseVersion}\"", ModulesLocalDirectory);
+                GitTasks.Git($"push origin HEAD:master -f", ModulesLocalDirectory);
             }
         });
+
+    Target PublishModuleManifest => _ => _
+        .DependsOn(GetManifest, UpdateManifest, PublishManifest);
 
     Target SwaggerValidation => _ => _
           .DependsOn(Publish)
