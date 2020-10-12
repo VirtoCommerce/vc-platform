@@ -39,7 +39,7 @@ namespace VirtoCommerce.Platform.Modules
             {
                 manager.LoadModule(module.ModuleName);
 
-                // VP-2190: Ne need to add parts for modules with laoding errors - it could cause an exception
+                // VP-2190: No need to add parts for modules with laoding errors - it could cause an exception
                 if (module.Assembly != null && module.Errors.IsNullOrEmpty())
                 {
                     // Register API controller from modules
