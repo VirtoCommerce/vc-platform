@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
-using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -21,7 +19,6 @@ using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Hangfire;
-
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -31,32 +28,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class PlatformExportImportController : Controller
     {
-        private static string _stringSampleDataUrl;
-
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
-        private readonly IBlobStorageProvider _blobStorageProvider;
-        private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly ISettingsManager _settingsManager;
         private readonly IUserNameResolver _userNameResolver;
-        private readonly IWebHostEnvironment _hostEnv;
         private readonly PlatformOptions _platformOptions;
 
         private static readonly object _lockObject = new object();
 
-        public PlatformExportImportController(IPlatformExportImportManager platformExportManager, IPushNotificationManager pushNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver,
-            ISettingsManager settingManager, IUserNameResolver userNameResolver, IWebHostEnvironment hostingEnvironment, IOptions<PlatformOptions> options)
+        public PlatformExportImportController(
+            IPlatformExportImportManager platformExportManager,
+            IPushNotificationManager pushNotifier,
+            ISettingsManager settingManager,
+            IUserNameResolver userNameResolver,
+            IOptions<PlatformOptions> options)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
-            _blobStorageProvider = blobStorageProvider;
-            _blobUrlResolver = blobUrlResolver;
             _settingsManager = settingManager;
             _userNameResolver = userNameResolver;
-            _hostEnv = hostingEnvironment;
             _platformOptions = options.Value;
-
-            _stringSampleDataUrl = options.Value.SampleDataUrl;
         }
 
         [HttpGet]
@@ -187,7 +178,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok();
         }
 
-
         [HttpGet]
         [Route("export/download/{fileName}")]
         [Authorize(Permissions.PlatformExport)]
@@ -196,7 +186,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var localTmpFolder = Path.GetFullPath(Path.Combine(_platformOptions.DefaultExportFolder));
             var localPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
 
-            //Load source data only from local file system 
+            //Load source data only from local file system
             using (var stream = System.IO.File.Open(localPath, FileMode.Open))
             {
                 var provider = new FileExtensionContentTypeProvider();
@@ -208,11 +198,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private static IEnumerable<SampleDataInfo> InnerDiscoverSampleData()
+        private IEnumerable<SampleDataInfo> InnerDiscoverSampleData()
         {
             var retVal = new List<SampleDataInfo>();
 
-            var sampleDataUrl = _stringSampleDataUrl;
+            var sampleDataUrl = _platformOptions.SampleDataUrl;
             if (!string.IsNullOrEmpty(sampleDataUrl))
             {
                 //Discovery mode
@@ -241,7 +231,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                             }
                         }
                         retVal.AddRange(sampleDataInfos);
-
                     }
                 }
                 else
@@ -252,7 +241,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             return retVal;
         }
-
 
         public async Task SampleDataImportBackgroundAsync(Uri url, string tmpPath, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
         {
@@ -325,7 +313,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 var localPath = Path.GetFullPath(Path.Combine(_platformOptions.LocalUploadFolderPath, importRequest.FileUrl));
 
-                //Load source data only from local file system 
+                //Load source data only from local file system
                 using (var stream = new FileStream(localPath, FileMode.Open))
                 {
                     var manifest = importRequest.ToManifest();
@@ -372,7 +360,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     System.IO.File.Delete(localTmpPath);
                 }
-                //Import first to local tmp folder because Azure blob storage doesn't support some special file access mode 
+                //Import first to local tmp folder because Azure blob storage doesn't support some special file access mode
                 using (var stream = System.IO.File.OpenWrite(localTmpPath))
                 {
                     var manifest = exportRequest.ToManifest();
