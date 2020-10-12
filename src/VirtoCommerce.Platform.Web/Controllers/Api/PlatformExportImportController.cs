@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Processing);
                     var pushNotification = new SampleDataImportPushNotification(User.Identity.Name);
                     _pushNotifier.Send(pushNotification);
-                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(new Uri(url), Path.GetFullPath(_platformOptions.LocalUploadFolderPath), pushNotification, JobCancellationToken.Null, null));
+                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(new Uri(url), pushNotification, JobCancellationToken.Null, null));
                     pushNotification.JobId = jobId;
 
                     return Ok(pushNotification);
@@ -273,7 +273,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        public async Task SampleDataImportBackgroundAsync(Uri url, string tmpPath, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task SampleDataImportBackgroundAsync(Uri url, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
         {
             void progressCallback(ExportImportProgressInfo x)
             {
@@ -281,11 +281,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 pushNotification.JobId = context.BackgroundJob.Id;
                 _pushNotifier.Send(pushNotification);
             }
+
             try
             {
                 pushNotification.Description = "Start downloading from " + url;
+
                 await _pushNotifier.SendAsync(pushNotification);
 
+                var tmpPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
                 if (!Directory.Exists(tmpPath))
                 {
                     Directory.CreateDirectory(tmpPath);
