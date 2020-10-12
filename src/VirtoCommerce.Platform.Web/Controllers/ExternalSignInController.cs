@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -50,7 +51,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
-            var decodedReturnUrl = System.Web.HttpUtility.UrlDecode(returnUrl, System.Text.Encoding.Default);
+            var decodedReturnUrl = HttpUtility.UrlDecode(returnUrl, System.Text.Encoding.Default);
             if (!_urlHelper.IsLocalUrl(decodedReturnUrl))
             {
                 return RedirectToAction("Index", "Home");
