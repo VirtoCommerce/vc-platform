@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Web.Middleware
                 //Need handle only storefront api errors
                 if (!context.Response.HasStarted && context.Request.Path.ToString().Contains("/api/"))
                 {
-                    var message = ex.ToString();
+                    var message = $@"An exception occurred while processing the request [{context.Request.Path}]: {ex} ";
                     _logger.LogError(ex, message);
                     var httpStatusCode = HttpStatusCode.InternalServerError;
                     var json = JsonConvert.SerializeObject(new { message, stackTrace = ex.StackTrace });
