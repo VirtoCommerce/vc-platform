@@ -239,7 +239,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             using (var stream = client.OpenRead(new Uri(manifestUrl)))
             {
                 //Add empty template
-                var retVal = new List<SampleDataInfo>
+                var result = new List<SampleDataInfo>
                 {
                     new SampleDataInfo { Name = "Empty" }
                 };
@@ -267,9 +267,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     }
                 }
 
-                retVal.AddRange(sampleDataInfos);
+                result.AddRange(sampleDataInfos);
 
-                return retVal;
+                return result;
             }
         }
 
