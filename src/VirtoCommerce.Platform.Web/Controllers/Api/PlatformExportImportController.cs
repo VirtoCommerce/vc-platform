@@ -22,7 +22,6 @@ using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Hangfire;
 
 using Permissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
-using SystemFile = System.IO.File;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -205,7 +204,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var localPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
 
             //Load source data only from local file system
-            using (var stream = SystemFile.Open(localPath, FileMode.Open))
+            using (var stream = System.IO.File.Open(localPath, FileMode.Open))
             {
                 var provider = new FileExtensionContentTypeProvider();
                 if (!provider.TryGetContentType(localPath, out var contentType))
@@ -391,13 +390,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     Directory.CreateDirectory(localTmpFolder);
                 }
 
-                if (SystemFile.Exists(localTmpPath))
+                if (System.IO.File.Exists(localTmpPath))
                 {
-                    SystemFile.Delete(localTmpPath);
+                    System.IO.File.Delete(localTmpPath);
                 }
 
                 //Import first to local tmp folder because Azure blob storage doesn't support some special file access mode
-                using (var stream = SystemFile.OpenWrite(localTmpPath))
+                using (var stream = System.IO.File.OpenWrite(localTmpPath))
                 {
                     var manifest = exportRequest.ToManifest();
                     await _platformExportManager.ExportAsync(stream, manifest, progressCallback, new JobCancellationTokenWrapper(cancellationToken));
