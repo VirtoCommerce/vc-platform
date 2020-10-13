@@ -25,21 +25,16 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
             });
             blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
             blade.isLoading = false;
-        };
+        }
 
         function isAccountlocked(id) {
             return accounts.locked({ id: id }).$promise;
         }
 
-
         blade.metaFields = metaFormsService.getMetaFields("accountDetails");
 
         function isDirty() {
             return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
-        };
-
-        function canSave() {
-            return isDirty() && $scope.formScope && $scope.formScope.$valid;
         }
 
         blade.openAccountTypeSettingManagement = function () {
@@ -52,7 +47,6 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                 template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
             };
             bladeNavigationService.showBlade(newBlade, blade);
-
         };
 
         $scope.setForm = function (form) {
@@ -78,7 +72,6 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
 
         blade.headIcon = 'fa-key';
 
-       
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",

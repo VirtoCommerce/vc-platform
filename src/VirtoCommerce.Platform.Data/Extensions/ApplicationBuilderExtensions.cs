@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using static VirtoCommerce.Platform.Data.Constants.DefaultEntityNames;
 
 namespace VirtoCommerce.Platform.Data.Extensions
 {
@@ -30,8 +31,13 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 var userName = currentUserNameResolver.GetCurrentUserName();
 
                 entry.Entity.ModifiedDate = currentTime;
-                entry.Entity.ModifiedBy = userName;
+
+                if (userName != UNKNOWN_USERNAME)
+                {
+                    entry.Entity.ModifiedBy = userName;
+                }
             };
+
             return appBuilder;
         }
     }

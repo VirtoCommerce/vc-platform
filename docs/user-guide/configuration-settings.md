@@ -2,7 +2,7 @@
 VC Platform is ASP&#46;NET Core application, and it's configurable as described in [Configuration in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1).
 
 ## Configuration settings
-The configuration keys are hierarchical. This structure is most convenient to manage in _appsettings.json_ file: 
+The configuration keys are hierarchical. This structure is most convenient to manage in _appsettings.json_ file:
 
 | Top Configuration node | Child node(s) | Default OR sample value  | Description  |
 | ---------------------- | ------------- | ------------------------ | ------------ |
@@ -11,10 +11,10 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | E.g., VirtoCommerce.Catalog        | E.g., `Data Source=(local);Initial Catalog=VirtoCommerceCatalog;Persist Security Info=True;User ID=virto;Password=virto; MultipleActiveResultSets=True;Connect Timeout=30` | Other, module-specific connection string(s). E.g., VirtoCommerce.Catalog module would use `VirtoCommerce.Catalog` connection string, if it's defined. |
 | | RedisConnectionString | E.g., `"localhost"` | StackExchange.Redis Configuration string. Check [Redis Configuration](https://stackexchange.github.io/StackExchange.Redis/Configuration) for details.
 | VirtoCommerce |  |  | VC Platform system settings
-|  | LicenseActivationUrl |`"https://virtocommerce.com/admin/ api/licenses/activate/"` | VC Platform license activation service URL
+|  | LicenseActivationUrl |`"https://virtocommerce.com/admin/api/licenses/activate/"` | VC Platform license activation service URL
 |  | LicenseFilePath |      `"App_Data/VirtoCommerce.lic"`                            | VC Platform license file location
 |  | LocalUploadFolderPath | `"App_Data/Uploads"`                                     | Uploads folder location
-|  | SampleDataUrl | E.g., `"http://virtocommerce.azureedge. net/sample-data"` | URL to download sample data during initial Platform setup
+|  | SampleDataUrl | E.g., `"http://virtocommerce.azureedge.net/sample-data"` | URL to download sample data during initial Platform setup
 |  | DiscoveryPath | `"./Modules"` | Relative or absolute folder location where Platform will discover installed modules
 |  | AllowInsecureHttp | `false` | Controls how the OpenID Connect server (ASOS) handles the incoming requests to arriving on non-HTTPS endpoints should be rejected or not. By default, this property is set to false to help mitigate man-in-the-middle attacks.
 |  | Hangfire          | E.g. <br>"Hangfire": {<br>            "JobStorageType": "Memory",<br>            "UseHangfireServer": true,<br>            "AutomaticRetryCount": 1,<br>            "SqlServerStorageOptions": {<br>                "CommandBatchMaxTimeout": "00:05:00",<br>                "SlidingInvisibilityTimeout": "00:05:00",<br>                "QueuePollInterval": "00:00:00",<br>                "UseRecommendedIsolationLevel": true,<br>                "UsePageLocksOnDequeue": true,<br>                "DisableGlobalLocks": true,<br>                "EnableHeavyMigrations": true<br>            }<br>        }   | Background processing library (Hangfire) configuration.<br><br> `JobStorageType` - current job storage. Supported values: Memory, SqlServer.<br> `UseHangfireServer` - enable/disable HangFire for this app instance.<br> `AutomaticRetryCount` - maximum number of automatic retry attempts. <br>`SqlServerStorageOptions` - Hangfire.SqlServer.SqlServerStorageOptions. Check [Hangfire's SQL Server Configuration](https://docs.hangfire.io/en/latest/configuration/using-sql-server.html#configuration) for details.
@@ -25,8 +25,8 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 | IdentityOptions | | | Options to configure the ASP&#46;NET Core Identity system. Check [Configure ASP.NET Core Identity](https://github.com/dotnet/AspNetCore.Docs/blob/master/aspnetcore/security/authentication/identity-configuration.md#configure-aspnet-core-identity) for details.
 | ExternalModules | | | Configure external source to install modules.
 |  | IncludePrerelease | `false` | Show module versions marked as *Prerelease* if value is `true`.
-|  | ModulesManifestUrl | E.g., `"https://raw.githubusercontent. com/VirtoCommerce/vc-modules/master/modules_v3.json"` | Url to *.json* file containing modules' manifests. 
-|  | AuthorizationToken | | Authorization token to access *ModulesManifestUrl*. Added to *Authorization* header, if specified. 
+|  | ModulesManifestUrl | E.g., `"https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules_v3.json"` | Url to *.json* file containing modules' manifests.
+|  | AuthorizationToken | | Authorization token to access *ModulesManifestUrl*. Added to *Authorization* header, if specified.
 |  | AutoInstallModuleBundles | `["commerce"]` | Group(s) of modules to install automatically during initial Platform setup. Provide empty array to install none.
 | Caching |  |  | Caching configuration
 |  | Redis | E.g., <br>"Redis": {<br>"ChannelName": "VirtoCommerceChannel",<br>"BusRetryCount": 3<br>} | Redis configuration, incl. the message channel to use and number of times to retry.
@@ -48,7 +48,6 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | Provider | `"FileSystem"` | Current Content (files) Provider. Supported values: FileSystem, AzureBlobStorage.
 |  | FileSystem | E.g., <br> "FileSystem": {<br> "RootPath": "~/cms-content",<br>"PublicUrl": "http://localhost:10645/cms-content/"<br>}  | File system based content provider configuration. This is the default provider, used if `AzureBlobStorage` is not set as current provider.
 |  | AzureBlobStorage | E.g., <br> "AzureBlobStorage": {<br> "ConnectionString": "",<br>"CdnUrl": ""<br>}  | Azure Blob Storage based content provider configuration. Used, if `"Provider": "AzureBlobStorage"`.
-
 
 **_Note:_** Each setting is optional, if it's not marked as **Required.**
 

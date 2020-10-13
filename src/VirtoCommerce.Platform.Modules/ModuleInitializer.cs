@@ -108,8 +108,6 @@ namespace VirtoCommerce.Platform.Modules
                 manifestModule.Errors.Add(exception.ToString());
             }
             _loggerFacade.LogError(moduleException.ToString());
-
-            //throw moduleException;
         }
 
         /// <summary>

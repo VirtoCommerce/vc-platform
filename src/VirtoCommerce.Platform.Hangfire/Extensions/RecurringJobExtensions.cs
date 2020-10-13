@@ -8,7 +8,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
 
-namespace VirtoCommerce.Platform.Hangfire
+namespace VirtoCommerce.Platform.Hangfire.Extensions
 {
     public static class RecurringJobExtensions
     {
@@ -26,11 +26,11 @@ namespace VirtoCommerce.Platform.Hangfire
             ISettingsManager settingsManager,
             SettingCronJob settingCronJob)
         {
-            WatchJobSettingAsync(recurringJobManager, settingsManager, settingCronJob).GetAwaiter().GetResult();
+            recurringJobManager.WatchJobSettingAsync(settingsManager, settingCronJob).GetAwaiter().GetResult();
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="recurringJobManager"></param>
@@ -67,7 +67,7 @@ namespace VirtoCommerce.Platform.Hangfire
                 .ToJob(methodCall)
                 .Build();
 
-            WatchJobSettingAsync(recurringJobManager, settingsManager, settingCronJob).GetAwaiter().GetResult();
+            recurringJobManager.WatchJobSettingAsync(settingsManager, settingCronJob).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -93,11 +93,11 @@ namespace VirtoCommerce.Platform.Hangfire
             _observedSettingsDict.AddOrUpdate(settingCronJob.EnableSetting.Name, settingCronJob, (settingName, сronJob) => settingCronJob);
             _observedSettingsDict.AddOrUpdate(settingCronJob.CronSetting.Name, settingCronJob, (settingName, сronJob) => settingCronJob);
 
-            return RunOrRemoveJobAsync(recurringJobManager, settingsManager, settingCronJob);
+            return recurringJobManager.RunOrRemoveJobAsync(settingsManager, settingCronJob);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="recurringJobManager"></param>
         /// <param name="settingsManager"></param>
@@ -113,7 +113,7 @@ namespace VirtoCommerce.Platform.Hangfire
             {
                 throw new ArgumentNullException(nameof(settingsManager));
             }
-            return HandleSettingChangeAsyncIntnl(recurringJobManager, settingsManager, message);
+            return recurringJobManager.HandleSettingChangeAsyncIntnl(settingsManager, message);
         }
 
         private static async Task HandleSettingChangeAsyncIntnl(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, ObjectSettingChangedEvent message)
@@ -123,7 +123,7 @@ namespace VirtoCommerce.Platform.Hangfire
             {
                 if (_observedSettingsDict.TryGetValue(changedEntry.NewEntry.Name, out var settingCronJob))
                 {
-                    await RunOrRemoveJobAsync(recurringJobManager, settingsManager, settingCronJob);
+                    await recurringJobManager.RunOrRemoveJobAsync(settingsManager, settingCronJob);
                 }
             }
         }

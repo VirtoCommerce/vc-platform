@@ -16,18 +16,16 @@ angular
                     menuElement.addClass('open');
 
                     var doc = $document[0].documentElement;
-                    var docLeft = (window.pageXOffset || doc.scrollLeft) -
-                                  (doc.clientLeft || 0),
-                        docTop = (window.pageYOffset || doc.scrollTop) -
-                                 (doc.clientTop || 0),
-                        elementWidth = menuElement[0].scrollWidth,
-                        elementHeight = menuElement[0].scrollHeight;
-                    var docWidth = doc.clientWidth + docLeft,
-                      docHeight = doc.clientHeight + docTop,
-                      totalWidth = elementWidth + event.pageX,
-                      totalHeight = elementHeight + event.pageY,
-                      left = Math.max(event.pageX - docLeft, 0),
-                      top = Math.max(event.pageY - docTop, 0);
+                    var docLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+                    var docTop = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
+                    var elementWidth = menuElement[0].scrollWidth;
+                    var elementHeight = menuElement[0].scrollHeight;
+
+                    var docWidth = doc.clientWidth + docLeft;
+                    var docHeight = doc.clientHeight + docTop;
+                    var totalWidth = elementWidth + event.pageX;
+                    var left = Math.max(event.pageX - docLeft, 0);
+                    var top = Math.max(event.pageY - docTop, 0);
 
                     if (totalWidth > docWidth) {
                         left = left - (totalWidth - docWidth);
@@ -73,7 +71,7 @@ angular
                             close(ContextMenuService.menuElement);
                         }
                         ContextMenuService.menuElement = angular.element(
-                          document.getElementById($attrs.target)
+                            document.getElementById($attrs.target)
                         );
                         ContextMenuService.element = event.target;
 
@@ -98,9 +96,9 @@ angular
 
                 function handleClickEvent(event) {
                     if (!$scope.disabled() &&
-                      opened &&
-                      (event.button !== 2 ||
-                       event.target !== ContextMenuService.element)) {
+                        opened &&
+                        (event.button !== 2 ||
+                            event.target !== ContextMenuService.element)) {
                         $scope.$apply(function () {
                             close(ContextMenuService.menuElement);
                         });

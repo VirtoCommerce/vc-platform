@@ -1,10 +1,7 @@
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Http;
-using System.Text;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Modules.External
@@ -12,6 +9,7 @@ namespace VirtoCommerce.Platform.Modules.External
     public class ExternalModulesClient : IExternalModulesClient
     {
         private readonly ExternalModuleCatalogOptions _options;
+
         public ExternalModulesClient(IOptions<ExternalModuleCatalogOptions> options)
         {
             _options = options.Value;
