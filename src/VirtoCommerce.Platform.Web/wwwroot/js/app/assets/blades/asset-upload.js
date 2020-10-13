@@ -18,12 +18,17 @@ angular.module('platformWebApp')
                     removeAfterUpload: true
                 });
 
-                if (blade.fileUploadOptions.accept && blade.fileUploadOptions.accept.contains('image')) {
+                if (blade.fileUploadOptions.typeFilterCallback && angular.isFunction(blade.fileUploadOptions.typeFilterCallback)) {
+                    uploader.filters.push({
+                        name: 'customFileTypeFilter',
+                        fn: blade.fileUploadOptions.typeFilterCallback
+                    });
+                } else if (blade.fileUploadOptions.accept && blade.fileUploadOptions.accept.contains('image')) {
                     uploader.filters.push({
                         name: 'imageFilter',
                         fn: function (item) {
                             var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-                            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+                            return '|jpg|png|jpeg|bmp|gif|svg+xml|'.indexOf(type) !== -1;
                         }
                     });
                 }
