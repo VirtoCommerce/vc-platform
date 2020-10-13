@@ -133,14 +133,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // Link: https://docs.microsoft.com/en-us/dotnet/api/system.io.path.combine?view=netcore-3.1#System_IO_Path_Combine_System_String_System_String_
             if (Uri.TryCreate(fileUrl, UriKind.Absolute, out _))
             {
-                throw new ArgumentException($"Absolute path for {nameof(fileUrl)} does not allow.");
+                throw new ArgumentException($"Absolute path for {nameof(fileUrl)} is not allowed.");
             }
 
             // Prevent fileUrl pattern "..//..//path"
             // Its not possible to change root folder with Path.Combine, but we need process attempted exploitation
             if (Regex.IsMatch(fileUrl, @"^((\/){0,}[.]+(\/){0,})+"))
             {
-                throw new ArgumentException($"Change root folder does not allow.");
+                throw new ArgumentException($"Change root folder is not allowed.");
             }
 
             var localPath = Path.Combine(Path.GetFullPath(_platformOptions.LocalUploadFolderPath), fileUrl);
