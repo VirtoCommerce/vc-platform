@@ -18,10 +18,10 @@ angular.module('platformWebApp')
                     removeAfterUpload: true
                 });
 
-                if (blade.fileUploadOptions.typeFilterCallback && angular.isFunction(blade.fileUploadOptions.typeFilterCallback)) {
+                if (blade.fileUploadOptions.filterCallback && angular.isFunction(blade.fileUploadOptions.filterCallback)) {
                     uploader.filters.push({
-                        name: 'customFileTypeFilter',
-                        fn: blade.fileUploadOptions.typeFilterCallback
+                        name: 'customFileFilter',
+                        fn: blade.fileUploadOptions.filterCallback
                     });
                 } else if (blade.fileUploadOptions.accept && blade.fileUploadOptions.accept.contains('image')) {
                     uploader.filters.push({
