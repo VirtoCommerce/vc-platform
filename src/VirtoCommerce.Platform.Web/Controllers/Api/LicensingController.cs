@@ -33,21 +33,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest(new { Error = $"{activationCode} is invalid" });
             }
 
+            License license = null;
+
             using (var httpClient = new HttpClient())
             {
                 var activationUrl = new Uri(_platformOptions.LicenseActivationUrl + activationCode);
                 var httpResponse = await httpClient.GetAsync(activationUrl);
 
-                if (!httpResponse.IsSuccessStatusCode)
+                if (httpResponse.IsSuccessStatusCode)
                 {
-                    return BadRequest(new { Error = $"License server returns {httpResponse.StatusCode} status code" });
+                    var rawLicense = await httpResponse.Content.ReadAsStringAsync();
+                    license = License.Parse(rawLicense, Path.GetFullPath(_platformOptions.LicensePublicKeyPath));
                 }
-
-                var rawLicense = await httpResponse.Content.ReadAsStringAsync();
-                var license = License.Parse(rawLicense, Path.GetFullPath(_platformOptions.LicensePublicKeyPath));
-
-                return Ok(license);
             }
+
+            return Ok(license);
         }
 
         [HttpPost]
