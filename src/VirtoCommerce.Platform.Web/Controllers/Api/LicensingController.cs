@@ -30,7 +30,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             if (!Regex.IsMatch(activationCode, "^([a-zA-Z_0-9-])+$"))
             {
-                return BadRequest(new { Error = $"{activationCode} is invalid" });
+                return BadRequest(new { Message = $"Activation code \"{activationCode}\" is invalid" });
             }
 
             License license = null;
