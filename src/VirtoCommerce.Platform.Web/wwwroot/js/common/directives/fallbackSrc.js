@@ -1,4 +1,4 @@
-///https://github.com/dcohenb/angular-img-fallback
+﻿///https://github.com/dcohenb/angular-img-fallback
 ///Angular directives that handles image loading, it has fallback-src to handle errors in image loading and loading-src for placeholder while the image is being loaded.
 angular.module('platformWebApp')
     .directive('fallbackSrc', ['imageService', function(imageService) {
@@ -9,23 +9,15 @@ angular.module('platformWebApp')
                 // Update the service with the correct missing src if present, otherwise use the default image
                 var newSrc = attr.fallbackSrc ? imageService.setMissing(attr.fallbackSrc) : imageService.getMissing();
 
-                var errorCount = 0;
                 // Listen for errors on the element and if there are any replace the source with the fallback source
                 var errorHandler = function() {
 
-                    // To prevent recursive fails on loading missed (404) fallbackSrc, try to do it only once
-                    if (errorCount === 0) {
-                        // fallbackSrc may have changed since the link function ran, so try to grab it again.
-                        var newSrc = attr.fallbackSrc
-                            ? imageService.setMissing(attr.fallbackSrc)
-                            : imageService.getMissing();
+                    // fallbackSrc may have changed since the link function ran, so try to grab it again.
+                    var newSrc = attr.fallbackSrc ? imageService.setMissing(attr.fallbackSrc) : imageService.getMissing();
 
-                        if (element[0].src !== newSrc) {
-                            element[0].src = newSrc;
-                        }
+                    if (element[0].src !== newSrc) {
+                        element[0].src = newSrc;
                     }
-
-                    errorCount++;
                 };
 
                 // Replace the loading image with missing image if `ng-src` link was broken
