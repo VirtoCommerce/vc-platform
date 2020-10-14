@@ -132,8 +132,8 @@ namespace VirtoCommerce.Platform.Web.Security
             var result = await base.DeleteAsync(user);
             if (result.Succeeded)
             {
-                await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
                 SecurityCacheRegion.ExpireUser(user);
+                await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
             }
             return result;
         }
@@ -163,8 +163,8 @@ namespace VirtoCommerce.Platform.Web.Security
 
             if (result.Succeeded)
             {
-                await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
                 SecurityCacheRegion.ExpireUser(existentUser);
+                await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
             }
 
             return result;
@@ -224,7 +224,6 @@ namespace VirtoCommerce.Platform.Web.Security
             var result = await base.CreateAsync(user);
             if (result.Succeeded)
             {
-                await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
                 if (!user.Roles.IsNullOrEmpty())
                 {
                     //Add
@@ -244,6 +243,7 @@ namespace VirtoCommerce.Platform.Web.Security
                 }
 
                 SecurityCacheRegion.ExpireUser(user);
+                await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
             }
             return result;
         }
