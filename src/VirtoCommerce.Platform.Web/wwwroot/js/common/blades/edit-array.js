@@ -39,7 +39,7 @@ angular.module('platformWebApp').controller('platformWebApp.editArrayController'
 
     function isDirty() {
         return !angular.equals(blade.currentEntities, blade.origEntity) && blade.hasUpdatePermission();
-    };
+    }
 
     $scope.saveChanges = function () {
         var items = blade.currentEntities.map(x => x.value);
@@ -51,26 +51,23 @@ angular.module('platformWebApp').controller('platformWebApp.editArrayController'
         $scope.bladeClose();
     }
 
-    blade.toolbarCommands = [
-        {
-            name: "platform.commands.reset", icon: 'fa fa-undo',
-            executeMethod: function () {
-                angular.copy(blade.origEntity, blade.currentEntities);
-            },
-            canExecuteMethod: isDirty,
-            permission: blade.updatePermission
+    blade.toolbarCommands = [{
+        name: "platform.commands.reset", icon: 'fa fa-undo',
+        executeMethod: function () {
+            angular.copy(blade.origEntity, blade.currentEntities);
         },
-        {
-            name: "platform.commands.delete", icon: 'fa fa-trash-o',
-            executeMethod: function () {
-                deleteChecked();
-            },
-            canExecuteMethod: function () {
-                return isItemsChecked();
-            },
-            permission: blade.updatePermission
-        }
-    ];
+        canExecuteMethod: isDirty,
+        permission: blade.updatePermission
+    }, {
+        name: "platform.commands.delete", icon: 'fa fa-trash-o',
+        executeMethod: function () {
+            deleteChecked();
+        },
+        canExecuteMethod: function () {
+            return isItemsChecked();
+        },
+        permission: blade.updatePermission
+    }];
 
     $scope.toggleAll = function () {
         blade.currentEntities.forEach(x => x.$selected = blade.selectedAll);

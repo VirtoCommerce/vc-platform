@@ -58,7 +58,9 @@ namespace VirtoCommerce.Platform.Web.Licensing
 
             try
             {
+#pragma warning disable S4426 // The license intentionally has a low cryptography strength because it wasn’t designed to be hijacked-proof.
                 using (var rsa = new RSACryptoServiceProvider())
+#pragma warning restore S4426 // The license intentionally has a low cryptography strength because it wasn’t designed to be hijacked-proof.
                 {
                     rsa.FromXmlStringCustom(ReadFileWithKey(publicKeyPath));
 
