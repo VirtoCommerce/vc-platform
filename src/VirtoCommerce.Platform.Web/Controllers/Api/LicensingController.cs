@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +18,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     public class LicensingController : Controller
     {
         private readonly PlatformOptions _platformOptions;
+
         public LicensingController(IOptions<PlatformOptions> platformOptions)
         {
             _platformOptions = platformOptions.Value;
@@ -24,14 +26,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("activateByCode")]
-        public async Task<ActionResult<License>> ActivateByCode([FromBody]string activationCode)
+        public async Task<ActionResult<License>> ActivateByCode([FromBody] string activationCode)
         {
+            if (!Regex.IsMatch(activationCode, "^([a-zA-Z_0-9-])+$"))
+            {
+                return BadRequest(new { Message = $"Activation code \"{activationCode}\" is invalid" });
+            }
+
             License license = null;
 
             using (var httpClient = new HttpClient())
             {
                 var activationUrl = new Uri(_platformOptions.LicenseActivationUrl + activationCode);
                 var httpResponse = await httpClient.GetAsync(activationUrl);
+
                 if (httpResponse.IsSuccessStatusCode)
                 {
                     var rawLicense = await httpResponse.Content.ReadAsStringAsync();
@@ -63,7 +71,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("activateLicense")]
-        public ActionResult<License> ActivateLicense([FromBody]License license)
+        public ActionResult<License> ActivateLicense([FromBody] License license)
         {
             license = License.Parse(license?.RawLicense, Path.GetFullPath(_platformOptions.LicensePublicKeyPath));
 
