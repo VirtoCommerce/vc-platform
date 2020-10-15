@@ -4,7 +4,12 @@ using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace VirtoCommerce.Platform.Web.Infrastructure
 {
-    // Proxy class for easy implemetation IUrlHelper
+    /// <summary>
+    /// Proxy class for easy implemetation IUrlHelper
+    /// </summary>
+    /// <remarks>
+    /// Source: https://stackoverflow.com/questions/54727734/injecting-iurlhelper-with-simple-injector#answer-55076523
+    /// </remarks>
     public class UrlHelperProxy : IUrlHelper
     {
         private readonly IActionContextAccessor accessor;
