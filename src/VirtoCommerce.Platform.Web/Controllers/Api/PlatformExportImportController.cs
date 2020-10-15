@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
@@ -127,20 +126,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 throw new ArgumentNullException(nameof(fileUrl));
             }
 
-            //// If fileUrl contains absolute path we need to prevent loading stream from this path.
-            //// Remark: if second path of Path.Combine contains absolute Uri they will return second path.
-            //// Link: https://docs.microsoft.com/en-us/dotnet/api/system.io.path.combine?view=netcore-3.1#System_IO_Path_Combine_System_String_System_String_
-            //if (Uri.TryCreate(fileUrl, UriKind.Absolute, out _))
-            //{
-            //    throw new ArgumentException($"Absolute path for {nameof(fileUrl)} is not allowed.");
-            //}
-
-            //// Prevent fileUrl pattern "..//..//path"
-            //// Its not possible to change root folder with Path.Combine, but we need process attempted exploitation
-            //if (Regex.IsMatch(fileUrl, @"^((\/){0,}[.]+(\/){0,})+"))
-            //{
-            //    throw new ArgumentException($"Change root folder is not allowed.");
-            //}
             var uploadFolderPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
 
             var localPath = Path.Combine(uploadFolderPath, fileUrl);
