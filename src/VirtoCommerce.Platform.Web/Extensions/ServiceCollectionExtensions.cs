@@ -69,13 +69,5 @@ namespace VirtoCommerce.Platform.Modules
 
             return services;
         }
-
-        public static IServiceCollection AddUtilities(this IServiceCollection services)
-        {
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddSingleton<IUrlHelper, UrlHelperProxy>();
-
-            return services;
-        }
     }
 }

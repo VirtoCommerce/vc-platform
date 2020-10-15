@@ -388,8 +388,6 @@ namespace VirtoCommerce.Platform.Web
                 services.AddFileSystemBlobProvider();
             }
 
-            services.AddUtilities();
-
             //HangFire
             services.AddHangfire(Configuration);
 
