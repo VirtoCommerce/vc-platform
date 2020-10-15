@@ -1,12 +1,15 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules.External;
+using VirtoCommerce.Platform.Web.Infrastructure;
 
 namespace VirtoCommerce.Platform.Modules
 {
@@ -63,6 +66,14 @@ namespace VirtoCommerce.Platform.Modules
             }
 
             services.AddSingleton<IPlatformRestarter, ProcessPlatformRestarter>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddUtilities(this IServiceCollection services)
+        {
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IUrlHelper, UrlHelperProxy>();
 
             return services;
         }
