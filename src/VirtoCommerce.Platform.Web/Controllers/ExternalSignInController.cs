@@ -50,7 +50,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
-            if (!_urlHelper.IsLocalUrl(returnUrl))
+            if (!Url.IsLocalUrl(returnUrl))
             {
                 return RedirectToAction("Index", "Home");
             }
