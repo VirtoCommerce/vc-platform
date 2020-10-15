@@ -20,15 +20,13 @@ namespace VirtoCommerce.Platform.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IUrlHelper _urlHelper;
 
         public ExternalSignInController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager,
-            IEventPublisher eventPublisher, IUrlHelper urlHelper)
+            IEventPublisher eventPublisher)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
-            _urlHelper = urlHelper;
         }
 
         [HttpGet]
@@ -50,7 +48,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
-            if (!_urlHelper.IsLocalUrl(returnUrl))
+            if (!Url.IsLocalUrl(returnUrl))
             {
                 return RedirectToAction("Index", "Home");
             }
