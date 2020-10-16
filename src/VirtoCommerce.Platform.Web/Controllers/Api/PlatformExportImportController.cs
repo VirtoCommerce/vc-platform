@@ -335,6 +335,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
 
                 var localPath = Path.GetFullPath(Path.Combine(_platformOptions.LocalUploadFolderPath, importRequest.FileUrl));
+                if (!localPath.StartsWith(_platformOptions.LocalUploadFolderPath))
+                {
+                    throw new PlatformException($"Invalid path {localPath}");
+                }
 
                 //Load source data only from local file system
                 using (var stream = new FileStream(localPath, FileMode.Open))
