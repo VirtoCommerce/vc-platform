@@ -76,7 +76,8 @@ angular.module('platformWebApp')
                             setupWizard.showStep(step.nextStep);
                         }
                     });
-                };
+                }
+
                 discoverSampleData();
             }]
         });
@@ -141,5 +142,5 @@ angular.module('platformWebApp')
                 controller: 'platformWebApp.importSampleDataWidgetController',
                 template: '$(Platform)/Scripts/app/exportImport/widgets/sampleDataImportWidget.tpl.html'
             },
-            'settingsDetail');
+                'settingsDetail');
         }]);

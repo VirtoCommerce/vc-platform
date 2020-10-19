@@ -171,6 +171,38 @@ namespace VirtoCommerce.Platform.Security.Migrations
                             EXEC (N'INSERT INTO [AspNetRoleClaims] ([RoleId],[ClaimType],[ClaimValue]) SELECT [RoleId], ''permission'', [PermissionId] FROM [PlatformRolePermission]')
 	                    END
 
+                        BEGIN
+                            CREATE TABLE [UserApiKey] (
+                                [Id] nvarchar(128) NOT NULL,
+                                [CreatedDate] datetime2 NOT NULL,
+                                [ModifiedDate] datetime2 NULL,
+                                [CreatedBy] nvarchar(64) NULL,
+                                [ModifiedBy] nvarchar(64) NULL,
+                                [ApiKey] nvarchar(450) NULL,
+                                [UserName] nvarchar(max) NULL,
+                                [UserId] nvarchar(max) NULL,
+                                [IsActive] bit NOT NULL,
+                                CONSTRAINT [PK_UserApiKey] PRIMARY KEY ([Id])
+                            );
+                        END
+
+                        BEGIN
+                            CREATE UNIQUE INDEX [IX_UserApiKey_ApiKey] ON [UserApiKey] ([ApiKey]) WHERE [ApiKey] IS NOT NULL;
+                        END
+
+                        BEGIN
+                            -- Copy only simple Api keys from v2 to v3.
+                            INSERT INTO [UserApiKey]
+                            ([Id], [CreatedDate], [ModifiedDate], [CreatedBy], [ModifiedBy], [ApiKey], [UserName], [UserId], [IsActive])
+                            SELECT 
+                            [Id], [CreatedDate], [ModifiedDate], [CreatedBy], [ModifiedBy], [SecretKey], [Name], [AccountId], [IsActive] from [PlatformApiAccount]
+                            WHERE ApiAccountType=2                        
+                        END
+
+                        BEGIN
+                            INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20200320170218_UserApiKey', N'3.1.5');
+                        END;
+
                     END");
         }
 

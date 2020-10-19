@@ -15,34 +15,35 @@
 
     <ItemGroup>
         <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0" />
-        <PackageReference Include="FluentValidation" Version="8.6.2" />
-        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.13.1" />
-        <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.13.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.5" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="3.1.5" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.5" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="3.1.5" />
-        <PackageReference Include="Microsoft.Azure.SignalR" Version="1.4.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5">
+        <PackageReference Include="FluentValidation" Version="8.6.3" />
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
+        <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.15.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.8" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="3.1.8" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.8" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="3.1.8" />
+        <PackageReference Include="Microsoft.Azure.SignalR" Version="1.5.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.5" />
-        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.5" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
+        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.8" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
         <PackageReference Include="OpenIddict" Version="2.0.1" />
         <PackageReference Include="OpenIddict.Core" Version="2.0.1" />
         <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="2.0.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.1.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
         <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.0.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="5.5.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="5.6.3" />
         <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
         <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
     </ItemGroup>
@@ -55,26 +56,32 @@
         <ProjectReference Include="..\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Remove="Modules\**" />
+        <Compile Remove="modules\**" />
         <Compile Remove="wwwroot\assets\**" />
         <Compile Remove="wwwroot\cms-content\**" />
         
         <Content Remove="wwwroot\assets\**" />
-        <Content Remove="App_Data\Modules\** " /> 
+        <Content Remove="app_data\modules\** " /> 
         <Content Remove="wwwroot\cms-content\**" />
-        <Content Remove="Modules\**" />
+        <Content Remove="modules\**" />
           
-        <EmbeddedResource Remove="Modules\**" />
+        <EmbeddedResource Remove="modules\**" />
         <EmbeddedResource Remove="wwwroot\assets\**" />
         <EmbeddedResource Remove="wwwroot\cms-content\**" />
-        <EmbeddedResource Remove="App_Data\Modules\**" />
-        <None Remove="Modules\**" />
+        <EmbeddedResource Remove="app_data\modules\**" />
+        <None Remove="modules\**" />
         <None Remove="wwwroot\assets\**" />
         <None Remove="wwwroot\cms-content\**" />
-        <None Remove="App_Data\Modules\**" />
+        <None Remove="app_data\modules\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="app_data\VirtoCommerce_rsa.pub" />
     </ItemGroup>
    
     <ItemGroup>
+        <EmbeddedResource Include="app_data\VirtoCommerce_rsa.pub">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <EmbeddedResource Include="wwwroot\swagger\index.html" />
         <None Include="wwwroot\restarting.html" />
         <None Include="wwwroot\swagger\logo_small.png" />
@@ -82,19 +89,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Certificates\virtocommerce.crt">
+        <EmbeddedResource Include="certificates\virtocommerce.crt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
-        <EmbeddedResource Include="Certificates\virtocommerce.pfx">
+        <EmbeddedResource Include="certificates\virtocommerce.pfx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="App_Data\public.key">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
     <!--<Target Name="BuildFront" BeforeTargets="Build">
     <Message Importance="High" Text="######### Restoring NPM packages ##########" />
     <Exec Command="npm install" />

@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders.Physical;
@@ -19,7 +16,6 @@ namespace VirtoCommerce.Platform.Web.TagHelpers.Internal
         private readonly IPlatformMemoryCache _platformMemoryCache;
         private readonly PhysicalFilesWatcher _fileSystemWatcher;
         private readonly string _rootPath;
-
 
         public FileVersionHashProvider(string rootPath, IPlatformMemoryCache platformMemoryCache)
         {
@@ -57,6 +53,5 @@ namespace VirtoCommerce.Platform.Web.TagHelpers.Internal
         {
             return path.Replace(_rootPath, string.Empty).Replace(Path.DirectorySeparatorChar, '/').TrimStart('/');
         }
-
     }
 }

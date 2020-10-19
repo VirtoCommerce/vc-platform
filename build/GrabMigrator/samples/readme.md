@@ -18,7 +18,8 @@ vc-build GrabMigrator --grab-migrator-config <configfile>
 {
   "MigrationDirectories": [
     "D:\\AK\\Code\\Projects\\VC3-DEV-CORE3\\modules",
-    "D:\\AK\\Code\\Projects\\VC3-DEV-CORE3\\vc-platform\\src\\VirtoCommerce.Platform.Data"
+    "D:\\AK\\Code\\Projects\\VC3-DEV-CORE3\\vc-platform\\src\\VirtoCommerce.Platform.Data",
+    "D:\\AK\\Code\\Projects\\VC3-DEV-CORE3\\vc-platform\\src\\VirtoCommerce.Platform.Security"
   ],
   "StatementsDirectory": "Statements"
 }
@@ -41,6 +42,7 @@ Nodes explanation:
 {
   "ApplyingOrder": [
     "VirtoCommerce.Platform",
+    "VirtoCommerce.Platform.Security",
     "VirtoCommerce.CoreModule",
     "VirtoCommerce.TaxModule",
     "VirtoCommerce.InventoryModule",

@@ -6,6 +6,7 @@ using Hangfire.States;
 using Moq;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Hangfire;
+using VirtoCommerce.Platform.Hangfire.Extensions;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.UnitTests

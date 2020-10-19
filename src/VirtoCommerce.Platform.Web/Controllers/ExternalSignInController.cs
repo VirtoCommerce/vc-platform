@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -47,6 +48,11 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
+            if (!Url.IsLocalUrl(returnUrl))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             var externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
             if (externalLoginInfo == null)
             {
@@ -62,8 +68,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
             }
 
-            var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider,
-                externalLoginInfo.ProviderKey, false);
+            var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, false);
             if (!externalLoginResult.Succeeded)
             {
                 //Need handle the two cases
@@ -75,7 +80,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                     platformUser = new ApplicationUser
                     {
                         UserName = userName,
-
+                        Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? (userName.IsValidEmail() ? userName : null)
                         // TODO: somehow access the AzureAd configuration section and read the default user type from there
                         //UserType = _authenticationOptions.AzureAdDefaultUserType
                     };
@@ -83,13 +88,13 @@ namespace VirtoCommerce.Platform.Web.Controllers
                     var result = await _userManager.CreateAsync(platformUser);
                     if (!result.Succeeded)
                     {
-                        var joinedErrors = string.Join(Environment.NewLine, result.Errors);
+                        var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
                         throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
                     }
                 }
 
-                var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey,
-                    externalLoginInfo.ProviderDisplayName);
+                var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
+
                 await _userManager.AddLoginAsync(platformUser, newExternalLogin);
 
                 //SignIn  user in the system
@@ -101,11 +106,14 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 // TODO: handle user lock-out and two-factor authentication
                 return RedirectToAction("Index", "Home");
             }
+
             if (platformUser == null)
             {
                 platformUser = await _userManager.FindByNameAsync(userName);
             }
+
             await _eventPublisher.Publish(new UserLoginEvent(platformUser));
+
             return Redirect(returnUrl);
         }
 

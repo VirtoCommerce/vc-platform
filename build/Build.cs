@@ -93,7 +93,7 @@ partial class Build : NukeBuild
     [Parameter] readonly AbsolutePath CoverageReportPath = RootDirectory / ".tmp" / "coverage.xml";
     [Parameter] readonly string TestsFilter = "Category!=IntegrationTest";
 
-    [Parameter("Url to Swagger Validation Api")] readonly string SwaggerValidatorUri = "http://validator.swagger.io/validator/debug";
+    [Parameter("Url to Swagger Validation Api")] readonly string SwaggerValidatorUri = "https://validator.swagger.io/validator/debug";
 
     [Parameter("GitHub user for release creation")] readonly string GitHubUser;
     [Parameter("GitHub user security token for release creation")] readonly string GitHubToken;
@@ -121,6 +121,12 @@ partial class Build : NukeBuild
     [Parameter("Release branch")] readonly string ReleaseBranch;
 
     [Parameter("Branch Name for SonarQube")] readonly string SonarBranchName;
+
+    [Parameter("PR Base for SonarQube")] readonly string SonarPRBase;
+    [Parameter("PR Branch for SonarQube")] readonly string SonarPRBranch;
+    [Parameter("PR Number for SonarQube")] readonly string SonarPRNumber;
+    [Parameter("Github Repository for SonarQube")] readonly string SonarGithubRepo;
+    [Parameter("PR Provider for SonarQube")] readonly string SonarPRProvider;
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
@@ -651,27 +657,37 @@ partial class Build : NukeBuild
             var prBaseParam = "";
             var prBranchParam = "";
             var prKeyParam = "";
+            var ghRepoArg = "";
+            var prProviderArg = "";
+            var prBase = "";
             if (PullRequest)
             {
-                var prBase = Environment.GetEnvironmentVariable("CHANGE_TARGET");
+                prBase = String.IsNullOrEmpty(SonarPRBase) ? Environment.GetEnvironmentVariable("CHANGE_TARGET") : SonarPRBase;
                 prBaseParam = $"/d:sonar.pullrequest.base=\"{prBase}\"";
 
-                var changeTitle = Environment.GetEnvironmentVariable("CHANGE_TITLE");
+                var changeTitle = String.IsNullOrEmpty(SonarPRBranch) ? Environment.GetEnvironmentVariable("CHANGE_TITLE") : SonarPRBranch;
                 prBranchParam = $"/d:sonar.pullrequest.branch=\"{changeTitle}\"";
 
-                var prNumber = Environment.GetEnvironmentVariable("CHANGE_ID");
+                var prNumber = String.IsNullOrEmpty(SonarPRNumber) ? Environment.GetEnvironmentVariable("CHANGE_ID") : SonarPRNumber;
                 prKeyParam = $"/d:sonar.pullrequest.key={prNumber}";
 
-            }
-            var branchParam = PullRequest ? "" : $"/d:\"sonar.branch={branchName}\"";
+                ghRepoArg = String.IsNullOrEmpty(SonarGithubRepo) ? "" : $"/d:sonar.pullrequest.github.repository={SonarGithubRepo}";
 
+                prProviderArg = String.IsNullOrEmpty(SonarPRProvider) ? "" : $"/d:sonar.pullrequest.provider={SonarPRProvider}";
+
+            }
+            var baseBranch = PullRequest ? prBase : branchName;
+            var branchParam = $"/d:\"sonar.branch={baseBranch}\"";
+
+            var projectNameParam = $"/n:\"{RepoName}\"";
             var projectKeyParam = $"/k:\"{RepoOrg}_{RepoName}\"";
+            var projectVersionParam = $"/v:\"{ReleaseVersion}\"";
             var hostParam = $"/d:sonar.host.url={SonarUrl}";
             var tokenParam = $"/d:sonar.login={SonarAuthToken}";
             var sonarReportPathParam = $"/d:sonar.cs.opencover.reportsPaths={CoverageReportPath}";
             var orgParam = $"/o:{SonarOrg}";
 
-            var startCmd = $"sonarscanner begin {orgParam} {branchParam} {projectKeyParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam}";
+            var startCmd = $"sonarscanner begin {orgParam} {branchParam} {projectKeyParam} {projectNameParam} {projectVersionParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam} {ghRepoArg} {prProviderArg}";
 
             Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}")}");
 

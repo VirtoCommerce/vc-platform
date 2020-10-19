@@ -1,11 +1,9 @@
 using System;
-using System.Globalization;
-using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Core.Modularity.Exceptions
 {
     /// <summary>
-    /// Exception thrown by <see cref="IModuleInitializer"/> implementations whenever 
+    /// Exception thrown by <see cref="IModuleInitializer"/> implementations whenever
     /// a module fails to load.
     /// </summary>
     public partial class ModuleInitializeException : ModularityException
@@ -47,13 +45,13 @@ namespace VirtoCommerce.Platform.Core.Modularity.Exceptions
         }
 
         /// <summary>
-        /// Initializes the exception with a particular module, error message and inner exception 
+        /// Initializes the exception with a particular module, error message and inner exception
         /// that happened.
         /// </summary>
         /// <param name="moduleName">The name of the module.</param>
         /// <param name="moduleAssembly">The assembly where the module is located.</param>
         /// <param name="message">The error message that explains the reason for the exception.</param>
-        /// <param name="innerException">The exception that is the cause of the current exception, 
+        /// <param name="innerException">The exception that is the cause of the current exception,
         /// or a <see langword="null"/> reference if no inner exception is specified.</param>
         public ModuleInitializeException(string moduleName, string moduleAssembly, string message, Exception innerException)
             : base(
@@ -68,7 +66,7 @@ namespace VirtoCommerce.Platform.Core.Modularity.Exceptions
         /// </summary>
         /// <param name="moduleName">The name of the module.</param>
         /// <param name="message">The error message that explains the reason for the exception.</param>
-        /// <param name="innerException">The exception that is the cause of the current exception, 
+        /// <param name="innerException">The exception that is the cause of the current exception,
         /// or a <see langword="null"/> reference if no inner exception is specified.</param>
         public ModuleInitializeException(string moduleName, string message, Exception innerException)
             : base(moduleName, $"An exception occurred while initializing module {moduleName}.", innerException)

@@ -1,5 +1,4 @@
 using System;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,12 +16,10 @@ namespace VirtoCommerce.Platform.Web.Security
 {
     public static class ServiceCollectionExtensions
     {
-
         public static IServiceCollection AddSecurityServices(this IServiceCollection services, Action<AuthorizationOptions> setupAction = null)
         {
             services.AddTransient<ISecurityRepository, SecurityRepository>();
             services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<ISecurityRepository>());
-
 
             services.AddScoped<IUserApiKeyService, UserApiKeyService>();
             services.AddScoped<IUserApiKeySearchService, UserApiKeySearchService>();
@@ -32,7 +29,6 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddScoped<IRoleSearchService, RoleSearchService>();
             //Register as singleton because this abstraction can be used as dependency in singleton services
             services.AddSingleton<IUserSearchService>(provider => new UserSearchService(provider.CreateScope().ServiceProvider.GetService<Func<UserManager<ApplicationUser>>>()));
-
 
             //Identity dependencies override
             services.TryAddScoped<RoleManager<Role>, CustomRoleManager>();
