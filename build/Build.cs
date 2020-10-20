@@ -86,7 +86,7 @@ partial class Build : NukeBuild
     [Parameter("ApiKey for the specified source")] readonly string ApiKey;
     [Parameter] readonly string Source = @"https://api.nuget.org/v3/index.json";
 
-    [Parameter] static string GlobalModuleIgnoreFileUrl = @"https://raw.githubusercontent.com/VirtoCommerce/vc-platform/release/3.0.0/module.ignore";
+    [Parameter] static string GlobalModuleIgnoreFileUrl = @"https://raw.githubusercontent.com/VirtoCommerce/vc-platform/dev/module.ignore";
 
     [Parameter] readonly string SonarAuthToken = "";
     [Parameter] readonly string SonarUrl = "https://sonarcloud.io";
@@ -128,10 +128,15 @@ partial class Build : NukeBuild
     [Parameter("Github Repository for SonarQube")] readonly string SonarGithubRepo;
     [Parameter("PR Provider for SonarQube")] readonly string SonarPRProvider;
 
+    [Parameter("Modules.json repo url")] readonly string ModulesJsonRepoUrl = "https://github.com/VirtoCommerce/vc-modules.git";
+
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
     [Parameter("Path to Artifacts Directory")] AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
-    Project WebProject => Solution.AllProjects.FirstOrDefault(x => x.Name.EndsWith(".Web") || x.Name.EndsWith("VirtoCommerce.Storefront"));
+
+    [Parameter("Directory containing modules.json")] string ModulesJsonDirectoryName = "vc-modules";
+    AbsolutePath ModulesLocalDirectory => ArtifactsDirectory / ModulesJsonDirectoryName;
+    Project WebProject => Solution.AllProjects.FirstOrDefault(x => (x.Name.EndsWith(".Web") && !x.Path.ToString().Contains("samples")) || x.Name.EndsWith("VirtoCommerce.Storefront"));
     AbsolutePath ModuleManifestFile => WebProject.Directory / "module.manifest";
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
@@ -152,7 +157,7 @@ partial class Build : NukeBuild
 
     string ModulePackageUrl => CustomModulePackageUri.IsNullOrEmpty() ?
         $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}/{ModuleManifest.Id}_{ReleaseVersion}.zip" : CustomModulePackageUri;
-    GitRepository ModulesRepository => GitRepository.FromUrl("https://github.com/VirtoCommerce/vc-modules.git");
+    GitRepository ModulesRepository => GitRepository.FromUrl(ModulesJsonRepoUrl);
 
     bool IsModule => FileExists(ModuleManifestFile);
 
@@ -281,6 +286,7 @@ partial class Build : NukeBuild
             DotNetNuGetPush(s => s
                     .SetSource(Source)
                     .SetApiKey(ApiKey)
+                    .SetSkipDuplicate(true)
                     .CombineWith(
                         packages, (cs, v) => cs
                             .SetTargetPath(v)),
@@ -530,20 +536,28 @@ partial class Build : NukeBuild
          }
      });
 
-    Target PublishModuleManifest => _ => _
+    Target GetManifestGit => _ => _
+        .Before(UpdateManifest)
         .Executes(() =>
         {
             GitTasks.GitLogger = GitLogger;
-            var modulesLocalDirectory = ArtifactsDirectory / "vc-modules";
-            var modulesJsonFile = modulesLocalDirectory / ModulesJsonName;
-            if (!DirectoryExists(modulesLocalDirectory))
+            var modulesJsonFile = ModulesLocalDirectory / ModulesJsonName;
+            if (!DirectoryExists(ModulesLocalDirectory))
             {
-                GitTasks.Git($"clone {ModulesRepository.HttpsUrl} {modulesLocalDirectory}");
+                GitTasks.Git($"clone {ModulesRepository.HttpsUrl} {ModulesLocalDirectory}");
             }
             else
             {
-                GitTasks.Git($"pull", modulesLocalDirectory);
+                GitTasks.Git($"pull", ModulesLocalDirectory);
             }
+        });
+
+    Target UpdateManifest => _ => _
+        .Before(PublishManifestGit)
+        .After(GetManifestGit)
+        .Executes(() =>
+        {
+            var modulesJsonFile = ModulesLocalDirectory / ModulesJsonName;
             var manifest = ModuleManifest;
 
             var modulesExternalManifests = JsonConvert.DeserializeObject<List<ExternalModuleManifest>>(TextTasks.ReadAllText(modulesJsonFile));
@@ -594,9 +608,19 @@ partial class Build : NukeBuild
                 modulesExternalManifests.Add(ExternalModuleManifest.FromManifest(manifest));
             }
             TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Newtonsoft.Json.Formatting.Indented));
-            GitTasks.Git($"commit -am \"{manifest.Id} {ReleaseVersion}\"", modulesLocalDirectory);
-            GitTasks.Git($"push origin HEAD:master -f", modulesLocalDirectory);
         });
+
+    Target PublishManifestGit => _ => _
+        .After(UpdateManifest)
+        .Executes(() =>
+        {
+            GitTasks.GitLogger = GitLogger;
+            GitTasks.Git($"commit -am \"{ModuleManifest.Id} {ReleaseVersion}\"", ModulesLocalDirectory);
+            GitTasks.Git($"push origin HEAD:master -f", ModulesLocalDirectory);
+        });
+
+    Target PublishModuleManifest => _ => _
+        .DependsOn(GetManifestGit, UpdateManifest, PublishManifestGit);
 
     Target SwaggerValidation => _ => _
           .DependsOn(Publish)
@@ -741,7 +765,7 @@ partial class Build : NukeBuild
 
     void GitLogger(OutputType type, string text)
     {
-        if (text.Contains("github returned 422 Unprocessable Entity"))
+        if (text.Contains("github returned 422 Unprocessable Entity") && text.Contains("already_exists"))
         {
             ExitCode = 422;
         }

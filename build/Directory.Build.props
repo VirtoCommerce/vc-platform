@@ -6,7 +6,7 @@
     <Copyright>Copyright © VirtoCommerce 2011-2020</Copyright>
   </PropertyGroup>
   <PropertyGroup>
-    <VersionPrefix>1.4.7</VersionPrefix>
+    <VersionPrefix>1.4.17</VersionPrefix>
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
 
@@ -20,6 +20,5 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-
 
 </Project>
