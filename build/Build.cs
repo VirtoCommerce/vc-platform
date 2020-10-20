@@ -128,7 +128,6 @@ partial class Build : NukeBuild
     [Parameter("Github Repository for SonarQube")] readonly string SonarGithubRepo;
     [Parameter("PR Provider for SonarQube")] readonly string SonarPRProvider;
 
-    [Parameter("Push Changes")] readonly bool PushChanges = true;
     [Parameter("Modules.json repo url")] readonly string ModulesJsonRepoUrl = "https://github.com/VirtoCommerce/vc-modules.git";
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
@@ -616,11 +615,8 @@ partial class Build : NukeBuild
         .Executes(() =>
         {
             GitTasks.GitLogger = GitLogger;
-            if (PushChanges)
-            {
-                GitTasks.Git($"commit -am \"{ModuleManifest.Id} {ReleaseVersion}\"", ModulesLocalDirectory);
-                GitTasks.Git($"push origin HEAD:master -f", ModulesLocalDirectory);
-            }
+            GitTasks.Git($"commit -am \"{ModuleManifest.Id} {ReleaseVersion}\"", ModulesLocalDirectory);
+            GitTasks.Git($"push origin HEAD:master -f", ModulesLocalDirectory);
         });
 
     Target PublishModuleManifest => _ => _
