@@ -86,7 +86,7 @@ partial class Build : NukeBuild
     [Parameter("ApiKey for the specified source")] readonly string ApiKey;
     [Parameter] readonly string Source = @"https://api.nuget.org/v3/index.json";
 
-    [Parameter] static string GlobalModuleIgnoreFileUrl = @"https://raw.githubusercontent.com/VirtoCommerce/vc-platform/release/3.0.0/module.ignore";
+    [Parameter] static string GlobalModuleIgnoreFileUrl = @"https://raw.githubusercontent.com/VirtoCommerce/vc-platform/dev/module.ignore";
 
     [Parameter] readonly string SonarAuthToken = "";
     [Parameter] readonly string SonarUrl = "https://sonarcloud.io";
