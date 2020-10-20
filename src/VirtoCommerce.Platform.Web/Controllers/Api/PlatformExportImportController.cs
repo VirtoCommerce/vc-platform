@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
-using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -31,32 +29,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class PlatformExportImportController : Controller
     {
-        private static string _stringSampleDataUrl;
-
         private readonly IPlatformExportImportManager _platformExportManager;
         private readonly IPushNotificationManager _pushNotifier;
-        private readonly IBlobStorageProvider _blobStorageProvider;
-        private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly ISettingsManager _settingsManager;
         private readonly IUserNameResolver _userNameResolver;
-        private readonly IWebHostEnvironment _hostEnv;
         private readonly PlatformOptions _platformOptions;
 
         private static readonly object _lockObject = new object();
 
-        public PlatformExportImportController(IPlatformExportImportManager platformExportManager, IPushNotificationManager pushNotifier, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver,
-            ISettingsManager settingManager, IUserNameResolver userNameResolver, IWebHostEnvironment hostingEnvironment, IOptions<PlatformOptions> options)
+        public PlatformExportImportController(
+            IPlatformExportImportManager platformExportManager,
+            IPushNotificationManager pushNotifier,
+            ISettingsManager settingManager,
+            IUserNameResolver userNameResolver,
+            IOptions<PlatformOptions> options)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
-            _blobStorageProvider = blobStorageProvider;
-            _blobUrlResolver = blobUrlResolver;
             _settingsManager = settingManager;
             _userNameResolver = userNameResolver;
-            _hostEnv = hostingEnvironment;
             _platformOptions = options.Value;
-
-            _stringSampleDataUrl = options.Value.SampleDataUrl;
         }
 
         [HttpGet]
@@ -94,7 +86,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Processing);
                     var pushNotification = new SampleDataImportPushNotification(User.Identity.Name);
                     _pushNotifier.Send(pushNotification);
-                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(new Uri(url), Path.GetFullPath(_platformOptions.LocalUploadFolderPath), pushNotification, JobCancellationToken.Null, null));
+                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(new Uri(url), pushNotification, JobCancellationToken.Null, null));
                     pushNotification.JobId = jobId;
 
                     return Ok(pushNotification);
@@ -134,7 +126,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 throw new ArgumentNullException(nameof(fileUrl));
             }
 
-            var localPath = Path.Combine(Path.GetFullPath(_platformOptions.LocalUploadFolderPath), fileUrl);
+            var uploadFolderPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
+
+            var localPath = Path.Combine(uploadFolderPath, fileUrl);
+            if (!localPath.StartsWith(uploadFolderPath))
+            {
+                throw new PlatformException($"Invalid path {localPath}");
+            }
 
             PlatformExportManifest retVal;
             using (var stream = new FileStream(localPath, FileMode.Open))
@@ -187,7 +185,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok();
         }
 
-
         [HttpGet]
         [Route("export/download/{fileName}")]
         [Authorize(Permissions.PlatformExport)]
@@ -196,7 +193,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var localTmpFolder = Path.GetFullPath(Path.Combine(_platformOptions.DefaultExportFolder));
             var localPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
 
-            //Load source data only from local file system 
+            //Load source data only from local file system
             using (var stream = System.IO.File.Open(localPath, FileMode.Open))
             {
                 var provider = new FileExtensionContentTypeProvider();
@@ -208,53 +205,64 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private static IEnumerable<SampleDataInfo> InnerDiscoverSampleData()
+        private IEnumerable<SampleDataInfo> InnerDiscoverSampleData()
         {
-            var retVal = new List<SampleDataInfo>();
-
-            var sampleDataUrl = _stringSampleDataUrl;
-            if (!string.IsNullOrEmpty(sampleDataUrl))
+            var sampleDataUrl = _platformOptions.SampleDataUrl;
+            if (string.IsNullOrEmpty(sampleDataUrl))
             {
-                //Discovery mode
-                if (!sampleDataUrl.EndsWith(".zip"))
-                {
-                    var manifestUrl = sampleDataUrl + "\\manifest.json";
-                    using (var client = new WebClient())
-                    using (var stream = client.OpenRead(new Uri(manifestUrl)))
-                    {
-                        //Add empty template
-                        retVal.Add(new SampleDataInfo { Name = "Empty" });
-                        var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>();
-                        //Need filter unsupported versions and take one most new sample data
-                        sampleDataInfos = sampleDataInfos.Select(x => new { Version = SemanticVersion.Parse(x.PlatformVersion), x.Name, Data = x })
-                                                         .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
-                                                         .GroupBy(x => x.Name)
-                                                         .Select(x => x.OrderByDescending(y => y.Version).First().Data)
-                                                         .ToList();
-                        //Convert relative  sample data urls to absolute
-                        foreach (var sampleDataInfo in sampleDataInfos)
-                        {
-                            if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
-                            {
-                                var uri = new Uri(sampleDataUrl);
-                                sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
-                            }
-                        }
-                        retVal.AddRange(sampleDataInfos);
+                return Enumerable.Empty<SampleDataInfo>();
+            }
 
+            //Direct file mode
+            if (sampleDataUrl.EndsWith(".zip"))
+            {
+                return new List<SampleDataInfo>
+                {
+                    new SampleDataInfo { Url = sampleDataUrl }
+                };
+            }
+
+            //Discovery mode
+            var manifestUrl = sampleDataUrl + "\\manifest.json";
+            using (var client = new WebClient())
+            using (var stream = client.OpenRead(new Uri(manifestUrl)))
+            {
+                //Add empty template
+                var result = new List<SampleDataInfo>
+                {
+                    new SampleDataInfo { Name = "Empty" }
+                };
+
+                //Need filter unsupported versions and take one most new sample data
+                var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>()
+                    .Select(x => new
+                    {
+                        Version = SemanticVersion.Parse(x.PlatformVersion),
+                        x.Name,
+                        Data = x
+                    })
+                    .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
+                    .GroupBy(x => x.Name)
+                    .Select(x => x.OrderByDescending(y => y.Version).First().Data)
+                    .ToList();
+
+                //Convert relative  sample data urls to absolute
+                foreach (var sampleDataInfo in sampleDataInfos)
+                {
+                    if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
+                    {
+                        var uri = new Uri(sampleDataUrl);
+                        sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
                     }
                 }
-                else
-                {
-                    //Direct file mode
-                    retVal.Add(new SampleDataInfo { Url = sampleDataUrl });
-                }
+
+                result.AddRange(sampleDataInfos);
+
+                return result;
             }
-            return retVal;
         }
 
-
-        public async Task SampleDataImportBackgroundAsync(Uri url, string tmpPath, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task SampleDataImportBackgroundAsync(Uri url, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
         {
             void progressCallback(ExportImportProgressInfo x)
             {
@@ -262,11 +270,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 pushNotification.JobId = context.BackgroundJob.Id;
                 _pushNotifier.Send(pushNotification);
             }
+
             try
             {
                 pushNotification.Description = "Start downloading from " + url;
+
                 await _pushNotifier.SendAsync(pushNotification);
 
+                var tmpPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
                 if (!Directory.Exists(tmpPath))
                 {
                     Directory.CreateDirectory(tmpPath);
@@ -323,9 +334,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
 
-                var localPath = Path.GetFullPath(Path.Combine(_platformOptions.LocalUploadFolderPath, importRequest.FileUrl));
+                var uploadFolderFullPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
+                // VP-5353: Checking that the file is inside LocalUploadFolderPath
+                var localPath = Path.Combine(uploadFolderFullPath, importRequest.FileUrl);
 
-                //Load source data only from local file system 
+                if (!localPath.StartsWith(uploadFolderFullPath))
+                {
+                    throw new PlatformException($"Invalid path {localPath}");
+                }
+
+                //Load source data only from local file system
                 using (var stream = new FileStream(localPath, FileMode.Open))
                 {
                     var manifest = importRequest.ToManifest();
@@ -368,11 +386,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     Directory.CreateDirectory(localTmpFolder);
                 }
+
                 if (System.IO.File.Exists(localTmpPath))
                 {
                     System.IO.File.Delete(localTmpPath);
                 }
-                //Import first to local tmp folder because Azure blob storage doesn't support some special file access mode 
+
+                //Import first to local tmp folder because Azure blob storage doesn't support some special file access mode
                 using (var stream = System.IO.File.OpenWrite(localTmpPath))
                 {
                     var manifest = exportRequest.ToManifest();
