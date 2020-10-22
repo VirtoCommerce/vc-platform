@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.FileLock;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Modules.AssemblyLoading;
@@ -32,41 +34,77 @@ namespace VirtoCommerce.Platform.Modules
             if (string.IsNullOrEmpty(_options.DiscoveryPath))
                 throw new InvalidOperationException("The DiscoveryPath cannot contain a null value or be empty");
 
+
+            var bNeedToCopyAssemblies = _options.RefreshProbingFolderOnStart;
+
             if (!Directory.Exists(_options.ProbingPath))
             {
+                bNeedToCopyAssemblies = true; // Force to refresh assemblies anyway, even if RefreshProbeFolderOnStart set to false, because the probing path is absent
                 Directory.CreateDirectory(_options.ProbingPath);
+            }
+
+            FileLock fileLock = null;
+            var lockFilePath = Path.Combine(_options.ProbingPath, "vc-lock.txt");
+
+            if (bNeedToCopyAssemblies)
+            {
+                fileLock = new FileLock(lockFilePath, TimeSpan.FromMinutes(1));
+                bNeedToCopyAssemblies = fileLock.TryAcquireLock();
+            }
+
+            if (fileLock != null && !bNeedToCopyAssemblies)
+            {
+                // Await for another (first) platform instance had finished copy/load modules
+                while (!fileLock.TryAcquireLock())
+                {
+                    Thread.Sleep(2000);
+                }
             }
 
             if (!discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
                 discoveryPath += PlatformInformation.DirectorySeparator;
 
-            CopyAssemblies(discoveryPath, _options.ProbingPath);
+            if (bNeedToCopyAssemblies) CopyAssemblies(discoveryPath, _options.ProbingPath);
 
-            foreach (var pair in GetModuleManifests())
+            try
             {
-                var manifest = pair.Value;
-                var manifestPath = pair.Key;
-
-                var modulePath = Path.GetDirectoryName(manifestPath);
-
-                CopyAssemblies(modulePath, _options.ProbingPath);
-                var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                moduleInfo.LoadFromManifest(manifest);
-                moduleInfo.FullPhysicalPath = Path.GetDirectoryName(manifestPath);
-
-                // Modules without assembly file don't need initialization
-                if (string.IsNullOrEmpty(manifest.AssemblyFile))
+                foreach (var pair in GetModuleManifests())
                 {
-                    moduleInfo.State = ModuleState.Initialized;
-                }
-                else
-                {
-                    //Set module assembly physical path for future loading by IModuleTypeLoader instance
-                    moduleInfo.Ref = GetFileAbsoluteUri(_options.ProbingPath, manifest.AssemblyFile);
-                }
+                    var manifest = pair.Value;
+                    var manifestPath = pair.Key;
 
-                moduleInfo.IsInstalled = true;
-                AddModule(moduleInfo);
+                    if (bNeedToCopyAssemblies)
+                    {
+                        var modulePath = Path.GetDirectoryName(manifestPath);
+                        CopyAssemblies(modulePath, _options.ProbingPath);
+                    }
+
+                    var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+                    moduleInfo.LoadFromManifest(manifest);
+                    moduleInfo.FullPhysicalPath = Path.GetDirectoryName(manifestPath);
+
+                    // Modules without assembly file don't need initialization
+                    if (string.IsNullOrEmpty(manifest.AssemblyFile))
+                    {
+                        moduleInfo.State = ModuleState.Initialized;
+                    }
+                    else
+                    {
+                        //Set module assembly physical path for future loading by IModuleTypeLoader instance
+                        moduleInfo.Ref = GetFileAbsoluteUri(_options.ProbingPath, manifest.AssemblyFile);
+                    }
+
+                    moduleInfo.IsInstalled = true;
+                    AddModule(moduleInfo);
+                }
+            }
+            finally
+            {
+                if (fileLock != null)
+                {
+                    //Release file system lock	
+                    fileLock.ReleaseLock();
+                }
             }
         }
 
