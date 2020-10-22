@@ -1,0 +1,70 @@
+# v1
+name: Release alpha
+on:
+  workflow_dispatch:
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      BLOB_SAS: ${{ secrets.BLOB_TOKEN }}
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Install VirtoCommerce.GlobalTool
+      run: dotnet tool install --global VirtoCommerce.GlobalTool
+
+    - name: Install dotnet-sonarscanner
+      run: dotnet tool install --global dotnet-sonarscanner
+
+    - name: Get Image Version
+      uses: VirtoCommerce/vc-github-actions/get-image-version@VP-5059
+      id: image
+
+    - name: Add version suffix
+      uses: VirtoCommerce/vc-github-actions/add-version-suffix@VP-5059
+
+    - name: SonarCloud Begin
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@master
+
+    - name: Build
+      run: vc-build Compile
+
+    - name: Unit Tests
+      run: vc-build Test -skip
+
+    - name: SonarCloud End
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@master
+
+    - name: Packaging
+      run: vc-build Compress -skip Clean+Restore+Compile+Test
+
+    - name: Build Docker Image
+      id: dockerBuild
+      uses: VirtoCommerce/vc-github-actions/build-docker-image@VP-5059
+      with:
+        imageName: "platform"
+        tag: ${{ steps.image.outputs.taggedVersion }}
+        dockerFiles: "https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh"
+          
+    - name: Docker Login
+      uses: azure/docker-login@v1
+      with:
+        login-server: docker.pkg.github.com
+        username: $GITHUB_ACTOR
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish Docker Image
+      uses: VirtoCommerce/vc-github-actions/publish-docker-image@VP-5059
+      with:
+          image: ${{ steps.dockerBuild.outputs.imageName }}
+          tag: ${{ steps.image.outputs.taggedVersion }}
+          docker_user: ${{ secrets.DOCKER_USERNAME }}
+          docker_token: ${{ secrets.DOCKER_TOKEN }}
+          docker_hub: 'false'
+          update_latest: 'false'
