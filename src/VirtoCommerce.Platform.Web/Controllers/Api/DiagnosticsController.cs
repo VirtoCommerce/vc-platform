@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -18,12 +19,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly IModuleCatalog _moduleCatalog;
         private readonly LicenseProvider _licenseProvider;
+        private readonly IOptions<ExternalModuleCatalogOptions> _options;
 
-        public DiagnosticsController(IModuleCatalog moduleCatalog, LicenseProvider licenseProvider)
+        public DiagnosticsController(IModuleCatalog moduleCatalog, LicenseProvider licenseProvider, IOptions<ExternalModuleCatalogOptions> options)
         {
             _moduleCatalog = moduleCatalog;
             _licenseProvider = licenseProvider;
-
+            _options = options;
         }
 
         [HttpGet]
@@ -68,6 +70,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 .ToArray();
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Get installed modules with errors
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("modulesOptions")]
+        [AllowAnonymous]
+        public JsonResult GetModulesOptions()
+        {
+            return Json(_options);
         }
     }
 }
