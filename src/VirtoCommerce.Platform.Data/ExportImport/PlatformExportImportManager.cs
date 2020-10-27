@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -458,6 +459,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
         private async Task ImportModulesInternalAsync(ZipArchive zipArchive, PlatformExportManifest manifest, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
+            var errors = new StringBuilder();
             var progressInfo = new ExportImportProgressInfo();
             foreach (var moduleInfo in manifest.Modules)
             {
@@ -485,12 +487,18 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                             }
                             catch (Exception ex)
                             {
+                                errors.AppendLine($"<b> {moduleInfo.Id} </b>: {ex} <br><br>");
                                 progressInfo.Errors.Add($"{moduleInfo.Id}: {ex}");
                                 progressCallback(progressInfo);
                             }
                         }
                     }
                 }
+            }
+
+            if (errors.Length != 0)
+            {
+                throw new Exception(errors.ToString());
             }
         }
 
