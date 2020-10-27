@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -498,7 +497,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
             if (errors.Length != 0)
             {
-                throw new Exception(errors.ToString());
+                throw new InvalidOperationException(errors.ToString());
             }
         }
 
