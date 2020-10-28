@@ -41,6 +41,7 @@ using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
@@ -137,7 +138,8 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("VirtoCommerce"));
+                //options.UseSqlServer(Configuration.GetConnectionString("VirtoCommerce"));
+                options.UseDatabaseProviderSwitcher(Configuration).SetConnectionName(Configuration, "VirtoCommerce");
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.
