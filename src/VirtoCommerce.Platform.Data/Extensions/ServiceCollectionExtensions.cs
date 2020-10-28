@@ -15,6 +15,7 @@ using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Data.ChangeLog;
 using VirtoCommerce.Platform.Data.DynamicProperties;
 using VirtoCommerce.Platform.Data.ExportImport;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Localizations;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.Settings;
@@ -27,8 +28,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
         public static IServiceCollection AddPlatformServices(this IServiceCollection services, IConfiguration configuration)
         {
-
-            services.AddDbContext<PlatformDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("VirtoCommerce")));
+            services.AddDbContext<PlatformDbContext>(options => options.UseDatabaseProviderSwitcher(configuration).SetConnectionName(configuration, "VirtoCommerce"));
             services.AddTransient<IPlatformRepository, PlatformRepository>();
             services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());
 

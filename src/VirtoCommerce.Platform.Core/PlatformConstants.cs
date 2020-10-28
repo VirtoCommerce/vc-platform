@@ -265,5 +265,11 @@ namespace VirtoCommerce.Platform.Core
                 .Concat(UserProfile.AllSettings)
                 .Concat(UserInterface.AllSettings);
         }
+
+        public static class DatabaseProviders
+        {
+            public const string SqlServer = "SqlServer";
+            public const string InMemory = "InMemory";
+        }
     }
 }
