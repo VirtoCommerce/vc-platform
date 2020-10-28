@@ -1,3 +1,4 @@
+# v1.1
 name: Platform CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
@@ -51,7 +52,10 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/changelog-generator@master
 
     - name: Add version suffix
+      if: ${{ github.ref != 'refs/heads/master' }}
       uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
+      with:
+        versionSuffix: ${{ steps.image.outputs.suffix }}
 
     - name: SonarCloud Begin
       uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@master
