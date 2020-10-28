@@ -479,11 +479,11 @@ namespace VirtoCommerce.Platform.Web
             {
                 var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
                 platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
-                platformDbContext.Database.Migrate();
+                platformDbContext.Database.MigrateIfRelationalDatabase();
 
                 var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
                 securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
-                securityDbContext.Database.Migrate();
+                securityDbContext.Database.MigrateIfRelationalDatabase();
             }
 
             app.UseDbTriggers();
