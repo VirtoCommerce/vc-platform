@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using VirtoCommerce.Platform.Core;
@@ -39,8 +40,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IPlatformRestarter _platformRestarter;
         private static readonly object _lockObject = new object();
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
+        private readonly ILogger _logger;
 
-        public ModulesController(IExternalModuleCatalog externalModuleCatalog, IModuleInstaller moduleInstaller, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver, ISettingsManager settingsManager, IOptions<PlatformOptions> platformOptions, IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions, IPlatformRestarter platformRestarter)
+        public ModulesController(IExternalModuleCatalog externalModuleCatalog, IModuleInstaller moduleInstaller, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver, ISettingsManager settingsManager, IOptions<PlatformOptions> platformOptions
+            , IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions,
+            IPlatformRestarter platformRestarter,
+            ILogger<ModulesController> logger)
         {
             _externalModuleCatalog = externalModuleCatalog;
             _moduleInstaller = moduleInstaller;
@@ -50,6 +55,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _platformOptions = platformOptions.Value;
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
+            _logger = logger;
         }
 
         /// <summary>
@@ -280,6 +286,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Finished = DateTime.UtcNow
             };
 
+            _logger.LogWarning($"=============XAPI=======================");
+            _logger.LogWarning($"XAPI: ModulesAutoInstalled = {_settingsManager.GetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, false)}");
+            _logger.LogWarning($"=============XAPI=======================");
             if (!_settingsManager.GetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, false))
             {
                 lock (_lockObject)
@@ -289,6 +298,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         var moduleBundles = _externalModuleCatalogOptions.AutoInstallModuleBundles;
                         if (!moduleBundles.IsNullOrEmpty())
                         {
+                            _logger.LogWarning($"=============XAPI=======================");
+                            _logger.LogWarning($"XAPI: moduleBundles = {string.Join(' ', moduleBundles)}");
+                            _logger.LogWarning($"=============XAPI=======================");
                             _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, true);
                             _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Processing);
 
@@ -320,6 +332,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                                 .Where(x => !x.IsInstalled)
                                 .Select(x => new ModuleDescriptor(x))
                                 .ToArray();
+
+                            _logger.LogWarning($"=============XAPI=======================");
+                            _logger.LogWarning($"XAPI: modulesWithDependencies = {string.Join(' ', modulesWithDependencies.Select(x => x.Id))}");
+                            _logger.LogWarning($"=============XAPI=======================");
 
                             if (modulesWithDependencies.Any())
                             {
