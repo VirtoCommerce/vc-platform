@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -19,13 +20,15 @@ namespace VirtoCommerce.Platform.Web.Controllers
     {
         private readonly PlatformOptions _platformOptions;
         private readonly WebAnalyticsOptions _webAnalyticsOptions;
+        private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private readonly LicenseProvider _licenseProvider;
         private readonly ISettingsManager _settingsManager;
 
-        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, LicenseProvider licenseProvider, ISettingsManager settingsManager)
+        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions, LicenseProvider licenseProvider, ISettingsManager settingsManager)
         {
             _platformOptions = platformOptions.Value;
             _webAnalyticsOptions = webAnalyticsOptions.Value;
+            _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
             _licenseProvider = licenseProvider;
             _settingsManager = settingsManager;
         }
@@ -37,7 +40,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 PlatformVersion = new HtmlString(Core.Common.PlatformVersion.CurrentVersion.ToString()),
                 DemoCredentials = new HtmlString(_platformOptions.DemoCredentials ?? "''"),
                 DemoResetTime = new HtmlString(_platformOptions.DemoResetTime ?? "''"),
-                WebAnalyticsOptions = _webAnalyticsOptions
+                WebAnalyticsOptions = _webAnalyticsOptions,
+                RefreshProbingFolder = _localStorageModuleCatalogOptions.RefreshProbingFolderOnStart
             };
 
             var license = _licenseProvider.GetLicense();
