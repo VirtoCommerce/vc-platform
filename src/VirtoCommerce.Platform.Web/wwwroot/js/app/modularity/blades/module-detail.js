@@ -1,31 +1,38 @@
 angular.module('platformWebApp')
 .controller('platformWebApp.moduleDetailController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', 'FileUploader', 'platformWebApp.settings', function ($scope, dialogService, bladeNavigationService, modules, moduleHelper, FileUploader, settings) {
     var blade = $scope.blade;
+    blade.allowInstallModules = window.allowInstallModules;
 
     function initializeBlade() {        
         if (blade.currentEntity.isInstalled) {
             var canUpdate = _.any(moduleHelper.allmodules, function (x) {
                 return x.id === blade.currentEntity.id && !x.isInstalled;
             });
-            blade.toolbarCommands = [
-                {
-                    name: "platform.commands.update", icon: 'fa fa-upload',
-                    executeMethod: function () {
-                        blade.currentEntity = _.last(_.where(moduleHelper.allmodules, { id: blade.currentEntity.id, isInstalled: false }));
-                        initializeBlade();
+            if (window.allowInstallModules) {
+
+                blade.toolbarCommands = [
+                    {
+                        name: "platform.commands.update", icon: 'fa fa-upload',
+                        executeMethod: function () {
+                            blade.currentEntity = _.last(_.where(moduleHelper.allmodules, { id: blade.currentEntity.id, isInstalled: false }));
+                            initializeBlade();
+                        },
+                        canExecuteMethod: function () { return canUpdate; },
+                        permission: 'platform:module:manage'
                     },
-                    canExecuteMethod: function () { return canUpdate; },
-                    permission: 'platform:module:manage'
-                },
-                {
-                    name: "platform.commands.uninstall", icon: 'fa fa-trash-o',
-                    executeMethod: function () {
-                        $scope.confirmActionInDialog('uninstall');
-                    },
-                    canExecuteMethod: function () { return true; },
-                    permission: 'platform:module:manage'
-                }
-            ];
+                    {
+                        name: "platform.commands.uninstall", icon: 'fa fa-trash-o',
+                        executeMethod: function () {
+                            $scope.confirmActionInDialog('uninstall');
+                        },
+                        canExecuteMethod: function () { return true; },
+                        permission: 'platform:module:manage'
+                    }
+                ];
+            }
+            else {
+                blade.toolbarCommands = [];
+            }
 
             // hide settings toolbar button when there are no settings available #523
             settings.getSettings({ id: blade.currentEntity.id }, function (results) {
