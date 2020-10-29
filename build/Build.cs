@@ -54,7 +54,7 @@ partial class Build : NukeBuild
             if (solutions.Length == 1)
             {
                 var solutionFileName = Path.GetFileName(solutions.First());
-                Logger.Info($"Solution found: {solutionFileName}"); 
+                Logger.Info($"Solution found: {solutionFileName}");
                 File.WriteAllText(".nuke", solutionFileName);
             }
         }
@@ -70,7 +70,9 @@ partial class Build : NukeBuild
     private static string[] ModuleContentFolders = new[] { "dist", "Localizations", "Scripts", "Content" };
 
     [Solution] readonly Solution Solution;
-    [GitRepository] readonly GitRepository GitRepository;
+    GitRepository GitRepository => GitRepository.FromLocalDirectory(RootDirectory / ".git");
+        
+            
 
     readonly Tool Git;
 
