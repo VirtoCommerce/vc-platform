@@ -372,6 +372,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public ActionResult<string> GetAutoInstallState()
         {
             var state = EnumUtility.SafeParse(_settingsManager.GetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, string.Empty), AutoInstallState.Undefined);
+            _logger.LogWarning($"=============XAPI=======================");
+            _logger.LogWarning($"XAPI: state = {state}");
+            _logger.LogWarning($"=============XAPI=======================");
             return Ok(state);
         }
 
