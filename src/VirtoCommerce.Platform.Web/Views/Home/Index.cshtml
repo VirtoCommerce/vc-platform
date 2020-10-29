@@ -6,10 +6,10 @@
 @section scripts
 {
     <script>
-        $(function() {
+        $(function () {
             $('.main-content')
                 .on("mousewheel DOMMouseScroll",
-                    function(e) {
+                    function (e) {
                         var delta = parseInt(e.originalEvent.wheelDelta || -e.originalEvent.detail);
                         if (Math.abs(delta) >= 120) {
                             delta = delta / 40;
@@ -60,6 +60,8 @@
                 });
             }
         }
+
+        window.allowInstallModules = @($@"{Model.RefreshProbingFolder}".ToLower());
     </script>
 }
 
@@ -92,7 +94,7 @@
 <div class="error-feature" style="display:none">
     <h1 style="padding-top: 50px; padding-left: 50px; ">Startup error</h1>
     <p style="padding: 15px 0 10px 50px; font-size: 24px">The script injection error occurred:</p>
-    <textarea  id="scriptError" class="textarea-error error-text" readonly></textarea>
+    <textarea id="scriptError" class="textarea-error error-text" readonly></textarea>
     <div class="error-content" style="display:none">
         <p style="padding-top: 10px; padding-left: 50px; font-size: 24px;">The following modules were loaded with errors:</p>
         <div id="moduleInfo" class="error-text">
