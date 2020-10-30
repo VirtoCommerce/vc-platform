@@ -56,9 +56,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
             _logger = logger;
-            _logger.LogWarning($"=============XAPI=======================");
-            _logger.LogWarning($"XAPI: AutoInstallModuleBundles = {string.Join(' ', _externalModuleCatalogOptions.AutoInstallModuleBundles)}");
-            _logger.LogWarning($"=============XAPI=======================");
+            if (!_externalModuleCatalogOptions.AutoInstallModuleBundles.IsNullOrEmpty())
+            {
+                logger.LogWarning($"=============XAPI=======================");
+                logger.LogWarning($"XAPI: AutoInstallModuleBundles = {string.Join(' ', _externalModuleCatalogOptions.AutoInstallModuleBundles)}");
+                logger.LogWarning($"=============XAPI=======================");
+            }
+            
         }
 
         /// <summary>

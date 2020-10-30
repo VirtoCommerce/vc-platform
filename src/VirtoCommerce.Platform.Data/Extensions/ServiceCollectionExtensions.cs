@@ -1,8 +1,10 @@
 using System;
 using System.IO.Abstractions;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.ChangeLog;
@@ -28,7 +30,17 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
         public static IServiceCollection AddPlatformServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<PlatformDbContext>(options => options.UseDatabaseProviderSwitcher(configuration).SetConnectionName(configuration, "VirtoCommerce"));
+            services.AddDbContext<PlatformDbContext>((sp, options) =>
+            {
+                var logger = sp.GetService<ILogger<IServiceCollection>>();
+                logger.LogWarning($"=============XAPI=======================");
+                logger.LogWarning($"XAPI: DatabaseProvider = {sp.GetService<IConfiguration>().GetValue<string>("VirtoCommerce:DatabaseProvider")}");
+                logger.LogWarning($"=============XAPI=======================");
+                options.UseDatabaseProviderSwitcher(sp.GetService<IConfiguration>()).SetConnectionName(sp.GetService<IConfiguration>(), "VirtoCommerce");
+                logger.LogWarning($"=============XAPI=======================");
+                logger.LogWarning($"XAPI: DatabaseProvider = {string.Join(" ", options.Options.Extensions.Select(x => x.GetType().Name))}");
+                logger.LogWarning($"=============XAPI=======================");
+            });
             services.AddTransient<IPlatformRepository, PlatformRepository>();
             services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());
 

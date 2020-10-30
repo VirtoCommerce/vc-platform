@@ -22,10 +22,12 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.InMemory.Infrastructure.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -136,10 +138,17 @@ namespace VirtoCommerce.Platform.Web
                 return JsonSerializer.Create(serv.Value.SerializerSettings);
             });
 
-            services.AddDbContext<SecurityDbContext>(options =>
+            services.AddDbContext<SecurityDbContext>((sp, options) =>
             {
+                var logger = sp.GetService<ILogger<IServiceCollection>>();
+                logger.LogWarning($"=============XAPI=======================");
+                logger.LogWarning($"XAPI: DatabaseProvider = {Configuration.GetValue<string>("VirtoCommerce:DatabaseProvider")}");
+                logger.LogWarning($"=============XAPI=======================");
                 //options.UseSqlServer(Configuration.GetConnectionString("VirtoCommerce"));
                 options.UseDatabaseProviderSwitcher(Configuration).SetConnectionName(Configuration, "VirtoCommerce");
+                logger.LogWarning($"=============XAPI=======================");
+                logger.LogWarning($"XAPI: DatabaseProvider = {string.Join(" ", options.Options.Extensions.Select(x => x.GetType().Name))}");
+                logger.LogWarning($"=============XAPI=======================");
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.
