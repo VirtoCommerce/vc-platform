@@ -359,7 +359,8 @@
                     "module": "Модуль",
                     "version": "Версия",
                     "author": "Автор",
-                    "installed": "Установленные модули"
+                    "installed": "Установленные модули",
+                    "manual-install-disabled": "Ручная установка модулей отключена из-за запрета обновления загрузочной папки модулей (RefreshProbingFolderOnStart=false)."
                 }
             },
             "history": {
