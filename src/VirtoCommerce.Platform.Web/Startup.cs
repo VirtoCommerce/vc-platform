@@ -140,15 +140,8 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddDbContext<SecurityDbContext>((sp, options) =>
             {
-                var logger = sp.GetService<ILogger<IServiceCollection>>();
-                logger.LogWarning($"=============XAPI=======================");
-                logger.LogWarning($"XAPI: DatabaseProvider = {Configuration.GetValue<string>("VirtoCommerce:DatabaseProvider")}");
-                logger.LogWarning($"=============XAPI=======================");
                 //options.UseSqlServer(Configuration.GetConnectionString("VirtoCommerce"));
-                options.UseDatabaseProviderSwitcher(Configuration).SetConnectionName(Configuration, "VirtoCommerce");
-                logger.LogWarning($"=============XAPI=======================");
-                logger.LogWarning($"XAPI: DatabaseProvider = {string.Join(" ", options.Options.Extensions.Select(x => x.GetType().Name))}");
-                logger.LogWarning($"=============XAPI=======================");
+                options.UseDatabaseProviderSwitcher(sp.GetService<IConfiguration>()).SetConnectionName(sp.GetService<IConfiguration>(), "VirtoCommerce");
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.

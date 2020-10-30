@@ -30,17 +30,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
         public static IServiceCollection AddPlatformServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<PlatformDbContext>((sp, options) =>
-            {
-                var logger = sp.GetService<ILogger<IServiceCollection>>();
-                logger.LogWarning($"=============XAPI=======================");
-                logger.LogWarning($"XAPI: DatabaseProvider = {sp.GetService<IConfiguration>().GetValue<string>("VirtoCommerce:DatabaseProvider")}");
-                logger.LogWarning($"=============XAPI=======================");
-                options.UseDatabaseProviderSwitcher(sp.GetService<IConfiguration>()).SetConnectionName(sp.GetService<IConfiguration>(), "VirtoCommerce");
-                logger.LogWarning($"=============XAPI=======================");
-                logger.LogWarning($"XAPI: DatabaseProvider = {string.Join(" ", options.Options.Extensions.Select(x => x.GetType().Name))}");
-                logger.LogWarning($"=============XAPI=======================");
-            });
+            services.AddDbContext<PlatformDbContext>((sp, options) => options.UseDatabaseProviderSwitcher(sp.GetService<IConfiguration>()).SetConnectionName(sp.GetService<IConfiguration>(), "VirtoCommerce"));
             services.AddTransient<IPlatformRepository, PlatformRepository>();
             services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());
 
