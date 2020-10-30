@@ -56,6 +56,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
             _logger = logger;
+            _logger.LogWarning($"=============XAPI=======================");
+            _logger.LogWarning($"XAPI: AutoInstallModuleBundles = {string.Join(' ', _externalModuleCatalogOptions.AutoInstallModuleBundles)}");
+            _logger.LogWarning($"=============XAPI=======================");
         }
 
         /// <summary>
@@ -286,22 +289,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Finished = DateTime.UtcNow
             };
 
+            var autoInstalled = _settingsManager.GetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, false);
             _logger.LogWarning($"=============XAPI=======================");
-            _logger.LogWarning($"XAPI: ModulesAutoInstalled = {_settingsManager.GetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, false)}");
+            _logger.LogWarning($"XAPI: ModulesAutoInstalled = { autoInstalled }");
             _logger.LogWarning($"=============XAPI=======================");
-            if (!_settingsManager.GetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, false))
+            if (!autoInstalled)
             {
                 lock (_lockObject)
                 {
-                    if (!_settingsManager.GetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, false))
+                    if (!autoInstalled)
                     {
+                        _logger.LogWarning($"=============XAPI=======================");
+                        _logger.LogWarning($"XAPI: ModulesAutoInstalled = { autoInstalled }");
+                        _logger.LogWarning($"=============XAPI=======================");
                         var moduleBundles = _externalModuleCatalogOptions.AutoInstallModuleBundles;
                         if (!moduleBundles.IsNullOrEmpty())
                         {
                             _logger.LogWarning($"=============XAPI=======================");
                             _logger.LogWarning($"XAPI: moduleBundles = {string.Join(' ', moduleBundles)}");
                             _logger.LogWarning($"=============XAPI=======================");
-                            _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, true);
+                            
                             _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Processing);
 
                             EnsureModulesCatalogInitialized();
@@ -354,6 +361,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                                     ModuleBackgroundJob(options, notification);
                                 }).Start();
                             }
+
+                            _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, true);
                         }
                     }
                 }
