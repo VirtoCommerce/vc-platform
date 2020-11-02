@@ -30,8 +30,9 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
         public static IServiceCollection AddPlatformServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<PlatformDbContext>((sp, options) => options.UseDatabaseProviderSwitcher(sp.GetService<IConfiguration>()).SetConnectionName(sp.GetService<IConfiguration>(), "VirtoCommerce"));
-            services.AddTransient<IPlatformRepository, PlatformRepository>();
+            //services.AddDbContext<PlatformDbContext>((sp, options) => options.UseDatabaseProviderSwitcher(sp.GetService<IConfiguration>()).SetConnectionName(sp.GetService<IConfiguration>(), "VirtoCommerce"));
+            //services.AddTransient<IPlatformRepository, PlatformRepository>();
+            services.AddTransient<IPlatformRepository, PlatformRepositoryInMemory>();
             services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());
 
             services.AddSettings();

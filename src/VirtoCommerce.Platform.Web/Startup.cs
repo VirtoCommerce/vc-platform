@@ -178,6 +178,8 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
                     .AddEntityFrameworkStores<SecurityDbContext>()
+                    //.AddUserStore<InMemoryUserStore<ApplicationUser>>()
+                    //.AddRoleStore<InMemoryRoleStore<Role>>()
                     .AddDefaultTokenProviders();
 
             // Configure Identity to use the same JWT claims as OpenIddict instead
@@ -479,16 +481,16 @@ namespace VirtoCommerce.Platform.Web
             });
 
             //Force migrations
-            using (var serviceScope = app.ApplicationServices.CreateScope())
-            {
-                var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
-                platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
-                platformDbContext.Database.MigrateIfRelationalDatabase();
+            //using (var serviceScope = app.ApplicationServices.CreateScope())
+            //{
+            //    var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
+            //    platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
+            //    platformDbContext.Database.MigrateIfRelationalDatabase();
 
-                var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
-                securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
-                securityDbContext.Database.MigrateIfRelationalDatabase();
-            }
+            //    var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
+            //    securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
+            //    securityDbContext.Database.MigrateIfRelationalDatabase();
+            //}
 
             app.UseDbTriggers();
             //Register platform settings
