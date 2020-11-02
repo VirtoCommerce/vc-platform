@@ -17,11 +17,28 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// <param name="entity"></param>
         public static async Task DeepLoadSettingsAsync(this ISettingsManager manager, IHasSettings entity)
         {
+            await DeepLoadSettingsAsync(manager, entity, true);
+        }
+
+        /// <summary>
+        /// Deep load and populate settings values for entity and all nested objects
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <param name="entity"></param>
+        /// <param name="excludeHidden"></param>
+        /// <returns></returns>
+        public static Task DeepLoadSettingsAsync(this ISettingsManager manager, IHasSettings entity, bool excludeHidden)
+        {
             if (entity == null)
             {
                 throw new ArgumentNullException(nameof(entity));
             }
 
+            return DeepLoadSettingsAsyncImpl(manager, entity, excludeHidden);
+        }
+
+        private static async Task DeepLoadSettingsAsyncImpl(ISettingsManager manager, IHasSettings entity, bool excludeHidden)
+        {
             //Deep load settings values for all object contains settings
             var hasSettingsObjects = entity.GetFlatObjectsListWithInterface<IHasSettings>();
             foreach (var hasSettingsObject in hasSettingsObjects)
@@ -31,6 +48,12 @@ namespace VirtoCommerce.Platform.Core.Settings
                 {
                     throw new SettingsTypeNotRegisteredException(hasSettingsObject.TypeName);
                 }
+
+                if (excludeHidden)
+                {
+                    typeSettings = typeSettings.Where(x => !x.IsHidden);
+                }
+
                 hasSettingsObject.Settings = (await manager.GetObjectSettingsAsync(typeSettings.Select(x => x.Name), hasSettingsObject.TypeName, hasSettingsObject.Id)).ToList();
             }
         }
