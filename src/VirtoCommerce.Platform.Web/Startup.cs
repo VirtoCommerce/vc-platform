@@ -49,6 +49,7 @@ using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Extensions;
+using VirtoCommerce.Platform.Web.Hangfire;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
@@ -101,6 +102,7 @@ namespace VirtoCommerce.Platform.Web
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
             services.AddApplicationInsightsTelemetryProcessor<IgnoreSignalRTelemetryProcessor>();
+            services.AddApplicationInsightsTelemetryProcessor<IgnoreHangfireTelemetryProcessor>();
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
                 {
