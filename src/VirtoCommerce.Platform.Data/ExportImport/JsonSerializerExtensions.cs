@@ -16,6 +16,13 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             var totalCount = result.TotalCount;
 
             await writer.WriteStartArrayAsync();
+
+            // Prevent infinity loop
+            if (pageSize <= 0)
+            {
+                pageSize = 50;
+            }
+
             for (var i = 0; i < totalCount; i += pageSize)
             {
                 var nextPage = await pagedDataLoader(i, pageSize);
