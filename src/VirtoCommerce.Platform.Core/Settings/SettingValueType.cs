@@ -1,14 +1,20 @@
-﻿namespace VirtoCommerce.Platform.Core.Settings
+namespace VirtoCommerce.Platform.Core.Settings
 {
     public enum SettingValueType
     {
-        ShortText,
-        LongText,
-        Integer,
-        Decimal,
-        DateTime,
         Boolean,
+        DateTime,
+        Decimal,
+        Integer,
+        Json,
+        LongText,
+
+        /// <summary>
+        /// A000027 - Natural numbers
+        /// </summary>
+        PositiveInteger,
+
         SecureString,
-        Json
+        ShortText,
     }
 }
