@@ -2,6 +2,7 @@ using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Telemetry;
 
 namespace VirtoCommerce.Platform.Web.Telemetry
@@ -29,7 +30,7 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             {
                 foreach (var substring in _options.QueryIgnoreSubstrings)
                 {
-                    if (dependencyTelemetry.Data.Contains(substring))
+                    if (!(dependencyTelemetry.Data.IsNullOrEmpty()) && dependencyTelemetry.Data.Contains(substring))
                     {
                         // To filter out an item, just terminate the chain:
                         return;
