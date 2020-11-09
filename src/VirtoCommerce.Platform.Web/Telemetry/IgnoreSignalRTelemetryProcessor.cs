@@ -2,7 +2,7 @@ using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace VirtoCommerce.Platform.Web.SignalR
+namespace VirtoCommerce.Platform.Web.Telemetry
 {
     /// <summary>
     /// Application insight telemetry processor which exclude all SignalR requests from statistic.
