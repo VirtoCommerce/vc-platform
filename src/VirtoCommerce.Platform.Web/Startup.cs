@@ -101,8 +101,18 @@ namespace VirtoCommerce.Platform.Web
 
             // The following line enables Application Insights telemetry collection.
             services.AddApplicationInsightsTelemetry();
-            services.AddApplicationInsightsTelemetryProcessor<IgnoreSignalRTelemetryProcessor>();
-            services.AddApplicationInsightsTelemetryProcessor<IgnoreHangfireTelemetryProcessor>();
+            if (Configuration["VirtoCommerce:ApplicationInsights:EnableSignalRTelemetry"]?.ToLower() != "true")
+            {
+                services.AddApplicationInsightsTelemetryProcessor<IgnoreSignalRTelemetryProcessor>();
+            }
+            if (Configuration["VirtoCommerce:ApplicationInsights:EnableHangfireTelemetry"]?.ToLower() != "true")
+            {
+                services.AddApplicationInsightsTelemetryProcessor<IgnoreHangfireTelemetryProcessor>();
+            }
+
+            // The next line can be uncommented to gather detailed SQL info in local run for AI.
+            // See instructions here: https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-dependencies#advanced-sql-tracking-to-get-full-sql-query
+            // services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
                 {

@@ -5,6 +5,9 @@ using Microsoft.ApplicationInsights.Extensibility;
 
 namespace VirtoCommerce.Platform.Web.Hangfire
 {
+    /// <summary>
+    /// Application insight telemetry processor which exclude all dependency SQL queries related to Hangfire.
+    /// </summary>
     public class IgnoreHangfireTelemetryProcessor : ITelemetryProcessor
     {
         private ITelemetryProcessor Next { get; set; }
@@ -17,8 +20,9 @@ namespace VirtoCommerce.Platform.Web.Hangfire
 
         public void Process(ITelemetry item)
         {
-            var dependencyTelemetry = item as DependencyTelemetry;
-            if (dependencyTelemetry != null && dependencyTelemetry.Type == "SQL" && dependencyTelemetry.Data.Contains("HangFire"))
+            if (item is DependencyTelemetry dependencyTelemetry &&
+                dependencyTelemetry.Type == "SQL" &&
+                dependencyTelemetry.Data.Contains("HangFire"))
             {
                 // To filter out an item, just terminate the chain:
                 return;
