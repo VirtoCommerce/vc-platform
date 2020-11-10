@@ -8,6 +8,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 {
     public static class JsonSerializerExtensions
     {
+        private const int DefaultPageSize = 50;
+
         public static async Task SerializeJsonArrayWithPagingAsync<T>(this JsonTextWriter writer, JsonSerializer serializer, int pageSize, Func<int, int, Task<GenericSearchResult<T>>> pagedDataLoader, Action<int, int> progressCallback, ICancellationToken cancellationToken)
         {
             //Evaluate total items counts
@@ -20,7 +22,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             // Prevent infinity loop
             if (pageSize <= 0)
             {
-                pageSize = 50;
+                pageSize = DefaultPageSize;
             }
 
             for (var i = 0; i < totalCount; i += pageSize)
