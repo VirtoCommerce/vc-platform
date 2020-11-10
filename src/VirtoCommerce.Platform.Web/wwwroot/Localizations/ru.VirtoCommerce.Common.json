@@ -1,4 +1,4 @@
-﻿{
+{
   "platform": {
     "commands": {
       "add": "Добавить",
@@ -133,7 +133,8 @@
             "long-text-multilang": "Ввести значение",
             "short-text-multivalue-multilang": "Добавить значение",
             "short-text-dictionary-multilang": "Выбрать значение",
-            "short-text-dictionary-multivalue-multilang": "Выбрать значение"
+            "short-text-dictionary-multivalue-multilang": "Выбрать значение",
+            "long-text-dictionary-multivalue-multilang": "Выбрать значение"
         }
     }
   }
