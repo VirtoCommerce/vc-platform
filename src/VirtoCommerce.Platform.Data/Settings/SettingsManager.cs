@@ -173,8 +173,13 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .ToListAsync());
 
                 var validator = new ObjectSettingEntryValidator();
-                foreach (var setting in objectSettings.Where(x => x.ItHasValues).Where(x => validator.Validate(x).IsValid))
+                foreach (var setting in objectSettings.Where(x => x.ItHasValues))
                 {
+                    if (!validator.Validate(setting).IsValid)
+                    {
+                        throw new PlatformException($"Setting with name {setting.Name} is invalid");
+                    }
+
                     var settingDescriptor = _registeredSettingsByNameDict[setting.Name];
                     if (settingDescriptor == null)
                     {
