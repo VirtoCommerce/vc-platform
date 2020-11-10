@@ -27,19 +27,26 @@ namespace VirtoCommerce.Platform.Data.Model
 
         public object GetValue()
         {
+            // Todo update to switch from C# 9.0 with or feature
             switch (EnumUtility.SafeParse(ValueType, SettingValueType.LongText))
             {
                 case SettingValueType.Boolean:
                     return BooleanValue;
+
                 case SettingValueType.DateTime:
                     return DateTimeValue;
+
                 case SettingValueType.Decimal:
                     return DecimalValue;
+
                 case SettingValueType.Integer:
+                case SettingValueType.PositiveInteger:
                     return IntegerValue;
+
                 case SettingValueType.ShortText:
                 case SettingValueType.SecureString:
                     return ShortTextValue;
+
                 default:
                     return LongTextValue;
             }
@@ -49,6 +56,7 @@ namespace VirtoCommerce.Platform.Data.Model
         {
             ValueType = valueType.ToString();
 
+            // Todo update to switch from C# 9.0 with or feature
             if (valueType == SettingValueType.Boolean)
             {
                 BooleanValue = Convert.ToBoolean(value);
@@ -62,6 +70,10 @@ namespace VirtoCommerce.Platform.Data.Model
                 DecimalValue = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
             }
             else if (valueType == SettingValueType.Integer)
+            {
+                IntegerValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+            }
+            else if (valueType == SettingValueType.PositiveInteger)
             {
                 IntegerValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
             }
@@ -84,6 +96,7 @@ namespace VirtoCommerce.Platform.Data.Model
 
             ShortTextValue = string.IsNullOrWhiteSpace(ShortTextValue) ? null : ShortTextValue;
             LongTextValue = string.IsNullOrWhiteSpace(LongTextValue) ? null : LongTextValue;
+
             return this;
         }
 
@@ -93,18 +106,25 @@ namespace VirtoCommerce.Platform.Data.Model
             {
                 case SettingValueType.Boolean:
                     return BooleanValue.ToString();
+
                 case SettingValueType.DateTime:
                     return DateTimeValue == null ? null : DateTimeValue.Value.ToString(formatProvider);
+
                 case SettingValueType.Decimal:
                     return DecimalValue.ToString(formatProvider);
+
                 case SettingValueType.Integer:
+                case SettingValueType.PositiveInteger:
                     return IntegerValue.ToString(formatProvider);
+
                 case SettingValueType.LongText:
                 case SettingValueType.Json:
                     return LongTextValue;
+
                 case SettingValueType.ShortText:
                 case SettingValueType.SecureString:
                     return ShortTextValue;
+
                 default:
                     return base.ToString();
             }
