@@ -1,4 +1,4 @@
-﻿{
+{
   "platform": {
     "commands": {
       "add": "Hinzufügen",
@@ -107,25 +107,26 @@
       }
     },
     "genericValueInput": {
-      "placeholders": {
-        "short-text": "Kurztext eingeben",
-        "secure-string": "Geheimen Text eingeben",
-        "url": " URL eingeben",
-        "long-text": "Langen Text eingeben",
-        "integer": "Ganzzahl eingeben",
-        "number": "Dezimalzahl eingeben",
-        "date-time": "Datum auswählen",
-        "short-text-multivalue": "Wert hinzufügen",
-        "integer-multivalue": "Integer hinzufügen",
-        "number-multivalue": "Dezimal hinzufügen",
-        "short-text-dictionary": "Wert auswählen",
-        "short-text-dictionary-multivalue": "Wert auswählen",
-        "short-text-multilang": "Wert eingeben",
-        "long-text-multilang": "Wert eingeben",
-        "short-text-multivalue-multilang": "Wert hinzufügen",
-        "short-text-dictionary-multilang": "Wert auswählen",
-        "short-text-dictionary-multivalue-multilang": "Wert auswählen"
-      }
+        "placeholders": {
+            "short-text": "Kurztext eingeben",
+            "secure-string": "Geheimen Text eingeben",
+            "url": " URL eingeben",
+            "long-text": "Langen Text eingeben",
+            "integer": "Ganzzahl eingeben",
+            "number": "Dezimalzahl eingeben",
+            "date-time": "Datum auswählen",
+            "short-text-multivalue": "Wert hinzufügen",
+            "integer-multivalue": "Integer hinzufügen",
+            "number-multivalue": "Dezimal hinzufügen",
+            "short-text-dictionary": "Wert auswählen",
+            "short-text-dictionary-multivalue": "Wert auswählen",
+            "short-text-multilang": "Wert eingeben",
+            "long-text-multilang": "Wert eingeben",
+            "short-text-multivalue-multilang": "Wert hinzufügen",
+            "short-text-dictionary-multilang": "Wert auswählen",
+            "short-text-dictionary-multivalue-multilang": "Wert auswählen",
+            "long-text-dictionary-multivalue-multilang": "Wert auswählen"
+        }
     }
   }
 }
