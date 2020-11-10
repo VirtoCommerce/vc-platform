@@ -113,6 +113,8 @@ angular.module('platformWebApp')
                             case 'Json':
                                 result = 'dCode';
                                 break;
+                            case 'PositiveInteger':
+                                return 'dPositiveInteger.html';
                             default:
                                 result = 'd' + property.valueType;
                         }
