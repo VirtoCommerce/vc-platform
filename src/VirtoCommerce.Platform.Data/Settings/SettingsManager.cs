@@ -13,12 +13,13 @@ using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.Validators;
 
 namespace VirtoCommerce.Platform.Data.Settings
 {
     /// <summary>
     /// Provide next functionality to working with settings
-    /// - Load setting metainformation from module manifest and database 
+    /// - Load setting metainformation from module manifest and database
     /// - Deep load all settings for entity
     /// - Mass update all entity settings
     /// </summary>
@@ -37,8 +38,8 @@ namespace VirtoCommerce.Platform.Data.Settings
             _eventPublisher = eventPublisher;
         }
 
-
         #region ISettingsRegistrar Members
+
         public void RegisterSettingsForType(IEnumerable<SettingDescriptor> settings, string typeName)
         {
             if (settings == null)
@@ -51,7 +52,6 @@ namespace VirtoCommerce.Platform.Data.Settings
                 settings = existTypeSettings.Concat(settings).Distinct().ToList();
             }
             _registeredTypeSettingsByNameDict[typeName] = settings;
-
         }
 
         public IEnumerable<SettingDescriptor> GetSettingsForType(string typeName)
@@ -73,7 +73,9 @@ namespace VirtoCommerce.Platform.Data.Settings
                 _registeredSettingsByNameDict[setting.Name] = setting;
             }
         }
-        #endregion
+
+        #endregion ISettingsRegistrar Members
+
         #region ISettingsManager Members
 
         public virtual async Task<ObjectSettingEntry> GetObjectSettingAsync(string name, string objectType = null, string objectId = null)
@@ -170,15 +172,21 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .Where(x => settingNames.Contains(x.Name))
                     .ToListAsync());
 
+                var validator = new ObjectSettingEntryValidator();
                 foreach (var setting in objectSettings.Where(x => x.ItHasValues))
                 {
+                    if (!validator.Validate(setting).IsValid)
+                    {
+                        throw new PlatformException($"Setting with name {setting.Name} is invalid");
+                    }
 
                     var settingDescriptor = _registeredSettingsByNameDict[setting.Name];
                     if (settingDescriptor == null)
                     {
                         throw new PlatformException($"Setting with name {setting.Name} is not registered");
                     }
-                    //we need to convert resulting DB entities to model. Use ValueObject.Equals to find already saved setting entity from passed setting
+
+                    // We need to convert resulting DB entities to model. Use ValueObject.Equals to find already saved setting entity from passed setting
                     var originalEntity = alreadyExistDbSettings.Where(x => x.Name.EqualsInvariant(setting.Name))
                                                                .FirstOrDefault(x => x.ToModel(new ObjectSettingEntry(settingDescriptor)).Equals(setting));
 
@@ -204,7 +212,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             await _eventPublisher.Publish(new ObjectSettingChangedEvent(changedEntries));
         }
 
-        #endregion
+        #endregion ISettingsManager Members
 
         protected virtual void ClearCache(IEnumerable<ObjectSettingEntry> objectSettings)
         {
@@ -214,7 +222,5 @@ namespace VirtoCommerce.Platform.Data.Settings
                 SettingsCacheRegion.ExpireSetting(setting);
             }
         }
-
-
     }
 }

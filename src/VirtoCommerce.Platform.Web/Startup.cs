@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
+using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,6 +41,7 @@ using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Telemetry;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Hangfire.Extensions;
@@ -57,8 +59,8 @@ using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
-using VirtoCommerce.Platform.Web.SignalR;
 using VirtoCommerce.Platform.Web.Swagger;
+using VirtoCommerce.Platform.Web.Telemetry;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace VirtoCommerce.Platform.Web
@@ -102,32 +104,47 @@ namespace VirtoCommerce.Platform.Web
             services.AddApplicationInsightsTelemetry();
             services.AddApplicationInsightsTelemetryProcessor<IgnoreSignalRTelemetryProcessor>();
 
+            var ignoreSqlTelemetryOptionsSection = Configuration.GetSection("VirtoCommerce:ApplicationInsights:IgnoreSqlTelemetryOptions");
+            if (ignoreSqlTelemetryOptionsSection.Exists())
+            {
+                services.AddOptions<IgnoreSqlTelemetryOptions>().Bind(ignoreSqlTelemetryOptionsSection);
+                services.AddApplicationInsightsTelemetryProcessor<IgnoreSqlTelemetryProcessor>();
+            }
+
+            if (Configuration["VirtoCommerce:ApplicationInsights:EnableLocalSqlCommandTextInstrumentation"]?.ToLower() == "true")
+            {
+                // Next line allows to gather detailed SQL info for AI in the local run.
+                // See instructions here: https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-dependencies#advanced-sql-tracking-to-get-full-sql-query
+                services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
+            }
+
+
             var mvcBuilder = services.AddMvc(mvcOptions =>
+            {
+                //Disable 204 response for null result. https://github.com/aspnet/AspNetCore/issues/8847
+                var noContentFormatter = mvcOptions.OutputFormatters.OfType<HttpNoContentOutputFormatter>().FirstOrDefault();
+                if (noContentFormatter != null)
                 {
-                    //Disable 204 response for null result. https://github.com/aspnet/AspNetCore/issues/8847
-                    var noContentFormatter = mvcOptions.OutputFormatters.OfType<HttpNoContentOutputFormatter>().FirstOrDefault();
-                    if (noContentFormatter != null)
-                    {
-                        noContentFormatter.TreatNullValueAsNoContent = false;
-                    }
+                    noContentFormatter.TreatNullValueAsNoContent = false;
                 }
-            )
-            .AddNewtonsoftJson(options =>
-                {
-                    //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
-                    //we should register this converter globally.
-                    options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
-                    //Next line allow to use polymorph types as parameters in API controller methods
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
-                    options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
-                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    options.SerializerSettings.Formatting = Formatting.None;
-                }
-            );
+            }
+        )
+        .AddNewtonsoftJson(options =>
+            {
+                //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
+                //we should register this converter globally.
+                options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
+                //Next line allow to use polymorph types as parameters in API controller methods
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
+                options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
+                options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                options.SerializerSettings.Formatting = Formatting.None;
+            }
+        );
 
             services.AddSingleton(js =>
             {

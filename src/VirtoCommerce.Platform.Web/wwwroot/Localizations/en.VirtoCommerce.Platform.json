@@ -292,7 +292,8 @@
                     "module": "Module",
                     "version": "Version",
                     "author": "Author",
-                    "installed": "Installed Modules"
+                    "installed": "Installed Modules",
+                    "manual-install-disabled": "Manual modules install was disabled due to prohibited refreshing probing path (RefreshProbingFolderOnStart=false)."
                 }
             },
             "history": {

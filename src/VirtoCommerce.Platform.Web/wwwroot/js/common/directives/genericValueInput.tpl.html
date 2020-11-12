@@ -5,7 +5,6 @@
                ng-model="context.currentPropValues[0].value"
                placeholder="{{ 'platform.genericValueInput.placeholders.short-text' | translate}}">
     </div>
-
 </script>
 <script type="text/ng-template" id="dEmail.html">
     <div class="form-input">
@@ -51,6 +50,15 @@
 <script type="text/ng-template" id="dInteger.html">
     <div class="form-input __number">
         <input smart-float num-type="integer"
+               ng-required="currentEntity.isRequired"
+               ng-readonly="currentEntity.isReadOnly"
+               ng-model="context.currentPropValues[0].value"
+               placeholder="{{ 'platform.genericValueInput.placeholders.integer' | translate}}" />
+    </div>
+</script>
+<script type="text/ng-template" id="dPositiveInteger.html">
+    <div class="form-input __number">
+        <input smart-float num-type="positiveInteger"
                ng-required="currentEntity.isRequired"
                ng-readonly="currentEntity.isReadOnly"
                ng-model="context.currentPropValues[0].value"
@@ -130,45 +138,44 @@
             </ui-select-choices>
         </ui-select>
     </div>
-
 </script>
 <script type="text/ng-template" id="dShortText-multilang.html">
-    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">        
-            <label class="lang-code">{{propValue.locale}}</label>
-            <input ng-required="currentEntity.isRequired"
-                   ng-readonly="currentEntity.isReadOnly"
-                   ng-model="propValue.value"
-                   placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">        
+    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+        <label class="lang-code">{{propValue.locale}}</label>
+        <input ng-required="currentEntity.isRequired"
+               ng-readonly="currentEntity.isReadOnly"
+               ng-model="propValue.value"
+               placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multilang' | translate}}">
     </div>
 </script>
 <script type="text/ng-template" id="dLongText-multilang.html">
-    <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">        
-            <label>{{propValue.locale}}</label>
-            <textarea ng-required="currentEntity.isRequired"
-                      ng-readonly="currentEntity.isReadOnly"
-                      ng-model="propValue.value"
-                      placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />        
+    <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+        <label>{{propValue.locale}}</label>
+        <textarea ng-required="currentEntity.isRequired"
+                  ng-readonly="currentEntity.isReadOnly"
+                  ng-model="propValue.value"
+                  placeholder="{{ 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
     </div>
 </script>
 <script type="text/ng-template" id="dCode-multilang.html">
-    <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">        
-            <label>{{propValue.locale}}</label>
-            <ui-codemirror ng-required="currentEntity.isRequired"
-                           ng-readonly="currentEntity.isReadOnly"
-                           ng-model="propValue.value"
-                           ui-codemirror-opts="editorOptions"></ui-codemirror>        
+    <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+        <label>{{propValue.locale}}</label>
+        <ui-codemirror ng-required="currentEntity.isRequired"
+                       ng-readonly="currentEntity.isReadOnly"
+                       ng-model="propValue.value"
+                       ui-codemirror-opts="editorOptions"></ui-codemirror>
     </div>
 </script>
 
 <script type="text/ng-template" id="dShortText-multivalue-multilang.html">
-    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">        
-            <label class="lang-code">{{propValue.locale}}</label>
-            <tags-input ng-model="propValue.values"
-                        min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
-                        min-length="1"
-                        display-property="value"
-                        placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multivalue-multilang' | translate}}">
-            </tags-input>        
+    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+        <label class="lang-code">{{propValue.locale}}</label>
+        <tags-input ng-model="propValue.values"
+                    min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
+                    min-length="1"
+                    display-property="value"
+                    placeholder="{{ 'platform.genericValueInput.placeholders.short-text-multivalue-multilang' | translate}}">
+        </tags-input>
     </div>
 </script>
 <script type="text/ng-template" id="dShortText-dictionary-multilang.html">

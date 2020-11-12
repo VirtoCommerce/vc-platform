@@ -18,6 +18,7 @@ namespace VirtoCommerce.Platform.Core.Settings
             AllowedValues = descriptor.AllowedValues;
             DefaultValue = descriptor.DefaultValue;
             IsDictionary = descriptor.IsDictionary;
+            IsHidden = descriptor.IsHidden;
         }
         public bool ItHasValues => Value != null || !AllowedValues.IsNullOrEmpty();
         /// <summary>

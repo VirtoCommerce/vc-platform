@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.2.2" />
+        <PackageReference Include="FluentValidation" Version="8.6.3" />
         <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8" />
