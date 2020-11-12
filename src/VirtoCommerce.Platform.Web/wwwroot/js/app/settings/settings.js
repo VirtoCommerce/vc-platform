@@ -20,19 +20,43 @@ angular.module("platformWebApp")
           });
   }]
 )
-.run(
-  ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
-      //Register module in main menu
-      var menuItem = {
-          path: 'configuration/settings',
-          icon: 'fa fa-gears',
-          title: 'platform.menu.settings',
-          priority: 1,
-          action: function () { $state.go('workspace.modulesSettings'); },
-          permission: 'platform:setting:access'
-      };
-      mainMenuService.addMenuItem(menuItem);
-  }])
+.run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.changeLogApi', 'platformWebApp.toolbarService', 'platformWebApp.dialogService', '$state', function ($rootScope, mainMenuService, widgetService, changeLogApi, toolbarService, dialogService, $state) {
+    //Register module in main menu
+    var menuItem = {
+        path: 'configuration/settings',
+        icon: 'fa fa-gears',
+        title: 'platform.menu.settings',
+        priority: 1,
+        action: function () { $state.go('workspace.modulesSettings'); },
+        permission: 'platform:setting:access'
+    };
+    mainMenuService.addMenuItem(menuItem);
+
+    // Add 'Reset cache' command to settings blade
+    var resetCacheCommand = {
+        name: 'platform.commands.reset-storefront-cache',
+        icon: 'fa fa-eraser',
+        executeMethod: function (blade) {
+            blade.isLoading = true;
+
+            changeLogApi.forceChanges({}, function () {
+                blade.isLoading = false;
+
+                var dialog = {
+                    id: "cacheResetDialog",
+                    title: 'platform.dialogs.storefront-cache-reset-successfully.title',
+                    message: 'platform.dialogs.storefront-cache-reset-successfully.message'
+                };
+                dialogService.showNotificationDialog(dialog);
+            });
+
+        },
+        canExecuteMethod: function () { return true; },
+        permission: 'cache:reset',
+        index: 2
+    };
+    toolbarService.register(resetCacheCommand, 'platformWebApp.settingGroupListController');
+}])
 
 .factory('platformWebApp.settings.helper', [function () {
     var retVal = {};
