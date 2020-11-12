@@ -1,4 +1,4 @@
-﻿///https://github.com/dcohenb/angular-img-fallback
+///https://github.com/dcohenb/angular-img-fallback
 ///Angular directives that handles image loading, it has fallback-src to handle errors in image loading and loading-src for placeholder while the image is being loaded.
 angular.module('platformWebApp')
     .directive('fallbackSrc', ['imageService', function(imageService) {
@@ -15,7 +15,8 @@ angular.module('platformWebApp')
                     // fallbackSrc may have changed since the link function ran, so try to grab it again.
                     var newSrc = attr.fallbackSrc ? imageService.setMissing(attr.fallbackSrc) : imageService.getMissing();
 
-                    if (element[0].src !== newSrc) {
+                    // Add check for encoded URL to avoid possible recursion - as element[0].src is encoded
+                    if (element[0].src !== newSrc && element[0].src !== encodeURI(newSrc)) {
                         element[0].src = newSrc;
                     }
                 };
