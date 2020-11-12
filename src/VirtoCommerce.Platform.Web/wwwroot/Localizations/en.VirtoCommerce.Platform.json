@@ -827,7 +827,7 @@
         },
         "commands": {
             "login-on-behalf": "Login on behalf",
-            "reset-storefront-cache": "Reset storefront cache"
+            "reset-storefront-cache": "Reset cache"
         }
     },
     "permissions": {
