@@ -41,7 +41,6 @@ using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Telemetry;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Hangfire.Extensions;
@@ -101,15 +100,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<LicenseProvider>();
 
             // The following line enables Application Insights telemetry collection.
-            services.AddApplicationInsightsTelemetry();
-            services.AddApplicationInsightsTelemetryProcessor<IgnoreSignalRTelemetryProcessor>();
-
-            var ignoreSqlTelemetryOptionsSection = Configuration.GetSection("VirtoCommerce:ApplicationInsights:IgnoreSqlTelemetryOptions");
-            if (ignoreSqlTelemetryOptionsSection.Exists())
-            {
-                services.AddOptions<IgnoreSqlTelemetryOptions>().Bind(ignoreSqlTelemetryOptionsSection);
-                services.AddApplicationInsightsTelemetryProcessor<IgnoreSqlTelemetryProcessor>();
-            }
+            services.AddAppInsightsTelemetry(Configuration);
 
             if (Configuration["VirtoCommerce:ApplicationInsights:EnableLocalSqlCommandTextInstrumentation"]?.ToLower() == "true")
             {
@@ -490,6 +481,9 @@ namespace VirtoCommerce.Platform.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // Use app insights telemetry 
+            app.UseAppInsightsTelemetry();
 
             //Force migrations
             using (var serviceScope = app.ApplicationServices.CreateScope())
