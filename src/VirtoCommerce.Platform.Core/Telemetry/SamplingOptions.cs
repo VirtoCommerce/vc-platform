@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Core.Telemetry
         public string IncludedTypes { get; set; } = "Dependency;Event;Exception;PageView;Request;Trace";
         /// <summary>
         /// A semi-colon delimited list of types that you do not want to be subject to sampling.
-        /// Recognized types are: Dependency, Event, Exception, PageView, Request, Trace. The specified types will be sampled.
+        /// Recognized types are: Dependency, Event, Exception, PageView, Request, Trace.
         /// Empty by default.
         /// </summary>
         public string ExcludedTypes { get; set; }
