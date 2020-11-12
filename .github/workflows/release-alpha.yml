@@ -1,5 +1,5 @@
 # v1
-name: Release alpha
+name: Platform Release alpha CI
 on:
   workflow_dispatch:
 jobs:
@@ -23,11 +23,11 @@ jobs:
       run: dotnet tool install --global dotnet-sonarscanner
 
     - name: Get Image Version
-      uses: VirtoCommerce/vc-github-actions/get-image-version@VP-5059
+      uses: VirtoCommerce/vc-github-actions/get-image-version@master
       id: image
 
     - name: Add version suffix
-      uses: VirtoCommerce/vc-github-actions/add-version-suffix@VP-5059
+      uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
 
     - name: SonarCloud Begin
       uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@master
@@ -46,7 +46,7 @@ jobs:
 
     - name: Build Docker Image
       id: dockerBuild
-      uses: VirtoCommerce/vc-github-actions/build-docker-image@VP-5059
+      uses: VirtoCommerce/vc-github-actions/build-docker-image@master
       with:
         imageName: "platform"
         tag: ${{ steps.image.outputs.taggedVersion }}
@@ -60,7 +60,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish Docker Image
-      uses: VirtoCommerce/vc-github-actions/publish-docker-image@VP-5059
+      uses: VirtoCommerce/vc-github-actions/publish-docker-image@master
       with:
           image: ${{ steps.dockerBuild.outputs.imageName }}
           tag: ${{ steps.image.outputs.taggedVersion }}

@@ -21,6 +21,9 @@
 </div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
+    <div ng-if="!blade.allowInstallModules" class="form-group form-error inner-block">
+        {{ 'platform.blades.modules-list.labels.manual-install-disabled' | translate }}
+    </div>
         <div class="inner-block" ng-init="setGridOptions({
                     rowTemplate: 'modules-list.row.html',
                     virtualizationThreshold: 1000,

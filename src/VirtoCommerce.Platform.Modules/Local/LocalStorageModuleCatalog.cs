@@ -32,24 +32,31 @@ namespace VirtoCommerce.Platform.Modules
             if (string.IsNullOrEmpty(_options.DiscoveryPath))
                 throw new InvalidOperationException("The DiscoveryPath cannot contain a null value or be empty");
 
+
+            var bNeedToCopyAssemblies = _options.RefreshProbingFolderOnStart;
+
             if (!Directory.Exists(_options.ProbingPath))
             {
+                bNeedToCopyAssemblies = true; // Force to refresh assemblies anyway, even if RefreshProbeFolderOnStart set to false, because the probing path is absent
                 Directory.CreateDirectory(_options.ProbingPath);
             }
 
             if (!discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
                 discoveryPath += PlatformInformation.DirectorySeparator;
 
-            CopyAssemblies(discoveryPath, _options.ProbingPath);
+            if (bNeedToCopyAssemblies) CopyAssemblies(discoveryPath, _options.ProbingPath);
 
             foreach (var pair in GetModuleManifests())
             {
                 var manifest = pair.Value;
                 var manifestPath = pair.Key;
 
-                var modulePath = Path.GetDirectoryName(manifestPath);
+                if (bNeedToCopyAssemblies)
+                {
+                    var modulePath = Path.GetDirectoryName(manifestPath);
+                    CopyAssemblies(modulePath, _options.ProbingPath);
+                }
 
-                CopyAssemblies(modulePath, _options.ProbingPath);
                 var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
                 moduleInfo.LoadFromManifest(manifest);
                 moduleInfo.FullPhysicalPath = Path.GetDirectoryName(manifestPath);

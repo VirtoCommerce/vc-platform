@@ -9,7 +9,7 @@
             </label>
         </div>
     </div>
-    <button class="btn" ng-click="confirmActionInDialog(blade.mode)" ng-if="blade.currentEntity" ng-disabled="isInstalling || (blade.currentEntity.requireLicenseAcceptance && !blade.currentEntity.licenseAccepted)">
+    <button class="btn" ng-click="confirmActionInDialog(blade.mode)" ng-if="blade.currentEntity" ng-disabled="!blade.allowInstallModules || isInstalling || (blade.currentEntity.requireLicenseAcceptance && !blade.currentEntity.licenseAccepted)">
         <span ng-if="blade.mode === 'install'">{{'platform.commands.install' | translate}}</span>
         <span ng-if="blade.mode === 'update'">{{'platform.commands.update' | translate}}</span>
     </button>
@@ -17,7 +17,10 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <div ng-if="blade.mode === 'advanced'" va-permission="platform:module:manage">
+            <div ng-if="!blade.allowInstallModules" class="form-group form-error inner-block">
+	        {{ 'platform.blades.modules-list.labels.manual-install-disabled' | translate }}
+	    </div>
+            <div ng-if="blade.mode === 'advanced' && blade.allowInstallModules" va-permission="platform:module:manage">
                 <div class="t __divider">{{ 'platform.blades.module-detail.labels.install-from-file' | translate }}</div>
                 <div class="form-group" ng-if="!blade.isLoading">
                     <label class="form-label">{{ 'platform.blades.module-detail.labels.select-module-file' | translate }}</label>

@@ -1,4 +1,4 @@
-﻿<div class="blade-static __bottom">
+<div class="blade-static __bottom">
     <button class="btn" ng-click="startProcess()" ng-disabled="!canStartProcess() || blade.notification">
         <span>{{ 'platform.blades.import-main.labels.start-import' | translate }}</span>
     </button>
@@ -91,7 +91,7 @@
                         <div ng-if="blade.notification.errorCount > 0">
                             <span class="sub-t">{{ 'platform.blades.import-main.labels.errors' | translate }}</span>
                             <div class="log">
-                                <p ng-repeat="error in blade.notification.errors track by $index" class="error">{{error}}</p>
+                                <p ng-repeat="error in blade.notification.errors track by $index" class="error" ng-bind-html="error" >
                             </div>
                         </div>
                     </div>
