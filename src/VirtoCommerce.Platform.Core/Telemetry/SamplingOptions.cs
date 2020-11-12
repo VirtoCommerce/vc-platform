@@ -32,6 +32,4 @@ namespace VirtoCommerce.Platform.Core.Telemetry
         /// </summary>
         public string ExcludedTypes { get; set; }
     }
-
-
 }
