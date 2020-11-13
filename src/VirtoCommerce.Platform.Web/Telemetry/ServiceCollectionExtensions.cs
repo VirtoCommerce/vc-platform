@@ -40,7 +40,7 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             if (configuration["VirtoCommerce:ApplicationInsights:EnableLocalSqlCommandTextInstrumentation"]?.ToLower() == "true" ||
                 configuration["VirtoCommerce:ApplicationInsights:EnableSqlCommandTextInstrumentation"]?.ToLower() == "true")
             {
-                // Next line forces to gather detailed SQL info for AI in the local run.
+                // Next line forces to gather detailed SQL info for AI
                 // See instructions here: https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-dependencies#advanced-sql-tracking-to-get-full-sql-query
                 services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
             }
