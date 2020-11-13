@@ -14,6 +14,17 @@ namespace VirtoCommerce.Platform.Web.Telemetry
     {
         private readonly IgnoreSqlTelemetryOptions _options;
 
+        /// <summary>
+        /// Just for looking at processor options from outside (logging, etc...)
+        /// </summary>
+        public IgnoreSqlTelemetryOptions Options
+        {
+            get
+            {
+                return _options;
+            }
+        }
+
         private ITelemetryProcessor Next { get; set; }
 
         // Link processors to each other in a chain.
