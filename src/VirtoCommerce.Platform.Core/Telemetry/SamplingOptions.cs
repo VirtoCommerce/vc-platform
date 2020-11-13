@@ -16,7 +16,7 @@ namespace VirtoCommerce.Platform.Core.Telemetry
         /// </summary>
         public SamplingPercentageEstimatorSettings Adaptive { get; set; } = new SamplingPercentageEstimatorSettings();
         /// <summary>
-        /// Foxed sampling settings (if Processor==SamplingProcessor.Fixed)
+        /// Fixed sampling settings (if Processor==SamplingProcessor.Fixed)
         /// </summary>
         public FixedProcessorSettings Fixed { get; set; } = new FixedProcessorSettings();
         /// <summary>
