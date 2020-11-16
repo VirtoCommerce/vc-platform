@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Web.Telemetry
     /// </summary>
     public class IgnoreSqlTelemetryProcessor : ITelemetryProcessor
     {
-        private readonly IgnoreSqlTelemetryOptions _options;
+        private readonly ApplicationInsightsOptions _options;
 
         /// <summary>
         /// Just for looking at processor options from outside (logging, etc...)
@@ -21,14 +21,14 @@ namespace VirtoCommerce.Platform.Web.Telemetry
         {
             get
             {
-                return _options;
+                return _options.IgnoreSqlTelemetryOptions;
             }
         }
 
         private ITelemetryProcessor Next { get; set; }
 
         // Link processors to each other in a chain.
-        public IgnoreSqlTelemetryProcessor(IOptions<IgnoreSqlTelemetryOptions> options, ITelemetryProcessor next)
+        public IgnoreSqlTelemetryProcessor(IOptions<ApplicationInsightsOptions> options, ITelemetryProcessor next)
         {
             _options = options.Value;
             Next = next;
@@ -39,7 +39,7 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             if (item is DependencyTelemetry dependencyTelemetry &&
                 dependencyTelemetry.Type == "SQL")
             {
-                foreach (var substring in _options.QueryIgnoreSubstrings)
+                foreach (var substring in _options.IgnoreSqlTelemetryOptions.QueryIgnoreSubstrings)
                 {
                     if (!(dependencyTelemetry.Data.IsNullOrEmpty()) && dependencyTelemetry.Data.Contains(substring))
                     {

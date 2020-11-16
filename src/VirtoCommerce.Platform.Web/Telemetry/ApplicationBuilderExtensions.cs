@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Web.Telemetry
         /// <returns></returns>
         public static IApplicationBuilder UseAppInsightsTelemetry(this IApplicationBuilder app)
         {
-            var samplingOptions = app.ApplicationServices.GetRequiredService<IOptions<SamplingOptions>>().Value;
+            var samplingOptions = app.ApplicationServices.GetRequiredService<IOptions<ApplicationInsightsOptions>>().Value.SamplingOptions;
 
             var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
 
