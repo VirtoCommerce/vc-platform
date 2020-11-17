@@ -43,7 +43,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             inProcessBus.RegisterHandler<ObjectSettingChangedEvent>(async (message, token) => await recurringJobManager.HandleSettingChangeAsync(settingsManager, message));
 
             // Add Hangfire filters/middlewares
-            var userNameResolver = appBuilder.ApplicationServices.GetRequiredService<IUserNameResolver>();
+            var userNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<IUserNameResolver>();
             GlobalJobFilters.Filters.Add(new HangfireUserContextMiddleware(userNameResolver));
 
             return appBuilder;
