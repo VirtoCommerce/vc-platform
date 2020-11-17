@@ -9,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
-using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -101,14 +100,6 @@ namespace VirtoCommerce.Platform.Web
 
             // The following line enables Application Insights telemetry collection.
             services.AddAppInsightsTelemetry(Configuration);
-
-            if (Configuration["VirtoCommerce:ApplicationInsights:EnableLocalSqlCommandTextInstrumentation"]?.ToLower() == "true")
-            {
-                // Next line allows to gather detailed SQL info for AI in the local run.
-                // See instructions here: https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-dependencies#advanced-sql-tracking-to-get-full-sql-query
-                services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
-            }
-
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
             {
