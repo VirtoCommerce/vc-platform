@@ -1,7 +1,6 @@
 using System.Threading;
 using Hangfire.Client;
 using Hangfire.Server;
-using Microsoft.AspNetCore.Http;
 using VirtoCommerce.Platform.Core.Security;
 using static VirtoCommerce.Platform.Core.Common.ThreadSlotNames;
 
