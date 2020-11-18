@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             var aiVirtoOptionsSection = configuration.GetSection("VirtoCommerce:ApplicationInsights");
             services.AddOptions<ApplicationInsightsOptions>().Bind(aiVirtoOptionsSection);
 
-            var aiVirtoOptions = aiVirtoOptionsSection.Get<ApplicationInsightsOptions>();
+            var aiVirtoOptions = aiVirtoOptionsSection.Get<ApplicationInsightsOptions>() ?? new ApplicationInsightsOptions();
 
             // Enable SQL dependencies filtering, if need            
             if (aiVirtoOptions.IgnoreSqlTelemetryOptions != null)
