@@ -9,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
-using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -41,7 +40,6 @@ using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Telemetry;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Hangfire.Extensions;
@@ -101,23 +99,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<LicenseProvider>();
 
             // The following line enables Application Insights telemetry collection.
-            services.AddApplicationInsightsTelemetry();
-            services.AddApplicationInsightsTelemetryProcessor<IgnoreSignalRTelemetryProcessor>();
-
-            var ignoreSqlTelemetryOptionsSection = Configuration.GetSection("VirtoCommerce:ApplicationInsights:IgnoreSqlTelemetryOptions");
-            if (ignoreSqlTelemetryOptionsSection.Exists())
-            {
-                services.AddOptions<IgnoreSqlTelemetryOptions>().Bind(ignoreSqlTelemetryOptionsSection);
-                services.AddApplicationInsightsTelemetryProcessor<IgnoreSqlTelemetryProcessor>();
-            }
-
-            if (Configuration["VirtoCommerce:ApplicationInsights:EnableLocalSqlCommandTextInstrumentation"]?.ToLower() == "true")
-            {
-                // Next line allows to gather detailed SQL info for AI in the local run.
-                // See instructions here: https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-dependencies#advanced-sql-tracking-to-get-full-sql-query
-                services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
-            }
-
+            services.AddAppInsightsTelemetry(Configuration);
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
             {
@@ -490,6 +472,9 @@ namespace VirtoCommerce.Platform.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            // Use app insights telemetry 
+            app.UseAppInsightsTelemetry();
 
             //Force migrations
             using (var serviceScope = app.ApplicationServices.CreateScope())
