@@ -495,10 +495,10 @@ namespace VirtoCommerce.Platform.Web
             // Complete hangfire init
             app.UseHangfire(Configuration);
 
-            app.UseModules();
-
             //Register platform permissions
             app.UsePlatformPermissions();
+
+            app.UseModules();
 
             //Setup SignalR hub
             app.UseEndpoints(routes =>
