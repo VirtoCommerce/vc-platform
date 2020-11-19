@@ -109,24 +109,23 @@ namespace VirtoCommerce.Platform.Web
                 {
                     noContentFormatter.TreatNullValueAsNoContent = false;
                 }
-            }
-        )
-        .AddNewtonsoftJson(options =>
-            {
-                //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
-                //we should register this converter globally.
-                options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
-                //Next line allow to use polymorph types as parameters in API controller methods
-                options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
-                options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
-                options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                options.SerializerSettings.Formatting = Formatting.None;
-            }
-        );
+            })
+            .AddNewtonsoftJson(options =>
+                {
+                    //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
+                    //we should register this converter globally.
+                    options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
+                    //Next line allow to use polymorph types as parameters in API controller methods
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
+                    options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
+                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    options.SerializerSettings.Formatting = Formatting.None;
+                }
+            );
 
             services.AddSingleton(js =>
             {
