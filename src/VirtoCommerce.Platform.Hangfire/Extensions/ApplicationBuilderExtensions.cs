@@ -1,12 +1,12 @@
 using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Bus;
+using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Hangfire.Middleware;
@@ -43,8 +43,8 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             inProcessBus.RegisterHandler<ObjectSettingChangedEvent>(async (message, token) => await recurringJobManager.HandleSettingChangeAsync(settingsManager, message));
 
             // Add Hangfire filters/middlewares
-            var contextAccessor = appBuilder.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
-            GlobalJobFilters.Filters.Add(new HangfireUserContextMiddleware(contextAccessor));
+            var userNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<IUserNameResolver>();
+            GlobalJobFilters.Filters.Add(new HangfireUserContextMiddleware(userNameResolver));
 
             return appBuilder;
         }
