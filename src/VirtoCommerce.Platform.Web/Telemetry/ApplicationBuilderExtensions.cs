@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector;
 using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +52,11 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             }
 
             builder.Build();
+
+            var modules = app.ApplicationServices.GetServices<ITelemetryModule>();
+            var perfModule = modules.OfType<PerformanceCollectorModule>().First();
+            perfModule.DefaultCounters.Clear();
+
 
             var telemetryProcessorsLogInfo = new Dictionary<string, ITelemetryProcessor>();
             foreach (var processor in configuration.DefaultTelemetrySink.TelemetryProcessors)
