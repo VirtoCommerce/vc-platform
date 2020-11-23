@@ -51,12 +51,11 @@ namespace VirtoCommerce.Platform.Web.Telemetry
                 );
             }
 
-            builder.Build();
-
             var modules = app.ApplicationServices.GetServices<ITelemetryModule>();
             var perfModule = modules.OfType<PerformanceCollectorModule>().First();
             perfModule.DefaultCounters.Clear();
 
+            builder.Build();
 
             var telemetryProcessorsLogInfo = new Dictionary<string, ITelemetryProcessor>();
             foreach (var processor in configuration.DefaultTelemetrySink.TelemetryProcessors)
