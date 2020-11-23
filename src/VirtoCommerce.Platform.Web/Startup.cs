@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -53,7 +52,6 @@ using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.PushNotifications;
-using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
@@ -81,8 +79,6 @@ namespace VirtoCommerce.Platform.Web
             // This custom provider allows able to use just [Authorize] instead of having to define [Authorize(AuthenticationSchemes = "Bearer")] above every API controller
             // without this Bearer authorization will not work
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
-
-            services.AddRedis(Configuration);
 
             services.AddSignalR().AddPushNotifications(Configuration);
 
@@ -142,33 +138,12 @@ namespace VirtoCommerce.Platform.Web
                 options.UseOpenIddict();
             });
 
-            // Enable synchronous IO if using Kestrel:
-            services.Configure<KestrelServerOptions>(options =>
-            {
-                options.AllowSynchronousIO = true;
-            });
-
-            // Enable synchronous IO if using IIS:
-            services.Configure<IISServerOptions>(options =>
-            {
-                options.AllowSynchronousIO = true;
-            });
-
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+            services.ConfigureServer();
 
             var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                                       //Add the second ApiKey auth schema to handle api_key in query string
                                       .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
                                       .AddCookie();
-
-            services.AddSecurityServices(options =>
-            {
-            });
 
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
                     .AddEntityFrameworkStores<SecurityDbContext>()
@@ -363,7 +338,7 @@ namespace VirtoCommerce.Platform.Web
                          options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
                      })
                     .ValidateDataAnnotations();
-            services.AddModules(mvcBuilder);
+            services.AddModules(WebHostEnvironment.IsDevelopment(),x => mvcBuilder.AddApplicationPartWithRelatedAssembly(x));
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
@@ -401,9 +376,6 @@ namespace VirtoCommerce.Platform.Web
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
-#if DEBUG
-                TelemetryDebugWriter.IsTracingDisabled = true;
-#endif
             }
             else
             {

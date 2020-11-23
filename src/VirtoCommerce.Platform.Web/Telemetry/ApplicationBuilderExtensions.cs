@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Telemetry;
@@ -59,6 +62,13 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             var telemetryProcessors = Newtonsoft.Json.JsonConvert.SerializeObject(telemetryProcessorsLogInfo, Newtonsoft.Json.Formatting.Indented);
             var logger = app.ApplicationServices.GetRequiredService<ILogger<Startup>>();
             logger.LogInformation($@"ApplicationInsights telemetry processors list and settings:{Environment.NewLine}{telemetryProcessors}{Environment.NewLine}");
+
+#if DEBUG
+            if (app.ApplicationServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
+            {
+                TelemetryDebugWriter.IsTracingDisabled = true;
+            }
+#endif
 
             return app;
         }
