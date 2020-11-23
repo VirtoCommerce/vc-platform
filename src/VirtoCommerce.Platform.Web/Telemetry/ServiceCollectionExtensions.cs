@@ -20,6 +20,7 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             // Disable adaptive sampling before custom configuration to have a choice between processors in Configure,
             // according to instructions: https://docs.microsoft.com/en-us/azure/azure-monitor/app/sampling#configure-sampling-settings
             aiOptions.EnableAdaptiveSampling = false;
+            aiOptions.EnablePerformanceCounterCollectionModule = false;
             services.AddApplicationInsightsTelemetry(aiOptions);
 
             // Always ignore SignalRTelemetry
