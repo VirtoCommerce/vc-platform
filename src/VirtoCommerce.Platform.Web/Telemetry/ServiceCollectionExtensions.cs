@@ -17,6 +17,10 @@ namespace VirtoCommerce.Platform.Web.Telemetry
         public static IServiceCollection AddAppInsightsTelemetry(this IServiceCollection services, IConfiguration configuration)
         {
             // The following lines enables Application Insights telemetry collection.
+            // As we use ApplicationInsights.AspNetCore SDK 2.15.0 & above, please read there about the standard way of service options configuration:
+            // https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core#configuration-recommendation-for-microsoftapplicationinsightsaspnetcore-sdk-2150--above
+            // See also the configurable settings in ApplicationInsightsServiceOptions for the most up-to-date list:
+            // https://github.com/microsoft/ApplicationInsights-dotnet/blob/develop/NETCORE/src/Shared/Extensions/ApplicationInsightsServiceOptions.cs
             services.AddApplicationInsightsTelemetry();
 
             // Disable adaptive sampling before custom configuration to have a choice between processors in Configure,
