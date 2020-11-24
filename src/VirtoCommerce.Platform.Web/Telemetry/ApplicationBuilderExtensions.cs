@@ -4,12 +4,14 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Telemetry;
+#if DEBUG
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+#endif
 
 namespace VirtoCommerce.Platform.Web.Telemetry
 {
@@ -26,7 +28,6 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             var samplingOptions = app.ApplicationServices.GetRequiredService<IOptions<ApplicationInsightsOptions>>().Value.SamplingOptions;
 
             var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
-            var webHostEnvironment = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
 
             var builder = configuration.DefaultTelemetrySink.TelemetryProcessorChainBuilder;
             if (samplingOptions.Processor == SamplingProcessor.Adaptive)
@@ -65,7 +66,7 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             logger.LogInformation($@"ApplicationInsights telemetry processors list and settings:{Environment.NewLine}{telemetryProcessors}{Environment.NewLine}");
 
 #if DEBUG
-            if (webHostEnvironment.IsDevelopment())
+            if (app.ApplicationServices.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
             {
                 TelemetryDebugWriter.IsTracingDisabled = true;
             }
