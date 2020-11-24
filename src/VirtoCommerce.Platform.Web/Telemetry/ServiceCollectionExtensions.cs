@@ -17,11 +17,11 @@ namespace VirtoCommerce.Platform.Web.Telemetry
         public static IServiceCollection AddAppInsightsTelemetry(this IServiceCollection services, IConfiguration configuration)
         {
             // The following lines enables Application Insights telemetry collection.
-            var aiOptions = configuration.GetSection("VirtoCommerce:ApplicationInsights:ServiceOptions").Get<ApplicationInsightsServiceOptions>() ?? new ApplicationInsightsServiceOptions();
+            services.AddApplicationInsightsTelemetry();
+
             // Disable adaptive sampling before custom configuration to have a choice between processors in Configure,
             // according to instructions: https://docs.microsoft.com/en-us/azure/azure-monitor/app/sampling#configure-sampling-settings
-            aiOptions.EnableAdaptiveSampling = false;
-            services.AddApplicationInsightsTelemetry(aiOptions);
+            services.Configure((ApplicationInsightsServiceOptions o) => o.EnableAdaptiveSampling = false);
 
             // Always ignore SignalRTelemetry
             services.AddApplicationInsightsTelemetryProcessor<IgnoreSignalRTelemetryProcessor>();
