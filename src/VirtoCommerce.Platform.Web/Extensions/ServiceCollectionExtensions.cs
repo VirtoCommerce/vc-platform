@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Modules
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection ConfigureServer(this IServiceCollection services)
+        public static IServiceCollection ConfigureWebServer(this IServiceCollection services)
         {
             // Enable synchronous IO if using Kestrel:
             services.Configure<KestrelServerOptions>(options =>

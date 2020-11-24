@@ -138,7 +138,7 @@ namespace VirtoCommerce.Platform.Web
                 options.UseOpenIddict();
             });
 
-            services.ConfigureServer();
+            services.ConfigureWebServer();
 
             var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                                       //Add the second ApiKey auth schema to handle api_key in query string
