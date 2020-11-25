@@ -465,13 +465,6 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
-
             // Use app insights telemetry 
             app.UseAppInsightsTelemetry();
 
@@ -498,11 +491,13 @@ namespace VirtoCommerce.Platform.Web
             app.UsePlatformPermissions();
 
             app.UseModules();
-
-            //Setup SignalR hub
-            app.UseEndpoints(routes =>
+            
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapHub<PushNotificationHub>("/pushNotificationHub");
+                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                //Setup SignalR hub
+                endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
             });
 
             //Seed default users
