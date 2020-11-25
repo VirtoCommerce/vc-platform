@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -19,16 +20,18 @@ namespace VirtoCommerce.Platform.Web.Controllers
     public class HomeController : Controller
     {
         private readonly PlatformOptions _platformOptions;
+        private readonly PushNotificationOptions _pushNotificationOptions;
         private readonly WebAnalyticsOptions _webAnalyticsOptions;
         private readonly LocalStorageModuleCatalogOptions _localStorageModuleCatalogOptions;
         private readonly LicenseProvider _licenseProvider;
         private readonly ISettingsManager _settingsManager;
 
-        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions, LicenseProvider licenseProvider, ISettingsManager settingsManager)
+        public HomeController(IOptions<PlatformOptions> platformOptions, IOptions<WebAnalyticsOptions> webAnalyticsOptions, IOptions<LocalStorageModuleCatalogOptions> localStorageModuleCatalogOptions, IOptions<PushNotificationOptions> pushNotificationOptions, LicenseProvider licenseProvider, ISettingsManager settingsManager)
         {
             _platformOptions = platformOptions.Value;
             _webAnalyticsOptions = webAnalyticsOptions.Value;
             _localStorageModuleCatalogOptions = localStorageModuleCatalogOptions.Value;
+            _pushNotificationOptions = pushNotificationOptions.Value;
             _licenseProvider = licenseProvider;
             _settingsManager = settingsManager;
         }
@@ -41,7 +44,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 DemoCredentials = new HtmlString(_platformOptions.DemoCredentials ?? "''"),
                 DemoResetTime = new HtmlString(_platformOptions.DemoResetTime ?? "''"),
                 WebAnalyticsOptions = _webAnalyticsOptions,
-                RefreshProbingFolder = _localStorageModuleCatalogOptions.RefreshProbingFolderOnStart
+                RefreshProbingFolder = _localStorageModuleCatalogOptions.RefreshProbingFolderOnStart,
+                ForceWebSockets = _pushNotificationOptions.ForceWebSockets
             };
 
             var license = _licenseProvider.GetLicense();

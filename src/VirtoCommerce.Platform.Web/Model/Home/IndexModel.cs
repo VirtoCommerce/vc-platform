@@ -17,5 +17,7 @@ namespace VirtoCommerce.Platform.Web.Model.Home
         /// True by default.
         /// </summary>
         public bool RefreshProbingFolder { get; internal set; } = true;
+
+        public bool ForceWebSockets { get; internal set; }
     }
 }
