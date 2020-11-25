@@ -6,7 +6,10 @@ angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$ro
         var reconnectionIndex = 0;
 
         var connection = new signalR.HubConnectionBuilder()
-            .withUrl('/pushNotificationHub')
+            .withUrl('/pushNotificationHub', {
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets
+            })
             .configureLogging(signalR.LogLevel.Error)
             .build();
 
