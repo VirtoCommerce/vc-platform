@@ -5,9 +5,17 @@ angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$ro
         var reconnectionIntervals = [2000, 5000, 10000, 30000];
         var reconnectionIndex = 0;
 
-        var connection = new signalR.HubConnectionBuilder()
-            .withUrl('/pushNotificationHub')
-            .configureLogging(signalR.LogLevel.Error)
+        var connBuilder = new signalR.HubConnectionBuilder();
+        if (window.forceWebSockets) {
+            connBuilder = connBuilder.withUrl('/pushNotificationHub', {
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets
+            })
+        }
+        else {
+            connBuilder = connBuilder.withUrl('/pushNotificationHub');
+        }
+        var connection = connBuilder.configureLogging(signalR.LogLevel.Error)
             .build();
 
         connection.start();

@@ -16,20 +16,21 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
         {
             builder.Services.AddSingleton<IPushNotificationStorage, PushNotificationInMemoryStorage>();
 
-            var scalabilityMode = configuration["PushNotifications:ScalabilityMode"];                     
+            var scalabilityMode = configuration["PushNotifications:ScalabilityMode"];
+
+            builder.Services.AddOptions<PushNotificationOptions>().Bind(configuration.GetSection("PushNotifications")).ValidateDataAnnotations();
 
             // SignalR scalability configuration.
             if (scalabilityMode != null && !scalabilityMode.EqualsInvariant("None"))
             {
-                builder.Services.AddOptions<PushNotificationOptions>().Bind(configuration.GetSection("PushNotifications")).ValidateDataAnnotations();
 
                 //Enable to store in the json the full type information to be able deserialize a push notifications types on the other instances
                 builder.AddNewtonsoftJsonProtocol(jsonOptions =>
                 {
                     jsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
                     jsonOptions.PayloadSerializerSettings.TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple;
-                });          
-              
+                });
+
                 builder.Services.AddSingleton<IPushNotificationManager, ScalablePushNotificationManager>();
                 builder.Services.AddHostedService<PushNotificationSynchronizerTask>();
 
@@ -53,7 +54,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                         throw new InvalidOperationException($"RedisConnectionString must be set");
                     }
                     builder.AddStackExchangeRedis(redisConnectionString);
-                }               
+                }
             }
             else
             {
@@ -63,6 +64,6 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             return builder;
         }
 
-     
+
     }
 }
