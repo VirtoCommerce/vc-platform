@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.ChangeLog;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.ChangeLog
 {
@@ -31,10 +33,25 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             return result;
         }
 
+        public void Reset(AuditableEntity entity)
+        {
+            var typeNames = new List<string>();
+            var entityType = entity.GetType();
+            typeNames.Add(entityType.Name);
+            while (!entityType.BaseType.Equals(typeof(AuditableEntity)))
+            {
+                entityType = entityType.BaseType;
+                typeNames.Add(entityType.Name);
+            }
+
+            foreach (var entityTypeName in typeNames)
+            {
+                Reset(entityTypeName);
+            }
+        }
+
         public void Reset(string entityName)
         {
-            entityName ??= string.Empty;
-
             LastChangesCacheRegion.ExpireTokenForKey(entityName);
         }
     }
