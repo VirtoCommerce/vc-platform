@@ -106,6 +106,12 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             ChangeLogCacheRegion.ExpireTokenForKey(entityName);
         }
 
+        public void Reset()
+        {
+            Reset(null);
+        }
+        public DateTimeOffset LastModified => GetLastModified();
+
         #endregion
     }
 }
