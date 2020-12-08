@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -51,10 +52,37 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = new LastModifiedResponse
             {
                 Scope = scope,
-                LastModifiedDate = _lastModifiedDateTime.LastModified.UtcDateTime
+                LastModifiedDate = _lastModifiedDateTime.GetLastModified().UtcDateTime
             };
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("~/api/changes/changedentities")]
+        [AllowAnonymous]
+        public ActionResult<ChangedEntitiesResponse> ChangedEntities(ChangedEntitiesRequest changedEntitiesRequest)
+        {
+            var result = new ChangedEntitiesResponse()
+            {
+                EntitiesResponses = changedEntitiesRequest.EntitiesNames.Select(x => new LastModifiedEntityResponse { EntityName = x, LastModifiedDate = _lastModifiedDateTime.GetLastModified(x).UtcDateTime })
+                    .Where(x => x.LastModifiedDate >= changedEntitiesRequest.After)
+            };
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("~/api/changes/forcechangedentities")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+        public ActionResult ForceChangedEntities(string[] entitiesNames)
+        {
+            foreach (var entityName in entitiesNames)
+            {
+                _lastModifiedDateTime.Reset(entityName);
+            }
+
+            return NoContent();
         }
 
         [HttpPost]

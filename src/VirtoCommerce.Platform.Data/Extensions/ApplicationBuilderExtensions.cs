@@ -2,6 +2,7 @@ using System;
 using EntityFrameworkCore.Triggers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using static VirtoCommerce.Platform.Data.Constants.DefaultEntityNames;
@@ -12,8 +13,12 @@ namespace VirtoCommerce.Platform.Data.Extensions
     {
         public static IApplicationBuilder UseDbTriggers(this IApplicationBuilder appBuilder)
         {
+            var lastChangesService = appBuilder.ApplicationServices.GetRequiredService<ILastModifiedDateTime>();
+
             Triggers<IAuditable>.Inserting += entry =>
             {
+                lastChangesService.Reset(entry.Entity.GetType().FullName);
+
                 var currentUserNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetService<IUserNameResolver>();
                 var currentTime = DateTime.UtcNow;
                 var userName = currentUserNameResolver.GetCurrentUserName();
@@ -26,6 +31,8 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             Triggers<IAuditable>.Updating += entry =>
             {
+                lastChangesService.Reset(entry.Entity.GetType().FullName);
+
                 var currentUserNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetService<IUserNameResolver>();
                 var currentTime = DateTime.UtcNow;
                 var userName = currentUserNameResolver.GetCurrentUserName();

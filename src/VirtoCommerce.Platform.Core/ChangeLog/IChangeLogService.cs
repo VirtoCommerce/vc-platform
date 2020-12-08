@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.ChangeLog

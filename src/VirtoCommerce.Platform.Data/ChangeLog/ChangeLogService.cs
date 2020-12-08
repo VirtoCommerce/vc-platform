@@ -23,29 +23,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             _repositoryFactory = platformRepositoryFactory;
             _memoryCache = memoryCache;
         }
-        #region ILastModifiedDateTime Members
-
-        public DateTimeOffset LastModified
-        {
-            get
-            {
-                var cacheKey = CacheKey.With(GetType(), "LastModifiedDateTime");
-                return _memoryCache.GetOrCreateExclusive(cacheKey, (cacheEntry) =>
-                {
-                    cacheEntry.AddExpirationToken(ChangeLogCacheRegion.CreateChangeToken());
-                    return DateTimeOffset.Now;
-                });
-            }
-        }
-
-        public void Reset()
-        {
-            ChangeLogCacheRegion.ExpireRegion();
-        }
-
-        #endregion
         #region IChangeLogService Members
-
         public async Task<OperationLog[]> GetByIdsAsync(string[] ids)
         {
             using (var repository = _repositoryFactory())
@@ -83,7 +61,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                     }
                 }
                 await repository.UnitOfWork.CommitAsync();
-                ChangeLogCacheRegion.ExpireRegion();
+                Reset();
             }
         }
 
@@ -98,8 +76,34 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                     repository.Remove(entity);
                 }
                 await repository.UnitOfWork.CommitAsync();
-                ChangeLogCacheRegion.ExpireRegion();
+                Reset();
             }
+        }
+        #endregion
+
+        #region ILastModifiedDateTime Members
+        public DateTimeOffset GetLastModified(string entityName = null)
+        {
+            DateTimeOffset result;
+
+            entityName ??= string.Empty;
+
+            var cacheKey = CacheKey.With(GetType(), "LastModifiedDateTime", entityName);
+            result = _memoryCache.GetOrCreateExclusive(cacheKey, options =>
+            {
+                options.AddExpirationToken(ChangeLogCacheRegion.CreateChangeTokenForKey(entityName));
+
+                return DateTimeOffset.UtcNow;
+            });
+
+            return result;
+        }
+
+        public void Reset(string entityName = null)
+        {
+            entityName ??= string.Empty;
+
+            ChangeLogCacheRegion.ExpireTokenForKey(entityName);
         }
 
         #endregion
