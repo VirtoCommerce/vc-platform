@@ -59,20 +59,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpPost]
-        [Route("~/api/changes/changedentities")]
+        [Route("~/api/changes/changed-entities")]
         [AllowAnonymous]
         public ActionResult<ChangedEntitiesResponse> ChangedEntities(ChangedEntitiesRequest changedEntitiesRequest)
         {
             var result = new ChangedEntitiesResponse()
             {
-                EntitiesResponses = changedEntitiesRequest.EntitiesNames.Select(x => new LastModifiedEntityResponse { EntityName = x, LastModifiedDate = _lastModifiedDateTime.GetLastModified(x).UtcDateTime })
-                    .Where(x => x.LastModifiedDate >= changedEntitiesRequest.After)
+                LastModifiedDates = changedEntitiesRequest.EntityNames.Select(x => new LastModifiedEntityResponse { EntityName = x, LastModifiedDate = _lastModifiedDateTime.GetLastModified(x).UtcDateTime })
+                    .Where(x => x.LastModifiedDate >= changedEntitiesRequest.ModifiedSince)
             };
             return Ok(result);
         }
 
         [HttpPost]
-        [Route("~/api/changes/forcechangedentities")]
+        [Route("~/api/changes/force-changed-entities")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public ActionResult ForceChangedEntities(string[] entitiesNames)

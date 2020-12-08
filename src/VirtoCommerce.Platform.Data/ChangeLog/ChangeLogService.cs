@@ -99,7 +99,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             return result;
         }
 
-        public void Reset(string entityName = null)
+        public void Reset(string entityName)
         {
             entityName ??= string.Empty;
 

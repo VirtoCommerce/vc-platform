@@ -5,7 +5,7 @@ namespace VirtoCommerce.Platform.Web.Model
 {
     public class ChangedEntitiesRequest
     {
-        public IEnumerable<string> EntitiesNames { get; set; }
-        public DateTime After { get; set; }
+        public IEnumerable<string> EntityNames { get; set; }
+        public DateTime ModifiedSince { get; set; }
     }
 }
