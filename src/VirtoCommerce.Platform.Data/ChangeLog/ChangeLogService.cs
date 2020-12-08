@@ -23,6 +23,27 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             _repositoryFactory = platformRepositoryFactory;
             _memoryCache = memoryCache;
         }
+        #region ILastModifiedDateTime Members
+
+        public DateTimeOffset LastModified
+        {
+            get
+            {
+                var cacheKey = CacheKey.With(GetType(), "LastModifiedDateTime");
+                return _memoryCache.GetOrCreateExclusive(cacheKey, (cacheEntry) =>
+                {
+                    cacheEntry.AddExpirationToken(ChangeLogCacheRegion.CreateChangeToken());
+                    return DateTimeOffset.Now;
+                });
+            }
+        }
+
+        public void Reset()
+        {
+            ChangeLogCacheRegion.ExpireRegion();
+        }
+
+        #endregion
         #region IChangeLogService Members
         public async Task<OperationLog[]> GetByIdsAsync(string[] ids)
         {
@@ -81,37 +102,5 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
         }
         #endregion
 
-        #region ILastModifiedDateTime Members
-        public DateTimeOffset GetLastModified(string entityName = null)
-        {
-            DateTimeOffset result;
-
-            entityName ??= string.Empty;
-
-            var cacheKey = CacheKey.With(GetType(), "LastModifiedDateTime", entityName);
-            result = _memoryCache.GetOrCreateExclusive(cacheKey, options =>
-            {
-                options.AddExpirationToken(ChangeLogCacheRegion.CreateChangeTokenForKey(entityName));
-
-                return DateTimeOffset.UtcNow;
-            });
-
-            return result;
-        }
-
-        public void Reset(string entityName)
-        {
-            entityName ??= string.Empty;
-
-            ChangeLogCacheRegion.ExpireTokenForKey(entityName);
-        }
-
-        public void Reset()
-        {
-            Reset(null);
-        }
-        public DateTimeOffset LastModified => GetLastModified();
-
-        #endregion
     }
 }

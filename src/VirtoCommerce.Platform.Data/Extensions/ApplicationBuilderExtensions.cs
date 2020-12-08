@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
     {
         public static IApplicationBuilder UseDbTriggers(this IApplicationBuilder appBuilder)
         {
-            var lastChangesService = appBuilder.ApplicationServices.GetRequiredService<ILastModifiedDateTime>();
+            var lastChangesService = appBuilder.ApplicationServices.GetRequiredService<ILastChangesService>();
 
             Triggers<IAuditable>.Inserting += entry =>
             {

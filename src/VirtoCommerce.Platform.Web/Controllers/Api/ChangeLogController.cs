@@ -16,11 +16,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly IChangeLogSearchService _changeLogSearchService;
         private readonly ILastModifiedDateTime _lastModifiedDateTime;
+        private readonly ILastChangesService _lastChangesService;
 
-        public ChangeLogController(IChangeLogSearchService changeLogSearchService, ILastModifiedDateTime lastModifiedDateTime)
+        public ChangeLogController(IChangeLogSearchService changeLogSearchService, ILastModifiedDateTime lastModifiedDateTime, ILastChangesService lastChangesService)
         {
             _changeLogSearchService = changeLogSearchService;
             _lastModifiedDateTime = lastModifiedDateTime;
+            _lastChangesService = lastChangesService;
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var result = new LastModifiedResponse
             {
                 Scope = scope,
-                LastModifiedDate = _lastModifiedDateTime.GetLastModified().UtcDateTime
+                LastModifiedDate = _lastModifiedDateTime.LastModified.UtcDateTime
             };
 
             return Ok(result);
@@ -65,7 +67,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var result = new ChangedEntitiesResponse()
             {
-                LastModifiedDates = changedEntitiesRequest.EntityNames.Select(x => new LastModifiedEntityResponse { EntityName = x, LastModifiedDate = _lastModifiedDateTime.GetLastModified(x).UtcDateTime })
+                LastModifiedDates = changedEntitiesRequest.EntityNames.Select(x => new LastModifiedEntityResponse { EntityName = x, LastModifiedDate = _lastChangesService.GetLastModified(x).UtcDateTime })
                     .Where(x => x.LastModifiedDate >= changedEntitiesRequest.ModifiedSince)
             };
             return Ok(result);
@@ -79,7 +81,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             foreach (var entityName in entitiesNames)
             {
-                _lastModifiedDateTime.Reset(entityName);
+                _lastChangesService.Reset(entityName);
             }
 
             return NoContent();
