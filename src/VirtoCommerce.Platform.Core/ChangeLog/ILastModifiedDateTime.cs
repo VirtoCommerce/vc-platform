@@ -4,7 +4,7 @@ namespace VirtoCommerce.Platform.Core.ChangeLog
 {
     public interface ILastModifiedDateTime
     {
-        public DateTimeOffset GetLastModified(string entityName = null);
-        public void Reset(string entityName = null);
+        DateTimeOffset GetLastModified(string entityName = null);
+        void Reset(string entityName = null);
     }
 }
