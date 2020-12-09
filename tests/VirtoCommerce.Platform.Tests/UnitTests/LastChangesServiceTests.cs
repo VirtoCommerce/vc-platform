@@ -1,4 +1,6 @@
+using System.Threading;
 using VirtoCommerce.Platform.Core.ChangeLog;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.ChangeLog;
 using VirtoCommerce.Platform.Tests.Caching;
 using Xunit;
@@ -8,37 +10,73 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
     [Trait("Category", "Unit")]
     public class LastChangesServiceTests : MemoryCacheTestsBase
     {
-        private const string entity1 = "Entity1";
-        private const string entity2 = "Entity2";
+        private const string _firstEntity = "FirstEntity";
+        private const string _secondEntity = "SecondEntity";
+
+        private class BaseEntity : Entity
+        {
+        }
+
+        private class DerivedEntity : BaseEntity
+        {
+        }
 
         [Fact]
         public void RepeatableRead()
         {
             ILastChangesService lastChangesService = new LastChangesService(GetPlatformMemoryCache());
-            var entity1_1stAttempt = lastChangesService.GetLastModifiedDate(entity1);
-            var entity2_1stAttempt = lastChangesService.GetLastModifiedDate(entity2);
-            System.Threading.Thread.Sleep(10);
+            var firstEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_firstEntity);
+            var secondEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_secondEntity);
+
+            Thread.Sleep(10);
+
             // Next reads should return the same value
-            var entity1_2stAttempt = lastChangesService.GetLastModifiedDate(entity1);
-            var entity2_2stAttempt = lastChangesService.GetLastModifiedDate(entity2);
-            Assert.Equal(entity1_1stAttempt, entity1_2stAttempt);
-            Assert.Equal(entity2_1stAttempt, entity2_2stAttempt);
+
+            var firstEntitySecondAttempt = lastChangesService.GetLastModifiedDate(_firstEntity);
+            var secondEntitySecondAttempt = lastChangesService.GetLastModifiedDate(_secondEntity);
+
+            Assert.Equal(firstEntityFirstAttempt, firstEntitySecondAttempt);
+            Assert.Equal(secondEntityFirstAttempt, secondEntitySecondAttempt);
         }
 
         [Fact]
         public void Reset()
         {
             ILastChangesService lastChangesService = new LastChangesService(GetPlatformMemoryCache());
-            var entity1_1stAttempt = lastChangesService.GetLastModifiedDate(entity1);
-            var entity2_1stAttempt = lastChangesService.GetLastModifiedDate(entity2);
-            System.Threading.Thread.Sleep(10);
-            lastChangesService.Reset(entity2);
-            // Next read entity1 should have the same value.
-            // entity2 -- different, because it was reset.
-            var entity1_2stAttempt = lastChangesService.GetLastModifiedDate(entity1);
-            var entity2_2stAttempt = lastChangesService.GetLastModifiedDate(entity2);
-            Assert.Equal(entity1_1stAttempt, entity1_2stAttempt);
-            Assert.NotEqual(entity2_1stAttempt, entity2_2stAttempt);
+            var firstEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_firstEntity);
+            var secondEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_secondEntity);
+
+            Thread.Sleep(10);
+            lastChangesService.Reset(_secondEntity);
+
+            // Next read _firstEntity should have the same value.
+            // _secondEntity -- different, because it was reset.
+
+            var firstEntitySecondAttempt = lastChangesService.GetLastModifiedDate(_firstEntity);
+            var secondEntitySecondAttempt = lastChangesService.GetLastModifiedDate(_secondEntity);
+
+            Assert.Equal(firstEntityFirstAttempt, firstEntitySecondAttempt);
+            Assert.NotEqual(secondEntityFirstAttempt, secondEntitySecondAttempt);
+        }
+
+        [Fact]
+        public void ResetDatesForBaseEntityTypes()
+        {
+            // Arrange
+            ILastChangesService lastChangesService = new LastChangesService(GetPlatformMemoryCache());
+            var initialDateForBaseEntity = lastChangesService.GetLastModifiedDate(nameof(BaseEntity));
+            var initialDateForDerivedEntity = lastChangesService.GetLastModifiedDate(nameof(DerivedEntity));
+
+            // Act
+            Thread.Sleep(10);
+            lastChangesService.Reset(new DerivedEntity());
+
+            var dateForBaseEntity = lastChangesService.GetLastModifiedDate(nameof(BaseEntity));
+            var dateForDerivedEntity = lastChangesService.GetLastModifiedDate(nameof(DerivedEntity));
+
+            // Assert
+            Assert.NotEqual(dateForBaseEntity, initialDateForBaseEntity);
+            Assert.NotEqual(dateForDerivedEntity, initialDateForDerivedEntity);
         }
     }
 }
