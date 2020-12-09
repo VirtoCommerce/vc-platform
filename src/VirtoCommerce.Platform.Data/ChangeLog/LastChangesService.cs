@@ -16,32 +16,29 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
             _memoryCache = memoryCache;
         }
 
-        public DateTimeOffset GetLastModified(string entityName)
+        public DateTimeOffset GetLastModifiedDate(string entityName)
         {
-            DateTimeOffset result;
-
             entityName ??= string.Empty;
 
-            var cacheKey = CacheKey.With(GetType(), "LastModifiedDateTime", entityName);
-            result = _memoryCache.GetOrCreateExclusive(cacheKey, options =>
+            var cacheKey = CacheKey.With(GetType(), nameof(GetLastModifiedDate), entityName);
+            return _memoryCache.GetOrCreateExclusive(cacheKey, options =>
             {
                 options.AddExpirationToken(LastChangesCacheRegion.CreateChangeTokenForKey(entityName));
 
                 return DateTimeOffset.UtcNow;
             });
-
-            return result;
         }
 
-        public void Reset(AuditableEntity entity)
+        public void Reset(IEntity entity)
         {
             var typeNames = new List<string>();
+
             var entityType = entity.GetType();
-            typeNames.Add(entityType.Name);
-            while (!entityType.BaseType.Equals(typeof(AuditableEntity)))
+
+            while (entityType != null && entityType != typeof(Entity))
             {
-                entityType = entityType.BaseType;
                 typeNames.Add(entityType.Name);
+                entityType = entityType.BaseType;
             }
 
             foreach (var entityTypeName in typeNames)

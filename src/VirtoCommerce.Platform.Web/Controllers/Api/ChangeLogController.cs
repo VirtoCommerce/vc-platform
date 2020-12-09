@@ -63,23 +63,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("~/api/changes/changed-entities")]
         [AllowAnonymous]
-        public ActionResult<ChangedEntitiesResponse> ChangedEntities([FromBody] ChangedEntitiesRequest changedEntitiesRequest)
+        public ActionResult<ChangedEntitiesResponse> GetChangedEntities([FromBody] ChangedEntitiesRequest changedEntitiesRequest)
         {
             var result = new ChangedEntitiesResponse()
             {
-                LastModifiedDates = changedEntitiesRequest.EntityNames.Select(x => new LastModifiedEntityResponse { EntityName = x, LastModifiedDate = _lastChangesService.GetLastModified(x).UtcDateTime })
-                    .Where(x => x.LastModifiedDate >= changedEntitiesRequest.ModifiedSince)
+                Entities = changedEntitiesRequest.EntityNames
+                    .Select(x => new ChangedEntity { Name = x, ModifiedDate = _lastChangesService.GetLastModifiedDate(x).UtcDateTime })
+                    .Where(x => x.ModifiedDate >= changedEntitiesRequest.ModifiedSince)
+                    .ToList(),
             };
+
             return Ok(result);
         }
 
         [HttpPost]
-        [Route("~/api/changes/force-changed-entities")]
+        [Route("~/api/changes/changed-entities/reset")]
         [Authorize(PlatformConstants.Security.Permissions.ResetCache)]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
-        public ActionResult ForceChangedEntities([FromBody] string[] entitiesNames)
+        public ActionResult ResetChangedEntities([FromBody] string[] entityNames)
         {
-            foreach (var entityName in entitiesNames)
+            foreach (var entityName in entityNames)
             {
                 _lastChangesService.Reset(entityName);
             }

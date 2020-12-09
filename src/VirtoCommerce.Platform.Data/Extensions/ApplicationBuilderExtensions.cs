@@ -17,8 +17,6 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             Triggers<IAuditable>.Inserting += entry =>
             {
-                lastChangesService.Reset((AuditableEntity)entry.Entity);
-
                 var currentUserNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetService<IUserNameResolver>();
                 var currentTime = DateTime.UtcNow;
                 var userName = currentUserNameResolver.GetCurrentUserName();
@@ -31,8 +29,6 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             Triggers<IAuditable>.Updating += entry =>
             {
-                lastChangesService.Reset((AuditableEntity)entry.Entity);
-
                 var currentUserNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetService<IUserNameResolver>();
                 var currentTime = DateTime.UtcNow;
                 var userName = currentUserNameResolver.GetCurrentUserName();
@@ -43,6 +39,16 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 {
                     entry.Entity.ModifiedBy = userName;
                 }
+            };
+
+            Triggers<IEntity>.Inserting += entry =>
+            {
+                lastChangesService.Reset(entry.Entity);
+            };
+
+            Triggers<IEntity>.Updating += entry =>
+            {
+                lastChangesService.Reset(entry.Entity);
             };
 
             return appBuilder;
