@@ -63,7 +63,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("~/api/changes/changed-entities")]
         [AllowAnonymous]
-        public ActionResult<ChangedEntitiesResponse> ChangedEntities(ChangedEntitiesRequest changedEntitiesRequest)
+        public ActionResult<ChangedEntitiesResponse> ChangedEntities([FromBody] ChangedEntitiesRequest changedEntitiesRequest)
         {
             var result = new ChangedEntitiesResponse()
             {
@@ -75,9 +75,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("~/api/changes/force-changed-entities")]
-        [AllowAnonymous]
+        [Authorize(PlatformConstants.Security.Permissions.ResetCache)]
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
-        public ActionResult ForceChangedEntities(string[] entitiesNames)
+        public ActionResult ForceChangedEntities([FromBody] string[] entitiesNames)
         {
             foreach (var entityName in entitiesNames)
             {
