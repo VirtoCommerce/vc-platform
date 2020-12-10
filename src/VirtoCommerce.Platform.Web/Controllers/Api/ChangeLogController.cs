@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Web.Model;
@@ -34,6 +35,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public ActionResult ForceChanges(ForceChangesRequest forceRequest)
         {
             _lastModifiedDateTime.Reset();
+            return NoContent();
+        }
+
+        [HttpPost]
+        [Route("~/api/platform-cache/reset")]
+        [Authorize(PlatformConstants.Security.Permissions.ResetCache)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+        public ActionResult ResetPlatformCache()
+        {
+            GlobalCacheRegion.ExpireRegion();
+
             return NoContent();
         }
 
