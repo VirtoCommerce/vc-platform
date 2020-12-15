@@ -1,18 +1,9 @@
-# v1.1
-name: Platform CI
+name: Platform E2E
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   workflow_dispatch:
-  push:
-    paths-ignore:
-      - '.github/**'
-      - 'docs/**'
-      - 'build/**'
-      - 'README.md'
-      - 'LICENSE'
-    branches: [ master, dev ]
   pull_request:
     paths-ignore:
       - '.github/**'
@@ -82,7 +73,6 @@ jobs:
       run: vc-build Compress -skip Clean+Restore+Compile+Test
 
     - name: Build Docker Image
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' }}
       id: dockerBuild
       uses: VirtoCommerce/vc-github-actions/build-docker-image@master
       with:
@@ -108,28 +98,19 @@ jobs:
         platformImage: docker.pkg.github.com/virtocommerce/vc-platform/platform
         storefrontImage: docker.pkg.github.com/virtocommerce/vc-storefront/storefront
           
-    - name: Publish Nuget
-      if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'}}
-      uses: VirtoCommerce/vc-github-actions/publish-nuget@master
+    - name: Getting tests
+      shell: sh
+      run: git clone https://github.com/VirtoCommerce/vc-quality-gate-katalon.git
 
-    - name: Publish to Blob
-      if: ${{ github.ref == 'refs/heads/dev' }}
-      id: blobRelease
-      uses: VirtoCommerce/vc-github-actions/publish-blob-release@master
+    - name: Katalon Studio Github Action
+      uses: katalon-studio/katalon-studio-github-action@v2.2
       with:
-        blobSAS: ${{ secrets.BLOB_TOKEN }}
-      
-    - name: Publish Github Release
-      if: ${{ github.ref == 'refs/heads/master' }}
-      with:
-        changelog: ${{ steps.changelog.outputs.changelog }}
-      uses: VirtoCommerce/vc-github-actions/publish-github-release@master
+        version: '7.5.5'
+        projectPath: '${{ github.workspace }}/vc-quality-gate-katalon/platform_storefront.prj'
+        args: '-noSplash -retry=0 -testSuitePath="${{ github.event.inputs.testSuite }}" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"' 
 
-    - name: Publish Docker Image
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' }}
-      uses: VirtoCommerce/vc-github-actions/publish-docker-image@master
-      with:
-          image: ${{ steps.dockerBuild.outputs.imageName }}
-          tag: ${{ steps.image.outputs.taggedVersion }}
-          docker_user: ${{ secrets.DOCKER_USERNAME }}
-          docker_token: ${{ secrets.DOCKER_TOKEN }}
+    - name: Katalon Report
+      if: ${{ success() || failure() }}
+      uses: VirtoCommerce/vc-github-actions/publish-katalon-report@master
+      with: 
+        testProjectPath: ${{ github.workspace }}
