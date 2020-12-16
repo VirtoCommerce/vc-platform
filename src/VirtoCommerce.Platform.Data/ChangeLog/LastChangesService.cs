@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 
             while (entityType != null && entityType != typeof(Entity))
             {
-                typeNames.Add(entityType.Name);
+                typeNames.Add(entityType.FullName);
                 entityType = entityType.BaseType;
             }
 
