@@ -64,15 +64,15 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         {
             // Arrange
             ILastChangesService lastChangesService = new LastChangesService(GetPlatformMemoryCache());
-            var initialDateForBaseEntity = lastChangesService.GetLastModifiedDate(nameof(BaseEntity));
-            var initialDateForDerivedEntity = lastChangesService.GetLastModifiedDate(nameof(DerivedEntity));
+            var initialDateForBaseEntity = lastChangesService.GetLastModifiedDate(typeof(BaseEntity).FullName);
+            var initialDateForDerivedEntity = lastChangesService.GetLastModifiedDate(typeof(DerivedEntity).FullName);
 
             // Act
             Thread.Sleep(10);
             lastChangesService.Reset(new DerivedEntity());
 
-            var dateForBaseEntity = lastChangesService.GetLastModifiedDate(nameof(BaseEntity));
-            var dateForDerivedEntity = lastChangesService.GetLastModifiedDate(nameof(DerivedEntity));
+            var dateForBaseEntity = lastChangesService.GetLastModifiedDate(typeof(BaseEntity).FullName);
+            var dateForDerivedEntity = lastChangesService.GetLastModifiedDate(typeof(DerivedEntity).FullName);
 
             // Assert
             Assert.NotEqual(dateForBaseEntity, initialDateForBaseEntity);
