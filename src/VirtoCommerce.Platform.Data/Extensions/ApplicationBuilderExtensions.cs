@@ -13,8 +13,6 @@ namespace VirtoCommerce.Platform.Data.Extensions
     {
         public static IApplicationBuilder UseDbTriggers(this IApplicationBuilder appBuilder)
         {
-            var lastChangesService = appBuilder.ApplicationServices.GetRequiredService<ILastChangesService>();
-
             Triggers<IAuditable>.Inserting += entry =>
             {
                 var currentUserNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetService<IUserNameResolver>();
@@ -43,11 +41,13 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             Triggers<IEntity>.Inserting += entry =>
             {
+                var lastChangesService = appBuilder.ApplicationServices.GetRequiredService<ILastChangesService>();
                 lastChangesService.Reset(entry.Entity);
             };
 
             Triggers<IEntity>.Updating += entry =>
             {
+                var lastChangesService = appBuilder.ApplicationServices.GetRequiredService<ILastChangesService>();
                 lastChangesService.Reset(entry.Entity);
             };
 
