@@ -1,9 +1,13 @@
 name: Platform E2E
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   workflow_dispatch:
+    inputs:
+      testSuite:
+        description: "Test Suite"
+        required: false
+        default: "Test Suites/Platform_start"
+
   pull_request:
     paths-ignore:
       - '.github/**'
@@ -13,9 +17,8 @@ on:
       - 'LICENSE'
     branches: [ master, dev ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  ci:
+  e2e-tests:
     runs-on: ubuntu-latest
     env:
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
@@ -28,29 +31,17 @@ jobs:
       with:
         fetch-depth: 0
 
-    - uses: actions/setup-dotnet@v1
+    - name: Set up .net Core 3.1.x for vc-build #GitHib Actions migrates to .net Core 5.x. To vc-build work properly need to manually install .net Core 3.1.x
+      uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
 
     - name: Install VirtoCommerce.GlobalTool
       run: dotnet tool install --global VirtoCommerce.GlobalTool
 
-    - name: Install dotnet-sonarscanner
-      run: dotnet tool install --global dotnet-sonarscanner
-
     - name: Get Image Version
       uses: VirtoCommerce/vc-github-actions/get-image-version@master
       id: image
-
-    - name: Get changelog
-      id: changelog
-      uses: VirtoCommerce/vc-github-actions/changelog-generator@master
-
-    - name: Add version suffix
-      if: ${{ github.ref != 'refs/heads/master' }}
-      uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
-      with:
-        versionSuffix: ${{ steps.image.outputs.suffix }}
 
     - name: Build
       run: vc-build Compile
@@ -67,7 +58,7 @@ jobs:
         dockerFiles: "https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh"
 
     - name: Docker Login
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' }}
+#      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' }}
       uses: azure/docker-login@v1
       with:
         login-server: docker.pkg.github.com
@@ -76,7 +67,7 @@ jobs:
 
     - name: Docker Env
       uses: VirtoCommerce/vc-github-actions/docker-env@master
-      if: ${{ github.ref == 'refs/heads/dev' }}
+#      if: ${{ github.ref == 'refs/heads/dev' }}
       with:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}
@@ -84,7 +75,8 @@ jobs:
         storefrontDockerTag: 'dev-linux-latest'
         platformImage: docker.pkg.github.com/virtocommerce/vc-platform/platform
         storefrontImage: docker.pkg.github.com/virtocommerce/vc-storefront/storefront
-          
+        validateSwagger: 'false'
+
     - name: Getting tests
       shell: sh
       run: git clone https://github.com/VirtoCommerce/vc-quality-gate-katalon.git
@@ -96,8 +88,9 @@ jobs:
         projectPath: '${{ github.workspace }}/vc-quality-gate-katalon/platform_storefront.prj'
         args: '-noSplash -retry=0 -testSuitePath="${{ github.event.inputs.testSuite }}" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"'
 
-    - name: Katalon Report
-      if: ${{ success() || failure() }}
+    - name: Katalon Report to PR
+    
+      if: ${{ ( success() || failure() ) && github.event_name == 'pull_request' }}
       uses: VirtoCommerce/vc-github-actions/publish-katalon-report@master
       with: 
         testProjectPath: ${{ github.workspace }}
