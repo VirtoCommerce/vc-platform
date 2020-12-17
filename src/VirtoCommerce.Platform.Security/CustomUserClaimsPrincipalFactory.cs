@@ -1,3 +1,4 @@
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -36,7 +37,7 @@ namespace VirtoCommerce.Platform.Security
                 result.AddClaim(new Claim(Options.ClaimsIdentity.RoleClaimType, PlatformConstants.Security.SystemRoles.Manager));
             }
 
-            result.AddClaim(new Claim(PlatformConstants.Security.Claims.MemberIdClaimType, user.MemberId ?? ""));
+            result.AddClaim(new Claim(PlatformConstants.Security.Claims.MemberIdClaimType, user.MemberId ?? string.Empty));
             return result;
         }
     }
