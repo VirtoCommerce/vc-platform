@@ -29,31 +29,31 @@ namespace VirtoCommerce.Platform.Core.ObjectValue
                 && obj.TryGetValue("value", out var objValue)
                 && obj.TryGetValue("valueType", out var objValueType))
             {
-                obj["value"] = ConvertValue(objValue, objValueType.ToObject<string>());
+                obj["value"] = ConvertValue(objValue, objValueType.ToObject<ObjectValueType>());
             }
 
             obj.WriteTo(writer);
         }
 
-        private string ConvertValue(object value, string valueType)
+        private string ConvertValue(object value, ObjectValueType valueType)
         {
             string result;
 
             switch (valueType)
             {
-                case "LongText":
-                case "ShortText":
-                case "GeoPoint":
-                case "Integer":
+                case ObjectValueType.LongText:
+                case ObjectValueType.ShortText:
+                case ObjectValueType.GeoPoint:
+                case ObjectValueType.Integer:
                     result = Convert.ToString(value);
                     break;
-                case "Number":
+                case ObjectValueType.Number:
                     result = Convert.ToString(value, CultureInfo.InstalledUICulture);
                     break;
-                case "DateTime":
+                case ObjectValueType.DateTime:
                     result = Convert.ToDateTime(value, CultureInfo.InvariantCulture).ToString("O");
                     break;
-                case "Boolean":
+                case ObjectValueType.Boolean:
                     result = value.ToString().ToLower();
                     break;
                 default:
