@@ -58,7 +58,6 @@ jobs:
         dockerFiles: "https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh"
 
     - name: Docker Login
-#      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' }}
       uses: azure/docker-login@v1
       with:
         login-server: docker.pkg.github.com
@@ -67,7 +66,6 @@ jobs:
 
     - name: Docker Env
       uses: VirtoCommerce/vc-github-actions/docker-env@master
-#      if: ${{ github.ref == 'refs/heads/dev' }}
       with:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}
@@ -89,7 +87,6 @@ jobs:
         args: '-noSplash -retry=0 -testSuitePath="${{ github.event.inputs.testSuite }}" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"'
 
     - name: Katalon Report to PR
-    
       if: ${{ ( success() || failure() ) && github.event_name == 'pull_request' }}
       uses: VirtoCommerce/vc-github-actions/publish-katalon-report@master
       with: 
