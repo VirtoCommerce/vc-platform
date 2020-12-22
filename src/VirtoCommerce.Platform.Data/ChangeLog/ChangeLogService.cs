@@ -45,7 +45,6 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
 
         #endregion
         #region IChangeLogService Members
-
         public async Task<OperationLog[]> GetByIdsAsync(string[] ids)
         {
             using (var repository = _repositoryFactory())
@@ -83,7 +82,7 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                     }
                 }
                 await repository.UnitOfWork.CommitAsync();
-                ChangeLogCacheRegion.ExpireRegion();
+                Reset();
             }
         }
 
@@ -98,10 +97,10 @@ namespace VirtoCommerce.Platform.Data.ChangeLog
                     repository.Remove(entity);
                 }
                 await repository.UnitOfWork.CommitAsync();
-                ChangeLogCacheRegion.ExpireRegion();
+                Reset();
             }
         }
-
         #endregion
+
     }
 }

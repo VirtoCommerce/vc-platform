@@ -17,6 +17,7 @@ namespace VirtoCommerce.Platform.Core
                 public const char PermissionClaimTypeDelimiter = ';';
                 public const string UserNameClaimType = "username";
                 public const string LimitedPermissionsClaimType = "limited_permissions";
+                public const string MemberIdClaimType = "memberId";
             }
 
             public static class SystemRoles

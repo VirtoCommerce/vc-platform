@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,11 +17,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly IChangeLogSearchService _changeLogSearchService;
         private readonly ILastModifiedDateTime _lastModifiedDateTime;
+        private readonly ILastChangesService _lastChangesService;
 
-        public ChangeLogController(IChangeLogSearchService changeLogSearchService, ILastModifiedDateTime lastModifiedDateTime)
+        public ChangeLogController(IChangeLogSearchService changeLogSearchService, ILastModifiedDateTime lastModifiedDateTime, ILastChangesService lastChangesService)
         {
             _changeLogSearchService = changeLogSearchService;
             _lastModifiedDateTime = lastModifiedDateTime;
+            _lastChangesService = lastChangesService;
         }
 
         /// <summary>
@@ -67,6 +70,36 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             };
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("~/api/changes/changed-entities")]
+        [AllowAnonymous]
+        public ActionResult<ChangedEntitiesResponse> GetChangedEntities([FromBody] ChangedEntitiesRequest changedEntitiesRequest)
+        {
+            var result = new ChangedEntitiesResponse()
+            {
+                Entities = changedEntitiesRequest.EntityNames
+                    .Select(x => new ChangedEntity { Name = x, ModifiedDate = _lastChangesService.GetLastModifiedDate(x).UtcDateTime })
+                    .Where(x => x.ModifiedDate >= changedEntitiesRequest.ModifiedSince)
+                    .ToList(),
+            };
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("~/api/changes/changed-entities/reset")]
+        [Authorize(PlatformConstants.Security.Permissions.ResetCache)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
+        public ActionResult ResetChangedEntities([FromBody] string[] entityNames)
+        {
+            foreach (var entityName in entityNames)
+            {
+                _lastChangesService.Reset(entityName);
+            }
+
+            return NoContent();
         }
 
         [HttpPost]
