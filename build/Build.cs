@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -65,7 +66,8 @@ partial class Build : NukeBuild
     private static int? ExitCode = null;
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-    readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+    readonly string Configuration = IsLocalBuild ? "Debug" : "Release";
+    
 
     private static string[] ModuleContentFolders = new[] { "dist", "Localizations", "Scripts", "Content" };
 
@@ -247,7 +249,7 @@ partial class Build : NukeBuild
                 .SetFilter(TestsFilter)
                 .SetNoBuild(true)
                 .SetCollectCoverage(true)
-                .SetLogOutput(true)
+                .SetProcessLogOutput(true)
                 .SetResultsDirectory(OutPath);
                var testProjectBinDir = testProject.Directory / "bin";
                var testAssemblies = testProjectBinDir.GlobFiles($"**/{testProject.Name}.dll");
@@ -356,6 +358,17 @@ partial class Build : NukeBuild
     Target StartRelease => _ => _
         .Executes(() =>
         {
+            GitTasks.GitLogger = GitLogger;
+            var disableApprove = Environment.GetEnvironmentVariable("VCBUILD_DISABLE_RELEASE_APPROVEMENT");
+            if (disableApprove.IsNullOrEmpty())
+            {
+                Console.Write($"Are you sure want to release {GitRepository.Identifier}? (y/N): ");
+                var response = Console.ReadLine();
+                if (response.ToLower().CompareTo("y") != 0)
+                {
+                    ControlFlow.Fail("Aborted");
+                }
+            }
             var currentDir = Directory.GetCurrentDirectory();
             Directory.SetCurrentDirectory(Solution.Path.Parent);
             GitTasks.Git("checkout dev");
@@ -419,6 +432,7 @@ partial class Build : NukeBuild
 
     Target CompleteHotfix => _ => _
         .After(StartHotfix)
+           
         .Executes(() =>
         {
             //workaround for run from sources
@@ -470,7 +484,7 @@ partial class Build : NukeBuild
        .Executes(() =>
        {
            DotNetPublish(s => s
-               .SetWorkingDirectory(WebProject.Directory)
+               .SetProcessWorkingDirectory(WebProject.Directory)
                .EnableNoRestore()
                .SetOutput(IsModule ? ModuleOutputDirectory / "bin" : ArtifactsDirectory / "publish")
                .SetConfiguration(Configuration));
@@ -483,7 +497,7 @@ partial class Build : NukeBuild
          if (FileExists(WebProject.Directory / "package.json"))
          {
              NpmTasks.Npm("ci", WebProject.Directory);
-             NpmTasks.NpmRun(s => s.SetWorkingDirectory(WebProject.Directory).SetCommand("webpack:build"));
+             NpmTasks.NpmRun(s => s.SetProcessWorkingDirectory(WebProject.Directory).SetCommand("webpack:build"));
          }
          else
          {
@@ -618,6 +632,7 @@ partial class Build : NukeBuild
         {
             GitTasks.GitLogger = GitLogger;
             GitTasks.Git($"commit -am \"{ModuleManifest.Id} {ReleaseVersion}\"", ModulesLocalDirectory);
+            GitTasks.Git($"pull --rebase");
             GitTasks.Git($"push origin HEAD:master -f", ModulesLocalDirectory);
         });
 
@@ -786,24 +801,65 @@ partial class Build : NukeBuild
         }
     }
 
+    async Task PublishRelease(string owner, string repo, string token, string tag, string description, string artifactPath, bool prerelease)
+    {
+        var tokenAuth = new Octokit.Credentials(token);
+        var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("vc-build"))
+        {
+            Credentials = tokenAuth
+        };
+        var newRelease = new Octokit.NewRelease(tag)
+        {
+            Name = tag,
+            Prerelease = prerelease,
+            Draft = false,
+            Body = description
+        };
+        var release = await githubClient.Repository.Release.Create(owner, repo, newRelease);
+        using (var artifactStream = File.OpenRead(artifactPath))
+        {
+            var assetUpload = new Octokit.ReleaseAssetUpload()
+            {
+                FileName = Path.GetFileName(artifactPath),
+                ContentType = "application/zip",
+                RawData = artifactStream
+            };
+            var asset = await githubClient.Repository.Release.UploadAsset(release, assetUpload);
+        }
+    }
+
     Target Release => _ => _
          .DependsOn(Clean, Compress)
          .Requires(() => GitHubUser, () => GitHubToken)
-         /*.Requires(() =>   GitRepository.IsOnReleaseBranch() && GitTasks.GitHasCleanWorkingCopy()) */
          .Executes(() =>
          {
              string tag = ReleaseVersion;
-             //FinishReleaseOrHotfix(tag);
-
-             void RunGitHubRelease(string args)
-             {
-                 ProcessTasks.StartProcess("github-release", args, RootDirectory, customLogger: GitLogger).AssertZeroExitCode();
-             }
-             var prereleaseArg = PreRelease ? "--pre-release" : "";
              var targetBranchArg = ReleaseBranch.IsNullOrEmpty() ? "" : $"--target \"{ReleaseBranch}\"";
-             var descriptionArg = File.Exists(ReleaseNotes) ? $"--description \"{File.ReadAllText(ReleaseNotes)}\"" : "";
-             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} {targetBranchArg} --tag {tag} {descriptionArg} {prereleaseArg}"); //-c branch -d description
-             RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
+             var descr = File.Exists(ReleaseNotes) ? File.ReadAllText(ReleaseNotes) : "";
+             try
+             {
+                 PublishRelease(GitHubUser, GitRepositoryName, GitHubToken, tag, descr, ZipFilePath, PreRelease).Wait();
+             }
+             catch(AggregateException ex)
+             {
+                 var responseRaw = ((Octokit.ApiValidationException)ex.InnerException)?.HttpResponse?.Body.ToString() ?? "";
+                 var response = System.Text.Json.JsonDocument.Parse(responseRaw);
+                 bool alreadyExistsError = false;
+                 JsonElement errors;
+                 if (response.RootElement.TryGetProperty("errors", out errors))
+                 {
+                     var errorCount = errors.GetArrayLength();
+                     if (errorCount > 0)
+                     {
+                         alreadyExistsError = errors.EnumerateArray().Where(e => e.GetProperty("code").GetString() == "already_exists").Count() > 0;
+                     }
+                 }
+                 if(alreadyExistsError)
+                 {
+                     ExitCode = 422;
+                 }
+                  ControlFlow.Fail(ex.Message);
+             }
          });
 
     void FinishReleaseOrHotfix(string tag)
