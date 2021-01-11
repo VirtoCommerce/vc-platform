@@ -16,12 +16,14 @@
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <StartupObject>Build</StartupObject>
         <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Octokit" Version="0.48.0" />
         <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
         <PackageReference Include="Virtocommerce.Platform.Core" Version="3.21.0" />
-        <PackageReference Include="Nuke.Common" Version="0.24.11" />
+        <PackageReference Include="Nuke.Common" Version="0.25.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -34,7 +36,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**;GrabMigrator\**;Properties\*.*" />
+        <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**;GrabMigrator\**;Properties\*.*;global.json" />
         <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**" />
         <None Remove="*.csproj.DotSettings;*.ref.*.txt" />
 
