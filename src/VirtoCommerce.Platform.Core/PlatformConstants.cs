@@ -63,11 +63,11 @@ namespace VirtoCommerce.Platform.Core
                                     PlatformImport = "platform:import",
                                     PlatformExport = "platform:export";
 
-                public const string LoginOnBehalf = "platform:security:loginOnBehalf";
+                public const string SecurityLoginOnBehalf = "platform:security:loginOnBehalf";
 
                 public static string[] AllPermissions { get; } = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
                                               SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
-                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport, LoginOnBehalf};
+                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport, SecurityLoginOnBehalf};
             }
         }
 
