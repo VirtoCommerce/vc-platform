@@ -524,6 +524,16 @@
                     "log-in": "Войти"
                 }
             },
+            "registration": {
+                "labels": {
+                    "sign-in": "Пожалуйста зарегистрируйтесь для продолжения работы с Virto Commerce без лицензии",
+                    "name": "Имя",
+                    "email": "Эл. адрес",
+                    "organization": "Организация",
+                    "accepted": "Я принимаю",
+                    "register": "Регистрация"
+                }
+            },
             "forgotpassword": {
                 "title": "Забыли пароль?",
                 "labels": {

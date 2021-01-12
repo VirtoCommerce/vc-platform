@@ -1,0 +1,54 @@
+<div class="window">
+    <header class="window-head" style=" background-color: #F87A06;">
+        <img class="__logo" ng-src="{{uiCustomization.contrast_logo || '/images/contrast-logo.png'}}" />
+        <span class="window-t">{{ 'platform.blades.registration.labels.sign-in' | translate }}</span>
+    </header>
+    <div class="window-cnt">
+        <form class="form" novalidate ng-submit="register()" name="registrationForm">
+            <!-- Name -->
+            <div class="form-group">
+                <label class="form-label">{{ 'platform.blades.registration.labels.name' | translate }}</label>
+                <div class="form-input">
+                    <input type="text" name="name" ng-model="client.name" required autofocus va-autofill>
+                </div>
+            </div>
+            <!-- Email -->
+            <div class="form-group">
+                <label class="form-label">{{ 'platform.blades.registration.labels.email' | translate }}</label>
+                <div class="form-input">
+                    <input type="text" name="email" ng-model="client.email" required autofocus va-autofill>
+                </div>
+            </div>
+            <!-- Organization -->
+            <div class="form-group">
+                <label class="form-label">{{ 'platform.blades.registration.labels.organization' | translate }}</label>
+                <div class="form-input">
+                    <input type="text" name="organization" ng-model="client.organization" required autofocus va-autofill>
+                </div>
+            </div>
+
+            <small class="form-text" style="display: block; padding-top: 1.5em; width: 354px; line-height: 17px; font-size: 11px;">By clicking a checkbox you confirm that you have read and accept the Virto Commerce Open Source License and the related restrictions.</small>
+            
+            <div class="clearfix">
+                <div class="column">
+                    <div class="form-group">
+                        <div class="form-control __checkbox">
+                            <label class="form-label">
+                                <input type="checkbox" name="agreement" checked="" required ng-model="client.agreement">
+                                <span class="check"></span>
+                                <span class="name" style="width: 291px;height: 19px;font-family: Roboto;font-style: normal;font-weight: normal;font-size: 11px;line-height: 14px;color: #333333;">{{ 'platform.blades.registration.labels.accepted' | translate }} <a title="License agreement and restrictions" style="font-size:unset" href="https://virtocommerce.com/open-source-license">License agreement and restrictions</a></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="form-group __right">
+                        <button class="btn" type="submit" ng-disabled="registrationForm.$invalid">
+                            <span>{{ 'platform.blades.registration.labels.register' | translate }}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

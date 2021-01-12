@@ -133,6 +133,34 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = true
                 };
 
+                #region Registration settings
+
+                /// <summary>
+                /// This setting does not mean real registration and should not be controlled by passing virtual GTM registration.
+                /// This setting only shows if client bought license and we need to stop force client registration. Do not change it manualy.
+                /// </summary>
+                public static SettingDescriptor ClientPassRegistration { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.ClientPassRegistration",
+                    GroupName = "Platform|Setup",
+                    ValueType = SettingValueType.Boolean,
+                    IsHidden = true,
+                    DefaultValue = false
+                };
+
+                /// <summary>
+                /// This setting controlled from LicenseController.
+                /// </summary>
+                public static SettingDescriptor TrialExpirationDate { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.TrialExpirationDate",
+                    GroupName = "Platform|Setup",
+                    ValueType = SettingValueType.DateTime,
+                    IsHidden = true,
+                };
+
+                #endregion Registration settings
+
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
@@ -142,6 +170,8 @@ namespace VirtoCommerce.Platform.Core
                         yield return ModulesAutoInstallState;
                         yield return ModulesAutoInstalled;
                         yield return SendDiagnosticData;
+                        yield return ClientPassRegistration;
+                        yield return TrialExpirationDate;
                     }
                 }
             }

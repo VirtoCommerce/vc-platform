@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Licensing;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -18,10 +19,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     public class LicensingController : Controller
     {
         private readonly PlatformOptions _platformOptions;
+        private readonly ISettingsManager _settingsManager;
 
-        public LicensingController(IOptions<PlatformOptions> platformOptions)
+        public LicensingController(IOptions<PlatformOptions> platformOptions, ISettingsManager settingsManager)
         {
             _platformOptions = platformOptions.Value;
+            _settingsManager = settingsManager;
         }
 
         [HttpPost]
@@ -47,6 +50,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
             }
 
+            if (license != null)
+            {
+                await DisableTrial();
+            }
+
             return Ok(license);
         }
 
@@ -66,12 +74,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 license = License.Parse(rawLicense, Path.GetFullPath(_platformOptions.LicensePublicKeyPath));
             }
 
+            if (license != null)
+            {
+                await DisableTrial();
+            }
+
             return Ok(license);
         }
 
         [HttpPost]
         [Route("activateLicense")]
-        public ActionResult<License> ActivateLicense([FromBody] License license)
+        public async Task<ActionResult<License>> ActivateLicense([FromBody] License license)
         {
             license = License.Parse(license?.RawLicense, Path.GetFullPath(_platformOptions.LicensePublicKeyPath));
 
@@ -81,7 +94,74 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 System.IO.File.WriteAllText(licenseFilePath, license.RawLicense);
             }
 
+            if (license != null)
+            {
+                await DisableTrial();
+            }
+
             return Ok(license);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("checkTrialExpiration")]
+        public async Task<ActionResult<bool>> CheckTrialExpiration()
+        {
+            var trialExpirationDate = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.TrialExpirationDate.Name);
+
+            // First login, check if delay setup
+            if (trialExpirationDate.Value is null)
+            {
+                var delay = _platformOptions.RegistrationDelay;
+
+                // If delay is zero we need show registration immediately
+                if (delay == TimeSpan.Zero)
+                {
+                    return Ok(true);
+                }
+
+                // If not we need to delay registration by this time
+                trialExpirationDate.Value = DateTime.UtcNow.Add(delay);
+                await _settingsManager.SaveObjectSettingsAsync(new[] { trialExpirationDate });
+
+                return Ok(false);
+            }
+
+            // Trial period is end, show registration
+            if ((DateTime)trialExpirationDate.Value < DateTime.UtcNow)
+            {
+                return Ok(true);
+            }
+
+            // Trial period is not expired
+            return Ok(false);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("continueTrial")]
+        public async Task<ActionResult> ContinueTrial()
+        {
+            var trialExpirationDate = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.TrialExpirationDate.Name);
+
+            var expirationPeriod = _platformOptions.RegistrationExpiration;
+            if (expirationPeriod <= TimeSpan.Zero)
+            {
+                expirationPeriod = TimeSpan.FromDays(30);
+            }
+
+            trialExpirationDate.Value = DateTime.UtcNow.Add(expirationPeriod);
+
+            await _settingsManager.SaveObjectSettingsAsync(new[] { trialExpirationDate });
+
+            return Ok();
+        }
+
+        private async Task DisableTrial()
+        {
+            var clientPassRegistration = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.ClientPassRegistration.Name);
+            clientPassRegistration.Value = true;
+            await _settingsManager.SaveObjectSettingsAsync(new[] { clientPassRegistration });
         }
     }
 }
