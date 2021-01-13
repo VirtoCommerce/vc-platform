@@ -85,13 +85,13 @@ The changes required in **_module.manifest_** file:
 
 1. Changes in **_Initialize()_** method:
     1. Register the new _DbContext_ in DI:
-    ```csharp
-    serviceCollection.AddDbContext<Order2DbContext>(options => options.UseSqlServer(configuration.GetConnectionString("VirtoCommerce")));
-    ```
+        ```csharp
+        serviceCollection.AddDbContext<Order2DbContext>(options => options.UseSqlServer(configuration.GetConnectionString("VirtoCommerce")));
+        ```
     1. Register the new _Repository_ implementation in DI:
-    ```csharp
-    serviceCollection.AddTransient<IOrderRepository, OrderRepository2>();
-    ```
+        ```csharp
+        serviceCollection.AddTransient<IOrderRepository, OrderRepository2>();
+        ```
 
 1. Changes in **_PostInitialize()_** method:
     1. Register type override(s) to AbstractTypeFactory
