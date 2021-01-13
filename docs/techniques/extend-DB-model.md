@@ -25,24 +25,24 @@ This article provides the steps to take to extend persistent model.
     1. **_Optional:_** Extend the parent repository interface: add `IQueryable<T>` property, add additional methods, if needed.
     1. Extend the parent repository by implementing the interface, just defined in previous step. If new interface wasn't defined, override the base methods as needed. It's important to add the `IQueryable<the new type>`, e.g.:
 
-    ```csharp
-    public IQueryable<CustomerOrder2Entity> CustomerOrders2 => DbContext.Set<CustomerOrder2Entity>();
-    ```
+        ```csharp
+        public IQueryable<CustomerOrder2Entity> CustomerOrders2 => DbContext.Set<CustomerOrder2Entity>();
+        ```
    
 1. Generate code-first DB migration:
     1. Execute "**Set as Startup Project**" on your **"_.Data_"** project in Solution Explorer
     2. Open NuGet **Package Manager Console**
     3. Select your "**.Data**" as "**Default project**" in the console
     4. Run command to add a new migration. Where "_YourNewMigrationName_" is the name for the migration to add. The new migration files should be generated and opened:
-```console
-Add-Migration YourNewMigrationName
-```
+        ```console
+        Add-Migration YourNewMigrationName
+        ```
 
-    5. Explore the generated code and **remove** the commands, not reflecting your model changes or configurations defined in your _DbContext.OnModelCreating()_. These changes were applied already by migrations in base module. Ensure, that the _Up()_ method defines:
+5. Explore the generated code and **remove** the commands, not reflecting your model changes or configurations defined in your _DbContext.OnModelCreating()_. These changes were applied already by migrations in base module. Ensure, that the _Up()_ method defines:
 
-        1. new tables and indices, like:
+    1. new tables and indices, like:
 
-        ```csharp
+        ```cs
         migrationBuilder.CreateTable(
                name: "OrderInvoice",
                ...
@@ -54,19 +54,19 @@ Add-Migration YourNewMigrationName
               column: "CustomerOrder2Id");
         ```
 
-        1. the new column(s), if existing tables are being altered, like:
+    1. the new column(s), if existing tables are being altered, like:
 
         ```csharp
         migrationBuilder.AddColumn<string>(name: "NewField", table: "CustomerOrder", maxLength: 128, nullable: true);
         ```
 
-        1. a `Discriminator` column (if new columns were defined in previous step AND it didn't exist in the original table already):
+    1. a `Discriminator` column (if new columns were defined in previous step AND it didn't exist in the original table already):
 
         ```csharp
-        migrationBuilder.AddColumn<string>(name: "Discriminator", table: "CustomerOrder", nullable: false, maxLength: 128, defaultValue: "CustomerOrder");
+        migrationBuilder.AddColumn<string>(name: "Discriminator", table: "CustomerOrder", nullable: false, maxLength: 128, defaultValue: "CustomerOrder2Entity");
         ```
 
-        1. any custom SQL scripts, if data update is needed.
+    1. any custom SQL scripts, if data update is needed.
 
         !!! tip
             Read the [EF Core article about inheritance](https://docs.microsoft.com/en-us/ef/core/modeling/inheritance) for more details.
@@ -77,34 +77,34 @@ Add-Migration YourNewMigrationName
 The changes required in **_module.manifest_** file:
 
 1. Ensure, that a dependency to appropriate module is added to **_dependencies_** section:
-```xml
-    <dependency id="VirtoCommerce.Orders" version="3.0.0" />
-```
+    ```xml
+        <dependency id="VirtoCommerce.Orders" version="3.0.0" />
+    ```
 
-The required changes to **_Module.cs_** regarding the model extension:
+    The required changes to **_Module.cs_** regarding the model extension:
 
 1. Changes in **_Initialize()_** method:
     1. Register the new _DbContext_ in DI:
-```csharp
-serviceCollection.AddDbContext<Order2DbContext>(options => options.UseSqlServer(configuration.GetConnectionString("VirtoCommerce")));
-```
+        ```csharp
+        serviceCollection.AddDbContext<Order2DbContext>(options => options.UseSqlServer(configuration.GetConnectionString("VirtoCommerce")));
+        ```
     1. Register the new _Repository_ implementation in DI:
-```csharp
-serviceCollection.AddTransient<IOrderRepository, OrderRepository2>();
-```
+        ```csharp
+        serviceCollection.AddTransient<IOrderRepository, OrderRepository2>();
+        ```
 
 1. Changes in **_PostInitialize()_** method:
     1. Register type override(s) to AbstractTypeFactory
     1. Register new type(s) to AbstractTypeFactory (as in usual module)
     1. Add code to ensure that the migrations from new DbContext are applied:
-```csharp
-using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
-{
-    var dbContext = serviceScope.ServiceProvider.GetRequiredService<Order2DbContext>();
-    dbContext.Database.EnsureCreated();
-    dbContext.Database.Migrate();
-}
-```
+    ```csharp
+    using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
+    {
+        var dbContext = serviceScope.ServiceProvider.GetRequiredService<Order2DbContext>();
+        dbContext.Database.EnsureCreated();
+        dbContext.Database.Migrate();
+    }
+    ```
 
 1. Test your changes in  Solution REST API documentation (Swagger) and DB.
 
