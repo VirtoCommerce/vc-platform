@@ -88,7 +88,7 @@ The changes required in **_module.manifest_** file:
     ```csharp
     serviceCollection.AddDbContext<Order2DbContext>(options => options.UseSqlServer(configuration.GetConnectionString("VirtoCommerce")));
     ```
-1. Register the new _Repository_ implementation in DI:
+    1. Register the new _Repository_ implementation in DI:
     ```csharp
     serviceCollection.AddTransient<IOrderRepository, OrderRepository2>();
     ```
