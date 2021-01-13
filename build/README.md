@@ -1,6 +1,7 @@
 # Manage tools
 
 The official CLI [.NET Core GlobalTool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) for building, deploy releases, create and push packages, and manage environments for projects based on VirtoCommerce. Is powered by [nuke.build](https://nuke.build/) A cross-platform build automation system with C# DSL.
+
 ## Publish a new version
 
 Incerment package version in _build.csproj
@@ -16,9 +17,10 @@ dotnet pack .\vc-platform\build\_build.csproj  --configuration Release --include
 dotnet nuget push VirtoCommerce.GlobalTool.{version}.nupkg  -s https://api.nuget.org/v3/index.json -k {api key}
 
 ```
+
 ## Installation
 
-To use VirtoCommerce.GlobalTool  install the  package:
+Installing VirtoCommerce.GlobalTool package:
 
 ```console
 
@@ -26,9 +28,8 @@ dotnet tool install VirtoCommerce.GlobalTool  -g
 
 ```
 
-
-## Update to latest version 
-For update VirtoCommerce.GlobalTool to the latest version you need to run this command
+## Latest version
+Run this command to update VirtoCommerce.GlobalTool to the latest version:
 
 ```console
 
@@ -39,7 +40,7 @@ dotnet tool update VirtoCommerce.GlobalTool -g
 ## Usage
 To use VirtoCommerce.GlobalTool by invoke the tool using the following command: `vc-build`
 
-To get the all list of targets 
+To get the all list of targets:
 ```console
 
 vc-build help
@@ -48,30 +49,43 @@ vc-build help
 Command output
 
 ```console
-NUKE Execution Engine version 0.21.2 (Windows,.NETStandard,Version=v2.0)
+NUKE Execution Engine version 0.24.11 (Windows,.NETCoreApp,Version=v2.1)
 
 Target with name 'help' does not exist. Available targets are:
+  - ChangeVersion
   - Clean
   - Compile
+  - CompleteHotfix
+  - CompleteRelease
   - Compress
+  - GetManifestGit
+  - GrabMigrator
+  - IncremenPatch
+  - IncrementMinor
   - MassPullAndBuild
   - Pack
   - Publish
+  - PublishManifestGit
   - PublishModuleManifest
   - PublishPackages
+  - QuickRelease
   - Release
   - Restore
   - SonarQubeEnd
   - SonarQubeStart
   - StartAnalyzer
+  - StartHotfix
+  - StartRelease
   - SwaggerValidation
   - Test
+  - UpdateManifest
+  - ValidateSwaggerSchema
   - WebPackBuild
 
 ```
 
 ## Compress
-The target is used to create a redistributed zip archive for a module or platform. After executing, it  placed resulting zip in the `artifacts` folder.
+The target is used to create a redistributed zip archive for a module or platform. After executing, the resulting zip is placed in `artifacts` folder.
 To execute this target, you need to run this command in the root module folder of the cloned from GitHub repository.
 
 ```console
