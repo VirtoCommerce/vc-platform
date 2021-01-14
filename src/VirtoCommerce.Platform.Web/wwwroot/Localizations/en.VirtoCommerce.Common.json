@@ -136,7 +136,8 @@
                 "long-text-multilang": "Enter value",
                 "short-text-multivalue-multilang": "Add value",
                 "short-text-dictionary-multilang": "Select value",
-                "short-text-dictionary-multivalue-multilang": "Select value"
+                "short-text-dictionary-multivalue-multilang": "Select value",
+                "long-text-dictionary-multivalue-multilang": "Select value"
             }
         },
         "validators": {

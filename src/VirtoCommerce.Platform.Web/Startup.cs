@@ -9,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
-using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -41,7 +40,6 @@ using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Telemetry;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Hangfire.Extensions;
@@ -101,23 +99,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<LicenseProvider>();
 
             // The following line enables Application Insights telemetry collection.
-            services.AddApplicationInsightsTelemetry();
-            services.AddApplicationInsightsTelemetryProcessor<IgnoreSignalRTelemetryProcessor>();
-
-            var ignoreSqlTelemetryOptionsSection = Configuration.GetSection("VirtoCommerce:ApplicationInsights:IgnoreSqlTelemetryOptions");
-            if (ignoreSqlTelemetryOptionsSection.Exists())
-            {
-                services.AddOptions<IgnoreSqlTelemetryOptions>().Bind(ignoreSqlTelemetryOptionsSection);
-                services.AddApplicationInsightsTelemetryProcessor<IgnoreSqlTelemetryProcessor>();
-            }
-
-            if (Configuration["VirtoCommerce:ApplicationInsights:EnableLocalSqlCommandTextInstrumentation"]?.ToLower() == "true")
-            {
-                // Next line allows to gather detailed SQL info for AI in the local run.
-                // See instructions here: https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-dependencies#advanced-sql-tracking-to-get-full-sql-query
-                services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
-            }
-
+            services.AddAppInsightsTelemetry(Configuration);
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
             {
@@ -127,24 +109,23 @@ namespace VirtoCommerce.Platform.Web
                 {
                     noContentFormatter.TreatNullValueAsNoContent = false;
                 }
-            }
-        )
-        .AddNewtonsoftJson(options =>
-            {
-                //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
-                //we should register this converter globally.
-                options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
-                //Next line allow to use polymorph types as parameters in API controller methods
-                options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
-                options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
-                options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                options.SerializerSettings.Formatting = Formatting.None;
-            }
-        );
+            })
+            .AddNewtonsoftJson(options =>
+                {
+                    //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
+                    //we should register this converter globally.
+                    options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
+                    //Next line allow to use polymorph types as parameters in API controller methods
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
+                    options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
+                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    options.SerializerSettings.Formatting = Formatting.None;
+                }
+            );
 
             services.AddSingleton(js =>
             {
@@ -484,12 +465,8 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            // Use app insights telemetry 
+            app.UseAppInsightsTelemetry();
 
             //Force migrations
             using (var serviceScope = app.ApplicationServices.CreateScope())
@@ -510,15 +487,17 @@ namespace VirtoCommerce.Platform.Web
             // Complete hangfire init
             app.UseHangfire(Configuration);
 
-            app.UseModules();
-
             //Register platform permissions
             app.UsePlatformPermissions();
 
-            //Setup SignalR hub
-            app.UseEndpoints(routes =>
+            app.UseModules();
+            
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapHub<PushNotificationHub>("/pushNotificationHub");
+                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                //Setup SignalR hub
+                endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
             });
 
             //Seed default users

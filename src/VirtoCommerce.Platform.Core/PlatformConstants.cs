@@ -17,6 +17,7 @@ namespace VirtoCommerce.Platform.Core
                 public const char PermissionClaimTypeDelimiter = ';';
                 public const string UserNameClaimType = "username";
                 public const string LimitedPermissionsClaimType = "limited_permissions";
+                public const string MemberIdClaimType = "memberId";
             }
 
             public static class SystemRoles
@@ -54,7 +55,8 @@ namespace VirtoCommerce.Platform.Core
                                     SecurityCreate = "platform:security:create",
                                     SecurityAccess = "platform:security:access",
                                     SecurityUpdate = "platform:security:update",
-                                    SecurityDelete = "platform:security:delete";
+                                    SecurityDelete = "platform:security:delete",
+                                    SecurityLoginOnBehalf = "platform:security:loginOnBehalf";
 
                 public const string BackgroundJobsManage = "background_jobs:manage";
 
@@ -62,9 +64,10 @@ namespace VirtoCommerce.Platform.Core
                                     PlatformImport = "platform:import",
                                     PlatformExport = "platform:export";
 
+
                 public static string[] AllPermissions { get; } = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
                                               SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
-                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport};
+                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport, SecurityLoginOnBehalf};
             }
         }
 

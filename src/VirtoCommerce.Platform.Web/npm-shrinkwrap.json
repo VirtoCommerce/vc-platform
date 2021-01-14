@@ -292,6 +292,11 @@
                 }
             }
         },
+        "@fortawesome/fontawesome-free": {
+            "version": "5.1.0-9",
+            "resolved": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-5.1.0-9.tgz",
+            "integrity": "sha512-F5Iz5k+Jj5+YDLcFb4pskOmKncsq3Y/ez6eCCCneLpcredQJd1uqTGC/WK5cYOS/h+c/6N4zj1YI5saDgOVaRg=="
+        },
         "@gulp-sourcemaps/identity-map": {
             "version": "1.0.1",
             "resolved": "https://registry.npmjs.org/@gulp-sourcemaps/identity-map/-/identity-map-1.0.1.tgz",

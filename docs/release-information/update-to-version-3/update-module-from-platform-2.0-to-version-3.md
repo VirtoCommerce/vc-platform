@@ -189,6 +189,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
         .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
         ```
         3. Open **_20000000000000_UpdateCustomerReviewsV2.Designer_** and change **_Migration_** attribute parameter value to the current migration ID ("20000000000000_UpdateCustomerReviewsV2" in this case). Check [20000000000000_UpdateCoreV2.Designer.cs](https://github.com/VirtoCommerce/vc-module-core/tree/release/3.0.0/src/VirtoCommerce.CoreModule.Data/Migrations/20000000000000_UpdateCoreV2.Designer.cs#L12) as another example.
+        > **Note:** if there are extended entities then need to explicitly update `Discriminator` to extended type. For more details please check [extension article](../../techniques/extend-DB-model.md#L63) Discriminator column creation part.
 
 5. If separated databases are used by the solution, follow the steps in [Prepare separated databases for VC v3](prepare-separated-databases-for-v3.md).
 6. It's useful sometimes to apply migrations without starting the platform. There is an utility to extract and apply migrations (integrated to vc-build tool). Take a reference to [Grab migrator utility](../../../build/GrabMigrator/samples/readme.md).
