@@ -41,6 +41,13 @@ namespace VirtoCommerce.Platform.Tests.Controllers.Api
                     Value = GetExpirationDateByExpirationTime(expirationTime)
                 });
 
+            _settingsManager
+                .Setup(x => x.GetObjectSettingAsync(PlatformConstants.Settings.Setup.ClientPassRegistration.Name, null, null))
+                .ReturnsAsync(new ObjectSettingEntry
+                {
+                    Value = false
+                });
+
             platformOptions.RegistrationDelay = TimeSpan.Parse(delay);
 
             // Act
@@ -49,6 +56,25 @@ namespace VirtoCommerce.Platform.Tests.Controllers.Api
 
             // Assert
             actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public async Task CheckTrialExpiration_ClientPassRegistration()
+        {
+            // Arrange
+            _settingsManager
+                .Setup(x => x.GetObjectSettingAsync(PlatformConstants.Settings.Setup.ClientPassRegistration.Name, null, null))
+                .ReturnsAsync(new ObjectSettingEntry
+                {
+                    Value = true // Client pass registration
+                });
+
+            // Act
+            var result = await _controller.CheckTrialExpiration();
+            var actual = ((OkObjectResult)result.Result).Value;
+
+            // Assert
+            actual.Should().Be(false);
         }
 
         public enum ExpirationTime

@@ -107,6 +107,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("checkTrialExpiration")]
         public async Task<ActionResult<bool>> CheckTrialExpiration()
         {
+            var clientPassRegistration = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.ClientPassRegistration.Name);
+            if (Convert.ToBoolean(clientPassRegistration.Value))
+            {
+                return Ok(false); // If registration ended we dont need to show it again
+            }
+
             var trialExpirationDate = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.TrialExpirationDate.Name);
 
             // First login, check if delay setup
