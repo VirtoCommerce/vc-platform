@@ -506,16 +506,6 @@
                     "log-in": "Log in"
                 }
             },
-            "registration": {
-                "labels": {
-                    "sign-in": "Please register to continue using Virto Commerce without a license",
-                    "name": "Name",
-                    "email": "Email",
-                    "organization": "Organization",
-                    "accepted": "I accepted",
-                    "register": "Register"
-                }
-            },
             "forgotpassword": {
                 "title": "Forgot your password?",
                 "labels": {

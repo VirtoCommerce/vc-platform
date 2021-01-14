@@ -1,78 +1,48 @@
 angular.module('platformWebApp')
     .config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
-        $stateProvider.state('registrationDialog', {
-            url: '/client-registration',
-            templateUrl: '$(Platform)/Scripts/app/security/login/registration.tpl.html',
-            controller: ['$window', '$scope', '$state', '$http',
-                function ($window, $scope, $state, $http) {
-                    $scope.registerProgress = false;
-                    $scope.client = {};
-                    $scope.register = function () {
-                        $scope.registerProgress = true;
-                        $http.post('api/platform/licensing/continueTrial').then(function () {
-                            $window.dataLayer.push({
-                                'name': $scope.client.name,
-                                'email': $scope.client.email,
-                                'org': $scope.client.organization
+        $stateProvider.state('loginDialog',
+            {
+                url: '/login',
+                templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
+                controller: [
+                    '$scope', 'platformWebApp.authService', 'platformWebApp.externalSignInService',
+                    function ($scope, authService, externalSignInService) {
+                        externalSignInService.getProviders().then(
+                            function (response) {
+                                $scope.externalLoginProviders = response.data;
                             });
-                            console.log('Thanks for registration! 😀');
-                            $state.go('loginDialog');
-                        });
-                    };
-                    
-                }
-            ]
-        });
-
-        $stateProvider.state('loginDialog', {
-            url: '/login',
-            templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
-            controller: ['$scope', '$state', '$http', 'platformWebApp.authService', 'platformWebApp.externalSignInService',
-                function ($scope, $state, $http, authService, externalSignInService) {
-                    $http.get('api/platform/licensing/checkTrialExpiration').then(function (response) {
-                        if (response.data) {
-                            $state.go('registrationDialog');
-                        }
-                    });
-
-                    externalSignInService
-                        .getProviders()
-                        .then(function (response) {
-                            $scope.externalLoginProviders = response.data;
-                        });
-
-                    $scope.user = {};
-                    $scope.authError = null;
-                    $scope.authReason = false;
-                    $scope.loginProgress = false;
-                    $scope.ok = function () {
-                        // Clear any previous security errors
+                        $scope.user = {};
                         $scope.authError = null;
-                        $scope.loginProgress = true;
-                        // Try to login
-                        authService
-                            .login($scope.user.email, $scope.user.password, $scope.user.remember)
-                            .then(function (loggedIn) {
-                                $scope.loginProgress = false;
-                                if (!loggedIn) {
-                                    $scope.authError = 'invalidCredentials';
-                                }
-                            }, function (x) {
-                                $scope.loginProgress = false;
-                                if (angular.isDefined(x.status)) {
-                                    if (x.status === 401) {
-                                        $scope.authError = 'The login or password is incorrect.';
-                                    } else {
-                                        $scope.authError = 'Authentication error (code: ' + x.status + ').';
+                        $scope.authReason = false;
+                        $scope.loginProgress = false;
+                        $scope.ok = function () {
+                            // Clear any previous security errors
+                            $scope.authError = null;
+                            $scope.loginProgress = true;
+                            // Try to login
+                            authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
+                                function (loggedIn) {
+                                    $scope.loginProgress = false;
+                                    if (!loggedIn) {
+                                        $scope.authError = 'invalidCredentials';
                                     }
-                                } else {
-                                    $scope.authError = 'Authentication error ' + x;
-                                }
-                            });
-                    };
-                }
-            ]
-        });
+                                },
+                                function (x) {
+                                    $scope.loginProgress = false;
+                                    if (angular.isDefined(x.status)) {
+                                        if (x.status === 401) {
+                                            $scope.authError = 'The login or password is incorrect.';
+                                        } else {
+                                            $scope.authError = 'Authentication error (code: ' + x.status + ').';
+                                        }
+                                    } else {
+                                        $scope.authError = 'Authentication error ' + x;
+                                    }
+                                });
+                        };
+                    }
+                ]
+            });
 
         $stateProvider.state('forgotpasswordDialog',
             {

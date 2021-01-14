@@ -43,10 +43,10 @@ namespace VirtoCommerce.Platform.Core
         //mitigate man-in-the-middle attacks.
         public bool AllowInsecureHttp { get; set; }
 
-        // Time before first registration required
-        public TimeSpan RegistrationDelay { get; set; }
+        // Time before first registration required (one day default)
+        public TimeSpan RegistrationDelay { get; set; } = new TimeSpan(1, 0, 0, 0);
 
-        // Time before registration expire
-        public TimeSpan RegistrationExpiration { get; set; }
+        // Time before registration expire (30 days default)
+        public TimeSpan RegistrationExpiration { get; set; } = new TimeSpan(30, 0, 0, 0);
     }
 }

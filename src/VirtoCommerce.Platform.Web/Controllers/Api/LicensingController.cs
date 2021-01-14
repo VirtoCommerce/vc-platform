@@ -113,9 +113,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (trialExpirationDate.Value is null)
             {
                 var delay = _platformOptions.RegistrationDelay;
-
-                // If delay is zero we need show registration immediately
-                if (delay == TimeSpan.Zero)
+                // If delay is zero or delay format is wrong we need show registration immediately.
+                if (delay <= TimeSpan.Zero)
                 {
                     return Ok(true);
                 }
