@@ -150,7 +150,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
             var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
             {
-                new GenericChangedEntry<ApplicationUser>(user, existentUser, EntryState.Modified)
+                new GenericChangedEntry<ApplicationUser>(user, (ApplicationUser)existentUser.Clone(), EntryState.Modified)
             };
 
             await _eventPublisher.Publish(new UserChangingEvent(changedEntries));
