@@ -15,6 +15,7 @@ namespace VirtoCommerce.Platform.Core.Security
 
         public string Description { get; set; }
         public IList<Permission> Permissions { get; set; }
+                
 
         [SwaggerIgnore]
         public ICollection<IdentityUserRole<string>> UserRoles { get; set; }
