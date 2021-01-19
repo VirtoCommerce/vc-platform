@@ -64,7 +64,6 @@ namespace VirtoCommerce.Platform.Core
                                     PlatformImport = "platform:import",
                                     PlatformExport = "platform:export";
 
-
                 public static string[] AllPermissions { get; } = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
                                               SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
                                               SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport, SecurityLoginOnBehalf};
@@ -136,21 +135,6 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = true
                 };
 
-                #region Registration settings
-
-                /// <summary>
-                /// This setting does not mean real registration and should not be controlled by passing virtual GTM registration.
-                /// This setting only shows if client bought license and we need to stop force client registration. Do not change it manualy.
-                /// </summary>
-                public static SettingDescriptor ClientPassRegistration { get; } = new SettingDescriptor
-                {
-                    Name = "VirtoCommerce.ClientPassRegistration",
-                    GroupName = "Platform|Setup",
-                    ValueType = SettingValueType.Boolean,
-                    IsHidden = true,
-                    DefaultValue = false
-                };
-
                 /// <summary>
                 /// This setting controlled from LicenseController.
                 /// </summary>
@@ -162,8 +146,6 @@ namespace VirtoCommerce.Platform.Core
                     IsHidden = true,
                 };
 
-                #endregion Registration settings
-
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
@@ -173,7 +155,6 @@ namespace VirtoCommerce.Platform.Core
                         yield return ModulesAutoInstallState;
                         yield return ModulesAutoInstalled;
                         yield return SendDiagnosticData;
-                        yield return ClientPassRegistration;
                         yield return TrialExpirationDate;
                     }
                 }

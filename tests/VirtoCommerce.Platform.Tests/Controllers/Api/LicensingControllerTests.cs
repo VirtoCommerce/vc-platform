@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -8,6 +11,7 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using Xunit;
+using static VirtoCommerce.Platform.Web.Controllers.Api.LicensingController;
 
 namespace VirtoCommerce.Platform.Tests.Controllers.Api
 {
@@ -27,68 +31,83 @@ namespace VirtoCommerce.Platform.Tests.Controllers.Api
         }
 
         [Theory]
-        [InlineData("11:22:33", ExpirationTime.Unset, false)]
-        [InlineData("00:00:00", ExpirationTime.Unset, true)]
-        [InlineData("00:00:00", ExpirationTime.Yesterday, true)]
-        [InlineData("00:00:00", ExpirationTime.Tomorrow, false)]
-        public async Task CheckTrialExpiration(string delay, ExpirationTime expirationTime, bool expected)
+        [InlineData(ExpirationTime.Unset, false)]
+        [InlineData(ExpirationTime.Yesterday, false)]
+        [InlineData(ExpirationTime.Tomorrow, false)]
+        public async Task GetTrialExpirationDate(ExpirationTime expirationTime, bool expected)
+        {
+            // Arrange
+            var expirationDate = GetExpirationDateByExpirationTime(expirationTime);
+            _settingsManager
+                .Setup(x => x.GetObjectSettingAsync(PlatformConstants.Settings.Setup.TrialExpirationDate.Name, null, null))
+                .ReturnsAsync(new ObjectSettingEntry
+                {
+                    Value = expirationDate
+                });
+
+            // Act
+            var result = await _controller.GetTrialExpirationDate();
+            var actual = ((OkObjectResult)result.Result).Value as TrialState;
+
+            // Assert
+            actual.Should().NotBeNull();
+            actual.ClientPassRegistration.Should().Be(expected);
+            actual.ExpirationDate.Should().Be(expirationDate);
+        }
+
+        [Fact]
+        public async Task GetTrialExpirationDate_Registered()
         {
             // Arrange
             _settingsManager
                 .Setup(x => x.GetObjectSettingAsync(PlatformConstants.Settings.Setup.TrialExpirationDate.Name, null, null))
                 .ReturnsAsync(new ObjectSettingEntry
                 {
-                    Value = GetExpirationDateByExpirationTime(expirationTime)
+                    Value = GetExpirationDateByExpirationTime(ExpirationTime.AlreadyRegistered)
                 });
-
-            _settingsManager
-                .Setup(x => x.GetObjectSettingAsync(PlatformConstants.Settings.Setup.ClientPassRegistration.Name, null, null))
-                .ReturnsAsync(new ObjectSettingEntry
-                {
-                    Value = false
-                });
-
-            platformOptions.RegistrationDelay = TimeSpan.Parse(delay);
 
             // Act
-            var result = await _controller.CheckTrialExpiration();
-            var actual = ((OkObjectResult)result.Result).Value;
+            var result = await _controller.GetTrialExpirationDate();
+            var actual = ((OkObjectResult)result.Result).Value as TrialState;
 
             // Assert
-            actual.Should().Be(expected);
+            actual.Should().NotBeNull();
+            actual.ClientPassRegistration.Should().Be(true);
+
+            actual.ExpirationDate.Should().BeNull();
         }
 
         [Fact]
-        public async Task CheckTrialExpiration_ClientPassRegistration()
+        public async Task ContinueTrial()
         {
             // Arrange
+            var dateTime = new Fixture().Create<DateTime>();
             _settingsManager
-                .Setup(x => x.GetObjectSettingAsync(PlatformConstants.Settings.Setup.ClientPassRegistration.Name, null, null))
-                .ReturnsAsync(new ObjectSettingEntry
-                {
-                    Value = true // Client pass registration
-                });
+                .Setup(x => x.GetObjectSettingAsync(PlatformConstants.Settings.Setup.TrialExpirationDate.Name, null, null))
+                .ReturnsAsync(new ObjectSettingEntry());
 
             // Act
-            var result = await _controller.CheckTrialExpiration();
-            var actual = ((OkObjectResult)result.Result).Value;
+            await _controller.ContinueTrial(dateTime);
 
             // Assert
-            actual.Should().Be(false);
+            _settingsManager.Verify(x => x.GetObjectSettingAsync(It.Is<string>(x => x.Equals(PlatformConstants.Settings.Setup.TrialExpirationDate.Name)), null, null), Times.Once);
+            _settingsManager.Verify(x => x.SaveObjectSettingsAsync(It.Is<IEnumerable<ObjectSettingEntry>>(x => x.First().Value.Equals(dateTime))), Times.Once);
         }
 
         public enum ExpirationTime
         {
             Unset,
             Yesterday,
-            Tomorrow
+            Tomorrow,
+            AlreadyRegistered
         }
 
-        private object GetExpirationDateByExpirationTime(ExpirationTime expirationTime) => expirationTime switch
+        private DateTime? GetExpirationDateByExpirationTime(ExpirationTime expirationTime) => expirationTime switch
         {
             ExpirationTime.Unset => null,
             ExpirationTime.Yesterday => DateTime.UtcNow.AddDays(-1),
             ExpirationTime.Tomorrow => DateTime.UtcNow.AddDays(1),
+            ExpirationTime.AlreadyRegistered => DateTime.MaxValue,
             _ => throw new ArgumentException($"{expirationTime} not allowed for this test")
         };
     }

@@ -42,11 +42,5 @@ namespace VirtoCommerce.Platform.Core
         //server (ASOS) handles the incoming requests to arriving on non-HTTPS endpoints should be rejected or not. By default, this property is set to false to help
         //mitigate man-in-the-middle attacks.
         public bool AllowInsecureHttp { get; set; }
-
-        // Time before first registration required (one day default)
-        public TimeSpan RegistrationDelay { get; set; } = new TimeSpan(1, 0, 0, 0);
-
-        // Time before registration expire (30 days default)
-        public TimeSpan RegistrationExpiration { get; set; } = new TimeSpan(30, 0, 0, 0);
     }
 }

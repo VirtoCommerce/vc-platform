@@ -104,59 +104,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("checkTrialExpiration")]
-        public async Task<ActionResult<bool>> CheckTrialExpiration()
+        [Route("getTrialExpirationDate")]
+        public async Task<ActionResult<TrialState>> GetTrialExpirationDate()
         {
-            var clientPassRegistration = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.ClientPassRegistration.Name);
-            if (Convert.ToBoolean(clientPassRegistration.Value))
-            {
-                return Ok(false); // If registration ended we dont need to show it again
-            }
-
             var trialExpirationDate = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.TrialExpirationDate.Name);
-
-            // First login, check if delay setup
-            if (trialExpirationDate.Value is null)
+            return trialExpirationDate.Value switch
             {
-                var delay = _platformOptions.RegistrationDelay;
-                // If delay is zero or delay format is wrong we need show registration immediately.
-                if (delay <= TimeSpan.Zero)
-                {
-                    return Ok(true);
-                }
-
-                // If not we need to delay registration by this time
-                trialExpirationDate.Value = DateTime.UtcNow.Add(delay);
-                await _settingsManager.SaveObjectSettingsAsync(new[] { trialExpirationDate });
-
-                return Ok(false);
-            }
-
-            // Trial period is end, show registration
-            if ((DateTime)trialExpirationDate.Value < DateTime.UtcNow)
-            {
-                return Ok(true);
-            }
-
-            // Trial period is not expired
-            return Ok(false);
+                DateTime dateTime when dateTime == DateTime.MaxValue => Ok(TrialState.Registered),
+                DateTime dateTime => Ok(new TrialState(dateTime)),
+                _ => Ok(TrialState.Empty)
+            };
         }
 
         [HttpPost]
         [AllowAnonymous]
         [Route("continueTrial")]
-        public async Task<ActionResult> ContinueTrial()
+        public async Task<ActionResult> ContinueTrial(DateTime nextTime)
         {
             var trialExpirationDate = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.TrialExpirationDate.Name);
-
-            var expirationPeriod = _platformOptions.RegistrationExpiration;
-            if (expirationPeriod <= TimeSpan.Zero)
-            {
-                expirationPeriod = TimeSpan.FromDays(30);
-            }
-
-            trialExpirationDate.Value = DateTime.UtcNow.Add(expirationPeriod);
-
+            trialExpirationDate.Value = nextTime;
             await _settingsManager.SaveObjectSettingsAsync(new[] { trialExpirationDate });
 
             return Ok();
@@ -164,9 +130,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private async Task DisableTrial()
         {
-            var clientPassRegistration = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.ClientPassRegistration.Name);
-            clientPassRegistration.Value = true;
-            await _settingsManager.SaveObjectSettingsAsync(new[] { clientPassRegistration });
+            var trialExpirationDate = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.TrialExpirationDate.Name);
+            trialExpirationDate.Value = DateTime.MaxValue;
+            await _settingsManager.SaveObjectSettingsAsync(new[] { trialExpirationDate });
+        }
+
+        public class TrialState
+        {
+            public DateTime? ExpirationDate { get; protected set; }
+            public bool ClientPassRegistration { get; protected set; }
+
+            protected TrialState()
+            {
+            }
+
+            public TrialState(DateTime expirationDate)
+            {
+                ExpirationDate = expirationDate;
+            }
+
+            public static TrialState Registered => new TrialState { ClientPassRegistration = true };
+            public static TrialState Empty => new TrialState();
         }
     }
 }
