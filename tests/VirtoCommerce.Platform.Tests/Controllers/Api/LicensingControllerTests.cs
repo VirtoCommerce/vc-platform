@@ -87,11 +87,11 @@ namespace VirtoCommerce.Platform.Tests.Controllers.Api
                 .ReturnsAsync(new ObjectSettingEntry());
 
             // Act
-            await _controller.ContinueTrial(dateTime);
+            await _controller.ContinueTrial(new TrialProlongation { NextTime = dateTime.ToString() });
 
             // Assert
             _settingsManager.Verify(x => x.GetObjectSettingAsync(It.Is<string>(x => x.Equals(PlatformConstants.Settings.Setup.TrialExpirationDate.Name)), null, null), Times.Once);
-            _settingsManager.Verify(x => x.SaveObjectSettingsAsync(It.Is<IEnumerable<ObjectSettingEntry>>(x => x.First().Value.Equals(dateTime))), Times.Once);
+            _settingsManager.Verify(x => x.SaveObjectSettingsAsync(It.Is<IEnumerable<ObjectSettingEntry>>(x => x.First().Value.ToString().Equals(dateTime.ToString()))), Times.Once);
         }
 
         public enum ExpirationTime

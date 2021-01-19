@@ -119,10 +119,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [AllowAnonymous]
         [Route("continueTrial")]
-        public async Task<ActionResult> ContinueTrial(DateTime nextTime)
+        public async Task<ActionResult> ContinueTrial([FromBody] TrialProlongation request)
         {
+            if (!DateTime.TryParse(request.NextTime, out var result))
+            {
+                return BadRequest();
+            }
+
             var trialExpirationDate = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Setup.TrialExpirationDate.Name);
-            trialExpirationDate.Value = nextTime;
+            trialExpirationDate.Value = result;
             await _settingsManager.SaveObjectSettingsAsync(new[] { trialExpirationDate });
 
             return Ok();
@@ -151,6 +156,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             public static TrialState Registered => new TrialState { ClientPassRegistration = true };
             public static TrialState Empty => new TrialState();
+        }
+
+        public class TrialProlongation
+        {
+            public string NextTime { get; set; }
         }
     }
 }
