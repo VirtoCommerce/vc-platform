@@ -81,6 +81,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await DisableTrial();
             }
 
+            if (license != null)
+            {
+                await DisableTrial();
+            }
+
             return Ok(license);
         }
 
@@ -93,6 +98,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (license != null)
             {
                 _licenseProvider.SaveLicense(license);
+            }
+
+            if (license != null)
+            {
+                await DisableTrial();
             }
 
             if (license != null)
