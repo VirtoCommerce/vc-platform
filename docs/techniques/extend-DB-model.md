@@ -65,6 +65,17 @@ This article provides the steps to take to extend persistent model.
         ```csharp
         migrationBuilder.AddColumn<string>(name: "Discriminator", table: "CustomerOrder", nullable: false, maxLength: 128, defaultValue: "CustomerOrder2Entity");
         ```
+        >Note that need to add sql-script for adding the field to `20000000000000_Update<Module>V2.cs` for backward compatibility with v.2. like this:
+        ```sql
+        ALTER TABLE [CustomerOrder] ADD [Discriminator] nvarchar(128) NOT NULL DEFAULT('CustomerOrder2Entity')
+        ```
+    1. If the `Discriminator` already exists and want to migrate from v.2 then need to add sql-script for updating the field to `20000000000000_Update<Module>V2.cs` for backward compatibility with v.2. like this:
+        ```cs
+        migrationBuilder.Sql(
+                @"BEGIN                                   
+                      EXEC('UPDATE [CustomerOrder] SET [Discriminator] = ''CustomerOrder2Entity''')
+                  END");
+        ```
 
     1. any custom SQL scripts, if data update is needed.
 

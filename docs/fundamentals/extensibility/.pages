@@ -1,0 +1,7 @@
+arrange:
+  - style-guide.md
+  - extending-main-menu.md
+  - blades-and-navigation.md
+  - metaform.md
+  - widgets.md
+  - ...
