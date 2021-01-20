@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace VirtoCommerce.Platform.Core
@@ -18,7 +19,7 @@ namespace VirtoCommerce.Platform.Core
         //Local path for license file
         public string LicenseFilePath { get; set; } = "app_data/VirtoCommerce.lic";
 
-        //Local path to public key for license 
+        //Local path to public key for license
         public string LicensePublicKeyPath { get; set; } = "app_data/VirtoCommerce_rsa.pub";
 
         //Local path to private key for signing license
@@ -29,7 +30,7 @@ namespace VirtoCommerce.Platform.Core
         [Url]
         public string SampleDataUrl { get; set; }
 
-        //Default path to store export files 
+        //Default path to store export files
         public string DefaultExportFolder { get; set; } = "app_data/export/";
 
         public string DefaultExportFileName { get; set; } = "exported_{0:yyyyMMddHHmmss}.zip";
@@ -42,5 +43,4 @@ namespace VirtoCommerce.Platform.Core
         //mitigate man-in-the-middle attacks.
         public bool AllowInsecureHttp { get; set; }
     }
-
 }

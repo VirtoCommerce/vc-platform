@@ -64,7 +64,6 @@ namespace VirtoCommerce.Platform.Core
                                     PlatformImport = "platform:import",
                                     PlatformExport = "platform:export";
 
-
                 public static string[] AllPermissions { get; } = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
                                               SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
                                               SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport, SecurityLoginOnBehalf};
@@ -136,6 +135,17 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = true
                 };
 
+                /// <summary>
+                /// This setting controlled from LicenseController.
+                /// </summary>
+                public static SettingDescriptor TrialExpirationDate { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.TrialExpirationDate",
+                    GroupName = "Platform|Setup",
+                    ValueType = SettingValueType.DateTime,
+                    IsHidden = true,
+                };
+
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
@@ -145,6 +155,7 @@ namespace VirtoCommerce.Platform.Core
                         yield return ModulesAutoInstallState;
                         yield return ModulesAutoInstalled;
                         yield return SendDiagnosticData;
+                        yield return TrialExpirationDate;
                     }
                 }
             }
