@@ -98,8 +98,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddSecurityServices();
             services.AddSingleton<LicenseProvider>();
 
-            // The following line enables Application Insights telemetry collection.
-            services.AddAppInsightsTelemetry(Configuration);
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
             {
@@ -391,6 +389,14 @@ namespace VirtoCommerce.Platform.Web
 
             // Register the Swagger generator
             services.AddSwagger();
+
+
+            // The following line enables Application Insights telemetry collection.
+            // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple
+            // AI modules initialization https://virtocommerce.atlassian.net/browse/VP-6653 and  https://github.com/microsoft/ApplicationInsights-dotnet/issues/2114 until we don't
+            // get rid of calling IServiceCollection.BuildServiceProvider from the platform and modules code, each BuildServiceProvider call leads to the running the
+            // extra AI module and causes the hight CPU utilization and telemetry data flood on production env.
+            services.AddAppInsightsTelemetry(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -465,9 +471,6 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Use app insights telemetry 
-            app.UseAppInsightsTelemetry();
-
             //Force migrations
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
@@ -505,6 +508,10 @@ namespace VirtoCommerce.Platform.Web
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
+
+
+            // Use app insights telemetry 
+            app.UseAppInsightsTelemetry();
         }
     }
 }
