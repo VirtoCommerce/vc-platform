@@ -363,12 +363,14 @@
                     "login": "Login",
                     "account-state": "Account state",
                     "account-email": "Email",
-                    "locked-state": "Locked state"
+                    "locked-state": "Locked state",
+                    "status": "Status"
                 },
                 "placeholders": {
                     "account-type": "Select ...",
                     "email": "Enter email",
-                    "user-name": "Enter user name"
+                    "user-name": "Enter user name",
+                    "status": "Select ..."
                 }
             },
             "account-list": {

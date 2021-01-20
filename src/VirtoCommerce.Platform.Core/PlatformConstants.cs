@@ -274,10 +274,32 @@ namespace VirtoCommerce.Platform.Core
                 }
             }
 
+            public static class Other
+            {
+                public static SettingDescriptor AccountStatuses { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Other.AccountStatuses",
+                    GroupName = "Platform|Other",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = "New",
+                    IsDictionary = true,
+                    AllowedValues = new[] { "New", "Approved", "Rejected", "Deleted" }
+                };
+
+                public static IEnumerable<SettingDescriptor> AllSettings
+                {
+                    get
+                    {
+                        yield return AccountStatuses;
+                    }
+                }
+            }
+
             public static IEnumerable<SettingDescriptor> AllSettings => Security.AllSettings
                 .Concat(Setup.AllSettings)
                 .Concat(UserProfile.AllSettings)
-                .Concat(UserInterface.AllSettings);
+                .Concat(UserInterface.AllSettings)
+                .Concat(Other.AllSettings);
         }
     }
 }
