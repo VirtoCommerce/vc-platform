@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
@@ -28,7 +29,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var firstEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_firstEntity);
             var secondEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_secondEntity);
 
-            Thread.Sleep(10);
+            TrueSmallestDelay();
 
             // Next reads should return the same value
 
@@ -46,7 +47,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var firstEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_firstEntity);
             var secondEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_secondEntity);
 
-            Thread.Sleep(10);
+            TrueSmallestDelay();
             lastChangesService.Reset(_secondEntity);
 
             // Next read _firstEntity should have the same value.
@@ -68,7 +69,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             var initialDateForDerivedEntity = lastChangesService.GetLastModifiedDate(typeof(DerivedEntity).FullName);
 
             // Act
-            Thread.Sleep(10);
+            TrueSmallestDelay();
             lastChangesService.Reset(new DerivedEntity());
 
             var dateForBaseEntity = lastChangesService.GetLastModifiedDate(typeof(BaseEntity).FullName);
@@ -77,6 +78,15 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             // Assert
             Assert.NotEqual(dateForBaseEntity, initialDateForBaseEntity);
             Assert.NotEqual(dateForDerivedEntity, initialDateForDerivedEntity);
+        }
+
+        private void TrueSmallestDelay()
+        {
+            var startTime = DateTime.Now;
+            while (startTime.Equals(DateTime.Now))
+            {
+                Thread.Sleep(10);
+            }
         }
     }
 }
