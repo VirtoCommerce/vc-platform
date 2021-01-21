@@ -44,9 +44,9 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
             return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
         }
 
-        blade.openSettingDictionaryController = function (id, currentEntityId) {
+        blade.openSettingDictionaryController = function (currentEntityId) {
             var newBlade = {
-                id: id,
+                id: currentEntityId,
                 isApiSave: true,
                 currentEntityId: currentEntityId,
                 parentRefresh: function (data) { blade.accountTypes = data; },
