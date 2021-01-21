@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Security.Repositories;
 namespace VirtoCommerce.Platform.Security.Migrations
 {
     [DbContext(typeof(SecurityDbContext))]
-    [Migration("20210121083545_AccountStatuses")]
+    [Migration("20210121084540_AccountStatuses")]
     partial class AccountStatuses
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
