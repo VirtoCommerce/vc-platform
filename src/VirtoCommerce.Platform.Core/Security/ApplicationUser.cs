@@ -18,6 +18,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public virtual bool IsAdministrator { get; set; }
         public virtual string PhotoUrl { get; set; }
         public virtual string UserType { get; set; }
+        public virtual string Status { get; set; }
         public virtual string Password { get; set; }
         public virtual DateTime CreatedDate { get; set; }
         public virtual DateTime? ModifiedDate { get; set; }
@@ -83,6 +84,7 @@ namespace VirtoCommerce.Platform.Core.Security
             target.StoreId = StoreId;
             target.PhotoUrl = PhotoUrl;
             target.UserType = UserType;
+            target.Status = Status;
             target.Password = Password;
             target.PasswordExpired = PasswordExpired;
 

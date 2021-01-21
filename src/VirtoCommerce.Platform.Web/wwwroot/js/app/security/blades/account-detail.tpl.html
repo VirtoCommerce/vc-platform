@@ -10,10 +10,27 @@
     </div>
 </div>
 
+<script type="text/ng-template" id="statusSelector.html">
+    <div class="form-label">
+        {{ 'platform.blades.account-detail.labels.status' | translate }}
+        <a href="" ng-click="blade.openSettingDictionaryController('VirtoCommerce.Other.AccountStatuses')" class="form-edit">
+            <i class="form-ico fa fa-pencil"></i>
+        </a>
+    </div>
+    <div class="form-input">
+        <ui-select ng-model="blade.currentEntity.status">
+            <ui-select-match placeholder="{{ 'platform.blades.account-detail.placeholders.status' | translate }}">{{$select.selected}}</ui-select-match>
+            <ui-select-choices repeat="x as x in blade.statuses | filter: $select.search ">
+                <span ng-bind-html="x | highlight: $select.search"></span>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+</script>
+
 <script type="text/ng-template" id="accountTypeSelector.html">
     <div class="form-label">
         {{ 'platform.blades.account-detail.labels.account-type' | translate }}
-        <a href="" ng-click="blade.openAccountTypeSettingManagement()" class="form-edit">
+        <a href="" ng-click="blade.openSettingDictionaryController('VirtoCommerce.Platform.Security.AccountTypes')" class="form-edit">
             <i class="form-ico fa fa-pencil"></i>
         </a>
     </div>

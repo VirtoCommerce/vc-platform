@@ -7,7 +7,6 @@ namespace VirtoCommerce.Platform.Security.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-          
             migrationBuilder.CreateTable(
                 name: "UserApiKey",
                 columns: table => new
@@ -17,7 +16,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     ModifiedDate = table.Column<DateTime>(nullable: true),
                     CreatedBy = table.Column<string>(maxLength: 64, nullable: true),
                     ModifiedBy = table.Column<string>(maxLength: 64, nullable: true),
-                    ApiKey = table.Column<string>(nullable: true),
+                    ApiKey = table.Column<string>(maxLength: 128, nullable: true),
                     UserName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: true),
                     IsActive = table.Column<bool>(nullable: false)
@@ -39,8 +38,6 @@ namespace VirtoCommerce.Platform.Security.Migrations
         {
             migrationBuilder.DropTable(
                 name: "UserApiKey");
-
-         
         }
     }
 }

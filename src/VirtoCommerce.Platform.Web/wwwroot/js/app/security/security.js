@@ -193,14 +193,19 @@ angular.module('platformWebApp')
                         priority: 2
                     },
                     {
+                        name: "status",
+                        templateUrl: "statusSelector.html",
+                        priority: 3
+                    },
+                    {
                         name: "accountType",
                         templateUrl: "accountTypeSelector.html",
-                        priority: 3
+                        priority: 4
                     },
                     {
                         name: "accountInfo",
                         templateUrl: "accountInfo.html",
-                        priority: 4
+                        priority: 5
                     }
                 ]);
 
