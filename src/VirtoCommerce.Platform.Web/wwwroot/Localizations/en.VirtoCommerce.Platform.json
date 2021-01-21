@@ -940,6 +940,12 @@
                         "title": "The global lifetime of objects in the cache"
                     }
                 }
+            },
+            "Other": {
+                "AccountStatuses": {
+                    "title": "Account statuses",
+                    "description": "Change account statuses"
+                }
             }
         }
     }
