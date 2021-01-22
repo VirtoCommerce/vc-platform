@@ -63,7 +63,7 @@ partial class Build : NukeBuild
         return ExitCode ?? exitCode;
     }
 
-    private static int? ExitCode = null;
+    private new static int? ExitCode = null;
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly string Configuration = IsLocalBuild ? "Debug" : "Release";
@@ -117,6 +117,8 @@ partial class Build : NukeBuild
     [Parameter("Path to modules.json")] readonly string ModulesJsonName = "modules_v3.json";
     [Parameter("Full uri to module artifact")] readonly string CustomModulePackageUri;
 
+    [Parameter("Path to packageJson")] readonly string PackageJsonPath = "package.json";
+
     [Parameter("Path to Release Notes File")] readonly AbsolutePath ReleaseNotes;
 
     [Parameter("VersionTag for module.manifest and Directory.Build.props")] string CustomVersionPrefix;
@@ -145,9 +147,11 @@ partial class Build : NukeBuild
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
     Microsoft.Build.Evaluation.Project MSBuildProject => WebProject.GetMSBuildProject();
-    string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix")?.EvaluatedValue;
+    string VersionPrefix => IsTheme ? GetThemeVersion(PackageJsonPath) : MSBuildProject.GetProperty("VersionPrefix")?.EvaluatedValue;
     string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix")?.EvaluatedValue;
     string ReleaseVersion => MSBuildProject.GetProperty("PackageVersion")?.EvaluatedValue ?? WebProject.GetProperty("Version");
+
+    bool IsTheme => Solution == null;
 
     ModuleManifest ModuleManifest => ManifestReader.Read(ModuleManifestFile);
 
@@ -306,42 +310,54 @@ partial class Build : NukeBuild
 
     public void ChangeProjectVersion(string prefix = null, string suffix = null)
     {
-        //module.manifest
-        if (IsModule)
+        //theme
+        if(IsTheme)
         {
-            var manifest = ModuleManifest.Clone();
+            //var json = JsonDocument.Parse(File.ReadAllText(PackageJsonPath));
+            //json.RootElement.GetProperty("version")
+            var json = SerializationTasks.JsonDeserializeFromFile<JObject>(PackageJsonPath);
+            json["version"] = prefix;            
+            SerializationTasks.JsonSerializeToFile(json, Path.GetFullPath(PackageJsonPath));
+        }
+        else
+        {
+            //module.manifest
+            if (IsModule)
+            {
+                var manifest = ModuleManifest.Clone();
+                if (!String.IsNullOrEmpty(prefix))
+                    manifest.Version = prefix;
+                if (!String.IsNullOrEmpty(suffix))
+                    manifest.VersionTag = suffix;
+                using (var writer = new Utf8StringWriter())
+                {
+                    XmlSerializer xml = new XmlSerializer(typeof(ModuleManifest));
+                    xml.Serialize(writer, manifest);
+                    File.WriteAllText(ModuleManifestFile, writer.ToString(), Encoding.UTF8);
+                }
+            }
+
+            //Directory.Build.props
+            var xmlDoc = new XmlDocument()
+            {
+                PreserveWhitespace = true
+            };
+            xmlDoc.LoadXml(File.ReadAllText(DirectoryBuildPropsPath));
             if (!String.IsNullOrEmpty(prefix))
-                manifest.Version = prefix;
-            if (!String.IsNullOrEmpty(suffix))
-                manifest.VersionTag = suffix;
+            {
+                var prefixNodex = xmlDoc.GetElementsByTagName("VersionPrefix");
+                prefixNodex[0].InnerText = prefix;
+            }
+            if (String.IsNullOrEmpty(VersionSuffix) && !String.IsNullOrEmpty(suffix))
+            {
+                var suffixNodes = xmlDoc.GetElementsByTagName("VersionSuffix");
+                suffixNodes[0].InnerText = suffix;
+            }
             using (var writer = new Utf8StringWriter())
             {
-                XmlSerializer xml = new XmlSerializer(typeof(ModuleManifest));
-                xml.Serialize(writer, manifest);
-                File.WriteAllText(ModuleManifestFile, writer.ToString(), Encoding.UTF8);
+                xmlDoc.Save(writer);
+                File.WriteAllText(DirectoryBuildPropsPath, writer.ToString());
             }
-        }
-
-        //Directory.Build.props
-        var xmlDoc = new XmlDocument()
-        {
-            PreserveWhitespace = true
-        };
-        xmlDoc.LoadXml(File.ReadAllText(DirectoryBuildPropsPath));
-        if (!String.IsNullOrEmpty(prefix))
-        {
-            var prefixNodex = xmlDoc.GetElementsByTagName("VersionPrefix");
-            prefixNodex[0].InnerText = prefix;
-        }
-        if (String.IsNullOrEmpty(VersionSuffix) && !String.IsNullOrEmpty(suffix))
-        {
-            var suffixNodes = xmlDoc.GetElementsByTagName("VersionSuffix");
-            suffixNodes[0].InnerText = suffix;
-        }
-        using (var writer = new Utf8StringWriter())
-        {
-            xmlDoc.Save(writer);
-            File.WriteAllText(DirectoryBuildPropsPath, writer.ToString());
         }
     }
 
@@ -354,6 +370,18 @@ partial class Build : NukeBuild
                 ChangeProjectVersion(prefix: CustomVersionPrefix, suffix: CustomVersionSuffix);
             }
         });
+
+    string GetThemeVersion(string packageJsonPath)
+    {
+        var json = JsonDocument.Parse(File.ReadAllText(packageJsonPath));
+        JsonElement version;
+        if(json.RootElement.TryGetProperty("version", out version))
+        {
+            return version.GetString();
+        }
+        ControlFlow.Fail("No version found");
+        return "";
+    }
 
     Target StartRelease => _ => _
         .Executes(() =>
@@ -369,24 +397,27 @@ partial class Build : NukeBuild
                     ControlFlow.Fail("Aborted");
                 }
             }
-            var currentDir = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(Solution.Path.Parent);
             GitTasks.Git("checkout dev");
             GitTasks.Git("pull");
-            var releaseBranchName = $"release/{ReleaseVersion}";
+            string version;
+            if (IsTheme)
+            {
+                version = GetThemeVersion(PackageJsonPath);
+            }
+            else
+            {
+                version = ReleaseVersion;
+            }
+            var releaseBranchName = $"release/{version}";
             Logger.Info(Directory.GetCurrentDirectory());
             GitTasks.Git($"checkout -b {releaseBranchName}");
             GitTasks.Git($"push -u origin {releaseBranchName}");
-            Directory.SetCurrentDirectory(currentDir);
         });
 
     Target CompleteRelease => _ => _
         .After(StartRelease)
         .Executes(() =>
         {
-            //workaround for run from sources
-            var currentDir = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(Solution.Path.Parent);
             var currentBranch = GitTasks.GitCurrentBranch();
             //Master
             GitTasks.Git("checkout master");
@@ -398,14 +429,23 @@ partial class Build : NukeBuild
             GitTasks.Git($"merge {currentBranch}");
             IncrementVersionMinor();
             ChangeProjectVersion(prefix: CustomVersionPrefix);
-            var manifestArg = IsModule ? RootDirectory.GetRelativePathTo(ModuleManifestFile) : "";
-            GitTasks.Git($"add Directory.Build.props {manifestArg}");
+            var addFiles = "";
+            if(IsTheme)
+            {
+                addFiles = $"{PackageJsonPath}";
+            }
+            else
+            {
+                var manifestArg = IsModule ? RootDirectory.GetRelativePathTo(ModuleManifestFile) : "";
+                addFiles = $"Directory.Build.props {manifestArg}";
+            }
+            
+            GitTasks.Git($"add {addFiles}");
             GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
             GitTasks.Git($"push origin dev");
             //remove release branch
             GitTasks.Git($"branch -d {currentBranch}");
             GitTasks.Git($"push origin --delete {currentBranch}");
-            Directory.SetCurrentDirectory(currentDir);
         });
 
     Target QuickRelease => _ => _
@@ -414,8 +454,6 @@ partial class Build : NukeBuild
     Target StartHotfix => _ => _
         .Executes(() =>
         {
-            var currentDir = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(Solution.Path.Parent);
             GitTasks.Git("checkout master");
             GitTasks.Git("pull");
             IncrementVersionPatch();
@@ -427,7 +465,6 @@ partial class Build : NukeBuild
             GitTasks.Git($"add Directory.Build.props {manifestArg}");
             GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
             GitTasks.Git($"push -u origin {hotfixBranchName}");
-            Directory.SetCurrentDirectory(currentDir);
         });
 
     Target CompleteHotfix => _ => _
@@ -436,8 +473,6 @@ partial class Build : NukeBuild
         .Executes(() =>
         {
             //workaround for run from sources
-            var currentDir = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(Solution.Path.Parent);
             var currentBranch = GitTasks.GitCurrentBranch();
             //Master
             GitTasks.Git("checkout master");
@@ -447,7 +482,6 @@ partial class Build : NukeBuild
             //remove hotfix branch
             GitTasks.Git($"branch -d {currentBranch}");
             GitTasks.Git($"push origin --delete {currentBranch}");
-            Directory.SetCurrentDirectory(currentDir);
         });
 
     public void IncrementVersionMinor()
@@ -632,7 +666,6 @@ partial class Build : NukeBuild
         {
             GitTasks.GitLogger = GitLogger;
             GitTasks.Git($"commit -am \"{ModuleManifest.Id} {ReleaseVersion}\"", ModulesLocalDirectory);
-            GitTasks.Git($"pull --rebase");
             GitTasks.Git($"push origin HEAD:master -f", ModulesLocalDirectory);
         });
 
@@ -843,7 +876,7 @@ partial class Build : NukeBuild
              catch(AggregateException ex)
              {
                  var responseRaw = ((Octokit.ApiValidationException)ex.InnerException)?.HttpResponse?.Body.ToString() ?? "";
-                 var response = System.Text.Json.JsonDocument.Parse(responseRaw);
+                 var response = JsonDocument.Parse(responseRaw);
                  bool alreadyExistsError = false;
                  JsonElement errors;
                  if (response.RootElement.TryGetProperty("errors", out errors))
