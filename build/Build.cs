@@ -666,7 +666,6 @@ partial class Build : NukeBuild
         {
             GitTasks.GitLogger = GitLogger;
             GitTasks.Git($"commit -am \"{ModuleManifest.Id} {ReleaseVersion}\"", ModulesLocalDirectory);
-            GitTasks.Git($"pull --rebase");
             GitTasks.Git($"push origin HEAD:master -f", ModulesLocalDirectory);
         });
 
