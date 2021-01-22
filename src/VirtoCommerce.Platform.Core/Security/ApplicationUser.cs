@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -7,7 +8,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class ApplicationUser : IdentityUser, IEntity, IAuditable
+    public class ApplicationUser : IdentityUser, IEntity, IAuditable, ICloneable
     {
         /// <summary>
         /// Tenant id
@@ -17,6 +18,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public virtual bool IsAdministrator { get; set; }
         public virtual string PhotoUrl { get; set; }
         public virtual string UserType { get; set; }
+        public virtual string Status { get; set; }
         public virtual string Password { get; set; }
         public virtual DateTime CreatedDate { get; set; }
         public virtual DateTime? ModifiedDate { get; set; }
@@ -60,7 +62,6 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public virtual bool PasswordExpired { get; set; }
 
-
         public virtual void Patch(ApplicationUser target)
         {
             target.UserName = UserName;
@@ -83,18 +84,27 @@ namespace VirtoCommerce.Platform.Core.Security
             target.StoreId = StoreId;
             target.PhotoUrl = PhotoUrl;
             target.UserType = UserType;
+            target.Status = Status;
             target.Password = Password;
             target.PasswordExpired = PasswordExpired;
-
-            target.CreatedDate = CreatedDate;
-            target.ModifiedDate = ModifiedDate;
-            target.CreatedBy = CreatedBy;
-            target.ModifiedBy = ModifiedBy;
 
             if (!Roles.IsNullOrEmpty())
             {
                 Roles.Patch(target.Roles, (sourcePhone, targetPhone) => sourcePhone.Patch(targetPhone));
             }
         }
+
+        #region ICloneable members
+
+        public virtual object Clone()
+        {
+            var result = MemberwiseClone() as ApplicationUser;
+
+            result.Roles = Roles?.Select(x => x.Clone()).OfType<Role>().ToList();
+
+            return result;
+        }
+
+        #endregion
     }
 }

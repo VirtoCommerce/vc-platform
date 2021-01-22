@@ -363,12 +363,14 @@
                     "login": "Login",
                     "account-state": "Account state",
                     "account-email": "Email",
-                    "locked-state": "Locked state"
+                    "locked-state": "Locked state",
+                    "status": "Status"
                 },
                 "placeholders": {
                     "account-type": "Select ...",
                     "email": "Enter email",
-                    "user-name": "Enter user name"
+                    "user-name": "Enter user name",
+                    "status": "Select ..."
                 }
             },
             "account-list": {
@@ -937,6 +939,12 @@
                         "description": "Specifies the maximum time  that the cached data to be stored in the cache. Format: [-][d.]hh:mm:ss[.fffffff]",
                         "title": "The global lifetime of objects in the cache"
                     }
+                }
+            },
+            "Other": {
+                "AccountStatuses": {
+                    "title": "Account statuses",
+                    "description": "Change account statuses"
                 }
             }
         }
