@@ -505,7 +505,7 @@ partial class Build : NukeBuild
             IncrementVersionMinor();
         });
 
-    Target IncremenPatch => _ => _
+    Target IncrementPatch => _ => _
         .Triggers(ChangeVersion)
         .Executes(() =>
         {
