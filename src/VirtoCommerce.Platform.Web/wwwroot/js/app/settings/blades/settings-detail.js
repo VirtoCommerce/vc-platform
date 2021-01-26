@@ -89,7 +89,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingsDetailContro
     blade.headIcon = 'fa-wrench';
     blade.toolbarCommands = [
         {
-            name: "platform.commands.save", icon: 'fa fa-save',
+            name: "platform.commands.save", icon: 'fas fa-save',
             executeMethod: blade.saveChanges,
             canExecuteMethod: canSave
         },

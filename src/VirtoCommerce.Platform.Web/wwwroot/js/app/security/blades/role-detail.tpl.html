@@ -45,7 +45,7 @@
                                 <span class="table-descr alt-description" ng-if="data.availableScopes.length">{{ 'platform.blades.role-detail.labels.assigned-scopes' | translate }}: {{(data.assignedScopes.length ? data.assignedScopes.length : 0) | number:0 }}</span>
                                 <ul role="menu" class="menu __context" id="rd_menu_{{$index}}">
                                     <li class="menu-item" ng-click='delete($index)'>
-                                        <i class="menu-ico fa fa-trash-o"></i> {{ 'platform.commands.delete' | translate }}
+                                        <i class="menu-ico fas fa-trash-alt"></i> {{ 'platform.commands.delete' | translate }}
                                     </li>
                                 </ul>
                             </td>

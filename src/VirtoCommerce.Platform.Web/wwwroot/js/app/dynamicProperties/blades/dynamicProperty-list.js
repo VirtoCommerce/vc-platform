@@ -47,7 +47,7 @@
        //    }
        //},
        {
-           name: "platform.commands.add-new-property", icon: 'fa fa-plus',
+           name: "platform.commands.add-new-property", icon: 'fas fa-plus',
            executeMethod: function () {
                $scope.selectedNodeId = undefined;
                var newBlade = {

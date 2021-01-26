@@ -57,7 +57,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     blade.headIcon = 'fa-wrench';
     blade.subtitle = 'platform.blades.setting-dictionary.subtitle';
     blade.toolbarCommands = [{
-        name: "platform.commands.delete", icon: 'fa fa-trash-o',
+        name: "platform.commands.delete", icon: 'fas fa-trash-alt',
         executeMethod: function () {
             deleteChecked();
         },
@@ -88,7 +88,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
 
         blade.toolbarCommands.splice(0, 0, {
             name: "platform.commands.save",
-            icon: 'fa fa-save',
+            icon: 'fas fa-save',
             executeMethod: function () {
                 saveChanges();
             },
