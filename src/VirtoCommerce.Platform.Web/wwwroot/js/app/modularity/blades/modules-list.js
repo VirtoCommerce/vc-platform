@@ -44,7 +44,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                 break;
             case 'available':
                 blade.toolbarCommands = [{
-                    name: "platform.commands.install", icon: 'fa fa-plus',
+                    name: "platform.commands.install", icon: 'fas fa-plus',
                     executeMethod: function () { $scope.confirmActionInDialog('install', $scope.gridApi.selection.getSelectedRows()); },
                     canExecuteMethod: isItemsChecked,
                     permission: 'platform:module:manage'
@@ -52,7 +52,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                 break;
             case 'installed':
                 blade.toolbarCommands = [{
-                    name: "platform.commands.uninstall", icon: 'fa fa-trash-o',
+                    name: "platform.commands.uninstall", icon: 'fas fa-trash-alt',
                     executeMethod: function () { $scope.confirmActionInDialog('uninstall', $scope.gridApi.selection.getSelectedRows()); },
                     canExecuteMethod: isItemsChecked,
                     permission: 'platform:module:manage'

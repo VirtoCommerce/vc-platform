@@ -82,7 +82,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",
-                icon: 'fa fa-save',
+                icon: 'fas fa-save',
                 executeMethod: function () {
                     $scope.saveChanges();
                 },

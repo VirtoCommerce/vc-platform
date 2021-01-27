@@ -180,14 +180,14 @@ angular.module('platformWebApp')
                 //    permission: 'platform:asset:update'
                 //},
                 {
-                    name: "platform.commands.delete", icon: 'fa fa-trash-o',
+                    name: "platform.commands.delete", icon: 'fas fa-trash-alt',
                     executeMethod: function () { deleteList($scope.gridApi.selection.getSelectedRows()); },
                     canExecuteMethod: isItemsChecked,
                     permission: 'platform:asset:delete'
                 }
                 //{
                 //    name: "Cut",
-                //    icon: 'fa fa-cut',
+                //    icon: 'fas fa-cut',
                 //    executeMethod: function () {
                 //    },
                 //    canExecuteMethod: isItemsChecked,
@@ -195,7 +195,7 @@ angular.module('platformWebApp')
                 //},
                 //{
                 //    name: "Paste",
-                //    icon: 'fa fa-clipboard',
+                //    icon: 'fas fa-paste',
                 //    executeMethod: function () {
                 //        blade.isLoading = true;
                 //        assets.move({
