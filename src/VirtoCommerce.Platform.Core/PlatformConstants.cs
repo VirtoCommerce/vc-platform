@@ -84,11 +84,30 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = UserType.Manager
                 };
 
+                public static readonly SettingDescriptor EnablePruneExpiredTokensJob = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.EnablePruneExpiredTokensJob",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true
+                };
+
+                public static readonly SettingDescriptor CronPruneExpiredTokensJob = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.CronPruneExpiredTokensJob",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = "0 0 */1 * *"
+                };
+
+
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
                     {
                         yield return SecurityAccountTypes;
+                        yield return EnablePruneExpiredTokensJob;
+                        yield return CronPruneExpiredTokensJob;
                     }
                 }
             }
