@@ -41,7 +41,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public static IApplicationBuilder UsePruneExpiredTokensJob(this IApplicationBuilder appBuilder)
         {
-            //Schedule periodic subscription processing job
+            //Schedule periodic token prune job
             var jobsRunner = appBuilder.ApplicationServices.GetService<BackgroundJobsRunner>();
             jobsRunner.PruneExpiredTokensJob().GetAwaiter().GetResult();
             return appBuilder;
