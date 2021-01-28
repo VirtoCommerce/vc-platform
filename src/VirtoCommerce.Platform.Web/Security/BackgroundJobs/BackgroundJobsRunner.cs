@@ -14,7 +14,7 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
             _settingsManager = settingsManager;
         }
 
-        public async Task ConfigureProcessSubscriptionJob()
+        public async Task PruneExpiredTokensJob()
         {
             var processJobEnable = await _settingsManager.GetValueAsync(PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob.Name, true);
             if (processJobEnable)

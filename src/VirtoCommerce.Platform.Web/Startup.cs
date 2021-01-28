@@ -493,6 +493,7 @@ namespace VirtoCommerce.Platform.Web
             //Register platform permissions
             app.UsePlatformPermissions();
             app.UseSecurityHandlers();
+            app.UsePruneExpiredTokensJob();
 
             app.UseModules();
             

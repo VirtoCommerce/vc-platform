@@ -9,6 +9,7 @@ using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -44,6 +45,8 @@ namespace VirtoCommerce.Platform.Web.Security
 
             services.AddSingleton(provider => new LogChangesUserChangedEventHandler(provider.CreateScope().ServiceProvider.GetService<IChangeLogService>()));
             services.AddSingleton(provider => new UserApiKeyActualizeEventHandler(provider.CreateScope().ServiceProvider.GetService<IUserApiKeyService>()));
+
+            services.AddTransient<BackgroundJobsRunner>();
 
             return services;
         }

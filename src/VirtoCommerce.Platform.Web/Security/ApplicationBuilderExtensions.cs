@@ -9,6 +9,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security.Handlers;
+using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -35,6 +36,14 @@ namespace VirtoCommerce.Platform.Web.Security
             inProcessBus.RegisterHandler<UserLoginEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
             inProcessBus.RegisterHandler<UserLogoutEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
 
+            return appBuilder;
+        }
+
+        public static IApplicationBuilder UsePruneExpiredTokensJob(this IApplicationBuilder appBuilder)
+        {
+            //Schedule periodic subscription processing job
+            var jobsRunner = appBuilder.ApplicationServices.GetService<BackgroundJobsRunner>();
+            jobsRunner.PruneExpiredTokensJob().GetAwaiter().GetResult();
             return appBuilder;
         }
 
