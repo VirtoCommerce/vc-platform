@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +9,11 @@ using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
+using VirtoCommerce.Platform.Hangfire;
+using VirtoCommerce.Platform.Hangfire.Extensions;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -39,11 +43,24 @@ namespace VirtoCommerce.Platform.Web.Security
             return appBuilder;
         }
 
+        /// <summary>
+        /// Schedule a periodic job for prune expired/invalid authorization tokens
+        /// </summary>
+        /// <param name="appBuilder"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UsePruneExpiredTokensJob(this IApplicationBuilder appBuilder)
-        {
-            //Schedule periodic token prune job
-            var jobsRunner = appBuilder.ApplicationServices.GetService<BackgroundJobsRunner>();
-            jobsRunner.PruneExpiredTokensJob().GetAwaiter().GetResult();
+        {            
+            var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
+            var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
+
+            RecurringJobExtensions.WatchJobSetting(recurringJobManager,
+            settingsManager,
+            new SettingCronJobBuilder()
+                .SetEnablerSetting(PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob)
+                .SetCronSetting(PlatformConstants.Settings.Security.CronPruneExpiredTokensJob)
+                .ToJob<PruneExpiredTokensJob>(x => x.Process())
+                .Build());
+
             return appBuilder;
         }
 

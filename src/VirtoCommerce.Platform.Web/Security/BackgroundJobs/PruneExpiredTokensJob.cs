@@ -5,6 +5,9 @@ using OpenIddict.EntityFrameworkCore.Models;
 
 namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
 {
+    /// <summary>
+    /// Periodic job for prune expired/invalid authorization tokens
+    /// </summary>
     public class PruneExpiredTokensJob
     {
         private readonly OpenIddictTokenManager<OpenIddictToken> _openIddictTokenManager;
