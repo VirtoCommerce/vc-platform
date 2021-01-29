@@ -10,10 +10,10 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Security.Handlers;
-using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 using VirtoCommerce.Platform.Hangfire;
 using VirtoCommerce.Platform.Hangfire.Extensions;
+using VirtoCommerce.Platform.Security.Handlers;
+using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -49,17 +49,17 @@ namespace VirtoCommerce.Platform.Web.Security
         /// <param name="appBuilder"></param>
         /// <returns></returns>
         public static IApplicationBuilder UsePruneExpiredTokensJob(this IApplicationBuilder appBuilder)
-        {            
+        {
             var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
             var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
 
             recurringJobManager.WatchJobSetting(
-            settingsManager,
-            new SettingCronJobBuilder()
-                .SetEnablerSetting(PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob)
-                .SetCronSetting(PlatformConstants.Settings.Security.CronPruneExpiredTokensJob)
-                .ToJob<PruneExpiredTokensJob>(x => x.Process())
-                .Build());
+                settingsManager,
+                new SettingCronJobBuilder()
+                    .SetEnablerSetting(PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob)
+                    .SetCronSetting(PlatformConstants.Settings.Security.CronPruneExpiredTokensJob)
+                    .ToJob<PruneExpiredTokensJob>(x => x.Process())
+                    .Build());
 
             return appBuilder;
         }
