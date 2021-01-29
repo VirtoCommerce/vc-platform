@@ -175,6 +175,23 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = "_none", // fake default value to fix empty dictionary saving issue
                 };
 
+                public static readonly SettingDescriptor EnablePruneExpiredTokensJob = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.EnablePruneExpiredTokensJob",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true
+                };
+
+                public static readonly SettingDescriptor CronPruneExpiredTokensJob = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.CronPruneExpiredTokensJob",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = "0 0 */1 * *"
+                };
+
+
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get

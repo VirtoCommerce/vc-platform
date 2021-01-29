@@ -66,6 +66,27 @@ namespace VirtoCommerce.Platform.Web.Security
             return appBuilder;
         }
 
+        /// <summary>
+        /// Schedule a periodic job for prune expired/invalid authorization tokens
+        /// </summary>
+        /// <param name="appBuilder"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UsePruneExpiredTokensJob(this IApplicationBuilder appBuilder)
+        {
+            var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
+            var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
+
+            recurringJobManager.WatchJobSetting(
+                settingsManager,
+                new SettingCronJobBuilder()
+                    .SetEnablerSetting(PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob)
+                    .SetCronSetting(PlatformConstants.Settings.Security.CronPruneExpiredTokensJob)
+                    .ToJob<PruneExpiredTokensJob>(x => x.Process())
+                    .Build());
+
+            return appBuilder;
+        }
+
         public static async Task<IApplicationBuilder> UseDefaultUsersAsync(this IApplicationBuilder appBuilder)
         {
             using (var scope = appBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
