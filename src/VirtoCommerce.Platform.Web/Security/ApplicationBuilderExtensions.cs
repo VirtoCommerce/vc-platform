@@ -53,7 +53,7 @@ namespace VirtoCommerce.Platform.Web.Security
             var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
             var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
 
-            RecurringJobExtensions.WatchJobSetting(recurringJobManager,
+            recurringJobManager.WatchJobSetting(
             settingsManager,
             new SettingCronJobBuilder()
                 .SetEnablerSetting(PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob)
