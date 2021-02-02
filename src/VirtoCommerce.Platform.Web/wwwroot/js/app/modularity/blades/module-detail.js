@@ -21,7 +21,7 @@ angular.module('platformWebApp')
                         permission: 'platform:module:manage'
                     },
                     {
-                        name: "platform.commands.uninstall", icon: 'fa fa-trash-o',
+                        name: "platform.commands.uninstall", icon: 'fas fa-trash-alt',
                         executeMethod: function () {
                             $scope.confirmActionInDialog('uninstall');
                         },

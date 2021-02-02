@@ -15,7 +15,9 @@ using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.Events;
 
 namespace Mvc.Server
 {
@@ -27,6 +29,7 @@ namespace Mvc.Server
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
         private readonly AuthorizationOptions _authorizationOptions;
+        private readonly IEventPublisher _eventPublisher;
 
         public AuthorizationController(
             OpenIddictApplicationManager<OpenIddictApplication> applicationManager,
@@ -34,7 +37,8 @@ namespace Mvc.Server
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-            IOptions<AuthorizationOptions> authorizationOptions)
+            IOptions<AuthorizationOptions> authorizationOptions,
+            IEventPublisher eventPublisher)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions;
@@ -42,6 +46,7 @@ namespace Mvc.Server
             _userManager = userManager;
             _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
             _authorizationOptions = authorizationOptions.Value;
+            _eventPublisher = eventPublisher;
         }
 
         #region Password, authorization code and refresh token flows
@@ -107,6 +112,8 @@ namespace Mvc.Server
                     ((ClaimsIdentity)claimsPrincipal.Identity).AddClaim(new Claim(PlatformConstants.Security.Claims.LimitedPermissionsClaimType, string.Join(PlatformConstants.Security.Claims.PermissionClaimTypeDelimiter, limitedPermissions)));
                     await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, claimsPrincipal);
                 }
+
+                await _eventPublisher.Publish(new UserLoginEvent(user));
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }

@@ -293,9 +293,9 @@
             }
         },
         "@fortawesome/fontawesome-free": {
-            "version": "5.1.0-9",
-            "resolved": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-5.1.0-9.tgz",
-            "integrity": "sha512-F5Iz5k+Jj5+YDLcFb4pskOmKncsq3Y/ez6eCCCneLpcredQJd1uqTGC/WK5cYOS/h+c/6N4zj1YI5saDgOVaRg=="
+            "version": "5.15.2",
+            "resolved": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-5.15.2.tgz",
+            "integrity": "sha512-7l/AX41m609L/EXI9EKH3Vs3v0iA8tKlIOGtw+kgcoanI7p+e4I4GYLqW3UXWiTnjSFymKSmTTPKYrivzbxxqA=="
         },
         "@gulp-sourcemaps/identity-map": {
             "version": "1.0.1",

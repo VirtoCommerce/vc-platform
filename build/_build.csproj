@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <PackageId>VirtoCommerce.GlobalTool</PackageId>
         <OutputType>Exe</OutputType>
@@ -20,6 +20,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
         <PackageReference Include="Octokit" Version="0.48.0" />
         <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
         <PackageReference Include="Virtocommerce.Platform.Core" Version="3.21.0" />

@@ -40,6 +40,7 @@
     },
     "dependencies": {
         "@aspnet/signalr": "^1.1.4",
+        "@fortawesome/fontawesome-free": "^5.15.2",
         "@uirouter/angularjs": "^1.0.20",
         "angular": "^1.4.4",
         "angular-animate": "^1.4.4",
@@ -69,8 +70,8 @@
         "angularjs-scroll-glue": "^2.2.0",
         "codemirror": "^5.45.0",
         "font-awesome": "^4.7.0",
-        "@fortawesome/fontawesome-free": "5.1.0-9",
         "jquery": "^2.1.4",
+        "js-yaml": "3.13.1",
         "marked": "0.3.6",
         "moment": "^2.22.2",
         "moment-timezone": "0.5.13",
@@ -78,6 +79,7 @@
         "ng-tags-input": "^3.2.0",
         "ngstorage": "^0.3.11",
         "select2": "^3.4.5",
+        "swagger-cli": "2.3.1",
         "textangular": "^1.5.16",
         "ui-grid-draggable-rows": "^0.3.3",
         "ui-select": "^0.19.8",
@@ -85,8 +87,6 @@
         "underscore": "^1.9.1",
         "webpack-jquery-ui": "^2.0.1",
         "webpack-modernizr-loader": "^4.0.1",
-        "yamljs": "0.3.0",
-        "js-yaml": "3.13.1",
-        "swagger-cli": "2.3.1"
+        "yamljs": "0.3.0"
     }
 }

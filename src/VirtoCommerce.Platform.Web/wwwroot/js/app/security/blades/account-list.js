@@ -65,7 +65,7 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
             }
         },
         {
-            name: "platform.commands.add", icon: 'fa fa-plus',
+            name: "platform.commands.add", icon: 'fas fa-plus',
             executeMethod: function () {
                 bladeNavigationService.closeChildrenBlades(blade, function () {
                     var newBlade = {
@@ -85,7 +85,7 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
             permission: 'platform:security:create'
         },
         {
-            name: "platform.commands.delete", icon: 'fa fa-trash-o',
+            name: "platform.commands.delete", icon: 'fas fa-trash-alt',
             executeMethod: function () { $scope.deleteList($scope.gridApi.selection.getSelectedRows()); },
             canExecuteMethod: function () {
                 return $scope.gridApi && _.any($scope.gridApi.selection.getSelectedRows());

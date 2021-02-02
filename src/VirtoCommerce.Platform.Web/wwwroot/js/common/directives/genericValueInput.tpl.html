@@ -206,7 +206,7 @@
     <div class="form-input">
         <div class="image-preview-small" ng-class="{'image-preview-no-image': !context.currentPropValues[0].value}" style="cursor:pointer">
             <img ng-if="context.currentPropValues[0].value" ng-src="{{context.currentPropValues[0].value}}" ng-click="openUrl(context.currentPropValues[0].value)" />
-            <i ng-if="!context.currentPropValues[0].value" class="gallery-ico fa fa-image" ng-click="uploadImage()"></i>
+            <i ng-if="!context.currentPropValues[0].value" class="gallery-ico fas fa-image" ng-click="uploadImage()"></i>
         </div>
         <a href ng-click="uploadImage()">Upload</a>
         <a href ng-click="clearImage()">Delete</a>

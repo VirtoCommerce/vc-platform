@@ -54,7 +54,7 @@ angular.module('platformWebApp')
 
         blade.toolbarCommands = [
             {
-                name: "platform.commands.assign", icon: 'fa fa-plus',
+                name: "platform.commands.assign", icon: 'fas fa-plus',
                 executeMethod: function () {
                     var newBlade = {
                         id: "accountChildBladeChild",
@@ -72,7 +72,7 @@ angular.module('platformWebApp')
                 permission: blade.updatePermission
             },
             {
-                name: "platform.commands.remove", icon: 'fa fa-trash-o',
+                name: "platform.commands.remove", icon: 'fas fa-trash-alt',
                 executeMethod: function () {
                     deleteChecked();
                 },
