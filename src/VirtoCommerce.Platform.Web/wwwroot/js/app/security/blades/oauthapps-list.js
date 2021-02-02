@@ -61,7 +61,7 @@ angular.module('platformWebApp').controller('platformWebApp.oauthappsListControl
         dialogService.showConfirmationDialog(dialog);
     };
 
-    blade.headIcon = 'fa-key';
+    blade.headIcon = 'fas fa-key';
 
     blade.toolbarCommands = [
         {

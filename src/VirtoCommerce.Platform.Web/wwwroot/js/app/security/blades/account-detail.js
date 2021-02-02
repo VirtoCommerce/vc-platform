@@ -77,7 +77,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
             bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "platform.dialogs.account-save.title", "platform.dialogs.account-save.message");
         };
 
-        blade.headIcon = 'fa-key';
+        blade.headIcon = 'fas fa-key';
 
         blade.toolbarCommands = [
             {

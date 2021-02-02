@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.rolePermissionsController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.roles', function ($scope, dialogService, roles) {
         var blade = $scope.blade;
-        blade.headIcon = 'fa-key';
+        blade.headIcon = 'fas fa-key';
         var allPermissions;
 
         function initializeBlade(data) {

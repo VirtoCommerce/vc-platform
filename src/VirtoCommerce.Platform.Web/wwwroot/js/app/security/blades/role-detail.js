@@ -111,7 +111,7 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
         blade.currentEntity.permissions.splice(index, 1);
     };
 
-    blade.headIcon = 'fa-key';
+    blade.headIcon = 'fas fa-key';
 
     function initializeToolbar() {
         if (!blade.isNew) {

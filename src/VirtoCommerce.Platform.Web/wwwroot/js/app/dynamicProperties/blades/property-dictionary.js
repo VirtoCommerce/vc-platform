@@ -1,7 +1,7 @@
 angular.module('platformWebApp').controller('platformWebApp.propertyDictionaryController', ['$scope', 'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', function ($scope, dialogService, bladeNavigationService, settings, dictionaryItemsApi) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
-    blade.headIcon = 'fa-plus-square-o';
+    blade.headIcon = 'fa fa-plus-square-o';
     blade.title = 'platform.blades.property-dictionary.title';
     blade.subtitle = 'platform.blades.property-dictionary.subtitle';
 
