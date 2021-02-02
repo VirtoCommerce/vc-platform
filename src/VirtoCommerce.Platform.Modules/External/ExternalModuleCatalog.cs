@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Modules
                 if (_options.ModulesManifestUrl != null)
                 {
                     var externalModuleInfos = LoadModulesManifests(_options.ModulesManifestUrl);
-                    if(!_options.ExtraModulesManifestUrls.IsNullOrEmpty())
+                    if (!_options.ExtraModulesManifestUrls.IsNullOrEmpty())
                     {
                         foreach (var extraUrl in _options.ExtraModulesManifestUrls)
                         {
@@ -48,14 +48,25 @@ namespace VirtoCommerce.Platform.Modules
                     {
                         if (!Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
                         {
-                            var alreadyInstalledModule = _installedModules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Equals(externalModuleInfo));
+                            var doAddModule = true;
+                            var alreadyInstalledModule = _installedModules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Id == externalModuleInfo.Id);
                             if (alreadyInstalledModule != null)
                             {
-                                externalModuleInfo.IsInstalled = alreadyInstalledModule.IsInstalled;
-                                externalModuleInfo.Errors.AddRange(alreadyInstalledModule.Errors);
+                                if (externalModuleInfo.Equals(alreadyInstalledModule)){
+                                    externalModuleInfo.IsInstalled = alreadyInstalledModule.IsInstalled;
+                                    externalModuleInfo.Errors.AddRange(alreadyInstalledModule.Errors);
+                                }
+                                else if (alreadyInstalledModule.Version > externalModuleInfo.Version)
+                                {
+                                    doAddModule = false;
+                                }
                             }
-                            externalModuleInfo.InitializationMode = InitializationMode.OnDemand;
-                            AddModule(externalModuleInfo);
+
+                            if (doAddModule)
+                            {
+                                externalModuleInfo.InitializationMode = InitializationMode.OnDemand;
+                                AddModule(externalModuleInfo);
+                            }
                         }
                     }
                 }
@@ -126,9 +137,9 @@ namespace VirtoCommerce.Platform.Modules
             {
                 throw new ArgumentNullException(nameof(manifestUrl));
             }
-            
+
             var result = new List<ManifestModuleInfo>();
-            
+
             _logger.LogDebug("Download module manifests from " + manifestUrl);
 
             using (var stream = _externalClient.OpenRead(manifestUrl))
@@ -156,7 +167,7 @@ namespace VirtoCommerce.Platform.Modules
                                 //Select from all versions of module the latest compatible by semVer with the current platform version.
                                 var latestPrereleasePlatformCompatibleVersion = manifest.Versions.OrderByDescending(x => x.SemanticVersion)
                                                                                .FirstOrDefault(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion)
-                                                                                                    && (!string.IsNullOrEmpty(x.VersionTag) && _options.IncludePrerelease));
+                                                                                                    && !string.IsNullOrEmpty(x.VersionTag));
                                 if (latestPrereleasePlatformCompatibleVersion != null)
                                 {
                                     var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
