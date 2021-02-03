@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             // This removes all OpenIDDict tokens and authorizations
-            // Truncate used to avoid timeouts.
+            // Truncate to avoid timeouts in the first run of "PruneExpiredTokensJob".
             migrationBuilder.Sql(@"
                 ALTER TABLE [OpenIddictTokens] DROP CONSTRAINT [FK_OpenIddictTokens_OpenIddictAuthorizations_AuthorizationId]
 
