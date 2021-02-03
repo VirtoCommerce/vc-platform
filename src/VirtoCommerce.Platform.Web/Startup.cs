@@ -235,15 +235,19 @@ namespace VirtoCommerce.Platform.Web
                 if (options.Enabled)
                 {
                     //TODO: Need to check how this influence to OpennIddict Reference tokens activated by this line below  AddValidation(options => options.UseReferenceTokens());
+                    //TechDept: Need to upgrade to Microsoft.Identity.Web
+                    //https://docs.microsoft.com/en-us/azure/active-directory/develop/microsoft-identity-web
                     authBuilder.AddOpenIdConnect(options.AuthenticationType, options.AuthenticationCaption,
                         openIdConnectOptions =>
                         {
                             openIdConnectOptions.ClientId = options.ApplicationId;
+
                             openIdConnectOptions.Authority = $"{options.AzureAdInstance}{options.TenantId}";
                             openIdConnectOptions.UseTokenLifetime = true;
                             openIdConnectOptions.RequireHttpsMetadata = false;
                             openIdConnectOptions.SignInScheme = IdentityConstants.ExternalScheme;
                             openIdConnectOptions.SecurityTokenValidator = defaultTokenHandler;
+                            openIdConnectOptions.MetadataAddress = options.MetadataAddress;
                         });
                 }
             }
