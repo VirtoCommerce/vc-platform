@@ -4,7 +4,7 @@ angular.module('platformWebApp')
             var blade = $scope.blade;
             blade.template = '$(Platform)/Scripts/app/assets/blades/asset-select.tpl.html';
 
-            blade.headIcon = 'fa-folder-o';
+            blade.headIcon = 'fa fa-folder-o';
 
             if (!blade.currentEntity) {
                 blade.currentEntity = {};

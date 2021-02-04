@@ -141,7 +141,7 @@ angular.module('platformWebApp')
         });
     };
 
-    blade.headIcon = 'fa-cubes';
+    blade.headIcon = 'fa fa-cubes';
 
     if (blade.mode === 'advanced') {
         // the uploader
