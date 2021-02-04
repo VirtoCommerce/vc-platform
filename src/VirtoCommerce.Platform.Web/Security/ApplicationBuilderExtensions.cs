@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,11 @@ using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Hangfire;
+using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Security.Handlers;
+using VirtoCommerce.Platform.Web.Security.BackgroundJobs;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -34,6 +39,27 @@ namespace VirtoCommerce.Platform.Web.Security
             inProcessBus.RegisterHandler<UserResetPasswordEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
             inProcessBus.RegisterHandler<UserLoginEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
             inProcessBus.RegisterHandler<UserLogoutEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
+
+            return appBuilder;
+        }
+
+        /// <summary>
+        /// Schedule a periodic job for prune expired/invalid authorization tokens
+        /// </summary>
+        /// <param name="appBuilder"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UsePruneExpiredTokensJob(this IApplicationBuilder appBuilder)
+        {
+            var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
+            var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
+
+            recurringJobManager.WatchJobSetting(
+                settingsManager,
+                new SettingCronJobBuilder()
+                    .SetEnablerSetting(PlatformConstants.Settings.Security.EnablePruneExpiredTokensJob)
+                    .SetCronSetting(PlatformConstants.Settings.Security.CronPruneExpiredTokensJob)
+                    .ToJob<PruneExpiredTokensJob>(x => x.Process())
+                    .Build());
 
             return appBuilder;
         }

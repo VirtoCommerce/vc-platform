@@ -121,7 +121,7 @@ angular.module('platformWebApp')
             }
         };
 
-        blade.headIcon = 'fa-file-o';
+        blade.headIcon = 'fa fa-file-o';
 
         initialize();
         blade.isLoading = false;

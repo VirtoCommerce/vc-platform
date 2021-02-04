@@ -888,6 +888,14 @@
                     "AccountTypes": {
                         "description": "Dictionary for possible user types",
                         "title": "User types"
+                    },
+                    "EnablePruneExpiredTokensJob": {
+                        "description": "Enables prune expired and invalid tokens/authorizations",
+                        "title": "Prune expired tokens"
+                    },
+                    "CronPruneExpiredTokensJob": {
+                        "description": "Cron expression for prune expired and invalid tokens/authorizations job",
+                        "title": "Cron for the tokens prune job"
                     }
                 },
                 "UI": {
