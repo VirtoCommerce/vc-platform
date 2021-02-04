@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.exportImport.mainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.authService', function ($scope, bladeNavigationService, authService) {
 
     $scope.export = function () {
@@ -23,6 +23,6 @@
         }
     };
 
-    $scope.blade.headIcon = 'fa-database';
+    $scope.blade.headIcon = 'fa fa-database';
     $scope.blade.isLoading = false;
 }]);

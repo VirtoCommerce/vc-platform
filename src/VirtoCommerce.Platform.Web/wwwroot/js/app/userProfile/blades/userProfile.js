@@ -3,7 +3,7 @@ angular.module('platformWebApp')
         'platformWebApp.i18n', 'platformWebApp.userProfile', 'platformWebApp.common.languages', 'platformWebApp.common.locales', 'platformWebApp.common.timeZones', 'platformWebApp.userProfileApi',
         function ($rootScope, $scope, bladeNavigationService, settings, settingsHelper, i18n, userProfile, languages, locales, timeZones, userProfileApi) {
             var blade = $scope.blade;
-            blade.headIcon = 'fa-user';
+            blade.headIcon = 'fa fa-user';
             blade.title = 'platform.blades.user-profile.title';
 
             blade.currentLanguage = i18n.getLanguage();

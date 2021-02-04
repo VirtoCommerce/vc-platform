@@ -2,7 +2,7 @@ angular.module('platformWebApp').controller('platformWebApp.newAccountWizardCont
     ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.passwordValidationService', 'platformWebApp.settings',
         function ($scope, bladeNavigationService, accounts, roles, passwordValidationService, settings) {
             var blade = $scope.blade;
-            blade.headIcon = 'fa-key';
+            blade.headIcon = 'fas fa-key';
 
             blade.statuses = [];
 

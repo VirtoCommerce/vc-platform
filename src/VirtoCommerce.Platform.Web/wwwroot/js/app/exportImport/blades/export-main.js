@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.exportImport.exportMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'platformWebApp.authService', 'platformWebApp.toolbarService', function ($scope, bladeNavigationService, exportImportResourse, authService, toolbarService) {
         var blade = $scope.blade;
-        blade.headIcon = 'fa-upload';
+        blade.headIcon = 'fa fa-upload';
         blade.title = 'platform.blades.export-main.title';
 
         $scope.exportRequest = {};
