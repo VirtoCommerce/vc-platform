@@ -276,6 +276,13 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha002", PlatformVersion = "3.0.0-alpha001" } }, //installed
                     false
                 };
+                yield return new object[]
+                {
+                    "3.0.0-alpha001",
+                    new[] {new ModuleManifest {Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0-alpha001" } },
+                    new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0-alpha001" } }, //installed
+                    false
+                };
             }
 
             IEnumerator IEnumerable.GetEnumerator()
