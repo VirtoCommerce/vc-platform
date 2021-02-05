@@ -68,7 +68,7 @@ function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGr
         });
     }
 
-    blade.headIcon = 'fa-key';
+    blade.headIcon = 'fas fa-key';
 
     blade.toolbarCommands = [
         {

@@ -2,7 +2,7 @@ angular.module('platformWebApp')
 .controller('platformWebApp.exportImport.importMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'FileUploader', function ($scope, bladeNavigationService, exportImportResourse, FileUploader) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:exportImport:import';
-    blade.headIcon = 'fa-download';
+    blade.headIcon = 'fa fa-download';
     blade.title = 'platform.blades.import-main.title';
     blade.isLoading = false;
     $scope.importRequest = {};

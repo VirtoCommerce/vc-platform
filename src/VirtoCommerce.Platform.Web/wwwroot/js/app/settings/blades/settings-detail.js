@@ -86,7 +86,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingsDetailContro
         return deferred.promise;
     };
 
-    blade.headIcon = 'fa-wrench';
+    blade.headIcon = 'fa fa-wrench';
     blade.toolbarCommands = [
         {
             name: "platform.commands.save", icon: 'fas fa-save',

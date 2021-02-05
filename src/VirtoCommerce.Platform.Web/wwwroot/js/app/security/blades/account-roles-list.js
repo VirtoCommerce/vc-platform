@@ -50,7 +50,7 @@ angular.module('platformWebApp')
             blade.currentEntities.splice(index, 1);
         };
 
-        blade.headIcon = 'fa-key';
+        blade.headIcon = 'fas fa-key';
 
         blade.toolbarCommands = [
             {

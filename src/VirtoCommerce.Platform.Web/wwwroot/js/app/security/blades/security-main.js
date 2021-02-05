@@ -26,7 +26,7 @@ angular.module('platformWebApp').controller('platformWebApp.securityMainControll
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
-    $scope.blade.headIcon = 'fa-key';
+    $scope.blade.headIcon = 'fas fa-key';
 
     initializeBlade();
 }]);
