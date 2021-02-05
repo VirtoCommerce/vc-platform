@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .config(['$stateProvider', function ($stateProvider) {
     $stateProvider
         .state('workspace.userProfile', {
@@ -79,7 +79,7 @@
 .run(['platformWebApp.mainMenuService', '$state', function (mainMenuService, $state) {
     var menuItem = {
         path: 'configuration/userProfile',
-        icon: 'fa  fa-user',
+        icon: 'fa fa-user',
         title: 'platform.menu.user-profile',
         priority: 99,
         action: function () { $state.go('workspace.userProfile'); }

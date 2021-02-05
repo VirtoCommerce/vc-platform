@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
     .config(['$provide', 'uiGridConstants', function ($provide, uiGridConstants) {
         $provide.decorator('GridOptions', ['$delegate', '$localStorage', '$translate', 'platformWebApp.bladeNavigationService', function ($delegate, $localStorage, $translate, bladeNavigationService) {
             var gridOptions = angular.copy($delegate);
@@ -175,6 +175,8 @@
         retVal.uiGridConstants = uiGridConstants;
         retVal.initialize = function ($scope, gridOptions, externalRegisterApiCallback) {
             $scope.gridOptions = angular.extend({
+                enableVerticalScrollbar: uiGridConstants.scrollbars.WHEN_NEEDED,
+                enableHorizontalScrollbar: uiGridConstants.scrollbars.WHEN_NEEDED,
                 data: _.any(gridOptions.data) ? gridOptions.data : 'blade.currentEntities',
                 onRegisterApi: function (gridApi) {
                     if (externalRegisterApiCallback) {

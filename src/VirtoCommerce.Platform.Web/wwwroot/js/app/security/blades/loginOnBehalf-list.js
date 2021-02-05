@@ -45,7 +45,7 @@ function ($scope, $window, $modal, bladeNavigationService, $localStorage, valida
         bladeNavigationService.showBlade(newBlade, blade);
     }
 
-    blade.headIcon = 'fa-key';
+    blade.headIcon = 'fas fa-key';
 
     blade.toolbarCommands = [
         {
