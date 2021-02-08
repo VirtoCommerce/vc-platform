@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Events;
 
 namespace VirtoCommerce.Platform.Core.Security.Events
@@ -14,14 +13,7 @@ namespace VirtoCommerce.Platform.Core.Security.Events
             { PlatformConstants.Security.Changes.UserPasswordChanged, f => new UserPasswordChangedEvent(f.FirstOrDefault()?.NewEntry) }
         };
 
-        public static Task PublishSecurityEventsAsync(this IEventPublisher eventPublisher, List<GenericChangedEntry<ApplicationUser>> changedEntries)
-        {
-            var events = MakeEvents(changedEntries);
-            var tasks = events.Select(x => eventPublisher.Publish(x)); 
-            return Task.WhenAll(tasks);
-        }
-
-        private static IEnumerable<IEvent> MakeEvents(List<GenericChangedEntry<ApplicationUser>> changedEntries)
+        public static IEnumerable<IEvent> GenerateSecurityEventsByChanges(this List<GenericChangedEntry<ApplicationUser>> changedEntries)
         {
             var changes = changedEntries.SelectMany(e => e.NewEntry.DetectUserChanges(e.OldEntry));
             foreach (var change in changes)

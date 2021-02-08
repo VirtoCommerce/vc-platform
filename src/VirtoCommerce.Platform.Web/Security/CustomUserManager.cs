@@ -20,9 +20,9 @@ namespace VirtoCommerce.Platform.Web.Security
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly RoleManager<Role> _roleManager;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
+        private readonly IUserPasswordHasher _passwordHasher;
 
-        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher,
+        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IUserPasswordHasher passwordHasher,
                                  IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
                                  ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
                                  ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher)
@@ -172,7 +172,9 @@ namespace VirtoCommerce.Platform.Web.Security
             if (result.Succeeded)
             {
                 SecurityCacheRegion.ExpireUser(existentUser);
-                await _eventPublisher.PublishSecurityEventsAsync(changedEntries);
+                var events = changedEntries.GenerateSecurityEventsByChanges();
+                var tasks = events.Select(x => _eventPublisher.Publish(x));
+                await Task.WhenAll(tasks);
             }
 
             return result;
