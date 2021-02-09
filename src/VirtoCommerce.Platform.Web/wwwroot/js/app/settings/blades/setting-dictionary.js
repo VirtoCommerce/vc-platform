@@ -20,7 +20,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             data.allowedValues = [];
         }
 
-        blade.title = data.title;
+        blade.title = data.name;
         blade.currentEntity = data;
         currentEntities = blade.currentEntity.allowedValues;
         blade.isLoading = false;
