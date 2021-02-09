@@ -371,14 +371,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var result = await _signInManager.UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
-            if (result.Succeeded)
+            if (result.Succeeded && user.PasswordExpired)
             {
-                // If the password change was required for the user, now it is not needed anymore - the password is changed.
-                if (user.PasswordExpired)
-                {
-                    user.PasswordExpired = false;
-                    await _userManager.UpdateAsync(user);
-                }
+                user.PasswordExpired = false;
+                await _userManager.UpdateAsync(user);
             }
 
             return Ok(result.ToSecurityResult());
@@ -456,15 +452,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var result = await _signInManager.UserManager.ResetPasswordAsync(user, resetPasswordConfirm.Token, resetPasswordConfirm.NewPassword);
-            if (result.Succeeded)
+            if (result.Succeeded && user.PasswordExpired)
             {
-                // If the password reset was required for the user, now it is not needed anymore - the password is changed now.
-                if (user.PasswordExpired)
-                {
-                    user.PasswordExpired = false;
+                user.PasswordExpired = false;
 
-                    await _userManager.UpdateAsync(user);
-                }
+                await _userManager.UpdateAsync(user);
             }
 
             return Ok(result.ToSecurityResult());
