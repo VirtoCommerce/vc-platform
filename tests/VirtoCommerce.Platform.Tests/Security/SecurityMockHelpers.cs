@@ -25,6 +25,7 @@ namespace VirtoCommerce.Platform.Tests.Security
                 .ReturnsAsync(Array.Empty<UserLoginInfo>());
             storeMock.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>(), CancellationToken.None))
                 .ReturnsAsync(IdentityResult.Success);
+
             var options = new Mock<IOptions<IdentityOptions>>();
             var idOptions = new IdentityOptions();
             idOptions.Lockout.AllowedForNewUsers = false;
@@ -39,10 +40,13 @@ namespace VirtoCommerce.Platform.Tests.Security
                 Mock.Of<ILookupNormalizer>(),
                 Mock.Of<IdentityErrorDescriber>(),
                 Mock.Of<ILogger<RoleManager<Role>>>());
+            var passwordHasher = new Mock<IUserPasswordHasher>();
+            passwordHasher.Setup(x => x.VerifyHashedPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(PasswordVerificationResult.Success);
 
             var userManager = new CustomUserManager(storeMock.Object,
                 Mock.Of<IOptions<IdentityOptions>>(),
-                Mock.Of<IUserPasswordHasher>(),
+                passwordHasher.Object,
                 userValidators,
                 pwdValidators,
                 Mock.Of<ILookupNormalizer>(),
@@ -53,7 +57,7 @@ namespace VirtoCommerce.Platform.Tests.Security
                 Mock.Of<IPlatformMemoryCache>(),
                 eventPublisher);
 
-            validator.Setup(x => x.ValidateAsync(It.IsAny<UserManager<ApplicationUser>>(), It.IsAny<ApplicationUser>()))
+            validator.Setup(x => x.ValidateAsync(userManager, It.IsAny<ApplicationUser>()))
                 .ReturnsAsync(IdentityResult.Success).Verifiable();
             return userManager;
         }
