@@ -38,12 +38,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEmailSender _emailSender;
         private readonly IEventPublisher _eventPublisher;
         private readonly IUserApiKeyService _userApiKeyService;
-        private readonly IUserPasswordHasher _userPasswordHasher;
 
         public SecurityController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager,
                 IPermissionsRegistrar permissionsProvider, IUserSearchService userSearchService, IRoleSearchService roleSearchService,
                 IOptions<Core.Security.AuthorizationOptions> securityOptions, IPasswordCheckService passwordCheckService, IEmailSender emailSender,
-                IEventPublisher eventPublisher, IUserApiKeyService userApiKeyService, IUserPasswordHasher userPasswordHasher)
+                IEventPublisher eventPublisher, IUserApiKeyService userApiKeyService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -56,7 +55,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _emailSender = emailSender;
             _eventPublisher = eventPublisher;
             _userApiKeyService = userApiKeyService;
-            _userPasswordHasher = userPasswordHasher;
         }
 
         /// <summary>
@@ -373,18 +371,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var result = await _signInManager.UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
-            if (result.Succeeded)
+            if (result.Succeeded && user.PasswordExpired)
             {
-                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _userPasswordHasher.HashPassword(user, changePassword.NewPassword);
-                await _eventPublisher.Publish(new UserPasswordChangedEvent(user.Id, customPasswordHash));
-
-                // If the password change was required for the user, now it is not needed anymore - the password is changed.
-                if (user.PasswordExpired)
-                {
-                    user.PasswordExpired = false;
-                    await _userManager.UpdateAsync(user);
-                }
+                user.PasswordExpired = false;
+                await _userManager.UpdateAsync(user);
             }
 
             return Ok(result.ToSecurityResult());
@@ -429,10 +419,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 user = await _userManager.FindByNameAsync(userName);
 
-                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _userPasswordHasher.HashPassword(user, resetPasswordConfirm.NewPassword);
-                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
-
                 if (user.PasswordExpired != resetPasswordConfirm.ForcePasswordChangeOnNextSignIn)
                 {
                     user.PasswordExpired = resetPasswordConfirm.ForcePasswordChangeOnNextSignIn;
@@ -466,19 +452,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var result = await _signInManager.UserManager.ResetPasswordAsync(user, resetPasswordConfirm.Token, resetPasswordConfirm.NewPassword);
-            if (result.Succeeded)
+            if (result.Succeeded && user.PasswordExpired)
             {
-                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _userPasswordHasher.HashPassword(user, resetPasswordConfirm.NewPassword);
-                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
+                user.PasswordExpired = false;
 
-                // If the password reset was required for the user, now it is not needed anymore - the password is changed now.
-                if (user.PasswordExpired)
-                {
-                    user.PasswordExpired = false;
-
-                    await _userManager.UpdateAsync(user);
-                }
+                await _userManager.UpdateAsync(user);
             }
 
             return Ok(result.ToSecurityResult());
