@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.accountRolesController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.roles', function ($scope, bladeNavigationService, dialogService, roles) {
         var blade = $scope.blade;
-        blade.headIcon = 'fa-key';
+        blade.headIcon = 'fas fa-key';
 
         function initializeBlade(data) {
             blade.data = data;

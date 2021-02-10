@@ -35,7 +35,7 @@ angular.module('platformWebApp')
             });
         };
 
-        blade.headIcon = 'fa-key';
+        blade.headIcon = 'fas fa-key';
 
         // actions on load
         initializeBlade();

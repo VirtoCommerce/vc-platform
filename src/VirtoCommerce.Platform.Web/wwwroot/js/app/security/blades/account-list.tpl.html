@@ -1,4 +1,4 @@
-﻿<div class="blade-static">
+<div class="blade-static">
     <div class="form-group">
         <div class="form-input __search">
             <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="filter.keyword" ng-keyup="$event.which === 13 && filter.criteriaChanged()">
@@ -18,10 +18,7 @@
                     rowTemplate: 'account-list.row.html',
                     columnDefs: [
                         { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
-                        {
-                            displayName: 'platform.blades.account-list.labels.name', name: 'userName',
-                            sort: { direction: uiGridConstants.ASC }
-                        },
+                        { displayName: 'platform.blades.account-list.labels.name', name: 'userName', width: 295,  sort: { direction: uiGridConstants.ASC } },
                         { displayName: 'platform.blades.account-list.labels.account-type', name: 'userType' }
                     ]})">
                 <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>

@@ -17,7 +17,7 @@ using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
-    //the Order need for saparate runing UnitTests where use static Platform.CurrentVersion
+    //the Order is needed for running separate UnitTests where static Platform.CurrentVersion is used
     [Collection("Modularity"), Order(3)]
     public class ModuleInstallerUnitTests
     {
@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
         public ModuleInstallerUnitTests()
         {
-            _options = new LocalStorageModuleCatalogOptions { DiscoveryPath = "modules"};
+            _options = new LocalStorageModuleCatalogOptions { DiscoveryPath = "modules" };
             _externalClientMock = new Mock<IExternalModulesClient>();
             _fileManagerMock = new Mock<ITransactionFileManager>();
             _extModuleCatalogMock = new Mock<IExternalModuleCatalog>();
@@ -46,14 +46,14 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
             var modules = GetManifestModuleInfos(moduleManifests);
             var installedModules = GetManifestModuleInfos(installedModuleManifests);
-            
+
             _extModuleCatalogMock.Setup(x => x.Modules)
                 .Returns(installedModules.Select(x => { x.IsInstalled = true; return x; }));
 
             var service = GetModuleInstaller();
 
             //Act
-            service.Install(modules, progress);            
+            service.Install(modules, progress);
 
             //Assert
             modules.All(x => x.IsInstalled).Should().Be(isInstalled);
@@ -104,7 +104,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     new[] { new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }} },
                     new[]
                     {
-                        //installed
+                        //installed. Don't check dependency version
                         new ModuleManifest { Id = "B", Version = "3.2.0", PlatformVersion = "3.0.0" },
                         new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } } }
                     },
@@ -141,7 +141,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     new[] { new ModuleManifest { Id = "A", Version = "4.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "4.0.0" } }} },
                     new[]
                     {
-                        //installed
+                        //installed. Don't check dependency version
                         new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0" },
                         new ModuleManifest { Id = "C", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } },
                         new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } }
@@ -237,7 +237,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     "3.0.0",
                     new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, //installed
-                    true
+                    false
                 };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
@@ -274,7 +274,14 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     "3.0.0-alpha001",
                     new[] {new ModuleManifest {Id = "A", Version = "3.0.0-alpha001", PlatformVersion = "3.0.0-alpha001" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha002", PlatformVersion = "3.0.0-alpha001" } }, //installed
-                    true
+                    false
+                };
+                yield return new object[]
+                {
+                    "3.0.0-alpha001",
+                    new[] {new ModuleManifest {Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0-alpha001" } },
+                    new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0-alpha001" } }, //installed
+                    false
                 };
             }
 

@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Modules
                     Report(progress, ProgressMessageLevel.Error, string.Format("Target Platform version {0} is incompatible with current {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
                     isValid = false;
                 }
-           
+
                 var allInstalledModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).ToArray();
                 //Check that incompatible modules does not installed
                 if (!module.Incompatibilities.IsNullOrEmpty())
@@ -66,17 +66,11 @@ namespace VirtoCommerce.Platform.Modules
                 var alreadyInstalledModule = allInstalledModules.FirstOrDefault(x => x.Id.EqualsInvariant(module.Id));
                 if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(module.Version))
                 {
-                    //Allow downgrade or install not compatible version only if all dependencies will be compatible with installed version
-                    var modulesHasIncompatibleDependecies = allInstalledModules.Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase))
-                                                          .Where(x => x.Dependencies.Any(d => !module.Version.IsCompatibleWithBySemVer(d.Version)));
-
-                    if (modulesHasIncompatibleDependecies.Any())
-                    {
-                        Report(progress, ProgressMessageLevel.Error, string.Format("{0} is incompatible with installed {1} is required  by {2} ", module, alreadyInstalledModule, string.Join(", ", modulesHasIncompatibleDependecies.Select(x => x.ToString()))));
-                        isValid = false;
-                    }
+                    // module downgrade NOT supported
+                    Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}: module downgrading NOT SUPPORTED", module));
+                    isValid = false;
                 }
-                //Check that dependencies for installable modules 
+                //Check the dependencies for installable modules 
                 var missedDependencies = _extModuleCatalog.CompleteListWithDependencies(new[] { module }).OfType<ManifestModuleInfo>()
                                                        .Where(x => !x.IsInstalled).Except(modules);
                 if (missedDependencies.Any())
@@ -217,10 +211,10 @@ namespace VirtoCommerce.Platform.Modules
             }
 
             _zipFileWrapper.Extract(moduleZipPath, dstModuleDir);
-            
+
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
         }
-        
+
         private static void Report(IProgress<ProgressMessage> progress, ProgressMessageLevel level, string format, params object[] args)
         {
             if (progress != null)

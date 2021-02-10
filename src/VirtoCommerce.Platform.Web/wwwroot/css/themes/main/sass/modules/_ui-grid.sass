@@ -67,6 +67,8 @@
   > :first-child
     height: 100%
 .ui-grid-header-cell
+  padding-top: 6px
+  font-weight: bold
   .ui-grid-selection-row-header-buttons
     // quick bug fix, because other selection divs contain &nbsp by default
     margin-right: 2px
@@ -87,7 +89,7 @@
   display: inline-block
   font-size: 14px
   height: 100%
-  padding: 0 0 0 5px
+  padding: 5px 0 0 5px
   text-shadow: 1px 1px #fff
   vertical-align: middle
   width: 100%
@@ -223,7 +225,7 @@ input.ui-grid-filter-input[type="text"]
 .ui-grid-render-container-body .ui-grid-header-cell
   height: 40px
 .ui-grid-menu-button
-  right: 4px
+  right: 15px
   top: 4px
 .blade-inner:hover .ui-grid.__scrolled .ui-grid-menu-button
   right: 20px
@@ -234,6 +236,9 @@ input.ui-grid-filter-input[type="text"]
   padding: 1px 0 0
   text-align: center
   width: 32px
+  border-bottom: 1px solid #d4d4d4
+  border-top: 1px solid #d4d4d4
+  border-right: 1px solid #d4d4d4
 .ui-grid-sort-priority-number
   color: $baseColor
 .ui-grid-menu-button .ui-grid-icon-menu
@@ -252,6 +257,8 @@ input.ui-grid-filter-input[type="text"]
   position: relative
   text-align: center
   z-index: 50
+  padding-top: 2px
+  padding-left: 3px
   &::after
     content: ' '
     display: inline-block
