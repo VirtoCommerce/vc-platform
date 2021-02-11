@@ -1,7 +1,12 @@
 using System;
+using System.IO;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using StackExchange.Redis;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -9,6 +14,7 @@ using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Platform.Web.Extensions;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -46,6 +52,24 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton(provider => new UserApiKeyActualizeEventHandler(provider.CreateScope().ServiceProvider.GetService<IUserApiKeyService>()));
 
             return services;
+        }
+
+        public static void AddPlatformDataProtection(this IServiceCollection services, IConfiguration config, IWebHostEnvironment webHostEnvironment)
+        {
+            var redisConnectionString = config.GetConnectionString("RedisConnectionString");
+            if (!string.IsNullOrEmpty(redisConnectionString))
+            {
+                var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+                services.AddDataProtection()
+                    .SetApplicationName("VirtoCommerce.Platform")
+                    .PersistKeysToStackExchangeRedis(redis, "VirtoCommerce-Keys");
+            }
+            else
+            {
+                var dataProtectionKeysFolder = new DirectoryInfo(webHostEnvironment.MapPath("~/app_data/dataprotectionkeys"));
+                //configure the data protection system to persist keys to the specified directory
+                services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
+            }
         }
     }
 }

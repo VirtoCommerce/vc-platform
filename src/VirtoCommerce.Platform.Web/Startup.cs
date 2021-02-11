@@ -96,6 +96,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
+            services.AddPlatformDataProtection(Configuration, WebHostEnvironment);
             services.AddSingleton<LicenseProvider>();
 
 
@@ -340,6 +341,7 @@ namespace VirtoCommerce.Platform.Web
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     return Task.CompletedTask;
                 };
+                options.Cookie.Name = ".AspNet.SharedCookie";
             });
 
             services.AddAuthorization(options =>
