@@ -14,7 +14,6 @@ using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
-using VirtoCommerce.Platform.Web.Extensions;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -67,7 +66,6 @@ namespace VirtoCommerce.Platform.Web.Security
             else
             {
                 var dataProtectionKeysFolder = new DirectoryInfo(Path.GetFullPath("app_data/dataprotectionkeys"));
-                //configure the data protection system to persist keys to the specified directory
                 services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
             }
         }
