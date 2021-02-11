@@ -68,6 +68,14 @@ namespace VirtoCommerce.Platform.Core
                                               SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
                                               SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport, SecurityLoginOnBehalf};
             }
+
+            public static class Changes
+            {
+                public const string UserUpdated = "UserUpdated";
+                public const string UserPasswordChanged = "UserPasswordChanged";
+                public const string RoleAdded = "RoleAdded";
+                public const string RoleRemoved = "RoleRemoved";
+            }
         }
 
         public static class Settings

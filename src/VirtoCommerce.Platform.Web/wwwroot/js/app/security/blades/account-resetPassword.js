@@ -28,7 +28,8 @@ angular.module('platformWebApp')
             };
 
             accounts.resetPassword({ id: blade.currentEntityId }, postData, function (data) {
-                $scope.bladeClose();
+                blade.parentBlade.refresh();
+                $scope.bladeClose();                
             }, function (error) {
                 bladeNavigationService.setError(error, $scope.blade);
             });
