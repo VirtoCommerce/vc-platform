@@ -89,6 +89,7 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
     };
 
     $scope.toggleAll = function () {
+        blade.selectedAll = !blade.selectedAll;
         angular.forEach(blade.currentEntity.permissions, function (item) {
             item.$selected = blade.selectedAll;
         });
@@ -106,6 +107,7 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
         });
         blade.selectedAll = false;
     }
+    $scope.selectButtonClick = (row) => row.$selected = !row.$selected ;
 
     $scope.delete = function (index) {
         blade.currentEntity.permissions.splice(index, 1);
