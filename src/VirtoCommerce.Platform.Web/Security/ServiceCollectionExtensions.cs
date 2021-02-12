@@ -65,7 +65,7 @@ namespace VirtoCommerce.Platform.Web.Security
             }
             else
             {
-                var dataProtectionKeysFolder = new DirectoryInfo(Path.GetFullPath("app_data/dataprotectionkeys"));
+                var dataProtectionKeysFolder = new DirectoryInfo(Path.GetFullPath(Path.Combine("app_data","dataprotectionkeys")));
                 services.AddDataProtection().PersistKeysToFileSystem(dataProtectionKeysFolder);
             }
         }
