@@ -96,7 +96,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
-            services.AddPlatformDataProtection(Configuration, WebHostEnvironment);
+            services.AddPlatformDataProtection(Configuration);
             services.AddSingleton<LicenseProvider>();
 
 

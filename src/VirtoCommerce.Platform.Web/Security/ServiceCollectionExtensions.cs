@@ -53,7 +53,7 @@ namespace VirtoCommerce.Platform.Web.Security
             return services;
         }
 
-        public static void AddPlatformDataProtection(this IServiceCollection services, IConfiguration config, IWebHostEnvironment webHostEnvironment)
+        public static void AddPlatformDataProtection(this IServiceCollection services, IConfiguration config)
         {
             var redisConnectionString = config.GetConnectionString("RedisConnectionString");
             if (!string.IsNullOrEmpty(redisConnectionString))
