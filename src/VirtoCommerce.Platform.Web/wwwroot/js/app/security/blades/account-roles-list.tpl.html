@@ -9,7 +9,7 @@
 
                             <td class="table-col">
 
-                            <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.$selected}" ng-click="selectButtonClick(data)">&nbsp;</div>
+                            <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.$selected}" ng-click="data.$selected = !data.$selected">&nbsp;</div>
                             </td>
                             <td class="table-col" ng-click='blade.selectNode(data)'>
                                 <span class="table-t">{{data.name}}</span>

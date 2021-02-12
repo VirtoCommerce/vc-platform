@@ -28,10 +28,6 @@ angular.module('platformWebApp')
             return _.any(blade.currentEntities, function (x) { return x.$selected; });
         }
 
-        $scope.selectButtonClick = (row) => {
-            row.$selected = !row.$selected
-        };
-
         function deleteChecked() {
             _.each(blade.currentEntities.slice(), function (x) {
                 if (x.$selected) {

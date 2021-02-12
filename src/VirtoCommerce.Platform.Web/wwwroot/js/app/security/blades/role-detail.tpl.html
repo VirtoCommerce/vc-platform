@@ -30,13 +30,9 @@
                             <th class="table-col">{{ 'platform.blades.role-detail.labels.permission-name' | translate }}</th>
                         </tr>
                         <tr class="table-item" ng-repeat="data in blade.currentEntity.permissions | orderBy:'name' track by data.name " ng-class="{'__selected': data.name === selectedNodeId}" context-menu data-target="rd_menu_{{$index}}">
-
                             <td class="table-col">
-
-                                <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.$selected}" ng-click="selectButtonClick(data)">&nbsp;</div>
+                                <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.$selected}" ng-click="data.$selected = !data.$selected">&nbsp;</div>
                                 </td>
-  
-
                             <td class="table-col" ng-click='selectNode(data)'>
                                 <span class="table-t">{{data.name}}</span>
                                 <span class="table-descr">{{'permissions.' + data.name | translate }}</span>
