@@ -260,12 +260,13 @@ angular.module('platformWebApp')
                         var idx = service.stateBlades().indexOf(blade);
                         if (idx >= 0) service.stateBlades().splice(idx, 1);
 
-                        //remove blade from children collection
+                        //remove blade from children collection and set current blade
                         if (angular.isDefined(blade.parentBlade)) {
                             var childIdx = blade.parentBlade.childrenBlades.indexOf(blade);
                             if (childIdx >= 0) {
                                 blade.parentBlade.childrenBlades.splice(childIdx, 1);
                             }
+                            service.currentBlade = blade.parentBlade;
                         }
                         if (angular.isFunction(callback)) {
                             callback();
