@@ -29,21 +29,11 @@ angular.module('platformWebApp')
         }
 
         function deleteChecked() {
-            //var dialog = {
-            //    id: "confirmDeleteItem",
-            //    title: "Delete confirmation",
-            //    message: "Are you sure you want to delete selected Quote Requests?",
-            //    callback: function (remove) {
-            //        if (remove) {
             _.each(blade.currentEntities.slice(), function (x) {
                 if (x.$selected) {
                     blade.currentEntities.splice(blade.currentEntities.indexOf(x), 1);
                 }
             });
-            //        }
-            //    }
-            //}
-            //dialogService.showConfirmationDialog(dialog);
         }
 
         $scope.delete = function (index) {
