@@ -89,6 +89,7 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
     };
 
     $scope.toggleAll = function () {
+        blade.selectedAll = !blade.selectedAll;
         angular.forEach(blade.currentEntity.permissions, function (item) {
             item.$selected = blade.selectedAll;
         });

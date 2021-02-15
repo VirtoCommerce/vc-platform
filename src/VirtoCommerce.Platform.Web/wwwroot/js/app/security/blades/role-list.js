@@ -17,8 +17,6 @@ function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGr
 
             $scope.pageSettings.totalItems = data.totalCount;
             blade.currentEntities = data.results;
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
 
