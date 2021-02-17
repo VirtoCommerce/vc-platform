@@ -45,13 +45,13 @@ angular.module('platformWebApp')
 
         blade.toolbarCommands = [
             {
-                name: "platform.commands.save",
+                name: "platform.commands.confirm",
                 icon: 'fas fa-check',
                 executeMethod: $scope.saveChanges,
                 canExecuteMethod: () => $scope.isValid(),
             },
             {
-                name: "platform.commands.reset",
+                name: "platform.commands.cancel",
                 icon: 'fas fa-times',
                 executeMethod: $scope.cancelChanges,
                 canExecuteMethod: () => true,
