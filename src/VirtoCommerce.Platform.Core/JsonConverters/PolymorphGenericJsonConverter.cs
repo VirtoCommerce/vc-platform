@@ -20,13 +20,13 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
             _knownTypes = new HashSet<Type>(types);
         }
 
+        public override bool CanWrite => false;
+        public override bool CanRead => true;
+
         protected virtual T Create(Type objectType, JObject jObject)
         {
             return AbstractTypeFactory<T>.TryCreateInstance();
         }
-
-        public override bool CanWrite => false;
-        public override bool CanRead => true;
 
         public override bool CanConvert(Type objectType)
         {
