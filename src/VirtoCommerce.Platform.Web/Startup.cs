@@ -40,6 +40,7 @@ using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Hangfire.Extensions;
@@ -116,6 +117,7 @@ namespace VirtoCommerce.Platform.Web
                     //Next line allow to use polymorph types as parameters in API controller methods
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
+                    options.SerializerSettings.Converters.Add(new PolymorphGenericJsonConverter<ObjectSettingEntry>());
                     options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
                     options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
