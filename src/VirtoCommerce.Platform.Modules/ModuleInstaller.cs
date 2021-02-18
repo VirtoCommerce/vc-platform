@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Modules
                 }
 
                 //Check the dependencies for installable modules
-                isValid = !HasMissedDependencies(module, modules, progress) && isValid;
+                isValid &= !HasMissedDependencies(module, modules, progress);
             }
 
             if (isValid)
