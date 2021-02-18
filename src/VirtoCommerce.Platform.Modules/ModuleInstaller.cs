@@ -197,10 +197,6 @@ namespace VirtoCommerce.Platform.Modules
             {
                 Report(progress, ProgressMessageLevel.Error, ex.Message);
             }
-            catch (Exception)
-            {
-                throw;
-            }
 
             return result;
         }
