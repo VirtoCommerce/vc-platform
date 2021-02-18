@@ -12,12 +12,17 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         [Fact]
         public void DeserializeObject_DeserializeExtendedSetting()
         {
+            //Arrange
             AbstractTypeFactory<ObjectSettingEntry>.OverrideType<ObjectSettingEntry, ExtendedObjectSettingEntry>();
 
             var json = "{'extField':'HasExtField','itHasValues':false,'restartRequired':false,'moduleId':'Platform','groupName':'Platform|Security','name':'VirtoCommerce.Platform.Security.CronPruneExpiredTokensJob','isHidden':false,'valueType':'ShortText','defaultValue':'0 0 */1 * *','isDictionary':false}"
                         .Replace("'", "\"");
+
+            //Act
             var extendedObjectSetting = JsonConvert.DeserializeObject<ExtendedObjectSettingEntry>(json, new PolymorphGenericJsonConverter<ObjectSettingEntry>());
             var objectSetting = JsonConvert.DeserializeObject<ObjectSettingEntry>(json, new PolymorphGenericJsonConverter<ObjectSettingEntry>());
+
+            //Assert
             extendedObjectSetting.Should().NotBeNull();
             extendedObjectSetting.ExtField.Should().Equals("HasExtField");
             objectSetting.Should().NotBeNull();
