@@ -11,11 +11,11 @@
                 <div class="list __sub" ng-repeat-end>
                     <div class="list-item" ng-repeat="data in values | orderBy:'name'">
                         <div class="cover">
-                        <div class="first ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.$selected}" ng-click="data.$selected = !data.$selected">&nbsp;</div>
-                        <div class="next">
-                           <span class="list-name">{{ data.name }}</span>
-                           <span class="list-descr">{{ 'permissions.' + data.name | translate}}</span>
-                        </div>
+                            <div class="first ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.$selected}" ng-click="data.$selected = !data.$selected">&nbsp;</div>
+                            <div class="next">
+                                <span class="list-name">{{ data.name }}</span>
+                                <span class="list-descr">{{ 'permissions.' + data.name | translate}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
