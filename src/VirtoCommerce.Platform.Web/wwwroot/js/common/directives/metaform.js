@@ -36,7 +36,7 @@ angular.module('platformWebApp')
                 _.each(filteredInputs, function (x) {
                     x = angular.copy(x);
                     x.ngBindingModel = x.name;
-                    x.colSpan = x.spanAllColumns ? columnCount : x.colSpan || 1;
+                    x.colSpan = x.colSpan || (x.spanAllColumns ? columnCount : 1);
                     columnCountInRow += x.colSpan;
                     let isNewRow = columnCountInRow > columnCount;
 
