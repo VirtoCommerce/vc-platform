@@ -13,9 +13,10 @@ angular.module('platformWebApp')
         dynamicPropertiesApi.search({objectType: blade.currentEntity.objectType, take: blade.dynamicPropertyCount},
             function (response) {
                 var rawProperties = response.results;
+                var dynamicProperties = angular.copy(blade.currentEntity.dynamicProperties);
                 _.each(response.results, function(prop) {
                     prop.values = [];
-                    var filteredProperty = _.find(blade.currentEntity.dynamicProperties, function (o) { return o.name === prop.name; });
+                    var filteredProperty = _.find(dynamicProperties, function (o) { return o.name === prop.name; });
                     if (filteredProperty) {
                         prop.values = filteredProperty.values;
                     }
