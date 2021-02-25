@@ -4,6 +4,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
         blade.updatePermission = 'platform:security:update';
         blade.accountTypes = [];
         blade.statuses = [];
+        blade.isLinkSent = false;
 
         blade.refresh = function (parentRefresh) {
             var entity = parentRefresh ? blade.currentEntity : blade.data;
@@ -42,6 +43,16 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
 
         function isDirty() {
             return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+        }
+
+        blade.sendLink = function () {
+            if (!blade.isLinkSent && !blade.isLoading) {
+                blade.isLoading = true;
+                accounts.verifyEmail({ userId: blade.currentEntity.id }, null , () => {
+                    blade.isLinkSent = true;
+                    blade.isLoading = false;
+                });
+            }
         }
 
         blade.openSettingDictionaryController = function (currentEntityId) {

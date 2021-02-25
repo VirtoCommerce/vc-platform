@@ -56,14 +56,30 @@
 </script>
 
 <script type="text/ng-template" id="accountEmail.html">
-    <div class="form-label">
-        {{ 'platform.blades.account-detail.labels.account-email' | translate }}
-    </div>
-    <div class="form-input">
-        <input type="email" ng-model="blade.currentEntity.email" placeholder="{{'platform.blades.account-detail.placeholders.email' | translate}}" />
+    <div class="form-line">
+        <div class="form-line-item-250">
+            <div class="form-label"> {{ 'platform.blades.account-detail.labels.account-email' | translate }}
+            </div>
+            <div class="form-input">
+                <input type="email" ng-model="blade.currentEntity.email" placeholder="{{'platform.blades.account-detail.placeholders.email' | translate}}"/>
+            </div>
+        </div>
+        <div class="form-label" va-permission="platform:security:verifyEmail">
+            <div class="form-label"> {{ 'platform.blades.account-detail.labels.verified' | translate }}
+            </div>
+            <div>
+                <label class="form-label __switch" >
+                    <input type="checkbox" ng-model="blade.currentEntity.emailConfirmed">
+                    <span class="switch" ng-class="{disabled: currentEntity.isReadOnly}"></span>
+                </label>
+            </div>
+            <div>
+                <a href="" ng-style="blade.isLinkSent && {'color':'green'} || {'color': ''}" ng-click="blade.sendLink()">
+                    {{blade.isLinkSent ? 'platform.blades.account-detail.labels.link-sent' : 'platform.blades.account-detail.labels.resend-link' | translate }}</a>
+            </div>
+        </div>
     </div>
 </script>
-
 
 <script type="text/ng-template" id="accountUserName.html">
     <div class="form-label">
