@@ -46,9 +46,9 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
         }
 
         blade.sendLink = function () {
-            if (!blade.isLinkSent || !blade.isLoading) {
+            if (!blade.isLinkSent && !blade.isLoading) {
                 blade.isLoading = true;
-                accounts.verifyEmail({ id: blade.currentEntity.userName }, null , () => {
+                accounts.verifyEmail({ userId: blade.currentEntity.id }, null , () => {
                     blade.isLinkSent = true;
                     blade.isLoading = false;
                 });

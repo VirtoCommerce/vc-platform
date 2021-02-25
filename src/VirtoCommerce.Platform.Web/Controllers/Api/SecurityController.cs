@@ -665,13 +665,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <summary>
         /// Verify user email
         /// </summary>
-        /// <param name="userName"></param>
+        /// <param name="userId"></param>
         [HttpPost]
-        [Route("users/{userName}/verifyEmail")]
+        [Route("users/{userId}/verifyEmail")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityVerifyEmail)]
-        public async Task<ActionResult> VerifyEmail([FromRoute] string userName)
+        public async Task<ActionResult> VerifyEmail([FromRoute] string userId)
         {
-            var user = await _userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
