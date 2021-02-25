@@ -686,7 +686,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok();
         }
 
-
         //TODO: Remove later
 
         #region Obsolete methods
