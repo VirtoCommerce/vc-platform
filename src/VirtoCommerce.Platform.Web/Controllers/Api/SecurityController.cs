@@ -669,7 +669,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("users/{userId}/verifyEmail")]
         [Authorize(PlatformConstants.Security.Permissions.SecurityVerifyEmail)]
-        public async Task<ActionResult> VerifyEmail([FromRoute] string userId)
+        public async Task<ActionResult> SendVerificationEmail([FromRoute] string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
