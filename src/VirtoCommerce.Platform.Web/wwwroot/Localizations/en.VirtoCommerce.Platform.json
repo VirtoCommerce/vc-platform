@@ -364,7 +364,10 @@
                     "account-state": "Account state",
                     "account-email": "Email",
                     "locked-state": "Locked state",
-                    "status": "Status"
+                    "status": "Status",
+                    "verified": "Verified",
+                    "resend-link": "Resend link",
+                    "link-sent": "The link was sent"
                 },
                 "placeholders": {
                     "account-type": "Select ...",

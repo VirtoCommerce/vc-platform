@@ -662,6 +662,31 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok();
         }
 
+        /// <summary>
+        /// Verify user email
+        /// </summary>
+        /// <param name="userName"></param>
+        [HttpPost]
+        [Route("users/{userName}/verifyEmail")]
+        [Authorize(PlatformConstants.Security.Permissions.SecurityVerifyEmail)]
+        public async Task<ActionResult> VerifyEmail([FromRoute] string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+            }
+            if (!IsUserEditable(user.UserName))
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
+            }
+
+            await _eventPublisher.Publish(new UserVerificationEmailEvent(user));
+
+            return Ok();
+        }
+
+
         //TODO: Remove later
 
         #region Obsolete methods
