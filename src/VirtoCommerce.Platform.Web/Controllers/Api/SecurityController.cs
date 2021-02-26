@@ -532,6 +532,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return Ok(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
+
+            var applicationUser = await _userManager.FindByIdAsync(user.Id);
+            if (applicationUser.EmailConfirmed != user.EmailConfirmed)
+            {
+                var hasPermission = Request.HttpContext.User.HasGlobalPermission(PlatformConstants.Security.Permissions.SecurityVerifyEmail);
+
+                if (!hasPermission)
+                {
+                    return Unauthorized();
+                }
+            }
+
             var result = await _userManager.UpdateAsync(user);
 
             return Ok(result.ToSecurityResult());
