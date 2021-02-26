@@ -21,6 +21,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Web.Model.Security;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -534,14 +535,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var applicationUser = await _userManager.FindByIdAsync(user.Id);
-            if (applicationUser.EmailConfirmed != user.EmailConfirmed)
+            if (applicationUser.EmailConfirmed != user.EmailConfirmed
+                && !Request.HttpContext.User.HasGlobalPermission(PlatformPermissions.SecurityVerifyEmail))
             {
-                var hasPermission = Request.HttpContext.User.HasGlobalPermission(PlatformConstants.Security.Permissions.SecurityVerifyEmail);
+                return Unauthorized();
+            }
 
-                if (!hasPermission)
-                {
-                    return Unauthorized();
-                }
+            if (!applicationUser.Email.EqualsInvariant(user.Email))
+            {
+                user.EmailConfirmed = false;
             }
 
             var result = await _userManager.UpdateAsync(user);

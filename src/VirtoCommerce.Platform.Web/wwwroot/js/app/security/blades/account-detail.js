@@ -84,7 +84,9 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
             });
         };
 
-        blade.hasVerifyEmailPerrmission = () => authService.checkPermission('platform:security:verifyEmail', blade.securityScopes);
+        blade.hasVerifyEmailPerrmission = () => {
+            return authService.checkPermission('platform:security:verifyEmail', blade.securityScopes);
+        }
 
         blade.onClose = function (closeCallback) {
             bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "platform.dialogs.account-save.title", "platform.dialogs.account-save.message");
