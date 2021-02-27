@@ -1,5 +1,5 @@
-angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.settings',
-    function ($scope, bladeNavigationService, metaFormsService, accounts, settings) {
+angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.settings', 'platformWebApp.authService',
+    function ($scope, bladeNavigationService, metaFormsService, accounts, settings, authService) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:security:update';
         blade.accountTypes = [];
@@ -83,6 +83,10 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                 }
             });
         };
+
+        blade.hasVerifyEmailPerrmission = () => {
+            return authService.checkPermission('platform:security:verifyEmail', blade.securityScopes);
+        }
 
         blade.onClose = function (closeCallback) {
             bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "platform.dialogs.account-save.title", "platform.dialogs.account-save.message");

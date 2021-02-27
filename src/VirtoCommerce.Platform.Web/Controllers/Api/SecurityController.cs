@@ -21,6 +21,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Web.Model.Security;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
+using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -532,6 +533,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return Ok(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
+
+            var applicationUser = await _userManager.FindByIdAsync(user.Id);
+            if (applicationUser.EmailConfirmed != user.EmailConfirmed
+                && !Request.HttpContext.User.HasGlobalPermission(PlatformPermissions.SecurityVerifyEmail))
+            {
+                return Unauthorized();
+            }
+
+            if (!applicationUser.Email.EqualsInvariant(user.Email))
+            {
+                user.EmailConfirmed = false;
+            }
+
             var result = await _userManager.UpdateAsync(user);
 
             return Ok(result.ToSecurityResult());

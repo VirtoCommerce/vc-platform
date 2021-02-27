@@ -64,17 +64,17 @@
                 <input type="email" ng-model="blade.currentEntity.email" placeholder="{{'platform.blades.account-detail.placeholders.email' | translate}}"/>
             </div>
         </div>
-        <div class="form-label" va-permission="platform:security:verifyEmail">
+        <div class="form-label">
             <div class="form-label"> {{ 'platform.blades.account-detail.labels.verified' | translate }}
             </div>
             <div>
                 <label class="form-label __switch" >
-                    <input type="checkbox" ng-model="blade.currentEntity.emailConfirmed">
-                    <span class="switch" ng-class="{disabled: currentEntity.isReadOnly}"></span>
+                    <input type="checkbox" ng-model="blade.currentEntity.emailConfirmed" ng-disabled="!blade.hasVerifyEmailPerrmission()">
+                    <span class="switch" ng-class="{disabled: currentEntity.isReadOnly || !blade.hasVerifyEmailPerrmission() }"></span>
                 </label>
             </div>
             <div>
-                <a href="" ng-style="blade.isLinkSent && {'color':'green'} || {'color': ''}" ng-click="blade.sendLink()">
+                <a href="" ng-style="blade.isLinkSent && {'color':'green'} || {'color': ''}" ng-click="blade.sendLink()" va-permission="platform:security:verifyEmail">
                     {{blade.isLinkSent ? 'platform.blades.account-detail.labels.link-sent' : 'platform.blades.account-detail.labels.resend-link' | translate }}</a>
             </div>
         </div>
