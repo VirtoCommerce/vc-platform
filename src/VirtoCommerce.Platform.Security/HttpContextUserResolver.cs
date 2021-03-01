@@ -1,6 +1,5 @@
 using System.Threading;
 using Microsoft.AspNetCore.Http;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using static VirtoCommerce.Platform.Data.Constants.DefaultEntityNames;
 
