@@ -44,7 +44,7 @@ namespace VirtoCommerce.Platform.Hangfire.Middleware
         {
             var userName = filterContext.GetJobParameter<string>(USER_NAME);
 
-            Thread.SetData(Thread.GetNamedDataSlot(USER_NAME), userName);
+            _userNameResolver.SetCurrentUserName(userName);
         }
 
         public void OnPerformed(PerformedContext filterContext)
