@@ -20,8 +20,8 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Web.Model.Security;
-using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -543,7 +543,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!applicationUser.Email.EqualsInvariant(user.Email))
             {
-                user.EmailConfirmed = false;
+                // SetEmailAsync also: sets EmailConfirmed to false and updates the SecurityStamp
+                await _userManager.SetEmailAsync(user, user.Email);
             }
 
             var result = await _userManager.UpdateAsync(user);
