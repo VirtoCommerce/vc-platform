@@ -71,7 +71,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             var cloudBlob = _cloudBlobClient
                 .GetBlobReferenceFromServerAsync(new Uri(_cloudBlobClient.BaseUri, uri.AbsolutePath.TrimStart('/')))
                 .Result;
-            return cloudBlob.OpenReadAsync(null, null, null).Result;
+            return cloudBlob.OpenReadAsync(null, null, null).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             // More Info https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
             blob.Properties.CacheControl = BlobCacheControlPropertyValue;
 
-            return blob.OpenWriteAsync().Result;
+            return blob.OpenWriteAsync().GetAwaiter().GetResult();
         }
 
         public virtual async Task RemoveAsync(string[] urls)

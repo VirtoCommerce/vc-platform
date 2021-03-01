@@ -676,17 +676,17 @@
             "integrity": "sha1-OraMobbWiXTk7/D5Shaki5v38CM="
         },
         "angular-ui-grid": {
-            "version": "4.0.1",
-            "resolved": "https://registry.npmjs.org/angular-ui-grid/-/angular-ui-grid-4.0.1.tgz",
-            "integrity": "sha1-Ls9CSHRnQOrOBQICN0EJEwXmMSs=",
+            "version": "4.10.0",
+            "resolved": "https://registry.npmjs.org/angular-ui-grid/-/angular-ui-grid-4.10.0.tgz",
+            "integrity": "sha512-y0AtYkTf41JTmWc+hyl0bXYtUnjOWHu8JIhrxCx7kn9wdbOAkcfyYhV/MT2Cp0pS4gzUI1sjL0qqRyrTtKljnQ==",
             "requires": {
-                "angular": ">=1.4.0 1.5.x"
+                "angular": ">=1.4.0 1.8.x"
             },
             "dependencies": {
                 "angular": {
-                    "version": "1.5.11",
-                    "resolved": "https://registry.npmjs.org/angular/-/angular-1.5.11.tgz",
-                    "integrity": "sha1-jFunOG8VllyazzQp9ogVU6raMNY="
+                    "version": "1.8.2",
+                    "resolved": "https://registry.npmjs.org/angular/-/angular-1.8.2.tgz",
+                    "integrity": "sha512-IauMOej2xEe7/7Ennahkbb5qd/HFADiNuLSESz9Q27inmi32zB0lnAsFeLEWcox3Gd1F6YhNd1CP7/9IukJ0Gw=="
                 }
             }
         },

@@ -6,11 +6,10 @@
                 <table class="table">
                     <tbody>
                         <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="arl_menu_{{$index}}">
+
                             <td class="table-col">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="data.$selected">
-                                    <span class="check"></span>
-                                </label>
+
+                            <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.$selected}" ng-click="data.$selected = !data.$selected">&nbsp;</div>
                             </td>
                             <td class="table-col" ng-click='blade.selectNode(data)'>
                                 <span class="table-t">{{data.name}}</span>

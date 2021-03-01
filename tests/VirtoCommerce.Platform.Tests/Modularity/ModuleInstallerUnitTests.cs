@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.TransactionFileManager;
 using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules;
@@ -17,7 +19,7 @@ using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
-    //the Order need for saparate runing UnitTests where use static Platform.CurrentVersion
+    //the Order is needed for running separate UnitTests where static Platform.CurrentVersion is used
     [Collection("Modularity"), Order(3)]
     public class ModuleInstallerUnitTests
     {
@@ -29,7 +31,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
         public ModuleInstallerUnitTests()
         {
-            _options = new LocalStorageModuleCatalogOptions { DiscoveryPath = "modules"};
+            _options = new LocalStorageModuleCatalogOptions { DiscoveryPath = "modules" };
             _externalClientMock = new Mock<IExternalModulesClient>();
             _fileManagerMock = new Mock<ITransactionFileManager>();
             _extModuleCatalogMock = new Mock<IExternalModuleCatalog>();
@@ -46,17 +48,32 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
             var modules = GetManifestModuleInfos(moduleManifests);
             var installedModules = GetManifestModuleInfos(installedModuleManifests);
-            
+
             _extModuleCatalogMock.Setup(x => x.Modules)
                 .Returns(installedModules.Select(x => { x.IsInstalled = true; return x; }));
 
             var service = GetModuleInstaller();
 
             //Act
-            service.Install(modules, progress);            
+            service.Install(modules, progress);
 
             //Assert
             modules.All(x => x.IsInstalled).Should().Be(isInstalled);
+        }
+
+        [Theory]
+        [ClassData(typeof(DepencencyTestData))]
+        public void MissedModuleDependencyTest(ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool hasMissedModuleException)
+        {
+            //Arrange
+            var modules = GetManifestModuleInfos(moduleManifests);
+            var service = GetExternalModuleCatalog(installedModuleManifests);
+
+            //Act
+            var exception = Record.Exception(() => service.CompleteListWithDependencies(modules).Any());
+
+            //Assert
+            Assert.Equal(exception is MissedModuleException, hasMissedModuleException);
         }
 
         private ManifestModuleInfo[] GetManifestModuleInfos(ModuleManifest[] moduleManifests)
@@ -79,6 +96,26 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                 _zipFileWrapperMock.Object);
         }
 
+
+        private IExternalModuleCatalog GetExternalModuleCatalog(ModuleManifest[] installedModuleManifests)
+        {
+            var installedModules = GetManifestModuleInfos(installedModuleManifests).Select(x => { x.IsInstalled = true; return x; }).ToList();
+            var localCatalogModulesMock = new Mock<ILocalModuleCatalog>();
+            localCatalogModulesMock.Setup(x => x.Modules).Returns(installedModules);
+
+            var externalModulesClientMock = new Mock<IExternalModulesClient>();
+            var options = Options.Create(new Mock<ExternalModuleCatalogOptions>().Object);
+            var loggerMock = new Mock<ILogger<ExternalModuleCatalog>>();
+
+            var externalModuleCatalog = new ExternalModuleCatalog(localCatalogModulesMock.Object, externalModulesClientMock.Object, options, loggerMock.Object);
+
+            foreach (var module in installedModules)
+            {
+                externalModuleCatalog.AddModule(module);
+            }
+
+            return externalModuleCatalog;
+        }
 
         class ModularityTestData : IEnumerable<object[]>
         {
@@ -104,7 +141,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     new[] { new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }} },
                     new[]
                     {
-                        //installed
+                        //installed. Don't check dependency version
                         new ModuleManifest { Id = "B", Version = "3.2.0", PlatformVersion = "3.0.0" },
                         new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } } }
                     },
@@ -141,7 +178,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     new[] { new ModuleManifest { Id = "A", Version = "4.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "4.0.0" } }} },
                     new[]
                     {
-                        //installed
+                        //installed. Don't check dependency version
                         new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0" },
                         new ModuleManifest { Id = "C", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } },
                         new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.0.0" } } }
@@ -237,7 +274,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     "3.0.0",
                     new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, //installed
-                    true
+                    false
                 };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
                 yield return new object[] { "3.0.0", new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0" } }, Array.Empty<ModuleManifest>(), true };
@@ -274,7 +311,82 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     "3.0.0-alpha001",
                     new[] {new ModuleManifest {Id = "A", Version = "3.0.0-alpha001", PlatformVersion = "3.0.0-alpha001" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha002", PlatformVersion = "3.0.0-alpha001" } }, //installed
+                    false
+                };
+                yield return new object[]
+                {
+                    "3.0.0-alpha001",
+                    new[] {new ModuleManifest {Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0-alpha001" } },
+                    new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0-alpha001" } }, //installed
+                    false
+                };
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
+
+        class DepencencyTestData : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new object[]
+                {
+                    //modules
+                    new[]
+                    {
+                        new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }},
+                    },
+                    //installed
+                    Array.Empty<ModuleManifest>(),
+                    //has missed module exception
                     true
+                };
+                yield return new object[]
+                {
+                    new[]
+                    {
+                        new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }},
+                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "4.0.0" } }},
+                    },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "C", Version = "3.5.0", PlatformVersion = "3.0.0" },
+                    },
+                    true
+                };
+                yield return new object[]
+                {
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.2.0", PlatformVersion = "3.0.0" },
+                    },
+                    true
+                };
+                yield return new object[]
+                {
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0" },
+                    },
+                    false
+                };
+                yield return new object[]
+                {
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.2.0", PlatformVersion = "3.0.0" },
+                    },
+                    false
                 };
             }
 

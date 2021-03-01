@@ -120,7 +120,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingGroupListCont
         }
     }];
 
-    blade.headIcon = 'fa-wrench';
+    blade.headIcon = 'fa fa-wrench';
 
     $scope.$watch('blade.searchText', function (newVal) {
         if (newVal) {

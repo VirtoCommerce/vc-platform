@@ -2,7 +2,7 @@ angular.module('platformWebApp')
 .controller('platformWebApp.propertyValueListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.i18n', '$timeout', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, dialogService, settings, dictionaryItemsApi, i18n, $timeout, dynamicPropertiesApi) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:dynamic_properties:update';
-    blade.headIcon = 'fa-plus-square-o';
+    blade.headIcon = 'fa fa-plus-square-o';
     blade.title = "platform.blades.propertyValue-list.title";
     blade.subtitle = "platform.blades.propertyValue-list.subtitle";
     blade.currentLanguage = i18n.getLanguage();
@@ -13,9 +13,10 @@ angular.module('platformWebApp')
         dynamicPropertiesApi.search({objectType: blade.currentEntity.objectType, take: blade.dynamicPropertyCount},
             function (response) {
                 var rawProperties = response.results;
+                var dynamicProperties = angular.copy(blade.currentEntity.dynamicProperties);
                 _.each(response.results, function(prop) {
                     prop.values = [];
-                    var filteredProperty = _.find(blade.currentEntity.dynamicProperties, function (o) { return o.name === prop.name; });
+                    var filteredProperty = _.find(dynamicProperties, function (o) { return o.name === prop.name; });
                     if (filteredProperty) {
                         prop.values = filteredProperty.values;
                     }
@@ -102,22 +103,22 @@ angular.module('platformWebApp')
             },
             canExecuteMethod: isDirty
         },
-		{
-		    name: "platform.commands.manage-type-properties", icon: 'fa fa-edit',
-		    executeMethod: function () {
-		        var newBlade = {
-		            id: 'dynamicPropertyList',
-		            objectType: blade.data.objectType,
-		            controller: 'platformWebApp.dynamicPropertyListController',
-		            template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html',
-		            parentRefresh: blade.refresh
-		        };
-		        bladeNavigationService.showBlade(newBlade, blade);
-		    },
-		    canExecuteMethod: function () {
-		        return angular.isDefined(blade.data.objectType);
-		    }
-		}
+        {
+            name: "platform.commands.manage-type-properties", icon: 'fa fa-edit',
+            executeMethod: function () {
+                var newBlade = {
+                    id: 'dynamicPropertyList',
+                    objectType: blade.data.objectType,
+                    controller: 'platformWebApp.dynamicPropertyListController',
+                    template: '$(Platform)/Scripts/app/dynamicProperties/blades/dynamicProperty-list.tpl.html',
+                    parentRefresh: blade.refresh
+                };
+                bladeNavigationService.showBlade(newBlade, blade);
+            },
+            canExecuteMethod: function () {
+                return angular.isDefined(blade.data.objectType);
+            }
+        }
     ];
 
     $scope.getDictionaryValues = function (property, callback) {
