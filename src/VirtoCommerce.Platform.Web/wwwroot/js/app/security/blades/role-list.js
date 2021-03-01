@@ -17,8 +17,6 @@ function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGr
 
             $scope.pageSettings.totalItems = data.totalCount;
             blade.currentEntities = data.results;
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, blade);
         });
     };
 
@@ -68,7 +66,7 @@ function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGr
         });
     }
 
-    blade.headIcon = 'fa-key';
+    blade.headIcon = 'fas fa-key';
 
     blade.toolbarCommands = [
         {

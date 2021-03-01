@@ -165,7 +165,7 @@ angular.module('platformWebApp')
             //Register module in main menu
             var menuItem = {
                 path: 'configuration/security',
-                icon: 'fa fa-key',
+                icon: 'fas fa-key',
                 title: 'platform.menu.security',
                 priority: 5,
                 action: function () { $state.go('workspace.securityModule'); },

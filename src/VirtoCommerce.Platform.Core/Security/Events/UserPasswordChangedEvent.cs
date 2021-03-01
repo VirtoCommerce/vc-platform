@@ -1,4 +1,4 @@
-﻿using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Events;
 
 namespace VirtoCommerce.Platform.Core.Security.Events
 {
@@ -8,6 +8,12 @@ namespace VirtoCommerce.Platform.Core.Security.Events
         {
             UserId = userId;
             CustomPasswordHash = сustomPasswordHash;
+        }
+
+        public UserPasswordChangedEvent(ApplicationUser applicationUser)
+        {
+            UserId = applicationUser.Id;
+            CustomPasswordHash = applicationUser.PasswordHash;
         }
 
         public string UserId { get; set; }

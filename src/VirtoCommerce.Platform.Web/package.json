@@ -59,7 +59,7 @@
         "angular-translate-storage-local": "^2.15.1",
         "angular-ui-bootstrap": "^0.13.1",
         "angular-ui-event": "^1.0.0",
-        "angular-ui-grid": "4.0.1",
+        "angular-ui-grid": "4.10.0",
         "angular-ui-indeterminate": "^1.0.0",
         "angular-ui-mask": "^1.8.7",
         "angular-ui-scroll": "^1.7.2",

@@ -1,6 +1,6 @@
 angular.module('platformWebApp').controller('platformWebApp.permissionScopesController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.permissionScopeResolver', function ($q, $scope, bladeNavigationService, dialogService, permissionScopeResolver) {
     var blade = $scope.blade;
-    blade.headIcon = 'fa-key';
+    blade.headIcon = 'fas fa-key';
 
     function initializeBlade() {
         var tmpScopes = [];
