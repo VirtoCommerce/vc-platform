@@ -26,6 +26,7 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
