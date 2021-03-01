@@ -74,7 +74,7 @@
                 </label>
             </div>
             <div>
-                <a ng-if="blade.currentEntity.email === blade.origEntity.email"  href="" ng-style="blade.isLinkSent && {'color':'green'} || {'color': ''}" ng-click="blade.sendLink()" va-permission="platform:security:verifyEmail">
+                <a href="" ng-style="blade.isLinkSent && {'color':'green'} || {'color': ''}" ng-click="blade.sendLink()" va-permission="platform:security:verifyEmail">
                     {{blade.isLinkSent ? 'platform.blades.account-detail.labels.link-sent' : 'platform.blades.account-detail.labels.resend-link' | translate }}</a>
             </div>
         </div>
