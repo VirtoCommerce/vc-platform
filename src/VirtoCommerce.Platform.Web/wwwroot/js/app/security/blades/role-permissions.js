@@ -6,12 +6,21 @@ angular.module('platformWebApp')
 
         function initializeBlade(data) {
             blade.data = data;
-            roles.queryPermissions({ take: 10000 }, function (result) {
-                allPermissions = _.filter(angular.copy(result), function (x) {
-                    return _.all(data.permissions, function (curr) { return curr.name !== x.name; });
+            roles.queryPermissions({ take: 10000 }, (result) => {
+                allPermissions = _.filter(angular.copy(result), (x) => {
+                    return _.all(data.permissions, (curr) => curr.name !== x.name );
                 });
 
                 blade.currentEntities = _.groupBy(allPermissions, 'groupName');
+
+                blade.currentEntities = Object.keys(blade.currentEntities).sort().reduce(
+                    (obj, key) => { 
+                        obj[key] = blade.currentEntities[key]; 
+                        return obj;
+                    }, 
+                    {}
+                  );
+
                 blade.isLoading = false;
             });
         }
@@ -33,4 +42,19 @@ angular.module('platformWebApp')
         };
 
         $scope.$watch('blade.parentBlade.currentEntity', initializeBlade);
+
+        blade.toolbarCommands = [
+            {
+                name: "platform.commands.confirm",
+                icon: 'fas fa-check',
+                executeMethod: $scope.saveChanges,
+                canExecuteMethod: () => $scope.isValid(),
+            },
+            {
+                name: "platform.commands.cancel",
+                icon: 'fas fa-times',
+                executeMethod: $scope.cancelChanges,
+                canExecuteMethod: () => true,
+            }];
+        
     }]);

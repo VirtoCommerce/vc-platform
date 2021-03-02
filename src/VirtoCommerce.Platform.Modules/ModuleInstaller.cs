@@ -8,6 +8,7 @@ using System.Transactions;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.TransactionFileManager;
 using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules.External;
@@ -70,14 +71,9 @@ namespace VirtoCommerce.Platform.Modules
                     Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}: module downgrading NOT SUPPORTED", module));
                     isValid = false;
                 }
-                //Check the dependencies for installable modules 
-                var missedDependencies = _extModuleCatalog.CompleteListWithDependencies(new[] { module }).OfType<ManifestModuleInfo>()
-                                                       .Where(x => !x.IsInstalled).Except(modules);
-                if (missedDependencies.Any())
-                {
-                    Report(progress, ProgressMessageLevel.Error, string.Format("{0} dependencies required for {1}", string.Join(" ", missedDependencies), module));
-                    isValid = false;
-                }
+
+                //Check the dependencies for installable modules
+                isValid &= !HasMissedDependencies(module, modules, progress);
             }
 
             if (isValid)
@@ -185,6 +181,25 @@ namespace VirtoCommerce.Platform.Modules
         }
         #endregion
 
+        private bool HasMissedDependencies(ManifestModuleInfo module, IEnumerable<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
+        {
+            var result = true;
+
+            try
+            {
+                result = _extModuleCatalog.CompleteListWithDependencies(new[] { module })
+                    .OfType<ManifestModuleInfo>()
+                    .Where(x => !x.IsInstalled)
+                    .Except(modules)
+                    .Any();
+            }
+            catch (MissedModuleException ex)
+            {
+                Report(progress, ProgressMessageLevel.Error, ex.Message);
+            }
+
+            return result;
+        }
 
         private void InnerInstall(ManifestModuleInfo module, IProgress<ProgressMessage> progress)
         {

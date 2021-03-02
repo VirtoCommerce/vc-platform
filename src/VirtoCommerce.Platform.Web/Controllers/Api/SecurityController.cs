@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Web.Model.Security;
+using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -532,6 +533,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return Ok(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
+
+            var applicationUser = await _userManager.FindByIdAsync(user.Id);
+            if (applicationUser.EmailConfirmed != user.EmailConfirmed
+                && !Request.HttpContext.User.HasGlobalPermission(PlatformPermissions.SecurityVerifyEmail))
+            {
+                return Unauthorized();
+            }
+
+            if (!applicationUser.Email.EqualsInvariant(user.Email))
+            {
+                // SetEmailAsync also: sets EmailConfirmed to false and updates the SecurityStamp
+                await _userManager.SetEmailAsync(user, user.Email);
+            }
+
             var result = await _userManager.UpdateAsync(user);
 
             return Ok(result.ToSecurityResult());
@@ -659,6 +674,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<UserApiKey[]>> DeleteUserApiKeys([FromQuery] string[] ids)
         {
             await _userApiKeyService.DeleteApiKeysAsync(ids);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Verify user email
+        /// </summary>
+        /// <param name="userId"></param>
+        [HttpPost]
+        [Route("users/{userId}/sendVerificationEmail")]
+        [Authorize(PlatformConstants.Security.Permissions.SecurityVerifyEmail)]
+        public async Task<ActionResult> SendVerificationEmail([FromRoute] string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+            }
+            if (!IsUserEditable(user.UserName))
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
+            }
+
+            await _eventPublisher.Publish(new UserVerificationEmailEvent(user));
+
             return Ok();
         }
 

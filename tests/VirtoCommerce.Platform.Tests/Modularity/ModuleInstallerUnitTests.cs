@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.TransactionFileManager;
 using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules;
@@ -59,6 +61,21 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             modules.All(x => x.IsInstalled).Should().Be(isInstalled);
         }
 
+        [Theory]
+        [ClassData(typeof(DepencencyTestData))]
+        public void MissedModuleDependencyTest(ModuleManifest[] moduleManifests, ModuleManifest[] installedModuleManifests, bool hasMissedModuleException)
+        {
+            //Arrange
+            var modules = GetManifestModuleInfos(moduleManifests);
+            var service = GetExternalModuleCatalog(installedModuleManifests);
+
+            //Act
+            var exception = Record.Exception(() => service.CompleteListWithDependencies(modules).Any());
+
+            //Assert
+            Assert.Equal(exception is MissedModuleException, hasMissedModuleException);
+        }
+
         private ManifestModuleInfo[] GetManifestModuleInfos(ModuleManifest[] moduleManifests)
         {
             return moduleManifests.Select(x =>
@@ -79,6 +96,26 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                 _zipFileWrapperMock.Object);
         }
 
+
+        private IExternalModuleCatalog GetExternalModuleCatalog(ModuleManifest[] installedModuleManifests)
+        {
+            var installedModules = GetManifestModuleInfos(installedModuleManifests).Select(x => { x.IsInstalled = true; return x; }).ToList();
+            var localCatalogModulesMock = new Mock<ILocalModuleCatalog>();
+            localCatalogModulesMock.Setup(x => x.Modules).Returns(installedModules);
+
+            var externalModulesClientMock = new Mock<IExternalModulesClient>();
+            var options = Options.Create(new Mock<ExternalModuleCatalogOptions>().Object);
+            var loggerMock = new Mock<ILogger<ExternalModuleCatalog>>();
+
+            var externalModuleCatalog = new ExternalModuleCatalog(localCatalogModulesMock.Object, externalModulesClientMock.Object, options, loggerMock.Object);
+
+            foreach (var module in installedModules)
+            {
+                externalModuleCatalog.AddModule(module);
+            }
+
+            return externalModuleCatalog;
+        }
 
         class ModularityTestData : IEnumerable<object[]>
         {
@@ -281,6 +318,74 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                     "3.0.0-alpha001",
                     new[] {new ModuleManifest {Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0-alpha001" } },
                     new[] { new ModuleManifest { Id = "A", Version = "3.1.0-alpha001", PlatformVersion = "3.0.0-alpha001" } }, //installed
+                    false
+                };
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
+
+        class DepencencyTestData : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new object[]
+                {
+                    //modules
+                    new[]
+                    {
+                        new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }},
+                    },
+                    //installed
+                    Array.Empty<ModuleManifest>(),
+                    //has missed module exception
+                    true
+                };
+                yield return new object[]
+                {
+                    new[]
+                    {
+                        new ModuleManifest { Id = "A", Version = "3.5.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }},
+                        new ModuleManifest { Id = "D", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "4.0.0" } }},
+                    },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "C", Version = "3.5.0", PlatformVersion = "3.0.0" },
+                    },
+                    true
+                };
+                yield return new object[]
+                {
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.5.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.2.0", PlatformVersion = "3.0.0" },
+                    },
+                    true
+                };
+                yield return new object[]
+                {
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.5.0", PlatformVersion = "3.0.0" },
+                    },
+                    false
+                };
+                yield return new object[]
+                {
+                    new[] { new ModuleManifest { Id = "A", Version = "3.0.0", PlatformVersion = "3.0.0", Dependencies = new []{ new ManifestDependency { Id = "B", Version = "3.2.0" } }} },
+                    new[]
+                    {
+                        //installed
+                        new ModuleManifest { Id = "B", Version = "3.2.0", PlatformVersion = "3.0.0" },
+                    },
                     false
                 };
             }
