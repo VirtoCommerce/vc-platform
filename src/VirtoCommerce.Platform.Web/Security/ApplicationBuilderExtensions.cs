@@ -39,6 +39,8 @@ namespace VirtoCommerce.Platform.Web.Security
             inProcessBus.RegisterHandler<UserResetPasswordEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
             inProcessBus.RegisterHandler<UserLoginEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
             inProcessBus.RegisterHandler<UserLogoutEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
+            inProcessBus.RegisterHandler<UserRoleAddedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
+            inProcessBus.RegisterHandler<UserRoleRemovedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
 
             return appBuilder;
         }

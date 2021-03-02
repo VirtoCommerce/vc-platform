@@ -20,7 +20,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             data.allowedValues = [];
         }
 
-        blade.title = data.title;
+        blade.title = data.name;
         blade.currentEntity = data;
         currentEntities = blade.currentEntity.allowedValues;
         blade.isLoading = false;
@@ -54,7 +54,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         $scope.selectedItem = listItem;
     };
 
-    blade.headIcon = 'fa-wrench';
+    blade.headIcon = 'fa fa-wrench';
     blade.subtitle = 'platform.blades.setting-dictionary.subtitle';
     blade.toolbarCommands = [{
         name: "platform.commands.delete", icon: 'fas fa-trash-alt',
