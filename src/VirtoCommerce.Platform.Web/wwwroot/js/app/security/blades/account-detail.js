@@ -46,7 +46,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
         }
 
         blade.sendLink = function () {
-            if (!blade.isLinkSent && !blade.isLoading) {
+            if (!blade.isLinkSent && !blade.isLoading && blade.currentEntity.email === blade.origEntity.email) {
                 blade.isLoading = true;
                 accounts.verifyEmail({ userId: blade.currentEntity.id }, null , () => {
                     blade.isLinkSent = true;
@@ -84,7 +84,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
             });
         };
 
-        blade.hasVerifyEmailPerrmission = () => {
+        blade.hasVerifyEmailPermission = () => {
             return authService.checkPermission('platform:security:verifyEmail', blade.securityScopes);
         }
 
