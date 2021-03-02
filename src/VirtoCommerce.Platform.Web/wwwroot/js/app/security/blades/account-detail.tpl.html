@@ -69,12 +69,12 @@
             </div>
             <div>
                 <label class="form-label __switch" >
-                    <input type="checkbox" ng-model="blade.currentEntity.emailConfirmed" ng-disabled="!blade.hasVerifyEmailPerrmission()">
-                    <span class="switch" ng-class="{disabled: currentEntity.isReadOnly || !blade.hasVerifyEmailPerrmission() }"></span>
+                    <input type="checkbox" ng-model="blade.currentEntity.emailConfirmed" ng-disabled="!blade.hasVerifyEmailPermission()">
+                    <span class="switch" ng-class="{disabled: currentEntity.isReadOnly || !blade.hasVerifyEmailPermission() }"></span>
                 </label>
             </div>
             <div>
-                <a href="" ng-style="blade.isLinkSent && {'color':'green'} || {'color': ''}" ng-click="blade.sendLink()" va-permission="platform:security:verifyEmail">
+                <a ng-class="blade.currentEntity.email !== blade.origEntity.email ? 'disabled': ''"  href="" ng-style="blade.isLinkSent && {'color':'green'} || {'color': ''}" ng-click="blade.sendLink()" va-permission="platform:security:verifyEmail">
                     {{blade.isLinkSent ? 'platform.blades.account-detail.labels.link-sent' : 'platform.blades.account-detail.labels.resend-link' | translate }}</a>
             </div>
         </div>
