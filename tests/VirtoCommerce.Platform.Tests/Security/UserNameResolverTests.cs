@@ -22,16 +22,16 @@ namespace VirtoCommerce.Platform.Tests.Security
             const string user = "User1";
 
             var async1 = EmulateAsync(user);
-            var (UserFromResolver, UserFromThreadLocal) = await async1;
+            var (userFromResolver, userFromThreadLocal) = await async1;
 
             // Ensure user preserved in resolver
-            Assert.Equal(user, UserFromResolver);
+            Assert.Equal(user, userFromResolver);
 
             // We are sure user was lost in ThreadLocal (in comparison to AsyncLocal inside of HttpContextUserResolver)
-            Assert.Null(UserFromThreadLocal);
+            Assert.Null(userFromThreadLocal);
         }
 
-        private async Task<(string UserFromResolver, string UserFromThreadLocal)> EmulateAsync(string user)
+        private async Task<(string userFromResolver, string userFromThreadLocal)> EmulateAsync(string user)
         {
             _resolver.SetCurrentUserName(user);
             _threadLocalString.Value = user;
