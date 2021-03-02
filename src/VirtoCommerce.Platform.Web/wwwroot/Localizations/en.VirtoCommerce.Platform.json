@@ -858,6 +858,7 @@
         "platform:security:access": "Allows to see Security in the main menu",
         "platform:security:update": "Allows to change an users and roles",
         "platform:security:delete": "Allows to delete an users and roles",
+        "platform:security:verifyEmail": "Allows to change verified state and send verification email",
         "background_jobs:manage": "Allows to access to  the Hangfire console",
         "platform:exportImport:access": "Allows to see Export/Import in the main menu",
         "platform:import": "Allows to import platform and modules data",
