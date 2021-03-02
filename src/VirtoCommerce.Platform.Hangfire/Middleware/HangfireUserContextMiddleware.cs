@@ -6,8 +6,8 @@ using static VirtoCommerce.Platform.Core.Common.ThreadSlotNames;
 namespace VirtoCommerce.Platform.Hangfire.Middleware
 {
     /// <summary>
-    /// This class allow to process all hangifre jobs to add user name from identity and save it to
-    /// the Thread after job is perfoming to achieve getting access to user name in background tasks
+    /// This class allow to process all HangFire jobs to add user name from identity and save it to
+    /// the Thread after job is performing to achieve getting access to user name in background tasks
     /// </summary>
     public class HangfireUserContextMiddleware : IClientFilter, IServerFilter
     {
