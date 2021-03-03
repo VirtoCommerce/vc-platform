@@ -29,6 +29,8 @@ namespace VirtoCommerce.Platform.Caching
             {
                 result.RegisterPostEvictionCallback(callback: EvictionCallback);
                 var options = GetDefaultCacheEntryOptions();
+                //Add GlobalCache token for each entry
+                options.AddExpirationToken(GlobalCacheRegion.CreateChangeToken());
                 result.SetOptions(options);
             }
             return result;
