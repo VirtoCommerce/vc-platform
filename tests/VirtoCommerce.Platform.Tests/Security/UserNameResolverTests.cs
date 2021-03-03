@@ -27,8 +27,8 @@ namespace VirtoCommerce.Platform.Tests.Security
             // Ensure user preserved in resolver
             Assert.Equal(user, userFromResolver);
 
-            // We are sure user was lost in ThreadLocal (in comparison to AsyncLocal inside of HttpContextUserResolver)
-            Assert.Null(userFromThreadLocal);
+            // We can lost user in ThreadLocal (in comparison to AsyncLocal inside of HttpContextUserResolver)
+            // You can check this assert localy (sometimes you can lost data if context going to switch) Assert.Null(userFromThreadLocal);
         }
 
         private async Task<(string userFromResolver, string userFromThreadLocal)> EmulateAsync(string user)
