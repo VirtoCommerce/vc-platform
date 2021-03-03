@@ -326,10 +326,6 @@ namespace VirtoCommerce.Platform.Web
                 });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
-            services.AddDataProtection(options =>
-            {
-                options.ApplicationDiscriminator = "VirtoCommerceGroup";
-            });
 
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
