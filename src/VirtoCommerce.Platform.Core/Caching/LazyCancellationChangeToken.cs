@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Primitives;
 
@@ -45,12 +43,13 @@ namespace VirtoCommerce.Platform.Core.Caching
             }
         }
 
-        private class NullDisposable : IDisposable
+        private sealed class NullDisposable : IDisposable
         {
             public static readonly NullDisposable Instance = new NullDisposable();
 
             public void Dispose()
             {
+                // Method intentionally left empty.
             }
         }
     }

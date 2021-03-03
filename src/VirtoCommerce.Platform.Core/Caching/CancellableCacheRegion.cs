@@ -56,11 +56,14 @@ namespace VirtoCommerce.Platform.Core.Caching
     {
         private static readonly string _regionName = typeof(T).Name;
         private static readonly string _regionNamePrefix = $"{typeof(T).Name}:";
+#pragma warning disable S2743 // Static fields should not be used in generic types
+        // False-positive SLint warning disabled.
+        // These fields really need for every class applied
         private static CancellationTokenSource _regionTokenSource = new CancellationTokenSource();
         private static readonly ConcurrentDictionary<string, CancellationTokenSource> _keyTokensDict = new ConcurrentDictionary<string, CancellationTokenSource>();
         private static IDisposable _globalTokenDisposable;
         private static readonly object _lock = new object();
-
+#pragma warning restore S2743 // Static fields should not be used in generic types
         static CancellableCacheRegion()
         {
             TokenCancelled += (e, args) =>
