@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
@@ -16,14 +17,17 @@ namespace VirtoCommerce.Platform.Modules
     {
         private readonly ILogger<ModuleInitializer> _loggerFacade;
         private readonly IServiceCollection _serviceCollection;
+        private readonly IConfiguration _configuration;
+
         /// <summary>
         /// Initializes a new instance of <see cref="ModuleInitializer"/>.
         /// </summary>
         /// <param name="loggerFacade">The logger to use.</param>
-        public ModuleInitializer(ILogger<ModuleInitializer> loggerFacade, IServiceCollection serviceCollection)
+        public ModuleInitializer(ILogger<ModuleInitializer> loggerFacade, IServiceCollection serviceCollection, IConfiguration configuration)
         {
             _loggerFacade = loggerFacade ?? throw new ArgumentNullException("loggerFacade");
             _serviceCollection = serviceCollection;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -43,6 +47,12 @@ namespace VirtoCommerce.Platform.Modules
                 {
                     var moduleInstance = CreateModule(moduleInfo);
                     moduleInfo.ModuleInstance = moduleInstance;
+
+                    if (moduleInstance is IHasConfiguration configurableModule)
+                    {
+                        configurableModule.Configuration = _configuration;
+                    }
+
                     moduleInstance.Initialize(_serviceCollection);
                     moduleInfo.State = ModuleState.Initialized;
                 }

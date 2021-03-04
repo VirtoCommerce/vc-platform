@@ -500,7 +500,7 @@ namespace VirtoCommerce.Platform.Web
             app.UsePruneExpiredTokensJob();
 
             app.UseModules();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
