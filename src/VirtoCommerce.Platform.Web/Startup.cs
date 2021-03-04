@@ -36,6 +36,7 @@ using VirtoCommerce.Platform.Assets.FileSystem;
 using VirtoCommerce.Platform.Assets.FileSystem.Extensions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -116,8 +117,11 @@ namespace VirtoCommerce.Platform.Web
                     options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
                     //Next line allow to use polymorph types as parameters in API controller methods
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
                     options.SerializerSettings.Converters.Add(new PolymorphGenericJsonConverter<ObjectSettingEntry>());
+                    options.SerializerSettings.Converters.Add(new PolymorphGenericJsonConverter<DynamicProperty>());
+                    options.SerializerSettings.Converters.Add(new PolymorphGenericJsonConverter<ApplicationUser>());
+                    options.SerializerSettings.Converters.Add(new PolymorphGenericJsonConverter<Role>());
+                    options.SerializerSettings.Converters.Add(new PolymorphGenericJsonConverter<PermissionScope>(nameof(PermissionScope.Type)));
                     options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
                     options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

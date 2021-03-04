@@ -7,12 +7,29 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.JsonConverters
 {
+    /// <summary>
+    /// Generic converter to instantiate objects of type T from JSON
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class PolymorphGenericJsonConverter<T> : JsonConverter
     {
+        private readonly string _typePropertyNameLower;
+        private readonly string _typePropertyNameUpper;
+
         readonly HashSet<Type> _knownTypes;
 
-        public PolymorphGenericJsonConverter()
+        /// <summary>
+        /// Instantiate for every (base) entity type.
+        /// </summary>
+        /// <param name="typePropertyName">The property name where more specific type name is stored (optional)</param>
+        public PolymorphGenericJsonConverter(string typePropertyName = default)
         {
+            if (!typePropertyName.IsNullOrEmpty())
+            {
+                _typePropertyNameLower = char.IsLower(typePropertyName, 0) ? typePropertyName : char.ToLowerInvariant(typePropertyName[0]) + typePropertyName.Substring(1);
+                _typePropertyNameUpper = char.IsUpper(typePropertyName, 0) ? typePropertyName : char.ToUpperInvariant(typePropertyName[0]) + typePropertyName.Substring(1);
+            }
+
             var types = AbstractTypeFactory<T>
                             .AllTypeInfos
                             .Select(x => x.Type)
@@ -25,7 +42,18 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
 
         protected virtual T Create(Type objectType, JObject jObject)
         {
-            return AbstractTypeFactory<T>.TryCreateInstance();
+            var typeName = objectType.Name;
+
+            if (_typePropertyNameLower != null)
+            {
+                var pt = jObject[_typePropertyNameLower] ?? jObject[_typePropertyNameUpper];
+                if (pt != null)
+                {
+                    typeName = pt.Value<string>();
+                }
+            }
+
+            return AbstractTypeFactory<T>.TryCreateInstance(typeName);
         }
 
         public override bool CanConvert(Type objectType)
@@ -35,9 +63,8 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            JObject jObject = JObject.Load(reader);
-
-            T target = Create(objectType, jObject);
+            var jObject = JObject.Load(reader);
+            var target = Create(objectType, jObject);
 
             serializer.Populate(jObject.CreateReader(), target);
 
