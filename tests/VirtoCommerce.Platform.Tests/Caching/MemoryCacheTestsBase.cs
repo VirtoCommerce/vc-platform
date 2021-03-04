@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
@@ -28,6 +29,7 @@ namespace VirtoCommerce.Platform.Tests.Caching
             return new MemoryCache(new MemoryCacheOptions()
             {
                 Clock = clock,
+                ExpirationScanFrequency = TimeSpan.FromSeconds(1)
             });
         }
 

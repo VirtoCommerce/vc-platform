@@ -12,7 +12,7 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Caching
 {
-    [Trait("Category", "Unit")]
+    [Trait("Category", "Unit"), CollectionDefinition("CacheTests", DisableParallelization = true)]
     public class MemoryCacheExtensionTests : MemoryCacheTestsBase
     {
 

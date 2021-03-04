@@ -27,6 +27,7 @@ What benefits you will get if you will follow our **Extension concept** and use 
 * Domain and business logic extension
     * [extending domain types](./extensibility/extending-domain-models.md)
     * [extending using domain events](./extensibility/extending-using-events.md)
+    * [extending authorization policies](./extensibility/extending-authorization-policies.md)
     * [dynamic properties](./extensibility/using-dynamic-properties.md)
 * Platform manager UI extension
     * [extending main menu](./extensibility/extending-main-menu.md)
