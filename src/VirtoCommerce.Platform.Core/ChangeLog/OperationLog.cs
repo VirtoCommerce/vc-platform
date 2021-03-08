@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 
@@ -22,7 +23,7 @@ namespace VirtoCommerce.Platform.Core.ChangeLog
             }
 
             ObjectId = changedEntry.OldEntry.Id;
-            ObjectType = changedEntry.OldEntry.GetType().Name;
+            ObjectType = GetTypeNameForLogging(changedEntry.OldEntry);
             OperationType = changedEntry.EntryState;
 
             return this;
@@ -36,5 +37,21 @@ namespace VirtoCommerce.Platform.Core.ChangeLog
         }
 
         #endregion
+
+        /// <summary>
+        /// Find the type name for operation log. It's a direct successor of AuditableEntity by default.
+        /// </summary>
+        /// <returns>Name of found type</returns>
+        protected virtual string GetTypeNameForLogging<T>(T entry) where T : IEntity
+        {
+            if (entry is AuditableEntity)
+            {
+                return entry.GetType().GetTypeInheritanceChainTo(typeof(AuditableEntity)).Last().Name;
+            }
+            else
+            {
+                return entry.GetType().Name;
+            }
+        }
     }
 }
