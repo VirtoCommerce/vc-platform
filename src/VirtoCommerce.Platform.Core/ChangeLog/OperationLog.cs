@@ -48,6 +48,10 @@ namespace VirtoCommerce.Platform.Core.ChangeLog
             {
                 return entry.GetType().GetTypeInheritanceChainTo(typeof(AuditableEntity)).Last().Name;
             }
+            else if (entry is Entity)
+            {
+                return entry.GetType().GetTypeInheritanceChainTo(typeof(Entity)).Last().Name;
+            }
             else
             {
                 return entry.GetType().Name;
