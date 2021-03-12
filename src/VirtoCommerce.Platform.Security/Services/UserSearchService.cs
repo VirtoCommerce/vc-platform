@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -12,10 +13,12 @@ namespace VirtoCommerce.Platform.Security.Services
     public class UserSearchService : IUserSearchService
     {
         private readonly Func<UserManager<ApplicationUser>> _userManagerFactory;
+        private readonly RoleManager<Role> _roleManager;
 
-        public UserSearchService(Func<UserManager<ApplicationUser>> userManager)
+        public UserSearchService(Func<UserManager<ApplicationUser>> userManager, RoleManager<Role> roleManager)
         {
             _userManagerFactory = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<UserSearchResult> SearchUsersAsync(UserSearchCriteria criteria)
@@ -62,6 +65,18 @@ namespace VirtoCommerce.Platform.Security.Services
                 }
                 result.Results = await query.OrderBySortInfos(sortInfos).Skip(criteria.Skip).Take(criteria.Take).ToArrayAsync();
 
+                foreach (var user in result.Results)
+                {
+                    user.Roles = new List<Role>();
+                    foreach (var roleName in await userManager.GetRolesAsync(user))
+                        {
+                            var role = await _roleManager.FindByNameAsync(roleName);
+                            if (role != null)
+                                {
+                                    user.Roles.Add(role);
+                                }
+                        }
+                }
                 return result;
             }
         }
