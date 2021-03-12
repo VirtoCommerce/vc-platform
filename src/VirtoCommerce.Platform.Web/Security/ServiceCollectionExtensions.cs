@@ -26,7 +26,11 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton<IPermissionsRegistrar, DefaultPermissionProvider>();
             services.AddScoped<IRoleSearchService, RoleSearchService>();
             //Register as singleton because this abstraction can be used as dependency in singleton services
-            services.AddSingleton<IUserSearchService>(provider => new UserSearchService(provider.CreateScope().ServiceProvider.GetService<Func<UserManager<ApplicationUser>>>(), provider.CreateScope().ServiceProvider.GetService<RoleManager<Role>>()));
+            services.AddSingleton<IUserSearchService>(provider =>
+            {
+                var scope = provider.CreateScope();
+                return new UserSearchService(scope.ServiceProvider.GetService<Func<UserManager<ApplicationUser>>>(), scope.ServiceProvider.GetService<RoleManager<Role>>());
+            });
 
             //Identity dependencies override
             services.TryAddScoped<RoleManager<Role>, CustomRoleManager>();
