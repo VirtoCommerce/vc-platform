@@ -23,6 +23,13 @@ namespace VirtoCommerce.Platform.Core.Common
             }
         }
 
+        public static bool HasOverrides
+        {
+            get
+            {
+                return _typeInfos.Count > 0;
+            }
+        }
         /// <summary>
         /// Register new  type (fluent method)
         /// </summary>

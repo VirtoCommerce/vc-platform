@@ -1,49 +1,76 @@
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Core.JsonConverters
 {
     public class PolymorphJsonConverter : JsonConverter
     {
-        private static readonly Type[] _knowTypes = { typeof(ObjectSettingEntry), typeof(DynamicProperty), typeof(ApplicationUser), typeof(Role), typeof(PermissionScope) };
+        private static readonly ConcurrentDictionary<Type, Func<JObject, object>> _convertFactories = new ConcurrentDictionary<Type, Func<JObject, object>>();
+        private static readonly ConcurrentDictionary<Type, bool> _canConvertCache = new ConcurrentDictionary<Type, bool>();
 
         public override bool CanWrite => false;
         public override bool CanRead => true;
 
+
+        public static void RegisterTypeForDescriminator(Type type, string descriminator)
+        {
+
+            RegisterType(type, obj =>
+            {
+                var typeName = type.Name;
+                var pt = obj[descriminator] ?? obj[descriminator.FirstCharToUpper()];
+                if (pt != null)
+                {
+                    typeName = pt.Value<string>();
+                }
+                var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(type).GetMethods().FirstOrDefault(x => x.Name.Equals("TryCreateInstance") && x.GetParameters().Length == 1);
+                var result = tryCreateInstance?.Invoke(null, new[] { typeName });
+                if (result == null)
+                {
+                    throw new NotSupportedException("Unknown scopeType: " + typeName);
+                }
+                return result;
+            });
+
+        }
+        public static void RegisterType(Type type, Func<JObject, object> factory)
+        {
+            _canConvertCache[type] = true;
+            _convertFactories[type] = factory;
+        }
+
         public override bool CanConvert(Type objectType)
         {
-            return _knowTypes.Any(x => x.IsAssignableFrom(objectType));
+            if (objectType.IsPrimitive || objectType.Equals(typeof(string)) || objectType.IsArray)
+            {
+                return false;
+            }
+            var result = _canConvertCache.GetOrAdd(objectType, _ =>
+            {
+                return (bool)typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetProperty("HasOverrides").GetValue(null, null);
+            });
+            return result;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             object result;
             var obj = JObject.Load(reader);
-            if (typeof(PermissionScope).IsAssignableFrom(objectType))
+
+            object Factory(JObject obj2)
             {
-                var scopeType = objectType.Name;
-                var pt = obj["type"] ?? obj["Type"];
-                if (pt != null)
-                {
-                    scopeType = pt.Value<string>();
-                }
-                result = AbstractTypeFactory<PermissionScope>.TryCreateInstance(scopeType);
-                if (result == null)
-                {
-                    throw new NotSupportedException("Unknown scopeType: " + scopeType);
-                }
-            }
-            else
-            {
-                var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethods().FirstOrDefault(x => x.Name.EqualsInvariant("TryCreateInstance") && x.GetParameters().Length == 0);
-                result = tryCreateInstance?.Invoke(null, null);
-            }
+                //TODO: Optmimize reflection
+                var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethods().FirstOrDefault(x => x.Name.Equals("TryCreateInstance") && x.GetParameters().Length == 0);
+                return tryCreateInstance?.Invoke(null, null);
+            };
+            var factory = _convertFactories.GetOrAdd(objectType, _ => Factory);
+
+            result = factory(obj);
+
             serializer.Populate(obj.CreateReader(), result);
             return result;
         }
