@@ -29,6 +29,7 @@ namespace VirtoCommerce.Platform.Security.Services
                 {
                     throw new ArgumentNullException(nameof(criteria));
                 }
+
                 if (!userManager.SupportsQueryableUsers)
                 {
                     throw new NotSupportedException();
@@ -63,20 +64,22 @@ namespace VirtoCommerce.Platform.Security.Services
                 {
                     sortInfos = new[] { new SortInfo { SortColumn = ReflectionUtility.GetPropertyName<ApplicationUser>(x => x.UserName), SortDirection = SortDirection.Descending } };
                 }
+
                 result.Results = await query.OrderBySortInfos(sortInfos).Skip(criteria.Skip).Take(criteria.Take).ToArrayAsync();
 
                 foreach (var user in result.Results)
                 {
                     user.Roles = new List<Role>();
                     foreach (var roleName in await userManager.GetRolesAsync(user))
+                    {
+                        var role = await _roleManager.FindByNameAsync(roleName);
+                        if (role != null)
                         {
-                            var role = await _roleManager.FindByNameAsync(roleName);
-                            if (role != null)
-                                {
-                                    user.Roles.Add(role);
-                                }
+                            user.Roles.Add(role);
                         }
+                    }
                 }
+
                 return result;
             }
         }
