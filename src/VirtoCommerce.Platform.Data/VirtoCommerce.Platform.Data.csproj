@@ -13,16 +13,16 @@
 
     <ItemGroup>
         <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.2.2" />
-        <PackageReference Include="FluentValidation" Version="8.6.3" />
+        <PackageReference Include="FluentValidation" Version="9.5.2" />
         <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8" />
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8" />
-        <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.8" />
-        <PackageReference Include="Serialize.Linq" Version="1.8.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="5.0.0" />
+        <PackageReference Include="Serialize.Linq" Version="2.0.0" />
     </ItemGroup>
 
     <ItemGroup>
