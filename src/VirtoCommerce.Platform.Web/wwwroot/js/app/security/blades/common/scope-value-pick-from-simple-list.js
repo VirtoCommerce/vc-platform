@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.security.scopeValuePickFromSimpleListController', ['$scope', function ($scope) {
     var blade = $scope.blade;
 
@@ -35,6 +35,6 @@
         $scope.bladeClose();
     };
 
-    blade.headIcon = 'fa-key';
+    blade.headIcon = 'fas fa-key';
     initializeBlade();
 }]);

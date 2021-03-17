@@ -48,7 +48,7 @@ angular.module('platformWebApp')
                 }
             ];
 
-            blade.headIcon = 'fa-info-circle';
+            blade.headIcon = 'fa fa-info-circle';
             blade.initializeBlade();
         }]);
 

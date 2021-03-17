@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp').controller('platformWebApp.entitySettingListController', ['$scope', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', function ($scope, settingsHelper, bladeNavigationService) {
+angular.module('platformWebApp').controller('platformWebApp.entitySettingListController', ['$scope', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', function ($scope, settingsHelper, bladeNavigationService) {
     var blade = $scope.blade;
     blade.title = 'platform.blades.entitySetting-list.title';
 
@@ -76,7 +76,7 @@
         $scope.bladeClose();
     };
 
-    blade.headIcon = 'fa-wrench';
+    blade.headIcon = 'fa fa-wrench';
     blade.isSavingToParentObject = true;
     blade.toolbarCommands = [
         {

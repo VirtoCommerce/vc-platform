@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
     .controller('platformWebApp.modulesMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', function ($scope, bladeNavigationService, modules, moduleHelper) {
         var blade = $scope.blade;
         var nodeUpdate, nodeAvailable, nodeInstalled;
@@ -117,7 +117,7 @@
             }
         ];
 
-        blade.headIcon = 'fa-cubes';
+        blade.headIcon = 'fa fa-cubes';
 
         blade.currentEntities = [
             nodeUpdate = { name: 'platform.blades.modules-main.labels.updates', mode: 'update' },

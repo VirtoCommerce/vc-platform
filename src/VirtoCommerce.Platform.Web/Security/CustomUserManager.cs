@@ -20,8 +20,9 @@ namespace VirtoCommerce.Platform.Web.Security
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly RoleManager<Role> _roleManager;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IUserPasswordHasher _passwordHasher;
 
-        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher,
+        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IUserPasswordHasher passwordHasher,
                                  IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
                                  ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
                                  ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher)
@@ -30,6 +31,7 @@ namespace VirtoCommerce.Platform.Web.Security
             _memoryCache = memoryCache;
             _roleManager = roleManager;
             _eventPublisher = eventPublisher;
+            _passwordHasher = passwordHasher;
         }
 
         public override async Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey)
@@ -106,6 +108,9 @@ namespace VirtoCommerce.Platform.Web.Security
             if (result == IdentityResult.Success)
             {
                 SecurityCacheRegion.ExpireUser(user);
+                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
+                var customPasswordHash = _passwordHasher.HashPassword(user, newPassword);
+                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
             }
 
             return result;
@@ -117,6 +122,9 @@ namespace VirtoCommerce.Platform.Web.Security
             if (result == IdentityResult.Success)
             {
                 SecurityCacheRegion.ExpireUser(user);
+                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
+                var customPasswordHash = _passwordHasher.HashPassword(user, newPassword);
+                await _eventPublisher.Publish(new UserPasswordChangedEvent(user.Id, customPasswordHash));
             }
 
             return result;
@@ -164,7 +172,9 @@ namespace VirtoCommerce.Platform.Web.Security
             if (result.Succeeded)
             {
                 SecurityCacheRegion.ExpireUser(existentUser);
-                await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
+                var events = changedEntries.GenerateSecurityEventsByChanges();
+                var tasks = events.Select(x => _eventPublisher.Publish(x));
+                await Task.WhenAll(tasks);
             }
 
             return result;
@@ -248,6 +258,25 @@ namespace VirtoCommerce.Platform.Web.Security
             return result;
         }
 
+        public override async Task<IdentityResult> AddToRoleAsync(ApplicationUser user, string role)
+        {
+            var result = await base.AddToRoleAsync(user, role);
+            if (result.Succeeded)
+            {
+                await _eventPublisher.Publish(new UserRoleAddedEvent(user, role));
+            }
+            return result;
+        }
+
+        public override async Task<IdentityResult> RemoveFromRoleAsync(ApplicationUser user, string role)
+        {
+            var result = await base.RemoveFromRoleAsync(user, role);
+            if (result.Succeeded)
+            {
+                await _eventPublisher.Publish(new UserRoleRemovedEvent(user, role));
+            }
+            return result;
+        }
 
 
         /// <summary>

@@ -90,7 +90,7 @@ angular.module('platformWebApp')
             blade.title = 'platform.blades.license.title';
         }
 
-        blade.headIcon = 'fa-id-card';
+        blade.headIcon = 'fa fa-id-card';
         blade.isLoading = false;
     }])
 

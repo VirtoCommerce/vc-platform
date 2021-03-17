@@ -12,6 +12,7 @@ angular.module('platformWebApp').factory('platformWebApp.accounts', ['$resource'
         lock: { url: 'api/platform/security/users/:id/lock', method: 'POST' },
         getUserApiKeys: { url: 'api/platform/security/users/:id/apikeys', method: 'GET', isArray: true},
         saveUserApiKey: { url: 'api/platform/security/users/apikeys', method: 'POST' },
-        deleteUserApiKey: { url: 'api/platform/security/users/apikeys', method: 'DELETE' }
+        deleteUserApiKey: { url: 'api/platform/security/users/apikeys', method: 'DELETE' },
+        verifyEmail: { url: 'api/platform/security/users/:userId/sendVerificationEmail', method: 'POST' }
     });
 }]);

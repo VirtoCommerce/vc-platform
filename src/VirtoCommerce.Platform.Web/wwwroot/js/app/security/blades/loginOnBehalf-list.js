@@ -33,7 +33,7 @@ function ($scope, $window, $modal, bladeNavigationService, $localStorage, valida
             updatePermission: 'platform:security:update',
             data: blade.currentEntities,
             validator: validators.uriWithoutQuery,
-            headIcon: 'fa-plus-square-o',
+            headIcon: 'fa fa-plus-square-o',
             controller: 'platformWebApp.editArrayController',
             template: '$(Platform)/Scripts/common/blades/edit-array.tpl.html',
             onChangesConfirmedFn: function (values) {
@@ -45,7 +45,7 @@ function ($scope, $window, $modal, bladeNavigationService, $localStorage, valida
         bladeNavigationService.showBlade(newBlade, blade);
     }
 
-    blade.headIcon = 'fa-key';
+    blade.headIcon = 'fas fa-key';
 
     blade.toolbarCommands = [
         {

@@ -1,6 +1,5 @@
 using System.Threading;
 using Microsoft.AspNetCore.Http;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using static VirtoCommerce.Platform.Data.Constants.DefaultEntityNames;
 
@@ -8,6 +7,8 @@ namespace VirtoCommerce.Platform.Security
 {
     public class HttpContextUserResolver : IUserNameResolver
     {
+        private static readonly AsyncLocal<string> _currentUserName = new AsyncLocal<string>();
+
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public HttpContextUserResolver(IHttpContextAccessor httpContextAccessor)
@@ -17,7 +18,7 @@ namespace VirtoCommerce.Platform.Security
 
         public string GetCurrentUserName()
         {
-            var result = Thread.GetData(Thread.GetNamedDataSlot(ThreadSlotNames.USER_NAME)) as string ?? UNKNOWN_USERNAME;
+            var result = _currentUserName.Value ?? UNKNOWN_USERNAME;
 
             var context = _httpContextAccessor.HttpContext;
             if (context != null && context.Request != null && context.User != null)
@@ -33,6 +34,11 @@ namespace VirtoCommerce.Platform.Security
                 }
             }
             return result;
+        }
+
+        public void SetCurrentUserName(string userName)
+        {
+            _currentUserName.Value = userName;
         }
     }
 }

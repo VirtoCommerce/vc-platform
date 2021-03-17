@@ -54,7 +54,7 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
         dialogService.showConfirmationDialog(dialog);
     };
 
-    blade.headIcon = 'fa-key';
+    blade.headIcon = 'fas fa-key';
 
     blade.toolbarCommands = [
         {

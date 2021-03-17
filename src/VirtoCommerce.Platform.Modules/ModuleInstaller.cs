@@ -8,6 +8,7 @@ using System.Transactions;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.TransactionFileManager;
 using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Modules.External;
@@ -47,7 +48,7 @@ namespace VirtoCommerce.Platform.Modules
                     Report(progress, ProgressMessageLevel.Error, string.Format("Target Platform version {0} is incompatible with current {1}", module.PlatformVersion, PlatformVersion.CurrentVersion));
                     isValid = false;
                 }
-           
+
                 var allInstalledModules = _extModuleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).ToArray();
                 //Check that incompatible modules does not installed
                 if (!module.Incompatibilities.IsNullOrEmpty())
@@ -66,24 +67,13 @@ namespace VirtoCommerce.Platform.Modules
                 var alreadyInstalledModule = allInstalledModules.FirstOrDefault(x => x.Id.EqualsInvariant(module.Id));
                 if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(module.Version))
                 {
-                    //Allow downgrade or install not compatible version only if all dependencies will be compatible with installed version
-                    var modulesHasIncompatibleDependecies = allInstalledModules.Where(x => x.DependsOn.Contains(module.Id, StringComparer.OrdinalIgnoreCase))
-                                                          .Where(x => x.Dependencies.Any(d => !module.Version.IsCompatibleWithBySemVer(d.Version)));
-
-                    if (modulesHasIncompatibleDependecies.Any())
-                    {
-                        Report(progress, ProgressMessageLevel.Error, string.Format("{0} is incompatible with installed {1} is required  by {2} ", module, alreadyInstalledModule, string.Join(", ", modulesHasIncompatibleDependecies.Select(x => x.ToString()))));
-                        isValid = false;
-                    }
-                }
-                //Check that dependencies for installable modules 
-                var missedDependencies = _extModuleCatalog.CompleteListWithDependencies(new[] { module }).OfType<ManifestModuleInfo>()
-                                                       .Where(x => !x.IsInstalled).Except(modules);
-                if (missedDependencies.Any())
-                {
-                    Report(progress, ProgressMessageLevel.Error, string.Format("{0} dependencies required for {1}", string.Join(" ", missedDependencies), module));
+                    // module downgrade NOT supported
+                    Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}: module downgrading NOT SUPPORTED", module));
                     isValid = false;
                 }
+
+                //Check the dependencies for installable modules
+                isValid &= !HasMissedDependencies(module, modules, progress);
             }
 
             if (isValid)
@@ -191,6 +181,25 @@ namespace VirtoCommerce.Platform.Modules
         }
         #endregion
 
+        private bool HasMissedDependencies(ManifestModuleInfo module, IEnumerable<ManifestModuleInfo> modules, IProgress<ProgressMessage> progress)
+        {
+            var result = true;
+
+            try
+            {
+                result = _extModuleCatalog.CompleteListWithDependencies(new[] { module })
+                    .OfType<ManifestModuleInfo>()
+                    .Where(x => !x.IsInstalled)
+                    .Except(modules)
+                    .Any();
+            }
+            catch (MissedModuleException ex)
+            {
+                Report(progress, ProgressMessageLevel.Error, ex.Message);
+            }
+
+            return result;
+        }
 
         private void InnerInstall(ManifestModuleInfo module, IProgress<ProgressMessage> progress)
         {
@@ -217,10 +226,10 @@ namespace VirtoCommerce.Platform.Modules
             }
 
             _zipFileWrapper.Extract(moduleZipPath, dstModuleDir);
-            
+
             Report(progress, ProgressMessageLevel.Info, "Successfully installed '{0}'.", module);
         }
-        
+
         private static void Report(IProgress<ProgressMessage> progress, ProgressMessageLevel level, string format, params object[] args)
         {
             if (progress != null)
