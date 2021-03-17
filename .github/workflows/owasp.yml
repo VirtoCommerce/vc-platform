@@ -1,4 +1,4 @@
-name: Docker Environment + OWASP
+name: OWASP ZAP
 on:
   push:
     paths-ignore:
