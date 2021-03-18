@@ -1,14 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <IsPackable>false</IsPackable>
         <noWarn>1591</noWarn>
+        <UserSecretsId>d6c1f7d4-06d1-4f4e-8c58-7a79573b50f6</UserSecretsId>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="appsettings.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
    
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.14.0" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.8" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.8" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
