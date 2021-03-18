@@ -523,6 +523,7 @@ namespace VirtoCommerce.Platform.Web
             mvcJsonOptions.Value.SerializerSettings.Converters.Clear();
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
+            PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(SearchCriteriaBase), nameof(SearchCriteriaBase.ObjectType));
 
         }
     }
