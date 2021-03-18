@@ -123,7 +123,7 @@ namespace VirtoCommerce.Platform.Security
                 await SavePasswordHistory(user, newPassword);
 
                 // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _passwordHasher.HashPassword(user, newPassword);
+                var customPasswordHash = _userPasswordHasher.HashPassword(user, newPassword);
                 await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
             }
 
@@ -142,7 +142,7 @@ namespace VirtoCommerce.Platform.Security
                 await SavePasswordHistory(user, newPassword);
 
                 // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _passwordHasher.HashPassword(user, newPassword);
+                var customPasswordHash = _userPasswordHasher.HashPassword(user, newPassword);
                 await _eventPublisher.Publish(new UserPasswordChangedEvent(user.Id, customPasswordHash));
             }
 
