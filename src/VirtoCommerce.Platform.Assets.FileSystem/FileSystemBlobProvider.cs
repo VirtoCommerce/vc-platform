@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
 
         public FileSystemBlobProvider(IOptions<FileSystemBlobOptions> options)
         {
-            // extra replace step to prevent windows path getting into linux environment
+            // extra replace step to prevent windows path getting into Linux environment
             _storagePath = options.Value.RootPath.TrimEnd(Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
             _basePublicUrl = options.Value.PublicUrl;
             _basePublicUrl = _basePublicUrl?.TrimEnd('/');
@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
         #region IBlobStorageProvider members
 
         /// <summary>
-        /// Get blog info by url
+        /// Get blob info by URL
         /// </summary>
         /// <param name="blobUrl"></param>
         /// <returns></returns>
@@ -59,7 +59,7 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
         }
 
         /// <summary>
-        /// Open blob for read by relative or absolute url
+        /// Open blob for read by relative or absolute URL
         /// </summary>
         /// <param name="blobUrl"></param>
         /// <returns>blob stream</returns>
@@ -72,8 +72,13 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
             return File.Open(filePath, FileMode.Open, FileAccess.Read);
         }
 
+        public Task<Stream> OpenReadAsync(string blobUrl)
+        {
+            return Task.FromResult(OpenRead(blobUrl));
+        }
+
         /// <summary>
-        /// Open blob for write by relative or absolute url
+        /// Open blob for write by relative or absolute URL
         /// </summary>
         /// <param name="blobUrl"></param>
         /// <returns>blob stream</returns>
@@ -90,6 +95,11 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
             }
 
             return File.Open(filePath, FileMode.Create);
+        }
+
+        public Task<Stream> OpenWriteAsync(string blobUrl)
+        {
+            return Task.FromResult(OpenWrite(blobUrl));
         }
 
         /// <summary>
@@ -171,7 +181,7 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
         }
 
         /// <summary>
-        /// Remove folders and blobs by absolute or relative urls
+        /// Remove folders and blobs by absolute or relative URLs
         /// </summary>
         /// <param name="urls"></param>
         public virtual Task RemoveAsync(string[] urls)
@@ -222,12 +232,26 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
             }
         }
 
+        public Task MoveAsync(string srcUrl, string destUrl)
+        {
+            Move(srcUrl, destUrl);
+
+            return Task.CompletedTask;
+        }
+
         public virtual void Copy(string srcUrl, string destUrl)
         {
             var srcPath = GetStoragePathFromUrl(srcUrl);
             var destPath = GetStoragePathFromUrl(destUrl);
 
             CopyDirectoryRecursive(srcPath, destPath);
+        }
+
+        public Task CopyAsync(string srcUrl, string destUrl)
+        {
+            Copy(srcUrl, destUrl);
+
+            return Task.CompletedTask;
         }
 
         private static void CopyDirectoryRecursive(string sourcePath, string destPath)

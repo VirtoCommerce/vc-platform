@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -17,14 +18,14 @@ namespace VirtoCommerce.Platform.Core.Assets
         Task<BlobEntrySearchResult> SearchAsync(string folderUrl, string keyword);
 
         /// <summary>
-        /// Get blog info by url
+        /// Get blob info by URL
         /// </summary>
         /// <param name="blobUrl"></param>
         /// <returns></returns>
         Task<BlobInfo> GetBlobInfoAsync(string blobUrl);
 
         /// <summary>
-        /// Create blob folder in specified provider
+        /// Create blob folder
         /// </summary>
         /// <param name="folder"></param>
         Task CreateFolderAsync(BlobFolder folder);
@@ -32,33 +33,67 @@ namespace VirtoCommerce.Platform.Core.Assets
         /// <summary>
         /// Open blob for reading
         /// </summary>
-        /// <param name="blobUrl">Realative or absolute blob url (tmp/blob.txt) </param>
+        /// <param name="blobUrl">Relative or absolute blob URL (tmp/blob.txt) </param>
         /// <returns></returns>
+        [Obsolete("OpenReadAsync")]
         Stream OpenRead(string blobUrl);
+
+        /// <summary>
+        /// Open blob for reading
+        /// </summary>
+        /// <param name="blobUrl">Relative or absolute blob URL (tmp/blob.txt) </param>
+        /// <returns></returns>
+        Task<Stream> OpenReadAsync(string blobUrl);
 
         /// <summary>
         /// Open blob for writing
         /// </summary>
-        /// <param name="blobUrl">Realative or absolute blob url (tmp/blob.txt)</param>
+        /// <param name="blobUrl">Relative or absolute blob URL (tmp/blob.txt)</param>
         /// <returns></returns>
+        [Obsolete("OpenWriteAsync")]
         Stream OpenWrite(string blobUrl);
 
         /// <summary>
-        /// Remove secified blobs
+        /// Open blob for writing
+        /// </summary>
+        /// <param name="blobUrl">Relative or absolute blob URL (tmp/blob.txt)</param>
+        /// <returns></returns>
+        Task<Stream> OpenWriteAsync(string blobUrl);
+
+        /// <summary>
+        /// Remove specified blobs
         /// </summary>
         /// <param name="urls"></param>
         Task RemoveAsync(string[] urls);
+
         /// <summary>
         /// Move specified blob with srcUrl  to destUrl
         /// </summary>
         /// <param name="srcUrl"></param>
         /// <param name="destUrl"></param>
+        [Obsolete("MoveAsync")]
         void Move(string srcUrl, string destUrl);
+
+        /// <summary>
+        /// Move specified blob with srcUrl  to destUrl
+        /// </summary>
+        /// <param name="srcUrl"></param>
+        /// <param name="destUrl"></param>
+        Task MoveAsync(string srcUrl, string destUrl);
+
         /// <summary>
         /// Copy specified blob with srcUrl to destUrl
         /// </summary>
         /// <param name="srcUrl"></param>
         /// <param name="destUrl"></param>
+        [Obsolete("CopyAsync")]
         void Copy(string srcUrl, string destUrl);
+
+        /// <summary>
+        /// Copy specified blob with srcUrl to destUrl
+        /// </summary>
+        /// <param name="srcUrl"></param>
+        /// <param name="destUrl"></param>
+        Task CopyAsync(string srcUrl, string destUrl);
     }
 }

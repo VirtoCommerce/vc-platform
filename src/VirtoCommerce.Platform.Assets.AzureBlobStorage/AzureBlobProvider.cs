@@ -63,6 +63,11 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         /// <returns>blob stream</returns>
         public virtual Stream OpenRead(string blobUrl)
         {
+            return OpenReadAsync(blobUrl).GetAwaiter().GetResult();
+        }
+
+        public async virtual Task<Stream> OpenReadAsync(string blobUrl)
+        {
             if (string.IsNullOrEmpty(blobUrl))
             {
                 throw new ArgumentNullException(nameof(blobUrl));
@@ -72,9 +77,9 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             var blob = new BlobClient(new Uri(_blobServiceClient.Uri, uri.AbsolutePath.TrimStart('/')));
 
             var result = new MemoryStream();
-            blob.DownloadTo(result);
-            result.Seek(0, SeekOrigin.Begin);
+            await blob.DownloadToAsync(result);
 
+            result.Seek(0, SeekOrigin.Begin);
             return result;
         }
 
@@ -85,16 +90,18 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         /// <returns>blob stream</returns>
         public virtual Stream OpenWrite(string blobUrl)
         {
-            //Container name
-            var containerName = GetContainerNameFromUrl(blobUrl);
-            //directory path
+            return OpenWriteAsync(blobUrl).GetAwaiter().GetResult();
+        }
+
+        public virtual async Task<Stream> OpenWriteAsync(string blobUrl)
+        {
             var filePath = GetFilePathFromUrl(blobUrl);
             if (filePath == null)
             {
                 throw new ArgumentException(@"Cannot get file path from URL", nameof(blobUrl));
             }
 
-            var container = _blobServiceClient.GetBlobContainerClient(containerName);
+            var container = _blobServiceClient.GetBlobContainerClient(GetContainerNameFromUrl(blobUrl));
             container.CreateIfNotExistsAsync(PublicAccessType.Blob).GetAwaiter().GetResult();
 
             var blob = container.GetBlockBlobClient(filePath);
@@ -111,7 +118,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                 }
             };
 
-            return blob.OpenWriteAsync(true, options).GetAwaiter().GetResult();
+            return await blob.OpenWriteAsync(true, options);
         }
 
         public virtual async Task RemoveAsync(string[] urls)
@@ -238,15 +245,25 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 
         public virtual void Move(string srcUrl, string destUrl)
         {
-            MoveAsync(srcUrl, destUrl).GetAwaiter().GetResult();
+            DoMoveAsync(srcUrl, destUrl).GetAwaiter().GetResult();
+        }
+
+        public virtual async Task MoveAsync(string srcUrl, string destUrl)
+        {
+            await DoMoveAsync(srcUrl, destUrl);
         }
 
         public virtual void Copy(string srcUrl, string destUrl)
         {
-            MoveAsync(srcUrl, destUrl, true).GetAwaiter().GetResult();
+            DoMoveAsync(srcUrl, destUrl, true).GetAwaiter().GetResult();
         }
 
-        protected virtual async Task MoveAsync(string oldUrl, string newUrl, bool isCopy = false)
+        public virtual async Task CopyAsync(string srcUrl, string destUrl)
+        {
+            await DoMoveAsync(srcUrl, destUrl, true);
+        }
+
+        protected virtual async Task DoMoveAsync(string oldUrl, string newUrl, bool isCopy = false)
         {
             string oldPath, newPath;
             var isFolderRename = string.IsNullOrEmpty(Path.GetFileName(oldUrl));
@@ -281,7 +298,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         }
 
         /// <summary>
-        /// Move blob new url and remove old blob
+        /// Move blob new URL and remove old blob
         /// </summary>
         /// <param name="container"></param>
         /// <param name="oldUrl"></param>
@@ -353,7 +370,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         #endregion IBlobUrlResolver Members
 
         /// <summary>
-        /// Return outline folder from absolute or relative url
+        /// Return outline folder from absolute or relative URL
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
