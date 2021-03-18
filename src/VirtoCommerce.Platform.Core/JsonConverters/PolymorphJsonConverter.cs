@@ -22,12 +22,12 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
             RegisterType(type, obj =>
             {
                 var typeName = type.Name;
-                var pt = obj[discriminator] ?? obj[discriminator.FirstCharToUpper()];
+                var pt = obj[discriminator] ?? obj[discriminator.FirstCharToLower()];
                 if (pt != null)
                 {
                     typeName = pt.Value<string>();
                 }
-                var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(type).GetMethods().FirstOrDefault(x => x.Name.Equals("TryCreateInstance") && x.GetParameters().Length == 1);
+                var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(type).GetMethod("TryCreateInstance", new Type[] {typeof(string) });
                 var result = tryCreateInstance?.Invoke(null, new[] { typeName });
                 if (result == null)
                 {
@@ -64,7 +64,7 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
             object Factory(JObject obj2)
             {
                 //TODO: Optmimize reflection
-                var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethods().FirstOrDefault(x => x.Name.Equals("TryCreateInstance") && x.GetParameters().Length == 0);
+                var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", new Type[] { typeof(string) });
                 return tryCreateInstance?.Invoke(null, null);
             };
             var factory = _convertFactories.GetOrAdd(objectType, _ => Factory);
