@@ -16,13 +16,13 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
         public override bool CanRead => true;
 
 
-        public static void RegisterTypeForDescriminator(Type type, string descriminator)
+        public static void RegisterTypeForDiscriminator(Type type, string discriminator)
         {
 
             RegisterType(type, obj =>
             {
                 var typeName = type.Name;
-                var pt = obj[descriminator] ?? obj[descriminator.FirstCharToUpper()];
+                var pt = obj[discriminator] ?? obj[discriminator.FirstCharToUpper()];
                 if (pt != null)
                 {
                     typeName = pt.Value<string>();
