@@ -95,13 +95,11 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
             object result;
             var obj = JObject.Load(reader);
 
-            object Factory(JObject obj2)
-            {
+            var factory = _convertFactories.GetOrAdd(objectType, obj2 => {
                 var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(new CreateInstanceCacheKey(objectType, false), _ =>
-                    typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", new Type[] {}));
+                    typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", new Type[] { }));
                 return tryCreateInstance?.Invoke(null, null);
-            };
-            var factory = _convertFactories.GetOrAdd(objectType, _ => Factory); // Fall-back instance creation for discriminator-less cases
+            }); // Fall-back instance creation for discriminator-less cases
 
             result = factory(obj);
 
