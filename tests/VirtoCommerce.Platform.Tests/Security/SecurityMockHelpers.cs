@@ -47,6 +47,7 @@ namespace VirtoCommerce.Platform.Tests.Security
             var userManager = new CustomUserManager(storeMock.Object,
                 Mock.Of<IOptions<IdentityOptions>>(),
                 passwordHasher.Object,
+                passwordHasher.Object,
                 userValidators,
                 pwdValidators,
                 Mock.Of<ILookupNormalizer>(),
