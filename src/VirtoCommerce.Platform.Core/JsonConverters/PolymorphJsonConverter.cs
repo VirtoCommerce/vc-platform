@@ -64,10 +64,10 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
             object Factory(JObject obj2)
             {
                 //TODO: Optmimize reflection
-                var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", new Type[] { typeof(string) });
+                var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", new Type[] {});
                 return tryCreateInstance?.Invoke(null, null);
             };
-            var factory = _convertFactories.GetOrAdd(objectType, _ => Factory);
+            var factory = _convertFactories.GetOrAdd(objectType, _ => Factory); // Fallback conversion
 
             result = factory(obj);
 
