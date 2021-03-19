@@ -56,6 +56,7 @@ namespace VirtoCommerce.Platform.Core
                                     SecurityAccess = "platform:security:access",
                                     SecurityUpdate = "platform:security:update",
                                     SecurityDelete = "platform:security:delete",
+                                    SecurityVerifyEmail = "platform:security:verifyEmail",
                                     SecurityLoginOnBehalf = "platform:security:loginOnBehalf";
 
                 public const string BackgroundJobsManage = "background_jobs:manage";
@@ -66,7 +67,9 @@ namespace VirtoCommerce.Platform.Core
 
                 public static string[] AllPermissions { get; } = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
                                               SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
-                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport, SecurityLoginOnBehalf};
+                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport, SecurityLoginOnBehalf ,
+                                              SecurityVerifyEmail
+                };
             }
 
             public static class Changes

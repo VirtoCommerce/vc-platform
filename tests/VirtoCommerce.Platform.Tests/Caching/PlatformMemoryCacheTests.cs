@@ -2,12 +2,11 @@ using System;
 using System.Threading;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using VirtoCommerce.Platform.Caching;
-using VirtoCommerce.Platform.Core.Caching;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Caching
 {
+    [Trait("Category", "Unit"), CollectionDefinition("CacheTests", DisableParallelization = true)]
     public class PlatformMemoryCacheTests: MemoryCacheTestsBase
     {
         [Fact]
