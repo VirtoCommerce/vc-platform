@@ -32,8 +32,8 @@ plugins:
 #    - monorepo
 
 # Project information
-site_name: Virto Commerce
-site_description: Virto Commerce Documentation
+site_name: Virto Commerce Documentation
+site_description: Documentation for enterprise-level Microsoft .NET ecommerce platform Virto Commerce. 
 site_author: Virto Commerce
 site_url: https://virtocommerce.com/docs/latest
 
@@ -42,12 +42,14 @@ repo_name: VirtoCommerce/vc-platform
 repo_url: https://github.com/VirtoCommerce/vc-platform
 
 # Copyright
-copyright: Copyright &copy; 2020. All rights reserved.
+copyright: Copyright &copy; 2021. All rights reserved.
 
 extra:
     social:
       - icon: fontawesome/brands/github-alt
         link: https://github.com/VirtoCommerce
+      - icon: fontawesome/brands/youtube
+        link: https://www.youtube.com/c/Virtocommerce/videos
       - icon: fontawesome/brands/twitter
         link: https://twitter.com/virtocommerce?lang=en
       - icon: fontawesome/brands/linkedin
