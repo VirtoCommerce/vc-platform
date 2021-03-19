@@ -33,7 +33,7 @@ plugins:
 
 # Project information
 site_name: Virto Commerce Documentation
-site_description: Documentation for enterprise-level Microsoft .NET ecommerce platform Virto Commerce. 
+site_description: Documentation portal for enterprise-level Microsoft .NET ecommerce platform Virto Commerce. 
 site_author: Virto Commerce
 site_url: https://virtocommerce.com/docs/latest
 
