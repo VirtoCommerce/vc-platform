@@ -81,7 +81,7 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
 
             var factory = _convertFactories.GetOrAdd(objectType, obj2 => {
                 var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(CacheKey.With(nameof(PolymorphJsonConverter), objectType.Name), _ =>
-                    typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", new Type[] { }));
+                    typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", 0, new Type[] { }));
                 return tryCreateInstance?.Invoke(null, null);
             }); // Fall-back instance creation for discriminator-less cases
 
