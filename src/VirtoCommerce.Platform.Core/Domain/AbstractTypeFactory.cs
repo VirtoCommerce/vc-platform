@@ -23,7 +23,9 @@ namespace VirtoCommerce.Platform.Core.Common
             }
         }
 
+#pragma warning disable S2743 // Expressive use of _typeInfos member for every template instance
         public static bool HasOverrides
+#pragma warning restore S2743 // Expressive use of _typeInfos member for every template instance
         {
             get
             {
