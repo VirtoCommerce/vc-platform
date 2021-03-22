@@ -46,7 +46,7 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                 var result = tryCreateInstance?.Invoke(null, new[] { typeName });
                 if (result == null)
                 {
-                    throw new NotSupportedException("Unknown scopeType: " + typeName);
+                    throw new NotSupportedException("Unknown discriminator type name: " + typeName);
                 }
                 return result;
             });
