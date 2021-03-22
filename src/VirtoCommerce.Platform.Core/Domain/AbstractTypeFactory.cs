@@ -32,8 +32,9 @@ namespace VirtoCommerce.Platform.Core.Common
                 return _typeInfos.Count > 0;
             }
         }
+
         /// <summary>
-        /// Register new  type (fluent method)
+        /// Register new type (fluent method)
         /// </summary>
         /// <returns>TypeInfo instance to continue configuration through fluent syntax</returns>
         public static TypeInfo<BaseType> RegisterType<T>() where T : BaseType
