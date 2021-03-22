@@ -81,11 +81,11 @@ jobs:
       run: git clone https://github.com/VirtoCommerce/vc-quality-gate-katalon.git
 
     - name: Katalon Studio Github Action
-      uses: katalon-studio/katalon-studio-github-action@v2.2
+      uses: VirtoCommerce/vc-github-actions/katalon-studio-github-action@master
       with:
         version: '7.5.5'
         projectPath: '${{ github.workspace }}/vc-quality-gate-katalon/platform_storefront.prj'
-        args: '-noSplash -retry=0 -testSuitePath="${{ github.event.inputs.testSuite || env.DEFAULT_TEST_SUITE }}" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"'
+        args: '-noSplash -retry=0 -testSuitePath="${{ github.event.inputs.testSuite || env.DEFAULT_TEST_SUITE }}" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default" -webui.autoUpdateDrivers=true'
 
     - name: Katalon Report to PR
       if: ${{ ( success() || failure() ) && github.event_name == 'pull_request' }}
