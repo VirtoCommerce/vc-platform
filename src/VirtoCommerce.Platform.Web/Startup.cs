@@ -30,12 +30,16 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using RedLockNet.SERedis;
+using RedLockNet.SERedis.Configuration;
+using StackExchange.Redis;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
 using VirtoCommerce.Platform.Assets.FileSystem;
 using VirtoCommerce.Platform.Assets.FileSystem.Extensions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -52,6 +56,7 @@ using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
+using VirtoCommerce.Platform.Web.Migrations;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
@@ -475,31 +480,61 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //Force migrations
-            using (var serviceScope = app.ApplicationServices.CreateScope())
+            void UseMultiinstanceSequantally()
             {
-                var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
-                platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
-                platformDbContext.Database.Migrate();
+                // This method contents will run inside of critical section of instance distributed lock.
+                // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
+                // This ensures only one active EF-migration ran at startup to avoid DB-related side-effects.
 
-                var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
-                securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
-                securityDbContext.Database.Migrate();
+                // Force migrations
+                app.UsePlatformMigrations();
+
+                app.UseDbTriggers();
+                // Register platform settings
+                app.UsePlatformSettings();
+
+                // Complete hangfire init and apply Hangfire migrations
+                app.UseHangfire(Configuration);
+
+                // Register platform permissions
+                app.UsePlatformPermissions();
+                app.UseSecurityHandlers();
+                app.UsePruneExpiredTokensJob();
+
+                // Complete modules startup and apply their migrations
+                app.UseModules();
             }
 
-            app.UseDbTriggers();
-            //Register platform settings
-            app.UsePlatformSettings();
+            var redisConnMultiplexer = app.ApplicationServices.GetRequiredService<IConnectionMultiplexer>();
 
-            // Complete hangfire init
-            app.UseHangfire(Configuration);
+            if (redisConnMultiplexer != null)
+            {
+                var migrationDistributedLockOptions = app.ApplicationServices.GetRequiredService<IOptions<PlatformOptions>>().Value.MigrationDistributedLockOptions;
 
-            //Register platform permissions
-            app.UsePlatformPermissions();
-            app.UseSecurityHandlers();
-            app.UsePruneExpiredTokensJob();
+                // Try to acquire distributed lock
+                using (var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(redisConnMultiplexer) }))
+                using (var redLock = redlockFactory.CreateLock(GetType().FullName,
+                    migrationDistributedLockOptions.Expiry /* Successfully acquired lock expiration time */,
+                    migrationDistributedLockOptions.Wait /* Total time to wait until the lock is available */,
+                    migrationDistributedLockOptions.Retry /* The span to acquire the lock in retries */))
+                {
+                    if (redLock.IsAcquired)
+                    {
+                        UseMultiinstanceSequantally();
+                    }
+                    else
+                    {
+                        // Lock not acquired even after migrationDistributedLockOptions.Wait
+                        throw new PlatformException($"Can't apply migrations. It seems another platform instance still applies migrations. Consider to increase MigrationDistributedLockOptions.Wait timeout.");
+                    }
+                }
+            }
+            else
+            {
+                // One-instance configuration, no Redis, just run
+                UseMultiinstanceSequantally();
+            }
 
-            app.UseModules();
 
             app.UseEndpoints(endpoints =>
             {
