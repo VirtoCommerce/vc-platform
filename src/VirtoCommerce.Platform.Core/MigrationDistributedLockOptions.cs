@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace VirtoCommerce.Platform.Core
 {
@@ -21,5 +19,5 @@ namespace VirtoCommerce.Platform.Core
         /// The span to acquire the lock in retries
         /// </summary>
         public TimeSpan Retry { get; set; } = new TimeSpan(0, 0, 3);
-    }   
+    }
 }
