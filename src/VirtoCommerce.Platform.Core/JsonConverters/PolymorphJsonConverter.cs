@@ -28,12 +28,11 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
         public override bool CanWrite => false;
         public override bool CanRead => true;
 
-
         public static void RegisterTypeForDiscriminator(Type type, string discriminator)
         {
-
             RegisterType(type, obj =>
             {
+                // Create discriminator-defined instances
                 var typeName = type.Name;
                 var pt = obj[discriminator] ?? obj[discriminator.FirstCharToLower()];
                 if (pt != null)
@@ -50,8 +49,8 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                 }
                 return result;
             });
-
         }
+
         public static void RegisterType(Type type, Func<JObject, object> factory)
         {
             _canConvertCache[type] = true;
@@ -64,8 +63,6 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
             {
                 return false;
             }
-
-            
 
             var result = _canConvertCache.GetOrAdd(objectType, _ =>
             {
@@ -81,9 +78,9 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
 
             var factory = _convertFactories.GetOrAdd(objectType, obj2 => {
                 var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(CacheKey.With(nameof(PolymorphJsonConverter), objectType.Name), _ =>
-                    typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", 0, new Type[] { }));
+                    typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", 0 /* This guarantees template-parameterless method */, new Type[] { }));
                 return tryCreateInstance?.Invoke(null, null);
-            }); // Fall-back instance creation for discriminator-less cases
+            }); // Create instances for overrides and discriminator-less cases
 
             result = factory(obj);
 
