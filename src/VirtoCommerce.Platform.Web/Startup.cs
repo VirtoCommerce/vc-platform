@@ -30,8 +30,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using RedLockNet.SERedis;
-using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
@@ -101,7 +99,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
             services.AddSingleton<LicenseProvider>();
-
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
             {
@@ -398,7 +395,6 @@ namespace VirtoCommerce.Platform.Web
             // Register the Swagger generator
             services.AddSwagger();
 
-
             // The following line enables Application Insights telemetry collection.
             // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple
             // AI modules initialization https://virtocommerce.atlassian.net/browse/VP-6653 and  https://github.com/microsoft/ApplicationInsights-dotnet/issues/2114 until we don't
@@ -479,47 +475,19 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            void UseMultiinstanceSequantally()
-            {
-                // This method contents will run inside of critical section of instance distributed lock.
-                // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
-                // This ensures only one active EF-migration ran at startup to avoid DB-related side-effects.
-
-                // Force migrations
-                app.UsePlatformMigrations();
-
-                app.UseDbTriggers();
-                // Register platform settings
-                app.UsePlatformSettings();
-
-                // Complete hangfire init and apply Hangfire migrations
-                app.UseHangfire(Configuration);
-
-                // Register platform permissions
-                app.UsePlatformPermissions();
-                app.UseSecurityHandlers();
-                app.UsePruneExpiredTokensJob();
-
-                // Complete modules startup and apply their migrations
-                app.UseModules();
-            }
-
             var redisConnMultiplexer = app.ApplicationServices.GetRequiredService<IConnectionMultiplexer>();
 
             if (redisConnMultiplexer != null)
             {
-                var migrationDistributedLockOptions = app.ApplicationServices.GetRequiredService<IOptions<PlatformOptions>>().Value.MigrationDistributedLockOptions;
+                var options = app.ApplicationServices.GetRequiredService<IOptions<PlatformOptions>>().Value.MigrationDistributedLockOptions;
 
                 // Try to acquire distributed lock
-                using (var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(redisConnMultiplexer) }))
-                using (var redLock = redlockFactory.CreateLock(GetType().FullName,
-                    migrationDistributedLockOptions.Expiry /* Successfully acquired lock expiration time */,
-                    migrationDistributedLockOptions.Wait /* Total time to wait until the lock is available */,
-                    migrationDistributedLockOptions.Retry /* The span to acquire the lock in retries */))
+                using (var redlockFactory = redisConnMultiplexer.GetFactory())
+                using (var redLock = redlockFactory.CreateLock(GetType().FullName, options))
                 {
                     if (redLock.IsAcquired)
                     {
-                        UseMultiinstanceSequantally();
+                        UseMultiinstanceSequantally(app);
                     }
                     else
                     {
@@ -531,9 +499,8 @@ namespace VirtoCommerce.Platform.Web
             else
             {
                 // One-instance configuration, no Redis, just run
-                UseMultiinstanceSequantally();
+                UseMultiinstanceSequantally(app);
             }
-
 
             app.UseEndpoints(endpoints =>
             {
@@ -549,9 +516,35 @@ namespace VirtoCommerce.Platform.Web
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-
-            // Use app insights telemetry 
+            // Use app insights telemetry
             app.UseAppInsightsTelemetry();
+        }
+
+        /// <summary>
+        /// This method contents will run inside of critical section of instance distributed lock.
+        /// Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
+        /// This ensures only one active EF-migration ran at startup to avoid DB-related side-effects.
+        /// </summary>
+        /// <param name="app">Application builder</param>
+        private void UseMultiinstanceSequantally(IApplicationBuilder app)
+        {
+            // Force migrations
+            app.UsePlatformMigrations();
+
+            app.UseDbTriggers();
+            // Register platform settings
+            app.UsePlatformSettings();
+
+            // Complete hangfire init and apply Hangfire migrations
+            app.UseHangfire(Configuration);
+
+            // Register platform permissions
+            app.UsePlatformPermissions();
+            app.UseSecurityHandlers();
+            app.UsePruneExpiredTokensJob();
+
+            // Complete modules startup and apply their migrations
+            app.UseModules();
         }
     }
 }
