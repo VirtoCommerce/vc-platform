@@ -23,9 +23,11 @@ namespace VirtoCommerce.Platform.Core.Common
             }
         }
 
-#pragma warning disable S2743 // Expressive use of _typeInfos member for every template instance
+#pragma warning disable S2743 // Static fields should not be used in generic types
+        // False-positive SLint warning disabled.
+        // These field really need for every class applied by the template
         public static bool HasOverrides
-#pragma warning restore S2743 // Expressive use of _typeInfos member for every template instance
+#pragma warning restore S2743 // Static fields should not be used in generic types
         {
             get
             {

@@ -307,15 +307,6 @@ namespace VirtoCommerce.Platform.Core.Common
             return input.First().ToString().ToUpper() + input.Substring(1);
         }
 
-        public static string FirstCharToLower(this string input)
-        {
-            if (String.IsNullOrEmpty(input))
-            {
-                throw new ArgumentException("input");
-            }
-            return input.First().ToString().ToLower() + input.Substring(1);
-        }
-
         public static bool IsValidEmail(this string input)
         {
             if (input == null)

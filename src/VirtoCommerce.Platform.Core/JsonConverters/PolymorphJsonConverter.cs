@@ -26,36 +26,8 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
         private static readonly ConcurrentDictionary<string, MethodInfo> _createInstanceMethodsCache = new ConcurrentDictionary<string, MethodInfo>();
 
         public override bool CanWrite => false;
+
         public override bool CanRead => true;
-
-        public static void RegisterTypeForDiscriminator(Type type, string discriminator)
-        {
-            RegisterType(type, obj =>
-            {
-                // Create discriminator-defined instances
-                var typeName = type.Name;
-                var pt = obj[discriminator] ?? obj[discriminator.FirstCharToLower()];
-                if (pt != null)
-                {
-                    typeName = pt.Value<string>();
-                }
-
-                var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(CacheKey.With(nameof(PolymorphJsonConverter), type.Name, "+"/* To make a difference in keys for discriminator-specific methods */), _ =>
-                    typeof(AbstractTypeFactory<>).MakeGenericType(type).GetMethod("TryCreateInstance", new Type[] {typeof(string) }));
-                var result = tryCreateInstance?.Invoke(null, new[] { typeName });
-                if (result == null)
-                {
-                    throw new NotSupportedException("Unknown discriminator type name: " + typeName);
-                }
-                return result;
-            });
-        }
-
-        public static void RegisterType(Type type, Func<JObject, object> factory)
-        {
-            _canConvertCache[type] = true;
-            _convertFactories[type] = factory;
-        }
 
         public override bool CanConvert(Type objectType)
         {
@@ -87,6 +59,35 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
             serializer.Populate(obj.CreateReader(), result);
             return result;
         }
+
+        public static void RegisterTypeForDiscriminator(Type type, string discriminator)
+        {
+            RegisterType(type, obj =>
+            {
+                // Create discriminator-defined instances
+                var typeName = type.Name;
+                var pt = obj.GetValue(discriminator, StringComparison.InvariantCultureIgnoreCase);
+                if (pt != null)
+                {
+                    typeName = pt.Value<string>();
+                }
+
+                var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(CacheKey.With(nameof(PolymorphJsonConverter), type.Name, "+"/* To make a difference in keys for discriminator-specific methods */), _ =>
+                    typeof(AbstractTypeFactory<>).MakeGenericType(type).GetMethod("TryCreateInstance", new Type[] {typeof(string) }));
+                var result = tryCreateInstance?.Invoke(null, new[] { typeName });
+                if (result == null)
+                {
+                    throw new NotSupportedException("Unknown discriminator type name: " + typeName);
+                }
+                return result;
+            });
+        }
+
+        public static void RegisterType(Type type, Func<JObject, object> factory)
+        {
+            _canConvertCache[type] = true;
+            _convertFactories[type] = factory;
+        }               
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
