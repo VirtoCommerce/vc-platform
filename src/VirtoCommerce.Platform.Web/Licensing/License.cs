@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
@@ -62,7 +63,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
                 using (var rsa = new RSACryptoServiceProvider())
 #pragma warning restore S4426 // The license intentionally has a low cryptography strength because it wasn’t designed to be hijacked-proof.
                 {
-                    rsa.FromXmlStringCustom(ReadFileWithKey(publicKeyPath));
+                    rsa.FromXmlStringCustom(ReadResourceFileWithKey(publicKeyPath));
 
                     var signatureDeformatter = new RSAPKCS1SignatureDeformatter(rsa);
                     signatureDeformatter.SetHashAlgorithm(_hashAlgorithmName);
@@ -77,14 +78,24 @@ namespace VirtoCommerce.Platform.Web.Licensing
             return result;
         }
 
-        private static string ReadFileWithKey(string path)
+
+        private static string ReadResourceFileWithKey(string resourceName)
         {
-            if (!File.Exists(path))
+            var assembly = Assembly.GetExecutingAssembly();
+
+            var info = assembly.GetManifestResourceInfo(resourceName);
+            if (info == null)
             {
-                throw new LicenseOrKeyNotFoundException(path);
+                throw new LicenseOrKeyNotFoundException(resourceName);
             }
 
-            return File.ReadAllText(path);
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
         }
     }
 }
