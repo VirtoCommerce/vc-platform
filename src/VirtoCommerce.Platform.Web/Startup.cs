@@ -30,7 +30,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using StackExchange.Redis;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
 using VirtoCommerce.Platform.Assets.FileSystem;
@@ -475,14 +474,16 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            var redisConnMultiplexer = app.ApplicationServices.GetRequiredService<IConnectionMultiplexer>();
+            #region DistributionLock
 
-            if (redisConnMultiplexer != null)
+            var redisConnectionMultiplexer = app.GetConnectionMultiplexer();
+
+            if (redisConnectionMultiplexer != null)
             {
                 var options = app.ApplicationServices.GetRequiredService<IOptions<PlatformOptions>>().Value.MigrationDistributedLockOptions;
 
                 // Try to acquire distributed lock
-                using (var redlockFactory = redisConnMultiplexer.GetFactory())
+                using (var redlockFactory = redisConnectionMultiplexer.GetFactory())
                 using (var redLock = redlockFactory.CreateLock(GetType().FullName, options))
                 {
                     if (redLock.IsAcquired)
@@ -501,6 +502,8 @@ namespace VirtoCommerce.Platform.Web
                 // One-instance configuration, no Redis, just run
                 UseMultiinstanceSequantally(app);
             }
+
+            #endregion DistributionLock
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using RedLockNet;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
@@ -8,6 +10,9 @@ namespace VirtoCommerce.Platform.Web.Redis
 {
     public static class RedLockExtensions
     {
+        public static IConnectionMultiplexer GetConnectionMultiplexer(this IApplicationBuilder applicationBuilder)
+            => applicationBuilder.ApplicationServices.GetRequiredService<IConnectionMultiplexer>();
+
         public static RedLockFactory GetFactory(this IConnectionMultiplexer connectionMultiplexer)
             => RedLockFactory.Create(new RedLockMultiplexer[]
             {
