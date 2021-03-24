@@ -122,6 +122,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 isAdministrator = user.IsAdministrator,
                 UserName = user.UserName,
                 PasswordExpired = user.PasswordExpired,
+                LastPasswordChangedDate = user.LastPasswordChangedDate,
                 Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray()
             };
 
@@ -545,6 +546,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 // SetEmailAsync also: sets EmailConfirmed to false and updates the SecurityStamp
                 await _userManager.SetEmailAsync(user, user.Email);
+            }
+
+            if (user.LastPasswordChangedDate != applicationUser.LastPasswordChangedDate)
+            {
+                user.LastPasswordChangedDate = applicationUser.LastPasswordChangedDate;
             }
 
             var result = await _userManager.UpdateAsync(user);
