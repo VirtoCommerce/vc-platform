@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
@@ -18,7 +20,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
         public DateTime ExpirationDate { get; set; }
         public string RawLicense { get; set; }
 
-        public static License Parse(string rawLicense, string publicKeyPath)
+        public static License Parse(string rawLicense, string publicKeyResourceName)
         {
             License result = null;
 
@@ -29,13 +31,11 @@ namespace VirtoCommerce.Platform.Web.Licensing
                     var data = reader.ReadLine();
                     var signature = reader.ReadLine();
 
-                    if (data != null && signature != null)
+                    if (data != null && signature != null
+                        && ValidateSignature(data, signature, publicKeyResourceName))
                     {
-                        if (ValidateSignature(data, signature, publicKeyPath))
-                        {
-                            result = JsonConvert.DeserializeObject<License>(data);
-                            result.RawLicense = rawLicense;
-                        }
+                        result = JsonConvert.DeserializeObject<License>(data);
+                        result.RawLicense = rawLicense;
                     }
                 }
             }
@@ -43,7 +43,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
             return result;
         }
 
-        private static bool ValidateSignature(string data, string signature, string publicKeyPath)
+        private static bool ValidateSignature(string data, string signature, string publicKeyResourceName)
         {
             bool result;
             byte[] dataHash;
@@ -62,7 +62,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
                 using (var rsa = new RSACryptoServiceProvider())
 #pragma warning restore S4426 // The license intentionally has a low cryptography strength because it wasn’t designed to be hijacked-proof.
                 {
-                    rsa.FromXmlStringCustom(ReadFileWithKey(publicKeyPath));
+                    rsa.FromXmlStringCustom(ReadResourceFileWithKey(publicKeyResourceName));
 
                     var signatureDeformatter = new RSAPKCS1SignatureDeformatter(rsa);
                     signatureDeformatter.SetHashAlgorithm(_hashAlgorithmName);
@@ -77,14 +77,26 @@ namespace VirtoCommerce.Platform.Web.Licensing
             return result;
         }
 
-        private static string ReadFileWithKey(string path)
+
+        private static string ReadResourceFileWithKey(string publicKeyResourceName)
         {
-            if (!File.Exists(path))
+            var assembly = Assembly.GetExecutingAssembly();
+
+            var resourceNames = assembly.GetManifestResourceNames();
+            var fullResourceName = resourceNames.FirstOrDefault(x => x.Contains(publicKeyResourceName, StringComparison.OrdinalIgnoreCase));
+
+            if (string.IsNullOrEmpty(fullResourceName))
             {
-                throw new LicenseOrKeyNotFoundException(path);
+                throw new LicenseOrKeyNotFoundException(publicKeyResourceName);
             }
 
-            return File.ReadAllText(path);
+            using (var stream = assembly.GetManifestResourceStream(fullResourceName))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace VirtoCommerce.Platform.Core
@@ -19,8 +18,11 @@ namespace VirtoCommerce.Platform.Core
         //Local path for license file
         public string LicenseFilePath { get; set; } = "app_data/VirtoCommerce.lic";
 
-        //Local path to public key for license
-        public string LicensePublicKeyPath { get; set; } = "app_data/VirtoCommerce_rsa.pub";
+        //Name of the licence file with blob container
+        public string LicenseBlobPath { get; set; } = "license/VirtoCommerce.lic";
+
+        //Name of the public key embedded resource
+        public string LicensePublicKeyResourceName { get; set; } = "VirtoCommerce_rsa.pub";
 
         //Local path to private key for signing license
         public string LicensePrivateKeyPath { get; set; }

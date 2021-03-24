@@ -48,7 +48,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 ForceWebSockets = _pushNotificationOptions.ForceWebSockets
             };
 
-            var license = _licenseProvider.GetLicense();
+            var license = await _licenseProvider.GetLicenseAsync();
 
             if (license != null)
             {

@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core.Common;
@@ -28,10 +29,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet]
         [Route("systeminfo")]
-        public ActionResult<SystemInfo> GetSystemInfo()
+        public async Task<ActionResult<SystemInfo>> GetSystemInfo()
         {
             var platformVersion = PlatformVersion.CurrentVersion.ToString();
-            var license = _licenseProvider.GetLicense();
+            var license = await _licenseProvider.GetLicenseAsync();
 
             var installedModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).OrderBy(x => x.Id)
                                        .Select(x => new ModuleDescriptor(x))
