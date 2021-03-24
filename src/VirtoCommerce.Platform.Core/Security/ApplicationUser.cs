@@ -62,11 +62,6 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public virtual bool PasswordExpired { get; set; }
 
-        /// <summary>
-        /// The last date when the password was changed
-        /// </summary>
-        public virtual DateTime LastPasswordChangedDate { get; set; }
-
         public virtual void Patch(ApplicationUser target)
         {
             target.UserName = UserName;
@@ -92,7 +87,6 @@ namespace VirtoCommerce.Platform.Core.Security
             target.Status = Status;
             target.Password = Password;
             target.PasswordExpired = PasswordExpired;
-            target.LastPasswordChangedDate = LastPasswordChangedDate;
         }
 
         #region ICloneable members
