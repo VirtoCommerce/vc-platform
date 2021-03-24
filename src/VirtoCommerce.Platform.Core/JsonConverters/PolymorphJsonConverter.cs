@@ -1,52 +1,93 @@
 using System;
-using System.Linq;
+using System.Collections.Concurrent;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Core.JsonConverters
 {
     public class PolymorphJsonConverter : JsonConverter
     {
-        private static readonly Type[] _knowTypes = { typeof(ObjectSettingEntry), typeof(DynamicProperty), typeof(ApplicationUser), typeof(Role), typeof(PermissionScope) };
+        
+       
+        /// <summary>
+        /// Factory methods for create instances of proper classes during deserialization
+        /// </summary>
+        private static readonly ConcurrentDictionary<Type, Func<JObject, object>> _convertFactories = new ConcurrentDictionary<Type, Func<JObject, object>>();
+        /// <summary>
+        /// Cache for conversion possibility (to reduce AbstractTypeFactory calls thru reflection)
+        /// </summary>
+        private static readonly ConcurrentDictionary<Type, bool> _canConvertCache = new ConcurrentDictionary<Type, bool>();
+        /// <summary>
+        /// Cache for instance creation method infos (to reduce AbstractTypeFactory calls thru reflection)
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, MethodInfo> _createInstanceMethodsCache = new ConcurrentDictionary<string, MethodInfo>();
 
         public override bool CanWrite => false;
+
         public override bool CanRead => true;
 
         public override bool CanConvert(Type objectType)
         {
-            return _knowTypes.Any(x => x.IsAssignableFrom(objectType));
+            if (objectType.IsPrimitive || objectType.Equals(typeof(string)) || objectType.IsArray)
+            {
+                return false;
+            }
+
+            var result = _canConvertCache.GetOrAdd(objectType, _ =>
+            {
+                return (bool)typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetProperty("HasOverrides").GetValue(null, null);
+            });
+            return result;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             object result;
             var obj = JObject.Load(reader);
-            if (typeof(PermissionScope).IsAssignableFrom(objectType))
-            {
-                var scopeType = objectType.Name;
-                var pt = obj["type"] ?? obj["Type"];
-                if (pt != null)
-                {
-                    scopeType = pt.Value<string>();
-                }
-                result = AbstractTypeFactory<PermissionScope>.TryCreateInstance(scopeType);
-                if (result == null)
-                {
-                    throw new NotSupportedException("Unknown scopeType: " + scopeType);
-                }
-            }
-            else
-            {
-                var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethods().FirstOrDefault(x => x.Name.EqualsInvariant("TryCreateInstance") && x.GetParameters().Length == 0);
-                result = tryCreateInstance?.Invoke(null, null);
-            }
+
+            var factory = _convertFactories.GetOrAdd(objectType, obj2 => {
+                var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(CacheKey.With(nameof(PolymorphJsonConverter), objectType.Name), _ =>
+                    typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", 0 /* This guarantees template-parameterless method */, new Type[] { }));
+                return tryCreateInstance?.Invoke(null, null);
+            }); // Create instances for overrides and discriminator-less cases
+
+            result = factory(obj);
+
             serializer.Populate(obj.CreateReader(), result);
             return result;
         }
+
+        public static void RegisterTypeForDiscriminator(Type type, string discriminator)
+        {
+            RegisterType(type, obj =>
+            {
+                // Create discriminator-defined instances
+                var typeName = type.Name;
+                var pt = obj.GetValue(discriminator, StringComparison.InvariantCultureIgnoreCase);
+                if (pt != null)
+                {
+                    typeName = pt.Value<string>();
+                }
+
+                var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(CacheKey.With(nameof(PolymorphJsonConverter), type.Name, "+"/* To make a difference in keys for discriminator-specific methods */), _ =>
+                    typeof(AbstractTypeFactory<>).MakeGenericType(type).GetMethod("TryCreateInstance", new Type[] {typeof(string) }));
+                var result = tryCreateInstance?.Invoke(null, new[] { typeName });
+                if (result == null)
+                {
+                    throw new NotSupportedException("Unknown discriminator type name: " + typeName);
+                }
+                return result;
+            });
+        }
+
+        public static void RegisterType(Type type, Func<JObject, object> factory)
+        {
+            _canConvertCache[type] = true;
+            _convertFactories[type] = factory;
+        }               
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
