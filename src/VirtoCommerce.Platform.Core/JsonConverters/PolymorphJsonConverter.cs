@@ -97,6 +97,12 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
             _convertFactories[type] = factory;
         }
 
+        public static void RegisterType(Type type, Func<JObject, object> factory)
+        {
+            _canConvertCache[type] = true;
+            _convertFactories[type] = factory;
+        }               
+
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
