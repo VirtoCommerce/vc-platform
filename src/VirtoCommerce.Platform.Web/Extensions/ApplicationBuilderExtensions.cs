@@ -19,12 +19,12 @@ namespace VirtoCommerce.Platform.Web.Extensions
             settingsRegistrar.RegisterSettingsForType(UserProfile.AllSettings, typeof(UserProfile).Name);
 
             var settingsManager = appBuilder.ApplicationServices.GetRequiredService<ISettingsManager>();
-            
+
             var sendDiagnosticData = settingsManager.GetValue(Setup.SendDiagnosticData.Name, (bool)Setup.SendDiagnosticData.DefaultValue);
             if (!sendDiagnosticData)
             {
                 var licenseProvider = appBuilder.ApplicationServices.GetRequiredService<LicenseProvider>();
-                var license = licenseProvider.GetLicense();
+                var license = licenseProvider.GetLicenseAsync().GetAwaiter().GetResult();
 
                 if (license == null || license.ExpirationDate < DateTime.UtcNow)
                 {

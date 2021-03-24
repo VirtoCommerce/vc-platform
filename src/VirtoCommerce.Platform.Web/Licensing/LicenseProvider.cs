@@ -20,11 +20,6 @@ namespace VirtoCommerce.Platform.Web.Licensing
             _blobUrlResolver = blobUrlResolver;
         }
 
-        public License GetLicense()
-        {
-            return GetLicenseAsync().GetAwaiter().GetResult();
-        }
-
         public async Task<License> GetLicenseAsync()
         {
             License license = null;
