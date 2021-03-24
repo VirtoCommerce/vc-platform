@@ -505,7 +505,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseModules();
             }
 
-            var redisConnMultiplexer = app.ApplicationServices.GetRequiredService<IConnectionMultiplexer>();
+            var redisConnMultiplexer = app.ApplicationServices.GetService<IConnectionMultiplexer>();
 
             if (redisConnMultiplexer != null)
             {
