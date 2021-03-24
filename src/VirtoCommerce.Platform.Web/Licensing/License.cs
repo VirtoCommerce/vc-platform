@@ -31,13 +31,11 @@ namespace VirtoCommerce.Platform.Web.Licensing
                     var data = reader.ReadLine();
                     var signature = reader.ReadLine();
 
-                    if (data != null && signature != null)
+                    if (data != null && signature != null
+                        && ValidateSignature(data, signature, publicKeyResourceName))
                     {
-                        if (ValidateSignature(data, signature, publicKeyResourceName))
-                        {
-                            result = JsonConvert.DeserializeObject<License>(data);
-                            result.RawLicense = rawLicense;
-                        }
+                        result = JsonConvert.DeserializeObject<License>(data);
+                        result.RawLicense = rawLicense;
                     }
                 }
             }
