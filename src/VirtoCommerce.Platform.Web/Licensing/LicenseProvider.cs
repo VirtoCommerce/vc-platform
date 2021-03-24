@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
         {
             License license = null;
 
-            var licenseUrl = GetLicenseFileUrl();
+            var licenseUrl = _blobUrlResolver.GetAbsoluteUrl(_platformOptions.LicenseBlobPath);
             if (await LicenseExistsAsync(licenseUrl))
             {
                 var rawLicense = string.Empty;
@@ -76,7 +76,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
 
         public void SaveLicense(License license)
         {
-            using (var stream = _blobStorageProvider.OpenWrite(GetLicenseFileUrl()))
+            using (var stream = _blobStorageProvider.OpenWrite(_blobUrlResolver.GetAbsoluteUrl(_platformOptions.LicenseBlobPath)))
             {
                 var streamWriter = new StreamWriter(stream);
                 streamWriter.Write(license.RawLicense);
@@ -84,13 +84,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
             }
         }
 
-
-        protected string GetLicenseFileUrl()
-        {
-            return _blobUrlResolver.GetAbsoluteUrl(_platformOptions.LicenseBlobPath);
-        }
-
-        protected async Task<bool> LicenseExistsAsync(string licenseUrl)
+        private async Task<bool> LicenseExistsAsync(string licenseUrl)
         {
             var blobInfo = await _blobStorageProvider.GetBlobInfoAsync(licenseUrl);
             return blobInfo != null;
