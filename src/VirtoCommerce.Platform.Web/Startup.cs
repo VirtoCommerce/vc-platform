@@ -479,26 +479,20 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // Register platform settings
+            app.UsePlatformSettings();
+
             void UseMultiinstanceSequantally()
             {
                 // This method contents will run inside of critical section of instance distributed lock.
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
-                // This ensures only one active EF-migration ran at startup to avoid DB-related side-effects.
+                // This ensures only one active EF-migration ran simultaneously to avoid DB-related side-effects.
 
                 // Apply platform migrations
                 app.UsePlatformMigrations();
 
-                app.UseDbTriggers();
-                // Register platform settings
-                app.UsePlatformSettings();
-
                 // Complete hangfire init and apply Hangfire migrations
                 app.UseHangfire(Configuration);
-
-                // Register platform permissions
-                app.UsePlatformPermissions();
-                app.UseSecurityHandlers();
-                app.UsePruneExpiredTokensJob();
 
                 // Complete modules startup and apply their migrations
                 app.UseModules();
@@ -533,6 +527,14 @@ namespace VirtoCommerce.Platform.Web
                 // One-instance configuration, no Redis, just run
                 UseMultiinstanceSequantally();
             }
+
+            app.UseDbTriggers();
+
+            // Register platform permissions
+            app.UsePlatformPermissions();
+            app.UseSecurityHandlers();
+            app.UsePruneExpiredTokensJob();
+
 
             app.UseEndpoints(endpoints =>
             {
