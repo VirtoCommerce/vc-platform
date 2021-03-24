@@ -485,7 +485,7 @@ namespace VirtoCommerce.Platform.Web
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
                 // This ensures only one active EF-migration ran at startup to avoid DB-related side-effects.
 
-                // Force migrations
+                // Apply platform migrations
                 app.UsePlatformMigrations();
 
                 app.UseDbTriggers();
@@ -534,7 +534,6 @@ namespace VirtoCommerce.Platform.Web
                 UseMultiinstanceSequantally();
             }
 
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -548,7 +547,6 @@ namespace VirtoCommerce.Platform.Web
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-
 
             // Use app insights telemetry 
             app.UseAppInsightsTelemetry();

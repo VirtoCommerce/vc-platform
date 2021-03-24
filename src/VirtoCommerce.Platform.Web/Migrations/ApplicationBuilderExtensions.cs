@@ -15,6 +15,11 @@ namespace VirtoCommerce.Platform.Web.Migrations
 {
     public static class ApplicationBuilderExtensions
     {
+        /// <summary>
+        /// Apply platform migrations
+        /// </summary>
+        /// <param name="appBuilder"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UsePlatformMigrations(this IApplicationBuilder appBuilder)
         {
             using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
@@ -26,7 +31,6 @@ namespace VirtoCommerce.Platform.Web.Migrations
                 var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
                 securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
                 securityDbContext.Database.Migrate();
-
             }
 
             return appBuilder;
