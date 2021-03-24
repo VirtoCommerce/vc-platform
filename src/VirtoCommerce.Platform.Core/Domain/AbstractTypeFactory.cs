@@ -23,8 +23,20 @@ namespace VirtoCommerce.Platform.Core.Common
             }
         }
 
+#pragma warning disable S2743 // Static fields should not be used in generic types
+        // False-positive SLint warning disabled.
+        // This field really need for every class applied by the template
+        public static bool HasOverrides
+#pragma warning restore S2743 // Static fields should not be used in generic types
+        {
+            get
+            {
+                return _typeInfos.Count > 0;
+            }
+        }
+
         /// <summary>
-        /// Register new  type (fluent method)
+        /// Register new type (fluent method)
         /// </summary>
         /// <returns>TypeInfo instance to continue configuration through fluent syntax</returns>
         public static TypeInfo<BaseType> RegisterType<T>() where T : BaseType
