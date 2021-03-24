@@ -103,6 +103,7 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             //It is important to call base.FindByIdAsync method to avoid of update a cached user.
             var existUser = await base.FindByIdAsync(user.Id);
+            existUser.LastPasswordChangedDate = DateTime.UtcNow;
 
             var result = await base.ResetPasswordAsync(existUser, token, newPassword);
             if (result == IdentityResult.Success)
@@ -118,6 +119,8 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public override async Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)
         {
+            user.LastPasswordChangedDate = DateTime.UtcNow;
+
             var result = await base.ChangePasswordAsync(user, currentPassword, newPassword);
             if (result == IdentityResult.Success)
             {
