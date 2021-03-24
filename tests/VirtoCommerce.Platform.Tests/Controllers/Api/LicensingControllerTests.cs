@@ -10,6 +10,7 @@ using Moq;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Controllers.Api;
+using VirtoCommerce.Platform.Web.Licensing;
 using Xunit;
 using static VirtoCommerce.Platform.Web.Controllers.Api.LicensingController;
 
@@ -20,6 +21,7 @@ namespace VirtoCommerce.Platform.Tests.Controllers.Api
         private readonly Mock<IOptions<PlatformOptions>> _options = new Mock<IOptions<PlatformOptions>>();
         private readonly Mock<ISettingsManager> _settingsManager = new Mock<ISettingsManager>();
         private readonly PlatformOptions platformOptions = new PlatformOptions();
+        private readonly LicenseProvider _licenseProvider;
 
         private readonly LicensingController _controller;
 
@@ -27,7 +29,9 @@ namespace VirtoCommerce.Platform.Tests.Controllers.Api
         {
             _options.SetupGet(x => x.Value).Returns(platformOptions);
 
-            _controller = new LicensingController(_options.Object, _settingsManager.Object);
+            _licenseProvider = new LicenseProvider(_options.Object, null, null);
+
+            _controller = new LicensingController(_options.Object, _settingsManager.Object, _licenseProvider);
         }
 
         [Theory]
