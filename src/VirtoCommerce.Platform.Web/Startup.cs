@@ -119,7 +119,6 @@ namespace VirtoCommerce.Platform.Web
                     options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
                     //Next line allow to use polymorph types as parameters in API controller methods
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
                     options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
                     options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -551,6 +550,12 @@ namespace VirtoCommerce.Platform.Web
 
             // Use app insights telemetry 
             app.UseAppInsightsTelemetry();
+
+            
+            var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
+            mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
+            PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
+            PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(SearchCriteriaBase), nameof(SearchCriteriaBase.ObjectType));
         }
     }
 }
