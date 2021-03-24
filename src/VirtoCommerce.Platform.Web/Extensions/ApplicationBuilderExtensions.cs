@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using RedLockNet.SERedis;
+using RedLockNet.SERedis.Configuration;
+using StackExchange.Redis;
+using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -60,6 +66,47 @@ namespace VirtoCommerce.Platform.Web.Extensions
                 .OfType<ManifestModuleInfo>()
                 .Where(x => x.State == ModuleState.Initialized && !x.Errors.Any())
                 .ToArray();
+        }
+
+        /// <summary>
+        /// Run specified payload in sync between several instances
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder WithDistributedLock(this IApplicationBuilder app, Action payload)
+        {
+            var redisConnMultiplexer = app.ApplicationServices.GetService<IConnectionMultiplexer>();
+
+            if (redisConnMultiplexer != null)
+            {
+                var migrationDistributedLockOptions = app.ApplicationServices.GetRequiredService<IOptions<PlatformOptions>>().Value.MigrationDistributedLockOptions;
+
+                // Try to acquire distributed lock
+                using (var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(redisConnMultiplexer) }))
+                using (var redLock = redlockFactory.CreateLock(nameof(WithDistributedLock),
+                    migrationDistributedLockOptions.Expiry /* Successfully acquired lock expiration time */,
+                    migrationDistributedLockOptions.Wait /* Total time to wait until the lock is available */,
+                    migrationDistributedLockOptions.Retry /* The span to acquire the lock in retries */))
+                {
+                    if (redLock.IsAcquired)
+                    {
+                        payload();
+                    }
+                    else
+                    {
+                        // Lock not acquired even after migrationDistributedLockOptions.Wait
+                        throw new PlatformException($"Can't apply migrations. It seems another platform instance still applies migrations. Consider to increase MigrationDistributedLockOptions.Wait timeout.");
+                    }
+                }
+            }
+            else
+            {
+                // One-instance configuration, no Redis, just run
+                payload();
+            }
+
+            return app;
         }
     }
 

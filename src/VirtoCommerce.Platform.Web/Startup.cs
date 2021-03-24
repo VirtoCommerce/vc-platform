@@ -30,16 +30,12 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using RedLockNet.SERedis;
-using RedLockNet.SERedis.Configuration;
-using StackExchange.Redis;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
 using VirtoCommerce.Platform.Assets.FileSystem;
 using VirtoCommerce.Platform.Assets.FileSystem.Extensions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -478,7 +474,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            void UseMultiinstanceSequantally()
+            app.WithDistributedLock(() =>
             {
                 // This method contents will run inside of critical section of instance distributed lock.
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
@@ -502,37 +498,7 @@ namespace VirtoCommerce.Platform.Web
 
                 // Complete modules startup and apply their migrations
                 app.UseModules();
-            }
-
-            var redisConnMultiplexer = app.ApplicationServices.GetService<IConnectionMultiplexer>();
-
-            if (redisConnMultiplexer != null)
-            {
-                var migrationDistributedLockOptions = app.ApplicationServices.GetRequiredService<IOptions<PlatformOptions>>().Value.MigrationDistributedLockOptions;
-
-                // Try to acquire distributed lock
-                using (var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(redisConnMultiplexer) }))
-                using (var redLock = redlockFactory.CreateLock(GetType().FullName,
-                    migrationDistributedLockOptions.Expiry /* Successfully acquired lock expiration time */,
-                    migrationDistributedLockOptions.Wait /* Total time to wait until the lock is available */,
-                    migrationDistributedLockOptions.Retry /* The span to acquire the lock in retries */))
-                {
-                    if (redLock.IsAcquired)
-                    {
-                        UseMultiinstanceSequantally();
-                    }
-                    else
-                    {
-                        // Lock not acquired even after migrationDistributedLockOptions.Wait
-                        throw new PlatformException($"Can't apply migrations. It seems another platform instance still applies migrations. Consider to increase MigrationDistributedLockOptions.Wait timeout.");
-                    }
-                }
-            }
-            else
-            {
-                // One-instance configuration, no Redis, just run
-                UseMultiinstanceSequantally();
-            }
+            });
 
             app.UseEndpoints(endpoints =>
             {
@@ -551,7 +517,7 @@ namespace VirtoCommerce.Platform.Web
             // Use app insights telemetry 
             app.UseAppInsightsTelemetry();
 
-            
+
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
