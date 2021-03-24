@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Telemetry
         /// <param name="telemetry">Telemetry item.</param>
         protected override void OnInitializeTelemetry(HttpContext platformContext, RequestTelemetry requestTelemetry, ITelemetry telemetry)
         {
-            if (platformContext.User != null)
+            if (platformContext.User?.Identity?.Name != null)
             {
                 telemetry.Context.User.AuthenticatedUserId = platformContext.User.Identity.Name;
             }
