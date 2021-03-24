@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -19,7 +20,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
         public DateTime ExpirationDate { get; set; }
         public string RawLicense { get; set; }
 
-        public static License Parse(string rawLicense, string publicKeyPath)
+        public static License Parse(string rawLicense, string publicKeyResourceName)
         {
             License result = null;
 
@@ -32,7 +33,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
 
                     if (data != null && signature != null)
                     {
-                        if (ValidateSignature(data, signature, publicKeyPath))
+                        if (ValidateSignature(data, signature, publicKeyResourceName))
                         {
                             result = JsonConvert.DeserializeObject<License>(data);
                             result.RawLicense = rawLicense;
@@ -44,7 +45,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
             return result;
         }
 
-        private static bool ValidateSignature(string data, string signature, string publicKeyPath)
+        private static bool ValidateSignature(string data, string signature, string publicKeyResourceName)
         {
             bool result;
             byte[] dataHash;
@@ -63,7 +64,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
                 using (var rsa = new RSACryptoServiceProvider())
 #pragma warning restore S4426 // The license intentionally has a low cryptography strength because it wasn’t designed to be hijacked-proof.
                 {
-                    rsa.FromXmlStringCustom(ReadResourceFileWithKey(publicKeyPath));
+                    rsa.FromXmlStringCustom(ReadResourceFileWithKey(publicKeyResourceName));
 
                     var signatureDeformatter = new RSAPKCS1SignatureDeformatter(rsa);
                     signatureDeformatter.SetHashAlgorithm(_hashAlgorithmName);
@@ -79,17 +80,19 @@ namespace VirtoCommerce.Platform.Web.Licensing
         }
 
 
-        private static string ReadResourceFileWithKey(string resourceName)
+        private static string ReadResourceFileWithKey(string publicKeyResourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            var info = assembly.GetManifestResourceInfo(resourceName);
-            if (info == null)
+            var resourceNames = assembly.GetManifestResourceNames();
+            var fullResourceName = resourceNames.FirstOrDefault(x => x.Contains(publicKeyResourceName, StringComparison.OrdinalIgnoreCase));
+
+            if (string.IsNullOrEmpty(fullResourceName))
             {
-                throw new LicenseOrKeyNotFoundException(resourceName);
+                throw new LicenseOrKeyNotFoundException(publicKeyResourceName);
             }
 
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            using (var stream = assembly.GetManifestResourceStream(fullResourceName))
             {
                 using (var reader = new StreamReader(stream))
                 {

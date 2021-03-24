@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Core
         public string LicenseBlobPath { get; set; } = "license/VirtoCommerce.lic";
 
         //Name of the public key embedded resource
-        public string LicensePublicKeyResourceName { get; set; } = "VirtoCommerce.Platform.Web.app_data.VirtoCommerce_rsa.pub";
+        public string LicensePublicKeyResourceName { get; set; } = "VirtoCommerce_rsa.pub";
 
         //Local path to private key for signing license
         public string LicensePrivateKeyPath { get; set; }
