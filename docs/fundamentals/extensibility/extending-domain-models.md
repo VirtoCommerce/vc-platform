@@ -165,7 +165,7 @@ Also is so important to register our new persistent schema representation `Custo
     }
 ```
 
-## The known problems with updating when you have a schema  of persistent layer extensions.
+## The known problems with updating when you have a schema of persistent layer extensions.
 
 As a background, a huge limitation of the persistent layer extension technique is the mandatory creation of an empty database migration after each derived module update that has a new migration with schema changes. Without this, you will receive this error
 
@@ -186,24 +186,24 @@ Add-Migration BumpVersionEmptyMigration -Context {{ full type name with namespac
 
 * Update the module dependency version in `module.manifest file` of your custom module to point to the actual version of dependency. 
 
-## How the API understand/deserializes the derived domain types 
+## How the API understands/deserializes the derived domain types 
 
-In the previous paragraphs, we are considered extending domain types and persistent layers, but, in some cases, it is not enough. Especially when your domain types are used as DTO (Data Transfer Object) in public API contracts and can use as a result or parameter in the API endpoints. 
+In the previous paragraphs, we have considered extending domain types and persistent layers, but, in some cases, it is not enough. Especially when your domain types are used as DTOs (Data Transfer Objects) in public API contracts and can be used as a result or parameter in the API endpoints. 
 
-There is a technical task of an instantiation of the right “effective” type instance from incoming JSON (deserialization) data.
+There is a technical task of an instantiation of the right “effective” type instance from incoming JSON data (deserialization).
 
 There are two ways to force ASP.NET Core API Json serializer to understand our domain extensions:
-1. Use platform-defined `PolymorphJsonConverter`. It's preferable to use in most cases. The `PolymorphJsonConverter` transparently deserializes extending domain types with no developer actions.
-2. Custom JSON-converter, that passed in MvcNewtonsoftJsonOptions. Consider using this way if `PolymorphJsonConverter` not suitable for your case.
+1. Use platform-defined `PolymorphJsonConverter`. It's preferable to use in most cases. The `PolymorphJsonConverter` transparently deserializes extended domain types with no developer effort.
+2. Custom JSON converter passed to MvcNewtonsoftJsonOptions. Consider using it, if `PolymorphJsonConverter` is not suitable for your specific case.
 
 ### Universal `PolymorphJsonConverter`
 The `PolymorphJsonConverter` uses `AbstractTypeFactory<>` to construct instances during deserialization. There are following cases of overriding/extending, when `PolymorphJsonConverter` fits:
 
-1. Full type override. It's the case when the derived type replaces the original type thru the call `AbstractTypeFactory<>.OverrideType`, and the API uses the original type as a formal definition. No developer actions need in that case. `PolymorphJsonConverter` will deserialize instances of the derived type.
-1. Extending types controlled by registration thru the call `AbstractTypeFactory<>.RegisterType`, and the API uses the basic type as a formal definition. `PolymorphJsonConverter` will construct instances of derived types by looking at the value of discriminator property (formally defined in basic type) that stores the type name of the descendant. Because the discriminator property defined in the basic class, there are 2 subcases:
-    * Basic type, defined in the platform or another module and discriminators already registered in respective places. The developer needs no actions to support the deserialization of extending types.
-    * Basic type resides in newly creating custom module. That case developer needs to tell `PolymorphJsonConverter` which of the basic type properties stores the discriminator thru the call of static method `PolymorphJsonConverter.RegisterTypeForDiscriminator` in module `PostInitialize`.
-    For example, how it's made in Customer module: *`VirtoCommerce.CustomerModule.Web\Module.cs `*
+1. Full type override. It's the case when the derived type replaces the original type thru the call to `AbstractTypeFactory<>.OverrideType`, and the API uses the original type as a formal definition. No developer actions needed in that case. `PolymorphJsonConverter` will deserialize instances of the derived type.
+1. Extending types controlled by registration thru the call to `AbstractTypeFactory<>.RegisterType`, and the API uses the basic type as a formal definition. `PolymorphJsonConverter` will construct instances of derived types by looking at the value of discriminator property (formally defined in basic type) that stores the type name of the descendant. Because the discriminator property defined in the base class, there are 2 subcases:
+    * The basic type was defined in the Platform or another module and the discriminator already registered as needed. No additional developer actions needed to support the deserialization of extending types.
+    * The basic type resides in the newly created custom module. In that case, the developer needs to tell `PolymorphJsonConverter` which of the basic type properties stores the discriminator thru the call of static method `PolymorphJsonConverter.RegisterTypeForDiscriminator` in module's `PostInitialize`.
+    For example, check VC Customer module: *`VirtoCommerce.CustomerModule.Web\Module.cs `*
 ```C#
     public class Module : IModule, IExportSupport, IImportSupport
     {
@@ -225,7 +225,7 @@ The `PolymorphJsonConverter` uses `AbstractTypeFactory<>` to construct instances
 
 ### Custom JSON-converter
 
- Of course you can use standard converters extension technique by registering custom converter in `MvcNewtonsoftJsonOptions` in module `PostInitialize`:
+ Of course, you can use the standard converters extension technique by registering custom converter in `MvcNewtonsoftJsonOptions` in module `PostInitialize`:
 
 ```C#
     public class YourCustomJsonConverter : JsonConverter
@@ -235,7 +235,7 @@ The `PolymorphJsonConverter` uses `AbstractTypeFactory<>` to construct instances
     }
 ```
 
-*`/Module.cs`*
+*`VirtoCommerce.OrdersModule.Web/Module.cs`*
 ```C#
     public class Module : IModule
     {
