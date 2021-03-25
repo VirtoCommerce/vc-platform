@@ -79,14 +79,14 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
             if (redisConnMultiplexer != null)
             {
-                var distributedLockWait = 1000 * app.ApplicationServices.GetRequiredService<IOptions<LocalStorageModuleCatalogOptions>>().Value.DistributedLockWait;
+                var distributedLockWait = app.ApplicationServices.GetRequiredService<IOptions<LocalStorageModuleCatalogOptions>>().Value.DistributedLockWait;
 
                 // Try to acquire distributed lock
                 using (var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(redisConnMultiplexer) }))
                 using (var redLock = redlockFactory.CreateLock(nameof(WithDistributedLock),
-                    new TimeSpan(120000 + distributedLockWait) /* Successfully acquired lock expiration time */,
-                    new TimeSpan(distributedLockWait) /* Total time to wait until the lock is available */,
-                    new TimeSpan(0, 0, 3) /* The span to acquire the lock in retries */))
+                    TimeSpan.FromSeconds(120 + distributedLockWait) /* Successfully acquired lock expiration time */,
+                    TimeSpan.FromSeconds(distributedLockWait) /* Total time to wait until the lock is available */,
+                    TimeSpan.FromSeconds(3) /* The span to acquire the lock in retries */))
                 {
                     if (redLock.IsAcquired)
                     {
