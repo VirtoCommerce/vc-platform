@@ -235,7 +235,7 @@ The `PolymorphJsonConverter` uses `AbstractTypeFactory<>` to construct instances
     }
 ```
 
-*`VirtoCommerce.OrdersModule.Web/Module.cs`*
+*`/Module.cs`*
 ```C#
     public class Module : IModule
     {
