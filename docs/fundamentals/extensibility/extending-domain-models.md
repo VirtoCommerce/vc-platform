@@ -186,29 +186,54 @@ Add-Migration BumpVersionEmptyMigration -Context {{ full type name with namespac
 
 * Update the module dependency version in `module.manifest file` of your custom module to point to the actual version of dependency. 
 
-## PolymorphicOperationJsonConverter. How the API understand/deserializes the derived domain types 
+## How the API understand/deserializes the derived domain types 
 
-In the previous paragraphs, we are considered how to extend the domain types and persistent layer but, in some cases, it is not enough. Especially when your domain types are used as DTO (Data Transfer Object) in public API contacts and can use as result or parameters in the API endpoints. In order to force ASP.NET Core API Json serializer to understand our domain extensions, we use the special `PolymorphicOperationJsonConverter` class. Its primary responsibility is an instantiation of the right “effective” type instance from incoming JSON (deserialization) data. Looking to implementation it uses the `AbstractTypeFactory<>`  and reflection to construct the proper type instance based on base type or discriminator is used from JSON request body.
+In the previous paragraphs, we are considered extending domain types and persistent layers, but, in some cases, it is not enough. Especially when your domain types are used as DTO (Data Transfer Object) in public API contracts and can use as a result or parameter in the API endpoints. 
 
+There is a technical task of an instantiation of the right “effective” type instance from incoming JSON (deserialization) data.
 
-*`VirtoCommerce.OrdersModule.Web/JsonConverters/PolymorphicOperationJsonConverter.cs`*
+There are two ways to force ASP.NET Core API Json serializer to understand our domain extensions:
+1. Use platform-defined `PolymorphJsonConverter`. It's preferable to use in most cases. The `PolymorphJsonConverter` transparently deserializes extending domain types with no developer actions.
+2. Custom JSON-converter, that passed in MvcNewtonsoftJsonOptions. Consider using this way if `PolymorphJsonConverter` not suitable for your case.
+
+### Universal `PolymorphJsonConverter`
+The `PolymorphJsonConverter` uses `AbstractTypeFactory<>` to construct instances during deserialization. There are following cases of overriding/extending, when `PolymorphJsonConverter` fits:
+
+1. Full type override. It's the case when the derived type replaces the original type thru the call `AbstractTypeFactory<>.OverrideType`, and the API uses the original type as a formal definition. No developer actions need in that case. `PolymorphJsonConverter` will deserialize instances of the derived type.
+1. Extending types controlled by registration thru the call `AbstractTypeFactory<>.RegisterType`, and the API uses the basic type as a formal definition. `PolymorphJsonConverter` will construct instances of derived types by looking at the value of discriminator property (formally defined in basic type) that stores the type name of the descendant. Because the discriminator property defined in the basic class, there are 2 subcases:
+    * Basic type, defined in the platform or another module and discriminators already registered in respective places. The developer needs no actions to support the deserialization of extending types.
+    * Basic type resides in newly creating custom module. That case developer needs to tell `PolymorphJsonConverter` which of the basic type properties stores the discriminator thru the call of static method `PolymorphJsonConverter.RegisterTypeForDiscriminator` in module `PostInitialize`.
+    For example, how it's made in Customer module: *`VirtoCommerce.CustomerModule.Web\Module.cs `*
 ```C#
-    public class PolymorphicOperationJsonConverter : JsonConverter
+    public class Module : IModule, IExportSupport, IImportSupport
     {
         ...
-        
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public void PostInitialize(IApplicationBuilder appBuilder)
         {
-            object retVal;
-            var obj = JObject.Load(reader);
-
-            var tryCreateInstance = typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethods().FirstOrDefault(x => x.Name.EqualsInvariant("TryCreateInstance") && x.GetParameters().Length == 0);
-            retVal = tryCreateInstance?.Invoke(null, null);
+            ...
+            AbstractTypeFactory<Member>.RegisterType<Organization>().MapToType<OrganizationEntity>();
+            AbstractTypeFactory<Member>.RegisterType<Contact>().MapToType<ContactEntity>();
+            AbstractTypeFactory<Member>.RegisterType<Vendor>().MapToType<VendorEntity>();
+            AbstractTypeFactory<Member>.RegisterType<Employee>().MapToType<EmployeeEntity>();
+            ...
+            PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(Member), nameof(Member.MemberType));
+            ...
         }
         ...
     }
 ```
-The many base VirtoCommerce modules have such PolymorphicOperationJsonConverter for their own types that support extensions and register it in their `Module.cs` in this way.
+
+### Custom JSON-converter
+
+ Of course you can use standard converters extension technique by registering custom converter in `MvcNewtonsoftJsonOptions` in module `PostInitialize`:
+
+```C#
+    public class YourCustomJsonConverter : JsonConverter
+    {
+        ...
+        ...
+    }
+```
 
 *`VirtoCommerce.OrdersModule.Web/Module.cs`*
 ```C#
@@ -220,7 +245,7 @@ The many base VirtoCommerce modules have such PolymorphicOperationJsonConverter 
 
             // enable polymorphic types in API controller methods
             var mvcJsonOptions = appBuilder.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
-            mvcJsonOptions.Value.SerializerSettings.Converters.Add(appBuilder.ApplicationServices.GetService<PolymorphicOperationJsonConverter>());
+            mvcJsonOptions.Value.SerializerSettings.Converters.Add(appBuilder.ApplicationServices.GetService<YourCustomJsonConverter>());
 
             ...
 
