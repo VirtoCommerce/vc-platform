@@ -65,7 +65,7 @@ namespace VirtoCommerce.Platform.Core.Security
         /// <summary>
         /// The last date when the password was changed
         /// </summary>
-        public virtual DateTime LastPasswordChangedDate { get; set; }
+        public virtual DateTime? LastPasswordChangedDate { get; set; }
 
         public virtual void Patch(ApplicationUser target)
         {

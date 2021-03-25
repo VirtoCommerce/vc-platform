@@ -10,8 +10,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
             migrationBuilder.AddColumn<DateTime>(
                 name: "LastPasswordChangedDate",
                 table: "AspNetUsers",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

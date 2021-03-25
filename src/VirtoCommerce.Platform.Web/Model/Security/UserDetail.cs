@@ -10,6 +10,6 @@ namespace VirtoCommerce.Platform.Web.Model.Security
         public string UserName { get; set; }
         public bool isAdministrator { get; set; }
         public bool PasswordExpired { get; set; }
-        public DateTime LastPasswordChangedDate { get; set; }
+        public DateTime? LastPasswordChangedDate { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using VirtoCommerce.Platform.Security.Repositories;
 namespace VirtoCommerce.Platform.Security.Migrations
 {
     [DbContext(typeof(SecurityDbContext))]
-    [Migration("20210323075715_LastPasswordChangedDate")]
+    [Migration("20210325092444_LastPasswordChangedDate")]
     partial class LastPasswordChangedDate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -348,7 +348,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     b.Property<bool>("IsAdministrator")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastPasswordChangedDate")
+                    b.Property<DateTime?>("LastPasswordChangedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("LockoutEnabled")
