@@ -7,7 +7,6 @@ using Microsoft.Extensions.Options;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
-using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
@@ -25,7 +24,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
             settingsRegistrar.RegisterSettingsForType(UserProfile.AllSettings, typeof(UserProfile).Name);
 
             var settingsManager = appBuilder.ApplicationServices.GetRequiredService<ISettingsManager>();
-            
+
             var sendDiagnosticData = settingsManager.GetValue(Setup.SendDiagnosticData.Name, (bool)Setup.SendDiagnosticData.DefaultValue);
             if (!sendDiagnosticData)
             {
@@ -80,14 +79,14 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
             if (redisConnMultiplexer != null)
             {
-                var migrationDistributedLockOptions = app.ApplicationServices.GetRequiredService<IOptions<PlatformOptions>>().Value.MigrationDistributedLockOptions;
+                var distributedLockWait = 1000 * app.ApplicationServices.GetRequiredService<IOptions<LocalStorageModuleCatalogOptions>>().Value.DistributedLockWait;
 
                 // Try to acquire distributed lock
                 using (var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(redisConnMultiplexer) }))
                 using (var redLock = redlockFactory.CreateLock(nameof(WithDistributedLock),
-                    migrationDistributedLockOptions.Expiry /* Successfully acquired lock expiration time */,
-                    migrationDistributedLockOptions.Wait /* Total time to wait until the lock is available */,
-                    migrationDistributedLockOptions.Retry /* The span to acquire the lock in retries */))
+                    new TimeSpan(120000 + distributedLockWait) /* Successfully acquired lock expiration time */,
+                    new TimeSpan(distributedLockWait) /* Total time to wait until the lock is available */,
+                    new TimeSpan(0, 0, 3) /* The span to acquire the lock in retries */))
                 {
                     if (redLock.IsAcquired)
                     {
