@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
             if (!sendDiagnosticData)
             {
                 var licenseProvider = appBuilder.ApplicationServices.GetRequiredService<LicenseProvider>();
-                var license = licenseProvider.GetLicense();
+                var license = licenseProvider.GetLicenseAsync().GetAwaiter().GetResult();
 
                 if (license == null || license.ExpirationDate < DateTime.UtcNow)
                 {
