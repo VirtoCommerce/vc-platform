@@ -41,7 +41,6 @@ using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
-using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
@@ -52,6 +51,7 @@ using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
+using VirtoCommerce.Platform.Web.Migrations;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
@@ -474,31 +474,31 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //Force migrations
-            using (var serviceScope = app.ApplicationServices.CreateScope())
+            app.WithDistributedLock(() =>
             {
-                var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
-                platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
-                platformDbContext.Database.Migrate();
+                // This method contents will run inside of critical section of instance distributed lock.
+                // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
+                // This ensures only one active EF-migration ran simultaneously to avoid DB-related side-effects.
 
-                var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
-                securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
-                securityDbContext.Database.Migrate();
-            }
+                // Apply platform migrations
+                app.UsePlatformMigrations();
 
-            app.UseDbTriggers();
-            //Register platform settings
-            app.UsePlatformSettings();
+                app.UseDbTriggers();
 
-            // Complete hangfire init
-            app.UseHangfire(Configuration);
+                // Register platform settings
+                app.UsePlatformSettings();
 
-            //Register platform permissions
-            app.UsePlatformPermissions();
-            app.UseSecurityHandlers();
-            app.UsePruneExpiredTokensJob();
+                // Complete hangfire init and apply Hangfire migrations
+                app.UseHangfire(Configuration);
 
-            app.UseModules();
+                // Register platform permissions
+                app.UsePlatformPermissions();
+                app.UseSecurityHandlers();
+                app.UsePruneExpiredTokensJob();
+
+                // Complete modules startup and apply their migrations
+                app.UseModules();
+            });
 
             app.UseEndpoints(endpoints =>
             {
@@ -514,11 +514,10 @@ namespace VirtoCommerce.Platform.Web
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-
             // Use app insights telemetry 
             app.UseAppInsightsTelemetry();
 
-            
+
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
