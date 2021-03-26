@@ -522,7 +522,6 @@ namespace VirtoCommerce.Platform.Web
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
-            PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(SearchCriteriaBase), nameof(SearchCriteriaBase.ObjectType));
         }
     }
 }
