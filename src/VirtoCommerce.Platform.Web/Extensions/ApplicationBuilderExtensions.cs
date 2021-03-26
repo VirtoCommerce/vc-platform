@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
@@ -77,6 +78,8 @@ namespace VirtoCommerce.Platform.Web.Extensions
         {
             var redisConnMultiplexer = app.ApplicationServices.GetService<IConnectionMultiplexer>();
 
+            var logger = app.ApplicationServices.GetService<ILogger<Startup>>();
+
             if (redisConnMultiplexer != null)
             {
                 var distributedLockWait = app.ApplicationServices.GetRequiredService<IOptions<LocalStorageModuleCatalogOptions>>().Value.DistributedLockWait;
@@ -90,6 +93,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
                 {
                     if (redLock.IsAcquired)
                     {
+                        logger.LogInformation("Distributed lock acquired");
                         payload();
                     }
                     else
@@ -102,6 +106,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
             else
             {
                 // One-instance configuration, no Redis, just run
+                logger.Log(LogLevel.Information | LogLevel.Warning, "Distributed lock not acquired, Redis ConnectionMultiplexer is null (No Redis connection ?)");
                 payload();
             }
 
