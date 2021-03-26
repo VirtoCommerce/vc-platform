@@ -352,6 +352,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Change password for current user.
+        /// </summary>
+        /// <param name="changePassword">Old and new passwords.</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("currentuser/changepassword")]
+        [ProducesResponseType(400)]
+        [Authorize]
+        public async Task<ActionResult<SecurityResult>> ChangeCurrentUserPassword([FromBody] ChangePasswordRequest changePassword)
+        {
+            return await ChangePassword(User.Identity.Name, changePassword);
+        }
+
+        /// <summary>
         /// Change password
         /// </summary>
         /// <param name="userName"></param>
@@ -369,7 +383,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found." }).ToSecurityResult());
+            }
+
+            if (changePassword.OldPassword == changePassword.NewPassword)
+            {
+                return BadRequest(new SecurityResult { Errors = new[] { "Choose a different password." } });
             }
 
             var result = await _signInManager.UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
@@ -390,6 +409,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("currentuser/resetpassword")]
         [AllowAnonymous]
+        [Obsolete("use /currentuser/changepassword instead")]
         public async Task<ActionResult<SecurityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
         {
             return await ResetPassword(User.Identity.Name, resetPassword);

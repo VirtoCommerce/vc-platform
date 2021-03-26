@@ -25,6 +25,7 @@ namespace Mvc.Server
     {
         private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
         private readonly IOptions<IdentityOptions> _identityOptions;
+        private readonly UserOptionsExtended _userOptionsExtended;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
@@ -34,6 +35,7 @@ namespace Mvc.Server
         public AuthorizationController(
             OpenIddictApplicationManager<OpenIddictApplication> applicationManager,
             IOptions<IdentityOptions> identityOptions,
+            IOptions<UserOptionsExtended> userOptionsExtended,
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
@@ -42,6 +44,7 @@ namespace Mvc.Server
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions;
+            _userOptionsExtended = userOptionsExtended.Value;
             _signInManager = signInManager;
             _userManager = userManager;
             _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
@@ -82,6 +85,15 @@ namespace Mvc.Server
                         Error = OpenIdConnectConstants.Errors.InvalidGrant,
                         ErrorDescription = "The username/password couple is invalid."
                     });
+                }
+
+
+                // check and expire user password if needed
+                var lastPasswordChangeDate = user.LastPasswordChangedDate ?? user.CreatedDate;
+                if (!user.PasswordExpired && _userOptionsExtended.MaxPasswordAge != default && lastPasswordChangeDate.Add(_userOptionsExtended.MaxPasswordAge) < DateTime.UtcNow)
+                {
+                    user.PasswordExpired = true;
+                    await _userManager.UpdateAsync(user);
                 }
 
                 // Create a new authentication ticket.

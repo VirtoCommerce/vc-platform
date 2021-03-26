@@ -325,6 +325,7 @@ namespace VirtoCommerce.Platform.Web
                 });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
+            services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
 
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
