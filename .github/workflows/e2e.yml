@@ -78,7 +78,7 @@ jobs:
 
     - name: Getting tests
       shell: sh
-      run: git clone https://github.com/VirtoCommerce/vc-quality-gate-katalon.git
+      run: git clone https://github.com/VirtoCommerce/vc-quality-gate-katalon.git --branch dev
 
     - name: Katalon Studio Github Action
       uses: VirtoCommerce/vc-github-actions/katalon-studio-github-action@master
