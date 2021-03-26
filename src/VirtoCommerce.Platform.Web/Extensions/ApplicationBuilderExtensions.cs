@@ -106,7 +106,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
             else
             {
                 // One-instance configuration, no Redis, just run
-                logger.Log(LogLevel.Information | LogLevel.Warning, "Distributed lock not acquired, Redis ConnectionMultiplexer is null (No Redis connection ?)");
+                logger.Log(LogLevel.Information, "Distributed lock not acquired, Redis ConnectionMultiplexer is null (No Redis connection ?)");
                 payload();
             }
 
