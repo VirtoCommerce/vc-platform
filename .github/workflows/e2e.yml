@@ -19,7 +19,7 @@ on:
 
 jobs:
   e2e-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     env:
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
@@ -78,10 +78,10 @@ jobs:
 
     - name: Getting tests
       shell: sh
-      run: git clone https://github.com/VirtoCommerce/vc-quality-gate-katalon.git
+      run: git clone https://github.com/VirtoCommerce/vc-quality-gate-katalon.git --branch dev
 
     - name: Katalon Studio Github Action
-      uses: katalon-studio/katalon-studio-github-action@v2.2
+      uses: VirtoCommerce/vc-github-actions/katalon-studio-github-action@master
       with:
         version: '7.5.5'
         projectPath: '${{ github.workspace }}/vc-quality-gate-katalon/platform_storefront.prj'

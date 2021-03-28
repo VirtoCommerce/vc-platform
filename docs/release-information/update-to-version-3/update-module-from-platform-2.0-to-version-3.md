@@ -192,7 +192,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
         > **Note:** if there are extended entities then need to explicitly update `Discriminator` to extended type. For more details please check [extension article](../../techniques/extend-DB-model.md#L63) Discriminator column creation part.
 
 5. If separated databases are used by the solution, follow the steps in [Prepare separated databases for VC v3](prepare-separated-databases-for-v3.md).
-6. It's useful sometimes to apply migrations without starting the platform. There is an utility to extract and apply migrations (integrated to vc-build tool). Take a reference to [Grab migrator utility](../../../build/GrabMigrator/samples/readme.md).
+6. It's useful sometimes to apply migrations without starting the platform. There is an utility to extract and apply migrations (integrated to vc-build tool). Take a reference to [Grab migrator utility](https://github.com/VirtoCommerce/vc-platform/tree/master/build/GrabMigrator/samples).
 
 ## 5. Make changes in CustomerReviews&#46;Web project
 1. Execute "**Reload Project**" on CustomerReviews.**Web** project in Solution Explorer (as it was unloaded earlier).
