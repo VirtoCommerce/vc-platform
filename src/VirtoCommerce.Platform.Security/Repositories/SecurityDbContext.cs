@@ -28,6 +28,16 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<UserApiKeyEntity>().Property(x => x.CreatedBy).HasMaxLength(64);
             builder.Entity<UserApiKeyEntity>().Property(x => x.ModifiedBy).HasMaxLength(64);
 
+            builder.Entity<IdentityUserRole<string>>(userRole =>
+            {
+                userRole.HasOne<Role>()
+                    .WithMany(r => r.UserRoles)
+                    .HasForeignKey(ur => ur.RoleId);
+
+                userRole.HasOne<ApplicationUser>()
+                    .WithMany(r => r.UserRoles)
+                    .HasForeignKey(ur => ur.UserId);
+            });
 
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.

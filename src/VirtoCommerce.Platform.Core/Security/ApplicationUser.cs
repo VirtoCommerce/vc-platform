@@ -25,6 +25,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public virtual string CreatedBy { get; set; }
         public virtual string ModifiedBy { get; set; }
         public virtual IList<Role> Roles { get; set; }
+        public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; }
 
         /// <summary>
         /// Obsolete. Use LockoutEnd. DateTime in UTC when lockout ends, any time in the past is considered not locked out.
