@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -54,7 +55,7 @@ partial class Build : NukeBuild
             if (solutions.Length == 1)
             {
                 var solutionFileName = Path.GetFileName(solutions.First());
-                Logger.Info($"Solution found: {solutionFileName}"); 
+                Logger.Info($"Solution found: {solutionFileName}");
                 File.WriteAllText(".nuke", solutionFileName);
             }
         }
@@ -62,15 +63,18 @@ partial class Build : NukeBuild
         return ExitCode ?? exitCode;
     }
 
-    private static int? ExitCode = null;
+    private new static int? ExitCode = null;
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-    readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+    readonly string Configuration = IsLocalBuild ? "Debug" : "Release";
+    
 
     private static string[] ModuleContentFolders = new[] { "dist", "Localizations", "Scripts", "Content" };
 
     [Solution] readonly Solution Solution;
-    [GitRepository] readonly GitRepository GitRepository;
+    GitRepository GitRepository => GitRepository.FromLocalDirectory(RootDirectory / ".git");
+        
+            
 
     readonly Tool Git;
 
@@ -86,7 +90,7 @@ partial class Build : NukeBuild
     [Parameter("ApiKey for the specified source")] readonly string ApiKey;
     [Parameter] readonly string Source = @"https://api.nuget.org/v3/index.json";
 
-    [Parameter] static string GlobalModuleIgnoreFileUrl = @"https://raw.githubusercontent.com/VirtoCommerce/vc-platform/release/3.0.0/module.ignore";
+    [Parameter] static string GlobalModuleIgnoreFileUrl = @"https://raw.githubusercontent.com/VirtoCommerce/vc-platform/dev/module.ignore";
 
     [Parameter] readonly string SonarAuthToken = "";
     [Parameter] readonly string SonarUrl = "https://sonarcloud.io";
@@ -113,6 +117,8 @@ partial class Build : NukeBuild
     [Parameter("Path to modules.json")] readonly string ModulesJsonName = "modules_v3.json";
     [Parameter("Full uri to module artifact")] readonly string CustomModulePackageUri;
 
+    [Parameter("Path to packageJson")] readonly string PackageJsonPath = "package.json";
+
     [Parameter("Path to Release Notes File")] readonly AbsolutePath ReleaseNotes;
 
     [Parameter("VersionTag for module.manifest and Directory.Build.props")] string CustomVersionPrefix;
@@ -128,17 +134,24 @@ partial class Build : NukeBuild
     [Parameter("Github Repository for SonarQube")] readonly string SonarGithubRepo;
     [Parameter("PR Provider for SonarQube")] readonly string SonarPRProvider;
 
+    [Parameter("Modules.json repo url")] readonly string ModulesJsonRepoUrl = "https://github.com/VirtoCommerce/vc-modules.git";
+
     AbsolutePath SourceDirectory => RootDirectory / "src";
     AbsolutePath TestsDirectory => RootDirectory / "tests";
     [Parameter("Path to Artifacts Directory")] AbsolutePath ArtifactsDirectory = RootDirectory / "artifacts";
-    Project WebProject => Solution.AllProjects.FirstOrDefault(x => x.Name.EndsWith(".Web") || x.Name.EndsWith("VirtoCommerce.Storefront"));
+
+    [Parameter("Directory containing modules.json")] string ModulesJsonDirectoryName = "vc-modules";
+    AbsolutePath ModulesLocalDirectory => ArtifactsDirectory / ModulesJsonDirectoryName;
+    Project WebProject => Solution.AllProjects.FirstOrDefault(x => (x.Name.EndsWith(".Web") && !x.Path.ToString().Contains("samples")) || x.Name.EndsWith("VirtoCommerce.Storefront"));
     AbsolutePath ModuleManifestFile => WebProject.Directory / "module.manifest";
     AbsolutePath ModuleIgnoreFile => RootDirectory / "module.ignore";
 
     Microsoft.Build.Evaluation.Project MSBuildProject => WebProject.GetMSBuildProject();
-    string VersionPrefix => MSBuildProject.GetProperty("VersionPrefix")?.EvaluatedValue;
+    string VersionPrefix => IsTheme ? GetThemeVersion(PackageJsonPath) : MSBuildProject.GetProperty("VersionPrefix")?.EvaluatedValue;
     string VersionSuffix => MSBuildProject.GetProperty("VersionSuffix")?.EvaluatedValue;
     string ReleaseVersion => MSBuildProject.GetProperty("PackageVersion")?.EvaluatedValue ?? WebProject.GetProperty("Version");
+
+    bool IsTheme => Solution == null;
 
     ModuleManifest ModuleManifest => ManifestReader.Read(ModuleManifestFile);
 
@@ -152,7 +165,7 @@ partial class Build : NukeBuild
 
     string ModulePackageUrl => CustomModulePackageUri.IsNullOrEmpty() ?
         $"https://github.com/VirtoCommerce/{GitRepositoryName}/releases/download/{ReleaseVersion}/{ModuleManifest.Id}_{ReleaseVersion}.zip" : CustomModulePackageUri;
-    GitRepository ModulesRepository => GitRepository.FromUrl("https://github.com/VirtoCommerce/vc-modules.git");
+    GitRepository ModulesRepository => GitRepository.FromUrl(ModulesJsonRepoUrl);
 
     bool IsModule => FileExists(ModuleManifestFile);
 
@@ -240,7 +253,7 @@ partial class Build : NukeBuild
                 .SetFilter(TestsFilter)
                 .SetNoBuild(true)
                 .SetCollectCoverage(true)
-                .SetLogOutput(true)
+                .SetProcessLogOutput(true)
                 .SetResultsDirectory(OutPath);
                var testProjectBinDir = testProject.Directory / "bin";
                var testAssemblies = testProjectBinDir.GlobFiles($"**/{testProject.Name}.dll");
@@ -281,6 +294,7 @@ partial class Build : NukeBuild
             DotNetNuGetPush(s => s
                     .SetSource(Source)
                     .SetApiKey(ApiKey)
+                    .SetSkipDuplicate(true)
                     .CombineWith(
                         packages, (cs, v) => cs
                             .SetTargetPath(v)),
@@ -296,42 +310,54 @@ partial class Build : NukeBuild
 
     public void ChangeProjectVersion(string prefix = null, string suffix = null)
     {
-        //module.manifest
-        if (IsModule)
+        //theme
+        if(IsTheme)
         {
-            var manifest = ModuleManifest.Clone();
+            //var json = JsonDocument.Parse(File.ReadAllText(PackageJsonPath));
+            //json.RootElement.GetProperty("version")
+            var json = SerializationTasks.JsonDeserializeFromFile<JObject>(PackageJsonPath);
+            json["version"] = prefix;            
+            SerializationTasks.JsonSerializeToFile(json, Path.GetFullPath(PackageJsonPath));
+        }
+        else
+        {
+            //module.manifest
+            if (IsModule)
+            {
+                var manifest = ModuleManifest.Clone();
+                if (!String.IsNullOrEmpty(prefix))
+                    manifest.Version = prefix;
+                if (!String.IsNullOrEmpty(suffix))
+                    manifest.VersionTag = suffix;
+                using (var writer = new Utf8StringWriter())
+                {
+                    XmlSerializer xml = new XmlSerializer(typeof(ModuleManifest));
+                    xml.Serialize(writer, manifest);
+                    File.WriteAllText(ModuleManifestFile, writer.ToString(), Encoding.UTF8);
+                }
+            }
+
+            //Directory.Build.props
+            var xmlDoc = new XmlDocument()
+            {
+                PreserveWhitespace = true
+            };
+            xmlDoc.LoadXml(File.ReadAllText(DirectoryBuildPropsPath));
             if (!String.IsNullOrEmpty(prefix))
-                manifest.Version = prefix;
-            if (!String.IsNullOrEmpty(suffix))
-                manifest.VersionTag = suffix;
+            {
+                var prefixNodex = xmlDoc.GetElementsByTagName("VersionPrefix");
+                prefixNodex[0].InnerText = prefix;
+            }
+            if (String.IsNullOrEmpty(VersionSuffix) && !String.IsNullOrEmpty(suffix))
+            {
+                var suffixNodes = xmlDoc.GetElementsByTagName("VersionSuffix");
+                suffixNodes[0].InnerText = suffix;
+            }
             using (var writer = new Utf8StringWriter())
             {
-                XmlSerializer xml = new XmlSerializer(typeof(ModuleManifest));
-                xml.Serialize(writer, manifest);
-                File.WriteAllText(ModuleManifestFile, writer.ToString(), Encoding.UTF8);
+                xmlDoc.Save(writer);
+                File.WriteAllText(DirectoryBuildPropsPath, writer.ToString());
             }
-        }
-
-        //Directory.Build.props
-        var xmlDoc = new XmlDocument()
-        {
-            PreserveWhitespace = true
-        };
-        xmlDoc.LoadXml(File.ReadAllText(DirectoryBuildPropsPath));
-        if (!String.IsNullOrEmpty(prefix))
-        {
-            var prefixNodex = xmlDoc.GetElementsByTagName("VersionPrefix");
-            prefixNodex[0].InnerText = prefix;
-        }
-        if (String.IsNullOrEmpty(VersionSuffix) && !String.IsNullOrEmpty(suffix))
-        {
-            var suffixNodes = xmlDoc.GetElementsByTagName("VersionSuffix");
-            suffixNodes[0].InnerText = suffix;
-        }
-        using (var writer = new Utf8StringWriter())
-        {
-            xmlDoc.Save(writer);
-            File.WriteAllText(DirectoryBuildPropsPath, writer.ToString());
         }
     }
 
@@ -345,27 +371,53 @@ partial class Build : NukeBuild
             }
         });
 
+    string GetThemeVersion(string packageJsonPath)
+    {
+        var json = JsonDocument.Parse(File.ReadAllText(packageJsonPath));
+        JsonElement version;
+        if(json.RootElement.TryGetProperty("version", out version))
+        {
+            return version.GetString();
+        }
+        ControlFlow.Fail("No version found");
+        return "";
+    }
+
     Target StartRelease => _ => _
         .Executes(() =>
         {
-            var currentDir = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(Solution.Path.Parent);
+            GitTasks.GitLogger = GitLogger;
+            var disableApprove = Environment.GetEnvironmentVariable("VCBUILD_DISABLE_RELEASE_APPROVEMENT");
+            if (disableApprove.IsNullOrEmpty())
+            {
+                Console.Write($"Are you sure want to release {GitRepository.Identifier}? (y/N): ");
+                var response = Console.ReadLine();
+                if (response.ToLower().CompareTo("y") != 0)
+                {
+                    ControlFlow.Fail("Aborted");
+                }
+            }
             GitTasks.Git("checkout dev");
             GitTasks.Git("pull");
-            var releaseBranchName = $"release/{ReleaseVersion}";
+            string version;
+            if (IsTheme)
+            {
+                version = GetThemeVersion(PackageJsonPath);
+            }
+            else
+            {
+                version = ReleaseVersion;
+            }
+            var releaseBranchName = $"release/{version}";
             Logger.Info(Directory.GetCurrentDirectory());
             GitTasks.Git($"checkout -b {releaseBranchName}");
             GitTasks.Git($"push -u origin {releaseBranchName}");
-            Directory.SetCurrentDirectory(currentDir);
         });
 
     Target CompleteRelease => _ => _
         .After(StartRelease)
         .Executes(() =>
         {
-            //workaround for run from sources
-            var currentDir = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(Solution.Path.Parent);
             var currentBranch = GitTasks.GitCurrentBranch();
             //Master
             GitTasks.Git("checkout master");
@@ -377,14 +429,23 @@ partial class Build : NukeBuild
             GitTasks.Git($"merge {currentBranch}");
             IncrementVersionMinor();
             ChangeProjectVersion(prefix: CustomVersionPrefix);
-            var manifestArg = IsModule ? RootDirectory.GetRelativePathTo(ModuleManifestFile) : "";
-            GitTasks.Git($"add Directory.Build.props {manifestArg}");
+            var addFiles = "";
+            if(IsTheme)
+            {
+                addFiles = $"{PackageJsonPath}";
+            }
+            else
+            {
+                var manifestArg = IsModule ? RootDirectory.GetRelativePathTo(ModuleManifestFile) : "";
+                addFiles = $"Directory.Build.props {manifestArg}";
+            }
+            
+            GitTasks.Git($"add {addFiles}");
             GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
             GitTasks.Git($"push origin dev");
             //remove release branch
             GitTasks.Git($"branch -d {currentBranch}");
             GitTasks.Git($"push origin --delete {currentBranch}");
-            Directory.SetCurrentDirectory(currentDir);
         });
 
     Target QuickRelease => _ => _
@@ -393,8 +454,6 @@ partial class Build : NukeBuild
     Target StartHotfix => _ => _
         .Executes(() =>
         {
-            var currentDir = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(Solution.Path.Parent);
             GitTasks.Git("checkout master");
             GitTasks.Git("pull");
             IncrementVersionPatch();
@@ -406,16 +465,14 @@ partial class Build : NukeBuild
             GitTasks.Git($"add Directory.Build.props {manifestArg}");
             GitTasks.Git($"commit -m \"{CustomVersionPrefix}\"");
             GitTasks.Git($"push -u origin {hotfixBranchName}");
-            Directory.SetCurrentDirectory(currentDir);
         });
 
     Target CompleteHotfix => _ => _
         .After(StartHotfix)
+           
         .Executes(() =>
         {
             //workaround for run from sources
-            var currentDir = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(Solution.Path.Parent);
             var currentBranch = GitTasks.GitCurrentBranch();
             //Master
             GitTasks.Git("checkout master");
@@ -425,7 +482,6 @@ partial class Build : NukeBuild
             //remove hotfix branch
             GitTasks.Git($"branch -d {currentBranch}");
             GitTasks.Git($"push origin --delete {currentBranch}");
-            Directory.SetCurrentDirectory(currentDir);
         });
 
     public void IncrementVersionMinor()
@@ -449,7 +505,7 @@ partial class Build : NukeBuild
             IncrementVersionMinor();
         });
 
-    Target IncremenPatch => _ => _
+    Target IncrementPatch => _ => _
         .Triggers(ChangeVersion)
         .Executes(() =>
         {
@@ -462,7 +518,7 @@ partial class Build : NukeBuild
        .Executes(() =>
        {
            DotNetPublish(s => s
-               .SetWorkingDirectory(WebProject.Directory)
+               .SetProcessWorkingDirectory(WebProject.Directory)
                .EnableNoRestore()
                .SetOutput(IsModule ? ModuleOutputDirectory / "bin" : ArtifactsDirectory / "publish")
                .SetConfiguration(Configuration));
@@ -475,7 +531,7 @@ partial class Build : NukeBuild
          if (FileExists(WebProject.Directory / "package.json"))
          {
              NpmTasks.Npm("ci", WebProject.Directory);
-             NpmTasks.NpmRun(s => s.SetWorkingDirectory(WebProject.Directory).SetCommand("webpack:build"));
+             NpmTasks.NpmRun(s => s.SetProcessWorkingDirectory(WebProject.Directory).SetCommand("webpack:build"));
          }
          else
          {
@@ -530,20 +586,28 @@ partial class Build : NukeBuild
          }
      });
 
-    Target PublishModuleManifest => _ => _
+    Target GetManifestGit => _ => _
+        .Before(UpdateManifest)
         .Executes(() =>
         {
             GitTasks.GitLogger = GitLogger;
-            var modulesLocalDirectory = ArtifactsDirectory / "vc-modules";
-            var modulesJsonFile = modulesLocalDirectory / ModulesJsonName;
-            if (!DirectoryExists(modulesLocalDirectory))
+            var modulesJsonFile = ModulesLocalDirectory / ModulesJsonName;
+            if (!DirectoryExists(ModulesLocalDirectory))
             {
-                GitTasks.Git($"clone {ModulesRepository.HttpsUrl} {modulesLocalDirectory}");
+                GitTasks.Git($"clone {ModulesRepository.HttpsUrl} {ModulesLocalDirectory}");
             }
             else
             {
-                GitTasks.Git($"pull", modulesLocalDirectory);
+                GitTasks.Git($"pull", ModulesLocalDirectory);
             }
+        });
+
+    Target UpdateManifest => _ => _
+        .Before(PublishManifestGit)
+        .After(GetManifestGit)
+        .Executes(() =>
+        {
+            var modulesJsonFile = ModulesLocalDirectory / ModulesJsonName;
             var manifest = ModuleManifest;
 
             var modulesExternalManifests = JsonConvert.DeserializeObject<List<ExternalModuleManifest>>(TextTasks.ReadAllText(modulesJsonFile));
@@ -594,9 +658,19 @@ partial class Build : NukeBuild
                 modulesExternalManifests.Add(ExternalModuleManifest.FromManifest(manifest));
             }
             TextTasks.WriteAllText(modulesJsonFile, JsonConvert.SerializeObject(modulesExternalManifests, Newtonsoft.Json.Formatting.Indented));
-            GitTasks.Git($"commit -am \"{manifest.Id} {ReleaseVersion}\"", modulesLocalDirectory);
-            GitTasks.Git($"push origin HEAD:master -f", modulesLocalDirectory);
         });
+
+    Target PublishManifestGit => _ => _
+        .After(UpdateManifest)
+        .Executes(() =>
+        {
+            GitTasks.GitLogger = GitLogger;
+            GitTasks.Git($"commit -am \"{ModuleManifest.Id} {ReleaseVersion}\"", ModulesLocalDirectory);
+            GitTasks.Git($"push origin HEAD:master -f", ModulesLocalDirectory);
+        });
+
+    Target PublishModuleManifest => _ => _
+        .DependsOn(GetManifestGit, UpdateManifest, PublishManifestGit);
 
     Target SwaggerValidation => _ => _
           .DependsOn(Publish)
@@ -741,7 +815,7 @@ partial class Build : NukeBuild
 
     void GitLogger(OutputType type, string text)
     {
-        if (text.Contains("github returned 422 Unprocessable Entity"))
+        if (text.Contains("github returned 422 Unprocessable Entity") && text.Contains("already_exists"))
         {
             ExitCode = 422;
         }
@@ -760,24 +834,65 @@ partial class Build : NukeBuild
         }
     }
 
+    async Task PublishRelease(string owner, string repo, string token, string tag, string description, string artifactPath, bool prerelease)
+    {
+        var tokenAuth = new Octokit.Credentials(token);
+        var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("vc-build"))
+        {
+            Credentials = tokenAuth
+        };
+        var newRelease = new Octokit.NewRelease(tag)
+        {
+            Name = tag,
+            Prerelease = prerelease,
+            Draft = false,
+            Body = description
+        };
+        var release = await githubClient.Repository.Release.Create(owner, repo, newRelease);
+        using (var artifactStream = File.OpenRead(artifactPath))
+        {
+            var assetUpload = new Octokit.ReleaseAssetUpload()
+            {
+                FileName = Path.GetFileName(artifactPath),
+                ContentType = "application/zip",
+                RawData = artifactStream
+            };
+            var asset = await githubClient.Repository.Release.UploadAsset(release, assetUpload);
+        }
+    }
+
     Target Release => _ => _
          .DependsOn(Clean, Compress)
          .Requires(() => GitHubUser, () => GitHubToken)
-         /*.Requires(() =>   GitRepository.IsOnReleaseBranch() && GitTasks.GitHasCleanWorkingCopy()) */
          .Executes(() =>
          {
              string tag = ReleaseVersion;
-             //FinishReleaseOrHotfix(tag);
-
-             void RunGitHubRelease(string args)
-             {
-                 ProcessTasks.StartProcess("github-release", args, RootDirectory, customLogger: GitLogger).AssertZeroExitCode();
-             }
-             var prereleaseArg = PreRelease ? "--pre-release" : "";
              var targetBranchArg = ReleaseBranch.IsNullOrEmpty() ? "" : $"--target \"{ReleaseBranch}\"";
-             var descriptionArg = File.Exists(ReleaseNotes) ? $"--description \"{File.ReadAllText(ReleaseNotes)}\"" : "";
-             RunGitHubRelease($@"release --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} {targetBranchArg} --tag {tag} {descriptionArg} {prereleaseArg}"); //-c branch -d description
-             RunGitHubRelease($@"upload --user {GitHubUser} -s {GitHubToken} --repo {GitRepositoryName} --tag {tag} --name {ZipFileName} --file ""{ZipFilePath}""");
+             var descr = File.Exists(ReleaseNotes) ? File.ReadAllText(ReleaseNotes) : "";
+             try
+             {
+                 PublishRelease(GitHubUser, GitRepositoryName, GitHubToken, tag, descr, ZipFilePath, PreRelease).Wait();
+             }
+             catch(AggregateException ex)
+             {
+                 var responseRaw = ((Octokit.ApiValidationException)ex.InnerException)?.HttpResponse?.Body.ToString() ?? "";
+                 var response = JsonDocument.Parse(responseRaw);
+                 bool alreadyExistsError = false;
+                 JsonElement errors;
+                 if (response.RootElement.TryGetProperty("errors", out errors))
+                 {
+                     var errorCount = errors.GetArrayLength();
+                     if (errorCount > 0)
+                     {
+                         alreadyExistsError = errors.EnumerateArray().Where(e => e.GetProperty("code").GetString() == "already_exists").Count() > 0;
+                     }
+                 }
+                 if(alreadyExistsError)
+                 {
+                     ExitCode = 422;
+                 }
+                  ControlFlow.Fail(ex.Message);
+             }
          });
 
     void FinishReleaseOrHotfix(string tag)

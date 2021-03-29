@@ -20,7 +20,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             data.allowedValues = [];
         }
 
-        blade.title = data.title;
+        blade.title = data.name;
         blade.currentEntity = data;
         currentEntities = blade.currentEntity.allowedValues;
         blade.isLoading = false;
@@ -54,10 +54,10 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         $scope.selectedItem = listItem;
     };
 
-    blade.headIcon = 'fa-wrench';
+    blade.headIcon = 'fa fa-wrench';
     blade.subtitle = 'platform.blades.setting-dictionary.subtitle';
     blade.toolbarCommands = [{
-        name: "platform.commands.delete", icon: 'fa fa-trash-o',
+        name: "platform.commands.delete", icon: 'fas fa-trash-alt',
         executeMethod: function () {
             deleteChecked();
         },
@@ -74,20 +74,21 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
 
         function isDirty() {
             return !angular.equals(currentEntities, blade.origEntity) && blade.hasUpdatePermission();
-        };
+        }
 
         function saveChanges() {
             blade.selectedAll = false;
             blade.isLoading = true;
             blade.currentEntity.allowedValues = _.pluck(blade.currentEntity.allowedValues, 'value');
 
-            settingsApi.update(null, [blade.currentEntity], blade.refresh,
-                function (error) { bladeNavigationService.setError('Error ' + error.status, $scope.blade); });
-        };
+            settingsApi.update(null, [blade.currentEntity], blade.refresh, function (error) {
+                bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+            });
+        }
 
         blade.toolbarCommands.splice(0, 0, {
             name: "platform.commands.save",
-            icon: 'fa fa-save',
+            icon: 'fas fa-save',
             executeMethod: function () {
                 saveChanges();
             },
@@ -95,14 +96,14 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
                 return isDirty() && formScope && formScope.$valid;
             }
         }, {
-                name: "platform.commands.reset",
-                icon: 'fa fa-undo',
-                executeMethod: function () {
-                    angular.copy(blade.origEntity, currentEntities);
-                    blade.selectedAll = false;
-                },
-                canExecuteMethod: isDirty,
-            });
+            name: "platform.commands.reset",
+            icon: 'fa fa-undo',
+            executeMethod: function () {
+                angular.copy(blade.origEntity, currentEntities);
+                blade.selectedAll = false;
+            },
+            canExecuteMethod: isDirty,
+        });
         blade.refresh();
     } else {
         $scope.$watch('blade.parentBlade.currentEntities', function (data) {

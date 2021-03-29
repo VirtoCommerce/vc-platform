@@ -359,7 +359,8 @@
                     "module": "Модуль",
                     "version": "Версия",
                     "author": "Автор",
-                    "installed": "Установленные модули"
+                    "installed": "Установленные модули",
+                    "manual-install-disabled": "Ручная установка модулей отключена из-за запрета обновления загрузочной папки модулей (RefreshProbingFolderOnStart=false)."
                 }
             },
             "history": {
@@ -429,12 +430,14 @@
                     "login": "Вход",
                     "account-state": "Состояние аккаунта",
                     "account-email": "Адрес электронной почты",
-                    "locked-state": "Заблокирован"
+                    "locked-state": "Заблокирован",
+                    "status": "Статус"
                 },
                 "placeholders": {
                     "account-type": "Выбрать ...",
                     "email": "Введите адрес электронной почты",
-                    "user-name": "Введите имя пользователя"
+                    "user-name": "Введите имя пользователя",
+                    "status": "Выбрать ..."
                 }
             },
             "account-list": {

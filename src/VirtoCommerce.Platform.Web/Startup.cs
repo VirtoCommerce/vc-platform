@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
@@ -8,7 +9,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
-using Hangfire;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,8 +41,7 @@ using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
-using VirtoCommerce.Platform.Data.Repositories;
-using VirtoCommerce.Platform.Hangfire;
+using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Repositories;
@@ -51,13 +51,14 @@ using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
+using VirtoCommerce.Platform.Web.Migrations;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
 using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
-using VirtoCommerce.Platform.Web.SignalR;
 using VirtoCommerce.Platform.Web.Swagger;
+using VirtoCommerce.Platform.Web.Telemetry;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace VirtoCommerce.Platform.Web
@@ -69,6 +70,7 @@ namespace VirtoCommerce.Platform.Web
             Configuration = configuration;
             WebHostEnvironment = hostingEnvironment;
         }
+
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment WebHostEnvironment { get; }
 
@@ -96,20 +98,16 @@ namespace VirtoCommerce.Platform.Web
             services.AddSecurityServices();
             services.AddSingleton<LicenseProvider>();
 
-            // The following line enables Application Insights telemetry collection.
-            services.AddApplicationInsightsTelemetry();
-            services.AddApplicationInsightsTelemetryProcessor<IgnoreSignalRTelemetryProcessor>();
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
+            {
+                //Disable 204 response for null result. https://github.com/aspnet/AspNetCore/issues/8847
+                var noContentFormatter = mvcOptions.OutputFormatters.OfType<HttpNoContentOutputFormatter>().FirstOrDefault();
+                if (noContentFormatter != null)
                 {
-                    //Disable 204 response for null result. https://github.com/aspnet/AspNetCore/issues/8847
-                    var noContentFormatter = mvcOptions.OutputFormatters.OfType<HttpNoContentOutputFormatter>().FirstOrDefault();
-                    if (noContentFormatter != null)
-                    {
-                        noContentFormatter.TreatNullValueAsNoContent = false;
-                    }
+                    noContentFormatter.TreatNullValueAsNoContent = false;
                 }
-            )
+            })
             .AddNewtonsoftJson(options =>
                 {
                     //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
@@ -117,20 +115,12 @@ namespace VirtoCommerce.Platform.Web
                     options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
                     //Next line allow to use polymorph types as parameters in API controller methods
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
                     options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
                     options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
                     options.SerializerSettings.Formatting = Formatting.None;
-
-                    options.SerializerSettings.Error += (sender, args) =>
-                    {
-                        // Expose any JSON serialization exception as HTTP error
-                        throw new JsonException(args.ErrorContext.Error.Message);
-                    };
                 }
             );
 
@@ -173,10 +163,8 @@ namespace VirtoCommerce.Platform.Web
                                       .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
                                       .AddCookie();
 
-
             services.AddSecurityServices(options =>
             {
-
             });
 
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
@@ -246,15 +234,19 @@ namespace VirtoCommerce.Platform.Web
                 if (options.Enabled)
                 {
                     //TODO: Need to check how this influence to OpennIddict Reference tokens activated by this line below  AddValidation(options => options.UseReferenceTokens());
+                    //TechDept: Need to upgrade to Microsoft.Identity.Web
+                    //https://docs.microsoft.com/en-us/azure/active-directory/develop/microsoft-identity-web
                     authBuilder.AddOpenIdConnect(options.AuthenticationType, options.AuthenticationCaption,
                         openIdConnectOptions =>
                         {
                             openIdConnectOptions.ClientId = options.ApplicationId;
+
                             openIdConnectOptions.Authority = $"{options.AzureAdInstance}{options.TenantId}";
                             openIdConnectOptions.UseTokenLifetime = true;
                             openIdConnectOptions.RequireHttpsMetadata = false;
                             openIdConnectOptions.SignInScheme = IdentityConstants.ExternalScheme;
                             openIdConnectOptions.SecurityTokenValidator = defaultTokenHandler;
+                            openIdConnectOptions.MetadataAddress = options.MetadataAddress;
                         });
                 }
             }
@@ -369,7 +361,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
                      {
-                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "Modules");
+                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
                      })
                     .ValidateDataAnnotations();
             services.AddModules(mvcBuilder);
@@ -400,6 +392,14 @@ namespace VirtoCommerce.Platform.Web
 
             // Register the Swagger generator
             services.AddSwagger();
+
+
+            // The following line enables Application Insights telemetry collection.
+            // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple
+            // AI modules initialization https://virtocommerce.atlassian.net/browse/VP-6653 and  https://github.com/microsoft/ApplicationInsights-dotnet/issues/2114 until we don't
+            // get rid of calling IServiceCollection.BuildServiceProvider from the platform and modules code, each BuildServiceProvider call leads to the running the
+            // extra AI module and causes the hight CPU utilization and telemetry data flood on production env.
+            services.AddAppInsightsTelemetry(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -428,7 +428,27 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseHttpsRedirection();
 
-            app.UseStaticFiles();
+            // Add default MimeTypes with additional bindings
+            var fileExtensionsBindings = new Dictionary<string, string>()
+            {
+                { ".liquid", "text/html"},
+                { ".md", "text/html"}
+            };
+
+            // Create default provider (with default Mime types)
+            var fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+
+            // Add custom bindings
+            foreach (var binding in fileExtensionsBindings)
+            {
+                fileExtensionContentTypeProvider.Mappings[binding.Key] = binding.Value;
+            }
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = fileExtensionContentTypeProvider
+            });
+
             app.UseRouting();
             app.UseCookiePolicy();
 
@@ -445,7 +465,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
-                    RequestPath = new PathString($"/Modules/$({ module.ModuleName })")
+                    RequestPath = new PathString($"/modules/$({ module.ModuleName })")
                 });
             }
 
@@ -454,42 +474,38 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.WithDistributedLock(() =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                // This method contents will run inside of critical section of instance distributed lock.
+                // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
+                // This ensures only one active EF-migration ran simultaneously to avoid DB-related side-effects.
+
+                // Apply platform migrations
+                app.UsePlatformMigrations();
+
+                app.UseDbTriggers();
+
+                // Register platform settings
+                app.UsePlatformSettings();
+
+                // Complete hangfire init and apply Hangfire migrations
+                app.UseHangfire(Configuration);
+
+                // Register platform permissions
+                app.UsePlatformPermissions();
+                app.UseSecurityHandlers();
+                app.UsePruneExpiredTokensJob();
+
+                // Complete modules startup and apply their migrations
+                app.UseModules();
             });
 
-            //Force migrations
-            using (var serviceScope = app.ApplicationServices.CreateScope())
+            app.UseEndpoints(endpoints =>
             {
-                var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
-                platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
-                platformDbContext.Database.Migrate();
+                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
-                var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
-                securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
-                securityDbContext.Database.Migrate();
-            }
-
-            app.UseDbTriggers();
-            //Register platform settings
-            app.UsePlatformSettings();
-
-            // Complete hangfire init 
-            app.UseHangfire(Configuration);
-
-            app.UseModules();
-
-
-            //Register platform permissions
-            app.UsePlatformPermissions();
-
-            //Setup SignalR hub
-            app.UseEndpoints(routes =>
-            {
-                routes.MapHub<PushNotificationHub>("/pushNotificationHub");
+                //Setup SignalR hub
+                endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
             });
 
             //Seed default users
@@ -497,8 +513,14 @@ namespace VirtoCommerce.Platform.Web
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
+
+            // Use app insights telemetry 
+            app.UseAppInsightsTelemetry();
+
+
+            var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
+            mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
+            PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
         }
     }
 }
-
-

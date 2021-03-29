@@ -1,8 +1,10 @@
-angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.roles', 'platformWebApp.dialogService', 'platformWebApp.settings',
-    function ($scope, bladeNavigationService, metaFormsService, accounts, roles, dialogService, settings) {
+angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.settings', 'platformWebApp.authService',
+    function ($scope, bladeNavigationService, metaFormsService, accounts, settings, authService) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:security:update';
         blade.accountTypes = [];
+        blade.statuses = [];
+        blade.isLinkSent = false;
 
         blade.refresh = function (parentRefresh) {
             var entity = parentRefresh ? blade.currentEntity : blade.data;
@@ -23,36 +25,46 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
             isAccountlocked(blade.currentEntity.id).then(function (result) {
                 blade.accountLockedState = result.locked ? "Locked" : "Unlocked";
             });
+
+            // Load account types
             blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
+
+            // Load statuses
+            blade.statuses = settings.getValues({ id: 'VirtoCommerce.Other.AccountStatuses' });
+
             blade.isLoading = false;
-        };
+        }
 
         function isAccountlocked(id) {
             return accounts.locked({ id: id }).$promise;
         }
 
-
         blade.metaFields = metaFormsService.getMetaFields("accountDetails");
 
         function isDirty() {
             return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
-        };
-
-        function canSave() {
-            return isDirty() && $scope.formScope && $scope.formScope.$valid;
         }
 
-        blade.openAccountTypeSettingManagement = function () {
+        blade.sendLink = function () {
+            if (!blade.isLinkSent && !blade.isLoading && blade.currentEntity.email === blade.origEntity.email) {
+                blade.isLoading = true;
+                accounts.verifyEmail({ userId: blade.currentEntity.id }, null , () => {
+                    blade.isLinkSent = true;
+                    blade.isLoading = false;
+                });
+            }
+        }
+
+        blade.openSettingDictionaryController = function (currentEntityId) {
             var newBlade = {
-                id: 'accountTypesDictionary',
+                id: currentEntityId,
                 isApiSave: true,
-                currentEntityId: 'VirtoCommerce.Platform.Security.AccountTypes',
+                currentEntityId: currentEntityId,
                 parentRefresh: function (data) { blade.accountTypes = data; },
                 controller: 'platformWebApp.settingDictionaryController',
                 template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
             };
             bladeNavigationService.showBlade(newBlade, blade);
-
         };
 
         $scope.setForm = function (form) {
@@ -72,17 +84,20 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
             });
         };
 
+        blade.hasVerifyEmailPermission = () => {
+            return authService.checkPermission('platform:security:verifyEmail', blade.securityScopes);
+        }
+
         blade.onClose = function (closeCallback) {
             bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "platform.dialogs.account-save.title", "platform.dialogs.account-save.message");
         };
 
-        blade.headIcon = 'fa-key';
+        blade.headIcon = 'fas fa-key';
 
-       
         blade.toolbarCommands = [
             {
                 name: "platform.commands.save",
-                icon: 'fa fa-save',
+                icon: 'fas fa-save',
                 executeMethod: function () {
                     $scope.saveChanges();
                 },

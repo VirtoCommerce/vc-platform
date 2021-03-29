@@ -1,4 +1,4 @@
-﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel2.tpl.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block form">
@@ -7,7 +7,7 @@
                 <div class="form-input">
                     <input ng-model="blade.currentEntity.clientId" id="clientId" placeholder="{{ 'platform.blades.oauthapps.placeholders.clientId' | translate }}" ng-readonly="!blade.isNew" required focus-on>
                     <button class="btn __ico" type="button" ng-click="copyToClipboard('clientId')" title="{{ 'platform.commands.copy' | translate }}">
-                        <i class="btn-ico fa fa-clipboard"></i>
+                        <i class="btn-ico fas fa-paste"></i>
                     </button>
                 </div>
             </div>
@@ -17,7 +17,7 @@
                 <div class="form-input">
                     <input ng-model="blade.currentEntity.clientSecret" id="clientSecret" placeholder="{{ 'platform.blades.oauthapps.placeholders.clientSecret' | translate }}">
                     <button class="btn __ico" type="button" ng-click="copyToClipboard('clientSecret')" title="{{ 'platform.commands.copy' | translate }}">
-                        <i class="btn-ico fa fa-clipboard"></i>
+                        <i class="btn-ico fas fa-paste"></i>
                     </button>
                 </div>
             </div>

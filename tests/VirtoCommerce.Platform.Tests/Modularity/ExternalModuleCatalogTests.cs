@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,7 +14,7 @@ using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
-    //the Order need for saparate runing UnitTests where use static Platform.CurrentVersion
+    //the Order is needed for running separate UnitTests where static Platform.CurrentVersion is used
     [Collection("Modularity"), Order(1)]
     public class ExternalModuleCatalogTests
     {
@@ -138,10 +137,45 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             Assert.Equal(SemanticVersion.Parse(effectiveModuleVersion), module.Version);
         }
 
+        [Theory]
+        [InlineData("1.2.0", "1.3.0")]
+        [InlineData("1.3.0-alpha1", "1.3.0")]
+        [InlineData("1.4.0-alpha1", "1.4.0-alpha1")]
+        [InlineData("1.4.0", "1.4.0")]
+        public void CreateDirectory_NoDowngrades(string externalModuleVersion, string effectiveModuleVersion)
+        {
+            //Arrange
+            PlatformVersion.CurrentVersion = SemanticVersion.Parse("3.0.0");
+            var modules = new[]
+            {
+                new ExternalModuleManifest
+                {
+                    Id = "B",
+                    Versions = new []
+                    {
+                        new ExternalModuleManifestVersion
+                        {
+                             Version = externalModuleVersion,
+                             PlatformVersion = "3.0.0"
+                        }
+                    }
+                }
+             };
+
+            //Act
+            var extCatalog = CreateExternalModuleCatalog(modules);
+            extCatalog.Load();
+
+            //Assert
+            var module = extCatalog.Modules.FirstOrDefault() as ManifestModuleInfo;
+            Assert.NotNull(module);
+            Assert.Equal(SemanticVersion.Parse(effectiveModuleVersion), module.Version);
+        }
+
         private static ExternalModuleCatalog CreateExternalModuleCatalog(ExternalModuleManifest[] manifests)
         {
             var localModulesCatalog = new Moq.Mock<ILocalModuleCatalog>();
-            localModulesCatalog.Setup(x => x.Modules).Returns(new List<ManifestModuleInfo>());
+            localModulesCatalog.Setup(x => x.Modules).Returns(GetManifestModuleInfos(new[] { new ModuleManifest { Id = "B", Version = "1.3.0", PlatformVersion = "3.0.0" } }));
             var json = JsonConvert.SerializeObject(manifests);
             var client = new Moq.Mock<IExternalModulesClient>();
             client.Setup(x => x.OpenRead(Moq.It.IsAny<Uri>())).Returns(new MemoryStream(Encoding.UTF8.GetBytes(json ?? "")));
@@ -152,5 +186,14 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             return result;
         }
 
+        private static ManifestModuleInfo[] GetManifestModuleInfos(ModuleManifest[] moduleManifests)
+        {
+            return moduleManifests.Select(x =>
+            {
+                var module = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+                module.LoadFromManifest(x);
+                return module;
+            }).ToArray();
+        }
     }
 }

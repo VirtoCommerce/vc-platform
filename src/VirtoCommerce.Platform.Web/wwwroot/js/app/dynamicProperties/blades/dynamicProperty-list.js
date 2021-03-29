@@ -1,7 +1,7 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .controller('platformWebApp.dynamicPropertyListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, dynamicPropertiesApi) {
     var blade = $scope.blade;
-    blade.headIcon = 'fa-plus-square-o';
+    blade.headIcon = 'fa fa-plus-square-o';
     blade.title = blade.objectType;
     blade.subtitle = 'platform.blades.dynamicProperty-list.subtitle';
 
@@ -47,7 +47,7 @@
        //    }
        //},
        {
-           name: "platform.commands.add-new-property", icon: 'fa fa-plus',
+           name: "platform.commands.add-new-property", icon: 'fas fa-plus',
            executeMethod: function () {
                $scope.selectedNodeId = undefined;
                var newBlade = {

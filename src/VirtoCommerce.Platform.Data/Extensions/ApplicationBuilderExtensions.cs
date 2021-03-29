@@ -2,8 +2,10 @@ using System;
 using EntityFrameworkCore.Triggers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
+using static VirtoCommerce.Platform.Data.Constants.DefaultEntityNames;
 
 namespace VirtoCommerce.Platform.Data.Extensions
 {
@@ -30,8 +32,25 @@ namespace VirtoCommerce.Platform.Data.Extensions
                 var userName = currentUserNameResolver.GetCurrentUserName();
 
                 entry.Entity.ModifiedDate = currentTime;
-                entry.Entity.ModifiedBy = userName;
+
+                if (userName != UNKNOWN_USERNAME)
+                {
+                    entry.Entity.ModifiedBy = userName;
+                }
             };
+
+            Triggers<IEntity>.Inserting += entry =>
+            {
+                var lastChangesService = appBuilder.ApplicationServices.GetRequiredService<ILastChangesService>();
+                lastChangesService.Reset(entry.Entity);
+            };
+
+            Triggers<IEntity>.Updating += entry =>
+            {
+                var lastChangesService = appBuilder.ApplicationServices.GetRequiredService<ILastChangesService>();
+                lastChangesService.Reset(entry.Entity);
+            };
+
             return appBuilder;
         }
     }

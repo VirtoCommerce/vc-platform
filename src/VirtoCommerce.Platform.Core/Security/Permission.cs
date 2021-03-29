@@ -7,7 +7,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
-    public class Permission : ValueObject
+    public class Permission : ValueObject, ICloneable
     {
         private const char _scopeCharSeparator = '|';
 
@@ -94,5 +94,16 @@ namespace VirtoCommerce.Platform.Core.Security
                 AvailableScopes.Patch(target.AvailableScopes, (sourceScope, targetScope) => sourceScope.Patch(targetScope));
             }
         }
+
+        #region ICloneable members
+        public override object Clone()
+        {
+            var result = MemberwiseClone() as Permission;
+
+            result.AssignedScopes = AssignedScopes?.Select(x => x.Clone()).OfType<PermissionScope>().ToList();
+
+            return result;
+        }
+        #endregion
     }
 }

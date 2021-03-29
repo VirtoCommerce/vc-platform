@@ -89,6 +89,7 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
     };
 
     $scope.toggleAll = function () {
+        blade.selectedAll = !blade.selectedAll;
         angular.forEach(blade.currentEntity.permissions, function (item) {
             item.$selected = blade.selectedAll;
         });
@@ -111,14 +112,14 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
         blade.currentEntity.permissions.splice(index, 1);
     };
 
-    blade.headIcon = 'fa-key';
+    blade.headIcon = 'fas fa-key';
 
     function initializeToolbar() {
         if (!blade.isNew) {
             blade.toolbarCommands = [
                 {
                     name: "platform.commands.save",
-                    icon: 'fa fa-save',
+                    icon: 'fas fa-save',
                     executeMethod: $scope.saveChanges,
                     canExecuteMethod: canSave,
                     permission: blade.updatePermission
@@ -133,7 +134,7 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
                     permission: blade.updatePermission
                 },
                 {
-                    name: "platform.commands.assign", icon: 'fa fa-plus',
+                    name: "platform.commands.assign", icon: 'fas fa-plus',
                     executeMethod: function () {
                         var newBlade = {
                             id: 'listItemChildChild',
@@ -152,7 +153,7 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
                     permission: blade.updatePermission
                 },
                 {
-                    name: "platform.commands.remove", icon: 'fa fa-trash-o',
+                    name: "platform.commands.remove", icon: 'fas fa-trash-alt',
                     executeMethod: function () {
                         deleteChecked();
                     },

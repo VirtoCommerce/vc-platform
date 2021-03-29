@@ -1,13 +1,21 @@
-﻿import * as signalR from '@aspnet/signalr';
+import * as signalR from '@aspnet/signalr';
 
 angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$rootScope', function ($rootScope) {
     function signalRHubProxyFactory() {
         var reconnectionIntervals = [2000, 5000, 10000, 30000];
         var reconnectionIndex = 0;
 
-        var connection = new signalR.HubConnectionBuilder()
-            .withUrl('/pushNotificationHub')
-            .configureLogging(signalR.LogLevel.Error)
+        var connBuilder = new signalR.HubConnectionBuilder();
+        if (window.forceWebSockets) {
+            connBuilder = connBuilder.withUrl('/pushNotificationHub', {
+                skipNegotiation: true,
+                transport: signalR.HttpTransportType.WebSockets
+            })
+        }
+        else {
+            connBuilder = connBuilder.withUrl('/pushNotificationHub');
+        }
+        var connection = connBuilder.configureLogging(signalR.LogLevel.Error)
             .build();
 
         connection.start();
@@ -26,7 +34,7 @@ angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$ro
                     start();
                 }, reconnectionIntervals[reconnectionIndex]);
             }
-        };
+        }
 
         connection.onclose(async () => await start());
 
@@ -60,7 +68,7 @@ angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$ro
                     });
             },
             connection: connection
-        };
+        }
     };
 
     return signalRHubProxyFactory;

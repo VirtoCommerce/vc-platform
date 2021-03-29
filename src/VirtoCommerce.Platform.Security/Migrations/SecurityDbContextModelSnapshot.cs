@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.2")
+                .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -389,6 +389,10 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(64)")
+                        .HasMaxLength(64);
+
                     b.Property<string>("StoreId")
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
@@ -449,7 +453,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("VirtoCommerce.Platform.Core.Security.UserApiKey", b =>
+            modelBuilder.Entity("VirtoCommerce.Platform.Security.Model.UserApiKeyEntity", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -457,7 +461,8 @@ namespace VirtoCommerce.Platform.Security.Migrations
                         .HasMaxLength(128);
 
                     b.Property<string>("ApiKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(64)")

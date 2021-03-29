@@ -49,28 +49,28 @@ angular.module('platformWebApp')
                 url: '/forgotpassword',
                 templateUrl: '$(Platform)/Scripts/app/security/dialogs/forgotPasswordDialog.tpl.html',
                 controller: ['$rootScope', '$scope', 'platformWebApp.authService', '$state', function ($rootScope, $scope, authService, $state) {
-                        $scope.viewModel = {};
-                        $rootScope.preventLoginDialog = false;
-                        $scope.ok = function () {
-                            $scope.isLoading = true;
-                            $scope.errorMessage = null;
-                            authService.requestpasswordreset($scope.viewModel).then(function (retVal) {
-                                $scope.isLoading = false;
-                                $scope.succeeded = true;
-                                angular.extend($scope, retVal);
-                            }, function (response) {
-                                $scope.isLoading = false;
-                                $scope.errorMessage = response.data.message;
-                                if (!$scope.errors) {
-                                    $scope.errors = [];
-                                }
-                                $scope.errors.push(response.data.message);
-                            });
-                        };
-                        $scope.close = function () {
-                            $state.go('loginDialog');
-                        };
-                    }
+                    $scope.viewModel = {};
+                    $rootScope.preventLoginDialog = false;
+                    $scope.ok = function () {
+                        $scope.isLoading = true;
+                        $scope.errorMessage = null;
+                        authService.requestpasswordreset($scope.viewModel).then(function (retVal) {
+                            $scope.isLoading = false;
+                            $scope.succeeded = true;
+                            angular.extend($scope, retVal);
+                        }, function (response) {
+                            $scope.isLoading = false;
+                            $scope.errorMessage = response.data.message;
+                            if (!$scope.errors) {
+                                $scope.errors = [];
+                            }
+                            $scope.errors.push(response.data.message);
+                        });
+                    };
+                    $scope.close = function () {
+                        $state.go('loginDialog');
+                    };
+                }
                 ]
             });
 
@@ -84,7 +84,7 @@ angular.module('platformWebApp')
                 authService.validatepasswordresettoken($scope.viewModel).then(function (retVal) {
                     $scope.isValidToken = retVal;
                     $scope.isLoading = false;
-                    $scope.viewModel = { userId: $scope.viewModel.userId, code: $scope.viewModel.code, newPassword: '', newPassword2: ''}
+                    $scope.viewModel = { userId: $scope.viewModel.userId, code: $scope.viewModel.code, newPassword: '', newPassword2: '' }
                 }, function (response) {
                     $scope.isLoading = false;
                     $scope.errors = response.data.errors;
@@ -162,11 +162,10 @@ angular.module('platformWebApp')
     }])
     .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService',
         function ($rootScope, mainMenuService, metaFormsService, widgetService, $state, authService) {
-
             //Register module in main menu
             var menuItem = {
                 path: 'configuration/security',
-                icon: 'fa fa-key',
+                icon: 'fas fa-key',
                 title: 'platform.menu.security',
                 priority: 5,
                 action: function () { $state.go('workspace.securityModule'); },
@@ -194,14 +193,19 @@ angular.module('platformWebApp')
                         priority: 2
                     },
                     {
+                        name: "status",
+                        templateUrl: "statusSelector.html",
+                        priority: 3
+                    },
+                    {
                         name: "accountType",
                         templateUrl: "accountTypeSelector.html",
-                        priority: 3
+                        priority: 4
                     },
                     {
                         name: "accountInfo",
                         templateUrl: "accountInfo.html",
-                        priority: 4
+                        priority: 5
                     }
                 ]);
 

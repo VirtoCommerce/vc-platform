@@ -17,6 +17,7 @@ namespace VirtoCommerce.Platform.Core
                 public const char PermissionClaimTypeDelimiter = ';';
                 public const string UserNameClaimType = "username";
                 public const string LimitedPermissionsClaimType = "limited_permissions";
+                public const string MemberIdClaimType = "memberId";
             }
 
             public static class SystemRoles
@@ -54,7 +55,9 @@ namespace VirtoCommerce.Platform.Core
                                     SecurityCreate = "platform:security:create",
                                     SecurityAccess = "platform:security:access",
                                     SecurityUpdate = "platform:security:update",
-                                    SecurityDelete = "platform:security:delete";
+                                    SecurityDelete = "platform:security:delete",
+                                    SecurityVerifyEmail = "platform:security:verifyEmail",
+                                    SecurityLoginOnBehalf = "platform:security:loginOnBehalf";
 
                 public const string BackgroundJobsManage = "background_jobs:manage";
 
@@ -64,7 +67,17 @@ namespace VirtoCommerce.Platform.Core
 
                 public static string[] AllPermissions { get; } = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
                                               SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
-                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport};
+                                              SecurityQuery, SecurityCreate, SecurityAccess,  SecurityUpdate,  SecurityDelete, BackgroundJobsManage, PlatformExportImportAccess, PlatformImport, PlatformExport, SecurityLoginOnBehalf ,
+                                              SecurityVerifyEmail
+                };
+            }
+
+            public static class Changes
+            {
+                public const string UserUpdated = "UserUpdated";
+                public const string UserPasswordChanged = "UserPasswordChanged";
+                public const string RoleAdded = "RoleAdded";
+                public const string RoleRemoved = "RoleRemoved";
             }
         }
 
@@ -82,11 +95,30 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = UserType.Manager
                 };
 
+                public static readonly SettingDescriptor EnablePruneExpiredTokensJob = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.EnablePruneExpiredTokensJob",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = true
+                };
+
+                public static readonly SettingDescriptor CronPruneExpiredTokensJob = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.CronPruneExpiredTokensJob",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = "0 0 */1 * *"
+                };
+
+
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
                     {
                         yield return SecurityAccountTypes;
+                        yield return EnablePruneExpiredTokensJob;
+                        yield return CronPruneExpiredTokensJob;
                     }
                 }
             }
@@ -133,6 +165,17 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = true
                 };
 
+                /// <summary>
+                /// This setting controlled from LicenseController.
+                /// </summary>
+                public static SettingDescriptor TrialExpirationDate { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.TrialExpirationDate",
+                    GroupName = "Platform|Setup",
+                    ValueType = SettingValueType.DateTime,
+                    IsHidden = true,
+                };
+
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
@@ -142,6 +185,7 @@ namespace VirtoCommerce.Platform.Core
                         yield return ModulesAutoInstallState;
                         yield return ModulesAutoInstalled;
                         yield return SendDiagnosticData;
+                        yield return TrialExpirationDate;
                     }
                 }
             }
@@ -260,10 +304,32 @@ namespace VirtoCommerce.Platform.Core
                 }
             }
 
+            public static class Other
+            {
+                public static SettingDescriptor AccountStatuses { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Other.AccountStatuses",
+                    GroupName = "Platform|Other",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = "New",
+                    IsDictionary = true,
+                    AllowedValues = new[] { "New", "Approved", "Rejected", "Deleted" }
+                };
+
+                public static IEnumerable<SettingDescriptor> AllSettings
+                {
+                    get
+                    {
+                        yield return AccountStatuses;
+                    }
+                }
+            }
+
             public static IEnumerable<SettingDescriptor> AllSettings => Security.AllSettings
                 .Concat(Setup.AllSettings)
                 .Concat(UserProfile.AllSettings)
-                .Concat(UserInterface.AllSettings);
+                .Concat(UserInterface.AllSettings)
+                .Concat(Other.AllSettings);
         }
     }
 }

@@ -292,7 +292,8 @@
                     "module": "Module",
                     "version": "Version",
                     "author": "Author",
-                    "installed": "Installed Modules"
+                    "installed": "Installed Modules",
+                    "manual-install-disabled": "Manual modules install was disabled due to prohibited refreshing probing path (RefreshProbingFolderOnStart=false)."
                 }
             },
             "history": {
@@ -362,12 +363,17 @@
                     "login": "Login",
                     "account-state": "Account state",
                     "account-email": "Email",
-                    "locked-state": "Locked state"
+                    "locked-state": "Locked state",
+                    "status": "Status",
+                    "verified": "Verified",
+                    "resend-link": "Resend link",
+                    "link-sent": "The link was sent"
                 },
                 "placeholders": {
                     "account-type": "Select ...",
                     "email": "Enter email",
-                    "user-name": "Enter user name"
+                    "user-name": "Enter user name",
+                    "status": "Select ..."
                 }
             },
             "account-list": {
@@ -670,7 +676,7 @@
             },
             "licensing": {
                 "license-absent": "Community license",
-                "license-present": "{{type}} license, expired on {{expirationDate | amParse | date}}",
+                "license-present": "{{type}} license, expires on {{expirationDate | amParse | date}}",
                 "community": "Running community edition, click to request a commercial license.",
                 "expired": "You license has expired on {{expirationDate | amParse | date}}, please renew.",
                 "purchase": "Purchase",
@@ -819,10 +825,15 @@
             },
             "create-folder": {
                 "title": "A folder name must conform to the following naming rules:\n  Folder name must be from 3 through 63 characters long.\n  Folder name must start with a letter or number, and can contain only letters, numbers, and the dash (-) character.\n  Every dash (-) character must be immediately preceded and followed by a letter or number; consecutive dashes are not permitted.\n  All letters in a folder name must be lowercase."
+            },
+            "storefront-cache-reset-successfully": {
+                "title": "Cache reset",
+                "message": "Storefront cache has been reset successfully."
             }
         },
         "commands": {
-            "login-on-behalf": "Login on behalf"
+            "login-on-behalf": "Login on behalf",
+            "reset-storefront-cache": "Reset cache"
         }
     },
     "permissions": {
@@ -847,6 +858,7 @@
         "platform:security:access": "Allows to see Security in the main menu",
         "platform:security:update": "Allows to change an users and roles",
         "platform:security:delete": "Allows to delete an users and roles",
+        "platform:security:verifyEmail": "Allows to change verified state and send verification email",
         "background_jobs:manage": "Allows to access to  the Hangfire console",
         "platform:exportImport:access": "Allows to see Export/Import in the main menu",
         "platform:import": "Allows to import platform and modules data",
@@ -880,6 +892,14 @@
                     "AccountTypes": {
                         "description": "Dictionary for possible user types",
                         "title": "User types"
+                    },
+                    "EnablePruneExpiredTokensJob": {
+                        "description": "Enables prune expired and invalid tokens/authorizations",
+                        "title": "Prune expired tokens"
+                    },
+                    "CronPruneExpiredTokensJob": {
+                        "description": "Cron expression for prune expired and invalid tokens/authorizations job",
+                        "title": "Cron for the tokens prune job"
                     }
                 },
                 "UI": {
@@ -931,6 +951,12 @@
                         "description": "Specifies the maximum time  that the cached data to be stored in the cache. Format: [-][d.]hh:mm:ss[.fffffff]",
                         "title": "The global lifetime of objects in the cache"
                     }
+                }
+            },
+            "Other": {
+                "AccountStatuses": {
+                    "title": "Account statuses",
+                    "description": "Change account statuses"
                 }
             }
         }

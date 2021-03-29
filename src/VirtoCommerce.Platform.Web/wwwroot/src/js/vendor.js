@@ -76,4 +76,5 @@ import 'ui-select/dist/select.css';
 import 'ng-tags-input/build/ng-tags-input.css';
 import 'textangular/dist/textAngular.css';
 import 'select2/select2.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 import 'font-awesome/css/font-awesome.css';

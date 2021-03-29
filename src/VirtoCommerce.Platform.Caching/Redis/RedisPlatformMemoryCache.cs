@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Redis
             _cachingOptions = cachingOptions.Value;
             _redisCachingOptions = redisCachingOptions.Value;
 
-            CacheCancellableTokensRegistry.OnTokenCancelled = CacheCancellableTokensRegistry_OnTokenCancelled;
+            CancellableCacheRegion.OnTokenCancelled = CacheCancellableTokensRegistry_OnTokenCancelled;
         }
        
         private void CacheCancellableTokensRegistry_OnTokenCancelled(TokenCancelledEventArgs e)
@@ -86,7 +86,7 @@ namespace VirtoCommerce.Platform.Redis
                     if (message.IsToken)
                     {
                         _log.LogTrace($"Trying to cancel token with key: {key}");
-                        CacheCancellableTokensRegistry.TryCancelToken(key, raiseEvent: false);
+                        CancellableCacheRegion.CancelForKey(key, propagate: false);
                     }
                     else
                     {

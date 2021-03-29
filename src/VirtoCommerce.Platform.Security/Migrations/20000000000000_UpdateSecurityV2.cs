@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
 		                    EXEC ('DROP INDEX AspNetRoles.RoleNameIndex')
 		                    EXEC ('CREATE UNIQUE NONCLUSTERED INDEX [RoleNameIndex] ON [AspNetRoles] ([NormalizedName]) WHERE ([NormalizedName] IS NOT NULL)')
 	                    END
-	                    
+
 	                    BEGIN
 		                    ALTER TABLE [AspNetUserLogins] ADD [ProviderDisplayName] nvarchar(max);
 		                    ALTER TABLE [AspNetUsers] ADD [NormalizedUserName] nvarchar(256);
@@ -40,7 +40,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
 			                    [RoleId] [nvarchar](128) NOT NULL,
 			                    [ClaimType] [nvarchar](max) NULL,
 			                    [ClaimValue] [nvarchar](max) NULL,
-		                     CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY CLUSTERED 
+		                     CONSTRAINT [PK_AspNetRoleClaims] PRIMARY KEY CLUSTERED
 		                    (
 			                    [Id] ASC
 		                    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -62,7 +62,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
 	                            [LoginProvider] [nvarchar](450) NOT NULL,
 	                            [Name] [nvarchar](450) NOT NULL,
 	                            [Value] [nvarchar](max) NULL,
-                             CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY CLUSTERED 
+                             CONSTRAINT [PK_AspNetUserTokens] PRIMARY KEY CLUSTERED
                             (
 	                            [UserId] ASC,
 	                            [LoginProvider] ASC,
@@ -90,12 +90,12 @@ namespace VirtoCommerce.Platform.Security.Migrations
 			                    [Properties] [nvarchar](max) NULL,
 			                    [RedirectUris] [nvarchar](max) NULL,
 			                    [Type] [nvarchar](max) NOT NULL,
-		                     CONSTRAINT [PK_OpenIddictApplications] PRIMARY KEY CLUSTERED 
+		                     CONSTRAINT [PK_OpenIddictApplications] PRIMARY KEY CLUSTERED
 		                    (
 			                    [Id] ASC
 		                    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 		                    ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-	                    
+
 		                    CREATE TABLE [OpenIddictAuthorizations](
 			                    [ApplicationId] [nvarchar](450) NULL,
 			                    [ConcurrencyToken] [nvarchar](max) NULL,
@@ -105,7 +105,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
 			                    [Status] [nvarchar](max) NOT NULL,
 			                    [Subject] [nvarchar](max) NOT NULL,
 			                    [Type] [nvarchar](max) NOT NULL,
-		                     CONSTRAINT [PK_OpenIddictAuthorizations] PRIMARY KEY CLUSTERED 
+		                     CONSTRAINT [PK_OpenIddictAuthorizations] PRIMARY KEY CLUSTERED
 		                    (
 			                    [Id] ASC
 		                    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -124,7 +124,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
 			                    [Name] [nvarchar](450) NOT NULL,
 			                    [Properties] [nvarchar](max) NULL,
 			                    [Resources] [nvarchar](max) NULL,
-		                     CONSTRAINT [PK_OpenIddictScopes] PRIMARY KEY CLUSTERED 
+		                     CONSTRAINT [PK_OpenIddictScopes] PRIMARY KEY CLUSTERED
 		                    (
 			                    [Id] ASC
 		                    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -143,7 +143,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
 			                    [Status] [nvarchar](max) NULL,
 			                    [Subject] [nvarchar](max) NOT NULL,
 			                    [Type] [nvarchar](max) NOT NULL,
-		                     CONSTRAINT [PK_OpenIddictTokens] PRIMARY KEY CLUSTERED 
+		                     CONSTRAINT [PK_OpenIddictTokens] PRIMARY KEY CLUSTERED
 		                    (
 			                    [Id] ASC
 		                    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -171,12 +171,43 @@ namespace VirtoCommerce.Platform.Security.Migrations
                             EXEC (N'INSERT INTO [AspNetRoleClaims] ([RoleId],[ClaimType],[ClaimValue]) SELECT [RoleId], ''permission'', [PermissionId] FROM [PlatformRolePermission]')
 	                    END
 
+                        BEGIN
+                            CREATE TABLE [UserApiKey] (
+                                [Id] nvarchar(128) NOT NULL,
+                                [CreatedDate] datetime2 NOT NULL,
+                                [ModifiedDate] datetime2 NULL,
+                                [CreatedBy] nvarchar(64) NULL,
+                                [ModifiedBy] nvarchar(64) NULL,
+                                [ApiKey] nvarchar(128) NULL,
+                                [UserName] nvarchar(max) NULL,
+                                [UserId] nvarchar(max) NULL,
+                                [IsActive] bit NOT NULL,
+                                CONSTRAINT [PK_UserApiKey] PRIMARY KEY ([Id])
+                            );
+                        END
+
+                        BEGIN
+                            CREATE UNIQUE INDEX [IX_UserApiKey_ApiKey] ON [UserApiKey] ([ApiKey]) WHERE [ApiKey] IS NOT NULL;
+                        END
+
+                        BEGIN
+                            -- Copy only simple Api keys from v2 to v3.
+                            INSERT INTO [UserApiKey]
+                            ([Id], [CreatedDate], [ModifiedDate], [CreatedBy], [ModifiedBy], [ApiKey], [UserName], [UserId], [IsActive])
+                            SELECT
+                            [Id], [CreatedDate], [ModifiedDate], [CreatedBy], [ModifiedBy], [SecretKey], [Name], [AccountId], [IsActive] from [PlatformApiAccount]
+                            WHERE ApiAccountType=2
+                        END
+
+                        BEGIN
+                            INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'20200320170218_UserApiKey', N'3.1.5');
+                        END;
+
                     END");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
         }
     }
 }

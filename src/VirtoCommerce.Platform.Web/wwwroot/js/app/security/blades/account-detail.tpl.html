@@ -1,8 +1,10 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block clearfix">
-            <div class="t __divider">{{ 'platform.blades.account-detail.labels.user-information' | translate }}</div>
-            <form name="formScope">
+            <form name="formScope" class="form">
+                <fieldset>
+                    <legend>{{ 'platform.blades.account-detail.labels.user-information' | translate }}</legend>
+                </fieldset>
                 <va-metaform registered-inputs="blade.metaFields" blade="blade" column-count="1" ng-init="setForm(formScope)"></va-metaform>
             </form>
             <va-widget-container group="accountDetail" blade="blade" gridster-opts="{columns: 3}"></va-widget-container>
@@ -10,10 +12,27 @@
     </div>
 </div>
 
+<script type="text/ng-template" id="statusSelector.html">
+    <div class="form-label">
+        {{ 'platform.blades.account-detail.labels.status' | translate }}
+        <a href="" ng-click="blade.openSettingDictionaryController('VirtoCommerce.Other.AccountStatuses')" class="form-edit">
+            <i class="form-ico fa fa-pencil"></i>
+        </a>
+    </div>
+    <div class="form-input">
+        <ui-select ng-model="blade.currentEntity.status">
+            <ui-select-match placeholder="{{ 'platform.blades.account-detail.placeholders.status' | translate }}">{{$select.selected}}</ui-select-match>
+            <ui-select-choices repeat="x as x in blade.statuses | filter: $select.search ">
+                <span ng-bind-html="x | highlight: $select.search"></span>
+            </ui-select-choices>
+        </ui-select>
+    </div>
+</script>
+
 <script type="text/ng-template" id="accountTypeSelector.html">
     <div class="form-label">
         {{ 'platform.blades.account-detail.labels.account-type' | translate }}
-        <a href="" ng-click="blade.openAccountTypeSettingManagement()" class="form-edit">
+        <a href="" ng-click="blade.openSettingDictionaryController('VirtoCommerce.Platform.Security.AccountTypes')" class="form-edit">
             <i class="form-ico fa fa-pencil"></i>
         </a>
     </div>
@@ -37,14 +56,30 @@
 </script>
 
 <script type="text/ng-template" id="accountEmail.html">
-    <div class="form-label">
-        {{ 'platform.blades.account-detail.labels.account-email' | translate }}
-    </div>
-    <div class="form-input">
-        <input type="email" ng-model="blade.currentEntity.email" placeholder="{{'platform.blades.account-detail.placeholders.email' | translate}}" />
+    <div class="form-line">
+        <div class="form-line-item-250">
+            <div class="form-label"> {{ 'platform.blades.account-detail.labels.account-email' | translate }}
+            </div>
+            <div class="form-input">
+                <input type="email" ng-model="blade.currentEntity.email" placeholder="{{'platform.blades.account-detail.placeholders.email' | translate}}"/>
+            </div>
+        </div>
+        <div class="form-label">
+            <div class="form-label"> {{ 'platform.blades.account-detail.labels.verified' | translate }}
+            </div>
+            <div>
+                <label class="form-label __switch" >
+                    <input type="checkbox" ng-model="blade.currentEntity.emailConfirmed" ng-disabled="!blade.hasVerifyEmailPermission()">
+                    <span class="switch" ng-class="{disabled: currentEntity.isReadOnly || !blade.hasVerifyEmailPermission() }"></span>
+                </label>
+            </div>
+            <div>
+                <a ng-class="blade.currentEntity.email !== blade.origEntity.email ? 'disabled': ''"  href="" ng-style="blade.isLinkSent && {'color':'green'} || {'color': ''}" ng-click="blade.sendLink()" va-permission="platform:security:verifyEmail">
+                    {{blade.isLinkSent ? 'platform.blades.account-detail.labels.link-sent' : 'platform.blades.account-detail.labels.resend-link' | translate }}</a>
+            </div>
+        </div>
     </div>
 </script>
-
 
 <script type="text/ng-template" id="accountUserName.html">
     <div class="form-label">

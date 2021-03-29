@@ -7,6 +7,6 @@ namespace VirtoCommerce.Platform.Core.PushNotifications
         public string ScalabilityMode { get; set; } = "None";
         [Url, Required]
         public string HubUrl { get; set; }
-
+        public bool ForceWebSockets { get; set; } = false;
     }
 }

@@ -1,0 +1,41 @@
+name: Platform OWASP ZAP
+on:
+  push:
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'build/**'
+      - 'README.md'
+      - 'LICENSE'
+    branches: [ dev ]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Docker Login
+        uses: azure/docker-login@v1
+        with:
+          login-server: docker.pkg.github.com
+          username: $GITHUB_ACTOR
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Env
+        uses: VirtoCommerce/vc-github-actions/docker-env@master
+        with:
+          githubUser: ${{ env.GITHUB_ACTOR }}
+          githubToken: ${{ env.GITHUB_TOKEN }}
+          platformImage: docker.pkg.github.com/virtocommerce/vc-platform/platform
+          storefrontImage: docker.pkg.github.com/virtocommerce/vc-storefront/storefront
+          validateSwagger: 'false'
+
+      - name: OWASP ZAP Full Scan
+        uses: zaproxy/action-baseline@v0.4.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          docker_name: 'owasp/zap2docker-stable'
+          target: 'http://localhost:8090'
+          cmd_options: '-a -d'

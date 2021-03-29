@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.Platform.Core.Settings
+namespace VirtoCommerce.Platform.Core.Settings
 {
     public enum SettingValueType
     {
@@ -9,6 +9,11 @@
         DateTime,
         Boolean,
         SecureString,
-        Json
+        Json,
+
+        /// <summary>
+        /// A000027 - Natural numbers
+        /// </summary>
+        PositiveInteger,
     }
 }

@@ -40,5 +40,10 @@ namespace VirtoCommerce.Platform.Web.Azure
         /// </summary>
         public string DefaultUserType { get; set; }
 
+        //
+        // Summary:
+        //     Gets or sets the discovery endpoint for obtaining metadata
+        public string MetadataAddress { get; set; }
+
     }
 }

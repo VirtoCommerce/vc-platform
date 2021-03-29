@@ -14,19 +14,17 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
 
         private readonly string _storagePath;
         private readonly string _basePublicUrl;
-        private readonly FileSystemBlobOptions _options;
 
         public FileSystemBlobProvider(IOptions<FileSystemBlobOptions> options)
         {
-            _options = options.Value;
-
             // extra replace step to prevent windows path getting into linux environment
-            _storagePath = _options.RootPath.TrimEnd(Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar); 
-            _basePublicUrl = _options.PublicUrl;
+            _storagePath = options.Value.RootPath.TrimEnd(Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
+            _basePublicUrl = options.Value.PublicUrl;
             _basePublicUrl = _basePublicUrl?.TrimEnd('/');
         }
 
         #region IBlobStorageProvider members
+
         /// <summary>
         /// Get blog info by url
         /// </summary>
@@ -251,7 +249,8 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
                 CopyDirectoryRecursive(folder, dest);
             }
         }
-        #endregion
+
+        #endregion IBlobStorageProvider members
 
         #region IBlobUrlResolver Members
 
@@ -270,7 +269,7 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
             return new Uri(retVal).ToString();
         }
 
-        #endregion
+        #endregion IBlobUrlResolver Members
 
         protected string GetRelativeUrl(string url)
         {

@@ -17,7 +17,7 @@ ol
 
 .list.__inline,
 .menu.__inline
-  word-spacing: -4px
+  word-spacing: 0px
 
 ul,
 ol
@@ -365,8 +365,13 @@ h3
     font-size: 14px
     padding: 10px
     text-align: left
+    height: 40px
   .table-col:first-child
-    padding-left: 20px
+    text-align: center
+    padding-top: 10px
+    padding-right: 0px
+    width: 5%
+    padding-left: 20px;
   .table-col:last-child
     padding-right: 20px
   &.__data .table-col
@@ -706,7 +711,7 @@ $names: "", ".double", ".triple", ".quadro"
     font-family: $fontAw
     font-size: 16px
     position: absolute
-    right: 20px
+    right: 30px
     top: 50%
 
     transform: translateY(-50%)
@@ -779,6 +784,14 @@ $names: "", ".double", ".triple", ".quadro"
   right: 55px
 .__items .list-item.__default:hover:after
   right: 0
+.__items .list-item .cover
+  display: flex
+  align-items: center
+.__items .list-item .cover .first
+  display: inline
+.__items .list-item .cover .next
+  display: inline-block
+  padding-left: 15px
 .__items .list-link
     display: block
     white-space: nowrap
@@ -996,39 +1009,35 @@ $names: "", ".double", ".triple", ".quadro"
 
 /* Breadcrumbs */
 .breadcrumbs
+  .arrow-color
+    color: #A1C0D4
   padding: 15px 0
   .back
-    background: $whiteColor
-    border: 1px solid #a1c0d4
-    border-radius: 50%
-    color: #a1c0d4
+    margin: 4px 0 0 0 
+    padding: 4px 12px 4px 12px
+    border: 1px solid #A1C0D4
+    border-radius: 15px
+    background: white
+    color: #43b0e6
     display: inline-block
-    height: 30px
-    line-height: 28px
     text-align: center
     vertical-align: top
-    width: 30px
     &:hover
       border-color: $baseColor
       color: $baseColor
   .back ~ .menu
     display: inline-block
-    margin: 4px 0 0 10px
+    margin: 4px 0 0 5px
     vertical-align: top
   .menu-item.__divider
     height: 22px
     position: relative
-    width: 20px
-    &::after
-      background: #a6a6a6
-      content: ''
-      height: 4px
-      left: 50%
-      margin: 0 0 0 -2px
-      position: absolute
-      top: 50%
-      width: 4px
+    width: 5px
   .menu-link
+    padding: 4px 12px 4px 12px
+    border: 1px solid #A1C0D4
+    border-radius: 15px
+    background-color: white
     max-width: 123px
     display: block
     text-overflow: ellipsis
@@ -2537,3 +2546,7 @@ tags-input
     background-color: $blueBg
     &:hover
       background-color: darken($blueBg, 5%)
+// Font awesome
+.fa-gray
+  color: $iconGray
+  margin: 0 0 10px 0
