@@ -87,6 +87,16 @@ jobs:
         projectPath: '${{ github.workspace }}/vc-quality-gate-katalon/platform_storefront.prj'
         args: '-noSplash -retry=0 -testSuitePath="${{ github.event.inputs.testSuite || env.DEFAULT_TEST_SUITE }}" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"'
 
+    - name: 'Katalon Reports'
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: reports
+        path: |
+          vc-quality-gate-katalon/Reports
+          /home/runner/.katalon/*/Katalon_Studio_Engine_Linux_*/configuration/*.log.
+        retention-days: 5
+
     - name: Katalon Report to PR
       if: ${{ ( success() || failure() ) && github.event_name == 'pull_request' }}
       uses: VirtoCommerce/vc-github-actions/publish-katalon-report@master

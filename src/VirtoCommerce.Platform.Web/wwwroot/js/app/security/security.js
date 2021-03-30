@@ -122,43 +122,49 @@ angular.module('platformWebApp')
                 ]
             });
 
-        $stateProvider.state('changePasswordDialog',
-            {
-                url: '/changepassword',
-                templateUrl: '$(Platform)/Scripts/app/security/dialogs/changePasswordDialog.tpl.html',
-                params: {
-                    onClose: null
-                },
-                controller: ['$q', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.passwordValidationService', function ($q, $scope, $stateParams, accounts, authService, passwordValidationService) {
-                    $scope.userName = authService.userName;
-                    if ($scope.userName) {
-                        accounts.get({ id: $scope.userName }, function (user) {
-                            if (!user || !user.passwordExpired) {
-                                $stateParams.onClose();
-                            }
-                        });
-                    }
+        $stateProvider.state('changePasswordDialog', {
+            url: '/changepassword',
+            templateUrl: '$(Platform)/Scripts/app/security/dialogs/changePasswordDialog.tpl.html',
+            params: {
+                onClose: null
+            },
+            controller: ['$state', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.passwordValidationService', function ($state, $scope, $stateParams, accounts, authService, passwordValidationService) {
+                if (!authService.isAuthenticated) {
+                    $state.go('loginDialog');
+                }
 
-                    $scope.validatePasswordAsync = function (value) {
-                        return passwordValidationService.validatePasswordAsync(value);
-                    }
+                $scope.userName = authService.userName;
+                $scope.canCancel = !authService.passwordExpired;
 
-                    $scope.postpone = function () {
-                        $stateParams.onClose();
-                    }
+                $scope.validatePasswordAsync = (value) => {
+                    $scope.validatedPassword = value;
+                    delete $scope.errors;
+                    return passwordValidationService.validatePasswordAsync(value);
+                };
 
-                    $scope.ok = function () {
-                        var postData = {
-                            NewPassword: $scope.password
-                        };
-                        accounts.resetCurrentUserPassword(postData, function (data) {
+                $scope.postpone = () => {
+                    $stateParams.onClose();
+                };
+
+                $scope.ok = () => {
+                    accounts.changeCurrentUserPassword($scope.postData, (result) => {
+                        if (result.succeeded) {
                             $stateParams.onClose();
-                        }, function (response) {
-                            $scope.errors = response.data.errors;
-                        });
-                    }
-                }]
-            });
+                        } else {
+                            showErrors(result);
+                        }
+                    }, (response) => {
+                        showErrors(response.data);
+                    });
+
+                };
+
+                var showErrors = (result) => {
+                    $scope.postData = {};
+                    $scope.errors = result.errors;
+                };
+            }]
+        });
     }])
     .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService',
         function ($rootScope, mainMenuService, metaFormsService, widgetService, $state, authService) {
