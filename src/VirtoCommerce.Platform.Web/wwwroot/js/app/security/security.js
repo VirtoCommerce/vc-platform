@@ -153,6 +153,7 @@ angular.module('platformWebApp')
         $scope.ok = () => {
             accounts.changeCurrentUserPassword($scope.postData, (result) => {
                 if (result.succeeded) {
+                    authService.passwordExpired = false;
                     if (angular.isFunction($stateParams.onClose)) {
                         $stateParams.onClose();
                     } else {
