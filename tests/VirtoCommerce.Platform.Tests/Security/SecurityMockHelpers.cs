@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
@@ -14,9 +15,14 @@ namespace VirtoCommerce.Platform.Tests.Security
 {
     public static class SecurityMockHelpers
     {
-        public static CustomUserManager TestCustomUserManager(Mock<IUserStore<ApplicationUser>> storeMock = null, IEventPublisher eventPublisher = null)
+        public static CustomUserManager TestCustomUserManager(Mock<IUserStore<ApplicationUser>> storeMock, IEventPublisher eventPublisher)
         {
-            storeMock = storeMock ?? new Mock<IUserStore<ApplicationUser>>();
+            return TestCustomUserManager(storeMock, null, null, eventPublisher);
+        }
+
+        public static CustomUserManager TestCustomUserManager(Mock<IUserStore<ApplicationUser>> storeMock = null, UserOptionsExtended userOptions = null, PlatformMemoryCache platformMemoryCache = null, IEventPublisher eventPublisher = null)
+        {
+            storeMock ??= new Mock<IUserStore<ApplicationUser>>();
             storeMock.As<IUserRoleStore<ApplicationUser>>()
                 .Setup(x => x.GetRolesAsync(It.IsAny<ApplicationUser>(), CancellationToken.None))
                 .ReturnsAsync(Array.Empty<string>());
@@ -26,10 +32,17 @@ namespace VirtoCommerce.Platform.Tests.Security
             storeMock.Setup(x => x.UpdateAsync(It.IsAny<ApplicationUser>(), CancellationToken.None))
                 .ReturnsAsync(IdentityResult.Success);
 
-            var options = new Mock<IOptions<IdentityOptions>>();
+            var optionsMock = new Mock<IOptions<IdentityOptions>>();
             var idOptions = new IdentityOptions();
             idOptions.Lockout.AllowedForNewUsers = false;
-            options.Setup(o => o.Value).Returns(idOptions);
+            optionsMock.Setup(o => o.Value).Returns(idOptions);
+
+            userOptions ??= new UserOptionsExtended
+            {
+                MaxPasswordAge = new TimeSpan(0)
+            };
+            var userOptionsMock = new Mock<IOptions<UserOptionsExtended>>();
+            userOptionsMock.Setup(o => o.Value).Returns(userOptions);
             var userValidators = new List<IUserValidator<ApplicationUser>>();
             var validator = new Mock<IUserValidator<ApplicationUser>>();
             userValidators.Add(validator.Object);
@@ -48,6 +61,7 @@ namespace VirtoCommerce.Platform.Tests.Security
                 Mock.Of<IOptions<IdentityOptions>>(),
                 passwordHasher.Object,
                 passwordHasher.Object,
+                userOptionsMock.Object,
                 userValidators,
                 pwdValidators,
                 Mock.Of<ILookupNormalizer>(),
@@ -55,7 +69,7 @@ namespace VirtoCommerce.Platform.Tests.Security
                 Mock.Of<IServiceProvider>(),
                 Mock.Of<ILogger<UserManager<ApplicationUser>>>(),
                 roleManagerMock.Object,
-                Mock.Of<IPlatformMemoryCache>(),
+                platformMemoryCache ?? Mock.Of<IPlatformMemoryCache>(),
                 eventPublisher);
 
             validator.Setup(x => x.ValidateAsync(userManager, It.IsAny<ApplicationUser>()))
