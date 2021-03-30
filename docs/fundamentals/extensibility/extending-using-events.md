@@ -38,8 +38,8 @@ void  Initialize(IServiceCollection serviceCollection)
 void PostInitialize(IApplicationBuilder appBuilder)
 {
   ...
-var eventHandlerRegistrar = appBuilder.ServiceCollection.Resolve<IHandlerRegistrar>();
-eventHandlerRegistrar.RegisterHandler<CustomDomainEvent>(async (message, token) => await _container.Resolve<CustomDomainEventHandler>().Handle(message));
+var eventHandlerRegistrar = appBuilder.ApplicationServices.GetService<IHandlerRegistrar>();
+eventHandlerRegistrar.RegisterHandler<CustomDomainEvent>((message, token) => appBuilder.ApplicationServices.GetService<CustomDomainEventHandler>().Handle(message));
   ...
 }
 ```
