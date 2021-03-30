@@ -122,6 +122,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 isAdministrator = user.IsAdministrator,
                 UserName = user.UserName,
                 PasswordExpired = user.PasswordExpired,
+                LastPasswordChangedDate = user.LastPasswordChangedDate,
                 Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray()
             };
 
@@ -351,13 +352,29 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Change password for current user.
+        /// </summary>
+        /// <param name="changePassword">Old and new passwords.</param>
+        /// <returns>Result of password change</returns>
+        [HttpPost]
+        [Route("currentuser/changepassword")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public async Task<ActionResult<SecurityResult>> ChangeCurrentUserPassword([FromBody] ChangePasswordRequest changePassword)
+        {
+            return await ChangePassword(User.Identity.Name, changePassword);
+        }
+
+        /// <summary>
         /// Change password
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="changePassword">Old and new passwords.</param>
         [HttpPost]
         [Route("users/{userName}/changepassword")]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
         public async Task<ActionResult<SecurityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
         {
@@ -368,7 +385,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found." }).ToSecurityResult());
+            }
+
+            if (changePassword.OldPassword == changePassword.NewPassword)
+            {
+                return BadRequest(new SecurityResult { Errors = new[] { "Choose a different password." } });
             }
 
             var result = await _signInManager.UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
@@ -389,6 +411,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("currentuser/resetpassword")]
         [AllowAnonymous]
+        [Obsolete("use /currentuser/changepassword instead")]
         public async Task<ActionResult<SecurityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
         {
             return await ResetPassword(User.Identity.Name, resetPassword);
@@ -545,6 +568,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 // SetEmailAsync also: sets EmailConfirmed to false and updates the SecurityStamp
                 await _userManager.SetEmailAsync(user, user.Email);
+            }
+
+            if (user.LastPasswordChangedDate != applicationUser.LastPasswordChangedDate)
+            {
+                user.LastPasswordChangedDate = applicationUser.LastPasswordChangedDate;
             }
 
             var result = await _userManager.UpdateAsync(user);
