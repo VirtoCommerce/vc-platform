@@ -390,7 +390,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (changePassword.OldPassword == changePassword.NewPassword)
             {
-                return BadRequest(new SecurityResult { Errors = new[] { "Choose a different password." } });
+                return BadRequest(new SecurityResult { Errors = new[] { "You have used this password in the past. Choose another one." } });
             }
 
             var result = await _signInManager.UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
