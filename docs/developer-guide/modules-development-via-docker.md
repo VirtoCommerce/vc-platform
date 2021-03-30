@@ -41,12 +41,12 @@ For the *docker* and *docker-compose* files configuring convenience, all configu
 
 * For Docker installation, first review the information at Docker for Windows: [What to know before you install](https://docs.docker.com/docker-for-windows/install/#what-to-know-before-you-install)
 * Install [Docker Desktop for Windows](https://docs.docker.com/docker-for-windows/install/) on your machine
-* During installation you'll need to choose Linux as operating system used inside your containers
+* During installation you'll need to choose Linux as operating system used inside your containers and install update for WSL 2 (Windows Subsystem for Linux)
 
 ## How to use
 
 1. Copy [ModulesDevelop](https://github.com/VirtoCommerce/vc-platform/blob/dev/DockerCompose/ModulesDevelop/) folder to local machine
-2. Create an external network for the Docker engine
+2. Create an external network for the Docker engine. Run the following command in powershell with elevated admimistrator priviliges:
 
 ```cmd
 docker network create nat
@@ -55,7 +55,6 @@ docker network create nat
 3. Parameterize values in the *.env* file.
 
 ```cmd
-CMS_CONTENT_VOLUME=c:\path\to\folder\cms-content
 APP_DATA_MODULES=c:\path\to\folder\modules
 ```
 
@@ -70,10 +69,10 @@ SEARCH_PROVIDER=ElasticSearch
 4. Build and launch `docker-compose` by command:
 
 ```cmd
-docker-compose -f docker-compose.yml up --build -d
+docker-compose -f c:\path\to\modulesdevelop\docker-compose.yml up --build -d
 ```
 
-5. Run Virto Commerce Platform Manager (configure modules as sample data)
+5. Run Virto Commerce Platform Manager - http://localhost:8090/ (configure modules as sample data)
 6. [Create new module](./create-new-module.md) as described in the article
 7. Write code for new module
 8. Build new module
@@ -82,7 +81,7 @@ docker-compose -f docker-compose.yml up --build -d
 
 ## Run Virto Commerce Platform Manager
 
-Once the containers are started, open VC Platform Manager - http://localhost:8090 . This will launch the application and install default modules. After modules have been installed you need to restart the container with the platform what gives you the opportunity to configure sample data.
+Once the containers are started, open VC Platform Manager. This will launch the application and install default modules. After modules have been installed you need to restart the container with the platform what gives you the opportunity to configure sample data.
 
 ![Choose sample data](../media/screen-sample-data.png)
 

@@ -355,10 +355,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Change password for current user.
         /// </summary>
         /// <param name="changePassword">Old and new passwords.</param>
-        /// <returns></returns>
+        /// <returns>Result of password change</returns>
         [HttpPost]
         [Route("currentuser/changepassword")]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize]
         public async Task<ActionResult<SecurityResult>> ChangeCurrentUserPassword([FromBody] ChangePasswordRequest changePassword)
         {
@@ -372,7 +373,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <param name="changePassword">Old and new passwords.</param>
         [HttpPost]
         [Route("users/{userName}/changepassword")]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
         public async Task<ActionResult<SecurityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
         {
