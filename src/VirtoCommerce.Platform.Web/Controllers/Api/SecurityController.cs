@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Web.Model.Security;
+using VirtoCommerce.Platform.Web.Security;
 using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -32,6 +33,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly Core.Security.AuthorizationOptions _securityOptions;
+        private readonly UserOptionsExtended _userOptionsExtended;
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserSearchService _userSearchService;
         private readonly IRoleSearchService _roleSearchService;
@@ -42,12 +44,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         public SecurityController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager,
                 IPermissionsRegistrar permissionsProvider, IUserSearchService userSearchService, IRoleSearchService roleSearchService,
-                IOptions<Core.Security.AuthorizationOptions> securityOptions, IPasswordCheckService passwordCheckService, IEmailSender emailSender,
+                IOptions<Core.Security.AuthorizationOptions> securityOptions, IOptions<UserOptionsExtended> userOptionsExtended, IPasswordCheckService passwordCheckService, IEmailSender emailSender,
                 IEventPublisher eventPublisher, IUserApiKeyService userApiKeyService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _securityOptions = securityOptions.Value;
+            _userOptionsExtended = userOptionsExtended.Value;
             _passwordCheckService = passwordCheckService;
             _permissionsProvider = permissionsProvider;
             _roleManager = roleManager;
@@ -116,13 +119,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return NotFound();
             }
+
             var result = new UserDetail
             {
                 Id = user.Id,
                 isAdministrator = user.IsAdministrator,
                 UserName = user.UserName,
                 PasswordExpired = user.PasswordExpired,
-                LastPasswordChangedDate = user.LastPasswordChangedDate,
+                DaysTillPasswordExpiry = PasswordExpiryHelper.ContDaysTillPasswordExpiry(user, _userOptionsExtended),
                 Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray()
             };
 

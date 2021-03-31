@@ -132,7 +132,7 @@ angular.module('platformWebApp')
             });
     }])
 
-    .controller('platformWebApp.changePasswordDialog', ['$state', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.passwordValidationService', function ($state, $scope, $stateParams, accounts, authService, passwordValidationService) {
+    .controller('platformWebApp.changePasswordDialog', ['$rootScope', '$state', '$scope', '$stateParams', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.passwordValidationService', function ($rootScope, $state, $scope, $stateParams, accounts, authService, passwordValidationService) {
         if (!authService.isAuthenticated) {
             $state.go('loginDialog');
         }
@@ -154,6 +154,9 @@ angular.module('platformWebApp')
             accounts.changeCurrentUserPassword($scope.postData, (result) => {
                 if (result.succeeded) {
                     authService.passwordExpired = false;
+                    authService.daysTillPasswordExpiry = -1;
+                    $rootScope.$emit('userPasswordChanged', authService);
+
                     if (angular.isFunction($stateParams.onClose)) {
                         $stateParams.onClose();
                     } else {
