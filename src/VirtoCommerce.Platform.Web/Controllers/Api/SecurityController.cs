@@ -261,12 +261,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result.ToSecurityResult());
         }
 
+
         /// <summary>
         /// SearchAsync users by keyword
         /// </summary>
         /// <param name="criteria">Search criteria.</param>
         [HttpPost]
-        [Route("users")]
+        [Route("users/search")]
+        [Route("users")] //PT-789: Obsolete, remove later left only for backward compatibility with V2
         [Authorize(PlatformConstants.Security.Permissions.SecurityQuery)]
         public async Task<ActionResult<UserSearchResult>> SearchUsers([FromBody] UserSearchCriteria criteria)
         {
