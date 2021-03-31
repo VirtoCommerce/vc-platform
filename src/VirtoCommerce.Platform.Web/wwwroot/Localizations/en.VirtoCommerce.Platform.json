@@ -679,6 +679,11 @@
                 "renew": "Renew",
                 "expiration-date": "Expiration Date"
             },
+            "password-expiry": {
+                "expire-days": "To protect your account you will need to change your password <b>in {{count}} days.</b> ",
+                "expire-today": "To protect your account you will need to change your password <b>today.</b> ",
+                "change-link": "Change now"
+            },
             "modulesAutoInstallation": {
                 "labels": {
                     "module-auto-installation": "Modules auto installation",

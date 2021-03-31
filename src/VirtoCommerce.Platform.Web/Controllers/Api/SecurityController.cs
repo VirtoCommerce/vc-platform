@@ -32,6 +32,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly Core.Security.AuthorizationOptions _securityOptions;
+        private readonly UserOptionsExtended _userOptionsExtended;
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserSearchService _userSearchService;
         private readonly IRoleSearchService _roleSearchService;
@@ -42,12 +43,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         public SecurityController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager,
                 IPermissionsRegistrar permissionsProvider, IUserSearchService userSearchService, IRoleSearchService roleSearchService,
-                IOptions<Core.Security.AuthorizationOptions> securityOptions, IPasswordCheckService passwordCheckService, IEmailSender emailSender,
+                IOptions<Core.Security.AuthorizationOptions> securityOptions, IOptions<UserOptionsExtended> userOptionsExtended, IPasswordCheckService passwordCheckService, IEmailSender emailSender,
                 IEventPublisher eventPublisher, IUserApiKeyService userApiKeyService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _securityOptions = securityOptions.Value;
+            _userOptionsExtended = userOptionsExtended.Value;
             _passwordCheckService = passwordCheckService;
             _permissionsProvider = permissionsProvider;
             _roleManager = roleManager;
@@ -116,13 +118,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return NotFound();
             }
+
+            var daysTillPasswordExpiry = -1; // not a valid expiry days number
+            var lastPasswordChangeDate = user.LastPasswordChangedDate ?? user.CreatedDate;
+            if (_userOptionsExtended.RemindPasswordExpiryInDays > 0 &&
+                !user.PasswordExpired &&
+                _userOptionsExtended.MaxPasswordAge != null &&
+                _userOptionsExtended.MaxPasswordAge.Value > TimeSpan.Zero &&
+                (lastPasswordChangeDate.Add(_userOptionsExtended.MaxPasswordAge.Value) - DateTime.UtcNow) is var timeTillExpiry &&
+                timeTillExpiry > TimeSpan.Zero &&
+                timeTillExpiry < TimeSpan.FromDays(_userOptionsExtended.RemindPasswordExpiryInDays))
+            {
+                daysTillPasswordExpiry = timeTillExpiry.Days;
+            }
+
             var result = new UserDetail
             {
                 Id = user.Id,
                 isAdministrator = user.IsAdministrator,
                 UserName = user.UserName,
                 PasswordExpired = user.PasswordExpired,
-                LastPasswordChangedDate = user.LastPasswordChangedDate,
+                DaysTillPasswordExpiry = daysTillPasswordExpiry,
                 Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray()
             };
 
