@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Web.Model.Security;
+using VirtoCommerce.Platform.Web.Security;
 using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -119,26 +120,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return NotFound();
             }
 
-            var daysTillPasswordExpiry = -1; // not a valid expiry days number
-            var lastPasswordChangeDate = user.LastPasswordChangedDate ?? user.CreatedDate;
-            if (_userOptionsExtended.RemindPasswordExpiryInDays > 0 &&
-                !user.PasswordExpired &&
-                _userOptionsExtended.MaxPasswordAge != null &&
-                _userOptionsExtended.MaxPasswordAge.Value > TimeSpan.Zero &&
-                (lastPasswordChangeDate.Add(_userOptionsExtended.MaxPasswordAge.Value) - DateTime.UtcNow) is var timeTillExpiry &&
-                timeTillExpiry > TimeSpan.Zero &&
-                timeTillExpiry < TimeSpan.FromDays(_userOptionsExtended.RemindPasswordExpiryInDays))
-            {
-                daysTillPasswordExpiry = timeTillExpiry.Days;
-            }
-
             var result = new UserDetail
             {
                 Id = user.Id,
                 isAdministrator = user.IsAdministrator,
                 UserName = user.UserName,
                 PasswordExpired = user.PasswordExpired,
-                DaysTillPasswordExpiry = daysTillPasswordExpiry,
+                DaysTillPasswordExpiry = PasswordExpiryHelper.ContDaysTillPasswordExpiry(user, _userOptionsExtended),
                 Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray()
             };
 
