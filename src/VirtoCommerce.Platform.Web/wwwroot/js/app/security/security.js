@@ -176,8 +176,8 @@ angular.module('platformWebApp')
         };
     }])
 
-    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService',
-        function ($rootScope, mainMenuService, metaFormsService, widgetService, $state, authService) {
+    .run(['$transitions', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService',
+        function ($transitions, mainMenuService, metaFormsService, widgetService, $state, authService) {
             //Register module in main menu
             var menuItem = {
                 path: 'configuration/security',
@@ -238,4 +238,11 @@ angular.module('platformWebApp')
                 controller: 'platformWebApp.accountApiWidgetController',
                 template: '$(Platform)/Scripts/app/security/widgets/accountApiWidget.tpl.html',
             }, 'accountDetail');
+
+            // Prevent transition to workspace if password expired
+            $transitions.onBefore({ to: 'workspace.**' }, function (transition) {
+                if (authService.isAuthenticated && authService.passwordExpired) {
+                    return transition.router.stateService.target('changePasswordDialog');
+                }
+            });
         }]);
