@@ -19,6 +19,7 @@ namespace VirtoCommerce.Platform.Tests.Security
         [InlineData("LongPassword", true, true, false, false, 12, true, false, false, false, false, false)]
         [InlineData("P455WithD1git5", true, true, true, false, 8, true, false, false, false, false, false)]
         [InlineData("$ecur3P@Ssw0rd", true, true, true, true, 8, true, false, false, false, false, false)]
+        [InlineData("12ä45", false, false, false, true, 5, true, false, false, false, false, false)]
         // Violation of minimal length
         [InlineData("letmein", false, false, false, false, 8, false, true, false, false, false, false)]
         [InlineData("123", false, false, false, false, 5, false, true, false, false, false, false)]
