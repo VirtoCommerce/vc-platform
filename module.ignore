@@ -8,6 +8,7 @@ EntityFrameworkCore.Triggers.dll
 FluentValidation.dll
 Hangfire.AspNetCore.dll
 Hangfire.Core.dll
+Hangfire.Core.resources.dll
 Hangfire.MemoryStorage.dll
 Hangfire.SqlServer.dll
 MessagePack.dll
@@ -126,6 +127,7 @@ System.IO.Abstractions.dll
 System.IO.FileSystem.AccessControl.dll
 System.IO.Pipelines.dll
 System.Runtime.Caching.dll
+System.Runtime.CompilerServices.Unsafe.dll
 System.Security.AccessControl.dll
 System.Security.Cryptography.ProtectedData.dll
 System.Security.Principal.Windows.dll
