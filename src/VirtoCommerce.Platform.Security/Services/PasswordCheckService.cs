@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using VirtoCommerce.Platform.Core.Security;
@@ -10,8 +11,6 @@ namespace VirtoCommerce.Platform.Security.Services
     /// </summary>
     public class PasswordCheckService : IPasswordCheckService
     {
-        protected char[] SpecialCharacters { get; } = { '!', '@', '#', '$', '%', '^', '&', '*', '?', '_', '~', '-', '£', '(', ')', '.', ',' };
-
         protected IdentityOptions Options { get; }
 
         /// <summary>
@@ -29,13 +28,20 @@ namespace VirtoCommerce.Platform.Security.Services
             var result = new PasswordValidationResult
             {
                 PasswordIsValid = true,
-                MinPasswordLength = Options.Password.RequiredLength
+                MinPasswordLength = Options.Password.RequiredLength,
+                MinUniqueCharsCount = Options.Password.RequiredUniqueChars
             };
 
             if (!HasSufficientLength(password))
             {
                 result.PasswordIsValid = false;
                 result.PasswordViolatesMinLength = true;
+            }
+
+            if (!HasSufficientUniqueChars(password))
+            {
+                result.PasswordIsValid = false;
+                result.PasswordViolatesMinUniqueCharsCount = true;
             }
 
             if (Options.Password.RequireUppercase && !HasUpperCaseLetter(password))
@@ -71,6 +77,12 @@ namespace VirtoCommerce.Platform.Security.Services
                    && password.Length >= Options.Password.RequiredLength;
         }
 
+        private bool HasSufficientUniqueChars(string password)
+        {
+            return !string.IsNullOrEmpty(password)
+                   && password.Distinct().Count() >= Options.Password.RequiredUniqueChars;
+        }
+
         protected virtual bool HasUpperCaseLetter(string password)
         {
             return !string.IsNullOrWhiteSpace(password)
@@ -92,7 +104,7 @@ namespace VirtoCommerce.Platform.Security.Services
         protected virtual bool HasSpecialCharacter(string password)
         {
             return !string.IsNullOrWhiteSpace(password)
-                   && password.IndexOfAny(SpecialCharacters) != -1;
+                   && !Regex.IsMatch(password, "^[a-zA-Z0-9]+$");
         }
     }
 }
