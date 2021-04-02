@@ -77,7 +77,7 @@ namespace VirtoCommerce.Platform.Security.Services
                    && password.Length >= Options.Password.RequiredLength;
         }
 
-        private bool HasSufficientUniqueChars(string password)
+        protected virtual bool HasSufficientUniqueChars(string password)
         {
             return !string.IsNullOrEmpty(password)
                    && password.Distinct().Count() >= Options.Password.RequiredUniqueChars;
