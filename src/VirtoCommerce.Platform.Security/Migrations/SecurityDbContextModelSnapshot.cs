@@ -346,6 +346,9 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     b.Property<bool>("IsAdministrator")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("LastPasswordChangedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -526,13 +529,13 @@ namespace VirtoCommerce.Platform.Security.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.HasOne("VirtoCommerce.Platform.Core.Security.Role", null)
-                        .WithMany()
+                        .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("VirtoCommerce.Platform.Core.Security.ApplicationUser", null)
-                        .WithMany()
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

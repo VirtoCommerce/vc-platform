@@ -10,6 +10,7 @@ angular
                     var result = {
                         passwordIsValid: response.passwordIsValid,
                         minPasswordLength: response.minPasswordLength,
+                        minUniqueCharsCount: response.minUniqueCharsCount,
                         errors: []
                     };
 

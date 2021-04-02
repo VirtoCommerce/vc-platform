@@ -20,11 +20,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly PlatformOptions _platformOptions;
         private readonly ISettingsManager _settingsManager;
+        private readonly LicenseProvider _licenseProvider;
 
-        public LicensingController(IOptions<PlatformOptions> platformOptions, ISettingsManager settingsManager)
+        public LicensingController(IOptions<PlatformOptions> platformOptions, ISettingsManager settingsManager, LicenseProvider licenseProvider)
         {
             _platformOptions = platformOptions.Value;
             _settingsManager = settingsManager;
+            _licenseProvider = licenseProvider;
         }
 
         [HttpPost]
@@ -46,7 +48,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 if (httpResponse.IsSuccessStatusCode)
                 {
                     var rawLicense = await httpResponse.Content.ReadAsStringAsync();
-                    license = License.Parse(rawLicense, Path.GetFullPath(_platformOptions.LicensePublicKeyPath));
+                    license = License.Parse(rawLicense, _platformOptions.LicensePublicKeyResourceName);
                 }
             }
 
@@ -71,7 +73,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!string.IsNullOrEmpty(rawLicense))
             {
-                license = License.Parse(rawLicense, Path.GetFullPath(_platformOptions.LicensePublicKeyPath));
+                license = License.Parse(rawLicense, _platformOptions.LicensePublicKeyResourceName);
             }
 
             if (license != null)
@@ -86,12 +88,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("activateLicense")]
         public async Task<ActionResult<License>> ActivateLicense([FromBody] License license)
         {
-            license = License.Parse(license?.RawLicense, Path.GetFullPath(_platformOptions.LicensePublicKeyPath));
+            license = License.Parse(license?.RawLicense, _platformOptions.LicensePublicKeyResourceName);
 
             if (license != null)
             {
-                var licenseFilePath = Path.GetFullPath(_platformOptions.LicenseFilePath);
-                System.IO.File.WriteAllText(licenseFilePath, license.RawLicense);
+                _licenseProvider.SaveLicense(license);
             }
 
             if (license != null)

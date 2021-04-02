@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -575,9 +576,10 @@ partial class Build : NukeBuild
              ignoredFiles = ignoredFiles.Select(x => x.Trim()).Distinct().ToArray();
 
              DeleteFile(ZipFilePath);
-             //TODO: Exclude all dependencies of dependent modules
-             CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => !ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase)
-                                                                                     && !(ModuleManifest.Dependencies ?? Array.Empty<ManifestDependency>()).Any(md => x.Name.StartsWith($"{md.Id}Module", StringComparison.OrdinalIgnoreCase)));
+             //TODO: Exclude all ignored files and *module files not related to compressed module
+             var moduleRegex = new Regex(@".+Module\..*", RegexOptions.IgnoreCase);
+             CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => (!ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase) && !moduleRegex.IsMatch(x.Name))
+                                                                                     || x.Name.StartsWith($"{ModuleManifest.Id}Module.", StringComparison.OrdinalIgnoreCase));
          }
          else
          {
