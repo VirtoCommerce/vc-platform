@@ -7,7 +7,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <VersionPrefix>1.5.2</VersionPrefix>
-    <VersionSuffix>beta0011</VersionSuffix>
+    <VersionSuffix></VersionSuffix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">   
