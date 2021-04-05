@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -577,9 +577,10 @@ partial class Build : NukeBuild
 
              DeleteFile(ZipFilePath);
              //TODO: Exclude all ignored files and *module files not related to compressed module
-             var moduleRegex = new Regex(@".+Module\..*", RegexOptions.IgnoreCase);
-             CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => (!ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase) && !moduleRegex.IsMatch(x.Name))
-                                                                                     || x.Name.StartsWith($"{ModuleManifest.Id}Module.", StringComparison.OrdinalIgnoreCase));
+             var ignoreModulesFilesRegex = new Regex(@".+Module\..*", RegexOptions.IgnoreCase);
+             var includeModuleFilesRegex = new Regex(@$".*{ModuleManifest.Id}Module\..*", RegexOptions.IgnoreCase);
+             CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => (!ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase) && !ignoreModulesFilesRegex.IsMatch(x.Name))
+                                                                                     || includeModuleFilesRegex.IsMatch(x.Name));
          }
          else
          {
