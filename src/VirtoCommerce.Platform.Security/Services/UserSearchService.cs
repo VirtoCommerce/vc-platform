@@ -12,10 +12,12 @@ namespace VirtoCommerce.Platform.Security.Services
     public class UserSearchService : IUserSearchService
     {
         private readonly Func<UserManager<ApplicationUser>> _userManagerFactory;
+        private readonly Func<RoleManager<Role>> _roleManagerFactory;
 
-        public UserSearchService(Func<UserManager<ApplicationUser>> userManager)
+        public UserSearchService(Func<UserManager<ApplicationUser>> userManager, Func<RoleManager<Role>> roleManagerFactory)
         {
             _userManagerFactory = userManager;
+            _roleManagerFactory = roleManagerFactory;
         }
 
         public async Task<UserSearchResult> SearchUsersAsync(UserSearchCriteria criteria)
@@ -51,6 +53,19 @@ namespace VirtoCommerce.Platform.Security.Services
                 if (criteria.ModifiedSinceDate != null && criteria.ModifiedSinceDate != default(DateTime))
                 {
                     query = query.Where(x => x.ModifiedDate > criteria.ModifiedSinceDate);
+                }
+
+                if (!criteria.Roles.IsNullOrEmpty())
+                {
+                    var roleManager = _roleManagerFactory();
+                    if (!roleManager.SupportsQueryableRoles)
+                    {
+                        throw new NotSupportedException();
+                    }
+                    var rolesIds = await roleManager.Roles.Where(x => criteria.Roles.Contains(x.Name)).Select(x => x.Id).Distinct().ToArrayAsync();
+
+                    query = query.Where(x => x.UserRoles.Any(r => rolesIds.Contains(r.RoleId)));
+
                 }
 
                 result.TotalCount = await query.CountAsync();

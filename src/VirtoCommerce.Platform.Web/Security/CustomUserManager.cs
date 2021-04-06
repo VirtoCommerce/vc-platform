@@ -21,8 +21,10 @@ namespace VirtoCommerce.Platform.Web.Security
         private readonly RoleManager<Role> _roleManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly IUserPasswordHasher _userPasswordHasher;
+        private readonly UserOptionsExtended _userOptionsExtended;
 
         public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher, IUserPasswordHasher userPasswordHasher,
+                                 IOptions<UserOptionsExtended> userOptionsExtended,
                                  IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
                                  ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
                                  ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher)
@@ -32,6 +34,7 @@ namespace VirtoCommerce.Platform.Web.Security
             _roleManager = roleManager;
             _eventPublisher = eventPublisher;
             _userPasswordHasher = userPasswordHasher;
+            _userOptionsExtended = userOptionsExtended.Value;
         }
 
         public override async Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey)
@@ -103,6 +106,7 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             //It is important to call base.FindByIdAsync method to avoid of update a cached user.
             var existUser = await base.FindByIdAsync(user.Id);
+            existUser.LastPasswordChangedDate = DateTime.UtcNow;
 
             var result = await base.ResetPasswordAsync(existUser, token, newPassword);
             if (result == IdentityResult.Success)
@@ -118,6 +122,8 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public override async Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)
         {
+            user.LastPasswordChangedDate = DateTime.UtcNow;
+
             var result = await base.ChangePasswordAsync(user, currentPassword, newPassword);
             if (result == IdentityResult.Success)
             {
@@ -290,6 +296,17 @@ namespace VirtoCommerce.Platform.Web.Security
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
+            // check password expiry policy and mark password as expired, if needed
+            var lastPasswordChangeDate = user.LastPasswordChangedDate ?? user.CreatedDate;
+            if (!user.PasswordExpired &&
+                _userOptionsExtended.MaxPasswordAge != null &&
+                _userOptionsExtended.MaxPasswordAge.Value > TimeSpan.Zero &&
+                lastPasswordChangeDate.Add(_userOptionsExtended.MaxPasswordAge.Value) < DateTime.UtcNow)
+            {
+                user.PasswordExpired = true;
+            }
+
             user.Roles = new List<Role>();
             foreach (var roleName in await base.GetRolesAsync(user))
             {

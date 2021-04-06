@@ -17,6 +17,11 @@
       $width: getBladeContentSize($bladeSizeName)
       min-width: $width
       width: $width
+  &__info2
+    color: $whiteColor
+    @include blaseSizes()
+      min-width: 340px
+      width: 340px
   &__nav
     display: flex
     margin-left: auto
@@ -41,6 +46,8 @@
       width: 20px
       &.__animated
         animation: bell ease-in-out 1s .5s
+      &--warning
+        background-image: url('/images/header/warning.svg')
       &--settings
         background-image: url('/images/header/settings.svg')
       &--help
@@ -63,6 +70,16 @@
       margin-right: 20px
     &.active
       cursor: pointer
+
+  // Password expiry warning
+  .password-expiry
+    align-items: center
+    display: flex
+    height: 100%
+    &__text
+      white-space: normal;
+      font-size: 12px
+      margin-right: 20px
 
   // Account user
   .account-user

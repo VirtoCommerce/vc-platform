@@ -21,6 +21,16 @@ namespace VirtoCommerce.Platform.Core.Security
         public bool PasswordViolatesMinLength { get; set; }
 
         /// <summary>
+        /// Minimal unique chars count.
+        /// </summary>
+        public int MinUniqueCharsCount { get; set; }
+
+        /// <summary>
+        /// Indicates that password comprised of less than minimum number of unique chars.
+        /// </summary>
+        public bool PasswordViolatesMinUniqueCharsCount { get; set; }
+
+        /// <summary>
         /// Indicates that entered password lacks one or more lower-case letters.
         /// </summary>
         public bool PasswordMustHaveLowerCaseLetters { get; set; }

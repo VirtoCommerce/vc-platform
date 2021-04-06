@@ -8,6 +8,7 @@ angular.module('platformWebApp')
                 forcePasswordChange: true,
                 passwordIsValid: true,
                 minPasswordLength: 0,
+                minUniqueCharsCount: 0,
                 errors: []
             };
 
