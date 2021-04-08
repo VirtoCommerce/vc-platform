@@ -28,6 +28,8 @@ angular.module('platformWebApp')
         // Add support for tag type 'number'
         $provide.decorator('tagsInputDirective', ['$delegate', 'platformWebApp.numberFormat', 'tiUtil', function ($delegate, numberFormat, tiUtil) {
             var directive = $delegate[0];
+            var INTEGER_MAX_VALUE = 2147483647;
+            var INTEGER_MIN_VALUE = -2147483648;
             directive.compile = function () {
                 return function (scope, element, attrs) {
                     /* Copy-paste, because there is no extension point */
@@ -49,10 +51,16 @@ angular.module('platformWebApp')
                         // Validate tag
                         var isNumber = angular.isDefined(attrs.tagsNumber);
                         var value = undefined;
+                        var isValidInteger = true;
                         if (isNumber) {
                             value = numberFormat.validate(tagText, attrs.numType, attrs.min, attrs.max, attrs.fraction);
                             if (angular.isDefined(value)) {
                                 setTagValue(tag, value);
+                            }
+                            if (attrs.numType === "integer") {
+                                if (value > INTEGER_MAX_VALUE || value < INTEGER_MIN_VALUE) {
+                                    isValidInteger = false;
+                                }
                             }
                         }
                         return tagText &&
@@ -61,7 +69,7 @@ angular.module('platformWebApp')
                             options.allowedTagsPattern.test(tagText) &&
                             !tiUtil.findInObjectArray(scope.tagList.items, tag, options.keyProperty || options.displayProperty) &&
                             (!isNumber || angular.isDefined(value)) &&
-                            onTagAdding({ $tag: tag });
+                            onTagAdding({ $tag: tag }) && isValidInteger;
                     };
 
                     scope.tagList.add = function (tag) {
