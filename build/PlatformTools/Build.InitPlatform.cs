@@ -32,7 +32,6 @@ partial class Build: NukeBuild
         var logger = new LoggerFactory().CreateLogger<LocalStorageModuleCatalog>();
         var moduleCatalog = new LocalStorageModuleCatalog(options, logger);
         moduleCatalog.Load();
-        DisableModulesFolderProbing();
     });
 
     private string GetModulesDiscoveryPath(IConfiguration configuration)
@@ -40,12 +39,5 @@ partial class Build: NukeBuild
         var virtoSection = configuration.GetSection("VirtoCommerce");
         var result = virtoSection.GetValue<string>("DiscoveryPath", "./modules");
         return result;
-    }
-
-    private void DisableModulesFolderProbing()
-    {
-        var json = SerializationTasks.JsonDeserializeFromFile<JObject>(AppsettingsPath);
-        json["VirtoCommerce"]["RefreshProbingFolderOnStart"] = false;
-        SerializationTasks.JsonSerializeToFile(json, AppsettingsPath);
     }
 }
