@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Nuke.Common.IO;
 using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Configuration;
 
 partial class Build: NukeBuild
 {
@@ -20,9 +21,11 @@ partial class Build: NukeBuild
     Target InitPlatform => _ => _
     .Executes(() =>
     {
+        var builder = new ConfigurationBuilder().SetBasePath(RootDirectory).AddJsonFile(AppsettingsPath);
+        IConfiguration configuration = builder.Build();
         var moduleCatalogOptions = new LocalStorageModuleCatalogOptions()
         {
-            DiscoveryPath = string.IsNullOrEmpty(DiscoveryPath) ? GetModulesDiscoveryPath() : DiscoveryPath,
+            DiscoveryPath = string.IsNullOrEmpty(DiscoveryPath) ? GetModulesDiscoveryPath(configuration) : DiscoveryPath,
             ProbingPath = ProbingPath
         };
         var options = Microsoft.Extensions.Options.Options.Create<LocalStorageModuleCatalogOptions>(moduleCatalogOptions);
@@ -32,33 +35,16 @@ partial class Build: NukeBuild
         DisableModulesFolderProbing();
     });
 
-    private string GetModulesDiscoveryPath()
+    private string GetModulesDiscoveryPath(IConfiguration configuration)
     {
-        var result = "./modules";
-        var json = SerializationTasks.JsonDeserializeFromFile<JObject>(AppsettingsPath);
-        var virtoSection = json["VirtoCommerce"];
-        if(virtoSection != null)
-        {
-            if (virtoSection["DiscoveryPath"] != null)
-            {
-                return virtoSection["DiscoveryPath"].Value<string>(); ;
-            }
-            else
-            {
-                Logger.Warn("There is no key \"DiscoveryPath\"");
-            }
-        }
-        else
-        {
-            Logger.Warn("There is no key \"VirtoCommerce\"");
-        }
+        var virtoSection = configuration.GetSection("VirtoCommerce");
+        var result = virtoSection.GetValue<string>("DiscoveryPath", "./modules");
         return result;
     }
 
     private void DisableModulesFolderProbing()
     {
         var json = SerializationTasks.JsonDeserializeFromFile<JObject>(AppsettingsPath);
-        //json.Property("VirtoCommerce").Add(new JProperty("RefreshProbingFolderOnStart", false));
         json["VirtoCommerce"]["RefreshProbingFolderOnStart"] = false;
         SerializationTasks.JsonSerializeToFile(json, AppsettingsPath);
     }
