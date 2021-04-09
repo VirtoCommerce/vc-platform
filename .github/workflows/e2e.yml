@@ -2,11 +2,6 @@ name: Platform E2E
 
 on:
   workflow_dispatch:
-    inputs:
-      testSuite:
-        description: "Test Suite"
-        required: false
-        default: "Test Suites/Platform_start"
 
   pull_request:
     paths-ignore:
@@ -25,7 +20,6 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       NUGET_KEY: ${{ secrets.NUGET_KEY }}
       BLOB_SAS: ${{ secrets.BLOB_TOKEN }}
-      DEFAULT_TEST_SUITE: "Test Suites/Platform_start"
 
     steps:
     - uses: actions/checkout@v2
@@ -85,7 +79,7 @@ jobs:
       with:
         version: '7.5.5'
         projectPath: '${{ github.workspace }}/vc-quality-gate-katalon/platform_storefront.prj'
-        args: '-noSplash -retry=0 -testSuitePath="${{ github.event.inputs.testSuite || env.DEFAULT_TEST_SUITE }}" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"'
+        args: '-noSplash -retry=0 -testSuiteCollectionPath="Test Suites/Modules/Platform_collection" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"'
 
     - name: 'Katalon Reports'
       if: always()
