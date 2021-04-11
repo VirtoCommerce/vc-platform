@@ -5,14 +5,18 @@ angular.module('platformWebApp')
         function initializeBlade() {
             blade.currentEntity = {
                 newPassword: '',
-                forcePasswordChange: true
+                forcePasswordChange: true,
+                passwordIsValid: true,
+                minPasswordLength: 0,
+                minUniqueCharsCount: 0,
+                errors: []
             };
 
             blade.isLoading = false;
         }
 
         $scope.validatePasswordAsync = function (value) {
-            return passwordValidationService.validateUserPasswordAsync(blade.currentEntityId, value);
+            return passwordValidationService.validatePasswordAsync(value);
         }
 
         $scope.saveChanges = function () {
@@ -24,9 +28,11 @@ angular.module('platformWebApp')
                 forcePasswordChangeOnNextSignIn: blade.currentEntity.forcePasswordChange
             };
 
-            accounts.resetPassword({ userName: blade.currentEntityId }, postData, function (data) {
+            accounts.resetPassword({ id: blade.currentEntityId }, postData, function (data) {
                 blade.parentBlade.refresh();
-                $scope.bladeClose();
+                $scope.bladeClose();                
+            }, function (error) {
+                bladeNavigationService.setError(error, $scope.blade);
             });
         };
 
