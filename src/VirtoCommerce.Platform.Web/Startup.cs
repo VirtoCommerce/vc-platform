@@ -45,6 +45,7 @@ using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Repositories;
+using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
@@ -324,7 +325,6 @@ namespace VirtoCommerce.Platform.Web
                 });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
-            services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
             services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
 
             //always  return 401 instead of 302 for unauthorized  requests
@@ -356,6 +356,8 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
             //Platform authorization handler for policies based on permissions
             services.AddSingleton<IAuthorizationHandler, DefaultPermissionAuthorizationHandler>();
+            // Default password validation service implementation
+            services.AddScoped<IPasswordCheckService, PasswordCheckService>();
 
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>

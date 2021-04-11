@@ -9,12 +9,12 @@ angular.module('platformWebApp')
                 passwordTooWeakMessage: '@',
                 newPassword: '='
             },
-            link: function (scope) {
+            link: function (scope, element, attrs) {
                 scope.doValidatePasswordAsync = function (value) {
                     return scope.runPasswordValidation({ value: value }).then(
                         function (result) {
                             scope.passwordValidationResult = result;
-                            return result.succeeded ? $q.resolve() : $q.reject();
+                            return result.passwordIsValid ? $q.resolve() : $q.reject();
                         });
                 }
             }
