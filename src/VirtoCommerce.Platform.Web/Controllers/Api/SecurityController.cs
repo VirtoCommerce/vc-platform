@@ -558,17 +558,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 throw new ArgumentNullException(nameof(validatePassword));
             }
 
-            ApplicationUser user = null;
-            if (!validatePassword.UserName.IsNullOrEmpty())
+            if (validatePassword.UserName.IsNullOrEmpty() || !IsUserEditable(validatePassword.UserName))
             {
-
-                if (!IsUserEditable(validatePassword.UserName))
-                {
-                    return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }));
-                }
-
-                user = await _userManager.FindByNameAsync(validatePassword.UserName);
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }));
             }
+            
+           var user = await _userManager.FindByNameAsync(validatePassword.UserName);
+
 
             var result = await _passwordValidator.ValidateAsync(_userManager, user, validatePassword.NewPassword);
 
