@@ -28,7 +28,7 @@ jobs:
           git checkout -b "${PR_BRANCH}" "origin/${INPUT_TARGETBRANCH}"
           echo "-cherry-pick"
           git cherry-pick "${GITHUB_SHA}"
-          echo "-push"
+          echo "-push ${PR_BRANCH}"
           git push --set-upstream -u origin "${PR_BRANCH}"
           echo "-Create PR"
           hub pull-request -b "${INPUT_TARGETBRANCH}" -h "${PR_BRANCH}"-a "vc-ci" -m "${PR_TITLE}" -m "${PR_BODY}"
