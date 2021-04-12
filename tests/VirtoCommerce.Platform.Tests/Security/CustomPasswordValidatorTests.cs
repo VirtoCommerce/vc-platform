@@ -12,6 +12,7 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Security
 {
+    // PT-1033: Refactor security mock helper and custom password validator
     public class CustomPasswordValidatorTests
     {
         [Fact]
@@ -63,12 +64,12 @@ namespace VirtoCommerce.Platform.Tests.Security
             bool requireDigits,
             bool requireSpecialCharacters,
             int minLength,
-            bool passwordIsValid,
-            bool passwordMustBeLonger,
-            bool passwordMustHaveUpper,
-            bool passwordMustHaveLower,
-            bool passwordMustHaveDigit,
-            bool passwordMustHaveNonAlphanumeric)
+            bool expectedIsValid,
+            bool expectedMustBeLonger,
+            bool expectedMustHaveUpper,
+            bool expectedMustHaveLower,
+            bool expectedMustHaveDigit,
+            bool expectedMustHaveNonAlphanumeric)
         {
             // Arrange
             var options = new IdentityOptions
@@ -95,19 +96,19 @@ namespace VirtoCommerce.Platform.Tests.Security
             var result = await target.ValidateAsync(userManager, user, password);
 
             // Assert
-            Assert.Equal(passwordIsValid, result.Succeeded);
+            Assert.Equal(expectedIsValid, result.Succeeded);
 
-            Assert.Equal(passwordMustBeLonger, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordTooShort)));
-            if (passwordMustBeLonger)
+            Assert.Equal(expectedMustBeLonger, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordTooShort)));
+            if (expectedMustBeLonger)
             {
                 var tooShort = TryFindErrorByCode(result, nameof(IdentityErrorDescriber.PasswordTooShort));
                 Assert.IsType<CustomIdentityError>(tooShort);
                 Assert.Equal(minLength, ((CustomIdentityError)tooShort).ErrorParameter);
             }
-            Assert.Equal(passwordMustHaveUpper, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresUpper)));
-            Assert.Equal(passwordMustHaveLower, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresLower)));
-            Assert.Equal(passwordMustHaveDigit, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresDigit)));
-            Assert.Equal(passwordMustHaveNonAlphanumeric, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresNonAlphanumeric)));
+            Assert.Equal(expectedMustHaveUpper, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresUpper)));
+            Assert.Equal(expectedMustHaveLower, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresLower)));
+            Assert.Equal(expectedMustHaveDigit, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresDigit)));
+            Assert.Equal(expectedMustHaveNonAlphanumeric, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresNonAlphanumeric)));
         }
 
         [Theory]
@@ -122,7 +123,7 @@ namespace VirtoCommerce.Platform.Tests.Security
         public async Task PasswordValidator_ValidatesByPasswordHistory(
             string password,
             int passwordRepeatHistory,
-            bool passwordIsValid)
+            bool expectedIsValid)
         {
             // Arrange
             const string userId = "id1";
@@ -133,7 +134,7 @@ namespace VirtoCommerce.Platform.Tests.Security
                  .ToArray();
 
             var securityRepositoryMock = new Mock<ISecurityRepository>();
-            securityRepositoryMock.Setup(x => x.GetUserPasswordsHistoryAsync(It.IsAny<string>())).ReturnsAsync(entities);
+            securityRepositoryMock.Setup(x => x.GetUserPasswordsHistoryAsync(It.IsAny<string>(), It.IsAny<int>())).ReturnsAsync(entities);
             ISecurityRepository repositoryFactory() => securityRepositoryMock.Object;
 
             var passwordHasher = new Mock<IUserPasswordHasher>();
@@ -150,8 +151,8 @@ namespace VirtoCommerce.Platform.Tests.Security
             var result = await target.ValidateAsync(userManager, user, password);
 
             // Assert
-            Assert.Equal(passwordIsValid, result.Succeeded);
-            Assert.Equal(passwordIsValid, !ExistsErrorByCode(result, CustomPasswordValidator.RecentPasswordUsed));
+            Assert.Equal(expectedIsValid, result.Succeeded);
+            Assert.Equal(expectedIsValid, !ExistsErrorByCode(result, CustomPasswordValidator.RecentPasswordUsed));
         }
 
         private IdentityError TryFindErrorByCode(IdentityResult result, string errorCode)

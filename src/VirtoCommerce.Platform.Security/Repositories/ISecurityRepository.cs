@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
@@ -11,6 +12,6 @@ namespace VirtoCommerce.Platform.Security.Repositories
 
         IQueryable<UserPasswordHistoryEntity> UserPasswordsHistory { get; }
 
-        Task<UserPasswordHistoryEntity[]> GetUserPasswordsHistoryAsync(string userId);
+        Task<IEnumerable<UserPasswordHistoryEntity>> GetUserPasswordsHistoryAsync(string userId, int passwordsCountToCheck);
     }
 }

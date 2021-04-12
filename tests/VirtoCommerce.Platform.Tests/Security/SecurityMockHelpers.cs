@@ -59,10 +59,10 @@ namespace VirtoCommerce.Platform.Tests.Security
             userValidators.Add(validator.Object);
 
             repositoryFactory ??= () => Mock.Of<ISecurityRepository>();
-            var pwdValidators = new PasswordValidator<ApplicationUser>[] { new CustomPasswordValidator(new CustomIdentityErrorDescriber(), repositoryFactory, passwordHasher.Object) };
-
             var passwordOptionsMock = new Mock<IOptions<PasswordOptionsExtended>>();
             passwordOptionsMock.Setup(o => o.Value).Returns(new PasswordOptionsExtended());
+
+            var pwdValidators = new PasswordValidator<ApplicationUser>[] { new CustomPasswordValidator(new CustomIdentityErrorDescriber(), repositoryFactory, passwordHasher.Object, passwordOptionsMock.Object) };
 
             var roleManagerMock = new Mock<RoleManager<Role>>(Mock.Of<IRoleStore<Role>>(),
                         new[] { Mock.Of<IRoleValidator<Role>>() },
