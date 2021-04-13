@@ -4,7 +4,11 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <noWarn>1591</noWarn>
         <OutputType>Library</OutputType>
-		<IsPackable>True</IsPackable>
+        <IsPackable>True</IsPackable>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,12 +22,13 @@
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.8" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8" />
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.8" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="Polly" Version="7.2.1" />
         <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
+        <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
     </ItemGroup>
 
 </Project>
