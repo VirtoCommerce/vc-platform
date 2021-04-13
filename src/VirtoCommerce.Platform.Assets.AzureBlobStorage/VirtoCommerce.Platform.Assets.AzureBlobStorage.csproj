@@ -5,6 +5,10 @@
         <noWarn>1591</noWarn>
         <OutputType>Library</OutputType>
         <IsPackable>True</IsPackable>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -13,6 +17,7 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Storage.Blobs" Version="12.8.0" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.2" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.8" />
     </ItemGroup>
