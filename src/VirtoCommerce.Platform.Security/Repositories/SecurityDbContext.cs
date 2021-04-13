@@ -28,6 +28,15 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<UserApiKeyEntity>().Property(x => x.CreatedBy).HasMaxLength(64);
             builder.Entity<UserApiKeyEntity>().Property(x => x.ModifiedBy).HasMaxLength(64);
 
+            builder.Entity<UserPasswordHistoryEntity>().ToTable("AspNetUserPasswordsHistory").HasKey(x => x.Id);
+            builder.Entity<UserPasswordHistoryEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
+            builder.Entity<UserPasswordHistoryEntity>().HasIndex(x => new { x.UserId });
+            builder.Entity<UserPasswordHistoryEntity>()
+                .HasOne<ApplicationUser>()
+                .WithMany()
+                .HasForeignKey(uh => uh.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<IdentityUserRole<string>>(userRole =>
             {
                 userRole.HasOne<Role>()

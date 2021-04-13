@@ -37,21 +37,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserSearchService _userSearchService;
         private readonly IRoleSearchService _roleSearchService;
-        private readonly IPasswordCheckService _passwordCheckService;
+        private readonly IPasswordValidator<ApplicationUser> _passwordValidator;
         private readonly IEmailSender _emailSender;
         private readonly IEventPublisher _eventPublisher;
         private readonly IUserApiKeyService _userApiKeyService;
 
         public SecurityController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager,
                 IPermissionsRegistrar permissionsProvider, IUserSearchService userSearchService, IRoleSearchService roleSearchService,
-                IOptions<Core.Security.AuthorizationOptions> securityOptions, IOptions<UserOptionsExtended> userOptionsExtended, IPasswordCheckService passwordCheckService, IEmailSender emailSender,
+                IOptions<Core.Security.AuthorizationOptions> securityOptions, IOptions<UserOptionsExtended> userOptionsExtended, IPasswordValidator<ApplicationUser> passwordValidator, IEmailSender emailSender,
                 IEventPublisher eventPublisher, IUserApiKeyService userApiKeyService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _securityOptions = securityOptions.Value;
             _userOptionsExtended = userOptionsExtended.Value;
-            _passwordCheckService = passwordCheckService;
+            _passwordValidator = passwordValidator;
             _permissionsProvider = permissionsProvider;
             _roleManager = roleManager;
             _userSearchService = userSearchService;
@@ -539,9 +539,35 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("validatepassword")]
         [Authorize]
-        public async Task<ActionResult<PasswordValidationResult>> ValidatePassword([FromBody] string password)
+        public async Task<ActionResult<IdentityResult>> ValidatePassword([FromBody] string password)
         {
-            var result = await _passwordCheckService.ValidatePasswordAsync(password);
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var result = await _passwordValidator.ValidateAsync(_userManager, currentUser, password);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("validateuserpassword")]
+        [Authorize(PlatformPermissions.SecurityUpdate)]
+        public async Task<ActionResult<IdentityResult>> ValidateUserPassword([FromBody] ChangePasswordRequest validatePassword)
+        {
+            if (validatePassword == null)
+            {
+                throw new ArgumentNullException(nameof(validatePassword));
+            }
+
+            if (validatePassword.UserName.IsNullOrEmpty() || !IsUserEditable(validatePassword.UserName))
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }));
+            }
+            
+           var user = await _userManager.FindByNameAsync(validatePassword.UserName);
+
+
+            var result = await _passwordValidator.ValidateAsync(_userManager, user, validatePassword.NewPassword);
+
             return Ok(result);
         }
 
