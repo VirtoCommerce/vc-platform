@@ -49,11 +49,11 @@ angular.module('platformWebApp').controller('platformWebApp.newAccountWizardCont
             };
 
             $scope.validatePasswordAsync = function (value) {
-                return passwordValidationService.validatePasswordAsync(value);
+                return passwordValidationService.validateUserPasswordAsync(blade.currentEntity.userName, value);
             }
 
             $scope.saveChanges = function () {
-                if (blade.currentEntity.password != blade.currentEntity.newPassword2) {
+                if (blade.currentEntity.password !== blade.currentEntity.newPassword2) {
                     blade.error = 'Error: passwords don\'t match!';
                     return;
                 }
