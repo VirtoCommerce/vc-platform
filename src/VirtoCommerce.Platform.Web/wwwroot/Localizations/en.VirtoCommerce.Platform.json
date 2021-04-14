@@ -353,7 +353,7 @@
                     "passwordRequiresUpper": "Passwords must have at least one uppercase ('A'-'Z')",
                     "passwordRequiresDigit": "Passwords must have at least one digit ('0'-'9')",
                     "passwordRequiresNonAlphanumeric": "Passwords must have at least one non alphanumeric character",
-                     "recentPasswordUsed": "This password has been used in recent history. Please choose a different password."
+                    "recentPasswordUsed": "You have used this password in the past. Choose another one."
                 },
                 "placeholders": {
                     "new-password": "Enter new password",
