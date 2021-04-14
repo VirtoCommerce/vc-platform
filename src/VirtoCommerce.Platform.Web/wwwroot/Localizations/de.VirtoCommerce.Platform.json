@@ -325,11 +325,11 @@
                 "repeat-password": "Das neue Passwort stimmt nicht überein!",
                 "invalid-token": "Passwort zurücksetzen Token ist ungültig oder abgelaufen",
                 "password-too-weak": "Neues Passwort entspricht nicht einer oder mehreren Passwortsicherheitsrichtlinien:",
-                "passwordViolatesMinLength": "Passwörter müssen {{minPasswordLength}} oder mehr Zeichen lang sein",
-                "passwordMustHaveLowerCaseLetters": "Passwörter müssen mindestens einen Kleinbuchstaben enthalten ('a'-'z')",
-                "passwordMustHaveUpperCaseLetters": "Passwörter müssen mindestens einen Großbuchstaben haben ('A'-'Z')",
-                "passwordMustHaveDigits": "Passwörter müssen mindestens eine Ziffer haben ('0'-'9')",
-                "passwordMustHaveSpecialCharacters": "Passwörter müssen mindestens ein nicht alphanumerisches Zeichen enthalten"
+                "passwordTooShort": "Passwörter müssen {{errorParameter}} oder mehr Zeichen lang sein",
+                "passwordRequiresLower": "Passwörter müssen mindestens einen Kleinbuchstaben enthalten ('a'-'z')",
+                "passwordRequiresUpper": "Passwörter müssen mindestens einen Großbuchstaben haben ('A'-'Z')",
+                "passwordRequiresDigit": "Passwörter müssen mindestens eine Ziffer haben ('0'-'9')",
+                "passwordRequiresNonAlphanumeric": "Passwörter müssen mindestens ein nicht alphanumerisches Zeichen enthalten"
             },
             "placeholders": {
                 "current-password": "Aktuelles Passwort eingeben",
