@@ -389,7 +389,8 @@
                     "name": "Name",
                     "account-type": "Account type",
                     "login": "Login",
-                    "state": "State"
+                    "state": "State",
+                    "status": "Status"
                 }
             },
             "account-api": {
