@@ -1,0 +1,78 @@
+name: Regression PR
+
+on: 
+  push:
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'build/**'
+      - 'README.md'
+      - 'LICENSE'
+    branches: [ dev ]
+
+jobs:
+  check-label:
+    runs-on: ubuntu-latest
+    outputs:
+      isLabeled: ${{ steps.checkLabel.outputs.isLabeled }}
+      pullNumber: ${{ steps.checkLabel.outputs.pullNumber }}
+      pullUrl: ${{ steps.checkLabel.outputs.pullUrl }}
+
+    steps:
+    - name: Check regression label
+      id: checkLabel
+      uses: VirtoCommerce/vc-github-actions/check-pr-regression-label@PT-802
+      with:
+        githubToken: ${{ secrets.REPO_TOKEN }}
+        label: regression
+        commitMessage: ${{ github.event.head_commit.message }}
+
+  cherry-pick:
+    needs: check-label
+    if: ${{ needs.check-label.outputs.isLabeled == 'true'}}
+    env: 
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      INPUT_TARGETBRANCH: "regression"
+      PR_BRANCH: ""
+      PR_TITLE: ""
+      PR_BODY: ""
+      TARGETBRANCH_EXISTS: "false"
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set PR_BRANCH PR_TITLE PR_BODY
+      run: |
+        echo "PR_BRANCH=cherry-pick/${{ needs.check-label.outputs.pullNumber }}" >> $GITHUB_ENV
+        echo "PR_TITLE=PR-${{ needs.check-label.outputs.pullNumber }}-regression-cherry-pick" >> $GITHUB_ENV
+        echo "PR_BODY=Automated cherry-pick update from PR ${{ needs.check-label.outputs.pullUrl}}" >> $GITHUB_ENV
+
+    - name: checkout
+      uses: actions/checkout@v1
+
+    - uses: VirtoCommerce/vc-github-actions/setup-git-credentials-github@master
+      with:
+        githubToken: ${{ secrets.REPO_TOKEN }}
+
+    - name: Check INPUT_TARGETBRANCH exists
+      run: |
+          existed_in_remote=$(git ls-remote --heads origin "${INPUT_TARGETBRANCH}")
+          if [[ -z ${existed_in_remote} ]]; then
+            echo "TARGETBRANCH_EXISTS=false" >> $GITHUB_ENV
+          else
+            echo "TARGETBRANCH_EXISTS=true" >> $GITHUB_ENV
+          fi
+
+    - name: Cherry-pick and create PR
+      if: ${{env.TARGETBRANCH_EXISTS == 'true' }} 
+      run: |
+          echo "-remote update"
+          git remote update
+          echo "-fetch --all"
+          git fetch --all
+          echo "-checkout"
+          git checkout -b "${PR_BRANCH}" "origin/${INPUT_TARGETBRANCH}"
+          echo "-cherry-pick"
+          git cherry-pick "${GITHUB_SHA}"
+          echo "-push"
+          git push -u origin "${PR_BRANCH}"
+          echo "-Create PR"
+          hub pull-request -b "${INPUT_TARGETBRANCH}" -h "${PR_BRANCH}" -m "${PR_TITLE}" -m "${PR_BODY}"
