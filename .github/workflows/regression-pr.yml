@@ -41,7 +41,7 @@ jobs:
     steps:
     - name: Set PR_BRANCH PR_TITLE PR_BODY
       run: |
-        echo "PR_BRANCH=feature/cherry-pick-${{ needs.check-label.outputs.pullNumber }}" >> $GITHUB_ENV
+        echo "PR_BRANCH=cherry-pick/${{ needs.check-label.outputs.pullNumber }}" >> $GITHUB_ENV
         echo "PR_TITLE=PR-${{ needs.check-label.outputs.pullNumber }}-regression-cherry-pick" >> $GITHUB_ENV
         echo "PR_BODY=Automated cherry-pick update from PR ${{ needs.check-label.outputs.pullUrl}}" >> $GITHUB_ENV
 
