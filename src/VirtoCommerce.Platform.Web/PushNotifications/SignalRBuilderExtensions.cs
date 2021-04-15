@@ -50,11 +50,12 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                 {
                     var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
                     var redisChannelName = configuration["PushNotifications:RedisBackplane:ChannelName"];
+                    redisChannelName = string.IsNullOrEmpty(redisChannelName) ? "VirtoCommerceChannel" : redisChannelName;
                     if (string.IsNullOrEmpty(redisConnectionString))
                     {
                         throw new InvalidOperationException($"RedisConnectionString must be set");
                     }
-                    builder.AddStackExchangeRedis(redisConnectionString, o => o.Configuration.ChannelPrefix = string.IsNullOrEmpty(redisChannelName) ? "VirtoCommerceChannel" : redisChannelName);
+                    builder.AddStackExchangeRedis(redisConnectionString, o => o.Configuration.ChannelPrefix = redisChannelName);
                 }
             }
             else
