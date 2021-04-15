@@ -317,14 +317,18 @@
             },
             "account-changePassword": {
                 "labels": {
+                    "title": "Please enter a new password for the '{{userName}}' user",
+                    "force-change-info": "Your password has expired. You must <b>change the password to continue</b> using the manager.",
                     "current-password": "Current password",
                     "new-password": "New password",
-                    "repeat-password": "Repeat password"
+                    "repeat-password": "Repeat new password",
+                    "cancel": "Cancel",
+                    "save": "Change"
                 },
                 "validations": {
                     "current-password": "Required",
                     "new-password": "Old and new passwords are the same!",
-                    "repeat-password": "New passwords doesn't match!"
+                    "repeat-password": "New passwords do not match!"
                 },
                 "placeholders": {
                     "current-password": "Enter current password",
@@ -343,11 +347,13 @@
                     "repeat-password": "New passwords do not match!",
                     "invalid-token": "Reset password token is invalid or expired",
                     "password-too-weak": "New password does not comply one or more password security policies:",
-                    "passwordViolatesMinLength": "Passwords must be {{minPasswordLength}} or more characters long",
-                    "passwordMustHaveLowerCaseLetters": "Passwords must have at least one lowercase ('a'-'z')",
-                    "passwordMustHaveUpperCaseLetters": "Passwords must have at least one uppercase ('A'-'Z')",
-                    "passwordMustHaveDigits": "Passwords must have at least one digit ('0'-'9')",
-                    "passwordMustHaveSpecialCharacters": "Passwords must have at least one non alphanumeric character"
+                    "passwordTooShort": "Passwords must be {{errorParameter}} or more characters long",
+                    "passwordRequiresUniqueChars": "Passwords must use at least {{errorParameter}} different characters",
+                    "passwordRequiresLower": "Passwords must have at least one lowercase ('a'-'z')",
+                    "passwordRequiresUpper": "Passwords must have at least one uppercase ('A'-'Z')",
+                    "passwordRequiresDigit": "Passwords must have at least one digit ('0'-'9')",
+                    "passwordRequiresNonAlphanumeric": "Passwords must have at least one non alphanumeric character",
+                    "recentPasswordUsed": "You have used this password in the past. Choose another one."
                 },
                 "placeholders": {
                     "new-password": "Enter new password",
@@ -383,7 +389,8 @@
                     "name": "Name",
                     "account-type": "Account type",
                     "login": "Login",
-                    "state": "State"
+                    "state": "State",
+                    "status": "Status"
                 }
             },
             "account-api": {
@@ -638,14 +645,6 @@
                     "Years": "Years"
                 }
             },
-            "change-password": {
-                "title": "Please enter a new password for the '{{userName}}' user",
-                "password": "New password:",
-                "confirm": "Repeat new password:",
-                "save": "Change password",
-                "postpone": "Postpone",
-                "force-change-info": "You must change the password to continue using the manager."
-            },
             "loginOnBehalf-list": {
                 "title": "Login as {{name}}",
                 "labels": {
@@ -682,6 +681,11 @@
                 "purchase": "Purchase",
                 "renew": "Renew",
                 "expiration-date": "Expiration Date"
+            },
+            "password-expiry": {
+                "expire-days": "To protect your account you will need to change your password <b>in {{count}} days.</b> ",
+                "expire-today": "To protect your account you will need to change your password <b>today.</b> ",
+                "change-link": "Change now"
             },
             "modulesAutoInstallation": {
                 "labels": {

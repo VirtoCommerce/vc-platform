@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Core.Security
 
         public string Description { get; set; }
         public IList<Permission> Permissions { get; set; }
-                
+        public ICollection<IdentityUserRole<string>> UserRoles { get; set; }
 
         public virtual void Patch(Role target)
         {

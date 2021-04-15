@@ -346,6 +346,9 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     b.Property<bool>("IsAdministrator")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("LastPasswordChangedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -496,6 +499,42 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     b.ToTable("UserApiKey");
                 });
 
+            modelBuilder.Entity("VirtoCommerce.Platform.Security.Model.UserPasswordHistoryEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(64)")
+                        .HasMaxLength(64);
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserPasswordsHistory");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("VirtoCommerce.Platform.Core.Security.Role", null)
@@ -526,13 +565,13 @@ namespace VirtoCommerce.Platform.Security.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.HasOne("VirtoCommerce.Platform.Core.Security.Role", null)
-                        .WithMany()
+                        .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("VirtoCommerce.Platform.Core.Security.ApplicationUser", null)
-                        .WithMany()
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -563,6 +602,14 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     b.HasOne("OpenIddict.EntityFrameworkCore.Models.OpenIddictAuthorization", "Authorization")
                         .WithMany("Tokens")
                         .HasForeignKey("AuthorizationId");
+                });
+
+            modelBuilder.Entity("VirtoCommerce.Platform.Security.Model.UserPasswordHistoryEntity", b =>
+                {
+                    b.HasOne("VirtoCommerce.Platform.Core.Security.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

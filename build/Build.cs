@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -287,7 +288,7 @@ partial class Build : NukeBuild
         .Requires(() => ApiKey)
         .Executes(() =>
         {
-            var packages = ArtifactsDirectory.GlobFiles("*.nupkg");
+            var packages = ArtifactsDirectory.GlobFiles("*.nupkg", "*.snupkg").OrderBy(p => p.ToString());
 
             DotNetLogger = CustomDotnetLogger;
 
@@ -298,7 +299,7 @@ partial class Build : NukeBuild
                     .CombineWith(
                         packages, (cs, v) => cs
                             .SetTargetPath(v)),
-                degreeOfParallelism: 5,
+                degreeOfParallelism: 1,
                 completeOnFailure: true);
         });
 
@@ -575,9 +576,11 @@ partial class Build : NukeBuild
              ignoredFiles = ignoredFiles.Select(x => x.Trim()).Distinct().ToArray();
 
              DeleteFile(ZipFilePath);
-             //TODO: Exclude all dependencies of dependent modules
-             CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => !ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase)
-                                                                                     && !(ModuleManifest.Dependencies ?? Array.Empty<ManifestDependency>()).Any(md => x.Name.StartsWith($"{md.Id}Module", StringComparison.OrdinalIgnoreCase)));
+             //TODO: Exclude all ignored files and *module files not related to compressed module
+             var ignoreModulesFilesRegex = new Regex(@".+Module\..*", RegexOptions.IgnoreCase);
+             var includeModuleFilesRegex = new Regex(@$".*{ModuleManifest.Id}Module\..*", RegexOptions.IgnoreCase);
+             CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => (!ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase) && !ignoreModulesFilesRegex.IsMatch(x.Name))
+                                                                                     || includeModuleFilesRegex.IsMatch(x.Name));
          }
          else
          {
@@ -701,23 +704,38 @@ partial class Build : NukeBuild
         {
             var responseContent = await SendSwaggerSchemaToValidator(httpClient, SwaggerSchemaPath, SwaggerValidatorUri);
             var jsonObj = JObject.Parse(responseContent);
-            foreach (var msg in jsonObj["schemaValidationMessages"])
+            JToken validationMessages;
+            if (jsonObj.TryGetValue("schemaValidationMessages", out validationMessages))
             {
-                Logger.Normal(msg);
+                foreach (var msg in validationMessages)
+                {
+                    Logger.Normal(msg);
+                }
+            
+                if (validationMessages.Where(t => (string)t["level"] == "error").Any())
+                    ControlFlow.Fail("Schema Validation Messages contains error");
             }
-            if (jsonObj["schemaValidationMessages"].Where(t => (string)t["level"] == "error").Any())
-                ControlFlow.Fail("Schema Validation Messages contains error");
+            else
+            {
+                Logger.Warn("There is no validation messages from validator");
+            }
         });
 
     private async Task<string> SendSwaggerSchemaToValidator(HttpClient httpClient, string schemaPath, string validatorUri)
     {
-        var swaggerScheme = File.ReadAllText(schemaPath);
-        var requestContent = new StringContent(swaggerScheme, Encoding.UTF8, "application/json");
+        var swaggerSchema = File.ReadAllText(schemaPath);
+        Logger.Normal($"Swagger schema length: {swaggerSchema.Length}");
+        var requestContent = new StringContent(swaggerSchema, Encoding.UTF8, "application/json");
+        Logger.Normal("Request content created");
         var request = new HttpRequestMessage(HttpMethod.Post, validatorUri);
+        Logger.Normal("Request created");
         request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         request.Content = requestContent;
         var response = await httpClient.SendAsync(request);
-        return await response.Content.ReadAsStringAsync();
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content?.ReadAsStringAsync();
+        Logger.Normal($"Response from Validator: {result}");
+        return result;
     }
 
     Target SonarQubeStart => _ => _
@@ -846,7 +864,8 @@ partial class Build : NukeBuild
             Name = tag,
             Prerelease = prerelease,
             Draft = false,
-            Body = description
+            Body = description,
+            TargetCommitish = GitTasks.GitCurrentBranch()
         };
         var release = await githubClient.Repository.Release.Create(owner, repo, newRelease);
         using (var artifactStream = File.OpenRead(artifactPath))

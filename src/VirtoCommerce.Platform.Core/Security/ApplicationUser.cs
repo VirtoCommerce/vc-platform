@@ -25,6 +25,7 @@ namespace VirtoCommerce.Platform.Core.Security
         public virtual string CreatedBy { get; set; }
         public virtual string ModifiedBy { get; set; }
         public virtual IList<Role> Roles { get; set; }
+        public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; }
 
         /// <summary>
         /// Obsolete. Use LockoutEnd. DateTime in UTC when lockout ends, any time in the past is considered not locked out.
@@ -62,6 +63,11 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public virtual bool PasswordExpired { get; set; }
 
+        /// <summary>
+        /// The last date when the password was changed
+        /// </summary>
+        public virtual DateTime? LastPasswordChangedDate { get; set; }
+
         public virtual void Patch(ApplicationUser target)
         {
             target.UserName = UserName;
@@ -87,6 +93,7 @@ namespace VirtoCommerce.Platform.Core.Security
             target.Status = Status;
             target.Password = Password;
             target.PasswordExpired = PasswordExpired;
+            target.LastPasswordChangedDate = LastPasswordChangedDate;
         }
 
         #region ICloneable members
