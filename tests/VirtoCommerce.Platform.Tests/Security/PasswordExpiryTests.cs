@@ -23,11 +23,12 @@ namespace VirtoCommerce.Platform.Tests.Security
             var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
             userStoreMock.Setup(x => x.FindByIdAsync(user.Id, CancellationToken.None)).ReturnsAsync(user);
 
-            var userManager = SecurityMockHelpers.TestCustomUserManager(userStoreMock, new UserOptionsExtended
-            {
-                MaxPasswordAge = maxPasswordAge
-            },
-            GetPlatformMemoryCache());
+            var userManager = SecurityMockHelpers.TestCustomUserManager(userStoreMock,
+                new UserOptionsExtended
+                {
+                    MaxPasswordAge = maxPasswordAge
+                },
+                null, GetPlatformMemoryCache());
 
             //Act
             user = await userManager.FindByIdAsync(user.Id);
