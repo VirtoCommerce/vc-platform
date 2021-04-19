@@ -410,11 +410,11 @@
                     "repeat-password": "Новые пароли не совпадают!",
                     "invalid-token": "Токен смены пароля некорректен или срок его действия истёк",
                     "password-too-weak": "Новый пароль не удовлетворяет одной или нескольким политикам безопасности паролей:",
-                    "passwordViolatesMinLength": "Длина паролей должна составлять {{minPasswordLength}} или более символов",
-                    "passwordMustHaveLowerCaseLetters": "Пароли должны содержать хотя бы одну строчную букву ('a'-'z')",
-                    "passwordMustHaveUpperCaseLetters": "Пароли должны содержать хотя бы одну заглавную букву ('A'-'Z')",
-                    "passwordMustHaveDigits": "Пароли должны содержать хотя бы одну цифру ('0'-'9')",
-                    "passwordMustHaveSpecialCharacters": "Пароли должны содержать хотя бы один знак препинания или другой специальный символ"
+                    "passwordTooShort": "Длина паролей должна составлять {{errorParameter}} или более символов",
+                    "passwordRequiresLower": "Пароли должны содержать хотя бы одну строчную букву ('a'-'z')",
+                    "passwordRequiresUpper": "Пароли должны содержать хотя бы одну заглавную букву ('A'-'Z')",
+                    "passwordRequiresDigit": "Пароли должны содержать хотя бы одну цифру ('0'-'9')",
+                    "passwordRequiresNonAlphanumeric": "Пароли должны содержать хотя бы один знак препинания или другой специальный символ"
                 },
                 "placeholders": {
                     "new-password": "Введите новый пароль",
