@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Modules;
@@ -16,24 +17,34 @@ namespace PlatformTools
 
         public static ExternalModuleCatalog GetCatalog(string authToken, LocalStorageModuleCatalog localCatalog, IEnumerable<string> manifestUrls)
         {
+            var options = GetOptions(authToken, manifestUrls);
+            return GetCatalog(options, localCatalog);
+        }
+
+        public static ExternalModuleCatalog GetCatalog(IOptions<ExternalModuleCatalogOptions> options, LocalStorageModuleCatalog localCatalog)
+        {
             if (_catalog == null)
             {
-                var moduleCatalogOptions = new ExternalModuleCatalogOptions()
-                {
-                    ModulesManifestUrl = new Uri(manifestUrls.First()),
-                    AuthorizationToken = authToken,
-                    IncludePrerelease = false,
-                    AutoInstallModuleBundles = new string[] { },
-                    ExtraModulesManifestUrls = manifestUrls.Select(m => new Uri(m)).ToArray()
-                };
-                var options = Microsoft.Extensions.Options.Options.Create<ExternalModuleCatalogOptions>(moduleCatalogOptions);
                 var client = new ExternalModulesClient(options);
                 var logger = new LoggerFactory().CreateLogger<ExternalModuleCatalog>();
                 _catalog = new ExternalModuleCatalog(localCatalog, client, options, logger);
                 _catalog.Load();
             }
-            _catalog.Reload();
+            else _catalog.Reload();
             return _catalog;
+        }
+
+        public static IOptions<ExternalModuleCatalogOptions> GetOptions(string authToken, IEnumerable<string> manifestUrls)
+        {
+            var extCatalogOptions =  new ExternalModuleCatalogOptions()
+            {
+                ModulesManifestUrl = new Uri(manifestUrls.First()),
+                AuthorizationToken = authToken,
+                IncludePrerelease = false,
+                AutoInstallModuleBundles = new string[] { },
+                ExtraModulesManifestUrls = manifestUrls.Select(m => new Uri(m)).ToArray()
+            };
+            return Options.Create<ExternalModuleCatalogOptions>(extCatalogOptions);
         }
     }
 }

@@ -15,16 +15,17 @@ namespace PlatformTools
         private static GitHubClient client = new GitHubClient(new ProductHeaderValue("vc-build"));
         public static async Task<Release> GetPlatformRelease(string releaseTag)
         {
-            Release release;
-            if (string.IsNullOrEmpty(releaseTag)) {
-               release = await client.Repository.Release.GetLatest(GithubUser, PlatformRepo);
-            } else
-            {
-               release = await client.Repository.Release.Get(GithubUser, PlatformRepo, releaseTag);
-            }
+            var release = string.IsNullOrEmpty(releaseTag)
+                ? await client.Repository.Release.GetLatest(GithubUser, PlatformRepo)
+                : await client.Repository.Release.Get(GithubUser, PlatformRepo, releaseTag);
             return release;
         }
 
+        /// <summary>
+        /// Gets a repo owner and a repo name from packageUrl
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns>The First Value is Owner, The Second is Repo Name</returns>
         public static Tuple<string, string> GetRepoFromUrl(string url)
         {
             var regex = new Regex(@"http[s]{0,1}:\/\/github.com\/([A-z0-9]*)\/([A-z0-9\-]*)\/", RegexOptions.IgnoreCase);

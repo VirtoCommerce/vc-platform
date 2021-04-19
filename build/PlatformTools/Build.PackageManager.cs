@@ -18,7 +18,6 @@ partial class Build: NukeBuild
     [Parameter("vc-package.json path")] public static string PackageManifestPath = "./vc-package.json";
     [Parameter("Install params (install -module VirtoCommerce.Core:1.2.3)")] public static string[] Module;
     Target Init => _ => _
-    .Triggers(InstallPlatform)
     .Executes(async () =>
     {
         var platformRelease = await GithubManager.GetPlatformRelease(PlatformVersion);
@@ -106,45 +105,27 @@ partial class Build: NukeBuild
         var discoveryPath = GetDiscoveryPath();
         var localModuleCatalog = LocalModuleCatalog.GetCatalog(discoveryPath, ProbingPath);
         var externalModuleCatalog = ExtModuleCatalog.GetCatalog(GitHubToken, localModuleCatalog, packageManifest.ModuleSources);
-        foreach(var moduleInstall in packageManifest.Modules)
+        var moduleInstaller = ModuleInstallerFacade.GetModuleInstaller(discoveryPath, ProbingPath, GitHubToken, packageManifest.ModuleSources);
+        var modules = new List<ModuleInfo>();
+        modules.AddRange(externalModuleCatalog.Modules.Where(m =>
         {
-            // Check if is it already installed
-            var moduleDir = Path.Combine(discoveryPath, moduleInstall.Id);
-            if (Directory.Exists(moduleDir))
-            {  // check version if it is
-                var manifestPath = Path.Combine(moduleDir, "module.manifest");
-                var manifest = SerializationTasks.XmlDeserializeFromFile<ModuleManifest>(manifestPath);
-
-                // Remove if it is mismatch
-                if (manifest.Version != moduleInstall.Version)
-                {
-                    FileSystemTasks.DeleteDirectory(moduleDir);
-                }
-                else continue;
-            }
+            var moduleIds = packageManifest.Modules.Select(i => i.Id);
+            return moduleIds.Contains(m.ModuleName);
+        }));
+        foreach (var moduleInstall in packageManifest.Modules)
+        {
             // Get link to certain release
             var externalModule = externalModuleCatalog.Modules.Where(m => m.ModuleName == moduleInstall.Id).First();
             var (githubUser, repoName) = GithubManager.GetRepoFromUrl(externalModule.Ref);
             // Download and unzip
             var githubRelease = await GithubManager.GetModuleRelease(repoName, moduleInstall.Version);
             var releaseAsset = githubRelease.Assets.First();
-            var artifactPath = Path.Combine(TemporaryDirectory, releaseAsset.Name);
-            await HttpTasks.HttpDownloadFileAsync(releaseAsset.BrowserDownloadUrl, artifactPath);
-            CompressionTasks.Uncompress(artifactPath, Path.Combine(discoveryPath, moduleInstall.Id));
-            var dependencies = externalModuleCatalog.GetDependentModules(externalModule);
-            foreach(var dependency in dependencies)
-            {
-                if(!packageManifest.Modules.Where(m => m.Id == dependency.ModuleName).Any())
-                {
-                    var dependencyArtifact = Path.Combine(TemporaryDirectory, $"{dependency.ModuleName}.zip");
-                    await HttpTasks.HttpDownloadFileAsync(dependency.Ref, dependencyArtifact);
-                    var dependencyDestPath = Path.Combine(discoveryPath, dependency.ModuleName);
-                    if (Directory.Exists(dependencyDestPath)) FileSystemTasks.DeleteDirectory(dependencyDestPath);
-                    CompressionTasks.Uncompress(dependencyArtifact, dependencyDestPath);
-                }
-            }
-            localModuleCatalog.Load();
+            var currentModule = modules.First(m => m.ModuleName == moduleInstall.Id).Ref = releaseAsset.BrowserDownloadUrl; ;
         }
+        var progress = new Progress<ProgressMessage>(m => Logger.Info(m.Message));
+        var moduleManifests = externalModuleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>();
+        moduleInstaller.Install(moduleManifests, progress);
+        localModuleCatalog.Reload();
     });
 
     Target Uninstall => _ => _
