@@ -33,6 +33,11 @@ namespace VirtoCommerce.Platform.Core.Security
                 result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: member ID: {oldUser.MemberId} -> {newUser.MemberId}");
             }
 
+            if (newUser.Status != oldUser.Status)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: status: {oldUser.Status} -> {newUser.Status}");
+            }
+
             if (newUser.PasswordHash != oldUser.PasswordHash)
             {
                 result.Add(PlatformConstants.Security.Changes.UserPasswordChanged, $"Password changed");
@@ -41,6 +46,4 @@ namespace VirtoCommerce.Platform.Core.Security
             return result;
         }
     }
-
-
 }
