@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Modules.AssemblyLoading;
@@ -15,11 +17,13 @@ namespace VirtoCommerce.Platform.Modules
     public class LocalStorageModuleCatalog : ModuleCatalog, ILocalModuleCatalog
     {
         private readonly LocalStorageModuleCatalogOptions _options;
+        private readonly IConnectionMultiplexer _redisConnMultiplexer;
         private readonly ILogger<LocalStorageModuleCatalog> _logger;
 
-        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, ILogger<LocalStorageModuleCatalog> logger)
+        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IConnectionMultiplexer redisConnMultiplexer, ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
+            _redisConnMultiplexer = redisConnMultiplexer;
             _logger = logger;
         }
 
@@ -33,33 +37,57 @@ namespace VirtoCommerce.Platform.Modules
                 throw new InvalidOperationException("The DiscoveryPath cannot contain a null value or be empty");
 
 
-            var bNeedToCopyAssemblies = _options.RefreshProbingFolderOnStart;
+            var manifests = GetModuleManifests();
+
+            var needToCopyAssemblies = _options.RefreshProbingFolderOnStart;
 
             if (!Directory.Exists(_options.ProbingPath))
             {
-                bNeedToCopyAssemblies = true; // Force to refresh assemblies anyway, even if RefreshProbeFolderOnStart set to false, because the probing path is absent
+                needToCopyAssemblies = true; // Force to refresh assemblies anyway, even if RefreshProbeFolderOnStart set to false, because the probing path is absent
                 Directory.CreateDirectory(_options.ProbingPath);
             }
 
             if (!discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
                 discoveryPath += PlatformInformation.DirectorySeparator;
 
-            if (bNeedToCopyAssemblies) CopyAssemblies(discoveryPath, _options.ProbingPath);
+            if (needToCopyAssemblies)
+            {
+                var storageLockResource = new LocalStorageDistributedLockResource(Path.Combine(_options.ProbingPath, "storage.mark"));
+                storageLockResource.Lock(_redisConnMultiplexer, _options.DistributedLockWait, (x) =>
+                {
+                    if (x != DistributedLockCondition.Delayed)
+                    {
+                        if (x == DistributedLockCondition.NoRedis)
+                        {
+                            _logger.LogInformation("Distributed lock not acquired, Redis ConnectionMultiplexer is null (No Redis connection?)");
+                        }
+                        else
+                        {
+                            _logger.LogInformation(@$"Distributed lock for local storage resource {storageLockResource} acquired");
+                        }
 
-            foreach (var pair in GetModuleManifests())
+                        CopyAssemblies(discoveryPath, _options.ProbingPath); // Copy platform files if needed
+                        foreach (var pair in manifests)
+                        {
+                            var modulePath = Path.GetDirectoryName(pair.Key);
+                            CopyAssemblies(modulePath, _options.ProbingPath); // Copy module files if needed
+                        }
+                    }
+                    else
+                    {
+                        // Delayed lock acquire, do nothing here with a notice logging
+                        _logger.LogInformation(@$"Skip copy assemblies to ProbingPath for local storage resource {storageLockResource} (another instance made it)");
+                    }
+                });
+            }
+
+            foreach (var pair in manifests)
             {
                 var manifest = pair.Value;
-                var manifestPath = pair.Key;
-
-                if (bNeedToCopyAssemblies)
-                {
-                    var modulePath = Path.GetDirectoryName(manifestPath);
-                    CopyAssemblies(modulePath, _options.ProbingPath);
-                }
 
                 var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
                 moduleInfo.LoadFromManifest(manifest);
-                moduleInfo.FullPhysicalPath = Path.GetDirectoryName(manifestPath);
+                moduleInfo.FullPhysicalPath = Path.GetDirectoryName(pair.Key);
 
                 // Modules without assembly file don't need initialization
                 if (string.IsNullOrEmpty(manifest.AssemblyFile))
