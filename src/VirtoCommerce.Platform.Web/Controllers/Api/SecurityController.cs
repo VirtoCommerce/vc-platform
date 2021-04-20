@@ -265,19 +265,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result.ToSecurityResult());
         }
 
-
         /// <summary>
         /// SearchAsync users by keyword
         /// </summary>
         /// <param name="criteria">Search criteria.</param>
         [HttpPost]
         [Route("users/search")]
-        [Route("users")] //PT-789: Obsolete, remove later left only for backward compatibility with V2
-        [Authorize(PlatformConstants.Security.Permissions.SecurityQuery)]
+        [Authorize(PlatformPermissions.SecurityQuery)]
         public async Task<ActionResult<UserSearchResult>> SearchUsers([FromBody] UserSearchCriteria criteria)
         {
             var result = await _userSearchService.SearchUsersAsync(criteria);
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Old SearchAsync users by keyword
+        /// </summary>
+        /// <param name="criteria">Search criteria.</param>
+        /// <remarks>Obsolete, only for backward compatibility with V2</remarks>
+        [HttpPost]
+        [Route("users")] //PT-789: Obsolete, remove later left only for backward compatibility with V2
+        [Authorize(PlatformPermissions.SecurityQuery)]
+        public Task<ActionResult<UserSearchResult>> SearchUsersOld([FromBody] UserSearchCriteria criteria)
+        {
+            return SearchUsers(criteria);
         }
 
         /// <summary>
@@ -562,9 +573,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }));
             }
-            
-           var user = await _userManager.FindByNameAsync(validatePassword.UserName);
 
+            var user = await _userManager.FindByNameAsync(validatePassword.UserName);
 
             var result = await _passwordValidator.ValidateAsync(_userManager, user, validatePassword.NewPassword);
 
