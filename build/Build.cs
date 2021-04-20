@@ -58,6 +58,9 @@ partial class Build : NukeBuild
                 var solutionFileName = Path.GetFileName(solutions.First());
                 Logger.Info($"Solution found: {solutionFileName}");
                 File.WriteAllText(".nuke", solutionFileName);
+            } else if (solutions.Length < 1)
+            {
+                File.CreateText(Path.Combine(Directory.GetCurrentDirectory(), ".nuke")).Close();
             }
         }
         var exitCode = Execute<Build>(x => x.Compile);

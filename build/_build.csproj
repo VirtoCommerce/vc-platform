@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <PackageId>VirtoCommerce.GlobalTool</PackageId>
         <OutputType>Exe</OutputType>
@@ -40,6 +40,7 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="5.6.3">
             <ExcludeAssets>all</ExcludeAssets>
         </PackageReference>
+        <PackageReference Include="VirtoCommerce.Platform.Data" Version="3.52.0" />
         <PackageReference Include="VirtoCommerce.Platform.Modules" Version="3.52.0" />
     </ItemGroup>
 
