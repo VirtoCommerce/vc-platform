@@ -14,7 +14,7 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
         /// </summary>
         Delayed,
         /// <summary>
-        /// No distributed lock was acquired because of the Redis server non-configured
+        /// Distributed lock wasn't acquired because of non-configured Redis connection
         /// </summary>
         NoRedis
     }

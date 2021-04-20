@@ -53,7 +53,7 @@ namespace VirtoCommerce.Platform.Modules
             if (needToCopyAssemblies)
             {
                 var storageLockResource = new LocalStorageDistributedLockResource(Path.Combine(_options.ProbingPath, "storage.mark"));
-                storageLockResource.Lock(_redisConnMultiplexer, _options.DistributedLockWait, (x) =>
+                storageLockResource.WithLock(_redisConnMultiplexer, _options.DistributedLockWait, (x) =>
                 {
                     if (x != DistributedLockCondition.Delayed)
                     {

@@ -20,18 +20,19 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
         /// Run payload method with distributed lock
         /// </summary>
         /// <param name="redisConnMultiplexer">Connection multiplexer pointing to the Redis server, used for locking</param>
-        /// <param name="distributedLockWait">Total time to wait until the lock is available</param>
+        /// <param name="waitTime">Total time to wait until the lock is available</param>
         /// <param name="payload">Payload method to run under the acquired lock</param>
-        public virtual void Lock(IConnectionMultiplexer redisConnMultiplexer, int distributedLockWait, Action<DistributedLockCondition> payload)
+        public virtual void WithLock(IConnectionMultiplexer redisConnMultiplexer, int waitTime, Action<DistributedLockCondition> payload)
         {
             if (redisConnMultiplexer != null)
             {
                 using (var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(redisConnMultiplexer) }))
                 {
                     var instantlyAcquired = false;
+                    var expiryTime = 120 + waitTime;
                     // Try to acquire distributed lock giving up immediately if the lock is not available
                     using (var redLock = redlockFactory.CreateLock(ResourceId,
-                        TimeSpan.FromSeconds(120 + distributedLockWait) /* Successfully acquired lock expiration time */))
+                        TimeSpan.FromSeconds(expiryTime) /* Successfully acquired lock expiration time */))
                     {
                         if (redLock.IsAcquired)
                         {
@@ -44,8 +45,8 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
                     {
                         // Try to acquire distributed lock with awaiting 
                         using (var redLock = redlockFactory.CreateLock(ResourceId,
-                            TimeSpan.FromSeconds(120 + distributedLockWait) /* Successfully acquired lock expiration time */,
-                            TimeSpan.FromSeconds(distributedLockWait) /* Total time to wait until the lock is available */,
+                            TimeSpan.FromSeconds(expiryTime) /* Successfully acquired lock expiration time */,
+                            TimeSpan.FromSeconds(waitTime) /* Total time to wait until the lock is available */,
                             TimeSpan.FromSeconds(3) /* The span to acquire the lock in retries */))
                         {
                             if (redLock.IsAcquired)
