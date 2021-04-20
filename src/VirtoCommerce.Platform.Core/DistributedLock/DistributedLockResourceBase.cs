@@ -14,12 +14,12 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
         /// <summary>
         /// Resource identifier to use in the distributed lock
         /// </summary>
-        protected string ResourceId { get; set; }
+        protected string ResourceId { get; set; } = string.Empty;
 
         /// <summary>
         /// Run payload method with distributed lock
         /// </summary>
-        /// <param name="redisConnMultiplexer">Redis connection multiplexer pointing to the Redis server, used for locking</param>
+        /// <param name="redisConnMultiplexer">Connection multiplexer pointing to the Redis server, used for locking</param>
         /// <param name="distributedLockWait">Total time to wait until the lock is available</param>
         /// <param name="payload">Payload method to run under the acquired lock</param>
         public virtual void Lock(IConnectionMultiplexer redisConnMultiplexer, int distributedLockWait, Action<DistributedLockCondition> payload)
@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
 
                     if (!instantlyAcquired)
                     {
-                        // Try to acquire distributed lock with awaiting
+                        // Try to acquire distributed lock with awaiting 
                         using (var redLock = redlockFactory.CreateLock(ResourceId,
                             TimeSpan.FromSeconds(120 + distributedLockWait) /* Successfully acquired lock expiration time */,
                             TimeSpan.FromSeconds(distributedLockWait) /* Total time to wait until the lock is available */,
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
                             else
                             {
                                 // Lock not acquired even after migrationDistributedLockOptions.Wait
-                                throw new PlatformException($"Can't acquire lock. It seems another platform instance still has the lock. Consider to increase wait timeout.");
+                                throw new PlatformException($"Can't acquire distribute lock for resource {this}. It seems another platform instance still has the lock. Consider to increase wait timeout.");
                             }
                         }
                     }
