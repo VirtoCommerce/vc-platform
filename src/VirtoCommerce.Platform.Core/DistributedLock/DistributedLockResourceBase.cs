@@ -15,21 +15,27 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
         /// Resource identifier to use in the distributed lock
         /// </summary>
         protected string ResourceId { get; set; } = string.Empty;
+        protected IConnectionMultiplexer _redisConnMultiplexer;
+        protected int _waitTime;
+
+        protected DistributedLockResourceBase(IConnectionMultiplexer redisConnMultiplexer, int waitTime)
+        {
+            _redisConnMultiplexer = redisConnMultiplexer;
+            _waitTime = waitTime;
+        }
 
         /// <summary>
         /// Run payload method with distributed lock
         /// </summary>
-        /// <param name="redisConnMultiplexer">Connection multiplexer pointing to the Redis server, used for locking</param>
-        /// <param name="waitTime">Total time to wait until the lock is available</param>
         /// <param name="payload">Payload method to run under the acquired lock</param>
-        public virtual void WithLock(IConnectionMultiplexer redisConnMultiplexer, int waitTime, Action<DistributedLockCondition> payload)
+        public virtual void WithLock(Action<DistributedLockCondition> payload)
         {
-            if (redisConnMultiplexer != null)
+            if (_redisConnMultiplexer != null)
             {
-                using (var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(redisConnMultiplexer) }))
+                using (var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(_redisConnMultiplexer) }))
                 {
                     var instantlyAcquired = false;
-                    var expiryTime = 120 + waitTime;
+                    var expiryTime = 120 + _waitTime;
                     // Try to acquire distributed lock and giving up immediately if the lock is not available
                     using (var redLock = redlockFactory.CreateLock(ResourceId,
                         TimeSpan.FromSeconds(expiryTime) /* Successfully acquired lock expiration time */))
@@ -46,18 +52,15 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
                         // Try to acquire distributed lock with awaiting 
                         using (var redLock = redlockFactory.CreateLock(ResourceId,
                             TimeSpan.FromSeconds(expiryTime) /* Successfully acquired lock expiration time */,
-                            TimeSpan.FromSeconds(waitTime) /* Total time to wait until the lock is available */,
+                            TimeSpan.FromSeconds(_waitTime) /* Total time to wait until the lock is available */,
                             TimeSpan.FromSeconds(3) /* The span to acquire the lock in retries */))
                         {
-                            if (redLock.IsAcquired)
-                            {
-                                payload(DistributedLockCondition.Delayed);
-                            }
-                            else
+                            if (!redLock.IsAcquired)
                             {
                                 // Lock not acquired even after migrationDistributedLockOptions.Wait
                                 throw new PlatformException($"Can't acquire distributed lock for resource {this}. It seems that another Platform instance still has the lock, consider increasing wait timeout.");
                             }
+                            payload(DistributedLockCondition.Delayed);
                         }
                     }
                 }

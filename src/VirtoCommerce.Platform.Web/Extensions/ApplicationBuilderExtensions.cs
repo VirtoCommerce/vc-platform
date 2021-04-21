@@ -79,7 +79,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
             var logger = app.ApplicationServices.GetService<ILogger<Startup>>();
 
-            new StaticDistributedLockResource(nameof(WithDistributedLock)).WithLock(redisConnMultiplexer, distributedLockWait, (x) =>
+            new StaticDistributedLockResource(redisConnMultiplexer, distributedLockWait, nameof(WithDistributedLock)).WithLock((x) =>
                 {
                     if (x == DistributedLockCondition.NoRedis)
                     {

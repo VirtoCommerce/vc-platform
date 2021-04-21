@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using StackExchange.Redis;
 using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.Core.Exceptions;
 
@@ -14,26 +15,31 @@ namespace VirtoCommerce.Platform.Modules
         /// <summary>
         /// Try marking the storage by placing mark-file at the specified path
         /// </summary>
+        /// <param name="redisConnMultiplexer">Connection multiplexer pointing to the Redis server, used for locking</param>
+        /// <param name="waitTime">Total time to wait until the lock is available</param>
         /// <param name="markerFilePath"></param>
-        public LocalStorageDistributedLockResource(string markerFilePath)
+        public LocalStorageDistributedLockResource(IConnectionMultiplexer redisConnMultiplexer, int waitTime, string markerFilePath) : base(redisConnMultiplexer, waitTime)
         {
             try
             {
-                if (!File.Exists(markerFilePath))
+                if (File.Exists(markerFilePath))
                 {
-                    // Non-marked storage, mark by placing a file with unique id.
-                    using (var stream = File.CreateText(markerFilePath))
+                    using (var stream = File.OpenText(markerFilePath))
                     {
-                        stream.Write(Guid.NewGuid());
+                        ResourceId = stream.ReadToEnd();
                     }
                 }
-
-                using (var stream = File.OpenText(markerFilePath))
+                else
                 {
-                    ResourceId = stream.ReadToEnd();
+                    // Non-marked storage, mark by placing a file with resource id.
+                    ResourceId = Guid.NewGuid().ToString();
+                    using (var stream = File.CreateText(markerFilePath))
+                    {
+                        stream.Write(ResourceId);
+                    }
                 }
             }
-            catch (Exception exc)
+            catch (IOException exc)
             {
                 throw new PlatformException($"An IO error occurred while marking local modules storage.", exc);
             }

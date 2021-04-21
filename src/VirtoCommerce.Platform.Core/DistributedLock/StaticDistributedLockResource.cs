@@ -1,3 +1,5 @@
+using StackExchange.Redis;
+
 namespace VirtoCommerce.Platform.Core.DistributedLock
 {
     /// <summary>
@@ -7,9 +9,11 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
     {
         /// <summary>
         /// Construct static lock resource with specified string key
-        /// </summary>
+        /// </summary>        
+        /// <param name="redisConnMultiplexer">Connection multiplexer pointing to the Redis server, used for locking</param>
+        /// <param name="waitTime">Total time to wait until the lock is available</param>
         /// <param name="resourceId"></param>
-        public StaticDistributedLockResource(string resourceId)
+        public StaticDistributedLockResource(IConnectionMultiplexer redisConnMultiplexer, int waitTime, string resourceId) : base(redisConnMultiplexer, waitTime)
         {
             ResourceId = resourceId;
         }
