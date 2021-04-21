@@ -45,7 +45,7 @@ partial class Build : NukeBuild
         }
         var descriptionBlock = container.Descendants<ParagraphBlock>().FirstOrDefault();
         var exampleBlock = container.Descendants<FencedCodeBlock>().FirstOrDefault();
-        var description = descriptionBlock != null ? GetTextContent(descriptionBlock) : string.Empty;
+        var description = GetTextContent(descriptionBlock);
         var examples = GetFencedText(exampleBlock);
         string result = $"{description}{Environment.NewLine}{examples}";
         return result;
@@ -53,10 +53,11 @@ partial class Build : NukeBuild
 
     private string GetTextContent(LeafBlock leaf)
     {
-        var inline = leaf?.Inline.FirstChild;
-        var result = new StringBuilder();
-        if (leaf == null)
+        var inline = leaf?.Inline?.FirstChild;
+        if (inline is null)
             return string.Empty;
+
+        var result = new StringBuilder();
         do
         {
             switch (inline)
@@ -70,11 +71,8 @@ partial class Build : NukeBuild
                     break;
             }
 
-            if (inline.NextSibling != null)
-            {
-                inline = inline.NextSibling;
-            }
-        } while (inline != leaf.Inline.LastChild);
+            inline = inline.NextSibling;
+        } while (inline != null);
         return result.ToString();
     }
 
@@ -82,12 +80,15 @@ partial class Build : NukeBuild
     {
         if (fencedCodeBlock == null)
             return string.Empty;
+
         var lines = fencedCodeBlock.Lines.Lines.Select(l =>
         {
             var slice = l.Slice;
             if (EqualityComparer<StringSlice>.Default.Equals(slice, default(StringSlice)))
                 return string.Empty;
+
             return slice.Text?.Substring(l.Slice.Start, l.Slice.Length) ?? string.Empty;
+
         });
         return string.Join(Environment.NewLine, lines);
     }
