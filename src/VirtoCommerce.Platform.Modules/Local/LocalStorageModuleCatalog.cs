@@ -19,18 +19,20 @@ namespace VirtoCommerce.Platform.Modules
         private readonly LocalStorageModuleCatalogOptions _options;
         private readonly IConnectionMultiplexer _redisConnMultiplexer;
         private readonly ILogger<LocalStorageModuleCatalog> _logger;
+        private readonly string _discoveryPath;
 
         public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IConnectionMultiplexer redisConnMultiplexer, ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
+            _discoveryPath = _options.DiscoveryPath;
+            if (!_discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
+                _discoveryPath += PlatformInformation.DirectorySeparator;
             _redisConnMultiplexer = redisConnMultiplexer;
             _logger = logger;
         }
 
         protected override void InnerLoad()
         {
-            var discoveryPath = _options.DiscoveryPath;
-
             if (string.IsNullOrEmpty(_options.ProbingPath))
                 throw new InvalidOperationException("The ProbingPath cannot contain a null value or be empty");
             if (string.IsNullOrEmpty(_options.DiscoveryPath))
@@ -47,38 +49,9 @@ namespace VirtoCommerce.Platform.Modules
                 Directory.CreateDirectory(_options.ProbingPath);
             }
 
-            if (!discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
-                discoveryPath += PlatformInformation.DirectorySeparator;
-
             if (needToCopyAssemblies)
             {
-                var storageLockResource = new LocalStorageDistributedLockResource(Path.Combine(_options.ProbingPath, "storage.mark"));
-                storageLockResource.WithLock(_redisConnMultiplexer, _options.DistributedLockWait, (x) =>
-                {
-                    if (x != DistributedLockCondition.Delayed)
-                    {
-                        if (x == DistributedLockCondition.NoRedis)
-                        {
-                            _logger.LogInformation("Distributed lock not acquired, Redis ConnectionMultiplexer is null (No Redis connection?)");
-                        }
-                        else
-                        {
-                            _logger.LogInformation(@$"Distributed lock for local storage resource {storageLockResource} acquired");
-                        }
-
-                        CopyAssemblies(discoveryPath, _options.ProbingPath); // Copy platform files if needed
-                        foreach (var pair in manifests)
-                        {
-                            var modulePath = Path.GetDirectoryName(pair.Key);
-                            CopyAssemblies(modulePath, _options.ProbingPath); // Copy module files if needed
-                        }
-                    }
-                    else
-                    {
-                        // Delayed lock acquire, do nothing here with a notice logging
-                        _logger.LogInformation(@$"Skip copy assemblies to ProbingPath for local storage resource {storageLockResource} (another instance made it)");
-                    }
-                });
+                CopyAssembliesWithDistributedLock(manifests);
             }
 
             foreach (var pair in manifests)
@@ -204,6 +177,37 @@ namespace VirtoCommerce.Platform.Modules
                 }
             }
             return result;
+        }
+
+        private void CopyAssembliesWithDistributedLock(IDictionary<string, ModuleManifest> manifests)
+        {
+            var storageLockResource = new LocalStorageDistributedLockResource(Path.Combine(_options.ProbingPath, "storage.mark"));
+            storageLockResource.WithLock(_redisConnMultiplexer, _options.DistributedLockWait, (x) =>
+            {
+                if (x != DistributedLockCondition.Delayed)
+                {
+                    if (x == DistributedLockCondition.NoRedis)
+                    {
+                        _logger.LogInformation("Distributed lock not acquired, Redis ConnectionMultiplexer is null (No Redis connection?)");
+                    }
+                    else
+                    {
+                        _logger.LogInformation(@$"Distributed lock for local storage resource {storageLockResource} acquired");
+                    }
+
+                    CopyAssemblies(_discoveryPath, _options.ProbingPath); // Copy platform files if needed
+                    foreach (var pair in manifests)
+                    {
+                        var modulePath = Path.GetDirectoryName(pair.Key);
+                        CopyAssemblies(modulePath, _options.ProbingPath); // Copy module files if needed
+                    }
+                }
+                else
+                {
+                    // Delayed lock acquire, do nothing here with a notice logging
+                    _logger.LogInformation(@$"Skip copy assemblies to ProbingPath for local storage resource {storageLockResource} (another instance made it)");
+                }
+            });
         }
 
         private void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
