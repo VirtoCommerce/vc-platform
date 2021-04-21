@@ -30,7 +30,7 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
                 {
                     var instantlyAcquired = false;
                     var expiryTime = 120 + waitTime;
-                    // Try to acquire distributed lock giving up immediately if the lock is not available
+                    // Try to acquire distributed lock and giving up immediately if the lock is not available
                     using (var redLock = redlockFactory.CreateLock(ResourceId,
                         TimeSpan.FromSeconds(expiryTime) /* Successfully acquired lock expiration time */))
                     {
@@ -56,7 +56,7 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
                             else
                             {
                                 // Lock not acquired even after migrationDistributedLockOptions.Wait
-                                throw new PlatformException($"Can't acquire distribute lock for resource {this}. It seems another platform instance still has the lock. Consider to increase wait timeout.");
+                                throw new PlatformException($"Can't acquire distributed lock for resource {this}. It seems that another Platform instance still has the lock, consider increasing wait timeout.");
                             }
                         }
                     }
