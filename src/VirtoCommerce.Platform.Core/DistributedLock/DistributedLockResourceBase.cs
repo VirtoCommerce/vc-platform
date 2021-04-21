@@ -9,14 +9,14 @@ namespace VirtoCommerce.Platform.Core.DistributedLock
     /// <summary>
     /// Basic implementation of distributed lock resource
     /// </summary>
-    public class DistributedLockResourceBase
+    public abstract class DistributedLockResourceBase
     {
         /// <summary>
         /// Resource identifier to use in the distributed lock
         /// </summary>
         protected string ResourceId { get; set; } = string.Empty;
-        protected IConnectionMultiplexer _redisConnMultiplexer;
-        protected int _waitTime;
+        protected readonly IConnectionMultiplexer _redisConnMultiplexer;
+        protected readonly int _waitTime;
 
         protected DistributedLockResourceBase(IConnectionMultiplexer redisConnMultiplexer, int waitTime)
         {
