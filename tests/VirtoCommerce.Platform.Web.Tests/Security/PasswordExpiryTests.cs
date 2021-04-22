@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Tests.Caching;
 using VirtoCommerce.Platform.Web.Security;
 using Xunit;
+using static VirtoCommerce.Platform.Web.Tests.Cache.PlatformWebMockHelper;
 
-namespace VirtoCommerce.Platform.Tests.Security
+namespace VirtoCommerce.Platform.Web.Tests.Security
 {
-    public class PasswordExpiryTests : MemoryCacheTestsBase
+    public class PasswordExpiryTests : PlatformWebMockHelper
     {
         [Theory]
         [ClassData(typeof(CreateExpiryTestData))]
@@ -23,12 +23,12 @@ namespace VirtoCommerce.Platform.Tests.Security
             var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
             userStoreMock.Setup(x => x.FindByIdAsync(user.Id, CancellationToken.None)).ReturnsAsync(user);
 
-            var userManager = SecurityMockHelpers.TestCustomUserManager(userStoreMock,
+            var userManager = SecurityMockHelper.TestCustomUserManager(userStoreMock,
                 new UserOptionsExtended
                 {
                     MaxPasswordAge = maxPasswordAge
                 },
-                null, GetPlatformMemoryCache());
+                null, MemoryCacheMockHelper.GetPlatformMemoryCache());
 
             //Act
             user = await userManager.FindByIdAsync(user.Id);
@@ -57,14 +57,13 @@ namespace VirtoCommerce.Platform.Tests.Security
             //Act
             var daysTillPasswordExpiry = PasswordExpiryHelper.ContDaysTillPasswordExpiry(user, userOptionsExtended);
 
-
             //Assert
             Assert.Equal(expectedDays, daysTillPasswordExpiry);
         }
 
         #region TestData
 
-        class CreateExpiryTestData : IEnumerable<object[]>
+        private class CreateExpiryTestData : IEnumerable<object[]>
         {
             public IEnumerator<object[]> GetEnumerator()
             {
@@ -80,7 +79,7 @@ namespace VirtoCommerce.Platform.Tests.Security
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        class CreateExpiryTestDataCalculator : IEnumerable<object[]>
+        private class CreateExpiryTestDataCalculator : IEnumerable<object[]>
         {
             public IEnumerator<object[]> GetEnumerator()
             {
@@ -100,6 +99,7 @@ namespace VirtoCommerce.Platform.Tests.Security
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
+
         #endregion TestData
     }
 }
