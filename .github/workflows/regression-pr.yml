@@ -21,7 +21,7 @@ jobs:
     steps:
     - name: Check regression label
       id: checkLabel
-      uses: VirtoCommerce/vc-github-actions/check-pr-regression-label@PT-802
+      uses: VirtoCommerce/vc-github-actions/check-pr-regression-label@master
       with:
         githubToken: ${{ secrets.REPO_TOKEN }}
         label: regression

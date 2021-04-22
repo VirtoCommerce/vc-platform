@@ -7,8 +7,21 @@ angular.module('platformWebApp')
     blade.subtitle = "platform.blades.propertyValue-list.subtitle";
     blade.currentLanguage = i18n.getLanguage();
 
+    blade.propertiesVisible = true;
+    blade.propertyVisibleCommand = {
+        name: 'catalog.blades.property-list.labels.hide-empty-values', icon: 'fas fa-eye-slash',
+        executeMethod: function () {
+            $scope.switchPropertiesVisibility();
+        },
+        canExecuteMethod: function () {
+            return true;
+        }
+    };
+
     blade.refresh = function () {
         blade.data = blade.currentEntity;
+        blade.emptyProperties = [];
+
         if (blade.refreshWidgetCount) blade.refreshWidgetCount(blade.currentEntity.objectType);
         dynamicPropertiesApi.search({objectType: blade.currentEntity.objectType, take: blade.dynamicPropertyCount},
             function (response) {
@@ -118,11 +131,78 @@ angular.module('platformWebApp')
             canExecuteMethod: function () {
                 return angular.isDefined(blade.data.objectType);
             }
-        }
+        },
+        blade.propertyVisibleCommand
     ];
 
     $scope.getDictionaryValues = function (property, callback) {
         dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, callback);
+    }
+
+    $scope.switchPropertiesVisibility = function () {
+        blade.propertiesVisible = !blade.propertiesVisible;
+
+        if (blade.propertiesVisible) {
+            blade.propertyVisibleCommand.name = 'platform.commands.hide-empty-property-values';
+            blade.propertyVisibleCommand.icon = 'fas fa-eye-slash';
+
+            showEmptyProperties();
+        }
+        else {
+            blade.propertyVisibleCommand.name = 'platform.commands.show-empty-property-values';
+            blade.propertyVisibleCommand.icon = 'fas fa-eye';
+
+            hideEmptyProperties();
+        }
+    };
+
+    $scope.isPropertyHasValues = function (property) {
+        return !blade.emptyProperties.includes(property);
+    }
+
+    function hideEmptyProperties() {
+        // control visibility of multilanguage properties separately
+        _.each(blade.currentEntities, function (property) {
+            if (property.isMultilingual) {
+                property.$$hiddenLanguages = [];
+                _.each($scope.languages, function (language) {
+                    var languageFound = _.some(property.values, function (propertyValue) {
+                        return propertyValue.value && propertyValue.value !== '' && propertyValue.locale === language;
+                    });
+
+                    if (!languageFound) {
+                        property.$$hiddenLanguages.push(language);
+                    }
+                });
+            }
+        })
+
+        _.each(blade.currentEntities, function (property) {
+            // required properties and switchers can’t be hidden
+            if (!property.isRequired &&
+                property.valueType !== 'Boolean' &&
+                allPropertiesEmpty(property.values)
+            ) {
+                blade.emptyProperties.push(property)
+            }
+        });
+    }
+
+    function allPropertiesEmpty(propertyValues) {
+        var result = _.all(propertyValues, function (value) {
+            return !value.value || value.value === '';
+        });
+        return result;
+    }
+
+    function showEmptyProperties() {
+        _.each(blade.currentEntities, function (property) {
+            if (property.$$hiddenLanguages) {
+                property.$$hiddenLanguages = null;
+            }
+        });
+
+        blade.emptyProperties = [];
     }
 
     blade.refresh();
