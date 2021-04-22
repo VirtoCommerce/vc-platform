@@ -157,7 +157,7 @@ angular.module('platformWebApp')
     };
 
     $scope.isPropertyHasValues = function (property) {
-        return !blade.emptyProperties.includes(property.name);
+        return !blade.emptyProperties.includes(property);
     }
 
     function hideEmptyProperties() {
@@ -177,18 +177,15 @@ angular.module('platformWebApp')
             }
         })
 
-        var noValueProperties = _.filter(blade.currentEntities, function (property) {
+        _.each(blade.currentEntities, function (property) {
             // required properties and switchers can’t be hidden
-            if (property.isRequired ||
-                property.valueType === 'Boolean'
+            if (!property.isRequired &&
+                property.valueType !== 'Boolean' &&
+                allPropertiesEmpty(property.values)
             ) {
-                return false;
+                blade.emptyProperties.push(property)
             }
-
-            return allPropertiesEmpty(property.values);
         });
-
-        blade.emptyProperties = _.pluck(noValueProperties, 'name');
     }
 
     function allPropertiesEmpty(propertyValues) {
