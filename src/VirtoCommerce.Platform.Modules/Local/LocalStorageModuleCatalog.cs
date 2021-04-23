@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Modules
         private readonly ILogger<LocalStorageModuleCatalog> _logger;
         private readonly string _discoveryPath;
 
-        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IConnectionMultiplexer redisConnMultiplexer, ILogger<LocalStorageModuleCatalog> logger)
+        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IEnumerable<IConnectionMultiplexer> redisConnMultiplexers, ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
             _discoveryPath = _options.DiscoveryPath;
@@ -29,7 +29,9 @@ namespace VirtoCommerce.Platform.Modules
             {
                 _discoveryPath += PlatformInformation.DirectorySeparator;
             }
-            _redisConnMultiplexer = redisConnMultiplexer;
+            // Resolve IConnectionMultiplexer as multiple services to avoid crash if the platform ran without Redis
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1#service-registration-methods
+            _redisConnMultiplexer = redisConnMultiplexers.FirstOrDefault();
             _logger = logger;
         }
 
