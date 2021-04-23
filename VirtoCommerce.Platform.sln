@@ -31,8 +31,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Hang
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{74EADA4F-F378-490E-8EA6-AFC5605368EA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.DistributedLock", "src\VirtoCommerce.Platform.DistributedLock\VirtoCommerce.Platform.DistributedLock.csproj", "{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,10 +83,6 @@ Global
 		{0ACDFABF-CD6E-4984-98FE-2099108D3F4A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{74EADA4F-F378-490E-8EA6-AFC5605368EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{74EADA4F-F378-490E-8EA6-AFC5605368EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,7 +99,6 @@ Global
 		{E6585ACB-09CE-438D-9812-0F4B047FEC62} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{EC079077-1D1B-4F23-A3E2-E54BDEB64A92} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 		{0ACDFABF-CD6E-4984-98FE-2099108D3F4A} = {90F6E3EE-475A-4844-A4C4-078613591F81}
-		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01A94F38-27D1-412F-A4F4-F00991D1157C}
