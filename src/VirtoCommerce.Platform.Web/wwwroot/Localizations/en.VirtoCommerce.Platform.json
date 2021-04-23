@@ -154,8 +154,7 @@
                     "platform-entries": "Platform entries",
                     "choose-modules": "Choose modules to export",
                     "download-url": "Download Url",
-                    "errors": "Errors",
-                    "start-export": "Start export",
+                    "errors": "Errors",                    
                     "start": "Start",
                     "end": "End"
                 },

@@ -133,8 +133,7 @@
                     "platform-entries": "Позиции платформы",
                     "choose-modules": "Выберите модули для экспорта",
                     "download-url": "Загрузить Url",
-                    "errors": "Ошибки",
-                    "start-export": "Начать экспорт",
+                    "errors": "Ошибки",                    
                     "start": "Начало",
                     "end": "Конец"
                 },

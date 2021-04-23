@@ -1,44 +1,59 @@
-<div class="blade-static __bottom">
-    <button class="btn" ng-click="startExport()" ng-disabled="!canStartProcess() || blade.notification">
-        <span>{{ 'platform.blades.export-main.labels.start-export' | translate }}</span>
-    </button>
-</div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form ng-pristine ng-valid" ng-if="!blade.notification">
                 <fieldset>
-                    <legend>{{ 'platform.blades.export-main.labels.platform-entries' | translate }}</legend>
-                    <div class="list __items">
-                        <label class="list-item">
-                            <input type="checkbox" ng-model="exportRequest.handleSecurity">
-                            <span class="switch"></span>
-                            <span class="list-name">{{ 'platform.blades.export-main.menu.security.title' | translate }}</span>
-                            <span class="list-descr">{{ 'platform.blades.export-main.menu.security.description' | translate }}</span>
-                        </label>
-                        <label class="list-item">
-                            <input type="checkbox" ng-model="exportRequest.handleBinaryData">
-                            <span class="switch"></span>
-                            <span class="list-name">{{ 'platform.blades.export-main.menu.binary.title' | translate }}</span>
-                            <span class="list-descr">{{ 'platform.blades.export-main.menu.binary.description' | translate }}</span>
-                        </label>
-                        <label class="list-item">
-                            <input type="checkbox" ng-model="exportRequest.handleSettings">
-                            <span class="switch"></span>
-                            <span class="list-name">{{ 'platform.blades.export-main.menu.settings.title' | translate }}</span>
-                            <span class="list-descr">{{ 'platform.blades.export-main.menu.settings.description' | translate }}</span>
-                        </label>
+                    <div class="sub-t">{{ 'platform.blades.export-main.labels.platform-entries' | translate }}</div>
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <tbody>
+                                <tr class="table-item" ng-click="exportRequest.handleSecurity = !exportRequest.handleSecurity">
+                                    <td class="table-col">
+                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': exportRequest.handleSecurity}">&nbsp;</div>
+                                    </td>
+                                    <td class="table-col">
+                                        <span class="table-t">{{ 'platform.blades.export-main.menu.security.title' | translate }}</span>
+                                        <span class="table-descr">{{ 'platform.blades.export-main.menu.security.description' | translate }}</span>
+                                    </td>
+                                </tr>
+                                <tr class="table-item" ng-click="exportRequest.handleBinaryData = !exportRequest.handleBinaryData">
+                                    <td class="table-col">
+                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': exportRequest.handleBinaryData}">&nbsp;</div>
+                                    </td>
+                                    <td class="table-col">
+                                        <span class="table-t">{{ 'platform.blades.export-main.menu.binary.title' | translate }}</span>
+                                        <span class="table-descr">{{ 'platform.blades.export-main.menu.binary.description' | translate }}</span>
+                                    </td>
+                                </tr>
+                                <tr class="table-item" ng-click="exportRequest.handleSettings = !exportRequest.handleSettings">
+                                    <td class="table-col">
+                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': exportRequest.handleSettings}">&nbsp;</div>
+                                    </td>
+                                    <td class="table-col">
+                                        <span class="table-t">{{ 'platform.blades.export-main.menu.settings.title' | translate }}</span>
+                                        <span class="table-descr">{{ 'platform.blades.export-main.menu.settings.description' | translate }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </fieldset>
                 <fieldset>
-                    <legend>{{ 'platform.blades.export-main.labels.choose-modules' | translate }}</legend>
-                    <div class="list __items">
-                        <label class="list-item" ng-repeat="data in exportRequest.exportManifest.modules">
-                            <input type="checkbox" ng-model="data.isChecked" ng-change="updateModuleSelection()">
-                            <span class="switch"></span>
-                            <span class="list-name">{{data.id}}</span>
-                            <span class="list-descr">{{'module.' + data.id + '.description' | translate}}</span>
-                        </label>
+                    <div class="sub-t">{{ 'platform.blades.export-main.labels.choose-modules' | translate }}</div>
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <tbody>
+                                <tr class="table-item" ng-repeat="data in exportRequest.exportManifest.modules" ng-click="data.isChecked = !data.isChecked; updateModuleSelection()">
+                                    <td class="table-col">
+                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.isChecked}">&nbsp;</div>
+                                    </td>
+                                    <td class="table-col">
+                                        <span class="table-t">{{data.id}}</span>
+                                        <span class="table-descr">{{'module.' + data.id + '.description' | translate}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </fieldset>
             </form>
