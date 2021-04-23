@@ -1,18 +1,30 @@
 ﻿<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <ul class="list __items">
-                <li class="list-item" ng-mouseup="export()" ng-class="{'__selected': 'export' === selectedNodeId}">
-                    <i class="list-ico fa fa-upload"></i>
-                    <span class="list-t">{{ 'platform.blades.exportImport-main.menu.export.title' | translate }}</span>
-                    <span class="list-descr">{{ 'platform.blades.exportImport-main.menu.export.description' | translate }}</span>
-                </li>
-                <li class="list-item" ng-mouseup="import()" ng-class="{'__selected': 'import' === selectedNodeId}">
-                    <i class="list-ico fa fa-download"></i>
-                    <span class="list-t">{{ 'platform.blades.exportImport-main.menu.import.title' | translate }}</span>
-                    <span class="list-descr">{{ 'platform.blades.exportImport-main.menu.import.description' | translate }}</span>
-                </li>
-            </ul>
+            <div class="table-wrapper">
+                <table class="table __items">
+                    <tbody>
+                        <tr class="table-item" ng-mouseup="export()" ng-class="{'__selected': 'export' === selectedNodeId}">
+                            <td class="table-col">
+                                <i class="table-ico fa fa-upload"></i>
+                            </td>
+                            <td class="table-col" ng-click='exportRequest.handleSecurity = !exportRequest.handleSecurity'>
+                                <span class="table-t">{{ 'platform.blades.exportImport-main.menu.export.title' | translate }}</span>
+                                <span class="table-descr">{{ 'platform.blades.exportImport-main.menu.export.description' | translate }}</span>
+                            </td>
+                        </tr>
+                        <tr class="table-item" ng-mouseup="import()" ng-class="{'__selected': 'import' === selectedNodeId}">
+                            <td class="table-col">
+                                <i class="table-ico fa fa-download"></i>
+                            </td>
+                            <td class="table-col" ng-click='exportRequest.handleSettings = !exportRequest.handleSettings'>
+                                <span class="table-t">{{ 'platform.blades.exportImport-main.menu.import.title' | translate }}</span>
+                                <span class="table-descr">{{ 'platform.blades.exportImport-main.menu.import.description' | translate }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

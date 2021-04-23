@@ -31,7 +31,7 @@ angular.module('platformWebApp')
             $scope.exportRequest.modules = _.pluck(selection, 'id');
         };
 
-        $scope.startExport = function () {
+        var startExport = function () {
             blade.isLoading = true;
             exportImportResourse.runExport($scope.exportRequest,
                 function (data) {
@@ -56,12 +56,17 @@ angular.module('platformWebApp')
 
         blade.toolbarCommands = [
             {
-                name: "platform.commands.select-all", icon: 'fa fa-check-square-o',
+                name: "platform.commands.start-export", icon: 'fa fa-upload',
+                executeMethod: function () { startExport() },
+                canExecuteMethod: function () { return $scope.canStartProcess() && !blade.notification; }
+            },
+            {
+                name: "platform.commands.select-all", icon: 'fa fa-check-square',
                 executeMethod: function () { selectAll(true) },
                 canExecuteMethod: function () { return $scope.exportRequest.exportManifest && !blade.notification; }
             },
             {
-                name: "platform.commands.unselect-all", icon: 'fa fa-square-o',
+                name: "platform.commands.unselect-all", icon: 'fa fa-square',
                 executeMethod: function () { selectAll(false) },
                 canExecuteMethod: function () { return $scope.exportRequest.exportManifest && !blade.notification; }
             }
