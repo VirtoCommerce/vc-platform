@@ -307,9 +307,13 @@ label.form-control
   margin-top: 5px
 .form-control.__checkbox .form-label,
 .form-control.__radio .form-label
-  line-height: 1.1
+  line-height: 1.5
   margin-bottom: 0
   vertical-align: top
+.window
+  .__required:after
+    content: " *"
+    color: #F14E4E
 .form-control
   input
     position: absolute
@@ -322,7 +326,7 @@ label.form-control
     left: 0
     position: absolute
     top: 0
-    width: 13px
+    width: 13px 
 .form-control.__radio .check
   border-radius: 50%
 .form-control .form-label:hover .check,
