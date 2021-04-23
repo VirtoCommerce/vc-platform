@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
-using VirtoCommerce.Platform.Core.DistributedLock;
+using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -79,7 +79,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
             var logger = app.ApplicationServices.GetService<ILogger<Startup>>();
 
-            new StaticDistributedLockResource(redisConnMultiplexer, distributedLockWait, nameof(WithDistributedLock)).WithLock((x) =>
+            new DistributedLockResource(redisConnMultiplexer, distributedLockWait, nameof(WithDistributedLock)).WithLock((x) =>
                 {
                     if (x == DistributedLockCondition.NoRedis)
                     {

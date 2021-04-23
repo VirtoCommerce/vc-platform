@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.DistributedLock;
+using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Modules.AssemblyLoading;
@@ -183,20 +183,20 @@ namespace VirtoCommerce.Platform.Modules
 
         private void CopyAssembliesWithDistributedLock(IDictionary<string, ModuleManifest> manifests)
         {
-            var storageLockResource = new LocalStorageDistributedLockResource(_redisConnMultiplexer, _options.DistributedLockWait, Path.Combine(_options.ProbingPath, "storage.mark"));
+            var storageLockResource = new DistributedLockResource(_redisConnMultiplexer, _options.DistributedLockWait, nameof(LocalStorageModuleCatalog));
             storageLockResource.WithLock((x) =>
             {
                 switch (x)
                 {
                     // Delayed lock acquire, do nothing here with a notice logging
                     case DistributedLockCondition.Delayed:
-                        _logger.LogInformation(@$"Skip copy assemblies to ProbingPath for local storage resource {storageLockResource} (another instance made it)");
+                        _logger.LogInformation("Skip copy assemblies to ProbingPath for local storage (another instance made it)");
                         break;
                     case DistributedLockCondition.NoRedis:
                         _logger.LogInformation("Distributed lock not acquired, Redis ConnectionMultiplexer is null (No Redis connection?)");
                         break;
                     case DistributedLockCondition.Instant:
-                        _logger.LogInformation(@$"Distributed lock for local storage resource {storageLockResource} acquired");
+                        _logger.LogInformation("Distributed lock for local storage resource acquired");
                         break;
                 }
 

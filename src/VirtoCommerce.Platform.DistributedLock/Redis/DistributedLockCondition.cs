@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Platform.Core.DistributedLock
+namespace VirtoCommerce.Platform.DistributedLock
 {
     /// <summary>
     /// Distributed lock condition information to notice the payload method about running conditions
