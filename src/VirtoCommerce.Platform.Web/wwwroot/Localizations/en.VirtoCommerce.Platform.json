@@ -154,8 +154,7 @@
                     "platform-entries": "Platform entries",
                     "choose-modules": "Choose modules to export",
                     "download-url": "Download Url",
-                    "errors": "Errors",
-                    "start-export": "Start export",
+                    "errors": "Errors",                    
                     "start": "Start",
                     "end": "End"
                 },
@@ -515,7 +514,8 @@
                     "remember-me": "Remember me",
                     "external-sign-in": "Sign in with {{displayName}}",
                     "forgot-password": "Forgot your password?",
-                    "log-in": "Log in"
+                    "log-in": "Log in",
+                    "log-in-placeholder": "Please enter a value"
                 }
             },
             "forgotpassword": {

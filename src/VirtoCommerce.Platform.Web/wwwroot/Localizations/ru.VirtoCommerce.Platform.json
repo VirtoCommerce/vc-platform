@@ -133,8 +133,7 @@
                     "platform-entries": "Позиции платформы",
                     "choose-modules": "Выберите модули для экспорта",
                     "download-url": "Загрузить Url",
-                    "errors": "Ошибки",
-                    "start-export": "Начать экспорт",
+                    "errors": "Ошибки",                    
                     "start": "Начало",
                     "end": "Конец"
                 },
@@ -523,7 +522,8 @@
                     "remember-me": "Запомнить меня",
                     "external-sign-in": "Войти при помощи {{displayName}}",
                     "forgot-password": "Забыли пароль?",
-                    "log-in": "Войти"
+                    "log-in": "Войти",
+                    "log-in-placeholder": "Пожалуйста, введите значение"
                 }
             },
             "forgotpassword": {
