@@ -61,12 +61,12 @@ angular.module('platformWebApp')
                 canExecuteMethod: function () { return $scope.canStartProcess() && !blade.notification; }
             },
             {
-                name: "platform.commands.select-all", icon: 'fa fa-check-square',
+                name: "platform.commands.select-all", icon: 'far fa-check-square',
                 executeMethod: function () { selectAll(true) },
                 canExecuteMethod: function () { return $scope.exportRequest.exportManifest && !blade.notification; }
             },
             {
-                name: "platform.commands.unselect-all", icon: 'fa fa-square',
+                name: "platform.commands.unselect-all", icon: 'far fa-square',
                 executeMethod: function () { selectAll(false) },
                 canExecuteMethod: function () { return $scope.exportRequest.exportManifest && !blade.notification; }
             }
