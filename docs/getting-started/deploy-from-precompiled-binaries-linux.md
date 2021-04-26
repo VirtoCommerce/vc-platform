@@ -31,10 +31,12 @@ dotnet tool install -g VirtoCommerce.GlobalTool
 * Install platform
 ```console
 vc-build Init
+vc-build InstallPlatform
 ```
 Also you can specify the platform version:
 ```console
 vc-build Init -PlatformVersion 3.52.0
+vc-build InstallPlatform
 ```
 
 ## Setup
