@@ -53,15 +53,6 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
     },
 ```
 
-
-### Running the Platform only on HTTP schema
- 
-* In order to run the platform only at HTTP schema in production mode, it's enough to pass only HTTP URLs in `--urls` argument of the `dotnet` command.
-
-```console
-  dotnet VirtoCommerce.Platform.Web.dll --urls=http://localhost:5000
-```
-
 ### Running the Platform on HTTPS schema
 
 * Install and trust HTTPS certificate
@@ -76,14 +67,7 @@ Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-
 
 * Run the Platform:
 
-You can start platform by run exe file
-
-```console
-cd C:\vc-platform-3\
-VirtoCommerce.Platform.Web.exe
-```
-
-or by CLI "dotnet"
+You can start platform by CLI "dotnet"
 
 ```console
 cd C:\vc-platform-3\
@@ -97,6 +81,14 @@ Now listening on: http://localhost:5000
 Now listening on: https://localhost:5001
 ```
 
+### Running the Platform only on HTTP schema
+ 
+* In order to run the platform only at HTTP schema in production mode, it's enough to pass only HTTP URLs in `--urls` argument of the `dotnet` command.
+
+```console
+  dotnet VirtoCommerce.Platform.Web.dll --urls=http://localhost:5000
+```
+
 ### First run sign in
 
 * Open `https://localhost:5001` url in your browser. "Your connection is not private" might appear. Click "Advanced" and "Proceed to ...".
@@ -104,6 +96,36 @@ Read more on removing this error and using a self-signed certificate: [Trust the
 * The application will create and initialize database on the first request. After that you should see the sign in page. Use the following credentials:
   * Login: **admin**
   * Password: **store**
+
+
+### Content Configuration in application settings
+If you plan to run Virto Commerce on either custom domain or port, you will need to change public url for Assets and Content:
+
+* Open the **appsettings.json** file in a text editor.
+
+* In the **Assets** section set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images
+
+```json
+"Assets": {
+        "Provider": "FileSystem",
+        "FileSystem": {
+            "RootPath": "~/assets",
+            "PublicUrl": "https://localhost:5001/assets/" <-- Set your platform application url with port localhost:5001
+        },
+    },
+```
+
+* In the **Content** section set public url for content `Content:FileSystem:PublicUrl` with url of your application, this step is needed in order for configure CMS content storage
+
+```json
+"Content": {
+        "Provider": "FileSystem",
+        "FileSystem": {
+            "RootPath": "~/cms-content",
+            "PublicUrl": "https://localhost:5001/cms-content/" <-- Set your platform application url with port localhost:5001
+        },
+    },
+```
 
 ### Host on Windows with IIS
 
