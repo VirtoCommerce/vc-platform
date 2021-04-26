@@ -45,13 +45,13 @@ Storefront  **appsettings.json** file contains **ContentConnectionString** setti
 You can set this connection string in one of the following ways:
 
 1. Build and Copy theme to `wwwroot\cms-content\{StoreName}\{ThemeName}`
-1. If you have already have installed  platform with sample data, your platform already contains `~/App_Data/cms-content` folder with themes for sample stores and you need only to make symbolic link to this folder by this command:
+1. If you have already have installed  platform with sample data, your platform already contains `~/wwwroot/cms-content` folder with themes for sample stores and you need only to make symbolic link to this folder by this command:
     ```console
-    mklink /d C:\vc-storefront\VirtoCommerce.Storefront\wwwroot\cms-content C:\vc-platform\VirtoCommerce.Platform.Web\App_Data\cms-content
+    mklink /d C:\vc-storefront\VirtoCommerce.Storefront\wwwroot\cms-content C:\vc-platform-3\VirtoCommerce.Platform.Web\wwwroot\cms-content
     ```
 On Mac OS and Linux:
     ```console
-    ln -s ~/vc-storefront/wwwroot/cms-content ~/vc-platform/wwwroot/cms-content
+    ln -s ~/vc-storefront/wwwroot/cms-content ~/vc-platform-3/wwwroot/cms-content
     ```
 1. If you did not install sample data with your platform, you need to create new store in platform manager and download themes as it described in this article: [Theme development](../user-guide/getting-started.md)
 
