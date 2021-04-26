@@ -4,14 +4,13 @@
 
 To get started locally, follow these instructions:
 
-1. Make sure that you have all [Prerequisites](../getting-started/deploy-from-precompiled-binaries-windows.md#prerequisites) installed 
-1. Make fork from the latest platform source code from [latest release](https://github.com/VirtoCommerce/vc-platform/tree/release/3.0.0)
-1. Clone to your local computer using `git` and and switch to the release/3.0.0 branch
+1. Make sure that you have all [Prerequisites](../getting-started/deploy-from-precompiled-binaries-windows.md#prerequisites) installed
+1. Make fork from the latest platform source code from [master branch](https://github.com/VirtoCommerce/vc-platform/tree/master)
+1. Clone to your local computer using `git`
 
 ```console
-git clone -b release/3.0.0 https://github.com/VirtoCommerce/vc-platform.git
+git clone https://github.com/VirtoCommerce/vc-platform.git
 ```
-
 
 ## Building Platform
 

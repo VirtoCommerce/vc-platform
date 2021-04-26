@@ -4,7 +4,7 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 ## Prerequisites
 
 * [Prerequisites for .NET Core on Windows](https://docs.microsoft.com/en-us/dotnet/core/windows-prerequisites)
-* [.NET Core SDK](https://dotnet.microsoft.com/download/thank-you/dotnet-sdk-3.0.100-windows-x64-installer)
+* [.NET Core SDK 3.1.x](https://dotnet.microsoft.com/download/dotnet/3.1)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-2017-editions)
 
 ## Downloading the precomplied binaries
