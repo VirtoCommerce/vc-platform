@@ -11,7 +11,6 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Licensing;
-using VirtoCommerce.Platform.Web.Tests;
 using Xunit;
 using static VirtoCommerce.Platform.Web.Controllers.Api.LicensingController;
 

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace VirtoCommerce.Platform.Web.Tests

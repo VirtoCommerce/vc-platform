@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using FluentAssertions;
@@ -25,6 +21,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
     {
         private readonly Mock<SignInManager<ApplicationUser>> _signInManagerMock;
         private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;
+        private readonly Mock<RoleManager<Role>> _roleManagerMock;
 
         private readonly Mock<IPermissionsRegistrar> _permissionsProviderMock;
         private readonly Mock<IUserSearchService> _userSearchServiceMock;
@@ -48,20 +45,23 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _userApiKeyServiceMock = new Mock<IUserApiKeyService>();
 
             _userManagerMock = new Mock<UserManager<ApplicationUser>>(
-                    /* IUserStore<TUser> store */Mock.Of<IUserStore<ApplicationUser>>(),
-                    /* IOptions<IdentityOptions> optionsAccessor */null,
-                    /* IPasswordHasher<TUser> passwordHasher */null,
-                    /* IEnumerable<IUserValidator<TUser>> userValidators */null,
-                    /* IEnumerable<IPasswordValidator<TUser>> passwordValidators */null,
-                    /* ILookupNormalizer keyNormalizer */null,
-                    /* IdentityErrorDescriber errors */null,
-                    /* IServiceProvider services */null,
-                    /* ILogger<UserManager<TUser>> logger */null);
+                Mock.Of<IUserStore<ApplicationUser>>(),
+                /* IOptions<IdentityOptions> optionsAccessor */null,
+                /* IPasswordHasher<TUser> passwordHasher */null,
+                /* IEnumerable<IUserValidator<TUser>> userValidators */null,
+                /* IEnumerable<IPasswordValidator<TUser>> passwordValidators */null,
+                /* ILookupNormalizer keyNormalizer */null,
+                /* IdentityErrorDescriber errors */null,
+                /* IServiceProvider services */null,
+                /* ILogger<UserManager<TUser>> logger */null);
+
+            _roleManagerMock = new Mock<RoleManager<Role>>(
+                Mock.Of<IRoleStore<Role>>(), null, null, null, null);
 
             _signInManagerMock = new Mock<SignInManager<ApplicationUser>>(
                 _userManagerMock.Object,
-                /* IHttpContextAccessor contextAccessor */Mock.Of<IHttpContextAccessor>(),
-                /* IUserClaimsPrincipalFactory<TUser> claimsFactory */Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>(),
+                Mock.Of<IHttpContextAccessor>(),
+                Mock.Of<IUserClaimsPrincipalFactory<ApplicationUser>>(),
                 /* IOptions<IdentityOptions> optionsAccessor */null,
                 /* ILogger<SignInManager<TUser>> logger */null,
                 /* IAuthenticationSchemeProvider schemes */null,
@@ -69,7 +69,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
             _controller = new SecurityController(
                 signInManager: _signInManagerMock.Object,
-                roleManager: null,
+                roleManager: _roleManagerMock.Object,
                 permissionsProvider: _permissionsProviderMock.Object,
                 userSearchService: _userSearchServiceMock.Object,
                 roleSearchService: _roleSearchServiceMock.Object,
@@ -78,8 +78,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 passwordValidator: _passwordValidatorMock.Object,
                 emailSender: _emailSenderMock.Object,
                 eventPublisher: _eventPublisherMock.Object,
-                userApiKeyService: _userApiKeyServiceMock.Object
-                );
+                userApiKeyService: _userApiKeyServiceMock.Object);
         }
 
         #region Login
@@ -207,5 +206,185 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         }
 
         #endregion Logout
+
+        #region Search roles
+
+        /// <summary>
+        /// Should retranslate result from serach service with 200 status code
+        /// </summary>
+        [Fact]
+        public async Task SearchRoles()
+        {
+            // Arrange
+            var request = _fixture.Create<RoleSearchCriteria>();
+            var roleSearchResult = _fixture.Create<RoleSearchResult>();
+            _roleSearchServiceMock
+                .Setup(x => x.SearchRolesAsync(It.IsAny<RoleSearchCriteria>()))
+                .ReturnsAsync(roleSearchResult);
+
+            // Act
+            var actual = await _controller.SearchRoles(request);
+            var result = actual.ExtractFromOkResult();
+
+            // Assert
+            result.Should().BeEquivalentTo(roleSearchResult);
+        }
+
+        #endregion Search roles
+
+        #region GetRole
+
+        /// <summary>
+        /// Should retranslate result from role manager with 200 status code
+        /// </summary>
+        [Fact]
+        public async Task GetRole()
+        {
+            // Arrange
+            var request = _fixture.Create<string>();
+            var role = _fixture.Create<Role>();
+            _roleManagerMock
+                .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync(role);
+
+            // Act
+            var actual = await _controller.GetRole(request);
+            var result = actual.ExtractFromOkResult();
+
+            // Assert
+            result.Should().BeEquivalentTo(role);
+        }
+
+        #endregion GetRole
+
+        #region DeleteRoles
+
+        /// <summary>
+        /// Should delete only existed roles
+        /// </summary>
+        [Fact]
+        public async Task DeleteRoles()
+        {
+            // Arrange
+            var roleIds = _fixture.CreateMany<string>().ToList();
+            var roles = _fixture.CreateMany<Role>(roleIds.Count - 1).ToList();
+            // Emulate role with last roleid is not exist
+            roles.Add(null);
+
+            var indexer = 0;
+            _roleManagerMock
+                .Setup(x => x.FindByIdAsync(It.IsAny<string>()))
+                .Callback<string>((id) => indexer = roleIds.IndexOf(id))
+                .ReturnsAsync(() => roles[indexer]);
+
+            // Act
+            await _controller.DeleteRoles(roleIds.ToArray());
+
+            // Assert
+            _roleManagerMock.Verify(x => x.FindByIdAsync(It.IsAny<string>()), Times.Exactly(roleIds.Count));
+            _roleManagerMock.Verify(x => x.DeleteAsync(It.IsAny<Role>()), Times.Exactly(roleIds.Count - 1));
+        }
+
+        #endregion DeleteRoles
+
+        #region UpdateRole
+
+        /// <summary>
+        /// Should find role by id and update role
+        /// </summary>
+        [Fact]
+        public async Task UpdateRole_IdNotNull_RoleExist()
+        {
+            // Arrange
+            var role = _fixture.Create<Role>();
+            _roleManagerMock
+                .Setup(x => x.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync(role);
+            _roleManagerMock
+                .Setup(x => x.UpdateAsync(It.IsAny<Role>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            // Act
+            await _controller.UpdateRole(role);
+
+            // Assert
+            _roleManagerMock.Verify(x => x.FindByIdAsync(It.IsAny<string>()), Times.Once());
+            _roleManagerMock.Verify(x => x.UpdateAsync(It.IsAny<Role>()), Times.Once());
+        }
+
+        /// <summary>
+        /// Should not find role by id and create role
+        /// </summary>
+        [Fact]
+        public async Task UpdateRole_IdNotNull_RoleNotExist()
+        {
+            // Arrange
+            var role = _fixture.Create<Role>();
+            _roleManagerMock
+                .Setup(x => x.FindByIdAsync(It.IsAny<string>()))
+                .ReturnsAsync((Role)null);
+            _roleManagerMock
+                .Setup(x => x.CreateAsync(It.IsAny<Role>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            // Act
+            await _controller.UpdateRole(role);
+
+            // Assert
+            _roleManagerMock.Verify(x => x.FindByIdAsync(It.IsAny<string>()), Times.Once());
+            _roleManagerMock.Verify(x => x.CreateAsync(It.IsAny<Role>()), Times.Once());
+        }
+
+        /// <summary>
+        /// Should find role by name and update role
+        /// </summary>
+        [Fact]
+        public async Task UpdateRole_IdNull_RoleExist()
+        {
+            // Arrange
+            var role = _fixture.Create<Role>();
+            role.Id = null;
+
+            _roleManagerMock
+                .Setup(x => x.RoleExistsAsync(It.IsAny<string>()))
+                .ReturnsAsync(true);
+            _roleManagerMock
+                .Setup(x => x.UpdateAsync(It.IsAny<Role>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            // Act
+            await _controller.UpdateRole(role);
+
+            // Assert
+            _roleManagerMock.Verify(x => x.RoleExistsAsync(It.IsAny<string>()), Times.Once());
+            _roleManagerMock.Verify(x => x.UpdateAsync(It.IsAny<Role>()), Times.Once());
+        }
+
+        /// <summary>
+        /// Should not find role by name and create role
+        /// </summary>
+        [Fact]
+        public async Task UpdateRole_IdNull_RoleNotExist()
+        {
+            // Arrange
+            var role = _fixture.Create<Role>();
+            role.Id = null;
+
+            _roleManagerMock
+                .Setup(x => x.RoleExistsAsync(It.IsAny<string>()))
+                .ReturnsAsync(false);
+            _roleManagerMock
+                .Setup(x => x.CreateAsync(It.IsAny<Role>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            // Act
+            await _controller.UpdateRole(role);
+
+            // Assert
+            _roleManagerMock.Verify(x => x.RoleExistsAsync(It.IsAny<string>()), Times.Once());
+            _roleManagerMock.Verify(x => x.CreateAsync(It.IsAny<Role>()), Times.Once());
+        }
+
+        #endregion UpdateRole
     }
 }
