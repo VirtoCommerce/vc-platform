@@ -19,6 +19,10 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
     {
         public class SecurityMockHelper
         {
+            protected SecurityMockHelper()
+            {
+            }
+
             public static CustomUserManager TestCustomUserManager(Mock<IUserStore<ApplicationUser>> storeMock, IEventPublisher eventPublisher)
             {
                 return TestCustomUserManager(storeMock, null, null, null, eventPublisher);
