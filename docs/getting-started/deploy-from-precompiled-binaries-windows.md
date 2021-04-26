@@ -29,30 +29,6 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 ```
 
-* In the **Assets** section set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images
-
-```json
-"Assets": {
-        "Provider": "FileSystem",
-        "FileSystem": {
-            "RootPath": "~/assets",
-            "PublicUrl": "https://localhost:5001/assets/" <-- Set your platform application url with port localhost:5001
-        },
-    },
-```
-
-* In the **Content** section set public url for content `Content:FileSystem:PublicUrl` with url of your application, this step is needed in order for configure CMS content storage
-
-```json
-"Content": {
-        "Provider": "FileSystem",
-        "FileSystem": {
-            "RootPath": "~/cms-content",
-            "PublicUrl": "https://localhost:5001/cms-content/" <-- Set your platform application url with port localhost:5001
-        },
-    },
-```
-
 ### Running the Platform on HTTPS schema
 
 * Install and trust HTTPS certificate
