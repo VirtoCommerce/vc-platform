@@ -160,7 +160,7 @@ Installs platform according to vc-package.json
 vc-build InstallPlatform
 ```
 #### Uninstall
-Gets -Modules parameter and removes specified modules
+Gets -Module parameter and removes specified modules
 ```console
 vc-build uninstall -Module VirtoCommerce.Cart VirtoCommerce.Catalog
 ```
