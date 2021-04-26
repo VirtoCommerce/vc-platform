@@ -147,6 +147,7 @@ Examples:
 ```console
 vc-build install -Module VirtoCommerce.Cart VirtoCommerce.Catalog
 vc-build install -Module VirtoCommerce.Cart VirtoCommerce.Catalog:3.38.0
+vc-build install -Module VirtoCommerce.Cart VirtoCommerce.Catalog -DiscoveryPath ../modules -ProbingPath platform/app_data/modules
 ```
 #### InstallModules
 Installs modules according to vc-package.json and resolves dependencies
