@@ -52,7 +52,8 @@ namespace VirtoCommerce.Platform.Modules
                             var alreadyInstalledModule = _installedModules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.Id == externalModuleInfo.Id);
                             if (alreadyInstalledModule != null)
                             {
-                                if (externalModuleInfo.Equals(alreadyInstalledModule)){
+                                if (externalModuleInfo.Equals(alreadyInstalledModule))
+                                {
                                     externalModuleInfo.IsInstalled = alreadyInstalledModule.IsInstalled;
                                     externalModuleInfo.Errors.AddRange(alreadyInstalledModule.Errors);
                                 }
@@ -151,32 +152,14 @@ namespace VirtoCommerce.Platform.Modules
                     {
                         if (manifest.Versions != null)
                         {
-                            //Select from all versions of module the latest compatible by semVer with the current platform version.
-                            var latestStablePlatformCompatibleVersion = manifest.Versions.OrderByDescending(x => x.SemanticVersion)
-                                                                           .FirstOrDefault(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion)
-                                                                                                && string.IsNullOrEmpty(x.VersionTag));
-                            if (latestStablePlatformCompatibleVersion != null)
+                            var compatibleVersion = GetLatestPlatformCompatibleVersion(manifest, _options.IncludePrerelease);
+
+                            if (compatibleVersion != null)
                             {
                                 var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                                moduleInfo.LoadFromExternalManifest(manifest, latestStablePlatformCompatibleVersion);
+                                moduleInfo.LoadFromExternalManifest(manifest, compatibleVersion);
                                 result.Add(moduleInfo);
                             }
-
-                            if (_options.IncludePrerelease)
-                            {
-                                //Select from all versions of module the latest compatible by semVer with the current platform version.
-                                var latestPrereleasePlatformCompatibleVersion = manifest.Versions.OrderByDescending(x => x.SemanticVersion)
-                                                                               .FirstOrDefault(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion)
-                                                                                                    && !string.IsNullOrEmpty(x.VersionTag));
-                                if (latestPrereleasePlatformCompatibleVersion != null)
-                                {
-                                    var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                                    moduleInfo.LoadFromExternalManifest(manifest, latestPrereleasePlatformCompatibleVersion);
-                                    result.Add(moduleInfo);
-                                }
-                            }
-
-
                         }
                         else
                         {
@@ -186,9 +169,40 @@ namespace VirtoCommerce.Platform.Modules
                 }
             }
 
+            result = RemoveModulesWithMissedDependencies(result);
+
             return result;
         }
 
+        /// <summary>
+        /// Select from all versions of module the latest compatible by semVer with the current platform version.
+        /// </summary>
+        protected virtual ExternalModuleManifestVersion GetLatestPlatformCompatibleVersion(ExternalModuleManifest manifest, bool includePrerelease)
+        {
+            var result = manifest.Versions
+                .OrderByDescending(x => x.SemanticVersion)
+                .FirstOrDefault(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion) && (string.IsNullOrEmpty(x.VersionTag) != includePrerelease));
+
+            return result;
+        }
+
+        /// <summary>
+        /// Remove modules whose dependencies can't be resolved 
+        /// </summary>
+        protected virtual List<ManifestModuleInfo> RemoveModulesWithMissedDependencies(List<ManifestModuleInfo> modules)
+        {
+            try
+            {
+                _ = SolveDependencies(modules);
+            }
+            catch (MissedModuleException exception)
+            {
+                var missedModules = exception.MissedDependenciesMatrix.Select(x => x.Key).ToList();
+                modules.RemoveAll(x => missedModules.Contains(x.Id));
+            }
+
+            return modules;
+        }
 
         protected override void ValidateDependencyGraph()
         {
@@ -213,6 +227,5 @@ namespace VirtoCommerce.Platform.Modules
                 }
             }
         }
-
     }
 }
