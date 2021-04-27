@@ -183,7 +183,8 @@ namespace VirtoCommerce.Platform.Modules
         {
             var result = manifest.Versions
                 .OrderByDescending(x => x.SemanticVersion)
-                .FirstOrDefault(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion) && (string.IsNullOrEmpty(x.VersionTag) != includePrerelease));
+                .Where(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion))
+                .FirstOrDefault(x => string.IsNullOrEmpty(x.VersionTag) != includePrerelease);
 
             return result;
         }
