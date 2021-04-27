@@ -27,6 +27,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
+        <ProjectReference Include="..\VirtoCommerce.Platform.DistributedLock\VirtoCommerce.Platform.DistributedLock.csproj" />
     </ItemGroup>
 
 </Project>
