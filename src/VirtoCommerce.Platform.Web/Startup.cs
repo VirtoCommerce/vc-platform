@@ -41,6 +41,7 @@ using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
+using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
@@ -86,6 +87,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddSignalR().AddPushNotifications(Configuration);
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
+            services.AddOptions<DistributedLockOptions>().Bind(Configuration.GetSection("DistributedLock"));
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
@@ -232,7 +234,7 @@ namespace VirtoCommerce.Platform.Web
 
                 if (options.Enabled)
                 {
-                    //TODO: Need to check how this influence to OpennIddict Reference tokens activated by this line below  AddValidation(options => options.UseReferenceTokens());
+                    //TODO: Need to check how this influence to OpennIddict Reference tokens activated by this line below  AddValidation(options => options.UseReferenceTokens())
                     //TechDept: Need to upgrade to Microsoft.Identity.Web
                     //https://docs.microsoft.com/en-us/azure/active-directory/develop/microsoft-identity-web
                     authBuilder.AddOpenIdConnect(options.AuthenticationType, options.AuthenticationCaption,
@@ -287,7 +289,7 @@ namespace VirtoCommerce.Platform.Web
                     options.UseRollingTokens();
 
                     // Make the "client_id" parameter mandatory when sending a token request.
-                    //options.RequireClientIdentification();
+                    //options.RequireClientIdentification()
 
                     // When request caching is enabled, authorization and logout requests
                     // are stored in the distributed cache by OpenIddict and the user agent
@@ -474,7 +476,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.WithDistributedLock(() =>
+            app.ExecuteSynhronized(() =>
             {
                 // This method contents will run inside of critical section of instance distributed lock.
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.

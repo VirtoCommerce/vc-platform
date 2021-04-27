@@ -14,8 +14,8 @@ namespace VirtoCommerce.Platform.DistributedLock
         /// </summary>
         Delayed,
         /// <summary>
-        /// Distributed lock wasn't acquired because of non-configured Redis connection
+        /// Distributed lock wasn't acquired because of run in bypass (no distributed lock)
         /// </summary>
-        NoRedis
+        NoLock
     }
 }
