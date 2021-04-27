@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace VirtoCommerce.Platform.DistributedLock
 {
@@ -9,7 +7,6 @@ namespace VirtoCommerce.Platform.DistributedLock
     /// </summary>
     public interface IDistributedLockProvider
     {
-
         /// <summary>
         /// Run payload method with a distributed lock
         /// </summary>        
