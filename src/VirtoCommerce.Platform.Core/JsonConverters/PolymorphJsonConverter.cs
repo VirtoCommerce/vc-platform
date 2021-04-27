@@ -10,16 +10,16 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
 {
     public class PolymorphJsonConverter : JsonConverter
     {
-        
-       
         /// <summary>
         /// Factory methods for create instances of proper classes during deserialization
         /// </summary>
         private static readonly ConcurrentDictionary<Type, Func<JObject, object>> _convertFactories = new ConcurrentDictionary<Type, Func<JObject, object>>();
+
         /// <summary>
         /// Cache for conversion possibility (to reduce AbstractTypeFactory calls thru reflection)
         /// </summary>
         private static readonly ConcurrentDictionary<Type, bool> _canConvertCache = new ConcurrentDictionary<Type, bool>();
+
         /// <summary>
         /// Cache for instance creation method infos (to reduce AbstractTypeFactory calls thru reflection)
         /// </summary>
@@ -36,11 +36,10 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                 return false;
             }
 
-            var result = _canConvertCache.GetOrAdd(objectType, _ =>
+            return _canConvertCache.GetOrAdd(objectType, _ =>
             {
                 return (bool)typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetProperty("HasOverrides").GetValue(null, null);
             });
-            return result;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -48,11 +47,16 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
             object result;
             var obj = JObject.Load(reader);
 
-            var factory = _convertFactories.GetOrAdd(objectType, obj2 => {
-                var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(CacheKey.With(nameof(PolymorphJsonConverter), objectType.Name), _ =>
-                    typeof(AbstractTypeFactory<>).MakeGenericType(objectType).GetMethod("TryCreateInstance", 0 /* This guarantees template-parameterless method */, new Type[] { }));
+            // Create instances for overrides and discriminator-less cases
+            var factory = _convertFactories.GetOrAdd(objectType, obj2 =>
+            {
+                var key = CacheKey.With(nameof(PolymorphJsonConverter), objectType.FullName);
+                var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(key, _ => typeof(AbstractTypeFactory<>)
+                    .MakeGenericType(objectType)
+                    .GetMethod("TryCreateInstance", 0 /* This guarantees template-parameterless method */, new Type[] { }));
+
                 return tryCreateInstance?.Invoke(null, null);
-            }); // Create instances for overrides and discriminator-less cases
+            });
 
             result = factory(obj);
 
@@ -72,13 +76,17 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
                     typeName = pt.Value<string>();
                 }
 
-                var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(CacheKey.With(nameof(PolymorphJsonConverter), type.Name, "+"/* To make a difference in keys for discriminator-specific methods */), _ =>
-                    typeof(AbstractTypeFactory<>).MakeGenericType(type).GetMethod("TryCreateInstance", new Type[] {typeof(string) }));
+                var key = CacheKey.With(nameof(PolymorphJsonConverter), type.FullName, "+"/* To make a difference in keys for discriminator-specific methods */);
+                var tryCreateInstance = _createInstanceMethodsCache.GetOrAdd(key, _ => typeof(AbstractTypeFactory<>)
+                    .MakeGenericType(type)
+                    .GetMethod("TryCreateInstance", new Type[] { typeof(string) }));
+
                 var result = tryCreateInstance?.Invoke(null, new[] { typeName });
                 if (result == null)
                 {
-                    throw new NotSupportedException("Unknown discriminator type name: " + typeName);
+                    throw new NotSupportedException($"Unknown discriminator type name: {typeName}");
                 }
+
                 return result;
             });
         }
@@ -87,7 +95,7 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
         {
             _canConvertCache[type] = true;
             _convertFactories[type] = factory;
-        }               
+        }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
