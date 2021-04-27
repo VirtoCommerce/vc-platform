@@ -169,7 +169,9 @@ namespace VirtoCommerce.Platform.Modules
                 }
             }
 
-            result = RemoveModulesWithMissedDependencies(result);
+            // Since modules that have a higher platrform version than the current one are removed from the list after the initial read of modules.json
+            // we need to check the list again to filter out modules that are dependent on those removed incompatible modules
+            RemoveModulesWithMissedDependencies(result);
 
             return result;
         }
