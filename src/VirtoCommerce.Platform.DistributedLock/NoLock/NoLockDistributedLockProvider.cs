@@ -10,14 +10,14 @@ namespace VirtoCommerce.Platform.DistributedLock
     /// </summary>
     public class NoLockDistributedLockProvider : IDistributedLockProvider
     {
-        protected readonly ILogger<RedLockDistributedLockProvider> _logger;
+        protected readonly ILogger<NoLockDistributedLockProvider> _logger;
 
 
         /// <summary>
         /// Construct the provider
         /// </summary>
         /// <param name="logger"></param>
-        public NoLockDistributedLockProvider(ILogger<RedLockDistributedLockProvider> logger)
+        public NoLockDistributedLockProvider(ILogger<NoLockDistributedLockProvider> logger)
         {
             _logger = logger;
         }
