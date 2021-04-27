@@ -5,11 +5,10 @@ using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using StackExchange.Redis;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
+using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Modules.AssemblyLoading;
 
 namespace VirtoCommerce.Platform.Modules
@@ -184,7 +183,7 @@ namespace VirtoCommerce.Platform.Modules
         }
 
         private void CopyAssembliesSynchronized(IDictionary<string, ModuleManifest> manifests)
-        {            
+        {
             _distributedLockProvider.ExecuteSynhronized(nameof(LocalStorageModuleCatalog), (x) =>
             {
                 if (x != DistributedLockCondition.Delayed)
