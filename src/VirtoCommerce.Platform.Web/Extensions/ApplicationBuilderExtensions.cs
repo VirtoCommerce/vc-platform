@@ -69,7 +69,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
         /// <param name="app"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
-        public static IApplicationBuilder Synchronized(this IApplicationBuilder app, Action payload)
+        public static IApplicationBuilder ExecuteSynhronized(this IApplicationBuilder app, Action payload)
         {
             var distributedLockProvider = app.ApplicationServices.GetRequiredService<IDistributedLockProvider>();
             distributedLockProvider.ExecuteSynhronized(nameof(Startup), (x) => payload());
