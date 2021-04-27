@@ -169,10 +169,6 @@ namespace VirtoCommerce.Platform.Modules
                 }
             }
 
-            // Since modules that have a higher platrform version than the current one are removed from the list after the initial read of modules.json
-            // we need to check the list again to filter out modules that are dependent on those removed incompatible modules
-            RemoveModulesWithMissedDependencies(result);
-
             return result;
         }
 
@@ -187,22 +183,6 @@ namespace VirtoCommerce.Platform.Modules
                 .FirstOrDefault(x => string.IsNullOrEmpty(x.VersionTag) != includePrerelease);
 
             return result;
-        }
-
-        /// <summary>
-        /// Remove modules whose dependencies can't be resolved 
-        /// </summary>
-        protected virtual void RemoveModulesWithMissedDependencies(List<ManifestModuleInfo> modules)
-        {
-            try
-            {
-                _ = SolveDependencies(modules);
-            }
-            catch (MissedModuleException exception)
-            {
-                var missedModules = exception.MissedDependenciesMatrix.Select(x => x.Key).ToList();
-                modules.RemoveAll(x => missedModules.Contains(x.Id));
-            }
         }
 
         protected override void ValidateDependencyGraph()
