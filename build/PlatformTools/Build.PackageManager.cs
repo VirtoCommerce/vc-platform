@@ -45,7 +45,7 @@ partial class Build: NukeBuild
                     moduleId = module;
                     var localModuleCatalog = LocalModuleCatalog.GetCatalog(GetDiscoveryPath(), ProbingPath); 
                     var externalCatalog = ExtModuleCatalog.GetCatalog(GitHubToken, localModuleCatalog, packageManifest.ModuleSources);
-                    var moduleInfo = externalCatalog.Items.OfType<ManifestModuleInfo>().Where(m => m.Id == moduleId).Where(m => m.Ref.Contains("github.com")).FirstOrDefault();
+                    var moduleInfo = externalCatalog.Items.OfType<ManifestModuleInfo>().Where(m => m.Id == moduleId).FirstOrDefault(m => m.Ref.Contains("github.com"));
                     if (moduleInfo == null)
                     {
                         ControlFlow.Fail($"No module {moduleId} found");
@@ -119,7 +119,7 @@ partial class Build: NukeBuild
         foreach (var moduleInstall in packageManifest.Modules)
         {
             // Get link to certain release
-            var externalModule = externalModuleCatalog.Modules.Where(m => m.ModuleName == moduleInstall.Id).FirstOrDefault();
+            var externalModule = externalModuleCatalog.Modules.FirstOrDefault(m => m.ModuleName == moduleInstall.Id);
             if (externalModule == null)
             {
                 ControlFlow.Fail($"No module {moduleInstall.Id} found");
@@ -163,7 +163,7 @@ partial class Build: NukeBuild
         {
             var localModuleCatalog = LocalModuleCatalog.GetCatalog(GetDiscoveryPath(), ProbingPath);
             var externalCatalog = ExtModuleCatalog.GetCatalog(GitHubToken, localModuleCatalog, packageManifest.ModuleSources);
-            var moduleInfo = externalCatalog.Items.OfType<ManifestModuleInfo>().Where(m => m.Id == module.Id).Where(m => m.Ref.Contains("github.com")).FirstOrDefault();
+            var moduleInfo = externalCatalog.Items.OfType<ManifestModuleInfo>().Where(m => m.Id == module.Id).FirstOrDefault(m => m.Ref.Contains("github.com"));
             if(moduleInfo == null)
             {
                 ControlFlow.Fail($"No module {module.Id} found");
