@@ -189,11 +189,5 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
         $scope.filteredEntitiesCount = visibleCount;
         return renderableRows;
     };
-
-    $scope.selectButtonClick = function (row, event) {
-        console.log(row);
-        console.log(event);
-    }
-
     blade.isLoading = false;
 }]);
