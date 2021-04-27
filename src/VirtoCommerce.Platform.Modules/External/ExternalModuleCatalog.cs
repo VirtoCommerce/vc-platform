@@ -189,7 +189,7 @@ namespace VirtoCommerce.Platform.Modules
         /// <summary>
         /// Remove modules whose dependencies can't be resolved 
         /// </summary>
-        protected virtual List<ManifestModuleInfo> RemoveModulesWithMissedDependencies(List<ManifestModuleInfo> modules)
+        protected virtual void RemoveModulesWithMissedDependencies(List<ManifestModuleInfo> modules)
         {
             try
             {
@@ -200,8 +200,6 @@ namespace VirtoCommerce.Platform.Modules
                 var missedModules = exception.MissedDependenciesMatrix.Select(x => x.Key).ToList();
                 modules.RemoveAll(x => missedModules.Contains(x.Id));
             }
-
-            return modules;
         }
 
         protected override void ValidateDependencyGraph()
