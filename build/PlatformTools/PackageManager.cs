@@ -43,7 +43,6 @@ namespace PlatformTools
         public static PackageManifest FromFile(string path = "./vc-package.json")
         {
             var result = SerializationTasks.JsonDeserializeFromFile<PackageManifest>(path);
-            PlatformVersion.CurrentVersion = new SemanticVersion(Version.Parse(result.PlatformVersion));
             return result;
         }
     }
