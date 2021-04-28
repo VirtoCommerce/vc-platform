@@ -3,9 +3,9 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 ## Prerequisites
 
-* [Prerequisites for .NET Core on Windows](https://docs.microsoft.com/en-us/dotnet/core/windows-prerequisites)
-* [.NET Core SDK 3.1.x](https://dotnet.microsoft.com/download/dotnet/3.1)
-* [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-2017-editions)
+* [Prerequisites for .NET Core 3.1 on Windows](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=netcore31#dependencies)
+* [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1)
+* [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 
 ## Downloading the precomplied binaries
 
@@ -45,6 +45,56 @@ vc-build InstallPlatform
 
 ```
 
+### Running the Platform on HTTPS schema
+
+* Install and trust HTTPS certificate
+
+Run to trust the .NET Core SDK HTTPS development certificate:
+
+```console
+    dotnet dev-certs https --trust
+```
+
+Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust)
+
+* Run the Platform:
+
+You can start platform by CLI "dotnet"
+
+```console
+cd C:\vc-platform-3\
+dotnet.exe VirtoCommerce.Platform.Web.dll
+```
+
+The output in the console will say something like:
+
+```console
+Now listening on: http://localhost:5000
+Now listening on: https://localhost:5001
+```
+
+### Running the Platform only on HTTP schema
+ 
+* In order to run the platform only at HTTP schema in production mode, it's enough to pass only HTTP URLs in `--urls` argument of the `dotnet` command.
+
+```console
+  dotnet VirtoCommerce.Platform.Web.dll --urls=http://localhost:5000
+```
+
+### First run sign in
+
+* Open `https://localhost:5001` url in your browser. "Your connection is not private" might appear. Click "Advanced" and "Proceed to ...".
+Read more on removing this error and using a self-signed certificate: [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
+* The application will create and initialize database on the first request. After that you should see the sign in page. Use the following credentials:
+  * Login: **admin**
+  * Password: **store**
+
+
+### Content Configuration in application settings
+If you plan to run Virto Commerce on either custom domain or port, you will need to change public url for Assets and Content:
+
+* Open the **appsettings.json** file in a text editor.
+
 * In the **Assets** section set public url for assets `Assets:FileSystem:PublicUrl` with url of your application, this step is needed in order for display images
 
 ```json
@@ -68,58 +118,6 @@ vc-build InstallPlatform
         },
     },
 ```
-
-
-### Running the Platform only on HTTP schema
- 
-* In order to run the platform only at HTTP schema in production mode, it's enough to pass only HTTP URLs in `--urls` argument of the `dotnet` command.
-
-```console
-  dotnet VirtoCommerce.Platform.Web.dll --urls=http://localhost:5000
-```
-
-### Running the Platform on HTTPS schema
-
-* Install and trust HTTPS certificate
-
-Run to trust the .NET Core SDK HTTPS development certificate:
-
-```console
-    dotnet dev-certs https --trust
-```
-
-Read more about [enforcing HTTPS in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-3.0&tabs=visual-studio#trust)
-
-* Run the Platform:
-
-You can start platform by run exe file
-
-```console
-cd C:\vc-platform-3\
-VirtoCommerce.Platform.Web.exe
-```
-
-or by CLI "dotnet"
-
-```console
-cd C:\vc-platform-3\
-dotnet.exe VirtoCommerce.Platform.Web.dll
-```
-
-The output in the console will say something like:
-
-```console
-Now listening on: http://localhost:5000
-Now listening on: https://localhost:5001
-```
-
-### First run sign in
-
-* Open `https://localhost:5001` url in your browser. "Your connection is not private" might appear. Click "Advanced" and "Proceed to ...".
-Read more on removing this error and using a self-signed certificate: [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
-* The application will create and initialize database on the first request. After that you should see the sign in page. Use the following credentials:
-  * Login: **admin**
-  * Password: **store**
 
 ### Host on Windows with IIS
 
