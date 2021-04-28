@@ -5,11 +5,10 @@ using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using StackExchange.Redis;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
+using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Modules.AssemblyLoading;
 
 namespace VirtoCommerce.Platform.Modules
@@ -17,11 +16,11 @@ namespace VirtoCommerce.Platform.Modules
     public class LocalStorageModuleCatalog : ModuleCatalog, ILocalModuleCatalog
     {
         private readonly LocalStorageModuleCatalogOptions _options;
-        private readonly IConnectionMultiplexer _redisConnMultiplexer;
         private readonly ILogger<LocalStorageModuleCatalog> _logger;
+        private readonly IDistributedLockProvider _distributedLockProvider;
         private readonly string _discoveryPath;
 
-        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IEnumerable<IConnectionMultiplexer> redisConnMultiplexers, ILogger<LocalStorageModuleCatalog> logger)
+        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IDistributedLockProvider distributedLockProvider, ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
             _discoveryPath = _options.DiscoveryPath;
@@ -31,7 +30,7 @@ namespace VirtoCommerce.Platform.Modules
             }
             // Resolve IConnectionMultiplexer as multiple services to avoid crash if the platform ran without Redis
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1#service-registration-methods
-            _redisConnMultiplexer = redisConnMultiplexers.FirstOrDefault();
+            _distributedLockProvider = distributedLockProvider;
             _logger = logger;
         }
 
@@ -55,7 +54,7 @@ namespace VirtoCommerce.Platform.Modules
 
             if (needToCopyAssemblies)
             {
-                CopyAssembliesWithDistributedLock(manifests);
+                CopyAssembliesSynchronized(manifests);
             }
 
             foreach (var pair in manifests)
@@ -183,25 +182,10 @@ namespace VirtoCommerce.Platform.Modules
             return result;
         }
 
-        private void CopyAssembliesWithDistributedLock(IDictionary<string, ModuleManifest> manifests)
+        private void CopyAssembliesSynchronized(IDictionary<string, ModuleManifest> manifests)
         {
-            var storageLockResource = new DistributedLockResource(_redisConnMultiplexer, _options.DistributedLockWait, nameof(LocalStorageModuleCatalog));
-            storageLockResource.WithLock((x) =>
+            _distributedLockProvider.ExecuteSynhronized(nameof(LocalStorageModuleCatalog), (x) =>
             {
-                switch (x)
-                {
-                    // Delayed lock acquire, do nothing here with a notice logging
-                    case DistributedLockCondition.Delayed:
-                        _logger.LogInformation("Skip copy assemblies to ProbingPath for local storage (another instance made it)");
-                        break;
-                    case DistributedLockCondition.NoRedis:
-                        _logger.LogInformation("Distributed lock not acquired, Redis ConnectionMultiplexer is null (No Redis connection?)");
-                        break;
-                    case DistributedLockCondition.Instant:
-                        _logger.LogInformation("Distributed lock for local storage resource acquired");
-                        break;
-                }
-
                 if (x != DistributedLockCondition.Delayed)
                 {
                     CopyAssemblies(_discoveryPath, _options.ProbingPath); // Copy platform files if needed
@@ -210,6 +194,10 @@ namespace VirtoCommerce.Platform.Modules
                         var modulePath = Path.GetDirectoryName(pair.Key);
                         CopyAssemblies(modulePath, _options.ProbingPath); // Copy module files if needed
                     }
+                }
+                else // Delayed lock acquire, do nothing here with a notice logging
+                {
+                    _logger.LogInformation("Skip copy assemblies to ProbingPath for local storage (another instance made it)");
                 }
             });
         }
