@@ -86,6 +86,8 @@ partial class Build : NukeBuild
     readonly string DevelopBranch = "develop";
     readonly string ReleaseBranchPrefix = "release";
     readonly string HotfixBranchPrefix = "hotfix";
+    readonly string SonarLongLiveBranches = "master;develop";
+
 
 
 
@@ -131,6 +133,7 @@ partial class Build : NukeBuild
     [Parameter("Release branch")] readonly string ReleaseBranch;
 
     [Parameter("Branch Name for SonarQube")] readonly string SonarBranchName;
+    [Parameter("Target Branch Name for SonarQube")] readonly string SonarBranchNameTarget = "dev";
 
     [Parameter("PR Base for SonarQube")] readonly string SonarPRBase;
     [Parameter("PR Branch for SonarQube")] readonly string SonarPRBranch;
@@ -747,6 +750,7 @@ partial class Build : NukeBuild
             var dotNetPath = ToolPathResolver.TryGetEnvironmentExecutable("DOTNET_EXE") ?? ToolPathResolver.GetPathExecutable("dotnet");
             Logger.Normal($"IsServerBuild = {IsServerBuild}");
             var branchName = String.IsNullOrEmpty(SonarBranchName) ? GitRepository.Branch : SonarBranchName;
+            var branchNameTarget = String.IsNullOrEmpty(SonarBranchNameTarget) ? GitRepository.Branch : SonarBranchNameTarget;
             Logger.Info($"BRANCH_NAME = {branchName}");
             var projectName = Solution.Name;
             var prBaseParam = "";
@@ -755,6 +759,9 @@ partial class Build : NukeBuild
             var ghRepoArg = "";
             var prProviderArg = "";
             var prBase = "";
+            var branchParam = "";
+            var branchTargetParam = "";
+
             if (PullRequest)
             {
                 prBase = String.IsNullOrEmpty(SonarPRBase) ? Environment.GetEnvironmentVariable("CHANGE_TARGET") : SonarPRBase;
@@ -771,8 +778,11 @@ partial class Build : NukeBuild
                 prProviderArg = String.IsNullOrEmpty(SonarPRProvider) ? "" : $"/d:sonar.pullrequest.provider={SonarPRProvider}";
 
             }
-            var baseBranch = PullRequest ? prBase : branchName;
-            var branchParam = $"/d:\"sonar.branch={baseBranch}\"";
+            else
+            {
+                branchParam = $"/d:\"sonar.branch.name={branchName}\"";
+                branchTargetParam = SonarLongLiveBranches.Contains(branchName) ? "" : $"/d:\"sonar.branch.target={branchNameTarget}\"";
+            }
 
             var projectNameParam = $"/n:\"{RepoName}\"";
             var projectKeyParam = $"/k:\"{RepoOrg}_{RepoName}\"";
@@ -782,7 +792,7 @@ partial class Build : NukeBuild
             var sonarReportPathParam = $"/d:sonar.cs.opencover.reportsPaths={CoverageReportPath}";
             var orgParam = $"/o:{SonarOrg}";
 
-            var startCmd = $"sonarscanner begin {orgParam} {branchParam} {projectKeyParam} {projectNameParam} {projectVersionParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam} {ghRepoArg} {prProviderArg}";
+            var startCmd = $"sonarscanner begin {orgParam} {branchParam} {branchTargetParam} {projectKeyParam} {projectNameParam} {projectVersionParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam} {ghRepoArg} {prProviderArg}";
 
             Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}")}");
 
