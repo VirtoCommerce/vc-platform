@@ -20,6 +20,13 @@ vc-build install -Module VirtoCommerce.Cart VirtoCommerce.Catalog:3.38.0
 ```
 :::
 :::
+## Update
+Updates platform and modules to last versions
+```console
+vc-build Update
+```
+:::
+:::
 ## InstallModules
 Installs modules according to vc-package.json and solves dependencies
 ```console
@@ -36,7 +43,7 @@ vc-build InstallPlatform
 :::
 :::
 ## Uninstall
-Gets -Modules parameter and removes specified modules
+Gets -Module parameter and removes specified modules
 ```console
 vc-build uninstall -Module VirtoCommerce.Cart VirtoCommerce.Catalog
 ```
