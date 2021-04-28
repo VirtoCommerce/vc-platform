@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
+using VirtoCommerce.Platform.DistributedLock;
 
 namespace VirtoCommerce.Platform.Web.Redis
 {
@@ -18,7 +19,12 @@ namespace VirtoCommerce.Platform.Web.Redis
                 services.AddSingleton(redis.GetSubscriber());
                 services.AddDataProtection()
                         .SetApplicationName("VirtoCommerce.Platform")
-                        .PersistKeysToStackExchangeRedis(redis, "VirtoCommerce-Keys");
+                        .PersistKeysToStackExchangeRedis(redis, "VirtoCommerce-Keys");                
+                services.AddSingleton<IDistributedLockProvider, RedLockDistributedLockProvider>();
+            }
+            else
+            {
+                services.AddSingleton<IDistributedLockProvider, NoLockDistributedLockProvider>();
             }
 
             return services;

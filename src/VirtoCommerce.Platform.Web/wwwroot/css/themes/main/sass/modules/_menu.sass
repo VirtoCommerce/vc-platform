@@ -95,7 +95,7 @@
       .list-item
         background: $navbarItemBg
         border-bottom: 1px solid $baseBrd
-        height: 20px
+        height: 22px
         width: auto
         &:hover
           .list-t,
@@ -122,17 +122,18 @@
         &.__draggable
           &:before
             color: #a6a6a6
-            content: "\f142"
+            background-image: url('/images/navbar/3_dot_icon.svg')
+            background-repeat: no-repeat
+            background-position-x: center
+            background-position-y: center
             cursor: move
-            font-family: "FontAwesome"
-            font-size: 24px
             opacity: 0
             display: none
             position: absolute
             left: 0
             top: 50%
-            padding: 7px
-            width: 6px
+            width: 20px
+            height: 42px
 
             transform: translateY(-50%)
             transition: opacity .25s ease-in-out 0s
@@ -140,7 +141,7 @@
             opacity: 1
             display: block
         &.__more
-          height: 20px
+          height: 22px
           width: auto
           .list-ico
             display: none
@@ -159,6 +160,8 @@
           display: block
           height: 100%
           width: 100%
+      .list-ico.list-toggle
+        color: #319ED4
         // &::before
         //   content: ' '
         //   display: block

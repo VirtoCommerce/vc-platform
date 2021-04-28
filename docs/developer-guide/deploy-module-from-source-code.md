@@ -6,7 +6,7 @@ To get started locally, follow these instructions:
 
 1. Make sure that you have Virto Commerce Platform installed
 1. Make fork from the latest module source code from https://github.com/VirtoCommerce/{module-name}.git
-1. Clone to your local computer using `git` and and switch to the release/3.0.0 branch
+1. Clone to your local computer using `git`
 
 ```console
 git clone https://github.com/VirtoCommerce/{module-name}.git
@@ -87,6 +87,6 @@ Restart the Platform to load the new module assemblies into the Platform's appli
 
 ![image](../media/frontend-debug-chrome.png)
 
-## Testing 
+## Testing
 
 There is `tests` folder with suites which can be run locally.

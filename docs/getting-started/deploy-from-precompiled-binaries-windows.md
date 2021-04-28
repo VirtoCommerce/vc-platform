@@ -15,6 +15,22 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 * Unpack this zip to a local directory **C:\vc-platform-3**. After that you will have the directory with Platform precompiled files.
 
+## Downloading with vc-build tool
+* Install vc-build 
+```console
+dotnet tool install -g VirtoCommerce.GlobalTool
+```
+* Install platform
+```console
+vc-build Init
+vc-build InstallPlatform
+```
+Also you can specify the platform version:
+```console
+vc-build Init -PlatformVersion 3.52.0
+vc-build InstallPlatform
+```
+
 ## Setup
 
 ### Configure application strings
