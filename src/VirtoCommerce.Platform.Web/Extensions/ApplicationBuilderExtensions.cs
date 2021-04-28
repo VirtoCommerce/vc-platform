@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using StackExchange.Redis;
-using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Web.Licensing;
 using static VirtoCommerce.Platform.Core.PlatformConstants.Settings;
 
@@ -72,27 +69,10 @@ namespace VirtoCommerce.Platform.Web.Extensions
         /// <param name="app"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
-        public static IApplicationBuilder WithDistributedLock(this IApplicationBuilder app, Action payload)
+        public static IApplicationBuilder ExecuteSynhronized(this IApplicationBuilder app, Action payload)
         {
-            var redisConnMultiplexer = app.ApplicationServices.GetService<IConnectionMultiplexer>();
-            var distributedLockWait = app.ApplicationServices.GetRequiredService<IOptions<LocalStorageModuleCatalogOptions>>().Value.DistributedLockWait;
-
-            var logger = app.ApplicationServices.GetService<ILogger<Startup>>();
-
-            new DistributedLockResource(redisConnMultiplexer, distributedLockWait, nameof(WithDistributedLock)).WithLock((x) =>
-                {
-                    if (x == DistributedLockCondition.NoRedis)
-                    {
-                        logger.LogInformation("Distributed lock not acquired, Redis ConnectionMultiplexer is null (No Redis connection ?)");
-                    }
-                    else
-                    {
-                        logger.LogInformation("Distributed lock acquired");
-                    }
-                    payload();
-                }
-            );
-
+            var distributedLockProvider = app.ApplicationServices.GetRequiredService<IDistributedLockProvider>();
+            distributedLockProvider.ExecuteSynhronized(nameof(Startup), (x) => payload());
             return app;
         }
     }
