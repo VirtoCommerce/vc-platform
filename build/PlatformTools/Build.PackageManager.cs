@@ -45,7 +45,11 @@ partial class Build: NukeBuild
                     moduleId = module;
                     var localModuleCatalog = LocalModuleCatalog.GetCatalog(GetDiscoveryPath(), ProbingPath); 
                     var externalCatalog = ExtModuleCatalog.GetCatalog(GitHubToken, localModuleCatalog, packageManifest.ModuleSources);
-                    var moduleInfo = externalCatalog.Items.OfType<ManifestModuleInfo>().Where(m => m.Id == moduleId).Where(m => m.Ref.Contains("github.com")).First();
+                    var moduleInfo = externalCatalog.Items.OfType<ManifestModuleInfo>().Where(m => m.Id == moduleId).FirstOrDefault(m => m.Ref.Contains("github.com"));
+                    if (moduleInfo == null)
+                    {
+                        ControlFlow.Fail($"No module {moduleId} found");
+                    }
                     var ownerRepo = GithubManager.GetRepoFromUrl(moduleInfo.Ref);
                     Octokit.Release moduleRelease = await GithubManager.GetModuleRelease(ownerRepo.Item2, null);
                     moduleVersion = moduleRelease.TagName;
@@ -115,12 +119,17 @@ partial class Build: NukeBuild
         foreach (var moduleInstall in packageManifest.Modules)
         {
             // Get link to certain release
-            var externalModule = externalModuleCatalog.Modules.Where(m => m.ModuleName == moduleInstall.Id).First();
+            var externalModule = externalModuleCatalog.Modules.FirstOrDefault(m => m.ModuleName == moduleInstall.Id);
+            if (externalModule == null)
+            {
+                ControlFlow.Fail($"No module {moduleInstall.Id} found");
+            }
             var (githubUser, repoName) = GithubManager.GetRepoFromUrl(externalModule.Ref);
             // Download and unzip
             var githubRelease = await GithubManager.GetModuleRelease(repoName, moduleInstall.Version);
             var releaseAsset = githubRelease.Assets.First();
-            var currentModule = modules.First(m => m.ModuleName == moduleInstall.Id).Ref = releaseAsset.BrowserDownloadUrl; ;
+            var currentModule = modules.First(m => m.ModuleName == moduleInstall.Id);
+            currentModule.Ref = releaseAsset.BrowserDownloadUrl;
         }
         var progress = new Progress<ProgressMessage>(m => Logger.Info(m.Message));
         var moduleManifests = externalModuleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>();
@@ -140,5 +149,29 @@ partial class Build: NukeBuild
         packageManifest.Modules.RemoveAll(m => Module.Contains(m.Id));
         PackageManager.ToFile(packageManifest);
         localModulesCatalog.Load();
+    });
+
+    Target Update => _ => _
+    .Triggers(InstallPlatform, InstallModules)
+    .Executes(async () =>
+    {
+        var packageManifest = PackageManager.FromFile(PackageManifestPath);
+        var platformRelease = await GithubManager.GetPlatformRelease(PlatformVersion);
+        packageManifest.PlatformVersion = platformRelease.TagName;
+        packageManifest.PlatformAssetUrl = platformRelease.Assets.First().BrowserDownloadUrl;
+        foreach(var module in packageManifest.Modules)
+        {
+            var localModuleCatalog = LocalModuleCatalog.GetCatalog(GetDiscoveryPath(), ProbingPath);
+            var externalCatalog = ExtModuleCatalog.GetCatalog(GitHubToken, localModuleCatalog, packageManifest.ModuleSources);
+            var moduleInfo = externalCatalog.Items.OfType<ManifestModuleInfo>().Where(m => m.Id == module.Id).FirstOrDefault(m => m.Ref.Contains("github.com"));
+            if(moduleInfo == null)
+            {
+                ControlFlow.Fail($"No module {module.Id} found");
+            }
+            var ownerRepo = GithubManager.GetRepoFromUrl(moduleInfo.Ref);
+            var moduleRelease = await GithubManager.GetModuleRelease(ownerRepo.Item2, null);
+            module.Version = moduleRelease.TagName;
+        }
+        PackageManager.ToFile(packageManifest);
     });
 }
