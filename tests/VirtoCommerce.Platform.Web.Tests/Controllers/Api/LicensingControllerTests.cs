@@ -14,9 +14,9 @@ using VirtoCommerce.Platform.Web.Licensing;
 using Xunit;
 using static VirtoCommerce.Platform.Web.Controllers.Api.LicensingController;
 
-namespace VirtoCommerce.Platform.Tests.Controllers.Api
+namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 {
-    public class LicensingControllerTests
+    public class LicensingControllerTests : PlatformWebMockHelper
     {
         private readonly Mock<IOptions<PlatformOptions>> _options = new Mock<IOptions<PlatformOptions>>();
         private readonly Mock<ISettingsManager> _settingsManager = new Mock<ISettingsManager>();
