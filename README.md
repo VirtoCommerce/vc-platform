@@ -52,15 +52,15 @@ In our work, we always try to use advanced technologies. Our decision to choose 
 
 We decided to use the following stack of technologies:
 
-* ASP.NET Core 3.1.0 as base platform
-* EF Core 3.1.0 as primary ORM
-* ASP.NET Core Identity 3.1.0 for authentication and authorization
-* OpenIddict 2.0.1 for OAuth authorization
-* WebPack as primary design/runtime bundler and minifier
-* Swashbuckle.AspNetCore.SwaggerGen for Swagger docs and UI
-* SignalR Core for push notifications
-* AngularJS 1.4 as primary framework for SPA
-* HangFire 1.7.8 for run background tasks
+* ASP.NET Core 3.1.0 as base platform;
+* EF Core 3.1.0 as primary ORM;
+* ASP.NET Core Identity 3.1.0 for authentication and authorization;
+* OpenIddict 2.0.1 for OAuth authorization;
+* WebPack as primary design/runtime bundler and minifier;
+* Swashbuckle.AspNetCore.SwaggerGen for Swagger docs and UI;
+* SignalR Core for push notifications;
+* AngularJS 1.4 as primary framework for SPA;
+* HangFire 1.7.8 for run background tasks.
 
 ## Introduction to Virto Commerce
 
