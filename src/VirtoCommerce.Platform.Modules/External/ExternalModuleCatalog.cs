@@ -152,7 +152,7 @@ namespace VirtoCommerce.Platform.Modules
                     {
                         if (manifest.Versions != null)
                         {
-                            var compatibleVersion = GetLatestPlatformCompatibleVersion(manifest, _options.IncludePrerelease);
+                            var compatibleVersion = GetLatestCompatibleWithPlatformVersion(manifest, _options.IncludePrerelease);
 
                             if (compatibleVersion != null)
                             {
@@ -175,11 +175,12 @@ namespace VirtoCommerce.Platform.Modules
         /// <summary>
         /// Select from all versions of module the latest compatible by semVer with the current platform version.
         /// </summary>
-        protected virtual ExternalModuleManifestVersion GetLatestPlatformCompatibleVersion(ExternalModuleManifest manifest, bool includePrerelease)
+        protected virtual ExternalModuleManifestVersion GetLatestCompatibleWithPlatformVersion(ExternalModuleManifest manifest, bool includePrerelease)
         {
+            //load modules with exactly the same major version as the current platform has
             var result = manifest.Versions
                 .OrderByDescending(x => x.SemanticVersion)
-                .Where(x => x.PlatformSemanticVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion))
+                .Where(x => x.PlatformSemanticVersion.Major == PlatformVersion.CurrentVersion.Major)
                 .FirstOrDefault(x => string.IsNullOrEmpty(x.VersionTag) != includePrerelease);
 
             return result;
