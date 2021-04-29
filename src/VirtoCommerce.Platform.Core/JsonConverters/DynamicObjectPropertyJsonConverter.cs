@@ -17,13 +17,13 @@ namespace VirtoCommerce.Platform.Core.JsonConverters
 
         public override bool CanConvert(Type objectType)
         {
-           return typeof(IHasDynamicProperties).IsAssignableFrom(objectType);
+            return typeof(IHasDynamicProperties).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var result = base.ReadJson(reader, objectType, existingValue, serializer);
-            if(result != null && result is IHasDynamicProperties hasDynProp)
+            if (result is IHasDynamicProperties hasDynProp)
             {
                 hasDynProp.ResolveMetaDataAsync(_metadataResolver).GetAwaiter().GetResult();
             }

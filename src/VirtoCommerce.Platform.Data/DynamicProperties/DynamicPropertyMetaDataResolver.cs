@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                return result.Distinct().ToDictionary(x => $"{x.ObjectType}__{x.Name}", StringComparer.InvariantCultureIgnoreCase).WithDefaultValue(null);
 
            });
-           return dict[$"{objectType}__{propertyName}"];
+            return dict[$"{objectType}__{propertyName}"];
         }
     }
 }
