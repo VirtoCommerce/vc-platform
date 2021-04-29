@@ -48,3 +48,104 @@ Gets -Module parameter and removes specified modules
 vc-build uninstall -Module VirtoCommerce.Cart VirtoCommerce.Catalog
 ```
 :::
+:::
+## Clean
+Cleans bin, obj and artifacts directories
+```console
+vc-build clean
+```
+:::
+:::
+## Restore
+Executes dotnet restore
+```console
+vc-build restore
+```
+:::
+:::
+## Compile
+Executes dotnet build
+```console
+vc-build compile
+```
+:::
+:::
+## Pack
+Creates nuget packages by executing dotnet pack
+```console
+vc-build pack
+```
+:::
+:::
+## Test
+Executes unit tests and generates coverage report
+Can get -TestsFilter parameter to filter tests which should be run
+```console
+vc-build Test
+vc-build Test -TestsFilter "Category!=IntegrationTest"
+```
+:::
+:::
+## PublishPackages
+Publishes nuget packages in ./artifacts directory with -Source and -ApiKey parameters.
+-Source is "https://api.nuget.org/v3/index.json" by default
+```console
+vc-build PublishPackages -ApiKey %SomeApiKey%
+```
+:::
+:::
+## QuickRelease
+Creates a release branch from dev. Merges it into master. Increments version in dev branch and removes release/* branch.
+```console
+vc-build uninstall -Module VirtoCommerce.Cart VirtoCommerce.Catalog
+```
+:::
+:::
+## Publish
+Executes dotnet publish
+```console
+vc-build publish
+```
+:::
+:::
+## WebPackBuild
+Executes "npm ci" and then "npm run webpack:build"
+```console
+vc-build WebPackBuild
+```
+:::
+:::
+## Compress
+Compresses an artifact to the archive and filters excess files
+```console
+vc-build compress
+```
+:::
+:::
+## PublishModuleManifest
+Updates modules_v3.json with information from the current artifact's module.manifest
+```console
+vc-build PublishModuleManifest
+```
+:::
+:::
+## SonarQubeStart
+Starts sonar scanner by executing "dotnet sonarscanner begin"
+Gets parameters: SonarBranchName, SonarPRBase, SonarPRBranch, SonarPRNumber, SonarGithubRepo, SonarPRProvider, SonarAuthToken
+:::
+:::
+## SonarQubeEnd
+Executes "dotnet sonarscanner end"
+Gets parameters: SonarAuthToken
+```console
+vc-build SonarQubeEnd -SonarAuthToken %SonarToken%
+```
+:::
+:::
+## Release
+Creates the github release
+Gets parameters: GitHubUser, GitHubToken, ReleaseBranch
+```console
+vc-build release -GitHubUser VirtoCommerce -GitHubToken %token% 
+```
+:::
