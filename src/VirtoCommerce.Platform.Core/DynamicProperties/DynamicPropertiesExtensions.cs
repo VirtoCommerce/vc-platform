@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -8,6 +9,50 @@ namespace VirtoCommerce.Platform.Core.DynamicProperties
 {
     public static class DynamicPropertiesExtensions
     {
+        public static async Task ResolveMetaDataRecursiveAsync(this IHasDynamicProperties owner, IDynamicPropertyMetaDataResolver metaDataResolver)
+        {
+            if (owner == null)
+            {
+                throw new ArgumentNullException(nameof(owner));
+            }
+
+            if (metaDataResolver == null)
+            {
+                throw new ArgumentNullException(nameof(metaDataResolver));
+            }
+
+            var hasDynProps = owner.GetFlatObjectsListWithInterface<IHasDynamicProperties>();
+            foreach (var hasDynProp in hasDynProps)
+            {
+                await ResolveMetaDataAsync(hasDynProp, metaDataResolver);
+            }
+        }
+
+        public static async Task ResolveMetaDataAsync(this IHasDynamicProperties owner, IDynamicPropertyMetaDataResolver metaDataResolver)
+        {
+            if (owner == null)
+            {
+                throw new ArgumentNullException(nameof(owner));
+            }
+
+            if (metaDataResolver == null)
+            {
+                throw new ArgumentNullException(nameof(metaDataResolver));
+            }
+
+            foreach (var propertyValue in owner.DynamicProperties ?? Array.Empty<DynamicObjectProperty>())
+            {
+                if (propertyValue.IsTransient() && !string.IsNullOrEmpty(propertyValue.Name))
+                {
+                    var metadata = await metaDataResolver.GetByNameAsync(owner.ObjectType, propertyValue.Name);
+                    if (metadata != null)
+                    {
+                        propertyValue.SetMetaData(metadata);
+                    }
+                }
+            }
+        }
+
         public static T GetDynamicPropertyValue<T>(this IHasDynamicProperties owner, string propertyName, T defaultValue)
         {
             var result = defaultValue;

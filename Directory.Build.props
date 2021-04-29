@@ -12,7 +12,7 @@
         <VersionPrefix>3.55.0</VersionPrefix>
         <VersionSuffix></VersionSuffix>
         <VersionSuffix Condition=" '$(VersionSuffix)' != '' AND '$(BuildNumber)' != '' ">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
-        <NoWarn>$(NoWarn);S3875</NoWarn>
+        <NoWarn>$(NoWarn);S3875;S4457</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
