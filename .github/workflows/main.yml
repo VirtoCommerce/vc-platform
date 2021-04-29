@@ -122,15 +122,15 @@ jobs:
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Swagger validation
-      uses: VirtoCommerce/vc-github-actions/docker-env@master
-      if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
-      with:
-        githubUser: ${{ env.GITHUB_ACTOR }}
-        githubToken: ${{ env.GITHUB_TOKEN }}
-        dockerTag: dev-linux-latest
-        platformImage: docker.pkg.github.com/virtocommerce/vc-platform/platform
-        storefrontImage: docker.pkg.github.com/virtocommerce/vc-storefront/storefront
+    # - name: Swagger validation
+    #   uses: VirtoCommerce/vc-github-actions/docker-env@master
+    #   if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
+    #   with:
+    #     githubUser: ${{ env.GITHUB_ACTOR }}
+    #     githubToken: ${{ env.GITHUB_TOKEN }}
+    #     dockerTag: dev-linux-latest
+    #     platformImage: docker.pkg.github.com/virtocommerce/vc-platform/platform
+    #     storefrontImage: docker.pkg.github.com/virtocommerce/vc-storefront/storefront
           
     - name: Publish Nuget
       if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'}}

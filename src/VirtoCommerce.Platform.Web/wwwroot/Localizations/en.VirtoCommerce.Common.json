@@ -40,6 +40,7 @@
             "save": "Save",
             "send": "Send",
             "select-all": "Select All",
+            "start-export": "Start export",
             "settings": "Settings",
             "sign-out": "Sign out",
             "undo": "Undo",
@@ -63,7 +64,9 @@
             "time": "Time",
             "now": "Now",
             "date": "Date",
-            "see-details": "see Details"
+            "see-details": "see Details",
+            "hide-empty-property-values": "Hide empty values",
+            "show-empty-property-values": "Show empty values"
         },
         "list": {
             "no-data": "No data",

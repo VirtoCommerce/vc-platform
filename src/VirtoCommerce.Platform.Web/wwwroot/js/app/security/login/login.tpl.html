@@ -9,24 +9,33 @@
     <div class="window-cnt">
         <form class="form" novalidate ng-submit="ok()" name="loginForm">
             <div class="form-group">
-                <label class="form-label">{{ 'platform.blades.login.labels.login' | translate }}</label>
+                <label class="form-label __required">{{ 'platform.blades.login.labels.login' | translate }}</label>
                 <div class="form-input">
-                    <input type="text" name="login" ng-model="user.email" required autofocus va-autofill>
+                    <input type="text" name="login" placeholder="{{ 'platform.blades.login.labels.log-in-placeholder' | translate }}" ng-model="user.email" required autofocus va-autofill>
                 </div>
             </div>
             <div class="form-group">
-                <label class="form-label">{{ 'platform.blades.login.labels.password' | translate }}</label>
+                <label class="form-label __required">{{ 'platform.blades.login.labels.password' | translate }}</label>
                 <div class="form-input">
-                    <input name="password" type="password" ng-model="user.password" required va-autofill>
+                    <input name="password" type="password" placeholder="{{ 'platform.blades.login.labels.log-in-placeholder' | translate }}" ng-model="user.password" required va-autofill>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="form-control __checkbox">
-                    <label class="form-label">
-                        <input type="checkbox" name="c1" checked="" ng-model="user.remember">
-                        <span class="check"></span>
-                        <span class="name">{{ 'platform.blades.login.labels.remember-me' | translate }}</span>
-                    </label>
+            <div class="clearfix">
+                <div class="column">
+                    <div class="form-group">
+                        <div class="form-control __checkbox">
+                            <label class="form-label">
+                                <input type="checkbox" name="c1" checked="" ng-model="user.remember">
+                                <span class="check"></span>
+                                <span class="name">{{ 'platform.blades.login.labels.remember-me' | translate }}</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="column __right">
+                    <div class="form-group">
+                        <a ui-sref="forgotpasswordDialog">{{ 'platform.blades.login.labels.forgot-password' | translate }}</a>
+                    </div>
                 </div>
             </div>
             <!--Global variable sets on _Layout.cshtml and defined in Web.config-->
@@ -38,16 +47,13 @@
                     {{authError}}
                 </div>
             </div>
-            <div class="form-group" ng-repeat="provider in externalLoginProviders">
-                <a ng-href="externalsignin?authenticationType={{provider.authenticationType}}">{{ 'platform.blades.login.labels.external-sign-in' | translate: provider }}</a>
-            </div>
             <div class="clearfix">
                 <div class="column">
-                    <div class="form-group">
-                        <a ui-sref="forgotpasswordDialog">{{ 'platform.blades.login.labels.forgot-password' | translate }}</a>
+                    <div class="form-group" ng-repeat="provider in externalLoginProviders">
+                        <a ng-href="externalsignin?authenticationType={{provider.authenticationType}}">{{ 'platform.blades.login.labels.external-sign-in' | translate: provider }}</a>
                     </div>
                 </div>
-                <div class="column">
+                <div class="column __right">
                     <div class="form-group __right">
                         <button class="btn" type="submit" ng-disabled="loginForm.$invalid||loginProgress">
                             <span>{{ 'platform.blades.login.labels.log-in' | translate }}</span>

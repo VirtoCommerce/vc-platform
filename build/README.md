@@ -129,3 +129,39 @@ Used to automate the routine operations with release branches
 #### CompleteHotfix:
 - Merges hotfix branch into master
 - Adds tag and pushes
+
+## Packages management
+#### Init
+Creates vc-package.json boilerplate with the latest version number of the platform.
+Version number can be specified by -PlatformVersion parameter
+For example:
+```console
+vc-build Init
+vc-build Init -PlatformVersion 3.52.0
+```
+#### Install
+Gets the -Module parameter, which is an array of module ids, and updates vc-package.json.
+Also module id can be  supplemented with the version number.
+Discovery and Probing directories can be overridden via -DiscoveryPath and -ProbingPath
+Examples:
+```console
+vc-build install -Module VirtoCommerce.Cart VirtoCommerce.Catalog
+vc-build install -Module VirtoCommerce.Cart VirtoCommerce.Catalog:3.38.0
+vc-build install -Module VirtoCommerce.Cart VirtoCommerce.Catalog -DiscoveryPath ../modules -ProbingPath platform/app_data/modules
+```
+#### InstallModules
+Installs modules according to vc-package.json and resolves dependencies
+```console
+vc-build InstallModules
+vc-build InstallModules -DiscoveryPath ../modules -ProbingPath platform/app_data/modules
+```
+#### InstallPlatform
+Installs platform according to vc-package.json
+```console
+vc-build InstallPlatform
+```
+#### Uninstall
+Gets -Module parameter and removes specified modules
+```console
+vc-build uninstall -Module VirtoCommerce.Cart VirtoCommerce.Catalog
+```

@@ -159,8 +159,11 @@ angular.module('platformWebApp')
 
                     if (angular.isFunction($stateParams.onClose)) {
                         $stateParams.onClose();
-                    } else {
+                    } else if (angular.isFunction($scope.$close)) {
                         $scope.$close(true);
+                    } else {
+                        // redirect to home page (after initial platform setup)
+                        $state.go('workspace');
                     }
                 } else {
                     showErrors(result);
