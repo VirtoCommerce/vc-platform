@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
+using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Modules.AssemblyLoading;
 
 namespace VirtoCommerce.Platform.Modules
@@ -16,50 +17,53 @@ namespace VirtoCommerce.Platform.Modules
     {
         private readonly LocalStorageModuleCatalogOptions _options;
         private readonly ILogger<LocalStorageModuleCatalog> _logger;
+        private readonly IDistributedLockProvider _distributedLockProvider;
+        private readonly string _discoveryPath;
 
-        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, ILogger<LocalStorageModuleCatalog> logger)
+        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IDistributedLockProvider distributedLockProvider, ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
+            _discoveryPath = _options.DiscoveryPath;
+            if (!_discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
+            {
+                _discoveryPath += PlatformInformation.DirectorySeparator;
+            }
+            // Resolve IConnectionMultiplexer as multiple services to avoid crash if the platform ran without Redis
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1#service-registration-methods
+            _distributedLockProvider = distributedLockProvider;
             _logger = logger;
         }
 
         protected override void InnerLoad()
         {
-            var discoveryPath = _options.DiscoveryPath;
-
             if (string.IsNullOrEmpty(_options.ProbingPath))
                 throw new InvalidOperationException("The ProbingPath cannot contain a null value or be empty");
             if (string.IsNullOrEmpty(_options.DiscoveryPath))
                 throw new InvalidOperationException("The DiscoveryPath cannot contain a null value or be empty");
 
 
-            var bNeedToCopyAssemblies = _options.RefreshProbingFolderOnStart;
+            var manifests = GetModuleManifests();
+
+            var needToCopyAssemblies = _options.RefreshProbingFolderOnStart;
 
             if (!Directory.Exists(_options.ProbingPath))
             {
-                bNeedToCopyAssemblies = true; // Force to refresh assemblies anyway, even if RefreshProbeFolderOnStart set to false, because the probing path is absent
+                needToCopyAssemblies = true; // Force to refresh assemblies anyway, even if RefreshProbeFolderOnStart set to false, because the probing path is absent
                 Directory.CreateDirectory(_options.ProbingPath);
             }
 
-            if (!discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
-                discoveryPath += PlatformInformation.DirectorySeparator;
+            if (needToCopyAssemblies)
+            {
+                CopyAssembliesSynchronized(manifests);
+            }
 
-            if (bNeedToCopyAssemblies) CopyAssemblies(discoveryPath, _options.ProbingPath);
-
-            foreach (var pair in GetModuleManifests())
+            foreach (var pair in manifests)
             {
                 var manifest = pair.Value;
-                var manifestPath = pair.Key;
-
-                if (bNeedToCopyAssemblies)
-                {
-                    var modulePath = Path.GetDirectoryName(manifestPath);
-                    CopyAssemblies(modulePath, _options.ProbingPath);
-                }
 
                 var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
                 moduleInfo.LoadFromManifest(manifest);
-                moduleInfo.FullPhysicalPath = Path.GetDirectoryName(manifestPath);
+                moduleInfo.FullPhysicalPath = Path.GetDirectoryName(pair.Key);
 
                 // Modules without assembly file don't need initialization
                 if (string.IsNullOrEmpty(manifest.AssemblyFile))
@@ -176,6 +180,26 @@ namespace VirtoCommerce.Platform.Modules
                 }
             }
             return result;
+        }
+
+        private void CopyAssembliesSynchronized(IDictionary<string, ModuleManifest> manifests)
+        {
+            _distributedLockProvider.ExecuteSynhronized(nameof(LocalStorageModuleCatalog), (x) =>
+            {
+                if (x != DistributedLockCondition.Delayed)
+                {
+                    CopyAssemblies(_discoveryPath, _options.ProbingPath); // Copy platform files if needed
+                    foreach (var pair in manifests)
+                    {
+                        var modulePath = Path.GetDirectoryName(pair.Key);
+                        CopyAssemblies(modulePath, _options.ProbingPath); // Copy module files if needed
+                    }
+                }
+                else // Delayed lock acquire, do nothing here with a notice logging
+                {
+                    _logger.LogInformation("Skip copy assemblies to ProbingPath for local storage (another instance made it)");
+                }
+            });
         }
 
         private void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)

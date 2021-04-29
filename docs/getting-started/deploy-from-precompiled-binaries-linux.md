@@ -23,6 +23,22 @@ wget "https://github.com/VirtoCommerce/vc-platform/releases/download/3.x.x/Virto
 unzip VirtoCommerce.Platform.3.x.x.zip -d vc-platform-3
 ```
 
+## Downloading with vc-build tool
+* Install vc-build 
+```console
+dotnet tool install -g VirtoCommerce.GlobalTool
+```
+* Install platform
+```console
+vc-build Init
+vc-build InstallPlatform
+```
+Also you can specify the platform version:
+```console
+vc-build Init -PlatformVersion 3.52.0
+vc-build InstallPlatform
+```
+
 ## Setup
 
 ### Configure application strings

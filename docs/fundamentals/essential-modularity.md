@@ -55,6 +55,8 @@ The module loading process into  Virto platform application process includes the
 
 > Copying assemblies into probing folder prevents assembly lock issues that might happen when the same assemblies that are loaded into the application process and same time can be modified during development or other activity. 
 
+> In multiinstance platform configurations only one instance checks/copies assemblies into the probing folder. This achieved by distributed locking between instances thru Redis. First started instance copies the files and the other instances skips.
+
 * Loading modules. The assemblies that contain the modules are loaded into default context `AssemblyLoadContex.Default` of the application process. This phase requires the module assemblies to be retrieved from the probing folder.
 * Order by dependency graph – sore all loaded modules in the order of their dependencies for proper initialization order.
 * Initializing modules. The modules are then initialized. This means creating instances of the module class and calling the Initialize method on them via the `IModule` interface.
@@ -173,6 +175,10 @@ How this process works for the virto platform modules for both platform major ve
 
 
 **Design time** –  this mode is often used during development, when you manage installed versions of modules, install them manually or update them in the `~/Modules` discovery folder on the local computer or in any other public environment. The main disadvantage of this method is it not distributed to other team members because of versions and list of used modules doesn’t preserved in version controls system and can’t be shared.
+Also we can setup module with vc-build tool:
+```console
+vc-build Install -Module VirtoCommerce.Store
+```
 
 >The virto platform team is currently working on improving of this process, where you can work with all modules in one solution (mono-repositoriy) and manage versions and dependencies of all modules in the same way as you can manage NuGet dependencies for regular solutions containing several projects.
 
