@@ -152,13 +152,22 @@ namespace VirtoCommerce.Platform.Modules
                     {
                         if (manifest.Versions != null)
                         {
-                            var compatibleVersion = GetLatestCompatibleWithPlatformVersion(manifest, _options.IncludePrerelease);
-
-                            if (compatibleVersion != null)
+                            //!!!DO NOT REFACTOR!!!
+                            //load single the latest stable version for  a module that has exactly the same major version as the current platform
+                            var latestCompatibleStable = GetLatestCompatibleWithPlatformVersion(manifest, false);
+                            if (latestCompatibleStable != null)
                             {
-                                var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
-                                moduleInfo.LoadFromExternalManifest(manifest, compatibleVersion);
-                                result.Add(moduleInfo);
+                                result.Add(latestCompatibleStable);
+                            }
+
+                            if (_options.IncludePrerelease)
+                            {
+                                //load single the latests prerelease version for a module that have exactly the same major version as the current platform
+                                var latestCompatiblePrerelease = GetLatestCompatibleWithPlatformVersion(manifest, true);
+                                if (latestCompatiblePrerelease != null)
+                                {
+                                    result.Add(latestCompatiblePrerelease);
+                                }
                             }
                         }
                         else
@@ -171,18 +180,22 @@ namespace VirtoCommerce.Platform.Modules
 
             return result;
         }
-
         /// <summary>
-        /// Select from all versions of module the latest compatible by semVer with the current platform version.
+        /// Get the  new ManifestModuleInfo for module version that has exactly the same major version as the current platform
         /// </summary>
-        protected virtual ExternalModuleManifestVersion GetLatestCompatibleWithPlatformVersion(ExternalModuleManifest manifest, bool includePrerelease)
+        private ManifestModuleInfo GetLatestCompatibleWithPlatformVersion(ExternalModuleManifest manifest, bool prerelease)
         {
-            //load modules with exactly the same major version as the current platform has
-            var result = manifest.Versions
+            ManifestModuleInfo result = null;
+            var latestCompatibleManifest = manifest.Versions
                 .OrderByDescending(x => x.SemanticVersion)
                 .Where(x => x.PlatformSemanticVersion.Major == PlatformVersion.CurrentVersion.Major)
-                .FirstOrDefault(x => string.IsNullOrEmpty(x.VersionTag) != includePrerelease);
+                .FirstOrDefault(x => string.IsNullOrEmpty(x.VersionTag) != prerelease);
 
+            if (latestCompatibleManifest != null)
+            {
+                result = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
+                result.LoadFromExternalManifest(manifest, latestCompatibleManifest);
+            }
             return result;
         }
 
