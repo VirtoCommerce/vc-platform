@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.Common;
 namespace VirtoCommerce.Platform.Core.JsonConverters
 {
     public class PolymorphJsonConverter : JsonConverter
-    {
+    {  
         /// <summary>
         /// Factory methods for create instances of proper classes during deserialization
         /// </summary>

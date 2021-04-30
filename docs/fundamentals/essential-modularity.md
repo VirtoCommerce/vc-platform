@@ -175,6 +175,10 @@ How this process works for the virto platform modules for both platform major ve
 
 
 **Design time** –  this mode is often used during development, when you manage installed versions of modules, install them manually or update them in the `~/Modules` discovery folder on the local computer or in any other public environment. The main disadvantage of this method is it not distributed to other team members because of versions and list of used modules doesn’t preserved in version controls system and can’t be shared.
+Also we can setup module with vc-build tool:
+```console
+vc-build Install -Module VirtoCommerce.Store
+```
 
 >The virto platform team is currently working on improving of this process, where you can work with all modules in one solution (mono-repositoriy) and manage versions and dependencies of all modules in the same way as you can manage NuGet dependencies for regular solutions containing several projects.
 

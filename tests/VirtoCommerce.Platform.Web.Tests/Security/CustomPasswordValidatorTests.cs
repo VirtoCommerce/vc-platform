@@ -10,20 +10,20 @@ using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.Security
+namespace VirtoCommerce.Platform.Web.Tests.Security
 {
     // PT-1033: Refactor security mock helper and custom password validator
-    public class CustomPasswordValidatorTests
+    public class CustomPasswordValidatorTests : PlatformWebMockHelper
     {
         [Fact]
-        public async Task NullPassword_ThrowsException()
+        public Task NullPassword_ThrowsException()
         {
             // Arrange
-            var userManager = SecurityMockHelpers.TestCustomUserManager();
+            var userManager = SecurityMockHelper.TestCustomUserManager();
             var target = userManager.PasswordValidators.First();
 
             // Act, Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await target.ValidateAsync(userManager, new ApplicationUser(), null));
+            return Assert.ThrowsAsync<ArgumentNullException>(async () => await target.ValidateAsync(userManager, new ApplicationUser(), null));
         }
 
         [Theory]
@@ -88,9 +88,8 @@ namespace VirtoCommerce.Platform.Tests.Security
             var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
             userStoreMock.Setup(x => x.FindByIdAsync(user.Id, CancellationToken.None)).ReturnsAsync(user);
 
-            var userManager = SecurityMockHelpers.TestCustomUserManager(userStoreMock, identityOptions: options);
+            var userManager = SecurityMockHelper.TestCustomUserManager(userStoreMock, identityOptions: options);
             var target = userManager.PasswordValidators.First();
-            //var target = new CustomPasswordValidator(new CustomIdentityErrorDescriber(), _repositoryFactory, null);
 
             // Act
             var result = await target.ValidateAsync(userManager, user, password);
@@ -105,6 +104,7 @@ namespace VirtoCommerce.Platform.Tests.Security
                 Assert.IsType<CustomIdentityError>(tooShort);
                 Assert.Equal(minLength, ((CustomIdentityError)tooShort).ErrorParameter);
             }
+
             Assert.Equal(expectedMustHaveUpper, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresUpper)));
             Assert.Equal(expectedMustHaveLower, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresLower)));
             Assert.Equal(expectedMustHaveDigit, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresDigit)));
@@ -143,7 +143,7 @@ namespace VirtoCommerce.Platform.Tests.Security
             passwordHasher.Setup(x => x.VerifyHashedPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns<ApplicationUser, string, string>((user, hash, password) => hash == Hash(password) ? PasswordVerificationResult.Success : PasswordVerificationResult.Failed);
 
-            var userManager = SecurityMockHelpers.TestCustomUserManager(repositoryFactory: repositoryFactory, passwordHasher: passwordHasher);
+            var userManager = SecurityMockHelper.TestCustomUserManager(repositoryFactory: repositoryFactory, passwordHasher: passwordHasher);
             var user = new ApplicationUser { Id = userId };
             var target = userManager.PasswordValidators.First();
 

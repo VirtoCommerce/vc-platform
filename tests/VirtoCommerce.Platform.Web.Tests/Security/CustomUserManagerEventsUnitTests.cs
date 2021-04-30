@@ -10,8 +10,9 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using Xunit;
+using static VirtoCommerce.Platform.Web.Tests.Security.PlatformWebMockHelper;
 
-namespace VirtoCommerce.Platform.Tests.Security
+namespace VirtoCommerce.Platform.Web.Tests.Security
 {
     public class CustomUserManagerEventsUnitTests
     {
@@ -27,7 +28,7 @@ namespace VirtoCommerce.Platform.Tests.Security
                 .ReturnsAsync(IdentityResult.Success);
             var eventPublisher = new EventPublisherStub();
 
-            var userManager = SecurityMockHelpers.TestCustomUserManager(userStoreMock, eventPublisher);
+            var userManager = SecurityMockHelper.TestCustomUserManager(userStoreMock, eventPublisher);
 
             //Act
             var result = await userManager.CreateAsync(user);
@@ -46,7 +47,7 @@ namespace VirtoCommerce.Platform.Tests.Security
             userStoreMock.Setup(x => x.FindByIdAsync(user.Id, CancellationToken.None)).ReturnsAsync(oldUser);
             var eventPublisher = new EventPublisherStub();
 
-            var userManager = SecurityMockHelpers.TestCustomUserManager(userStoreMock, eventPublisher);
+            var userManager = SecurityMockHelper.TestCustomUserManager(userStoreMock, eventPublisher);
 
             //Act
             var result = await userManager.UpdateAsync(user);
@@ -68,7 +69,7 @@ namespace VirtoCommerce.Platform.Tests.Security
                          .Returns(Task.CompletedTask);
             var eventPublisher = new EventPublisherStub();
 
-            var userManager = SecurityMockHelpers.TestCustomUserManager(userStoreMock, eventPublisher);
+            var userManager = SecurityMockHelper.TestCustomUserManager(userStoreMock, eventPublisher);
             userManager.RegisterTokenProvider("Static", new StaticTokenProvider());
             userManager.Options.Tokens.PasswordResetTokenProvider = "Static";
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -93,7 +94,7 @@ namespace VirtoCommerce.Platform.Tests.Security
                          .ReturnsAsync(user.PasswordHash);
             var eventPublisher = new EventPublisherStub();
 
-            var userManager = SecurityMockHelpers.TestCustomUserManager(userStoreMock, eventPublisher);
+            var userManager = SecurityMockHelper.TestCustomUserManager(userStoreMock, eventPublisher);
 
             //Act
             var result = await userManager.ChangePasswordAsync(user, "current_pass", "Qwerty123!");
@@ -103,10 +104,9 @@ namespace VirtoCommerce.Platform.Tests.Security
             eventPublisher.Events.Should().SatisfyRespectively(assertions);
         }
 
-
         #region TestData
 
-        class CreateTestData : IEnumerable<object[]>
+        private class CreateTestData : IEnumerable<object[]>
         {
             public IEnumerator<object[]> GetEnumerator()
             {
@@ -124,7 +124,7 @@ namespace VirtoCommerce.Platform.Tests.Security
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        class UpdateTestData : IEnumerable<object[]>
+        private class UpdateTestData : IEnumerable<object[]>
         {
             public IEnumerator<object[]> GetEnumerator()
             {
@@ -154,7 +154,7 @@ namespace VirtoCommerce.Platform.Tests.Security
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        class ResetPasswordTestData : IEnumerable<object[]>
+        private class ResetPasswordTestData : IEnumerable<object[]>
         {
             public IEnumerator<object[]> GetEnumerator()
             {
@@ -172,7 +172,7 @@ namespace VirtoCommerce.Platform.Tests.Security
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        class ChangePasswordTestData : IEnumerable<object[]>
+        private class ChangePasswordTestData : IEnumerable<object[]>
         {
             public IEnumerator<object[]> GetEnumerator()
             {
@@ -193,7 +193,7 @@ namespace VirtoCommerce.Platform.Tests.Security
         #endregion TestData
     }
 
-    class EventPublisherStub : IEventPublisher
+    internal class EventPublisherStub : IEventPublisher
     {
         public List<IEvent> Events = new List<IEvent>();
 
@@ -204,7 +204,7 @@ namespace VirtoCommerce.Platform.Tests.Security
         }
     }
 
-    class StaticTokenProvider : IUserTwoFactorTokenProvider<ApplicationUser>
+    internal class StaticTokenProvider : IUserTwoFactorTokenProvider<ApplicationUser>
     {
         public async Task<string> GenerateAsync(string purpose, UserManager<ApplicationUser> manager, ApplicationUser user)
         {
