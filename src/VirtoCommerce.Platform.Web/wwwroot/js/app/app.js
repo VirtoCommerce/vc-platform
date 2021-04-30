@@ -32,7 +32,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
             if (authContext.isAuthenticated) {
                 modules.query().$promise.then(function (results) {
-                    var modulesWithErrors = _.filter(results, function (x) { return _.any(x.validationErrors); });
+                    var modulesWithErrors = _.filter(results, function (x) { return _.any(x.validationErrors) && x.isInstalled; });
                     if (_.any(modulesWithErrors)) {
                         $scope.platformError = {
                             title: modulesWithErrors.length + " modules are loaded with errors and require your attention.",
@@ -118,7 +118,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         var httpErrorInterceptor = {};
 
         httpErrorInterceptor.request = function (config) {
-        // Need to pass localization request despite on the auth state
+            // Need to pass localization request despite on the auth state
             if (config.url == 'api/platform/localization') {
                 return config;
             }
@@ -457,7 +457,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                         template: '$(Platform)/Scripts/app/security/blades/loginOnBehalf-list.tpl.html'
                     };
                     bladeNavigationService.showBlade(newBlade, blade);
-                    },
+                },
                 canExecuteMethod: function () { return true; },
                 permission: 'platform:security:loginOnBehalf',
                 index: 4

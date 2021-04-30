@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -18,6 +19,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
     [Collection("Modularity"), Order(1)]
     public class ExternalModuleCatalogTests
     {
+        private static Mutex _mutex = new Mutex();
+
         [Fact]
         public void PublishNewVersionTest()
         {
@@ -90,18 +93,19 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         }
 
         [Theory]
-        [InlineData("2.12.0", "1.4.0")]
-        [InlineData("3.1.0", "2.0.0")]
-        public void CreateDirectory_CreateTestDirectory(string platformVersion, string effectiveModuleVersion)
+        [InlineData("2.12.0", new[] { "1.5.0" }, false)]
+        [InlineData("3.1.0", new[] { "2.1.0" }, false)]
+        [InlineData("3.0.0", new[] { "2.1.0", "2.2.0-beta" }, true)]
+        public void CreateDirectory_CreateTestDirectory(string platformVersion, string[] expectedModuleVersions, bool includePrerelease)
         {
+            //Mutex is required to synhronize access to the static  PlatformVersion.CurrentVersion for one thread
+            _mutex.WaitOne();
             //Arrange
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(platformVersion);
-            var modules = new[]
+            var moduleA = new ExternalModuleManifest
             {
-                new ExternalModuleManifest
-                {
-                    Id = "A",
-                    Versions = new []
+                Id = "A",
+                Versions = new[]
                     {
                         new ExternalModuleManifestVersion
                         {
@@ -123,18 +127,32 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                              Version = "2.0.0",
                              PlatformVersion = "3.0.0"
                         },
+                        new ExternalModuleManifestVersion
+                        {
+                             Version = "2.1.0",
+                             PlatformVersion = "3.2.0"
+                        },
+                         new ExternalModuleManifestVersion
+                        {
+                             Version = "2.2.0",
+                             PlatformVersion = "3.2.0",
+                             VersionTag= "beta"
+                        },
                     }
-                }
-             };
-
+            };
+             
             //Act
-            var extCatalog = CreateExternalModuleCatalog(modules);
+            var extCatalog = CreateExternalModuleCatalog(new[] { moduleA }, includePrerelease);
             extCatalog.Load();
 
+
             //Assert
-            var module = extCatalog.Modules.FirstOrDefault() as ManifestModuleInfo;
-            Assert.NotNull(module);
-            Assert.Equal(SemanticVersion.Parse(effectiveModuleVersion), module.Version);
+            var actualVersions = extCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.Id == moduleA.Id).Select(x => x.Version);
+            var expectedVersions = expectedModuleVersions.Select(x => SemanticVersion.Parse(x));
+           
+            Assert.Equal(expectedVersions, actualVersions);
+
+            _mutex.ReleaseMutex();
         }
 
         [Theory]
@@ -144,6 +162,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         [InlineData("1.4.0", "1.4.0")]
         public void CreateDirectory_NoDowngrades(string externalModuleVersion, string effectiveModuleVersion)
         {
+            //Mutex is required to synhronize access to the static  PlatformVersion.CurrentVersion
+            _mutex.WaitOne();
             //Arrange
             PlatformVersion.CurrentVersion = SemanticVersion.Parse("3.0.0");
             var modules = new[]
@@ -170,9 +190,11 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var module = extCatalog.Modules.FirstOrDefault() as ManifestModuleInfo;
             Assert.NotNull(module);
             Assert.Equal(SemanticVersion.Parse(effectiveModuleVersion), module.Version);
+
+            _mutex.ReleaseMutex();
         }
 
-        private static ExternalModuleCatalog CreateExternalModuleCatalog(ExternalModuleManifest[] manifests)
+        private static ExternalModuleCatalog CreateExternalModuleCatalog(ExternalModuleManifest[] manifests, bool includePrerelease = false)
         {
             var localModulesCatalog = new Moq.Mock<ILocalModuleCatalog>();
             localModulesCatalog.Setup(x => x.Modules).Returns(GetManifestModuleInfos(new[] { new ModuleManifest { Id = "B", Version = "1.3.0", PlatformVersion = "3.0.0" } }));
@@ -181,7 +203,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             client.Setup(x => x.OpenRead(Moq.It.IsAny<Uri>())).Returns(new MemoryStream(Encoding.UTF8.GetBytes(json ?? "")));
             var logger = new Moq.Mock<ILogger<ExternalModuleCatalog>>();
 
-            var options = Options.Create(new ExternalModuleCatalogOptions() { ModulesManifestUrl = new Uri("http://nowhere.mock") });
+            var options = Options.Create(new ExternalModuleCatalogOptions() { ModulesManifestUrl = new Uri("http://nowhere.mock"), IncludePrerelease = includePrerelease });
             var result = new ExternalModuleCatalog(localModulesCatalog.Object, client.Object, options, logger.Object);
             return result;
         }
