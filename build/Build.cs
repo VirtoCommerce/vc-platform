@@ -248,7 +248,7 @@ partial class Build : NukeBuild
        .Executes(() =>
        {
            var dotnetPath = ToolPathResolver.GetPathExecutable("dotnet");
-           var testProjects = Solution.GetProjects("*.Tests");
+           var testProjects = Solution.GetProjects("*.Tests|*.Testing");
            //
            var OutPath = RootDirectory / ".tmp";
            testProjects.ForEach((testProject, index) =>
@@ -268,13 +268,14 @@ partial class Build : NukeBuild
                {
                    ControlFlow.Fail("Tests Assemblies not found!");
                }
+
                CoverletTasks.Coverlet(s => s
                 .SetTargetSettings(testSetting)
                 .SetAssembly(testAssemblies.First())
                 .SetTarget(dotnetPath)
                 .When(index == 0, ss => ss.SetOutput(CoverageReportPath))
                 .When(index > 0 && index < testProjects.Count() - 1, ss => ss.SetMergeWith(CoverageReportPath))
-                .When(index == testProjects.Count() - 1, ss => ss.SetOutput(CoverageReportPath).SetFormat(CoverletOutputFormat.opencover))
+                .When(index == testProjects.Count() - 1, ss => ss.SetOutput(CoverageReportPath).SetMergeWith(CoverageReportPath).SetFormat(CoverletOutputFormat.opencover))
                 );
 
            });
