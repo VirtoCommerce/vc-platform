@@ -49,11 +49,12 @@ Organizations, contacts, vendors, and employees are kept in the index.
 
 ## Extensibility
 
-### Declarative extensibility
+### No-code extensibility (Admin panel UI)
+Virto Commerce supports declarative(no-code) extensions through the Admin panel and API to extend the data model, UI, and workflow processing.
 
-Name | Module | Description | Link
---- | --- | --- | --- 
-Adding a dynamic property | Customer | How to add a property to Contact, Organization, Vendor, and Employee without development (in admin panel) |  |
+* [Dynamic properties](../fundamentals/extensibility/using-dynamic-properties.md)
+* [Statuses](#) - TODO:
+
 
 ### Code extensibility
 
@@ -66,19 +67,27 @@ Extend Employee | Customer | Add field to employee entity | [Extend Employee](ht
 
 ### Reactive programming extensibility
 
-#### Events
+#### Events/Webhooks
+
+!!! note
+    Every event contains information about NewEntry, OldEntry and EntryState witch can be one of these states: Added, Modified or Deleted.
+
+!!! tip
+    All events are available for all type of extensions: native extensions, webhooks and event bus.
 
 Name | Module | Description | Link
 --- | --- | --- | ---
-OLEG to do | Customer | (event business description) | (add link to dev doc)
-OLEG to do | Security | (event business description) | (add link to dev doc)
+MemberChangingEvent | Customer | Occurs before a member is saved to the data source. | [Read more](https://virtocommerce.com/docs/latest/modules/customer/)
+MemberChangedEvent | Customer | Occurs when  member is saved to the data source. | [Read more](https://virtocommerce.com/docs/latest/modules/customer/)
+UserChangingEvent | Platform/Security | Occurs before an user is saved to the data source. | [Read more](../user-guide/security.md)
+UserChangedEvent | Platform/Security | Occurs when an user is saved to the data source. | [Read more](../user-guide/security.md)
+UserLoginEvent | Platform/Security | Occurs when an user logins. | [Read more](../user-guide/security.md)
+UserLogoutEvent | Platform/Security | Occurs when an user logout. | [Read more](../user-guide/security.md)
+UserPasswordChangedEvent | Platform/Security |  Occurs when an user changed password. | [Read more](../user-guide/security.md)
+UserResetPasswordEvent | Platform/Security | Occurs when an user reset password. | [Read more](../user-guide/security.md)
+UserRoleAddedEvent | Platform/Security | Occurs when role is removed from the user. | [Read more](../user-guide/security.md)
+UserRoleRemovedEvent| Platform/Security | Occurs when role is removed from the user. | [Read more](../user-guide/security.md)
 
-#### Webhooks
-
-Name | Module | Description | Link
---- | --- | --- | ---
-OLEG to do | Customer | (webhook business description) | (add link to dev doc)
-OLEG to do | Security | (webhook business description) | (add link to dev doc)
 
 ## User scenarios 
 
