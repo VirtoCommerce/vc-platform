@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.DistributedLock;
@@ -184,7 +185,7 @@ namespace VirtoCommerce.Platform.Modules
 
         private void CopyAssembliesSynchronized(IDictionary<string, ModuleManifest> manifests)
         {
-            _distributedLockProvider.ExecuteSynhronized(nameof(LocalStorageModuleCatalog), (x) =>
+            _distributedLockProvider.ExecuteSynhronized(GetSourceMark(), (x) =>
             {
                 if (x != DistributedLockCondition.Delayed)
                 {
@@ -200,6 +201,40 @@ namespace VirtoCommerce.Platform.Modules
                     _logger.LogInformation("Skip copy assemblies to ProbingPath for local storage (another instance made it)");
                 }
             });
+        }
+
+        /// <summary>
+        /// Read marker from the storage.
+        /// Mark the storage if the marker not present, then use created marker.
+        /// </summary>
+        /// <returns></returns>
+        private string GetSourceMark()
+        {
+            var markerFilePath = Path.Combine(_options.ProbingPath, "storage.mark");
+            var marker = Guid.NewGuid().ToString();
+            try
+            {
+                if (File.Exists(markerFilePath))
+                {
+                    using (var stream = File.OpenText(markerFilePath))
+                    {
+                        marker = stream.ReadToEnd();
+                    }
+                }
+                else
+                {
+                    // Non-marked storage, mark by placing a file with resource id.                    
+                    using (var stream = File.CreateText(markerFilePath))
+                    {
+                        stream.Write(marker);
+                    }
+                }
+            }
+            catch (IOException exc)
+            {
+                throw new PlatformException($"An IO error occurred while marking local modules storage.", exc);
+            }
+            return $@"{nameof(LocalStorageModuleCatalog)}-{marker}";
         }
 
         private void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
@@ -255,7 +290,7 @@ namespace VirtoCommerce.Platform.Modules
                 catch (IOException)
                 {
                     // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
-                    // We should not fail platform sart in that case - just add warning into the log. In case of unability to place newer version - should fail platform start.
+                    // We should not fail platform start in that case - just add warning into the log. In case of unability to place newer version - should fail platform start.
                     if (versionsAreSameButLaterDate)
                     {
                         _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");
