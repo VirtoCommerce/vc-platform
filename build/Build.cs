@@ -585,7 +585,7 @@ partial class Build : NukeBuild
              DeleteFile(ZipFilePath);
              //TODO: Exclude all ignored files and *module files not related to compressed module
              var ignoreModulesFilesRegex = new Regex(@".+Module\..*", RegexOptions.IgnoreCase);
-             var includeModuleFilesRegex = new Regex(@$".*{ModuleManifest.Id}Module\..*", RegexOptions.IgnoreCase);
+             var includeModuleFilesRegex = new Regex(@$".*{ModuleManifest.Id}(Module\.|\.).*", RegexOptions.IgnoreCase);
              CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => (!ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase) && !ignoreModulesFilesRegex.IsMatch(x.Name))
                                                                                      || includeModuleFilesRegex.IsMatch(x.Name));
          }
@@ -815,7 +815,11 @@ partial class Build : NukeBuild
 
             var processEnd = ProcessTasks.StartProcess(dotNetPath, endCmd, customLogger: SonarLogger, logInvocation: false)
                 .AssertWaitForExit().AssertZeroExitCode();
-            processEnd.Output.EnsureOnlyStd();
+            var errors = processEnd.Output.Where(o => !o.Text.Contains(@"The 'files' list in config file 'tsconfig.json' is empty") && o.Type == OutputType.Err);
+            if(errors.Any())
+            {
+                ControlFlow.Fail(errors.Select(e => e.Text).Join(Environment.NewLine));
+            }
         });
 
     Target StartAnalyzer => _ => _

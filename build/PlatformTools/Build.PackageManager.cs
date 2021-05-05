@@ -17,10 +17,11 @@ partial class Build: NukeBuild
     [Parameter("Platform version")] public static string PlatformVersion;
     [Parameter("vc-package.json path")] public static string PackageManifestPath = "./vc-package.json";
     [Parameter("Install params (install -module VirtoCommerce.Core:1.2.3)")] public static string[] Module;
+    [Parameter("Skip dependency solving")] public static bool SkipDependencySolving = false;
     Target Init => _ => _
     .Executes(async () =>
     {
-        var platformRelease = await GithubManager.GetPlatformRelease(PlatformVersion);
+        var platformRelease = await GithubManager.GetPlatformRelease(GitHubToken, PlatformVersion);
         var packageManifest = PackageManager.CreatePackageManifest(platformRelease.TagName, platformRelease.Assets.First().BrowserDownloadUrl);
         PackageManager.ToFile(packageManifest, PackageManifestPath);
     });
@@ -29,7 +30,9 @@ partial class Build: NukeBuild
     .Triggers(InstallModules)
     .Executes(async () => {
         var packageManifest = PackageManager.FromFile(PackageManifestPath);
-        if(Module.Length > 0)
+        var localModuleCatalog = LocalModuleCatalog.GetCatalog(GetDiscoveryPath(), ProbingPath);
+        var externalCatalog = ExtModuleCatalog.GetCatalog(GitHubToken, localModuleCatalog, packageManifest.ModuleSources);
+        if (Module?.Length > 0)
         {
             foreach(var module in Module)
             {
@@ -43,15 +46,13 @@ partial class Build: NukeBuild
                 else
                 {
                     moduleId = module;
-                    var localModuleCatalog = LocalModuleCatalog.GetCatalog(GetDiscoveryPath(), ProbingPath); 
-                    var externalCatalog = ExtModuleCatalog.GetCatalog(GitHubToken, localModuleCatalog, packageManifest.ModuleSources);
                     var moduleInfo = externalCatalog.Items.OfType<ManifestModuleInfo>().Where(m => m.Id == moduleId).FirstOrDefault(m => m.Ref.Contains("github.com"));
                     if (moduleInfo == null)
                     {
                         ControlFlow.Fail($"No module {moduleId} found");
                     }
                     var ownerRepo = GithubManager.GetRepoFromUrl(moduleInfo.Ref);
-                    Octokit.Release moduleRelease = await GithubManager.GetModuleRelease(ownerRepo.Item2, null);
+                    Octokit.Release moduleRelease = await GithubManager.GetModuleRelease(GitHubToken, ownerRepo.Item2, null);
                     moduleVersion = moduleRelease.TagName;
                 }
                 var moduleItem = new ModuleItem(moduleId, moduleVersion);
@@ -64,6 +65,11 @@ partial class Build: NukeBuild
                     existedModule.Version = moduleItem.Version;
                 }
             }
+        }
+        else
+        {
+            var commerce = externalCatalog.Modules.OfType<ManifestModuleInfo>().Where(m => m.Groups.Contains("commerce")).Select(m => new ModuleItem(m.ModuleName, m.Version.ToString()));
+            packageManifest.Modules.AddRange(commerce);
         }
         PackageManager.ToFile(packageManifest);
     });
@@ -126,13 +132,17 @@ partial class Build: NukeBuild
             }
             var (githubUser, repoName) = GithubManager.GetRepoFromUrl(externalModule.Ref);
             // Download and unzip
-            var githubRelease = await GithubManager.GetModuleRelease(repoName, moduleInstall.Version);
+            var githubRelease = await GithubManager.GetModuleRelease(GitHubToken, repoName, moduleInstall.Version);
             var releaseAsset = githubRelease.Assets.First();
             var currentModule = modules.First(m => m.ModuleName == moduleInstall.Id);
             currentModule.Ref = releaseAsset.BrowserDownloadUrl;
         }
         var progress = new Progress<ProgressMessage>(m => Logger.Info(m.Message));
-        var moduleManifests = externalModuleCatalog.CompleteListWithDependencies(modules).OfType<ManifestModuleInfo>();
+        if (!SkipDependencySolving)
+        {
+            modules = (List<ModuleInfo>)externalModuleCatalog.CompleteListWithDependencies(modules);
+        }
+        var moduleManifests = modules.OfType<ManifestModuleInfo>();
         moduleInstaller.Install(moduleManifests, progress);
         localModuleCatalog.Reload();
     });
@@ -156,7 +166,7 @@ partial class Build: NukeBuild
     .Executes(async () =>
     {
         var packageManifest = PackageManager.FromFile(PackageManifestPath);
-        var platformRelease = await GithubManager.GetPlatformRelease(PlatformVersion);
+        var platformRelease = await GithubManager.GetPlatformRelease(GitHubToken, PlatformVersion);
         packageManifest.PlatformVersion = platformRelease.TagName;
         packageManifest.PlatformAssetUrl = platformRelease.Assets.First().BrowserDownloadUrl;
         foreach(var module in packageManifest.Modules)
@@ -169,7 +179,7 @@ partial class Build: NukeBuild
                 ControlFlow.Fail($"No module {module.Id} found");
             }
             var ownerRepo = GithubManager.GetRepoFromUrl(moduleInfo.Ref);
-            var moduleRelease = await GithubManager.GetModuleRelease(ownerRepo.Item2, null);
+            var moduleRelease = await GithubManager.GetModuleRelease(GitHubToken, ownerRepo.Item2, null);
             module.Version = moduleRelease.TagName;
         }
         PackageManager.ToFile(packageManifest);

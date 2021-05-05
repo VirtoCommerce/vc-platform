@@ -16,8 +16,25 @@ namespace PlatformTools
         public static async Task<Release> GetPlatformRelease(string releaseTag)
         {
             var release = string.IsNullOrEmpty(releaseTag)
-                ? await client.Repository.Release.GetLatest(GithubUser, PlatformRepo)
+                ? await GetLatestReleaseAsync(GithubUser, PlatformRepo)
                 : await client.Repository.Release.Get(GithubUser, PlatformRepo, releaseTag);
+            return release;
+        }
+        public static async Task<Release> GetPlatformRelease(string token, string releaseTag)
+        {
+            SetAuthToken(token);
+            return await GetPlatformRelease(releaseTag);
+        }
+        public static void SetAuthToken(string token)
+        {
+            if(!string.IsNullOrEmpty(token))
+                client.Credentials = new Credentials(token);
+        }
+
+        private static async Task<Release> GetLatestReleaseAsync(string repoUser, string repoName)
+        {
+            var releases = await client.Repository.Release.GetAll(repoUser, repoName, new ApiOptions() { PageSize = 5, PageCount = 1});
+            var release = releases.OrderByDescending(r => r.TagName.Trim()).FirstOrDefault();
             return release;
         }
 
@@ -33,7 +50,11 @@ namespace PlatformTools
             var groups = match.Groups;
             return new Tuple<string, string>(groups[1].Value, groups[2].Value);
         }
-
+        public static async Task<Release> GetModuleRelease(string token, string moduleRepo, string releaseTag)
+        {
+            GithubManager.SetAuthToken(token);
+            return await GithubManager.GetModuleRelease(moduleRepo, releaseTag);
+        }
         public static async Task<Release> GetModuleRelease(string moduleRepo, string releaseTag)
         {
             Release release;
