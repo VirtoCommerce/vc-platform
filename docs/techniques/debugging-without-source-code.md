@@ -1,6 +1,6 @@
 # How to debug the platform and modules code without source code
 
-Debugging is a big part of a developer’s job. Since, the preferred way how to work with VC as binary precompiled components when the source is unavailable you might be required debugging for the VC source code that being called from your custom modules or solution. In this article we will cover the main debugging-related technics that can improve your development productivity when working with VC and 3rd party components.
+Debugging is a big part of a developer’s job. Since, the preferred way how to work with VC as binary precompiled components when the source is unavailable sometimes you have needs to debug the VC source code. In this article we will cover the main debugging-related technics that can improve your development productivity when working with VC and 3rd party components.
 
 - Debugging VC components with using [Source Link](https://github.com/dotnet/sourcelink/blob/main/README.md) technology
 - Load a PDB directly from public symbol servers
@@ -8,6 +8,9 @@ Debugging is a big part of a developer’s job. Since, the preferred way how to 
 Let’s have a look at each one of them in detail and consider the scenario, where  you want to debug a 3rd party NuGet package. You have no access to the source code of the library and  the local  project that references it as a package.
 
 ## Debugging with Source Links
+
+> Source Link is a technology that enables source code debugging of .NET assemblies from NuGet by developers. Source Link executes when creating the NuGet package and embeds source control metadata inside assemblies and the package. Developers who download the package and have Source Link enabled in Visual Studio can step into its source code. 
+
 Since the all VC platform and modules components already support the [Source Link](https://github.com/dotnet/sourcelink/blob/main/README.md) technology, this is the preferred  way how to debug the VC components for your solution. With Source Link, you can step into framework methods just like you can with your own code, inspect all variables, and set breakpoints.
 
 In order to start using [Source Link](https://github.com/dotnet/sourcelink/blob/main/README.md) for debugging you should complete the following steps:
@@ -19,8 +22,15 @@ In Visual Studio, go to `Tools –> Options –> Debugging –> Symbols`:
 
 ![image](../media/debugging-1.png) 
 
-Make sure the `NuGet.org Symbol Server` and `Load only specified modules` options are checked, the first option allows to VS load symbols from public NuGet servers. 
-Your debug sessions will be then significantly slower to run, especially the first time. Indeed, Visual Studio will download the available symbols of each loaded dependency which will make your Nuget package debuggable, the second option target this issue and allows you to reduce the time of first time for launch debugging session and allows you better control what symbols of modules will be loaded during debugging session.
+Make sure the `NuGet.org Symbol Server` and `Load only specified modules` options are checked, the first option allows to VS load symbols from public NuGet servers.
+Recommend additional servers order: 
+- http://referencesource.microsoft.com/symbols 
+- http://srv.symbolsource.org/pdb/Public 
+- http://srv.symbolsource.org/pdb/MyGet 
+- http://msdl.microsoft.com/download/symbols 
+
+The second option `Load only specified modules` can significantly speed up the launch a debug session. Otherwise, Visual Studio will download the available symbols for each dependency for the solution on startup and this can take a long time.
+
 
 ### Step 2 - Configure Visual Studio debugging general options
 In Visual Studio, go to `Tools –> Options –> Debugging –> General`:
