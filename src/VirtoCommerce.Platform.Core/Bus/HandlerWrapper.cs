@@ -18,15 +18,13 @@ namespace VirtoCommerce.Platform.Core.Bus
 
         public ILogger Logger { get; set; }
 
-        public Task Handle(IEvent @event, CancellationToken cancellationToken)
+        public async Task Handle(IEvent @event, CancellationToken cancellationToken)
         {
             var stopWatch = Stopwatch.StartNew();
-            var result = Handler(@event, cancellationToken);
+            await Handler(@event, cancellationToken);
             stopWatch.Stop();
 
             Logger.LogInformation($"event:{EventName} module:{HandlerModuleName} overall_elapsed:{stopWatch.ElapsedMilliseconds}");
-
-            return result;
         }
     }
 }
