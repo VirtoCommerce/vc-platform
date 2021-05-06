@@ -20,10 +20,10 @@ namespace VirtoCommerce.Platform.Core.Bus
 
         public Task Handle(IEvent @event, CancellationToken cancellationToken)
         {
-            return Task.Factory.StartNew(async () =>
+            return Task.Factory.StartNew(() =>
             {
                 var stopWatch = Stopwatch.StartNew();
-                await Handler(@event, cancellationToken);
+                Handler(@event, cancellationToken).GetAwaiter().GetResult();
                 stopWatch.Stop();
 
                 Logger.LogInformation($"event:{EventName} module:{HandlerModuleName} overall_elapsed:{stopWatch.ElapsedMilliseconds}");
