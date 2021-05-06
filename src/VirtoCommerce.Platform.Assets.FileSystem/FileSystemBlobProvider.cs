@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
                 throw new ArgumentNullException(nameof(blobUrl));
             }
 
-            BlobInfo retVal = null;
+            BlobInfo result = null;
             var filePath = GetStoragePathFromUrl(blobUrl);
 
             ValidatePath(filePath);
@@ -46,16 +46,16 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
             {
                 var fileInfo = new FileInfo(filePath);
 
-                retVal = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
-                retVal.Url = GetAbsoluteUrlFromPath(filePath);
-                retVal.ContentType = MimeTypeResolver.ResolveContentType(fileInfo.Name);
-                retVal.Size = fileInfo.Length;
-                retVal.Name = fileInfo.Name;
-                retVal.ModifiedDate = fileInfo.LastWriteTimeUtc;
-                retVal.RelativeUrl = GetRelativeUrl(retVal.Url);
+                result = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
+                result.Url = GetAbsoluteUrlFromPath(filePath);
+                result.ContentType = MimeTypeResolver.ResolveContentType(fileInfo.Name);
+                result.Size = fileInfo.Length;
+                result.Name = fileInfo.Name;
+                result.ModifiedDate = fileInfo.LastWriteTimeUtc;
+                result.RelativeUrl = GetRelativeUrl(result.Url);
             }
 
-            return Task.FromResult(retVal);
+            return Task.FromResult(result);
         }
 
         /// <summary>
@@ -110,8 +110,8 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
         /// <returns></returns>
         public virtual Task<BlobEntrySearchResult> SearchAsync(string folderUrl, string keyword)
         {
-            var retVal = AbstractTypeFactory<BlobEntrySearchResult>.TryCreateInstance();
-            folderUrl = folderUrl ?? _basePublicUrl;
+            var result = AbstractTypeFactory<BlobEntrySearchResult>.TryCreateInstance();
+            folderUrl ??= _basePublicUrl;
 
             var storageFolderPath = GetStoragePathFromUrl(folderUrl);
 
@@ -119,7 +119,7 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
 
             if (!Directory.Exists(storageFolderPath))
             {
-                return Task.FromResult(retVal);
+                return Task.FromResult(result);
             }
             var directories = string.IsNullOrEmpty(keyword) ? Directory.GetDirectories(storageFolderPath) : Directory.GetDirectories(storageFolderPath, "*" + keyword + "*", SearchOption.AllDirectories);
             foreach (var directory in directories)
@@ -131,7 +131,7 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
                 folder.Url = GetAbsoluteUrlFromPath(directory);
                 folder.ParentUrl = GetAbsoluteUrlFromPath(directoryInfo.Parent?.FullName);
                 folder.RelativeUrl = GetRelativeUrl(folder.Url);
-                retVal.Results.Add(folder);
+                result.Results.Add(folder);
             }
 
             var files = string.IsNullOrEmpty(keyword) ? Directory.GetFiles(storageFolderPath) : Directory.GetFiles(storageFolderPath, "*" + keyword + "*.*", SearchOption.AllDirectories);
@@ -146,11 +146,11 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
                 blobInfo.Name = fileInfo.Name;
                 blobInfo.ModifiedDate = fileInfo.LastWriteTimeUtc;
                 blobInfo.RelativeUrl = GetRelativeUrl(blobInfo.Url);
-                retVal.Results.Add(blobInfo);
+                result.Results.Add(blobInfo);
             }
 
-            retVal.TotalCount = retVal.Results.Count;
-            return Task.FromResult(retVal);
+            result.TotalCount = result.Results.Count;
+            return Task.FromResult(result);
         }
 
         /// <summary>
@@ -285,45 +285,45 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
                 throw new ArgumentNullException(nameof(blobKey));
             }
 
-            var retVal = blobKey;
+            var result = blobKey;
             if (!blobKey.IsAbsoluteUrl())
             {
-                retVal = _basePublicUrl + "/" + blobKey.TrimStart('/').TrimEnd('/');
+                result = _basePublicUrl + "/" + blobKey.TrimStart('/').TrimEnd('/');
             }
-            return new Uri(retVal).ToString();
+            return new Uri(result).ToString();
         }
 
         #endregion IBlobUrlResolver Members
 
         protected string GetRelativeUrl(string url)
         {
-            var retVal = url;
+            var result = url;
             if (!string.IsNullOrEmpty(_basePublicUrl))
             {
-                retVal = url.Replace(_basePublicUrl, string.Empty);
+                result = url.Replace(_basePublicUrl, string.Empty);
             }
-            return retVal;
+            return result;
         }
 
         protected string GetAbsoluteUrlFromPath(string path)
         {
-            var retVal = _basePublicUrl + "/" + path.Replace(_storagePath, string.Empty)
+            var result = _basePublicUrl + "/" + path.Replace(_storagePath, string.Empty)
                              .TrimStart(Path.DirectorySeparatorChar)
                              .Replace(Path.DirectorySeparatorChar, '/');
-            return Uri.EscapeUriString(retVal);
+            return Uri.EscapeUriString(result);
         }
 
         protected string GetStoragePathFromUrl(string url)
         {
-            var retVal = _storagePath;
+            var result = _storagePath;
             if (url != null)
             {
-                retVal = _storagePath + Path.DirectorySeparatorChar;
-                retVal += GetRelativeUrl(url);
-                retVal = retVal.Replace('/', Path.DirectorySeparatorChar)
+                result = _storagePath + Path.DirectorySeparatorChar;
+                result += GetRelativeUrl(url);
+                result = result.Replace('/', Path.DirectorySeparatorChar)
                                .Replace($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}");
             }
-            return Uri.UnescapeDataString(retVal);
+            return Uri.UnescapeDataString(result);
         }
 
         protected void ValidatePath(string path)

@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -35,7 +34,6 @@ namespace VirtoCommerce.Platform.Core.Assets
         /// </summary>
         /// <param name="blobUrl">Relative or absolute blob URL (tmp/blob.txt) </param>
         /// <returns></returns>
-        [Obsolete("OpenReadAsync")]
         Stream OpenRead(string blobUrl);
 
         /// <summary>
@@ -50,7 +48,6 @@ namespace VirtoCommerce.Platform.Core.Assets
         /// </summary>
         /// <param name="blobUrl">Relative or absolute blob URL (tmp/blob.txt)</param>
         /// <returns></returns>
-        [Obsolete("OpenWriteAsync")]
         Stream OpenWrite(string blobUrl);
 
         /// <summary>
@@ -71,7 +68,6 @@ namespace VirtoCommerce.Platform.Core.Assets
         /// </summary>
         /// <param name="srcUrl"></param>
         /// <param name="destUrl"></param>
-        [Obsolete("MoveAsync")]
         void Move(string srcUrl, string destUrl);
 
         /// <summary>
@@ -86,7 +82,6 @@ namespace VirtoCommerce.Platform.Core.Assets
         /// </summary>
         /// <param name="srcUrl"></param>
         /// <param name="destUrl"></param>
-        [Obsolete("CopyAsync")]
         void Copy(string srcUrl, string destUrl);
 
         /// <summary>

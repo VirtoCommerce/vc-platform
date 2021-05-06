@@ -10,7 +10,6 @@ namespace VirtoCommerce.Platform.Tests
         {
             // Build configuration
             configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", false)
                 .AddUserSecrets<AppConfiguration>()
                 .Build();
         }
