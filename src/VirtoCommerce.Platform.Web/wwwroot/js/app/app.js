@@ -230,12 +230,17 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
     }])
     .config(['$provide', function ($provide) {
         $provide.decorator('GridOptions', ['$delegate', 'uiGridConstants', function (GridOptions, uiGridConstants) {
+            // create GridOptions object for each grid from base GridOptions object
             var gridOptions = angular.copy(GridOptions);
             gridOptions.initialize = function (options) {
-                var initOptions = GridOptions.initialize(options);
-                initOptions.enableVerticalScrollbar = uiGridConstants.scrollbars.WHEN_NEEDED;
-                initOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.WHEN_NEEDED;
-                return initOptions;
+                // initialize it with default values
+                var initialOptions = GridOptions.initialize(options);
+
+                // override default values here
+                initialOptions.enableVerticalScrollbar = uiGridConstants.scrollbars.WHEN_NEEDED;
+                initialOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.WHEN_NEEDED;
+
+                return initialOptions;
             };
             return gridOptions;
         }]);
