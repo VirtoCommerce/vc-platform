@@ -6,6 +6,38 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
+## News Digests
+
+!!! done "3 May"
+    * New Videos on Youtube
+    * Price import/export module
+    * File system distributed lock 
+    * Dynamic Properties for Organizations and contacts
+    * UX/UI Improvements
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-3-may-2021/314)
+
+!!! done "19 April"
+    * New Videos on Youtube
+    * Product with a Bill of Materials
+    * Password repeat generation policy
+    * Updated Visual Studio Module Template
+    * UX/UI Improvements
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-19-april-2021/309)
+
+!!! done "5 April"
+    * Design System for Virto Commerce Admin UI (Preview)
+    * DB Distributed lock 
+    * Improve performance
+    * Added Password expiration policy
+    * Added breadcrumbs property for XAPI
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-5-april-2021/306)
+
+
+View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and [GitHub](https://github.com/VirtoCommerce)
+
 ## Principles
 The main principle is to help the development team to focus on the implementation of business features and don’t worry about **CLEAN ARCHITECTURE**.
 
@@ -17,6 +49,8 @@ The main principle is to help the development team to focus on the implementatio
     1. *Reliability* - Can leverage a solution deployed across multiple data centers and availability zones to maximize up-time and reduce potential revenue losses.
 * **HEADLESS** – Allows an enterprise to support omnichannel journeys across traditional and digital touchpoints as well as new business models.
 * **EXTENSIBILITY** – The API model, persistence model, business logic can be extended as needed without deploying and re-deploying solution. This provides superior business agility and keeps up to date.
+
+
 
 ## Architecture Overview
 The following diagram illustrates the high-level architecture and main areas of Virto Commerce solutions:
@@ -101,7 +135,21 @@ The module can use a lot out-of-the box additional services from Virto Commerce 
 
 ## Scalability
 In the cloud, the Virto Commerce Applications can be easily scaled to support peak demand and long-term business growth.
-With auto-scale, you no longer have to worry about scaling services manually. 
+With auto-scale, you no longer have to worry about scaling services manually.
+
+## Extensibility
+
+Unlimited extensibility is an indisputable advantage of Virto Commerce. This means end-user solution developers can adapt or replace Virto Commerce modules with their own functionality. This adaptation can be done in an elegant and simple way without workarounds.
+
+Three types of vendor-made extensions guarantee “seamless delivery”.  Virto Commerce guarantees that these ways of extensibility are sufficient to build an ecommerce solution of any complexity on top of it.  
+ 
+1. No-code extensions. Virto Commerce supports declarative extensions through the Admin interface and API to extend the data model, UI, and workflow processing.  
+ 
+2. API-based extensions. These are traditional cloud based extensions based on API calls and Events (Hooks). Developers can use any language and framework for integration and reactive programming. 
+ 
+3. Native extensions. This is an advanced mode of modular extensions. It is called native because it is the way how Virto Commerce is built internally. Virto Commerce creates a unique extension framework based on .NET extension and dependency injection. It allows benefits from the first two approaches and extends default implementation for the unique needs of each business. Plus, it simplifies DevOps procedures and provides performance. 
+Source-code is only available for the purpose of transparency.  Virto Commerce doesn't recommend extending the platform through source-code. This will breach the continuous delivery functionality.   
+
 
 ## Monitoring
 Virto Commerce Applications has native integrations with [Azure Application Insights](https://azure.microsoft.com/en-us/services/monitor/).
