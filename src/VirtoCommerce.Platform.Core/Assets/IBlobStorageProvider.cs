@@ -75,7 +75,7 @@ namespace VirtoCommerce.Platform.Core.Assets
         /// </summary>
         /// <param name="srcUrl"></param>
         /// <param name="destUrl"></param>
-        Task MoveAsync(string srcUrl, string destUrl);
+        Task MoveAsyncPublic(string srcUrl, string destUrl);
 
         /// <summary>
         /// Copy specified blob with srcUrl to destUrl

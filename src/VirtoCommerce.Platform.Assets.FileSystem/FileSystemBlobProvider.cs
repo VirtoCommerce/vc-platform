@@ -232,7 +232,7 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
             }
         }
 
-        public Task MoveAsync(string srcUrl, string destUrl)
+        public Task MoveAsyncPublic(string srcUrl, string destUrl)
         {
             Move(srcUrl, destUrl);
 

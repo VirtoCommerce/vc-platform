@@ -243,25 +243,25 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 
         public virtual void Move(string srcUrl, string destUrl)
         {
-            DoMoveAsync(srcUrl, destUrl).GetAwaiter().GetResult();
+            MoveAsync(srcUrl, destUrl).GetAwaiter().GetResult();
         }
 
-        public virtual Task MoveAsync(string srcUrl, string destUrl)
+        public virtual Task MoveAsyncPublic(string srcUrl, string destUrl)
         {
-            return DoMoveAsync(srcUrl, destUrl);
+            return MoveAsync(srcUrl, destUrl);
         }
 
         public virtual void Copy(string srcUrl, string destUrl)
         {
-            DoMoveAsync(srcUrl, destUrl, true).GetAwaiter().GetResult();
+            MoveAsync(srcUrl, destUrl, true).GetAwaiter().GetResult();
         }
 
         public virtual Task CopyAsync(string srcUrl, string destUrl)
         {
-            return DoMoveAsync(srcUrl, destUrl, true);
+            return MoveAsync(srcUrl, destUrl, true);
         }
 
-        protected virtual async Task DoMoveAsync(string oldUrl, string newUrl, bool isCopy = false)
+        protected virtual async Task MoveAsync(string oldUrl, string newUrl, bool isCopy = false)
         {
             string oldPath, newPath;
             var isFolderRename = string.IsNullOrEmpty(Path.GetFileName(oldUrl));
