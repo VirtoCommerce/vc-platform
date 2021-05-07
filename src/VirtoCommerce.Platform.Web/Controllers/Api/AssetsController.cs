@@ -49,7 +49,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             //ToDo Now supports downloading one file, find a solution for downloading multiple files
             // https://docs.microsoft.com/en-us/aspnet/core/mvc/models/file-uploads?view=aspnetcore-3.1
-            var retVal = new List<BlobInfo>();
+            var result = new List<BlobInfo>();
 
             if (!MultipartRequestHelper.IsMultipartContentType(Request.ContentType))
             {
@@ -91,11 +91,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         //Use only file name as Url, for further access to these files need use PlatformOptions.LocalUploadFolderPath
                         blobInfo.Url = fileName;
                         blobInfo.ContentType = MimeTypeResolver.ResolveContentType(fileName);
-                        retVal.Add(blobInfo);
+                        result.Add(blobInfo);
                     }
                 }
             }
-            return Ok(retVal.ToArray());
+            return Ok(result.ToArray());
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest($"Expected a multipart request, but got {Request.ContentType}");
             }
 
-            var retVal = new List<BlobInfo>();
+            var result = new List<BlobInfo>();
             if (url != null)
             {
                 var fileName = name ?? HttpUtility.UrlDecode(Path.GetFileName(url));
@@ -135,7 +135,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     blobInfo.Name = fileName;
                     blobInfo.RelativeUrl = fileUrl;
                     blobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
-                    retVal.Add(blobInfo);
+                    result.Add(blobInfo);
                 }
             }
             else
@@ -166,13 +166,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                             blobInfo.RelativeUrl = targetFilePath;
                             blobInfo.Url = _urlResolver.GetAbsoluteUrl(targetFilePath);
                             blobInfo.ContentType = MimeTypeResolver.ResolveContentType(fileName);
-                            retVal.Add(blobInfo);
+                            result.Add(blobInfo);
                         }
                     }
                 }
             }
 
-            return Ok(retVal.ToArray());
+            return Ok(result.ToArray());
         }
 
         /// <summary>
