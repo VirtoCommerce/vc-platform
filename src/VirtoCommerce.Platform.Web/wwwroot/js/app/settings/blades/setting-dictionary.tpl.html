@@ -1,7 +1,18 @@
+<div class="blade-static">
+    <div class="form-group">
+        <div class="form-input __search">
+            <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText">
+            <button class="btn __other" style="position: relative;right: 45px;">
+                <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText=''"></i>
+            </button>
+        </div>
+        <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{blade.currentEntity.allowedValues.length | number:0}}</span></p>
+    </div>
+</div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form class="form" ng-submit="add(pdForm)" name="pdForm" novalidate autocomplete="off">
+            <!--<form class="form" ng-submit="add(pdForm)" name="pdForm" novalidate autocomplete="off">
                 <fieldset>
                     <legend>{{ 'platform.blades.setting-dictionary.labels.new-value' | translate }}</legend>
                     <div class="form-group">
@@ -21,37 +32,41 @@
                         <button class="btn" ng-disabled="pdForm.$invalid" type="submit">{{ 'platform.commands.add' | translate }}</button>
                     </div>
                 </fieldset>
-            </form>
-            <fieldset ng-if="blade.currentEntity.allowedValues.length > 0">
-                <legend>{{ 'platform.blades.setting-dictionary.labels.current-values' | translate }}</legend>
+            </form>-->
+
+            <fieldset>
                 <div class="table-wrapper">
                     <form name="formScope" class="form">
                         <table class="table __indexed" ng-init="setForm(formScope)">
                             <thead>
                                 <tr>
-                                    <th class="table-col">
-                                        <label class="form-control __checkbox">
-                                            <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll()" />
-                                            <span class="check"></span>
-                                        </label>
+                                    <th class="table-col" ng-click="blade.selectedAll=!blade.selectedAll; checkAll()">
+                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': blade.selectedAll}">&nbsp;</div>
                                     </th>
-                                    <th class="table-col">{{ 'platform.blades.setting-dictionary.labels.value' | translate }}</th>
+                                    <th class="table-col __link" ng-click="blade.orderDesc=!blade.orderDesc; applyOrder()">
+                                        <span>
+                                            {{ 'platform.blades.setting-dictionary.labels.value' | translate }}
+                                        </span>
+                                        <i ng-class="{ 'ui-grid-icon-up-dir': !blade.orderDesc, 'ui-grid-icon-down-dir': blade.orderDesc}"></i>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="table-item" ng-repeat="data in blade.currentEntity.allowedValues" ng-class="{'__selected': data === selectedItem}" context-menu data-target="pd_menu_{{$index}}" ng-click='selectItem(data)'>
-                                    <td class="table-col">
-                                        <label class="form-control __checkbox">
-                                            <input type="checkbox" ng-model="data._selected">
-                                            <span class="check"></span>
-                                        </label>
+                                <tr class="table-item" ng-repeat="data in filteredEntities()" ng-class="{'__selected': data === selectedItem}" context-menu data-target="pd_menu_{{$index}}">
+                                    <td class="table-col" ng-click="data._selected=!data._selected">
+                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data._selected}">&nbsp;</div>
                                     </td>
-                                    <td class="table-col">
-                                        <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
-                                            <input required ng-model="data.value" maxlength="512" />
+                                    <td class="table-col" ng-click="selectItem(data)">
+                                        <div ng-if="data===selectedItem">
+                                            <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
+                                                <input required ng-model="data.value" maxlength="512" ng-blur="selectItem(null)" />
+                                            </div>
+                                            <div class="form-input __number" ng-if="blade.currentEntity.valueType === 'Number'">
+                                                <input smart-float required ng-model="data.value" maxlength="36" num-type="float" ng-blur="selectItem(null)">
+                                            </div>
                                         </div>
-                                        <div class="form-input __number" ng-if="blade.currentEntity.valueType === 'Number'">
-                                            <input smart-float required ng-model="data.value" maxlength="36" num-type="float">
+                                        <div ng-if="data!==selectedItem">
+                                            <span class="table-t">{{data.value}}</span>
                                         </div>
                                         <ul role="menu" class="menu __context" id="pd_menu_{{$index}}">
                                             <li class="menu-item" ng-click='delete($index)'>

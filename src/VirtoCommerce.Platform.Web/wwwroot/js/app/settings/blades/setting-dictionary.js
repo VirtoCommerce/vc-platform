@@ -10,7 +10,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             }
 
             settings.allowedValues = _.map(settings.allowedValues, function (x) { return { value: x }; });
-            blade.origEntity = angular.copy(settings.allowedValues);
+            blade.origEntity = angular.copy(settings.allowedValues);            
             initializeBlade(settings);
         });
     }
@@ -22,7 +22,10 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
 
         blade.title = data.name;
         blade.currentEntity = data;
+        blade.searchText = "";
+        blade.origEntity = _.sortBy(blade.origEntity, function (o) { return o.value; });
         currentEntities = blade.currentEntity.allowedValues;
+        $scope.applyOrder();
         blade.isLoading = false;
     }
 
@@ -37,13 +40,17 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         return false;
     };
 
-    $scope.add = function (form) {
-        if (form.$valid) {
-            currentEntities.push($scope.newValue);
-            resetNewValue();
-            form.$setPristine();
-        }
+    $scope.filteredEntities = function () {
+        loverCasedSearchText = blade.searchText.toLowerCase();
+        return _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(loverCasedSearchText);});
     };
+    //$scope.add = function (form) {
+    //    if (form.$valid) {
+    //        currentEntities.push($scope.newValue);
+    //        resetNewValue();
+    //        form.$setPristine();
+    //    }
+    //};
 
     $scope.delete = function (index) {
         currentEntities.splice(index, 1);
@@ -57,7 +64,16 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     blade.headIcon = 'fa fa-wrench';
     blade.subtitle = 'platform.blades.setting-dictionary.subtitle';
     blade.toolbarCommands = [{
-        name: "platform.commands.delete", icon: 'fas fa-trash-alt',
+        name: "platform.commands.add", icon: 'menu-ico fas fa-plus',
+        executeMethod: function () {
+            addNew();
+        },
+        canExecuteMethod: function () {
+            return true;
+        }
+    },
+    {
+        name: "platform.commands.delete", icon: 'menu-ico fas fa-trash-alt',
         executeMethod: function () {
             deleteChecked();
         },
@@ -73,7 +89,9 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         }
 
         function isDirty() {
-            return !angular.equals(currentEntities, blade.origEntity) && blade.hasUpdatePermission();
+            sortedCurrent = _.sortBy(currentEntities, function (o) { return o.value; });            
+            //return !angular.equals(currentEntities, blade.origEntity) && blade.hasUpdatePermission();
+            return !angular.equals(sortedCurrent, blade.origEntity) && blade.hasUpdatePermission();
         }
 
         function saveChanges() {
@@ -120,6 +138,17 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         });
     };
 
+    $scope.applyOrder = function () {
+        orderedEntities = _.sortBy(currentEntities, function (o) { return o.value; })
+        if (blade.orderDesc) {
+            orderedEntities = orderedEntities.reverse();
+        }
+        currentEntities.length = 0;
+        for (const obj of orderedEntities) {
+            currentEntities.push(obj);
+        }
+    };
+
     function resetNewValue() {
         $scope.newValue = { value: null };
     }
@@ -133,6 +162,11 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         angular.forEach(selection, function (listItem) {
             $scope.delete(currentEntities.indexOf(listItem));
         });
+    }
+
+    function addNew() {
+        currentEntities.splice(0, 0, $scope.newValue);
+        resetNewValue();
     }
 
     // on load
