@@ -86,6 +86,8 @@ partial class Build : NukeBuild
     readonly string DevelopBranch = "develop";
     readonly string ReleaseBranchPrefix = "release";
     readonly string HotfixBranchPrefix = "hotfix";
+    readonly string SonarLongLiveBranches = "master;develop";
+
 
 
 
@@ -131,6 +133,7 @@ partial class Build : NukeBuild
     [Parameter("Release branch")] readonly string ReleaseBranch;
 
     [Parameter("Branch Name for SonarQube")] readonly string SonarBranchName;
+    [Parameter("Target Branch Name for SonarQube")] readonly string SonarBranchNameTarget = "dev";
 
     [Parameter("PR Base for SonarQube")] readonly string SonarPRBase;
     [Parameter("PR Branch for SonarQube")] readonly string SonarPRBranch;
@@ -245,7 +248,7 @@ partial class Build : NukeBuild
        .Executes(() =>
        {
            var dotnetPath = ToolPathResolver.GetPathExecutable("dotnet");
-           var testProjects = Solution.GetProjects("*.Tests");
+           var testProjects = Solution.GetProjects("*.Tests|*.Testing");
            //
            var OutPath = RootDirectory / ".tmp";
            testProjects.ForEach((testProject, index) =>
@@ -265,13 +268,14 @@ partial class Build : NukeBuild
                {
                    ControlFlow.Fail("Tests Assemblies not found!");
                }
+
                CoverletTasks.Coverlet(s => s
                 .SetTargetSettings(testSetting)
                 .SetAssembly(testAssemblies.First())
                 .SetTarget(dotnetPath)
                 .When(index == 0, ss => ss.SetOutput(CoverageReportPath))
                 .When(index > 0 && index < testProjects.Count() - 1, ss => ss.SetMergeWith(CoverageReportPath))
-                .When(index == testProjects.Count() - 1, ss => ss.SetOutput(CoverageReportPath).SetFormat(CoverletOutputFormat.opencover))
+                .When(index == testProjects.Count() - 1, ss => ss.SetOutput(CoverageReportPath).SetMergeWith(CoverageReportPath).SetFormat(CoverletOutputFormat.opencover))
                 );
 
            });
@@ -581,7 +585,7 @@ partial class Build : NukeBuild
              DeleteFile(ZipFilePath);
              //TODO: Exclude all ignored files and *module files not related to compressed module
              var ignoreModulesFilesRegex = new Regex(@".+Module\..*", RegexOptions.IgnoreCase);
-             var includeModuleFilesRegex = new Regex(@$".*{ModuleManifest.Id}Module\..*", RegexOptions.IgnoreCase);
+             var includeModuleFilesRegex = new Regex(@$".*{ModuleManifest.Id}(Module)?\..*", RegexOptions.IgnoreCase);
              CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => (!ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase) && !ignoreModulesFilesRegex.IsMatch(x.Name))
                                                                                      || includeModuleFilesRegex.IsMatch(x.Name));
          }
@@ -747,6 +751,7 @@ partial class Build : NukeBuild
             var dotNetPath = ToolPathResolver.TryGetEnvironmentExecutable("DOTNET_EXE") ?? ToolPathResolver.GetPathExecutable("dotnet");
             Logger.Normal($"IsServerBuild = {IsServerBuild}");
             var branchName = String.IsNullOrEmpty(SonarBranchName) ? GitRepository.Branch : SonarBranchName;
+            var branchNameTarget = String.IsNullOrEmpty(SonarBranchNameTarget) ? GitRepository.Branch : SonarBranchNameTarget;
             Logger.Info($"BRANCH_NAME = {branchName}");
             var projectName = Solution.Name;
             var prBaseParam = "";
@@ -755,6 +760,9 @@ partial class Build : NukeBuild
             var ghRepoArg = "";
             var prProviderArg = "";
             var prBase = "";
+            var branchParam = "";
+            var branchTargetParam = "";
+
             if (PullRequest)
             {
                 prBase = String.IsNullOrEmpty(SonarPRBase) ? Environment.GetEnvironmentVariable("CHANGE_TARGET") : SonarPRBase;
@@ -771,8 +779,11 @@ partial class Build : NukeBuild
                 prProviderArg = String.IsNullOrEmpty(SonarPRProvider) ? "" : $"/d:sonar.pullrequest.provider={SonarPRProvider}";
 
             }
-            var baseBranch = PullRequest ? prBase : branchName;
-            var branchParam = $"/d:\"sonar.branch={baseBranch}\"";
+            else
+            {
+                branchParam = $"/d:\"sonar.branch.name={branchName}\"";
+                branchTargetParam = SonarLongLiveBranches.Contains(branchName) ? "" : $"/d:\"sonar.branch.target={branchNameTarget}\"";
+            }
 
             var projectNameParam = $"/n:\"{RepoName}\"";
             var projectKeyParam = $"/k:\"{RepoOrg}_{RepoName}\"";
@@ -782,7 +793,7 @@ partial class Build : NukeBuild
             var sonarReportPathParam = $"/d:sonar.cs.opencover.reportsPaths={CoverageReportPath}";
             var orgParam = $"/o:{SonarOrg}";
 
-            var startCmd = $"sonarscanner begin {orgParam} {branchParam} {projectKeyParam} {projectNameParam} {projectVersionParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam} {ghRepoArg} {prProviderArg}";
+            var startCmd = $"sonarscanner begin {orgParam} {branchParam} {branchTargetParam} {projectKeyParam} {projectNameParam} {projectVersionParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam} {ghRepoArg} {prProviderArg}";
 
             Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}")}");
 
