@@ -1,10 +1,6 @@
 using System;
 using System.Net;
-using Castle.Core.Logging;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using StackExchange.Redis;
@@ -12,10 +8,10 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Redis;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.Caching
+namespace VirtoCommerce.Platform.Caching.Tests
 {
     [Trait("Category", "Unit"), CollectionDefinition("CacheTests", DisableParallelization = true)]
-    public class RedisPlatformMemoryCacheTests: MemoryCacheTestsBase
+    public class RedisPlatformMemoryCacheTests : MemoryCacheTestsBase
     {
         private readonly Mock<IOptions<RedisCachingOptions>> _redisCachingOptionsMock = new Mock<IOptions<RedisCachingOptions>>();
         private readonly Mock<IConnectionMultiplexer> _connectionMock = new Mock<IConnectionMultiplexer>();
@@ -23,10 +19,10 @@ namespace VirtoCommerce.Platform.Tests.Caching
         private readonly Mock<ILogger<RedisPlatformMemoryCache>> _logMock = new Mock<ILogger<RedisPlatformMemoryCache>>();
 
         private const string CacheKey = "test";
+
         private readonly ConnectionFailedEventArgs _getConnectionFailedEvenArgs = new ConnectionFailedEventArgs(null,
             new DnsEndPoint("test.com", 8080), ConnectionType.Subscription,
             ConnectionFailureType.SocketFailure, new Exception(), "test");
-
 
         public RedisPlatformMemoryCacheTests()
         {
@@ -80,7 +76,5 @@ namespace VirtoCommerce.Platform.Tests.Caching
         {
             return platformMemoryCache.GetOrCreateExclusive(CacheKey, x => DateTime.Now);
         }
-
     }
-
 }

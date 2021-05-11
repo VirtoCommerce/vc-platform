@@ -3,10 +3,9 @@ using System.Threading;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.ChangeLog;
-using VirtoCommerce.Platform.Tests.Caching;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.UnitTests
+namespace VirtoCommerce.Platform.Caching.Tests
 {
     [Trait("Category", "Unit")]
     public class LastChangesServiceTests : MemoryCacheTestsBase
@@ -22,7 +21,7 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         {
         }
 
-        [Fact(Skip = "broken test")]
+        [Fact(Skip = "broken test")] // Need to rewrite all this class and move it to another project
         public void RepeatableRead()
         {
             ILastChangesService lastChangesService = new LastChangesService(GetPlatformMemoryCache());

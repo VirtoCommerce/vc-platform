@@ -32,7 +32,7 @@
 
 </head>
 @*DO NOT CHANGE THE CODE BELOW: COPYRIGHT VIOLATION*@
-<body ng-class="{'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime); license = initExpiration(@(Model.License))">
+<body ng-class="{'lang-rtl': isRTL}" ng-controller="platformWebApp.appCtrl" ng-init="platformVersion ='@(Model.PlatformVersion)'; demoCredentials = @(Model.DemoCredentials); demoResetTime = @(Model.DemoResetTime); license = initExpiration(@(Model.License)); allowInstallModules = @($@"{Model.RefreshProbingFolder}".ToLower())">
     @if (Model.SendDiagnosticData)
     {
         <!-- Google Tag Manager (noscript) -->
