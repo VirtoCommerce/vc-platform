@@ -10,13 +10,13 @@ using Xunit;
 namespace VirtoCommerce.Platform.Tests.Assets
 {
     [Trait("Category", "Unit")]
-    public class BlobStorageProviderTests : IDisposable
+    public class FileSystemBlobStorageProviderTests : IDisposable
     {
         private readonly string _tempDirectory;
         private readonly IOptions<FileSystemBlobOptions> _options;
         private readonly Mock<IUrlHelper> _urlHelper;
 
-        public BlobStorageProviderTests()
+        public FileSystemBlobStorageProviderTests()
         {
             var tempPath = Path.GetTempPath();
             _tempDirectory = Path.Combine(tempPath, "FileSystemBlobProviderTests");
