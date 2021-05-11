@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace VirtoCommerce.Platform.Tests
+namespace VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests
 {
     public class AppConfiguration
     {
