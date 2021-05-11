@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,11 +6,10 @@
         <noWarn>1591</noWarn>
         <UserSecretsId>d6c1f7d4-06d1-4f4e-8c58-7a79573b50f6</UserSecretsId>
     </PropertyGroup>
-   
+
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.8" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.8" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
@@ -26,12 +25,8 @@
         </PackageReference>
         <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
     </ItemGroup>
-  
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Assets.AzureBlobStorage\VirtoCommerce.Platform.Assets.AzureBlobStorage.csproj" />
-        <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Assets.FileSystem\VirtoCommerce.Platform.Assets.FileSystem.csproj" />
-        <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Caching\VirtoCommerce.Platform.Caching.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj" />
@@ -39,5 +34,4 @@
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" />
     </ItemGroup>
-
 </Project>

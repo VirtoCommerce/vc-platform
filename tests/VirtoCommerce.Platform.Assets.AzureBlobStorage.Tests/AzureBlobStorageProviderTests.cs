@@ -1,8 +1,7 @@
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Platform.Assets.AzureBlobStorage;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.Assets
+namespace VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests
 {
     public class AzureBlobStorageProviderTests
     {
