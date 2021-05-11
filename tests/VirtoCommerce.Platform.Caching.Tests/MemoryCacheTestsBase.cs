@@ -4,9 +4,8 @@ using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using VirtoCommerce.Platform.Caching;
 
-namespace VirtoCommerce.Platform.Tests.Caching
+namespace VirtoCommerce.Platform.Caching.Tests
 {
     public class MemoryCacheTestsBase
     {
