@@ -6,7 +6,9 @@ namespace VirtoCommerce.Testing.Helpers
     public class MockHelper
     {
         protected const int DEFAULT_PAGE_SIZE = 50;
-        protected readonly Fixture _fixture = new();
+#pragma warning disable IDE0090 // Use 'new(...)'
+        protected readonly Fixture _fixture = new Fixture();
+#pragma warning restore IDE0090 // Use 'new(...)'
 
         /// <summary>
         /// Helper for testing
