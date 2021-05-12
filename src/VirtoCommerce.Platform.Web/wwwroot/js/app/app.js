@@ -228,6 +228,23 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             return FileUploader;
         }]);
     }])
+    .config(['$provide', function ($provide) {
+        $provide.decorator('GridOptions', ['$delegate', 'uiGridConstants', function (GridOptions, uiGridConstants) {
+            // create GridOptions object for each grid from base GridOptions object
+            var gridOptions = angular.copy(GridOptions);
+            gridOptions.initialize = function (options) {
+                // initialize it with default values
+                var initialOptions = GridOptions.initialize(options);
+
+                // override default values here
+                initialOptions.enableVerticalScrollbar = uiGridConstants.scrollbars.WHEN_NEEDED;
+                initialOptions.enableHorizontalScrollbar = uiGridConstants.scrollbars.WHEN_NEEDED;
+
+                return initialOptions;
+            };
+            return gridOptions;
+        }]);
+    }])
     .config(['$stateProvider', '$httpProvider', 'uiSelectConfig', 'datepickerConfig', 'datepickerPopupConfig', 'tagsInputConfigProvider', '$compileProvider',
         function ($stateProvider, $httpProvider, uiSelectConfig, datepickerConfig, datepickerPopupConfig, tagsInputConfigProvider, $compileProvider) {
 

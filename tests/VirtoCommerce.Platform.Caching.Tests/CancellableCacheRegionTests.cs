@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.Caching
+namespace VirtoCommerce.Platform.Caching.Tests
 {
     [Trait("Category", "Unit"), CollectionDefinition("CacheTests", DisableParallelization = true)]
     public class CancellableCacheRegionTests : MemoryCacheTestsBase
@@ -37,7 +32,6 @@ namespace VirtoCommerce.Platform.Tests.Caching
             token = GlobalCacheRegion.CreateChangeToken();
             //Assertion
             Assert.IsType<LazyCancellationChangeToken>(token);
-           
         }
 
         [Fact]
@@ -156,7 +150,6 @@ namespace VirtoCommerce.Platform.Tests.Caching
             result = cache.Get(key2);
             Assert.Same(value2, result);
 
-          
             //Act
             CancellableCacheRegion.CancelForKey(key2, propagate);
 
@@ -198,8 +191,9 @@ namespace VirtoCommerce.Platform.Tests.Caching
         }
 
         public class CacheRegion : CancellableCacheRegion<CacheRegion>
-        {          
+        {
         }
+
         public class CacheRegion2 : CancellableCacheRegion<CacheRegion2>
         {
         }
