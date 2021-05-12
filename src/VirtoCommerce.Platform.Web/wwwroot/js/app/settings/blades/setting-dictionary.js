@@ -53,7 +53,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     };
 
     $scope.selectItem = function (listItem) {
-        if ($scope.selectedItem && !$scope.selectedItem.value && !$scope.editValue.value) {
+        if ($scope.selectedItem && !$scope.selectedItem.value) {
             // Remove valueless items
             $scope.delete(currentEntities.indexOf($scope.selectedItem));
         }
@@ -170,15 +170,16 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     };
 
     function orderBy(entities) {
-        var orderedEntities = _.sortBy(entities, function (o) { return o.value; })
+        if (blade.currentEntity.valueType === 'Number') {
+            entities.sort(function (a, b) { return a.value - b.value; })
+        }
+        else {
+            entities.sort(function (a, b) { return a.value.localeCompare(b.value); })            
+        }
         if (blade.orderDesc) {
-            orderedEntities = orderedEntities.reverse();
+            entities.reverse();
         }
-        // Overkill to preserve array reference
-        entities.length = 0;        
-        for (const obj of orderedEntities) {
-            entities.push(obj);
-        }
+
     }
 
     function resetNewValue() {
