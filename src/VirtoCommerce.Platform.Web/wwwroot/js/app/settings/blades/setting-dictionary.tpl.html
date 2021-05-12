@@ -38,7 +38,7 @@
                                         <div ng-if="data===selectedItem">
                                             <div class="form-input">
                                                 <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
-                                                    <input id="dictValue" required ng-model="editValue.value" maxlength="512" ng-blur="selectItem(null)" ng-keydown="inputKeyDown($event)" />
+                                                    <input id="dictValue" required ng-model="editValue.value" maxlength="512" ng-blur="selectItem(null)" ng-keyup="inputKeyUp($event)" />
                                                 </div>
                                                 <div class="form-input __number" ng-if="blade.currentEntity.valueType === 'Number'">
                                                     <input id="dictValue" smart-float required ng-model="editValue.value" maxlength="36" num-type="float" ng-blur="selectItem(null)" />

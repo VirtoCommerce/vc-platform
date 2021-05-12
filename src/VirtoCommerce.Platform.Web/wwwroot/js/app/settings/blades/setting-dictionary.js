@@ -43,8 +43,8 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     };
 
     $scope.filteredEntities = function () {
-        loverCasedSearchText = blade.searchText.toLowerCase();
-        return _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(loverCasedSearchText);});
+        var lowerCasedSearchText = blade.searchText.toLowerCase();
+        return _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(lowerCasedSearchText);});
     };
 
     $scope.delete = function (index) {
@@ -158,7 +158,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         }
     };
 
-    $scope.inputKeyDown = function ($event) {
+    $scope.inputKeyUp = function ($event) {
         if ($event.keyCode === 13) {
             // Apply value on hit Enter
             $scope.applyValue();
