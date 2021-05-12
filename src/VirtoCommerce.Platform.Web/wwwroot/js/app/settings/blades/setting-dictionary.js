@@ -162,15 +162,15 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         if ($event.keyCode === 13) {
             // Apply value on hit Enter
             $scope.applyValue();
-        };
+        }
         if ($event.keyCode === 27) {
             // Decline value on hit Esc
             $scope.selectItem(null);
-        };
+        }
     };
 
     function orderBy(entities) {
-        orderedEntities = _.sortBy(entities, function (o) { return o.value; })
+        var orderedEntities = _.sortBy(entities, function (o) { return o.value; })
         if (blade.orderDesc) {
             orderedEntities = orderedEntities.reverse();
         }
