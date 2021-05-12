@@ -53,6 +53,9 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     };
 
     $scope.selectItem = function (listItem) {
+        if ($scope.selectedItem && !$scope.selectedItem.value && !$scope.editValue.value) {
+            $scope.delete(currentEntities.indexOf($scope.selectedItem));
+        }
         if (listItem) {
             $scope.editValue = angular.copy(listItem);
         }
