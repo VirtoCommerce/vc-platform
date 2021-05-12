@@ -46,13 +46,6 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         loverCasedSearchText = blade.searchText.toLowerCase();
         return _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(loverCasedSearchText);});
     };
-    //$scope.add = function (form) {
-    //    if (form.$valid) {
-    //        currentEntities.push($scope.newValue);
-    //        resetNewValue();
-    //        form.$setPristine();
-    //    }
-    //};
 
     $scope.delete = function (index) {
         currentEntities.splice(index, 1);
