@@ -25,7 +25,7 @@ The main principle is to help the development team to focus on the implementatio
     1. *Reliability* - Can leverage a solution deployed across multiple data centers and availability zones to maximize up-time and reduce potential revenue losses.
 * **HEADLESS** – Allows an enterprise to support omnichannel journeys across traditional and digital touchpoints as well as new business models.
 * **EXTENSIBILITY** – The API model, persistence model, business logic can be extended as needed without deploying and re-deploying solution. This provides superior business agility and keeps up to date.
-* 
+
 ## Architecture Overview
 The following diagram illustrates the high-level architecture and main areas of Virto Commerce solutions:
 
