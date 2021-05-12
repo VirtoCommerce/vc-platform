@@ -12,28 +12,6 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <!--<form class="form" ng-submit="add(pdForm)" name="pdForm" novalidate autocomplete="off">
-                <fieldset>
-                    <legend>{{ 'platform.blades.setting-dictionary.labels.new-value' | translate }}</legend>
-                    <div class="form-group">
-                        <label class="form-label">{{ 'platform.blades.setting-dictionary.labels.new-value' | translate }}</label>
-                        <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
-                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" maxlength="512" placeholder="{{ 'platform.blades.setting-dictionary.placeholders.new-value' | translate }}" />
-                        </div>
-                        <div class="form-input" ng-if="blade.currentEntity.valueType === 'Number'">
-                            <input ng-class="{'error' : pdForm.dictValue.$invalid && !pdForm.dictValue.$pristine}" required ng-model="newValue.value" ui-validate=" 'dictValueValidator($value)' " name="dictValue" focus-on="" maxlength="36" placeholder="{{ 'platform.blades.setting-dictionary.placeholders.new-value' | translate }}" />
-                        </div>
-                        <div class="form-error" ng-if="pdForm.dictValue.$dirty && pdForm.dictValue.$invalid">
-                            <span ng-if="pdForm.dictValue.$error.required">{{ 'platform.blades.setting-dictionary.validations.new-value-required' | translate }}</span>
-                            <span ng-if="pdForm.dictValue.$error.validator">{{ 'platform.blades.setting-dictionary.validations.new-value' | translate }}</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn" ng-disabled="pdForm.$invalid" type="submit">{{ 'platform.commands.add' | translate }}</button>
-                    </div>
-                </fieldset>
-            </form>-->
-
             <fieldset>
                 <div class="table-wrapper">
                     <form name="formScope" class="form">
@@ -56,13 +34,21 @@
                                     <td class="table-col" ng-click="data._selected=!data._selected">
                                         <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data._selected}">&nbsp;</div>
                                     </td>
-                                    <td class="table-col" ng-click="selectItem(data)">
+                                    <td class="table-col" ng-click="selectItem(data);">
                                         <div ng-if="data===selectedItem">
-                                            <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
-                                                <input required ng-model="data.value" maxlength="512" ng-blur="selectItem(null)" />
+                                            <div class="form-input">
+                                                <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
+                                                    <input id="dictValue" required ng-model="editValue.value" maxlength="512" ng-blur="selectItem(null)" ng-keydown="inputKeyDown($event)" />
+                                                </div>
+                                                <div class="form-input __number" ng-if="blade.currentEntity.valueType === 'Number'">
+                                                    <input id="dictValue" smart-float required ng-model="editValue.value" maxlength="36" num-type="float" ng-blur="selectItem(null)" />
+                                                </div>
+                                                <button ng-mousedown="applyValue()" type="button" class="btn">
+                                                    <i class="btn-ico fas fa-save" ng-class="icon"></i>
+                                                </button>
                                             </div>
-                                            <div class="form-input __number" ng-if="blade.currentEntity.valueType === 'Number'">
-                                                <input smart-float required ng-model="data.value" maxlength="36" num-type="float" ng-blur="selectItem(null)">
+                                            <div class="form-error" ng-if="error">
+                                                <span>{{ 'platform.blades.setting-dictionary.validations.new-value' | translate }}</span>
                                             </div>
                                         </div>
                                         <div ng-if="data!==selectedItem">

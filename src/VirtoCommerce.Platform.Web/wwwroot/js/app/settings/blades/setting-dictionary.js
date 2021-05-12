@@ -10,26 +10,28 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             }
 
             settings.allowedValues = _.map(settings.allowedValues, function (x) { return { value: x }; });
-            blade.origEntity = angular.copy(settings.allowedValues);            
-            initializeBlade(settings);
+            initializeBlade(settings, { allowedValues: angular.copy(settings.allowedValues) } );
         });
     }
 
-    function initializeBlade(data) {
+    function initializeBlade(data, origData) {
         if (!data.allowedValues) {
             data.allowedValues = [];
+        }
+        if (!origData.allowedValues) {
+            origData.allowedValues = [];
         }
 
         blade.title = data.name;
         blade.currentEntity = data;
+        blade.origEntity = origData;
         blade.searchText = "";
-        blade.origEntity = _.sortBy(blade.origEntity, function (o) { return o.value; });
         currentEntities = blade.currentEntity.allowedValues;
         $scope.applyOrder();
         blade.isLoading = false;
     }
 
-    $scope.dictValueValidator = function (value) {
+    $scope.validateDictValue= function (value) {
         if (blade.currentEntity) {
             if (blade.currentEntity.valueType == 'ShortText') {
                 return _.all(currentEntities, function (item) { return angular.lowercase(item.value) !== angular.lowercase(value); });
@@ -58,7 +60,12 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     };
 
     $scope.selectItem = function (listItem) {
+        if (listItem) {
+            $scope.editValue = angular.copy(listItem);
+        }
+        $scope.error = false;
         $scope.selectedItem = listItem;
+        setTimeout(() => $('#dictValue').focus());
     };
 
     blade.headIcon = 'fa fa-wrench';
@@ -89,9 +96,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         }
 
         function isDirty() {
-            sortedCurrent = _.sortBy(currentEntities, function (o) { return o.value; });            
-            //return !angular.equals(currentEntities, blade.origEntity) && blade.hasUpdatePermission();
-            return !angular.equals(sortedCurrent, blade.origEntity) && blade.hasUpdatePermission();
+            return !angular.equals(currentEntities, blade.origEntity.allowedValues) && blade.hasUpdatePermission();
         }
 
         function saveChanges() {
@@ -127,7 +132,8 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         $scope.$watch('blade.parentBlade.currentEntities', function (data) {
             if (data) {
                 var allEntities = _.flatten(_.map(data, _.values));
-                initializeBlade(_.findWhere(allEntities, { name: blade.currentEntityId }));
+                var origEntities = _.flatten(_.map(blade.parentBlade.origEntity, _.values));
+                initializeBlade(_.findWhere(allEntities, { name: blade.currentEntityId }), _.findWhere(origEntities, { name: blade.currentEntityId }));
             }
         });
     }
@@ -139,15 +145,38 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     };
 
     $scope.applyOrder = function () {
-        orderedEntities = _.sortBy(currentEntities, function (o) { return o.value; })
+        orderBy(currentEntities);
+        orderBy(blade.origEntity.allowedValues);
+    };
+
+    $scope.applyValue = function () {
+        $scope.error = !$scope.validateDictValue($scope.editValue.value)
+        if (!$scope.error) {
+            $scope.selectedItem.value = $scope.editValue.value;
+            $scope.selectItem(null);
+            $scope.applyOrder();
+        }
+    };
+
+    $scope.inputKeyDown = function ($event) {
+        if ($event.keyCode === 13) {
+            $scope.applyValue();
+        };
+        if ($event.keyCode === 27) {
+            $scope.selectItem(null);
+        };
+    };
+
+    function orderBy(entities) {
+        orderedEntities = _.sortBy(entities, function (o) { return o.value; })
         if (blade.orderDesc) {
             orderedEntities = orderedEntities.reverse();
         }
-        currentEntities.length = 0;
+        entities.length = 0;
         for (const obj of orderedEntities) {
-            currentEntities.push(obj);
+            entities.push(obj);
         }
-    };
+    }
 
     function resetNewValue() {
         $scope.newValue = { value: null };
@@ -166,6 +195,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
 
     function addNew() {
         currentEntities.splice(0, 0, $scope.newValue);
+        $scope.selectItem($scope.newValue);
         resetNewValue();
     }
 
