@@ -54,6 +54,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
 
     $scope.selectItem = function (listItem) {
         if ($scope.selectedItem && !$scope.selectedItem.value && !$scope.editValue.value) {
+            // Remove valueless items
             $scope.delete(currentEntities.indexOf($scope.selectedItem));
         }
         if (listItem) {
@@ -136,17 +137,20 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
 
     $scope.checkAll = function () {
         angular.forEach(currentEntities, function (item) {
+            // use a field with $dollar-sign prefix to hide such field from angular.equals to avoid "miss-dirtying" issues
             item.$selected = blade.selectedAll;
         });
     };
 
     $scope.applyOrder = function () {
+        // Order both: current and source arrays to avoid issues with angular.equals (like "miss-dirtying")
         orderBy(currentEntities);
         orderBy(blade.origEntity.allowedValues);
     };
 
     $scope.applyValue = function () {
-        $scope.error = !$scope.validateDictValue($scope.editValue.value)
+        // Check the value has no duplicates
+        $scope.error = !$scope.validateDictValue($scope.editValue.value);
         if (!$scope.error) {
             $scope.selectedItem.value = $scope.editValue.value;
             $scope.selectItem(null);
@@ -156,9 +160,11 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
 
     $scope.inputKeyDown = function ($event) {
         if ($event.keyCode === 13) {
+            // Apply value on hit Enter
             $scope.applyValue();
         };
         if ($event.keyCode === 27) {
+            // Decline value on hit Esc
             $scope.selectItem(null);
         };
     };
@@ -168,7 +174,8 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         if (blade.orderDesc) {
             orderedEntities = orderedEntities.reverse();
         }
-        entities.length = 0;
+        // Overkill to preserve array reference
+        entities.length = 0;        
         for (const obj of orderedEntities) {
             entities.push(obj);
         }
