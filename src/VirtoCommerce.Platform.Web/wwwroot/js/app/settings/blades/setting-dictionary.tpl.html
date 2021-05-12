@@ -31,8 +31,8 @@
                             </thead>
                             <tbody>
                                 <tr class="table-item" ng-repeat="data in filteredEntities()" ng-class="{'__selected': data === selectedItem}" context-menu data-target="pd_menu_{{$index}}">
-                                    <td class="table-col" ng-click="data._selected=!data._selected">
-                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data._selected}">&nbsp;</div>
+                                    <td class="table-col" ng-click="data.$selected=!data.$selected">
+                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.$selected}">&nbsp;</div>
                                     </td>
                                     <td class="table-col" ng-click="selectItem(data);">
                                         <div ng-if="data===selectedItem">

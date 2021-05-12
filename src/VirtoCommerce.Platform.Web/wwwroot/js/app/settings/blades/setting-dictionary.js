@@ -133,7 +133,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
 
     $scope.checkAll = function () {
         angular.forEach(currentEntities, function (item) {
-            item._selected = blade.selectedAll;
+            item.$selected = blade.selectedAll;
         });
     };
 
@@ -176,11 +176,11 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     }
 
     function isItemsChecked() {
-        return _.any(currentEntities, function (x) { return x._selected; });
+        return _.any(currentEntities, function (x) { return x.$selected; });
     }
 
     function deleteChecked() {
-        var selection = _.where(currentEntities, { _selected: true });
+        var selection = _.where(currentEntities, { $selected: true });
         angular.forEach(selection, function (listItem) {
             $scope.delete(currentEntities.indexOf(listItem));
         });
