@@ -156,6 +156,9 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             $scope.selectItem(null);
             $scope.applyOrder();
         }
+        else {
+            setTimeout(() => $('#dictValue').focus());
+        }
     };
 
     $scope.inputKeyUp = function ($event) {

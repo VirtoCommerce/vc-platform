@@ -34,14 +34,14 @@
                                     <td class="table-col" ng-click="data.$selected=!data.$selected">
                                         <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.$selected}">&nbsp;</div>
                                     </td>
-                                    <td class="table-col" ng-click="selectItem(data);">
+                                    <td class="table-col" ng-click="!error && selectItem(data)">
                                         <div ng-if="data===selectedItem">
                                             <div class="form-input">
                                                 <div class="form-input" ng-if="blade.currentEntity.valueType !== 'Number'">
-                                                    <input id="dictValue" autocomplete="off" required ng-model="editValue.value" maxlength="512" ng-blur="selectItem(null)" ng-keyup="inputKeyUp($event)" />
+                                                    <input id="dictValue" autocomplete="off" required ng-model="editValue.value" maxlength="512" ng-blur="!error && selectItem(null)" ng-keyup="inputKeyUp($event)" />
                                                 </div>
                                                 <div class="form-input __number" ng-if="blade.currentEntity.valueType === 'Number'">
-                                                    <input id="dictValue" autocomplete="off" smart-float required ng-model="editValue.value" maxlength="36" num-type="float" ng-blur="selectItem(null)" ng-keyup="inputKeyUp($event)"/>
+                                                    <input id="dictValue" autocomplete="off" smart-float required ng-model="editValue.value" maxlength="36" num-type="float" ng-blur="!error && selectItem(null)" ng-keyup="inputKeyUp($event)"/>
                                                 </div>
                                                 <button ng-mousedown="applyValue()" type="button" class="btn">
                                                     <i class="btn-ico fas fa-save" ng-class="icon"></i>
