@@ -1,4 +1,7 @@
 arrange:
+  - overview.md
+  - extending-domain-models.md
+  - extending-using-events.md
   - style-guide.md
   - extending-main-menu.md
   - blades-and-navigation.md

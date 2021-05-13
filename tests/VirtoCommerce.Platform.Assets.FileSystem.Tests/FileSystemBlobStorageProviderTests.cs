@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Assets.FileSystem;
@@ -10,20 +9,18 @@ using Xunit;
 namespace VirtoCommerce.Platform.Tests.Assets
 {
     [Trait("Category", "Unit")]
-    public class BlobStorageProviderTests : IDisposable
+    public class FileSystemBlobStorageProviderTests : IDisposable
     {
         private readonly string _tempDirectory;
         private readonly IOptions<FileSystemBlobOptions> _options;
-        private readonly Mock<IUrlHelper> _urlHelper;
 
-        public BlobStorageProviderTests()
+        public FileSystemBlobStorageProviderTests()
         {
             var tempPath = Path.GetTempPath();
             _tempDirectory = Path.Combine(tempPath, "FileSystemBlobProviderTests");
             Directory.CreateDirectory(_tempDirectory);
 
             _options = BuildOptions(_tempDirectory);
-            _urlHelper = new Mock<IUrlHelper>();
         }
 
         private static IOptions<FileSystemBlobOptions> BuildOptions(string tempDirectory)

@@ -42,10 +42,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformConstants.Security.Permissions.AssetRead)]
         public async Task<ActionResult<AssetEntry>> Get([FromQuery]string id)
         {
-            var retVal = await _assetService.GetByIdsAsync(new[] { id });
-            if (retVal?.Any() == true)
+            var result = await _assetService.GetByIdsAsync(new[] { id });
+            if (result?.Any() == true)
             {
-                return Ok(retVal.Single());
+                return Ok(result.Single());
             }
 
             return NotFound();
