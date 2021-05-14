@@ -25,6 +25,8 @@ namespace VirtoCommerce.Platform.Core.Security
         public virtual string CreatedBy { get; set; }
         public virtual string ModifiedBy { get; set; }
         public virtual IList<Role> Roles { get; set; }
+
+        [SwaggerIgnore]
         public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; }
 
         /// <summary>
