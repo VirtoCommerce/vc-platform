@@ -31,11 +31,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Hang
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{74EADA4F-F378-490E-8EA6-AFC5605368EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Web.Tests", "tests\VirtoCommerce.Platform.Web.Tests\VirtoCommerce.Platform.Web.Tests.csproj", "{11BBA3A5-5C5B-447D-9844-6ED7DDF1B961}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Web.Tests", "tests\VirtoCommerce.Platform.Web.Tests\VirtoCommerce.Platform.Web.Tests.csproj", "{11BBA3A5-5C5B-447D-9844-6ED7DDF1B961}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Core.Tests", "tests\VirtoCommerce.Platform.Core.Tests\VirtoCommerce.Platform.Core.Tests.csproj", "{1BFCF9CE-E244-4F58-BB02-F3740B0E250A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Core.Tests", "tests\VirtoCommerce.Platform.Core.Tests\VirtoCommerce.Platform.Core.Tests.csproj", "{1BFCF9CE-E244-4F58-BB02-F3740B0E250A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.DistributedLock", "src\VirtoCommerce.Platform.DistributedLock\VirtoCommerce.Platform.DistributedLock.csproj", "{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests", "tests\VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests\VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests.csproj", "{707A1D34-5E3A-4655-90BB-C70DFA545476}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Assets.FileSystem.Tests", "tests\VirtoCommerce.Platform.Assets.FileSystem.Tests\VirtoCommerce.Platform.Assets.FileSystem.Tests.csproj", "{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Caching.Tests", "tests\VirtoCommerce.Platform.Caching.Tests\VirtoCommerce.Platform.Caching.Tests.csproj", "{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +107,18 @@ Global
 		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{707A1D34-5E3A-4655-90BB-C70DFA545476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{707A1D34-5E3A-4655-90BB-C70DFA545476}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{707A1D34-5E3A-4655-90BB-C70DFA545476}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{707A1D34-5E3A-4655-90BB-C70DFA545476}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +138,9 @@ Global
 		{11BBA3A5-5C5B-447D-9844-6ED7DDF1B961} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 		{1BFCF9CE-E244-4F58-BB02-F3740B0E250A} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F} = {90F6E3EE-475A-4844-A4C4-078613591F81}
+		{707A1D34-5E3A-4655-90BB-C70DFA545476} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
+		{1ECD0D01-CBE5-4092-BEF0-85ECF663560F} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
+		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01A94F38-27D1-412F-A4F4-F00991D1157C}

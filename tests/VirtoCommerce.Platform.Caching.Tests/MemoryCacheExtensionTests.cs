@@ -5,22 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.Caching
+namespace VirtoCommerce.Platform.Caching.Tests
 {
     [Trait("Category", "Unit"), CollectionDefinition("CacheTests", DisableParallelization = true)]
     public class MemoryCacheExtensionTests : MemoryCacheTestsBase
     {
-
         [Fact]
         public void GetOrCreateExclusive()
         {
             var sut = CreateCache();
-            int counter = 0;
+            var counter = 0;
             Parallel.ForEach(Enumerable.Range(1, 10), i =>
             {
                 var item = sut.GetOrCreateExclusive("test-key", cacheEntry =>
@@ -36,7 +34,7 @@ namespace VirtoCommerce.Platform.Tests.Caching
         public void GetOrCreateExclusiveAsync()
         {
             var sut = CreateCache();
-            int counter = 0;
+            var counter = 0;
             Parallel.ForEach(Enumerable.Range(1, 10), async i =>
             {
                 var item = await sut.GetOrCreateExclusiveAsync("test-key", cacheEntry =>
@@ -52,7 +50,7 @@ namespace VirtoCommerce.Platform.Tests.Caching
         public void Named_AsyncLock_Exclusive_Access_For_One_Thread()
         {
             var sut = CreateCache();
-            int counter = 0;
+            var counter = 0;
             Parallel.ForEach(Enumerable.Range(1, 10), async i =>
             {
                 var releaser = await AsyncLock.GetLockByKey((i % 2).ToString()).LockAsync();
@@ -65,7 +63,6 @@ namespace VirtoCommerce.Platform.Tests.Caching
             });
             Assert.Equal(2, counter);
         }
-
 
         [Fact]
         public void DefaultCachingOptions_Are_Applied()
@@ -86,6 +83,5 @@ namespace VirtoCommerce.Platform.Tests.Caching
             });
             Assert.Equal(2, result);
         }
-
     }
 }

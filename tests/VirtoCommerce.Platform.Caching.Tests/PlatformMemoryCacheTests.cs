@@ -4,16 +4,16 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Xunit;
 
-namespace VirtoCommerce.Platform.Tests.Caching
+namespace VirtoCommerce.Platform.Caching.Tests
 {
     [Trait("Category", "Unit"), CollectionDefinition("CacheTests", DisableParallelization = true)]
-    public class PlatformMemoryCacheTests: MemoryCacheTestsBase
+    public class PlatformMemoryCacheTests : MemoryCacheTestsBase
     {
         [Fact]
         public void SetWithTokenRegistersForNotification()
         {
             var cache = GetPlatformMemoryCache();
-            string key = "myKey";
+            var key = "myKey";
             var value = new object();
             var expirationToken = new TestExpirationToken() { ActiveChangeCallbacks = true };
             cache.Set(key, value, expirationToken);
@@ -30,7 +30,7 @@ namespace VirtoCommerce.Platform.Tests.Caching
         public void FireTokenRemovesItem()
         {
             var cache = GetPlatformMemoryCache();
-            string key = "myKey";
+            var key = "myKey";
             var value = new object();
             var callbackInvoked = new ManualResetEvent(false);
             var expirationToken = new TestExpirationToken() { ActiveChangeCallbacks = true };
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Tests.Caching
         public void RemoveItemDisposesTokenRegistration()
         {
             var cache = GetPlatformMemoryCache();
-            string key = "myKey";
+            var key = "myKey";
             var value = new object();
             var callbackInvoked = new ManualResetEvent(false);
             var expirationToken = new TestExpirationToken() { ActiveChangeCallbacks = true };
@@ -74,7 +74,7 @@ namespace VirtoCommerce.Platform.Tests.Caching
             Assert.True(callbackInvoked.WaitOne(TimeSpan.FromSeconds(30)), "Callback");
         }
     }
-    
+
     internal class TestExpirationToken : IChangeToken
     {
         private bool _hasChanged;
