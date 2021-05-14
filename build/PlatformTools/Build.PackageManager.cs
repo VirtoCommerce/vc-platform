@@ -18,6 +18,7 @@ partial class Build: NukeBuild
     [Parameter("vc-package.json path")] public static string PackageManifestPath = "./vc-package.json";
     [Parameter("Install params (install -module VirtoCommerce.Core:1.2.3)")] public static string[] Module;
     [Parameter("Skip dependency solving")] public static bool SkipDependencySolving = false;
+    [Parameter("Platform or Module version to install", Name = "Version")] public static string VersionToInstall;
     Target Init => _ => _
     .Executes(async () =>
     {
@@ -32,8 +33,11 @@ partial class Build: NukeBuild
         PackageManifest packageManifest;
         if (!File.Exists(PackageManifestPath))
         {
+            Logger.Info("vc-package.json is not exists.");
+            Logger.Info("Looking for the platform release");
             var platformRelease = await GithubManager.GetPlatformRelease(GitHubToken, PlatformVersion);
             packageManifest = PackageManager.CreatePackageManifest(platformRelease.TagName);
+            Logger.Info($"Installing platform {platformRelease.TagName}");
             await InstallPlatformAsync(platformRelease.TagName);
         }
         else
@@ -67,9 +71,11 @@ partial class Build: NukeBuild
                 var existedModule = packageManifest.Modules.Where(m => m.Id == moduleItem.Id).FirstOrDefault();
                 if(existedModule == null)
                 {
+                    Logger.Info($"Add {moduleItem.Id}:{moduleItem.Version}");
                     packageManifest.Modules.Add(moduleItem);
                 } else
                 {
+                    Logger.Info($"Change version: {existedModule.Version} -> {moduleItem.Version}");
                     existedModule.Version = moduleItem.Version;
                 }
             }
@@ -78,6 +84,7 @@ partial class Build: NukeBuild
         {
             if (!packageManifest.Modules.Any())
             {
+                Logger.Info("Add group: commerce");
                 var commerce = externalCatalog.Modules.OfType<ManifestModuleInfo>().Where(m => m.Groups.Contains("commerce")).Select(m => new ModuleItem(m.ModuleName, m.Version.ToString()));
                 packageManifest.Modules.AddRange(commerce);
             }
@@ -132,7 +139,7 @@ partial class Build: NukeBuild
     }
     Target InstallModules => _ => _
     .After(InstallPlatform)
-    .Executes(async () => {
+    .Executes(() => {
         var packageManifest = PackageManager.FromFile(PackageManifestPath);
         var discoveryPath = GetDiscoveryPath();
         var localModuleCatalog = LocalModuleCatalog.GetCatalog(discoveryPath, ProbingPath);
@@ -151,21 +158,26 @@ partial class Build: NukeBuild
             {
                 ControlFlow.Fail($"No module {moduleInstall.Id} found");
             }
-            var (githubUser, repoName) = GithubManager.GetRepoFromUrl(externalModule.Ref);
-            var githubRelease = await GithubManager.GetModuleRelease(GitHubToken, repoName, moduleInstall.Version);
-            var releaseAsset = githubRelease.Assets.First();
             var currentModule = modules.First(m => m.ModuleName == moduleInstall.Id);
-            currentModule.Ref = releaseAsset.BrowserDownloadUrl;
+            currentModule.Ref = currentModule.Ref.Replace(((ManifestModuleInfo)currentModule).Version.ToString(), moduleInstall.Version);
         }
         var progress = new Progress<ProgressMessage>(m => Logger.Info(m.Message));
         if (!SkipDependencySolving)
         {
             modules = externalModuleCatalog.CompleteListWithDependencies(modules).ToList();
         }
-        var moduleManifests = modules.OfType<ManifestModuleInfo>();
+        var moduleManifests = modules.OfType<ManifestModuleInfo>().Where(m => !m.IsInstalled);
         moduleInstaller.Install(moduleManifests, progress);
         localModuleCatalog.Reload();
     });
+
+    private bool ModuleInstalled(string discoveryPath, string moduleId, string version)
+    {
+        var result = false;
+        var moduleDir = Path.Combine(discoveryPath, moduleId);
+
+        return result;
+    }
 
     Target Uninstall => _ => _
     .Executes(() =>
@@ -189,18 +201,16 @@ partial class Build: NukeBuild
         var platformRelease = await GithubManager.GetPlatformRelease(GitHubToken, PlatformVersion);
         packageManifest.PlatformVersion = platformRelease.TagName;
         packageManifest.PlatformAssetUrl = platformRelease.Assets.First().BrowserDownloadUrl;
-        foreach(var module in packageManifest.Modules)
+        var localModuleCatalog = LocalModuleCatalog.GetCatalog(GetDiscoveryPath(), ProbingPath);
+        var externalCatalog = ExtModuleCatalog.GetCatalog(GitHubToken, localModuleCatalog, packageManifest.ModuleSources);
+        foreach (var module in packageManifest.Modules)
         {
-            var localModuleCatalog = LocalModuleCatalog.GetCatalog(GetDiscoveryPath(), ProbingPath);
-            var externalCatalog = ExtModuleCatalog.GetCatalog(GitHubToken, localModuleCatalog, packageManifest.ModuleSources);
             var moduleInfo = externalCatalog.Items.OfType<ManifestModuleInfo>().Where(m => m.Id == module.Id).FirstOrDefault(m => m.Ref.Contains("github.com"));
             if(moduleInfo == null)
             {
                 ControlFlow.Fail($"No module {module.Id} found");
             }
-            var ownerRepo = GithubManager.GetRepoFromUrl(moduleInfo.Ref);
-            var moduleRelease = await GithubManager.GetModuleRelease(GitHubToken, ownerRepo.Item2, null);
-            module.Version = moduleRelease.TagName;
+            module.Version = moduleInfo.Version.ToString();
         }
         PackageManager.ToFile(packageManifest);
     });
