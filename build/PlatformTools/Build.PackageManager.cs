@@ -146,28 +146,45 @@ partial class Build: NukeBuild
         var externalModuleCatalog = ExtModuleCatalog.GetCatalog(GitHubToken, localModuleCatalog, packageManifest.ModuleSources);
         var moduleInstaller = ModuleInstallerFacade.GetModuleInstaller(discoveryPath, ProbingPath, GitHubToken, packageManifest.ModuleSources);
         var modules = new List<ModuleInfo>();
-        modules.AddRange(externalModuleCatalog.Modules.Where(m =>
-        {
-            var moduleIds = packageManifest.Modules.Select(i => i.Id);
-            return moduleIds.Contains(m.ModuleName);
-        }));
+        //modules.AddRange(externalModuleCatalog.Modules.Where(m =>
+        //{
+        //    var moduleIds = packageManifest.Modules.Select(i => i.Id);
+        //    return moduleIds.Contains(m.ModuleName);
+        //}));
+        var modulesToInstall = new List<ManifestModuleInfo>();
         foreach (var moduleInstall in packageManifest.Modules)
         {
-            var externalModule = externalModuleCatalog.Modules.FirstOrDefault(m => m.ModuleName == moduleInstall.Id);
+            var externalModule = externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(m => m.ModuleName == moduleInstall.Id);
             if (externalModule == null)
             {
                 ControlFlow.Fail($"No module {moduleInstall.Id} found");
             }
-            var currentModule = modules.First(m => m.ModuleName == moduleInstall.Id);
-            currentModule.Ref = currentModule.Ref.Replace(((ManifestModuleInfo)currentModule).Version.ToString(), moduleInstall.Version);
+            if (externalModule.IsInstalled && externalModule.Version.ToString() == moduleInstall.Version)
+                continue;
+            var currentModule = new ModuleManifest()
+            {
+                Id = moduleInstall.Id,
+                Version = moduleInstall.Version,
+                Dependencies = externalModule.Dependencies.Select(d => new ManifestDependency()
+                {
+                    Id = d.Id,
+                    Version = d.Version.ToString()
+                }).ToArray(),
+                PackageUrl = externalModule.Ref.Replace(externalModule.Version.ToString(), moduleInstall.Version),
+                Authors = externalModule.Authors.ToArray(),
+                PlatformVersion = externalModule.PlatformVersion.ToString()
+            };
+
+            modulesToInstall.Add(new ManifestModuleInfo().LoadFromManifest(currentModule));
+            //currentModule.Ref = externalModule.Ref.Replace(((ManifestModuleInfo)currentModule).Version.ToString(), moduleInstall.Version);
         }
         var progress = new Progress<ProgressMessage>(m => Logger.Info(m.Message));
         if (!SkipDependencySolving)
         {
-            modules = externalModuleCatalog.CompleteListWithDependencies(modules).ToList();
+            modulesToInstall = externalModuleCatalog.CompleteListWithDependencies(modulesToInstall.OfType<ModuleInfo>()).OfType<ManifestModuleInfo>().ToList();
         }
-        var moduleManifests = modules.OfType<ManifestModuleInfo>().Where(m => !m.IsInstalled);
-        moduleInstaller.Install(moduleManifests, progress);
+        //var moduleManifests = modules.OfType<ManifestModuleInfo>().Where(m => !m.IsInstalled);
+        moduleInstaller.Install(modulesToInstall, progress);
         localModuleCatalog.Reload();
     });
 
