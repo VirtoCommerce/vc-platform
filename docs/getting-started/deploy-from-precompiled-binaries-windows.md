@@ -7,6 +7,12 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 * [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 
+
+## You have two options for installing the platform 
+
+* Manual downloading the precomplied binaries
+* Using CLI (beta)
+  
 ## Downloading the precomplied binaries
 
 * Navigate to the <a href="https://github.com/VirtoCommerce/vc-platform/releases">Releases section of Virto Commerce Platform in GitHub.</a>
@@ -15,21 +21,22 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 * Unpack this zip to a local directory **C:\vc-platform-3**. After that you will have the directory with Platform precompiled files.
 
-## Downloading with vc-build tool
+
+## Using `vc-build` CLI (beta).
+
 * Install vc-build 
 ```console
 dotnet tool install -g VirtoCommerce.GlobalTool
 ```
-* Install platform
+* Install platform and modules
 ```console
-vc-build Init
-vc-build InstallPlatform
+vc-build install
 ```
 Also you can specify the platform version:
 ```console
-vc-build Init -PlatformVersion 3.52.0
-vc-build InstallPlatform
+vc-build install -version 3.55.0
 ```
+Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/tree/dev/build#packages-management)  for more info.
 
 ## Setup
 
