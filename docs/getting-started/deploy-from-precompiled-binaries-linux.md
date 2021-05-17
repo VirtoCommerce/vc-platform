@@ -45,7 +45,7 @@ Also you can specify the platform version:
 ```console
 vc-build install -version 3.55.0
 ```
-Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/tree/dev/build#packages-management)  for more info.
+Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/CLI-tools/package-management.md) for more info.
 
 
 ## Setup

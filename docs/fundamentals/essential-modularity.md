@@ -174,7 +174,7 @@ How this process works for the virto platform modules for both platform major ve
 ![image|624x170](../media/essential-modularity-5.png) 
 
 
-**Design time with using CLI** –  this mode is often used during development, when you manage installed versions of modules, install or update them manually on the local computer or in any other public environment. The virto provides the special CLI tool for this, check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/tree/dev/build#packages-management) for more info.
+**Design time with using CLI** –  this mode is often used during development, when you manage installed versions of modules, install or update them manually on the local computer or in any other public environment. The virto provides the special CLI tool for this, check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/CLI-tools/package-management.md) for more info.
 
 Examples:
 
@@ -188,7 +188,7 @@ vc-build update
 
 ## Module deployment process
 
-Virto platform  has a build automation tool  [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/tree/master/build)   that helps with  building, packaging  and releasing  modules, you might read more about by this link https://github.com/VirtoCommerce/vc-platform/tree/master/build.
+Virto platform  has a build automation tool  [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/tree/dev/build)   that helps with  building, packaging  and releasing  modules, you might read more about by this link [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/CLI-tools/build-automation.md) for more info.
 
 ![image](../media/essential-modularity-7.png) 
 

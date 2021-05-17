@@ -5,6 +5,7 @@ arrange:
   - developer-guide
   - fundamentals
   - techniques
+  - CLI-tools
   - release-information
   - ...
   - support.md
