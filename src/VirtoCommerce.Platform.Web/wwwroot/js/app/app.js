@@ -1,7 +1,7 @@
-angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', '$window', 'platformWebApp.mainMenuService',
-    'platformWebApp.i18n', '$timeout', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings',
-    function ($rootScope, $scope, $window, mainMenuService,
-        i18n, $timeout, modules, $state, bladeNavigationService, userProfile, settings) {
+angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
+    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings',
+    function ($rootScope, $scope, mainMenuService,
+        i18n, modules, $state, bladeNavigationService, userProfile, settings) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -279,8 +279,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
             $compileProvider.debugInfoEnabled(false);
         }])
-    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.bladeNavigationService',
-        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, bladeNavigationService) {
+    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.loginOfBehalfUrlResolver',
+        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, loginOfBehalfUrlResolver) {
 
             //Disable animation
             $animate.enabled(false);
@@ -465,17 +465,37 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 name: "platform.commands.login-on-behalf",
                 icon: 'fa fa-key',
                 executeMethod: function (blade) {
-                    var newBlade = {
-                        id: 'memberDetailChild',
-                        currentEntityId: blade.currentEntity.id,
-                        title: 'platform.blades.loginOnBehalf-list.title',
-                        titleValues: { name: blade.currentEntity.userName },
-                        controller: 'platformWebApp.securityLoginOnBehalfListController',
-                        template: '$(Platform)/Scripts/app/security/blades/loginOnBehalf-list.tpl.html'
+                    var showError = () => {
+                        var dialog = {
+                            id: "noUrlDialog",
+                            showWarning: true,
+                            title: 'platform.dialogs.impersonate-no-url.title',
+                            message: 'platform.dialogs.impersonate-no-url.message'
+                        };
+                        dialogService.showNotificationDialog(dialog);
                     };
-                    bladeNavigationService.showBlade(newBlade, blade);
+
+                    var promise = loginOfBehalfUrlResolver.resolve(blade.currentEntity);
+                    if (promise) {
+                        blade.isLoading = true;
+                        promise.then((url) => {
+                            blade.isLoading = false;
+                            if (url) {
+                                if (url.endsWith("/")) {
+                                    url = url.slice(0, -1);
+                                }
+
+                                url = url + '/account/impersonate/' + blade.currentEntity.id;
+                                $window.open(url, '_blank');
+                            } else {
+                                showError();
+                            }
+                        });
+                    } else {
+                        showError();
+                    }
                 },
-                canExecuteMethod: function () { return true; },
+                canExecuteMethod: (blade) => blade.currentEntity,
                 permission: 'platform:security:loginOnBehalf',
                 index: 4
             };

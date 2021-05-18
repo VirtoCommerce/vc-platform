@@ -152,7 +152,7 @@ This fact may lead to an unexpected update of third-party dependencies for other
 
 Virto has two different install and update modes for modules: **Runtime** and  **Design-time** respectively.
 
-**Runtime**  - this mode is used for update and install modules on working system or in first time setup and this process based on request to special resource file modules.json that can be on public or internal access and it contains information about all modules and their latest major versions (minor and patch versions history not stored). Path to this file can be set by a special setting in the platform `appsettings.json` file.
+**Runtime**  - this mode is used for update and install modules on working system or in first time setup and this process based on request to special resource file modules.json (registry_ that can be on public or internal access and it contains information about all modules and their latest major versions (minor and patch versions history not stored). Path to this file can be set by a special setting in the platform `appsettings.json` file.
 
 *`module.manifest`*
 ```JSON
@@ -174,17 +174,21 @@ How this process works for the virto platform modules for both platform major ve
 ![image|624x170](../media/essential-modularity-5.png) 
 
 
-**Design time** –  this mode is often used during development, when you manage installed versions of modules, install them manually or update them in the `~/Modules` discovery folder on the local computer or in any other public environment. The main disadvantage of this method is it not distributed to other team members because of versions and list of used modules doesn’t preserved in version controls system and can’t be shared.
-Also we can setup module with vc-build tool:
-```console
-vc-build Install -Module VirtoCommerce.Store
-```
+**Design time with using CLI** –  this mode is often used during development, when you manage installed versions of modules, install or update them manually on the local computer or in any other public environment. The virto provides the special CLI tool for this, check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/CLI-tools/package-management.md) for more info.
 
->The virto platform team is currently working on improving of this process, where you can work with all modules in one solution (mono-repositoriy) and manage versions and dependencies of all modules in the same way as you can manage NuGet dependencies for regular solutions containing several projects.
+Examples:
+
+```console
+//Install  the latest version of a particular module 
+vc-build install -Module VirtoCommerce.Store
+
+//Update platform and all installed modules to the latest version
+vc-build update
+```
 
 ## Module deployment process
 
-Virto platform  has a build automation tool  [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/tree/master/build)   that helps with  building, packaging  and releasing  modules, you might read more about by this link https://github.com/VirtoCommerce/vc-platform/tree/master/build.
+Virto platform  has a build automation tool  [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/tree/dev/build)   that helps with  building, packaging  and releasing  modules, you might read more about by this link [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/CLI-tools/build-automation.md) for more info.
 
 ![image](../media/essential-modularity-7.png) 
 

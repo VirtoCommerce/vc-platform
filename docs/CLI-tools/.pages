@@ -1,0 +1,6 @@
+arrange:
+    - introduction.md
+    - build-automation.md
+    - package-management.md
+    - cold-start-and-data-migration.md
+    - ...

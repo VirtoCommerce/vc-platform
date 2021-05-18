@@ -1,6 +1,6 @@
 # Deploy to Azure
 
-## Deploy Platfrom
+## Deploy Platform
 You can deploy Virto Commerce Platform to Azure Cloud. To run the deployment of Platform, select the following button:
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fmaster%2Fazuredeploy.json)
@@ -33,7 +33,7 @@ The following resources will be created during deployment:
     ![Deploy to azure](../media/deploy-to-azure-vc-login.png)
 1. Install Commerce modules and restart the platform.
     ![Deploy to azure](../media/deploy-to-azure-vc-restart.png)
-1. Install sample data if required. 
+1. After restart Virto Commerce will offer to Install sample data. Select it if required. The sample data can be a good kick-off to launch a demo storefront and play with the platform.
 
 ## Deploy Storefront
 
