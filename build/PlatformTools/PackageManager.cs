@@ -23,6 +23,11 @@ namespace PlatformTools
             return manifest;
         }
 
+        public static PackageManifest CreatePackageManifest(string platformVersion)
+        {
+            return CreatePackageManifest(platformVersion, "");
+        }
+
         public static PackageManifest UpdatePlatform(PackageManifest manifest, string newVersion)
         {
             manifest.PlatformVersion = newVersion;
