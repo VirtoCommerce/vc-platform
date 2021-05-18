@@ -16,7 +16,7 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * Allows to display OuterId for Organization and Contacts
     * Add ability Search by username
 
-    [Continue reading on Virto Commerce community ...]https://www.virtocommerce.org/t/news-digest-17-may-2021/318)
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-17-may-2021/318)
 
 !!! done "3 May"
     * New Videos on Youtube
