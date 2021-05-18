@@ -77,7 +77,7 @@ jobs:
     - name: Katalon Studio Github Action
       uses: VirtoCommerce/vc-github-actions/katalon-studio-github-action@master
       with:
-        version: '7.5.5'
+        version: '7.9.1'
         projectPath: '${{ github.workspace }}/vc-quality-gate-katalon/platform_storefront.prj'
         args: '-noSplash -retry=0 -testSuiteCollectionPath="Test Suites/Modules/Platform_collection" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"'
 
