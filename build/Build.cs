@@ -815,7 +815,7 @@ partial class Build : NukeBuild
 
             var processEnd = ProcessTasks.StartProcess(dotNetPath, endCmd, customLogger: SonarLogger, logInvocation: false)
                 .AssertWaitForExit().AssertZeroExitCode();
-            var errors = processEnd.Output.Where(o => !o.Text.Contains(@"The 'files' list in config file 'tsconfig.json' is empty") && o.Type == OutputType.Err);
+            var errors = processEnd.Output.Where(o => !o.Text.Contains(@"The 'files' list in config file 'tsconfig.json' is empty") && o.Type == OutputType.Err).ToList();
             if(errors.Any())
             {
                 ControlFlow.Fail(errors.Select(e => e.Text).Join(Environment.NewLine));

@@ -212,14 +212,6 @@ partial class Build: NukeBuild
         localModuleCatalog.Reload();
     });
 
-    private bool ModuleInstalled(string discoveryPath, string moduleId, string version)
-    {
-        var result = false;
-        var moduleDir = Path.Combine(discoveryPath, moduleId);
-
-        return result;
-    }
-
     Target Uninstall => _ => _
     .Executes(() =>
     {
