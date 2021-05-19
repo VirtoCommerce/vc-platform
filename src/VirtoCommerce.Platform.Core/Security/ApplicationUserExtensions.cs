@@ -1,3 +1,4 @@
+using VirtoCommerce.Platform.Core.ChangesUtils;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
@@ -6,7 +7,7 @@ namespace VirtoCommerce.Platform.Core.Security
     {
         public static ListDictionary<string, string> DetectUserChanges(this ApplicationUser newUser, ApplicationUser oldUser)
         {
-            var result = new ListDictionary<string, string>();
+            var result = ChangesDetector.Gather(newUser, oldUser);
 
             if (newUser.UserName != oldUser.UserName)
             {
@@ -16,26 +17,6 @@ namespace VirtoCommerce.Platform.Core.Security
             if (newUser.Email != oldUser.Email)
             {
                 result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: email: {oldUser.Email} -> {newUser.Email}");
-            }
-
-            if (newUser.UserType != oldUser.UserType)
-            {
-                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: user type: {oldUser.UserType} -> {newUser.UserType}");
-            }
-
-            if (newUser.IsAdministrator != oldUser.IsAdministrator)
-            {
-                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: root: {oldUser.IsAdministrator} -> {newUser.IsAdministrator}");
-            }
-
-            if (newUser.MemberId != oldUser.MemberId)
-            {
-                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: member ID: {oldUser.MemberId} -> {newUser.MemberId}");
-            }
-
-            if (newUser.Status != oldUser.Status)
-            {
-                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: status: {oldUser.Status} -> {newUser.Status}");
             }
 
             if (newUser.PasswordHash != oldUser.PasswordHash)
