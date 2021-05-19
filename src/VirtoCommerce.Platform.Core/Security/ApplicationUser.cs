@@ -98,6 +98,56 @@ namespace VirtoCommerce.Platform.Core.Security
             target.LastPasswordChangedDate = LastPasswordChangedDate;
         }
 
+        /// <summary>
+        /// Collect the ApplicationUser changes in human-readable form.
+        /// Should be overridden by ApplicationUser descendants to extend changes data
+        /// </summary>
+        /// <param name="oldUser"></param>
+        /// <returns></returns>
+        public virtual ListDictionary<string, string> DetectUserChanges(ApplicationUser oldUser)
+        {
+            var newUser = this;
+
+            var result = new ListDictionary<string, string>();
+
+            if (newUser.UserName != oldUser.UserName)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: user name: {oldUser.UserName} -> {newUser.UserName}");
+            }
+
+            if (newUser.Email != oldUser.Email)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: email: {oldUser.Email} -> {newUser.Email}");
+            }
+
+            if (newUser.UserType != oldUser.UserType)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: user type: {oldUser.UserType} -> {newUser.UserType}");
+            }
+
+            if (newUser.IsAdministrator != oldUser.IsAdministrator)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: root: {oldUser.IsAdministrator} -> {newUser.IsAdministrator}");
+            }
+
+            if (newUser.MemberId != oldUser.MemberId)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: member ID: {oldUser.MemberId} -> {newUser.MemberId}");
+            }
+
+            if (newUser.Status != oldUser.Status)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: status: {oldUser.Status} -> {newUser.Status}");
+            }
+
+            if (newUser.PasswordHash != oldUser.PasswordHash)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserPasswordChanged, $"Password changed");
+            }
+
+            return result;
+        }
+
         #region ICloneable members
 
         public virtual object Clone()
