@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.Platform.Core.ChangesUtils
 {
@@ -18,7 +19,7 @@ namespace VirtoCommerce.Platform.Core.ChangesUtils
             var objType = newObj.GetType();
             if (objType.Equals(oldObj.GetType()))
             {
-                // Should collect all the getters marked by WithChangesDetectorAttribute and store into the cache
+                // Should collect all the getters marked by UseInChangesDetectorAttribute and store into the cache
                 var infos = _changesDetectorPropertyInfosCache.GetOrAdd(objType, _ =>
                     _.FindPropertiesWithAttribute(typeof(UseInChangesDetectorAttribute)).Select(
                     x => new ChangesDetectorPropertyInfo()
@@ -40,6 +41,11 @@ namespace VirtoCommerce.Platform.Core.ChangesUtils
                     }
                 }
             }
+            else
+            {
+                throw new PlatformException("Can't compare objects of different types.");
+            }
+
 
             return result;
         }
