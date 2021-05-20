@@ -30,27 +30,6 @@ namespace VirtoCommerce.Platform.Core.ChangesUtils
         }
 
         /// <summary>
-        /// Gather changes info for objects by properties, defined in native type of objects.
-        /// Comparable objects should have equal type.
-        /// Properties to compare should be annotated with <see cref="UseInChangesDetectorAttribute"/>.
-        /// </summary>
-        /// <param name="newObj">An object</param>
-        /// <param name="oldObj">An object compare to</param>
-        /// <returns></returns>
-        public static ListDictionary<string, string> Gather(object newObj, object oldObj)
-        {
-            var objType = newObj.GetType();
-
-            if (!objType.Equals(oldObj.GetType()))
-            {
-                throw new PlatformException("Can't compare objects of different types.");
-                
-            }
-            return GatherByType(objType, newObj, oldObj);
-        }
-
-
-        /// <summary>
         /// Gather changes info for objects by properties, defined in type objType.
         /// Properties to compare should be annotated with <see cref="UseInChangesDetectorAttribute"/>.
         /// </summary>
@@ -84,6 +63,26 @@ namespace VirtoCommerce.Platform.Core.ChangesUtils
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Gather changes info for objects by properties, defined in native type of objects.
+        /// Comparable objects should have equal type.
+        /// Properties to compare should be annotated with <see cref="UseInChangesDetectorAttribute"/>.
+        /// </summary>
+        /// <param name="newObj">An object</param>
+        /// <param name="oldObj">An object compare to</param>
+        /// <returns></returns>
+        public static ListDictionary<string, string> Gather(object newObj, object oldObj)
+        {
+            var objType = newObj.GetType();
+
+            if (!objType.Equals(oldObj.GetType()))
+            {
+                throw new PlatformException("Can't compare objects of different types.");
+
+            }
+            return GatherByType(objType, newObj, oldObj);
         }
     }
 }
