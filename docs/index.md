@@ -9,30 +9,30 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
 ## News Digests
 
 !!! done "17 May"
-    * New Videos on Youtube
-    * Rework Dictionary Values Blade for Platform Settings
-    * Allow updating Dynamic properties for Contacts via XAPI
-    * Upgrade to latest Azure.BlobStorage
-    * Allows to display OuterId for Organization and Contacts
-    * Add ability Search by username
+    * Added New Videos on Youtube
+    * Reworked Dictionary Values Blade UX for Platform Settings
+    * Allowed updating Dynamic properties for Contacts via XAPI
+    * Upgraded to latest Azure.BlobStorage
+    * Allowed to display OuterId for Organization and Contacts
+    * Added ability Search by username
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-17-may-2021/318)
 
 !!! done "3 May"
-    * New Videos on Youtube
-    * Price import/export module
-    * File system distributed lock 
-    * Dynamic Properties for Organizations and contacts
-    * UX/UI Improvements
+    * Added New Videos on Youtube
+    * Released Price import/export module
+    * Added File system distributed lock 
+    * Added Dynamic Properties for Organizations and contacts
+    * Implemented UX/UI Improvements
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-3-may-2021/314)
 
 !!! done "19 April"
-    * New Videos on Youtube
-    * Product with a Bill of Materials
-    * Password repeat generation policy
+    * Added New Videos on Youtube
+    * Added Product with a Bill of Materials
+    * Added Password repeat generation policy
     * Updated Visual Studio Module Template
-    * UX/UI Improvements
+    * Implemented UX/UI Improvements
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-19-april-2021/309)
 
