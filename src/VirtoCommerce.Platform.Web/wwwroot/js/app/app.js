@@ -279,8 +279,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
             $compileProvider.debugInfoEnabled(false);
         }])
-    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.loginOfBehalfUrlResolver',
-        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, loginOfBehalfUrlResolver) {
+    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.loginOfBehalfUrlResolver',
+        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, loginOfBehalfUrlResolver) {
 
             //Disable animation
             $animate.enabled(false);
@@ -342,6 +342,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     $state.go('loginDialog');
                 }
             });
+
+            pushNotificationService.startListening();
 
             //server error handling
             //$rootScope.$on('httpError', function (event, rejection) {
