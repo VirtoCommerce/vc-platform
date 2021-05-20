@@ -1,7 +1,6 @@
-using Xunit;
 using FluentAssertions;
 using VirtoCommerce.Platform.Core.Utils.ChangeDetector;
-using VirtoCommerce.Platform.Core.Common;
+using Xunit;
 
 namespace VirtoCommerce.Platform.Core.Tests.Common
 {

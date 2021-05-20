@@ -46,7 +46,6 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </summary>
         /// <param name="type">The type which properties need to be sought</param>
         /// <param name="attribute">The attribute to search</param>
-        /// <param name="inherit">Should search or not thru type ancestors properties</param>
         /// <returns></returns>
         public static PropertyInfo[] FindPropertiesWithAttribute(this Type type, Type attribute)
         {
