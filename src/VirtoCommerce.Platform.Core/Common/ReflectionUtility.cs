@@ -41,10 +41,28 @@ namespace VirtoCommerce.Platform.Core.Common
             return retVal;
         }
 
+        /// <summary>
+        /// Search all type properties (ancestors properties included) that have specific attribute
+        /// </summary>
+        /// <param name="type">The type which properties need to be sought</param>
+        /// <param name="attribute">The attribute to search</param>
+        /// <returns></returns>
         public static PropertyInfo[] FindPropertiesWithAttribute(this Type type, Type attribute)
         {
+            return FindPropertiesWithAttribute(type, attribute, true);
+        }
+
+        /// <summary>
+        /// Search all type properties that have specific attribute
+        /// </summary>
+        /// <param name="type">The type which properties need to be sought</param>
+        /// <param name="attribute">The attribute to search</param>
+        /// <param name="inherit">Should search or not thru type ancestors properties</param>
+        /// <returns></returns>
+        public static PropertyInfo[] FindPropertiesWithAttribute(this Type type, Type attribute, bool inherit)
+        {
             PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            return properties.Where(x => x.GetCustomAttributes(attribute, true).Any()).ToArray();
+            return properties.Where(x => x.GetCustomAttributes(attribute, inherit).Any()).ToArray();
         }
 
         public static bool IsHaveAttribute(this PropertyInfo propertyInfo, Type attribute)
