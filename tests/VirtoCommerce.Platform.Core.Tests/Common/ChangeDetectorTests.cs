@@ -48,6 +48,4 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
             changes.Values.Count.Should().Be(2);
         }
     }
-
-
 }
