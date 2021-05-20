@@ -1,10 +1,11 @@
 using System.Reflection;
 
-namespace VirtoCommerce.Platform.Core.ChangesUtils
+namespace VirtoCommerce.Platform.Core.Utils.ChangeDetector
 {
-    public class ChangesDetectorPropertyInfo
+    public sealed class ChangesDetectorPropertyInfo
     {
         public string PropertyName { get; set; }
+        public bool Inherited { get; set; }
         public string ChangeKey { get; set; }
         public MethodInfo Getter { get; set; }
     }

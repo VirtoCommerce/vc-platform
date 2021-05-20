@@ -4,8 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using VirtoCommerce.Platform.Core.ChangesUtils;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Utils.ChangeDetector;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
@@ -16,17 +16,17 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public virtual string StoreId { get; set; }
 
-        [UseInChangesDetector(PlatformConstants.Security.Changes.UserUpdated)]
+        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
         public virtual string MemberId { get; set; }
 
-        [UseInChangesDetector(PlatformConstants.Security.Changes.UserUpdated)]
+        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
         public virtual bool IsAdministrator { get; set; }
         public virtual string PhotoUrl { get; set; }
 
-        [UseInChangesDetector(PlatformConstants.Security.Changes.UserUpdated)]
+        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
         public virtual string UserType { get; set; }
 
-        [UseInChangesDetector(PlatformConstants.Security.Changes.UserUpdated)]
+        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
         public virtual string Status { get; set; }
         public virtual string Password { get; set; }
         public virtual DateTime CreatedDate { get; set; }
