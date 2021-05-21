@@ -1,7 +1,10 @@
-﻿<div class="modal-header">
+<div class="modal-header">
     <h3 class="modal-title">{{title | translate: titleValues}}</h3>
 </div>
 <div class="modal-body">
+    <span ng-if="showWarning" class="warning">
+        <img src="/images/dialogs/exclamation.svg" alt="">
+    </span>
     {{message | translate: messageValues}}
 </div>
 <div class="modal-footer">

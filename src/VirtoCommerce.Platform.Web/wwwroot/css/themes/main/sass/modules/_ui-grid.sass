@@ -29,7 +29,7 @@
 .ui-grid-row:nth-child(2n) .ui-grid-cell
   transition: background-color .35s ease-in-out
 .ui-grid-row:nth-child(2n) .ui-grid-cell
-  background: none
+  background: #F9F9F9
 .ui-grid-row:nth-child(2n+1) .ui-grid-cell.__selected
   background: #d9effa !important
 .ui-grid-row.ui-grid-row-selected > [ui-grid-row] > .ui-grid-cell
@@ -89,7 +89,7 @@
   display: inline-block
   font-size: 14px
   height: 100%
-  padding: 5px 0 0 5px
+  padding: 4px 0 0 10px
   text-shadow: 1px 1px #fff
   vertical-align: middle
   width: 100%
@@ -152,6 +152,7 @@
   color: #a1c0d4
   height: 100%
   opacity: 1
+  margin-left: -3px
 .ui-grid-selection-row-header-buttons
   &::after
     content: ' '
@@ -231,17 +232,21 @@ input.ui-grid-filter-input[type="text"]
   right: 20px
 .ui-grid-menu-button
   box-sizing: border-box
-  font-size: 14px
-  height: 32px
+  height: 26px
+  margin-top: 3px;
   padding: 1px 0 0
   text-align: center
-  width: 32px
+  width: 26px
   border-bottom: 1px solid #d4d4d4
   border-top: 1px solid #d4d4d4
   border-right: 1px solid #d4d4d4
 .ui-grid-sort-priority-number
   color: $baseColor
+.ui-grid-menu-button .ui-grid-icon-container
+  margin-top: 1px
+  margin-left: unset
 .ui-grid-menu-button .ui-grid-icon-menu
+  color: $baseColor
   &::before
     width: 9px
 .ui-grid-menu-button .ui-grid-menu

@@ -85,5 +85,8 @@ angular.module('platformWebApp').config(
                 headerNotifications.addNotification(data);
             });
 
-            return {};
+            return {
+                // fake method to ensure that pushNotificationService is referenced and static code analyzer won't mark the service as unused
+                startListening: () => true
+            };
         }]);

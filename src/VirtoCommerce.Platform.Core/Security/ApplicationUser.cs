@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Utils.ChangeDetector;
 
 namespace VirtoCommerce.Platform.Core.Security
 {
@@ -14,10 +15,18 @@ namespace VirtoCommerce.Platform.Core.Security
         /// Tenant id
         /// </summary>
         public virtual string StoreId { get; set; }
+
+        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
         public virtual string MemberId { get; set; }
+
+        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
         public virtual bool IsAdministrator { get; set; }
         public virtual string PhotoUrl { get; set; }
+
+        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
         public virtual string UserType { get; set; }
+
+        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
         public virtual string Status { get; set; }
         public virtual string Password { get; set; }
         public virtual DateTime CreatedDate { get; set; }
@@ -25,6 +34,8 @@ namespace VirtoCommerce.Platform.Core.Security
         public virtual string CreatedBy { get; set; }
         public virtual string ModifiedBy { get; set; }
         public virtual IList<Role> Roles { get; set; }
+
+        [SwaggerIgnore]
         public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; }
 
         /// <summary>
@@ -94,6 +105,31 @@ namespace VirtoCommerce.Platform.Core.Security
             target.Password = Password;
             target.PasswordExpired = PasswordExpired;
             target.LastPasswordChangedDate = LastPasswordChangedDate;
+        }
+
+        public virtual ListDictionary<string, string> DetectUserChanges(ApplicationUser oldUser)
+        {
+            var newUser = this;
+            // Gather all the changes from ApplicationUser and its possible descendants
+            var result = ChangesDetector.Gather(newUser, oldUser);
+
+            //Next: gather the changes manually from specific properties of ApplicationUser's ancestor
+            if (newUser.UserName != oldUser.UserName)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: user name: {oldUser.UserName} -> {newUser.UserName}");
+            }
+
+            if (newUser.Email != oldUser.Email)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, $"Changes: email: {oldUser.Email} -> {newUser.Email}");
+            }
+
+            if (newUser.PasswordHash != oldUser.PasswordHash)
+            {
+                result.Add(PlatformConstants.Security.Changes.UserPasswordChanged, $"Password changed");
+            }
+
+            return result;
         }
 
         #region ICloneable members
