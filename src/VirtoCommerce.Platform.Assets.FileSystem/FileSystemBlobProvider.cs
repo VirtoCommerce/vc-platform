@@ -193,6 +193,9 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
 
             foreach (var url in urls)
             {
+                if (string.IsNullOrWhiteSpace(url))
+                    continue;
+
                 var path = GetStoragePathFromUrl(url);
 
                 ValidatePath(path);
