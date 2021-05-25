@@ -30,6 +30,6 @@ namespace VirtoCommerce.Platform.Core.Modularity.PushNotifications
         /// The error count.
         /// </value>
         [JsonProperty("errorCount")]
-        public int ErrorCount => ProgressLog.Count(x => x.Level == ProgressMessageLevel.Error);
+        public int ErrorCount => ProgressLog?.Count(x => x.Level == ProgressMessageLevel.Error) ?? 0;
     }
 }
