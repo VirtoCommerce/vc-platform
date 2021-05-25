@@ -372,6 +372,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     lock (_lockObject)
                     {
+                        notification.Description = m.Message;
                         notification.ProgressLog.Add(m);
                         _pushNotifier.Send(notification);
                     }
@@ -400,10 +401,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 _settingsManager.SetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, AutoInstallState.Completed);
 
                 notification.Finished = DateTime.UtcNow;
+                notification.Description = "Installation finished.";
                 notification.ProgressLog.Add(new ProgressMessage
                 {
                     Level = ProgressMessageLevel.Info,
-                    Message = "Installation finished.",
+                    Message = notification.Description,
                 });
                 _pushNotifier.Send(notification);
             }
