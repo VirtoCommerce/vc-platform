@@ -18,12 +18,14 @@ vc-build install (with no args)
 This target downloads and install into the current folder the platform and modules with versions described in vc-package.json. If vc-package.json is not found in the local folder, by default the command will download and install the latest platform and modules versions that are marked with the commerce group.
 
 By default, install target will install all modules listed as dependencies in vc-package.json.
+Path to vc-package.json, discovery and probing paths can be overridden with PackageManifestPath, DiscoveryPath, ProbingPath parameters. Also we can skip dependency solving with SkipDependencySolving parameter.
 Examples:
 ```console
 vc-build install (with no args)
 vc-build install -platform -version <version>
 vc-build install -module <module> -version <version>
 vc-build install -module <module>:<version>
+vc-build install -PackageManifestPath some_directory/vc-package.json -DiscoveryPath ../modules -ProbingPath platform_dir/app_data/modules -SkipDependencySolving
 ```
 :::
 :::
