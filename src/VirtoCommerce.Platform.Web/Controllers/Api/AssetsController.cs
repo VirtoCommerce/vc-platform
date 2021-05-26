@@ -187,7 +187,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult> DeleteBlobsAsync([FromQuery] string[] urls)
         {
             if (urls.IsNullOrEmpty())
-                return BadRequest("Please, specify all deleting assets urls.");
+                return BadRequest("Please, specify at least one asset URL to delete.");
 
             await _blobProvider.RemoveAsync(urls);
             return NoContent();

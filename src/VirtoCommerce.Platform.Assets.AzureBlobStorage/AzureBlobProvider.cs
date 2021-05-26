@@ -119,7 +119,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 
         public virtual async Task RemoveAsync(string[] urls)
         {
-            foreach (var url in urls)
+            foreach (var url in urls.Where(x => !string.IsNullOrWhiteSpace(x)))
             {
                 if (string.IsNullOrWhiteSpace(url))
                     continue;
