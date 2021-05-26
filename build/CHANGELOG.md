@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.7.3] - 2021-05-26
+### Changed
+- Updated help
+- Extended install target
+- Removed coverlet.console dependency
+### Fixed
+- Coverage report generation method
+
 ## [1.7.0] - 2021-04-21
 ### Added
 - Targets: Init, Install, InstallPlatform, InstallModules, Uninstall

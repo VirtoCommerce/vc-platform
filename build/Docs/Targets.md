@@ -10,13 +10,22 @@ vc-build Init -PlatformVersion 3.52.0
 :::
 :::
 ## Install
-Gets the -Module parameter, which is an array of module ids, and updates vc-package.json.
-Also module id can be  supplemented with the version number.
-Discovery and Probing directories can be overrided via -DiscoveryPath and -ProbingPath
+This command downloads and install into the current folder the platform or modules with versions that are passed as the command parameters or defined in vc-package.json.
+
+vc-package.json - file is used to maintain the list of installed modules with their versions. This allows vc-build to easily restore the platform with the modules when on a different machine, such as a build server, without all those packages.
+
+vc-build install (with no args)
+This target downloads and install into the current folder the platform and modules with versions described in vc-package.json. If vc-package.json is not found in the local folder, by default the command will download and install the latest platform and modules versions that are marked with the commerce group.
+
+By default, install target will install all modules listed as dependencies in vc-package.json.
+Path to vc-package.json, discovery and probing paths can be overridden with PackageManifestPath, DiscoveryPath, ProbingPath parameters. Also we can skip dependency solving with SkipDependencySolving parameter.
 Examples:
 ```console
-vc-build install -Module VirtoCommerce.Cart VirtoCommerce.Catalog
-vc-build install -Module VirtoCommerce.Cart VirtoCommerce.Catalog:3.38.0
+vc-build install (with no args)
+vc-build install -platform -version <version>
+vc-build install -module <module> -version <version>
+vc-build install -module <module>:<version>
+vc-build install -PackageManifestPath some_directory/vc-package.json -DiscoveryPath ../modules -ProbingPath platform_dir/app_data/modules -SkipDependencySolving
 ```
 :::
 :::
@@ -130,8 +139,11 @@ vc-build PublishModuleManifest
 :::
 :::
 ## SonarQubeStart
-Starts sonar scanner by executing "dotnet sonarscanner begin"
+Starts sonar scanner by executing "dotnet sonarscanner begin". 
 Gets parameters: SonarBranchName, SonarPRBase, SonarPRBranch, SonarPRNumber, SonarGithubRepo, SonarPRProvider, SonarAuthToken
+```console
+vc-build SonarQubeStart -SonarBranchName dev -SonarAuthToken *** -RepoName vc-module-marketing
+```
 :::
 :::
 ## SonarQubeEnd
