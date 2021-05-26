@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <PackageId>VirtoCommerce.GlobalTool</PackageId>
         <OutputType>Exe</OutputType>
@@ -35,7 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.console" Version="1.7.2">
+        <PackageReference Include="dotnet-reportgenerator-globaltool" Version="4.8.8">
             <ExcludeAssets>all</ExcludeAssets>
         </PackageReference>
         <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="5.6.3">
@@ -73,7 +73,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Docs\Targets.md">
+        <None Update="docs\targets.md">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
