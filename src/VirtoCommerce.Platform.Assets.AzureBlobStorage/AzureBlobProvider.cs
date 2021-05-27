@@ -121,9 +121,6 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         {
             foreach (var url in urls.Where(x => !string.IsNullOrWhiteSpace(x)))
             {
-                if (string.IsNullOrWhiteSpace(url))
-                    continue;
-
                 var absoluteUri = url.IsAbsoluteUrl()
                     ? new Uri(url).ToString()
                     : UrlHelperExtensions.Combine(_blobServiceClient.Uri.ToString(), url);
