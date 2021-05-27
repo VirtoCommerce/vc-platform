@@ -27,7 +27,7 @@ partial class Build : NukeBuild
     {
         var pipeline = new MarkdownPipelineBuilder().UseCustomContainers().Build();
         var vcbuildRoot = AppDomain.CurrentDomain.BaseDirectory;
-        var docsPath = Path.Combine(vcbuildRoot, "Docs", "Targets.md");
+        var docsPath = Path.Combine(vcbuildRoot, "docs", "targets.md");
         var md = Markdown.Parse(File.ReadAllText(docsPath), pipeline);
         var containers = md.Descendants<CustomContainer>();
         var container = containers.FirstOrDefault(c =>

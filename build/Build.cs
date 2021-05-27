@@ -23,6 +23,7 @@ using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Git;
 using Nuke.Common.Tools.Npm;
+using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using VirtoCommerce.Platform.Core.Common;
@@ -248,37 +249,35 @@ partial class Build : NukeBuild
        .Executes(() =>
        {
            var dotnetPath = ToolPathResolver.GetPathExecutable("dotnet");
-           var testProjects = Solution.GetProjects("*.Tests|*.Testing");
-           //
+           var testProjects = Solution.GetProjects("*.Test|*.Tests|*.Testing");
            var OutPath = RootDirectory / ".tmp";
            testProjects.ForEach((testProject, index) =>
            {
+               DotNetTasks.DotNet($"add {testProject.Path} package coverlet.collector");
                var testSetting = new DotNetTestSettings()
-                .SetProjectFile(testProject.Path)
-                .SetConfiguration(Configuration)
-                .SetLogger("trx")
-                .SetFilter(TestsFilter)
-                .SetNoBuild(true)
-                .SetCollectCoverage(true)
-                .SetProcessLogOutput(true)
-                .SetResultsDirectory(OutPath);
-               var testProjectBinDir = testProject.Directory / "bin";
-               var testAssemblies = testProjectBinDir.GlobFiles($"**/{testProject.Name}.dll");
-               if(testAssemblies.Count < 1)
-               {
-                   ControlFlow.Fail("Tests Assemblies not found!");
-               }
-
-               CoverletTasks.Coverlet(s => s
-                .SetTargetSettings(testSetting)
-                .SetAssembly(testAssemblies.First())
-                .SetTarget(dotnetPath)
-                .When(index == 0, ss => ss.SetOutput(CoverageReportPath))
-                .When(index > 0 && index < testProjects.Count() - 1, ss => ss.SetMergeWith(CoverageReportPath))
-                .When(index == testProjects.Count() - 1, ss => ss.SetOutput(CoverageReportPath).SetMergeWith(CoverageReportPath).SetFormat(CoverletOutputFormat.opencover))
-                );
-
+                    .SetProjectFile(testProject.Path)
+                    .SetConfiguration(Configuration)
+                    .SetFilter(TestsFilter)
+                    .SetNoBuild(true)
+                    .SetProcessLogOutput(true)
+                    .SetResultsDirectory(OutPath)
+                    .SetDataCollector("XPlat Code Coverage");
+               DotNetTasks.DotNetTest(testSetting);
            });
+           var coberturaReports = OutPath.GlobFiles("**/coverage.cobertura.xml");
+           if (coberturaReports.Count > 0)
+           {
+               var reportGenerator = ToolResolver.GetPackageTool("dotnet-reportgenerator-globaltool", "ReportGenerator.dll", "4.8.8", "netcoreapp3.0");
+               reportGenerator.Invoke($"-reports:{OutPath / "**/coverage.cobertura.xml"} -targetdir:{OutPath} -reporttypes:SonarQube");
+               var sonarCoverageReportPath = OutPath.GlobFiles("SonarQube.xml").FirstOrDefault();
+               if (sonarCoverageReportPath == null)
+                   ControlFlow.Fail("No Coverage Report found");
+               FileSystemTasks.MoveFile(sonarCoverageReportPath, CoverageReportPath);
+           }
+           else
+           {
+               Logger.Warn("No Coverage Reports found");
+           }
        });
 
     public void CustomDotnetLogger(OutputType type, string text)
@@ -790,7 +789,7 @@ partial class Build : NukeBuild
             var projectVersionParam = $"/v:\"{ReleaseVersion}\"";
             var hostParam = $"/d:sonar.host.url={SonarUrl}";
             var tokenParam = $"/d:sonar.login={SonarAuthToken}";
-            var sonarReportPathParam = $"/d:sonar.cs.opencover.reportsPaths={CoverageReportPath}";
+            var sonarReportPathParam = FileSystemTasks.FileExists(CoverageReportPath) ? $"/d:sonar.coverageReportPaths={CoverageReportPath}" : string.Empty;
             var orgParam = $"/o:{SonarOrg}";
 
             var startCmd = $"sonarscanner begin {orgParam} {branchParam} {branchTargetParam} {projectKeyParam} {projectNameParam} {projectVersionParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam} {ghRepoArg} {prProviderArg}";
