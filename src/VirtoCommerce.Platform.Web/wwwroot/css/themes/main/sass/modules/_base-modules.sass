@@ -378,7 +378,7 @@ h3
     padding-top: 10px
     padding-right: 0px
     width: 5%
-    padding-left: 20px;
+    padding-left: 20px
   .table-col:last-child
     padding-right: 20px
   &.__data .table-col
@@ -1450,7 +1450,7 @@ $names: "", ".double", ".triple", ".quadro"
 .form-input.__langs .select2-search-field
   left: 36px
 .select2-container-multi .select2-choices .select2-search-choice
-  background: $lightBg;
+  background: $lightBg
   border: 1px solid #a1c0d4
   border-radius: 0
   box-shadow: none
@@ -1476,7 +1476,7 @@ $names: "", ".double", ".triple", ".quadro"
     color: $baseColor
     content: ''
     font-family: $fontAw
-    font-size: 12px
+    font-size: 13px
     text-shadow: none
     top: 0
     &:hover
@@ -1502,8 +1502,8 @@ tags-input
     box-shadow: none
     color: $colorText
     padding: 0 10px
-    -moz-appearance: none;
-    -webkit-appearance: none;
+    -moz-appearance: none
+    -webkit-appearance: none
     li
       padding: 0
       text-indent: 0
@@ -1905,10 +1905,30 @@ tags-input
         margin-right: 80px
         &:last-child
           margin-right: 0
-    .blade-static
       .form-count
         @include center(false, true, true)
-        right: 0;
+        right: 0
+    .blade-static .searchrow
+      align-content: stretch
+      display: flex
+      flex-wrap: nowrap
+      flex-direction: row
+      .column
+        width: 94%
+        margin-right: 16px
+        &-half
+          width: 47%
+          margin-right: 16px
+      .form-input .btn
+        background: url(/images/layout/remove.svg) no-repeat content-box center
+        min-width: 34px
+      .filter-edit
+        font-size: 17px
+        margin: 4px 16px 0 -8px
+      .form-count2
+        top: 16%
+        transform: translateY(16%)
+        font-weight: 500
     .blade-static .pagination
       border: none
       margin: 0
@@ -2160,7 +2180,7 @@ tags-input
   width: 100%
 .gridster .gridster-cnt.__info,
 .gridster .gridster-cnt.__note
-  cursor: inherit;
+  cursor: inherit
   bottom: 2px
   left: 2px
   right: 2px

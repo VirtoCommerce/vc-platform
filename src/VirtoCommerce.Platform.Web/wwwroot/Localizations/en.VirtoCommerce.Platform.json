@@ -292,7 +292,7 @@
                     "version": "Version",
                     "author": "Author",
                     "installed": "Installed Modules",
-                    "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart set to true."
+                    "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart set to false."
                 }
             },
             "history": {

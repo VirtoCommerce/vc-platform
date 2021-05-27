@@ -359,7 +359,7 @@
                     "version": "Версия",
                     "author": "Автор",
                     "installed": "Установленные модули",
-                    "manual-install-warning": "Внимание! Ручная установка модулей отключена, поскольку RefreshProbingFolderOnStart установлен в true."
+                    "manual-install-warning": "Внимание! Ручная установка модулей отключена, поскольку RefreshProbingFolderOnStart установлен в false."
                 }
             },
             "history": {

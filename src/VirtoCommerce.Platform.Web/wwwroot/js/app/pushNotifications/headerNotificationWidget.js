@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-    .factory('platformWebApp.headerNotificationWidgetService', ['platformWebApp.pushNotifications', '$timeout', '$interval',
-        function (notifications, $timeout, $interval) {
+    .factory('platformWebApp.headerNotificationWidgetService', ['$timeout', '$interval',
+        function ($timeout, $interval) {
 
             var notifications = [];
             var newCount = 0;
@@ -117,10 +117,6 @@ angular.module('platformWebApp')
                         if (scope.dropDownOpened) {
                             headerNotifications.markAllAsReaded();
                         }
-                    };
-
-                    scope.close = function () {
-                        scope.dropDownOpened = false;
                     };
 
                     scope.clearRecent = function () {
