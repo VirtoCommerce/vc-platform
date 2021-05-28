@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Assets;
@@ -191,7 +192,7 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
                 throw new ArgumentNullException(nameof(urls));
             }
 
-            foreach (var url in urls)
+            foreach (var url in urls.Where(x => !string.IsNullOrWhiteSpace(x)))
             {
                 var path = GetStoragePathFromUrl(url);
 
