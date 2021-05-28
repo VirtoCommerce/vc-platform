@@ -8,6 +8,15 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
 
 ## News Digests
 
+!!! done "28 May"
+    * Added new video on Youtube
+    * Dynamic properties added to X-Purchase-Cart
+    * Improved Design
+    * Simplified Login on behalf
+    * Fixed Swagger Validation errors
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-28-may-2021/330)
+
 !!! done "17 May"
     * Added New Videos on Youtube
     * Reworked Dictionary Values Blade UX for Platform Settings
@@ -26,15 +35,6 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * Implemented UX/UI Improvements
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-3-may-2021/314)
-
-!!! done "19 April"
-    * Added New Videos on Youtube
-    * Added Product with a Bill of Materials
-    * Added Password repeat generation policy
-    * Updated Visual Studio Module Template
-    * Implemented UX/UI Improvements
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-19-april-2021/309)
 
 
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and [GitHub](https://github.com/VirtoCommerce)
