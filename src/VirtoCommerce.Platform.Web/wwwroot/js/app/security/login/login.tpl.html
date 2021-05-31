@@ -3,7 +3,7 @@
         <div class="progress-bar"></div>
     </div>
     <header class="window-head">
-        <img class="__logo" ng-src="{{uiCustomization.contrast_logo || '/images/contrast-logo.png'}}" />
+        <img class="__logo" ng-src="{{uiCustomization.contrast_logo || '/images/contrast-logo.svg'}}" />
         <span class="window-t">{{ 'platform.blades.login.labels.sign-in' | translate: (uiCustomization.title ? uiCustomization : { title: 'Virto Commerce' }) }}</span>
     </header>
     <div class="window-cnt">
@@ -52,6 +52,7 @@
                     <div class="form-group" ng-repeat="provider in externalLoginProviders">
                         <a ng-href="externalsignin?authenticationType={{provider.authenticationType}}">{{ 'platform.blades.login.labels.external-sign-in' | translate: provider }}</a>
                     </div>
+                    <div ng-if="!externalLoginProviders.length">&nbsp;</div>
                 </div>
                 <div class="column __right">
                     <div class="form-group __right">
