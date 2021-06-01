@@ -14,7 +14,6 @@ namespace VirtoCommerce.Platform.Security.Repositories
         public SecurityDbContext(DbContextOptions<SecurityDbContext> options)
             : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -54,17 +53,18 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<Role>().Ignore(x => x.Permissions);
             builder.Entity<ApplicationUser>().Ignore(x => x.Password);
             builder.Entity<ApplicationUser>().Ignore(x => x.Roles);
+#pragma warning disable CS0618 // Type or member is obsolete
             builder.Entity<ApplicationUser>().Ignore(x => x.LockoutEndDateUtc);
             builder.Entity<ApplicationUser>().Ignore(x => x.Permissions);
-            builder.Entity<ApplicationUser>().Ignore(x => x.Logins);
             builder.Entity<ApplicationUser>().Ignore(x => x.UserState);
+#pragma warning restore CS0618 // Type or member is obsolete
+            builder.Entity<ApplicationUser>().Ignore(x => x.Logins);
             builder.Entity<ApplicationUser>().Property(x => x.UserType).HasMaxLength(64);
             builder.Entity<ApplicationUser>().Property(x => x.Status).HasMaxLength(64);
             builder.Entity<ApplicationUser>().Property(x => x.PhotoUrl).HasMaxLength(2048);
             builder.Entity<ApplicationUser>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             builder.Entity<ApplicationUser>().Property(x => x.StoreId).HasMaxLength(128);
             builder.Entity<ApplicationUser>().Property(x => x.MemberId).HasMaxLength(128);
-
             builder.Entity<Role>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             builder.Entity<IdentityUserClaim<string>>().Property(x => x.UserId).HasMaxLength(128);
             builder.Entity<IdentityUserLogin<string>>().Property(x => x.UserId).HasMaxLength(128);
@@ -77,22 +77,27 @@ namespace VirtoCommerce.Platform.Security.Repositories
         }
 
         #region override Save*** methods to catch save events in Triggers, otherwise ApplicationUser not be catched because SecurityDbContext can't inherit DbContextWithTriggers
+
         public override int SaveChanges()
         {
             return this.SaveChangesWithTriggers(base.SaveChanges, acceptAllChangesOnSuccess: true);
         }
+
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             return this.SaveChangesWithTriggers(base.SaveChanges, acceptAllChangesOnSuccess);
         }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             return this.SaveChangesWithTriggersAsync(base.SaveChangesAsync, true, cancellationToken);
         }
+
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
         {
             return this.SaveChangesWithTriggersAsync(base.SaveChangesAsync, acceptAllChangesOnSuccess, cancellationToken);
         }
-        #endregion
+
+        #endregion override Save*** methods to catch save events in Triggers, otherwise ApplicationUser not be catched because SecurityDbContext can't inherit DbContextWithTriggers
     }
 }

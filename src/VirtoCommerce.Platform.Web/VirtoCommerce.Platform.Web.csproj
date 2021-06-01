@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
         <noWarn>1591</noWarn>
@@ -15,25 +15,25 @@
 
     <ItemGroup>
         <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0" />
-        <PackageReference Include="FluentValidation" Version="8.6.3" />
-        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
-        <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.15.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.8" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="3.1.8" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.8" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="3.1.8" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.8" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="3.1.8" />
-        <PackageReference Include="Microsoft.Azure.SignalR" Version="1.5.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PackageReference Include="FluentValidation" Version="10.2.1" />
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
+        <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.17.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="5.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="5.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="5.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="5.0.6" />
+        <PackageReference Include="Microsoft.Azure.SignalR" Version="1.8.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.6">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
-        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.8" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="5.0.6" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
@@ -60,12 +60,12 @@
         <Compile Remove="modules\**" />
         <Compile Remove="wwwroot\assets\**" />
         <Compile Remove="wwwroot\cms-content\**" />
-        
+
         <Content Remove="wwwroot\assets\**" />
-        <Content Remove="app_data\modules\** " /> 
+        <Content Remove="app_data\modules\** " />
         <Content Remove="wwwroot\cms-content\**" />
         <Content Remove="modules\**" />
-          
+
         <EmbeddedResource Remove="modules\**" />
         <EmbeddedResource Remove="wwwroot\assets\**" />
         <EmbeddedResource Remove="wwwroot\cms-content\**" />
@@ -76,12 +76,12 @@
         <None Remove="app_data\modules\**" />
     </ItemGroup>
     <ItemGroup>
-      <None Remove="app_data\VirtoCommerce_rsa.pub" />
+        <None Remove="app_data\VirtoCommerce_rsa.pub" />
     </ItemGroup>
-   
+
     <ItemGroup>
         <EmbeddedResource Include="app_data\VirtoCommerce_rsa.pub">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
         <EmbeddedResource Include="wwwroot\swagger\index.html" />
         <None Include="wwwroot\restarting.html" />

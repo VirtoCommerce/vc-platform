@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace VirtoCommerce.Platform.Tests.Common
 {
@@ -41,12 +41,10 @@ namespace VirtoCommerce.Platform.Tests.Common
             return Execute<TResult>(expression);
         }
 
-
         public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
         {
             return new TestAsyncEnumerable<TResult>(expression);
         }
-
     }
 
     public class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>

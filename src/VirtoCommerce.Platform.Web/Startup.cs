@@ -100,7 +100,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddSecurityServices();
             services.AddSingleton<LicenseProvider>();
 
-
             var mvcBuilder = services.AddMvc(mvcOptions =>
             {
                 //Disable 204 response for null result. https://github.com/aspnet/AspNetCore/issues/8847
@@ -140,6 +139,8 @@ namespace VirtoCommerce.Platform.Web
                 // to replace the default OpenIddict entities.
                 options.UseOpenIddict();
             });
+
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             // Enable synchronous IO if using Kestrel:
             services.Configure<KestrelServerOptions>(options =>
@@ -396,7 +397,6 @@ namespace VirtoCommerce.Platform.Web
             // Register the Swagger generator
             services.AddSwagger();
 
-
             // The following line enables Application Insights telemetry collection.
             // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple
             // AI modules initialization https://virtocommerce.atlassian.net/browse/VP-6653 and  https://github.com/microsoft/ApplicationInsights-dotnet/issues/2114 until we don't
@@ -412,7 +412,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
 #if DEBUG
                 TelemetryDebugWriter.IsTracingDisabled = true;
 #endif
@@ -517,21 +517,18 @@ namespace VirtoCommerce.Platform.Web
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-            // Use app insights telemetry 
+            // Use app insights telemetry
             app.UseAppInsightsTelemetry();
-
 
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
 
             //Json converter that resolve a meta-data for all incoming objects of  DynamicObjectProperty type
-            //in order to be able pass { name: "dynPropName", value: "myVal" } in the incoming requests for dynamic properties, and do not care about meta-data loading. see more details: PT-48 
+            //in order to be able pass { name: "dynPropName", value: "myVal" } in the incoming requests for dynamic properties, and do not care about meta-data loading. see more details: PT-48
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new DynamicObjectPropertyJsonConverter(app.ApplicationServices.GetService<IDynamicPropertyMetaDataResolver>()));
-
 
             //The converter is responsible for the materialization of objects, taking into account the information on overriding
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
-          
         }
     }
 }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
         <noWarn>1591</noWarn>
         <OutputType>Library</OutputType>
         <IsPackable>True</IsPackable>
@@ -16,11 +16,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
         <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="3.1.6" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
-        <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.1.6" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.8" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
     </ItemGroup>
@@ -29,5 +30,4 @@
         <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
         <ProjectReference Include="..\VirtoCommerce.Platform.DistributedLock\VirtoCommerce.Platform.DistributedLock.csproj" />
     </ItemGroup>
-
 </Project>
