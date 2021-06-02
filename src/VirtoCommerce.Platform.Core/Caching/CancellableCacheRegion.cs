@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Core.Caching
         {
         }
         //need to preserve the name for backward compatibility
-        protected static readonly string _globalRegionName = "GlobalCacheRegion";
+        protected static readonly string _globalRegionName = "GlobalCacheRegion_";
         private static CancellationTokenSource _globalTokenSource = new CancellationTokenSource();
         protected static CancellationTokenSource GlobalTokenSource
         {
@@ -54,8 +54,8 @@ namespace VirtoCommerce.Platform.Core.Caching
     /// <typeparam name="T"></typeparam>
     public class CancellableCacheRegion<T> : CancellableCacheRegion
     {
-        private static readonly string _regionName = typeof(T).Name;
-        private static readonly string _regionNamePrefix = $"{typeof(T).Name}:";
+        private static readonly string _regionName = $"{typeof(T).Name}_{string.Join("_", typeof(T).GetGenericArguments().Select(x=>x.Name))}";
+        private static readonly string _regionNamePrefix = $"{typeof(T).Name}_{string.Join("_", typeof(T).GetGenericArguments().Select(x => x.Name))}:";
 #pragma warning disable S2743 // Static fields should not be used in generic types
         // False-positive SLint warning disabled.
         // These fields really need for every class applied
