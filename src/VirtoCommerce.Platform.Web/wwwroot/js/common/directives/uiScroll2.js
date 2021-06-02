@@ -9,7 +9,10 @@ angular.module('platformWebApp')
             require: 'ngModel',
             replace: true,
             scope: {
-                data: '&',
+                data: '&?',
+                onSelect: '&?',
+                onRemove: '&?',
+                predefined: '=?',
                 disabled: '=?',
                 multiple: '=?',
                 pageSize: '=?',
@@ -27,19 +30,35 @@ angular.module('platformWebApp')
                     multiple: angular.isDefined(attrs.multiple) && (attrs.multiple === '' || attrs.multiple.toLowerCase() === 'true')
                 };
 
+                // if Predefined list is binded paginaiton is disabled
+                $scope.items = $scope.predefined || [];
+                $scope.isNoItems = !$scope.predefined;
+
                 // PageSize amount must be enough to show scrollbar in dropdown list container.
                 // If scrollbar doesn't appear auto loading won't work.
                 var pageSize = $scope.pageSize || defaultPageSize;
                 var responseGroup = $scope.responseGroup || defaultResponseGroup;
                 var selectedItemsPropertyName = $scope.selectedItemsPropertyName || defaultSelectedItemsPropertyName;
-
-                $scope.items = [];
-                $scope.isNoItems = true;
                 var lastSearchPhrase = '';
                 var totalCount = 0;
                 var hiddenCount = angular.isArray($scope.entitiesToHide) ? $scope.entitiesToHide.length : 0;
 
+                $scope.selectValue = (item, model) => {
+                    if ($scope.onSelect) {
+                        $scope.onSelect({ item: item, model: model });
+                    }
+                }
+
+                $scope.removeValue = (item, model) => {
+                    if ($scope.onRemove) {
+                        $scope.onRemove({ item: item, model: model });
+                    }
+                }
+
                 $scope.fetch = function ($select) {
+                    if ($scope.predefined)
+                        return;
+
                     load();
 
                     if (!$scope.disabled) {
@@ -48,8 +67,8 @@ angular.module('platformWebApp')
                 };
 
                 $scope.fetchNext = ($select) => {
-                    //if (!$select.open)
-                    //    return;
+                    if ($scope.predefined)
+                        return;
 
                     $select.page = $select.page || 0;
 

@@ -3,7 +3,9 @@
                multiple
                ng-model="context.modelValue"
                ng-disabled="disabled"
-               ng-class="{ disabled: isNoItems }">
+               ng-class="{ disabled: isNoItems }"
+               on-select="selectValue($item, $model)"
+               on-remove="removeValue($item, $model)">
         <ui-select-match placeholder="{{ placeholder || 'platform.placeholders.select-values' | translate }}">
             {{ isNoItems ? ('platform.list.loading' | translate) : $item.name }}
         </ui-select-match>
@@ -18,7 +20,9 @@
                ng-model="context.modelValue"
                ng-required="context.required"
                ng-disabled="disabled"
-               ng-class="{ disabled: isNoItems }">
+               ng-class="{ disabled: isNoItems }"
+               on-select="selectValue($item, $model)"
+               on-remove="removeValue($item, $model)">
         <ui-select-match allow-clear="true" placeholder="{{ placeholder || 'platform.placeholders.select-value' | translate }}">
             {{ isNoItems ? ('platform.list.loading' | translate) : $select.selected.name }}
         </ui-select-match>
