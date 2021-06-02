@@ -188,7 +188,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         protected virtual GenericChangedEntryEvent<TModel> EventFactory<TEvent>(IEnumerable<GenericChangedEntry<TModel>> changedEntries)
         {
-            return (GenericChangedEntryEvent<TModel>) typeof(TEvent).GetConstructor(new Type[] { typeof(IEnumerable<GenericChangedEntry<TModel>>) }).Invoke(new object[] { changedEntries });
+            return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor(new Type[] { typeof(IEnumerable<GenericChangedEntry<TModel>>) }).Invoke(new object[] { changedEntries });
         }
     }
 }

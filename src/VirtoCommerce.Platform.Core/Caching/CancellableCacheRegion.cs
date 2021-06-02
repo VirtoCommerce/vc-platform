@@ -54,7 +54,7 @@ namespace VirtoCommerce.Platform.Core.Caching
     /// <typeparam name="T"></typeparam>
     public class CancellableCacheRegion<T> : CancellableCacheRegion
     {
-        private static readonly string _regionName = $"{typeof(T).Name}_{string.Join("_", typeof(T).GetGenericArguments().Select(x=>x.Name))}";
+        private static readonly string _regionName = $"{typeof(T).Name}_{string.Join("_", typeof(T).GetGenericArguments().Select(x => x.Name))}";
         private static readonly string _regionNamePrefix = $"{typeof(T).Name}_{string.Join("_", typeof(T).GetGenericArguments().Select(x => x.Name))}:";
 #pragma warning disable S2743 // Static fields should not be used in generic types
         // False-positive SLint warning disabled.
@@ -72,11 +72,11 @@ namespace VirtoCommerce.Platform.Core.Caching
                 {
                     return;
                 }
-                if(args.TokenKey == _regionName)
+                if (args.TokenKey == _regionName)
                 {
                     ExpireRegion(args.Propagate);
                 }
-                else if(args.TokenKey.StartsWith(_regionNamePrefix))
+                else if (args.TokenKey.StartsWith(_regionNamePrefix))
                 {
                     InnerExpireTokenForKey(args.TokenKey, args.Propagate);
                 }
@@ -120,7 +120,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 
                 var compositionToken = new CompositeChangeToken(new[] { regionChangeToken, globalChangeToken });
                 return compositionToken;
-            }           
+            }
         }
 
         //This method left for backward compatibility
@@ -135,7 +135,7 @@ namespace VirtoCommerce.Platform.Core.Caching
             {
                 var tokenKey = GenerateRegionTokenKey(key);
 
-                InnerExpireTokenForKey(tokenKey, propagate);               
+                InnerExpireTokenForKey(tokenKey, propagate);
             }
         }
 
