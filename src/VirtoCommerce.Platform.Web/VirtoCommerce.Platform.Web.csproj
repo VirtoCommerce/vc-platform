@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0" />
-        <PackageReference Include="FluentValidation" Version="10.2.1" />
+        <PackageReference Include="FluentValidation" Version="8.6.3" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
         <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.17.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.6" />
