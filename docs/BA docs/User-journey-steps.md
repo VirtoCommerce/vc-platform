@@ -1,4 +1,4 @@
-# Customer Journey
+# Customer journey
 
 ## Awareness phase
 
