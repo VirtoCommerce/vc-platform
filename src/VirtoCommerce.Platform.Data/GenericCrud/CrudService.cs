@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.Platform.Caching.GenericCrud;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Data.Infrastructure;
@@ -13,8 +14,8 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 namespace VirtoCommerce.Platform.Data.GenericCrud
 {
     public abstract class CrudService<TModel, TEntity, TChangeEvent, TChangedEvent> : ICrudService<TModel>
-        where TModel : Entity
-        where TEntity : Entity
+        where TModel : Entity, ICloneable
+        where TEntity : Entity, IDataEntity<TEntity, TModel>
         where TChangeEvent : GenericChangedEntryEvent<TModel>
         where TChangedEvent : GenericChangedEntryEvent<TModel>
     {
@@ -57,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
                     foreach (var entity in entities)
                     {
-                        var model = ToModel(entity, AbstractTypeFactory<TModel>.TryCreateInstance());
+                        var model = entity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
                         model = PopulateModel(responseGroup, entity, model);
                         if (model != null) retVal.Add(model);
                     }
@@ -67,17 +68,8 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 return retVal;
             });
 
-            return result.Select(x => Clone(x)).ToArray();
+            return result.Select(x => (TModel)x.Clone()).ToArray();
         }
-
-
-        protected abstract TEntity FromModel(TEntity entity, TModel model, PrimaryKeyResolvingMap pkMap);
-
-        protected abstract TModel ToModel(TEntity entity, TModel model);
-
-        protected abstract TModel Clone(TModel model);
-
-        protected abstract void Patch(TEntity sourceEntity, TEntity targetEntity);
 
         protected virtual TModel PopulateModel(string responseGroup, TEntity entity, TModel model)
         {
@@ -118,7 +110,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 {
 
                     var originalEntity = dataExistEntities.FirstOrDefault(x => x.Id == model.Id);
-                    var modifiedEntity = FromModel(AbstractTypeFactory<TEntity>.TryCreateInstance(), model, pkMap);
+                    var modifiedEntity = AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, pkMap);
 
                     if (originalEntity != null)
                     {
@@ -127,8 +119,8 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         // https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes#detectchanges-honors-store-generated-key-values
                         repository.TrackModifiedAsAddedForNewChildEntities(originalEntity);
 
-                        changedEntries.Add(new GenericChangedEntry<TModel>(model, ToModel(originalEntity, AbstractTypeFactory<TModel>.TryCreateInstance()), EntryState.Modified));
-                        Patch(modifiedEntity, originalEntity);
+                        changedEntries.Add(new GenericChangedEntry<TModel>(model, originalEntity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance()), EntryState.Modified));
+                        modifiedEntity.Patch(originalEntity);
                         if (originalEntity is IAuditable auditableOriginalEntity)
                         {
                             auditableOriginalEntity.ModifiedDate = DateTime.UtcNow;
@@ -171,7 +163,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     var keyMap = new PrimaryKeyResolvingMap();
                     foreach (var model in models)
                     {
-                        var entity = FromModel(AbstractTypeFactory<TEntity>.TryCreateInstance(), model, keyMap);
+                        var entity = AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, keyMap);
                         repository.Remove(entity);
                     }
                     await repository.UnitOfWork.CommitAsync();
