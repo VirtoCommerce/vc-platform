@@ -12,9 +12,8 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Platform.Data.GenericCrud
 {
-    public abstract class CrudService<TModel, TResponseGroup, TEntity, TChangeEvent, TChangedEvent> : ICrudService<TModel>
+    public abstract class CrudService<TModel, TEntity, TChangeEvent, TChangedEvent> : ICrudService<TModel>
         where TModel : Entity
-        where TResponseGroup : struct
         where TEntity : Entity
         where TChangeEvent : GenericChangedEntryEvent<TModel>
         where TChangedEvent : GenericChangedEntryEvent<TModel>
@@ -121,9 +120,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
                         changedEntries.Add(new GenericChangedEntry<TModel>(model, ToModel(originalEntity, AbstractTypeFactory<TModel>.TryCreateInstance()), EntryState.Modified));
                         Patch(modifiedEntity, originalEntity);
-                        if (originalEntity is IAuditable)
+                        if (originalEntity is IAuditable auditableOriginalEntity)
                         {
-                            ((IAuditable)originalEntity).ModifiedDate = DateTime.UtcNow;
+                            auditableOriginalEntity.ModifiedDate = DateTime.UtcNow;
                         }
                     }
                     else
