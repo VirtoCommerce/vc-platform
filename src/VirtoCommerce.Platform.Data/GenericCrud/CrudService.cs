@@ -79,8 +79,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         protected abstract void Patch(TEntity sourceEntity, TEntity targetEntity);
 
-        protected abstract TModel PopulateModel(string responseGroup, TEntity entity, TModel model);
-
+        protected virtual TModel PopulateModel(string responseGroup, TEntity entity, TModel model)
+        {
+            return model;
+        }
 
         protected abstract Task<TEntity[]> LoadEntities(IRepository repository, string[] ids, string responseGroup);
 
@@ -89,10 +91,17 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return LoadEntities(repository, ids, "Full");
         }
 
-        protected abstract void ValidateOnSave(TModel[] entitites);
+        protected virtual void ValidateOnSave(TModel[] entitites)
+        {
+            // Basic implementation left empty
+        }
 
 
-        protected abstract Task SoftDelete(IRepository repository, string[] ids);
+        protected virtual Task SoftDelete(IRepository repository, string[] ids)
+        {
+            // Basic implementation of soft delete intentionally left empty.
+            return Task.CompletedTask;
+        }
 
         public virtual async Task SaveChangesAsync(TModel[] models)
         {
