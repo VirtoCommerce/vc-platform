@@ -1,5 +1,7 @@
+import { data } from "jquery";
+
 angular.module('platformWebApp')
-    .directive('uiScrollDropDown', [function() {
+    .directive('uiScrollDropDown', [function () {
         const defaultPageSize = 20;
         const defaultResponseGroup = 'none';
         const defaultSelectedItemsPropertyName = 'objectIds';
@@ -9,18 +11,17 @@ angular.module('platformWebApp')
             require: 'ngModel',
             replace: true,
             scope: {
-                data: '&?',
+                data: '&',
                 onSelect: '&?',
                 onRemove: '&?',
-                predefined: '=?',
+                filter: '&?',
                 disabled: '=?',
                 multiple: '=?',
                 pageSize: '=?',
                 placeholder: '=?',
                 required: '=?',
-                entitiesToHide: '=?',
                 responseGroup: '=?',
-                selectedItemsPropertyName: '=?'
+                selectedItemsPropertyName: '=?' //TODO: delete this when storeIds/etc are changed to objectIds
             },
             templateUrl: '$(Platform)/Scripts/common/directives/uiScroll.tpl.html',
             link: function ($scope, element, attrs, ngModelController) {
@@ -30,9 +31,10 @@ angular.module('platformWebApp')
                     multiple: angular.isDefined(attrs.multiple) && (attrs.multiple === '' || attrs.multiple.toLowerCase() === 'true')
                 };
 
-                // if Predefined list is binded paginaiton is disabled
-                $scope.items = $scope.predefined || [];
-                $scope.isNoItems = !$scope.predefined;
+                $scope.items = [];
+                $scope.isNoItems = true;
+                // If binded data function returns a predefined list then disable pagination funciton
+                $scope.paginationDisabled = false;
 
                 // PageSize amount must be enough to show scrollbar in dropdown list container.
                 // If scrollbar doesn't appear auto loading won't work.
@@ -40,8 +42,6 @@ angular.module('platformWebApp')
                 var responseGroup = $scope.responseGroup || defaultResponseGroup;
                 var selectedItemsPropertyName = $scope.selectedItemsPropertyName || defaultSelectedItemsPropertyName;
                 var lastSearchPhrase = '';
-                var totalCount = 0;
-                var hiddenCount = angular.isArray($scope.entitiesToHide) ? $scope.entitiesToHide.length : 0;
 
                 $scope.selectValue = (item, model) => {
                     if ($scope.onSelect) {
@@ -56,9 +56,6 @@ angular.module('platformWebApp')
                 }
 
                 $scope.fetch = function ($select) {
-                    if ($scope.predefined)
-                        return;
-
                     load();
 
                     if (!$scope.disabled) {
@@ -67,12 +64,12 @@ angular.module('platformWebApp')
                 };
 
                 $scope.fetchNext = ($select) => {
-                    if ($scope.predefined)
+                    if ($scope.paginationDisabled)
                         return;
 
                     $select.page = $select.page || 0;
 
-                    if (lastSearchPhrase !== $select.search && totalCount > $scope.items.length) {
+                    if (lastSearchPhrase !== $select.search) {
                         lastSearchPhrase = $select.search;
                         $select.page = 0;
                     }
@@ -85,15 +82,13 @@ angular.module('platformWebApp')
                     };
 
                     return $scope.data({ criteria: criteria }).$promise.then((data) => {
-                            join(data.results);
-                            $select.page++;
+                        join(data.results, true);
+                        $select.page++;
 
-                            if ($select.page * pageSize < data.totalCount) {
-                                $scope.$broadcast('scrollCompleted');
-                            }
-
-                            totalCount = Math.max(totalCount, data.totalCount - hiddenCount);
-                        });
+                        if ($select.page * pageSize < data.totalCount) {
+                            $scope.$broadcast('scrollCompleted');
+                        }
+                    });
                 };
 
                 $scope.$watch('context.modelValue', function (newValue, oldValue) {
@@ -117,18 +112,38 @@ angular.module('platformWebApp')
 
                         criteria[selectedItemsPropertyName] = selectedIds;
 
-                        $scope.data({ criteria: criteria }).$promise.then((data) => {
-                            join(data.results);
-                        });
+                        var data = $scope.data({ criteria: criteria });
+
+                        if (data.$promise) {
+                            data.$promise.then((data) => {
+                                join(data.results);
+                            });
+                        }
+                        else if (angular.isArray(data)) {
+                            join(data);
+                            $scope.paginationDisabled = true;
+                        }
                     }
                 }
 
-                function join(newItems) {
-                    newItems = _.reject(newItems, x => _.any($scope.items, y => y.id === x.id) || _.indexOf($scope.entitiesToHide, x.id) > -1);
+                function join(newItems, callFilter) {
+                    newItems = _.reject(newItems, x => _.any($scope.items, y => y.id === x.id));
+
+                    if (callFilter) {
+                        newItems = filterItems(newItems);
+                    }
+
                     if (_.any(newItems)) {
                         $scope.items = $scope.items.concat(newItems);
                         $scope.isNoItems = $scope.items.length === 0;
                     }
+                }
+
+                function filterItems(items) {
+                    if (!$scope.filter)
+                        return items;
+
+                    return $scope.filter({ items: items });
                 }
             }
         }
