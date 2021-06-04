@@ -1,5 +1,3 @@
-import { data } from "jquery";
-
 angular.module('platformWebApp')
     .directive('uiScrollDropDown', [function () {
         const defaultPageSize = 20;
@@ -81,11 +79,11 @@ angular.module('platformWebApp')
                         responseGroup: responseGroup
                     };
 
-                    return $scope.data({ criteria: criteria }).$promise.then((data) => {
-                        join(data.results, true);
+                    return $scope.data({ criteria: criteria }).$promise.then((x) => {
+                        join(x.results, true);
                         $select.page++;
 
-                        if ($select.page * pageSize < data.totalCount) {
+                        if ($select.page * pageSize < x.totalCount) {
                             $scope.$broadcast('scrollCompleted');
                         }
                     });
@@ -112,15 +110,15 @@ angular.module('platformWebApp')
 
                         criteria[selectedItemsPropertyName] = selectedIds;
 
-                        var data = $scope.data({ criteria: criteria });
+                        var result = $scope.data({ criteria: criteria });
 
-                        if (data.$promise) {
-                            data.$promise.then((data) => {
-                                join(data.results);
+                        if (result.$promise) {
+                            result.$promise.then((x) => {
+                                join(x.results);
                             });
                         }
-                        else if (angular.isArray(data)) {
-                            join(data);
+                        else if (angular.isArray(result)) {
+                            join(result);
                             $scope.paginationDisabled = true;
                         }
                     }
