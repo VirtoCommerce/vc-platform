@@ -24,9 +24,8 @@ namespace VirtoCommerce.Platform.Core.Common
             if (GetRealObjectType(this) != GetRealObjectType(obj))
                 return false;
 
-
             var other = obj as Entity;
-            return other != null && Id == other.Id;
+            return other?.Id != null && Id != null && Id == other.Id;
         }
 
         public override int GetHashCode()
