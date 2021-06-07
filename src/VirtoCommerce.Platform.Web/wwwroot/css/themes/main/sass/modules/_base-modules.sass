@@ -1028,8 +1028,9 @@ $names: "", ".double", ".triple", ".quadro"
     vertical-align: top
     &.flex-row-wrap
       flex-flow: row wrap
-  li.menu-item:not(:last-child)
-   margin: 0 6px 8px 0
+  li.menu-item:not(:last-child),
+  li.menu-item:first-child
+    margin: 0 6px 8px 0
   .menu-link
     padding: 4px 12px 4px 12px
     border: 1px solid #A1C0D4

@@ -1,7 +1,7 @@
 <div class="breadcrumbs">
     <ul class="menu __inline" ng-class="{'flex-row-wrap': expanded}">
         <li class="menu-item" ng-if="breadcrumbs.length">
-            <a class="menu-link" ng-click='innerNavigate(breadcrumbs[0])' href="" title="{{breadcrumbs[0].name}}">{{breadcrumbs[0].name}}</a>
+            <a class="menu-link" ng-class="{'last-item': breadcrumbs.length == 1}" ng-click='innerNavigate(breadcrumbs[0])' href="" title="{{breadcrumbs[0].name}}">{{breadcrumbs[0].name}}</a>
         </li>
         <li class="menu-item" ng-if="canExpand()">
             <a class="menu-link" ng-click='expand()' href="" title="Expand">...</a>
