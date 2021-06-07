@@ -24,7 +24,6 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected readonly IPlatformMemoryCache _platformMemoryCache;
         protected readonly Func<IRepository> _repositoryFactory;
 
-
         protected CrudService(IEventPublisher eventPublisher, IPlatformMemoryCache platformMemoryCache, Func<IRepository> repositoryFactory)
         {
             _eventPublisher = eventPublisher;
@@ -60,7 +59,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     foreach (var entity in entities)
                     {
                         var model = entity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
-                        model = AfterLoadEntities(responseGroup, entity, model);
+                        model = ProcessModel(responseGroup, entity, model);
                         if (model != null) models.Add(model);
                     }
 
@@ -72,7 +71,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return result.Select(x => (TModel)x.Clone());
         }
 
-        protected virtual TModel AfterLoadEntities(string responseGroup, TEntity entity, TModel model)
+        protected virtual TModel ProcessModel(string responseGroup, TEntity entity, TModel model)
         {
             return model;
         }
@@ -84,14 +83,16 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return LoadEntities(repository, ids, "Full");
         }
 
-        protected virtual void BeforeSaveChanges(IEnumerable<TModel> models)
+        protected virtual Task BeforeSaveChanges(IEnumerable<TModel> models)
         {
             // Basic implementation left empty
+            return Task.CompletedTask;
         }
 
-        protected virtual void AfterSaveChanges(IEnumerable<TModel> models, IEnumerable<GenericChangedEntry<TModel>> changedEntries)
+        protected virtual Task AfterSaveChangesAsync(IEnumerable<TModel> models, IEnumerable<GenericChangedEntry<TModel>> changedEntries)
         {
             // Basic implementation left empty
+            return Task.CompletedTask;
         }
 
         protected virtual Task SoftDelete(IRepository repository, IEnumerable<string> ids)
@@ -146,7 +147,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             ClearCache(models);
 
-            AfterSaveChanges(models, changedEntries);
+            await AfterSaveChangesAsync(models, changedEntries);
 
             await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
         }
