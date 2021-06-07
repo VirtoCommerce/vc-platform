@@ -1,6 +1,6 @@
 # Catalog
 
-Managing catalog data is the scenario that results keeping and appearing the products in different conditions or for different users.
+1Managing catalog data is the scenario that results keeping and appearing the products in different conditions or for different users.
 
 ## Overview
 
