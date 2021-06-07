@@ -140,8 +140,6 @@ namespace VirtoCommerce.Platform.Web
                 options.UseOpenIddict();
             });
 
-            services.AddDatabaseDeveloperPageExceptionFilter();
-
             // Enable synchronous IO if using Kestrel:
             services.Configure<KestrelServerOptions>(options =>
             {
@@ -412,7 +410,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
-                app.UseMigrationsEndPoint();
+                app.UseDatabaseErrorPage();
 #if DEBUG
                 TelemetryDebugWriter.IsTracingDisabled = true;
 #endif

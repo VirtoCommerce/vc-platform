@@ -29,7 +29,7 @@
         <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.6" />
+        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.8" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="5.0.1" />
