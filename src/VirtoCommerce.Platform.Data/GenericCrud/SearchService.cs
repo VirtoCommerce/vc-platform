@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using VirtoCommerce.Platform.Core.GenericCrud;
-using VirtoCommerce.Platform.Caching.GenericCrud;
-using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Caching;
-using VirtoCommerce.Platform.Data.Infrastructure;
-using Microsoft.Extensions.Caching.Memory;
-using VirtoCommerce.Platform.Core.Domain;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using VirtoCommerce.Platform.Caching.GenericCrud;
+using VirtoCommerce.Platform.Core.Caching;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Domain;
+using VirtoCommerce.Platform.Core.GenericCrud;
+using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Platform.Data.GenericCrud
 {
@@ -77,7 +76,6 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 }
             });
         }
-
 
         protected abstract IQueryable<TEntity> BuildQuery(IRepository repository, TCriteria criteria);
 
