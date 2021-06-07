@@ -106,7 +106,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             var pkMap = new PrimaryKeyResolvingMap();
             var changedEntries = new List<GenericChangedEntry<TModel>>();
 
-            BeforeSaveChanges(models);
+            await BeforeSaveChanges(models);
 
             using (var repository = _repositoryFactory())
             {
