@@ -28,7 +28,7 @@
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="5.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="5.0.6" />
         <PackageReference Include="Microsoft.Azure.SignalR" Version="1.8.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.6">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
