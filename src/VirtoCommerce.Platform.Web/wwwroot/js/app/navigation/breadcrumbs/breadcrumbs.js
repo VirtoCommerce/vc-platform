@@ -28,7 +28,7 @@ angular.module('platformWebApp')
                     };
 
                     scope.$watch('bladeMaximized', (newVal, oldVal) => {
-                        if (newVal === oldVal) return;
+                        if (newVal === oldVal && newVal === undefined) return;
 
                         if (newVal) {
                             originalWidth = availableWidth;
