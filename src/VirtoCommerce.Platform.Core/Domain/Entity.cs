@@ -25,7 +25,7 @@ namespace VirtoCommerce.Platform.Core.Common
                 return false;
 
             var other = obj as Entity;
-            return other?.Id != null && Id != null && Id == other.Id;
+            return Id != null && Id == other?.Id;
         }
 
         public override int GetHashCode()
