@@ -5,11 +5,9 @@ Account registration is a scenario that results with the appearance of a new act
 ## Overview
 
 
-*Describe main entities definitions, navigation, indexation, etc.*
-
 ### Main entities
 
-Accounts data are managed in the Contact module. Native Virto Commerce functionality contains the following type of accounts and contacts:
+Accounts data are managed in the Customer module. Native Virto Commerce functionality contains the following type of accounts and contacts:
 
 Type | Description | 
 --- | --- 
