@@ -1,6 +1,6 @@
 # Pricing
 
-1Managing prices is the scenario that results appearing different prices for one product in different conditions or for different users. 
+Managing prices is the scenario that results appearing different prices for one product in different conditions or for different users. 
 
 ## Overview
 

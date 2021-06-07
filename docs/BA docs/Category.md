@@ -6,7 +6,7 @@
 
 ### Main Entities
 
-1Category data are managed in Catalog module. Native VirtoCommerce functionality contains the following types:
+Category data are managed in Catalog module. Native VirtoCommerce functionality contains the following types:
 
 Type | Description 
 ---|---

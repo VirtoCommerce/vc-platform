@@ -1,6 +1,6 @@
 # Catalog
 
-1Managing catalog data is the scenario that results keeping and appearing the products in different conditions or for different users.
+Managing catalog data is the scenario that results keeping and appearing the products in different conditions or for different users.
 
 ## Overview
 
@@ -70,13 +70,13 @@ How to add properties to variations in Catalog | Catalog module|
 
 ### Code extensibility
 
-Name | Module |Description | 
+Name | Module |Description | Link
 --- |---|---|---
 Extend Catalog | Catalog module | Add custom field |
 
 ## User scenario examples
 
-Name | Description | 
+Name | Description | Link
 --- |---|---
 How to display product in Store in the few Categories  | Create needed categories in virtual catalog, link the products to them and relate this catalog to store | 
 How to change product displaying in store without changing the location in the admin side | Create needed categories in virtual catalog, link the products to them and relate this catalog to store | 

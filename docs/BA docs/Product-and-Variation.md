@@ -1,6 +1,6 @@
 # Product and variations
 
-1Managing products is the main scenario that results 
+Managing products is the main scenario that results 
 
 ## Overview
 
