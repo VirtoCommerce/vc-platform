@@ -171,7 +171,7 @@ partial class Build: NukeBuild
             {
                 Id = moduleInstall.Id,
                 Version = moduleInstall.Version,
-                Dependencies = externalModule.Dependencies.Select(d => new ManifestDependency()
+                Dependencies = SkipDependencySolving ? null : externalModule.Dependencies.Select(d => new ManifestDependency()
                 {
                     Id = d.Id,
                     Version = d.Version.ToString()

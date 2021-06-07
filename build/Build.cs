@@ -272,7 +272,7 @@ partial class Build : NukeBuild
                var sonarCoverageReportPath = OutPath.GlobFiles("SonarQube.xml").FirstOrDefault();
                if (sonarCoverageReportPath == null)
                    ControlFlow.Fail("No Coverage Report found");
-               FileSystemTasks.MoveFile(sonarCoverageReportPath, CoverageReportPath);
+               FileSystemTasks.MoveFile(sonarCoverageReportPath, CoverageReportPath, FileExistsPolicy.Overwrite);
            }
            else
            {
@@ -789,7 +789,7 @@ partial class Build : NukeBuild
             var projectVersionParam = $"/v:\"{ReleaseVersion}\"";
             var hostParam = $"/d:sonar.host.url={SonarUrl}";
             var tokenParam = $"/d:sonar.login={SonarAuthToken}";
-            var sonarReportPathParam = FileSystemTasks.FileExists(CoverageReportPath) ? $"/d:sonar.coverageReportPaths={CoverageReportPath}" : string.Empty;
+            var sonarReportPathParam = $"/d:sonar.coverageReportPaths={CoverageReportPath}";
             var orgParam = $"/o:{SonarOrg}";
 
             var startCmd = $"sonarscanner begin {orgParam} {branchParam} {branchTargetParam} {projectKeyParam} {projectNameParam} {projectVersionParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam} {ghRepoArg} {prProviderArg}";

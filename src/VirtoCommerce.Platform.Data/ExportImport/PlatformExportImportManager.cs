@@ -532,7 +532,12 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                             var options = manifest.Options
                                 .DefaultIfEmpty(new ExportImportOptions { HandleBinaryData = manifest.HandleBinaryData, ModuleIdentity = new ModuleIdentity(module.Id, SemanticVersion.Parse(module.Version)) })
                                 .FirstOrDefault(x => x.ModuleIdentity.Id == moduleDescriptor.Identity.Id);
-                            await exporter.ExportAsync(zipEntry.Open(), options, ModuleProgressCallback, cancellationToken);
+
+                            using (var stream = zipEntry.Open())
+                            {
+                                await exporter.ExportAsync(stream, options, ModuleProgressCallback,
+                                    cancellationToken);
+                            }
                         }
                         catch (Exception ex)
                         {
