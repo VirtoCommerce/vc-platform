@@ -9,16 +9,16 @@ namespace VirtoCommerce.Platform.Caching.GenericCrud
 {
     public class GenericCrudCachingRegion<T> : CancellableCacheRegion<GenericCrudCachingRegion<T>> where T : Entity
     {
-        public static IChangeToken CreateChangeToken(T[] entities)
+        public static IChangeToken CreateChangeToken(IEnumerable<T> entities)
         {
             if (entities == null)
             {
                 throw new ArgumentNullException(nameof(entities));
             }
-            return CreateChangeToken(entities.Select(x => x.Id).ToArray());
+            return CreateChangeToken((IEnumerable<T>) entities.Select(x => x.Id));
         }
 
-        public static IChangeToken CreateChangeToken(string[] entityIds)
+        public static IChangeToken CreateChangeToken(IEnumerable<string> entityIds)
         {
             if (entityIds == null)
             {

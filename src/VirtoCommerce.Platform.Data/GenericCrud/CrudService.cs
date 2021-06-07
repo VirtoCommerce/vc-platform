@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Caching.GenericCrud;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
@@ -37,7 +38,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return entities.FirstOrDefault();
         }
 
-        public virtual async Task<TModel[]> GetByIdsAsync(string[] ids, string responseGroup = null)
+        public virtual async Task<IEnumerable<TModel>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(GetByIdsAsync), string.Join("-", ids), responseGroup);
             var result = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
@@ -52,14 +53,14 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     //It is so important to generate change tokens for all ids even for not existing objects to prevent an issue
                     //with caching of empty results for non - existing objects that have the infinitive lifetime in the cache
                     //and future unavailability to create objects with these ids.
-                    cacheEntry.AddExpirationToken(GenericCrudCachingRegion<TModel>.CreateChangeToken(ids));
+                    cacheEntry.AddExpirationToken(CreateCacheToken(ids));
 
                     var entities = await LoadEntities(repository, ids, responseGroup);
 
                     foreach (var entity in entities)
                     {
                         var model = entity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
-                        model = PopulateModel(responseGroup, entity, model);
+                        model = AfterLoadEntities(responseGroup, entity, model);
                         if (model != null) retVal.Add(model);
                     }
 
@@ -68,43 +69,47 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 return retVal;
             });
 
-            return result.Select(x => (TModel)x.Clone()).ToArray();
+            return result.Select(x => (TModel)x.Clone());
         }
 
-        protected virtual TModel PopulateModel(string responseGroup, TEntity entity, TModel model)
+        protected virtual TModel AfterLoadEntities(string responseGroup, TEntity entity, TModel model)
         {
             return model;
         }
 
-        protected abstract Task<TEntity[]> LoadEntities(IRepository repository, string[] ids, string responseGroup);
+        protected abstract Task<IEnumerable<TEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids, string responseGroup);
 
-        protected Task<TEntity[]> LoadEntities(IRepository repository, string[] ids)
+        protected Task<IEnumerable<TEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids)
         {
             return LoadEntities(repository, ids, "Full");
         }
 
-        protected virtual void ValidateOnSave(TModel[] entitites)
+        protected virtual void BeforeSaveChanges(IEnumerable<TModel> models)
         {
             // Basic implementation left empty
         }
 
+        protected virtual void AfterSaveChanges(IEnumerable<TModel> models, IEnumerable<GenericChangedEntry<TModel>> changedEntries)
+        {
+            // Basic implementation left empty
+        }
 
-        protected virtual Task SoftDelete(IRepository repository, string[] ids)
+        protected virtual Task SoftDelete(IRepository repository, IEnumerable<string> ids)
         {
             // Basic implementation of soft delete intentionally left empty.
             return Task.CompletedTask;
         }
 
-        public virtual async Task SaveChangesAsync(TModel[] models)
+        public virtual async Task SaveChangesAsync(IEnumerable<TModel> models)
         {
             var pkMap = new PrimaryKeyResolvingMap();
             var changedEntries = new List<GenericChangedEntry<TModel>>();
 
-            ValidateOnSave(models);
+            BeforeSaveChanges(models);
 
             using (var repository = _repositoryFactory())
             {
-                var dataExistEntities = await LoadEntities(repository, models.Where(x => !x.IsTransient()).Select(x => x.Id).ToArray());
+                var dataExistEntities = await LoadEntities(repository, models.Where(x => !x.IsTransient()).Select(x => x.Id));
 
                 foreach (var model in models)
                 {
@@ -136,22 +141,24 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 //Raise domain events
                 await _eventPublisher.Publish(EventFactory<TChangeEvent>(changedEntries));
                 await repository.UnitOfWork.CommitAsync();
-                pkMap.ResolvePrimaryKeys();
-
-                ClearCache(models);
-
-                await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
             }
+            pkMap.ResolvePrimaryKeys();
+
+            ClearCache(models);
+
+            AfterSaveChanges(models, changedEntries);
+
+            await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
         }
 
-        public virtual async Task DeleteAsync(string[] ids, bool softDelete = false)
+        public virtual async Task DeleteAsync(IEnumerable<string> ids, bool softDelete = false)
         {
-            var models = (await GetByIdsAsync(ids)).ToArray();
+            var models = (await GetByIdsAsync(ids));
 
             using (var repository = _repositoryFactory())
             {
                 //Raise domain events before deletion
-                var changedEntries = models.Select(x => new GenericChangedEntry<TModel>(x, EntryState.Deleted)).ToArray();
+                var changedEntries = models.Select(x => new GenericChangedEntry<TModel>(x, EntryState.Deleted));
                 await _eventPublisher.Publish(EventFactory<TChangeEvent>(changedEntries));
 
                 if (softDelete)
@@ -174,6 +181,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 //Raise domain events after deletion
                 await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
             }
+        }
+
+        protected virtual IChangeToken CreateCacheToken(IEnumerable<string> ids)
+        {
+            return GenericCrudCachingRegion<TModel>.CreateChangeToken(ids);
         }
 
         protected virtual void ClearCache(IEnumerable<TModel> entities)
