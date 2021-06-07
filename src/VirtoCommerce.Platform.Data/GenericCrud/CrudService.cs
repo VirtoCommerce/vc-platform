@@ -43,7 +43,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             var cacheKey = CacheKey.With(GetType(), nameof(GetByIdsAsync), string.Join("-", ids), responseGroup);
             var result = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
-                var retVal = new List<TModel>();
+                var models = new List<TModel>();
 
                 using (var repository = _repositoryFactory())
                 {
@@ -61,12 +61,12 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     {
                         var model = entity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
                         model = AfterLoadEntities(responseGroup, entity, model);
-                        if (model != null) retVal.Add(model);
+                        if (model != null) models.Add(model);
                     }
 
                 }
 
-                return retVal;
+                return models;
             });
 
             return result.Select(x => (TModel)x.Clone());

@@ -35,9 +35,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         public virtual async Task<TResult> SearchAsync(TCriteria criteria)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
-            var result = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
+            return await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
-                var retVal = AbstractTypeFactory<TResult>.TryCreateInstance();
+                var result = AbstractTypeFactory<TResult>.TryCreateInstance();
                 cacheEntry.AddExpirationToken(GenericSearchCacheRegion<TModel>.CreateChangeToken());
                 using (var repository = _repositoryFactory())
                 {
@@ -56,28 +56,26 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                                          .Skip(criteria.Skip).Take(criteria.Take)
                                          .ToArrayAsync();
 
-                        retVal.TotalCount = ids.Count();
+                        result.TotalCount = ids.Count();
                         // This reduces a load of a relational database by skipping count query in case of:
                         // - First page is reading (Skip is 0)
                         // - Count in reading result less than Take value.
-                        if (criteria.Skip > 0 || retVal.TotalCount == criteria.Take)
+                        if (criteria.Skip > 0 || result.TotalCount == criteria.Take)
 
                         {
                             needExecuteCount = true;
                         }
-                        retVal.Results = (await _crudService.GetByIdsAsync(ids, criteria.ResponseGroup)).OrderBy(x => Array.IndexOf(ids, x.Id)).ToList();
+                        result.Results = (await _crudService.GetByIdsAsync(ids, criteria.ResponseGroup)).OrderBy(x => Array.IndexOf(ids, x.Id)).ToList();
                     }
 
                     if (needExecuteCount)
                     {
-                        retVal.TotalCount = await query.CountAsync();
+                        result.TotalCount = await query.CountAsync();
                     }
 
-                    return retVal;
+                    return result;
                 }
             });
-
-            return result;
         }
 
 
