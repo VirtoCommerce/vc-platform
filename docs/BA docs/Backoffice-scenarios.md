@@ -1,4 +1,16 @@
-# Backoffice scenarios
+# Backoffice functional scenarios
+
+## Overview
+
+Backoffice scenarios describe how to impact the customer experience in the backend through the eCommerce data management: catalog, prices, personalization, and many other topics.
+
+Backoffice scenarios may intersect with the information that you can find in Customer journey steps description.
+
+The difference is that Customer journey steps description is focused on customer scenarios, and Backoffice scenarios description is more focused on seller employee experience and data management. While in the end these both ways lead to the same information.
+
+To use the Backoffice documentation you should just find the area that you are interested in and check related page(s) mentioned in the "Link" column.
+
+## Functional areas
 
 Step | Description | Link
 --- | --- | ---
