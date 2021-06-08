@@ -107,7 +107,6 @@ OpenIddict.Server.dll
 OpenIddict.Validation.dll
 Pipelines.Sockets.Unofficial.dll
 Polly.dll
-Scrutor.dll
 Serialize.Linq.dll
 StackExchange.Redis.dll
 Swashbuckle.AspNetCore.Annotations.dll
