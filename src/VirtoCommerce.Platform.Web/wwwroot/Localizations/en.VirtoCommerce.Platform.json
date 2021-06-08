@@ -30,6 +30,7 @@
             },
             "asset-list": {
                 "title": "Asset management",
+                "bread-crumb-top": "All assets",
                 "labels": {
                     "picture": "Pic",
                     "name": "Name",

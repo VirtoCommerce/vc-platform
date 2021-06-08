@@ -82,7 +82,7 @@ angular.module('platformWebApp')
                     }
 
                     function calculateWordWidth(word) {
-                        var wordWidth = _.reduce(word, (memo, letter) => memo + (letter === letter.toUpperCase() ? 9 : 5.6), 0);
+                        var wordWidth = _.reduce(word, (memo, letter) => memo + (letter === letter.toUpperCase() ? 9 : 5.8), 0);
                         const maxWidthForMenuLinkText = 123;
                         const paddingAndBorders = 32;
                         var result = Math.min(maxWidthForMenuLinkText, wordWidth) + paddingAndBorders;
