@@ -1,11 +1,36 @@
-<div class="form-group">
-<label class="form-label">{{label | translate}}</label>
 <div class="form-input">
-    <ui-select ng-model="selectedId" required on-select="setValue($item)">
-        <ui-select-match placeholder="{{placeholder | translate}}">{{list.length > 0 ? $select.selected.name : 'Loading...'}}</ui-select-match>
-        <ui-select-choices repeat="x.id as x in list | filter: { name: $select.search }" refresh="fetch($select)" when-scrolled="fetchNext($select)">
-            <span ng-bind-html="x.name | highlight: $select.search"></span>
+    <ui-select ng-if="context.multiple"
+               multiple
+               ng-model="context.modelValue"
+               ng-disabled="disabled"
+               ng-class="{ disabled: isNoItems }"
+               on-select="selectValue($item, $model)"
+               on-remove="removeValue($item, $model)">
+        <ui-select-match placeholder="{{ placeholder || 'platform.placeholders.select-values' | translate }}">
+            {{ isNoItems ? ('platform.list.loading' | translate) : $item.name }}
+        </ui-select-match>
+        <ui-select-choices repeat="x.id as x in items | filter: { name: $select.search }"
+                           refresh="fetch($select)"
+                           refresh-delay="0"
+                           when-scrolled="fetchNext($select)">
+            <span ng-bind-html="x.name | highlight: $select.search" ng-show='!isNoItems'></span>
         </ui-select-choices>
     </ui-select>
-</div>
+    <ui-select ng-if="!context.multiple"
+               ng-model="context.modelValue"
+               ng-required="context.required"
+               ng-disabled="disabled"
+               ng-class="{ disabled: isNoItems }"
+               on-select="selectValue($item, $model)"
+               on-remove="removeValue($item, $model)">
+        <ui-select-match allow-clear="true" placeholder="{{ placeholder || 'platform.placeholders.select-value' | translate }}">
+            {{ isNoItems ? ('platform.list.loading' | translate) : $select.selected.name }}
+        </ui-select-match>
+        <ui-select-choices repeat="x.id as x in items | filter: { name: $select.search }"
+                           refresh="fetch($select)"
+                           refresh-delay="300"
+                           when-scrolled="fetchNext($select)">
+            <span ng-bind-html="x.name | highlight: $select.search" ng-show='!isNoItems'></span>
+        </ui-select-choices>
+    </ui-select>
 </div>
