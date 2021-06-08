@@ -8,32 +8,33 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
 
 ## News Digests
 
+!!! done "28 May"
+    * Added new video on Youtube
+    * Dynamic properties added to X-Purchase-Cart
+    * Improved Design
+    * Simplified Login on behalf
+    * Fixed Swagger Validation errors
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-28-may-2021/330)
+
+!!! done "17 May"
+    * Added New Videos on Youtube
+    * Reworked Dictionary Values Blade UX for Platform Settings
+    * Allowed updating Dynamic properties for Contacts via XAPI
+    * Upgraded to latest Azure.BlobStorage
+    * Allowed to display OuterId for Organization and Contacts
+    * Added ability Search by username
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-17-may-2021/318)
+
 !!! done "3 May"
-    * New Videos on Youtube
-    * Price import/export module
-    * File system distributed lock 
-    * Dynamic Properties for Organizations and contacts
-    * UX/UI Improvements
+    * Added New Videos on Youtube
+    * Released Price import/export module
+    * Added File system distributed lock 
+    * Added Dynamic Properties for Organizations and contacts
+    * Implemented UX/UI Improvements
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-3-may-2021/314)
-
-!!! done "19 April"
-    * New Videos on Youtube
-    * Product with a Bill of Materials
-    * Password repeat generation policy
-    * Updated Visual Studio Module Template
-    * UX/UI Improvements
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-19-april-2021/309)
-
-!!! done "5 April"
-    * Design System for Virto Commerce Admin UI (Preview)
-    * DB Distributed lock 
-    * Improve performance
-    * Added Password expiration policy
-    * Added breadcrumbs property for XAPI
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-5-april-2021/306)
 
 
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and [GitHub](https://github.com/VirtoCommerce)
