@@ -43,6 +43,7 @@ angular.module('platformWebApp')
                     });
 
                     scope.$watchCollection('breadcrumbs', (newItems) => {
+                        delete scope.expanded;
                         recalculateItemVisibility(newItems);
                         breadcrumbHistoryService.push(newItems, scope.bladeId);
                     });
