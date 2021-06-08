@@ -70,12 +70,15 @@
         },
         "list": {
             "no-data": "No data",
-            "count": "Count"
+            "count": "Count",
+            "loading": "Loading..."
         },
         "placeholders": {
             "n-a": "N/A",
             "no-file": "Choose file",
-            "search-keyword": "Search keyword..."
+            "search-keyword": "Search keyword...",
+            "select-value": "Select value",
+            "select-values": "Select value"
         },
         "dialogs": {
             "delete": {
