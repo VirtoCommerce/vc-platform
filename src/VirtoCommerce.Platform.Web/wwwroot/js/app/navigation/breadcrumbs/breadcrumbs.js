@@ -1,15 +1,23 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
     .directive('vaBreadcrumb', [
-        'platformWebApp.breadcrumbHistoryService', function (breadcrumbHistoryService) {
+        'platformWebApp.breadcrumbHistoryService', '$translate', '$timeout', function (breadcrumbHistoryService, $translate, $timeout) {
             return {
                 restrict: 'E',
                 require: 'ngModel',
                 replace: true,
                 scope: {
-                    bladeId: '='
+                    bladeId: '=',
+                    bladeMaximized: '='
                 },
-        templateUrl: '$(Platform)/Scripts/app/navigation/breadcrumbs/breadcrumbs.tpl.html',
+                templateUrl: '$(Platform)/Scripts/app/navigation/breadcrumbs/breadcrumbs.tpl.html',
                 link: function (scope, element, attr, ngModelController) {
+                    var availableWidth = element.width();
+                    var originalWidth = availableWidth;
+
+                    $timeout(() => {
+                        element.find(".menu.__inline").css('max-width', availableWidth);
+                    });
+
                     scope.breadcrumbs = [];
                     ngModelController.$render = function () {
                         scope.breadcrumbs = ngModelController.$modelValue;
@@ -19,29 +27,116 @@
                         breadcrumb.navigate(breadcrumb);
                     };
 
-                    scope.canNavigateBack = function () {
-                        return breadcrumbHistoryService.check(scope.bladeId);
-                    };
+                    scope.$watch('bladeMaximized', (newVal, oldVal) => {
+                        if (newVal === oldVal && newVal === undefined) return;
 
-                    scope.navigateBack = function () {
-                        if (scope.canNavigateBack()) {
-                            var breadcrumb = breadcrumbHistoryService.pop(scope.bladeId);
-                            breadcrumb.navigate(breadcrumb);
+                        if (newVal) {
+                            originalWidth = availableWidth;
+                            availableWidth = element.width();
+                        } else {
+                            availableWidth = originalWidth;
                         }
-                    };
-                    scope.$watchCollection('breadcrumbs', function (newItems) {
+
+                        recalculateItemVisibility(scope.breadcrumbs);
+
+                        element.find(".menu.__inline").css('max-width', availableWidth);
+                    });
+
+                    scope.$watchCollection('breadcrumbs', (newItems) => {
+                        delete scope.expanded;
+                        recalculateItemVisibility(newItems);
                         breadcrumbHistoryService.push(newItems, scope.bladeId);
                     });
+
+                    function recalculateItemVisibility(breadcrumbs) {
+                        if (scope.expanded || !_.some(breadcrumbs))
+                            return;
+
+                        availableWidth = Math.min(availableWidth, element.width());
+
+                        const expanderWidth = 43;
+                        var wasLastItemVisible = true;
+                        breadcrumbs[0].name = $translate.instant(breadcrumbs[0].name);
+                        var widthOfItems = calculateWordWidth(breadcrumbs[0].name);
+                        var items = _.rest(breadcrumbs).reverse();
+
+                        for (var i = 0; i < items.length; i++) {
+                            var x = items[i];
+                            if (wasLastItemVisible) {
+                                var wordWidth = calculateWordWidth(x.name);
+                                if (widthOfItems + wordWidth < availableWidth) {
+                                    widthOfItems += wordWidth;
+                                } else {
+                                    wasLastItemVisible = false;
+                                    widthOfItems += expanderWidth;
+                                    if (widthOfItems > availableWidth) {
+                                        // hide 1 more because expander took the space
+                                        items[i - 1].isVisible = false;
+                                    }
+                                }
+                            }
+
+                            x.isVisible = wasLastItemVisible;
+                        }
+
+                        //console.log("Calc. breadcrumbs width: " + widthOfItems + ", avail: " + availableWidth);
+                    }
+
+                    function calculateWordWidth(word) {
+                        var wordWidth = _.reduce(word, (memo, letter) => memo + (letter === letter.toUpperCase() ? 9 : 5.8), 0);
+                        const maxWidthForMenuLinkText = 123;
+                        const paddingAndBorders = 32;
+                        var result = Math.min(maxWidthForMenuLinkText, wordWidth) + paddingAndBorders;
+                        //console.log("[calc. width] " + word + "\t=> " + (result - 6));
+                        return result;
+                    }
+
+                    scope.expand = () => {
+                        for (var x of scope.breadcrumbs) {
+                            x.isVisible = true;
+                        }
+
+                        scope.expanded = true;
+
+                        $timeout(() => {
+                            var el = element;
+                            var bladeStatic = el.parent();
+                            var requiredStaticTopHeight = bladeStatic[0].offsetHeight + el.height() - 39;
+                            bladeStatic.height(requiredStaticTopHeight + "px");
+
+                            var staticBottom = bladeStatic.parent().find(".blade-static.__bottom")[0]
+                            var staticBottomHeight = staticBottom ? staticBottom.offsetHeight : 0;
+                            bladeStatic.parent().find(".blade-content").height('calc(100% - ' + (requiredStaticTopHeight + staticBottomHeight) + 'px)');
+                        });
+                    };
+
+                    scope.canExpand = () => {
+                        return !scope.expanded && scope.breadcrumbs && _.some(_.rest(scope.breadcrumbs), (breadcrumb) => !breadcrumb.isVisible);
+                    };
                 }
             }
         }
     ])
+
     .factory('platformWebApp.breadcrumbHistoryService', function () {
         var map = {};
 
-        function breadcrumbsEqual(x,y) {
+        function breadcrumbsEqual(x, y) {
             return x && y && x.id === y.id && x.name === y.name;
         }
+
+        var checkInternal = (id) => map[id] && _.any(map[id].records);
+
+        var popInternal = (id) => {
+            var retVal = undefined;
+            var history = map[id];
+            if (_.any(history.records)) {
+                retVal = history.records.pop();
+                history.ignoreNextAction = true;
+            }
+
+            return retVal;
+        };
 
         return {
             push: function (breadcrumbs, id) {
@@ -58,8 +153,8 @@
                 if (history.ignoreNextAction) {
                     history.ignoreNextAction = false;
                 } else if (history.currentBreadcrumb &&
-                            !breadcrumbsEqual(history.currentBreadcrumb, currentBreadcrumb) &&
-                            !breadcrumbsEqual(history.currentBreadcrumb, _.last(history.records))) {
+                    !breadcrumbsEqual(history.currentBreadcrumb, currentBreadcrumb) &&
+                    !breadcrumbsEqual(history.currentBreadcrumb, _.last(history.records))) {
                     history.records.push(history.currentBreadcrumb);
                 }
 
@@ -68,19 +163,19 @@
                 }
             },
 
-            check: function (id) {
-                return map[id] && _.any(map[id].records);
-            },
+            check: checkInternal,
 
-            pop: function (id) {
-                var retVal = undefined;
-                var history = map[id];
-                if (_.any(history.records)) {
-                    retVal = history.records.pop();
-                    history.ignoreNextAction = true;
-                }
+            pop: popInternal,
 
-                return retVal;
-            }
+            getBackButtonInstance: () => angular.copy({
+                name: "platform.navigation.back", icon: 'fas fa-arrow-left',
+                showSeparator: true,
+                executeMethod: function (blade) {
+                    var breadcrumb = popInternal(blade.id);
+                    breadcrumb.navigate(breadcrumb);
+                },
+                canExecuteMethod: (blade) => checkInternal(blade.id),
+                index: 0
+            })
         };
     });

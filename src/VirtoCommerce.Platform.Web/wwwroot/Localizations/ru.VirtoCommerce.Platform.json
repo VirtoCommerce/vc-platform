@@ -17,8 +17,7 @@
             "help": "Помощь"
         },
         "navigation": {
-            "back": "Назад",
-            "bread-crumb-top": "Все"
+            "back": "Назад"
         },
         "blades": {
             "system-info": {
@@ -621,7 +620,8 @@
                 "title": "Настройки значений"
             },
             "settingGroup-list": {
-                "title": "Настройки"
+                "title": "Настройки",
+                "bread-crumb-top": "Все настройки"
             },
             "user-profile": {
                 "title": "Профиль пользователя",
