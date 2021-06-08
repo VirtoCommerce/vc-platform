@@ -136,7 +136,7 @@ namespace VirtoCommerce.Platform.Modules
             foreach (var module in manifestModules)
             {
                 //Check platform version
-                if (!module.PlatformVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion))
+                if (!module.PlatformVersion.IsCompatibleWith(PlatformVersion.CurrentVersion) || !module.PlatformVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion))
                 {
                     module.Errors.Add($"Module platform version {module.PlatformVersion} is incompatible with current {PlatformVersion.CurrentVersion}");
                 }
