@@ -13,6 +13,14 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Platform.Data.GenericCrud
 {
+    /// <summary>
+    /// Generic service to simplify search implementation.
+    /// To implement the service for applied purpose, inherit your search service from this.
+    /// </summary>
+    /// <typeparam name="TCriteria">Search criteria type (a descendant of <see cref="SearchCriteriaBase"/>)</typeparam>
+    /// <typeparam name="TResult">Search result (<see cref="GenericSearchResult<TModel>"/>)</typeparam>
+    /// <typeparam name="TModel">The type of service layer model</typeparam>
+    /// <typeparam name="TEntity">The type of data access layer entity (EF) </typeparam>
     public abstract class SearchService<TCriteria, TResult, TModel, TEntity> : ISearchService<TCriteria, TResult, TModel>
         where TCriteria : SearchCriteriaBase
         where TResult : GenericSearchResult<TModel>
@@ -23,6 +31,12 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected readonly Func<IRepository> _repositoryFactory;
         protected readonly ICrudService<TModel> _crudService;
 
+        /// <summary>
+        /// Construct new SearchService
+        /// </summary>
+        /// <param name="repositoryFactory">Repository factory to get access to the data source</param>
+        /// <param name="platformMemoryCache">The cache used to temporary store returned values</param>
+        /// <param name="crudService">Crud service to get service-layer model instances (a descendant of <see cref="ICrudService<TModel>"/>)</param>
         protected SearchService(Func<IRepository> repositoryFactory, IPlatformMemoryCache platformMemoryCache, ICrudService<TModel> crudService)
         {
             _platformMemoryCache = platformMemoryCache;
@@ -30,7 +44,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             _crudService = crudService;
         }
 
-
+        /// <summary>
+        /// Search for model (service-layer) instances, related to specified criteria
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
         public virtual async Task<TResult> SearchAsync(TCriteria criteria)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
@@ -77,8 +95,19 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             });
         }
 
+        /// <summary>
+        /// Custom search service must override this method to implement search criteria to query transformation for repository call
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
         protected abstract IQueryable<TEntity> BuildQuery(IRepository repository, TCriteria criteria);
 
+        /// <summary>
+        /// Build sort expression. Override to add custom sorting.
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
         protected virtual IList<SortInfo> BuildSortExpression(TCriteria criteria)
         {
             return criteria.SortInfos;

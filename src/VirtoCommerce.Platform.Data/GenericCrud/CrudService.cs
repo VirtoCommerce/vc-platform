@@ -14,6 +14,14 @@ using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Platform.Data.GenericCrud
 {
+    /// <summary>
+    /// Generic service to simplify CRUD implementation.
+    /// To implement the service for applied purpose, inherit your search service from this.
+    /// </summary>
+    /// <typeparam name="TModel">The type of service layer model</typeparam>
+    /// <typeparam name="TEntity">The type of data access layer entity (EF) </typeparam>
+    /// <typeparam name="TChangeEvent">The type of *change event</typeparam>
+    /// <typeparam name="TChangedEvent">The type of *changed event</typeparam>
     public abstract class CrudService<TModel, TEntity, TChangeEvent, TChangedEvent> : ICrudService<TModel>
         where TModel : Entity, ICloneable
         where TEntity : Entity, IDataEntity<TEntity, TModel>
@@ -24,19 +32,38 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected readonly IPlatformMemoryCache _platformMemoryCache;
         protected readonly Func<IRepository> _repositoryFactory;
 
-        protected CrudService(IEventPublisher eventPublisher, IPlatformMemoryCache platformMemoryCache, Func<IRepository> repositoryFactory)
+        /// <summary>
+        /// Construct new CrudService
+        /// </summary>
+        /// <param name="repositoryFactory">Repository factory to get access to the data source</param>
+        /// <param name="platformMemoryCache">The cache used to temporary store returned values</param>
+        /// <param name="eventPublisher">The publisher to propagate platform-wide events (TChangeEvent, TChangedEvent)</param>
+        protected CrudService(Func<IRepository> repositoryFactory, IPlatformMemoryCache platformMemoryCache, IEventPublisher eventPublisher)
         {
-            _eventPublisher = eventPublisher;
-            _platformMemoryCache = platformMemoryCache;
             _repositoryFactory = repositoryFactory;
+            _platformMemoryCache = platformMemoryCache;
+            _eventPublisher = eventPublisher;
         }
 
+        /// <summary>
+        /// Return a model instance for specified id and response group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="responseGroup"></param>
+        /// <returns></returns>
         public virtual async Task<TModel> GetByIdAsync(string id, string responseGroup = null)
         {
             var entities = await GetByIdsAsync(new[] { id }, responseGroup);
             return entities.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Return an enumerable set of model instances for specified ids and response group.
+        /// Custom CRUD service can override this to implement fully specific read.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="responseGroup"></param>
+        /// <returns></returns>
         public virtual async Task<IEnumerable<TModel>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(GetByIdsAsync), string.Join("-", ids), responseGroup);
@@ -71,36 +98,81 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return result.Select(x => (TModel)x.Clone());
         }
 
+        /// <summary>
+        /// Post-read processing of the model instance.
+        /// A good place to make some additional actions, tune model data.
+        /// Override to add some model data changes, calculations, etc...
+        /// </summary>
+        /// <param name="responseGroup"></param>
+        /// <param name="entity"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         protected virtual TModel ProcessModel(string responseGroup, TEntity entity, TModel model)
         {
             return model;
         }
 
+        /// <summary>
+        /// Custom CRUD service must override this method to implement a call to repository for data read
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="ids"></param>
+        /// <param name="responseGroup"></param>
+        /// <returns></returns>
         protected abstract Task<IEnumerable<TEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids, string responseGroup);
 
-        protected Task<IEnumerable<TEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids)
+        /// <summary>
+        /// Just calls LoadEntities with "Full" response group
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        protected virtual Task<IEnumerable<TEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids)
         {
             return LoadEntities(repository, ids, "Full");
         }
 
+        /// <summary>
+        /// Custom CRUD service can override to implement some actions before save
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         protected virtual Task BeforeSaveChanges(IEnumerable<TModel> models)
         {
             // Basic implementation left empty
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Custom CRUD service can override to implement some actions after save
+        /// </summary>
+        /// <param name="models"></param>
+        /// <param name="changedEntries"></param>
+        /// <returns></returns>
         protected virtual Task AfterSaveChangesAsync(IEnumerable<TModel> models, IEnumerable<GenericChangedEntry<TModel>> changedEntries)
         {
             // Basic implementation left empty
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Custom CRUD service can override to implement a call to the repository for soft delete.
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         protected virtual Task SoftDelete(IRepository repository, IEnumerable<string> ids)
         {
             // Basic implementation of soft delete intentionally left empty.
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Persists specific set of enumerable model instances to the data source.
+        /// Can be overridden to implement full custom save.
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns></returns>
         public virtual async Task SaveChangesAsync(IEnumerable<TModel> models)
         {
             var pkMap = new PrimaryKeyResolvingMap();
@@ -152,6 +224,12 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
         }
 
+        /// <summary>
+        /// Delete models, related to specific set of their ids, from the data source.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="softDelete"></param>
+        /// <returns></returns>
         public virtual async Task DeleteAsync(IEnumerable<string> ids, bool softDelete = false)
         {
             var models = (await GetByIdsAsync(ids));
@@ -184,18 +262,31 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             }
         }
 
+        /// <summary>
+        /// Create cache region.
+        /// Default implementation creates <see cref="GenericCrudCachingRegion<TModel>"/>.
+        /// Can be overridden to create some different region.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         protected virtual IChangeToken CreateCacheToken(IEnumerable<string> ids)
         {
             return GenericCrudCachingRegion<TModel>.CreateChangeToken(ids);
         }
 
-        protected virtual void ClearCache(IEnumerable<TModel> entities)
+        /// <summary>
+        /// Clear the cache.
+        /// Default implementation expires <see cref="GenericSearchCacheRegion<TModel>"/> region and <see cref="GenericCrudCachingRegion<TModel>"/> regions for every entity
+        /// Can be overridden to expire different regions/tokens.
+        /// </summary>
+        /// <param name="models"></param>
+        protected virtual void ClearCache(IEnumerable<TModel> models)
         {
             GenericSearchCacheRegion<TModel>.ExpireRegion();
 
-            foreach (var entity in entities)
+            foreach (var model in models)
             {
-                GenericCrudCachingRegion<TModel>.ExpireTokenForKey(entity.Id);
+                GenericCrudCachingRegion<TModel>.ExpireTokenForKey(model.Id);
             }
         }
 
