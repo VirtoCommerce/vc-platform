@@ -7,6 +7,10 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Caching.GenericCrud
 {
+    /// <summary>
+    /// Generic CRUD caching region implementation for use with generic crud service.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class GenericCrudCachingRegion<T> : CancellableCacheRegion<GenericCrudCachingRegion<T>> where T : Entity
     {
         public static IChangeToken CreateChangeToken(IEnumerable<T> entities)
