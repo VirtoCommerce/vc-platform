@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Nuke.Common.IO;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Configuration;
+using PlatformTools;
 
 partial class Build: NukeBuild
 {
@@ -21,11 +22,10 @@ partial class Build: NukeBuild
     Target InitPlatform => _ => _
     .Executes(() =>
     {
-        var builder = new ConfigurationBuilder().SetBasePath(RootDirectory).AddJsonFile(AppsettingsPath);
-        IConfiguration configuration = builder.Build();
+        IConfiguration configuration = AppSettings.GetConfiguration(RootDirectory, AppsettingsPath);
         var moduleCatalogOptions = new LocalStorageModuleCatalogOptions()
         {
-            DiscoveryPath = string.IsNullOrEmpty(DiscoveryPath) ? GetModulesDiscoveryPath(configuration) : DiscoveryPath,
+            DiscoveryPath = string.IsNullOrEmpty(DiscoveryPath) ? configuration.GetModulesDiscoveryPath() : DiscoveryPath,
             ProbingPath = ProbingPath
         };
         var options = Microsoft.Extensions.Options.Options.Create<LocalStorageModuleCatalogOptions>(moduleCatalogOptions);
@@ -33,11 +33,4 @@ partial class Build: NukeBuild
         var moduleCatalog = new LocalStorageModuleCatalog(options, logger);
         moduleCatalog.Load();
     });
-
-    private string GetModulesDiscoveryPath(IConfiguration configuration)
-    {
-        var virtoSection = configuration.GetSection("VirtoCommerce");
-        var result = virtoSection.GetValue<string>("DiscoveryPath", "./modules");
-        return result;
-    }
 }

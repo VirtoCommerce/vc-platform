@@ -378,7 +378,7 @@ h3
     padding-top: 10px
     padding-right: 0px
     width: 5%
-    padding-left: 20px;
+    padding-left: 20px
   .table-col:last-child
     padding-right: 20px
   &.__data .table-col
@@ -390,6 +390,10 @@ h3
     line-height: 1.3
   .table-item
     cursor: pointer
+    &:hover
+      .table-ico
+        color: #161d25
+        transition: color .25s ease-in-out
   .table-ico
     .sort
       font-size: 16px
@@ -444,7 +448,7 @@ h3
 .table-ico
   color: $tableIcoColor
   font-size: 28px
-  margin: 0 10px
+  margin: 0 10px 0 6px
   vertical-align: middle
 .table-item
   &.__error .table-ico
@@ -466,7 +470,6 @@ h3
     background-repeat: no-repeat
     background-size: contain
     height: 100%
-    margin: 0 0 0 6px
     position: relative
     width: 100%
   img.image
@@ -1019,27 +1022,15 @@ $names: "", ".double", ".triple", ".quadro"
   .arrow-color
     color: #A1C0D4
   padding: 15px 0
-  .back
-    margin: 4px 0 0 0 
-    padding: 4px 12px 4px 12px
-    border: 1px solid #A1C0D4
-    border-radius: 15px
-    background: white
-    color: #43b0e6
-    display: inline-block
-    text-align: center
+  .menu
+    display: flex
+    margin: 4px 0 -8px 0
     vertical-align: top
-    &:hover
-      border-color: $baseColor
-      color: $baseColor
-  .back ~ .menu
-    display: inline-block
-    margin: 4px 0 0 5px
-    vertical-align: top
-  .menu-item.__divider
-    height: 22px
-    position: relative
-    width: 5px
+    &.flex-row-wrap
+      flex-flow: row wrap
+  li.menu-item:not(:last-child),
+  li.menu-item:first-child
+    margin: 0 6px 8px 0
   .menu-link
     padding: 4px 12px 4px 12px
     border: 1px solid #A1C0D4
@@ -1053,6 +1044,9 @@ $names: "", ".double", ".triple", ".quadro"
     font-size: 14px
     &:hover
       color: #52a2ca
+    &.last-item
+      border: 1px solid #838d9a
+      color: #838d9a
 
 /* Tree */
 .tree
@@ -1447,7 +1441,7 @@ $names: "", ".double", ".triple", ".quadro"
 .form-input.__langs .select2-search-field
   left: 36px
 .select2-container-multi .select2-choices .select2-search-choice
-  background: $lightBg;
+  background: $lightBg
   border: 1px solid #a1c0d4
   border-radius: 0
   box-shadow: none
@@ -1473,7 +1467,7 @@ $names: "", ".double", ".triple", ".quadro"
     color: $baseColor
     content: ''
     font-family: $fontAw
-    font-size: 12px
+    font-size: 13px
     text-shadow: none
     top: 0
     &:hover
@@ -1499,8 +1493,8 @@ tags-input
     box-shadow: none
     color: $colorText
     padding: 0 10px
-    -moz-appearance: none;
-    -webkit-appearance: none;
+    -moz-appearance: none
+    -webkit-appearance: none
     li
       padding: 0
       text-indent: 0
@@ -1780,10 +1774,12 @@ tags-input
 
       transition: height .3s ease
       .menu
-        margin: 0 0 0 10px
+        margin: 0 0 0 7px
         white-space: normal
       .menu-item
         margin: 7px 0
+        &.separator
+          border-right: 1px solid rgba(255,255,255,.2)
       .menu-item.__loading
         pointer-events: none
         position: relative
@@ -1878,7 +1874,7 @@ tags-input
     .blade-static.__expanded
       .breadcrumbs
         margin: 0 0 -15px
-        padding: 14px 20px
+        padding: 14px 15px
     .blade-static .form-group,
     .blade-static .form
       margin: 0 20px
@@ -1902,10 +1898,30 @@ tags-input
         margin-right: 80px
         &:last-child
           margin-right: 0
-    .blade-static
       .form-count
         @include center(false, true, true)
-        right: 0;
+        right: 0
+    .blade-static .searchrow
+      align-content: stretch
+      display: flex
+      flex-wrap: nowrap
+      flex-direction: row
+      .column
+        width: 94%
+        margin-right: 16px
+        &-half
+          width: 47%
+          margin-right: 16px
+      .form-input .btn
+        background: url(/images/layout/remove.svg) no-repeat content-box center
+        min-width: 34px
+      .filter-edit
+        font-size: 17px
+        margin: 4px 16px 0 -8px
+      .form-count2
+        top: 16%
+        transform: translateY(16%)
+        font-weight: 500
     .blade-static .pagination
       border: none
       margin: 0
@@ -2157,7 +2173,7 @@ tags-input
   width: 100%
 .gridster .gridster-cnt.__info,
 .gridster .gridster-cnt.__note
-  cursor: inherit;
+  cursor: inherit
   bottom: 2px
   left: 2px
   right: 2px

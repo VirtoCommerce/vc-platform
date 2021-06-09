@@ -8,6 +8,7 @@ angular.module('platformWebApp')
                 transclude: true,
                 scope: {
                     languages: "=",
+                    hiddenLanguages: "=",
                     getDictionaryValues: "&"
                 },
                 link: function (scope, element, attr, ngModelController, linker) {
@@ -235,6 +236,16 @@ angular.module('platformWebApp')
 
                     scope.openUrl = function (url) {
                         window.open(url, '_blank');
+                    }
+
+                    scope.isLanguageVisible = function (language) {
+                        if (scope.hiddenLanguages) {
+                            if (_.contains(scope.hiddenLanguages, language)) {
+                                return false;
+                            }
+                        }
+
+                        return true;
                     }
                 }
             }

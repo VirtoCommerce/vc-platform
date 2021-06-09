@@ -17,8 +17,7 @@
       "help" : "hilfe"
     },
     "navigation": {
-      "back": "Zurück",
-      "bread-crumb-top": "Alle"
+      "back": "Zurück"
     },
     "blades": {
         "system-info": {
@@ -136,8 +135,7 @@
                 "platform-entries": "Plattform Einträge",
                 "choose-modules": "Module wählen Sie exportieren",
                 "download-url": "URL herunterladen",
-                "errors": "Fehler",
-                "start-export": "Export starten",
+                "errors": "Fehler",                
                 "start": "Starten",
                 "end": "Ende"
             },
@@ -524,7 +522,8 @@
             "title": "Modul Einstellungen"
         },
         "settingGroup-list": {
-            "title": "Einstellungen"
+            "title": "Einstellungen",
+            "bread-crumb-top": "Alle"
         },
         "user-profile": {
             "title": "User Profil",

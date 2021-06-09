@@ -55,6 +55,8 @@ The module loading process into  Virto platform application process includes the
 
 > Copying assemblies into probing folder prevents assembly lock issues that might happen when the same assemblies that are loaded into the application process and same time can be modified during development or other activity. 
 
+> In multiinstance platform configurations only one instance checks/copies assemblies into the probing folder. This achieved by distributed locking between instances thru Redis. First started instance copies the files and the other instances skips.
+
 * Loading modules. The assemblies that contain the modules are loaded into default context `AssemblyLoadContex.Default` of the application process. This phase requires the module assemblies to be retrieved from the probing folder.
 * Order by dependency graph – sore all loaded modules in the order of their dependencies for proper initialization order.
 * Initializing modules. The modules are then initialized. This means creating instances of the module class and calling the Initialize method on them via the `IModule` interface.
@@ -150,7 +152,7 @@ This fact may lead to an unexpected update of third-party dependencies for other
 
 Virto has two different install and update modes for modules: **Runtime** and  **Design-time** respectively.
 
-**Runtime**  - this mode is used for update and install modules on working system or in first time setup and this process based on request to special resource file modules.json that can be on public or internal access and it contains information about all modules and their latest major versions (minor and patch versions history not stored). Path to this file can be set by a special setting in the platform `appsettings.json` file.
+**Runtime**  - this mode is used for update and install modules on working system or in first time setup and this process based on request to special resource file modules.json (registry_ that can be on public or internal access and it contains information about all modules and their latest major versions (minor and patch versions history not stored). Path to this file can be set by a special setting in the platform `appsettings.json` file.
 
 *`module.manifest`*
 ```JSON
@@ -172,13 +174,21 @@ How this process works for the virto platform modules for both platform major ve
 ![image|624x170](../media/essential-modularity-5.png) 
 
 
-**Design time** –  this mode is often used during development, when you manage installed versions of modules, install them manually or update them in the `~/Modules` discovery folder on the local computer or in any other public environment. The main disadvantage of this method is it not distributed to other team members because of versions and list of used modules doesn’t preserved in version controls system and can’t be shared.
+**Design time with using CLI** –  this mode is often used during development, when you manage installed versions of modules, install or update them manually on the local computer or in any other public environment. The virto provides the special CLI tool for this, check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/CLI-tools/package-management.md) for more info.
 
->The virto platform team is currently working on improving of this process, where you can work with all modules in one solution (mono-repositoriy) and manage versions and dependencies of all modules in the same way as you can manage NuGet dependencies for regular solutions containing several projects.
+Examples:
+
+```console
+//Install  the latest version of a particular module 
+vc-build install -Module VirtoCommerce.Store
+
+//Update platform and all installed modules to the latest version
+vc-build update
+```
 
 ## Module deployment process
 
-Virto platform  has a build automation tool  [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/tree/master/build)   that helps with  building, packaging  and releasing  modules, you might read more about by this link https://github.com/VirtoCommerce/vc-platform/tree/master/build.
+Virto platform  has a build automation tool  [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/tree/dev/build)   that helps with  building, packaging  and releasing  modules, you might read more about by this link [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/CLI-tools/build-automation.md) for more info.
 
 ![image](../media/essential-modularity-7.png) 
 

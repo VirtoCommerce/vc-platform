@@ -10,23 +10,28 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             }
 
             settings.allowedValues = _.map(settings.allowedValues, function (x) { return { value: x }; });
-            blade.origEntity = angular.copy(settings.allowedValues);
-            initializeBlade(settings);
+            initializeBlade(settings, { allowedValues: angular.copy(settings.allowedValues) } );
         });
     }
 
-    function initializeBlade(data) {
+    function initializeBlade(data, origData) {
         if (!data.allowedValues) {
             data.allowedValues = [];
+        }
+        if (!origData.allowedValues) {
+            origData.allowedValues = [];
         }
 
         blade.title = data.name;
         blade.currentEntity = data;
+        blade.origEntity = origData;
+        blade.searchText = "";
         currentEntities = blade.currentEntity.allowedValues;
+        $scope.applyOrder();
         blade.isLoading = false;
     }
 
-    $scope.dictValueValidator = function (value) {
+    $scope.validateDictValue= function (value) {
         if (blade.currentEntity) {
             if (blade.currentEntity.valueType == 'ShortText') {
                 return _.all(currentEntities, function (item) { return angular.lowercase(item.value) !== angular.lowercase(value); });
@@ -37,12 +42,9 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         return false;
     };
 
-    $scope.add = function (form) {
-        if (form.$valid) {
-            currentEntities.push($scope.newValue);
-            resetNewValue();
-            form.$setPristine();
-        }
+    $scope.filteredEntities = function () {
+        var lowerCasedSearchText = blade.searchText.toLowerCase();
+        return _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(lowerCasedSearchText);});
     };
 
     $scope.delete = function (index) {
@@ -51,13 +53,31 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     };
 
     $scope.selectItem = function (listItem) {
+        if ($scope.selectedItem && !$scope.selectedItem.value) {
+            // Remove valueless items
+            $scope.delete(currentEntities.indexOf($scope.selectedItem));
+        }
+        if (listItem) {
+            $scope.editValue = angular.copy(listItem);
+        }
+        $scope.error = false;
         $scope.selectedItem = listItem;
+        setTimeout(() => $('#dictValue').focus());
     };
 
     blade.headIcon = 'fa fa-wrench';
     blade.subtitle = 'platform.blades.setting-dictionary.subtitle';
     blade.toolbarCommands = [{
-        name: "platform.commands.delete", icon: 'fas fa-trash-alt',
+        name: "platform.commands.add", icon: 'menu-ico fas fa-plus',
+        executeMethod: function () {
+            addNew();
+        },
+        canExecuteMethod: function () {
+            return true;
+        }
+    },
+    {
+        name: "platform.commands.delete", icon: 'menu-ico fas fa-trash-alt',
         executeMethod: function () {
             deleteChecked();
         },
@@ -73,7 +93,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         }
 
         function isDirty() {
-            return !angular.equals(currentEntities, blade.origEntity) && blade.hasUpdatePermission();
+            return !angular.equals(currentEntities, blade.origEntity.allowedValues) && blade.hasUpdatePermission();
         }
 
         function saveChanges() {
@@ -109,30 +129,81 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         $scope.$watch('blade.parentBlade.currentEntities', function (data) {
             if (data) {
                 var allEntities = _.flatten(_.map(data, _.values));
-                initializeBlade(_.findWhere(allEntities, { name: blade.currentEntityId }));
+                var origEntities = _.flatten(_.map(blade.parentBlade.origEntity, _.values));
+                initializeBlade(_.findWhere(allEntities, { name: blade.currentEntityId }), _.findWhere(origEntities, { name: blade.currentEntityId }));
             }
         });
     }
 
     $scope.checkAll = function () {
         angular.forEach(currentEntities, function (item) {
-            item._selected = blade.selectedAll;
+            // use a field with $dollar-sign prefix to hide such field from angular.equals to avoid "miss-dirtying" issues
+            item.$selected = blade.selectedAll;
         });
     };
+
+    $scope.applyOrder = function () {
+        // Order both: current and source arrays to avoid issues with angular.equals (like "miss-dirtying")
+        orderBy(currentEntities);
+        orderBy(blade.origEntity.allowedValues);
+    };
+
+    $scope.applyValue = function () {
+        // Check the value has no duplicates
+        $scope.error = !$scope.validateDictValue($scope.editValue.value);
+        if (!$scope.error) {
+            $scope.selectedItem.value = $scope.editValue.value;
+            $scope.selectItem(null);
+            $scope.applyOrder();
+        }
+        else {
+            setTimeout(() => $('#dictValue').focus());
+        }
+    };
+
+    $scope.inputKeyUp = function ($event) {
+        if ($event.keyCode === 13) {
+            // Apply value on hit Enter
+            $scope.applyValue();
+        }
+        if ($event.keyCode === 27) {
+            // Decline value on hit Esc
+            $scope.selectItem(null);
+        }
+    };
+
+    function orderBy(entities) {
+        if (blade.currentEntity.valueType === 'Number') {
+            entities.sort(function (a, b) { return a.value - b.value; })
+        }
+        else {
+            entities.sort(function (a, b) { return a.value.localeCompare(b.value); })            
+        }
+        if (blade.orderDesc) {
+            entities.reverse();
+        }
+
+    }
 
     function resetNewValue() {
         $scope.newValue = { value: null };
     }
 
     function isItemsChecked() {
-        return _.any(currentEntities, function (x) { return x._selected; });
+        return _.any(currentEntities, function (x) { return x.$selected; });
     }
 
     function deleteChecked() {
-        var selection = _.where(currentEntities, { _selected: true });
+        var selection = _.where(currentEntities, { $selected: true });
         angular.forEach(selection, function (listItem) {
             $scope.delete(currentEntities.indexOf(listItem));
         });
+    }
+
+    function addNew() {
+        currentEntities.splice(0, 0, $scope.newValue);
+        $scope.selectItem($scope.newValue);
+        resetNewValue();
     }
 
     // on load

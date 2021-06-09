@@ -13,14 +13,15 @@
 .window,
 .modal-content
   background: $whiteColor
-  box-shadow: 0 0 0 8px rgba(0, 0, 0, .05)
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15)
+  border-radius: 2px
   font-family: $font
   line-height: 1.3
-  min-height: 200px
+  min-height: 316px
   left: 50%
   position: absolute
   top: 50%
-  width: 500px
+  width: 516px
   transform: translate(-50%, -50%)
   .modal-header-error
     background: #7a1c13
@@ -69,8 +70,9 @@
     margin: 0
 .window .window-head,
 .modal-content .modal-header
-  background: #333
-  height: 40px
+  background: #465769
+  border-radius: 2px 2px 0px 0px
+  height: 50px
   line-height: 38px
   position: relative
   z-index: 50
@@ -84,27 +86,28 @@
 .window-head .window-t,
 .modal-header .modal-title
   color: $whiteColor
-  font-size: 14px
+  font-size: 16px
+  line-height: 50px
   padding: 0 20px
 .modal-header .modal-title
-  font-size: 20px
-  font-weight: 400
-  padding: 20px
+  font-size: 18px
+  font-weight: 500
+  padding: 0 17px
 .window-head .__logo
-  display: inline
-  padding: 0 0 0 20px
-  max-height: 27px
-  max-width: 27px
-  vertical-align: middle
-  box-sizing: content-box
+  padding-left: 18px
   ~.window-t
     padding: 0 20px 0 10px
 .window .window-cnt
-  padding: 0 20px
+  padding: 0 28px
 .modal-content .modal-body,
 .modal-content .modal-footer
   font-size: 14px
   padding: 20px
+.modal-content .modal-body .warning
+  background: transparent
+  float: left
+  margin: 5px 10px 0 6px
+  width: 10%
 .modal-content .modal-body .form-input
   margin: 15px 0 0
 .modal-content .modal-footer

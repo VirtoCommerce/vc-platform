@@ -6,8 +6,10 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
+using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Modules.AssemblyLoading;
 
 namespace VirtoCommerce.Platform.Modules
@@ -16,50 +18,53 @@ namespace VirtoCommerce.Platform.Modules
     {
         private readonly LocalStorageModuleCatalogOptions _options;
         private readonly ILogger<LocalStorageModuleCatalog> _logger;
+        private readonly IDistributedLockProvider _distributedLockProvider;
+        private readonly string _discoveryPath;
 
-        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, ILogger<LocalStorageModuleCatalog> logger)
+        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IDistributedLockProvider distributedLockProvider, ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
+            _discoveryPath = _options.DiscoveryPath;
+            if (!_discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
+            {
+                _discoveryPath += PlatformInformation.DirectorySeparator;
+            }
+            // Resolve IConnectionMultiplexer as multiple services to avoid crash if the platform ran without Redis
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1#service-registration-methods
+            _distributedLockProvider = distributedLockProvider;
             _logger = logger;
         }
 
         protected override void InnerLoad()
         {
-            var discoveryPath = _options.DiscoveryPath;
-
             if (string.IsNullOrEmpty(_options.ProbingPath))
                 throw new InvalidOperationException("The ProbingPath cannot contain a null value or be empty");
             if (string.IsNullOrEmpty(_options.DiscoveryPath))
                 throw new InvalidOperationException("The DiscoveryPath cannot contain a null value or be empty");
 
 
-            var bNeedToCopyAssemblies = _options.RefreshProbingFolderOnStart;
+            var manifests = GetModuleManifests();
+
+            var needToCopyAssemblies = _options.RefreshProbingFolderOnStart;
 
             if (!Directory.Exists(_options.ProbingPath))
             {
-                bNeedToCopyAssemblies = true; // Force to refresh assemblies anyway, even if RefreshProbeFolderOnStart set to false, because the probing path is absent
+                needToCopyAssemblies = true; // Force to refresh assemblies anyway, even if RefreshProbeFolderOnStart set to false, because the probing path is absent
                 Directory.CreateDirectory(_options.ProbingPath);
             }
 
-            if (!discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
-                discoveryPath += PlatformInformation.DirectorySeparator;
+            if (needToCopyAssemblies)
+            {
+                CopyAssembliesSynchronized(manifests);
+            }
 
-            if (bNeedToCopyAssemblies) CopyAssemblies(discoveryPath, _options.ProbingPath);
-
-            foreach (var pair in GetModuleManifests())
+            foreach (var pair in manifests)
             {
                 var manifest = pair.Value;
-                var manifestPath = pair.Key;
-
-                if (bNeedToCopyAssemblies)
-                {
-                    var modulePath = Path.GetDirectoryName(manifestPath);
-                    CopyAssemblies(modulePath, _options.ProbingPath);
-                }
 
                 var moduleInfo = AbstractTypeFactory<ManifestModuleInfo>.TryCreateInstance();
                 moduleInfo.LoadFromManifest(manifest);
-                moduleInfo.FullPhysicalPath = Path.GetDirectoryName(manifestPath);
+                moduleInfo.FullPhysicalPath = Path.GetDirectoryName(pair.Key);
 
                 // Modules without assembly file don't need initialization
                 if (string.IsNullOrEmpty(manifest.AssemblyFile))
@@ -130,8 +135,10 @@ namespace VirtoCommerce.Platform.Modules
             //Dependencies and platform version validation
             foreach (var module in manifestModules)
             {
-                //Check platform version
-                if (!module.PlatformVersion.IsCompatibleWith(PlatformVersion.CurrentVersion))
+                // Check module platform target version. Versions must be:
+                // 1. Plain compatible, module target should be less or equal of the running platform version.
+                // 2. Compatible by semantic version. Major versions are not compatible.
+                if (!module.PlatformVersion.IsCompatibleWith(PlatformVersion.CurrentVersion) || !module.PlatformVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion))
                 {
                     module.Errors.Add($"Module platform version {module.PlatformVersion} is incompatible with current {PlatformVersion.CurrentVersion}");
                 }
@@ -176,6 +183,60 @@ namespace VirtoCommerce.Platform.Modules
                 }
             }
             return result;
+        }
+
+        private void CopyAssembliesSynchronized(IDictionary<string, ModuleManifest> manifests)
+        {
+            _distributedLockProvider.ExecuteSynhronized(GetSourceMark(), (x) =>
+            {
+                if (x != DistributedLockCondition.Delayed)
+                {
+                    CopyAssemblies(_discoveryPath, _options.ProbingPath); // Copy platform files if needed
+                    foreach (var pair in manifests)
+                    {
+                        var modulePath = Path.GetDirectoryName(pair.Key);
+                        CopyAssemblies(modulePath, _options.ProbingPath); // Copy module files if needed
+                    }
+                }
+                else // Delayed lock acquire, do nothing here with a notice logging
+                {
+                    _logger.LogInformation("Skip copy assemblies to ProbingPath for local storage (another instance made it)");
+                }
+            });
+        }
+
+        /// <summary>
+        /// Read marker from the storage.
+        /// Mark the storage if the marker not present, then use created marker.
+        /// </summary>
+        /// <returns></returns>
+        private string GetSourceMark()
+        {
+            var markerFilePath = Path.Combine(_options.ProbingPath, "storage.mark");
+            var marker = Guid.NewGuid().ToString();
+            try
+            {
+                if (File.Exists(markerFilePath))
+                {
+                    using (var stream = File.OpenText(markerFilePath))
+                    {
+                        marker = stream.ReadToEnd();
+                    }
+                }
+                else
+                {
+                    // Non-marked storage, mark by placing a file with resource id.                    
+                    using (var stream = File.CreateText(markerFilePath))
+                    {
+                        stream.Write(marker);
+                    }
+                }
+            }
+            catch (IOException exc)
+            {
+                throw new PlatformException($"An IO error occurred while marking local modules storage.", exc);
+            }
+            return $@"{nameof(LocalStorageModuleCatalog)}-{marker}";
         }
 
         private void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
@@ -231,7 +292,7 @@ namespace VirtoCommerce.Platform.Modules
                 catch (IOException)
                 {
                     // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
-                    // We should not fail platform sart in that case - just add warning into the log. In case of unability to place newer version - should fail platform start.
+                    // We should not fail platform start in that case - just add warning into the log. In case of unability to place newer version - should fail platform start.
                     if (versionsAreSameButLaterDate)
                     {
                         _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");

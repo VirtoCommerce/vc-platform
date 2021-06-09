@@ -38,11 +38,13 @@ using VirtoCommerce.Platform.Assets.FileSystem;
 using VirtoCommerce.Platform.Assets.FileSystem.Extensions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Data.Extensions;
+using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security.Authorization;
@@ -105,6 +107,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddSignalR().AddPushNotifications(Configuration);
 
             services.AddOptions<PlatformOptions>().Bind(Configuration.GetSection("VirtoCommerce")).ValidateDataAnnotations();
+            services.AddOptions<DistributedLockOptions>().Bind(Configuration.GetSection("DistributedLock"));
             services.AddOptions<TranslationOptions>().Configure(options =>
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
@@ -250,7 +253,7 @@ namespace VirtoCommerce.Platform.Web
 
                 if (options.Enabled)
                 {
-                    //TODO: Need to check how this influence to OpennIddict Reference tokens activated by this line below  AddValidation(options => options.UseReferenceTokens());
+                    //TODO: Need to check how this influence to OpennIddict Reference tokens activated by this line below  AddValidation(options => options.UseReferenceTokens())
                     //TechDept: Need to upgrade to Microsoft.Identity.Web
                     //https://docs.microsoft.com/en-us/azure/active-directory/develop/microsoft-identity-web
                     authBuilder.AddOpenIdConnect(options.AuthenticationType, options.AuthenticationCaption,
@@ -305,7 +308,7 @@ namespace VirtoCommerce.Platform.Web
                     options.UseRollingTokens();
 
                     // Make the "client_id" parameter mandatory when sending a token request.
-                    //options.RequireClientIdentification();
+                    //options.RequireClientIdentification()
 
                     // When request caching is enabled, authorization and logout requests
                     // are stored in the distributed cache by OpenIddict and the user agent
@@ -344,6 +347,7 @@ namespace VirtoCommerce.Platform.Web
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
             services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
+            services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
 
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
@@ -490,7 +494,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.WithDistributedLock(() =>
+            app.ExecuteSynhronized(() =>
             {
                 // This method contents will run inside of critical section of instance distributed lock.
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
@@ -534,8 +538,16 @@ namespace VirtoCommerce.Platform.Web
             app.UseAppInsightsTelemetry();
 
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
+
+            //Json converter that resolve a meta-data for all incoming objects of  DynamicObjectProperty type
+            //in order to be able pass { name: "dynPropName", value: "myVal" } in the incoming requests for dynamic properties, and do not care about meta-data loading. see more details: PT-48 
+            mvcJsonOptions.Value.SerializerSettings.Converters.Add(new DynamicObjectPropertyJsonConverter(app.ApplicationServices.GetService<IDynamicPropertyMetaDataResolver>()));
+
+
+            //The converter is responsible for the materialization of objects, taking into account the information on overriding
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
+          
         }
     }
 }

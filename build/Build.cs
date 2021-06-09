@@ -23,6 +23,7 @@ using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Git;
 using Nuke.Common.Tools.Npm;
+using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using VirtoCommerce.Platform.Core.Common;
@@ -58,6 +59,9 @@ partial class Build : NukeBuild
                 var solutionFileName = Path.GetFileName(solutions.First());
                 Logger.Info($"Solution found: {solutionFileName}");
                 File.WriteAllText(".nuke", solutionFileName);
+            } else if (solutions.Length < 1)
+            {
+                File.CreateText(Path.Combine(Directory.GetCurrentDirectory(), ".nuke")).Close();
             }
         }
         var exitCode = Execute<Build>(x => x.Compile);
@@ -83,6 +87,8 @@ partial class Build : NukeBuild
     readonly string DevelopBranch = "develop";
     readonly string ReleaseBranchPrefix = "release";
     readonly string HotfixBranchPrefix = "hotfix";
+    readonly string SonarLongLiveBranches = "master;develop";
+
 
 
 
@@ -128,6 +134,7 @@ partial class Build : NukeBuild
     [Parameter("Release branch")] readonly string ReleaseBranch;
 
     [Parameter("Branch Name for SonarQube")] readonly string SonarBranchName;
+    [Parameter("Target Branch Name for SonarQube")] readonly string SonarBranchNameTarget = "dev";
 
     [Parameter("PR Base for SonarQube")] readonly string SonarPRBase;
     [Parameter("PR Branch for SonarQube")] readonly string SonarPRBranch;
@@ -242,36 +249,35 @@ partial class Build : NukeBuild
        .Executes(() =>
        {
            var dotnetPath = ToolPathResolver.GetPathExecutable("dotnet");
-           var testProjects = Solution.GetProjects("*.Tests");
-           //
+           var testProjects = Solution.GetProjects("*.Test|*.Tests|*.Testing");
            var OutPath = RootDirectory / ".tmp";
            testProjects.ForEach((testProject, index) =>
            {
+               DotNetTasks.DotNet($"add {testProject.Path} package coverlet.collector");
                var testSetting = new DotNetTestSettings()
-                .SetProjectFile(testProject.Path)
-                .SetConfiguration(Configuration)
-                .SetLogger("trx")
-                .SetFilter(TestsFilter)
-                .SetNoBuild(true)
-                .SetCollectCoverage(true)
-                .SetProcessLogOutput(true)
-                .SetResultsDirectory(OutPath);
-               var testProjectBinDir = testProject.Directory / "bin";
-               var testAssemblies = testProjectBinDir.GlobFiles($"**/{testProject.Name}.dll");
-               if(testAssemblies.Count < 1)
-               {
-                   ControlFlow.Fail("Tests Assemblies not found!");
-               }
-               CoverletTasks.Coverlet(s => s
-                .SetTargetSettings(testSetting)
-                .SetAssembly(testAssemblies.First())
-                .SetTarget(dotnetPath)
-                .When(index == 0, ss => ss.SetOutput(CoverageReportPath))
-                .When(index > 0 && index < testProjects.Count() - 1, ss => ss.SetMergeWith(CoverageReportPath))
-                .When(index == testProjects.Count() - 1, ss => ss.SetOutput(CoverageReportPath).SetFormat(CoverletOutputFormat.opencover))
-                );
-
+                    .SetProjectFile(testProject.Path)
+                    .SetConfiguration(Configuration)
+                    .SetFilter(TestsFilter)
+                    .SetNoBuild(true)
+                    .SetProcessLogOutput(true)
+                    .SetResultsDirectory(OutPath)
+                    .SetDataCollector("XPlat Code Coverage");
+               DotNetTasks.DotNetTest(testSetting);
            });
+           var coberturaReports = OutPath.GlobFiles("**/coverage.cobertura.xml");
+           if (coberturaReports.Count > 0)
+           {
+               var reportGenerator = ToolResolver.GetPackageTool("dotnet-reportgenerator-globaltool", "ReportGenerator.dll", "4.8.8", "netcoreapp3.0");
+               reportGenerator.Invoke($"-reports:{OutPath / "**/coverage.cobertura.xml"} -targetdir:{OutPath} -reporttypes:SonarQube");
+               var sonarCoverageReportPath = OutPath.GlobFiles("SonarQube.xml").FirstOrDefault();
+               if (sonarCoverageReportPath == null)
+                   ControlFlow.Fail("No Coverage Report found");
+               FileSystemTasks.MoveFile(sonarCoverageReportPath, CoverageReportPath, FileExistsPolicy.Overwrite);
+           }
+           else
+           {
+               Logger.Warn("No Coverage Reports found");
+           }
        });
 
     public void CustomDotnetLogger(OutputType type, string text)
@@ -578,7 +584,7 @@ partial class Build : NukeBuild
              DeleteFile(ZipFilePath);
              //TODO: Exclude all ignored files and *module files not related to compressed module
              var ignoreModulesFilesRegex = new Regex(@".+Module\..*", RegexOptions.IgnoreCase);
-             var includeModuleFilesRegex = new Regex(@$".*{ModuleManifest.Id}Module\..*", RegexOptions.IgnoreCase);
+             var includeModuleFilesRegex = new Regex(@$".*{ModuleManifest.Id}(Module)?\..*", RegexOptions.IgnoreCase);
              CompressionTasks.CompressZip(ModuleOutputDirectory, ZipFilePath, (x) => (!ignoredFiles.Contains(x.Name, StringComparer.OrdinalIgnoreCase) && !ignoreModulesFilesRegex.IsMatch(x.Name))
                                                                                      || includeModuleFilesRegex.IsMatch(x.Name));
          }
@@ -744,6 +750,7 @@ partial class Build : NukeBuild
             var dotNetPath = ToolPathResolver.TryGetEnvironmentExecutable("DOTNET_EXE") ?? ToolPathResolver.GetPathExecutable("dotnet");
             Logger.Normal($"IsServerBuild = {IsServerBuild}");
             var branchName = String.IsNullOrEmpty(SonarBranchName) ? GitRepository.Branch : SonarBranchName;
+            var branchNameTarget = String.IsNullOrEmpty(SonarBranchNameTarget) ? GitRepository.Branch : SonarBranchNameTarget;
             Logger.Info($"BRANCH_NAME = {branchName}");
             var projectName = Solution.Name;
             var prBaseParam = "";
@@ -752,6 +759,9 @@ partial class Build : NukeBuild
             var ghRepoArg = "";
             var prProviderArg = "";
             var prBase = "";
+            var branchParam = "";
+            var branchTargetParam = "";
+
             if (PullRequest)
             {
                 prBase = String.IsNullOrEmpty(SonarPRBase) ? Environment.GetEnvironmentVariable("CHANGE_TARGET") : SonarPRBase;
@@ -768,18 +778,21 @@ partial class Build : NukeBuild
                 prProviderArg = String.IsNullOrEmpty(SonarPRProvider) ? "" : $"/d:sonar.pullrequest.provider={SonarPRProvider}";
 
             }
-            var baseBranch = PullRequest ? prBase : branchName;
-            var branchParam = $"/d:\"sonar.branch={baseBranch}\"";
+            else
+            {
+                branchParam = $"/d:\"sonar.branch.name={branchName}\"";
+                branchTargetParam = SonarLongLiveBranches.Contains(branchName) ? "" : $"/d:\"sonar.branch.target={branchNameTarget}\"";
+            }
 
             var projectNameParam = $"/n:\"{RepoName}\"";
             var projectKeyParam = $"/k:\"{RepoOrg}_{RepoName}\"";
             var projectVersionParam = $"/v:\"{ReleaseVersion}\"";
             var hostParam = $"/d:sonar.host.url={SonarUrl}";
             var tokenParam = $"/d:sonar.login={SonarAuthToken}";
-            var sonarReportPathParam = $"/d:sonar.cs.opencover.reportsPaths={CoverageReportPath}";
+            var sonarReportPathParam = $"/d:sonar.coverageReportPaths={CoverageReportPath}";
             var orgParam = $"/o:{SonarOrg}";
 
-            var startCmd = $"sonarscanner begin {orgParam} {branchParam} {projectKeyParam} {projectNameParam} {projectVersionParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam} {ghRepoArg} {prProviderArg}";
+            var startCmd = $"sonarscanner begin {orgParam} {branchParam} {branchTargetParam} {projectKeyParam} {projectNameParam} {projectVersionParam} {hostParam} {tokenParam} {sonarReportPathParam} {prBaseParam} {prBranchParam} {prKeyParam} {ghRepoArg} {prProviderArg}";
 
             Logger.Normal($"Execute: {startCmd.Replace(SonarAuthToken, "{IS HIDDEN}")}");
 
@@ -801,7 +814,11 @@ partial class Build : NukeBuild
 
             var processEnd = ProcessTasks.StartProcess(dotNetPath, endCmd, customLogger: SonarLogger, logInvocation: false)
                 .AssertWaitForExit().AssertZeroExitCode();
-            processEnd.Output.EnsureOnlyStd();
+            var errors = processEnd.Output.Where(o => !o.Text.Contains(@"The 'files' list in config file 'tsconfig.json' is empty") && o.Type == OutputType.Err).ToList();
+            if(errors.Any())
+            {
+                ControlFlow.Fail(errors.Select(e => e.Text).Join(Environment.NewLine));
+            }
         });
 
     Target StartAnalyzer => _ => _

@@ -17,8 +17,7 @@
             "help": "Help"
         },
         "navigation": {
-            "back": "Back",
-            "bread-crumb-top": "All"
+            "back": "Back"
         },
         "blades": {
             "system-info": {
@@ -31,6 +30,7 @@
             },
             "asset-list": {
                 "title": "Asset management",
+                "bread-crumb-top": "All assets",
                 "labels": {
                     "picture": "Pic",
                     "name": "Name",
@@ -154,8 +154,7 @@
                     "platform-entries": "Platform entries",
                     "choose-modules": "Choose modules to export",
                     "download-url": "Download Url",
-                    "errors": "Errors",
-                    "start-export": "Start export",
+                    "errors": "Errors",                    
                     "start": "Start",
                     "end": "End"
                 },
@@ -293,7 +292,7 @@
                     "version": "Version",
                     "author": "Author",
                     "installed": "Installed Modules",
-                    "manual-install-disabled": "Manual modules install was disabled due to prohibited refreshing probing path (RefreshProbingFolderOnStart=false)."
+                    "manual-install-warning": "Warning! Manually installed modules will not start because RefreshProbingFolderOnStart set to false."
                 }
             },
             "history": {
@@ -515,7 +514,8 @@
                     "remember-me": "Remember me",
                     "external-sign-in": "Sign in with {{displayName}}",
                     "forgot-password": "Forgot your password?",
-                    "log-in": "Log in"
+                    "log-in": "Log in",
+                    "log-in-placeholder": "Please enter a value"
                 }
             },
             "forgotpassword": {
@@ -613,7 +613,8 @@
                 "title": "Setting values"
             },
             "settingGroup-list": {
-                "title": "Settings"
+                "title": "Settings",
+                "bread-crumb-top": "All settings"
             },
             "user-profile": {
                 "title": "User profile",
@@ -643,16 +644,6 @@
                     "Months": "Months",
                     "Quarters": "Quarters",
                     "Years": "Years"
-                }
-            },
-            "loginOnBehalf-list": {
-                "title": "Login as {{name}}",
-                "labels": {
-                    "pick-url-to-login": "Pick a Login Url to login",
-                    "no-login-urls": "No Login Urls yet"
-                },
-                "validations": {
-                    "secure-url-missing": "Secure URL is missing. Click to enter Login secure URL manually."
                 }
             }
         },
@@ -810,14 +801,9 @@
             "error-details": {
                 "title": "The error details"
             },
-            "enter-login-url": {
+            "impersonate-no-url": {
                 "title": "Login on behalf",
-                "labels": {
-                    "enter-login-url": "Please enter login secure URL"
-                },
-                "placeholders": {
-                    "secure-url": "https://vcshop.com"
-                }
+                "message": "Store URL was not added in the store setting. Please contact administrator."
             },
             "asset-upload-error": {
                 "title": "Error in upload",

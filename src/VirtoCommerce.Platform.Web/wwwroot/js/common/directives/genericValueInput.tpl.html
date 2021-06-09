@@ -149,7 +149,7 @@
     </div>
 </script>
 <script type="text/ng-template" id="dShortText-multilang.html">
-    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'" ng-if="isLanguageVisible(propValue.locale)">
         <label class="lang-code">{{propValue.locale}}</label>
         <input ng-required="currentEntity.isRequired"
                ng-readonly="currentEntity.isReadOnly"
@@ -159,17 +159,17 @@
     </div>
 </script>
 <script type="text/ng-template" id="dLongText-multilang.html">
-    <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+    <div class="form-input __langs" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'" ng-if="isLanguageVisible(propValue.locale)">
         <label>{{propValue.locale}}</label>
         <textarea ng-required="currentEntity.isRequired"
                   ng-readonly="currentEntity.isReadOnly"
                   ng-disabled="currentEntity.disabled"
                   ng-model="propValue.value"
-                  placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}" />
+                  placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.long-text-multilang' | translate}}"/>
     </div>
 </script>
 <script type="text/ng-template" id="dCode-multilang.html">
-    <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+    <div ng-class="{'form-group': !$first}" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'" ng-if="isLanguageVisible(propValue.locale)">
         <label>{{propValue.locale}}</label>
         <ui-codemirror ng-required="currentEntity.isRequired"
                        ng-readonly="currentEntity.isReadOnly"
@@ -180,7 +180,7 @@
 </script>
 
 <script type="text/ng-template" id="dShortText-multivalue-multilang.html">
-    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'">
+    <div ng-class="(!$first ? 'form-group ' : '') + 'form-input __langs'" ng-repeat="propValue in context.currentPropValues | orderBy: 'locale'" ng-if="isLanguageVisible(propValue.locale)">
         <label class="lang-code">{{propValue.locale}}</label>
         <tags-input ng-model="propValue.values"
                     min-tags="{{currentEntity.isRequired ? 1 : undefined}}"

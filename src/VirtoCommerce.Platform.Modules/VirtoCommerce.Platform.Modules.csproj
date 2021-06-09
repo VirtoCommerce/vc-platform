@@ -13,6 +13,7 @@
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <NoWarn>1701;1702;1705;1591</NoWarn>
+        <DocumentationFile>VirtoCommerce.Platform.Modules.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,6 +28,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
+        <ProjectReference Include="..\VirtoCommerce.Platform.DistributedLock\VirtoCommerce.Platform.DistributedLock.csproj" />
     </ItemGroup>
 
 </Project>

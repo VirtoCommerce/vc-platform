@@ -1,4 +1,4 @@
-﻿
+
 VirtoCommerce supports extension of managed code domain types. This article shows how to use the various techniques to extend exist domain type without direct code modification.
 
 
@@ -165,27 +165,6 @@ Also is so important to register our new persistent schema representation `Custo
     }
 ```
 
-## The known problems with updating when you have a schema of persistent layer extensions.
-
-As a background, a huge limitation of the persistent layer extension technique is the mandatory creation of an empty database migration after each derived module update that has a new migration with schema changes. Without this, you will receive this error
-
-“*The model backing the context has changed since the database was created*” each time when you will update an extendable module that has a persistent schema change and contains a new migration.
-
-The following diagram illustrates the problem described above.
-![image|657x290](../../media/extensibility-basics-2.png) 
-
-Unfortunately, there is only one solution to solve this issue, before each update of the extendable module that contains the DB schema changes it is mandatory to do the following steps with your module:
-
-* Update to the latest version all  NuGet dependencies containing the base `DbContext` class which your custom  `DbContext`  is derived. Usually, this project has suffix Data. E.g `VirtoCommerce.CustomerOrder.Data`.
-* Generate a new “empty” migration by this command  
-```Console
-Add-Migration BumpVersionEmptyMigration -Context {{ full type name with namespace of your DbContext }}   -Verbose -OutputDir Migrations -Project {{ your module project name }} -Debug
-```
-
-* Manually edit resulting migration file, delete all generated content and left only empty migration. It is mandatory step because the resulting migration will contain the same changes as original migration in the extendable module. 
-
-* Update the module dependency version in `module.manifest file` of your custom module to point to the actual version of dependency. 
-
 ## How the API understands/deserializes the derived domain types 
 
 In the previous paragraphs, we have considered extending domain types and persistent layers, but, in some cases, it is not enough. Especially when your domain types are used as DTOs (Data Transfer Objects) in public API contracts and can be used as a result or parameter in the API endpoints. 
@@ -195,60 +174,3 @@ There is a technical task of an instantiation of the right “effective” type 
 There are two ways to force ASP.NET Core API Json serializer to understand our domain extensions:
 1. Use platform-defined `PolymorphJsonConverter`. It's preferable to use in most cases. The `PolymorphJsonConverter` transparently deserializes extended domain types with no developer effort.
 2. Custom JSON converter passed to MvcNewtonsoftJsonOptions. Consider using it, if `PolymorphJsonConverter` is not suitable for your specific case.
-
-### Universal `PolymorphJsonConverter`
-The `PolymorphJsonConverter` uses `AbstractTypeFactory<>` to construct instances during deserialization. There are following cases of overriding/extending, when `PolymorphJsonConverter` fits:
-
-1. Full type override. It's the case when the derived type replaces the original type thru the call to `AbstractTypeFactory<>.OverrideType`, and the API uses the original type as a formal definition. No developer actions needed in that case. `PolymorphJsonConverter` will deserialize instances of the derived type.
-1. Extending types controlled by registration thru the call to `AbstractTypeFactory<>.RegisterType`, and the API uses the basic type as a formal definition. `PolymorphJsonConverter` will construct instances of derived types by looking at the value of discriminator property (formally defined in basic type) that stores the type name of the descendant. Because the discriminator property defined in the base class, there are 2 subcases:
-    * The basic type was defined in the Platform or another module and the discriminator already registered as needed. No additional developer actions needed to support the deserialization of extending types.
-    * The basic type resides in the newly created custom module. In that case, the developer needs to tell `PolymorphJsonConverter` which of the basic type properties stores the discriminator thru the call of static method `PolymorphJsonConverter.RegisterTypeForDiscriminator` in module's `PostInitialize`.
-    For example, check VC Customer module: *`VirtoCommerce.CustomerModule.Web\Module.cs `*
-```C#
-    public class Module : IModule, IExportSupport, IImportSupport
-    {
-        ...
-        public void PostInitialize(IApplicationBuilder appBuilder)
-        {
-            ...
-            AbstractTypeFactory<Member>.RegisterType<Organization>().MapToType<OrganizationEntity>();
-            AbstractTypeFactory<Member>.RegisterType<Contact>().MapToType<ContactEntity>();
-            AbstractTypeFactory<Member>.RegisterType<Vendor>().MapToType<VendorEntity>();
-            AbstractTypeFactory<Member>.RegisterType<Employee>().MapToType<EmployeeEntity>();
-            ...
-            PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(Member), nameof(Member.MemberType));
-            ...
-        }
-        ...
-    }
-```
-
-### Custom JSON-converter
-
- Of course, you can use the standard converters extension technique by registering custom converter in `MvcNewtonsoftJsonOptions` in module `PostInitialize`:
-
-```C#
-    public class YourCustomJsonConverter : JsonConverter
-    {
-        ...
-        ...
-    }
-```
-
-*`/Module.cs`*
-```C#
-    public class Module : IModule
-    {
-        public void PostInitialize(IApplicationBuilder appBuilder)
-        {
-            ...
-
-            // enable polymorphic types in API controller methods
-            var mvcJsonOptions = appBuilder.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
-            mvcJsonOptions.Value.SerializerSettings.Converters.Add(appBuilder.ApplicationServices.GetService<YourCustomJsonConverter>());
-
-            ...
-
-        }
-    }
-```
