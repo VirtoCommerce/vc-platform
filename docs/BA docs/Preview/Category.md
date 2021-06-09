@@ -53,7 +53,7 @@ How to create Category | Catalog module |
 How to manage Category | Catalog module |
 How to create Subcategory | Catalog module |
 How to run indexation for categories | Search module |
-How to add properties in Category | Catalog module|
+How to add properties in Category | Catalog module |
 How to add tags in Category | Catalog module |
 How to hide and show Category | Catalog module |
 How to set priority | Catalog module |
