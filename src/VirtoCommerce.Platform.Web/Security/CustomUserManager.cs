@@ -12,6 +12,8 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security.Caching;
+using VirtoCommerce.Platform.Security.Model;
+using VirtoCommerce.Platform.Security.Repositories;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
@@ -20,18 +22,25 @@ namespace VirtoCommerce.Platform.Web.Security
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly RoleManager<Role> _roleManager;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IUserPasswordHasher _passwordHasher;
+        private readonly IUserPasswordHasher _userPasswordHasher;
+        private readonly UserOptionsExtended _userOptionsExtended;
+        private readonly Func<ISecurityRepository> _repositoryFactory;
+        private readonly PasswordOptionsExtended _passwordOptionsExtended;
 
-        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IUserPasswordHasher passwordHasher,
-                                 IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
-                                 ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
-                                 ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher)
+        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher, IUserPasswordHasher userPasswordHasher,
+            IOptions<UserOptionsExtended> userOptionsExtended,
+            IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
+            ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
+            ILogger<UserManager<ApplicationUser>> logger, RoleManager<Role> roleManager, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher, Func<ISecurityRepository> repositoryFactory, IOptions<PasswordOptionsExtended> passwordOptionsExtended)
             : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
         {
             _memoryCache = memoryCache;
             _roleManager = roleManager;
             _eventPublisher = eventPublisher;
-            _passwordHasher = passwordHasher;
+            _userPasswordHasher = userPasswordHasher;
+            _userOptionsExtended = userOptionsExtended.Value;
+            _repositoryFactory = repositoryFactory;
+            _passwordOptionsExtended = passwordOptionsExtended.Value;
         }
 
         public override async Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey)
@@ -103,13 +112,17 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             //It is important to call base.FindByIdAsync method to avoid of update a cached user.
             var existUser = await base.FindByIdAsync(user.Id);
+            existUser.LastPasswordChangedDate = DateTime.UtcNow;
 
             var result = await base.ResetPasswordAsync(existUser, token, newPassword);
             if (result == IdentityResult.Success)
             {
                 SecurityCacheRegion.ExpireUser(user);
+
+                await SavePasswordHistory(user, newPassword);
+
                 // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _passwordHasher.HashPassword(user, newPassword);
+                var customPasswordHash = _userPasswordHasher.HashPassword(user, newPassword);
                 await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
             }
 
@@ -118,16 +131,36 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public override async Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)
         {
+            user.LastPasswordChangedDate = DateTime.UtcNow;
+
             var result = await base.ChangePasswordAsync(user, currentPassword, newPassword);
             if (result == IdentityResult.Success)
             {
                 SecurityCacheRegion.ExpireUser(user);
+
+                await SavePasswordHistory(user, newPassword);
+
                 // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _passwordHasher.HashPassword(user, newPassword);
+                var customPasswordHash = _userPasswordHasher.HashPassword(user, newPassword);
                 await _eventPublisher.Publish(new UserPasswordChangedEvent(user.Id, customPasswordHash));
             }
 
             return result;
+        }
+
+        protected virtual async Task SavePasswordHistory(ApplicationUser user, string newPassword)
+        {
+            // Store password history entry
+            if (_passwordOptionsExtended.PasswordHistory.GetValueOrDefault() > 0)
+            {
+                var userPasswordHistoryRecord = AbstractTypeFactory<UserPasswordHistoryEntity>.TryCreateInstance();
+                userPasswordHistoryRecord.UserId = user.Id;
+                userPasswordHistoryRecord.PasswordHash = PasswordHasher.HashPassword(user, newPassword);
+
+                using var repository = _repositoryFactory();
+                repository.Add(userPasswordHistoryRecord);
+                await repository.UnitOfWork.CommitAsync();
+            }
         }
 
         public override async Task<IdentityResult> DeleteAsync(ApplicationUser user)
@@ -258,6 +291,19 @@ namespace VirtoCommerce.Platform.Web.Security
             return result;
         }
 
+        public override async Task<IdentityResult> CreateAsync(ApplicationUser user, string password)
+        {
+            var result = await base.CreateAsync(user, password);
+
+            if (result.Succeeded)
+            {
+                await SavePasswordHistory(user, password);
+            }
+
+            return result;
+
+        }
+
         public override async Task<IdentityResult> AddToRoleAsync(ApplicationUser user, string role)
         {
             var result = await base.AddToRoleAsync(user, role);
@@ -290,6 +336,17 @@ namespace VirtoCommerce.Platform.Web.Security
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
+            // check password expiry policy and mark password as expired, if needed
+            var lastPasswordChangeDate = user.LastPasswordChangedDate ?? user.CreatedDate;
+            if (!user.PasswordExpired &&
+                _userOptionsExtended.MaxPasswordAge != null &&
+                _userOptionsExtended.MaxPasswordAge.Value > TimeSpan.Zero &&
+                lastPasswordChangeDate.Add(_userOptionsExtended.MaxPasswordAge.Value) < DateTime.UtcNow)
+            {
+                user.PasswordExpired = true;
+            }
+
             user.Roles = new List<Role>();
             foreach (var roleName in await base.GetRolesAsync(user))
             {

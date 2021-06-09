@@ -1,4 +1,11 @@
-# Customer journey
+# Customer journey steps
+
+After designing the desirable customer journey flow or some dedicated steps of this flow a Business Analyst find the relevant customer journey step in the table below.
+
+Than, the Business Analyst checks the related page(s) mentioned in the "Link" column to see what related functionality is provided by Virto Commerce and identify what should be extended to cover gaps if they exist.
+
+Customer steps in the front end are implemented with using scenarios or commands that are built-in into experience API. On the relevant page(s) you may find information about related XAPI commands, examples of complex custom user scenarios, explanation of useful atomic backend functions, and explanation of possible ways of extending the system.
+
 
 ## Awareness phase
 
@@ -34,7 +41,7 @@ Step | Description | Link
 Shopping cart | Shopping cart scenarios for front-end in experience API. |[Experience API](https://virtocommerce.com/docs/latest/modules/experience-api/x-profile-reference/)
 Upsell | Upsell and cross-sell tools: products associations, dynamic products associations, personalization | [Products associations](https://virtocommerce.com/docs/latest/modules/catalog/), Dynamic Marketing Segments, Dynamic Product Associations, [Personalization](https://virtocommerce.com/docs/latest/modules/catalog-personalization/)
 Unavailable items | Making products unavailable or invisible | [Unavailable product](https://virtocommerce.com/docs/latest/modules/catalog/)
-Registration | Buyer registration scenarios: physical buyer user (B2C), organization (B2B) with different levels of organizational complexity| [Manual](Registration.md)
+Registration | Buyer registration scenarios: physical buyer user (B2C), organization (B2B) with different levels of organizational complexity| [Experience API](https://virtocommerce.com/docs/latest/modules/experience-api/x-profile-reference/)
 Login | Login scenarios in experience API| [Experience API](https://virtocommerce.com/docs/latest/modules/experience-api/x-profile-reference/)
 Guest visitor | Guest visitor scenarios for front-end in experience API. Creating specific logic for such kinds of visitors: full access, no access, limited access (no prices, no cart, other). How to configure and extend these scenarios| [Experience API](https://virtocommerce.com/docs/latest/modules/experience-api/x-profile-reference/)
 Quick checkout | Quick checkout scenarios for front-end in experience API.  | [Experience API](https://virtocommerce.com/docs/latest/modules/experience-api/x-profile-reference/)

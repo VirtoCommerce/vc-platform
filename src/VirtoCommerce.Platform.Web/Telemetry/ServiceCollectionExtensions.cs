@@ -1,5 +1,6 @@
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.ApplicationInsights.DependencyCollector;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.Telemetry;
@@ -22,6 +23,9 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             // See also the configurable settings in ApplicationInsightsServiceOptions for the most up-to-date list:
             // https://github.com/microsoft/ApplicationInsights-dotnet/blob/develop/NETCORE/src/Shared/Extensions/ApplicationInsightsServiceOptions.cs
             services.AddApplicationInsightsTelemetry();
+
+            // Register app insights extensions
+            services.AddSingleton<ITelemetryInitializer, UserTelemetryInitializer>();
 
             // Disable adaptive sampling before custom configuration to have a choice between processors in Configure,
             // according to instructions: https://docs.microsoft.com/en-us/azure/azure-monitor/app/sampling#configure-sampling-settings

@@ -1,9 +1,10 @@
-angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.settings',
-    function ($scope, bladeNavigationService, metaFormsService, accounts, settings) {
+angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.settings', 'platformWebApp.authService',
+    function ($scope, bladeNavigationService, metaFormsService, accounts, settings, authService) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:security:update';
         blade.accountTypes = [];
         blade.statuses = [];
+        blade.isLinkSent = false;
 
         blade.refresh = function (parentRefresh) {
             var entity = parentRefresh ? blade.currentEntity : blade.data;
@@ -44,6 +45,16 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
             return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
         }
 
+        blade.sendLink = function () {
+            if (!blade.isLinkSent && !blade.isLoading && blade.currentEntity.email === blade.origEntity.email) {
+                blade.isLoading = true;
+                accounts.verifyEmail({ userId: blade.currentEntity.id }, null , () => {
+                    blade.isLinkSent = true;
+                    blade.isLoading = false;
+                });
+            }
+        }
+
         blade.openSettingDictionaryController = function (currentEntityId) {
             var newBlade = {
                 id: currentEntityId,
@@ -72,6 +83,10 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                 }
             });
         };
+
+        blade.hasVerifyEmailPermission = () => {
+            return authService.checkPermission('platform:security:verifyEmail', blade.securityScopes);
+        }
 
         blade.onClose = function (closeCallback) {
             bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "platform.dialogs.account-save.title", "platform.dialogs.account-save.message");

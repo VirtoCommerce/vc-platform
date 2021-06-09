@@ -20,6 +20,8 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Web.Model.Security;
+using VirtoCommerce.Platform.Web.Security;
+using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -31,23 +33,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<Role> _roleManager;
         private readonly Core.Security.AuthorizationOptions _securityOptions;
+        private readonly UserOptionsExtended _userOptionsExtended;
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserSearchService _userSearchService;
         private readonly IRoleSearchService _roleSearchService;
-        private readonly IPasswordCheckService _passwordCheckService;
+        private readonly IPasswordValidator<ApplicationUser> _passwordValidator;
         private readonly IEmailSender _emailSender;
         private readonly IEventPublisher _eventPublisher;
         private readonly IUserApiKeyService _userApiKeyService;
 
         public SecurityController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<Role> roleManager,
                 IPermissionsRegistrar permissionsProvider, IUserSearchService userSearchService, IRoleSearchService roleSearchService,
-                IOptions<Core.Security.AuthorizationOptions> securityOptions, IPasswordCheckService passwordCheckService, IEmailSender emailSender,
+                IOptions<Core.Security.AuthorizationOptions> securityOptions, IOptions<UserOptionsExtended> userOptionsExtended, IPasswordValidator<ApplicationUser> passwordValidator, IEmailSender emailSender,
                 IEventPublisher eventPublisher, IUserApiKeyService userApiKeyService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _securityOptions = securityOptions.Value;
-            _passwordCheckService = passwordCheckService;
+            _userOptionsExtended = userOptionsExtended.Value;
+            _passwordValidator = passwordValidator;
             _permissionsProvider = permissionsProvider;
             _roleManager = roleManager;
             _userSearchService = userSearchService;
@@ -115,12 +119,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return NotFound();
             }
+
             var result = new UserDetail
             {
                 Id = user.Id,
                 isAdministrator = user.IsAdministrator,
                 UserName = user.UserName,
                 PasswordExpired = user.PasswordExpired,
+                DaysTillPasswordExpiry = PasswordExpiryHelper.ContDaysTillPasswordExpiry(user, _userOptionsExtended),
                 Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray()
             };
 
@@ -259,12 +265,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(result.ToSecurityResult());
         }
 
+
         /// <summary>
         /// SearchAsync users by keyword
         /// </summary>
         /// <param name="criteria">Search criteria.</param>
         [HttpPost]
-        [Route("users")]
+        [Route("users/search")]
+        [Route("users")] //PT-789: Obsolete, remove later left only for backward compatibility with V2
         [Authorize(PlatformConstants.Security.Permissions.SecurityQuery)]
         public async Task<ActionResult<UserSearchResult>> SearchUsers([FromBody] UserSearchCriteria criteria)
         {
@@ -350,13 +358,29 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Change password for current user.
+        /// </summary>
+        /// <param name="changePassword">Old and new passwords.</param>
+        /// <returns>Result of password change</returns>
+        [HttpPost]
+        [Route("currentuser/changepassword")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
+        public async Task<ActionResult<SecurityResult>> ChangeCurrentUserPassword([FromBody] ChangePasswordRequest changePassword)
+        {
+            return await ChangePassword(User.Identity.Name, changePassword);
+        }
+
+        /// <summary>
         /// Change password
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="changePassword">Old and new passwords.</param>
         [HttpPost]
         [Route("users/{userName}/changepassword")]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(PlatformConstants.Security.Permissions.SecurityUpdate)]
         public async Task<ActionResult<SecurityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
         {
@@ -367,7 +391,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found." }).ToSecurityResult());
+            }
+
+            if (changePassword.OldPassword == changePassword.NewPassword)
+            {
+                return BadRequest(new SecurityResult { Errors = new[] { "You have used this password in the past. Choose another one." } });
             }
 
             var result = await _signInManager.UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
@@ -388,6 +417,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("currentuser/resetpassword")]
         [AllowAnonymous]
+        [Obsolete("use /currentuser/changepassword instead")]
         public async Task<ActionResult<SecurityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
         {
             return await ResetPassword(User.Identity.Name, resetPassword);
@@ -509,9 +539,35 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("validatepassword")]
         [Authorize]
-        public async Task<ActionResult<PasswordValidationResult>> ValidatePassword([FromBody] string password)
+        public async Task<ActionResult<IdentityResult>> ValidatePassword([FromBody] string password)
         {
-            var result = await _passwordCheckService.ValidatePasswordAsync(password);
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var result = await _passwordValidator.ValidateAsync(_userManager, currentUser, password);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("validateuserpassword")]
+        [Authorize(PlatformPermissions.SecurityUpdate)]
+        public async Task<ActionResult<IdentityResult>> ValidateUserPassword([FromBody] ChangePasswordRequest validatePassword)
+        {
+            if (validatePassword == null)
+            {
+                throw new ArgumentNullException(nameof(validatePassword));
+            }
+
+            if (validatePassword.UserName.IsNullOrEmpty() || !IsUserEditable(validatePassword.UserName))
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }));
+            }
+            
+           var user = await _userManager.FindByNameAsync(validatePassword.UserName);
+
+
+            var result = await _passwordValidator.ValidateAsync(_userManager, user, validatePassword.NewPassword);
+
             return Ok(result);
         }
 
@@ -532,6 +588,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return Ok(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
             }
+
+            var applicationUser = await _userManager.FindByIdAsync(user.Id);
+            if (applicationUser.EmailConfirmed != user.EmailConfirmed
+                && !Request.HttpContext.User.HasGlobalPermission(PlatformPermissions.SecurityVerifyEmail))
+            {
+                return Unauthorized();
+            }
+
+            if (!applicationUser.Email.EqualsInvariant(user.Email))
+            {
+                // SetEmailAsync also: sets EmailConfirmed to false and updates the SecurityStamp
+                await _userManager.SetEmailAsync(user, user.Email);
+            }
+
+            if (user.LastPasswordChangedDate != applicationUser.LastPasswordChangedDate)
+            {
+                user.LastPasswordChangedDate = applicationUser.LastPasswordChangedDate;
+            }
+
             var result = await _userManager.UpdateAsync(user);
 
             return Ok(result.ToSecurityResult());
@@ -659,6 +734,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<UserApiKey[]>> DeleteUserApiKeys([FromQuery] string[] ids)
         {
             await _userApiKeyService.DeleteApiKeysAsync(ids);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Verify user email
+        /// </summary>
+        /// <param name="userId"></param>
+        [HttpPost]
+        [Route("users/{userId}/sendVerificationEmail")]
+        [Authorize(PlatformConstants.Security.Permissions.SecurityVerifyEmail)]
+        public async Task<ActionResult> SendVerificationEmail([FromRoute] string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+            }
+            if (!IsUserEditable(user.UserName))
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "It is forbidden to edit this user." }).ToSecurityResult());
+            }
+
+            await _eventPublisher.Publish(new UserVerificationEmailEvent(user));
+
             return Ok();
         }
 

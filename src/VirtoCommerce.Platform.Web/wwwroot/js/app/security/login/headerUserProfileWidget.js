@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-    .directive('vaHeaderUserProfileWidget', ['$document', '$state', 'platformWebApp.authService',
-        function ($document, $state, authService) {
+    .directive('vaHeaderUserProfileWidget', ['$document', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService',
+        function ($document, $state, authService, dialogService) {
 
             return {
                 restrict: 'E',
@@ -29,11 +29,18 @@ angular.module('platformWebApp')
 
                     scope.logout = function () {
                         authService.logout();
-                    }
+                    };
+
+                    scope.changePassword = () => {
+                        var dialog = {
+                            id: "changePasswordDialog"
+                        };
+                        dialogService.showDialog(dialog, '$(Platform)/Scripts/app/security/dialogs/changePasswordDialog.tpl.html', 'platformWebApp.changePasswordDialog');
+                    };
 
                     scope.manageProfile = function () {
                         $state.go('workspace.userProfile');
-                    }
+                    };
 
                     scope.toggleDropDown = function () {
                         scope.dropDownOpened = !scope.dropDownOpened;

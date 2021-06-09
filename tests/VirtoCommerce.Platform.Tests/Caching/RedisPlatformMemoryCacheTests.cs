@@ -14,14 +14,13 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.Caching
 {
-    [Trait("Category", "Unit")]
+    [Trait("Category", "Unit"), CollectionDefinition("CacheTests", DisableParallelization = true)]
     public class RedisPlatformMemoryCacheTests: MemoryCacheTestsBase
     {
         private readonly Mock<IOptions<RedisCachingOptions>> _redisCachingOptionsMock = new Mock<IOptions<RedisCachingOptions>>();
         private readonly Mock<IConnectionMultiplexer> _connectionMock = new Mock<IConnectionMultiplexer>();
         private readonly Mock<ISubscriber> _subscriberMock = new Mock<ISubscriber>();
         private readonly Mock<ILogger<RedisPlatformMemoryCache>> _logMock = new Mock<ILogger<RedisPlatformMemoryCache>>();
-        private readonly TelemetryClient _telemetryClient = new TelemetryClient(TelemetryConfiguration.CreateDefault());
 
         private const string CacheKey = "test";
         private readonly ConnectionFailedEventArgs _getConnectionFailedEvenArgs = new ConnectionFailedEventArgs(null,

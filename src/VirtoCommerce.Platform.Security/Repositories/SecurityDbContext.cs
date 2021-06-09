@@ -28,6 +28,25 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<UserApiKeyEntity>().Property(x => x.CreatedBy).HasMaxLength(64);
             builder.Entity<UserApiKeyEntity>().Property(x => x.ModifiedBy).HasMaxLength(64);
 
+            builder.Entity<UserPasswordHistoryEntity>().ToTable("AspNetUserPasswordsHistory").HasKey(x => x.Id);
+            builder.Entity<UserPasswordHistoryEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
+            builder.Entity<UserPasswordHistoryEntity>().HasIndex(x => new { x.UserId });
+            builder.Entity<UserPasswordHistoryEntity>()
+                .HasOne<ApplicationUser>()
+                .WithMany()
+                .HasForeignKey(uh => uh.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<IdentityUserRole<string>>(userRole =>
+            {
+                userRole.HasOne<Role>()
+                    .WithMany(r => r.UserRoles)
+                    .HasForeignKey(ur => ur.RoleId);
+
+                userRole.HasOne<ApplicationUser>()
+                    .WithMany(r => r.UserRoles)
+                    .HasForeignKey(ur => ur.UserId);
+            });
 
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
@@ -45,6 +64,7 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<ApplicationUser>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             builder.Entity<ApplicationUser>().Property(x => x.StoreId).HasMaxLength(128);
             builder.Entity<ApplicationUser>().Property(x => x.MemberId).HasMaxLength(128);
+
             builder.Entity<Role>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
             builder.Entity<IdentityUserClaim<string>>().Property(x => x.UserId).HasMaxLength(128);
             builder.Entity<IdentityUserLogin<string>>().Property(x => x.UserId).HasMaxLength(128);

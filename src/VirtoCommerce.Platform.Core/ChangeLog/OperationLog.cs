@@ -21,8 +21,18 @@ namespace VirtoCommerce.Platform.Core.ChangeLog
                 throw new ArgumentNullException(nameof(changedEntry));
             }
 
+            return FromChangedEntry(changedEntry, changedEntry.OldEntry.GetType().Name);
+        }
+
+        public virtual OperationLog FromChangedEntry<T>(GenericChangedEntry<T> changedEntry, string objectType) where T : IEntity
+        {
+            if (changedEntry == null)
+            {
+                throw new ArgumentNullException(nameof(changedEntry));
+            }
+
             ObjectId = changedEntry.OldEntry.Id;
-            ObjectType = changedEntry.OldEntry.GetType().Name;
+            ObjectType = objectType;
             OperationType = changedEntry.EntryState;
 
             return this;

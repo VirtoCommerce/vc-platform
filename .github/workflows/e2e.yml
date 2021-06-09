@@ -2,11 +2,6 @@ name: Platform E2E
 
 on:
   workflow_dispatch:
-    inputs:
-      testSuite:
-        description: "Test Suite"
-        required: false
-        default: "Test Suites/Platform_start"
 
   pull_request:
     paths-ignore:
@@ -19,13 +14,12 @@ on:
 
 jobs:
   e2e-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     env:
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       NUGET_KEY: ${{ secrets.NUGET_KEY }}
       BLOB_SAS: ${{ secrets.BLOB_TOKEN }}
-      DEFAULT_TEST_SUITE: "Test Suites/Platform_start"
 
     steps:
     - uses: actions/checkout@v2
@@ -38,7 +32,7 @@ jobs:
         dotnet-version: '3.1.x'
 
     - name: Install VirtoCommerce.GlobalTool
-      run: dotnet tool install --global VirtoCommerce.GlobalTool
+      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
 
     - name: Get Image Version
       uses: VirtoCommerce/vc-github-actions/get-image-version@master
@@ -78,14 +72,24 @@ jobs:
 
     - name: Getting tests
       shell: sh
-      run: git clone https://github.com/VirtoCommerce/vc-quality-gate-katalon.git
+      run: git clone https://github.com/VirtoCommerce/vc-quality-gate-katalon.git --branch dev
 
     - name: Katalon Studio Github Action
-      uses: katalon-studio/katalon-studio-github-action@v2.2
+      uses: VirtoCommerce/vc-github-actions/katalon-studio-github-action@master
       with:
         version: '7.5.5'
         projectPath: '${{ github.workspace }}/vc-quality-gate-katalon/platform_storefront.prj'
-        args: '-noSplash -retry=0 -testSuitePath="${{ github.event.inputs.testSuite || env.DEFAULT_TEST_SUITE }}" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"'
+        args: '-noSplash -retry=0 -testSuiteCollectionPath="Test Suites/Modules/Platform_collection" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"'
+
+    - name: 'Katalon Reports'
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: reports
+        path: |
+          vc-quality-gate-katalon/Reports
+          /home/runner/.katalon/*/Katalon_Studio_Engine_Linux_*/configuration/*.log.
+        retention-days: 5
 
     - name: Katalon Report to PR
       if: ${{ ( success() || failure() ) && github.event_name == 'pull_request' }}

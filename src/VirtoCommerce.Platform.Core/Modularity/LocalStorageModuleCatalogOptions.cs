@@ -23,5 +23,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public string[] LocalizationFileExtensions { get; set; } = new[] { "resources.dll" };
         public string[] AssemblyFileExtensions { get; set; } = new[] { ".dll", ".exe" };
         public string[] AssemblyServiceFileExtensions { get; set; } = new[] { ".pdb", ".xml", ".deps.json", ".runtimeconfig.json", ".runtimeconfig.dev.json", ".dep" };
+
+        /// <summary>
+        /// Option for managing distributed lock access to apply migrations sequentially in multiinstance platform installations. 
+        /// Total time in seconds to wait until the lock is available.
+        /// </summary>
+        public int DistributedLockWait { get; set; } = 180;
     }
 }
