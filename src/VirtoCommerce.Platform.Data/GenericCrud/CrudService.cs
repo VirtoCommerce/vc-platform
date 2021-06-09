@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using VirtoCommerce.Platform.Caching.GenericCrud;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
@@ -271,7 +271,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <returns></returns>
         protected virtual IChangeToken CreateCacheToken(IEnumerable<string> ids)
         {
-            return GenericCrudCachingRegion<TModel>.CreateChangeToken(ids);
+            return GenericCachingRegion<TModel>.CreateChangeToken(ids);
         }
 
         /// <summary>
@@ -282,11 +282,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="models"></param>
         protected virtual void ClearCache(IEnumerable<TModel> models)
         {
-            GenericSearchCacheRegion<TModel>.ExpireRegion();
+            GenericSearchCachingRegion<TModel>.ExpireRegion();
 
             foreach (var model in models)
             {
-                GenericCrudCachingRegion<TModel>.ExpireTokenForKey(model.Id);
+                GenericCachingRegion<TModel>.ExpireTokenForKey(model.Id);
             }
         }
 

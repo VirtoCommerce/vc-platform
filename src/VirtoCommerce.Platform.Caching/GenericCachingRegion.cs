@@ -5,13 +5,13 @@ using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Platform.Caching.GenericCrud
+namespace VirtoCommerce.Platform.Caching
 {
     /// <summary>
-    /// Generic CRUD caching region implementation for use with generic crud service.
+    /// Generic CRUD caching region implementation for use with crud services.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class GenericCrudCachingRegion<T> : CancellableCacheRegion<GenericCrudCachingRegion<T>> where T : Entity
+    public class GenericCachingRegion<T> : CancellableCacheRegion<GenericCachingRegion<T>> where T : Entity
     {
         public static IChangeToken CreateChangeToken(IEnumerable<T> entities)
         {

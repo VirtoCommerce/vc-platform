@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using VirtoCommerce.Platform.Caching.GenericCrud;
+using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
                 var result = AbstractTypeFactory<TResult>.TryCreateInstance();
-                cacheEntry.AddExpirationToken(GenericSearchCacheRegion<TModel>.CreateChangeToken());
+                cacheEntry.AddExpirationToken(GenericSearchCachingRegion<TModel>.CreateChangeToken());
                 using (var repository = _repositoryFactory())
                 {
                     //Optimize performance and CPU usage
