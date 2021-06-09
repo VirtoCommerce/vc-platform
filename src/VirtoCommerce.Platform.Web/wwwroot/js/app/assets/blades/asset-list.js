@@ -27,8 +27,6 @@ angular.module('platformWebApp')
 
                         //Set navigation breadcrumbs
                         setBreadcrumbs();
-                    }, function (error) {
-                        bladeNavigationService.setError('Error ' + error.status, blade);
                     });
             };
 
@@ -45,7 +43,7 @@ angular.module('platformWebApp')
                     }
                     blade.breadcrumbs = breadcrumbs;
                 } else {
-                    blade.breadcrumbs = [generateBreadcrumb(blade.currentEntity.url, 'all')];
+                    blade.breadcrumbs = [generateBreadcrumb(blade.currentEntity.url, 'platform.blades.asset-list.bread-crumb-top')];
                 }
             }
 

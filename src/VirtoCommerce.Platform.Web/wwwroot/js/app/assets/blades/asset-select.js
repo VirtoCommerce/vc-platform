@@ -46,10 +46,7 @@ angular.module('platformWebApp')
                     }
                     blade.breadcrumbs = breadcrumbs;
                 } else {
-                    var name = "all";
-                    if (blade.folder)
-                        name = blade.folder;
-
+                    var name = blade.folder || "platform.blades.asset-list.bread-crumb-top";
                     blade.breadcrumbs = [generateBreadcrumb(blade.currentEntity.url, name)];
                 }
             }

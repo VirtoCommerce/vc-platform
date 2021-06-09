@@ -1022,27 +1022,15 @@ $names: "", ".double", ".triple", ".quadro"
   .arrow-color
     color: #A1C0D4
   padding: 15px 0
-  .back
-    margin: 4px 0 0 0 
-    padding: 4px 12px 4px 12px
-    border: 1px solid #A1C0D4
-    border-radius: 15px
-    background: white
-    color: #43b0e6
-    display: inline-block
-    text-align: center
+  .menu
+    display: flex
+    margin: 4px 0 -8px 0
     vertical-align: top
-    &:hover
-      border-color: $baseColor
-      color: $baseColor
-  .back ~ .menu
-    display: inline-block
-    margin: 4px 0 0 5px
-    vertical-align: top
-  .menu-item.__divider
-    height: 22px
-    position: relative
-    width: 5px
+    &.flex-row-wrap
+      flex-flow: row wrap
+  li.menu-item:not(:last-child),
+  li.menu-item:first-child
+    margin: 0 6px 8px 0
   .menu-link
     padding: 4px 12px 4px 12px
     border: 1px solid #A1C0D4
@@ -1056,6 +1044,9 @@ $names: "", ".double", ".triple", ".quadro"
     font-size: 14px
     &:hover
       color: #52a2ca
+    &.last-item
+      border: 1px solid #838d9a
+      color: #838d9a
 
 /* Tree */
 .tree
@@ -1783,10 +1774,12 @@ tags-input
 
       transition: height .3s ease
       .menu
-        margin: 0 0 0 10px
+        margin: 0 0 0 7px
         white-space: normal
       .menu-item
         margin: 7px 0
+        &.separator
+          border-right: 1px solid rgba(255,255,255,.2)
       .menu-item.__loading
         pointer-events: none
         position: relative
@@ -1881,7 +1874,7 @@ tags-input
     .blade-static.__expanded
       .breadcrumbs
         margin: 0 0 -15px
-        padding: 14px 20px
+        padding: 14px 15px
     .blade-static .form-group,
     .blade-static .form
       margin: 0 20px
