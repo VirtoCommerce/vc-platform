@@ -15,7 +15,7 @@ Product | An orderable item of merchandise for sale, can be used for targeted pr
 
 It is important to understand the relations between entities:
 
-Type |Relations
+Type | Relations
 ---|--- 
 Category |(many) categories <-> (one) physical  catalog; (one) category <-> (many) products; (many) categories <-> (many) properties; (many) categories <-> many tags; (many) categories <-> (many) properties; (many) categories <-> (one) tax type;
 Product |(many) products <-> (one) physical catalog; (many) products <-> (one) category;
@@ -25,7 +25,7 @@ Where (many) entity1 <-> (one) entity2 means that entity1 can be related with on
 Applying of properties and relations:
 
 Type | From where | Description
---- |--- |
+---|---|---
 Product property | created in Catalog | property inherited through Categories to their products
 Product property | created in Category | property inherits and appears for products only in this Category
 Variation property | created in Catalog | property inherited through Categories > through their products to products variations
