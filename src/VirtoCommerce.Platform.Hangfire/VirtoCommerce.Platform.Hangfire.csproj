@@ -15,7 +15,7 @@
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <NoWarn>1701;1702;1705;1591</NoWarn>
-        <DocumentationFile />
+        <DocumentationFile>VirtoCommerce.Platform.Hangfire.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
