@@ -135,7 +135,9 @@ namespace VirtoCommerce.Platform.Modules
             //Dependencies and platform version validation
             foreach (var module in manifestModules)
             {
-                //Check platform version
+                // Check module platform target version. Versions must be:
+                // 1. Plain compatible, module target should be less or equal of the running platform version.
+                // 2. Compatible by semantic version. Major versions are not compatible.
                 if (!module.PlatformVersion.IsCompatibleWith(PlatformVersion.CurrentVersion) || !module.PlatformVersion.IsCompatibleWithBySemVer(PlatformVersion.CurrentVersion))
                 {
                     module.Errors.Add($"Module platform version {module.PlatformVersion} is incompatible with current {PlatformVersion.CurrentVersion}");
