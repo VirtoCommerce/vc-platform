@@ -1,12 +1,13 @@
 <div class="breadcrumbs">
-    <a title="Back" ng-click='navigateBack()' class="back" ng-class="{'__disabled': !canNavigateBack()}" ng-disabled="!canNavigateBack()">
-        <i class="fas fa-arrow-left arrow-color"></i>
-        Back
-    </a>
-    <ul class="menu __inline">
-        <li class="menu-item" ng-repeat-start="breadcrumb in breadcrumbs">
-            <a ng-if="($first || $index > breadcrumbs.length - 4) && !$last" class="menu-link" ng-click='innerNavigate(breadcrumb)' href="" title="{{breadcrumb.name}}">{{(($first || $index > breadcrumbs.length - 3) ? breadcrumb.name : '...') | translate}}</a>
+    <ul class="menu __inline" ng-class="{'flex-row-wrap': expanded}">
+        <li class="menu-item" ng-if="breadcrumbs.length">
+            <a class="menu-link" ng-class="{'last-item': breadcrumbs.length == 1}" ng-click='innerNavigate(breadcrumbs[0])' href="" title="{{breadcrumbs[0].name}}">{{breadcrumbs[0].name}}</a>
         </li>
-        <li class="menu-item __divider" ng-repeat-end ng-if="!$last && ($first || $index > breadcrumbs.length - 4)"></li>
+        <li class="menu-item" ng-if="canExpand()">
+            <a class="menu-link" ng-click='expand()' href="" title="Expand">...</a>
+        </li>
+        <li class="menu-item" ng-repeat="breadcrumb in breadcrumbs | limitTo:999:1" ng-if="breadcrumb.isVisible">
+            <a class="menu-link" ng-class="{'last-item': $last}" ng-click='innerNavigate(breadcrumb)' href="" title="{{breadcrumb.name}}">{{breadcrumb.name}}</a>
+        </li>
     </ul>
 </div>
