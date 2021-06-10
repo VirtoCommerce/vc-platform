@@ -44,6 +44,8 @@ repo_url: https://github.com/VirtoCommerce/vc-platform
 # Copyright
 copyright: Copyright &copy; 2021. All rights reserved.
 
+google_analytics: ['GTM-NKMNNN', 'hostname']
+
 extra:
     social:
       - icon: fontawesome/brands/github-alt
