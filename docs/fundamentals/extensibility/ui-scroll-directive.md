@@ -2,7 +2,7 @@
 # Generic UI scroll directive
 ---
 ## Introduction
-Generic UI scroll directive helps develpers add drop-down lists to the UI and bind them to a custom data source. 
+Generic UI scroll directive helps developers add drop-down lists to the UI and bind them to a custom data source. 
 
 ## Using the directive
 
@@ -72,7 +72,7 @@ $scope.getData = function () {
 }
 ```
 ### Multiple
-To ebable multiselect mode:
+To enable multi select mode:
 ```HTML
 <ui-scroll-drop-down 
     multiple
@@ -87,7 +87,7 @@ $scope.currentEntity = ['ID2', 'ID3'];
 ```
 
 ### Filter expression
-If set this funciton is called after each new page of data is fetched. Does not work with predefined array data function.
+If set this function is called after each new page of data is fetched. Does not work with predefined array data function.
 ```HTML
 <ui-scroll-drop-down 
     ng-model="currentEntity"
