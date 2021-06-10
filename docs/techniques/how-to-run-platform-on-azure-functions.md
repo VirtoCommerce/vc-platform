@@ -13,7 +13,7 @@ Verify these prerequisites before you begin
 - Locally installed [VC Platform](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/getting-started/deploy-from-precompiled-binaries-windows.md) instance with a set of modules installed
 - [Create supporting Azure resources for your function](https://docs.microsoft.com/en-us/azure/azure-functions/create-first-function-cli-csharp?tabs=azure-cli%2Cbrowser#create-supporting-azure-resources-for-your-function)
 
-In this article, you use `command-line` tools to deploy platform app to the serverless environment of Azure Functions. There is also the article how to getting started with Azure Functions [Getting started with Azure Functions using command line](https://docs.microsoft.com/en-us/azure/azure-functions/functions-get-started?pivots=programming-language-csharp), or alternative [Create a C# function in Azure using Visual Studio Code](https://docs.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-csharp)
+In this article, you use `command-line` tools to deploy the platform app to the serverless environment of Azure Functions. There is also the article how to get started with Azure Functions [Getting started with Azure Functions using command line](https://docs.microsoft.com/en-us/azure/azure-functions/functions-get-started?pivots=programming-language-csharp), or alternative [Create a C# function in Azure using Visual Studio Code](https://docs.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-csharp)
 
 The platform folder already includes all files that required to run platform app as custom handler you don't need to do anything extra with this:
 
