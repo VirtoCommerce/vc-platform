@@ -444,12 +444,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 
             // Engages the forwarded header support in the pipeline  (see description above)
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                // Preserve the protocol value of the originating scheme
-                // (https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-5.0#forwarded-headers)
-                ForwardedHeaders = ForwardedHeaders.XForwardedProto
-            });
+            app.UseForwardedHeaders();
 
             app.UseHttpsRedirection();
 
