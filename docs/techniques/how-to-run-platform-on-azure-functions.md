@@ -3,7 +3,7 @@ In this article, you use command-line tools to deploy and run VC Platform on the
 
 
 # How it works
-For run `vc platform` on the serverless environment of Azure Functions we use the [Azure Functions custom handlers](https://docs.microsoft.com/en-us/azure/azure-functions/functions-custom-handlers). Custom handlers are best suited for situations where we want to host and run the existing ASP.NET Core application that is not intendent to run on Azure functions, and by the way recieves a good options to run as serverless application without any code changes.
+To run `vc platform` on the serverless environment of Azure Functions we use the [Azure Functions custom handlers](https://docs.microsoft.com/en-us/azure/azure-functions/functions-custom-handlers). Custom handlers are best suited for situations where we want to host and run the existing ASP.NET Core application that is not intended to run on Azure functions, and by the way, receives a good option to run as a serverless application without any code changes.
 
 
 # Prerequisites
