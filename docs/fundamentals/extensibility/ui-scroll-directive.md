@@ -1,5 +1,5 @@
 ---
-title: Generic UI scroll directive
+# Generic UI scroll directive
 ---
 ## Introduction
 Generic UI scroll directive helps develpers add drop-down lists to the UI and bind them to a custom data source. 
