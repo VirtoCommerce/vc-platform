@@ -92,5 +92,5 @@ func azure functionapp publish vc-platform-serverless-app --subscription <your a
 
 
 # Known limitations
-- Platform runs as Azure Functions only on Windows os type (WIP)
+- Platform runs as Azure Functions only on Windows os type (Linux os WIP)
 - Bearer token Authorization doesn't work you must use simple key authorization (api_key) instead (WIP)  
