@@ -87,6 +87,7 @@
     <div class="form-input __calendar">
         <input ng-model="context.currentPropValues[0].value"
                datepicker-popup
+               ng-required="currentEntity.isRequired"
                ng-disabled="currentEntity.isReadOnly"
                is-open="datepickers.DateTime"
                placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.date-time' | translate}}">
