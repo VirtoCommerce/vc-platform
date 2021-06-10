@@ -114,7 +114,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingGroupListCont
 
     blade.breadcrumbs = [{
         id: null,
-        name: "platform.navigation.bread-crumb-top",
+        name: 'platform.blades.settingGroup-list.bread-crumb-top',
         navigate: function () {
             $scope.selectNode({ groupName: null, children: settingsTree });
         }
