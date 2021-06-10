@@ -428,10 +428,6 @@ namespace VirtoCommerce.Platform.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseForwardedHeaders(new ForwardedHeadersOptions
-                {
-                    ForwardedHeaders = ForwardedHeaders.XForwardedProto
-                });
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
 #if DEBUG
@@ -441,10 +437,6 @@ namespace VirtoCommerce.Platform.Web
             else
             {
                 app.UseExceptionHandler("/Error");
-                app.UseForwardedHeaders(new ForwardedHeadersOptions
-                {
-                    ForwardedHeaders = ForwardedHeaders.XForwardedProto
-                });
                 app.UseHsts();
             }
 
@@ -452,7 +444,12 @@ namespace VirtoCommerce.Platform.Web
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 
             // Engages the forwarded header support in the pipeline  (see description above)
-            app.UseForwardedHeaders();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                // Preserve the protocol value of the originating scheme
+                // (https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-5.0#forwarded-headers)
+                ForwardedHeaders = ForwardedHeaders.XForwardedProto
+            });
 
             app.UseHttpsRedirection();
 
