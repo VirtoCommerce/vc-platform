@@ -428,7 +428,10 @@ namespace VirtoCommerce.Platform.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseForwardedHeaders();
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedProto
+                });
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
 #if DEBUG
@@ -438,7 +441,10 @@ namespace VirtoCommerce.Platform.Web
             else
             {
                 app.UseExceptionHandler("/Error");
-                app.UseForwardedHeaders();
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedProto
+                });
                 app.UseHsts();
             }
 
