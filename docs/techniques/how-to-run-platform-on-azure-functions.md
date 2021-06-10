@@ -1,5 +1,5 @@
 Azure Functions lets you run your code in a serverless environment without having to first create a virtual machine (VM) or publish a web application. 
-In this article, you use command-line tools to deploy and run VC Platform on the serverless environment  of Azure Functions.
+In this article, you use command-line tools to deploy and run VC Platform on the serverless environment of Azure Functions.
 
 
 # How it works
