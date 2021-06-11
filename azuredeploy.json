@@ -1,5 +1,5 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "appServiceName": {
@@ -11,20 +11,6 @@
         "appServicePlanSkuName": {
             "type": "string",
             "defaultValue": "S1",
-            "allowedValues": [
-                "F1",
-                "D1",
-                "B1",
-                "B2",
-                "B3",
-                "S1",
-                "S2",
-                "S3",
-                "P1",
-                "P2",
-                "P3",
-                "P4"
-            ],
             "metadata": {
                 "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
             }
