@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Core
         public string LicensePrivateKeyPath { get; set; }
 
         //Local path for countries list
-        public string CountriesFilePath { get; set; } = "app_data/countries.json";
+        public string CountriesFilePath { get; set; } = "localization/common/countries.json";
 
         //URL for discovery sample data for initial installation
         //e.g. http://virtocommerce.blob.core.windows.net/sample-data
