@@ -20,16 +20,14 @@ namespace VirtoCommerce.Platform.Data.Common
         /// Get Full list of countries defined by ISO 3166-1 alpha-3
         /// based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
         /// </summary>
-        public async Task<IList<Country>> GetCountriesAsync()
+        public Task<IList<Country>> GetCountriesAsync()
         {
             var cacheKey = CacheKey.With(GetType(), nameof(GetCountriesAsync));
-            var results = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var filePath = Path.GetFullPath("app_data/countries.json");
                 return JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
             });
-
-            return results;
         }
     }
 }
