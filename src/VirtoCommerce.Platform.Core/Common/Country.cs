@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Platform.Web.Model
+namespace VirtoCommerce.Platform.Core.Common
 {
     public class Country
     {
