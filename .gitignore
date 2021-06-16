@@ -281,3 +281,10 @@ app_data/
 /src/VirtoCommerce.Platform.Web/modules
 # mkdocs output
 /site
+/src/VirtoCommerce.Platform.Caching/VirtoCommerce.Platform.Caching.xml
+/src/VirtoCommerce.Platform.Data/VirtoCommerce.Platform.Data.xml
+/src/VirtoCommerce.Platform.Hangfire/VirtoCommerce.Platform.Hangfire.xml
+/src/VirtoCommerce.Platform.Core/VirtoCommerce.Platform.Core.xml
+/src/VirtoCommerce.Platform.DistributedLock/VirtoCommerce.Platform.DistributedLock.xml
+/src/VirtoCommerce.Platform.Modules/VirtoCommerce.Platform.Modules.xml
+/src/VirtoCommerce.Platform.Security/VirtoCommerce.Platform.Security.xml
