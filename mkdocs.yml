@@ -44,6 +44,8 @@ repo_url: https://github.com/VirtoCommerce/vc-platform/tree/support/2.x
 # Copyright
 copyright: Copyright &copy; 2020. All rights reserved.
 
+google_analytics: ['GTM-NKMNNN', 'hostname']
+
 extra:
     social:
       - icon: fontawesome/brands/github-alt
