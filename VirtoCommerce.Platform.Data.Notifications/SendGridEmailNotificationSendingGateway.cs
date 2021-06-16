@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -47,9 +48,20 @@ namespace VirtoCommerce.Platform.Data.Notifications
             var sendGridClient = new SendGridClient(apiKey);
 
             var from = new EmailAddress(emailNotification.Sender);
-            var to = new EmailAddress(emailNotification.Recipient);
+
+            //Use the MailMessage class to parse mutiple reciepients from a Recipient property of a passed notification.
+            var msg = new MailMessage(emailNotification.Sender, emailNotification.Recipient);
+            var to = msg.To.Select(x => new EmailAddress(x.Address, x.DisplayName)).ToList();
             var content = emailNotification.Body;
-            var mail = MailHelper.CreateSingleEmail(from, to, emailNotification.Subject, content, content);
+            SendGridMessage mail = null;
+            if (to.Count > 1)
+            {
+                mail = MailHelper.CreateSingleEmailToMultipleRecipients(from, to, emailNotification.Subject, content, content);
+            }
+            else
+            {
+                mail = MailHelper.CreateSingleEmail(from, to.FirstOrDefault(), emailNotification.Subject, content, content);
+            }
             if (!emailNotification.CC.IsNullOrEmpty())
             {
                 foreach (var ccEmail in emailNotification.CC)
