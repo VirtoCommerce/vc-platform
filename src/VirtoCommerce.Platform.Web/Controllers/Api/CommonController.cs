@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using VirtoCommerce.Platform.Core.Caching;
-using VirtoCommerce.Platform.Web.Model;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -13,30 +11,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [ApiExplorerSettings(IgnoreApi = true)]
     public class CommonController : Controller
     {
-        private readonly IPlatformMemoryCache _memoryCache;
+        private readonly ICountriesService _countriesService;
 
-        public CommonController(IPlatformMemoryCache memoryCache)
+        public CommonController(ICountriesService countriesService)
         {
-            _memoryCache = memoryCache;
+            _countriesService = countriesService;
         }
 
 
-        /// <summary>
-        /// Get Full list of countries defined by ISO 3166-1 alpha-3
-        /// based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
-        /// </summary>
         [HttpGet]
         [Route("countries")]
         [AllowAnonymous]
-        public ActionResult<List<Country>> GetCountries()
+        public async Task<ActionResult<List<Country>>> GetCountries()
         {
-            var cacheKey = CacheKey.With(GetType(), nameof(GetCountries));
-            var results = _memoryCache.GetOrCreateExclusive(cacheKey, (cacheEntry) =>
-            {
-                var filePath = Path.GetFullPath("app_data/countries.json");
-                return JsonConvert.DeserializeObject<List<Country>>(System.IO.File.ReadAllText(filePath));
-            });
-
+            var results = await _countriesService.GetCountriesAsync();
             return Ok(results);
         }
     }
