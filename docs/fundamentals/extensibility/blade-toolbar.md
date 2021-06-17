@@ -17,7 +17,7 @@ $scope.blade.toolbarCommands = [
   {
     name: "Save",
     icon: 'fa fa-save',
-    title: 'Save action tooltip text'
+    title: 'Save action tooltip text', // or you can use keys for translation "platform.commands.titles.save"
     executeMethod: function () {
       $scope.saveChanges();
     },
@@ -29,7 +29,7 @@ $scope.blade.toolbarCommands = [
   {
     name: "Reset",
     icon: 'fa fa-undo',
-    title: 'Reset action tooltip text'
+    title: 'Reset action tooltip text',
     executeMethod: function () {
       angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
       userStateCommand.updateName();
@@ -42,7 +42,7 @@ $scope.blade.toolbarCommands = [
   {
     name: "Change password",
     icon: 'fa fa-refresh',
-    title: 'Change password action tooltip text'
+    title: 'Change password action tooltip text',
     executeMethod: function () {
       var newBlade = {
         id: 'accountDetailChild',
