@@ -85,7 +85,6 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
         <EmbeddedResource Include="wwwroot\swagger\index.html" />
-        <None Include="wwwroot\restarting.html" />
         <None Include="wwwroot\swagger\logo_small.png" />
         <None Include="wwwroot\swagger\vc.css" />
     </ItemGroup>

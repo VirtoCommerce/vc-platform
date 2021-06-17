@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -9,10 +11,12 @@ namespace VirtoCommerce.Platform.Data.Common
 {
     public class FileSystemCountriesService : ICountriesService
     {
+        private readonly PlatformOptions _platformOptions;
         private readonly IPlatformMemoryCache _memoryCache;
 
-        public FileSystemCountriesService(IPlatformMemoryCache memoryCache)
+        public FileSystemCountriesService(IOptions<PlatformOptions> platformOptions, IPlatformMemoryCache memoryCache)
         {
+            _platformOptions = platformOptions.Value;
             _memoryCache = memoryCache;
         }
 
@@ -25,7 +29,7 @@ namespace VirtoCommerce.Platform.Data.Common
             var cacheKey = CacheKey.With(GetType(), nameof(GetCountriesAsync));
             return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
-                var filePath = Path.GetFullPath("app_data/countries.json");
+                var filePath = Path.GetFullPath(_platformOptions.CountriesFilePath);
                 return JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
             });
         }

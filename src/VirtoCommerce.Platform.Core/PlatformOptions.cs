@@ -11,14 +11,14 @@ namespace VirtoCommerce.Platform.Core
         [Required]
         public string LocalUploadFolderPath { get; set; } = "app_data/uploads";
 
-        //The public url for license activation
+        //The public URL for license activation
         [Url]
         public string LicenseActivationUrl { get; set; } = "https://virtocommerce.com/admin/api/licenses/activate/";
 
         //Local path for license file
         public string LicenseFilePath { get; set; } = "app_data/VirtoCommerce.lic";
 
-        //Name of the licence file with blob container
+        //Name of the license file with blob container
         public string LicenseBlobPath { get; set; } = "license/VirtoCommerce.lic";
 
         //Name of the public key embedded resource
@@ -27,7 +27,10 @@ namespace VirtoCommerce.Platform.Core
         //Local path to private key for signing license
         public string LicensePrivateKeyPath { get; set; }
 
-        //Url for discovery sample data for initial installation
+        //Local path for countries list
+        public string CountriesFilePath { get; set; } = "localization/common/countries.json";
+
+        //URL for discovery sample data for initial installation
         //e.g. http://virtocommerce.blob.core.windows.net/sample-data
         [Url]
         public string SampleDataUrl { get; set; }
