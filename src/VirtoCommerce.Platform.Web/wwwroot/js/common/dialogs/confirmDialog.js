@@ -31,7 +31,7 @@
         return found;
     }
 
-    dialogService.showDialog = function (dialog, templateUrl, controller, cssClass) {
+    dialogService.showDialog = function (dialog, templateUrl, controller, cssClass, modalBackdrop = true, closeFromKeyboard = true) {
         var dlg = findDialog(dialog.id);
 
         if (angular.isUndefined(dlg)) {
@@ -40,6 +40,8 @@
             dlg.instance = $modal.open({
                 templateUrl: templateUrl,
                 controller: controller,
+                backdrop: modalBackdrop,
+                keyboard: closeFromKeyboard,
                 windowClass: cssClass ? cssClass : null,
                 resolve: {
                     dialog: function () {
@@ -48,17 +50,24 @@
                 }
             });
 
-            dlg.instance.result.then(function (result) //success
-            {
-                var idx = dialogService.dialogs.indexOf(dlg);
-                dialogService.dialogs.splice(idx, 1);
-                if (dlg.callback)
-                    dlg.callback(result);
-            }, function (reason) //dismiss
-            {
-                var idx = dialogService.dialogs.indexOf(dlg);
-                dialogService.dialogs.splice(idx, 1);
-            });
+            dlg.instance.result.then(
+                //success
+                function (result) {
+                    var idx = dialogService.dialogs.indexOf(dlg);
+                    dialogService.dialogs.splice(idx, 1);
+                    if (dlg.callback) {
+                        dlg.callback(result);
+                    }
+                },
+                 //dismiss
+                function (reason) {
+                    var idx = dialogService.dialogs.indexOf(dlg);
+                    dialogService.dialogs.splice(idx, 1);
+                    if (dlg.callbackOnDismiss) {
+                        dlg.callbackOnDismiss(reason);
+                    }
+                }
+            );
 
             dialogService.dialogs.push(dlg);
         }
