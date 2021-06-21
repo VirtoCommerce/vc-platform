@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +32,6 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
-using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
 using VirtoCommerce.Platform.Assets.FileSystem;
@@ -178,7 +178,7 @@ namespace VirtoCommerce.Platform.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var authBuilder = services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)
+            var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                                       //Add the second ApiKey auth schema to handle api_key in query string
                                       .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
                                       .AddCookie();
@@ -236,7 +236,7 @@ namespace VirtoCommerce.Platform.Web
 
                         options.TokenValidationParameters = new TokenValidationParameters()
                         {
-                            NameClaimType = OpenIddictConstants.Claims.Subject,
+                            NameClaimType = OpenIddictConstants.Claims.Name,
                             RoleClaimType = OpenIddictConstants.Claims.Role,
                             ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
                             ValidateIssuerSigningKey = true,
@@ -349,16 +349,8 @@ namespace VirtoCommerce.Platform.Web
                         privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
                     }
                     options.AddSigningCertificate(privateKey);
-                })
-                // Register the OpenIddict validation components.
-                .AddValidation(options =>
-                {
-                    // Import the configuration from the local OpenIddict server instance.
-                    options.UseLocalServer();
-
-                    // Register the ASP.NET Core host.
-                    options.UseAspNetCore();
                 });
+
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
@@ -383,7 +375,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddAuthorization(options =>
             {
                 //We need this policy because it is a single way to implicitly use the two schema (JwtBearer and ApiKey)  authentication for resource based authorization.
-                var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
+                var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
                                                                               .RequireAuthenticatedUser()
                                                                               //.RequireAssertion(context => context.User.HasScope("api1"))
                                                                               .Build();

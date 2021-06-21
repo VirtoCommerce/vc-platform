@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using OpenIddict.Validation.AspNetCore;
 
 namespace VirtoCommerce.Platform.Web.Infrastructure
 {
@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Web.Infrastructure
 
             if (request.Headers.ContainsKey("Authorization"))
             {
-                return await GetSchemeAsync(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+                return await GetSchemeAsync(JwtBearerDefaults.AuthenticationScheme);
             }
 
             return null;
