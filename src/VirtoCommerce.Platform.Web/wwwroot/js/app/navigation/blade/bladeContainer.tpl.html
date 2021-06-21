@@ -2,8 +2,9 @@
     <div class="blade-wrapper" va-blade='blade'>
         <header class="blade-head">
             <div class="blade-status" ng-class="{'__error': blade.error}">
-                <div class="status-message" ng-if="blade.error"><div class="error-message">{{blade.error}}</div>
-                <div class="see-details"><a class="link-error-details" ng-click="showErrorDetails()">{{ 'platform.commands.see-details' | translate }}</a></div>
+                <div class="status-message" ng-if="blade.error">
+                    <div class="error-message">{{blade.error}}</div>
+                    <div class="see-details"><a class="link-error-details" ng-click="showErrorDetails()">{{ 'platform.commands.see-details' | translate }}</a></div>
                 </div>
                 <div class="progress-bar" ng-class="{'__loaded': !blade.isLoading}" ng-show="blade.isLoading"></div>
             </div>
@@ -36,7 +37,7 @@
             <div class="blade-toolbar">
                 <ul class="menu __inline">
                     <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade), 'separator': toolbarCommand.showSeparator}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands | limitTo:toolsPerLineCount" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" va-permission="{{toolbarCommand.permission}}" security-scopes="blade.securityScopes">
-                        <button class="menu-btn">
+                        <button class="menu-btn" ng-attr-title="{{toolbarCommand.title | translate}}">
                             <i class="menu-ico" ng-class="toolbarCommand.icon"></i>
                             {{ toolbarCommand.name | translate }}
                         </button>
