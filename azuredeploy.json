@@ -4,6 +4,7 @@
     "parameters": {
         "appServiceName": {
             "type": "string",
+            "defaultValue": "backend-webapp",
             "metadata": {
                 "description": "Unique Web App Name of the VirtoCommerce platform to create in .azurewebsites.net"
             }
@@ -70,8 +71,7 @@
             "None": {
                 "configValue": ""
             }
-        },
-        "sqlAdministratorPassword": "[concat(listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]"
+        }
     },
     "resources": [
         {
@@ -93,7 +93,7 @@
             "properties": {
                 "version": "12.0",
                 "administratorLogin": "[parameters('sqlAdministratorLogin')]",
-                "administratorLoginPassword": "[variables('sqlAdministratorPassword')]"
+                "administratorLoginPassword": "[concat(listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]"
             },
             "resources": [
                 {
