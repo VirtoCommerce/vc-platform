@@ -27,5 +27,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var results = await _countriesService.GetCountriesAsync();
             return Ok(results);
         }
+
+        [HttpGet("countries/{countryCode}/regions")]
+        public async Task<ActionResult<CountryRegion[]>> GetCountryRegionsAsync(string countryCode)
+        {
+            var results = await _countriesService.GetCountryRegionsAsync(countryCode);
+            return Ok(results);
+        }
     }
 }
