@@ -1,10 +1,5 @@
 <div class="blade-static __expanded">
-    <style>
-        .breadcrumbs .menu .menu-item .menu-link {
-            max-width: 189px;
-        }
-    </style>
-    <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id"></va-breadcrumb>
+    <va-breadcrumb ng-model="blade.breadcrumbs" blade-id="blade.id" blade-maximized="blade.isMaximized"></va-breadcrumb>
     <div class="form-group">
         <div class="form-input __other">
             <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchKeyword" ng-keyup="$event.which === 13 && blade.refresh()">

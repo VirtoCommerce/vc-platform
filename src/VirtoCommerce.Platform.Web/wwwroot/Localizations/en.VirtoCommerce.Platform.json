@@ -17,8 +17,7 @@
             "help": "Help"
         },
         "navigation": {
-            "back": "Back",
-            "bread-crumb-top": "All"
+            "back": "Back"
         },
         "blades": {
             "system-info": {
@@ -31,6 +30,7 @@
             },
             "asset-list": {
                 "title": "Asset management",
+                "bread-crumb-top": "All assets",
                 "labels": {
                     "picture": "Pic",
                     "name": "Name",
@@ -613,7 +613,8 @@
                 "title": "Setting values"
             },
             "settingGroup-list": {
-                "title": "Settings"
+                "title": "Settings",
+                "bread-crumb-top": "All settings"
             },
             "user-profile": {
                 "title": "User profile",

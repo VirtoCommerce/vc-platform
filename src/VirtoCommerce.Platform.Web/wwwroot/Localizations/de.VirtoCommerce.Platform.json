@@ -17,8 +17,7 @@
       "help" : "hilfe"
     },
     "navigation": {
-      "back": "Zurück",
-      "bread-crumb-top": "Alle"
+      "back": "Zurück"
     },
     "blades": {
         "system-info": {
@@ -523,7 +522,8 @@
             "title": "Modul Einstellungen"
         },
         "settingGroup-list": {
-            "title": "Einstellungen"
+            "title": "Einstellungen",
+            "bread-crumb-top": "Alle"
         },
         "user-profile": {
             "title": "User Profil",

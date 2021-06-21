@@ -8,6 +8,7 @@
         <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>..\..</DockerfileContext>
+        <UserSecretsId>local</UserSecretsId>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <NoWarn>1701;1702;1705;1591</NoWarn>
@@ -83,7 +84,6 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
         <EmbeddedResource Include="wwwroot\swagger\index.html" />
-        <None Include="wwwroot\restarting.html" />
         <None Include="wwwroot\swagger\logo_small.png" />
         <None Include="wwwroot\swagger\vc.css" />
     </ItemGroup>
