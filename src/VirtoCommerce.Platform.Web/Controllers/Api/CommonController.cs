@@ -18,7 +18,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _countriesService = countriesService;
         }
 
-
         [HttpGet]
         [Route("countries")]
         [AllowAnonymous]
@@ -26,6 +25,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var results = await _countriesService.GetCountriesAsync();
             return Ok(results);
+        }
+
+        [HttpGet]
+        [Route("ping")]
+        [AllowAnonymous]
+        public ActionResult<string> Ping()
+        {
+            return Ok("pong");
         }
     }
 }
