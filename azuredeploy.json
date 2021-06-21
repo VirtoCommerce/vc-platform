@@ -11,29 +11,39 @@
         "appServicePlanSkuName": {
             "type": "string",
             "defaultValue": "S1",
+            "allowedValues": [
+                "F1",
+                "D1",
+                "B1",
+                "B2",
+                "B3",
+                "S1",
+                "S2",
+                "S3",
+                "P1",
+                "P2",
+                "P3",
+                "P4"
+            ],
             "metadata": {
                 "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
             }
         },
         "sqlAdministratorLogin": {
             "type": "string",
+            "defaultValue": "sql-admin",
             "metadata": {
                 "description": "The administrator username of the SQL logical server. Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.)"
-            }
-        },
-        "sqlAdministratorPassword": {
-            "type": "securestring",
-            "metadata": {
-                "description": "The administrator password of the SQL logical server. Your password must be at least 8 characters in length. Your password must contain characters from three of the following categories – English uppercase letters, English lowercase letters, numbers (0-9), and non-alphanumeric characters (!, $, #, %, etc.)."
             }
         },
         "installModuleBundle": {
             "type": "string",
             "allowedValues": [
+                "Demo",
                 "Commerce",
                 "None"
             ],
-            "defaultValue": "Commerce",
+            "defaultValue": "Demo",
             "metadata": {
                 "description": "Group(s) of modules to install automatically during initial Platform setup. Select None to install empty platform."
             }
@@ -51,13 +61,17 @@
         "storageName": "[replace(parameters('appServiceName'), '-', '')]",
         "storageType": "Standard_LRS",
         "moduleBundles": {
+            "Demo": {
+                "configValue": "demo"
+            },
             "Commerce": {
                 "configValue": "commerce"
             },
             "None": {
                 "configValue": ""
             }
-        }
+        },
+        "sqlAdministratorPassword": "[concat(listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1)]"
     },
     "resources": [
         {
@@ -79,7 +93,7 @@
             "properties": {
                 "version": "12.0",
                 "administratorLogin": "[parameters('sqlAdministratorLogin')]",
-                "administratorLoginPassword": "[parameters('sqlAdministratorPassword')]"
+                "administratorLoginPassword": "[variables('sqlAdministratorPassword')]"
             },
             "resources": [
                 {
