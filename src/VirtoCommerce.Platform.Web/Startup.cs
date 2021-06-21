@@ -8,10 +8,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using AspNet.Security.OpenIdConnect.Primitives;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +28,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using OpenIddict.Abstractions;
+using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
 using VirtoCommerce.Platform.Assets.FileSystem;
@@ -100,7 +100,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddSecurityServices();
             services.AddSingleton<LicenseProvider>();
 
-
             var mvcBuilder = services.AddMvc(mvcOptions =>
             {
                 //Disable 204 response for null result. https://github.com/aspnet/AspNetCore/issues/8847
@@ -160,7 +159,7 @@ namespace VirtoCommerce.Platform.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            var authBuilder = services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)
                                       //Add the second ApiKey auth schema to handle api_key in query string
                                       .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
                                       .AddCookie();
@@ -178,9 +177,9 @@ namespace VirtoCommerce.Platform.Web
             // which saves you from doing the mapping in your authorization controller.
             services.Configure<IdentityOptions>(options =>
             {
-                options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Subject;
-                options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Name;
-                options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
+                options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Name;
+                options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Subject;
+                options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
             });
 
             // Support commonly used forwarded headers
@@ -218,8 +217,8 @@ namespace VirtoCommerce.Platform.Web
 
                         options.TokenValidationParameters = new TokenValidationParameters()
                         {
-                            NameClaimType = OpenIdConnectConstants.Claims.Subject,
-                            RoleClaimType = OpenIdConnectConstants.Claims.Role,
+                            NameClaimType = OpenIddictConstants.Claims.Subject,
+                            RoleClaimType = OpenIddictConstants.Claims.Role,
                             ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
                             ValidateIssuerSigningKey = true,
                             IssuerSigningKey = publicKey
@@ -269,11 +268,13 @@ namespace VirtoCommerce.Platform.Web
                     // Register the ASP.NET Core MVC binder used by OpenIddict.
                     // Note: if you don't call this method, you won't be able to
                     // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                    options.UseMvc();
+                    var builder = options.UseAspNetCore().
+                        EnableTokenEndpointPassthrough().
+                        EnableAuthorizationEndpointPassthrough();
 
                     // Enable the authorization, logout, token and userinfo endpoints.
-                    options.EnableTokenEndpoint("/connect/token")
-                        .EnableUserinfoEndpoint("/api/security/userinfo");
+                    options.SetTokenEndpointUris("/connect/token");
+                    options.SetUserinfoEndpointUris("/api/security/userinfo");
 
                     // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
                     // can enable the other flows if you need to support implicit or client credentials.
@@ -287,7 +288,8 @@ namespace VirtoCommerce.Platform.Web
                     options.AcceptAnonymousClients();
 
                     // Configure Openiddict to issues new refresh token for each token refresh request.
-                    options.UseRollingTokens();
+                    // Enabled by default
+                    // options.DisableRollingRefreshTokens();
 
                     // Make the "client_id" parameter mandatory when sending a token request.
                     //options.RequireClientIdentification()
@@ -297,19 +299,23 @@ namespace VirtoCommerce.Platform.Web
                     // is redirected to the same page with a single parameter (request_id).
                     // This allows flowing large OpenID Connect requests even when using
                     // an external authentication provider like Google, Facebook or Twitter.
-                    options.EnableRequestCaching();
+                    builder.EnableAuthorizationRequestCaching();
+                    builder.EnableLogoutRequestCaching();
 
                     options.DisableScopeValidation();
 
                     // During development or when you explicitly run the platform in production mode without https, need to disable the HTTPS requirement.
                     if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
                     {
-                        options.DisableHttpsRequirement();
+                        builder.DisableTransportSecurityRequirement(); //former options.DisableHttpsRequirement();
+
+                        options.AddDevelopmentEncryptionCertificate()
+                            .AddDevelopmentSigningCertificate();
                     }
 
                     // Note: to use JWT access tokens instead of the default
                     // encrypted format, the following lines are required:
-                    options.UseJsonWebTokens();
+                    options.DisableAccessTokenEncryption();
 
                     var bytes = File.ReadAllBytes(Configuration["Auth:PrivateKeyPath"]);
                     X509Certificate2 privateKey;
@@ -324,6 +330,15 @@ namespace VirtoCommerce.Platform.Web
                         privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
                     }
                     options.AddSigningCertificate(privateKey);
+                })
+                // Register the OpenIddict validation components.
+                .AddValidation(options =>
+                {
+                    // Import the configuration from the local OpenIddict server instance.
+                    options.UseLocalServer();
+
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
                 });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
@@ -349,8 +364,9 @@ namespace VirtoCommerce.Platform.Web
             services.AddAuthorization(options =>
             {
                 //We need this policy because it is a single way to implicitly use the two schema (JwtBearer and ApiKey)  authentication for resource based authorization.
-                var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
+                var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
                                                                               .RequireAuthenticatedUser()
+                                                                              //.RequireAssertion(context => context.User.HasScope("api1"))
                                                                               .Build();
                 //The good article is described the meaning DefaultPolicy and FallbackPolicy
                 //https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/
@@ -531,7 +547,7 @@ namespace VirtoCommerce.Platform.Web
             //The converter is responsible for the materialization of objects, taking into account the information on overriding
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
-          
+
         }
     }
 }
