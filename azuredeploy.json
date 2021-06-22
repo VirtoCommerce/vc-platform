@@ -9,6 +9,13 @@
                 "description": "Unique Web App Name of the VirtoCommerce platform to create in .azurewebsites.net"
             }
         },
+        "appServiceName_StoreFront": {
+            "type": "string",
+            "defaultValue": "frontend",
+            "metadata": {
+                "description": "Unique Web App Name of the StoreFront to create in .azurewebsites.net"
+            }
+        },
         "appServicePlanSkuName": {
             "type": "string",
             "defaultValue": "S1",
@@ -32,9 +39,10 @@
         },
         "baseTime": {
             "type": "string",
-            "defaultValue": "[utcNow('d')]",
+            "defaultValue": "[utcNow()]",
             "metadata": {
-            "description": "This time."
+                "description": "This time."
+            }
         },
         "sqlAdministratorLogin": {
             "type": "string",
@@ -59,34 +67,41 @@
             "type": "string",
             "defaultValue": "https://github.com/VirtoCommerce/vc-platform"
         },
+        "repoUrlStoreFront": {
+            "type": "string",
+            "defaultValue": "https://github.com/VirtoCommerce/vc-storefront"
+        },
         "branch": {
             "type": "string",
             "defaultValue": "master"
         },
-		"searchServiceName": {
-			"type": "string",
+        "searchServiceName": {
+            "type": "string",
             "defaultValue": "search",
-			"metadata": {
-				"description": "The name of the search service to create"
-			}
-		},
-		"searchServiceReplicas": {
-			"type": "int",
-			"metadata": {
-				"description": "The number of the search service replicas"
-			},
-			"defaultValue": 1
-		},
-		"cacheName": {
-			"type": "string",
+            "metadata": {
+                "description": "The name of the search service to create"
+            }
+        },
+        "searchServiceReplicas": {
+            "type": "int",
+            "metadata": {
+                "description": "The number of the search service replicas"
+            },
+            "defaultValue": 1
+        },
+        "cacheName": {
+            "type": "string",
             "defaultValue": "redis",
-			"metadata": {
-				"description": "The name of the redis cache to create"
-			}
-		}
+            "metadata": {
+                "description": "The name of the redis cache to create"
+            }
+        }
     },
     "variables": {
-        "storageName": "[replace(parameters('appServiceName'), '-', '')]",
+        "appServiceNameUnique": "[concat(parameters('appServiceName'), parameters('baseTime'))]",
+        "appServiceName_StoreFrontUnique": "[concat(parameters('appServiceName_StoreFront'), parameters('baseTime'))]",
+        "searchServiceScope": "demo",
+        "storageName": "[replace(variables('appServiceNameUnique'), '-', '')]",
         "storageType": "Standard_LRS",
         "moduleBundles": {
             "Demo": {
@@ -100,8 +115,9 @@
             }
         },
         "cacheSKUName": "Standard",
-		"cacheSKUFamily": "C",
-		"cacheSKUCapacity": 0
+        "cacheSKUFamily": "C",
+        "cacheSKUCapacity": 0,
+        "searchSKU": "standard"
     },
     "resources": [
         {
@@ -118,7 +134,7 @@
         {
             "apiVersion": "2014-04-01",
             "type": "Microsoft.Sql/servers",
-            "name": "[parameters('appServiceName')]",
+            "name": "[variables('appServiceNameUnique')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "version": "12.0",
@@ -129,10 +145,10 @@
                 {
                     "apiVersion": "2014-04-01",
                     "type": "databases",
-                    "name": "[parameters('appServiceName')]",
+                    "name": "[variables('appServiceNameUnique')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
+                        "[concat('Microsoft.Sql/servers/', variables('appServiceNameUnique'))]"
                     ],
                     "properties": {
                         "edition": "Basic",
@@ -147,7 +163,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2014-04-01",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
+                        "[concat('Microsoft.Sql/servers/', variables('appServiceNameUnique'))]"
                     ],
                     "properties": {
                         "endIpAddress": "0.0.0.0",
@@ -159,7 +175,7 @@
         {
             "apiVersion": "2018-02-01",
             "type": "Microsoft.Web/serverfarms",
-            "name": "[parameters('appServiceName')]",
+            "name": "[variables('appServiceNameUnique')]",
             "location": "[resourceGroup().location]",
             "kind": "app",
             "sku": {
@@ -167,44 +183,60 @@
                 "capacity": 1
             },
             "properties": {
-                "name": "[parameters('appServiceName')]",
+                "name": "[variables('appServiceNameUnique')]",
                 "numberOfWorkers": "1",
                 "reserved": false
             }
         },
-		{
-			"name": "[parameters('cacheName')]",
-			"type": "Microsoft.Cache/Redis",
-			"apiVersion": "2018-03-01",
-			"properties": {
-				"enableNonSslPort": false,
-				"minimumTlsVersion": "1.2",
-				"sku": {
-					"name": "[variables('cacheSKUName')]",
-					"family": "[variables('cacheSKUFamily')]",
-					"capacity": "[variables('cacheSKUCapacity')]"
-				}
-			},
-			"location": "[resourceGroup().location]",
-			"tags": {
-				"displayName": "redisCache"
-			}
-		},
+        {
+            "name": "[parameters('cacheName')]",
+            "type": "Microsoft.Cache/Redis",
+            "apiVersion": "2018-03-01",
+            "properties": {
+                "enableNonSslPort": false,
+                "minimumTlsVersion": "1.2",
+                "sku": {
+                    "name": "[variables('cacheSKUName')]",
+                    "family": "[variables('cacheSKUFamily')]",
+                    "capacity": "[variables('cacheSKUCapacity')]"
+                }
+            },
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "redisCache"
+            }
+        },
+        {
+            "name": "[parameters('searchServiceName')]",
+            "type": "Microsoft.Search/searchServices",
+            "apiVersion": "2015-08-19",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "azureSearch"
+            },
+            "properties": {
+                "replicaCount": "[parameters('searchServiceReplicas')]",
+                "partitionCount": 1
+            },
+            "sku": {
+                "name": "[variables('searchSKU')]"
+            }
+        },
         {
             "apiVersion": "2018-11-01",
             "type": "Microsoft.Web/sites",
-            "name": "[parameters('appServiceName')]",
+            "name": "[variables('appServiceNameUnique')]",
             "location": "[resourceGroup().location]",
             "kind": "app",
             "dependsOn": [
-                "[concat('Microsoft.Web/serverFarms/', parameters('appServiceName'))]"
+                "[concat('Microsoft.Web/serverFarms/', variables('appServiceNameUnique'))]"
             ],
             "tags": {
                 "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServiceName'))]": "empty"
             },
             "properties": {
-                "name": "[parameters('appServiceName')]",
-                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServiceName'))]",
+                "name": "[variables('appServiceNameUnique')]",
+                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('appServiceNameUnique'))]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -232,12 +264,20 @@
                             "value": "cms"
                         },
                         {
-                            "name": "Search:Provider",
-                            "value": "Lucene"
+                            "name": "Search:AzureSearch:Key",
+                            "value": "[listAdminKeys(resourceId('Microsoft.Search/searchServices', parameters('searchServiceName')),'2015-08-19').primaryKey]"
                         },
                         {
-                            "name": "Search:Lucene:Path",
-                            "value": "App_Data/Lucene"
+                            "name": "Search:AzureSearch:SearchServiceName",
+                            "value": "[parameters('searchServiceName')]"
+                        },
+                        {
+                            "name": "Search:Provider",
+                            "value": "AzureSearch"
+                        },
+                        {
+                            "name": "Search:Scope",
+                            "value": "[variables('searchServiceScope')]"
                         },
                         {
                             "name": "VirtoCommerce:DiscoveryPath",
@@ -251,8 +291,13 @@
                     "connectionStrings": [
                         {
                             "name": "VirtoCommerce",
-                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('appServiceName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('appServiceName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('appServiceName'), ';Password=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
+                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('appServiceNameUnique'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('appServiceNameUnique'), ';User Id=', parameters('sqlAdministratorLogin'), '@', variables('appServiceNameUnique'), ';Password=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
                             "type": "SQLAzure"
+                        },
+                        {
+                            "name": "RedisConnectionString",
+                            "connectionString": "[concat(parameters('cacheName'),'.redis.cache.windows.net:6380,abortConnect=false,ssl=True,allowAdmin=True,password=', listKeys(resourceId('Microsoft.Cache/Redis', parameters('cacheName')),'2016-04-01').primaryKey)]",
+                            "type": "Custom"
                         }
                     ],
                     "metadata": [
@@ -285,6 +330,71 @@
                     ],
                     "properties": {
                         "RepoUrl": "[parameters('repoUrl')]",
+                        "branch": "[parameters('branch')]",
+                        "IsManualIntegration": true
+                    }
+                }
+            ]
+        },
+        {
+            "name": "[parameters('appServiceName_StoreFront')]",
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "kind": "app",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "webApp_storefront"
+            },
+            "properties": {
+                "enabled": true,
+                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServiceName_StoreFront'))]",
+                "siteConfig": {
+                    "requestTracingEnabled": true,
+                    "requestTracingExpirationTime": "9999-12-31T23:59:00Z",
+                    "httpLoggingEnabled": true,
+                    "logsDirectorySizeLimit": 100,
+                    "detailedErrorLoggingEnabled": true,
+                    "clientAffinityEnabled": true,
+                    "use32BitWorkerProcess": false,
+                    "webSocketsEnabled": true,
+                    "alwaysOn": true,
+                    "httpsOnly": true,
+                    "http20Enabled": true,
+                    "minTlsVersion": "1.2",
+                    "ftpsState": "Disabled",
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "dotnetcore"
+                        }
+                    ],
+                    "appSettings": [
+                        {
+                            "name": "ASPNETCORE_ENVIRONMENT",
+                            "value": "Production"
+                        },
+                        {
+                            "name": "IdentityOptions:Password:RequiequireUppercase",
+                            "value": "true"
+                        },
+                        {
+                            "name": "IdentityOptions:Password:RequireDigit",
+                            "value": "true"
+                        }
+                    ],
+                    "connectionStrings": []
+                }
+            },
+            "resources": [
+                {
+                    "apiVersion": "2018-11-01",
+                    "name": "web",
+                    "type": "sourcecontrols",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', parameters('appServiceName'))]"
+                    ],
+                    "properties": {
+                        "RepoUrl": "[parameters('repoUrlStoreFront')]",
                         "branch": "[parameters('branch')]",
                         "IsManualIntegration": true
                     }
