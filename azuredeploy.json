@@ -4,7 +4,7 @@
     "parameters": {
         "appServiceName": {
             "type": "string",
-            "defaultValue": "backend-webapp",
+            "defaultValue": "backend",
             "metadata": {
                 "description": "Unique Web App Name of the VirtoCommerce platform to create in .azurewebsites.net"
             }
@@ -29,6 +29,12 @@
             "metadata": {
                 "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
             }
+        },
+        "baseTime": {
+            "type": "string",
+            "defaultValue": "[utcNow('d')]",
+            "metadata": {
+            "description": "This time."
         },
         "sqlAdministratorLogin": {
             "type": "string",
@@ -56,7 +62,28 @@
         "branch": {
             "type": "string",
             "defaultValue": "master"
-        }
+        },
+		"searchServiceName": {
+			"type": "string",
+            "defaultValue": "search",
+			"metadata": {
+				"description": "The name of the search service to create"
+			}
+		},
+		"searchServiceReplicas": {
+			"type": "int",
+			"metadata": {
+				"description": "The number of the search service replicas"
+			},
+			"defaultValue": 1
+		},
+		"cacheName": {
+			"type": "string",
+            "defaultValue": "redis",
+			"metadata": {
+				"description": "The name of the redis cache to create"
+			}
+		}
     },
     "variables": {
         "storageName": "[replace(parameters('appServiceName'), '-', '')]",
@@ -71,7 +98,10 @@
             "None": {
                 "configValue": ""
             }
-        }
+        },
+        "cacheSKUName": "Standard",
+		"cacheSKUFamily": "C",
+		"cacheSKUCapacity": 0
     },
     "resources": [
         {
@@ -142,6 +172,24 @@
                 "reserved": false
             }
         },
+		{
+			"name": "[parameters('cacheName')]",
+			"type": "Microsoft.Cache/Redis",
+			"apiVersion": "2018-03-01",
+			"properties": {
+				"enableNonSslPort": false,
+				"minimumTlsVersion": "1.2",
+				"sku": {
+					"name": "[variables('cacheSKUName')]",
+					"family": "[variables('cacheSKUFamily')]",
+					"capacity": "[variables('cacheSKUCapacity')]"
+				}
+			},
+			"location": "[resourceGroup().location]",
+			"tags": {
+				"displayName": "redisCache"
+			}
+		},
         {
             "apiVersion": "2018-11-01",
             "type": "Microsoft.Web/sites",
