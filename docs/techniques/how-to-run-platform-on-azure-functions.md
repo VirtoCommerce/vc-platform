@@ -95,11 +95,10 @@ az group create --name vc-platform-func-rg --location westeurope
 ```console
 az storage account create --name vcplatformfuncstorage --location westeurope --resource-group vc-platform-func-rg --sku Standard_LRS
 ```
-4. Create the function app
+4. Create the function app Windows/Linux
 ```console
-az functionapp create --resource-group vc-platform-func-rg --consumption-plan-location westeurope --runtime custom --functions-version 3 --name vc-platform-func-app --storage-account vcplatformfuncstorage --os-type Windows --subscription <your azure subscription id>
+az functionapp create --resource-group vc-platform-func-rg --consumption-plan-location westeurope --runtime custom --functions-version 3 --name vc-platform-func-app --storage-account vcplatformfuncstorage --os-type {Linux, Windows} --subscription <your azure subscription id>
 ```
-
 
 Then deploy the platform application to Azure
 ```console
@@ -109,11 +108,10 @@ func azure functionapp publish vc-platform-func-app --subscription <your azure s
 
 > Important note! 
 > 
-> To reduce the launch time of the platform app, the next step after the successful publication to Azure please set the `RefreshProbingFolderOnStart` setting to `false` for the Azure Function App configuration in Azure portal.
+> To reduce the launch time of the platform app, the next step after the successful publication to Azure please set the `VirtoCommerce:RefreshProbingFolderOnStart` for Windows or `VirtoCommerce__RefreshProbingFolderOnStart` for Linux setting to `false` for the Azure Function App configuration in Azure portal.
 
 ![image](../media/how-to-run-platform-on-azure-functions-1.png) 
 
 
-# Known limitations
-- Platform runs as Azure Functions only on Windows os type (Linux os WIP)
-- Non reliable behavior, often the exception "System.OutOfMemoryException" has thrown during working (WIP on the lite platform version)
+# Known limitations and problems
+- Non reliable behavior, often the exception "System.OutOfMemoryException" has thrown during working on Windows (temporary solution use Linux instead)
