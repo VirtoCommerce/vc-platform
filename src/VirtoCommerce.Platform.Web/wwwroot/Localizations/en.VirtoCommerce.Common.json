@@ -15,6 +15,8 @@
             "create": "Create",
             "cut": "Cut",
             "delete": "Delete",
+            "add-all": "Add all",
+            "remove-all": "Delete all",
             "download": "Download",
             "edit": "Edit",
             "export": "Export",
