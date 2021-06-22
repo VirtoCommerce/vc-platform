@@ -307,8 +307,7 @@ namespace VirtoCommerce.Platform.Web
                     options.AcceptAnonymousClients();
 
                     // Configure Openiddict to issues new refresh token for each token refresh request.
-                    // Enabled by default
-                    // options.DisableRollingRefreshTokens();
+                    // Enabled by default, to disable use options.DisableRollingRefreshTokens()
 
                     // Make the "client_id" parameter mandatory when sending a token request.
                     //options.RequireClientIdentification()
@@ -326,10 +325,7 @@ namespace VirtoCommerce.Platform.Web
                     // During development or when you explicitly run the platform in production mode without https, need to disable the HTTPS requirement.
                     if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
                     {
-                        builder.DisableTransportSecurityRequirement(); //former options.DisableHttpsRequirement();
-
-                        options.AddDevelopmentEncryptionCertificate()
-                            .AddDevelopmentSigningCertificate();
+                        builder.DisableTransportSecurityRequirement();
                     }
 
                     // Note: to use JWT access tokens instead of the default
@@ -349,6 +345,7 @@ namespace VirtoCommerce.Platform.Web
                         privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
                     }
                     options.AddSigningCertificate(privateKey);
+                    options.AddEncryptionCertificate(privateKey);
                 });
 
 

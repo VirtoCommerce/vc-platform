@@ -113,7 +113,7 @@ namespace Mvc.Server
                 await _eventPublisher.Publish(new UserLoginEvent(user));
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
-            else if (openIdConnectRequest.IsAuthorizationCodeGrantType() || openIdConnectRequest.IsRefreshTokenGrantType())
+            else if (openIdConnectRequest.IsRefreshTokenGrantType())
             {
                 // Retrieve the claims principal stored in the authorization code/refresh token.
                 var info = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
@@ -162,7 +162,7 @@ namespace Mvc.Server
                 }
 
                 // Create a new authentication ticket.
-                var ticket = CreateTicket(openIdConnectRequest, application);
+                var ticket = CreateTicket(application);
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
@@ -174,7 +174,7 @@ namespace Mvc.Server
         }
         #endregion
 
-        private AuthenticationTicket CreateTicket(OpenIddictRequest request, OpenIddictEntityFrameworkCoreApplication application)
+        private AuthenticationTicket CreateTicket(OpenIddictEntityFrameworkCoreApplication application)
         {
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.
