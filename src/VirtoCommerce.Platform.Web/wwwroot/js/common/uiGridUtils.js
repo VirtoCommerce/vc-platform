@@ -137,7 +137,7 @@ angular.module('platformWebApp')
                                 column.visible = !(column.visible === undefined || column.visible);
                                 var mi = grid.options.gridMenuCustomItems.find(y => y.colName === x.name);
                                 mi.icon = column.visible ? "ui-grid-icon-ok" : "ui-grid-icon-cancel";
-				grid.api.core.notifyDataChange(uiGridConstants.dataChange.COLUMN); // Inform the grid about changes
+                                grid.api.core.notifyDataChange(uiGridConstants.dataChange.COLUMN); // Inform the grid about changes
                                 grid.api.core.raise.columnVisibilityChanged(); // Fire event to save settings to the local storage
                             }
                             grid.refresh();
