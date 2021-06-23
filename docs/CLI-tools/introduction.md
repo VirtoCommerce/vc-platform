@@ -1,7 +1,7 @@
 
 The official CLI [.NET Core GlobalTool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) for building, deploy releases, create and push packages, and package management for projects based on VirtoCommerce. Is powered by [nuke.build](https://nuke.build/) A cross-platform build automation system with C# DSL, that provides an approach to embrace existing IDE tooling and state where everyone in a team can manage and change the build scenarios. This allows writing build scenarios in C# and debugging them in Visual Studio. Also, along with crossplatform support, it was the best choice for us to build our own build automation solution on top of this project.
 
-Check out [the project source code](https://github.com/VirtoCommerce/vc-platform/tree/master/build) for implementation details.
+Check out [the project source code](https://github.com/VirtoCommerce/vc-build) for implementation details.
 
 ![vc-build CLI](../media/cli-tools-1.png)
 

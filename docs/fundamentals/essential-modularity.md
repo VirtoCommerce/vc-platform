@@ -188,7 +188,7 @@ vc-build update
 
 ## Module deployment process
 
-Virto platform  has a build automation tool  [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/tree/dev/build)   that helps with  building, packaging  and releasing  modules, you might read more about by this link [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/CLI-tools/build-automation.md) for more info.
+Virto platform  has a build automation tool  [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-build)   that helps with  building, packaging  and releasing  modules, you might read more about by this link [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/CLI-tools/build-automation.md) for more info.
 
 ![image](../media/essential-modularity-7.png) 
 
