@@ -195,7 +195,7 @@ angular.module('platformWebApp')
             function toSentenceCase(str)
             {
                  // adding space between strings
-                const result = str.replace(/([A-Z])/g,' $1');
+                const result = str.replace(/([A-Z])/g,' $1').trim();
                 // converting first character to uppercase and join it to the final string
                 return result.charAt(0).toUpperCase()+result.slice(1);
             }
