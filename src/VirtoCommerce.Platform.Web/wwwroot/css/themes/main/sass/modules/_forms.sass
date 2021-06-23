@@ -223,6 +223,7 @@ fieldset + fieldset
 .form-label
   display: inline-block
   font-size: 14px
+  font-weight: 500
   margin: 0 0 5px
 .form-edit
   display: inline-block
@@ -282,6 +283,14 @@ fieldset + fieldset
   position: relative
 .form-control .form-label + .form-label
   margin-left: 10px
+a.btn-ico
+  float: right
+  padding: 0 0 0 18px
+  margin: 4px 0 0 10px
+  &.check
+    background: url('/images/layout/check_circle.svg') no-repeat left center
+  &.remove
+    background: url('/images/layout/remove_circle.svg') no-repeat left center
 label.form-control
   display: inline-block
   height: 12px
@@ -459,6 +468,7 @@ label.form-control
   width: 100%
 
 /* Buttons */
+.btn-default,
 .btn
   background: $baseColor
   border: none;
@@ -475,8 +485,16 @@ label.form-control
   &:hover
     color: $whiteColor
     opacity: .8
-
     filter: alpha(opacity=80)
+li.btn-default.select
+  background: $baseColor url('/images/layout/plus.svg') no-repeat right center
+  background-size: 10px
+  background-position-x: 35px
+  border-radius: 2px
+  color: $whiteColor
+  height: 26px
+  margin: 3px 0 0 5px
+  padding: 0 20px 0 7px
 button.btn
   padding: 0 17px
 .btn.__loading
