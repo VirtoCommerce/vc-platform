@@ -46,6 +46,7 @@ public class Module : IModule
 
 ### 3. Done
 Now you can check your platform by getting a response from `/health` endpoint.
+
 ![image](../media/health-checks-test.jpg)
 
 ## Docker
