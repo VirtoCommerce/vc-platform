@@ -117,7 +117,7 @@
         "cacheSKUCapacity": 0,
         "searchSKU": "standard",
         "sqlServerName": "[concat('sqlServer', parameters('baseTime'))]",
-        "dbName": "[concat('db', parameters('baseTime'))]",
+        "dbName": "[concat('db', parameters('baseTime'))]"
     },
     "resources": [
         {
