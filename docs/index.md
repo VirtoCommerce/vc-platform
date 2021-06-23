@@ -8,6 +8,15 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
 
 ## News Digests
 
+!!! done "6 June"
+    * New posts: Measure elapsed times for domain event handlers, How to use Hangfire Enqueue operation, Introduction to Virto Commerce CLI tools, Build automation, Package management, How to run the platform on azure functions, BA Documentation
+    * Order XAPI extended with Dynamic properties
+    * Updated Design of Login Screen
+    * Improved Pricelist blade
+    * Added Generic CRUD Services
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-6-june-2021/342)
+
 !!! done "28 May"
     * Added new video on Youtube
     * Dynamic properties added to X-Purchase-Cart

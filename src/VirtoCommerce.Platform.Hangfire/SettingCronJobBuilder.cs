@@ -32,6 +32,12 @@ namespace VirtoCommerce.Platform.Hangfire
             return this;
         }
 
+        public SettingCronJobBuilder SetEnabledEvaluator(Func<object, bool> enabledEvaluator)
+        {
+            _settingCronJob.EnabledEvaluator = enabledEvaluator;
+            return this;
+        }
+
         public SettingCronJobBuilder SetCronSetting(SettingDescriptor settingDescriptor)
         {
             _settingCronJob.CronSetting = settingDescriptor;

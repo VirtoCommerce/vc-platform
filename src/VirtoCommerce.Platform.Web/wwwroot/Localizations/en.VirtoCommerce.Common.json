@@ -15,6 +15,8 @@
             "create": "Create",
             "cut": "Cut",
             "delete": "Delete",
+            "add-all": "Add all",
+            "remove-all": "Delete all",
             "download": "Download",
             "edit": "Edit",
             "export": "Export",
@@ -66,7 +68,12 @@
             "date": "Date",
             "see-details": "see Details",
             "hide-empty-property-values": "Hide empty values",
-            "show-empty-property-values": "Show empty values"
+            "show-empty-property-values": "Show empty values",
+            "titles": {
+                "refresh": "Refresh",
+                "new-folder": "New folder",
+                "upload": "Upload"
+            }
         },
         "list": {
             "no-data": "No data",

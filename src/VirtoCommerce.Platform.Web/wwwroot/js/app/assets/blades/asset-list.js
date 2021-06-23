@@ -139,6 +139,7 @@ angular.module('platformWebApp')
             blade.toolbarCommands = [
                 {
                     name: "platform.commands.refresh", icon: 'fa fa-refresh',
+                    title: "platform.commands.titles.refresh",
                     executeMethod: blade.refresh,
                     canExecuteMethod: function () {
                         return true;
@@ -146,6 +147,7 @@ angular.module('platformWebApp')
                 },
                 {
                     name: "platform.commands.new-folder", icon: 'fa fa-folder-o',
+                    title: "platform.commands.titles.new-folder",
                     executeMethod: function () { newFolder(); },
                     canExecuteMethod: function () {
                         return true;
@@ -154,6 +156,7 @@ angular.module('platformWebApp')
                 },
                 {
                     name: "platform.commands.upload", icon: 'fa fa-upload',
+                    title: "platform.commands.titles.upload",
                     executeMethod: function () {
                         var newBlade = {
                             id: "assetUpload",

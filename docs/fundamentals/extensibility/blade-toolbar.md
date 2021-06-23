@@ -17,6 +17,7 @@ $scope.blade.toolbarCommands = [
   {
     name: "Save",
     icon: 'fa fa-save',
+    title: 'Save action tooltip text', // or you can use keys for translation "platform.commands.titles.save"
     executeMethod: function () {
       $scope.saveChanges();
     },
@@ -28,6 +29,7 @@ $scope.blade.toolbarCommands = [
   {
     name: "Reset",
     icon: 'fa fa-undo',
+    title: 'Reset action tooltip text',
     executeMethod: function () {
       angular.copy($scope.blade.origEntity, $scope.blade.currentEntity);
       userStateCommand.updateName();
@@ -40,6 +42,7 @@ $scope.blade.toolbarCommands = [
   {
     name: "Change password",
     icon: 'fa fa-refresh',
+    title: 'Change password action tooltip text',
     executeMethod: function () {
       var newBlade = {
         id: 'accountDetailChild',
@@ -87,6 +90,7 @@ Toolbar item definition structure:
 |------|-----------|
 |name|Display name for the command.|
 |icon|The icon.|
+|title|Tooltip message for the button.|
 |executeMethod|Function to execute on command click. The current blade parameter is passed.|
 |canExecuteMethod|Function to determine if command could be executed. The command is disabled in the toolbar if boolean *false *value**returned.|
 |index|The 0 based position to insert the item in the toolbar.|
