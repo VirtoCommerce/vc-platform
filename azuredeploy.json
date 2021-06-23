@@ -356,8 +356,11 @@
             "apiVersion": "2018-11-01",
             "kind": "app",
             "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverFarms/', parameters('appServiceName_StoreFront'))]"
+            ],
             "tags": {
-                "displayName": "webApp_storefront"
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServiceName_StoreFront'))]": "empty"
             },
             "properties": {
                 "enabled": true,
@@ -394,9 +397,32 @@
                         {
                             "name": "IdentityOptions:Password:RequireDigit",
                             "value": "true"
+                        },
+                        {
+                            "name": "VirtoCommerce:Endpoint:Url",
+                            "value": "[concat('https://', parameters('appServiceName'), '.azurewebsites.net')]"
+                        },
+                        {
+                            "name": "VirtoCommerce:Endpoint:ClientId",
+                            "value": ""
+                        },
+                        {
+                            "name": "VirtoCommerce:Endpoint:ClientSecret",
+                            "value": ""
                         }
                     ],
-                    "connectionStrings": []
+                    "connectionStrings": [
+                        {
+                            "name": "ContentConnectionString",
+                            "value": "[concat('provider=AzureBlobStorage;rootPath=cms;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]",
+                            "type": "Custom"
+                        },
+                        {
+                            "name": "RedisConnectionString",
+                            "connectionString": "[concat(parameters('cacheName'),'.redis.cache.windows.net:6380,abortConnect=false,ssl=True,allowAdmin=True,password=', listKeys(resourceId('Microsoft.Cache/Redis', parameters('cacheName')),'2016-04-01').primaryKey)]",
+                            "type": "Custom"
+                        }
+                    ]
                 }
             },
             "resources": [
