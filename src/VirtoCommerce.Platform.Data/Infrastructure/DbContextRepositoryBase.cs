@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             // Mitigations the breaking changes with cascade deletion introduced in EF Core 3.0
             // https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes#cascade
             // The new CascadeTiming.Immediate that is used by default in EF Core 3.0 is lead wrong track as Added  for Deleted dependent/child entities during
-            // work of Patch method for data entities  
+            // work of Patch method for data entities
             DbContext.ChangeTracker.CascadeDeleteTiming = CascadeTiming.OnSaveChanges;
             DbContext.ChangeTracker.DeleteOrphansTiming = CascadeTiming.OnSaveChanges;
 
@@ -28,10 +28,10 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             dbContext.Database.SetCommandTimeout(connectionTimeout);
         }
 
-      
         public TContext DbContext { get; private set; }
 
         #region IRepository Members
+
         /// <summary>
         /// Gets the unit of work. This class actually saves the data into underlying storage.
         /// </summary>
@@ -98,7 +98,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                 UnitOfWork = null;
             }
         }
-        #endregion
 
+        #endregion IRepository Members
     }
 }

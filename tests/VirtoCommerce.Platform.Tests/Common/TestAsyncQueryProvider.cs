@@ -41,12 +41,10 @@ namespace VirtoCommerce.Platform.Tests.Common
             return Execute<TResult>(expression);
         }
 
-
         public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
         {
             return new TestAsyncEnumerable<TResult>(expression);
         }
-
     }
 
     public class TestAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
