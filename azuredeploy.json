@@ -115,7 +115,9 @@
         "cacheSKUName": "Standard",
         "cacheSKUFamily": "C",
         "cacheSKUCapacity": 0,
-        "searchSKU": "standard"
+        "searchSKU": "standard",
+        "sqlServerName": "[concat('sqlServer', parameters('baseTime'))]",
+        "dbName": "[concat('db', parameters('baseTime'))]",
     },
     "resources": [
         {
@@ -132,7 +134,7 @@
         {
             "apiVersion": "2014-04-01",
             "type": "Microsoft.Sql/servers",
-            "name": "[parameters('appServiceName')]",
+            "name": "[variables('sqlServerName')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "version": "12.0",
@@ -143,10 +145,10 @@
                 {
                     "apiVersion": "2014-04-01",
                     "type": "databases",
-                    "name": "[parameters('appServiceName')]",
+                    "name": "[variables('dbName')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
+                        "[concat('Microsoft.Sql/servers/', variables('sqlServerName'))]"
                     ],
                     "properties": {
                         "edition": "Basic",
@@ -161,7 +163,7 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2014-04-01",
                     "dependsOn": [
-                        "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
+                        "[concat('Microsoft.Sql/servers/', variables('sqlServerName'))]"
                     ],
                     "properties": {
                         "endIpAddress": "0.0.0.0",
@@ -305,7 +307,7 @@
                     "connectionStrings": [
                         {
                             "name": "VirtoCommerce",
-                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('appServiceName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('appServiceName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('appServiceName'), ';Password=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
+                            "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', variables('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', variables('dbName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', variables('dbName'), ';Password=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
                             "type": "SQLAzure"
                         },
                         {
