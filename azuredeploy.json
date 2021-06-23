@@ -326,7 +326,7 @@
                     "name": "web",
                     "type": "sourcecontrols",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites/', parameters('appServiceName'))]"
+                        "[resourceId('Microsoft.Web/sites/', variables('appServiceNameUnique'))]"
                     ],
                     "properties": {
                         "RepoUrl": "[parameters('repoUrl')]",
@@ -337,7 +337,7 @@
             ]
         },
         {
-            "name": "[parameters('appServiceName_StoreFront')]",
+            "name": "[variables('appServiceName_StoreFrontUnique')]",
             "type": "Microsoft.Web/sites",
             "apiVersion": "2018-11-01",
             "kind": "app",
@@ -347,7 +347,7 @@
             },
             "properties": {
                 "enabled": true,
-                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServiceName_StoreFront'))]",
+                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('appServiceName_StoreFrontUnique'))]",
                 "siteConfig": {
                     "requestTracingEnabled": true,
                     "requestTracingExpirationTime": "9999-12-31T23:59:00Z",
@@ -391,7 +391,7 @@
                     "name": "web",
                     "type": "sourcecontrols",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites/', parameters('appServiceName'))]"
+                        "[resourceId('Microsoft.Web/sites/', variables('appServiceName_StoreFrontUnique'))]"
                     ],
                     "properties": {
                         "RepoUrl": "[parameters('repoUrlStoreFront')]",
@@ -405,7 +405,11 @@
     "outputs": {
         "url": {
             "type": "string",
-            "value": "[concat('https://', parameters('appServiceName'), '.azurewebsites.net')]"
+            "value": "[concat('https://', variables('appServiceNameUnique'), '.azurewebsites.net')]"
+        },
+        "urlStorefront": {
+            "type": "string",
+            "value": "[concat('https://', variables('appServiceName_StoreFrontUnique'), '.azurewebsites.net')]"
         },
         "defaultAdminLogin": {
             "type": "string",
