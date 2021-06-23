@@ -2,25 +2,16 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "baseTime": {
+        "installModuleBundle": {
             "type": "string",
-            "defaultValue": "[take(toLower(utcNow()), 15)]",
+            "allowedValues": [
+                "Demo",
+                "Commerce",
+                "None"
+            ],
+            "defaultValue": "Demo",
             "metadata": {
-                "description": "This time."
-            }
-        },
-        "appServiceName": {
-            "type": "string",
-            "defaultValue": "[concat('backend', parameters('baseTime'))]",
-            "metadata": {
-                "description": "Unique Web App Name of the VirtoCommerce platform to create in .azurewebsites.net"
-            }
-        },
-        "appServiceName_StoreFront": {
-            "type": "string",
-            "defaultValue": "[concat('frontend', parameters('baseTime'))]",
-            "metadata": {
-                "description": "Unique Web App Name of the StoreFront to create in .azurewebsites.net"
+                "description": "Group(s) of modules to install automatically during initial Platform setup. Select None to install empty platform."
             }
         },
         "appServicePlanSkuName": {
@@ -44,23 +35,32 @@
                 "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
             }
         },
+        "baseTime": {
+            "type": "string",
+            "defaultValue": "[take(toLower(utcNow()), 15)]",
+            "metadata": {
+                "description": "This time."
+            }
+        },
+        "appServiceName": {
+            "type": "string",
+            "defaultValue": "[concat('backend', parameters('baseTime'))]",
+            "metadata": {
+                "description": "Unique Web App Name of the VirtoCommerce platform to create in .azurewebsites.net"
+            }
+        },
+        "appServiceName_StoreFront": {
+            "type": "string",
+            "defaultValue": "[concat('frontend', parameters('baseTime'))]",
+            "metadata": {
+                "description": "Unique Web App Name of the StoreFront to create in .azurewebsites.net"
+            }
+        },
         "sqlAdministratorLogin": {
             "type": "string",
             "defaultValue": "sql-admin",
             "metadata": {
                 "description": "The administrator username of the SQL logical server. Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.)"
-            }
-        },
-        "installModuleBundle": {
-            "type": "string",
-            "allowedValues": [
-                "Demo",
-                "Commerce",
-                "None"
-            ],
-            "defaultValue": "Demo",
-            "metadata": {
-                "description": "Group(s) of modules to install automatically during initial Platform setup. Select None to install empty platform."
             }
         },
         "repoUrl": {
@@ -116,7 +116,7 @@
         "cacheSKUFamily": "C",
         "cacheSKUCapacity": 0,
         "searchSKU": "standard",
-        "sqlServerName": "[concat('sqlServer', parameters('baseTime'))]",
+        "sqlServerName": "[concat('sqlserver', parameters('baseTime'))]",
         "dbName": "[concat('db', parameters('baseTime'))]"
     },
     "resources": [
@@ -202,24 +202,6 @@
                 "name": "[parameters('appServiceName_StoreFront')]",
                 "numberOfWorkers": "1",
                 "reserved": false
-            }
-        },
-        {
-            "name": "[parameters('cacheName')]",
-            "type": "Microsoft.Cache/Redis",
-            "apiVersion": "2018-03-01",
-            "properties": {
-                "enableNonSslPort": false,
-                "minimumTlsVersion": "1.2",
-                "sku": {
-                    "name": "[variables('cacheSKUName')]",
-                    "family": "[variables('cacheSKUFamily')]",
-                    "capacity": "[variables('cacheSKUCapacity')]"
-                }
-            },
-            "location": "[resourceGroup().location]",
-            "tags": {
-                "displayName": "redisCache"
             }
         },
         {
@@ -442,6 +424,24 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "[parameters('cacheName')]",
+            "type": "Microsoft.Cache/Redis",
+            "apiVersion": "2018-03-01",
+            "properties": {
+                "enableNonSslPort": false,
+                "minimumTlsVersion": "1.2",
+                "sku": {
+                    "name": "[variables('cacheSKUName')]",
+                    "family": "[variables('cacheSKUFamily')]",
+                    "capacity": "[variables('cacheSKUCapacity')]"
+                }
+            },
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "redisCache"
+            }
         }
     ],
     "outputs": {
