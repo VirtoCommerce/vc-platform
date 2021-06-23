@@ -1,25 +1,31 @@
+<div class="blade-static __bottom">
+    <button class="btn" ng-click="startProcess()" ng-disabled="!canStartProcess() || blade.notification">
+        <span>{{ 'platform.blades.import-main.labels.start-import' | translate }}</span>
+    </button>
+</div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <form class="form" ng-if="!blade.notification">
                 <fieldset>
-                    <div ng-show="uploader.isHTML5 && !uploader.isUploading">
-                        <!-- 3. ng-file-over | ng-file-over="className" -->
-                        <div class="well my-drop-zone panel drag-area" uploader="uploader" nv-file-drop nv-file-over>
-                            <div class="drag-content">
-                                {{ 'platform.blades.import-main.labels.drag-note' | translate }}
-                            </div>
+                    <div>
+                        <label class="form-label">{{ 'platform.blades.import-main.labels.select-file' | translate }}</label>
+                        <div class="form-input">
+                            <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+                            <input type="text" placeholder="Upload import zip" readonly="" ng-model="importRequest.fileName">
+                            <button class="btn __file" type="button" onclick="$('input[type=file]').trigger('click')">
+                                <i class="btn-ico fa fa-file-archive-o"></i>
+                            </button>
                         </div>
                     </div>
                     <div ng-show="uploader.isUploading">
                         <div class="sub-t">{{ 'platform.blades.import-main.labels.upload-progress' | translate }}</div>
-                        <div class="progress-bar"></div>
+                        <div class="progress-bar __aqua" ng-style="{'width': uploader.progress + '%'}" style="width: 0%;"></div>
                     </div>
                 </fieldset>
             </form>
-            <!-- valid zip -->
-            <div class="sub-t" ng-if="importRequest.exportManifest && !blade.notification && !blade.error || blade.notification.jobId && blade.notification.finished">{{ 'platform.blades.import-main.labels.import-data-information' | translate }}</div>
-            <ul class="list __info" ng-if="importRequest.exportManifest && !blade.notification && !blade.error || blade.notification.jobId && blade.notification.finished">
+            <div class="sub-t" ng-if="importRequest.exportManifest">{{ 'platform.blades.import-main.labels.import-data-information' | translate }}</div>
+            <ul class="list __info" ng-if="importRequest.exportManifest">
                 <li class="list-item">
                     <div class="list-t">{{ 'platform.blades.import-main.labels.author' | translate }}</div>
                     <div class="list-descr">{{importRequest.exportManifest.author}}</div>
@@ -33,108 +39,59 @@
                     <div class="list-descr">{{importRequest.exportManifest.platformVersion}}</div>
                 </li>
             </ul>
-            <!-- invalid zip -->
-            <div class="sub-t" ng-if="blade.error && !blade.notification">{{ 'platform.blades.import-main.labels.upload-failed' | translate }}</div>
-            <div class="table-wrapper" ng-if="blade.error && !blade.notification">
-                <table class="table __items">
-                    <tbody>
-                        <tr class="table-item" ng-mouseup="export()" ng-class="{'__selected': 'export' === selectedNodeId}">
-                            <td class="table-col">
-                                <i class="table-ico fa fa-file-archive-o" style="color: red"></i>
-                            </td>
-                            <td class="table-col" ng-click='exportRequest.handleSecurity = !exportRequest.handleSecurity'>
-                                <span class="table-t">{{ importRequest.fileName }}</span>
-                                <span class="table-descr">{{ blade.error }}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
+            
             <form class="form ng-pristine ng-valid" ng-if="importRequest.exportManifest && !blade.notification">
                 <fieldset>
-                    <div class="sub-t">{{ 'platform.blades.import-main.labels.platform-entries' | translate }}</div>
-                    <div class="table-wrapper">
-                        <table class="table">
-                            <tbody>
-                                <tr class="table-item"
-                                    ng-click="importRequest.handleSecurity = !importRequest.handleSecurity"
-                                    ng-class="{ '__disabled' : !importRequest.exportManifest.handleSecurity,  '__selected' : importRequest.handleSecurity }">
-                                    <td class="table-col">
-                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': importRequest.handleSecurity}">&nbsp;</div>
-                                    </td>
-                                    <td class="table-col">
-                                        <span class="table-t">{{ 'platform.blades.import-main.menu.security.title' | translate }}</span>
-                                        <span class="table-descr">{{ 'platform.blades.import-main.menu.security.description' | translate }}</span>
-                                    </td>
-                                </tr>
-                                <tr class="table-item"
-                                    ng-click="importRequest.handleBinaryData = !importRequest.handleBinaryData"
-                                    ng-class="{ '__disabled' : !importRequest.exportManifest.handleBinaryData,  '__selected' : importRequest.handleBinaryData }">
-                                    <td class="table-col">
-                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': importRequest.handleBinaryData}">&nbsp;</div>
-                                    </td>
-                                    <td class="table-col">
-                                        <span class="table-t">{{ 'platform.blades.import-main.menu.binary.title' | translate }}</span>
-                                        <span class="table-descr">{{ 'platform.blades.import-main.menu.binary.description' | translate }}</span>
-                                    </td>
-                                </tr>
-                                <tr class="table-item"
-                                    ng-click="importRequest.handleSettings = !importRequest.handleSettings"
-                                    ng-class="{ '__disabled' : !importRequest.exportManifest.handleSettings,  '__selected' : importRequest.handleSettings }">
-                                    <td class="table-col">
-                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': importRequest.handleSettings}">&nbsp;</div>
-                                    </td>
-                                    <td class="table-col">
-                                        <span class="table-t">{{ 'platform.blades.import-main.menu.settings.title' | translate }}</span>
-                                        <span class="table-descr">{{ 'platform.blades.import-main.menu.settings.description' | translate }}</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <legend>{{ 'platform.blades.import-main.labels.platform-entries' | translate }}</legend>
+                    <div class="list __items">
+                        <label class="list-item" ng-class="{ '__disabled' : !importRequest.exportManifest.handleSecurity }">
+                            <input type="checkbox" ng-model="importRequest.handleSecurity">
+                            <span class="switch"></span>
+                            <span class="list-name">{{ 'platform.blades.import-main.menu.security.title' | translate }}</span>
+                            <span class="list-descr">{{ 'platform.blades.import-main.menu.security.description' | translate }}</span>
+                        </label>
+                        <label class="list-item" ng-class="{ '__disabled' : !importRequest.exportManifest.handleBinaryData }">
+                            <input type="checkbox" ng-model="importRequest.handleBinaryData">
+                            <span class="switch"></span>
+                            <span class="list-name">{{ 'platform.blades.import-main.menu.binary.title' | translate }}</span>
+                            <span class="list-descr">{{ 'platform.blades.import-main.menu.binary.description' | translate }}</span>
+                        </label>
+                        <label class="list-item" ng-class="{ '__disabled' : !importRequest.exportManifest.handleSettings }">
+                            <input type="checkbox" ng-model="importRequest.handleSettings">
+                            <span class="switch"></span>
+                            <span class="list-name">{{ 'platform.blades.import-main.menu.settings.title' | translate }}</span>
+                            <span class="list-descr">{{ 'platform.blades.import-main.menu.settings.description' | translate }}</span>
+                        </label>
                     </div>
                 </fieldset>
                 <fieldset>
-                    <div class="sub-t">{{ 'platform.blades.import-main.labels.choose-modules' | translate }}</div>
-                    <div class="table-wrapper">
-                        <table class="table">
-                            <tbody>
-                                <tr class="table-item"
-                                    ng-repeat="data in importRequest.exportManifest.modules"
-                                    ng-click="data.isChecked = !data.isChecked; updateModuleSelection()"
-                                    ng-class="{ '__selected' : data.isChecked }">
-                                    <td class="table-col">
-                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.isChecked}">&nbsp;</div>
-                                    </td>
-                                    <td class="table-col">
-                                        <span class="table-t">{{data.id}}</span>
-                                        <span class="table-descr">{{'module.' + data.id + '.description' | translate}}</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <legend>{{ 'platform.blades.import-main.labels.choose-modules' | translate }}</legend>
+                    <div class="list __items">
+                        <label class="list-item" ng-repeat="data in importRequest.exportManifest.modules">
+                            <input type="checkbox" ng-model="data.isChecked" ng-change="updateModuleSelection()">
+                            <span class="switch"></span>
+                            <span class="list-name">{{data.id}}</span>
+                            <span class="list-descr">{{'module.' + data.id + '.description' | translate}}</span>
+                        </label>
+                    </div>
+                    <div class="note" ng-if="blade.currentEntities.length == 0">
+                        {{ 'platform.blades.import-main.labels.no-data' | translate }}
                     </div>
                 </fieldset>
             </form>
             <div class="form" ng-if="blade.notification">
                 <div class="block">
                     <div>
-                        <div class="sub-t" ng-show="!blade.notification.jobId || !blade.notification.finished">{{ 'platform.blades.import-main.labels.import-progress' | translate }}</div>
-                        <div class="sub-t" ng-show="blade.notification.jobId && blade.notification.finished">{{ 'platform.blades.import-main.labels.import-finished' | translate }}</div>
-                        <hr>
+                        <div class="sub-t">{{blade.notification.description}}</div>
                         <div class="block" ng-if="blade.notification.created || blade.notification.finished">
                             <p ng-if="blade.notification.created" ng-class="{'no-data': blade.notification.created}" class="text">{{ 'platform.blades.import-main.labels.start' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.created | amParse | date:'mediumTime' }}</p>
                             <p ng-if="blade.notification.finished" ng-class="{'no-data': blade.notification.finished}" class="text">{{ 'platform.blades.import-main.labels.end' | translate }} — <i class="fa fa-clock-o"></i>&nbsp;{{ blade.notification.finished | amParse | date:'mediumTime' }}</p>
-                        </div>
-                        <div ng-show="!blade.notification.jobId || !blade.notification.finished">
-                            <div class="progress-bar"></div>
-                            <div class="table-t">{{blade.notification.description}}</div>
                         </div>
 
                         <div ng-if="blade.notification.errorCount > 0">
                             <span class="sub-t">{{ 'platform.blades.import-main.labels.errors' | translate }}</span>
                             <div class="log">
-                                <p ng-repeat="error in blade.notification.errors track by $index" class="error" ng-bind-html="error">
+                                <p ng-repeat="error in blade.notification.errors track by $index" class="error" ng-bind-html="error" >
                             </div>
                         </div>
                     </div>
