@@ -127,6 +127,7 @@ To address crucial extension requirements the platform contains various **extens
     * [working with widgets](widgets.md)
     * [metaforms](metaform.md)
     * [extending blade toolbar](blade-toolbar.md)
+    * [extending grid columns](extending-grid-columns.md)
 * Extending commerce logic
     * [new payment method registration](new-payment-method-registration.md)
     * [new shipping method registration](new-shipping-method-registration.md)
