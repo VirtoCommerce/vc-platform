@@ -16,7 +16,7 @@
         },
         "appServicePlanSkuName": {
             "type": "string",
-            "defaultValue": "S1",
+            "defaultValue": "B2",
             "allowedValues": [
                 "F1",
                 "D1",
@@ -35,11 +35,23 @@
                 "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
             }
         },
+        "branch": {
+            "type": "string",
+            "defaultValue": "master"
+        },
+        "repoUrl": {
+            "type": "string",
+            "defaultValue": "https://github.com/VirtoCommerce/vc-platform"
+        },
+        "repoUrlStoreFront": {
+            "type": "string",
+            "defaultValue": "https://github.com/VirtoCommerce/vc-storefront"
+        },
         "baseTime": {
             "type": "string",
             "defaultValue": "[take(toLower(utcNow()), 15)]",
             "metadata": {
-                "description": "This time."
+                "description": "UTC time of template side"
             }
         },
         "appServiceName": {
@@ -62,18 +74,6 @@
             "metadata": {
                 "description": "The administrator username of the SQL logical server. Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.)"
             }
-        },
-        "repoUrl": {
-            "type": "string",
-            "defaultValue": "https://github.com/VirtoCommerce/vc-platform"
-        },
-        "repoUrlStoreFront": {
-            "type": "string",
-            "defaultValue": "https://github.com/VirtoCommerce/vc-storefront"
-        },
-        "branch": {
-            "type": "string",
-            "defaultValue": "master"
         },
         "searchServiceName": {
             "type": "string",
@@ -236,6 +236,18 @@
                 "name": "[parameters('appServiceName')]",
                 "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServiceName'))]",
                 "siteConfig": {
+                    "requestTracingEnabled": true,
+                    "requestTracingExpirationTime": "9999-12-31T23:59:00Z",
+                    "httpLoggingEnabled": true,
+                    "logsDirectorySizeLimit": 100,
+                    "detailedErrorLoggingEnabled": true,
+                    "clientAffinityEnabled": true,
+                    "use32BitWorkerProcess": false,
+                    "alwaysOn": true,
+                    "httpsOnly": true,
+                    "http20Enabled": true,
+                    "minTlsVersion": "1.2",
+                    "ftpsState": "Disabled",
                     "appSettings": [
                         {
                             "name": "ExternalModules:AutoInstallModuleBundles",
