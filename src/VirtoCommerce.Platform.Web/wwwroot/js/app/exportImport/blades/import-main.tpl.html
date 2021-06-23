@@ -33,7 +33,6 @@
                     <div class="list-descr">{{importRequest.exportManifest.platformVersion}}</div>
                 </li>
             </ul>
-            <!--  -->
             <!-- invalid zip -->
             <div class="sub-t" ng-if="blade.error && !blade.notification">{{ 'platform.blades.import-main.labels.upload-failed' | translate }}</div>
             <div class="table-wrapper" ng-if="blade.error && !blade.notification">
@@ -51,7 +50,6 @@
                     </tbody>
                 </table>
             </div>
-            <!--  -->
 
             <form class="form ng-pristine ng-valid" ng-if="importRequest.exportManifest && !blade.notification">
                 <fieldset>

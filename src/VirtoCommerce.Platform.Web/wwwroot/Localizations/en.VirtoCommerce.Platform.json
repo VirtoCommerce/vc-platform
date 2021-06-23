@@ -177,6 +177,7 @@
                 "title": "Data import",
                 "labels": {
                     "start-import": "Start import",
+                    "select-file": "Select .zip file to import. The file must be produced by Commerce Manager data export.",
                     "drag-note": "Drag and drop .zip file to import. The file must be produced by Commerce Manager data export.",
                     "upload-failed": "Upload failed",
                     "upload-progress": "Upload progress",

@@ -27,8 +27,7 @@ angular.module('platformWebApp')
         $scope.startProcess = function () {
             blade.isLoading = true;
             exportImportResourse.runImport($scope.importRequest,
-                function (data) { blade.notification = data; blade.isLoading = false; },
-                function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
+                function (data) { blade.notification = data; blade.isLoading = false; });
 
             blade.toolbarCommands.splice(0, 1, commandCancel);
         }
@@ -40,8 +39,7 @@ angular.module('platformWebApp')
                 return blade.notification && !blade.notification.finished;
             },
             executeMethod: function () {
-                exportImportResourse.taskCancel({ jobId: blade.notification.jobId }, null, function (data) {
-                });
+                exportImportResourse.taskCancel({ jobId: blade.notification.jobId }, null, null);
             }
         };
 
