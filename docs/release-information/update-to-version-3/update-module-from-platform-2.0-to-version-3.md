@@ -192,7 +192,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
         > **Note:** if there are extended entities then need to explicitly update `Discriminator` to extended type. For more details please check [extension article](../../techniques/extend-DB-model.md#L63) Discriminator column creation part.
 
 5. If separated databases are used by the solution, follow the steps in [Prepare separated databases for VC v3](prepare-separated-databases-for-v3.md).
-6. It's useful sometimes to apply migrations without starting the platform. There is an utility to extract and apply migrations (integrated to vc-build tool). Take a reference to [Grab migrator utility](https://github.com/VirtoCommerce/vc-platform/tree/master/build/GrabMigrator/samples).
+6. It's useful sometimes to apply migrations without starting the platform. There is an utility to extract and apply migrations (integrated to vc-build tool). Take a reference to [Grab migrator utility](https://github.com/VirtoCommerce/vc-build/tree/main/GrabMigrator/samples).
 
 ## 5. Make changes in CustomerReviews&#46;Web project
 1. Execute "**Reload Project**" on CustomerReviews.**Web** project in Solution Explorer (as it was unloaded earlier).
@@ -323,6 +323,6 @@ This article describes how to update an existing [CustomerReviews sample](https:
 
 ## 7. Create module package
 
-1. Please, read the article about [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/build/README.md).
-1. Add **.nuke** file to be able to use VirtoCommerce.GlobalTool. It should contain the solution filename, e.g., [.nuke in vc-module-customer](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/.nuke)
-1. Add **Directory.Build.props** file to be able to configure package release versions. Check [Directory.Build.props in vc-module-customer](https://github.com/VirtoCommerce/vc-module-customer/blob/release/3.0.0/Directory.Build.Props) for details.
+1. Please, read the article about [VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-build/blob/main/README.md).
+1. Add **.nuke** file to be able to use VirtoCommerce.GlobalTool. It should contain the solution filename, e.g., [.nuke in vc-module-customer](https://github.com/VirtoCommerce/vc-module-customer/blob/master/.nuke)
+1. Add **Directory.Build.props** file to be able to configure package release versions. Check [Directory.Build.props in vc-module-customer](https://github.com/VirtoCommerce/vc-module-customer/blob/master/Directory.Build.props) for details.
