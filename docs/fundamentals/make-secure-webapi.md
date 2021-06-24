@@ -367,8 +367,7 @@ public sealed class OrderAuthorizationHandler : PermissionAuthorizationHandlerBa
 In this implementation, we load all **StoreSelectedScope** objects that are assigned to the `order:read` permission in the role definition, and then use the stores' identifiers are retrieved from these scopes to change the **CustomerOrderSearchCriteria** for  enforce policy to return only orders for stores that are defined in the permission scopes. 
 
 ## Permissions localizations
-
-Virto platform manager support localization resources for text, captions, tips etc. this is also true for permission names. This is achieved by adding into module localization resource file   resources with a special key names
+Virto Platform Manager supports localization resources for text, captions, tips, etc. This is also true for permission names. This is achieved by adding resources with a special key names into module localization resource file:
 
 > *‘permissions:’ + permission.name*
 
