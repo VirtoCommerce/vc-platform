@@ -15,7 +15,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNet.Security.OAuth.Validation" Version="2.0.0" />
         <PackageReference Include="FluentValidation" Version="8.6.3" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
         <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.15.0" />
@@ -33,19 +32,19 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.13" />
         <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.1.8" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-        <PackageReference Include="OpenIddict" Version="2.0.1" />
-        <PackageReference Include="OpenIddict.Core" Version="2.0.1" />
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="2.0.1" />
+        <PackageReference Include="OpenIddict.AspNetCore" Version="3.0.4" />
+        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
         <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.2" />
         <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="5.6.3" />
+        <PackageReference Include="System.Linq.Async" Version="5.0.0" />
         <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
         <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
     </ItemGroup>
