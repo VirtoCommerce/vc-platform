@@ -28,7 +28,7 @@ angular.module('platformWebApp')
             queryRegions: (countryCode) => {
                 var results = $resource('api/platform/common/countries/:countryCode/regions', { countryCode: countryCode }).query((data) => {
                     for (var x of data) {
-                        var translateKey = 'platform.countries.' + countryCode + '.' + x.id;
+                        var translateKey = 'platform.' + countryCode + '.' + x.id;
                         var translated = $translate.instant(translateKey);
                         x.displayName = translated === translateKey ? x.name : translated;
                     }
