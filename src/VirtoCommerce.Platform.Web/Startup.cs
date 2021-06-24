@@ -196,8 +196,8 @@ namespace VirtoCommerce.Platform.Web
             // which saves you from doing the mapping in your authorization controller.
             services.Configure<IdentityOptions>(options =>
             {
-                options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Name;
-                options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Subject;
+                options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Subject;
+                options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Name;
                 options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
             });
 
@@ -236,7 +236,7 @@ namespace VirtoCommerce.Platform.Web
 
                         options.TokenValidationParameters = new TokenValidationParameters()
                         {
-                            NameClaimType = OpenIddictConstants.Claims.Name,
+                            NameClaimType = OpenIddictConstants.Claims.Subject,
                             RoleClaimType = OpenIddictConstants.Claims.Role,
                             ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
                             ValidateIssuerSigningKey = true,
