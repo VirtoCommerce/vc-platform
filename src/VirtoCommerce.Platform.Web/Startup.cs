@@ -420,6 +420,8 @@ namespace VirtoCommerce.Platform.Web
             // get rid of calling IServiceCollection.BuildServiceProvider from the platform and modules code, each BuildServiceProvider call leads to the running the
             // extra AI module and causes the hight CPU utilization and telemetry data flood on production env.
             services.AddAppInsightsTelemetry(Configuration);
+
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -526,6 +528,8 @@ namespace VirtoCommerce.Platform.Web
 
                 //Setup SignalR hub
                 endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
+
+                endpoints.MapHealthChecks();
             });
 
             //Seed default users
@@ -540,14 +544,12 @@ namespace VirtoCommerce.Platform.Web
             var mvcJsonOptions = app.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
 
             //Json converter that resolve a meta-data for all incoming objects of  DynamicObjectProperty type
-            //in order to be able pass { name: "dynPropName", value: "myVal" } in the incoming requests for dynamic properties, and do not care about meta-data loading. see more details: PT-48 
+            //in order to be able pass { name: "dynPropName", value: "myVal" } in the incoming requests for dynamic properties, and do not care about meta-data loading. see more details: PT-48
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new DynamicObjectPropertyJsonConverter(app.ApplicationServices.GetService<IDynamicPropertyMetaDataResolver>()));
-
 
             //The converter is responsible for the materialization of objects, taking into account the information on overriding
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
-          
         }
     }
 }
