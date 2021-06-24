@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VirtoCommerce.Platform.Security.Migrations
 {
-    public partial class OpenIddictUpdate2 : Migration
+    public partial class OpenIddictUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
