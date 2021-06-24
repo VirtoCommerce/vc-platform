@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Hangfire;
 using OpenIddict.Core;
@@ -10,10 +11,10 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
     /// </summary>
     public class PruneExpiredTokensJob
     {
-        private readonly OpenIddictTokenManager<OpenIddictToken> _openIddictTokenManager;
-        private readonly OpenIddictAuthorizationManager<OpenIddictAuthorization> _openIddictAuthorizationManager;
+        private readonly OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> _openIddictTokenManager;
+        private readonly OpenIddictAuthorizationManager<OpenIddictEntityFrameworkCoreAuthorization> _openIddictAuthorizationManager;
 
-        public PruneExpiredTokensJob(OpenIddictTokenManager<OpenIddictToken> openIddictTokenManager, OpenIddictAuthorizationManager<OpenIddictAuthorization> openIddictAuthorizationManager)
+        public PruneExpiredTokensJob(OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> openIddictTokenManager, OpenIddictAuthorizationManager<OpenIddictEntityFrameworkCoreAuthorization> openIddictAuthorizationManager)
         {
             _openIddictTokenManager = openIddictTokenManager;
             _openIddictAuthorizationManager = openIddictAuthorizationManager;
@@ -28,8 +29,8 @@ namespace VirtoCommerce.Platform.Web.Security.BackgroundJobs
         // Failed job goes to "Failed" state (by default) after retries exhausted.
         public async Task Process()
         {
-            await _openIddictTokenManager.PruneAsync();
-            await _openIddictAuthorizationManager.PruneAsync();            
+            await _openIddictTokenManager.PruneAsync(DateTimeOffset.UtcNow);
+            await _openIddictAuthorizationManager.PruneAsync(DateTimeOffset.UtcNow);
         }
     }
 }

@@ -2,8 +2,6 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AspNet.Security.OAuth.Validation;
-using AspNet.Security.OpenIdConnect.Primitives;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +19,7 @@ using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Security;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 using PlatformPermissions = VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -145,16 +144,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
+        [Authorize]
         [Route("userinfo")]
         public async Task<ActionResult<Claim[]>> Userinfo()
         {
             var user = await UserManager.GetUserAsync(User);
             if (user == null)
             {
-                return BadRequest(new OpenIdConnectResponse
+                return BadRequest(new OpenIddictResponse
                 {
-                    Error = OpenIdConnectConstants.Errors.InvalidGrant,
+                    Error = Errors.InvalidGrant,
                     ErrorDescription = "The user profile is no longer available."
                 });
             }
@@ -164,22 +163,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 //TODO: replace to PrinciplaClaims
 
                 // Note: the "sub" claim is a mandatory claim and must be included in the JSON response.
-                [OpenIdConnectConstants.Claims.Subject] = await UserManager.GetUserIdAsync(user)
+                [Claims.Subject] = await UserManager.GetUserIdAsync(user)
             };
 
-            if (User.HasClaim(OpenIdConnectConstants.Claims.Scope, OpenIdConnectConstants.Scopes.Email))
+            if (User.HasClaim(Claims.Scope, Scopes.Email))
             {
-                claims[OpenIdConnectConstants.Claims.Email] = await UserManager.GetEmailAsync(user);
-                claims[OpenIdConnectConstants.Claims.EmailVerified] = await UserManager.IsEmailConfirmedAsync(user);
+                claims[Claims.Email] = await UserManager.GetEmailAsync(user);
+                claims[Claims.EmailVerified] = await UserManager.IsEmailConfirmedAsync(user);
             }
 
-            if (User.HasClaim(OpenIdConnectConstants.Claims.Scope, OpenIdConnectConstants.Scopes.Phone))
+            if (User.HasClaim(Claims.Scope, Scopes.Phone))
             {
-                claims[OpenIdConnectConstants.Claims.PhoneNumber] = await UserManager.GetPhoneNumberAsync(user);
-                claims[OpenIdConnectConstants.Claims.PhoneNumberVerified] = await UserManager.IsPhoneNumberConfirmedAsync(user);
+                claims[Claims.PhoneNumber] = await UserManager.GetPhoneNumberAsync(user);
+                claims[Claims.PhoneNumberVerified] = await UserManager.IsPhoneNumberConfirmedAsync(user);
             }
 
-            if (User.HasClaim(OpenIdConnectConstants.Claims.Scope, OpenIddictConstants.Scopes.Roles))
+            if (User.HasClaim(Claims.Scope, Scopes.Roles))
             {
                 claims["roles"] = JArray.FromObject(await UserManager.GetRolesAsync(user));
             }
