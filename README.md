@@ -7,7 +7,6 @@
 [![Documentation](https://img.shields.io/badge/docs-read-brightgreen.svg)](https://virtocommerce.com/docs)&nbsp;[![Discourse topics](https://img.shields.io/discourse/topics?label=community&logo=community&server=http%3A%2F%2Fcommunity.virtocommerce.com)](https://community.virtocommerce.com) [![Contributors](https://img.shields.io/github/contributors/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/graphs/contributors)
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fmaster%2Fazuredeploy.json)
-[![Deploy to Azure Test](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2FPT-1262%2Fazuredeploy.json)
 
 Virto Commerce is an open-source platform for an extensible e-commerce applications.
 
