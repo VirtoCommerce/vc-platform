@@ -6,7 +6,6 @@ angular.module('platformWebApp')
         blade.title = 'platform.blades.import-main.title';
         blade.isLoading = false;
         $scope.importRequest = {};
-        var origManifest;
 
         $scope.$on("new-notification-event", function (event, notification) {
             if (notification.jobId && notification.finished) {
@@ -102,8 +101,6 @@ angular.module('platformWebApp')
                 $scope.importRequest.fileName = asset[0].name;
 
                 exportImportResourse.loadExportManifest({ fileUrl: $scope.importRequest.fileUrl }, function (data) {
-                    origManifest = angular.copy(data);
-
                     // select all available data for import
                     $scope.importRequest.handleSecurity = data.handleSecurity;
                     $scope.importRequest.handleSettings = data.handleSettings;
