@@ -7,6 +7,12 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "28 June"
+    * Virto Commerce on Azure Functions (from Virto DevLabs)
+    * Added full-text search for order documents
+    * OpenIddict Updated to 3.0
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-28-june-2021/349)
 
 !!! done "6 June"
     * New posts: Measure elapsed times for domain event handlers, How to use Hangfire Enqueue operation, Introduction to Virto Commerce CLI tools, Build automation, Package management, How to run the platform on azure functions, BA Documentation
