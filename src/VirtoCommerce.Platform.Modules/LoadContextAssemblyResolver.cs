@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,15 @@ namespace VirtoCommerce.Platform.Modules
         private readonly ILogger<LoadContextAssemblyResolver> _logger;
         private readonly Dictionary<string, Assembly> _loadedAssemblies = new Dictionary<string, Assembly>();
         private readonly bool _isDevelopmentEnvironment;
+
+        private readonly IList<string> _ignoredAssemblies = new[]
+        {
+            "AspNet.Security.OpenIdConnect.Extensions",
+            "AspNet.Security.OpenIdConnect.Primitives",
+            "AspNet.Security.OpenIdConnect.Server",
+            "OpenIddict.Mvc",
+            "CryptoHelper",
+        };
 
         public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
         {
@@ -77,7 +87,20 @@ namespace VirtoCommerce.Platform.Modules
             {
                 try
                 {
-                    var loadedAssembly = LoadAssemblyCached(dependency, loadContext) ?? throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath);
+                    var loadedAssembly = LoadAssemblyCached(dependency, loadContext);
+                    if (loadedAssembly == null)
+                    {
+                        // Temprorary workaround to ensure seamless update to OpenIddictV3:
+                        // skips unsuded OpenIddictV2 assemblies that might not be present on the machine from being loaded by modules (in Platform.Security package)
+                        // will be removed later.
+                        if (_ignoredAssemblies.Contains(dependency.Name.Name, StringComparer.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath);
+                    }
+
                     if (mainAssemblyName.EqualsInvariant(loadedAssembly.GetName().Name))
                     {
                         mainAssembly = loadedAssembly;

@@ -61,7 +61,7 @@
      - Returning *async Task* or *async Task<T\>*
      - The endpoint names left unchanged for backward compatibility (**not ending** with "Async")
 #### DevOps
-  - Nuke - [Build Automation System for C#/.NET aka VirtoCommerce.GlobalTool](../CLI-tools/introduction.md)
+  - Nuke - [Build Automation System for C#/.NET aka VirtoCommerce.GlobalTool](https://github.com/VirtoCommerce/vc-build/blob/main/docs/CLI-tools/introduction.md)
 #### Dynamic properties
   - Dynamic properties registration logic changed. Now manual registration used instead of reflection
 #### Export/Import
