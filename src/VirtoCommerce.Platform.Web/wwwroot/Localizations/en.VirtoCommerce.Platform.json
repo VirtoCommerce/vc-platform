@@ -154,7 +154,7 @@
                     "platform-entries": "Platform entries",
                     "choose-modules": "Choose modules to export",
                     "download-url": "Download Url",
-                    "errors": "Errors",                    
+                    "errors": "Errors",
                     "start": "Start",
                     "end": "End"
                 },
@@ -178,7 +178,11 @@
                 "labels": {
                     "start-import": "Start import",
                     "select-file": "Select .zip file to import. The file must be produced by Commerce Manager data export.",
+                    "drag-note": "Drag and drop .zip file to import. The file must be produced by Commerce Manager data export.",
+                    "upload-failed": "Upload failed",
                     "upload-progress": "Upload progress",
+                    "import-progress": "Import progress",
+                    "import-finished": "Import finished",
                     "import-data-information": "Import data information",
                     "author": "Author",
                     "data-file-created": "Data file created",
