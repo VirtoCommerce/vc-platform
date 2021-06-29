@@ -132,7 +132,7 @@
                     "platform-entries": "Позиции платформы",
                     "choose-modules": "Выберите модули для экспорта",
                     "download-url": "Загрузить Url",
-                    "errors": "Ошибки",                    
+                    "errors": "Ошибки",
                     "start": "Начало",
                     "end": "Конец"
                 },
@@ -156,7 +156,11 @@
                 "labels": {
                     "start-import": "Начать импорт",
                     "select-file": "Выберите файл .zip для импорта. Файл должен быть создан путем экспорта данных Commerce Manager.",
+                    "drag-note": "Перетащите файл .zip для импорта. Файл должен быть создан путем экспорта данных Commerce Manager.",
+                    "upload-failed": "Загрузка файла не удалась",
                     "upload-progress": "Прогресс загрузки",
+                    "import-progress": "Процесс импорта",
+                    "import-finished": "Импорт завершён",
                     "import-data-information": "Информация об импорте данных",
                     "author": "Автор",
                     "data-file-created": "Создан файл с данными",
