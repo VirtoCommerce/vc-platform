@@ -1,4 +1,4 @@
-﻿---
+---
 title: Deployment Environments
 description: The article about Virto Commerce deployment environments
 layout: docs
@@ -17,7 +17,7 @@ Once the features are implemented and considered fairly stable, they get merged 
 
 After all of the bugs are fixed, the release manager promotes a new version to staging. Code is merged from QA branch into the staging branch and automatically deployed to the staging environment. On this stage QA testers can be both internal staff and external reviewers.
 
-The process of bug fixing continues until the QA team declares the staging version is вЂњokay to releaseвЂќ. The release manager check the release notes and deploy to the production environment.
+The process of bug fixing continues until the QA team declares the staging version is `okay to release`. The release manager check the release notes and deploy to the production environment.
 
-> Only вЂњrelease managerвЂќ can deploy versions to the next stage.В Of course, on some projects, the developer, the release manager, and QA tester can actually be the same person. The important point, though, is that there is always only one person responsible for deploying the new version.
+> Only `release manager` can deploy versions to the next stage. Of course, on some projects, the developer, the release manager, and QA tester can actually be the same person. The important point, though, is that there is always only one person responsible for deploying the new version.
 > We recommend always deploying major releases to production at a scheduled time, of which the whole team is aware of.

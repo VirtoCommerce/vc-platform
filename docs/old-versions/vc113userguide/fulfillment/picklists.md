@@ -22,15 +22,15 @@ The following details are included in the picklist by default:
 
 Once a picklist has been created, the status of the shipment is changed to "Packing". A picklist is assigned to the user who created it. An administrator or worker can view the status of all picklists and, if necessary, to reprint a picklist.
 
-Once a shipment is in the вЂњPackingвЂќ state, users may print a packing slip for the order. A packing slip is similar to an invoice, and is included with the parcel.В 
+Once a shipment is in the `Packing` state, users may print a packing slip for the order. A packing slip is similar to an invoice, and is included with the parcel. 
 
-At this stage in the order life cycle, the funds for the shipment have not yet been captured. The picker must вЂњcomplete the orderвЂќ when a shipment has been packaged and shipped. At that point, funds will be transferred.
+At this stage in the order life cycle, the funds for the shipment have not yet been captured. The picker must `complete the order` when a shipment has been packaged and shipped. At that point, funds will be transferred.
 
 ## Creating a picklist
 
-1. OpenВ **Fulfillment**В module.
+1. Open **Fulfillment** module.
 2. Open **Picklists** tab.
-3. ClickВ **Add**В button.
+3. Click **Add** button.
   <img src="../../../assets/images/docs/image2013-5-29_17_38_44.png" />
 4. In the popup dialog select appropriate Fulfillment center (if it is the only one - it will be selected automatically)
   <img src="../../../assets/images/docs/image2013-6-14_16_18_42.png" />
@@ -41,7 +41,7 @@ The created picklist will be added to the list of picklists.
 
 ## Printing a picklist
 
-1. OpenВ **Fulfillment**В module.
+1. Open **Fulfillment** module.
 2. Open **Picklists** tab.
 3. Select the pick list to edit. double-click it.
 4. Click **Print picklist** button.
@@ -50,10 +50,10 @@ The picklist PDF file will be generated and opened to print.
 
 ## Printing a picklist slips
 
-1. OpenВ **Fulfillment**В module.
+1. Open **Fulfillment** module.
 2. Open **Picklists** tab.
 3. Select the pick list to edit. double-click it.
-4. ClickВ **Print slips**В button.
+4. Click **Print slips** button.
 
 The slips PDF file will be generated and opened to print.
 
@@ -61,7 +61,7 @@ The slips PDF file will be generated and opened to print.
 
 ## Completing a shipment
 
-1. OpenВ FulfillmentВ module.
+1. Open Fulfillment module.
 2. In the right upper corner click
   <img src="../../../assets/images/docs/image2013-6-14_16_32_40.png" />
   button.

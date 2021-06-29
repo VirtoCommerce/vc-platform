@@ -23,7 +23,7 @@ Setup automatic creating of testing, staging or production environments.
 
 ## Preparation
 
-Follow theВ [Source Code Azure Deployment Guide](docs/old-versions/vc113devguide/development-environment/source-code-azure-deployment) to setup deployment on your Build Server. After you able to deploy manually using the powershell scripts, you can automate the process using the build infrastructure.
+Follow the [Source Code Azure Deployment Guide](docs/old-versions/vc113devguide/development-environment/source-code-azure-deployment) to setup deployment on your Build Server. After you able to deploy manually using the powershell scripts, you can automate the process using the build infrastructure.
 
 ## Preparing TFS Build Server
 

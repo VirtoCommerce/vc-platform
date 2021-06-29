@@ -31,7 +31,7 @@ The other setting is for Follow us links. It is a collection of settings contain
 
 <img src="../../../../assets/images/FollowLinks.png" />
 
-The follow us links can be generated using addThis smart layers as shown in sample below: (More information for customization atВ <a href="http://support.addthis.com/" rel="nofollow">http://support.addthis.com/</a>)
+The follow us links can be generated using addThis smart layers as shown in sample below: (More information for customization at <a href="http://support.addthis.com/" rel="nofollow">http://support.addthis.com/</a>)
 
 ```
 <script type="text/javascript">
@@ -51,7 +51,7 @@ The follow us links can be generated using addThis smart layers as shown in samp
         'theme': 'transparent'
       }
     };
-В 
+ 
     @foreach (var follow in @SettingsHelper.GetSettings("FollowServices"))
     {
       var followStrSplit = follow.ToString().Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
@@ -72,7 +72,7 @@ The follow us links can be generated using addThis smart layers as shown in samp
       });
       </text>
     }
-В В В В В В В В В В В В В 
+             
     // now render Recommended and What's Next Layers
     window.addthis.layers(layers);
   };

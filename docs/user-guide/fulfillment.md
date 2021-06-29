@@ -5,11 +5,11 @@ layout: docs
 date: 2015-06-23T14:12:57.850Z
 priority: 11
 ---
-Order fulfillment includes the steps involved in receiving, processing and delivering orders to end customers. Usually the process of fulfillment in ecommerce inlcudes receiving inventory from a supplier (including its counting, instecting, labeling and etc.), storage of the inventory, order processing (including preparing, packing and exchange if necessary) and shipping. There also may be returns that are counted according to the store rules and conditions. In Virto Commerce manager fulfillment lifecycle looks as follows.В 
+Order fulfillment includes the steps involved in receiving, processing and delivering orders to end customers. Usually the process of fulfillment in ecommerce inlcudes receiving inventory from a supplier (including its counting, instecting, labeling and etc.), storage of the inventory, order processing (including preparing, packing and exchange if necessary) and shipping. There also may be returns that are counted according to the store rules and conditions. In Virto Commerce manager fulfillment lifecycle looks as follows. 
 
 ## Shipment created
 
-This is the first step of fulfillment. A shipment includes one or more products of the order. Order can contain one or more shipments.В   
+This is the first step of fulfillment. A shipment includes one or more products of the order. Order can contain one or more shipments.   
 
 ## Inventory assigned
 

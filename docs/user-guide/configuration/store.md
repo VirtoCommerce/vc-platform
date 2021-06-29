@@ -28,7 +28,7 @@ New store blade
 ![](../../assets/images/docs/base64d1cdd73a82073c85.png)
 Store management details UI
 
-The most important properties goes first. Then thereвЂ™s a list of available widgets. It includes:
+The most important properties goes first. Then theres a list of available widgets. It includes:
 
 * languages
 * currencies

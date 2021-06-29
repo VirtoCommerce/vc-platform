@@ -16,7 +16,7 @@ Windows Management Framework 3.0. Some clean OS misses it. Download and install 
 ## Installing VirtoCommerce
 
 1. If you have previous version of VirtoCommerce SDK installed. Uninstall it before installing the new version.
-2. Download the latestВ package fromВ here.
+2. Download the latest package from here.
 3. Launch setup.
 4. Select to install VirtoCommerce SDK and search, check if you agree with the license terms.
   <img src="../../../assets/images/docs/image2013-10-25_11_53_45.png" />
@@ -40,7 +40,7 @@ Windows Management Framework 3.0. Some clean OS misses it. Download and install 
 12. When all features are configured click finish. Now you should have a project ready. Right click on SampleProject to launch it in browser or explore the source code. You can also edit in Visual Studio.
   <img src="../../../assets/images/docs/image2013-9-23_10_26_12.png" />
 
-**NEXT STEPS**: Please follow theВ [New Store getting started](docs/old-versions/vc113devguide/development-environment/new-store-getting-started)В tutorial to set up a new store.
+**NEXT STEPS**: Please follow the [New Store getting started](docs/old-versions/vc113devguide/development-environment/new-store-getting-started) tutorial to set up a new store.
 
 ## Troubleshooting
 

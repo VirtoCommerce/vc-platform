@@ -7,16 +7,16 @@ priority: 3
 ---
 ## Introduction and glossary
 
-A blade toolbarВ is a dedicated area inside **blade** for adding **commands**. Hereinafter, theВ toolbar commands shall be referenced to asВ **toolbar items**.
+A blade toolbar is a dedicated area inside **blade** for adding **commands**. Hereinafter, the toolbar commands shall be referenced to as **toolbar items**.
 
 ![](../../../assets/images/docs/image2015-7-9_18-36-5.png)
 Sample depicting 4 commands inside toolbar.  
 
-Toolbar items can be added to aВ **blade instance**В directly or using Virto Commerce platform toolbar extensibility service.
+Toolbar items can be added to a **blade instance** directly or using Virto Commerce platform toolbar extensibility service.
 
 ## Adding toolbar items to blade instance directly.
 
-Toolbar items are usually defined and added in angularJS controller, which is bound to blade (UI). Command adding to toolbar is straight forward: defineВ **$scope.blade.toolbarCommands** array with necessary commands.
+Toolbar items are usually defined and added in angularJS controller, which is bound to blade (UI). Command adding to toolbar is straight forward: define **$scope.blade.toolbarCommands** array with necessary commands.
 
 ```
 $scope.blade.toolbarCommands = [
@@ -67,7 +67,7 @@ $scope.blade.toolbarCommands = [
 
 ## Adding toolbar items from external code
 
-A dedicated service is used for adding toolbar items externally (without having a reference to blade instance). The preferred place for toolbar item registration is angularJSВ **module run** block.В Reference toВ '**platformWebApp.toolbarService**' asВ **toolbarService**, create command option and call '**register**' on the service:
+A dedicated service is used for adding toolbar items externally (without having a reference to blade instance). The preferred place for toolbar item registration is angularJS **module run** block. Reference to '**platformWebApp.toolbarService**' as **toolbarService**, create command option and call '**register**' on the service:
 
 ```
 toolbarService.register({
@@ -94,5 +94,5 @@ Toolbar item definition structure:
 |name|Display name for the command.|
 |icon|The icon.|
 |executeMethod|Function to execute on command click. The current blade parameter is passed.|
-|canExecuteMethod|Function to determine if command could be executed. The command is disabled in the toolbar if booleanВ *false *value**returned.|
+|canExecuteMethod|Function to determine if command could be executed. The command is disabled in the toolbar if boolean *false *value**returned.|
 |index|The 0 based position to insert the item in the toolbar.|

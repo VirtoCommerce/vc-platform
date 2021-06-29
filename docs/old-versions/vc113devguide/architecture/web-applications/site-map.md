@@ -43,7 +43,7 @@ The sitemap file is used for defining nodes that will be mapped to current page.
     </mvcSiteMapNode>
 
     <!-- Special node for building breadcrums-->
-    <mvcSiteMapNode title="Breadcrumb" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.BreadcrumbNodeProvider, VirtoCommerce.Web"></mvcSiteMapNode>В В  
+    <mvcSiteMapNode title="Breadcrumb" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.BreadcrumbNodeProvider, VirtoCommerce.Web"></mvcSiteMapNode>   
   </mvcSiteMapNode>
 </mvcSiteMap>
 ```

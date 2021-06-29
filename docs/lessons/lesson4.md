@@ -1,4 +1,4 @@
-﻿---
+---
 title: Lessons 4 - How to build and customize platform manager Web UI (AngularJS)
 description: Lessons 4 - How to build and customize platform manager Web UI (AngularJS)
 layout: docs
@@ -78,7 +78,7 @@ A widget container is a placeholder control for individual widgets.
 
 ![Widget container](../assets/images/docs/lesson4-blade-widgetcontainer.png)
 
-Read more in the [Widgets](https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/widgets) article.
+Read more in the [Widgets](https://virtocommerce.com/../../developer-guide/working-with-platform-manager/basic-functions/widgets.md) article.
 
 ## Scripts debugging
 

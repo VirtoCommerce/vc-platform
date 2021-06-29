@@ -12,7 +12,7 @@ In this how-to we described how to export catalog as csv format.
 Here are a few examples of what you can do with exported data:
 * import to another system
 * edit your products in bulk. Instead of editing products one at a time, you can save time by exporting your products to a CSV file. You can make changes to the CSV file, and import the CSV file to update your products.
-* move to another working VCF platform В instance (staging, production)
+* move to another working VCF platform  instance (staging, production)
 
 ## Start exporting products to CSV
 
@@ -23,7 +23,7 @@ Define what you want to export
 
 To begin export select specific objects or nothing if you want to export the entire catalog and click the export action in the toolbar.
 
-![](../../assets/images/docs/base64252cb259e4e2c1ea.png) В 
+![](../../assets/images/docs/base64252cb259e4e2c1ea.png)  
 
 In next screen need select the appropriate exported format from the list presented, in our case it will be csv.
 
@@ -35,7 +35,7 @@ Now select price list, which prices and warehouse and which inventories will be 
 
 ## Control export progress
 
-In nextscreen click the вЂњStart exportвЂќ button and the system will start the exporting process.
+In nextscreen click the `Start export` button and the system will start the exporting process.
 
 You will be informed about your exporting progress status by a special notification event in the notification area and in the blade that contains exporting progress information and errors.
 

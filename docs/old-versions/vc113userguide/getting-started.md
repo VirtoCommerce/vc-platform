@@ -21,7 +21,7 @@ When a user logged on to the Virto Commerce client the first thing he can view i
 
 <img src="../../assets/images/docs/dashboard.PNG" />
 
-The dashboard reflects the state of key commerce blocks, such as orders, customersвЂ™ cases,В  sales dynamics and other brief information you can view depending on your access rights. You can read more about dashboard blocks in [Dashboard](docs/old-versions/vc113userguide/dashboard).
+The dashboard reflects the state of key commerce blocks, such as orders, customers cases,  sales dynamics and other brief information you can view depending on your access rights. You can read more about dashboard blocks in [Dashboard](docs/old-versions/vc113userguide/dashboard).
 
 Above the dashboard (just click the white arrow) the general menu is located with the access to all of the Virto Commerce modules ([Customer Service](docs/old-versions/vc113userguide/customer-service), [Orders](docs/old-versions/vc113userguide/order-management), [Catalogs](docs/old-versions/vc113userguide/merchandise-management), [Price Lists](docs/old-versions/vc113userguide/price-lists), [Marketing](docs/old-versions/vc113userguide/marketing), [Fulfillment](docs/old-versions/vc113userguide/fulfillment), [Users](docs/old-versions/vc113userguide/users-management-roles-and-role-assignment) and [Settings](docs/old-versions/vc113userguide/settings). The navigation to required module is done with a click on it.
 
@@ -29,7 +29,7 @@ Above the dashboard (just click the white arrow) the general menu is located wit
 
 <img src="../../assets/images/docs/navigation-blocks.PNG" />
 
-You can also move to a certain commerce module using dashboard buttons. Just click required block. For example,В  click вЂњActive PromotionsвЂќ to open Marketing block and etc.
+You can also move to a certain commerce module using dashboard buttons. Just click required block. For example,  click `Active Promotions` to open Marketing block and etc.
 
 ## User Access and Roles
 

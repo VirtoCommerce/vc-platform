@@ -41,7 +41,7 @@ By default, shipping costs and taxes are not refunded.
 1. Open **Settings** module.
 2. Open **Taxes** tab.
 3. Open **Taxes** child tab.
-4. ClickВ **Add**В button.
+4. Click **Add** button.
   <img src="../../../assets/images/docs/image2013-5-29_17_38_44.png" />
 5. In the first and the only step of the wizard enter self-explanatory Name of the Tax Category.
   <img src="../../../assets/images/docs/image2013-6-7_10_29_26.png" />
@@ -51,7 +51,7 @@ The Category will be displayed in the list of Tax Categories.
 
 ### Editing Tax Category
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
 3. Open **Taxes** child tab.
 4. Double click the selected Category.
@@ -60,21 +60,21 @@ The Category will be displayed in the list of Tax Categories.
 
 ### Deleting Tax Category
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
 3. Open **Taxes** child tab.
 4. Click the Tax Category you want to delete.
-5. ClickВ **DELETE**В button
+5. Click **DELETE** button
 6. Confirm deletion.
 
 ## Tax Jurisdictions
 
 ### Creating a Tax Jurisdiction
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
 3. Open **Jurisdictions** child tab.
-4. ClickВ **Add**В button.
+4. Click **Add** button.
   <img src="../../../assets/images/docs/image2013-5-29_17_38_44.png" />
 5. In the first and the only step of the wizard setup Jurisdictions properties by your needs.
   <img src="../../../assets/images/docs/image2013-6-7_10_52_21.png" />
@@ -99,7 +99,7 @@ The created Jurisdiction will be displayed in the list.
 
 ### Editing Jurisdiction
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
 3. Open **Jurisdictions** child tab.
 4. Double click the selected Jurisdiction.
@@ -110,21 +110,21 @@ The created Jurisdiction will be displayed in the list.
 
 ### Deleting Jurisdiction
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
 3. Open **Jurisdictions** child tab.
 4. Click the Jurisdiction you want to delete.
-5. ClickВ **DELETE**В button
+5. Click **DELETE** button
 6. Confirm deletion.
 
 ## Tax Jurisdiction Groups
 
 ### Creating a Tax Jurisdiction Group
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
-3. OpenВ **Jurisdiction** groups child tab.
-4. ClickВ **Add**В button.
+3. Open **Jurisdiction** groups child tab.
+4. Click **Add** button.
   <img src="../../../assets/images/docs/image2013-5-29_17_38_44.png" />
 5. In the first and the only step of the wizard setup Jurisdiction group properties
   <img src="../../../assets/images/docs/image2013-6-7_11_5_51.png" />
@@ -142,7 +142,7 @@ The created Jurisdiction group will be displayed in the list.
 
 ### Editing Jurisdiction group
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
 3. Open **Jurisdiction** groups child tab.
 4. Double click the selected Jurisdiction group.
@@ -153,21 +153,21 @@ The created Jurisdiction group will be displayed in the list.
 
 ### Deleting Jurisdiction group
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
-3. Open **Jurisdiction** groupsВ tab.
+3. Open **Jurisdiction** groups tab.
 4. Click the Jurisdiction group you want to delete.
-5. ClickВ **DELETE**В button
+5. Click **DELETE** button
 6. Confirm deletion.
 
 ## Tax
 
 ### Creating a Tax
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
 3. Open **Taxes** child tab.
-4. ClickВ **Add**В button.
+4. Click **Add** button.
   <img src="../../../assets/images/docs/image2013-5-29_17_38_44.png" />
 5. In the first step of the wizard setup the Tax properties
   <img src="../../../assets/images/docs/image2013-6-7_11_41_55.png" />
@@ -188,7 +188,7 @@ The created Jurisdiction group will be displayed in the list.
   * Click **OK**
     The created display name will be displayed in the list.
 8. Click **Finish**.
-  The created Tax will be displayed in the list.В 
+  The created Tax will be displayed in the list. 
   Open it to setup Tax values for different Tax categories and Jurisdiction groups.
 9. Open **Tax** (see Editing Tax section of this guide page to open tax).
 10. Open **Tax values** tab.
@@ -209,7 +209,7 @@ The created Jurisdiction group will be displayed in the list.
 
 ### Editing Tax
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
 3. Select **Taxes** child tab.
 4. Double click the selected Tax.
@@ -218,11 +218,11 @@ The created Jurisdiction group will be displayed in the list.
 
 ### Deleting Tax
 
-1. OpenВ **Settings**В module.
+1. Open **Settings** module.
 2. Open **Taxes** tab.
 3. Select **Taxes** child tab.
 4. Click the Tax you want to delete.
-5. ClickВ **DELETE**В button
+5. Click **DELETE** button
 6. Confirm deletion.
 
 After Taxes has been configured assign catalog items to specific Tax Category, so only taxes that should be applied to the item would be calculated in the order.

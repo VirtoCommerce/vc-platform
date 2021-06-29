@@ -7,9 +7,9 @@ priority: 3
 ---
 ## Introduction
 
-Virto Commerce Platform Style Guide will help you develop consistent modules for the platform. You can use existing styles described in our online [Style Guide](https://virtocommerce.com/styleguide/index.html)[В ]()or you can add additional styles using the rules described below.
+Virto Commerce Platform Style Guide will help you develop consistent modules for the platform. You can use existing styles described in our online [Style Guide](https://virtocommerce.com/styleguide/index.html)[ ]()or you can add additional styles using the rules described below.
 
-* [Style Guide](https://virtocommerce.com/guides/style-guide)В - guidance on css and html to be used when creating UI for the platform
+* [Style Guide](https://virtocommerce.com/guides/style-guide) - guidance on css and html to be used when creating UI for the platform
 * [Blade Constructor](https://virtocommerce.com/guides/blade-constructor) - use to create your custom blades
 
 ## Rules
@@ -36,18 +36,18 @@ Inner module classes should be implemented only as part of the module:
 
 There are four module layers styles:
 
-* *Reset.css*:В Base of styles. Default styles reseted, fonts set, base sizes are set in this layer.В 
-* *Base modules.css*:В Base elements, forms and buttons are defined in this layer.
-* *Project modules.css*:В Module styles isolation layer. Concrete module style defined in this layer.
-* *Cosmetic.css*:В Minor modifications of colors, and links are defined here.
+* *Reset.css*: Base of styles. Default styles reseted, fonts set, base sizes are set in this layer. 
+* *Base modules.css*: Base elements, forms and buttons are defined in this layer.
+* *Project modules.css*: Module styles isolation layer. Concrete module style defined in this layer.
+* *Cosmetic.css*: Minor modifications of colors, and links are defined here.
 
 ## Naming conventions
 
-"-" - word separator (eg. вЂњinput-fieldвЂќ)
+"-" - word separator (eg. `input-field`)
 
-"_" - logic part separator (eg. вЂњtoolbar_logoвЂќ)
+"_" - logic part separator (eg. `toolbar_logo`)
 
-"__" - separator modifier (eg. вЂњmodule_list.__modifierвЂќ)
+"__" - separator modifier (eg. `module_list.__modifier`)
 
 ## Module modifier example
 
@@ -61,10 +61,10 @@ Say you have a module defined:
 .module .module-decsr {}
 ```
 
-Once you need the module to become red, you have to add modifier selectorВ __red:
+Once you need the module to become red, you have to add modifier selector __red:
 
 ```
 .module.__red {}
 ```
   
-In order to use the styling properly you should become familiar with theВ [Multilayer CSS organization methodology](http://operatino.github.io/MCSS/en/).
+In order to use the styling properly you should become familiar with the [Multilayer CSS organization methodology](http://operatino.github.io/MCSS/en/).

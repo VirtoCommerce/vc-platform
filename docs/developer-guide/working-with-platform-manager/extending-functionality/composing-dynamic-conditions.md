@@ -59,7 +59,7 @@ public abstract class DynamicExpression : IDynamicExpression
 		Id = this.GetType().Name;
 		AvailableChildren = new List<DynamicExpression>();
 		Children = new List<DynamicExpression>();
-	}В 
+	} 
 	#region IDynamicExpression Members
 	public string Id { get; set; }
 	#endregion

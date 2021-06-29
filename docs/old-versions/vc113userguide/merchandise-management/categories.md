@@ -19,17 +19,17 @@ Select a catalog in the Catalogs tree where you need to add a category to. Use m
 
 A "Create Category" wizard is displayed. On the first step fill in the fields as follows (fields marked by asterisk are required):
 
-* **Category name**В - the title of this category;
-* **Category type**В - the attributes associated with the category; (If this selector is empty, a category cannot be created at the moment. You should cancel this wizard, open current Catalog and create a new Property Set targeting Category.)
-* **Enable date**В - the date when the category becomes visible. (This option can be applied for seasonal categories, for instance).
-* **Disable date**В - the date when the category becomes unavailable (no longer appears in the store).
-* **Store visible**В - use this checkbox to make the category visible (available for customers) in the storefront. This option may be used when you need to hide/show a category with no relation to enable/disable dates.
+* **Category name** - the title of this category;
+* **Category type** - the attributes associated with the category; (If this selector is empty, a category cannot be created at the moment. You should cancel this wizard, open current Catalog and create a new Property Set targeting Category.)
+* **Enable date** - the date when the category becomes visible. (This option can be applied for seasonal categories, for instance).
+* **Disable date** - the date when the category becomes unavailable (no longer appears in the store).
+* **Store visible** - use this checkbox to make the category visible (available for customers) in the storefront. This option may be used when you need to hide/show a category with no relation to enable/disable dates.
 
 On the second step define property values. All properties marked required must have values in order for the category to be created. Created category will appear in the catalog tree.
 
 ## Creating a Sub-Category
 
-To create a sub-category, right-click onВ the category that you want to contain the sub-category and select "Create sub-Category" option from the context menu:
+To create a sub-category, right-click on the category that you want to contain the sub-category and select "Create sub-Category" option from the context menu:
 
 <img src="../../../assets/images/docs/023-create-sub-category.png" />
 
@@ -37,7 +37,7 @@ An identical wizard is displayed as in "Create Category" case. Fill in the field
 
 ## Creating a Linked Category
 
-Working with virtual catalogs considers creating linked categories.В A linked category is a category in a virtual catalog that is inherited from a common catalog. The inherited category contains links to all of the items in the source category in the common catalog. Moreover, all product attributes are inherited with each item.
+Working with virtual catalogs considers creating linked categories. A linked category is a category in a virtual catalog that is inherited from a common catalog. The inherited category contains links to all of the items in the source category in the common catalog. Moreover, all product attributes are inherited with each item.
 
 To create a linked category, right-click on a virtual catalog (or a category inside virtual catalog) in your catalog tree and select "Create Linked Category" option from the context menu:
 

@@ -57,7 +57,7 @@ We have created a simple pie chart. Learn more about other features provided by 
 
 ## Register Power BI
 
-Use online Power BI for collaborative work. To register it go to <a href="https://powerbi.microsoft.com" rel="nofollow">https://powerbi.microsoft.com</a>В and follow instructions.
+Use online Power BI for collaborative work. To register it go to <a href="https://powerbi.microsoft.com" rel="nofollow">https://powerbi.microsoft.com</a> and follow instructions.
 
 ## Publish to Power BI
 

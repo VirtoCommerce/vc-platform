@@ -7,7 +7,7 @@ priority: 1
 ---
 Liquid tags are the programming logic that tells templates what to do. Tags are wrapped in: {% raw %} {% %} {% endraw %}
 
-Certain tags, such as **for** andВ **cycle** can take on parameters. Details for each parameter can be found in their respective sections.
+Certain tags, such as **for** and **cycle** can take on parameters. Details for each parameter can be found in their respective sections.
 
 Tags can be broken down to four categories:
 * Control Flow Tags

@@ -18,9 +18,9 @@ From these types only Administrators can access and use Commerce Manager / Admin
 
 ## Working with Permissions
 
-SomeВ functionalityВ is available only if user has corresponding Permission. Initial set of permissions is created during DB setup. Permissions are stored in Permission datatable. Developer can add new Permissions by creating new rows in the Permission datatable directly. The PermissionId should be used for checking if user has access to restricted information orВ functionality. Depending onВ PermissionId, Permissions areВ dividedВ into groups inside [Commerce Manager roles management UI](docs/old-versions/vc113userguide/users-management-roles-and-role-assignment). The rules for Permission grouping:
+Some functionality is available only if user has corresponding Permission. Initial set of permissions is created during DB setup. Permissions are stored in Permission datatable. Developer can add new Permissions by creating new rows in the Permission datatable directly. The PermissionId should be used for checking if user has access to restricted information or functionality. Depending on PermissionId, Permissions are divided into groups inside [Commerce Manager roles management UI](docs/old-versions/vc113userguide/users-management-roles-and-role-assignment). The rules for Permission grouping:
 
-1. ifВ PermissionId ends with ":config", the group is "Settings". Usually this group includes Permissions for Commerce Manager Settings section.
-2. the group name is the beginning of PermissionId until a ":" delimiter is reached. E.g. permission named "Manage Catalog Items" has PermissionIDВ "catalog:items:manage" and belongs to "catalog" group.
+1. if PermissionId ends with ":config", the group is "Settings". Usually this group includes Permissions for Commerce Manager Settings section.
+2. the group name is the beginning of PermissionId until a ":" delimiter is reached. E.g. permission named "Manage Catalog Items" has PermissionID "catalog:items:manage" and belongs to "catalog" group.
 
 The group and Permission names are localizable. That means a manager can give any name to a Permission or Permission group using [Localization UI](docs/old-versions/vc113userguide/settings/application-settings).

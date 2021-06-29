@@ -209,7 +209,7 @@ namespace CustomerReviews.Core.Models
 }
 ```
 
-It contains all the mandatory data related to customerвЂ™s review: The authorвЂ™s nickname, review content, the status(active/inactive) and product ID which user reviewed.
+It contains all the mandatory data related to customers review: The authors nickname, review content, the status(active/inactive) and product ID which user reviewed.
 
 #### Search criteria
 
@@ -227,7 +227,7 @@ In this case, the client can search by products and review status.
 
 ### Services
 
-In order to use created models, need to create services. In **CustomerReviewsModule.Core\Services** folder will define the abstractions for customerвЂ™s review services.
+In order to use created models, need to create services. In **CustomerReviewsModule.Core\Services** folder will define the abstractions for customers review services.
 
 For example, the **ICustomerReviewService** interface:
 
@@ -489,7 +489,7 @@ Typical *module.manifest* structure is:
 
 ### Module.cs and initialization flow
 
-*Module.cs* is the main entry point of managed code, the base class for the entire module. In this case, itвЂ™s Customer Reviews module. Module initialization flow contains several steps:
+*Module.cs* is the main entry point of managed code, the base class for the entire module. In this case, its Customer Reviews module. Module initialization flow contains several steps:
 
 * Setup Database;
 * Initialization:
@@ -515,7 +515,7 @@ public override void SetupDatabase()
 
 #### Initialization
 
-Interfaces are using in services in CustomerReviews module. ThatвЂ™s because a dependency injection always used. Inside of **Initialize()** method in the Main class register the Service implementations of the module and link them with the interfaces:
+Interfaces are using in services in CustomerReviews module. Thats because a dependency injection always used. Inside of **Initialize()** method in the Main class register the Service implementations of the module and link them with the interfaces:
 
 ```c#
 public override void Initialize()
@@ -597,7 +597,7 @@ public IHttpActionResult SearchCustomerReviews(CustomerReviewSearchCriteria crit
 }
 ```
 
-There isnвЂ™t much code in the method. The customer reviews search Service calling directly. Of course, here as well, will use the **ICustomerReviewRepository** abstraction and not the service implementation itself.
+There isnt much code in the method. The customer reviews search Service calling directly. Of course, here as well, will use the **ICustomerReviewRepository** abstraction and not the service implementation itself.
 
 The API endpoints are all accessed from the JavaScript code written in the **CustomerReviewsModule**.
 

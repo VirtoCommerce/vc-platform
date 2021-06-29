@@ -104,7 +104,7 @@ private CatalogItemSearchModel CreateDataModel(CatalogItemSearchCriteria criteri
     else if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
     {
       sortObject = new SearchSort(session.Pricelists.Select(priceList =>
-        new SearchSortField(String.Format("price_{0}_{1}", criteria.Currency.ToLower(),В priceList.ToLower()))
+        new SearchSortField(String.Format("price_{0}_{1}", criteria.Currency.ToLower(), priceList.ToLower()))
         {
           IgnoredUnmapped = true
         }).ToArray());
@@ -123,7 +123,7 @@ private CatalogItemSearchModel CreateDataModel(CatalogItemSearchCriteria criteri
   if (results.Items.Any())
   {
     var itemsOrderedList = results.Items.ToList();
-    var itemsTemp = _catalogClient.GetItems(results.Items, true, ItemResponseGroups.ItemAssets |В ItemResponseGroups.ItemProperties);
+    var itemsTemp = _catalogClient.GetItems(results.Items, true, ItemResponseGroups.ItemAssets | ItemResponseGroups.ItemProperties);
     items = itemsTemp.OrderBy(i => itemsOrderedList.IndexOf(i.ItemId)).ToArray();
   }
   // Now convert it to the model
@@ -303,7 +303,7 @@ Below is a sample code to retrieve shipping methods and create model for view:
 
 ```
 /// <summary>
-///В Gets all shipping methods.
+/// Gets all shipping methods.
 /// </summary>
 /// <returns>shipping method model</returns>
 public static ShippingMethodModel[] GetAllShippingMethods(this CartHelper cart)

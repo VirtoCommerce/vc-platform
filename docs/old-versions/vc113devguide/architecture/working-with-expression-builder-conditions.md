@@ -13,12 +13,12 @@ Expression builder implementations are used in promotions, dynamic content, pric
 
 ## Conditions basics
 
-All conditions must be serializable so should be marked withВ [Serializable] attribute.
+All conditions must be serializable so should be marked with [Serializable] attribute.
 
-All conditions must be ofВ IExpressionAdaptor interface so to implement
+All conditions must be of IExpressionAdaptor interface so to implement
 
 ```
-Expression<Func<IEvaluationContext,В bool>>В GetExpression();
+Expression<Func<IEvaluationContext, bool>> GetExpression();
 ```
 
 method.
@@ -56,7 +56,7 @@ As shown below the base class constructor gets the first string parameter to set
 protected TypedExpressionElementBase(string displayName, IExpressionViewModel expressionViewModel)
 ```
 
-So in this case the label of the condition in the context menu will be "Cart total $В []"
+So in this case the label of the condition in the context menu will be "Cart total $ []"
 
 <img src="../../../assets/images/image2013-10-7_17_31_6.png" />
 

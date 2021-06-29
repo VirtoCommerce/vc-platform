@@ -7,7 +7,7 @@ priority: 5
 ---
 Product Associations are used to show related products, accessories and other types of items for a customer when he views a product page. The administrators define which types of products will be displayed as associated with an item.
 
-This refers to marketing policy and increasing the average check of a customerвЂ™s shopping cart since customers start buying similar products of a higher price or add different accessories to the selected good.
+This refers to marketing policy and increasing the average check of a customers shopping cart since customers start buying similar products of a higher price or add different accessories to the selected good.
 
 ## How the associations can be used
 

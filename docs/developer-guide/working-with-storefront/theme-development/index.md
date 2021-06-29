@@ -8,7 +8,7 @@ title: 'Theme development'
 
 Whenever you are building theme for your client or yourself this guide will provide instructions on how to <a class="crosslink" href="https://virtocommerce.com/website-design" target="_blank">create a theme</a>.
 
-There are several ways how the theme can be developed. You can start of with one of the sample themes provided with a product or download one from our [appstore](apps) or get on from <a href="https://themes.shopify.com/" rel="nofollow">Shopify themes</a>В as these themes are fully supported. In this documentation, we will consider a [default theme](https://github.com/VirtoCommerce/vc-default-theme) for VirtoCommerce storefront.
+There are several ways how the theme can be developed. You can start of with one of the sample themes provided with a product or download one from our [appstore](apps) or get on from <a href="https://themes.shopify.com/" rel="nofollow">Shopify themes</a> as these themes are fully supported. In this documentation, we will consider a [default theme](https://github.com/VirtoCommerce/vc-default-theme) for VirtoCommerce storefront.
 
 ## CMS Content storage structure
 ![](../../../assets/images/docs/cms-content-structure.png)

@@ -66,7 +66,7 @@ Sample pie chart
 
 ## Tableau online
 
-Tableau Online or Tableau Server are available for collaborative work. Go to Tableau online to register <a href="https://www.tableau.com/products/cloud-bi" rel="nofollow">https://www.tableau.com/products/cloud-bi</a>В and follow instructions.
+Tableau Online or Tableau Server are available for collaborative work. Go to Tableau online to register <a href="https://www.tableau.com/products/cloud-bi" rel="nofollow">https://www.tableau.com/products/cloud-bi</a> and follow instructions.
 
 ## Publishing on Tableau online dashboard
 

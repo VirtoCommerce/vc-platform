@@ -47,7 +47,7 @@ The interface has one method called ProcessPayment that returns true if payment 
 ```
 private Dictionary<string, string> CreateSettings(PaymentMethod method)
 {
-  var settings =В  method.PaymentMethodPropertyValues.ToDictionary(property => property.Name, property => property.ToString());
+  var settings =  method.PaymentMethodPropertyValues.ToDictionary(property => property.Name, property => property.ToString());
   settings["Gateway"] = method.PaymentGateway.GatewayId;
   return settings;
 }

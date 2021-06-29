@@ -20,7 +20,7 @@ The data fields of the cases:
 
 When there is a too large list of cases, use special filters on the right to search for the required case. This way you can view unresolved cases or cases that are not assigned to anyone yet. The graet meaning for using of this commerce manager block refers to the workflow applied in the customer service department. For instance, it does matters who will have to search for unassigned cases and assign them to CSRs, control unresolved cases and etc.
 
-From this page cases can beВ **taken**. This means that a user assigns himself as responsible for this case and has to make a resolution. Just use "Take" button after click on a required case (or multiple cases).
+From this page cases can be **taken**. This means that a user assigns himself as responsible for this case and has to make a resolution. Just use "Take" button after click on a required case (or multiple cases).
 
 > only open or unassigned cases can be taken.
 

@@ -13,7 +13,7 @@ When shipments of existing products arrive, warehouse staff may update the syste
 
 1. Open **Fulfillment** module.
 2. Open **Inventory** tab.
-3. Click **Add**В button.
+3. Click **Add** button.
   <img src="../../../assets/images/docs/image2013-5-29_17_38_44.png" />
 4. In the popup dialog select appropriate Fulfillment center
   <img src="../../../assets/images/docs/image2013-6-14_14_55_14.png" />
@@ -31,8 +31,8 @@ The quantity of the already available inventory will increase, and not found inv
 
 ## Editing iventory
 
-1. OpenВ **Fulfillment**В module.
-2. OpenВ **Inventory**В tab.
+1. Open **Fulfillment** module.
+2. Open **Inventory** tab.
 3. Select the inventory to edit. double-click it.
 4. Edit the required fields
   <img src="../../../assets/images/docs/image2013-6-14_15_38_48.png" />

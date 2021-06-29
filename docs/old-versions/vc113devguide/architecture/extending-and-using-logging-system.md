@@ -7,7 +7,7 @@ priority: 8
 ---
 ## Introduction
 
-VirtoCommerce logging system is based on Semantic Logging Application Block (SLAB). If you have to add logging to your code, you should be familiar with SLAB basics. Read more about SLABВ <a href="http://msdn.microsoft.com/en-us/library/dn440729(v=pandp.60).aspx" rel="nofollow">here</a>.
+VirtoCommerce logging system is based on Semantic Logging Application Block (SLAB). If you have to add logging to your code, you should be familiar with SLAB basics. Read more about SLAB <a href="http://msdn.microsoft.com/en-us/library/dn440729(v=pandp.60).aspx" rel="nofollow">here</a>.
 
 We expanded SLAB by creating SlabInvoker and extension Write method to write into log without concern about passing parameters order in the event method and it's code. Just store everything you need to log in the context and pass the context to the selected Event.
 
@@ -117,8 +117,8 @@ Add new class and name it PaymentGatewaysEventSource that is inherited from the 
 Add attribute EventSource to the PaymentGatewaysEventSource class:
 
 ```
-[EventSource(NameВ =В VCEventSources.Base)]
-publicВ classВ PaymentGatewaysEventSourceВ :В EventSource
+[EventSource(Name = VCEventSources.Base)]
+public class PaymentGatewaysEventSource : EventSource
 {
 }
 ```
@@ -126,13 +126,13 @@ publicВ classВ PaymentGatewaysEventSourceВ :В EventSource
 The class is the placeholder for Event methods. Now add EventCodes class into the PaymentGatewaysEventSource class. The EventCodes class will store unique Event ids constants. The class will be filled once new Event is added to the PaymentGatewaysEventSource.
 
 ```
-[EventSource(NameВ =В VCEventSources.Base)]
-publicВ classВ PaymentGatewaysEventSourceВ :В EventSource
+[EventSource(Name = VCEventSources.Base)]
+public class PaymentGatewaysEventSource : EventSource
 {
-  publicВ classВ EventCodes
+  public class EventCodes
   {
-    publicВ constВ intВ PaymentOperationInfoВ =В 11000;
-    publicВ constВ intВ PaymentOperationErrorВ =В 11001;
+    public const int PaymentOperationInfo = 11000;
+    public const int PaymentOperationError = 11001;
   }
 }
 ```
@@ -140,39 +140,39 @@ publicВ classВ PaymentGatewaysEventSourceВ :В EventSource
 Next add Event methods with attributes and input parameters according to the logging logic.
 
 ```
-[EventSource(NameВ =В VCEventSources.Base)]
-publicВ classВ PaymentGatewaysEventSourceВ :В EventSource
+[EventSource(Name = VCEventSources.Base)]
+public class PaymentGatewaysEventSource : EventSource
 {
-  privateВ staticВ readonlyВ PaymentGatewaysEventSourceВ _logВ =В newВ PaymentGatewaysEventSource();
+  private static readonly PaymentGatewaysEventSource _log = new PaymentGatewaysEventSource();
 
-  publicВ classВ Keywords
+  public class Keywords
   {
-    publicВ constВ EventKeywordsВ DiagnosticВ =В (EventKeywords)VCKeywords.Diagnostic;
+    public const EventKeywords Diagnostic = (EventKeywords)VCKeywords.Diagnostic;
   }
 
-  publicВ classВ EventCodes
+  public class EventCodes
   {
-    publicВ constВ intВ PaymentOperationErrorВ =В 11001;
-    publicВ constВ intВ PaymentOperationInfoВ =В 11000;
+    public const int PaymentOperationError = 11001;
+    public const int PaymentOperationInfo = 11000;
   }
   
-  publicВ staticВ PaymentGatewaysEventSourceВ Log
+  public static PaymentGatewaysEventSource Log
   {
     get
     {
-      returnВ _log;
+      return _log;
     }
   }
 
-  [Event(EventCodes.PaymentOperationError,В MessageВ =В "PaymentВ gatewayВ failure:В {3},В task:В {0}",В LevelВ =В EventLevel.Critical,В KeywordsВ =В Keywords.Diagnostic)]
-  publicВ voidВ PaymentOperationError(stringВ task,В stringВ orderId,В stringВ orderTN,В stringВ message,В stringВ exception)
+  [Event(EventCodes.PaymentOperationError, Message = "Payment gateway failure: {3}, task: {0}", Level = EventLevel.Critical, Keywords = Keywords.Diagnostic)]
+  public void PaymentOperationError(string task, string orderId, string orderTN, string message, string exception)
   {
-    this.WriteEvent(EventCodes.PaymentOperationError,В task,В orderId,В orderTN,В message,В exception);
+    this.WriteEvent(EventCodes.PaymentOperationError, task, orderId, orderTN, message, exception);
   }
-  [Event(EventCodes.PaymentOperationInfo,В MessageВ =В "{2}В -В PaymentВ gatewayВ success:В {3},В task:В {0}",В LevelВ =В EventLevel.Informational,В KeywordsВ =В Keywords.Diagnostic)]
-  publicВ voidВ PaymentOperationInfo(stringВ task,В stringВ orderTN,В stringВ message)
+  [Event(EventCodes.PaymentOperationInfo, Message = "{2} - Payment gateway success: {3}, task: {0}", Level = EventLevel.Informational, Keywords = Keywords.Diagnostic)]
+  public void PaymentOperationInfo(string task, string orderTN, string message)
   {
-    this.WriteEvent(EventCodes.PaymentOperationInfo,В task,В orderTN,В message);
+    this.WriteEvent(EventCodes.PaymentOperationInfo, task, orderTN, message);
   }
 }
 ```
@@ -180,16 +180,16 @@ publicВ classВ PaymentGatewaysEventSourceВ :В EventSource
 Next add PaymentGatewaySlabContext class that is inherited from the BaseSlabContext class.
 
 ```
-publicВ classВ PaymentGatewaysContext:В BaseSlabContext
+public class PaymentGatewaysContext: BaseSlabContext
 {
-  publicВ stringВ orderIdВ {В get;В set;В }
-  publicВ stringВ orderTNВ {В get;В set;В }
-  publicВ stringВ messageВ {В get;В set;В }
-  publicВ stringВ paymentStatusВ {В get;В set;В }
-  publicВ stringВ billingAddressВ {В get;В set;В }
-  publicВ stringВ reservationВ {В get;В set;В }
-  publicВ stringВ statusDescВ {В get;В set;В }
-  publicВ stringВ taskВ {В get;В set;В }
+  public string orderId { get; set; }
+  public string orderTN { get; set; }
+  public string message { get; set; }
+  public string paymentStatus { get; set; }
+  public string billingAddress { get; set; }
+  public string reservation { get; set; }
+  public string statusDesc { get; set; }
+  public string task { get; set; }
 }
 ```
 
@@ -200,7 +200,7 @@ Note that the context property names match to the Event methods input parameter 
 There are three ways of using the EventSource
 
 * Use directly calling the Event method
-* Collecting logging information into context and calling EventSource вЂњWriteвЂќ extension
+* Collecting logging information into context and calling EventSource `Write` extension
 * Using SlabInvoker
 
 ### Calling Event method
@@ -215,7 +215,7 @@ In this case passing task, orderTN and message as input parameters.
 
 ### Using Write extension
 
-Another way is to use вЂњWriteвЂќ extension. First create PaymentGatewayContext, collect data that needs to be logged into context properties and execute Write method with EventCode and context as input parameters:
+Another way is to use `Write` extension. First create PaymentGatewayContext, collect data that needs to be logged into context properties and execute Write method with EventCode and context as input parameters:
 
 ```
 PaymentGatewayEventSource.Log.Write(EventCode.PaymentOperationInfo, context);
@@ -229,7 +229,7 @@ SlabInvoker can be used while logging some long running task or portion of tasks
 SlabInvoker<PaymentGatewaysEventSource.PaymentGatewaysContext>.Execute(slab =>
 {
   slab.paymentStatus = PaymentStatus.Failed.ToString();
-В 
+ 
   try
   {
     var response = gateway.Send(request, description);
@@ -241,7 +241,7 @@ SlabInvoker<PaymentGatewaysEventSource.PaymentGatewaysContext>.Execute(slab =>
       return;
     }
     slab.statusDesc = info.StatusDesc = response.Message;
-В 
+ 
     slab.paymentStatus = payment.Status = PaymentStatus.Completed.ToString();
   }
   catch (Exception ex)

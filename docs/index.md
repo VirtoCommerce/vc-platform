@@ -1,4 +1,8 @@
 # VirtoCommerce Platform
+
+!!! warning
+    You are looking at documentation for an older release. For the latest information, see <a href="https://virtocommerce.com/docs">the current release documentation</a>.
+
 Enterprise .NET ecommerce platform for B2B and B2C solutions. Virto Commerce is based on .NET 4.6 (soon to be migrated to .net core) with extensive use of MVC, IoC, EF, Azure, Angular JS and many other cutting edge technologies. It can be deployed in Microsoft Cloud (Azure), Amazon Web Services (AWS) and on-premise. It also support Docker deployment and images can be found on docker.io.
 
 Virto Commerce is updated almost daily and new modules can be downloaded using "Modules" blade in admin console.
@@ -42,9 +46,9 @@ Setup your own private Microsoft Cloud environment and evaluate the latest versi
 [![Deploy to Azure](https://azuredeploy.net/deploybutton.svg "Deploy to Azure")](https://azuredeploy.net/)
 
 ## Developer resources
-* [Source Code Getting Started](https://virtocommerce.com/docs/vc2devguide/deployment/platform-deployment/source-code-getting-started)
-* [Platform settings](https://virtocommerce.com/docs/vc2devguide/deployment/platform-settings)
-* [Developing a custom solution](https://virtocommerce.com/docs/vc2devguide/development-scenarios/developing-a-custom-solution)
+* [Source Code Getting Started](https://virtocommerce.com/docs/2.0/developer-guide/deployment/platform-deployment/deploy-from-source-code/)
+* [Platform settings](https://virtocommerce.com/docs/2.0/developer-guide/deployment/platform-settings/)
+* [Developing a custom solution](https://virtocommerce.com/docs/2.0/developer-guide/development-scenarios/developing-a-custom-solution/)
 
 # License
 Copyright (c) Virto Solutions LTD.  All rights reserved.

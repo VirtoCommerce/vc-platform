@@ -34,7 +34,7 @@ It is required to adjust the list of fields that will be used for customer infor
 
 <img src="../../../assets/images/docs/Info-tab.PNG" />
 
-Double click "Customer Information" to edit settings. Here you can add more data fields that will be used for customerВ  information, such as name, contact information, birthday, address etc. This information will be used by CSRs later on. Depending on your store's requirements, you can add any fields and build reporting system then to analyze the effectiveness of your store according to various report results.
+Double click "Customer Information" to edit settings. Here you can add more data fields that will be used for customer  information, such as name, contact information, birthday, address etc. This information will be used by CSRs later on. Depending on your store's requirements, you can add any fields and build reporting system then to analyze the effectiveness of your store according to various report results.
 
 Click "ADD" button to add more fields. To edit or remove a field, click it in the list and click "EDIT" ir "REMOVE" buttons accordingly.
 

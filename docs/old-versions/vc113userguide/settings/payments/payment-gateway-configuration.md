@@ -119,7 +119,7 @@ To create new payment method do the following steps:
 * Add localizations for payment method display name if needed and continue
 * In the final page you have to configure selected gateway (assuming you have selected Authorize.Net)
   * Fill in Extra security key for Authorize.Net's AIM (3.1) protocol. or leave empty if not configured with Authorize.net
-    * This gateway has a unique security feature. To use it, you must add the secret hash value provided by the Authorize.Net merchant web interface.В If no hash secret is supplied in the config method, the hash value returned by the server will **NOT** be checked.
+    * This gateway has a unique security feature. To use it, you must add the secret hash value provided by the Authorize.Net merchant web interface. If no hash secret is supplied in the config method, the hash value returned by the server will **NOT** be checked.
   * Fill in Merchant's Gateway login (API Login ID) and Merchant's Gateway password (Transaction Key)
   * The field "Default URL for a specific Gateway" should only be changed to override default gateway used by iCharge. For example testing authorize.Net you should provide "https://test.authorize.net/gateway/transact.dll"
   * Check "Identifies if transaction is in test mode" only when testing gateway. Otherwise leave it unchecked. In test mode no real transaction are made.

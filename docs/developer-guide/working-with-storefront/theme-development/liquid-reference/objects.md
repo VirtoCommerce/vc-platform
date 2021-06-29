@@ -9,7 +9,7 @@ Liquid objects contain attributes to output dynamic content on the page. For exa
 
 **Liquid objects** are also often referred to as **Liquid variables**.
 
-To output an object attribute on a page, wrap them inВ {% raw %} {{ {% endraw %} and {% raw %} }} {% endraw %}, as shown below:
+To output an object attribute on a page, wrap them in {% raw %} {{ {% endraw %} and {% raw %} }} {% endraw %}, as shown below:
 
 {% raw %}
 ```

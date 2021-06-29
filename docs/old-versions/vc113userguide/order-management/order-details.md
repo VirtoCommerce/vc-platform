@@ -14,7 +14,7 @@ To view order information, double-click it in the "Orders" block of Commerce Man
 Actions available from order details dialog **Summary** tab:
 
 * Place order "On Hold"
-* Release orderВ Hold
+* Release order Hold
 * Cancel order
 * Create return
 * Create exchange order
@@ -42,7 +42,7 @@ Actions available from **Details** tab:
 
 ## Create Exchange Order
 
-To create an exchange order, user must have an appropriate permission and theВ order must be in a state of Complete. Creating exchange order combines two separate activities:
+To create an exchange order, user must have an appropriate permission and the order must be in a state of Complete. Creating exchange order combines two separate activities:
 
 * Create return
 * Place an order
@@ -54,14 +54,14 @@ To add an item into a shipment, open Details tab and use "Add" button. In the ad
 <img src="../../../assets/images/docs/add-shipment.PNG" />
 
 To edit an item in the shipment, choose it in the list of shipment items and use "Move" button.
-В 
+ 
 The actions you can do with shipment items:
-В 
+ 
 * Move to another shipment;
 * Choose another shipping address;
 * Change shipment method;
 * Change quantity.
-В 
+ 
 To remove an item from a shipment, choose item that you need to remove and use "Remove" button.
 
 ## Releasing Shipment
@@ -84,25 +84,25 @@ In Virto Commerce Manager shipment can be set to "Canceled" state from any other
 
 ## Refunds
 
-Refund is a special type of payment when money is transferred back to a buyer. Typically a refund is initiated as a consequence of an item return.В It's also possible to issue a refundВ because of other reasons, without a return.В Refund must be credited to the purchase medium used in the original purchase.В In special situations, you may issue a refund to a new payment source. For example, if the buyer used a now-expired credit card for the purchase, you may issue the refund to a new credit card.
-В 
-To create a refund, you must have appropriate permission and theВ order must be in a status of Complete.
-В 
+Refund is a special type of payment when money is transferred back to a buyer. Typically a refund is initiated as a consequence of an item return. It's also possible to issue a refund because of other reasons, without a return. Refund must be credited to the purchase medium used in the original purchase. In special situations, you may issue a refund to a new payment source. For example, if the buyer used a now-expired credit card for the purchase, you may issue the refund to a new credit card.
+ 
+To create a refund, you must have appropriate permission and the order must be in a status of Complete.
+ 
 Steps to create refund:
 
-1. OpenВ **Orders**В module, select anВ Order from the list andВ open it.
-2. ClickВ **Refund**В button insideВ **Summary**В tab.В 
+1. Open **Orders** module, select an Order from the list and open it.
+2. Click **Refund** button inside **Summary** tab. 
 3. A 2-step wizard appears. Enter refund amount, select a refund option: original source or a new credit card:
   <img src="../../../assets/images/docs/Capture.PNG" />
-4. Fill all new credit card data ifВ Refund to a new credit cardВ was chosen.
+4. Fill all new credit card data if Refund to a new credit card was chosen.
   <img src="../../../assets/images/docs/Capture3.PNG" />
-5. Click **Next**. In the next step of the wizard carefully recheck the payment data and clickВ **Submit**В to issue the payment.
+5. Click **Next**. In the next step of the wizard carefully recheck the payment data and click **Submit** to issue the payment.
   <img src="../../../assets/images/docs/Capture2.PNG" />
-6. Payment data is processed and operation result is displayed shortly. If the transaction succeeded, theВ **Back**В button disappears andВ **Finish**В button gets enabled. All data is saved, a new payment is added to the list inside the orderВ **Payments**В tab. ClickВ **Finish**. An example of successful transaction:
+6. Payment data is processed and operation result is displayed shortly. If the transaction succeeded, the **Back** button disappears and **Finish** button gets enabled. All data is saved, a new payment is added to the list inside the order **Payments** tab. Click **Finish**. An example of successful transaction:
   <img src="../../../assets/images/docs/Capture4.PNG" />
 7. A payment could fail because of various reasons. In such case the error message is displayed:
   <img src="../../../assets/images/docs/Capture5.PNG" />
-8. ClickВ **Back**В to correct the payment data orВ **Cancel**В to withdraw.
+8. Click **Back** to correct the payment data or **Cancel** to withdraw.
 
 ## Viewing Payment Details
 
@@ -110,10 +110,10 @@ Every order in the Virto Commerce Manager includes "Payments" tab that contains 
 
 <img src="../../../assets/images/docs/payment-details.PNG" />
 
-* **Payment method**В - the way transaction was made through (credit cards, electronic money, purchase orders, international payment systems, and etc. according to the list of payment methods accepted in your store.
-* **Transaction type**В - type of operation according to cash flow (credit, sale, refund, store bonuses accounting and etc.)
-* **Amount**В - the sum of transaction in applied currency.
-* **Status**В - the state of transaction (failed, completed, in progress and etc.)
+* **Payment method** - the way transaction was made through (credit cards, electronic money, purchase orders, international payment systems, and etc. according to the list of payment methods accepted in your store.
+* **Transaction type** - type of operation according to cash flow (credit, sale, refund, store bonuses accounting and etc.)
+* **Amount** - the sum of transaction in applied currency.
+* **Status** - the state of transaction (failed, completed, in progress and etc.)
 
 Besides the list of transaction here you can find summary information with total order cost, paid sum and balance due.
 

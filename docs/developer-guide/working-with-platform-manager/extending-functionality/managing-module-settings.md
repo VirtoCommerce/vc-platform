@@ -8,7 +8,7 @@ priority: 3
 ## Overview
 
 VirtoCommerce WebAdmin provides the following infrastructure for settings:
-* Standard UIВ accessible through Browse > Settings > Module
+* Standard UI accessible through Browse > Settings > Module
 * Web API
 * ISettingsManager interface for managed modules
 * Database storage
@@ -48,7 +48,7 @@ Each module can add settings to a standard UI by declaring them in the module ma
 |**settings**|The root element for all settings. Can contain multiple **group** elements.|
 |**group name="..."**|Defines a named group of settings. Can contain multiple **setting** elements.|
 |**setting**|Defines a setting|
-|**name**|The system name of the setting. It is recommended to give names like this: **ModuleId.SettingsCategoryName.SettingName**. For Example,В **VirtoCommerce.Core.Security.LockoutDuration**, where **VirtoCommerce.Core** is the module ID, **Security** is the settings category name and **LockoutDuration** is the setting name.|
+|**name**|The system name of the setting. It is recommended to give names like this: **ModuleId.SettingsCategoryName.SettingName**. For Example, **VirtoCommerce.Core.Security.LockoutDuration**, where **VirtoCommerce.Core** is the module ID, **Security** is the settings category name and **LockoutDuration** is the setting name.|
 |**valueType**|The type of the value. Supported types are: **string** - for short text (up to 512 characters); **secureString** - for short text masked with asterisks or circles in UI; **text** - for long text (longer than 512 characters); **integer**; **decimal**; **boolean**|
 |**allowedValues**|[Optional] Defines a list of allowed values. Can contain multiple **value** elements. User can select one of the values in standard UI.|
 |**defaultValue**|Defines the default value which will be returned by **GetValue()** method if the value has not been stored in database yet.|
@@ -57,12 +57,12 @@ Each module can add settings to a standard UI by declaring them in the module ma
 
 ## Web API
 
-GETВ api/platform/settings/values/MyStringSetting
+GET api/platform/settings/values/MyStringSetting
 
-POSTВ api/platform/settings  
+POST api/platform/settings  
 
 ```
-[ { Name: "MyStringSetting",В Value: "abc",В ValueType: "string" },В { Name: "MyIntegerSetting",В Value: "123",В ValueType: "integer" }В ]
+[ { Name: "MyStringSetting", Value: "abc", ValueType: "string" }, { Name: "MyIntegerSetting", Value: "123", ValueType: "integer" } ]
 ```
 
 ## ISettingsManager
@@ -81,13 +81,13 @@ value stored in databasedefault value declared in module manifestdefault value p
 ```
 using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Platform.Core.Settings;
-В 
+ 
 var settingsManager = ServiceLocator.Current.GetInstance<ISettingsManager>();
-В 
+ 
 var integerValue = settingsManager.GetValue("MyIntegerSetting", 0);
 var decimalValue = settingsManager.GetValue("MyDecimalSetting", 0m);
 var booleanValue = settingsManager.GetValue("MyBooleanSetting", false);
 var stringValue = settingsManager.GetValue("MyStringSetting", string.Empty);
-В 
+ 
 settingsManager.SetValue("MyDecimalSetting", 1.23m);
 ```

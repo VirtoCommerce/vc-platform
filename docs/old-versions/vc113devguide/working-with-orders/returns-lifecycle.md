@@ -7,25 +7,25 @@ priority: 6
 ---
 ## Introduction
 
-RMA request (return) is modeled as RmaReturn entity in VCF data model.В RmaReturn isВ integral part of an Order. RmaReturn may be created for an Order of state Completed.В A returnВ life cycle is divided into separate distinct states (enumeration):
+RMA request (return) is modeled as RmaReturn entity in VCF data model. RmaReturn is integral part of an Order. RmaReturn may be created for an Order of state Completed. A return life cycle is divided into separate distinct states (enumeration):
 
 ```
-publicВ enumВ RmaRequestStatus
+public enum RmaRequestStatus
 {
-  CompleteВ =В 1,
-  CanceledВ =В 2,
-  AwaitingStockReturnВ =В 4,
-  AwaitingCompletionВ =В 8
+  Complete = 1,
+  Canceled = 2,
+  AwaitingStockReturn = 4,
+  AwaitingCompletion = 8
 }
 ```
 
-RmaReturn isВ alwaysВ in one ofВ enumeration'sВ RmaRequestStatusВ states.В If exact enumeration mach wouldn't be found then it's considered to be in a state ofВ **AwaitingStockReturn**.В State changing is controlled byВ StateMachineBase<string> implementation (RmaRequestStateMachineImplВ class). This actuallyВ implements theВ state diagram depicted below and controls state transitions.
+RmaReturn is always in one of enumeration's RmaRequestStatus states. If exact enumeration mach wouldn't be found then it's considered to be in a state of **AwaitingStockReturn**. State changing is controlled by StateMachineBase<string> implementation (RmaRequestStateMachineImpl class). This actually implements the state diagram depicted below and controls state transitions.
 
 <img src="../../../assets/images/docs/image2013-6-6_16_23_30.png" />
 
 ## Create return
 
-Return is created as a part of an order. It's initial state can beВ **AwaitingStockReturn** orВ **AwaitingCompletion**. Return amount is calculated in external workflow, which isВ accessibleВ trough service.
+Return is created as a part of an order. It's initial state can be **AwaitingStockReturn** or **AwaitingCompletion**. Return amount is calculated in external workflow, which is accessible trough service.
 
 ```
 public Order CreateRmaReturn(Order order)
@@ -95,7 +95,7 @@ public void RemoveReturnItem(RmaReturnItem returnItem, decimal returnQuantity)
 
   Recalculate();
 }
-В 
+ 
 // Recalculates current Return's amounts: fees, subtotals, totals, etc.
 private void Recalculate()
 {
@@ -105,9 +105,9 @@ private void Recalculate()
 }
 ```
 
-## Transition toВ AwaitingCompletion state
+## Transition to AwaitingCompletion state
 
-State transitionВ **AwaitingStockReturn** --> **AwaitingCompletion**В is initiated upon RmaReturnВ RmaLineItems quantity change:
+State transition **AwaitingStockReturn** --> **AwaitingCompletion** is initiated upon RmaReturn RmaLineItems quantity change:
 
 ```
 private void RecalculateRmaRequestStatuses()
@@ -119,11 +119,11 @@ private void RecalculateRmaRequestStatuses()
 }
 ```
 
-whereВ **InnerItem** is instance of **RmaReturn**.
+where **InnerItem** is instance of **RmaReturn**.
 
 ## Complete
 
-RMA request can gain status of Complete when there exists a state transition toВ RmaRequestStatus.Complete. Steps to complete:
+RMA request can gain status of Complete when there exists a state transition to RmaRequestStatus.Complete. Steps to complete:
 
-1. IfВ RmaReturn.ReturnTotal > 0, then "Create Refund" process with ReturnTotal amountВ should be initialized.В 
-2. If previous step completed successfully, then set the status:В RmaReturn.Status =В В RmaRequestStatus.Complete.ToString();
+1. If RmaReturn.ReturnTotal > 0, then "Create Refund" process with ReturnTotal amount should be initialized. 
+2. If previous step completed successfully, then set the status: RmaReturn.Status =  RmaRequestStatus.Complete.ToString();

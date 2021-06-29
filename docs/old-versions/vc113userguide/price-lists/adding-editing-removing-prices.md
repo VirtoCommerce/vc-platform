@@ -19,7 +19,7 @@ Then fill in the following fields.
 
 <img src="../../../assets/images/docs/008-choose-item.PNG" />
 
-**List price** - often this is MSRP (ManufacturerвЂ™s Suggested Retail Price). If this is the only price list entry for the product, this price will be the default price.
+**List price** - often this is MSRP (Manufacturers Suggested Retail Price). If this is the only price list entry for the product, this price will be the default price.
 
 **Sale price** - the price you offer this product in your store for.
 

@@ -19,14 +19,14 @@ Navigate to the category where you would like to add a bundle to. Use "Add" butt
 
 Select a type of an item - Bundle. On the first step of creating fill in the following fields:
 
-* **Item Name**В - a descriptive name of the bundle.
-* **Item Type**В - select type from the drop-down list.
-* **Can be purchased**В - select this check box to allow this bundle to be purchased.
-* **Store visible**В - select this check box to let this bundle appear in the store.
-* **Min. Quantity**В - minimum quantity of bundle that must be ordered by a customer.
-* **Max. Quantity**В - maximum quantity of bundle that must be ordered by a customer.
-* **Enable Date/Time**В - date and time when the bundle will be available in the store. Useful for seasonal products.
-* **Disable Date/Time**В - date and time when the bundle will be unavailable in the store. Useful for seasonal products.
+* **Item Name** - a descriptive name of the bundle.
+* **Item Type** - select type from the drop-down list.
+* **Can be purchased** - select this check box to allow this bundle to be purchased.
+* **Store visible** - select this check box to let this bundle appear in the store.
+* **Min. Quantity** - minimum quantity of bundle that must be ordered by a customer.
+* **Max. Quantity** - maximum quantity of bundle that must be ordered by a customer.
+* **Enable Date/Time** - date and time when the bundle will be available in the store. Useful for seasonal products.
+* **Disable Date/Time** - date and time when the bundle will be unavailable in the store. Useful for seasonal products.
 
 On the second step enter editorial review information. This step is not required an can be skipped.
 
@@ -42,4 +42,4 @@ To edit a bundle double click on it and make all the modifications you need. The
 
 To delete a bundle, click on it in the category and use "Remove" button. In case you need to delete multiple bundles, use Ctrl key to select them.
 
-If a bundle is included into incomplete orders, it cannot be deleted. The bundle can be deleted after the ordersвЂ™ statuses have been changed to Complete.
+If a bundle is included into incomplete orders, it cannot be deleted. The bundle can be deleted after the orders statuses have been changed to Complete.

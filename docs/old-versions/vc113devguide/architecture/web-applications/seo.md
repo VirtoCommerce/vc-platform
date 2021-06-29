@@ -28,10 +28,10 @@ The general route form is as described above in format {lang}/{store}/{category}
 
 * {lang} is current language. This route segment can be omitted but it is always created and user will be redirected to normalized URL containing language in it. It uses LanguageRouteConstraint which checks if language is correct by regex and by trying to create cultureInfo from it.
 * {store} is current store. Store is always created and added as route value, but it can be omitted just as language and user will be redirected to normalized URL. The exception case is when store has configured URL or SecureUrl property. In such case store is removed from route url and it becomes shorter ( {lang}/{category}/{item} ). This segment uses StoreRouteConstraint which checks if such store exists in database. It also checks if store supports requested language.
-* {category} is a path of codes or keywords (if exists such in SeoUrlKeywordВ table) of categories. This segment uses CategoryRouteConstraint which checks if such categories exists in database.
+* {category} is a path of codes or keywords (if exists such in SeoUrlKeyword table) of categories. This segment uses CategoryRouteConstraint which checks if such categories exists in database.
 * {item} is code or keyword for item. This segment uses ItemRouteConstraint which checks if such item exists in database. It also checks if given category path belongs to requested item.
 
-The main job is done inside Route implementation as mentioned before. There are two main parts: Deconstructing (GetRouteData) and Constructing(GetVirtualPath) URL.В 
+The main job is done inside Route implementation as mentioned before. There are two main parts: Deconstructing (GetRouteData) and Constructing(GetVirtualPath) URL. 
 
 * **GetRouteData** is responsible for filling RouteValueDIctionary with correct values that can be used by actions. This means values have to be decoded, or in other words URL deconstructed. It is also responsible for determining if this route is suitable in given context.
 * **GetVirtualPath** method task is opposite. It must encode routeValues in order to construct desired url.
@@ -74,7 +74,7 @@ protected override string ModifyCategoryPath(RouteValueDictionary values)
   }
 
   var outline = item.GetItemCategoryRouteValue();
-В 
+ 
   return outline;
 }
 ```

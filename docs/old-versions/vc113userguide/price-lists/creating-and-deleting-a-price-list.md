@@ -11,7 +11,7 @@ Use "Add' button in the Price Lists block and fill in the required fields (name 
 
 Name - descriptive name of created price list
 
-Currency - selected from the dropdown currency (according to the list ofВ currencies available in the system)
+Currency - selected from the dropdown currency (according to the list of currencies available in the system)
 
 Description - brief or full description of the price list, for instance, your price list will be applied for MSRP (Manufacturer's Suggested Retail Price).
 

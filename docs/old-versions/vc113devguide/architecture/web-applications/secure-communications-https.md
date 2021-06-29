@@ -5,13 +5,13 @@ layout: docs
 date: 2015-03-18T20:11:12.560Z
 priority: 5
 ---
-VirtoCommerce is designed to work in secure (SSL) and standard (insecure) protocols (using https or http respectively). The simplest scenario is publishing VirtoCommerce as aВ standard website. It's accessible from a browser as a regular website and the Commerce Manager (CM) uses it's default URL while connecting to it.
+VirtoCommerce is designed to work in secure (SSL) and standard (insecure) protocols (using https or http respectively). The simplest scenario is publishing VirtoCommerce as a standard website. It's accessible from a browser as a regular website and the Commerce Manager (CM) uses it's default URL while connecting to it.
 
-In order to enable secure communications, only little additional web server configuration is needed. Follow this article to configure it on IIS:В <a href="http://msdn.microsoft.com/en-us/library/hh556232(v=vs.110).aspx" rel="nofollow">How to: Configure an IIS-hosted WCF service with SSL</a>. Remarks:
+In order to enable secure communications, only little additional web server configuration is needed. Follow this article to configure it on IIS: <a href="http://msdn.microsoft.com/en-us/library/hh556232(v=vs.110).aspx" rel="nofollow">How to: Configure an IIS-hosted WCF service with SSL</a>. Remarks:
 
 * If you want your store to be accessible both in http and https, you should skip the "Configure Virtual Directory for SSL" section.
-* The "Configure WCF Service for HTTP Transport Security" sectionВ addresses changes to web.config. Ignore the sample XML code and update web.config as following:
-  * changeВ every
+* The "Configure WCF Service for HTTP Transport Security" section addresses changes to web.config. Ignore the sample XML code and update web.config as following:
+  * change every
     ```
     <security mode="None">
       <message clientCredentialType="None" />
@@ -23,7 +23,7 @@ In order to enable secure communications, only little additional web server conf
       <transport clientCredentialType="None"/>
     </security>
     ```
-  * The original web.config file has these scripts already, just some parts are commented out. If you comment out the unwanted and uncomment theВ necessary parts, the final code could be like this:
+  * The original web.config file has these scripts already, just some parts are commented out. If you comment out the unwanted and uncomment the necessary parts, the final code could be like this:
     ```
     <binding name="NonAuthenticationServiceBinding" maxReceivedMessageSize="2147483647">
       <!-- configuration for services in HTTP -->
@@ -49,4 +49,4 @@ In order to enable secure communications, only little additional web server conf
     ```
   * Don't forget to save the file when done.
 
-Now you can manage your store securely trough CM. Just remember to useВ https://В for "Base URL" while connecting:
+Now you can manage your store securely trough CM. Just remember to use https:// for "Base URL" while connecting:

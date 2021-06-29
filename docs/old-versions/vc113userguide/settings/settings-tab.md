@@ -31,7 +31,7 @@ The "Fulfillment" tab contains the list of fulfillment centers including fulfill
 
 ## Payments
 
-The list of payment gateways applied in the stores that are managed by Virto Commerce Manager are set in the "Payments" tab ofВ  "Settings" module. Here you can set which payment methods are active at the moment, which shipping methods can be selected in case of choosing these methods, what the localization settings are. This way you can manage all payment gateways applied in the store.
+The list of payment gateways applied in the stores that are managed by Virto Commerce Manager are set in the "Payments" tab of  "Settings" module. Here you can set which payment methods are active at the moment, which shipping methods can be selected in case of choosing these methods, what the localization settings are. This way you can manage all payment gateways applied in the store.
 
 ## [Shipping](docs/old-versions/vc113userguide/settings/shipping)
 
@@ -39,7 +39,7 @@ The "Shipping" tab is intended for managing and setting of shipping gateways ava
 
 ## [Taxes](docs/old-versions/vc113userguide/settings/taxes)
 
-The taxes set up is performed in the "Taxes" tab. All the taxes applied in the store can be set in this block. Here users can manage the list of all taxes,В tax categories, jurisdictions and jurisdiction groups. Importing of taxes can also be executed in this section.
+The taxes set up is performed in the "Taxes" tab. All the taxes applied in the store can be set in this block. Here users can manage the list of all taxes, tax categories, jurisdictions and jurisdiction groups. Importing of taxes can also be executed in this section.
 
 ## [Search](docs/old-versions/vc113userguide/settings/search-settings)
 

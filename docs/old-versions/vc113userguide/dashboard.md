@@ -18,7 +18,7 @@ Below are the blocks of data and buttons available on the dashboard (**blocks ar
 * New Customer - leads to creating a new customer;
 * Activity - shows the quantity of activities (assigned, new, due and etc.);
 * New Case - leads to creating a new case;
-* Pending Cases - shows the quantity of cases to be resolvedВ  and leads to the list of cases;
+* Pending Cases - shows the quantity of cases to be resolved  and leads to the list of cases;
 * Latest Cases - shows the list of the latest cases in the system.
 
 ### Order Management
@@ -40,7 +40,7 @@ Below are the blocks of data and buttons available on the dashboard (**blocks ar
 ### Marketing
 
 * Active Promotions - shows the quantity of active promotions, leads to the list of existing promotions;
-* Total Ads - shows the quantity of active ads, leads toВ  dynamic content block;
+* Total Ads - shows the quantity of active ads, leads to  dynamic content block;
 * New Promotion - leads to creating a new promotion;
 * New Add - leads to creating a new dynamic content item;
 * Active Ads - shows the quantity of active ads;

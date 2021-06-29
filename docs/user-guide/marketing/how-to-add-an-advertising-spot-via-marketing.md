@@ -15,7 +15,7 @@ There are steps to prepare dynamic content infrastructure.
 
 There are steps to add a dynamic content to a website page:
 * Open a website page html file.
-* Insert code to your Html, where Id is В placeholder name
+* Insert code to your Html, where Id is  placeholder name
 `
 <vc-content-place id="Right banner 240x400" class="col-sm-4 col-md-4 rightblock"></vc-content-place>
 `
@@ -25,7 +25,7 @@ There are steps to add a dynamic content to a website page:
 * Go to Marketing module.
 * Select **Dynamic content** in the module blade.
 * Select **Content items** in the opening blade.
-* Select content item to apply with new content. It is "Google adv 200x240" inВ [Create a content item](docs/vc2userguide/marketing/how-to-add-an-advertising-spot-via-marketing/create-a-content-item)В example.
+* Select content item to apply with new content. It is "Google adv 200x240" in [Create a content item](docs/vc2userguide/marketing/how-to-add-an-advertising-spot-via-marketing/create-a-content-item) example.
 * Insert into Html google ads snippet:
 
 ```

@@ -11,7 +11,7 @@ Module package is a distributable piece of software that can be installed in Vir
 
 ![](../../assets/images/docs/image2015-5-29_12-13-41.png)
 
-Modules can beВ unmanaged (JavaScript only) or managed (containing .NET assemblies).
+Modules can be unmanaged (JavaScript only) or managed (containing .NET assemblies).
 
 ## Create an unmanaged module package
 
@@ -23,11 +23,11 @@ Managed modules should be created by using a special Powershell command in Visua
 
 ## Preparing the project
 
-The following steps are needed only once per module.В Skip this paragraph if your module has the reference to VirtoCommerce.Module library.
+The following steps are needed only once per module. Skip this paragraph if your module has the reference to VirtoCommerce.Module library.
 
 * Open Package Manager Console in VS having your new module project loaded (Tools -> NuGet Package Manager -> Package Manager Console);
 * In the "Default project" list select the module project (the one with module.manifest file);
-* Install VirtoCommerce.ModuleВ package (execute command:В Install-Package VirtoCommerce.Module). More info on the package: <a href="https://www.nuget.org/packages/VirtoCommerce.Module" rel="nofollow">https://www.nuget.org/packages/VirtoCommerce.Module</a>
+* Install VirtoCommerce.Module package (execute command: Install-Package VirtoCommerce.Module). More info on the package: <a href="https://www.nuget.org/packages/VirtoCommerce.Module" rel="nofollow">https://www.nuget.org/packages/VirtoCommerce.Module</a>
 * readme.txt is displayed after the package installation is completed.
 ![](../../assets/images/docs/image2016-6-1_10-21-32.png)
 
@@ -37,7 +37,7 @@ The module is ready to be build as a package.
 
 Execute these steps every time when you need the module package to be created / updated:
 
-Open and build the moduleВ project in VS;If need, update the module version (in module.manifest)В and build again;Open Package Manager Console (Tools -> NuGet Package Manager -> Package Manager Console);In the "Default project" list select the module project (the one with module.manifest file);Execute command:В Compress-Module
+Open and build the module project in VS;If need, update the module version (in module.manifest) and build again;Open Package Manager Console (Tools -> NuGet Package Manager -> Package Manager Console);In the "Default project" list select the module project (the one with module.manifest file);Execute command: Compress-Module
 
 ![](../../assets/images/docs/image2016-6-1_10-44-13.png)
 

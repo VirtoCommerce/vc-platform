@@ -13,9 +13,9 @@ A product type defines how a particular set of products will be displayed, which
 
 ## Viewing and editing an Item
 
-An item concept is a generalizationВ ofВ Variation/SKU,В Product, Bundle, Dynamic Kit or Package object in Commerce Manager.
+An item concept is a generalization of Variation/SKU, Product, Bundle, Dynamic Kit or Package object in Commerce Manager.
 
-A catalog must be selected and items list loaded before an item can be viewed.В Double-click an item in the items list to view its details.В Full information regarding each item is divided into tabs - Overview, Properties, Pricing, SEO, Product Items, Associations, Editorial Reviews, Categories and Assets.
+A catalog must be selected and items list loaded before an item can be viewed. Double-click an item in the items list to view its details. Full information regarding each item is divided into tabs - Overview, Properties, Pricing, SEO, Product Items, Associations, Editorial Reviews, Categories and Assets.
 
 ## Overview
 
@@ -27,13 +27,13 @@ Item type - item type contains the set of item properties. For instance, you can
 
 Enable date/time - date and time from which the item will be available in the store. Useful for seasonal products.
 
-Disable date/time - date and time from whichВ the item will be unavailable in the store. Useful for seasonal products.
+Disable date/time - date and time from which the item will be unavailable in the store. Useful for seasonal products.
 
 Can be purchased - select this check box to allow this item to be purchased.
 
 Store visible - select this check box to let this item appear in the store.
 
-Information in overview tab is filled when an item is created manually. These are the data fields of the created item itself. Other tabs - Properties, Pricing, SEO, Product Items, Associations, Editorial Reviews, Categories and Assets - are filled in with data loaded upon request from different datatables stored in a single database.В This data is loaded and can be edited by double-clicking the necessary item in the Virto Commerce Manager.
+Information in overview tab is filled when an item is created manually. These are the data fields of the created item itself. Other tabs - Properties, Pricing, SEO, Product Items, Associations, Editorial Reviews, Categories and Assets - are filled in with data loaded upon request from different datatables stored in a single database. This data is loaded and can be edited by double-clicking the necessary item in the Virto Commerce Manager.
 
 <img src="../../../assets/images/docs/image2014-2-3_15_38_41.png" />
 
@@ -65,26 +65,26 @@ Select the type of item - Product - to create.
 
 On the first step enter product details:
 
-1. **Item Name**В - a descriptive name of the product.
-2. **Item Type**В - select type from the drop-down list.
-3. **Can be purchased**В - select this check box to allow this item to be purchased.
-4. **Store visible**В - select this check box to let this product appear in the store.
-5. **Min. Quantity**В - minimum quantity of product that must be ordered by a customer.
-6. **Max. Quantity**В - maximum quantity of product that can be ordered by a customer.
-7. **Enable Date/Time**В - date and time when the product will be available in the store. Useful for seasonal products.
-8. **Disable Date/Time**В - date and time when the product will be unavailable in the store. Useful for seasonal products.
+1. **Item Name** - a descriptive name of the product.
+2. **Item Type** - select type from the drop-down list.
+3. **Can be purchased** - select this check box to allow this item to be purchased.
+4. **Store visible** - select this check box to let this product appear in the store.
+5. **Min. Quantity** - minimum quantity of product that must be ordered by a customer.
+6. **Max. Quantity** - maximum quantity of product that can be ordered by a customer.
+7. **Enable Date/Time** - date and time when the product will be available in the store. Useful for seasonal products.
+8. **Disable Date/Time** - date and time when the product will be unavailable in the store. Useful for seasonal products.
 
-On the second step an editorial review information could beВ filled. This information is not required and can be skipped.
+On the second step an editorial review information could be filled. This information is not required and can be skipped.
 
-On the step 3 property values should beВ filled. Values for required properties must be entered.
+On the step 3 property values should be filled. Values for required properties must be entered.
 
-On the step 4 pricing information could beВ entered (price list has to beВ selected for that).
+On the step 4 pricing information could be entered (price list has to be selected for that).
 
-Click "Finish".В New product will appear in the chosen category and will be opened for editing automatically. Even more product's details can be entered or updated.
+Click "Finish". New product will appear in the chosen category and will be opened for editing automatically. Even more product's details can be entered or updated.
 
 To delete a product from a category, click on it in the list and click "Remove" button. Deleting a product also removes it's prices from all price lists containing that product.
 
-Multiple items can be deleted in similar wayВ - just use Ctrl to select items to be removed.
+Multiple items can be deleted in similar way - just use Ctrl to select items to be removed.
 
 ## Creating, editing and deleting a Bundle
 
@@ -94,20 +94,20 @@ A bundle is an item that consists of one or more items that are sold as a single
 
 Virto Commerce Manager allows creating bundles and make them available in the store.
 
-To create a bundle, navigate to the category where you would like to add a bundle to and clickВ "Add" button.
+To create a bundle, navigate to the category where you would like to add a bundle to and click "Add" button.
 
 <img src="../../../assets/images/docs/038-bundle-add-button.PNG" />
 
 Select a type of an item - Bundle. On the first step of creating fill in the following fields:
 
-* **Item Name**В - a descriptive name of the bundle.
-* **Item Type**В - select type from the drop-down list.
-* **Can be purchased**В - select this check box to allow this bundle to be purchased.
-* **Store visible**В - select this check box to let this bundle appear in the store.
-* **Min. Quantity**В - minimum quantity of bundle that must be ordered by a customer.
-* **Max. Quantity**В - maximum quantity of bundle that must be ordered by a customer.
-* **Enable Date/Time**В - date and time when the bundle will be available in the store. Useful for seasonal products.
-* **Disable Date/Time**В - date and time when the bundle will be unavailable in the store. Useful for seasonal products.
+* **Item Name** - a descriptive name of the bundle.
+* **Item Type** - select type from the drop-down list.
+* **Can be purchased** - select this check box to allow this bundle to be purchased.
+* **Store visible** - select this check box to let this bundle appear in the store.
+* **Min. Quantity** - minimum quantity of bundle that must be ordered by a customer.
+* **Max. Quantity** - maximum quantity of bundle that must be ordered by a customer.
+* **Enable Date/Time** - date and time when the bundle will be available in the store. Useful for seasonal products.
+* **Disable Date/Time** - date and time when the bundle will be unavailable in the store. Useful for seasonal products.
 
 On the second step enter editorial review information. This step is not required an can be skipped.
 
@@ -117,11 +117,11 @@ On the step 4 enter pricing information (select price list from the drop-down) a
 
 To delete a bundle, click on it in the category and use "Remove" button. In case you need to delete multiple bundles, use Ctrl key to select them.
 
-If a bundle is included in incomplete orders, it cannot be deleted. The bundle can be deleted after the ordersвЂ™ statuses have been changed to Complete.
+If a bundle is included in incomplete orders, it cannot be deleted. The bundle can be deleted after the orders statuses have been changed to Complete.
 
 ## Creating, Editing, Deleting a Dynamic Kit
 
-AВ dynamic kitВ is a type of catalog item which can be dynamically configured by the customer. This configuration (or grouping) of products is based on the customer's needs and is sold as a single unit. The components of a dynamic kit are controlled through a set of predefined conditions and user interaction, and supplied at order entry time. Adding a dynamic kit to an order is similar to adding a package. Like a package, the individual components of a dynamic kit cannot be modified and the entire configuration must be fulfilled as a whole. It is allowed to change the dynamic kit components by reconfiguring it using the system.
+A dynamic kit is a type of catalog item which can be dynamically configured by the customer. This configuration (or grouping) of products is based on the customer's needs and is sold as a single unit. The components of a dynamic kit are controlled through a set of predefined conditions and user interaction, and supplied at order entry time. Adding a dynamic kit to an order is similar to adding a package. Like a package, the individual components of a dynamic kit cannot be modified and the entire configuration must be fulfilled as a whole. It is allowed to change the dynamic kit components by reconfiguring it using the system.
 
 To create a Dynamic Kit use "Add" option, select Dynamic Kit as a product to be created and fill out the form.
 
@@ -129,17 +129,17 @@ To create a Dynamic Kit use "Add" option, select Dynamic Kit as a product to be 
 
 The dynamic kit has the following parameters:
 
-* **Item Name**В - a descriptive name of the dynamic kit.
-* **Item Type**В - type from the drop-down list that defines item properties.
-* **Can be purchased**В - elect this check box to allow this dynamic kit to be purchased.
-* **Store visible**В - select this check box to let this dynamic kit appear in the store.
-* **Min. Quantity**В - minimum quantity of dynamic kits that must be ordered by a customer.
-* **Max. Quantity**В - maximumВ quantity of dynamic kits that must be ordered by a customer.
-* **Tax Category**В - select tax category that will be applied for this dynamic kit.
-* **Packaging**В - select an option of packaging for this dynamic kit.
-* **Availability**В - select an option when this dynamic kit will be available in the store.
-* **Weight**В - enterВ weight for the dynamic kitВ displayed on the product page.
-* **Track Inventory**В - select this check box in case you need to control this dynamic kit inventory and show it to customers.
+* **Item Name** - a descriptive name of the dynamic kit.
+* **Item Type** - type from the drop-down list that defines item properties.
+* **Can be purchased** - elect this check box to allow this dynamic kit to be purchased.
+* **Store visible** - select this check box to let this dynamic kit appear in the store.
+* **Min. Quantity** - minimum quantity of dynamic kits that must be ordered by a customer.
+* **Max. Quantity** - maximum quantity of dynamic kits that must be ordered by a customer.
+* **Tax Category** - select tax category that will be applied for this dynamic kit.
+* **Packaging** - select an option of packaging for this dynamic kit.
+* **Availability** - select an option when this dynamic kit will be available in the store.
+* **Weight** - enter weight for the dynamic kit displayed on the product page.
+* **Track Inventory** - select this check box in case you need to control this dynamic kit inventory and show it to customers.
 
 To edit a dynamic kit double-click it in the catalog and make required modifications.
 
@@ -159,19 +159,19 @@ Then select "Variation" item type and click "OK".
 
 On the step 1 define values for the following fields:
 
-* **Item Name**В - a descriptive name of product variation;
-* **Item Type**В - select a type from the dropdown list;
-* **Enable Date/Time**В - date and time when the product variation will become available in the store. Useful for seasonal products.
-* **Disable Date/Time**В - date and time when the product variation will become unavailable in the store. Useful for seasonal products.
-* **Can be purchased**В - select this check box to allow this product variation to be purchased;
-* **Store visible**В - select this check box to let this product variation appear in the store;
-* **Min. Quantity**В - minimum quantity of product variation that must be ordered by a customer;
-* **Max. Quantity**В - maximum quantity of product variation that must be ordered by a customer;
-* **Tax Category**В - select tax category that will be applied for this product variation;
-* **Packaging**В - select an option of packaging for this product variation;
-* **Availability**В - select an option when this product variation will be available in the store;
-* **Weight**В - enter displayed weight for the product variation;
-* **Track inventory**В - select this check box in case you need to control this product variation inventory.
+* **Item Name** - a descriptive name of product variation;
+* **Item Type** - select a type from the dropdown list;
+* **Enable Date/Time** - date and time when the product variation will become available in the store. Useful for seasonal products.
+* **Disable Date/Time** - date and time when the product variation will become unavailable in the store. Useful for seasonal products.
+* **Can be purchased** - select this check box to allow this product variation to be purchased;
+* **Store visible** - select this check box to let this product variation appear in the store;
+* **Min. Quantity** - minimum quantity of product variation that must be ordered by a customer;
+* **Max. Quantity** - maximum quantity of product variation that must be ordered by a customer;
+* **Tax Category** - select tax category that will be applied for this product variation;
+* **Packaging** - select an option of packaging for this product variation;
+* **Availability** - select an option when this product variation will be available in the store;
+* **Weight** - enter displayed weight for the product variation;
+* **Track inventory** - select this check box in case you need to control this product variation inventory.
 
 Click "Next" to move to the following step.
 
@@ -191,7 +191,7 @@ In case you need to delete multiple items, use Ctrl to select them.
 
 Product Associations are used to show related products, accessories and other types of items for a customer when he views a product page. The administrators define which types of products will be displayed as associated with an item.
 
-This refers to marketing policy and increasing the average check of a customerвЂ™s shopping cart since customers start buying similar products of a higher price or add different accessories to the selected good.
+This refers to marketing policy and increasing the average check of a customers shopping cart since customers start buying similar products of a higher price or add different accessories to the selected good.
 
 ### How the associations can be used
 

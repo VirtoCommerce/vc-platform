@@ -27,9 +27,9 @@ Prices tab shows the list of products and their prices. The table includes Item 
 
 **Item Code** - code of the product according to your system policy.
 
-**Quantity** - minimum quantity of the item that must be ordered for the List or Sale price to take effect. Every item should have at least one price list entry with a quantity вЂњ1вЂќ to provide a default price.
+**Quantity** - minimum quantity of the item that must be ordered for the List or Sale price to take effect. Every item should have at least one price list entry with a quantity `1` to provide a default price.
 
-**List Price** - this is often ManufacturerвЂ™s Suggested Retail Price (MSRP). In case this is the only price list entry for the product, this price will be the default price.
+**List Price** - this is often Manufacturers Suggested Retail Price (MSRP). In case this is the only price list entry for the product, this price will be the default price.
 
 **Sale Price** - not required, usually this amount would be the offered selling price of the store as opposed to the MSRP specified in the List Price field.
 

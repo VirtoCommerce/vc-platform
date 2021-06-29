@@ -7,16 +7,16 @@ priority: 3
 ---
 ## Introduction
 
-Refund is a special type of payment when money is transferred back to a buyer. Typically a refund is initiated as a consequence of an item return.В It's also possible to issue a refundВ because of other reasons, without a return.В Refund must be credited to the purchase medium used in the original purchase.В In special situations, you may issue a refund to a new payment source. For example, if the buyer used a now-expired credit card for the purchase, you may issue the refund to a new credit card.
+Refund is a special type of payment when money is transferred back to a buyer. Typically a refund is initiated as a consequence of an item return. It's also possible to issue a refund because of other reasons, without a return. Refund must be credited to the purchase medium used in the original purchase. In special situations, you may issue a refund to a new payment source. For example, if the buyer used a now-expired credit card for the purchase, you may issue the refund to a new credit card.
 
 ## Creating a refund
 
-To create a refund, you must have appropriate permission and theВ order must be in a status of Complete.
+To create a refund, you must have appropriate permission and the order must be in a status of Complete.
 
 Steps to create refund:
 
-1. Open **Orders** module, select an Order from the list andВ open it.
-2. Click **Refund** button inside **Summary** tab.В 
+1. Open **Orders** module, select an Order from the list and open it.
+2. Click **Refund** button inside **Summary** tab. 
 3. A 2-step wizard appears. Enter refund amount, select a refund option: original source or a new credit card:
   <img src="../../../../assets/images/docs/Capture--.PNG" />
 4. Fill all new credit card data if Refund to a new credit card was chosen.
@@ -27,4 +27,4 @@ Steps to create refund:
   <img src="../../../../assets/images/docs/Capture4.PNG" />
 7. A payment could fail because of various reasons. In such case the error message is displayed:
   <img src="../../../../assets/images/docs/Capture5.PNG" />
-8. Click **Back** to correct the payment data or **Cancel**В to withdraw.
+8. Click **Back** to correct the payment data or **Cancel** to withdraw.

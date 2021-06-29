@@ -1,6 +1,6 @@
 ﻿---
 title: Metaform
-description: The article about Angular JS component - metaform - a placeholder (container)В controlВ that renders UI content based on provided metadata
+description: The article about Angular JS component - metaform - a placeholder (container) control that renders UI content based on provided metadata
 layout: docs
 date: 2019-01-18T10:12:14.553Z
 priority: 8
@@ -10,21 +10,21 @@ priority: 8
 Most of the blades in Virto Commerce platform contain lists or data entry forms. Typically the data entry form is made of static HTML code with AngularJS bindings. This strategy comes with the following drawbacks:
 * impossible to add new UI elements without changing the source code
 * impossible to update existing UI without changing the source code
-* most of the content is produced by copy-pasting HTML codeВ leading to maintenanceВ problems in the future. Data entry forms could potentially loose common "look and feel".
+* most of the content is produced by copy-pasting HTML code leading to maintenance problems in the future. Data entry forms could potentially loose common "look and feel".
 
-In order to eliminate the above, a new AngularJSВ component - metaform - was developed.
+In order to eliminate the above, a new AngularJS component - metaform - was developed.
 
-A **metaform** is a placeholder (container)В controlВ that renders UI content based on provided metadata.
+A **metaform** is a placeholder (container) control that renders UI content based on provided metadata.
 
-AВ **meta-field**В is a JavaScript object defining metadata for a single logical element inside **metaform**В being rendered.
+A **meta-field** is a JavaScript object defining metadata for a single logical element inside **metaform** being rendered.
 
 ## Using metaform
 
-MetaformВ is implemented as 'vaMetaform' AngularJS directive and has the following features:
-* render UI elements in a rectangular area andВ typically should be placed inside a form
+Metaform is implemented as 'vaMetaform' AngularJS directive and has the following features:
+* render UI elements in a rectangular area and typically should be placed inside a form
 * has customizable column count. The rendering takes place from left to right (columns) and from top to bottom
-* occupies allВ theВ available width and has auto height
-* supports simpleВ inputВ types and customВ templatedВ elements as well.
+* occupies all the available width and has auto height
+* supports simple input types and custom templated elements as well.
 
 ```
 <form>
@@ -102,7 +102,7 @@ Single meta-field has the following structure:
 
 ## Samples
 
-Metaform is currently used in [MemberExtensionSample](https://github.com/VirtoCommerce/vc-samples),В [Order](https://github.com/VirtoCommerce/vc-module-order) and other modules.
+Metaform is currently used in [MemberExtensionSample](https://github.com/VirtoCommerce/vc-samples), [Order](https://github.com/VirtoCommerce/vc-module-order) and other modules.
 
 ![](../../../assets/images/docs/image2016-9-7_13-6-14.png)
 Sample order details view in Orders module. Content generated using metaform outlined by red rectangle.

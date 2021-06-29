@@ -111,7 +111,7 @@ Application Insights monitors your web application in production for performance
 
 ### Availability monitoring
 
-Be the first to know when your site or service goes down. Set up tests and performance thresholds to monitor both uptime and responsiveness. Get real-time email alerts to make sure youвЂ™re never out of the loop. Learn how
+Be the first to know when your site or service goes down. Set up tests and performance thresholds to monitor both uptime and responsiveness. Get real-time email alerts to make sure youre never out of the loop. Learn how
 
 ### Performance management
 

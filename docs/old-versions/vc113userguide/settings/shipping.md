@@ -19,7 +19,7 @@ The shipping options tab allows users to create a list of options used in the we
 
 To add a new shipping option, use "Add" button and fill in the data fields:
 
-* **Name** -В a descriptive name of the shipping option;
+* **Name** - a descriptive name of the shipping option;
 * **Gateway** - select a gateway that will be used for this shipping option;
 * **Description** - a description of the shipping option;
 * **Available packages** - define which packages will be available for usage with this shipping option (for example, small box or medium box).
@@ -47,7 +47,7 @@ To edit a shipping method, click it in the list and use "Edit" button to make al
 
 ## Shipping Packages
 
-The "Shipping Packages" tab contains the list of adjusted package options that can be chosen for shipping methods. This allows to manageВ and use effectively various options of packaging. For instance, it will help to choose the most optimal package for the parcel and exclude an ability of sending small products in a large box.
+The "Shipping Packages" tab contains the list of adjusted package options that can be chosen for shipping methods. This allows to manage and use effectively various options of packaging. For instance, it will help to choose the most optimal package for the parcel and exclude an ability of sending small products in a large box.
 
 <img src="../../../assets/images/docs/shipping-packages.PNG" />
 

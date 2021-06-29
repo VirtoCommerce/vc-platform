@@ -7,25 +7,25 @@ priority: 1
 ---
 ## Summary
 
-This tutorial will show you the steps in creating new module and adding it to **VirtoCommerce.Presentation**В application.
+This tutorial will show you the steps in creating new module and adding it to **VirtoCommerce.Presentation** application.
 
 ## Overview
 
-In this tutorial you will learn how to create custom (pricelist) module and add it to theВ **VirtoCommerce.Presentation**В application. This will be shown on the Reviews module that will be created and added to the application. The module will contain main (Home) view where the list of Pricelists will be viewed. Also the item view/edit form for the selected pricelist will be created and added to the application navigation system to view and edit selected item. Based on the edit view the wizard will be created.
-In the end of the tutorial you will be able to create and add new module to theВ **VirtoCommerce.Presentation**В application.
+In this tutorial you will learn how to create custom (pricelist) module and add it to the **VirtoCommerce.Presentation** application. This will be shown on the Reviews module that will be created and added to the application. The module will contain main (Home) view where the list of Pricelists will be viewed. Also the item view/edit form for the selected pricelist will be created and added to the application navigation system to view and edit selected item. Based on the edit view the wizard will be created.
+In the end of the tutorial you will be able to create and add new module to the **VirtoCommerce.Presentation** application.
 
 ## Prism modularity concept
 
-**VirtoCommerce.Presentation**В application is built with Prism 4.0 library patterns, using the principles of modular expansion, provided by the platform. For detailed specifications of the modular principles see MSDN:В <a href="http://msdn.microsoft.com/en-us/library/gg405479(v=PandP.40).aspx" rel="nofollow">Chapter 4: Modular Application Development</a>.
+**VirtoCommerce.Presentation** application is built with Prism 4.0 library patterns, using the principles of modular expansion, provided by the platform. For detailed specifications of the modular principles see MSDN: <a href="http://msdn.microsoft.com/en-us/library/gg405479(v=PandP.40).aspx" rel="nofollow">Chapter 4: Modular Application Development</a>.
 
-Unity is used as IoC container to buildВ object tree and resolve dependencies.
+Unity is used as IoC container to build object tree and resolve dependencies.
 
-**VirtoCommerce.Presentation**В supports the module definition over configuration files of the application as well as automated modules loading though directory modules catalog loader.
+**VirtoCommerce.Presentation** supports the module definition over configuration files of the application as well as automated modules loading though directory modules catalog loader.
 
 ## Step 1. Create module project
 
 1. Add new project to the solution.
-2. SelectВ "WPF Custom Control Library" project. Name it to PricelistModule. Press OK.
+2. Select "WPF Custom Control Library" project. Name it to PricelistModule. Press OK.
 3. Rename Class1.cs file to the PricelistModule.cs. Let the class to be renamed as well
 4. Add references to libraries to the project
   * Presentation.Core.dll
@@ -39,20 +39,20 @@ Now let's fill our module with the required functionality. It is to view the lis
 Now let's create view model for the PriceList (Detail) view.
 
 1. Add ViewModel folder to the project.
-2. Add IPriceListViewModel.cs files to the ViewModel folder.В 
+2. Add IPriceListViewModel.cs files to the ViewModel folder. 
 
 **IPriceList interface**
 ```
-publicВ interfaceВ IPriceListViewModelВ :В IViewModelDetailBase
+public interface IPriceListViewModel : IViewModelDetailBase
 {
 }
 ```
 
-3. Add PriceListViewModel to the ViewModelВ folder and implement IPriceListViewModel.cs interface.В 
+3. Add PriceListViewModel to the ViewModel folder and implement IPriceListViewModel.cs interface. 
 
 **PriceListViewModel implementation**
 ```
-publicВ classВ PriceListViewModelВ :В IPriceListViewModel
+public class PriceListViewModel : IPriceListViewModel
 {
 }
 ```
@@ -61,7 +61,7 @@ publicВ classВ PriceListViewModelВ :В IPriceListViewModel
 
 **PriceListViewModel implementation**
 ```
-publicВ classВ PriceListViewModelВ :В ViewModelDetailAndWizardBase<Pricelist>,В IPriceListViewModel
+public class PriceListViewModel : ViewModelDetailAndWizardBase<Pricelist>, IPriceListViewModel
 {
 }
 ```
@@ -76,11 +76,11 @@ Inherited properties are:
 
 **Dependencies**
 ```
-privateВ readonlyВ IAuthenticationContextВ _authContext;
-privateВ readonlyВ NavigationManagerВ _navManager;
-privateВ readonlyВ IRepositoryFactory<IPricelistRepository> _repositoryFactory;
-privateВ readonlyВ IRepositoryFactory<IAppConfigRepository> _appConfigRepositoryFactory;
-privateВ readonlyВ IViewModelsFactoryВ _vmFactory;
+private readonly IAuthenticationContext _authContext;
+private readonly NavigationManager _navManager;
+private readonly IRepositoryFactory<IPricelistRepository> _repositoryFactory;
+private readonly IRepositoryFactory<IAppConfigRepository> _appConfigRepositoryFactory;
+private readonly IViewModelsFactory _vmFactory;
 ```
 
 6. Add those dependencies as constructor parameters for edit mode. Public constructor will be used by container to pass dependencies.
@@ -89,11 +89,11 @@ privateВ readonlyВ IViewModelsFactoryВ _vmFactory;
 ```
 public PriceListViewModel(
   IRepositoryFactory<IPricelistRepository> repositoryFactory,
-  IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,В 
+  IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, 
   IViewModelsFactory<IPriceViewModel> priceVmFactory,
-  ICatalogEntityFactory entityFactory,В 
+  ICatalogEntityFactory entityFactory, 
   INavigationManager navManager,
-  IAuthenticationContext authContext,В 
+  IAuthenticationContext authContext, 
   Pricelist item)
   : base(entityFactory, item, false)
 {
@@ -112,7 +112,7 @@ public PriceListViewModel(
 }
 ```
 
-7. Add protected constructor for wizardВ 
+7. Add protected constructor for wizard 
 
 **Protected constructor (Wizard mode)**
 ```
@@ -134,21 +134,21 @@ protected PriceListViewModel(
 * **DisplayName** - name for the PriceListViewModel item for navigation system and another visual elements.
 
 ```
-publicВ overrideВ stringВ DisplayName
+public override string DisplayName
 {
-  getВ {В returnВ OriginalItem ==В nullВ ?В this.GetHashCode().ToString() : OriginalItem.Name; }
+  get { return OriginalItem == null ? this.GetHashCode().ToString() : OriginalItem.Name; }
 }
 ```
 
 * **ShellDetailItemMenuBrush** - color of this item in top menu.
 
 ```
-publicВ overrideВ BrushВ ShellDetailItemMenuBrush
+public override Brush ShellDetailItemMenuBrush
 {
   get
   {
-    varВ result = (SolidColorBrush)В Application.Current.TryFindResource("PriceListDetailItemMenuBrush");В 
-    returnВ result ??В base.ShellDetailItemMenuBrush;
+    var result = (SolidColorBrush) Application.Current.TryFindResource("PriceListDetailItemMenuBrush"); 
+    return result ?? base.ShellDetailItemMenuBrush;
   }
 }
 ```
@@ -158,13 +158,13 @@ publicВ overrideВ BrushВ ShellDetailItemMenuBrush
 * **ExceptionContextIdentity** - Identity of viewmodel object for fill info when exception occupied (usually name of viewmodel and DisplayName)
 
 ```
-publicВ overrideВ stringВ ExceptionContextIdentity {В getВ {В returnВ string.Format("Price list ({0})", DisplayName); } }
+public override string ExceptionContextIdentity { get { return string.Format("Price list ({0})", DisplayName); } }
 ```
 
-* **GetRepository** - return repository for PriceList itemВ 
+* **GetRepository** - return repository for PriceList item 
 
 ```
-protectedВ overrideВ voidВ GetRepository()
+protected override void GetRepository()
 {
   Repository = _repositoryFactory.GetRepositoryInstance();
 }
@@ -173,30 +173,30 @@ protectedВ overrideВ voidВ GetRepository()
 * **HasPermission** - return true if has permission for edit PriceList item
 
 ```
-protectedВ overrideВ boolВ HasPermission()
+protected override bool HasPermission()
 {
-  returnВ _authContext.CheckPermission(PredefinedPermissions.PricingPrice_ListsManage);
+  return _authContext.CheckPermission(PredefinedPermissions.PricingPrice_ListsManage);
 }
 ```
 
 * **IsValidForSave** - valid item before save
 
 ```
-protectedВ overrideВ boolВ IsValidForSave()
+protected override bool IsValidForSave()
 {
-  returnВ InnerItem.Validate();
+  return InnerItem.Validate();
 }
 ```
 
 * **CancelConfirm** - Return RefusedConfirmation for Cancel Confirm dialog
 
 ```
-protectedВ overrideВ RefusedConfirmationВ CancelConfirm()
+protected override RefusedConfirmation CancelConfirm()
 {
-  returnВ newВ RefusedConfirmation
+  return new RefusedConfirmation
   {
-    Content =В "Save changes to price list '"В + DisplayName +В "'?",
-    Title =В "Action confirmation"
+    Content = "Save changes to price list '" + DisplayName + "'?",
+    Title = "Action confirmation"
   };
 }
 ```
@@ -204,18 +204,18 @@ protectedВ overrideВ RefusedConfirmationВ CancelConfirm()
 * **LoadInnerItem** - Load PriceList item (InnerItem) from repository with all dependencies
 
 ```
-protectedВ overrideВ voidВ LoadInnerItem()
+protected override void LoadInnerItem()
 {
   try
   {
-    varВ item = (RepositoryВ asВ IPricelistRepository).Pricelists.Where(x => x.PricelistId == OriginalItem.PricelistId)
+    var item = (Repository as IPricelistRepository).Pricelists.Where(x => x.PricelistId == OriginalItem.PricelistId)
       .Expand("Prices/CatalogItem")
       .SingleOrDefault();
     OnUIThread(() => { InnerItem = item; });
-В В }
-  catchВ (ExceptionВ ex)
+  }
+  catch (Exception ex)
   {
-    ShowErrorDialog(ex,В string.Format("An error occurred when trying to loadВ {0}",
+    ShowErrorDialog(ex, string.Format("An error occurred when trying to load {0}",
     ExceptionContextIdentity));
   }
 }
@@ -224,9 +224,9 @@ protectedВ overrideВ voidВ LoadInnerItem()
 * **InitializePropertiesForViewing** - Initialize some viewmodel properties after load InnerItem
 
 ```
-protectedВ overrideВ voidВ InitializePropertiesForViewing()
+protected override void InitializePropertiesForViewing()
 {
-  ifВ (!IsWizardMode)
+  if (!IsWizardMode)
   {
     InitializeAvailableCurrencies();
   }
@@ -236,7 +236,7 @@ protectedВ overrideВ voidВ InitializePropertiesForViewing()
 * **AfterSaveChangesUI** - Execute after DoSaveChanges() in UI thread. OriginalItem should be complete here
 
 ```
-protectedВ overrideВ voidВ AfterSaveChangesUI()
+protected override void AfterSaveChangesUI()
 {
   OriginalItem.InjectFrom<CloneInjection>(InnerItem);
 }
@@ -245,9 +245,9 @@ protectedВ overrideВ voidВ AfterSaveChangesUI()
 * **SetSubscriptionUI** - Set subscription to tracking changes of ViewModel's properties or InnerItem's collections after load InnerItem
 
 ```
-protectedВ overrideВ voidВ SetSubscriptionUI()
+protected override void SetSubscriptionUI()
 {
-  ifВ (InnerItem.Prices !=В null)
+  if (InnerItem.Prices != null)
   {
     InnerItem.Prices.CollectionChanged += ViewModel_PropertyChanged;
   }
@@ -257,22 +257,22 @@ protectedВ overrideВ voidВ SetSubscriptionUI()
 * **CloseSubscriptionUI** - Unsubscribe from tracking changes of ViewModel's properties or InnerItem's collections
 
 ```
-protectedВ overrideВ voidВ CloseSubscriptionUI()
+protected override void CloseSubscriptionUI()
 {
-  ifВ (InnerItem.Prices !=В null)
+  if (InnerItem.Prices != null)
   {
     InnerItem.Prices.CollectionChanged -= ViewModel_PropertyChanged;
   }
 }
 ```
 
-* **BeforeDelete**В - Execute before remove item (PriceList) from repository
+* **BeforeDelete** - Execute before remove item (PriceList) from repository
 
 ```
-protectedВ overrideВ boolВ BeforeDelete()
+protected override bool BeforeDelete()
 {
-  CommonExtensions.DeleteCollectionItems<Price>(InnerItem.Prices, RepositoryВ asВ IPricelistRepository);
-  returnВ true;
+  CommonExtensions.DeleteCollectionItems<Price>(InnerItem.Prices, Repository as IPricelistRepository);
+  return true;
 }
 ```
 
@@ -284,7 +284,7 @@ Now create viewmodel for wizard step.
 2. Add wizard interface IPriceListOverviewStepViewModel.cs files to the Wizard folder.
 
 ```
-publicВ interfaceВ IPriceListOverviewStepViewModelВ :В IWizardStep
+public interface IPriceListOverviewStepViewModel : IWizardStep
 {
 }
 ```
@@ -298,14 +298,14 @@ public class PriceListOverviewStepViewModel : PriceListViewModel, IPriceListOver
     IRepositoryFactory<IPricelistRepository> repositoryFactory,
     IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, 
     ICatalogEntityFactory entityFactory, IAuthenticationContext authContext, Pricelist item)
-    : base(repositoryFactory, appConfigRepositoryFactory,В  entityFactory, authContext, item)
+    : base(repositoryFactory, appConfigRepositoryFactory,  entityFactory, authContext, item)
   {
   }
   //implement IWizardStep interface
 }
 ```
 
-4. Create CreatePriceListViewModel class derived fromВ WizardContainerStepsViewModelВ that is also implements ICreatePriceListViewModel empty interfaceВ and register all wizard steps in its constructor.
+4. Create CreatePriceListViewModel class derived from WizardContainerStepsViewModel that is also implements ICreatePriceListViewModel empty interface and register all wizard steps in its constructor.
 
 ```
 public class CreatePriceListViewModel : WizardContainerStepsViewModel, ICreatePriceListViewModel
@@ -322,15 +322,15 @@ public class CreatePriceListViewModel : WizardContainerStepsViewModel, ICreatePr
 * **IsValid** - true if step is valid
 
 ```
-publicВ overrideВ boolВ IsValid
+public override bool IsValid
 {
   get
   {
-    boolВ doNotifyChanges =В false;
+    bool doNotifyChanges = false;
     InnerItem.Validate(doNotifyChanges);
-    varВ retval = InnerItem.Errors.Count == 0;
+    var retval = InnerItem.Errors.Count == 0;
     InnerItem.Errors.Clear();
-    returnВ retval;
+    return retval;
   }
 }
 ```
@@ -338,13 +338,13 @@ publicВ overrideВ boolВ IsValid
 * **IsLast** - true if the step is the last step of the wizard
 
 ```
-publicВ overrideВ boolВ IsLast {В getВ {В returnВ true; } }
+public override bool IsLast { get { return true; } }
 ```
 
 * **Description** - Description of the step that is shown in the header of the wizard
 
 ```
-publicВ overrideВ stringВ Description {В getВ {В returnВ "Enter price list general information."; } }
+public override string Description { get { return "Enter price list general information."; } }
 ```
 
 ## Step 4. Create Home viewmodel for the module
@@ -352,19 +352,19 @@ publicВ overrideВ stringВ Description {В getВ {В returnВ "Enter pr
 1. Add IPriceListHomeViewModel.cs file to the ViewModel folder. The interface should be derived from the Presentation.Core.Infrastructure.IViewModel interface.
 
 ```
-publicВ interfaceВ IPriceListHomeViewModelВ :В IViewModel
+public interface IPriceListHomeViewModel : IViewModel
 {
 }
 ```
 
 2. Add PriceListHomeViewModel.cs class file to the ViewModel folder.
 
-The class should be derived from the ViewModelHomeEditableBase<T>В where T is type that the home view working with.
+The class should be derived from the ViewModelHomeEditableBase<T> where T is type that the home view working with.
 
-Also theВ PriceListHomeViewModelВ should implement next interfacesВ IPriceListHomeViewModel,В ISupportDelayInitialization andВ IVirtualListLoader<T>, where T is detail viewmodel interface
+Also the PriceListHomeViewModel should implement next interfaces IPriceListHomeViewModel, ISupportDelayInitialization and IVirtualListLoader<T>, where T is detail viewmodel interface
 
 ```
-publicВ classВ PriceListHomeViewModelВ :В ViewModelHomeEditableBase<Pricelist>,В IPriceListHomeViewModel,В IVirtualListLoader<IPriceListViewModel>,В ISupportDelayInitialization
+public class PriceListHomeViewModel : ViewModelHomeEditableBase<Pricelist>, IPriceListHomeViewModel, IVirtualListLoader<IPriceListViewModel>, ISupportDelayInitialization
 {
 }
 ```
@@ -372,24 +372,24 @@ publicВ classВ PriceListHomeViewModelВ :В ViewModelHomeEditableBase<Pric
 3. Add dependencies
 
 ```
-#regionВ Dependencies
-privateВ readonlyВ ICatalogEntityFactoryВ _entityFactory;
-privateВ readonlyВ IAuthenticationContextВ _authContext;
-privateВ readonlyВ IRepositoryFactory<IPricelistRepository> _pricelistRepository;
-privateВ readonlyВ IViewModelsFactoryВ _vmFactory;
-privateВ readonlyВ NavigationManagerВ _navManager;
+#region Dependencies
+private readonly ICatalogEntityFactory _entityFactory;
+private readonly IAuthenticationContext _authContext;
+private readonly IRepositoryFactory<IPricelistRepository> _pricelistRepository;
+private readonly IViewModelsFactory _vmFactory;
+private readonly NavigationManager _navManager;
 #endregion
 ```
 
 4. Add constructor and pass dependencies as constructor parameters
 
 ```
-publicВ PriceListHomeViewModel(
-  ICatalogEntityFactoryВ entityFactory,В 
-  IViewModelsFactoryВ vmFactory,В 
-  IRepositoryFactory<IPricelistRepository> pricelistRepository,В 
-  IAuthenticationContextВ authContext,В 
-  NavigationManagerВ navManager)
+public PriceListHomeViewModel(
+  ICatalogEntityFactory entityFactory, 
+  IViewModelsFactory vmFactory, 
+  IRepositoryFactory<IPricelistRepository> pricelistRepository, 
+  IAuthenticationContext authContext, 
+  NavigationManager navManager)
 {
   _entityFactory = entityFactory;
   _pricelistRepository = pricelistRepository;
@@ -405,29 +405,29 @@ publicВ PriceListHomeViewModel(
 * **CanItemAddExecute** return true if allow add new item (PriceList)
 
 ```
-protectedВ overrideВ boolВ CanItemAddExecute()
+protected override bool CanItemAddExecute()
 {
-  returnВ _authContext.CheckPermission(PredefinedPermissions.PricingPrice_ListsManage);
+  return _authContext.CheckPermission(PredefinedPermissions.PricingPrice_ListsManage);
 }
 ```
 
 * **CanItemDeleteExecute** return true if allow remove some items (PriceList)
 
 ```
-protectedВ overrideВ boolВ CanItemDeleteExecute(IListВ x)
+protected override bool CanItemDeleteExecute(IList x)
 {
-  returnВ _authContext.CheckPermission(PredefinedPermissions.PricingPrice_List_AssignmentsManage)В && x !=В nullВ && x.Count > 0;
+  return _authContext.CheckPermission(PredefinedPermissions.PricingPrice_List_AssignmentsManage) && x != null && x.Count > 0;
 }
 ```
 
 * **RaiseItemAddInteractionRequest** create new item (PriceList), create wizard container and show wizard to add new Item
 
 ```
-protectedВ overrideВ voidВ RaiseItemAddInteractionRequest()
+protected override void RaiseItemAddInteractionRequest()
 {
-  varВ item = _entityFactory.CreateEntity<Pricelist>();
-  varВ vm = _vmFactory.Create<ICreatePriceListViewModel>(newВ KeyValuePair<string,В object>("item", item));В 
-  varВ confirmation =В newВ ConfirmationВ { Content = vm, Title =В "Create Price List"В };
+  var item = _entityFactory.CreateEntity<Pricelist>();
+  var vm = _vmFactory.Create<ICreatePriceListViewModel>(new KeyValuePair<string, object>("item", item)); 
+  var confirmation = new Confirmation { Content = vm, Title = "Create Price List" };
   ItemAdd(confirmation);
 }
 ```
@@ -435,26 +435,26 @@ protectedВ overrideВ voidВ RaiseItemAddInteractionRequest()
 * **RaiseItemDeleteInteractionRequest** remove selected items (PriceList)
 
 ```
-protectedВ overrideВ voidВ RaiseItemDeleteInteractionRequest(IListВ selectedItemsList)
+protected override void RaiseItemDeleteInteractionRequest(IList selectedItemsList)
 {
-  varВ selectedItems = selectedItemsList.Cast<VirtualListItem<IPriceListViewModel>>();
+  var selectedItems = selectedItemsList.Cast<VirtualListItem<IPriceListViewModel>>();
   ItemDelete(selectedItems.Select(x => ((IViewModelDetailBase)x.Data)).ToList());
-}В 
+} 
 ```
 
 7. Implement IVirtualListLoader<T> interface
 
 ```
-#regionВ IVirtualListLoader<IPriceListViewModel> MembersВ 
-publicВ boolВ CanSort {В getВ {В returnВ false; } }В 
-В 
-publicВ IList<IPriceListViewModel> LoadRange(intВ startIndex,В intВ count,В SortDescriptionCollectionВ sortDescriptions,В outВ intВ overallCount)
+#region IVirtualListLoader<IPriceListViewModel> Members 
+public bool CanSort { get { return false; } } 
+ 
+public IList<IPriceListViewModel> LoadRange(int startIndex, int count, SortDescriptionCollection sortDescriptions, out int overallCount)
 {
-  varВ retVal =В newВ List<IPriceListViewModel>();В 
-  usingВ (varВ repository = _pricelistRepository.GetRepositoryInstance())
+  var retVal = new List<IPriceListViewModel>(); 
+  using (var repository = _pricelistRepository.GetRepositoryInstance())
   {
-    varВ query = repository.Pricelists;В 
-    ifВ (!string.IsNullOrEmpty(SearchFilterKeyword))
+    var query = repository.Pricelists; 
+    if (!string.IsNullOrEmpty(SearchFilterKeyword))
       query = query.Where(x => x.Name.Contains(SearchFilterKeyword)
         x.Description.Contains(SearchFilterKeyword));
     else
@@ -481,11 +481,11 @@ publicВ IList<IPriceListViewModel> LoadRange(intВ startIndex,В intВ coun
 
 ```
 #region ISupportDelayInitialization Members 
-publicВ void InitializeForOpen()
+public void InitializeForOpen()
 {
   if (ListItemsSource == null)
   {
-    OnUIThread(() => ListItemsSource = newВ VirtualList<IPriceListViewModel>(this, 25, SynchronizationContext.Current));
+    OnUIThread(() => ListItemsSource = new VirtualList<IPriceListViewModel>(this, 25, SynchronizationContext.Current));
   }
 }
 #endregion

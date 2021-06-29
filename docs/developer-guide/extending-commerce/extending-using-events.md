@@ -40,7 +40,7 @@ eventHandlerRegistrar.RegisterHandler<CustomDomainEvent>(async (message, token) 
 ```
 
 ## How to raise domain events
-In your domain entities, when a significant state change happens youвЂ™ll want to raise your domain events like this
+In your domain entities, when a significant state change happens youll want to raise your domain events like this
 ```
 var eventPublisher = _container.Resolve<IEventPublisher>();
 eventPublisher .Publish(new CustomDomainEvent()));

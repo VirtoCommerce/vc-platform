@@ -31,9 +31,9 @@ Catalog promotion conditions are used to make specific products and categories o
 
 ### Cart promotion conditions
 
-Cart promotion conditions are used to encourage shoppers to increase their order size by providing incentives, such as free shipping on orders over a certain sum. A shopping cart promotion conditions grants a discount on a specific product or set of products to shoppers who meet them. Cart promotions are only applied after the promotionВ conditionsВ expression returnedВ *true*. Thus, a shopper only sees the price that will be paid for a promoted item when it's viewed in the shopping cart or during checkout (assuming all the promotion's conditions are met).
+Cart promotion conditions are used to encourage shoppers to increase their order size by providing incentives, such as free shipping on orders over a certain sum. A shopping cart promotion conditions grants a discount on a specific product or set of products to shoppers who meet them. Cart promotions are only applied after the promotion conditions expression returned *true*. Thus, a shopper only sees the price that will be paid for a promoted item when it's viewed in the shopping cart or during checkout (assuming all the promotion's conditions are met).
 
-For example, a product has a <a class="crosslink" href="https://virtocommerce.com/price-engine" target="_blank">list price</a> of $100.00. Currently, there is a shopping cart promotion that grants a 5% discountВ toВ all orders over $99.00. When browsing the catalog, all shoppers see the product's $100.00 list price. If a shopper adds the product to the <a class="crosslink" href="https://virtocommerce.com/shopping-cart" target="_blank">shopping cart</a> and then views the cart's contents, the price of the cart is $95.00 (due to the 5% discount). If the same shopper goes back to browsing theВ frontend, the catalog still shows the list price of $100.
+For example, a product has a <a class="crosslink" href="https://virtocommerce.com/price-engine" target="_blank">list price</a> of $100.00. Currently, there is a shopping cart promotion that grants a 5% discount to all orders over $99.00. When browsing the catalog, all shoppers see the product's $100.00 list price. If a shopper adds the product to the <a class="crosslink" href="https://virtocommerce.com/shopping-cart" target="_blank">shopping cart</a> and then views the cart's contents, the price of the cart is $95.00 (due to the 5% discount). If the same shopper goes back to browsing the frontend, the catalog still shows the list price of $100.
 
 Conditions are the set of criteria that determine, based on the current state of the cart, whether a shopper is eligible for a promotion. Examples of conditions are:
 
@@ -103,9 +103,9 @@ Coupons can be used by any eligible customer. This means that any customer who q
 |Per customer limit|Sets the amount of times the promotion can be applied to the same customer. If set 0 the promotion will be limitless.|
 |Promotion conditions|Setup promotion rules (conditions) under which the promotion will be applied.|
 
-To setВ usergroupВ clickВ ![](../../assets/images/docs/image2015-6-3_10-14-54.png) and select the targetВ usergroup.
-To setВ condtionВ clickВ ![](../../assets/images/docs/image2015-6-3_10-15-29.png) select required condition and setup required values of the selected condition.
-To set effect clickВ ![](../../assets/images/docs/image2015-6-3_10-15-50.png)В select required effect and setup values.
+To set usergroup click ![](../../assets/images/docs/image2015-6-3_10-14-54.png) and select the target usergroup.
+To set condtion click ![](../../assets/images/docs/image2015-6-3_10-15-29.png) select required condition and setup required values of the selected condition.
+To set effect click ![](../../assets/images/docs/image2015-6-3_10-15-50.png) select required effect and setup values.
 
 * Click **Create**.
 

@@ -9,17 +9,17 @@ Store and manage files. Use asset managing providers to store files in Azure or 
 
 ## Introduction
 
-All resources available in Virto Commerce are referred to as assets. The most common asset is image, but it's not limited to that. An asset can be any file, electronic document, multimedia content, etc. They are accessed from storefront and Web Admin as well.В Assets are grouped into folders and form a (logical) hierarchy structure. The physical asset storage medium is not limited and currently Virto Commerce providesВ *file system*В and *Windows Azure Blob Storage* based implementations.
+All resources available in Virto Commerce are referred to as assets. The most common asset is image, but it's not limited to that. An asset can be any file, electronic document, multimedia content, etc. They are accessed from storefront and Web Admin as well. Assets are grouped into folders and form a (logical) hierarchy structure. The physical asset storage medium is not limited and currently Virto Commerce provides *file system* and *Windows Azure Blob Storage* based implementations.
 
-You can upload, download, or view the metadata of the assets by implementing Virto Commerce API interfaces or by using already provided implementations. The API provides an IBlobStorageProviderВ interface for working with assets.
+You can upload, download, or view the metadata of the assets by implementing Virto Commerce API interfaces or by using already provided implementations. The API provides an IBlobStorageProvider interface for working with assets.
 
 ## Asset class diagram
 
 You can see the main entities depicted in the diagram below:
-* **BlobInfo**В - asset metadata information;
-* **IBlobUrlResolver**В - provides assets full path by its key;
-* **IBlobStorageProvider**В - an interface for working with assets. It defines the methods that are available for asset manipulations;
-* **UploadStreamInfo**В - a class passed as a parameter to IBlobStorageProvider. Upload method. Contains information about the asset being uploaded together with it's content.
+* **BlobInfo** - asset metadata information;
+* **IBlobUrlResolver** - provides assets full path by its key;
+* **IBlobStorageProvider** - an interface for working with assets. It defines the methods that are available for asset manipulations;
+* **UploadStreamInfo** - a class passed as a parameter to IBlobStorageProvider. Upload method. Contains information about the asset being uploaded together with it's content.
 
 ![](../../../assets/images/docs/image2015-5-22_16-29-38.png)
 
@@ -32,8 +32,8 @@ Asset (file) uploading could be a long running process depending on the file siz
 ```
 //_blobStorageProvider is IBlobStorageProvider implementation object
 ...
-usingВ (var info =В newВ UploadStreamInfo())
-usingВ (var fileStream =В newВ FileStream(fullFileName, FileMode.Open, FileAccess.Read))
+using (var info = new UploadStreamInfo())
+using (var fileStream = new FileStream(fullFileName, FileMode.Open, FileAccess.Read))
 {
   info.FileName = fileName;
   info.FileByteStream = fileStream;
@@ -88,9 +88,9 @@ In order to set up the specific storage provider you need to set storage connect
 
 Asset provider connection string should be set in **connectionStrings.config** configuration file.
 
-There are different properties in the storage provider connection string depending on itвЂ™s type.
+There are different properties in the storage provider connection string depending on its type.
 
-### Local storage providerвЂ™s properties
+### Local storage providers properties
 
 * **provider**=LocalStorage - constant that sets the storage to File system;
 * **rootPath**=~/App_Data/Assets - the local physical path for storing assets;
@@ -104,7 +104,7 @@ Example:
 
 Make sure the **publicUrl** related to the specified physical directory **rootPath** parameter is accessible through IIS. If it is not accessible you need to create a virtual folder **Asset** in the IIS configuration manager and point to the specified physical directory.
 
-### Azure storage providerвЂ™s properties
+### Azure storage providers properties
 
 * **provider**=AzureBlobStorage - constant that states that the storage is Azure blob storage;
 * **DefaultEndPointsProtocol**=http - protocol to get to Azure blob storage;

@@ -5,7 +5,7 @@ layout: docs
 date: 2015-03-18T20:11:12.560Z
 priority: 2
 ---
-Import of categories, price lists and items is much easier when you use import jobs. Navigate to Import tab of "Catalogs" block. All previouslyВ createdВ import jobs are listed here.
+Import of categories, price lists and items is much easier when you use import jobs. Navigate to Import tab of "Catalogs" block. All previously created import jobs are listed here.
 
 * Category Import Job
 * Price Import Job

@@ -19,11 +19,11 @@ Although "VirtoCommerce" is the default database connection string, other module
 
 ### AssetsConnectionString
 
-That's a custom connection string for Assets management and it consists of two parts. First part is **provider=XXXX**, which specifies which provider to use for storing assets. The remainder of the string is passed to providerвЂ™s constructor. Platform supports two asset providers: **LocalStorage** and **AzureBlobStorage**.
+That's a custom connection string for Assets management and it consists of two parts. First part is **provider=XXXX**, which specifies which provider to use for storing assets. The remainder of the string is passed to providers constructor. Platform supports two asset providers: **LocalStorage** and **AzureBlobStorage**.
 
 #### LocalStorage
 ```
-<addВ name="AssetsConnectionString"В connectionString="provider=LocalStorage;rootPath=~/App_Data/Assets;publicUrl=http://localhost/admin/Assets" />
+<add name="AssetsConnectionString" connectionString="provider=LocalStorage;rootPath=~/App_Data/Assets;publicUrl=http://localhost/admin/Assets" />
 ```
 
 This provider stores assets in a local file system.
@@ -34,7 +34,7 @@ This provider stores assets in a local file system.
 
 #### AzureBlobStorage
 ```
-<addВ name="AssetsConnectionString"В connectionString="provider=AzureBlobStorage;DefaultEndpointsProtocol=http;AccountName=XXXX;AccountKey=YYYY" />
+<add name="AssetsConnectionString" connectionString="provider=AzureBlobStorage;DefaultEndpointsProtocol=http;AccountName=XXXX;AccountKey=YYYY" />
 ```
 
 This provider stores assets in <a class="crosslink" href="https://virtocommerce.com/ecommerce-hosting" target="_blank">Azure Storage</a>.
@@ -45,17 +45,17 @@ You should copy values for this connection string from your Azure portal and pas
 
 ### SampleDataUrl
 ```
-<addВ key="VirtoCommerce:SampleDataUrl"В value="http://virtocommerce.blob.core.windows.net/sample-data"В />
+<add key="VirtoCommerce:SampleDataUrl" value="http://virtocommerce.blob.core.windows.net/sample-data" />
 ```
 
-This parameter defines theВ URL ofВ either a ZIP package, which contains exported sample data, or a directory containing theВ manifest.json file with the list of available sample data packages and its URLs.
+This parameter defines the URL of either a ZIP package, which contains exported sample data, or a directory containing the manifest.json file with the list of available sample data packages and its URLs.
 
 ### Modules' Data Sources
 ```
-<addВ key="VirtoCommerce:ModulesDataSources"В value="https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules.json; C:\customModules\modules.json" />
+<add key="VirtoCommerce:ModulesDataSources" value="https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules.json; C:\customModules\modules.json" />
 ```
 
-This parameter definesВ theВ available data sources for VCВ modules management. There can beВ multiple (remote or local) links specified in a single settingВ value. Each link should lead toВ file inВ **json**В formatВ containing modules information such as module id, title, version,В dependencies, authors, etc.
+This parameter defines the available data sources for VC modules management. There can be multiple (remote or local) links specified in a single setting value. Each link should lead to file in **json** format containing modules information such as module id, title, version, dependencies, authors, etc.
 
 ```
 <add key="VirtoCommerce:Modules:GitHubAuthorizationToken" value="" />
@@ -124,11 +124,11 @@ Lifespan after which the authentication token is considered expired. Default val
 
 #### Cookies
 ```
-<addВ key="VirtoCommerce:Authentication:Cookies.Enabled"В value="true"В />
-<addВ key="VirtoCommerce:Authentication:Cookies.ValidateInterval"В value="1:00:00:00"В />
+<add key="VirtoCommerce:Authentication:Cookies.Enabled" value="true" />
+<add key="VirtoCommerce:Authentication:Cookies.ValidateInterval" value="1:00:00:00" />
 ```
 
-If the time passed since the authentication cookie was generated is greater than ValidateInterval,В the security stamp validator will check if the security stamp has been changed in the database.
+If the time passed since the authentication cookie was generated is greater than ValidateInterval, the security stamp validator will check if the security stamp has been changed in the database.
 
 Default value is 1 day.
 
@@ -210,8 +210,8 @@ The SlidingExpiration is set to true to instruct the middleware to re-issue a ne
 
 #### Bearer Tokens
 ```
-<addВ key="VirtoCommerce:Authentication:BearerTokens.Enabled"В value="true"В />
-<addВ key="VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan"В value="1:00:00"В />
+<add key="VirtoCommerce:Authentication:BearerTokens.Enabled" value="true" />
+<add key="VirtoCommerce:Authentication:BearerTokens.AccessTokenExpireTimeSpan" value="1:00:00" />
 ```
 
 AccessTokenExpireTimeSpan is the life time of the access token. When this period has expired the client should request a new token.
@@ -231,18 +231,18 @@ The list of permissions for Bearer token authorization that will be used to auth
 
 #### HMAC
 ```
-<addВ key="VirtoCommerce:Authentication:Hmac.Enabled"В value="true"В />
-<addВ key="VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod"В value="00:20:00"В />
+<add key="VirtoCommerce:Authentication:Hmac.Enabled" value="true" />
+<add key="VirtoCommerce:Authentication:Hmac.SignatureValidityPeriod" value="00:20:00" />
 ```
-If the time passed since theВ request signature was generated is greater than SignatureValidityPeriod, the request will be rejected by server.
+If the time passed since the request signature was generated is greater than SignatureValidityPeriod, the request will be rejected by server.
 
 Default value is 20 minutes.
 
 #### API Keys
 ```
-<addВ key="VirtoCommerce:Authentication:ApiKeys.Enabled"В value="true"В />
-<addВ key="VirtoCommerce:Authentication:ApiKeys.HttpHeaderName"В value="api_key"В />
-<addВ key="VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName"В value="api_key"В />
+<add key="VirtoCommerce:Authentication:ApiKeys.Enabled" value="true" />
+<add key="VirtoCommerce:Authentication:ApiKeys.HttpHeaderName" value="api_key" />
+<add key="VirtoCommerce:Authentication:ApiKeys.QueryStringParameterName" value="api_key" />
 ```
 The API key can be passed in the Authorization header, in the custom header (HttpHeaderName) or in the URL (QueryStringParameterName).
 

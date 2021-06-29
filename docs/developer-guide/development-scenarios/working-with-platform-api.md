@@ -1,4 +1,4 @@
-﻿---
+---
 title: Working with platform API
 description: The list of articles about working with platform Virto Commerce API
 layout: docs
@@ -9,7 +9,7 @@ priority: 6
 
 Virto Commerce platform supports 2 types of authentication for API calls:
 
-* Simple - when user id passed in url for each API request. Example: **http://demo.virtocommerce.com/admin/api/catalog/catalogs?api_key=a348fa7508d342f6a32f8bf6c6681a2a%20**
+* Simple - when user id passed in url for each API request. Example: `http://demo.virtocommerce.com/admin/api/catalog/catalogs?api_key=a348fa7508d342f6a32f8bf6c6681a2a%20`
 * HMAC - Hash-based message authentication code (HMAC) is used to identify a client and ensure the request integrity.
 
 In order to enable using platform API, first of all you should create user account in Commerce Manager and generate API key of appropriate type (simple or HMAC).
@@ -18,7 +18,7 @@ In order to enable using platform API, first of all you should create user acco
 
 You need to create a new user for impersonating the API requests. Login to Commerce Manager with administrator permissions. Navigate to **Configuration -> Security -> Users**.
 
-Create a new account and assign **Use api** role (comprising of single permission **security:call_api**) to it. More details on permissions: [Working with platform security](docs/vc2devguide/working-with-platform-manager/basic-functions/working-with-platform-security). 
+Create a new account and assign **Use api** role (comprising of single permission **security:call_api**) to it. More details on permissions: [Working with platform security](../../developer-guide/working-with-platform-manager/basic-functions/working-with-platform-security.md). 
 
 ![Assigning "Use api" role](../../assets/images/docs/image2016-5-31_16-54-3.png "Assigning Use API role")
 
@@ -45,7 +45,7 @@ After the permissions has been set, click "Create". The new user will be created
 ## Using platform API from managed C# code
 
 An API client has to be generated before using API. Refer
-[How to generate module API C# client using AutoRest](docs/vc2devguide/development-scenarios/how-to-generate-module-api-c-sharp-client-using-autorest) for instructions.
+[How to generate module API C# client using AutoRest](how-to-generate-module-api-c-sharp-client-using-autorest.md) for instructions.
 
 Next you should install special VirtoCommerce.Platform.Client.Security NuGet package which allows to use both (HMAC and SImple) API authentication protocols.
 
@@ -99,7 +99,7 @@ var catalogs = catalogClient.CatalogModuleCatalogs.GetCatalogs();
 
 Nothing special, just add ?api_key='Your API key' to each API request.
 
-[Example](http://demo.virtocommerce.com/admin/api/catalog/catalogs?api_key=a348fa7508d342f6a32f8bf6c6681a2a%20)
+Example: `http://demo.virtocommerce.com/admin/api/catalog/catalogs?api_key=a348fa7508d342f6a32f8bf6c6681a2a%20`
 
 ### Using API with HMAC authentication
 

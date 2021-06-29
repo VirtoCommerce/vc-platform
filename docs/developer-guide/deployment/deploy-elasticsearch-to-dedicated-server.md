@@ -29,7 +29,7 @@ service start
 
 ![Installing and starting ElascticSearch service](../../assets/images/docs/image2015-3-20_11-24-4.png "Installing and starting ElascticSearch service")
 
-Navigate toВ **http://localhost:9200**В in your browser. You should see Elasticsearch status inВ JSON format:
+Navigate to **http://localhost:9200** in your browser. You should see Elasticsearch status in JSON format:
 
 ```
 {
@@ -52,4 +52,4 @@ If you wish Elasticsearch to start when Windows starts run the following command
 sc config elasticsearch-service-x64 start=auto
 ```
 
-whereВ elasticsearch-service-x64 is the name of the installed Elasticsearch service.
+where elasticsearch-service-x64 is the name of the installed Elasticsearch service.

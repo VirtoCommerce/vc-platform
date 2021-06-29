@@ -9,9 +9,9 @@ This documents describes some specific related to developing on azure platform.
 
 ## Configuration
 
-Settings that are typically stored in web.config or connectionstrings.config are stored in theВ ServiceConfiguration.{deployment}.cscfg when running in azure. Settings are stored there to allow changing basic settings like database connection string during runtime without a need to redeploy. This is very useful when you want test code on staging environment against both test database and production database before doing a swap.
+Settings that are typically stored in web.config or connectionstrings.config are stored in the ServiceConfiguration.{deployment}.cscfg when running in azure. Settings are stored there to allow changing basic settings like database connection string during runtime without a need to redeploy. This is very useful when you want test code on staging environment against both test database and production database before doing a swap.
 
-The deployment package includes two such configuration files one called ServiceConfiguration.Local.cscfg and anotherВ ServiceConfiguration.Cloud.cscfg. Local is used to run in emulator in dev machine and Cloud for remote deployment.
+The deployment package includes two such configuration files one called ServiceConfiguration.Local.cscfg and another ServiceConfiguration.Cloud.cscfg. Local is used to run in emulator in dev machine and Cloud for remote deployment.
 
 ### Implementation
 

@@ -23,7 +23,7 @@ The "Settings" sub-tab is intended for creating and keeping the list of custom s
 
 <img src="../../../assets/images/docs/image2014-2-3_14_55_25.png" />
 
-To add new setting click "Add" button and fill in all the fields of the wizard.В 
+To add new setting click "Add" button and fill in all the fields of the wizard. 
 
 To edit a setting, select it in the list by and click "Edit" button. To delete a setting, select it and clidk "Delete" button.
 
@@ -48,7 +48,7 @@ To edit a system job, select it in the list by and click "Edit" button. To delet
 
 ## Email templates
 
-Every online store uses special email templates for sending various notifications to customers in order to inform about changes of status etc. All you need to do is create a code of email message in appropriate format (xsl,html or text) and adjust in the Virto Commerce Manager. Open "Email templates" tab of "Application" block in "Settings" module.В  You will see the list of email templates existing in the system.
+Every online store uses special email templates for sending various notifications to customers in order to inform about changes of status etc. All you need to do is create a code of email message in appropriate format (xsl,html or text) and adjust in the Virto Commerce Manager. Open "Email templates" tab of "Application" block in "Settings" module.  You will see the list of email templates existing in the system.
 
 <img src="../../../assets/images/docs/email-templates.PNG" />
 
@@ -71,7 +71,7 @@ The "Display templates" tab contains the list of applied templates created for d
 To add a new display template click "Add" button and fill in all the fields shown on the first step of the wizard. The fields are:
 
 * Name - system name of the template in the data base;
-* Template name -В  a descriptive name of the system job you create;
+* Template name -  a descriptive name of the system job you create;
 * Target type - select a type of the target for which the template will be used. Types are defined earlier;
 * Priority - set the priority to define in which turn this template will be used;
 * Is active - use this checkbox to make the email templates available for applying;
@@ -99,4 +99,4 @@ Another option to localize the frontend would be exporting the list of text to b
 
 <img src="../../../assets/images/docs/image2014-2-3_15_17_32.png" />
 
-button.В Translate the saved file in the text editor. After all the text has been translated import it into the system using Localization import funcionality. To import the translation go to "Import" tab which is under Localization tab. Create an import job and run it.
+button. Translate the saved file in the text editor. After all the text has been translated import it into the system using Localization import funcionality. To import the translation go to "Import" tab which is under Localization tab. Create an import job and run it.

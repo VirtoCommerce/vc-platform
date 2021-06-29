@@ -37,7 +37,7 @@ The Content Places, are also created through Virto Commerce administration tool,
 
 ## Content types
 
-A Content type is a template used to define a Dynamic Content Type. It describes how a particular content type is displayed and what information is required to display it.В Virto Commerce includes several Content types for the most common types of Dynamic Content. For example, there is a Content type to display images with links (banner) another to display product data (product with image and price).
+A Content type is a template used to define a Dynamic Content Type. It describes how a particular content type is displayed and what information is required to display it. Virto Commerce includes several Content types for the most common types of Dynamic Content. For example, there is a Content type to display images with links (banner) another to display product data (product with image and price).
 
 The following Dynamic Content Types are shipped with Virto Commerce out-of-the-box. Each requires one or more parameter values to specify things such as, what image file should display or what the target web page should display when clicked.
 
@@ -61,12 +61,12 @@ Content Places are created by web developers in templates. Once they have been c
 
 Dynamic Content shows specific content to targeted customers. The system determines the customers properties via Tags. Virto Commerce incorporates tagging system that is used to set and evaluate tags that you can use to segment Customers, and to decide when, where and to which Customer to display content. The tagging data about a customer is captured in a variety of ways, including:
 
-* Information provided in a registered userвЂ™s customer account
+* Information provided in a registered users customer account
 * Information entered by a Customer Service about a customer during a customer service call
 * Target and Referring URLs and search terms captured when the user clicks a link to bring them to a frontend.
 * Customer Geo location
 
-Information captured by the tags is stored in the userвЂ™s session while he shops in an frontend. The information can then be used to evaluate whether the customer meets conditions set for displaying Dynamic Content. Tag information is captured only when the customer first visits a frontend during a browser session.
+Information captured by the tags is stored in the users session while he shops in an frontend. The information can then be used to evaluate whether the customer meets conditions set for displaying Dynamic Content. Tag information is captured only when the customer first visits a frontend during a browser session.
 
 A Marketer or other Manager user with granted Dynamic Content permissions, uses the tags when creating conditions that determine whether a customer will see a piece of Dynamic Content or not.
 
@@ -146,7 +146,7 @@ In the example screenshot the ImageClickable is selected, so AlternativeText, Im
 4. Click **DELETE** button
 5. Confirm deletion.
 
-> Only Dynamic Content that doesn't belongВ to any of Content publishing can be deleted otherwise the message will be shown that the associated Content Publishing should be deleted first.
+> Only Dynamic Content that doesn't belong to any of Content publishing can be deleted otherwise the message will be shown that the associated Content Publishing should be deleted first.
 
 ### Duplicating Dynamic Content
 

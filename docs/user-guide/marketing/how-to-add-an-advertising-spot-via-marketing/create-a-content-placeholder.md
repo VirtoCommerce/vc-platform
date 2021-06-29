@@ -11,14 +11,14 @@ There are steps to create a content placeholder.
 * Select **Dynamic content** in the module blade.
 * Select **Content placeholders** in the opening blade.
 ![](../../../assets/images/docs/image2016-2-3_14-29-48.png)
-In order toВ manage your placeholders easily you should create a folder structure.В This structure like file system structure where files are content placeholders.
-* Add a new folder for advertising placeholderВ by clicking on **Add** toolbar command.
+In order to manage your placeholders easily you should create a folder structure. This structure like file system structure where files are content placeholders.
+* Add a new folder for advertising placeholder by clicking on **Add** toolbar command.
 * Select "Placeholders folder" on the opening blade.
 ![](../../../assets/images/docs/image2016-2-3_14-48-17.png)
-* Type name and description. Click **Create**В button.
+* Type name and description. Click **Create** button.
 * Go to created folder by clicking on it.
 ![](../../../assets/images/docs/image2016-2-3_14-49-35.png)
-* Add placeholderВ by clicking on **Add** toolbar command.
+* Add placeholder by clicking on **Add** toolbar command.
 * Select "Placeholder" on the opening blade.
-* TypeВ name and description. Load an image. Usually, the image is screen-short of your site page with marked placeholder. Click **Create**В button.
+* Type name and description. Load an image. Usually, the image is screen-short of your site page with marked placeholder. Click **Create** button.
 ![](../../../assets/images/docs/image2016-2-3_14-54-22.png)

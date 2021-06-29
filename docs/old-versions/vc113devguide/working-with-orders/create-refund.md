@@ -8,62 +8,62 @@ priority: 2
 Refunding can be initiated on order of state **Completed**. Sample code:
 
 ```
-varВ itemVMВ =В Container.Resolve<ICreateRefundViewModel>(newВ ParameterOverride("item",В InnerItem),В newВ ParameterOverride("defaultAmount",В decimal.Zero));
-varВ confirmationВ =В newВ ConditionalConfirmation();
-confirmation.TitleВ =В "CreateВ Refund";
-confirmation.ContentВ =В itemVM;
-CommonOrderWizardDialogInteractionRequest.Raise(confirmation,В xВ =>
+var itemVM = Container.Resolve<ICreateRefundViewModel>(new ParameterOverride("item", InnerItem), new ParameterOverride("defaultAmount", decimal.Zero));
+var confirmation = new ConditionalConfirmation();
+confirmation.Title = "Create Refund";
+confirmation.Content = itemVM;
+CommonOrderWizardDialogInteractionRequest.Raise(confirmation, x =>
 {
-  ifВ (x.Confirmed)
+  if (x.Confirmed)
   {
     ReQueryPayments();
   }
 });
 ```
 
-An instance ofВ ICreateRefundViewModelВ is resolved. Passing required parameters:
+An instance of ICreateRefundViewModel is resolved. Passing required parameters:
 
 * **item** - Order with OrderForms/Payments properties initialized;
-* **defaultAmount**В - initial amount to display in UI.
+* **defaultAmount** - initial amount to display in UI.
 
-Actual refund payment is submited inside theВ ICreateRefundViewModelВ wizard. IOrderService.CreatePaymentВ service method is used for actual payment transaction. Sample code for initiating aВ CreditCardPayment:
+Actual refund payment is submited inside the ICreateRefundViewModel wizard. IOrderService.CreatePayment service method is used for actual payment transaction. Sample code for initiating a CreditCardPayment:
 
 ```
-varВ paymentВ =В newВ OrdersModel.CreditCardPayment();
-switchВ (InnerModel.RefundOption)
+var payment = new OrdersModel.CreditCardPayment();
+switch (InnerModel.RefundOption)
 {
-  caseВ "original":
+  case "original":
     payment.InjectFrom(InnerModel.SelectedPayment);
     break;
-  caseВ "manual":
+  case "manual":
     payment.InjectFrom(InnerModel.NewPaymentSource.NewPayment);
-    payment.PaymentMethodIdВ =В InnerModel.NewPaymentSource.PaymentMethodName;
-    payment.PaymentTypeВ =В OrdersModel.PaymentType.CreditCard.GetHashCode();
+    payment.PaymentMethodId = InnerModel.NewPaymentSource.PaymentMethodName;
+    payment.PaymentType = OrdersModel.PaymentType.CreditCard.GetHashCode();
 
-    varВ initialPaymentВ =В InnerModel.Order.OrderForms[0].Payments
-      .Where(xВ =>В x.PaymentMethodIdВ ==В payment.PaymentMethodId)
-      .OrderByDescending(xВ =>В x.Created).First();
-    payment.ValidationCodeВ =В initialPayment.ValidationCode;
-    payment.AuthorizationCodeВ =В initialPayment.AuthorizationCode;
-    payment.OrderFormIdВ =В initialPayment.OrderFormId;
+    var initialPayment = InnerModel.Order.OrderForms[0].Payments
+      .Where(x => x.PaymentMethodId == payment.PaymentMethodId)
+      .OrderByDescending(x => x.Created).First();
+    payment.ValidationCode = initialPayment.ValidationCode;
+    payment.AuthorizationCode = initialPayment.AuthorizationCode;
+    payment.OrderFormId = initialPayment.OrderFormId;
     break;
 }
-payment.AmountВ =В InnerModel.Amount;
-payment.PaymentIdВ =В payment.GenerateNewKey();
-payment.TransactionTypeВ =В OrdersModel.TransactionType.Credit.ToString();
+payment.Amount = InnerModel.Amount;
+payment.PaymentId = payment.GenerateNewKey();
+payment.TransactionType = OrdersModel.TransactionType.Credit.ToString();
 
-varВ orderServiceВ =В ServiceLocator.Current.GetInstance<IOrderService>();
+var orderService = ServiceLocator.Current.GetInstance<IOrderService>();
 try
 {
-  varВ paymentResultВ =В orderService.CreatePayment(payment);
+  var paymentResult = orderService.CreatePayment(payment);
 }
 ...
 ```
 
-AВ CreatePaymentResultВ class instance is returned as aВ CreatePayment() method result. It contains payment creating (processing) details:
+A CreatePaymentResult class instance is returned as a CreatePayment() method result. It contains payment creating (processing) details:
 
 * **IsSuccess** - true, if payment was created successfully;
-* **Message** - error message or null if payment was createdВ successfully;
+* **Message** - error message or null if payment was created successfully;
 * **TransactionId** - transaction confirmation number.
 
 If operation succeeded, payments list should be updated in GUI.

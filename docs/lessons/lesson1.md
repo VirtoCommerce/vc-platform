@@ -45,10 +45,10 @@ New-Item -ItemType directory -Path $folder -Force
 
 ### Configure connection strings
 
-* Open theВ **C:\inetpub\wwwroot\admin\Web.config**В file in a text editor.
+* Open the **C:\inetpub\wwwroot\admin\Web.config** file in a text editor.
 * In the **connectionStrings** section find the **add** node:
   
-  **VirtoCommerce**: parameters forВ В SQL server database. Change (local) to IP address of your SQL Server. For locally running instance   SQL Express set **Data Source=.\SQLEXPRESS**.
+  **VirtoCommerce**: parameters for  SQL server database. Change (local) to IP address of your SQL Server. For locally running instance   SQL Express set **Data Source=.\SQLEXPRESS**.
   
 ```
   <add name="VirtoCommerce" connectionString="Data Source=(local);Initial Catalog=VirtoCommerce2;Persist Security Info=True;User       ID=virto;Password=virto;MultipleActiveResultSets=True;Connect Timeout=420" providerName="System.Data.SqlClient" />
@@ -60,7 +60,7 @@ New-Item -ItemType directory -Path $folder -Force
 
 ### Configure permissions for admin folder of VirtoCommerce Platform
 
-Open properties forВ **C:\inetpub\wwwroot\admin**В folder and give permissionВ **Modify**В toВ **IIS_IUSRS**В user group.
+Open properties for **C:\inetpub\wwwroot\admin** folder and give permission **Modify** to **IIS_IUSRS** user group.
 
 ![Setting admin folder security options](../assets/images/docs/iis_iusrs-rights-on-admin-folder.png "Setting admin folder security options")
 
@@ -78,13 +78,13 @@ $acl | Set-Acl $folder
 
 ### Configure IIS
 
-* Open theВ **IIS Manager**В and create a new application named **admin** inside an existing **Default Web Site**.
-* In theВ **Physical path**В field enter the full path to the platform site dataВ folder **C:\inetpub\wwwroot\admin**.
+* Open the **IIS Manager** and create a new application named **admin** inside an existing **Default Web Site**.
+* In the **Physical path** field enter the full path to the platform site data folder **C:\inetpub\wwwroot\admin**.
 
 ![Website configuration in IIS](../assets/images/docs/add-admin-application-binaries.png "Website configuration in IIS")
 
-* Select application pool named DefaultAppPool which usesВ **.NET CLR Version 4.0**В andВ **Integrated**В pipeline mode.
-* Inside the admin application add the new virtual directory with aliasВ **assets**В and physical pathВ **C:\inetpub\wwwroot\admin\App_Data\Assets**. If there is no **Assets** directory inside **App_Data**, create it manually or with PowerShell commands:
+* Select application pool named DefaultAppPool which uses **.NET CLR Version 4.0** and **Integrated** pipeline mode.
+* Inside the admin application add the new virtual directory with alias **assets** and physical path **C:\inetpub\wwwroot\admin\App_Data\Assets**. If there is no **Assets** directory inside **App_Data**, create it manually or with PowerShell commands:
 
 ```
 $folder="C:\inetpub\wwwroot\admin\App_Data\Assets"
@@ -95,7 +95,7 @@ New-Item -ItemType directory -Path $folder -Force
 
 ## First sign in
 
-* Open the Virto Commerce Platform application in the browser - in  theВ **IIS Manager** select **admin** and click on right column to "Browse *:80(http)".
+* Open the Virto Commerce Platform application in the browser - in  the **IIS Manager** select **admin** and click on right column to "Browse *:80(http)".
 * **On the first request the application will create and initialize Virtocommerce2 database**. Wait a minute...
 * After that you should see the sign in page.
 
@@ -129,12 +129,12 @@ After **Sample data installation** step completed user is forced to change the p
 * Select **Users**.
 * Select the **frontend** user.
 * Click **Change password**.
-* Enter the new password twice and clickВ **OK**.
+* Enter the new password twice and click **OK**.
 
 ## Change API credentials for storefront application
 
 * In the left menu select **More > Configuration > Security**.
-* SelectВ **Users**.
+* Select **Users**.
 * Select the **frontend** user.
 * Click the **API Keys** widget.
 * Select the **Frontend Hmac** key.
@@ -159,8 +159,8 @@ and unpack this zip file to this folder of web server.
 
 ### Configuring VirtoCommerce Platform Endpoint
 
-* Open theВ **C:\vc-storefront-core\appsettings.json** in a text editor.
-* In theВ **VirtoCommerce**В section find the node namedВ **Endpoint**. Make sure that itsВ **Url**В attribute value is **http://localhost/admin**.
+* Open the **C:\vc-storefront-core\appsettings.json** in a text editor.
+* In the **VirtoCommerce** section find the node named **Endpoint**. Make sure that its **Url** attribute value is **http://localhost/admin**.
 * Make sure that **AppId** and **SecretKey** attributes values is set to the values obtained earlier in the **Change API credentials for storefront application** step.
   
 ```
@@ -178,8 +178,8 @@ and unpack this zip file to this folder of web server.
 
 ### Configure CMS content storage
 
-* Open theВ **appsettings.json** in a text editor.
-* In the **ConnectionStrings** section find the attribute namedВ **ContentConnectionString**. Make sure that its rootPath value is **~/App_Data/cms-content**.
+* Open the **appsettings.json** in a text editor.
+* In the **ConnectionStrings** section find the attribute named **ContentConnectionString**. Make sure that its rootPath value is **~/App_Data/cms-content**.
 
 ```
 ...

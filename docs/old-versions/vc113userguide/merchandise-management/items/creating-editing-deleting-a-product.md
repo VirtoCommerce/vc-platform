@@ -21,14 +21,14 @@ Select the type of item - Product - to create.
 
 On the first step enter product details:
 
-1. **Item Name**В - a descriptive name of the product.
-2. **Item Type**В - select type from the drop-down list.
-3. **Can be purchased**В - select this check box to allow this item to be purchased.
-4. **Store visible**В - select this check box to let this product appear in the store.
-5. **Min. Quantity**В - minimum quantity of product that must be ordered by a customer.
-6. **Max. Quantity**В - maximum quantity of product that can be ordered by a customer.
-7. **Enable Date/Time**В - date and time when the product will be available in the store. Useful for seasonal products.
-8. **Disable Date/Time**В - date and time when the product will be unavailable in the store. Useful for seasonal products.
+1. **Item Name** - a descriptive name of the product.
+2. **Item Type** - select type from the drop-down list.
+3. **Can be purchased** - select this check box to allow this item to be purchased.
+4. **Store visible** - select this check box to let this product appear in the store.
+5. **Min. Quantity** - minimum quantity of product that must be ordered by a customer.
+6. **Max. Quantity** - maximum quantity of product that can be ordered by a customer.
+7. **Enable Date/Time** - date and time when the product will be available in the store. Useful for seasonal products.
+8. **Disable Date/Time** - date and time when the product will be unavailable in the store. Useful for seasonal products.
 
 On the second step enter editorial review information. This step is not required, you can skip it.
 
@@ -48,7 +48,7 @@ This way you can delete multiple products - just use Ctrl to select items to be 
 
 ## Creating a Product with Variations sample
 
-There is a product in the sample "Apple" store "apple ipod shuffle"В where you can pick color and size options.
+There is a product in the sample "Apple" store "apple ipod shuffle" where you can pick color and size options.
 
 Below is described the way to do such a product.
 

@@ -11,13 +11,13 @@ Open Import tab in the Catalogs block of Commerce Manager and click "Add" button
 
 On the first step define the following fields:
 
-* **Importing item data type**В - select the type of imported data (product, category, package, etc.);
-* **Catalog**В - select a catalog where the data will be imported to;
-* **Property set**В - select one of predefined property sets for imported data;
-* **CSV Template File**В - define the path of the CSV template file created previously;
-* **Name**В - the title of import job (it is filled automatically with the selected data type, catalog and property set properties values. So there is no need to fill this property by default;
-* **Column delimiter**В - select the character that separates text values in a line. The "Auto" is selected by default, so when you select the template file the system will try to guess the delimiter, but ifВ 
-* **Errors allowed during import**В - maximum number of errors that can occur during importing process.
+* **Importing item data type** - select the type of imported data (product, category, package, etc.);
+* **Catalog** - select a catalog where the data will be imported to;
+* **Property set** - select one of predefined property sets for imported data;
+* **CSV Template File** - define the path of the CSV template file created previously;
+* **Name** - the title of import job (it is filled automatically with the selected data type, catalog and property set properties values. So there is no need to fill this property by default;
+* **Column delimiter** - select the character that separates text values in a line. The "Auto" is selected by default, so when you select the template file the system will try to guess the delimiter, but if 
+* **Errors allowed during import** - maximum number of errors that can occur during importing process.
 
 Once all the fields marked by an asterisk are filled out, click "Next".
 

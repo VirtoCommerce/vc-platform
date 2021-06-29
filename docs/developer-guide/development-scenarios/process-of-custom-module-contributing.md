@@ -5,6 +5,6 @@ layout: docs
 date: 2016-05-31T12:44:38.140Z
 priority: 9
 ---
-## ProcessВ overview
+## Process overview
 
 ![](../../assets/images/docs/Modules_contributing_process.png)

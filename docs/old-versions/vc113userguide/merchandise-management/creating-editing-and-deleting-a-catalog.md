@@ -21,16 +21,16 @@ To create a catalog click "ADD CATALOG" button on top of the catalogs tree:
 
 <img src="../../../assets/images/docs/008-added-catalog.PNG" />
 
-Select catalog or virtual catalog to be created and click "OK".В Then fill out the fields to define catalog properties, language that will be used by default. Created catalog will appear in the tree.
+Select catalog or virtual catalog to be created and click "OK". Then fill out the fields to define catalog properties, language that will be used by default. Created catalog will appear in the tree.
 
-In case you need to edit a catalog, right-click on it and select "Open Catalog" option from the context menu.В Then make required modifications (for example, change the name of the catalog or add supported languages) and click "Save" to apply the changes:
+In case you need to edit a catalog, right-click on it and select "Open Catalog" option from the context menu. Then make required modifications (for example, change the name of the catalog or add supported languages) and click "Save" to apply the changes:
 
 <img src="../../../assets/images/docs/011-edit-catalog.PNG" />
 
 ## Deleting a Catalog
 
-To delete a catalog (or virtual catalog), right-click on it in catalogs tree and select "Delete" option from the context menu. A "Delete confirmation" dialog is displayed in order to confirm the action. Confirmation dialog provides additional information about the selected catalog likeВ category count and item count:
+To delete a catalog (or virtual catalog), right-click on it in catalogs tree and select "Delete" option from the context menu. A "Delete confirmation" dialog is displayed in order to confirm the action. Confirmation dialog provides additional information about the selected catalog like category count and item count:
 
 <img src="../../../assets/images/docs/ConfirmationCatalogDelete.PNG" />
 
-This dialog contains an additional security field. The delete can proceed only if security field is filled in and matches the beginning of catalog name.В Catalog with all related data is deleted after the action confirmed.В Deleted catalog will disappear from the catalog tree.
+This dialog contains an additional security field. The delete can proceed only if security field is filled in and matches the beginning of catalog name. Catalog with all related data is deleted after the action confirmed. Deleted catalog will disappear from the catalog tree.

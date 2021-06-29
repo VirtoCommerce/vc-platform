@@ -5,7 +5,7 @@ layout: docs
 date: 2015-09-04T21:43:54.507Z
 priority: 3
 ---
-Filters are simple methods that modify the output of numbers, strings, variables and objects. They are placed within an output tagВ **&lcub;&lcub;** **&rcub;&rcub;** and are separated with a pipe character **|**.
+Filters are simple methods that modify the output of numbers, strings, variables and objects. They are placed within an output tag **&lcub;&lcub;** **&rcub;&rcub;** and are separated with a pipe character **|**.
 
 {% raw %}
 ```

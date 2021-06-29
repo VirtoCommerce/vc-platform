@@ -9,7 +9,7 @@ priority: 1
 
 Background jobs are based on [Hangfire](http://hangfire.io/) library which allows to schedule execution of long running tasks on specific time or just start them in a fire-and-forget manner. Hangfire supports persistence, monitoring, execution history and automatic retries for failed jobs.
 
-Each job is defined as a static or instance method of some public class. ItвЂ™s not required to implement any interface to define a job.
+Each job is defined as a static or instance method of some public class. Its not required to implement any interface to define a job.
 
 ## Fire-and-forget tasks
 
@@ -29,7 +29,7 @@ RecurringJob.AddOrUpdate(() => Console.WriteLine("Hello, world!"), Cron.Daily);
 
 ## Instance methods
 
-Before executing an instance methodВ Hangfire willВ create an instance of the class resolving constructor arguments through Unity container.
+Before executing an instance method Hangfire will create an instance of the class resolving constructor arguments through Unity container.
 
 ```
 public class EmailService
@@ -52,7 +52,7 @@ RecurringJob.AddOrUpdate(() => Console.WriteLine(DateTime.Now), Cron.Minutely);
 
 ## Cancellation tokens
 
-Hangfire canВ notify jobs that application is shutting down or job is being canceled. One of the job's arguments should be IJobCancellationToken.В When sheduling such jobs you can pass null as cancellation token and Hangfire will pass the correct instance at execution time.
+Hangfire can notify jobs that application is shutting down or job is being canceled. One of the job's arguments should be IJobCancellationToken. When sheduling such jobs you can pass null as cancellation token and Hangfire will pass the correct instance at execution time.
 
 ```
 public static void Method(int iterationCount, IJobCancellationToken token)

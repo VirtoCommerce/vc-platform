@@ -39,7 +39,7 @@ The central place that check if user is authorized to specif store is in StoreHe
 /// <param name="storeId">The store id. Empty means current store</param>
 /// <param name="errorMessage">The error message.</param>
 /// <returns>
-///В В  <c>true</c> if [is user authorized] [the specified user name]; otherwise, <c>false</c>.
+///   <c>true</c> if [is user authorized] [the specified user name]; otherwise, <c>false</c>.
 /// </returns>
 public static bool IsUserAuthorized(string userName, string storeId, out string errorMessage)
 {
@@ -66,7 +66,7 @@ public static bool IsUserAuthorized(string userName, string storeId, out string 
         }
         else if (store.StoreState == StoreState.RestrictedAccess.GetHashCode())
         {
-          isAuthorized = SecurityService.CheckMemberPermission(account.MemberId, new Permission { PermissionId = PredefinedPermissions.ShopperRestrictedAccessВ });
+          isAuthorized = SecurityService.CheckMemberPermission(account.MemberId, new Permission { PermissionId = PredefinedPermissions.ShopperRestrictedAccess });
           if (!isAuthorized)
           {
             var setting = store.Settings.SingleOrDefault(n => n.Name.Equals("StoreRestrictedMessage"));
@@ -101,7 +101,7 @@ private bool IsStoreVisible(Store store)
     string errorMessage;
     return StoreHelper.IsUserAuthorized(HttpContext.User.Identity.Name, store.StoreId, out errorMessage);
   }
-В В В В В В В В В В В В 
+            
   return store.StoreState == StoreState.Open.GetHashCode() || store.StoreState == StoreState.RestrictedAccess.GetHashCode();
 }
 ```

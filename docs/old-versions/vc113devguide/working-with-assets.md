@@ -7,7 +7,7 @@ priority: 6
 ---
 ## Introduction
 
-All resources available in Virto Commerce are referred as assets. The most common asset is image, but it's not limited to that. An asset can be any file, electronic document, multimedia content, etc. В They are accessed from storefront and Commerce Manager as well.В Assets are grouped into folders and form a (logical) hierarchy structure. Physical asset storage medium is not limited and currently Virto Commerce provides file system based and Windows Azure Blob Storage based implementations.
+All resources available in Virto Commerce are referred as assets. The most common asset is image, but it's not limited to that. An asset can be any file, electronic document, multimedia content, etc.  They are accessed from storefront and Commerce Manager as well. Assets are grouped into folders and form a (logical) hierarchy structure. Physical asset storage medium is not limited and currently Virto Commerce provides file system based and Windows Azure Blob Storage based implementations.
 
 You can upload, download or view metadata of the assets trough Virto Commerce API. The API provides IAssetService interface for working with assets.
 
@@ -16,8 +16,8 @@ You can upload, download or view metadata of the assets trough Virto Commerce AP
 You can see the main entities depicted in the diagram below:
 
 * **Folder** - a (logical) container for assets and other Folders
-* **FolderItem**В - an asset metadata information
-* **IAssetService**В - an interface for working with assets. It defines methods that are available for asset manipulations
+* **FolderItem** - an asset metadata information
+* **IAssetService** - an interface for working with assets. It defines methods that are available for asset manipulations
 * **UploadStreamInfo** - a class passed as a parameter to IAssetService.Upload method. Contains information about asset being uploaded together with it's content
 
 <img src="../../assets/images/docs/asset-diagram.png" />
@@ -45,7 +45,7 @@ Asset (file) uploading could be long running process depending on file size, con
 
 ```
 ShowLoadingAnimation = true;
-В 
+ 
 var worker = new BackgroundWorker();
 worker.DoWork += (o, ea) =>
 {
@@ -80,7 +80,7 @@ worker.RunWorkerAsync();
 Asset content downloading is done as:
 
 ```
-varВ streamВ =В _assetService.OpenReadOnly(FolderItemId);
+var stream = _assetService.OpenReadOnly(FolderItemId);
 ```
 
 This also should be done in separate process as described in uploading section.

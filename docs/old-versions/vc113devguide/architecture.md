@@ -11,11 +11,11 @@ This documents provides broad overview of Virto Commerce architecture. The modul
 
 ## Architecture Overview
 
-VIrto Commerce consists of multiple layers of functionality. The platform or as we call it a core layer contains modules such as Catalog Module, Order Module and so on. Each module then defines a set of interfaces (Repository and Services),В POCO model classes that used to represent business logic, factory interfaces for creating business logic and configuration classes. Each module exists completely independently from one another (there is no dependencies within catalog module to the classes defined in order module). This is done to simplify testing, extensibility andВ maintenance of the platform. Each module can be easily replaced or removed if needed.
+VIrto Commerce consists of multiple layers of functionality. The platform or as we call it a core layer contains modules such as Catalog Module, Order Module and so on. Each module then defines a set of interfaces (Repository and Services), POCO model classes that used to represent business logic, factory interfaces for creating business logic and configuration classes. Each module exists completely independently from one another (there is no dependencies within catalog module to the classes defined in order module). This is done to simplify testing, extensibility and maintenance of the platform. Each module can be easily replaced or removed if needed.
 
-Core layer includes repository interfaces, designed usingВ <a href="http://msdn.microsoft.com/en-us/library/ff649690.aspx" rel="nofollow">Repository pattern</a>. The next layer, called Data Layer, implements repository interfaces defined in the core layer and is responsible for persisting POCO objects.
+Core layer includes repository interfaces, designed using <a href="http://msdn.microsoft.com/en-us/library/ff649690.aspx" rel="nofollow">Repository pattern</a>. The next layer, called Data Layer, implements repository interfaces defined in the core layer and is responsible for persisting POCO objects.
 
-Client layer includes Commerce Manager and Front endВ acceleratorВ sample. Commerce Manager uses REST/OData Service to communicate with a core layer and Front end uses Repositories.
+Client layer includes Commerce Manager and Front end accelerator sample. Commerce Manager uses REST/OData Service to communicate with a core layer and Front end uses Repositories.
 
 <img src="../../assets/images/docs/virtocommerce.architecture.png" />
 
@@ -27,7 +27,7 @@ Virto Commerce utilizes several frameworks including:
 * Microsoft Windows Workflow Foundation (WFF)
 * Microsoft Windows Communication Foundation (WCF)
 * Microsoft Windows Presentation Foundation (WPF)
-* Microsoft PowerShell 3.0В 
+* Microsoft PowerShell 3.0 
 * Microsoft Azure
 
 VC is designed to work both as on-premises application as well as azure cloud application.

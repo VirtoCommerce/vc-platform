@@ -7,9 +7,9 @@ priority: 4
 ---
 ## Overview
 
-VirtoCommerce Platform allows for the addition of new properties toВ entities at runtime.
+VirtoCommerce Platform allows for the addition of new properties to entities at runtime.
 
-Entity should implementВ IHasDynamicProperties interface.
+Entity should implement IHasDynamicProperties interface.
 
 ```
 public interface IHasDynamicProperties
@@ -20,11 +20,11 @@ public interface IHasDynamicProperties
 }
 ```
 
-When loading, saving and deleting an entity you should call corresponding IDynamicPropertyService methods and pass the entity.В TheВ DynamicPropertyService will process the passed entity and its child entities, which implementВ IHasDynamicProperties interface.
+When loading, saving and deleting an entity you should call corresponding IDynamicPropertyService methods and pass the entity. The DynamicPropertyService will process the passed entity and its child entities, which implement IHasDynamicProperties interface.
 
 ## Managing dynamic properties
 
-### UsingВ IDynamicPropertyService
+### Using IDynamicPropertyService
 
 ```
 public void CreateDynamicProperties(IDynamicPropertyService dynamicService)
@@ -50,11 +50,11 @@ public void CreateDynamicProperties(IDynamicPropertyService dynamicService)
 
 ### Using UI
 
-See the [Managing dynamic properties](docs/vc2userguide/configuration/managing-dynamic-properties)В article in the User Guide section.
+See the [Managing dynamic properties](docs/vc2userguide/configuration/managing-dynamic-properties) article in the User Guide section.
 
 ## Example
 
-In the following example we enable dynamic properties for MyEntity by implementing theВ IHasDynamicProperties and use MyEntityServiceВ for working with these entities.
+In the following example we enable dynamic properties for MyEntity by implementing the IHasDynamicProperties and use MyEntityService for working with these entities.
 
 ```
 using System;

@@ -42,7 +42,7 @@ repo_name: VirtoCommerce/vc-platform
 repo_url: https://github.com/VirtoCommerce/vc-platform/tree/support/2.x
 
 # Copyright
-copyright: Copyright &copy; 2020. All rights reserved.
+copyright: Copyright &copy; 2021. All rights reserved.
 
 google_analytics: ['GTM-NKMNNN', 'hostname']
 
@@ -50,6 +50,8 @@ extra:
     social:
       - icon: fontawesome/brands/github-alt
         link: https://github.com/VirtoCommerce
+      - icon: fontawesome/brands/youtube
+        link: https://www.youtube.com/c/Virtocommerce/videos
       - icon: fontawesome/brands/twitter
         link: https://twitter.com/virtocommerce?lang=en
       - icon: fontawesome/brands/linkedin

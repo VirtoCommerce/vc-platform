@@ -37,7 +37,7 @@ So an item concept in Virto Commerce is a generalization of Variation/SKU or Pro
 
 ![](../../assets/images/docs/base64c63a8c8b4f056246.png)
 
-User can manage simple itemвЂ™s properties as well as complex information:
+User can manage simple items properties as well as complex information:
 * custom properties;
 * SEO information;
 * associations (associated items);
@@ -48,7 +48,7 @@ User can manage simple itemвЂ™s properties as well as complex information:
 * inventory;
 * prices.
 
-Inventory and prices management are integrations from other modules - вЂњVirto Commerce InventoryвЂќ and вЂњVirto Commerce PricingвЂќ respectively.
+Inventory and prices management are integrations from other modules - `Virto Commerce Inventory` and `Virto Commerce Pricing` respectively.
 
 ## Variations
 
@@ -68,9 +68,9 @@ Properties (or custom properties) is the additional characteristics for your cat
 * category - value assigned in category level and can be overwritten in child categories;
 * product - value assigned in item or variation level;
 
-All properties defined in parent hierarchy entities are available in (inherited by) item. E.g. every item inside catalog will have property вЂњBrandвЂќ with value вЂњSonyвЂќ once it was defined in parent catalog and was assigned such value there.
+All properties defined in parent hierarchy entities are available in (inherited by) item. E.g. every item inside catalog will have property `Brand` with value `Sony` once it was defined in parent catalog and was assigned such value there.
 
-Every property has its вЂњAssign toвЂќ trait set to one of: вЂњcatalogвЂќ, вЂњcategoryвЂќ, вЂњproductвЂќ or вЂњvariationвЂќ. This defines at what level the propertyвЂ™s value can be set. 
+Every property has its `Assign to` trait set to one of: `catalog`, `category`, `product` or `variation`. This defines at what level the propertys value can be set. 
 
 ![](../../assets/images/docs/base645ec6d61f65356db7.png)
 
@@ -90,14 +90,14 @@ Properties has attributes. That is meta data of the property. User can set name 
 ![](../../assets/images/docs/base64b3beee820c6f32ee.png)
 
 Property has following settings:
-* **Required**.В Value for the property must be provided. Otherwise it wonвЂ™t pass validation.
-* **Dictionary**.В User can provide available values for it.
-* **Multivalue**.В User can define more than one value for that property.
-* **Multi language**.В User can provide values for every language that is available in the catalog.
+* **Required**. Value for the property must be provided. Otherwise it wont pass validation.
+* **Dictionary**. User can provide available values for it.
+* **Multivalue**. User can define more than one value for that property.
+* **Multi language**. User can provide values for every language that is available in the catalog.
 
 ![](../../assets/images/docs/base648eaf6bbeedc0a5bd.png)
 
-if property is checked as вЂњDictionaryвЂќ and вЂњMultivalueвЂќ that means user can define more than one value for the property, but only from the list of available values.
+if property is checked as `Dictionary` and `Multivalue` that means user can define more than one value for the property, but only from the list of available values.
 
 ## Virtual catalogs
 
@@ -113,7 +113,7 @@ Common and linked categories can be defined in the virtual catalog.
 
 ## Linked category
 
-Linked category is the category that maps one of the common catalogs category and all itвЂ™s structure with subcategories and products with the link to the virtual catalog or itвЂ™s common category.
+Linked category is the category that maps one of the common catalogs category and all its structure with subcategories and products with the link to the virtual catalog or its common category.
 
 ## Common category
 

@@ -11,7 +11,7 @@ Full information regarding each product properties is grouped in to tabs by thei
 
 ## Overview
 
-Item code - the code according to your companyвЂ™s convention for product codes.
+Item code - the code according to your companys convention for product codes.
 
 Item name - descriptive name that allows to differ this product from other in the catalog.
 

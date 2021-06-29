@@ -164,3 +164,4 @@ $RECYCLE.BIN/
 !VirtoCommerce.Module/build/
 /artifacts
 /VirtoCommerce.Platform.Web/package-lock.json
+/site

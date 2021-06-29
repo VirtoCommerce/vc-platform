@@ -11,7 +11,7 @@ For logging errors both of VirtoCommerce Manager and VirtoCommerce Storefront ar
 
 NLog configuration can be performed in special **&lt;nlog&gt;** sections of web.config files of VirtoCommerce.Storefront (Storefront solution) and VirtoCommerce.Platform.Web (Manager solution) projects.
 
-Here is a simple configuration example for logging errors in a columned CSV-file named with a short formated date which will be stored in a projectвЂ™s root folder:
+Here is a simple configuration example for logging errors in a columned CSV-file named with a short formated date which will be stored in a projects root folder:
 
 ```
 <nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" throwExceptions="true" autoReload="true">

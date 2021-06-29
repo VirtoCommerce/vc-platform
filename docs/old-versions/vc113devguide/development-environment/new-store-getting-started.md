@@ -13,7 +13,7 @@ The sample store will be the Boutique store.
 
 ## Pre-requisites
 
-Once you downloaded and installed VirtoCommerce SDK open the Projects Configurator to create new project **without** sample data.В More on creating a project read in [SDK getting started](docs/old-versions/vc113devguide/development-environment/sdk-getting-started) tutorial.
+Once you downloaded and installed VirtoCommerce SDK open the Projects Configurator to create new project **without** sample data. More on creating a project read in [SDK getting started](docs/old-versions/vc113devguide/development-environment/sdk-getting-started) tutorial.
 
 After new project created open Commerce Manager for that project and login. In order to do that first browse the frontend to launch IIS express for the project. To browse it right-click the project row and click **Browse**. A page like on the screenshot below will show up.
 
@@ -27,7 +27,7 @@ Now right-click the project in the Project Manager and select "Commerce manager"
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/8oQ2eNagOqA" frameborder="0" allowfullscreen></iframe>
 
-1. Create new catalog through the CommerceВ Manager. Go to Merchandise Management. Click ADD CATALOG
+1. Create new catalog through the Commerce Manager. Go to Merchandise Management. Click ADD CATALOG
   <img src="../../../assets/images/docs/worddavd44e49455580f6bc993f87bb1b71b690.png" />
 2. Select real Catalog to create
   <img src="../../../assets/images/worddav4821c73ecd8edd41a9f68717b0a99c77.png" />
@@ -56,7 +56,7 @@ Click "Add" to create new property. Enter Property Name ("Display name") and che
 
 Click "OK" to complete the wizard.
 
-Repeat the "Add" property steps for the "Size" and "Color" properties (markВ "Color" property as Multi Language).
+Repeat the "Add" property steps for the "Size" and "Color" properties (mark "Color" property as Multi Language).
 
 ### Creating Property sets
 
@@ -86,7 +86,7 @@ Click "SAVE" to permanently store the changes in the catalog.
 
 In order to assign prices to items to be able to sell them price lists (there are 3 pricelists by default) should be assigned to the catalog.
 
-1. OpenВ **Price Lists** module.
+1. Open **Price Lists** module.
 2. Select **Price List assignments** tab.
 3. Click "Add" to create new assignment.
 4. Set the name and description.
@@ -126,18 +126,18 @@ CSV file for categories structure:
 
 The file defines Categories data inside selected catalog.
 
-The top row of the file contains column names that will be matched with the Category entity properties in wizard's mapping step or later in the import job edit viewВ **Mapping**В tab.
+The top row of the file contains column names that will be matched with the Category entity properties in wizard's mapping step or later in the import job edit view **Mapping** tab.
 
 There are required properties for Category entity that has to be set (not null):
 
 * (string) CategoryId - the unique id for the category (GUID - generated automatically).
 * (string) Code - the unique code for the category in scope of catalog.
 * (string) Name - name of the category.
-* (bool) В  IsActive - if the category is active ("true" by default).
+* (bool)   IsActive - if the category is active ("true" by default).
 * (string) CatalogId - catalog id to which categories will be added.
-* (date) В  StartDate - the date when the category becomes active.
+* (date)   StartDate - the date when the category becomes active.
 
-CSV file must have columns that stands to Code and Name properties at least.В StartDateВ andВ IsActiveВ could be set via Custom value selection if all imported categories should be active or inactive initially (default value isВ true).В Catalog is selected in separate control, so it doesn't have to be in the CSV file.
+CSV file must have columns that stands to Code and Name properties at least. StartDate and IsActive could be set via Custom value selection if all imported categories should be active or inactive initially (default value is true). Catalog is selected in separate control, so it doesn't have to be in the CSV file.
 
 Other important but not required property is parent category code. If CSV file doesn't contain column that applies to this property, than all categories will be set to the root of the selected catalog.
 
@@ -173,7 +173,7 @@ Next prepare data file for item assets. Those are mainly images of the item.
 
 Assets should be placed under ~\Boutique\App_Data\Virto\Storage folder. In this case the "catalog" subfolder should be created and each product's assets are placed in it's own subfolder named by the product code.
 
-As you can see the path to the asset is relative to theВ ~\Boutique\App_Data\Virto\StorageВ folder. Asset type describes if it is image or some text documentation file, or download link for some electronic good. Asset group describes how the asset will be shown in the store frontend.
+As you can see the path to the asset is relative to the ~\Boutique\App_Data\Virto\Storage folder. Asset type describes if it is image or some text documentation file, or download link for some electronic good. Asset group describes how the asset will be shown in the store frontend.
 
 Next prepare import file for relations. That is where relations between products and variations are defined.
 
@@ -185,9 +185,9 @@ Next prepare data file to import prices for the variations.
 
 <img src="../../../assets/images/image2013-11-21_18_2_23.png" />
 
-The code of the price list should be provided in the Pricelist column. Quantity sets the amount of purchased items to apply the price. List price, Sale price and Sku code columnsВ are self explanatory.
+The code of the price list should be provided in the Pricelist column. Quantity sets the amount of purchased items to apply the price. List price, Sale price and Sku code columns are self explanatory.
 
-> Import data files should be placed underВ ~\Boutique\App_Data\Virto\StorageВ folder in order Commerce Manager could reach them. Create "Imports" subfolder and place all the created files there.
+> Import data files should be placed under ~\Boutique\App_Data\Virto\Storage folder in order Commerce Manager could reach them. Create "Imports" subfolder and place all the created files there.
 
 ### Step 2. Create Import jobs
 
@@ -211,14 +211,14 @@ The data should be imported in a certain order. There should be categories prese
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the Step 1 of the wizard set import type "Category", select property set, click "Select file" navigate toВ ImportsВ folder and choose the categories import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+4. In the Step 1 of the wizard set import type "Category", select property set, click "Select file" navigate to Imports folder and choose the categories import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
 <img src="../../../assets/images/image2013-11-22_16_24_50.png" />
 
 5. Click "Next" to proceed to Step 2.
-6. The system automatically identified which columns match entity properties. The import file doesn't contain the requiredВ **Start Date**В property, so it needs to be set manually. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
+6. The system automatically identified which columns match entity properties. The import file doesn't contain the required **Start Date** property, so it needs to be set manually. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
   <img src="../../../assets/images/image2013-11-21_17_22_23.png" />
 7. Finish the wizard.
 
@@ -231,16 +231,16 @@ The wizard step should look like on screenshot below:
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the wizardВ Step 1 set import type "Product", select property set, click "Select file" navigate toВ ImportsВ folder and choose the products import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+4. In the wizard Step 1 set import type "Product", select property set, click "Select file" navigate to Imports folder and choose the products import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
 <img src="../../../assets/images/image2013-11-22_16_49_22.png" />
 
 5. Click "Next" to proceed to Step 2.
-6. The system automatically identifiedВ which columns match entity properties. The import file doesn't contain the requiredВ **Start Date**В property, it's set automatically to current date. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
+6. The system automatically identified which columns match entity properties. The import file doesn't contain the required **Start Date** property, it's set automatically to current date. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
 
-> **Is Active**В should be set to True as products should be visible in the store,В **Is Buyable**В set to False as products can't be sold directly, only variation of the product can be sold.
+> **Is Active** should be set to True as products should be visible in the store, **Is Buyable** set to False as products can't be sold directly, only variation of the product can be sold.
 > <img src="../../../assets/images/image2013-11-25_10_16_37.png" />
 
 7. Finish the wizard.
@@ -255,14 +255,14 @@ The wizard step should look like on screenshot below:
 4. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-5. In the wizard Step 1 set import type "TaxCategory", enter import job name, click "Select file", navigate toВ ImportsВ folder and choose the TaxCategories.csv import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+5. In the wizard Step 1 set import type "TaxCategory", enter import job name, click "Select file", navigate to Imports folder and choose the TaxCategories.csv import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
 <img src="../../../assets/images/image2013-11-25_13_15_2.png" />
 
 6. Click "Next" to proceed to Step 2.
-7. The system automatically identifiedВ which columns match entity properties. Check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
+7. The system automatically identified which columns match entity properties. Check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
 
 <img src="../../../assets/images/image2013-11-25_13_15_37.png" />
 
@@ -277,16 +277,16 @@ The wizard step should look like on screenshot below:
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the wizardВ Step 1 set import type "Sku", select property set, click "Select file" navigate toВ ImportsВ folder and choose the variations import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+4. In the wizard Step 1 set import type "Sku", select property set, click "Select file" navigate to Imports folder and choose the variations import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
 <img src="../../../assets/images/image2013-11-25_10_49_17.png" />
 
 5. Click "Next" to proceed to Step 2.
-6. The system automatically identified which columns match entity properties. The import file doesn't contain the requiredВ **Start Date**В property, it's set automatically to current date. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
+6. The system automatically identified which columns match entity properties. The import file doesn't contain the required **Start Date** property, it's set automatically to current date. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
 
-> **Is Buyable**В should be set to True as variations can be sold,В **Is Active**В set to False as variation can't be viewed directly it should be selected through product page.
+> **Is Buyable** should be set to True as variations can be sold, **Is Active** set to False as variation can't be viewed directly it should be selected through product page.
 > <img src="../../../assets/images/image2013-11-25_11_59_27.png" />
 
 > As Color is multilingual property it has mapping property per locale.
@@ -302,7 +302,7 @@ The wizard step should look like on screenshot below:
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the wizard Step 1 set import type "ItemRelation", click "Select file", navigate toВ ImportsВ folder and choose the item relation import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+4. In the wizard Step 1 set import type "ItemRelation", click "Select file", navigate to Imports folder and choose the item relation import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
@@ -313,7 +313,7 @@ The wizard step should look like on screenshot below:
 
 <img src="../../../assets/images/image2013-11-25_12_28_37.png" />
 
-> There are two propertiesВ Source item catalogВ andВ Target item catalogВ . These properties can be set in case you're not sure if there can be items with the same codes in several catalogs, to point where to locate the items.
+> There are two properties Source item catalog and Target item catalog . These properties can be set in case you're not sure if there can be items with the same codes in several catalogs, to point where to locate the items.
 
 7. Finish the wizard.
 
@@ -326,7 +326,7 @@ The wizard step should look like on screenshot below:
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the wizardВ Step 1 set import type "ItemAsset", click "Select file", navigate toВ ImportsВ folder and choose the assets import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+4. In the wizard Step 1 set import type "ItemAsset", click "Select file", navigate to Imports folder and choose the assets import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
@@ -348,7 +348,7 @@ The wizard step should look like on screenshot below:
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the wizardВ Step 1 set import job name, click "Select file", navigate toВ ImportsВ folder and choose the prices import file as template. The column delimiter will be set automatically. Leave other properties default.
+4. In the wizard Step 1 set import job name, click "Select file", navigate to Imports folder and choose the prices import file as template. The column delimiter will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
@@ -373,7 +373,7 @@ Run import jobs in the next sequence:
 6. Item assets
 7. Prices
 
-After all data is imported you will have catalogВ fully set up. Now you have to setup Store: configure ShippingВ and PaymentВ methods in order to complete online store setup.
+After all data is imported you will have catalog fully set up. Now you have to setup Store: configure Shipping and Payment methods in order to complete online store setup.
 
 ## Setup Shipping method
 
@@ -385,16 +385,16 @@ In order to do that complete the next steps.
 
 Several shipping options are already provided with the VirtoCommerce SDK installation, but user can define more using Commerce Manager:
 
-1. OpenВ **Settings** module.
-2. Select **Shipping**В tab.
+1. Open **Settings** module.
+2. Select **Shipping** tab.
 3. Select **Shipping options** sub-tab.
-3. ClickВ **Add**В to create new shipping option.
+3. Click **Add** to create new shipping option.
 4. Enter required fields.
 5. Choose shipping gateway that will be used to apply shipping data transactions.
 
 <img src="../../../assets/images/image2013-11-26_13_1_23.png" />
 
-> VirtoCommerce contains 1 sample shipping gateway out of the box. If you need to configure your own (new) shipping gateway, you need to implement IShippingGateway interface and add the class description into Gateway table of the VirtoCommerceВ store database:
+> VirtoCommerce contains 1 sample shipping gateway out of the box. If you need to configure your own (new) shipping gateway, you need to implement IShippingGateway interface and add the class description into Gateway table of the VirtoCommerce store database:
 > <img src="../../../assets/images/image2013-11-25_17_15_43.png" />
 > Also if gateway requires parameters, they should be added into the GatewayProperty table:
 > <img src="../../../assets/images/image2013-11-25_17_17_56.png" />
@@ -410,10 +410,10 @@ Several shipping options are already provided with the VirtoCommerce SDK install
 
 Couple of payment methods are already provided with the VirtoCommerce installation, but user can define more using Commerce Manager:
 
-1. OpenВ **Settings**В module.
-2. SelectВ **Shipping**В tab.
-3. SelectВ **Shipping methods**В sub-tab.
-3. ClickВ **Add**В to create new shipping method.
+1. Open **Settings** module.
+2. Select **Shipping** tab.
+3. Select **Shipping methods** sub-tab.
+3. Click **Add** to create new shipping method.
 4. Enter required fields.
 5. Choose just created shipping option.
 6. Set currency and enter base price for the shipping method.
@@ -432,15 +432,15 @@ Couple of payment methods are already provided with the VirtoCommerce installati
 
 Payment methods should be set in order the customers could pay for the orders.
 
-In order to do that complete the next steps.В 
+In order to do that complete the next steps. 
 
 ### Step 1. Create Payment method.
 
 Several payment methods are already provided with the VirtoCommerce installation, but user can create more using Commerce Manager:
 
-1. OpenВ **Settings**В module.
-2. SelectВ **Payments**В tab.
-3. ClickВ **Add**В to create new payment method.
+1. Open **Settings** module.
+2. Select **Payments** tab.
+3. Click **Add** to create new payment method.
 4. Enter required fields.
 5. Set the payment method as active.
 6. Select shipping methods that can be applied with the payment method. (Choose the just created one).
@@ -450,12 +450,12 @@ Several payment methods are already provided with the VirtoCommerce installation
 
 > VirtoCommerce provides over 70 payment gateways out of the box. If you need to configure your own new payment gateway, you need to implement IPaymentGateway interface and add the class description into Gateway table of the store database.
 > <img src="../../../assets/images/image2013-11-25_17_15_43.png" />
-> Also if gateway requires parameters, theyВ should be added into the GatewayProperty table.
+> Also if gateway requires parameters, they should be added into the GatewayProperty table.
 > <img src="../../../assets/images/image2013-11-25_17_17_56.png" />
-> More details in theВ [Payment gateway](docs/old-versions/vc113devguide/working-with-orders/payment-gateway)В tutorial.
+> More details in the [Payment gateway](docs/old-versions/vc113devguide/working-with-orders/payment-gateway) tutorial.
 
-8. In the step 2 the payment method can be named in different languages.В 
-9. Step 3 is available only if the selectedВ paymentВ gateway has any properties. Fill in the properties here. For example:
+8. In the step 2 the payment method can be named in different languages. 
+9. Step 3 is available only if the selected payment gateway has any properties. Fill in the properties here. For example:
   <img src="../../../assets/images/image2013-11-25_17_21_58.png" />
 10. Complete the wizard.
 
@@ -488,7 +488,7 @@ Finally all the parts required to create new store are completed. The only thing
 
 **If you created new store with different id (not SampleStore) first open web.config and update appSettings and set DefaultStore to your store id.**
 
-The frontend has aВ menu which isВ hard-coded . To modify it go to ~/Views/Shared/DisplayTemplates folderВ and edit TopMenuNodeModel.cshtml file. Open it and add submenu for each category that is available in the just created catalog. For example add the code below for the Clothes category menu submenu:
+The frontend has a menu which is hard-coded . To modify it go to ~/Views/Shared/DisplayTemplates folder and edit TopMenuNodeModel.cshtml file. Open it and add submenu for each category that is available in the just created catalog. For example add the code below for the Clothes category menu submenu:
 
 ```
 @if (Model.Title == "Clothes")
@@ -512,7 +512,7 @@ The frontend has aВ menu which isВ hard-coded . To modify it go to ~/Views/S
 }
 ```
 
-Make similar menu for Shoes category or download theВ TopMenuNodeModel.cshtml and replace theВ ~/Views/Shared/DisplayTemplates/TopMenuNodeModel.cshtml
+Make similar menu for Shoes category or download the TopMenuNodeModel.cshtml and replace the ~/Views/Shared/DisplayTemplates/TopMenuNodeModel.cshtml
 
 After all steps are completed you should be able to see the just created store, categories and items on the default web page of the project. There should be a Shoes category like on the screenshot below:
 
@@ -528,7 +528,7 @@ You completed the store setup. Now you can define fulfillment centers, tax value
 
 ### Deployment locally on IIS
 
-In order to run dataservices and frontend configure IIS to theВ projectsВ folder. Set permissions for this folder to allow IIS modify it (IIS_IUSRSВ user).
+In order to run dataservices and frontend configure IIS to the projects folder. Set permissions for this folder to allow IIS modify it (IIS_IUSRS user).
 
 Your Web application basic configuration should look similar to the screenshot below:
 

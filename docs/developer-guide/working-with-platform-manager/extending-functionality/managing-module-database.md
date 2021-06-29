@@ -1,23 +1,23 @@
 ﻿---
 title: Managing Module Database
-description: This tutorialВ will show you how to integrate your module into database creation and update process
+description: This tutorial will show you how to integrate your module into database creation and update process
 layout: docs
 date: 2016-06-10T15:02:35.287Z
 priority: 2
 ---
 ## Summary
 
-This tutorialВ will show you how to integrate your module into database creation and update process.
+This tutorial will show you how to integrate your module into database creation and update process.
 
 ## Overview
 
-When application starts it calls the **IModule.SetupDatabase** method for each module where the moduleВ can create or update tables and fill them with data.
+When application starts it calls the **IModule.SetupDatabase** method for each module where the module can create or update tables and fill them with data.
 
 Database objects should be created using Entity Framework [Code First Migrations](https://msdn.microsoft.com/en-us/data/jj591621).
 
 ## Model and repository
 
-Consider a projectВ **MyModuleProject**В withВ **MyEntity**В class, which represents a model to be persisted in database.
+Consider a project **MyModuleProject** with **MyEntity** class, which represents a model to be persisted in database.
 
 ```
 public class MyEntity
@@ -27,14 +27,14 @@ public class MyEntity
 }
 ```
 
-Add NuGet packageВ **EntityFramework**В to the project.
+Add NuGet package **EntityFramework** to the project.
 
-Add project references toВ **VirtoCommerce.Platform.Core** andВ **VirtoCommerce.Platform.Data**.
+Add project references to **VirtoCommerce.Platform.Core** and **VirtoCommerce.Platform.Data**.
 
-Add a repository classВ **MyRepository**В derived fromВ **EFRepositoryBase**.
+Add a repository class **MyRepository** derived from **EFRepositoryBase**.
 
 * Disable database initializer in constructor.
-* Map entities to tables inВ overriddenВ methodВ **OnModelCreating**. It is recommended to use module ID as prefix for tables and other database objects to avoid conflicts with other modules.
+* Map entities to tables in overridden method **OnModelCreating**. It is recommended to use module ID as prefix for tables and other database objects to avoid conflicts with other modules.
 
 ```
 using System.Data.Entity;
@@ -69,22 +69,22 @@ public class MyRepository : EFRepositoryBase, IMyRepository
 ## Adding Code First Migrations
 
 * Open **Tools** > **NuGet Package Manager** > **Package Manager Console**
-* SelectВ **MyModuleProject**В asВ **Default project**
+* Select **MyModuleProject** as **Default project**
 * Run
   ```
-  Enable-MigrationsВ -ConnectionString "Data Source=(local);Initial Catalog=VirtoCommerce2;Persist Security Info=True;User ID=virto;Password=virto;"В -ConnectionProviderName System.Data.SqlClient
+  Enable-Migrations -ConnectionString "Data Source=(local);Initial Catalog=VirtoCommerce2;Persist Security Info=True;User ID=virto;Password=virto;" -ConnectionProviderName System.Data.SqlClient
   ```
 * Run
   ```
-  Add-Migration InitialВ -ConnectionStringВ "Data Source=(local);Initial Catalog=VirtoCommerce2;Persist Security Info=True;User ID=virto;Password=virto;"В -ConnectionProviderNameВ System.Data.SqlClient
+  Add-Migration Initial -ConnectionString "Data Source=(local);Initial Catalog=VirtoCommerce2;Persist Security Info=True;User ID=virto;Password=virto;" -ConnectionProviderName System.Data.SqlClient
   ```
 
 ![](../../../assets/images/docs/image2015-1-29_10-42-15.png)
 
-These commands will add aВ **Migrations**В folderВ with two classes:
+These commands will add a **Migrations** folder with two classes:
 
-* TheВ **Configuration**В class.В This class allows you to configure how migrations behave for your context. It also allows you to fill tables with sample or test data in theВ **Seed**В method. Automatic migrations should be disabled.
-* TheВ **Initial**В migration. This class contains two methods:В **Up**В andВ **Down**, which create and delete tables and other objects in the database.
+* The **Configuration** class. This class allows you to configure how migrations behave for your context. It also allows you to fill tables with sample or test data in the **Seed** method. Automatic migrations should be disabled.
+* The **Initial** migration. This class contains two methods: **Up** and **Down**, which create and delete tables and other objects in the database.
 
 ![](../../../assets/images/docs/image2015-1-29_10-44-26.png)
 
@@ -142,12 +142,12 @@ public partial class Initial : DbMigration
 
 ## Initializing database
 
-ChangeВ access modifier for **Configuration** class toВ **public**.
+Change access modifier for **Configuration** class to **public**.
 
-Add new classВ **MyDatabaseInitializer**.
+Add new class **MyDatabaseInitializer**.
 
-* Derive it fromВ **SetupDatabaseInitializer**<MyRepository, Migrations.Configuration>.
-* You can override theВ **Seed**В method and insert sample data in your tables. This method is called only once, when migrations are applied for the first time in a clean database.
+* Derive it from **SetupDatabaseInitializer**<MyRepository, Migrations.Configuration>.
+* You can override the **Seed** method and insert sample data in your tables. This method is called only once, when migrations are applied for the first time in a clean database.
 
 ```
 using VirtoCommerce.Foundation.Data.Infrastructure;
@@ -157,7 +157,7 @@ public class MyDatabaseInitializer : SetupDatabaseInitializer<MyRepository, Migr
 }
 ```
 
-In **IModule.SetupDatabase** method callВ **InitializeDatabase**В for an instance ofВ **MyDatabaseInitializer**.
+In **IModule.SetupDatabase** method call **InitializeDatabase** for an instance of **MyDatabaseInitializer**.
 
 ```
 using VirtoCommerce.Framework.Web.Modularity;
@@ -176,7 +176,7 @@ public class MyModule : IModule
   public void Initialize()
   {
   }
-В 
+ 
   public void PostInitialize()
   {
   }

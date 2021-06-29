@@ -7,7 +7,7 @@ priority: 9
 ---
 ## Introduction
 
-Reporting Module works directly with Sql server reporting service (SSRS) reports files (RDL format - <a href="http://technet.microsoft.com/en-us/library/ms155062.aspx" rel="nofollow">http://technet.microsoft.com/en-us/library/ms155062.aspx</a>). That means reports can be created with SSRS Reports Builder and uploaded directly to VC manager. However it is not using SSRS for generating reports data. VC manager (application works on client) does not access database directly, but usesВ VC services which are responsible for preparing datasets defined in report.
+Reporting Module works directly with Sql server reporting service (SSRS) reports files (RDL format - <a href="http://technet.microsoft.com/en-us/library/ms155062.aspx" rel="nofollow">http://technet.microsoft.com/en-us/library/ms155062.aspx</a>). That means reports can be created with SSRS Reports Builder and uploaded directly to VC manager. However it is not using SSRS for generating reports data. VC manager (application works on client) does not access database directly, but uses VC services which are responsible for preparing datasets defined in report.
 
 ## Creating report file
 

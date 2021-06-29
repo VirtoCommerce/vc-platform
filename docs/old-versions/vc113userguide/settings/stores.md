@@ -7,7 +7,7 @@ priority: 5
 ---
 ## Introduction
 
-A store in the Virto Commerce Manager is supposed as the web page (Storefront) that allows customers to purchase products drawn from a particular catalog. A default storefront is provided with the Commerce Manager. The store layout can be adjusted by editing special templates upon which the stores are based, but the most common parts of a store are configured through the "Stores" tab of Settings module. These settings include localization, taxes, payment gateways, customer accounts,В  and other system information to be set.
+A store in the Virto Commerce Manager is supposed as the web page (Storefront) that allows customers to purchase products drawn from a particular catalog. A default storefront is provided with the Commerce Manager. The store layout can be adjusted by editing special templates upon which the stores are based, but the most common parts of a store are configured through the "Stores" tab of Settings module. These settings include localization, taxes, payment gateways, customer accounts,  and other system information to be set.
 
 To find the block of store settings, open Settings module and navigate to "Stores" tab.
 
@@ -130,16 +130,16 @@ To delete a store, select it in the list and use "Remove" button. If a store is 
 
 ## Creating, Editing and Deleting Content Places
 
-Content Places define where the content will be placed on the store front. For example, the banner can be placed on top of the main page; the text of promotion can be displayed next to the logo and etc. This feature allows users of Virto Commerce Manager to manage store front content without developersвЂ™ assistance.
+Content Places define where the content will be placed on the store front. For example, the banner can be placed on top of the main page; the text of promotion can be displayed next to the logo and etc. This feature allows users of Virto Commerce Manager to manage store front content without developers assistance.
 
 <img src="../../../assets/images/docs/content-places.PNG" />
 
-Open вЂњContent PlacesвЂќ tab of the Settings module to view the list of all content places added to the system. To add a content place use вЂњAddвЂќ button and fill in two fields as follows:
+Open `Content Places` tab of the Settings module to view the list of all content places added to the system. To add a content place use `Add` button and fill in two fields as follows:
 
 * **Content place name** - name of the content place in the database.
 * **Content place description** - a description of the content place to identify which one is supposed.
 
-To edit a content place click it in the list and use вЂњEditвЂќ Button. Delete a content place the same way with вЂњRemoveвЂќ button.
+To edit a content place click it in the list and use `Edit` Button. Delete a content place the same way with `Remove` button.
 
 ## Creating, Editing and Deleting Fulfillment Centers
 

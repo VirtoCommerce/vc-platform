@@ -21,7 +21,7 @@ Dynamic Content is configured using the <a class="crosslink" href="https://virto
 
 ## Concepts
 
-Traditionally, Marketing relies on a web designer to create the layout of each page of a store website. The web developer sets frames, links, promotions and other visual stuff layout in a specific arrangement. Dynamic Content allows marketing to change the content within that layout dynamically, without involving the web developer beyond the initial set up of the page layout. Initially, the web developer will set up placeholders named **Content placeholders**В on the page for Dynamic Content.
+Traditionally, Marketing relies on a web designer to create the layout of each page of a store website. The web developer sets frames, links, promotions and other visual stuff layout in a specific arrangement. Dynamic Content allows marketing to change the content within that layout dynamically, without involving the web developer beyond the initial set up of the page layout. Initially, the web developer will set up placeholders named **Content placeholders** on the page for Dynamic Content.
 
 There are four interdependent components in Dynamic Content:
 * Dynamic Content
@@ -35,7 +35,7 @@ The **Content Placeholders**, are also created through Virto Commerce platform m
 
 ## Content types
 
-A Content type is a template used to define a Dynamic Content Type. It describes how a particular content type is displayed and what information is required to display it.В Virto Commerce includes several Content types for the most common types of Dynamic Content. For example, there is a Content type to display images with links (banner) another to display product data (product with image and price).
+A Content type is a template used to define a Dynamic Content Type. It describes how a particular content type is displayed and what information is required to display it. Virto Commerce includes several Content types for the most common types of Dynamic Content. For example, there is a Content type to display images with links (banner) another to display product data (product with image and price).
 
 The following Dynamic Content Types are shipped with Virto Commerce out-of-the-box. Each requires one or more parameter values to specify things such as, what image file should display or what the target web page should display when clicked.
 
@@ -57,12 +57,12 @@ Content Placeholders are created by web developers in templates. Once they have 
 
 Dynamic Content shows specific content to targeted customers. The system determines the customers properties via Tags. Virto Commerce incorporates tagging system that is used to set and evaluate tags that you can use to segment Customers, and to decide when, where and to which Customer to display content. The tagging data about a customer is captured in a variety of ways, including:
 
-* Information provided in a registered userвЂ™s customer account
+* Information provided in a registered users customer account
 * Information entered by a Customer Service about a customer during a customer service call
 * Target and Referring URLs and search terms captured when the user clicks a link to bring them to a storefront
 * Customer Geo location
 
-Information captured by the tags is stored in the userвЂ™s session while he shops in an storefront. The information can then be used to evaluate whether the customer meets conditions set for displaying Dynamic Content. Tag information is captured only when the customer first visits a storefront during a browser session.
+Information captured by the tags is stored in the users session while he shops in an storefront. The information can then be used to evaluate whether the customer meets conditions set for displaying Dynamic Content. Tag information is captured only when the customer first visits a storefront during a browser session.
 
 A Marketer or other Manager user with granted Dynamic Content permissions, uses the tags when creating conditions that determine whether a customer will see a piece of Dynamic Content or not.
 
@@ -96,11 +96,11 @@ Creating Content Publishing specifies which Dynamic Content(s) to view and condi
 
 ## Creating Dynamic Content item
 
-Creating Dynamic Content in Virto Commerce platform manager requires that you provide a name for the Dynamic Content, select a Content type and provide values for the typeвЂ™s parameters.
+Creating Dynamic Content in Virto Commerce platform manager requires that you provide a name for the Dynamic Content, select a Content type and provide values for the types parameters.
 
 * Open Marketing module.
-* Select **Dynamic Content**В from the list.
-* SelectВ **Content items**В from the list.  
+* Select **Dynamic Content** from the list.
+* Select **Content items** from the list.  
 ![](../../assets/images/docs/image2015-6-4_9-41-0.png)
 * Click **Add** button.  
 ![](../../assets/images/docs/image2015-6-4_9-42-30.png)
@@ -138,13 +138,13 @@ Creating Dynamic Content in Virto Commerce platform manager requires that you pr
 * Click **Delete** in the toolbar.
 * Confirm deletion.
 
-> Only Dynamic Content that doesn't belongВ to any of Content publishing can be deleted otherwise the message will be shown that the associated Content Publishing should be deleted first.
+> Only Dynamic Content that doesn't belong to any of Content publishing can be deleted otherwise the message will be shown that the associated Content Publishing should be deleted first.
 
 ## Creating Content Publishing
 
 Content publishing sets the delivery conditions of the Dynamic Content. Therefore before creating Content Publishing the required Dynamic Content and Content Place should be registered (created) in the system.
 
-*В Open **Marketing** Module
+* Open **Marketing** Module
 * Select **Content publishing**
 * Click **Add** button
 ![](../../assets/images/docs/image2015-6-4_10-20-36.png)
@@ -152,7 +152,7 @@ Content publishing sets the delivery conditions of the Dynamic Content. Therefor
 ![](../../assets/images/docs/image2015-6-4_10-21-40.png)
 **Name** and **Description** fields are self explanatory. The main suggestion is to use meaningful name to easily find the Content Publishing in the future. The good example of name is "15% Christmas discount for TVs", the bad is "Content Publishing 17". **Priority** property sets the priority of the Content Publishing. If more than one Dynamic Content configured to be displayed in the Content Place at some conditions, the Dynamic Content configured in the Content Publishing with higher priority will be displayed.
 **Is Active** property sets activity of the Content Publishing. If checkbox not checked the Dynamic Content set in the Content Publishing won't be available in the front-end. **Available from** and **Available to** sets the dates range when the Content should be available. These properties are useful to set banners for promotions that are limited by dates (e.g. banner for promotion that is active until Christmas should be available only up to 25 of December. If the Content should be displayed always, just leave those fields blank.
-*В Next set Content Placeholder(s) where the Dynamic Content should be displayed.
+* Next set Content Placeholder(s) where the Dynamic Content should be displayed.
 Click Placeholders to add/edit placeholders for the content publishing
 ![](../../assets/images/docs/image2015-6-4_10-24-35.png)
 * Choose placeholders in the opened blade.

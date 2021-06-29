@@ -17,7 +17,7 @@ For each SKU being returned, the CSR must enter the following details:
 * Reason for return.
 * Comment.
 
-The CSR must also specify whether theВ  physical return of items is required before refund can be issued
+The CSR must also specify whether the  physical return of items is required before refund can be issued
 
 Depending on whether the customer wants a refund or an exchange, the CSR has additional steps to execute:
 
@@ -46,4 +46,4 @@ When CSR does all work related to return or exchange (refunds money or ships exc
 
 6. Click **Save** button
 
-Click **Open original order**В button if original order information need to be reviewed.
+Click **Open original order** button if original order information need to be reviewed.

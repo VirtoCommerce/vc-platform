@@ -32,7 +32,7 @@ There are a number of predefined global variables that you can set in the front 
 |--------|-----------|
 |layout|If set, this specifies the layout file to use. Use the layout file name without the file extension. Layout files must be placed in the layouts directory of the current theme.|
 |permalink|If you need your processed blog post URLs to be something other than the site-wide style, then you can set this variable and it will be used as the final URL.|
-|published|Set to false if you donвЂ™t want a specific post to show up when the site is generated.|
+|published|Set to false if you dont want a specific post to show up when the site is generated.|
 |template|By default equals to "page" and will use "page.liquid" to render current page.|
 |tags|One or multiple tags can be added to a post. Tags can be specified as a <a href="http://en.wikipedia.org/wiki/YAML#Lists" rel="nofollow">YAML list</a> or a comma-separated string.|
 

@@ -13,11 +13,11 @@ Caching tools allows to develop faster and more robust applications. There are s
 
 ## Problem
 
-ItвЂ™s quite simple if you have single instance application with local cache storage. ItвЂ™s easy to manage cache lifecycle and invalidation when entries in a cache are removed/deleted.
+Its quite simple if you have single instance application with local cache storage. Its easy to manage cache lifecycle and invalidation when entries in a cache are removed/deleted.
 
 But what to do in case with scaled out multiple instances application?
 
-Main problem is how instances finds out when data was changed and itвЂ™s local cache data becomes irrelevant.
+Main problem is how instances finds out when data was changed and its local cache data becomes irrelevant.
 
 The point is to use local cache storage for each application instance and fill cache with fresh data by receiving invalidation message.
 

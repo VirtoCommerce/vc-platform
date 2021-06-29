@@ -7,13 +7,13 @@ priority: 4
 ---
 ## Introduction
 
-Virto Commerce supports multiple frontends. One supported frontend in particular is a popular ASP.NET MVC based CMS called "Orchard CMS". This document describes how to setup orchard to connect to Virto Commerce. We welcome any contributions to the Orchard module through github. You can download the complete source code from here:В [https://github.com/VirtoCommerce/vc-orchards-cms](https://github.com/VirtoCommerce/vc-orchard-cms).
+Virto Commerce supports multiple frontends. One supported frontend in particular is a popular ASP.NET MVC based CMS called "Orchard CMS". This document describes how to setup orchard to connect to Virto Commerce. We welcome any contributions to the Orchard module through github. You can download the complete source code from here: [https://github.com/VirtoCommerce/vc-orchards-cms](https://github.com/VirtoCommerce/vc-orchard-cms).
 
 ## Module installation guide
 
 > You must install Virto Commerce Manager before you can use Orchard CMS, in the alternative you can connect to our [public demo](try-now) instead.
 
-1.В Install module VirtoCommerce.Webshop from Orchard gallery or as single NuGet-file <a href="http://gallery.orchardproject.net/Packages/Orchard.Module.VirtoCommerce.Webshop" rel="nofollow">http://gallery.orchardproject.net/Packages/Orchard.Module.VirtoCommerce.Webshop</a>.
+1. Install module VirtoCommerce.Webshop from Orchard gallery or as single NuGet-file <a href="http://gallery.orchardproject.net/Packages/Orchard.Module.VirtoCommerce.Webshop" rel="nofollow">http://gallery.orchardproject.net/Packages/Orchard.Module.VirtoCommerce.Webshop</a>.
 2. Enable installed module. After that you can see it as a new item in Orchard settings: **VirtoCommerce.Webshop**
 ![](../../assets/images/docs/image001.png)
 3. Fill settings for webshop (all fields are required):

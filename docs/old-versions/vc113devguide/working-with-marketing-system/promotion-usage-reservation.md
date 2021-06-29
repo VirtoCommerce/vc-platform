@@ -14,20 +14,20 @@ Promotion usage reservation functionality allows to record an event of using cer
 The promotion usage entity consist of the following key fields:
 
 * **PromotionUsageId**: a unique identifier for promotion usage record
-* **MemberId**:В a membeId of the user whomever the promotion is applied to
-* **OrderGroupId**:В and id of the shopping cart (if reserved) or order (if used) where the promotion is applied
+* **MemberId**: a membeId of the user whomever the promotion is applied to
+* **OrderGroupId**: and id of the shopping cart (if reserved) or order (if used) where the promotion is applied
 * **CouponCode**: a coupon code if one was used when applying given promotion
 * **Status**:
   * **0 - Expired** (not used now as expired promotions are removed physically)
   * **1 - Reserved**. This status is used only when promotion is applied to shopping cart, before it is purchased or expired.
   * **2 - Used**. This status marks permanent usage after order is completed. Such usage never expire.
-* **UsageDate**:В an actual date time of usage. This field is required for system job to determine if promotion has expired.
-* **PromotionId**:В an id of the promotion that has been applied.
+* **UsageDate**: an actual date time of usage. This field is required for system job to determine if promotion has expired.
+* **PromotionId**: an id of the promotion that has been applied.
 * Other system fields: **LastModified**, **Created**, **Discriminator**
 
 ## Workflow activity
 
-The workflow activity named RecordPromotionUsageActivity is used to create promotion reservation records. The status (Reserved or Expired) is passed to workflow as constant parameter. It is used in two workflows: ShoppingCartPrepareWorkflow (with status Reserved) andВ ShoppingCartCheckoutWorkflow (with status Used). The activity first removes all usages for current shopping cart that are not used and then iterates over all discounts and adds usage record with status passed to it.
+The workflow activity named RecordPromotionUsageActivity is used to create promotion reservation records. The status (Reserved or Expired) is passed to workflow as constant parameter. It is used in two workflows: ShoppingCartPrepareWorkflow (with status Reserved) and ShoppingCartCheckoutWorkflow (with status Used). The activity first removes all usages for current shopping cart that are not used and then iterates over all discounts and adds usage record with status passed to it.
 
 ```
 using System;
@@ -156,11 +156,11 @@ namespace VirtoCommerce.Scheduling.Jobs
       var timeout = context.Parameters != null
         && context.Parameters.ContainsKey("expirationtimeout")
         && int.TryParse(context.Parameters["expirationtimeout"], out parsedTimeout)
-        && parsedTimeout > 0 ? parsedTimeoutВ  : 5; //Default timeout 5mins
+        && parsedTimeout > 0 ? parsedTimeout  : 5; //Default timeout 5mins
 
       using (_marketingRepository)
       {
-        var expiredTime =В  DateTime.UtcNow.AddMinutes(-timeout);
+        var expiredTime =  DateTime.UtcNow.AddMinutes(-timeout);
         var expiredPromotions =_marketingRepository.PromotionUsages.Where(p =>
           p.Status == (int) PromotionUsageStatus.Reserved && p.UsageDate.HasValue &&
           p.UsageDate.Value < expiredTime).ToList();

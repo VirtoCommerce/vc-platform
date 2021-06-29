@@ -25,13 +25,13 @@ Navigate to "Content Publishing" tab of Marketing block in Virto Commerce Manage
 
 <img src="../../../assets/images/docs/001-add-content-publishing.PNG" />
 
-Then fill out the fields displayed onВ the 4thВ step of creating and save new item:
+Then fill out the fields displayed on the 4th step of creating and save new item:
 
 * Name - a descriptive name of a new content publishing;
 * Description - full or brief description of content publishing;
 * Priority - define the priority of the item;
 * Check the box "Is active" to make this item available on the site;
-* Define the date the item will be available from-to (you can leave them blank to make the item availableВ  constantly);
+* Define the date the item will be available from-to (you can leave them blank to make the item available  constantly);
 * Content places - where the content publishing will be available, for instance, in the cart or on the Home page (selected from the list);
 * Dynamic Content - also selected from the list of available options, defines which kind of adjusted dynamic content will be related to this content publishing item.
 * Availability conditions - conditions that content publishing must meet to be available on the site.
@@ -46,7 +46,7 @@ Navigate to the Marketing block, open Content Publishing Group tab, click the re
 
 ## Editing Content Publishing
 
-To edit content publishing details, navigate to Content Publishing block of Marketing module, double-click an item and make all required modifications. This way you can change any parameters described in theВ Create Content Publishing GroupВ article.
+To edit content publishing details, navigate to Content Publishing block of Marketing module, double-click an item and make all required modifications. This way you can change any parameters described in the Create Content Publishing Group article.
 
 <img src="../../../assets/images/docs/002-edit-content-publishing.PNG" />
 
@@ -62,8 +62,8 @@ Confirm removing of content publishing to finish.
 
 ## Filtering Content Publishing Groups
 
-When the list of content publishing groups isВ  too large, you canВ filter by dates on the right part of the block.
+When the list of content publishing groups is  too large, you can filter by dates on the right part of the block.
 
-Navigate to "Content Publishing" tab of Marketing module. On the right define the period when the searchedВ items are active (active form, active to or active from-to).
+Navigate to "Content Publishing" tab of Marketing module. On the right define the period when the searched items are active (active form, active to or active from-to).
 
 <img src="../../../assets/images/docs/005-filtering-content-publishing.PNG" />

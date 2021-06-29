@@ -1,4 +1,4 @@
-﻿---
+---
 title: Extending domain models
 description: The developer guide for extending domain models
 layout: docs
@@ -25,7 +25,7 @@ In this sample we will add a new field CartType to the shopping cart.
 
 ### Create new module
 
-Create new **managed** module first: [creating new module](docs/vc2devguide/working-with-platform-manager/extending-functionality/creating-new-module).
+Create new **managed** module first: [creating new module](../working-with-platform-manager/extending-functionality/creating-new-module.md).
 
 ### Add dependencies
 

@@ -1,4 +1,4 @@
-﻿---
+---
 title: Extending Members domain types
 description: The developer guide to extending Members domain types
 layout: docs
@@ -27,7 +27,7 @@ In this sample we'll be creating a new **Supplier member** type.
 
 ### Create new module
 
-Create new **managed** module first: [creating new module](docs/vc2devguide/working-with-platform-manager/extending-functionality/creating-new-module).
+Create new **managed** module first: [creating new module](../working-with-platform-manager/extending-functionality/creating-new-module.md).
 
 Module manifest should contain dependencies to **VirtoCommerce.Core** and **VirtoCommerce.Customer** modules. Check full **module.manifest** content [here](https://github.com/VirtoCommerce/vc-samples/blob/master/MemberExtensionSampleModule/module.manifest).
 
@@ -198,7 +198,7 @@ The next important step concluded in the service definition (which provides CRU
 
 ### Register Supplier in platform members type factory
 
-For now we have domain and data model, persistency layer and CRUD and search services for client access to custom Supplier member. The final step is to register Supplier in the platform member type factory.
+For now we have domain and data model, persistent layer and CRUD and search services for client access to custom Supplier member. The final step is to register Supplier in the platform member type factory.
 
 ```
   public override void Initialize()

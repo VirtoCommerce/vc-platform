@@ -9,7 +9,7 @@ Add Product property 'DisplayName' to whole catalog level.
 
 ![](../../assets/images/docs/image2016-5-16_12-34-26.png)
 
-Set 'DisplayName' property value for each В language in each product  
+Set 'DisplayName' property value for each  language in each product  
 ![](../../assets/images/docs/image2016-5-16_12-37-36.png)
 
 Change storefront theme template to use as product title localized 'DisplayName' property  

@@ -1,11 +1,11 @@
 ﻿---
 title: Liquid reference
-description: DotLiquid is a templating system ported to the .net framework from RubyвЂ™s Liquid Markup.В You can have your users build their own templates without affecting your server security in any way.
+description: DotLiquid is a templating system ported to the .net framework from Rubys Liquid Markup. You can have your users build their own templates without affecting your server security in any way.
 layout: docs
 date: 2015-09-17T08:50:25.393Z
 priority: 1
 ---
-DotLiquid is a templating system ported to the .net framework from RubyвЂ™s <a href="http://www.liquidmarkup.org/" rel="nofollow">Liquid Markup</a>.В You can have your users build their own templates without affecting your server security in any way.
+DotLiquid is a templating system ported to the .net framework from Rubys <a href="http://www.liquidmarkup.org/" rel="nofollow">Liquid Markup</a>. You can have your users build their own templates without affecting your server security in any way.
 
 Liquid utilizes tags, objects, and filters to load content. Each theme consists of .liquid files that contain tags, objects and filters.
 

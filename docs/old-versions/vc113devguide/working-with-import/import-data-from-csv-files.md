@@ -7,7 +7,7 @@ priority: 1
 ---
 ## The purpose of using CSV files to import entities
 
-The purpose of the import functionality is to import entities from outside using CSV structured files. Such entities as Categories,В Products, Skus, Packages, Associations, Pricelists, Taxes, Customers can be imported in bulk using a CSV file. Alternatively to creating those entities one by one, you can export them from outside system to CSV (Comma Structured Values) files and import to VirtoCommerce storage using import functionality of the VirtoCommerce manager.
+The purpose of the import functionality is to import entities from outside using CSV structured files. Such entities as Categories, Products, Skus, Packages, Associations, Pricelists, Taxes, Customers can be imported in bulk using a CSV file. Alternatively to creating those entities one by one, you can export them from outside system to CSV (Comma Structured Values) files and import to VirtoCommerce storage using import functionality of the VirtoCommerce manager.
 
 Another way of using CSV files is to update huge amount of data, e.g. Prices of items, or delete entities.
 
@@ -36,12 +36,12 @@ There are several types of entities that could be imported via import functional
 
 Under Catalog module the next import types are available:
 
-* **Category** - select this Import type to create Import jobВ for Category structure importing into selected catalog.
-* **Product**В - select this Import type toВ create Import job forВ Items importing into selected Catalog
-* **Sku (Variation)** - select this Import type toВ create Import job forВ variations importing into selected Catalog
-* **Dynamic Kit**- select this Import type toВ create Import job forВ Items importing into selected Catalog
-* **Package**В - select this Import type toВ create Import job forВ Items importing into selected Catalog
-* **Bundle**В - select this Import type toВ create Import job forВ Items importing into selected Catalog
+* **Category** - select this Import type to create Import job for Category structure importing into selected catalog.
+* **Product** - select this Import type to create Import job for Items importing into selected Catalog
+* **Sku (Variation)** - select this Import type to create Import job for variations importing into selected Catalog
+* **Dynamic Kit**- select this Import type to create Import job for Items importing into selected Catalog
+* **Package** - select this Import type to create Import job for Items importing into selected Catalog
+* **Bundle** - select this Import type to create Import job for Items importing into selected Catalog
 * **ItemAsset** - select this Import type to create Import job for item assets.
 * **Association** - select this Import type to create Import job for items associations (e.g. to associate related items)
 * **ItemRelation** - select this Import type to create Import job for item relations.
@@ -53,8 +53,8 @@ Uder Pricelists module the next import type is available:
 Under Settings -> Taxes the next import types are available:
 
 * **TaxCategory** - select this Import type to create Import job to import tax categories.
-* **Jurisdiction**В - select this Import type to create Import job to import jurisdictions.
-* **JurisdictionGroup**В - select this Import type to create Import job to import jurisdiction groups. Those are to group jurisdictions where taxes are common.
+* **Jurisdiction** - select this Import type to create Import job to import jurisdictions.
+* **JurisdictionGroup** - select this Import type to create Import job to import jurisdiction groups. Those are to group jurisdictions where taxes are common.
 * **TaxValue** - select this Import type to create Import job to import tax values.
 
 Under Settings -> Localization the next import type is available:
@@ -68,7 +68,7 @@ By selecting each type of import the system will display different entity proper
 Steps to import items from the csv file:
 
 1. The CSV import file should be uploaded in the assets storage.
-2. Go to the module appropriate to the import entity. E.g. go toВ **Catalog**В moduleВ ImportВ tab to import categories structrue, items etc. Go toВ **Settings**В moduleВ TaxesВ tabВ ImportВ sub-tab.
+2. Go to the module appropriate to the import entity. E.g. go to **Catalog** module Import tab to import categories structrue, items etc. Go to **Settings** module Taxes tab Import sub-tab.
 3. If you already have import job that matches your needs to import entities go to step 5.
 4. Add import job.
 
@@ -95,7 +95,7 @@ In step 2 you map entity fields to the template CSV file columns. The system aut
 
 If the system matched wrong column, just double click the row of the field and in the popup dialog select the right one from the available column names.
 
-If entity property should be set to some custom predefined value during importing, double click the row of the desired field and in popup dialog select "Custom" in the available columns list В and set the custom value in the below text box. If the field can have predefined set of custom values only those will beВ available and will be available as options of the combobox. For example, if the property is of bool type, only "True", "False" will be available.
+If entity property should be set to some custom predefined value during importing, double click the row of the desired field and in popup dialog select "Custom" in the available columns list  and set the custom value in the below text box. If the field can have predefined set of custom values only those will be available and will be available as options of the combobox. For example, if the property is of bool type, only "True", "False" will be available.
 
 If the field is locale dependant then columns for each locale value can be set.
 
@@ -116,7 +116,7 @@ The Boutique catalog will have the next structure:
 
 <img src="../../../assets/images/docs/image2013-11-21_17_23_19.png" />
 
-**Prerequisite**:В Create new Catalog and name it "Boutique" with properties and property sets using the VirtoCommerce manager.
+**Prerequisite**: Create new Catalog and name it "Boutique" with properties and property sets using the VirtoCommerce manager.
 
 ## Step 1: Prepare or export data to CSV files
 
@@ -131,11 +131,11 @@ There are required properties for Category entity that has to be set (not null):
 * (string) CategoryId - the unique id for the category (GUID - generated automatically).
 * (string) Code - the unique code for the category in scope of catalog.
 * (string) Name - name of the category.
-* (bool) В  IsActive - if the category is active ("true" by default).
+* (bool)   IsActive - if the category is active ("true" by default).
 * (string) CatalogId - catalog id to which categories will be added.
-* (date) В  StartDate - the date when the category becomes active.
+* (date)   StartDate - the date when the category becomes active.
 
-CSV file must have columns that stands to Code and Name properties at least. StartDate and IsActive could be set via Custom value selection if all imported categories should be active or inactive initially (default value is true).В Catalog is selected in separate control, so it doesn't have to be in the CSV file.
+CSV file must have columns that stands to Code and Name properties at least. StartDate and IsActive could be set via Custom value selection if all imported categories should be active or inactive initially (default value is true). Catalog is selected in separate control, so it doesn't have to be in the CSV file.
 
 Other important but not required property is parent category code. If CSV file doesn't contain column that applies to this property, than all categories will be set to the root of the selected catalog.
 
@@ -171,7 +171,7 @@ Next prepare data file fo item assets. Those are mainly images of the item.
 
 Assets should be placed under ~\Frontend\App_Data\Virto\Storage folder. In this case the "catalog" subfolder should be created and each products assets are placed in it's own subfolder named by the products code.
 
-As you can see the path to the asset is relative to theВ ~\Frontend\App_Data\Virto\Storage folder. Asset type describes if it is image or some text documentation file, or download link for some electronic good. Asset group describes how the asset will be shown in the frontend.
+As you can see the path to the asset is relative to the ~\Frontend\App_Data\Virto\Storage folder. Asset type describes if it is image or some text documentation file, or download link for some electronic good. Asset group describes how the asset will be shown in the frontend.
 
 Next prepare import file for relations. That is where relations between products and variations will be defined.
 
@@ -185,7 +185,7 @@ Next prepare data file to import prices for the variations.
 
 In the pricelist the code of the pricelist should be provided. Quantity sets the amount of purchased items to apply the price. List price and sale price are self explanatory.
 
-> Import data files should be placed underВ ~\Frontend\App_Data\Virto\Storage folder in order VirtoCommerce manager's file manager could reach them. Create "Imports" subfolder and place all the created files there.
+> Import data files should be placed under ~\Frontend\App_Data\Virto\Storage folder in order VirtoCommerce manager's file manager could reach them. Create "Imports" subfolder and place all the created files there.
 
 ## Step 2. Create Import jobs
 
@@ -207,14 +207,14 @@ The data should be imported in a certain order. There should be categories befor
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the Step 1 of the wizard set import type "Category", select property set, click "Select file" navigate toВ ImportsВ folder and choose the categories import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+4. In the Step 1 of the wizard set import type "Category", select property set, click "Select file" navigate to Imports folder and choose the categories import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
 <img src="../../../assets/images/image2013-11-22_16_24_50.png" />
 
 5. Click "Next" to proceed to Step 2.
-6. The system automatically identified which columns match entity properties. The import file doesn't contain the requiredВ **Start Date**В property, so it needs to be set manually. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
+6. The system automatically identified which columns match entity properties. The import file doesn't contain the required **Start Date** property, so it needs to be set manually. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
   <img src="../../../assets/images/image2013-11-21_17_22_23.png" />
 7. Finish the wizard.
 
@@ -227,16 +227,16 @@ The wizard step should look like on screenshot below:
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the wizardВ Step 1 set import type "Product", select property set, click "Select file" navigate toВ ImportsВ folder and choose the products import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+4. In the wizard Step 1 set import type "Product", select property set, click "Select file" navigate to Imports folder and choose the products import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
 <img src="../../../assets/images/image2013-11-22_16_49_22.png" />
 
 5. Click "Next" to proceed to Step 2.
-6. The system automatically identifiedВ which columns match entity properties. The import file doesn't contain the requiredВ **Start Date**В property, it's set automatically to current date. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
+6. The system automatically identified which columns match entity properties. The import file doesn't contain the required **Start Date** property, it's set automatically to current date. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
 
-> **Is Active**В should be set to True as products should be visible in the store,В **Is Buyable**В set to False as products can't be sold directly, only variation of the product can be sold.
+> **Is Active** should be set to True as products should be visible in the store, **Is Buyable** set to False as products can't be sold directly, only variation of the product can be sold.
 > <img src="../../../assets/images/image2013-11-25_10_16_37.png" />
 
 7. Finish the wizard.
@@ -251,14 +251,14 @@ The wizard step should look like on screenshot below:
 4. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-5. In the wizard Step 1 set import type "TaxCategory", enter import job name, click "Select file", navigate toВ ImportsВ folder and choose the TaxCategories.csv import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+5. In the wizard Step 1 set import type "TaxCategory", enter import job name, click "Select file", navigate to Imports folder and choose the TaxCategories.csv import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
 <img src="../../../assets/images/image2013-11-25_13_15_2.png" />
 
 6. Click "Next" to proceed to Step 2.
-7. The system automatically identifiedВ which columns match entity properties. Check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
+7. The system automatically identified which columns match entity properties. Check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
 
 <img src="../../../assets/images/image2013-11-25_13_15_37.png" />
 
@@ -273,16 +273,16 @@ The wizard step should look like on screenshot below:
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the wizardВ Step 1 set import type "Sku", select property set, click "Select file" navigate toВ ImportsВ folder and choose the variations import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+4. In the wizard Step 1 set import type "Sku", select property set, click "Select file" navigate to Imports folder and choose the variations import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
 <img src="../../../assets/images/image2013-11-25_10_49_17.png" />
 
 5. Click "Next" to proceed to Step 2.
-6. The system automatically identified which columns match entity properties. The import file doesn't contain the requiredВ **Start Date**В property, it's set automatically to current date. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
+6. The system automatically identified which columns match entity properties. The import file doesn't contain the required **Start Date** property, it's set automatically to current date. Also check if properties are mapped correctly by automatic mapping. The mapping should look like on the screenshot below.
 
-> **Is Buyable**В should be set to True as variations can be sold,В **Is Active**В set to False as variation can't be viewed directly it should be selected through product page.
+> **Is Buyable** should be set to True as variations can be sold, **Is Active** set to False as variation can't be viewed directly it should be selected through product page.
 > <img src="../../../assets/images/image2013-11-25_11_59_27.png" />
 
 > As Color is multilingual property it has mapping property per locale.
@@ -298,7 +298,7 @@ The wizard step should look like on screenshot below:
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the wizard Step 1 set import type "ItemRelation", click "Select file", navigate toВ ImportsВ folder and choose the item relation import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+4. In the wizard Step 1 set import type "ItemRelation", click "Select file", navigate to Imports folder and choose the item relation import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
@@ -309,7 +309,7 @@ The wizard step should look like on screenshot below:
 
 <img src="../../../assets/images/image2013-11-25_12_28_37.png" />
 
-> There are two propertiesВ Source item catalogВ andВ Target item catalogВ . These properties can be set in case you're not sure if there can be items with the same codes in several catalogs, to point where to locate the items.
+> There are two properties Source item catalog and Target item catalog . These properties can be set in case you're not sure if there can be items with the same codes in several catalogs, to point where to locate the items.
 
 7. Finish the wizard.
 
@@ -322,7 +322,7 @@ The wizard step should look like on screenshot below:
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the wizardВ Step 1 set import type "ItemAsset", click "Select file", navigate toВ ImportsВ folder and choose the assets import file as template. The column delimiter and name will be set automatically. Leave other properties default.
+4. In the wizard Step 1 set import type "ItemAsset", click "Select file", navigate to Imports folder and choose the assets import file as template. The column delimiter and name will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
@@ -344,7 +344,7 @@ The wizard step should look like on screenshot below:
 3. Click
   <img src="../../../assets/images/image2013-11-22_15_28_31.png" />
   to launch wizard.
-4. In the wizardВ Step 1 set import job name, click "Select file", navigate toВ ImportsВ folder and choose the prices import file as template. The column delimiter will be set automatically. Leave other properties default.
+4. In the wizard Step 1 set import job name, click "Select file", navigate to Imports folder and choose the prices import file as template. The column delimiter will be set automatically. Leave other properties default.
 
 The wizard step should look like on screenshot below:
 
