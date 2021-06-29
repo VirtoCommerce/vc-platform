@@ -69,6 +69,7 @@ A dedicated service is used for adding toolbar items externally (without having 
 ```JS
 toolbarService.register({
   name: "ADDITIONAL COMMAND", icon: 'fa fa-cloud',
+  title: 'Action command tooltip text',
   executeMethod: function (blade) {
     console.log('test: ' + this.name + this.icon + blade);
   },
