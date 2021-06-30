@@ -119,7 +119,7 @@ jobs:
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
       uses: azure/docker-login@v1
       with:
-        login-server: docker.pkg.github.com
+        login-server: ghcr.io
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -130,8 +130,8 @@ jobs:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}
         dockerTag: dev-linux-latest
-        platformImage: docker.pkg.github.com/virtocommerce/vc-platform/platform
-        storefrontImage: docker.pkg.github.com/virtocommerce/vc-storefront/storefront
+        platformImage: ghcr.io/virtocommerce/platform
+        storefrontImage: ghcr.io/virtocommerce/storefront
           
     - name: Publish Nuget
       if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'}}
