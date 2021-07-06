@@ -80,7 +80,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("")]
         public async Task<ActionResult> DeleteAsync([FromQuery] string[] clientIds)
         {
-            var apps = _manager.ListAsync(x => x.Where(y => clientIds.Contains(y.ClientId))).ToEnumerable();
+            var apps = await _manager.ListAsync(x => x.Where(y => clientIds.Contains(y.ClientId))).ToListAsync();
 
             foreach (var app in apps)
             {
