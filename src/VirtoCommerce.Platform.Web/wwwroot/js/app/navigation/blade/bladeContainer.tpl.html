@@ -12,17 +12,17 @@
                 <ul class="menu __inline">
                     <li class="menu-item __minimize" ng-click="bladeMinimize()" ng-show="!blade.isExpandable && blade.isMaximized">
                         <button>
-                            {{ 'platform.commands.restore' | translate }}
+                            <i class="fa fa-window-minimize" aria-hidden="true" title="{{ 'platform.commands.minimize' | translate }}"></i>
                         </button>
                     </li>
                     <li class="menu-item __maximize" ng-click="bladeMaximize()" ng-show="!blade.isExpandable && !blade.isMaximized">
                         <button>
-                            {{ 'platform.commands.maximize' | translate }}
+                            <i class="fa fa-window-maximize" aria-hidden="true" title="{{ 'platform.commands.maximize' | translate }}"></i>
                         </button>
                     </li>
                     <li class="menu-item __close" ng-click="bladeClose()" ng-class="{'__disabled': blade.isClosingDisabled}" ng-disabled="blade.isClosingDisabled">
                         <button>
-                            {{ 'platform.commands.close' | translate }}
+                            <i class="fa fa-times" aria-hidden="true" title="{{ 'platform.commands.close' | translate }}"></i>
                         </button>
                     </li>
                 </ul>
