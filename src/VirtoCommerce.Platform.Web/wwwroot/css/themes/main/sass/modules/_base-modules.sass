@@ -26,6 +26,9 @@ ol
 .menu.__inline
   word-spacing: 0px
 
+.menu.__inline
+  font-size: 0px
+
 ul,
 ol
   li
@@ -1595,13 +1598,13 @@ tags-input
   .blade-head
     background: $bladeHeadBg
     box-sizing: border-box
-    height: 122px
-    padding: 25px 0 5px
+    height: 127px
+    padding: 30px 0 5px
     position: relative
 
     transition: height .3s ease
     .blade-status
-      height: 25px
+      height: 30px
       left: 0
       position: absolute
       right: 0
@@ -1652,7 +1655,7 @@ tags-input
         top: 0
         z-index: 200
     .blade-nav
-      height: 25px
+      height: 30px
       left: 0
       position: absolute
       right: 0
@@ -1666,7 +1669,7 @@ tags-input
         border: none
         cursor: pointer
         font-size: 0
-        height: 25px
+        height: 30px
         line-height: 1.4
         position: relative
         width: 35px
@@ -1683,34 +1686,8 @@ tags-input
           font-size: 13px
           line-height: 0
           margin: 12px 0 0
-      .menu-item.__minimize,
-      .menu-item.__maximize,
-      .menu-item.__close
-        z-index: 350
       .menu-item.__disabled
         cursor: not-allowed
-      .menu-item.__minimize,
-      .menu-item.__maximize
-        &::after
-          border-color: $whiteColor
-          border-style: solid
-          box-sizing: border-box
-          height: 8px
-          top: 8px
-          width: 12px
-      .menu-item.__minimize
-        &::after
-          border-width: 0 0 2px
-      .menu-item.__maximize
-        &::after
-          border-width: 2px 1px 1px
-      .menu-item.__close
-        &::after
-          content: '×'
-          font-family: caption
-          font-size: 20px
-          font-weight: bold
-          top: -3px
       .menu-item
         &::after
           color: $whiteColor
@@ -1769,7 +1746,7 @@ tags-input
       overflow: hidden
       position: absolute
       right: 0
-      top: 74px
+      top: 79px
       z-index: 50
 
       transition: height .3s ease
@@ -2445,11 +2422,11 @@ tags-input
     right: 10px
     top: 10px
     z-index: 50
-  &.size-clearfix 
+  &.size-clearfix
     max-height: 530px
     overflow: auto
-  @media (max-height: 766px) 
-    &.size-clearfix 
+  @media (max-height: 766px)
+    &.size-clearfix
       max-height: 400px
       overflow: auto
   .item-list-clearfix
@@ -2569,7 +2546,22 @@ tags-input
     background-color: $blueBg
     &:hover
       background-color: darken($blueBg, 5%)
+
 // Font awesome
 .fa-gray
   color: $iconGray
   margin: 0 0 10px 0
+
+.fa-window-maximize,
+.fa-window-minimize,
+.fa-times
+  display: flex
+  align-items: center
+  justify-content: center
+  color: $iconGray
+  font-size: 14px !important
+
+.fa-window-maximize
+  transform: scale(1.1)
+.fa-times
+  transform: scale(1.4)
