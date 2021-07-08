@@ -84,6 +84,17 @@ namespace Mvc.Server
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(openIdConnectRequest, user);
                 var claimsPrincipal = await _userClaimsPrincipalFactory.CreateAsync(user);
+
+                //Do not allow login to customers
+                if (claimsPrincipal.Claims.Any(x => x.Type == _identityOptions.Value.ClaimsIdentity.RoleClaimType && x.Value == PlatformConstants.Security.SystemRoles.Customer))
+                {
+                    return BadRequest(new OpenIddictResponse
+                    {
+                        Error = Errors.InvalidGrant,
+                        ErrorDescription = "The user is not allowed to sign in."
+                    });
+                }
+
                 var limitedPermissions = _authorizationOptions.LimitedCookiePermissions?.Split(PlatformConstants.Security.Claims.PermissionClaimTypeDelimiter, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
 
                 if (!user.IsAdministrator)
