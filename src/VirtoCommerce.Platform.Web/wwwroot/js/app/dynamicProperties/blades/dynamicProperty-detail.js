@@ -2,7 +2,7 @@ angular.module('platformWebApp')
     .controller('platformWebApp.dynamicPropertyDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.settings', 'platformWebApp.dynamicProperties.api', 'platformWebApp.dynamicProperties.dictionaryItemsApi', 'platformWebApp.dynamicProperties.valueTypesService', function ($scope, bladeNavigationService, dialogService, settings, dynamicPropertiesApi, dictionaryItemsApi, valueTypesService) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:dynamic_properties:update';
-        blade.headIcon = 'fa fa-plus-square-o';
+        blade.headIcon = 'far fa-plus-square';
         blade.title = 'platform.blades.dynamicProperty-detail.title';
         var localDictionaryValues = [];
 

@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.dynamicObjectListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dynamicProperties.api', function ($scope, bladeNavigationService, dynamicPropertiesApi) {
         var blade = $scope.blade;
-        blade.headIcon = 'fa fa-plus-square-o';
+        blade.headIcon = 'far fa-plus-square';
         blade.title = 'platform.blades.dynamicObject-list.title';
         blade.subtitle = 'platform.blades.dynamicObject-list.subtitle';
 

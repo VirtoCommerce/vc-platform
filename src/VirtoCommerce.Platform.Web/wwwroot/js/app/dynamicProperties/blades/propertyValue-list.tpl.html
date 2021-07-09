@@ -1,9 +1,9 @@
-<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel2.tpl.html'"></div>
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form name="formScope">
+            <form name="formScope" class="form">
                 <fieldset ng-init="setForm(formScope)">
+                    <legend>{{ 'platform.blades.propertyValue-list.labels.header' | translate }}</legend>
                     <div class="form-group list __info" ng-repeat="property in blade.currentEntities | orderBy: 'displayOrder' | filter: isPropertyHasValues">
                         <label class="form-label" for="">
                             {{::property | localizeDynamicPropertyName:blade.currentLanguage}}
