@@ -55,7 +55,7 @@ jobs:
     - name: Docker Login
       uses: azure/docker-login@v1
       with:
-        login-server: docker.pkg.github.com
+        login-server: ghcr.io
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -66,8 +66,8 @@ jobs:
         githubToken: ${{ env.GITHUB_TOKEN }}
         platformDockerTag: ${{ steps.image.outputs.taggedVersion }}
         storefrontDockerTag: 'dev-linux-latest'
-        platformImage: docker.pkg.github.com/virtocommerce/vc-platform/platform
-        storefrontImage: docker.pkg.github.com/virtocommerce/vc-storefront/storefront
+        platformImage: ghcr.io/virtocommerce/platform
+        storefrontImage: ghcr.io/virtocommerce/storefront
         validateSwagger: 'false'
 
     - name: Getting tests
