@@ -129,10 +129,11 @@
                 }
             },
             "propertyValue-list": {
-                "title": "Properties values",
-                "subtitle": "Edit properties values",
+                "title": "Dynamic properties",
+                "subtitle": "",
                 "labels": {
-                    "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
+                    "header": "Properties values",
+                    "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Types of properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
                 }
             },
             "edit-array": {
