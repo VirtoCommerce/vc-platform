@@ -19,7 +19,7 @@ jobs:
       - name: Docker Login
         uses: azure/docker-login@v1
         with:
-          login-server: docker.pkg.github.com
+          login-server: ghcr.io
           username: $GITHUB_ACTOR
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -28,8 +28,8 @@ jobs:
         with:
           githubUser: ${{ env.GITHUB_ACTOR }}
           githubToken: ${{ env.GITHUB_TOKEN }}
-          platformImage: docker.pkg.github.com/virtocommerce/vc-platform/platform
-          storefrontImage: docker.pkg.github.com/virtocommerce/vc-storefront/storefront
+          platformImage: ghcr.io/virtocommerce/platform
+          storefrontImage: ghcr.io/virtocommerce/storefront
           validateSwagger: 'false'
 
       - name: OWASP ZAP Full Scan
