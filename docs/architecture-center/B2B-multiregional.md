@@ -17,7 +17,7 @@ This solution is targeted to provide multi-regional support that shares the same
 
 ## Architecture diagram
 
-![B2B Multiregional Architecture Reference](../../media/arch-center-b2b-multiregional.png)
+![B2B Multiregional Architecture Reference](../media/arch-center-b2b-multiregional.png)
 
 In this architecture diagram three webstores targeted to customers in different regions shares the same Virto Commerce backend integrated with one or more third-party systems (such as ERP, PIM, etc.)
 
