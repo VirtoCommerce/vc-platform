@@ -123,8 +123,8 @@
         },
         "propertyValue-list": {
             "title": "Eigenschaften Werte",
-            "subtitle": "Eigenschaften bearbeiten Werte",
             "labels": {
+                "header": "Eigenschaften Werte",
                 "no-properties": "Diese Einheit hat keine dynamischen Eigenschaften haben. Verwalten klicken Sie auf Eigenschaften und einige Eigenschaften erstellen. Schließen und aktuelle Einheit Ansicht öffnen dynamische Eigenschaften geladen zu erhalten."
             }
         },

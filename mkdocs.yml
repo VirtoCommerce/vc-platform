@@ -1,6 +1,7 @@
 site_name: Virto Commerce Documentation
 theme:
     name: material
+    custom_dir: overrides
     language: en
 #    features:
 #        - instant # (still experimental) feature fails to load images when folder changes
