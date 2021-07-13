@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E70533FE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Web", "src\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj", "{6984B1F0-8005-4A50-8567-212273005472}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Security", "src\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj", "{CA049776-3F2F-4C56-B094-C3807F129566}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Modules", "src\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj", "{F26CCDD4-7115-4827-B56D-1D6D2B67B195}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Data", "src\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj", "{F8920663-0611-4357-8D7D-5AED3C655454}"
@@ -37,11 +35,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.DistributedLock", "src\VirtoCommerce.Platform.DistributedLock\VirtoCommerce.Platform.DistributedLock.csproj", "{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests", "tests\VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests\VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests.csproj", "{707A1D34-5E3A-4655-90BB-C70DFA545476}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests", "tests\VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests\VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests.csproj", "{707A1D34-5E3A-4655-90BB-C70DFA545476}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Assets.FileSystem.Tests", "tests\VirtoCommerce.Platform.Assets.FileSystem.Tests\VirtoCommerce.Platform.Assets.FileSystem.Tests.csproj", "{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Assets.FileSystem.Tests", "tests\VirtoCommerce.Platform.Assets.FileSystem.Tests\VirtoCommerce.Platform.Assets.FileSystem.Tests.csproj", "{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Caching.Tests", "tests\VirtoCommerce.Platform.Caching.Tests\VirtoCommerce.Platform.Caching.Tests.csproj", "{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Caching.Tests", "tests\VirtoCommerce.Platform.Caching.Tests\VirtoCommerce.Platform.Caching.Tests.csproj", "{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +51,6 @@ Global
 		{6984B1F0-8005-4A50-8567-212273005472}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6984B1F0-8005-4A50-8567-212273005472}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6984B1F0-8005-4A50-8567-212273005472}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA049776-3F2F-4C56-B094-C3807F129566}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA049776-3F2F-4C56-B094-C3807F129566}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA049776-3F2F-4C56-B094-C3807F129566}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA049776-3F2F-4C56-B094-C3807F129566}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F26CCDD4-7115-4827-B56D-1D6D2B67B195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F26CCDD4-7115-4827-B56D-1D6D2B67B195}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F26CCDD4-7115-4827-B56D-1D6D2B67B195}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -125,7 +119,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6984B1F0-8005-4A50-8567-212273005472} = {90F6E3EE-475A-4844-A4C4-078613591F81}
-		{CA049776-3F2F-4C56-B094-C3807F129566} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{F26CCDD4-7115-4827-B56D-1D6D2B67B195} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{F8920663-0611-4357-8D7D-5AED3C655454} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{A20E9B96-0AB5-4E61-BE2C-E94B8D4829FA} = {90F6E3EE-475A-4844-A4C4-078613591F81}

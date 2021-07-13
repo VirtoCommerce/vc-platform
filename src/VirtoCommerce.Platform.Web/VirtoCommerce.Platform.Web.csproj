@@ -19,16 +19,15 @@
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
         <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.15.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.8" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="3.1.8" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.13" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.8" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="3.1.8" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.8" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="3.1.8" />
         <PackageReference Include="Microsoft.Azure.SignalR" Version="1.5.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.13">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -37,15 +36,13 @@
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-        <PackageReference Include="OpenIddict.AspNetCore" Version="3.0.4" />
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
         <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.2" />
         <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="5.6.3" />
         <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="5.0.1" />
-        <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
         <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
         <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
     </ItemGroup>
@@ -55,7 +52,6 @@
         <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
         <ProjectReference Include="..\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj" />
         <ProjectReference Include="..\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj" />
-        <ProjectReference Include="..\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
     </ItemGroup>
     <ItemGroup>
         <Compile Remove="modules\**" />

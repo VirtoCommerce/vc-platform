@@ -31,7 +31,6 @@
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj" />
-        <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
         <ProjectReference Include="..\..\src\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" />
     </ItemGroup>
 </Project>

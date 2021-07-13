@@ -1,37 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
 using VirtoCommerce.Platform.Assets.FileSystem;
@@ -47,9 +38,6 @@ using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
-using VirtoCommerce.Platform.Security.Authorization;
-using VirtoCommerce.Platform.Security.Repositories;
-using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -57,9 +45,6 @@ using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Migrations;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Redis;
-using VirtoCommerce.Platform.Web.Security;
-using VirtoCommerce.Platform.Web.Security.Authentication;
-using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
 using VirtoCommerce.Platform.Web.Telemetry;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
@@ -116,7 +101,8 @@ namespace VirtoCommerce.Platform.Web
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
             services.AddPlatformServices(Configuration);
-            services.AddSecurityServices();
+            //TODO: DC REMOVE LATER
+            //services.AddSecurityServices();
             services.AddSingleton<LicenseProvider>();
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
@@ -150,14 +136,15 @@ namespace VirtoCommerce.Platform.Web
                 return JsonSerializer.Create(serv.Value.SerializerSettings);
             });
 
-            services.AddDbContext<SecurityDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("VirtoCommerce"));
-                // Register the entity sets needed by OpenIddict.
-                // Note: use the generic overload if you need
-                // to replace the default OpenIddict entities.
-                options.UseOpenIddict();
-            });
+            //TODO: DC REMOVE LATER
+            //services.AddDbContext<SecurityDbContext>(options =>
+            //{
+            //    options.UseSqlServer(Configuration.GetConnectionString("VirtoCommerce"));
+            //    // Register the entity sets needed by OpenIddict.
+            //    // Note: use the generic overload if you need
+            //    // to replace the default OpenIddict entities.
+            //    options.UseOpenIddict();
+            //});
 
             // Enable synchronous IO if using Kestrel:
             services.Configure<KestrelServerOptions>(options =>
@@ -178,28 +165,33 @@ namespace VirtoCommerce.Platform.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                                      //Add the second ApiKey auth schema to handle api_key in query string
-                                      .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
-                                      .AddCookie();
+            //TODO: DC REMOVE LATER
+            //var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
-            services.AddSecurityServices(options =>
-            {
-            });
+            //                          //Add the second ApiKey auth schema to handle api_key in query string
+            //                          .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
+            //                          .AddCookie();
 
-            services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
-                    .AddEntityFrameworkStores<SecurityDbContext>()
-                    .AddDefaultTokenProviders();
+            //TODO: DC REMOVE LATER
+            //services.AddSecurityServices(options =>
+            //{
+            //});
 
-            // Configure Identity to use the same JWT claims as OpenIddict instead
-            // of the legacy WS-Federation claims it uses by default (ClaimTypes),
-            // which saves you from doing the mapping in your authorization controller.
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Subject;
-                options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Name;
-                options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
-            });
+            //TODO: DC REMOVE LATER
+            //services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
+            //        .AddEntityFrameworkStores<SecurityDbContext>()
+            //        .AddDefaultTokenProviders();
+
+            //TODO: DC REMOVE LATER
+            //// Configure Identity to use the same JWT claims as OpenIddict instead
+            //// of the legacy WS-Federation claims it uses by default (ClaimTypes),
+            //// which saves you from doing the mapping in your authorization controller.
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Subject;
+            //    options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Name;
+            //    options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
+            //});
 
             // Support commonly used forwarded headers
             // X-Forwarded-For - Holds Client IP (optionally port number) across proxies and ends up in HttpContext.Connection.RemoteIpAddress
@@ -210,149 +202,155 @@ namespace VirtoCommerce.Platform.Web
                 options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor;
             });
 
+            //TODO: DC REMOVE LATER
             //Create backup of token handler before default claim maps are cleared
-            var defaultTokenHandler = new JwtSecurityTokenHandler();
+            //var defaultTokenHandler = new JwtSecurityTokenHandler();
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
-            authBuilder.AddJwtBearer(options =>
-                    {
-                        options.Authority = Configuration["Auth:Authority"];
-                        options.Audience = Configuration["Auth:Audience"];
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            //JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+            //authBuilder.AddJwtBearer(options =>
+            //        {
+            //            options.Authority = Configuration["Auth:Authority"];
+            //            options.Audience = Configuration["Auth:Audience"];
 
-                        if (WebHostEnvironment.IsDevelopment())
-                        {
-                            options.RequireHttpsMetadata = false;
-                        }
+            //            if (WebHostEnvironment.IsDevelopment())
+            //            {
+            //                options.RequireHttpsMetadata = false;
+            //            }
 
-                        options.IncludeErrorDetails = true;
+            //            options.IncludeErrorDetails = true;
 
-                        X509SecurityKey publicKey = null;
-                        if (!Configuration["Auth:PublicCertPath"].IsNullOrEmpty())
-                        {
-                            var publicCert = new X509Certificate2(Configuration["Auth:PublicCertPath"]);
-                            publicKey = new X509SecurityKey(publicCert);
-                        }
+            //            X509SecurityKey publicKey = null;
+            //            if (!Configuration["Auth:PublicCertPath"].IsNullOrEmpty())
+            //            {
+            //                var publicCert = new X509Certificate2(Configuration["Auth:PublicCertPath"]);
+            //                publicKey = new X509SecurityKey(publicCert);
+            //            }
 
-                        options.TokenValidationParameters = new TokenValidationParameters()
-                        {
-                            NameClaimType = OpenIddictConstants.Claims.Subject,
-                            RoleClaimType = OpenIddictConstants.Claims.Role,
-                            ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = publicKey
-                        };
-                    });
+            //            options.TokenValidationParameters = new TokenValidationParameters()
+            //            {
+            //                //TODO: DC REMOVE LATER (Check if required)
+            //                NameClaimType = "sub", // OpenIddictConstants.Claims.Subject,
+            //                RoleClaimType = "role",// OpenIddictConstants.Claims.Role,
+            //                ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
+            //                ValidateIssuerSigningKey = true,
+            //                IssuerSigningKey = publicKey
+            //            };
+            //        });
 
-            var azureAdSection = Configuration.GetSection("AzureAd");
+            //TODO: DC REMOVE LATER
+            //var azureAdSection = Configuration.GetSection("AzureAd");
 
-            if (azureAdSection.GetChildren().Any())
-            {
-                var options = new AzureAdOptions();
-                azureAdSection.Bind(options);
+            //if (azureAdSection.GetChildren().Any())
+            //{
+            //    var options = new AzureAdOptions();
+            //    azureAdSection.Bind(options);
 
-                if (options.Enabled)
-                {
-                    //TODO: Need to check how this influence to OpennIddict Reference tokens activated by this line below  AddValidation(options => options.UseReferenceTokens())
-                    //TechDept: Need to upgrade to Microsoft.Identity.Web
-                    //https://docs.microsoft.com/en-us/azure/active-directory/develop/microsoft-identity-web
-                    authBuilder.AddOpenIdConnect(options.AuthenticationType, options.AuthenticationCaption,
-                        openIdConnectOptions =>
-                        {
-                            openIdConnectOptions.ClientId = options.ApplicationId;
+            //    if (options.Enabled)
+            //    {
+            //        //TODO: Need to check how this influence to OpennIddict Reference tokens activated by this line below  AddValidation(options => options.UseReferenceTokens())
+            //        //TechDept: Need to upgrade to Microsoft.Identity.Web
+            //        //https://docs.microsoft.com/en-us/azure/active-directory/develop/microsoft-identity-web
+            //        authBuilder.AddOpenIdConnect(options.AuthenticationType, options.AuthenticationCaption,
+            //            openIdConnectOptions =>
+            //            {
+            //                openIdConnectOptions.ClientId = options.ApplicationId;
 
-                            openIdConnectOptions.Authority = $"{options.AzureAdInstance}{options.TenantId}";
-                            openIdConnectOptions.UseTokenLifetime = true;
-                            openIdConnectOptions.RequireHttpsMetadata = false;
-                            openIdConnectOptions.SignInScheme = IdentityConstants.ExternalScheme;
-                            openIdConnectOptions.SecurityTokenValidator = defaultTokenHandler;
-                            openIdConnectOptions.MetadataAddress = options.MetadataAddress;
-                        });
-                }
-            }
+            //                openIdConnectOptions.Authority = $"{options.AzureAdInstance}{options.TenantId}";
+            //                openIdConnectOptions.UseTokenLifetime = true;
+            //                openIdConnectOptions.RequireHttpsMetadata = false;
+            //                openIdConnectOptions.SignInScheme = IdentityConstants.ExternalScheme;
+            //                openIdConnectOptions.SecurityTokenValidator = defaultTokenHandler;
+            //                openIdConnectOptions.MetadataAddress = options.MetadataAddress;
+            //            });
+            //    }
+            //}
 
-            services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
-            var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
-            var platformOptions = Configuration.GetSection("VirtoCommerce").Get<PlatformOptions>();
-            // Register the OpenIddict services.
-            // Note: use the generic overload if you need
-            // to replace the default OpenIddict entities.
-            services.AddOpenIddict()
-                .AddCore(options =>
-                {
-                    options.UseEntityFrameworkCore()
-                        .UseDbContext<SecurityDbContext>();
-                }).AddServer(options =>
-                {
-                    // Register the ASP.NET Core MVC binder used by OpenIddict.
-                    // Note: if you don't call this method, you won't be able to
-                    // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                    var builder = options.UseAspNetCore().
-                        EnableTokenEndpointPassthrough().
-                        EnableAuthorizationEndpointPassthrough();
+            //TODO: DC REMOVE LATER
+            //services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
+            //var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
+            //var platformOptions = Configuration.GetSection("VirtoCommerce").Get<PlatformOptions>();
 
-                    // Enable the authorization, logout, token and userinfo endpoints.
-                    options.SetTokenEndpointUris("/connect/token");
-                    options.SetUserinfoEndpointUris("/api/security/userinfo");
+            //TODO: DC REMOVE LATER
+            //// Register the OpenIddict services.
+            //// Note: use the generic overload if you need
+            //// to replace the default OpenIddict entities.
+            //services.AddOpenIddict()
+            //    .AddCore(options =>
+            //    {
+            //        options.UseEntityFrameworkCore()
+            //            .UseDbContext<SecurityDbContext>();
+            //    }).AddServer(options =>
+            //    {
+            //        // Register the ASP.NET Core MVC binder used by OpenIddict.
+            //        // Note: if you don't call this method, you won't be able to
+            //        // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
+            //        var builder = options.UseAspNetCore().
+            //            EnableTokenEndpointPassthrough().
+            //            EnableAuthorizationEndpointPassthrough();
 
-                    // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
-                    // can enable the other flows if you need to support implicit or client credentials.
-                    options.AllowPasswordFlow()
-                        .AllowRefreshTokenFlow()
-                        .AllowClientCredentialsFlow();
+            //        // Enable the authorization, logout, token and userinfo endpoints.
+            //        options.SetTokenEndpointUris("/connect/token");
+            //        options.SetUserinfoEndpointUris("/api/security/userinfo");
 
-                    options.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
-                    options.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
+            //        // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
+            //        // can enable the other flows if you need to support implicit or client credentials.
+            //        options.AllowPasswordFlow()
+            //            .AllowRefreshTokenFlow()
+            //            .AllowClientCredentialsFlow();
 
-                    options.AcceptAnonymousClients();
+            //        options.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
+            //        options.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
 
-                    // Configure Openiddict to issues new refresh token for each token refresh request.
-                    // Enabled by default, to disable use options.DisableRollingRefreshTokens()
+            //        options.AcceptAnonymousClients();
 
-                    // Make the "client_id" parameter mandatory when sending a token request.
-                    //options.RequireClientIdentification()
+            //        // Configure Openiddict to issues new refresh token for each token refresh request.
+            //        // Enabled by default, to disable use options.DisableRollingRefreshTokens()
 
-                    // When request caching is enabled, authorization and logout requests
-                    // are stored in the distributed cache by OpenIddict and the user agent
-                    // is redirected to the same page with a single parameter (request_id).
-                    // This allows flowing large OpenID Connect requests even when using
-                    // an external authentication provider like Google, Facebook or Twitter.
-                    builder.EnableAuthorizationRequestCaching();
-                    builder.EnableLogoutRequestCaching();
+            //        // Make the "client_id" parameter mandatory when sending a token request.
+            //        //options.RequireClientIdentification()
 
-                    options.DisableScopeValidation();
+            //        // When request caching is enabled, authorization and logout requests
+            //        // are stored in the distributed cache by OpenIddict and the user agent
+            //        // is redirected to the same page with a single parameter (request_id).
+            //        // This allows flowing large OpenID Connect requests even when using
+            //        // an external authentication provider like Google, Facebook or Twitter.
+            //        builder.EnableAuthorizationRequestCaching();
+            //        builder.EnableLogoutRequestCaching();
 
-                    // During development or when you explicitly run the platform in production mode without https, need to disable the HTTPS requirement.
-                    if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
-                    {
-                        builder.DisableTransportSecurityRequirement();
-                    }
+            //        options.DisableScopeValidation();
 
-                    // Note: to use JWT access tokens instead of the default
-                    // encrypted format, the following lines are required:
-                    options.DisableAccessTokenEncryption();
+            //        // During development or when you explicitly run the platform in production mode without https, need to disable the HTTPS requirement.
+            //        if (WebHostEnvironment.IsDevelopment() || platformOptions.AllowInsecureHttp || !Configuration.IsHttpsServerUrlSet())
+            //        {
+            //            builder.DisableTransportSecurityRequirement();
+            //        }
 
-                    var bytes = File.ReadAllBytes(Configuration["Auth:PrivateKeyPath"]);
-                    X509Certificate2 privateKey;
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                    {
-                        // https://github.com/dotnet/corefx/blob/release/2.2/Documentation/architecture/cross-platform-cryptography.md
-                        // macOS cannot load certificate private keys without a keychain object, which requires writing to disk. Keychains are created automatically for PFX loading, and are deleted when no longer in use. Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
-                        privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet);
-                    }
-                    else
-                    {
-                        privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
-                    }
-                    options.AddSigningCertificate(privateKey);
-                    options.AddEncryptionCertificate(privateKey);
-                });
+            //        // Note: to use JWT access tokens instead of the default
+            //        // encrypted format, the following lines are required:
+            //        options.DisableAccessTokenEncryption();
 
+            //        var bytes = File.ReadAllBytes(Configuration["Auth:PrivateKeyPath"]);
+            //        X509Certificate2 privateKey;
+            //        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            //        {
+            //            // https://github.com/dotnet/corefx/blob/release/2.2/Documentation/architecture/cross-platform-cryptography.md
+            //            // macOS cannot load certificate private keys without a keychain object, which requires writing to disk. Keychains are created automatically for PFX loading, and are deleted when no longer in use. Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
+            //            privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet);
+            //        }
+            //        else
+            //        {
+            //            privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+            //        }
+            //        options.AddSigningCertificate(privateKey);
+            //        options.AddEncryptionCertificate(privateKey);
+            //    });
 
-            services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
-            services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
-            services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
-            services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
+            //TODO: DC REMOVE LATER
+            //services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
+            //services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
+            //services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
+            //services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
 
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
@@ -368,22 +366,21 @@ namespace VirtoCommerce.Platform.Web
                     return Task.CompletedTask;
                 };
             });
-
-            services.AddAuthorization(options =>
-            {
-                //We need this policy because it is a single way to implicitly use the two schema (JwtBearer and ApiKey)  authentication for resource based authorization.
-                var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
-                                                                              .RequireAuthenticatedUser()
-                                                                              //.RequireAssertion(context => context.User.HasScope("api1"))
-                                                                              .Build();
-                //The good article is described the meaning DefaultPolicy and FallbackPolicy
-                //https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/
-                options.DefaultPolicy = mutipleSchemaAuthPolicy;
-            });
-            // register the AuthorizationPolicyProvider which dynamically registers authorization policies for each permission defined in module manifest
-            services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
-            //Platform authorization handler for policies based on permissions
-            services.AddSingleton<IAuthorizationHandler, DefaultPermissionAuthorizationHandler>();
+            //TODO: DC REMOVE LATER
+            //services.AddAuthorization(options =>
+            //{
+            //    //We need this policy because it is a single way to implicitly use the two schema (JwtBearer and ApiKey)  authentication for resource based authorization.
+            //    var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme/* TODO: DC REMOVE LATER , ApiKeyAuthenticationOptions.DefaultScheme*/)
+            //                                                                  .RequireAuthenticatedUser()
+            //                                                                  .Build();
+            //    //The good article is described the meaning DefaultPolicy and FallbackPolicy
+            //    //https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/
+            //    options.DefaultPolicy = mutipleSchemaAuthPolicy;
+            //});
+            //// register the AuthorizationPolicyProvider which dynamically registers authorization policies for each permission defined in module manifest
+            //services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+            ////Platform authorization handler for policies based on permissions
+            //services.AddSingleton<IAuthorizationHandler, DefaultPermissionAuthorizationHandler>();
 
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
@@ -519,10 +516,11 @@ namespace VirtoCommerce.Platform.Web
                 // Complete hangfire init and apply Hangfire migrations
                 app.UseHangfire(Configuration);
 
+                //TODO: DC REMOVE LATER
                 // Register platform permissions
-                app.UsePlatformPermissions();
-                app.UseSecurityHandlers();
-                app.UsePruneExpiredTokensJob();
+                //app.UsePlatformPermissions();
+                //app.UseSecurityHandlers();
+                //app.UsePruneExpiredTokensJob();
 
                 // Complete modules startup and apply their migrations
                 app.UseModules();
@@ -538,8 +536,9 @@ namespace VirtoCommerce.Platform.Web
                 endpoints.MapHealthChecks();
             });
 
+            //TODO: DC REMOVE LATER
             //Seed default users
-            app.UseDefaultUsersAsync().GetAwaiter().GetResult();
+            //app.UseDefaultUsersAsync().GetAwaiter().GetResult();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
