@@ -56,4 +56,4 @@ extra:
         link: https://www.linkedin.com/company/virto-commerce/
 
 extra_javascript:
-    - scripts/head-include.js
+    - scripts/scripts-loader.js
