@@ -51,7 +51,7 @@ jobs:
       if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
         echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
-        echo "UPDATE_LATEST_TAG=false" >> $GITHUB_ENV 
+##        echo "UPDATE_LATEST_TAG=false" >> $GITHUB_ENV 
 
     - uses: actions/checkout@v2
       with:
