@@ -475,7 +475,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             // register login-on-behalf command in platform account blade
             var loginOnBehalfCommand = {
                 name: "platform.commands.login-on-behalf",
-                icon: 'fa fa-key',
+                icon: 'fas fa-key',
                 executeMethod: function (blade) {
                     var showError = () => {
                         var dialog = {
