@@ -138,11 +138,18 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/publish-nuget@master
 
     - name: Publish to Blob
-      if: ${{ github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      if: ${{ github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
       id: blobRelease
       uses: VirtoCommerce/vc-github-actions/publish-blob-release@master
       with:
         blobSAS: ${{ secrets.BLOB_TOKEN }}
+        
+      - name: Add link to PR
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
+        with:
+          artifactUrl: ${{ steps.blobRelease.outputs.packageUrl }}
+          downloadComment: 'Artifact URL:'
       
     - name: Publish Github Release
       if: ${{ github.ref == 'refs/heads/master' }}
