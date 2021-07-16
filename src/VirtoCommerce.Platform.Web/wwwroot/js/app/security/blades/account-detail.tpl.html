@@ -50,7 +50,7 @@
     <ul class="list __info">
         <li class="list-item">
             <div class="list-t">{{ 'platform.blades.account-detail.labels.locked-state' | translate }}</div>
-            <div class="list-descr">{{blade.accountLockedState}}</div>
+            <div class="list-descr" ng-class="{alert: blade.accountIsLocked}">{{blade.accountLockedState}}</div>
         </li>
     </ul>
 </script>
