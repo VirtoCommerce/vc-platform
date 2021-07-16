@@ -21,7 +21,7 @@
         <!-- End Google Tag Manager -->
     }
 
-    <link rel="stylesheet" href="~/dist/style.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/dist/style.css" asp-append-version="true" />*@
     <modules-style-bundle bundle-path="~/dist/style.css" asp-append-version="true"></modules-style-bundle>
 
 
@@ -46,8 +46,9 @@
 
     <partial name="_AppDependencies" />
 
-    <script src="~/dist/vendor.js" type="text/javascript" asp-append-version="true"></script>
-    <script src="~/dist/app.js" type="text/javascript" asp-append-version="true"></script>
+    @*<script src="~/dist/vendor.js" type="text/javascript" asp-append-version="true"></script>
+    <script src="~/dist/app.js" type="text/javascript" asp-append-version="true"></script>*@
+    <modules-script-bundle bundle-path="~/dist/vendor.js" asp-append-version="true"></modules-script-bundle>
     <modules-script-bundle bundle-path="~/dist/app.js" asp-append-version="true"></modules-script-bundle>
 
     @RenderSection("scripts", required: false)
