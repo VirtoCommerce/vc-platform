@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// </summary>
         public string ObjectId { get; set; }
         public string ObjectType { get; set; }
-
+        public bool IsReadOnly { get; set; }
         public object Value { get; set; }
 
         protected override IEnumerable<object> GetEqualityComponents()

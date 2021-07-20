@@ -17,9 +17,12 @@ namespace VirtoCommerce.Platform.Web.Migrations
         {
             using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
             {
-                var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
-                platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
-                platformDbContext.Database.Migrate();
+                var platformDbContext = serviceScope.ServiceProvider.GetService<PlatformDbContext>();
+                if (platformDbContext != null)
+                {
+                    platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
+                    platformDbContext.Database.Migrate();
+                }
 
             }
 

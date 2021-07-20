@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
@@ -30,12 +31,18 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly IDictionary<string, SettingDescriptor> _registeredSettingsByNameDict = new Dictionary<string, SettingDescriptor>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
         private readonly IDictionary<string, IEnumerable<SettingDescriptor>> _registeredTypeSettingsByNameDict = new Dictionary<string, IEnumerable<SettingDescriptor>>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
         private readonly IEventPublisher _eventPublisher;
+        private readonly IConfiguration _configuration;
 
-        public SettingsManager(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher)
+        public SettingsManager(
+            Func<IPlatformRepository> repositoryFactory
+            , IPlatformMemoryCache memoryCache
+            , IEventPublisher eventPublisher
+            , IConfiguration configuration)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
             _eventPublisher = eventPublisher;
+            _configuration = configuration;
         }
 
         #region ISettingsRegistrar Members
@@ -119,10 +126,22 @@ namespace VirtoCommerce.Platform.Data.Settings
                         ObjectType = objectType,
                         ObjectId = objectId
                     };
-                    var dbSetting = dbStoredSettings.FirstOrDefault(x => x.Name.EqualsInvariant(name));
-                    if (dbSetting != null)
+                    var envSettingStrValue = _configuration.GetValue<string>(name.Replace(".", ":"));
+                    if (envSettingStrValue != null)
                     {
-                        objectSetting = dbSetting.ToModel(objectSetting);
+                        //This hack is needed to cast setting value that is got from ENV to a value with type according to setting description
+                        var settingValue = new SettingValueEntity();
+                        settingValue.SetValue(settingDescriptor.ValueType, envSettingStrValue);
+                        objectSetting.Value = settingValue.GetValue();
+                        objectSetting.IsReadOnly = true;
+                    }
+                    else //Do not allow to override setting that defined in ENV
+                    {
+                        var dbSetting = dbStoredSettings.FirstOrDefault(x => x.Name.EqualsInvariant(name));
+                        if (dbSetting != null)
+                        {
+                            objectSetting = dbSetting.ToModel(objectSetting);
+                        }
                     }
                     resultObjectSettings.Add(objectSetting);
 
