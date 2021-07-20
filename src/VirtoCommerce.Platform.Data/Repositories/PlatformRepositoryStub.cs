@@ -8,6 +8,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
 {
     public class PlatformRepositoryStub : IPlatformRepository, IUnitOfWork
     {
+        [Obsolete("Use IAssetsRepository.AssetEntries from VirtoCommerce.AssetsModule.Data instead")]
         public IQueryable<AssetEntryEntity> AssetEntries { get; } = Enumerable.Empty<AssetEntryEntity>().AsQueryable();
 
         public IQueryable<SettingEntity> Settings { get; } = Enumerable.Empty<SettingEntity>().AsQueryable();
@@ -40,7 +41,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         {
             // Cleanup
         }
-
+        [Obsolete("Use IAssetsRepository.GetAssetsByIdsAsync from VirtoCommerce.AssetsModule.Data instead")]
         public Task<AssetEntryEntity[]> GetAssetsByIdsAsync(string[] ids)
         {
             return Task.FromResult(Array.Empty<AssetEntryEntity>());

@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.Platform.Data.Assets
 {
+    [Obsolete("Use AssetEntryService from VirtoCommerce.AssetsModule.Data instead")]
     public class AssetEntryService : IAssetEntryService, IAssetEntrySearchService
     {
         private readonly Func<IPlatformRepository> _platformRepository;

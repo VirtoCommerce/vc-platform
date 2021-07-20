@@ -87,8 +87,9 @@ namespace VirtoCommerce.Platform.Data.Repositories
             return result;
         }
 
+        [Obsolete("Use IAssetsRepository.AssetEntries from VirtoCommerce.AssetsModule.Data instead")]
         public IQueryable<AssetEntryEntity> AssetEntries => DbContext.Set<AssetEntryEntity>();
-
+        [Obsolete("Use IAssetsRepository.GetAssetsByIdsAsync from VirtoCommerce.AssetsModule.Data instead")]
         public async Task<AssetEntryEntity[]> GetAssetsByIdsAsync(string[] ids)
         {
             if (ids.IsNullOrEmpty())

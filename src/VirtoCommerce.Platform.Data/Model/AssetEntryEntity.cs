@@ -5,6 +5,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Data.Model
 {
+    [Obsolete("Use AssetEntryEntity from VirtoCommerce.AssetsModule.Data instead")]
     public class AssetEntryEntity : AuditableEntity
     {
         [StringLength(2083)]
