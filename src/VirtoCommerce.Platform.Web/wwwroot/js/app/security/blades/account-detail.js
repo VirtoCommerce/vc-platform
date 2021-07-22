@@ -19,11 +19,17 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                 });
         }
 
+        function setToolbarCommands() {
+            blade.toolbarCommands = commands.filter((item) => item.meta !== blade.accountLockedState);
+        }
+
         function initializeBlade(data) {
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
             isAccountlocked(blade.currentEntity.id).then(function (result) {
-                blade.accountLockedState = result.locked ? "Locked" : "Unlocked";
+                blade.accountIsLocked = result.locked;
+                blade.accountLockedState = blade.accountIsLocked ? "Locked" : "Unlocked";
+                setToolbarCommands();
             });
 
             // Load account types
@@ -94,7 +100,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
 
         blade.headIcon = 'fas fa-key';
 
-        blade.toolbarCommands = [
+        const commands = [
             {
                 name: "platform.commands.save",
                 icon: 'fas fa-save',
@@ -102,7 +108,8 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                     $scope.saveChanges();
                 },
                 canExecuteMethod: isDirty,
-                permission: blade.updatePermission
+                permission: blade.updatePermission,
+                meta: "Save"
             },
             {
                 name: "platform.commands.reset",
@@ -111,7 +118,8 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                     angular.copy(blade.origEntity, blade.currentEntity);
                 },
                 canExecuteMethod: isDirty,
-                permission: blade.updatePermission
+                permission: blade.updatePermission,
+                meta: "Reset"
             },
             {
                 name: "platform.commands.change-password",
@@ -130,7 +138,8 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                 canExecuteMethod: function () {
                     return true;
                 },
-                permission: blade.updatePermission
+                permission: blade.updatePermission,
+                meta: "ChangePassword"
             },
             {
                 name: "platform.commands.lock-account",
@@ -140,6 +149,8 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                     accounts.lock({ id: blade.currentEntity.id }, null, function (result) {
                         if (result.succeeded) {
                             blade.accountLockedState = "Locked";
+                            blade.accountIsLocked = true;
+                            setToolbarCommands();
                         }
                         blade.isLoading = false;
                     }, function (error) {
@@ -152,16 +163,19 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                         return blade.accountLockedState === "Unlocked";
                     return false;
                 },
-                permission: blade.updatePermission
+                permission: blade.updatePermission,
+                meta: "Locked"
             },
             {
                 name: "platform.commands.unlock-account",
-                icon: 'fa fa-unlock',
+                icon: 'fa fa-unlock-alt',
                 executeMethod: function () {
                     blade.isLoading = true;
                     accounts.unlock({ id: blade.currentEntity.id }, null, function (result) {
                         if (result.succeeded) {
                             blade.accountLockedState = "Unlocked";
+                            blade.accountIsLocked = false;
+                            setToolbarCommands();
                         }
                         blade.isLoading = false;
                     }, function (error) {
@@ -174,9 +188,10 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                         return blade.accountLockedState === "Locked";
                     return false;
                 },
-                permission: blade.updatePermission
+                permission: blade.updatePermission,
+                meta: "Unlocked"
             }
-        ];
+        ]
 
         // actions on load
         blade.refresh(false);

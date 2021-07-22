@@ -45,8 +45,6 @@ repo_url: https://github.com/VirtoCommerce/vc-platform
 # Copyright
 copyright: Copyright &copy; 2021. All rights reserved.
 
-google_analytics: ['GTM-NKMNNN', 'hostname']
-
 extra:
     social:
       - icon: fontawesome/brands/github-alt
@@ -57,3 +55,6 @@ extra:
         link: https://twitter.com/virtocommerce?lang=en
       - icon: fontawesome/brands/linkedin
         link: https://www.linkedin.com/company/virto-commerce/
+
+extra_javascript:
+    - scripts/scripts-loader.js
