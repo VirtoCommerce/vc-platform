@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -18,16 +19,21 @@ namespace VirtoCommerce.Platform.Modules
         private readonly ILogger<ModuleInitializer> _loggerFacade;
         private readonly IServiceCollection _serviceCollection;
         private readonly IConfiguration _configuration;
-
+        private readonly IHostEnvironment _hostingEnvironment;
         /// <summary>
         /// Initializes a new instance of <see cref="ModuleInitializer"/>.
         /// </summary>
         /// <param name="loggerFacade">The logger to use.</param>
-        public ModuleInitializer(ILogger<ModuleInitializer> loggerFacade, IServiceCollection serviceCollection, IConfiguration configuration)
+        public ModuleInitializer(
+            ILogger<ModuleInitializer> loggerFacade
+            , IServiceCollection serviceCollection
+            , IConfiguration configuration
+            , IHostEnvironment hostingEnvironment)
         {
             _loggerFacade = loggerFacade ?? throw new ArgumentNullException("loggerFacade");
             _serviceCollection = serviceCollection;
             _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         /// <summary>
@@ -51,6 +57,10 @@ namespace VirtoCommerce.Platform.Modules
                     if (moduleInstance is IHasConfiguration configurableModule)
                     {
                         configurableModule.Configuration = _configuration;
+                    }
+                    if (moduleInstance is IHasHostEnvironment hasHostEnvironment)
+                    {
+                        hasHostEnvironment.HostEnvironment = _hostingEnvironment;
                     }
 
                     moduleInstance.Initialize(_serviceCollection);
