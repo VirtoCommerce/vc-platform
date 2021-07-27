@@ -26,6 +26,10 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// </summary>
         public string ObjectId { get; set; }
         public string ObjectType { get; set; }
+        /// <summary>
+        /// Flag indicates the this setting is read only and can't be changed
+        /// </summary>
+        public string IsReadOnly { get; set; }
 
         public object Value { get; set; }
 

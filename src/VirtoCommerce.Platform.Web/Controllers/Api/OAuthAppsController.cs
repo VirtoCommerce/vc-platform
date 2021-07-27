@@ -8,8 +8,7 @@ using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Web.Model.Security;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
