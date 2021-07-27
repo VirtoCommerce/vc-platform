@@ -26,10 +26,10 @@ namespace VirtoCommerce.Platform.Modules
         /// </summary>
         /// <param name="loggerFacade">The logger to use.</param>
         public ModuleInitializer(
-            ILogger<ModuleInitializer> loggerFacade
-            , IServiceCollection serviceCollection
-            , IConfiguration configuration
-            , IHostEnvironment hostingEnvironment)
+            ILogger<ModuleInitializer> loggerFacade,
+            IServiceCollection serviceCollection,
+            IConfiguration configuration,
+            IHostEnvironment hostingEnvironment)
         {
             _loggerFacade = loggerFacade ?? throw new ArgumentNullException("loggerFacade");
             _serviceCollection = serviceCollection;
