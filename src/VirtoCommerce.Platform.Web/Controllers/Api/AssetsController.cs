@@ -14,9 +14,9 @@ using Microsoft.Net.Http.Headers;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Swagger;
 using VirtoCommerce.Platform.Data.Helpers;
 using VirtoCommerce.Platform.Web.Helpers;
-using VirtoCommerce.Platform.Web.Swagger;
 using VirtoCommerce.Platform.Web.Validators;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
