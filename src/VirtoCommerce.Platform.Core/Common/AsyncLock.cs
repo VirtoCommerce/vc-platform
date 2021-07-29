@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Core.Common
             return new Releaser(_key);
         }
 
-        private sealed class Releaser : IDisposable
+        public struct Releaser : IDisposable
         {
             private readonly string _key;
             public Releaser(string key)
