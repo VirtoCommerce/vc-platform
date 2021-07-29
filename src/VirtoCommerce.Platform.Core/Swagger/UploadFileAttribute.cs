@@ -1,6 +1,6 @@
 using System;
 
-namespace VirtoCommerce.Platform.Web.Swagger
+namespace VirtoCommerce.Platform.Core.Swagger
 {
     /// <summary> 
     /// Use this attribute for controllers methods to allow file upload via Swagger 
