@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Core.Common
 {
     //https://stackoverflow.com/questions/31138179/asynchronous-locking-based-on-a-key
     //Asynchronous locking based on a string key
-    public class AsyncLock
+    public sealed class AsyncLock
     {
         private readonly string _key;
         public AsyncLock(string key)
