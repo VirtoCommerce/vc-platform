@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,25 +31,19 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public Task GetOrCreateExclusiveAsync()
+        public void GetOrCreateExclusiveAsync()
         {
             var sut = CreateCache();
             var counter = 0;
-            var tasks = new List<Task>();
-            for (var threadNumber = 0; threadNumber < 10; threadNumber++)
+            Parallel.ForEach(Enumerable.Range(1, 10), async i =>
             {
-                var task = Task.Run(async () =>
+                var item = await sut.GetOrCreateExclusiveAsync("test-key", cacheEntry =>
                 {
-                    var item = await sut.GetOrCreateExclusiveAsync("test-key", cacheEntry =>
-                    {
-                        cacheEntry.SlidingExpiration = TimeSpan.FromSeconds(10);
-                        return Task.FromResult(Interlocked.Increment(ref counter));
-                    });
-                    Assert.Equal(1, item);
+                    cacheEntry.SlidingExpiration = TimeSpan.FromSeconds(10);
+                    return Task.FromResult(Interlocked.Increment(ref counter));
                 });
-                tasks.Add(task);
-            }
-            return Task.WhenAll(tasks);
+                Assert.Equal(1, item);
+            });
         }
 
         [Fact]
