@@ -1,86 +1,107 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-    //https://stackoverflow.com/questions/31138179/asynchronous-locking-based-on-a-key
-    //Asynchronous locking based on a string key
-    public sealed class AsyncLock
+    // http://sanjeev.dwivedi.net/?p=292
+    // http://blogs.msdn.com/b/pfxteam/archive/2012/02/12/10266983.aspx
+    public class AsyncSemaphore
     {
-        private readonly string _key;
-        public AsyncLock(string key)
+        private readonly static Task s_completed = Task.FromResult(true);
+        private readonly Queue<TaskCompletionSource<bool>> m_waiters = new Queue<TaskCompletionSource<bool>>();
+        private int m_currentCount;
+
+        public AsyncSemaphore(int initialCount)
         {
-            _key = key;
+            if (initialCount < 0) throw new ArgumentOutOfRangeException("initialCount");
+            m_currentCount = initialCount;
         }
 
-        private static readonly Dictionary<string, RefCounted<SemaphoreSlim>> _semaphoreSlims = new Dictionary<string, RefCounted<SemaphoreSlim>>();
-
-        private SemaphoreSlim GetOrCreate(string key)
+        public Task WaitAsync()
         {
-            RefCounted<SemaphoreSlim> item;
-            lock (_semaphoreSlims)
+            lock (m_waiters)
             {
-                if (_semaphoreSlims.TryGetValue(key, out item))
+                if (m_currentCount > 0)
                 {
-                    ++item.RefCount;
+                    --m_currentCount;
+                    return s_completed;
                 }
                 else
                 {
-                    item = new RefCounted<SemaphoreSlim>(new SemaphoreSlim(1, 1));
-                    _semaphoreSlims[key] = item;
+                    var waiter = new TaskCompletionSource<bool>();
+                    m_waiters.Enqueue(waiter);
+                    return waiter.Task;
                 }
             }
-            return item.Value;
         }
 
+        public void Release()
+        {
+            TaskCompletionSource<bool> toRelease = null;
+            lock (m_waiters)
+            {
+                if (m_waiters.Count > 0)
+                    toRelease = m_waiters.Dequeue();
+                else
+                    ++m_currentCount;
+            }
+            if (toRelease != null)
+                toRelease.SetResult(true);
+        }
+    }
+
+    // http://blogs.msdn.com/b/pfxteam/archive/2012/02/12/10266988.aspx
+    public class AsyncLock
+    {
+        private readonly string m_key;
+        private readonly AsyncSemaphore m_semaphore;
+        private readonly Task<Releaser> m_releaser;
+        private static ConcurrentDictionary<string, AsyncLock> _lockMap = new ConcurrentDictionary<string, AsyncLock>();
+
+        public AsyncLock(string key)
+        {
+            m_semaphore = new AsyncSemaphore(1);
+            m_releaser = Task.FromResult(new Releaser(this, () => _lockMap.TryRemove(key, out var _)));
+            m_key = key;
+        }
 
         public static AsyncLock GetLockByKey(string key)
         {
-            return new AsyncLock(key);
+            return _lockMap.GetOrAdd(key, (x) => new AsyncLock(key));
         }
 
-        public async Task<IDisposable> LockAsync()
+        public Task<Releaser> LockAsync()
         {
-            await GetOrCreate(_key).WaitAsync().ConfigureAwait(false);
-            return new Releaser(_key);
+            var wait = m_semaphore.WaitAsync();
+            return wait.IsCompleted ?
+                m_releaser :
+                wait.ContinueWith((_, state) => new Releaser((AsyncLock)state, () => _lockMap.TryRemove(m_key, out var _)),
+                    this, CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
         }
 
         public struct Releaser : IDisposable
         {
-            private readonly string _key;
-            public Releaser(string key)
+            private readonly AsyncLock m_toRelease;
+            private readonly Action m_postReleaseAction;
+
+            internal Releaser(AsyncLock toRelease, Action postReleaseAction = null)
             {
-                _key = key;
+                m_toRelease = toRelease;
+                m_postReleaseAction = postReleaseAction;
             }
 
             public void Dispose()
             {
-                RefCounted<SemaphoreSlim> item;
-                lock (_semaphoreSlims)
+                if (m_toRelease != null)
                 {
-                    item = _semaphoreSlims[_key];
-                    --item.RefCount;
-                    if (item.RefCount == 0)
-                    {
-                        _semaphoreSlims.Remove(_key);
-                    }
+                    m_toRelease.m_semaphore.Release();
+                    m_postReleaseAction?.Invoke();
                 }
-                item.Value.Release();
             }
-        }
-
-        private sealed class RefCounted<T>
-        {
-            public RefCounted(T value)
-            {
-                RefCount = 1;
-                Value = value;
-            }
-
-            public int RefCount { get; set; }
-            public T Value { get; private set; }
         }
     }
 }
