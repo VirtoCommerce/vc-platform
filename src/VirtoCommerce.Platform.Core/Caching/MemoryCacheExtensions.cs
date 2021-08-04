@@ -16,7 +16,7 @@ namespace VirtoCommerce.Platform.Core.Caching
         {
             if (!cache.TryGetValue(key, out var result))
             {
-                using (await AsyncLock.GetLockByKey(key).LockAsync())
+                using (await AsyncLock.GetLockByKey(key).GetReleaserAsync())
                 {
                     if (!cache.TryGetValue(key, out result))
                     {

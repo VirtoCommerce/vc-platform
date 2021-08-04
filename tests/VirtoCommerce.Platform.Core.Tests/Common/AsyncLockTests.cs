@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
                {
                    for (var i = 0; i < 10; i++)
                    {
-                       using (await AsyncLock.GetLockByKey("test-key").LockAsync())
+                       using (await AsyncLock.GetLockByKey("test-key").GetReleaserAsync())
                        {
                            Debug.WriteLine($"{i} enter");
                            counter += i;
