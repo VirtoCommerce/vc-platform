@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             var counter = 0;
             Parallel.ForEach(Enumerable.Range(1, 10), async i =>
             {
-                var releaser = await AsyncLock.GetLockByKey((i % 2).ToString()).LockAsync();
+                var releaser = await AsyncLock.GetLockByKey((i % 2).ToString()).GetReleaserAsync();
                 sut.GetOrCreate($@"test-key {i % 2}", cacheEntry =>
                 {
                     cacheEntry.SlidingExpiration = TimeSpan.FromSeconds(10);

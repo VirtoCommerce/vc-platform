@@ -2,6 +2,8 @@
 
 If you are new to Virto Commerce, follow these steps to set up and launch your store.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mXzsbOeMbV0" title="Virto Commerce - Getting Started with Your Store in 7 Steps" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Step 1. Create a catalog
 
 The catalog is what your customers are constantly working with. It is very important that the catalog is easy to browse and find the right products.
@@ -46,7 +48,6 @@ Thus, price configuring consists of the following actions:
 
 1. Create pricelist
 2. Add items to the pricelist
-
 3. Create pricelist assignment
 4. Manage inventory
 
@@ -93,4 +94,4 @@ To enhance User Experience Virto Commerce contains a set of tools:
 
 ## Step 7. Go to live with MVP and review additional cases in Virto Commerce
 
-Now you are ready to launch your MVP store.
+Now you are ready to connect a storefront and launch your MVP store.
