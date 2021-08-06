@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.ExportImport;
@@ -33,6 +34,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IPushNotificationManager _pushNotifier;
         private readonly ISettingsManager _settingsManager;
         private readonly IUserNameResolver _userNameResolver;
+        private readonly IBlobStorageProvider _blobStorageProvider;
+        private readonly IBlobUrlResolver _blobUrlResolver;
         private readonly PlatformOptions _platformOptions;
 
         private static readonly object _lockObject = new object();
@@ -42,12 +45,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IPushNotificationManager pushNotifier,
             ISettingsManager settingManager,
             IUserNameResolver userNameResolver,
+            IBlobStorageProvider blobStorageProvider,
+            IBlobUrlResolver blobUrlResolver,
             IOptions<PlatformOptions> options)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
             _settingsManager = settingManager;
             _userNameResolver = userNameResolver;
+            _blobStorageProvider = blobStorageProvider;
+            _blobUrlResolver = blobUrlResolver;
             _platformOptions = options.Value;
         }
 
@@ -188,21 +195,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("export/download/{fileName}")]
         [Authorize(Permissions.PlatformExport)]
-        public ActionResult DownloadExportFile([FromRoute] string fileName)
+        public async Task<ActionResult> DownloadExportFile([FromRoute] string fileName)
         {
-            var localTmpFolder = Path.GetFullPath(Path.Combine(_platformOptions.DefaultExportFolder));
-            var localPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
+            var localPath = Path.Combine(_platformOptions.DefaultExportFolder, Path.GetFileName(fileName));
 
-            //Load source data only from local file system
-            using (var stream = System.IO.File.Open(localPath, FileMode.Open))
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(localPath, out var contentType))
             {
-                var provider = new FileExtensionContentTypeProvider();
-                if (!provider.TryGetContentType(localPath, out var contentType))
-                {
-                    contentType = "application/octet-stream";
-                }
-                return PhysicalFile(localPath, contentType);
+                contentType = "application/octet-stream";
             }
+
+            using var blobStream = await _blobStorageProvider.OpenReadAsync(_blobUrlResolver.GetAbsoluteUrl(localPath));
+            var blobBytes = blobStream.ReadFully();
+            return File(blobBytes, contentType, fileName);
         }
 
         private IEnumerable<SampleDataInfo> InnerDiscoverSampleData()
@@ -379,26 +384,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             try
             {
                 var fileName = string.Format(_platformOptions.DefaultExportFileName, DateTime.UtcNow);
-                var localTmpFolder = Path.GetFullPath(Path.Combine(_platformOptions.DefaultExportFolder));
-                var localTmpPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
-
-                if (!Directory.Exists(localTmpFolder))
-                {
-                    Directory.CreateDirectory(localTmpFolder);
-                }
-
-                if (System.IO.File.Exists(localTmpPath))
-                {
-                    System.IO.File.Delete(localTmpPath);
-                }
+                var localPath = Path.Combine(_platformOptions.DefaultExportFolder, Path.GetFileName(fileName));
 
                 //Import first to local tmp folder because Azure blob storage doesn't support some special file access mode
-                using (var stream = System.IO.File.OpenWrite(localTmpPath))
-                {
-                    var manifest = exportRequest.ToManifest();
-                    await _platformExportManager.ExportAsync(stream, manifest, progressCallback, new JobCancellationTokenWrapper(cancellationToken));
-                    pushNotification.DownloadUrl = $"api/platform/export/download/{fileName}";
-                }
+                using var stream = _blobStorageProvider.OpenWrite(_blobUrlResolver.GetAbsoluteUrl(localPath));
+                var manifest = exportRequest.ToManifest();
+                await _platformExportManager.ExportAsync(stream, manifest, progressCallback, new JobCancellationTokenWrapper(cancellationToken));
+                pushNotification.DownloadUrl = $"api/platform/export/download/{fileName}";
             }
             catch (JobAbortedException)
             {

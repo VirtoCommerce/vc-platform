@@ -36,8 +36,8 @@ namespace VirtoCommerce.Platform.Core
         [Url]
         public string SampleDataUrl { get; set; }
 
-        //Default path to store export files
-        public string DefaultExportFolder { get; set; } = "app_data/export";
+        // Blob container (and path) to store export files
+        public string DefaultExportFolder { get; set; } = "export";
 
         public string DefaultExportFileName { get; set; } = "exported_{0:yyyyMMddHHmmss}.zip";
 
