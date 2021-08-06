@@ -62,7 +62,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return Unauthorized();
             }
-            using (await AsyncLock.GetLockByKey(userProfile.ToString()).LockAsync())
+            using (await AsyncLock.GetLockByKey(userProfile.ToString()).GetReleaserAsync())
             {
                 await _settingsManager.DeepSaveSettingsAsync(userProfile);
             }
