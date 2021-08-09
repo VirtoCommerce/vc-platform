@@ -8,8 +8,7 @@ using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Web.Model.Security;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -18,7 +17,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     [Authorize]
     public class OAuthAppsController : Controller
     {
-        private readonly OpenIddictApplicationManager<OpenIddictApplication> _manager;
+        private readonly OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> _manager;
 
         private readonly ISet<string> _defaultPermissions = new HashSet<string>
         {
@@ -28,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             OpenIddictConstants.Permissions.GrantTypes.ClientCredentials
         };
 
-        public OAuthAppsController(OpenIddictApplicationManager<OpenIddictApplication> manager)
+        public OAuthAppsController(OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> manager)
         {
             _manager = manager;
         }
@@ -80,8 +79,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("")]
         public async Task<ActionResult> DeleteAsync([FromQuery] string[] clientIds)
         {
-            var apps = await _manager.ListAsync(x =>
-                x.Where(y => clientIds.Contains(y.ClientId)));
+            var apps = await _manager.ListAsync(x => x.Where(y => clientIds.Contains(y.ClientId))).ToListAsync();
 
             foreach (var app in apps)
             {
@@ -100,8 +98,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 criteria.Sort = "DisplayName:ASC";
             }
 
-            var apps = await _manager.ListAsync(x =>
-                x.OrderBySortInfos(criteria.SortInfos).Skip(criteria.Skip).Take(criteria.Take));
+            var apps = _manager.ListAsync(x => x.OrderBySortInfos(criteria.SortInfos).Skip(criteria.Skip).Take(criteria.Take)).ToEnumerable();
 
             var appsTasks = apps.Select(async x =>
                 {

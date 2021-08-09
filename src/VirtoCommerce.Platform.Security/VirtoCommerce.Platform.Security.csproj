@@ -14,6 +14,7 @@
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <NoWarn>1701;1702;1705;1591</NoWarn>
+        <DocumentationFile>VirtoCommerce.Platform.Security.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,13 +22,14 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
         <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="3.1.8" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="2.0.1" />
-        <PackageReference Include="OpenIddict.Mvc" Version="2.0.1" />
+        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.0.4" />
     </ItemGroup>
+
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8" />
     </ItemGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
         <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />

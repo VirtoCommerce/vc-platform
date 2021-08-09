@@ -7,6 +7,9 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 * [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 
+> Please switch SQL server authentication to mixed mode
+
+![image|409x261](../media/sql-server-mixed-auth.png)  
 
 ## You have two options for installing the platform 
 
@@ -36,7 +39,7 @@ Also you can specify the platform version:
 ```console
 vc-build install -version 3.55.0
 ```
-Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-platform/blob/dev/docs/CLI-tools/package-management.md)  for more info.
+Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-build/blob/main/docs/CLI-tools/package-management.md)  for more info.
 
 ## Setup
 

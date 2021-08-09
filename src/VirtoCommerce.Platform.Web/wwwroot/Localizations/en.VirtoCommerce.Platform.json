@@ -17,8 +17,7 @@
             "help": "Help"
         },
         "navigation": {
-            "back": "Back",
-            "bread-crumb-top": "All"
+            "back": "Back"
         },
         "blades": {
             "system-info": {
@@ -31,6 +30,7 @@
             },
             "asset-list": {
                 "title": "Asset management",
+                "bread-crumb-top": "All assets",
                 "labels": {
                     "picture": "Pic",
                     "name": "Name",
@@ -129,10 +129,11 @@
                 }
             },
             "propertyValue-list": {
-                "title": "Properties values",
-                "subtitle": "Edit properties values",
+                "title": "Dynamic properties",
+                "subtitle": "",
                 "labels": {
-                    "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
+                    "header": "Properties values",
+                    "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Types of properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
                 }
             },
             "edit-array": {
@@ -154,7 +155,7 @@
                     "platform-entries": "Platform entries",
                     "choose-modules": "Choose modules to export",
                     "download-url": "Download Url",
-                    "errors": "Errors",                    
+                    "errors": "Errors",
                     "start": "Start",
                     "end": "End"
                 },
@@ -178,7 +179,11 @@
                 "labels": {
                     "start-import": "Start import",
                     "select-file": "Select .zip file to import. The file must be produced by Commerce Manager data export.",
+                    "drag-note": "Drag and drop .zip file to import. The file must be produced by Commerce Manager data export.",
+                    "upload-failed": "Upload failed",
                     "upload-progress": "Upload progress",
+                    "import-progress": "Import progress",
+                    "import-finished": "Import finished",
                     "import-data-information": "Import data information",
                     "author": "Author",
                     "data-file-created": "Data file created",
@@ -613,7 +618,8 @@
                 "title": "Setting values"
             },
             "settingGroup-list": {
-                "title": "Settings"
+                "title": "Settings",
+                "bread-crumb-top": "All settings"
             },
             "user-profile": {
                 "title": "User profile",

@@ -7,34 +7,27 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "6 August"
+    * New Videos & Topics
+    * Custom and Organization Export & Import module
+    * New Releases
 
-!!! done "3 May"
-    * New Videos on Youtube
-    * Price import/export module
-    * File system distributed lock 
-    * Dynamic Properties for Organizations and contacts
-    * UX/UI Improvements
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-6-august-2021/370)
+    
+!!! done "12 July"
+    * Added Catalog publishing conditions for dynamic content
+    * Added validation for product’s property name
+    * Dev Labs topics
+    * Fixed bugs 
 
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-3-may-2021/314)
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-12-july-2021/356)
+    
+!!! done "28 June"
+    * Virto Commerce on Azure Functions (from Virto DevLabs)
+    * Added full-text search for order documents
+    * OpenIddict Updated to 3.0
 
-!!! done "19 April"
-    * New Videos on Youtube
-    * Product with a Bill of Materials
-    * Password repeat generation policy
-    * Updated Visual Studio Module Template
-    * UX/UI Improvements
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-19-april-2021/309)
-
-!!! done "5 April"
-    * Design System for Virto Commerce Admin UI (Preview)
-    * DB Distributed lock 
-    * Improve performance
-    * Added Password expiration policy
-    * Added breadcrumbs property for XAPI
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-5-april-2021/306)
-
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-28-june-2021/349)
 
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and [GitHub](https://github.com/VirtoCommerce)
 

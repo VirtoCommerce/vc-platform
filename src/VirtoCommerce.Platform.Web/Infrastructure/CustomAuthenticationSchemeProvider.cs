@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using AspNet.Security.OAuth.Validation;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
@@ -33,15 +33,15 @@ namespace VirtoCommerce.Platform.Web.Infrastructure
 
             if (request.Headers.ContainsKey("Authorization"))
             {
-                return await GetSchemeAsync(OAuthValidationDefaults.AuthenticationScheme);
+                return await GetSchemeAsync(JwtBearerDefaults.AuthenticationScheme);
             }
 
             return null;
         }
 
         public override async Task<AuthenticationScheme> GetDefaultAuthenticateSchemeAsync() =>
-            await GetRequestSchemeAsync() ??
-            await base.GetDefaultAuthenticateSchemeAsync();
+                    await GetRequestSchemeAsync() ??
+                    await base.GetDefaultAuthenticateSchemeAsync();
 
         public override async Task<AuthenticationScheme> GetDefaultChallengeSchemeAsync() =>
             await GetRequestSchemeAsync() ??

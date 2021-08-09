@@ -1,6 +1,7 @@
 site_name: Virto Commerce Documentation
 theme:
     name: material
+    custom_dir: overrides
     language: en
 #    features:
 #        - instant # (still experimental) feature fails to load images when folder changes
@@ -54,3 +55,6 @@ extra:
         link: https://twitter.com/virtocommerce?lang=en
       - icon: fontawesome/brands/linkedin
         link: https://www.linkedin.com/company/virto-commerce/
+
+extra_javascript:
+    - scripts/scripts-loader.js

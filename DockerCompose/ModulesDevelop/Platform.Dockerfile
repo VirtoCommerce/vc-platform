@@ -1,6 +1,6 @@
 ARG platform_arg
 
-FROM docker.pkg.github.com/virtocommerce/vc-platform/platform:${platform_arg}
+FROM ghcr.io/virtocommerce/platform:${platform_arg}
 
 WORKDIR /opt/virtocommerce/platform
 

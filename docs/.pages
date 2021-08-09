@@ -2,11 +2,12 @@ arrange:
   - index.md
   - getting-started
   - user-guide
+  - BA docs
   - developer-guide
   - fundamentals
   - techniques
-  - CLI-tools
-  - release-information
   - ...
+  - release-information
+  - versions
   - support.md
   - license.md

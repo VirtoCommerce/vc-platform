@@ -1,0 +1,54 @@
+name: Send message to Teams (regression PR)
+
+on:
+   pull_request:
+    branches:
+      [regression]
+    
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Send a message to Microsoft Teams
+      uses: VirtoCommerce/vc-github-actions/msteams-send-message@master
+      with:
+        body: '{
+    "@type": "MessageCard",
+    "@context": "http://schema.org/extensions",
+    "themeColor": "0076D7",
+    "summary": "On ${{github.repository}} repository",
+    "sections": [
+        {
+            "activityTitle": "Regression PR created/updated",
+            "activitySubtitle": "By [${{ github.event.pull_request.user.login }}](${{ github.event.pull_request.user.url }}) on **[${{github.repository}}](${{github.server_url}}/${{github.repository}})** repository",
+            "activityImage":"${{ github.event.pull_request.user.avatar_url }}",
+            "facts": [
+                {
+                    "name": "Repository",
+                    "value": "[${{github.repository}}](${{github.server_url}}/${{github.repository}})"
+                },
+                {
+                    "name": "Pull request",
+                    "value": "[${{ github.event.pull_request.number }}](${{ github.event.pull_request._links.html.href }})"
+                },
+                {
+                    "name": "Pull request title",
+                    "value": "${{ github.event.pull_request.title }}"
+                }
+
+            ],
+            "markdown": true
+        }
+    ],
+    "potentialAction": [ {
+        "@type": "OpenUri",
+        "name": "View Pull Request",
+        "targets": [{
+            "os": "default",
+            "uri": "${{ github.event.pull_request._links.html.href }}"
+        }]
+    }]
+
+}'  # the body of the message
+        webhook_uri: ${{ secrets.PLATFORM_TEAMS_URI }} 
