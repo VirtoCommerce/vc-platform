@@ -7,30 +7,27 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "6 August"
+    * New Videos & Topics
+    * Custom and Organization Export & Import module
+    * New Releases
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-6-august-2021/370)
+    
+!!! done "12 July"
+    * Added Catalog publishing conditions for dynamic content
+    * Added validation for product’s property name
+    * Dev Labs topics
+    * Fixed bugs 
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-12-july-2021/356)
+    
 !!! done "28 June"
     * Virto Commerce on Azure Functions (from Virto DevLabs)
     * Added full-text search for order documents
     * OpenIddict Updated to 3.0
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-28-june-2021/349)
-
-!!! done "6 June"
-    * New posts: Measure elapsed times for domain event handlers, How to use Hangfire Enqueue operation, Introduction to Virto Commerce CLI tools, Build automation, Package management, How to run the platform on azure functions, BA Documentation
-    * Order XAPI extended with Dynamic properties
-    * Updated Design of Login Screen
-    * Improved Pricelist blade
-    * Added Generic CRUD Services
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-6-june-2021/342)
-
-!!! done "28 May"
-    * Added new video on Youtube
-    * Dynamic properties added to X-Purchase-Cart
-    * Improved Design
-    * Simplified Login on behalf
-    * Fixed Swagger Validation errors
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-28-may-2021/330)
 
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and [GitHub](https://github.com/VirtoCommerce)
 

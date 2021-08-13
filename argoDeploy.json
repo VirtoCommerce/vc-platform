@@ -1,0 +1,13 @@
+{
+    "artifactKey": "docker.pkg.github.com/virtocommerce/vc-platform/platform",
+    "deployRepo": "vc-deploy-dev",
+    "dev": {
+        "deployAppName": "vcplatform-dev",
+        "deployBranch": "dev"
+    },
+    "qa": {
+        "deployAppName": "vcplatform-qa",
+        "deployBranch": "qa"
+    },
+    "cmPath": "platform-dev/resources/kustomization.yaml"
+}

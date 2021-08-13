@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,19 +32,25 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public void GetOrCreateExclusiveAsync()
+        public Task GetOrCreateExclusiveAsync()
         {
             var sut = CreateCache();
             var counter = 0;
-            Parallel.ForEach(Enumerable.Range(1, 10), async i =>
+            var tasks = new List<Task>();
+            for (var threadNumber = 0; threadNumber < 10; threadNumber++)
             {
-                var item = await sut.GetOrCreateExclusiveAsync("test-key", cacheEntry =>
+                var task = Task.Run(async () =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromSeconds(10);
-                    return Task.FromResult(Interlocked.Increment(ref counter));
+                    var item = await sut.GetOrCreateExclusiveAsync("test-key", cacheEntry =>
+                    {
+                        cacheEntry.SlidingExpiration = TimeSpan.FromSeconds(10);
+                        return Task.FromResult(Interlocked.Increment(ref counter));
+                    });
+                    Assert.Equal(1, item);
                 });
-                Assert.Equal(1, item);
-            });
+                tasks.Add(task);
+            }
+            return Task.WhenAll(tasks);
         }
 
         [Fact]
@@ -53,7 +60,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             var counter = 0;
             Parallel.ForEach(Enumerable.Range(1, 10), async i =>
             {
-                var releaser = await AsyncLock.GetLockByKey((i % 2).ToString()).LockAsync();
+                var releaser = await AsyncLock.GetLockByKey((i % 2).ToString()).GetReleaserAsync();
                 sut.GetOrCreate($@"test-key {i % 2}", cacheEntry =>
                 {
                     cacheEntry.SlidingExpiration = TimeSpan.FromSeconds(10);
