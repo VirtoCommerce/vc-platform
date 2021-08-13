@@ -159,7 +159,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("types/{typeName}/properties")]
         public async Task<ActionResult<DynamicProperty[]>> GetProperties([FromRoute] string typeName)
         {
-            var result = await _dynamicPropertySearchService.SearchDynamicPropertiesAsync(new DynamicPropertySearchCriteria { ObjectType = typeName });
+            var result = await _dynamicPropertySearchService.SearchDynamicPropertiesAsync(new DynamicPropertySearchCriteria { ObjectType = typeName, Take = int.MaxValue });
             return Ok(result.Results);
         }
 
