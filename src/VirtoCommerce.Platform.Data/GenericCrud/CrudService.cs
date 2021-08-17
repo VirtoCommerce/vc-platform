@@ -129,7 +129,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <returns></returns>
         protected virtual Task<IEnumerable<TEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids)
         {
-            return LoadEntities(repository, ids, "Full");
+            return LoadEntities(repository, ids, null);
         }
 
         /// <summary>
@@ -252,9 +252,8 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         var entity = AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, keyMap);
                         repository.Remove(entity);
                     }
-                    await repository.UnitOfWork.CommitAsync();
                 }
-
+                await repository.UnitOfWork.CommitAsync();
                 ClearCache(models);
 
                 //Raise domain events after deletion
