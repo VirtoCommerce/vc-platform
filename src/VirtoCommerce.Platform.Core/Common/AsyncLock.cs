@@ -10,6 +10,7 @@ namespace VirtoCommerce.Platform.Core.Common
     public sealed class AsyncLock
     {
         private readonly string _key;
+
         public AsyncLock(string key)
         {
             _key = key;
@@ -35,13 +36,21 @@ namespace VirtoCommerce.Platform.Core.Common
             return item.Value;
         }
 
-
         public static AsyncLock GetLockByKey(string key)
         {
             return new AsyncLock(key);
         }
 
-        public async Task<IDisposable> LockAsync()
+        // TODO: Rename to LockAsync after resolving problem with backward compatibility
+        // in the modules (look on this ticket https://virtocommerce.atlassian.net/browse/PT-3548)
+        public async Task<IDisposable> GetReleaserAsync()
+        {
+            await GetOrCreate(_key).WaitAsync().ConfigureAwait(false);
+            return new Releaser(_key);
+        }
+
+        [Obsolete("Left for backward compatibility. Use GetReleaserAsync")]
+        public async Task<Releaser> LockAsync()
         {
             await GetOrCreate(_key).WaitAsync().ConfigureAwait(false);
             return new Releaser(_key);
@@ -50,6 +59,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public struct Releaser : IDisposable
         {
             private readonly string _key;
+
             public Releaser(string key)
             {
                 _key = key;
