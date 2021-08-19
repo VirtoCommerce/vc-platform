@@ -44,11 +44,6 @@ jobs:
       with:
         java-version: 1.11
 
-    # - name: Set up .net Core 3.1.x for vc-build #GitHib Actions migrates to .net Core 5.x. To vc-build work properly need to manually install .net Core 3.1.x
-    #   uses: actions/setup-dotnet@v1
-    #   with:
-    #     dotnet-version: '3.1.405'
-
     - name: Set variables
       if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
@@ -60,8 +55,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
-      #uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
-      run: dotnet tool update -g virtocommerce.globaltool --version 2.0.0-beta0001
+      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
