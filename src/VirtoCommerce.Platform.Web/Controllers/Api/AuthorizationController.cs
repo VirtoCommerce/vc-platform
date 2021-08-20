@@ -18,7 +18,7 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace Mvc.Server
+namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     public class AuthorizationController : Controller
     {
@@ -55,7 +55,7 @@ namespace Mvc.Server
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<ActionResult> Exchange()
         {
-            OpenIddictRequest openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();
+            var openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();
 
             if (openIdConnectRequest.IsPasswordGrantType())
             {
