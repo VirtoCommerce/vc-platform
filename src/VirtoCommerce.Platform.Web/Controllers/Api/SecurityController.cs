@@ -309,6 +309,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ApplicationUser>> GetUserByName([FromRoute] string userName)
         {
             var result = await UserManager.FindByNameAsync(userName);
+
+            ReduceUserDetails(result);
             return Ok(result);
         }
 
@@ -322,6 +324,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ApplicationUser>> GetUserById([FromRoute] string id)
         {
             var result = await UserManager.FindByIdAsync(id);
+
+            ReduceUserDetails(result);
             return Ok(result);
         }
 
@@ -335,6 +339,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ApplicationUser>> GetUserByEmail([FromRoute] string email)
         {
             var result = await UserManager.FindByEmailAsync(email);
+
+            ReduceUserDetails(result);
             return Ok(result);
         }
 
@@ -347,6 +353,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ApplicationUser>> GetUserByLogin([FromRoute] string loginProvider, [FromRoute] string providerKey)
         {
             var result = await UserManager.FindByLoginAsync(loginProvider, providerKey);
+
+            ReduceUserDetails(result);
             return Ok(result);
         }
 
@@ -791,6 +799,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         #endregion PT-788 Obsolete methods
+
+        private static void ReduceUserDetails(ApplicationUser user)
+        {
+            user.PasswordHash = null;
+            user.SecurityStamp = null;
+        }
 
         private bool IsUserEditable(string userName)
         {
