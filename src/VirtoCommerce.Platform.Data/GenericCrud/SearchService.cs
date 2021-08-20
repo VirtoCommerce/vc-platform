@@ -49,10 +49,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        public virtual async Task<TResult> SearchAsync(TCriteria criteria)
+        public virtual Task<TResult> SearchAsync(TCriteria criteria)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
-            return await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
+            return _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
                 var result = AbstractTypeFactory<TResult>.TryCreateInstance();
                 cacheEntry.AddExpirationToken(GenericSearchCachingRegion<TModel>.CreateChangeToken());
