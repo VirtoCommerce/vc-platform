@@ -3,8 +3,8 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 ## Prerequisites
 
-* [Prerequisites for .NET Core 3.1 on Windows](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=netcore31#dependencies)
-* [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1)
+* [Prerequisites for .NET 5.0 on Windows](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=net50#dependencies)
+* [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 
 > Please switch SQL server authentication to mixed mode
@@ -14,7 +14,7 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 ## You have two options for installing the platform 
 
 * Manual downloading the precomplied binaries
-* Using CLI (beta)
+* Using VirtoCommerce global tool CLI
   
 ## Downloading the precomplied binaries
 
@@ -24,8 +24,7 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 * Unpack this zip to a local directory **C:\vc-platform-3**. After that you will have the directory with Platform precompiled files.
 
-
-## Using `vc-build` CLI (beta).
+## Using `vc-build` CLI
 
 * Install vc-build 
 ```console
@@ -37,7 +36,7 @@ vc-build install
 ```
 Also you can specify the platform version:
 ```console
-vc-build install -version 3.55.0
+vc-build install -platform -version 3.55.0
 ```
 Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-build/blob/main/docs/CLI-tools/package-management.md)  for more info.
 
@@ -99,7 +98,6 @@ Read more on removing this error and using a self-signed certificate: [Trust the
   * Login: **admin**
   * Password: **store**
 
-
 ### Content Configuration in application settings
 If you plan to run Virto Commerce on either custom domain or port, you will need to change public url for Assets and Content:
 
@@ -137,5 +135,3 @@ Read more in the official Microsoft ASP.NET Core documentation:
 [Host ASP.NET Core on Windows with IIS](https://docs.microsoft.com/en-us/aspnet/core/publishing/iis)
 
 Open the VirtoCommerce Platform application in the browser.
-
-
