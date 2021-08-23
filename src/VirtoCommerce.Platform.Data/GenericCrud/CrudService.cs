@@ -257,9 +257,23 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
                 ClearCache(models);
 
+                await AfterDeleteAsync(models, changedEntries);
+
                 //Raise domain events after deletion
                 await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
             }
+        }
+
+        /// <summary>
+        /// Custom CRUD service can override to implement some actions after delete
+        /// </summary>
+        /// <param name="models"></param>
+        /// <param name="changedEntries"></param>
+        /// <returns></returns>
+        protected virtual Task AfterDeleteAsync(IEnumerable<TModel> models, IEnumerable<GenericChangedEntry<TModel>> changedEntries)
+        {
+            // Basic implementation left empty
+            return Task.CompletedTask;
         }
 
         /// <summary>
