@@ -75,6 +75,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 roleSearchService: _roleSearchServiceMock.Object,
                 securityOptions: Mock.Of<IOptions<AuthorizationOptions>>(),
                 userOptionsExtended: Mock.Of<IOptions<UserOptionsExtended>>(),
+                passwordOptions: Mock.Of<IOptions<PasswordOptionsExtended>>(),
                 passwordValidator: _passwordValidatorMock.Object,
                 emailSender: _emailSenderMock.Object,
                 eventPublisher: _eventPublisherMock.Object,
