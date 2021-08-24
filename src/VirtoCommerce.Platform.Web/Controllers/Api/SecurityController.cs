@@ -526,6 +526,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 user = await UserManager.FindByEmailAsync(loginOrEmail);
             }
 
+            // Return 200 to prevent potential user name/email harvesting
             if (user == null)
             {
                 return Ok();
