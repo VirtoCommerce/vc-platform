@@ -62,10 +62,10 @@ namespace VirtoCommerce.Platform.Web.Controllers
             ApplicationUser platformUser = null;
 
             //try yo take an user name from claims
-            var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn) ?? externalLoginInfo.Principal.FindFirstValue("preferred_username");
+            var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn);
             if (string.IsNullOrWhiteSpace(userName))
             {
-                throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
+                throw new InvalidOperationException("Received external login info does not have an UPN claim.");
             }
 
             var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, false);
