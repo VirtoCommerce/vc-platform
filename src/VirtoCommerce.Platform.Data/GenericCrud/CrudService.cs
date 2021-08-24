@@ -253,12 +253,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         repository.Remove(entity);
                     }
                     await repository.UnitOfWork.CommitAsync();
+                    await AfterDeleteAsync(models, changedEntries);
                 }
-
+               
                 ClearCache(models);
-
-                await AfterDeleteAsync(models, changedEntries);
-
+                
                 //Raise domain events after deletion
                 await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
             }
