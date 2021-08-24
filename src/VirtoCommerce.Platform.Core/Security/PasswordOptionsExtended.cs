@@ -12,6 +12,6 @@ namespace VirtoCommerce.Platform.Core.Security
         /// <summary>
         /// The time limit after which a user can request a password reset.
         /// </summary>
-        public TimeSpan? RepeatedResetPasswordTimeLimit { get; set; } = TimeSpan.FromMinutes(1);
+        public TimeSpan RepeatedResetPasswordTimeLimit { get; set; } = TimeSpan.FromMinutes(1);
     }
 }
