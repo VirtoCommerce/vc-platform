@@ -5,6 +5,7 @@ using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Events;
@@ -32,6 +33,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IEventPublisher> _eventPublisherMock;
         private readonly Mock<IUserApiKeyService> _userApiKeyServiceMock;
         private readonly Mock<IOptions<PasswordOptionsExtended>> _passwordOptions;
+        private readonly Mock<ILogger<SecurityController>> _logger;
 
         // Controller
         private readonly SecurityController _controller;
@@ -45,6 +47,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _emailSenderMock = new Mock<IEmailSender>();
             _eventPublisherMock = new Mock<IEventPublisher>();
             _userApiKeyServiceMock = new Mock<IUserApiKeyService>();
+            _logger = new Mock<ILogger<SecurityController>>();
 
             _userManagerMock = new Mock<UserManager<ApplicationUser>>(
                 Mock.Of<IUserStore<ApplicationUser>>(),
@@ -86,7 +89,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 passwordValidator: _passwordValidatorMock.Object,
                 emailSender: _emailSenderMock.Object,
                 eventPublisher: _eventPublisherMock.Object,
-                userApiKeyService: _userApiKeyServiceMock.Object);
+                userApiKeyService: _userApiKeyServiceMock.Object,
+                logger: _logger.Object);
         }
 
         #region Login
@@ -399,7 +403,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         /// Should return next available pass request date
         /// </summary>
         [Fact]
-        public async Task RequestPasswordReset_()
+        public async Task RequestPasswordReset_UserPasswordResetBeforeTimeLimit()
         {
             // Arrange
             var user = _fixture.Create<ApplicationUser>();
