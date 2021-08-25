@@ -187,7 +187,7 @@ namespace VirtoCommerce.Platform.Modules
 
         private void CopyAssembliesSynchronized(IDictionary<string, ModuleManifest> manifests)
         {
-            _distributedLockProvider.ExecuteSynhronized(GetSourceMark(), (x) =>
+            _distributedLockProvider.ExecuteSynchronized(GetSourceMark(), (x) =>
             {
                 if (x != DistributedLockCondition.Delayed)
                 {
