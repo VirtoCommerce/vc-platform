@@ -48,16 +48,23 @@ angular.module('platformWebApp')
             {
                 url: '/forgotpassword',
                 templateUrl: '$(Platform)/Scripts/app/security/dialogs/forgotPasswordDialog.tpl.html',
-                controller: ['$rootScope', '$scope', 'platformWebApp.authService', '$state', function ($rootScope, $scope, authService, $state) {
+                controller: ['$rootScope', '$scope', 'platformWebApp.authService', '$state', '$interval', function ($rootScope, $scope, authService, $state, $interval) {
                     $scope.viewModel = {};
                     $rootScope.preventLoginDialog = false;
                     $scope.ok = function () {
                         $scope.isLoading = true;
                         $scope.errorMessage = null;
-                        authService.requestpasswordreset($scope.viewModel).then(function (retVal) {
+                        authService.requestpasswordreset($scope.viewModel).then(function (result) {
                             $scope.isLoading = false;
-                            $scope.succeeded = true;
-                            angular.extend($scope, retVal);
+                            angular.extend($scope, result);
+
+                            if ($scope.nextRequestAt) {
+                                $scope.formattedCountdown = getCountdown($scope.nextRequestAt);
+                            }
+                            else {
+                                $scope.succeeded = true;
+                            }
+
                         }, function (response) {
                             $scope.isLoading = false;
                             $scope.errorMessage = response.data.message;
@@ -70,6 +77,31 @@ angular.module('platformWebApp')
                     $scope.close = function () {
                         $state.go('loginDialog');
                     };
+
+                    $interval(function () {
+                        $scope.formattedCountdown = getCountdown($scope.nextRequestAt);
+                        if (!$scope.formattedCountdown) {
+                            $scope.nextRequestAt = undefined;
+                        }
+                        return;
+                    }, 1000);
+
+                    function getCountdown(date) {
+                        if (!date) {
+                            return undefined;
+                        }
+
+                        var time = Math.floor(new Date(date).getTime() - new Date().getTime());
+
+                        if (time <= 0) {
+                            return undefined;
+                        }
+
+                        var seconds = Math.floor((time / 1000) % 60);
+                        var minutes = Math.floor(time / 60000);
+
+                        return minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+                    }
                 }
                 ]
             });
