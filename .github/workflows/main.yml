@@ -1,10 +1,16 @@
-# v1.1.4
+# v1.1.5
 name: Platform CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   workflow_dispatch:
+    inputs:
+      forceLatest:
+        description: "Flag to set dev-linux-latest flag on workflow_dispatch event. Allowed values true or false."
+        required: false
+        default: "true"
+
   push:
     paths-ignore:
       - '.github/**'
@@ -48,7 +54,7 @@ jobs:
       if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
         echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
-        echo "UPDATE_LATEST_TAG=false" >> $GITHUB_ENV 
+        echo "UPDATE_LATEST_TAG=${{ github.event.inputs.forceLatest }}" >> $GITHUB_ENV 
 
     - uses: actions/checkout@v2
       with:
