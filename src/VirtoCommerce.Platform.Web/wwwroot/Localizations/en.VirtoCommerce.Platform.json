@@ -327,7 +327,8 @@
                     "new-password": "New password",
                     "repeat-password": "Repeat new password",
                     "cancel": "Cancel",
-                    "save": "Change"
+                    "save": "Change",
+                    "fail": "Sorry, we could't reset password for this user."
                 },
                 "validations": {
                     "current-password": "Required",
