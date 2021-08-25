@@ -125,7 +125,8 @@ jobs:
       with:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}
-        dockerTag: dev-linux-latest
+        platformDockerTag: ${{ steps.image.outputs.taggedVersion }}
+        storefrontDockerTag: dev-linux-latest
         platformImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/platform
         storefrontImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/storefront
           
