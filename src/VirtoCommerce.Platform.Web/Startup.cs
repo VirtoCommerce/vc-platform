@@ -502,7 +502,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.ExecuteSynhronized(() =>
+            app.ExecuteSynchronized(() =>
             {
                 // This method contents will run inside of critical section of instance distributed lock.
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
