@@ -28,7 +28,9 @@ angular.module('platformWebApp')
                 blade.isLoading = false;
 
                 if (!data.succeeded) {
-                    blade.error = $translate.instant('platform.blades.resetpassword.labels.fail');
+                    blade.error = data.errors && data.errors.length ?
+                        data.errors[0] :
+                        $translate.instant('platform.blades.resetpassword.labels.fail');
                 }
                 else {
                     blade.parentBlade.refresh();

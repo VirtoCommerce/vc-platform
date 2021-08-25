@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using OpenIddict.Abstractions;
@@ -40,6 +41,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEmailSender _emailSender;
         private readonly IEventPublisher _eventPublisher;
         private readonly IUserApiKeyService _userApiKeyService;
+        private readonly ILogger<SecurityController> _logger;
 
         public SecurityController(
             SignInManager<ApplicationUser> signInManager,
@@ -53,7 +55,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IPasswordValidator<ApplicationUser> passwordValidator,
             IEmailSender emailSender,
             IEventPublisher eventPublisher,
-            IUserApiKeyService userApiKeyService)
+            IUserApiKeyService userApiKeyService,
+            ILogger<SecurityController> logger)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
@@ -67,6 +70,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _emailSender = emailSender;
             _eventPublisher = eventPublisher;
             _userApiKeyService = userApiKeyService;
+            _logger = logger;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
@@ -402,13 +406,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!IsUserEditable(userName))
             {
-                return Ok(new SecurityResult());
+                LogUserForbiddenToEdit(userName);
+                return Ok(IdentityResultExtensions.CreateUserForbiddenEditResult());
             }
 
             var user = await UserManager.FindByNameAsync(userName);
             if (user == null)
             {
-                return Ok(new SecurityResult());
+                LogUserNotFound(userName);
+                return Ok(IdentityResultExtensions.CreateUserNotFoundResult());
             }
 
             var result = await UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
@@ -433,9 +439,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<SecurityResult>> ResetPassword([FromRoute] string userName, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
         {
             var user = await UserManager.FindByNameAsync(userName);
-            if (user is null || !IsUserEditable(user.UserName))
+            if (user is null)
             {
-                return Ok(new SecurityResult());
+                LogUserNotFound(userName);
+                return Ok(IdentityResultExtensions.CreateUserNotFoundResult());
+            }
+
+            if (!IsUserEditable(user.UserName))
+            {
+                LogUserForbiddenToEdit(userName);
+                return Ok(IdentityResultExtensions.CreateUserForbiddenEditResult());
             }
 
             var token = await UserManager.GeneratePasswordResetTokenAsync(user);
@@ -466,9 +479,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<SecurityResult>> ResetPasswordByToken([FromRoute] string userId, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
         {
             var user = await UserManager.FindByIdAsync(userId);
-            if (user == null || !IsUserEditable(user.UserName))
+            if (user == null)
             {
-                return Ok(new SecurityResult());
+                LogUserNotFound(userId);
+                return Ok(IdentityResultExtensions.CreateUserNotFoundResult());
+            }
+
+            if (!IsUserEditable(user.UserName))
+            {
+                LogUserForbiddenToEdit(user.UserName);
+                return Ok(IdentityResultExtensions.CreateUserForbiddenEditResult());
             }
 
             var result = await UserManager.ResetPasswordAsync(user, resetPasswordConfirm.Token, resetPasswordConfirm.NewPassword);
@@ -810,6 +830,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private bool IsUserEditable(string userName)
         {
             return _securityOptions.NonEditableUsers?.FirstOrDefault(x => x.EqualsInvariant(userName)) == null;
+        }
+
+        private void LogUserNotFound(string idOrName)
+        {
+            _logger.LogWarning($"User {idOrName} not found.");
+        }
+
+        private void LogUserForbiddenToEdit(string idOrName)
+        {
+            _logger.LogWarning($"User {idOrName} is forbidden to edit.");
         }
     }
 }
