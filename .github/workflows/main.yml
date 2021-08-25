@@ -121,7 +121,7 @@ jobs:
 
     - name: Swagger validation
       uses: VirtoCommerce/vc-github-actions/docker-env@master
-      if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
+      if: ${{ github.ref == 'refs/heads/dev' }}
       with:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}
