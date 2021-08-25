@@ -9,7 +9,7 @@ on:
       forceLatest:
         description: "Flag to set dev-linux-latest flag on workflow_dispatch event. Allowed values true or false."
         required: false
-        default: "true"
+        default: "false"
 
   push:
     paths-ignore:
