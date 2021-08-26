@@ -30,6 +30,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
         /// Register swagger documents generator
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="configuration"></param>
         public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
         {
             var section = configuration.GetSection("VirtoCommerce:Swagger");
