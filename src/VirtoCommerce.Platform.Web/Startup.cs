@@ -418,7 +418,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddHangfire(Configuration);
 
             // Register the Swagger generator
-            services.AddSwagger();
+            services.AddSwagger(Configuration);
 
             // The following line enables Application Insights telemetry collection.
             // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple

@@ -6,6 +6,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -15,6 +16,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Swagger;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
@@ -23,12 +25,21 @@ namespace VirtoCommerce.Platform.Web.Swagger
         public static string platformDocName { get; } = "VirtoCommerce.Platform";
         public static string platformUIDocName { get; } = "PlatformUI";
         private static string oauth2SchemeName = "oauth2";
+
         /// <summary>
-        /// 
+        /// Register swagger documents generator
         /// </summary>
         /// <param name="services"></param>
-        public static void AddSwagger(this IServiceCollection services)
+        /// <param name="configuration"></param>
+        public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
         {
+            var section = configuration.GetSection("VirtoCommerce:Swagger");
+            var swaggerOptions = new SwaggerPlatformOptions();
+            section.Bind(swaggerOptions);
+            services.AddOptions<SwaggerPlatformOptions>().Bind(section).ValidateDataAnnotations();
+
+            if (swaggerOptions.Disable) return;
+
             var provider = services.BuildServiceProvider();
             var modules = provider.GetService<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null).ToArray();
 
@@ -119,11 +130,14 @@ namespace VirtoCommerce.Platform.Web.Swagger
         }
 
         /// <summary>
-        /// 
+        /// Enable endpoints for swagger documents and UI
         /// </summary>
         /// <param name="applicationBuilder"></param>
         public static void UseSwagger(this IApplicationBuilder applicationBuilder)
         {
+            var swaggerOptions = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<SwaggerPlatformOptions>>().Value;
+            if (swaggerOptions.Disable) return;
+
             applicationBuilder.UseSwagger(c =>
             {
                 c.RouteTemplate = "docs/{documentName}/swagger.json";
