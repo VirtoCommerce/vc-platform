@@ -804,20 +804,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return SearchRoles(request);
         }
 
-        /// <summary>
-        /// Resets password for current user.
-        /// </summary>
-        /// <param name="resetPassword">Password reset information containing new password.</param>
-        /// <returns>Result of password reset.</returns>
-        [HttpPost]
-        [Route("currentuser/resetpassword")]
-        [AllowAnonymous]
-        [Obsolete("use /currentuser/changepassword instead")]
-        public Task<ActionResult<SecurityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
-        {
-            return ResetPassword(User.Identity.Name, resetPassword);
-        }
-
         #endregion PT-788 Obsolete methods
 
         private bool IsUserEditable(string userName)
