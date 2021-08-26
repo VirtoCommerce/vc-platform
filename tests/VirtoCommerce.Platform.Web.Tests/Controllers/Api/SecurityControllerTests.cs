@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -30,6 +31,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IEmailSender> _emailSenderMock;
         private readonly Mock<IEventPublisher> _eventPublisherMock;
         private readonly Mock<IUserApiKeyService> _userApiKeyServiceMock;
+        private readonly Mock<IOptions<PasswordOptionsExtended>> _passwordOptions;
 
         // Controller
         private readonly SecurityController _controller;
@@ -67,6 +69,11 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 /* IAuthenticationSchemeProvider schemes */null,
                 /* IUserConfirmation<TUser> confirmation */null);
 
+            _passwordOptions = new Mock<IOptions<PasswordOptionsExtended>>()
+            {
+                DefaultValue = DefaultValue.Mock
+            };
+
             _controller = new SecurityController(
                 signInManager: _signInManagerMock.Object,
                 roleManager: _roleManagerMock.Object,
@@ -75,6 +82,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 roleSearchService: _roleSearchServiceMock.Object,
                 securityOptions: Mock.Of<IOptions<AuthorizationOptions>>(),
                 userOptionsExtended: Mock.Of<IOptions<UserOptionsExtended>>(),
+                passwordOptions: _passwordOptions.Object,
                 passwordValidator: _passwordValidatorMock.Object,
                 emailSender: _emailSenderMock.Object,
                 eventPublisher: _eventPublisherMock.Object,
@@ -386,5 +394,28 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         }
 
         #endregion UpdateRole
+
+        /// <summary>
+        /// Should return next available pass request date
+        /// </summary>
+        [Fact]
+        public async Task RequestPasswordReset_()
+        {
+            // Arrange
+            var user = _fixture.Create<ApplicationUser>();
+            user.UserName = "test";
+            user.LastPasswordChangeRequestDate = DateTime.UtcNow;
+            var request = _fixture.Create<LoginRequest>();
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == user.UserName)))
+                .ReturnsAsync(user);
+
+            // Act
+            var actual = await _controller.RequestPasswordReset(user.UserName);
+
+            // Assert
+            var result = actual.ExtractDynamicPropertyFromOkResult<DateTime>("NextRequestAt");
+            result.Should().BeAfter(user.LastPasswordChangeRequestDate.Value);
+        }
     }
 }
