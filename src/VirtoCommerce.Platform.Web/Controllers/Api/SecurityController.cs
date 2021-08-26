@@ -76,6 +76,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
         private string CurrentUserName => User?.Identity?.Name;
 
+        private readonly string UserNotFound = "User not found.";
+        private readonly string UserForbiddenToEdit = "It is forbidden to edit this user.";
+
         /// <summary>
         /// Sign in with user name and password
         /// </summary>
@@ -407,14 +410,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (!IsUserEditable(userName))
             {
                 LogUserForbiddenToEdit(userName);
-                return Ok(IdentityResultExtensions.CreateUserForbiddenEditResult());
+                return Ok(IdentityResultExtensions.CreateErrorResult(UserForbiddenToEdit));
             }
 
             var user = await UserManager.FindByNameAsync(userName);
             if (user == null)
             {
                 LogUserNotFound(userName);
-                return Ok(IdentityResultExtensions.CreateUserNotFoundResult());
+                return Ok(IdentityResultExtensions.CreateErrorResult(UserNotFound));
             }
 
             var result = await UserManager.ChangePasswordAsync(user, changePassword.OldPassword, changePassword.NewPassword);
@@ -442,13 +445,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (user is null)
             {
                 LogUserNotFound(userName);
-                return Ok(IdentityResultExtensions.CreateUserNotFoundResult());
+                return Ok(IdentityResultExtensions.CreateErrorResult(UserNotFound));
             }
 
             if (!IsUserEditable(user.UserName))
             {
                 LogUserForbiddenToEdit(userName);
-                return Ok(IdentityResultExtensions.CreateUserForbiddenEditResult());
+                return Ok(IdentityResultExtensions.CreateErrorResult(UserForbiddenToEdit));
             }
 
             var token = await UserManager.GeneratePasswordResetTokenAsync(user);
@@ -482,13 +485,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (user == null)
             {
                 LogUserNotFound(userId);
-                return Ok(IdentityResultExtensions.CreateUserNotFoundResult());
+                return Ok(IdentityResultExtensions.CreateErrorResult(UserNotFound));
             }
 
             if (!IsUserEditable(user.UserName))
             {
                 LogUserForbiddenToEdit(user.UserName);
-                return Ok(IdentityResultExtensions.CreateUserForbiddenEditResult());
+                return Ok(IdentityResultExtensions.CreateErrorResult(UserForbiddenToEdit));
             }
 
             var result = await UserManager.ResetPasswordAsync(user, resetPasswordConfirm.Token, resetPasswordConfirm.NewPassword);

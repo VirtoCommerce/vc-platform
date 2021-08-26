@@ -15,23 +15,12 @@ namespace VirtoCommerce.Platform.Core.Extensions
             };
         }
 
-        public static SecurityResult CreateUserForbiddenEditResult()
+        public static SecurityResult CreateErrorResult(string errorMessage)
         {
             var result = new SecurityResult();
 
 #if DEBUG
-            result.Errors = new[] { "It is forbidden to edit this user." };
-#endif
-
-            return result;
-        }
-
-        public static SecurityResult CreateUserNotFoundResult()
-        {
-            var result = new SecurityResult();
-
-#if DEBUG
-            result.Errors = new[] { "User not found." };
+            result.Errors = new[] { errorMessage };
 #endif
 
             return result;
