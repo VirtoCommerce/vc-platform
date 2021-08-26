@@ -34,10 +34,6 @@ Video Manuals
 -----------
 [https://www.youtube.com/channel/UC4Mu_zoDThg2jvexT0py12w/videos](https://www.youtube.com/channel/UC4Mu_zoDThg2jvexT0py12w/videos)
 
-Online Demo
------------
-[http://virtocommerce.com/try-now/online-demo](http://virtocommerce.com/try-now/online-demo)
-
 Cloud Private Demo
 -----------
 
@@ -57,7 +53,7 @@ Licensed under the Virto Commerce Open Software License (the "License"); you
 may not use this file except in compliance with the License. You may
 obtain a copy of the License at
 
-http://virtocommerce.com/opensourcelicense
+http://virtocommerce.com/open-source-license
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
