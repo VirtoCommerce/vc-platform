@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Web.Http.Description;
@@ -39,7 +39,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             swaggerDoc.info.license = new License
             {
                 name = "Virto Commerce Open Software License 3.0",
-                url = "http://virtocommerce.com/opensourcelicense"
+                url = "http://virtocommerce.com/open-source-license"
             };
 
             var tags = _moduleCatalog.Modules
