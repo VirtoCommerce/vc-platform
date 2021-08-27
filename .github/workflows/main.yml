@@ -31,6 +31,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   ci:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-18.04
     env:
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
