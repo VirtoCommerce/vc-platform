@@ -138,7 +138,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         }
 
         /// <summary>
-        /// Try to take an user name from claims
+        /// Try to take a user name from claims.
         /// </summary>
         private string GetUserName(ExternalLoginInfo externalLoginInfo)
         {
