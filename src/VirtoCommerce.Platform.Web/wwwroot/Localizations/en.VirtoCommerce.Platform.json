@@ -531,7 +531,9 @@
                     "success": "Email with instructions has been sent to you.",
                     "fail": "Sorry, we could't reset password for this user.",
                     "back": "Back",
-                    "submit": "Submit"
+                    "submit": "Submit",
+                    "time-limit": "You can try again in {{countdown}}",
+                    "time-limit-end": "You can try again now."
                 },
                 "placeholders": {
                     "login-or-email": "Please enter login or email"

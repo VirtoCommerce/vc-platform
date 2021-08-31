@@ -418,7 +418,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddHangfire(Configuration);
 
             // Register the Swagger generator
-            services.AddSwagger();
+            services.AddSwagger(Configuration);
 
             // The following line enables Application Insights telemetry collection.
             // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple
@@ -502,7 +502,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.ExecuteSynhronized(() =>
+            app.ExecuteSynchronized(() =>
             {
                 // This method contents will run inside of critical section of instance distributed lock.
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.
