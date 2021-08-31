@@ -1,4 +1,4 @@
-# v1.2
+# v1.2.1
 name: Platform E2E
 
 on:
@@ -15,6 +15,7 @@ on:
 
 jobs:
   e2e-tests:
+    if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-18.04 # katalon action runs correctly on ubuntu-18.04
     env:
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
@@ -76,6 +77,15 @@ jobs:
         version: '7.9.1'
         projectPath: '${{ github.workspace }}/vc-quality-gate-katalon/platform_storefront.prj'
         args: '-noSplash -retry=0 -testSuiteCollectionPath="Test Suites/Modules/Platform_collection" -browserType="Chrome" -apiKey= ${{ secrets.KATALON_API_KEY }} -g_urlBack="http://localhost:8090" -g_urlFront="http://localhost:8080" -executionProfile="default"'
+    
+    - name: Katalon Report Uploader
+      if: always()
+      uses: katalon-studio/report-uploader@v0.0.7.11
+      env:
+        PASSWORD: ${{ secrets.KATALON_API_KEY }}
+        PROJECT_ID: 171535
+        TYPE: junit
+        REPORT_PATH: ${{ github.workspace }}/vc-quality-gate-katalon/Reports
 
     - name: 'Katalon Reports'
       if: always()
