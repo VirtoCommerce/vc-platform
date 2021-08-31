@@ -1,4 +1,7 @@
 using Microsoft.Extensions.Options;
+using Moq;
+using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Settings;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests
@@ -22,7 +25,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests
         public void StreamWritePermissionsTest()
         {
             // Arrange
-            var provider = new AzureBlobProvider(_options);
+            var provider = new AzureBlobProvider(_options, new OptionsWrapper<PlatformOptions>(new PlatformOptions()), null);
             var fileName = "file-write.tmp";
             var fileUrl = $"tmpfolder/{fileName}";
 

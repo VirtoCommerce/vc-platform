@@ -14,6 +14,7 @@ using Microsoft.Net.Http.Headers;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Swagger;
 using VirtoCommerce.Platform.Data.Helpers;
 using VirtoCommerce.Platform.Web.Helpers;
@@ -121,22 +122,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest($"Expected a multipart request, but got {Request.ContentType}");
             }
 
+
             var result = new List<BlobInfo>();
             if (url != null)
             {
                 var fileName = name ?? HttpUtility.UrlDecode(Path.GetFileName(url));
                 var fileUrl = folderUrl + "/" + fileName;
                 using (var client = new WebClient())
-                using (var blobStream = _blobProvider.OpenWrite(fileUrl))
-                using (var remoteStream = client.OpenRead(url))
-                {
-                    remoteStream.CopyTo(blobStream);
-                    var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
-                    blobInfo.Name = fileName;
-                    blobInfo.RelativeUrl = fileUrl;
-                    blobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
-                    result.Add(blobInfo);
-                }
+                    try
+                    {
+                        using (var blobStream = _blobProvider.OpenWrite(fileUrl))
+                        using (var remoteStream = client.OpenRead(url))
+                        {
+                            await remoteStream.CopyToAsync(blobStream);
+                            var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
+                            blobInfo.Name = fileName;
+                            blobInfo.RelativeUrl = fileUrl;
+                            blobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
+                            result.Add(blobInfo);
+                        }
+                    }
+                    catch (PlatformException exc)
+                    {
+                        return new ObjectResult(new { exc.Message }) { StatusCode = StatusCodes.Status405MethodNotAllowed };
+                    }
             }
             else
             {
@@ -155,10 +164,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                             var fileName = contentDisposition.FileName.Value;
 
                             var targetFilePath = folderUrl + "/" + fileName;
-
-                            using (var targetStream = _blobProvider.OpenWrite(targetFilePath))
+                            try
                             {
-                                await section.Body.CopyToAsync(targetStream);
+                                using (var targetStream = _blobProvider.OpenWrite(targetFilePath))
+                                {
+                                    await section.Body.CopyToAsync(targetStream);
+                                }
+                            }
+                            catch (PlatformException exc)
+                            {
+                                return new ObjectResult(new { exc.Message }) {StatusCode = StatusCodes.Status405MethodNotAllowed };
                             }
 
                             var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();

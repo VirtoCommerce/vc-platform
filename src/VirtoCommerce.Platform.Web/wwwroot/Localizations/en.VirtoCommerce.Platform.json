@@ -897,6 +897,10 @@
                     "CronPruneExpiredTokensJob": {
                         "description": "Cron expression for prune expired and invalid tokens/authorizations job",
                         "title": "Cron for the tokens prune job"
+                    },
+                    "FileExtensionsBlackList": {
+                        "description": "Blocked upload files extensions to restrict allowed file types",
+                        "title": "Black list"
                     }
                 },
                 "UI": {
