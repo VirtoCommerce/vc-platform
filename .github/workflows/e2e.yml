@@ -1,4 +1,4 @@
-# v1.2
+# v1.2.1
 name: Platform E2E
 
 on:
@@ -15,6 +15,7 @@ on:
 
 jobs:
   e2e-tests:
+    if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-18.04 # katalon action runs correctly on ubuntu-18.04
     env:
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
