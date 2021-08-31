@@ -121,9 +121,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="result"></param>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        protected virtual async Task<TResult> ProcessSearchResultAsync(TResult result, TCriteria criteria)
+        protected virtual Task<TResult> ProcessSearchResultAsync(TResult result, TCriteria criteria)
         {
-            return result;
+            return Task.FromResult(result);
         }
     }
 }
