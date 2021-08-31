@@ -72,7 +72,8 @@ To set up the Azure Active Directory-based authentication in Virto Commerce Plat
         "ApplicationId": "(Replace this with Application (client) ID, e.g. 01234567-89ab-cdef-0123-456789abcdef)",
         "TenantId": "(Replace this with Directory (tenant) ID, e.g. abcdef01-2345-6789-abcd-ef0123456789)",
         "AzureAdInstance": "https://login.microsoftonline.com/",
-        "DefaultUserType": "Manager"
+        "DefaultUserType": "Manager",
+        "UsePreferredUsername": false
     },
 ```
 3. Modify these settings:
@@ -89,7 +90,8 @@ To set up the Azure Active Directory-based authentication in Virto Commerce Plat
         "ApplicationId": "b6d8dc6a-6ddd-4497-ad55-d65f91ca7f50",
         "TenantId": "fe353e8f-5f08-43b4-89d1-f4acec93df33",
         "AzureAdInstance": "https://login.microsoftonline.com/",
-        "DefaultUserType": "Manager"
+        "DefaultUserType": "Manager",
+        "UsePreferredUsername": false
     },
 ```
 
@@ -129,6 +131,12 @@ To answer this question, let's dive deeper to the Azure Active Directory authent
     - The account already exists and is linked with Azure Active Directory account of signed-in user. In this case, no further actions will be performed - Virto Commerce Platform will just authenticate that user using the existing account.
     - The account already exists, but is missing the Azure Active Directory external sign-in information. In this case Virto Commerce Platform will modify that account to add external login information for the Azure Active Directory account. All other account information (including roles, permissions and personal information) will remain untouched.
     - Finally, if such account does not exist yet, VC Platform will create it and link it with Azure Active Directory account.
+4. In cases when **upn** claim is not being passed the system can be configured to use **preferred_username** claim instead using the following setting:
+```json
+    {
+        "UsePreferredUsername": true
+    }
+```
 
 ## Configuration when Azure AD App has custom signing keys
 
@@ -151,6 +159,7 @@ To solve this situation the updated configuration should look like this:
         "TenantId": "fe353e8f-5f08-43b4-89d1-f4acec93df33",
         "AzureAdInstance": "https://login.microsoftonline.com/",
         "MetadataAddress": "https://login.microsoftonline.com/fe353e8f-5f08-43b4-89d1-f4acec93df33/v2.0/.well-known/openid-configuration?appid=b6d8dc6a-6ddd-4497-ad55-d65f91ca7f50",
-        "DefaultUserType": "Manager"
+        "DefaultUserType": "Manager",
+        "UsePreferredUsername": false
     },
 ```
