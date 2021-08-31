@@ -89,7 +89,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     {
                         result.TotalCount = await query.CountAsync();
                     }
-
+                    result = await ProcessSearchResultAsync(result, criteria);
                     return result;
                 }
             });
@@ -111,6 +111,19 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected virtual IList<SortInfo> BuildSortExpression(TCriteria criteria)
         {
             return criteria.SortInfos;
+        }
+
+        /// <summary>
+        /// Post-read processing of the search result instance.
+        /// A good place to make some additional actions, tune result data.
+        /// Override to add some search result data changes, calculations, etc...
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        protected virtual Task<TResult> ProcessSearchResultAsync(TResult result, TCriteria criteria)
+        {
+            return Task.FromResult(result);
         }
     }
 }
