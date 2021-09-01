@@ -122,67 +122,61 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest($"Expected a multipart request, but got {Request.ContentType}");
             }
 
-
             var result = new List<BlobInfo>();
-            if (url != null)
-            {
-                var fileName = name ?? HttpUtility.UrlDecode(Path.GetFileName(url));
-                var fileUrl = folderUrl + "/" + fileName;
-                using (var client = new WebClient())
-                    try
-                    {
-                        using (var blobStream = _blobProvider.OpenWrite(fileUrl))
-                        using (var remoteStream = client.OpenRead(url))
-                        {
-                            await remoteStream.CopyToAsync(blobStream);
-                            var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
-                            blobInfo.Name = fileName;
-                            blobInfo.RelativeUrl = fileUrl;
-                            blobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
-                            result.Add(blobInfo);
-                        }
-                    }
-                    catch (PlatformException exc)
-                    {
-                        return new ObjectResult(new { exc.Message }) { StatusCode = StatusCodes.Status405MethodNotAllowed };
-                    }
-            }
-            else
-            {
-                var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
-                var reader = new MultipartReader(boundary, HttpContext.Request.Body);
-
-                var section = await reader.ReadNextSectionAsync();
-                if (section != null)
+            try
+            {                
+                if (url != null)
                 {
-                    var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
-
-                    if (hasContentDispositionHeader && MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+                    var fileName = name ?? HttpUtility.UrlDecode(Path.GetFileName(url));
+                    var fileUrl = folderUrl + "/" + fileName;
+                    using (var client = new WebClient())
+                    using (var blobStream = _blobProvider.OpenWrite(fileUrl))
+                    using (var remoteStream = client.OpenRead(url))
                     {
-                        var fileName = contentDisposition.FileName.Value;
+                        await remoteStream.CopyToAsync(blobStream);
+                        var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
+                        blobInfo.Name = fileName;
+                        blobInfo.RelativeUrl = fileUrl;
+                        blobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
+                        result.Add(blobInfo);
+                    }
+                }
+                else
+                {
+                    var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
+                    var reader = new MultipartReader(boundary, HttpContext.Request.Body);
 
-                        var targetFilePath = folderUrl + "/" + fileName;
-                        try
+                    var section = await reader.ReadNextSectionAsync();
+                    if (section != null)
+                    {
+                        var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
+
+                        if (hasContentDispositionHeader && MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
                         {
+                            var fileName = contentDisposition.FileName.Value;
+                            var targetFilePath = folderUrl + "/" + fileName;
+
                             using (var targetStream = _blobProvider.OpenWrite(targetFilePath))
                             {
                                 await section.Body.CopyToAsync(targetStream);
                             }
-                        }
-                        catch (PlatformException exc)
-                        {
-                            return new ObjectResult(new { exc.Message }) {StatusCode = StatusCodes.Status405MethodNotAllowed };
-                        }
 
-                        var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
-                        blobInfo.Name = fileName;
-                        blobInfo.RelativeUrl = targetFilePath;
-                        blobInfo.Url = _urlResolver.GetAbsoluteUrl(targetFilePath);
-                        blobInfo.ContentType = MimeTypeResolver.ResolveContentType(fileName);
-                        result.Add(blobInfo);
+                            var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
+                            blobInfo.Name = fileName;
+                            blobInfo.RelativeUrl = targetFilePath;
+                            blobInfo.Url = _urlResolver.GetAbsoluteUrl(targetFilePath);
+                            blobInfo.ContentType = MimeTypeResolver.ResolveContentType(fileName);
+                            result.Add(blobInfo);
+                        }
                     }
                 }
+
             }
+            catch (PlatformException exc)
+            {
+                return new ObjectResult(new { exc.Message }) { StatusCode = StatusCodes.Status405MethodNotAllowed };
+            }
+
 
             return Ok(result.ToArray());
         }
