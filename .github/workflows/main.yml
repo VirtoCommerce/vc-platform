@@ -1,10 +1,16 @@
-# v1.1.4
+# v1.1.6
 name: Platform CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   workflow_dispatch:
+    inputs:
+      forceLatest:
+        description: "Flag to set dev-linux-latest flag on workflow_dispatch event. Allowed values true or false."
+        required: false
+        default: "false"
+
   push:
     paths-ignore:
       - '.github/**'
@@ -25,6 +31,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   ci:
+    if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-18.04
     env:
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
@@ -44,24 +51,18 @@ jobs:
       with:
         java-version: 1.11
 
-    # - name: Set up .net Core 3.1.x for vc-build #GitHib Actions migrates to .net Core 5.x. To vc-build work properly need to manually install .net Core 3.1.x
-    #   uses: actions/setup-dotnet@v1
-    #   with:
-    #     dotnet-version: '3.1.405'
-
     - name: Set variables
       if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
         echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
-        echo "UPDATE_LATEST_TAG=false" >> $GITHUB_ENV 
+        echo "UPDATE_LATEST_TAG=${{ github.event.inputs.forceLatest }}" >> $GITHUB_ENV 
 
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
-      #uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
-      run: dotnet tool update -g virtocommerce.globaltool --version 2.0.0-beta0001
+      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
@@ -127,11 +128,12 @@ jobs:
 
     - name: Swagger validation
       uses: VirtoCommerce/vc-github-actions/docker-env@master
-      if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
+      if: ${{ github.ref == 'refs/heads/dev' }}
       with:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}
-        dockerTag: dev-linux-latest
+        platformDockerTag: ${{ steps.image.outputs.taggedVersion }}
+        storefrontDockerTag: dev-linux-latest
         platformImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/platform
         storefrontImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/storefront
           

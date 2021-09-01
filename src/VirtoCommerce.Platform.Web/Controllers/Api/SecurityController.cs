@@ -32,6 +32,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly RoleManager<Role> _roleManager;
         private readonly Core.Security.AuthorizationOptions _securityOptions;
         private readonly UserOptionsExtended _userOptionsExtended;
+        private readonly PasswordOptionsExtended _passwordOptions;
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserSearchService _userSearchService;
         private readonly IRoleSearchService _roleSearchService;
@@ -48,6 +49,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IRoleSearchService roleSearchService,
             IOptions<Core.Security.AuthorizationOptions> securityOptions,
             IOptions<UserOptionsExtended> userOptionsExtended,
+            IOptions<PasswordOptionsExtended> passwordOptions,
             IPasswordValidator<ApplicationUser> passwordValidator,
             IEmailSender emailSender,
             IEventPublisher eventPublisher,
@@ -56,6 +58,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
             _userOptionsExtended = userOptionsExtended.Value;
+            _passwordOptions = passwordOptions.Value;
             _passwordValidator = passwordValidator;
             _permissionsProvider = permissionsProvider;
             _roleManager = roleManager;
@@ -523,13 +526,33 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 user = await UserManager.FindByEmailAsync(loginOrEmail);
             }
 
+            // Return 200 to prevent potential user name/email harvesting
+            if (user == null)
+            {
+                return Ok();
+            }
+
+            var nextRequestDate = user.LastPasswordChangeRequestDate + _passwordOptions.RepeatedResetPasswordTimeLimit;
+            if (nextRequestDate != null && nextRequestDate > DateTime.UtcNow)
+            {
+                return Ok(new
+                {
+                    NextRequestAt = nextRequestDate,
+                });
+            }
+
             //Do not permit rejected users and customers
-            if (user?.Email != null && IsUserEditable(user.UserName) && !(await UserManager.IsInRoleAsync(user, PlatformConstants.Security.SystemRoles.Customer)))
+            if (user.Email != null &&
+                IsUserEditable(user.UserName) &&
+                !(await UserManager.IsInRoleAsync(user, PlatformConstants.Security.SystemRoles.Customer)))
             {
                 var token = await UserManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = $"{Request.Scheme}://{Request.Host}/#/resetpassword/{user.Id}/{token}";
 
                 await _emailSender.SendEmailAsync(user.Email, "Reset password", callbackUrl.ToString());
+
+                user.LastPasswordChangeRequestDate = DateTime.UtcNow;
+                await UserManager.UpdateAsync(user);
             }
 
             return Ok();
@@ -602,6 +625,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (user.LastPasswordChangedDate != applicationUser.LastPasswordChangedDate)
             {
                 user.LastPasswordChangedDate = applicationUser.LastPasswordChangedDate;
+            }
+
+            if (user.LastPasswordChangeRequestDate != applicationUser.LastPasswordChangeRequestDate)
+            {
+                user.LastPasswordChangeRequestDate = applicationUser.LastPasswordChangeRequestDate;
             }
 
             var result = await UserManager.UpdateAsync(user);
@@ -774,20 +802,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public Task<ActionResult<RoleSearchResult>> SearchRolesObsolete([FromBody] RoleSearchCriteria request)
         {
             return SearchRoles(request);
-        }
-
-        /// <summary>
-        /// Resets password for current user.
-        /// </summary>
-        /// <param name="resetPassword">Password reset information containing new password.</param>
-        /// <returns>Result of password reset.</returns>
-        [HttpPost]
-        [Route("currentuser/resetpassword")]
-        [AllowAnonymous]
-        [Obsolete("use /currentuser/changepassword instead")]
-        public Task<ActionResult<SecurityResult>> ResetCurrentUserPassword([FromBody] ResetPasswordConfirmRequest resetPassword)
-        {
-            return ResetPassword(User.Identity.Name, resetPassword);
         }
 
         #endregion PT-788 Obsolete methods

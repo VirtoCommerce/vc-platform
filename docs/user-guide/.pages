@@ -4,5 +4,6 @@ arrange:
   - settings.md
   - user-profile.md
   - security.md
+  - login-on-behalf.md
   - assets-function.md
   - ...

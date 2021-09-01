@@ -1,3 +1,4 @@
+# v1.2
 name: Platform OWASP ZAP
 on:
   push:
@@ -11,10 +12,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  owasp:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Install VirtoCommerce.GlobalTool
+        uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
 
       - name: Docker Login
         uses: azure/docker-login@v1

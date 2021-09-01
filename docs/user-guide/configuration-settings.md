@@ -20,6 +20,7 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | DiscoveryPath | `"./Modules"` | Relative or absolute folder location where Platform will discover installed modules
 |  | AllowInsecureHttp | `false` | Controls how the OpenID Connect server (ASOS) handles the incoming requests to arriving on non-HTTPS endpoints should be rejected or not. By default, this property is set to false to help mitigate man-in-the-middle attacks.
 |  | Hangfire          | E.g. <br>"Hangfire": {<br>            "JobStorageType": "Memory",<br>            "UseHangfireServer": true,<br>            "AutomaticRetryCount": 1,<br>            "SqlServerStorageOptions": {<br>                "CommandBatchMaxTimeout": "00:05:00",<br>                "SlidingInvisibilityTimeout": "00:05:00",<br>                "QueuePollInterval": "00:00:00",<br>                "UseRecommendedIsolationLevel": true,<br>                "UsePageLocksOnDequeue": true,<br>                "DisableGlobalLocks": true,<br>                "EnableHeavyMigrations": true<br>            }<br>        }   | Background processing library (Hangfire) configuration.<br><br> `JobStorageType` - current job storage. Supported values: Memory, SqlServer.<br> `UseHangfireServer` - enable/disable HangFire for this app instance.<br> `AutomaticRetryCount` - maximum number of automatic retry attempts. <br>`SqlServerStorageOptions` - Hangfire.SqlServer.SqlServerStorageOptions. Check [Hangfire's SQL Server Configuration](https://docs.hangfire.io/en/latest/configuration/using-sql-server.html#configuration) for details.
+|  | Swagger | E.g. <br>"Swagger":<br>{<br>"Disable": true<br>}| Allows to disable swagger initialization at platform startup to prevent access to the swagger UI and documents.
 |Assets |  |  | **Required.** Configuration defining how VC Platform works with assets (files).
 |  | Provider | `"FileSystem"` | Current assets provider. Supported values: FileSystem, AzureBlobStorage.
 |  | FileSystem | E.g., <br> "FileSystem": {<br> "RootPath": "~/assets",<br>"PublicUrl": "http://localhost:10645/assets/"<br>} | File system based assets provider configuration. Used, if `"Provider": "FileSystem"`
@@ -53,6 +54,8 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | Provider | `"FileSystem"` | Current Content (files) Provider. Supported values: FileSystem, AzureBlobStorage.
 |  | FileSystem | E.g., <br> "FileSystem": {<br> "RootPath": "~/cms-content",<br>"PublicUrl": "http://localhost:10645/cms-content/"<br>}  | File system based content provider configuration. This is the default provider, used if `AzureBlobStorage` is not set as current provider.
 |  | AzureBlobStorage | E.g., <br> "AzureBlobStorage": {<br> "ConnectionString": "",<br>"CdnUrl": ""<br>}  | Azure Blob Storage based content provider configuration. Used, if `"Provider": "AzureBlobStorage"`.
+| AzureAd | | | Used for authentication with Azure Active Directory. Check [Enabling authentication with Azure Active Directory](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/techniques/authentication-with-azure-ad.md) for details. 
+|  | UsePreferredUsername | `false` | If set to `true` will check the `preffered_username` in case if the `upn` claim returns empty.
 
 **_Note:_** Each setting is optional, if it's not marked as **Required.**
 
