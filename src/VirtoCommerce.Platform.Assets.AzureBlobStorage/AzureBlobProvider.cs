@@ -106,15 +106,18 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             {
                 HttpHeaders = new BlobHttpHeaders
                 {
-                    ContentType = MimeTypeResolver.ResolveContentType(Path.GetFileName(filePath)),
+                    ContentType = MimeTypeResolver.ResolveContentType(Path.GetFileName(filePath)),                    
                     // Leverage Browser Caching - 7days
                     // Setting Cache-Control on Azure Blobs can help reduce bandwidth and improve the performance by preventing consumers from having to continuously download resources.
                     // More Info https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
                     CacheControl = BlobCacheControlPropertyValue
-                }
+                }                
             };
 
-            return await blob.OpenWriteAsync(true, options);
+            // FlushLessStream wraps BlockBlobWriteStream to not use Flush multiple times.
+            // !!! Call Flush several times on a plain BlockBlobWriteStream causes stream hangs/errors.
+            // https://github.com/Azure/azure-sdk-for-net/issues/20652
+            return new FlushLessStream(await blob.OpenWriteAsync(true, options));
         }
 
         public virtual async Task RemoveAsync(string[] urls)
