@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Core.Assets
     {
         private readonly ISettingsManager _settingsManager;
         private readonly IOptions<PlatformOptions> _platformOptions;
-        public BasicBlobProvider(IOptions<PlatformOptions> platformOptions, ISettingsManager settingsManager)
+        protected BasicBlobProvider(IOptions<PlatformOptions> platformOptions, ISettingsManager settingsManager)
         {
             _platformOptions = platformOptions;
             _settingsManager = settingsManager;

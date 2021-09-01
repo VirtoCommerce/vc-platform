@@ -899,7 +899,7 @@
                         "title": "Cron for the tokens prune job"
                     },
                     "FileExtensionsBlackList": {
-                        "description": "Blocked upload files extensions to restrict allowed file types",
+                        "description": "Files extensions prohibited to upload by the platform (additionally to 'FileExtensionsBlackList' in appsettings.json)",
                         "title": "Black list"
                     }
                 },

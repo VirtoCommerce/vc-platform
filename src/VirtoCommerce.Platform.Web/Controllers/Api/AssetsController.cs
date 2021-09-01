@@ -157,32 +157,29 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 {
                     var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
 
-                    if (hasContentDispositionHeader)
+                    if (hasContentDispositionHeader && MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
                     {
-                        if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+                        var fileName = contentDisposition.FileName.Value;
+
+                        var targetFilePath = folderUrl + "/" + fileName;
+                        try
                         {
-                            var fileName = contentDisposition.FileName.Value;
-
-                            var targetFilePath = folderUrl + "/" + fileName;
-                            try
+                            using (var targetStream = _blobProvider.OpenWrite(targetFilePath))
                             {
-                                using (var targetStream = _blobProvider.OpenWrite(targetFilePath))
-                                {
-                                    await section.Body.CopyToAsync(targetStream);
-                                }
+                                await section.Body.CopyToAsync(targetStream);
                             }
-                            catch (PlatformException exc)
-                            {
-                                return new ObjectResult(new { exc.Message }) {StatusCode = StatusCodes.Status405MethodNotAllowed };
-                            }
-
-                            var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
-                            blobInfo.Name = fileName;
-                            blobInfo.RelativeUrl = targetFilePath;
-                            blobInfo.Url = _urlResolver.GetAbsoluteUrl(targetFilePath);
-                            blobInfo.ContentType = MimeTypeResolver.ResolveContentType(fileName);
-                            result.Add(blobInfo);
                         }
+                        catch (PlatformException exc)
+                        {
+                            return new ObjectResult(new { exc.Message }) {StatusCode = StatusCodes.Status405MethodNotAllowed };
+                        }
+
+                        var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
+                        blobInfo.Name = fileName;
+                        blobInfo.RelativeUrl = targetFilePath;
+                        blobInfo.Url = _urlResolver.GetAbsoluteUrl(targetFilePath);
+                        blobInfo.ContentType = MimeTypeResolver.ResolveContentType(fileName);
+                        result.Add(blobInfo);
                     }
                 }
             }

@@ -15,7 +15,6 @@ namespace VirtoCommerce.Platform.Tests.Assets
     {
         private readonly string _tempDirectory;
         private readonly IOptions<FileSystemBlobOptions> _options;
-        private readonly Mock<ISettingsManager> _settingManager;
 
         public FileSystemBlobStorageProviderTests()
         {
