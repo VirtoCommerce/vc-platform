@@ -7,14 +7,17 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Extensions;
+using VirtoCommerce.Platform.Core.Settings;
 using BlobInfo = VirtoCommerce.Platform.Core.Assets.BlobInfo;
 
 namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 {
-    public class AzureBlobProvider : IBlobStorageProvider, IBlobUrlResolver
+    public class AzureBlobProvider : BasicBlobProvider, IBlobStorageProvider, IBlobUrlResolver
     {
         public const string ProviderName = "AzureBlobStorage";
         public const string BlobCacheControlPropertyValue = "public, max-age=604800";
@@ -22,7 +25,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         private readonly BlobServiceClient _blobServiceClient;
         private readonly string _cdnUrl;
 
-        public AzureBlobProvider(IOptions<AzureBlobOptions> options)
+        public AzureBlobProvider(IOptions<AzureBlobOptions> options, IOptions<PlatformOptions> platformOptions, ISettingsManager settingsManager) : base(platformOptions, settingsManager)
         {
             _blobServiceClient = new BlobServiceClient(options.Value.ConnectionString);
             _cdnUrl = options.Value.CdnUrl;
@@ -92,9 +95,16 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
         public virtual async Task<Stream> OpenWriteAsync(string blobUrl)
         {
             var filePath = GetFilePathFromUrl(blobUrl);
+            var fileName = Path.GetFileName(filePath);
+
             if (filePath == null)
             {
                 throw new ArgumentException(@"Cannot get file path from URL", nameof(blobUrl));
+            }
+
+            if (IsExtensionBlacklisted(filePath))
+            {
+                throw new PlatformException($"This extension is not allowed. Please contact administrator.");
             }
 
             var container = _blobServiceClient.GetBlobContainerClient(GetContainerNameFromUrl(blobUrl));
@@ -106,7 +116,8 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             {
                 HttpHeaders = new BlobHttpHeaders
                 {
-                    ContentType = MimeTypeResolver.ResolveContentType(Path.GetFileName(filePath)),                    
+                    // Use HTTP response headers to instruct the browser regarding the safe use of uploaded files, when downloaded from the system
+                    ContentType = MimeTypeResolver.ResolveContentType(fileName),
                     // Leverage Browser Caching - 7days
                     // Setting Cache-Control on Azure Blobs can help reduce bandwidth and improve the performance by preventing consumers from having to continuously download resources.
                     // More Info https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
@@ -310,6 +321,11 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             var targetPath = newUrl.EndsWith(Delimiter)
                 ? GetDirectoryPathFromUrl(newUrl)
                 : GetFilePathFromUrl(newUrl);
+
+            if (IsExtensionBlacklisted(targetPath))
+            {
+                throw new PlatformException($"This extension is not allowed. Please contact administrator.");
+            }
 
             var target = container.GetBlockBlobClient(targetPath);
 

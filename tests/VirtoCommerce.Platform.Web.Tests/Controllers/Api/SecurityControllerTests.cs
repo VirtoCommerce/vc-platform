@@ -5,6 +5,7 @@ using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Events;
@@ -31,10 +32,10 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IEmailSender> _emailSenderMock;
         private readonly Mock<IEventPublisher> _eventPublisherMock;
         private readonly Mock<IUserApiKeyService> _userApiKeyServiceMock;
-        private readonly Mock<IOptions<PasswordOptionsExtended>> _passwordOptions;
+        private readonly Mock<ILogger<SecurityController>> _logger;
 
         // Controller
-        private readonly SecurityController _controller;
+        private SecurityController _controller;
 
         public SecurityControllerTests()
         {
@@ -45,6 +46,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _emailSenderMock = new Mock<IEmailSender>();
             _eventPublisherMock = new Mock<IEventPublisher>();
             _userApiKeyServiceMock = new Mock<IUserApiKeyService>();
+            _logger = new Mock<ILogger<SecurityController>>();
 
             _userManagerMock = new Mock<UserManager<ApplicationUser>>(
                 Mock.Of<IUserStore<ApplicationUser>>(),
@@ -69,24 +71,32 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 /* IAuthenticationSchemeProvider schemes */null,
                 /* IUserConfirmation<TUser> confirmation */null);
 
-            _passwordOptions = new Mock<IOptions<PasswordOptionsExtended>>()
-            {
-                DefaultValue = DefaultValue.Mock
-            };
+            _controller = CreateSecurityController();
+        }
 
-            _controller = new SecurityController(
+        private SecurityController CreateSecurityController(
+            Mock<IOptions<PasswordOptionsExtended>> passwordOptions = null,
+            Mock<IOptions<AuthorizationOptions>> securityOptions = null
+            )
+        {
+            passwordOptions ??= new Mock<IOptions<PasswordOptionsExtended>> { DefaultValue = DefaultValue.Mock };
+
+            securityOptions ??= new Mock<IOptions<AuthorizationOptions>> { DefaultValue = DefaultValue.Mock };
+
+            return new SecurityController(
                 signInManager: _signInManagerMock.Object,
                 roleManager: _roleManagerMock.Object,
                 permissionsProvider: _permissionsProviderMock.Object,
                 userSearchService: _userSearchServiceMock.Object,
                 roleSearchService: _roleSearchServiceMock.Object,
-                securityOptions: Mock.Of<IOptions<AuthorizationOptions>>(),
+                securityOptions: securityOptions.Object,
                 userOptionsExtended: Mock.Of<IOptions<UserOptionsExtended>>(),
-                passwordOptions: _passwordOptions.Object,
+                passwordOptions: passwordOptions.Object,
                 passwordValidator: _passwordValidatorMock.Object,
                 emailSender: _emailSenderMock.Object,
                 eventPublisher: _eventPublisherMock.Object,
-                userApiKeyService: _userApiKeyServiceMock.Object);
+                userApiKeyService: _userApiKeyServiceMock.Object,
+                logger: _logger.Object);
         }
 
         #region Login
@@ -395,17 +405,18 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
         #endregion UpdateRole
 
+        #region RequestPasswordReset
+
         /// <summary>
         /// Should return next available pass request date
         /// </summary>
         [Fact]
-        public async Task RequestPasswordReset_()
+        public async Task RequestPasswordReset_UserPasswordResetBeforeTimeLimit()
         {
             // Arrange
             var user = _fixture.Create<ApplicationUser>();
             user.UserName = "test";
             user.LastPasswordChangeRequestDate = DateTime.UtcNow;
-            var request = _fixture.Create<LoginRequest>();
             _userManagerMock
                 .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == user.UserName)))
                 .ReturnsAsync(user);
@@ -417,5 +428,171 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             var result = actual.ExtractDynamicPropertyFromOkResult<DateTime>("NextRequestAt");
             result.Should().BeAfter(user.LastPasswordChangeRequestDate.Value);
         }
+
+        #endregion
+
+        #region ResetPassword
+
+        [Fact]
+        public async Task ResetPassword_NoUser_UnsuccessfulSecurityResult()
+        {
+            // Arrange
+            var user = _fixture.Create<ApplicationUser>();
+            user.UserName = "test";
+
+            var userName = "test";
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => { return null; });
+
+            // Act
+            var actual = await _controller.ResetPassword(userName, null);
+
+            // Assert
+            var result = actual.ExtractFromOkResult();
+            result.Succeeded.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task ResetPassword_UserNonEditable_UnsuccessfulSecurityResult()
+        {
+            // Arrange
+            var user = _fixture.Create<ApplicationUser>();
+            user.UserName = "test";
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == user.UserName)))
+                .ReturnsAsync(user);
+
+            var options = new Mock<IOptions<AuthorizationOptions>>();
+            options.SetupGet(x => x.Value)
+                .Returns(() =>
+                {
+                    return new AuthorizationOptions
+                    {
+                        NonEditableUsers = new[] { user.UserName },
+                    };
+                });
+
+            _controller = CreateSecurityController(securityOptions: options);
+
+            // Act
+            var actual = await _controller.ResetPassword(user.UserName, null);
+
+            // Assert
+            var result = actual.ExtractFromOkResult();
+            result.Succeeded.Should().BeFalse();
+        }
+
+        #endregion
+
+        #region ResetPasswordByToken
+
+        [Fact]
+        public async Task ResetPasswordByToken_NoUser_UnsuccessfulSecurityResult()
+        {
+            // Arrange
+            var userName = "test";
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => { return null; });
+
+            // Act
+            var actual = await _controller.ResetPasswordByToken(userName, null);
+
+            // Assert
+            var result = actual.ExtractFromOkResult();
+            result.Succeeded.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task ResetPasswordByToken_UserNonEditable_UnsuccessfulSecurityResult()
+        {
+            // Arrange
+            var user = _fixture.Create<ApplicationUser>();
+            user.UserName = "test";
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == user.UserName)))
+                .ReturnsAsync(user);
+
+            var options = new Mock<IOptions<AuthorizationOptions>>();
+            options.SetupGet(x => x.Value)
+                .Returns(() =>
+                {
+                    return new AuthorizationOptions
+                    {
+                        NonEditableUsers = new[] { user.UserName },
+                    };
+                });
+
+            _controller = CreateSecurityController(securityOptions: options);
+
+            // Act
+            var actual = await _controller.ResetPasswordByToken(user.UserName, null);
+
+            // Assert
+            var result = actual.ExtractFromOkResult();
+            result.Succeeded.Should().BeFalse();
+        }
+
+        #endregion
+
+        #region ChangePassword
+
+        [Fact]
+        public async Task ChangePassword_NoUser_UnsuccessfulSecurityResult()
+        {
+            // Arrange
+            var userName = "test";
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
+                .ReturnsAsync(() => { return null; });
+
+            var options = new Mock<IOptions<AuthorizationOptions>>();
+            options.SetupGet(x => x.Value)
+                .Returns(() =>
+                {
+                    return new AuthorizationOptions
+                    {
+                        NonEditableUsers = Array.Empty<string>(),
+                    };
+                });
+
+            _controller = CreateSecurityController(securityOptions: options);
+
+            // Act
+            var actual = await _controller.ChangePassword(userName, new ChangePasswordRequest { NewPassword = "new" });
+
+            // Assert
+            var result = actual.ExtractFromOkResult();
+            result.Succeeded.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task ChangePassword_UserNonEditable_UnsuccessfulSecurityResult()
+        {
+            // Arrange
+            var userName = "test";
+
+            var options = new Mock<IOptions<AuthorizationOptions>>();
+            options.SetupGet(x => x.Value)
+                .Returns(() =>
+                {
+                    return new AuthorizationOptions
+                    {
+                        NonEditableUsers = new[] { userName },
+                    };
+                });
+
+            _controller = CreateSecurityController(securityOptions: options);
+
+            // Act
+            var actual = await _controller.ChangePassword(userName, new ChangePasswordRequest { NewPassword = "new" });
+
+            // Assert
+            var result = actual.ExtractFromOkResult();
+            result.Succeeded.Should().BeFalse();
+        }
+
+        #endregion
     }
 }

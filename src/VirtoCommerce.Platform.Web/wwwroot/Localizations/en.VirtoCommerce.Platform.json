@@ -327,7 +327,8 @@
                     "new-password": "New password",
                     "repeat-password": "Repeat new password",
                     "cancel": "Cancel",
-                    "save": "Change"
+                    "save": "Change",
+                    "fail": "Sorry, we could't reset password for this user."
                 },
                 "validations": {
                     "current-password": "Required",
@@ -897,6 +898,10 @@
                     "CronPruneExpiredTokensJob": {
                         "description": "Cron expression for prune expired and invalid tokens/authorizations job",
                         "title": "Cron for the tokens prune job"
+                    },
+                    "FileExtensionsBlackList": {
+                        "description": "Files extensions prohibited to upload by the platform (additionally to 'FileExtensionsBlackList' in appsettings.json)",
+                        "title": "Black list"
                     }
                 },
                 "UI": {
