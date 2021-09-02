@@ -122,7 +122,8 @@ angular.module('platformWebApp')
                     $scope.errors = response.data.errors;
                 });
                 $scope.ok = function () {
-                    $scope.errorMessage = null;
+                    $scope.succeeded = undefined;
+                    $scope.errors = null;
                     $scope.isLoading = true;
                     authService.resetpassword($scope.viewModel).then(function (retVal) {
                         $scope.isLoading = false;
@@ -208,6 +209,7 @@ angular.module('platformWebApp')
         var showErrors = (result) => {
             $scope.postData = {};
             $scope.errors = result.errors;
+            $scope.succeeded = false;
         };
     }])
 
