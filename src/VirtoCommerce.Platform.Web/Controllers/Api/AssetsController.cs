@@ -14,6 +14,7 @@ using Microsoft.Net.Http.Headers;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Swagger;
 using VirtoCommerce.Platform.Data.Helpers;
 using VirtoCommerce.Platform.Web.Helpers;
@@ -122,38 +123,37 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             var result = new List<BlobInfo>();
-            if (url != null)
-            {
-                var fileName = name ?? HttpUtility.UrlDecode(Path.GetFileName(url));
-                var fileUrl = folderUrl + "/" + fileName;
-                using (var client = new WebClient())
-                using (var blobStream = _blobProvider.OpenWrite(fileUrl))
-                using (var remoteStream = client.OpenRead(url))
+            try
+            {                
+                if (url != null)
                 {
-                    remoteStream.CopyTo(blobStream);
-                    var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
-                    blobInfo.Name = fileName;
-                    blobInfo.RelativeUrl = fileUrl;
-                    blobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
-                    result.Add(blobInfo);
-                }
-            }
-            else
-            {
-                var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
-                var reader = new MultipartReader(boundary, HttpContext.Request.Body);
-
-                var section = await reader.ReadNextSectionAsync();
-                if (section != null)
-                {
-                    var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
-
-                    if (hasContentDispositionHeader)
+                    var fileName = name ?? HttpUtility.UrlDecode(Path.GetFileName(url));
+                    var fileUrl = folderUrl + "/" + fileName;
+                    using (var client = new WebClient())
+                    using (var blobStream = _blobProvider.OpenWrite(fileUrl))
+                    using (var remoteStream = client.OpenRead(url))
                     {
-                        if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+                        await remoteStream.CopyToAsync(blobStream);
+                        var blobInfo = AbstractTypeFactory<BlobInfo>.TryCreateInstance();
+                        blobInfo.Name = fileName;
+                        blobInfo.RelativeUrl = fileUrl;
+                        blobInfo.Url = _urlResolver.GetAbsoluteUrl(fileUrl);
+                        result.Add(blobInfo);
+                    }
+                }
+                else
+                {
+                    var boundary = MultipartRequestHelper.GetBoundary(MediaTypeHeaderValue.Parse(Request.ContentType), _defaultFormOptions.MultipartBoundaryLengthLimit);
+                    var reader = new MultipartReader(boundary, HttpContext.Request.Body);
+
+                    var section = await reader.ReadNextSectionAsync();
+                    if (section != null)
+                    {
+                        var hasContentDispositionHeader = ContentDispositionHeaderValue.TryParse(section.ContentDisposition, out var contentDisposition);
+
+                        if (hasContentDispositionHeader && MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
                         {
                             var fileName = contentDisposition.FileName.Value;
-
                             var targetFilePath = folderUrl + "/" + fileName;
 
                             using (var targetStream = _blobProvider.OpenWrite(targetFilePath))
@@ -170,7 +170,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         }
                     }
                 }
+
             }
+            catch (PlatformException exc)
+            {
+                return new ObjectResult(new { exc.Message }) { StatusCode = StatusCodes.Status405MethodNotAllowed };
+            }
+
 
             return Ok(result.ToArray());
         }
