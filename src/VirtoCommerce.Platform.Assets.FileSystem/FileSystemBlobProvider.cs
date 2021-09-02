@@ -236,6 +236,11 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
                 }
                 else if (File.Exists(srcPath) && !File.Exists(dstPath))
                 {
+                    if (IsExtensionBlacklisted(dstPath))
+                    {
+                        throw new PlatformException($"This extension is not allowed. Please contact administrator.");
+                    }
+
                     File.Move(srcPath, dstPath);
                 }
             }

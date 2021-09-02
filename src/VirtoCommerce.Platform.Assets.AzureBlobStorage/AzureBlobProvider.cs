@@ -322,6 +322,11 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                 ? GetDirectoryPathFromUrl(newUrl)
                 : GetFilePathFromUrl(newUrl);
 
+            if (IsExtensionBlacklisted(targetPath))
+            {
+                throw new PlatformException($"This extension is not allowed. Please contact administrator.");
+            }
+
             var target = container.GetBlockBlobClient(targetPath);
 
             if (!await target.ExistsAsync())
