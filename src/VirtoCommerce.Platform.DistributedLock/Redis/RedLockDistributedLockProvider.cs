@@ -34,7 +34,7 @@ namespace VirtoCommerce.Platform.DistributedLock
         /// </summary>        
         /// <param name="resourceId">Identifier of locking resource</param>
         /// <param name="payload">Payload method to run under the acquired lock</param>
-        public virtual void ExecuteSynhronized(string resourceId, Action<DistributedLockCondition> payload)
+        public virtual void ExecuteSynchronized(string resourceId, Action<DistributedLockCondition> payload)
         {
             using (var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(_redisConnMultiplexer) }))
             {

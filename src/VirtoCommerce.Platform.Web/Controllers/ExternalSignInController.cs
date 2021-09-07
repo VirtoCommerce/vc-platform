@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Model.Security;
 
 namespace VirtoCommerce.Platform.Web.Controllers
@@ -19,14 +21,18 @@ namespace VirtoCommerce.Platform.Web.Controllers
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly AzureAdOptions _azureAdOpitons;
         private readonly IEventPublisher _eventPublisher;
 
-        public ExternalSignInController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager,
+        public ExternalSignInController(SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IOptions<AzureAdOptions> azureAdOpitons,
             IEventPublisher eventPublisher)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
+            _azureAdOpitons = azureAdOpitons.Value;
         }
 
         [HttpGet]
@@ -60,9 +66,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             }
 
             ApplicationUser platformUser = null;
-
-            //try yo take an user name from claims
-            var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn) ?? externalLoginInfo.Principal.FindFirstValue("preferred_username");
+            var userName = GetUserName(externalLoginInfo);
             if (string.IsNullOrWhiteSpace(userName))
             {
                 throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
@@ -131,6 +135,21 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 .ToArray();
 
             return Ok(externalLoginProviders);
+        }
+
+        /// <summary>
+        /// Try to take a user name from claims.
+        /// </summary>
+        private string GetUserName(ExternalLoginInfo externalLoginInfo)
+        {
+            var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn);
+
+            if (string.IsNullOrWhiteSpace(userName) && _azureAdOpitons.UsePreferredUsername)
+            {
+                userName = externalLoginInfo.Principal.FindFirstValue("preferred_username");
+            }
+
+            return userName;
         }
     }
 }

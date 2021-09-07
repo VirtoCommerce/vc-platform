@@ -14,5 +14,16 @@ namespace VirtoCommerce.Platform.Core.Extensions
                 Errors = identityResult.Errors.Select(x => x.Description)
             };
         }
+
+        public static SecurityResult CreateErrorResult(string errorMessage)
+        {
+            var result = new SecurityResult();
+
+#if DEBUG
+            result.Errors = new[] { errorMessage };
+#endif
+
+            return result;
+        }
     }
 }
