@@ -48,5 +48,10 @@ namespace VirtoCommerce.Platform.Core
         //server (ASOS) handles the incoming requests to arriving on non-HTTPS endpoints should be rejected or not. By default, this property is set to false to help
         //mitigate man-in-the-middle attacks.
         public bool AllowInsecureHttp { get; set; }
+
+        /// <summary>
+        /// Extensions of the files that cannot be uploaded to the server by the platform
+        /// </summary>
+        public string[] FileExtensionsBlackList { get; set; } = new string[0];
     }
 }
