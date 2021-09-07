@@ -129,7 +129,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <returns></returns>
         protected virtual Task<IEnumerable<TEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids)
         {
-            return LoadEntities(repository, ids, "Full");
+            return LoadEntities(repository, ids, null);
         }
 
         /// <summary>
@@ -243,6 +243,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 if (softDelete)
                 {
                     await SoftDelete(repository, ids);
+                    await repository.UnitOfWork.CommitAsync();
                 }
                 else
                 {
@@ -255,7 +256,6 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     await repository.UnitOfWork.CommitAsync();
                     await AfterDeleteAsync(models, changedEntries);
                 }
-               
                 ClearCache(models);
                 
                 //Raise domain events after deletion
