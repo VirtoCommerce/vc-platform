@@ -275,7 +275,7 @@ jobs:
         deployment-sequence-number: ${{ github.run_id }}
         update-sequence-number: ${{ github.run_id }}
         issue-keys: ${{ steps.jira_keys.outputs.jira-keys }}
-        display-name: ${{steps.deployConfig.deployAppName}}
+        display-name: ${{ steps.deployConfig.outputs.deployAppName }}
         url: 'https://vcplatform-platform.dev.govirto.com/'
         description: "Deployment to the Development environment"
         last-updated: '${{github.event.head_commit.timestamp}}'
