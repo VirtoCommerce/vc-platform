@@ -17,11 +17,11 @@ angular.module('platformWebApp')
         return blade.dataService.search(criteria);
     };
 
-    $scope.selectItem = function (item, id) {
+    $scope.selectItem = function (item) {
         $scope.items.push(item);
     };
 
-    $scope.removeItem = function (item, id) {
+    $scope.removeItem = function (item) {
         $scope.items = _.reject($scope.items, x => item.id === x.id);
     };
 
