@@ -45,6 +45,12 @@ The following diagram illustrates the high-level architecture and main areas of 
 
 **Integration middleware** - Asynchronous integration middleware for declarative integration with Non-Real-time and legacy services.
 
+## Introduction to Virto Commerce
+These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
+
+* [Quick start](https://virtocommerce.com/docs/latest/vc-quickstart/)
+* [User guide](https://virtocommerce.com/docs/latest/user-guide/getting-started/)
+* [What’s new - News-digest](https://www.virtocommerce.org/c/news-digest/15)
 
 ## Technology Stack Used
 
@@ -52,33 +58,17 @@ In our work, we always try to use advanced technologies. Our decision to choose 
 
 We decided to use the following stack of technologies:
 
-* ASP.NET Core 3.1.0 as base platform;
-* EF Core 3.1.0 as primary ORM;
-* ASP.NET Core Identity 3.1.0 for authentication and authorization;
-* OpenIddict 2.0.1 for OAuth authorization;
+* .NET Core and ASP.NET Core as base platform;
+* EF Core as primary ORM;
+* ASP.NET Core Identity for authentication and authorization;
+* OpenIddict for OAuth authorization;
 * WebPack as primary design/runtime bundler and minifier;
 * Swashbuckle.AspNetCore.SwaggerGen for Swagger docs and UI;
 * SignalR Core for push notifications;
-* AngularJS 1.4 as primary framework for SPA;
-* HangFire 1.7.8 for run background tasks.
-
-## Introduction to Virto Commerce
-
-These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
-
-* [Virto Commerce Documentation](https://virtocommerce.com/docs/latest/)
-* [View on GitHub](docs/index.md)
-
-## Comparison with 2.x
-
-In the new version, we change primary technology stack to .NET Core for the platform application and all key modules. Eliminate known technical and architecture design issues of 2.x version (Caching, Overloaded core module, Asynchronous code, Platform Complexity, Extensibility, Performance, Authentication and Authorization)
-Improve the extensibility and unification of the application. Unified architecture and good architecture practices usage reduce the training time for developers who just start to work with Virto Commerce.
-
-Virto Commerce Platform 3 helps you increase development speed and significantly reduce time to market.
+* AngularJS as primary framework for SPA;
+* HangFire for run background tasks.
 
 ## References
-
-* [What’s new](docs/release-information/whats-new.md)
 * Deploy
   * [Deploy on Windows](docs/getting-started/deploy-from-precompiled-binaries-windows.md)
   * [Deploy on Linux](docs/getting-started/deploy-from-precompiled-binaries-linux.md)
@@ -86,12 +76,20 @@ Virto Commerce Platform 3 helps you increase development speed and significantly
   * [Deploy on MacOS](docs/getting-started/deploy-from-precompiled-binaries-MacOS.md) 
   * [Connect Storefront to Platform](docs/getting-started/connect-storefront-to-platform-v3.md)
   * [Deploy Platform 3 from source code](docs/developer-guide/deploy-from-source-code.md)
-* [Getting Started](docs/user-guide/getting-started.md)
-* [Update VC Platform Module from version 2.x to 3](docs/release-information/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
 * Virto Commerce Documentation: https://www.virtocommerce.com/docs/latest/
 * Home: https://virtocommerce.com
+* Youtube Videos: https://www.youtube.com/c/Virtocommerce/videos
 * Community: https://www.virtocommerce.org
-* [Download Latest Release](https://github.com/VirtoCommerce/vc-platform/releases/latest)
+
+## Comparison with 2.x
+
+In the new version, we change primary technology stack to .NET Core for the platform application and all key modules. Eliminate known technical and architecture design issues of 2.x version (Caching, Overloaded core module, Asynchronous code, Platform Complexity, Extensibility, Performance, Authentication and Authorization).
+Improved the extensibility and unification of the application. Unified architecture and good architecture practices usage reduce the training time for developers who just start to work with Virto Commerce.
+
+Virto Commerce Platform 3 helps you increase development speed and significantly reduce time to market.
+
+* [What’s new in VC3](docs/release-information/whats-new.md)
+* [Update VC Platform Module from version 2.x to 3](docs/release-information/update-to-version-3/update-module-from-platform-2.0-to-version-3.md)
 
 ## License
 
