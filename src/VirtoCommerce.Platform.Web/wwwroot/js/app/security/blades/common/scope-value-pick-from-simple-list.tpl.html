@@ -1,14 +1,16 @@
-﻿<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel.tpl.html'"></div>
+<div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel.tpl.html'"></div>
+
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <ul class="list __items">
-                <label class="list-item" ng-repeat="data in blade.currentEntities">
-                    <input type="checkbox" ng-model="data.$selected">
-                    <span class="switch"></span>
-                    <span class="list-t">{{data.name}}</span>
-                </label>
-            </ul>
+            <div class="sub-t">{{ blade.subtitle | translate }}</div>
+            <ui-scroll-drop-down multiple
+                                 data="search(criteria)"
+                                 ng-model="blade.selectedIds"
+                                 on-select="selectItem(item)"
+                                 on-remove="removeItem(item)"
+                                 placeholder="blade.subtitle">
+            </ui-scroll-drop-down>
         </div>
     </div>
 </div>

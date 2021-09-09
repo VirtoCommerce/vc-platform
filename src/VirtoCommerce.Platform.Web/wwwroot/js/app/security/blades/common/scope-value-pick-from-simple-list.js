@@ -3,21 +3,27 @@ angular.module('platformWebApp')
     var blade = $scope.blade;
 
     function initializeBlade() {
-        blade.dataPromise.then(function (data) {
-            blade.isLoading = false;
-
-            _.each(blade.currentEntity.assignedScopes, function (x) {
-                var store = _.find(data, function (y) { return x.scope === y.id; });
-                if (store) {
-                    store.$selected = true;
-                }
-            });
-
-            blade.currentEntities = data;
-        }, function (error) {
-            bladeNavigationService.setError('Error ' + error.status, blade);
+        blade.selectedIds = _.map(blade.currentEntity.assignedScopes, x => x.scope);
+        $scope.items = _.map(blade.currentEntity.assignedScopes, function (x) {
+            var result = {};
+            result.id = x.scope;
+            result.name = x.label;
+            return result;
         });
-    }
+        blade.isLoading = false;
+    }       
+
+    $scope.search = function (criteria) {
+        return blade.dataService.search(criteria);
+    };
+
+    $scope.selectItem = function (item) {
+        $scope.items.push(item);
+    };
+
+    $scope.removeItem = function (item) {
+        $scope.items = _.reject($scope.items, x => item.id === x.id);
+    };
 
     $scope.cancelChanges = function () {
         $scope.bladeClose();
@@ -28,7 +34,7 @@ angular.module('platformWebApp')
     };
 
     $scope.saveChanges = function () {
-        var selection = _.map(_.where(blade.currentEntities, { $selected: true }), function (x) {
+        var selection = _.map($scope.items, function (x) {
             return angular.extend({ scope: x.id, label: x.name }, blade.currentEntity.scopeOriginal);
         });
         blade.onChangesConfirmedFn(selection);
