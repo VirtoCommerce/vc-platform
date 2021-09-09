@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -53,6 +54,9 @@ namespace Mvc.Server
         // you must provide your own token endpoint action:
 
         [HttpPost("~/connect/token"), Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OpenIddictResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(OpenIddictResponse))]
+        // Be aware: look into OpenIDEndpointDescriptionFilter to know parameters description for the swagger document about this endpoint
         public async Task<ActionResult> Exchange()
         {
             OpenIddictRequest openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();

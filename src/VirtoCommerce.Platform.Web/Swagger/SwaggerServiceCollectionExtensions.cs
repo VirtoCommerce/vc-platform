@@ -84,6 +84,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.OperationFilter<FileUploadOperationFilter>();
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
                 c.OperationFilter<TagsFilter>();
+                c.OperationFilter<OpenIDEndpointDescriptionFilter>();
                 c.SchemaFilter<EnumSchemaFilter>();
                 c.SchemaFilter<SwaggerIgnoreFilter>();
                 c.MapType<object>(() => new OpenApiSchema { Type = "object" });
