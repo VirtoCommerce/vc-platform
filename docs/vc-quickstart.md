@@ -2,6 +2,8 @@
 # Quick start
 Use this guide to deploy, configure and run precompiled Virto Commerce Platform on local machine.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/AHPgLG771Uk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Prerequisites
 Next prerequisites needs to be installed to deploy and run Virto Commerce.
 
