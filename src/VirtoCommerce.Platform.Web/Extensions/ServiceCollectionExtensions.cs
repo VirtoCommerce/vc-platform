@@ -31,6 +31,7 @@ namespace VirtoCommerce.Platform.Modules
             {
                 services.Configure(setupAction);
             }
+            
             var providerSnapshot = services.BuildServiceProvider();
 
             var manager = providerSnapshot.GetRequiredService<IModuleManager>();
