@@ -26,7 +26,7 @@
         "ASPNETCORE_preventHostingStartup": "True",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:10645/"
+      "applicationUrl": "https://localhost:5001/"
     },
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",

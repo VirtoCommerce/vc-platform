@@ -7,6 +7,23 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "3 September"
+    * Added new scenarios to XAPI Demo Storefront Applications
+    * Added Black list for file extensions
+    * Added option to Disable Swagger UI
+    * Fixed Memory consumption-related issues
+    * Improved Property Creation UI
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-3-september-2021/374)
+
+!!! done "30 August"
+    * Virto Commerce CLI (VC-BUILD) 2.0 was released
+    * Added Quick start page and new videos
+    * New samples in XAPI Demo Storefront Applications demonstrates how to use XAPI and GraphQL for different e-commerce scenarios.
+    * New Releases
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-30-august-2021/373)    
+
 !!! done "6 August"
     * New Videos & Topics
     * Custom and Organization Export & Import module
@@ -14,21 +31,6 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-6-august-2021/370)
     
-!!! done "12 July"
-    * Added Catalog publishing conditions for dynamic content
-    * Added validation for product’s property name
-    * Dev Labs topics
-    * Fixed bugs 
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-12-july-2021/356)
-    
-!!! done "28 June"
-    * Virto Commerce on Azure Functions (from Virto DevLabs)
-    * Added full-text search for order documents
-    * OpenIddict Updated to 3.0
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-28-june-2021/349)
-
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and [GitHub](https://github.com/VirtoCommerce)
 
 ## Principles

@@ -3,20 +3,23 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Exceptions;
+using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Assets.FileSystem
 {
-    public class FileSystemBlobProvider : IBlobStorageProvider, IBlobUrlResolver
+    public class FileSystemBlobProvider : BasicBlobProvider, IBlobStorageProvider, IBlobUrlResolver
     {
         public const string ProviderName = "LocalStorage";
 
         private readonly string _storagePath;
         private readonly string _basePublicUrl;
 
-        public FileSystemBlobProvider(IOptions<FileSystemBlobOptions> options)
+
+        public FileSystemBlobProvider(IOptions<FileSystemBlobOptions> options, IOptions<PlatformOptions> platformOptions, ISettingsManager settingsManager) : base(platformOptions, settingsManager)
         {
             // extra replace step to prevent windows path getting into Linux environment
             _storagePath = options.Value.RootPath.TrimEnd(Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
@@ -87,6 +90,11 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
         {
             var filePath = GetStoragePathFromUrl(blobUrl);
             var folderPath = Path.GetDirectoryName(filePath);
+
+            if (IsExtensionBlacklisted(filePath))
+            {
+                throw new PlatformException($"This extension is not allowed. Please contact administrator.");
+            }
 
             ValidatePath(filePath);
 
@@ -228,6 +236,11 @@ namespace VirtoCommerce.Platform.Assets.FileSystem
                 }
                 else if (File.Exists(srcPath) && !File.Exists(dstPath))
                 {
+                    if (IsExtensionBlacklisted(dstPath))
+                    {
+                        throw new PlatformException($"This extension is not allowed. Please contact administrator.");
+                    }
+
                     File.Move(srcPath, dstPath);
                 }
             }
