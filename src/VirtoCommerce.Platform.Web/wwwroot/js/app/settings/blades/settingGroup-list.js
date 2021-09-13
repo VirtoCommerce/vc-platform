@@ -1,3 +1,5 @@
+import { rest } from "underscore";
+
 angular.module('platformWebApp')
     .controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$timeout', '$translate',
         function ($window, modules, waitForRestart, $scope, settings, bladeNavigationService, dialogService, $timeout, $translate) {
@@ -6,20 +8,26 @@ angular.module('platformWebApp')
 
             // mock theme settings
             var themeLoginPageSetting = {
+                children: {},
                 groupName: "Theme settings|Login Screen",
-                name: "LoginPageBackground",
-                groupIcon: ""
+                name: "Theme settings",
+                icon: 'fas fa-palette',
             };
+
+            themeLoginPageSetting.children['Login Screen'] = {
+                groupName: "Theme settings|Login Screen",
+                name: "Login Screen",
+                icon: 'fas fa-desktop'
+            }
 
             blade.refresh = function (disableOpenAnimation) {
                 blade.isLoading = true;
 
                 settings.query({}, function (results) {
+
                     results = _.sortBy(results, 'groupName');
                     blade.allSettings = results;
                     settingsTree = {};
-
-                    blade.allSettings.push(themeLoginPageSetting);
 
                     _.each(results, function (setting) {
                         var paths = (setting.groupName ? setting.groupName : 'General').split('|');
@@ -43,6 +51,9 @@ angular.module('platformWebApp')
                             }
                         });
                     });
+
+                    settingsTree['Theme settings'] = themeLoginPageSetting;
+                    blade.allSettings.push(themeLoginPageSetting);
 
                     _.each(blade.allSettings,
                         function (setting) {

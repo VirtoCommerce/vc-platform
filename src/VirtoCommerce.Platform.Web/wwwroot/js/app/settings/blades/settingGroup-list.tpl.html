@@ -19,7 +19,8 @@
                     <span class="list-descr" ng-if="data.groupName">{{data.groupName}}</span>
                 </li>
                 <li class="list-item" ng-repeat="data in blade.currentEntities track by data.groupName" ng-class="{'__selected': data.groupName === selectedNodeId}" ng-click='selectNode(data)' ng-if="!blade.searchText">
-                    <i class="list-ico fa fa-gears"></i>
+                    <i class="list-ico" ng-if="data.icon" ng-class="data.icon"></i>
+                    <i class="list-ico fa fa-gears" ng-if="!data.icon"></i>
                     <span class="list-t">{{data.name}}</span>
                 </li>
             </ul>

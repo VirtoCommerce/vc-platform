@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.settingsDetailThemeController', ['$scope', '$q', 'FileUploader', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings',
-        function ($scope, $q, FileUploader, settingsHelper, bladeNavigationService, settingsApi) {
+    .controller('platformWebApp.settingsDetailThemeController', ['$scope', '$rootScope', '$q', 'FileUploader', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings',
+        function ($scope, $rootScope, $q, FileUploader, settingsHelper, bladeNavigationService, settingsApi) {
             var blade = $scope.blade;
             blade.updatePermission = 'platform:setting:update';
 
@@ -56,14 +56,11 @@ angular.module('platformWebApp')
             function initializeBlade(settings) {
                 blade.isLoading = true;
 
-                // ---- refactor ----
-                _.each(settings, function (setting) {
-                    if (setting.groupName) {
-                        var paths = setting.groupName.split('|');
-                        setting.groupName = paths.pop();
-                    }
-                });
-                // ---- refactor ----
+                var setting = _.first(settings);
+                if (setting.groupName) {
+                    var paths = setting.groupName.split('|');
+                    blade.groupName = paths.pop();
+                }
 
                 settings = _.groupBy(settings, 'groupName');
                 blade.groupNames = _.keys(settings);
@@ -107,6 +104,11 @@ angular.module('platformWebApp')
 
                 // update UI customization setting
                 settingsApi.update({}, objects, function () {
+                    // update rootscope if not using preset
+                    if (!$rootScope.uiCustomizationUsingPreset) {
+                        $rootScope.uiCustomization = blade.currentEntity;
+                    }
+
                     blade.origEntity = blade.currentEntity;
                     blade.parentBlade.refresh(true);
 
