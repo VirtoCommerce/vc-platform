@@ -1,5 +1,3 @@
-import { rest } from "underscore";
-
 angular.module('platformWebApp')
     .controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$timeout', '$translate',
         function ($window, modules, waitForRestart, $scope, settings, bladeNavigationService, dialogService, $timeout, $translate) {
