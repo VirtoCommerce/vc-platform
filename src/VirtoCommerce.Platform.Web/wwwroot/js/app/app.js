@@ -97,13 +97,13 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
         settings.getUiCustomizationSetting(function (uiCustomizationSetting) {
             common.getLoginPageUIOptions(function (loginPageUIOptions) {
+                $rootScope.uiCustomization = {};
+
                 if (uiCustomizationSetting.value) {
                     $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
                 }
 
-                if (loginPageUIOptions.backgroundUrl && loginPageUIOptions.patternUrl) {
-                    $rootScope.uiCustomizationUsingPreset = true;
-
+                if (!$rootScope.uiCustomization.background && !$rootScope.uiCustomization.pattern) {
                     $rootScope.uiCustomization.background = {
                         url: loginPageUIOptions.backgroundUrl
                     };

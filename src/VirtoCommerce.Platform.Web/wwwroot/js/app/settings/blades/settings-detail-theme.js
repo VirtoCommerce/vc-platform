@@ -104,10 +104,8 @@ angular.module('platformWebApp')
 
                 // update UI customization setting
                 settingsApi.update({}, objects, function () {
-                    // update rootscope if not using preset
-                    if (!$rootScope.uiCustomizationUsingPreset) {
-                        $rootScope.uiCustomization = blade.currentEntity;
-                    }
+                    // update rootscope for seamless login page update
+                    $rootScope.uiCustomization = blade.currentEntity;
 
                     blade.origEntity = blade.currentEntity;
                     blade.parentBlade.refresh(true);

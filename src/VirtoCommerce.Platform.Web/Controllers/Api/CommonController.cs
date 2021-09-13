@@ -49,13 +49,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("ui/loginPageOptions")]
         public ActionResult GetLoginPageUIOptions()
         {
-            // process login page predefined options
+            // options priority - first BackgroundUrl/PatternUrl then presets
             string backgrounUrl = _loginPageOptions.BackgroundUrl;
             string patternUrl = _loginPageOptions.PatternUrl;
 
-            if (!string.IsNullOrWhiteSpace(_loginPageOptions.PresetName))
+            if (string.IsNullOrWhiteSpace(backgrounUrl) &&
+                string.IsNullOrWhiteSpace(patternUrl) &&
+                !string.IsNullOrWhiteSpace(_loginPageOptions.Preset))
             {
-                var preset = _loginPageOptions.Presets?.FirstOrDefault(x => x.Name.EqualsInvariant(_loginPageOptions.PresetName));
+                var preset = _loginPageOptions.Presets?.FirstOrDefault(x => x.Name.EqualsInvariant(_loginPageOptions.Preset));
                 backgrounUrl = preset?.BackgroundUrl;
                 patternUrl = preset?.PatternUrl;
             }
