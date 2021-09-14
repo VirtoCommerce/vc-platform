@@ -179,12 +179,9 @@ jobs:
           update_latest: ${{ env.UPDATE_LATEST_TAG }}
 
     - name: Parse Jira Keys from All Commits
-      id: jira_keys
+      uses: VirtoCommerce/vc-github-actions/get-jira-keys@master
       if: always()
-      uses: HighwayThree/jira-extract-issue-keys@master
-      with:
-        is-pull-request: ${{ github.event_name == 'pull_request' }}
-        parse-all-commits: ${{ github.event_name == 'push' }}
+      id: jira_keys
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
