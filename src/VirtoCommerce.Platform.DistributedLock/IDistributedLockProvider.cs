@@ -12,6 +12,6 @@ namespace VirtoCommerce.Platform.DistributedLock
         /// </summary>        
         /// <param name="resourceId">Identifier of locking resource</param>
         /// <param name="payload">Payload method to run under the acquired lock</param>
-        public void ExecuteSynhronized(string resourceId, Action<DistributedLockCondition> payload);
+        public void ExecuteSynchronized(string resourceId, Action<DistributedLockCondition> payload);
     }
 }

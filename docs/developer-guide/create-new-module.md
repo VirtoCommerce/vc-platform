@@ -4,6 +4,9 @@ How to create a new module from scratch? Follow the Dummy module example.
 
 !!! tips
     Visual Studio Extension helps to create your new Virto Commerce extension/module promptly and with the recommended project structure. [Download and Install](https://marketplace.visualstudio.com/items?itemName=Virto-Commerce.VirtoCommerce3ModuleTemplates)
+    
+    
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/Hr5vJH-pN4E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## 1. Create solution and projects in correct structure
 

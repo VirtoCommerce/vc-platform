@@ -64,15 +64,12 @@ angular.module('platformWebApp')
                     bladeNavigationService.setError(item._file.name + ' failed: ' + (response.message ? response.message : status), blade);
                 };
 
-                uploader.onCompleteAll = function () {
-                    refreshParentBlade();
-                    blade.uploadCompleted = true;
-                };
-
                 uploader.onSuccessItem = function (fileItem, images) {
+                    refreshParentBlade();
                     if (blade.onUploadComplete) {
                         blade.onUploadComplete(images);
                     }
+                    blade.uploadCompleted = true;
                 };
             }
         }

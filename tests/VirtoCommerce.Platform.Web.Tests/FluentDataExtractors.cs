@@ -14,5 +14,16 @@ namespace VirtoCommerce.Platform.Web.Tests
         {
             return actionResult.Result.As<TResult>().Value.As<TValue>();
         }
+
+        public static TValue ExtractDynamicPropertyFromOkResult<TValue>(this ActionResult actionResult, string propertyName)
+        {
+            var value = actionResult.As<OkObjectResult>().Value;
+            if (value == null)
+            {
+                return default(TValue);
+            }
+
+            return (TValue)value.GetType().GetProperty(propertyName).GetValue(value, null);
+        }
     }
 }

@@ -16,17 +16,17 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public virtual string StoreId { get; set; }
 
-        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
+        [DetectChangesAttribute(PlatformConstants.Security.Changes.UserUpdated)]
         public virtual string MemberId { get; set; }
 
-        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
+        [DetectChangesAttribute(PlatformConstants.Security.Changes.UserUpdated)]
         public virtual bool IsAdministrator { get; set; }
         public virtual string PhotoUrl { get; set; }
 
-        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
+        [DetectChangesAttribute(PlatformConstants.Security.Changes.UserUpdated)]
         public virtual string UserType { get; set; }
 
-        [DetectChangesAttribute (PlatformConstants.Security.Changes.UserUpdated)]
+        [DetectChangesAttribute(PlatformConstants.Security.Changes.UserUpdated)]
         public virtual string Status { get; set; }
         public virtual string Password { get; set; }
         public virtual DateTime CreatedDate { get; set; }
@@ -79,6 +79,11 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public virtual DateTime? LastPasswordChangedDate { get; set; }
 
+        /// <summary>
+        /// The last date when the requested password change.
+        /// </summary>
+        public virtual DateTime? LastPasswordChangeRequestDate { get; set; }
+
         public virtual void Patch(ApplicationUser target)
         {
             target.UserName = UserName;
@@ -105,6 +110,7 @@ namespace VirtoCommerce.Platform.Core.Security
             target.Password = Password;
             target.PasswordExpired = PasswordExpired;
             target.LastPasswordChangedDate = LastPasswordChangedDate;
+            target.LastPasswordChangeRequestDate = LastPasswordChangeRequestDate;
         }
 
         public virtual ListDictionary<string, string> DetectUserChanges(ApplicationUser oldUser)
