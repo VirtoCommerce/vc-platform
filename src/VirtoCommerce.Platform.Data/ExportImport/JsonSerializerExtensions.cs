@@ -52,9 +52,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    var itemType = AbstractTypeFactory<T>.TryCreateInstance().GetType();
-                    var item = serializer.Deserialize(reader, itemType);
-                    items.Add((T)item);
+                    var item = serializer.Deserialize<T>(reader);
+                    items.Add(item);
                     processedCount++;
                     reader.Read();
                     if (processedCount % pageSize == 0 || reader.TokenType == JsonToken.EndArray)
