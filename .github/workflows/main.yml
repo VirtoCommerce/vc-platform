@@ -31,6 +31,9 @@ jobs:
     if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-18.04
     env:
+      CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
+      CLIENT_ID: ${{secrets.CLIENT_ID}}
+      CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       NUGET_KEY: ${{ secrets.NUGET_KEY }}
@@ -185,6 +188,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Print all environment variables
+      run:  env
+
     - name: Push Build Info to Jira
       if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
       id: push_build_info_to_jira
@@ -223,6 +229,9 @@ jobs:
     needs: ci
     runs-on: ubuntu-latest
     env:
+      CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
+      CLIENT_ID: ${{secrets.CLIENT_ID}}
+      CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       IMAGE_NAME: 'platform'
       PACKAGE_SERVER: 'ghcr.io'
@@ -285,6 +294,9 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         status: ${{ job.status }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+    - name: Print all environment variables
+      run:  env
 
     - name: Push Deployment Info to Jira
       if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
