@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -69,7 +70,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="ids"></param>
         /// <param name="responseGroup"></param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<TModel>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null)
+        public virtual async Task<IReadOnlyCollection<TModel>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(GetByIdsAsync), string.Join("-", ids), responseGroup);
             var result = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
@@ -100,7 +101,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 return models;
             });
 
-            return result.Select(x => (TModel)x.Clone());
+            return new ReadOnlyCollection<TModel>(result.Select(x => (TModel)x.Clone()).ToList());
         }
 
         /// <summary>
