@@ -41,10 +41,10 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
         public static async Task DeserializeJsonArrayWithPagingAsync<T>(this JsonTextReader reader, JsonSerializer serializer, int pageSize, Func<IEnumerable<T>, Task> action, Action<int> progressCallback, ICancellationToken cancellationToken)
         {
-            reader.Read();
+            await reader.ReadAsync();
             if (reader.TokenType == JsonToken.StartArray)
             {
-                reader.Read();
+                await reader.ReadAsync();
 
                 var items = new List<T>();
                 var processedCount = 0;
@@ -52,11 +52,10 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    var itemType = AbstractTypeFactory<T>.TryCreateInstance().GetType();
-                    var item = serializer.Deserialize(reader, itemType);
-                    items.Add((T)item);
+                    var item = serializer.Deserialize<T>(reader);
+                    items.Add(item);
                     processedCount++;
-                    reader.Read();
+                    await reader.ReadAsync();
                     if (processedCount % pageSize == 0 || reader.TokenType == JsonToken.EndArray)
                     {
                         await action(items);
