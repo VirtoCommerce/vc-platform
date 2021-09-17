@@ -122,7 +122,7 @@ jobs:
       with:
         tag: ${{ steps.image.outputs.taggedVersion }}
         imageName: 'platform'
-        dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
+        dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/net5-migration/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
 
     - name: Docker Login
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
