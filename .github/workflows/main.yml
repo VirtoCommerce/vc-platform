@@ -191,30 +191,30 @@ jobs:
     - name: Print all environment variables
       run:  env
 
-    - name: Push Build Info to Jira
-      if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
-      id: push_build_info_to_jira
-      uses: HighwayThree/jira-upload-build-info@master
-      with:
-        cloud-id: '${{ secrets.CLOUD_ID }}'
-        client-id: '${{ secrets.CLIENT_ID }}'
-        client-secret: '${{ secrets.CLIENT_SECRET }}'
-        pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
-        build-number: ${{ github.run_number }}
-        build-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
-        build-state: '${{ env.BUILD_STATE }}'
-        build-url: '${{github.event.repository.url}}/actions/runs/${{github.run_id}}'
-        update-sequence-number: '${{ github.run_id }}'
-        last-updated: '${{github.event.head_commit.timestamp}}'
-        issue-keys: '${{ steps.jira_keys.outputs.jira-keys }}'
-        commit-id: '${{ github.sha }}'
-        repo-url: '${{ github.event.repository.url }}'
-        build-ref-url: '${{ github.event.repository.url }}/actions/runs/${{ github.run_id }}'
+    # - name: Push Build Info to Jira
+    #   if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
+    #   id: push_build_info_to_jira
+    #   uses: HighwayThree/jira-upload-build-info@master
+    #   with:
+    #     cloud-id: '${{ secrets.CLOUD_ID }}'
+    #     client-id: '${{ secrets.CLIENT_ID }}'
+    #     client-secret: '${{ secrets.CLIENT_SECRET }}'
+    #     pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
+    #     build-number: ${{ github.run_number }}
+    #     build-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
+    #     build-state: '${{ env.BUILD_STATE }}'
+    #     build-url: '${{github.event.repository.url}}/actions/runs/${{github.run_id}}'
+    #     update-sequence-number: '${{ github.run_id }}'
+    #     last-updated: '${{github.event.head_commit.timestamp}}'
+    #     issue-keys: '${{ steps.jira_keys.outputs.jira-keys }}'
+    #     commit-id: '${{ github.sha }}'
+    #     repo-url: '${{ github.event.repository.url }}'
+    #     build-ref-url: '${{ github.event.repository.url }}/actions/runs/${{ github.run_id }}'
 
-    - name: Confirm Jira Build Output
-      if: success()
-      run: |
-        echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
+    # - name: Confirm Jira Build Output
+    #   if: success()
+    #   run: |
+    #     echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
 
     # - name: Invoke VC image deployment workflow
     #   if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'workflow_dispatch' }}
