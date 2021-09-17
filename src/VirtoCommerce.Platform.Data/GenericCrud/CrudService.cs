@@ -53,6 +53,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <returns></returns>
         public virtual async Task<TModel> GetByIdAsync(string id, string responseGroup = null)
         {
+            if (id == null)
+            {
+                return null;
+            }
+
             var entities = await GetByIdsAsync(new[] { id }, responseGroup);
             return entities.FirstOrDefault();
         }
@@ -257,7 +262,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     await AfterDeleteAsync(models, changedEntries);
                 }
                 ClearCache(models);
-                
+
                 //Raise domain events after deletion
                 await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
             }
