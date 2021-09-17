@@ -58,6 +58,12 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | AzureBlobStorage | E.g., <br> "AzureBlobStorage": {<br> "ConnectionString": "",<br>"CdnUrl": ""<br>}  | Azure Blob Storage based content provider configuration. Used, if `"Provider": "AzureBlobStorage"`.
 | AzureAd | | | Used for authentication with Azure Active Directory. Check [Enabling authentication with Azure Active Directory](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/techniques/authentication-with-azure-ad.md) for details. 
 |  | UsePreferredUsername | `false` | If set to `true` will check the `preffered_username` in case if the `upn` claim returns empty.
+| LoginPageUI | | | Used for configuration of the background screen and background pattern of the login page.
+|  | BackgroundUrl | | Login page background URI. If set takes priority over the preset.
+|  | PatternUrl | | Login page background pattern URI. If set takes priority over the preset.
+|  | Preset | `demo` | Login page background preset name. If set searches the preset from the Presets list and applies BackgroundUrl and PatternUrl from it.
+|  | Presets | E.g.,<br>[{ "Name": "demo", "BackgroundUrl": "images/login_background.png", "PatternUrl": "/images/pattern-demo.svg" }, { "Name": "prod", "BackgroundUrl": "", "PatternUrl": "/images/pattern-live.svg" }] | A list of background Presets.
+
 
 **_Note:_** Each setting is optional, if it's not marked as **Required.**
 
