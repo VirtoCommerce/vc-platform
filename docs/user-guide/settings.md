@@ -27,6 +27,12 @@ Standard UI allows to view and edit simple settings. As an example, Catalog modu
 
 ![Catalog Settings](../media/screen-settings-values.png)
 
+## Theme Settings
+
+![Theme Settings](../media/screen-theme-settings.png)
+
+Theme Settings represent a special set of settings that control how various parts of Admin UI look (Login screen, etc). They are not registered in backend, instead they modify the default `Platform - User Interface` setting. Login screen settings can also be controlled via the Platform configuration but settings set using the UI take priority, so the priority flow is: Settings UI → then `LoginPageUI.BackgroundUrl` and `LoginPageUI.PatternUrl` options → then `LoginPageUI` preset options.
+
 ## Settings Description
 
 1. **Name**- The system name of the setting. Example, **"Catalog.ImageCategories"**;
