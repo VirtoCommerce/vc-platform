@@ -21,7 +21,12 @@
       "ancmHostingModel": "OutOfProcess"
     },
     "VirtoCommerce.Platform.Web": {
-      "applicationUrl": "http://localhost:5000/"
+        "commandName": "Project",
+        "environmentVariables": {
+            "ASPNETCORE_preventHostingStartup": "True",
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+        "applicationUrl": "http://localhost:10645/"
     },
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",
