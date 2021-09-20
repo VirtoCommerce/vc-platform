@@ -28,7 +28,7 @@
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="5.0.9" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="5.0.9" />
         <PackageReference Include="Microsoft.Azure.SignalR" Version="1.8.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.13">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -61,12 +61,10 @@
         <Compile Remove="modules\**" />
         <Compile Remove="wwwroot\assets\**" />
         <Compile Remove="wwwroot\cms-content\**" />
-
         <Content Remove="wwwroot\assets\**" />
         <Content Remove="app_data\modules\** " />
         <Content Remove="wwwroot\cms-content\**" />
         <Content Remove="modules\**" />
-
         <EmbeddedResource Remove="modules\**" />
         <EmbeddedResource Remove="wwwroot\assets\**" />
         <EmbeddedResource Remove="wwwroot\cms-content\**" />
