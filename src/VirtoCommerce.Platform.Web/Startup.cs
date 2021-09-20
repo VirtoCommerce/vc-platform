@@ -428,6 +428,10 @@ namespace VirtoCommerce.Platform.Web
             services.AddAppInsightsTelemetry(Configuration);
 
             services.AddHealthChecks();
+
+            // Add login page UI options
+            var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
+            services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

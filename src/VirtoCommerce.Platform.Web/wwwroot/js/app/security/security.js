@@ -5,8 +5,8 @@ angular.module('platformWebApp')
                 url: '/login',
                 templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
                 controller: [
-                    '$scope', 'platformWebApp.authService', 'platformWebApp.externalSignInService',
-                    function ($scope, authService, externalSignInService) {
+                    '$scope', 'platformWebApp.settings', 'platformWebApp.authService', 'platformWebApp.externalSignInService',
+                    function ($scope, settings, authService, externalSignInService) {
                         externalSignInService.getProviders().then(
                             function (response) {
                                 $scope.externalLoginProviders = response.data;

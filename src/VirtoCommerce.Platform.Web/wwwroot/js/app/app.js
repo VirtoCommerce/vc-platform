@@ -1,7 +1,7 @@
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
-    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings',
+    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', 'platformWebApp.common',
     function ($rootScope, $scope, mainMenuService,
-        i18n, modules, $state, bladeNavigationService, userProfile, settings) {
+        i18n, modules, $state, bladeNavigationService, userProfile, settings, common) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -96,9 +96,22 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         }
 
         settings.getUiCustomizationSetting(function (uiCustomizationSetting) {
-            if (uiCustomizationSetting.value) {
-                $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
-            }
+            common.getLoginPageUIOptions(function (loginPageUIOptions) {
+                $rootScope.uiCustomization = {};
+
+                if (uiCustomizationSetting.value) {
+                    $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
+                }
+
+                if (!$rootScope.uiCustomization.background && !$rootScope.uiCustomization.pattern) {
+                    $rootScope.uiCustomization.background = {
+                        url: loginPageUIOptions.backgroundUrl
+                    };
+                    $rootScope.uiCustomization.pattern = {
+                        url: loginPageUIOptions.patternUrl
+                    };
+                }
+            })
         });
 
         // DO NOT CHANGE THE FUNCTION BELOW: COPYRIGHT VIOLATION

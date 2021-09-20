@@ -114,7 +114,7 @@ namespace VirtoCommerce.Platform.Core
                 {
                     Name = "VirtoCommerce.Platform.Security.FileExtensionsBlackList",
                     GroupName = "Platform|Security",
-                    ValueType = SettingValueType.ShortText,                    
+                    ValueType = SettingValueType.ShortText,
                     IsDictionary = true,
                     AllowedValues = new string[] {
                         ".asax",
@@ -345,7 +345,7 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = "{\n" +
                                                "  \"title\": \"Virto Commerce\",\n" +
                                                "  \"logo\": \"/images/logo.png\",\n" +
-                                               "  \"contrast_logo\": \"/images/contrast-logo.png\"\n" +
+                                               "  \"contrast_logo\": \"/images/contrast-logo.svg\"\n" +
                                                "}"
                 };
 
