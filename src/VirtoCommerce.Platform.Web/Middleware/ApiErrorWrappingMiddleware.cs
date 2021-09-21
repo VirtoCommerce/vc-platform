@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Web.Middleware
                     var message = !_env.IsDevelopment() ? ex.Message : $@"An exception occurred while processing the request [{context.Request.Path}]: {ex}";
                     _logger.LogError(ex, message);
                     var httpStatusCode = HttpStatusCode.InternalServerError;
-                    var json = JsonConvert.SerializeObject(new { message, stackTrace = ex.StackTrace });
+                    var json = !_env.IsDevelopment() ? JsonConvert.SerializeObject(new { message, empty = "" }) : JsonConvert.SerializeObject(new { message, stackTrace = ex.StackTrace });
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = (int)httpStatusCode;
                     await context.Response.WriteAsync(json);
