@@ -1,0 +1,78 @@
+# v1.0
+
+name: VC deployment
+on:
+  workflow_dispatch:
+    inputs:
+      artifactUrl: 
+        description: 'Full link to artifact docker image or artifact download url'
+        required: true
+      deployBranch: 
+        description: 'ArgoCd branch name'
+        required: true
+        default: 'dev'
+
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+    steps: 
+
+    - name: Read deployment config
+      uses: VirtoCommerce/vc-github-actions/get-deploy-param@master
+      id: deployConfig
+      with:
+        envName: ${{ github.event.inputs.deployBranch }}
+
+    - name: Start deployment
+      uses: bobheadxi/deployments@master
+      id: deployment
+      with:
+        step: start
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: Development
+        no_override: false
+
+    - name: Update deployment-cm
+      uses: VirtoCommerce/vc-github-actions/create-deploy-pr@master
+      with:
+        deployRepo: ${{ steps.deployConfig.outputs.deployRepo }}
+        deployBranch: ${{ steps.deployConfig.outputs.deployBranch }}
+        artifactKey: ${{ steps.deployConfig.outputs.artifactKey }}
+        artifactUrl: ${{ github.event.inputs.artifactUrl }}
+        taskNumber: "undefined"
+        forceCommit: "true"
+        cmPath: ${{ steps.deployConfig.outputs.cmPath }}
+
+    - name: Wait for environment is up
+      shell: pwsh
+      timeout-minutes: 15
+      run: | 
+        do {
+          Start-Sleep -s 15
+          $statusBage = (Invoke-WebRequest -Uri "https://argo.govirto.com/api/badge?name=${{ steps.deployConfig.outputs.deployAppName }}").Content
+          
+          $syncedAndHealthy = $statusBage.Contains('>Healthy<') -and $statusBage.Contains('>Synced<')
+          if (-not $syncedAndHealthy) {
+            Write-Host "Sync pending..."
+          }
+        }
+        while (-not $syncedAndHealthy)
+    - name: BUILD_STATE::successful
+      if: success()
+      run: echo "BUILD_STATE=successful" >> $GITHUB_ENV
+
+    - name: BUILD_STATE::failed
+      if: failure()
+      run: echo "BUILD_STATE=failed"  >> $GITHUB_ENV
+
+    - name: Update GitHub deployment status
+      uses: bobheadxi/deployments@master
+      if: always()
+      with:
+        step: finish
+        token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}

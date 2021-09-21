@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.accountResetPasswordController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.accounts', 'platformWebApp.passwordValidationService', function ($q, $scope, bladeNavigationService, accounts, passwordValidationService) {
+    .controller('platformWebApp.accountResetPasswordController', ['$q', '$scope', '$translate', 'platformWebApp.accounts', 'platformWebApp.passwordValidationService', function ($q, $scope, $translate, accounts, passwordValidationService) {
         var blade = $scope.blade;
 
         function initializeBlade() {
@@ -25,8 +25,17 @@ angular.module('platformWebApp')
             };
 
             accounts.resetPassword({ userName: blade.currentEntityId }, postData, function (data) {
-                blade.parentBlade.refresh();
-                $scope.bladeClose();
+                blade.isLoading = false;
+
+                if (!data.succeeded) {
+                    blade.error = data.errors && data.errors.length ?
+                        data.errors[0] :
+                        $translate.instant('platform.blades.resetpassword.labels.fail');
+                }
+                else {
+                    blade.parentBlade.refresh();
+                    $scope.bladeClose();
+                }
             });
         };
 

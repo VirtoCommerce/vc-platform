@@ -418,7 +418,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddHangfire(Configuration);
 
             // Register the Swagger generator
-            services.AddSwagger();
+            services.AddSwagger(Configuration);
 
             // The following line enables Application Insights telemetry collection.
             // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple
@@ -428,6 +428,10 @@ namespace VirtoCommerce.Platform.Web
             services.AddAppInsightsTelemetry(Configuration);
 
             services.AddHealthChecks();
+
+            // Add login page UI options
+            var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
+            services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -502,7 +506,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.ExecuteSynhronized(() =>
+            app.ExecuteSynchronized(() =>
             {
                 // This method contents will run inside of critical section of instance distributed lock.
                 // Main goal is to apply the migrations (Platform, Hangfire, modules) sequentially instance by instance.

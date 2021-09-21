@@ -1,10 +1,14 @@
-# v1.1.4
+# v1.1.8
 name: Platform CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   workflow_dispatch:
+    inputs:
+      forceLatest:
+        description: "Flag to set dev-linux-latest flag on workflow_dispatch event. Allowed values true or false."
+        required: false
+        default: "false"
+
   push:
     paths-ignore:
       - '.github/**'
@@ -22,20 +26,28 @@ on:
       - 'LICENSE'
     branches: [ master, dev ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   ci:
+    if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-18.04
     env:
+      CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
+      CLIENT_ID: ${{secrets.CLIENT_ID}}
+      CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       NUGET_KEY: ${{ secrets.NUGET_KEY }}
       BLOB_SAS: ${{ secrets.BLOB_TOKEN }}
-      PUBLISH_TO_DOCKER: "true"
-      UPDATE_LATEST_TAG: "true"
-      VERSION_SUFFIX: ""
-      IMAGE_NAME: "platform"
-      PACKAGE_SERVER: "ghcr.io"
+      PUBLISH_TO_DOCKER: 'true'
+      UPDATE_LATEST_TAG: 'true'
+      VERSION_SUFFIX: ''
+      IMAGE_NAME: 'platform'
+      PACKAGE_SERVER: 'ghcr.io'
+      BUILD_STATE: 'failed'
+
+    outputs:
+      taggedVersion: ${{ steps.image.outputs.taggedVersion }}
+      jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
 
     steps:
 
@@ -44,31 +56,18 @@ jobs:
       with:
         java-version: 1.11
 
-    # - name: Set up .net Core 3.1.x for vc-build #GitHib Actions migrates to .net Core 5.x. To vc-build work properly need to manually install .net Core 3.1.x
-    #   uses: actions/setup-dotnet@v1
-    #   with:
-    #     dotnet-version: '3.1.405'
-
     - name: Set variables
       if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
         echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
-        echo "UPDATE_LATEST_TAG=false" >> $GITHUB_ENV 
+        echo "UPDATE_LATEST_TAG=${{ github.event.inputs.forceLatest }}" >> $GITHUB_ENV 
 
     - uses: actions/checkout@v2
       with:
-        if: ${{ github.event_name != 'pull_request' }}
         fetch-depth: 0
-
-    - uses: actions/checkout@v2
-      with:
-        if: ${{ github.event_name == 'pull_request' }}
-        fetch-depth: 0
-        ref: ${{ github.event.pull_request.head.sha }}
 
     - name: Install VirtoCommerce.GlobalTool
-      #uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
-      run: dotnet tool update -g virtocommerce.globaltool --version 2.0.0-beta0001
+      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
@@ -104,6 +103,10 @@ jobs:
     - name: Unit Tests
       run: vc-build Test -skip
 
+    - name: BUILD_STATE::successful
+      if: success()
+      run: echo "BUILD_STATE=successful" >> $GITHUB_ENV
+
     - name: SonarCloud End
       uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@master
 
@@ -121,8 +124,8 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/build-docker-image@master
       with:
         tag: ${{ steps.image.outputs.taggedVersion }}
-        imageName: "platform"
-        dockerFiles: "https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh"
+        imageName: 'platform'
+        dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
 
     - name: Docker Login
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
@@ -134,11 +137,12 @@ jobs:
 
     - name: Swagger validation
       uses: VirtoCommerce/vc-github-actions/docker-env@master
-      if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
+      if: ${{ github.ref == 'refs/heads/dev' }}
       with:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}
-        dockerTag: dev-linux-latest
+        platformDockerTag: ${{ steps.image.outputs.taggedVersion }}
+        storefrontDockerTag: dev-linux-latest
         platformImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/platform
         storefrontImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/storefront
           
@@ -177,10 +181,146 @@ jobs:
           docker_hub: ${{ env.PUBLISH_TO_DOCKER }}
           update_latest: ${{ env.UPDATE_LATEST_TAG }}
 
-    - name: Invoke VC image deployment workflow
-      if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'workflow_dispatch' }}
-      uses: benc-uk/workflow-dispatch@v1
+    - name: Parse Jira Keys from All Commits
+      uses: VirtoCommerce/vc-github-actions/get-jira-keys@master
+      if: always()
+      id: jira_keys
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Print all environment variables
+      run:  env
+
+    # - name: Push Build Info to Jira
+    #   if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
+    #   id: push_build_info_to_jira
+    #   uses: HighwayThree/jira-upload-build-info@master
+    #   with:
+    #     cloud-id: '${{ secrets.CLOUD_ID }}'
+    #     client-id: '${{ secrets.CLIENT_ID }}'
+    #     client-secret: '${{ secrets.CLIENT_SECRET }}'
+    #     pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
+    #     build-number: ${{ github.run_number }}
+    #     build-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
+    #     build-state: '${{ env.BUILD_STATE }}'
+    #     build-url: '${{github.event.repository.url}}/actions/runs/${{github.run_id}}'
+    #     update-sequence-number: '${{ github.run_id }}'
+    #     last-updated: '${{github.event.head_commit.timestamp}}'
+    #     issue-keys: '${{ steps.jira_keys.outputs.jira-keys }}'
+    #     commit-id: '${{ github.sha }}'
+    #     repo-url: '${{ github.event.repository.url }}'
+    #     build-ref-url: '${{ github.event.repository.url }}/actions/runs/${{ github.run_id }}'
+
+    # - name: Confirm Jira Build Output
+    #   if: success()
+    #   run: |
+    #     echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
+
+    # - name: Invoke VC image deployment workflow
+    #   if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'workflow_dispatch' }}
+    #   uses: benc-uk/workflow-dispatch@v1
+    #   with:
+    #     workflow: VC deployment
+    #     token: ${{ secrets.REPO_TOKEN }}
+    #     inputs: '{ "artifactUrl": "${{ env.PACKAGE_SERVER }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ steps.image.outputs.taggedVersion }}" }'
+
+  deploy:
+    if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
+    needs: ci
+    runs-on: ubuntu-latest
+    env:
+      CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
+      CLIENT_ID: ${{secrets.CLIENT_ID}}
+      CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      IMAGE_NAME: 'platform'
+      PACKAGE_SERVER: 'ghcr.io'
+    steps: 
+
+    - name: Read deployment config
+      uses: VirtoCommerce/vc-github-actions/get-deploy-param@master
+      id: deployConfig
       with:
-        workflow: VC deployment
-        token: ${{ secrets.REPO_TOKEN }}
-        inputs: '{ "artifactUrl": "${{ env.PACKAGE_SERVER }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ steps.image.outputs.taggedVersion }}" }'
+        envName: 'dev'
+
+    - name: Start deployment
+      uses: bobheadxi/deployments@master
+      id: deployment
+      with:
+        step: start
+        token: ${{ secrets.GITHUB_TOKEN }}
+        env: Development
+        no_override: false
+
+    - name: Update deployment-cm
+      uses: VirtoCommerce/vc-github-actions/create-deploy-pr@master
+      with:
+        deployRepo: ${{ steps.deployConfig.outputs.deployRepo }}
+        deployBranch: ${{ steps.deployConfig.outputs.deployBranch }}
+        artifactKey: ${{ steps.deployConfig.outputs.artifactKey }}
+        artifactUrl: '${{ env.PACKAGE_SERVER }}/{{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ needs.ci.outputs.taggedVersion }}'
+        taskNumber: 'undefined'
+        forceCommit: 'true'
+        cmPath: ${{ steps.deployConfig.outputs.cmPath }}
+
+    - name: Wait for environment is up
+      shell: pwsh
+      timeout-minutes: 15
+      run: | 
+        do {
+          Start-Sleep -s 15
+          $statusBage = (Invoke-WebRequest -Uri "https://argo.govirto.com/api/badge?name=${{ steps.deployConfig.outputs.deployAppName }}").Content
+          
+          $syncedAndHealthy = $statusBage.Contains('>Healthy<') -and $statusBage.Contains('>Synced<')
+          if (-not $syncedAndHealthy) {
+            Write-Host "Sync pending..."
+          }
+        }
+        while (-not $syncedAndHealthy)
+
+    - name: DEPLOY_STATE::successful
+      if: success()
+      run: echo "DEPLOY_STATE=successful" >> $GITHUB_ENV
+
+    - name: DEPLOY_STATE::failed
+      if: failure()
+      run: echo "DEPLOY_STATE=failed"  >> $GITHUB_ENV
+
+    - name: Update GitHub deployment status
+      uses: bobheadxi/deployments@master
+      if: always()
+      with:
+        step: finish
+        token: ${{ secrets.GITHUB_TOKEN }}
+        status: ${{ job.status }}
+        deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+    - name: Print all environment variables
+      run:  env
+
+    - name: Push Deployment Info to Jira
+      if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && needs.ci.outputs.jira-keys != '' && always() }}
+      id: push_deployment_info_to_jira
+      uses: HighwayThree/jira-upload-deployment-info@master
+      env:
+        CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
+        CLIENT_ID: ${{secrets.CLIENT_ID}}
+        CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+      with:
+        cloud-instance-base-url: ${{ secrets.CLOUD_INSTANCE_BASE_URL }}
+        client-id: ${{ secrets.CLIENT_ID }}
+        client-secret: ${{ secrets.CLIENT_SECRET }}
+        deployment-sequence-number: ${{ github.run_id }}
+        update-sequence-number: ${{ github.run_id }}
+        issue-keys: ${{ needs.ci.outputs.jira-keys }}
+        display-name: ${{ steps.deployConfig.outputs.deployAppName }}
+        url: 'https://vcplatform-platform.dev.govirto.com/'
+        description: 'Deployment to the Development environment'
+        last-updated: '${{github.event.head_commit.timestamp}}'
+        state: '${{ env.DEPLOY_STATE }}'
+        pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
+        pipeline-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
+        pipeline-url: '${{github.event.repository.html_url}}/actions/runs/${{github.run_id}}'
+        environment-id: 'development'
+        environment-display-name: 'Dev'
+        environment-type: 'development'

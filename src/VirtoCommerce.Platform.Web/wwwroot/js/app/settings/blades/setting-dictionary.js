@@ -93,7 +93,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         }
 
         function isDirty() {
-            return !angular.equals(currentEntities, blade.origEntity.allowedValues) && blade.hasUpdatePermission();
+            return blade.origEntity && !angular.equals(currentEntities, blade.origEntity.allowedValues) && blade.hasUpdatePermission();
         }
 
         function saveChanges() {
@@ -119,7 +119,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             name: "platform.commands.reset",
             icon: 'fa fa-undo',
             executeMethod: function () {
-                angular.copy(blade.origEntity, currentEntities);
+                angular.copy(blade.origEntity.allowedValues, currentEntities);
                 blade.selectedAll = false;
             },
             canExecuteMethod: isDirty,

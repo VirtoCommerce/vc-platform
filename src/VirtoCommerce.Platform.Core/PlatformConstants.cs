@@ -110,6 +110,59 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.ShortText,
                     DefaultValue = "0 0 */1 * *"
                 };
+                public static SettingDescriptor FileExtensionsBlackList { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.FileExtensionsBlackList",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.ShortText,
+                    IsDictionary = true,
+                    AllowedValues = new string[] {
+                        ".asax",
+                        ".ascx",
+                        ".master",
+                        ".skin",
+                        ".browser",
+                        ".sitemap",
+                        ".config",
+                        ".cs",
+                        ".csproj",
+                        ".vb",
+                        ".vbproj",
+                        ".webinfo",
+                        ".licx",
+                        ".resx",
+                        ".resources",
+                        ".mdb",
+                        ".vjsproj",
+                        ".java",
+                        ".jsl",
+                        ".ldb",
+                        ".dsdgm",
+                        ".ssdgm",
+                        ".lsad",
+                        ".ssmap",
+                        ".cd",
+                        ".dsprototype",
+                        ".lsaprototype",
+                        ".sdm",
+                        ".sdmDocument",
+                        ".mdf",
+                        ".ldf",
+                        ".ad",
+                        ".dd",
+                        ".ldd",
+                        ".sd",
+                        ".adprototype",
+                        ".lddprototype",
+                        ".exclude",
+                        ".refresh",
+                        ".compiled",
+                        ".msgx",
+                        ".vsdisco",
+                        ".rules"
+                    },
+                    DefaultValue = ".asax",
+                };
 
 
                 public static IEnumerable<SettingDescriptor> AllSettings
@@ -119,6 +172,7 @@ namespace VirtoCommerce.Platform.Core
                         yield return SecurityAccountTypes;
                         yield return EnablePruneExpiredTokensJob;
                         yield return CronPruneExpiredTokensJob;
+                        yield return FileExtensionsBlackList;
                     }
                 }
             }
@@ -291,7 +345,7 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = "{\n" +
                                                "  \"title\": \"Virto Commerce\",\n" +
                                                "  \"logo\": \"/images/logo.png\",\n" +
-                                               "  \"contrast_logo\": \"/images/contrast-logo.png\"\n" +
+                                               "  \"contrast_logo\": \"/images/contrast-logo.svg\"\n" +
                                                "}"
                 };
 

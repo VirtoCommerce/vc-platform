@@ -129,10 +129,11 @@
                 }
             },
             "propertyValue-list": {
-                "title": "Properties values",
-                "subtitle": "Edit properties values",
+                "title": "Dynamic properties",
+                "subtitle": "",
                 "labels": {
-                    "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Manage type properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
+                    "header": "Properties values",
+                    "no-properties": "This entity doesn't have any dynamic properties yet. Click 'Types of properties' and create some properties. Close and reopen current entity view to get dynamic properties loaded."
                 }
             },
             "edit-array": {
@@ -326,7 +327,8 @@
                     "new-password": "New password",
                     "repeat-password": "Repeat new password",
                     "cancel": "Cancel",
-                    "save": "Change"
+                    "save": "Change",
+                    "fail": "Sorry, we could't reset password for this user."
                 },
                 "validations": {
                     "current-password": "Required",
@@ -530,7 +532,9 @@
                     "success": "Email with instructions has been sent to you.",
                     "fail": "Sorry, we could't reset password for this user.",
                     "back": "Back",
-                    "submit": "Submit"
+                    "submit": "Submit",
+                    "time-limit": "You can try again in {{countdown}}",
+                    "time-limit-end": "You can try again now."
                 },
                 "placeholders": {
                     "login-or-email": "Please enter login or email"
@@ -894,6 +898,10 @@
                     "CronPruneExpiredTokensJob": {
                         "description": "Cron expression for prune expired and invalid tokens/authorizations job",
                         "title": "Cron for the tokens prune job"
+                    },
+                    "FileExtensionsBlackList": {
+                        "description": "Files extensions prohibited to upload by the platform (additionally to 'FileExtensionsBlackList' in appsettings.json)",
+                        "title": "Black list"
                     }
                 },
                 "UI": {

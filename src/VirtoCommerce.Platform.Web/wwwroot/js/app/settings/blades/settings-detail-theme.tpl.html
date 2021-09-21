@@ -1,0 +1,46 @@
+<div class="blade-static __bottom" ng-if="blade.isSavingToParentObject" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="formScope" class="form">
+                <fieldset ng-init="setForm(formScope)">
+                    <legend>{{ blade.groupName }}</legend>
+
+                    <div class="list __info form-group">
+                        <label class="form-label">Choose background</label>
+                        <div ng-show="uploader.isHTML5">
+                            <div over-class="bd-blue" nv-file-over nv-file-drop uploader="uploader" class="drag-area">
+                                <div class="drag-content">{{ 'catalog.blades.images.labels.drag-drop-comment' | translate }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="list __info form-group">
+                        <label class="form-label">Choose pattern</label>
+                        <div class="form-input">
+                            <ui-select ng-model="blade.currentEntity.pattern">
+                                <ui-select-match placeholder="{{ 'platform.genericValueInput.placeholders.short-text-dictionary' | translate }}">{{ $select.selected.value }}</ui-select-match>
+                                <ui-select-choices repeat="propValue in blade.patterns | filter: {value: $select.search}">
+                                    <span ng-bind-html="propValue.value | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+
+            <!-- preview -->
+            <div class="sub-t">Preview</div>
+            <div>
+                <div class="tile" style="width: 100%; height: 200px; background-repeat: repeat, no-repeat; background-size: auto, 100% 200px;"
+                     ng-style="{
+                     'background-image': 'url('+blade.currentEntity.pattern.url+'), url('+blade.currentEntity.background.url+')'
+                     }">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

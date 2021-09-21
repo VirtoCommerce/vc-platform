@@ -25,7 +25,7 @@ namespace VirtoCommerce.Platform.DistributedLock
         /// </summary>
         /// <param name="resourceId"></param>
         /// <param name="payload"></param>
-        public virtual void ExecuteSynhronized(string resourceId, Action<DistributedLockCondition> payload)
+        public virtual void ExecuteSynchronized(string resourceId, Action<DistributedLockCondition> payload)
         {
             _logger.LogInformation(@$"Distributed lock: run payload for resource {resourceId} without lock.");
             payload(DistributedLockCondition.NoLock);

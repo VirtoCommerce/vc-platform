@@ -362,6 +362,9 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     b.Property<bool>("IsAdministrator")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("LastPasswordChangeRequestDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("LastPasswordChangedDate")
                         .HasColumnType("datetime2");
 

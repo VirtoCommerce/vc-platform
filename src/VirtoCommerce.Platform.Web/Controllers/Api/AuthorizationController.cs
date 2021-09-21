@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -53,6 +54,9 @@ namespace Mvc.Server
         // you must provide your own token endpoint action:
 
         [HttpPost("~/connect/token"), Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OpenIddictResponse))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(OpenIddictResponse))]
+        // Be aware: look into OpenIDEndpointDescriptionFilter to know parameters description for the swagger document about this endpoint
         public async Task<ActionResult> Exchange()
         {
             OpenIddictRequest openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();
@@ -84,6 +88,17 @@ namespace Mvc.Server
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(openIdConnectRequest, user);
                 var claimsPrincipal = await _userClaimsPrincipalFactory.CreateAsync(user);
+
+                //Do not allow login to customers
+                if (claimsPrincipal.Claims.Any(x => x.Type == _identityOptions.Value.ClaimsIdentity.RoleClaimType && x.Value == PlatformConstants.Security.SystemRoles.Customer))
+                {
+                    return BadRequest(new OpenIddictResponse
+                    {
+                        Error = Errors.InvalidGrant,
+                        ErrorDescription = "The user is not allowed to sign in."
+                    });
+                }
+
                 var limitedPermissions = _authorizationOptions.LimitedCookiePermissions?.Split(PlatformConstants.Security.Claims.PermissionClaimTypeDelimiter, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
 
                 if (!user.IsAdministrator)
