@@ -30,11 +30,12 @@ namespace VirtoCommerce.Platform.Web.Middleware
             }
             catch (Exception ex)
             {
+                var isDevelopment = _env.IsDevelopment();
+                var message = !isDevelopment ? ex.Message : $@"An exception occurred while processing the request [{context.Request.Path}]: {ex}";
+
                 //Need handle only storefront api errors
                 if (!context.Response.HasStarted && context.Request.Path.ToString().Contains("/api/"))
                 {
-                    var isDevelopment = _env.IsDevelopment();
-                    var message = !isDevelopment ? ex.Message : $@"An exception occurred while processing the request [{context.Request.Path}]: {ex}";
                     _logger.LogError(ex, message);
                     var httpStatusCode = HttpStatusCode.InternalServerError;
                     var json = JsonConvert.SerializeObject(new { message, stackTrace = isDevelopment ? ex.StackTrace : null });
@@ -45,7 +46,7 @@ namespace VirtoCommerce.Platform.Web.Middleware
                 else
                 {
                     //Continue default error handling
-                    throw;
+                    await context.Response.WriteAsync(message);
                 }
             }
         }
