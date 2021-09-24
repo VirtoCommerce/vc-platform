@@ -68,7 +68,7 @@ angular.module('platformWebApp')
             {
                 name: "platform.commands.unselect-all", icon: 'far fa-square',
                 executeMethod: () => selectAll(false),
-                canExecuteMethod: () => $scope.exportRequest.exportManifest && !blade.notification
+                canExecuteMethod: () => $scope.exportRequest.exportManifest && !blade.notification && $scope.canStartProcess()
             }
         ];
 
