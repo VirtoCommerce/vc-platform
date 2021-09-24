@@ -1,4 +1,4 @@
-# v1.1.8
+# v1.1.9
 name: Platform CI
 
 on:
@@ -16,6 +16,7 @@ on:
       - 'build/**'
       - 'README.md'
       - 'LICENSE'
+      - '**/argoDeploy.json'
     branches: [ master, dev ]
   pull_request:
     paths-ignore:
@@ -24,6 +25,7 @@ on:
       - 'build/**'
       - 'README.md'
       - 'LICENSE'
+      - '**/argoDeploy.json'
     branches: [ master, dev ]
 
 jobs:
