@@ -8,6 +8,7 @@ on:
       - 'build/**'
       - 'README.md'
       - 'LICENSE'
+      - '**/argoDeploy.json'
     branches: [ dev ]
   workflow_dispatch:
 
