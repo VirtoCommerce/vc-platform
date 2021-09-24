@@ -372,10 +372,13 @@ namespace VirtoCommerce.Platform.Web
             services.AddAuthorization(options =>
             {
                 //We need this policy because it is a single way to implicitly use the two schema (JwtBearer and ApiKey)  authentication for resource based authorization.
-                var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
-                                                                              .RequireAuthenticatedUser()
-                                                                              //.RequireAssertion(context => context.User.HasScope("api1"))
-                                                                              .Build();
+                var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
+                    .RequireAuthenticatedUser()
+                    // Customer user can get token, but can't use any API where auth is needed
+                    .RequireAssertion(context =>
+                        !context.User.HasClaim(OpenIddictConstants.Claims.Role, PlatformConstants.Security.SystemRoles.Customer))
+                    .Build();
                 //The good article is described the meaning DefaultPolicy and FallbackPolicy
                 //https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/
                 options.DefaultPolicy = mutipleSchemaAuthPolicy;

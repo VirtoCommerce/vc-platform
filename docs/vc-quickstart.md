@@ -5,7 +5,7 @@ Use this guide to deploy, configure and run precompiled Virto Commerce Platform 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/AHPgLG771Uk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Prerequisites
-Next prerequisites needs to be installed to deploy and run Virto Commerce.
+The following prerequisites needs to be installed to deploy and run Virto Commerce.
 
 * [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet/3.1)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
