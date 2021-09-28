@@ -1,4 +1,4 @@
-# v1.1.9
+# v1.1.10
 name: Platform CI
 
 on:
@@ -46,6 +46,7 @@ jobs:
       IMAGE_NAME: 'platform'
       PACKAGE_SERVER: 'ghcr.io'
       BUILD_STATE: 'failed'
+      RELEASE_STATUS: 'false'
 
     outputs:
       taggedVersion: ${{ steps.image.outputs.taggedVersion }}
@@ -63,6 +64,11 @@ jobs:
       run: |
         echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
         echo "UPDATE_LATEST_TAG=${{ github.event.inputs.forceLatest }}" >> $GITHUB_ENV 
+
+    - name: Set RELEASE_STATUS
+      if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+      run: |
+        echo "RELEASE_STATUS=true" >> $GITHUB_ENV
 
     - uses: actions/checkout@v2
       with:
@@ -187,6 +193,8 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/get-jira-keys@master
       if: always()
       id: jira_keys
+      with:
+        release: ${{ env.RELEASE_STATUS }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -217,14 +225,6 @@ jobs:
       if: success()
       run: |
         echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
-
-    # - name: Invoke VC image deployment workflow
-    #   if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'workflow_dispatch' }}
-    #   uses: benc-uk/workflow-dispatch@v1
-    #   with:
-    #     workflow: VC deployment
-    #     token: ${{ secrets.REPO_TOKEN }}
-    #     inputs: '{ "artifactUrl": "${{ env.PACKAGE_SERVER }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ steps.image.outputs.taggedVersion }}" }'
 
   deploy:
     if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
