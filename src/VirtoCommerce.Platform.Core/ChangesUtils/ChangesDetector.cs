@@ -25,14 +25,15 @@ namespace VirtoCommerce.Platform.Core.Utils.ChangeDetector
         /// <returns></returns>
         public static ListDictionary<string, string> Gather(object newObj, object oldObj)
         {
-            var objType = newObj.GetType();
+            var newObjType = newObj.GetType();
+            var oldObjType = oldObj.GetType();
 
-            if (!objType.Equals(oldObj.GetType()))
+            if (!newObjType.Equals(oldObjType))
             {
-                throw new PlatformException("Can't compare objects of different types.");
+                throw new PlatformException($@"Can't compare objects of different types (new: {newObjType.Name}, old: {oldObjType.Name}).");
 
             }
-            return Gather(newObj, oldObj, objType);
+            return Gather(newObj, oldObj, newObjType);
         }
 
         /// <summary>
