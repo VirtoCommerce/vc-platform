@@ -1,4 +1,4 @@
-# v1.1.8
+# v1.1.10
 name: Platform CI
 
 on:
@@ -16,6 +16,7 @@ on:
       - 'build/**'
       - 'README.md'
       - 'LICENSE'
+      - '**/argoDeploy.json'
     branches: [ master, dev ]
   pull_request:
     paths-ignore:
@@ -24,6 +25,7 @@ on:
       - 'build/**'
       - 'README.md'
       - 'LICENSE'
+      - '**/argoDeploy.json'
     branches: [ master, dev ]
 
 jobs:
@@ -31,6 +33,9 @@ jobs:
     if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-18.04
     env:
+      CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
+      CLIENT_ID: ${{secrets.CLIENT_ID}}
+      CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       NUGET_KEY: ${{ secrets.NUGET_KEY }}
@@ -41,6 +46,7 @@ jobs:
       IMAGE_NAME: 'platform'
       PACKAGE_SERVER: 'ghcr.io'
       BUILD_STATE: 'failed'
+      RELEASE_STATUS: 'false'
 
     outputs:
       taggedVersion: ${{ steps.image.outputs.taggedVersion }}
@@ -58,6 +64,11 @@ jobs:
       run: |
         echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
         echo "UPDATE_LATEST_TAG=${{ github.event.inputs.forceLatest }}" >> $GITHUB_ENV 
+
+    - name: Set RELEASE_STATUS
+      if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+      run: |
+        echo "RELEASE_STATUS=true" >> $GITHUB_ENV
 
     - uses: actions/checkout@v2
       with:
@@ -182,15 +193,20 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/get-jira-keys@master
       if: always()
       id: jira_keys
+      with:
+        release: ${{ env.RELEASE_STATUS }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Print all environment variables
+      run:  env
 
     - name: Push Build Info to Jira
       if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
       id: push_build_info_to_jira
       uses: HighwayThree/jira-upload-build-info@master
       with:
-        cloud-id: '${{ secrets.CLOUD_ID }}'
+        cloud-instance-base-url: '${{ secrets.CLOUD_INSTANCE_BASE_URL }}'
         client-id: '${{ secrets.CLIENT_ID }}'
         client-secret: '${{ secrets.CLIENT_SECRET }}'
         pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
@@ -210,19 +226,14 @@ jobs:
       run: |
         echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
 
-    # - name: Invoke VC image deployment workflow
-    #   if: ${{ github.ref == 'refs/heads/master' && github.event_name != 'workflow_dispatch' }}
-    #   uses: benc-uk/workflow-dispatch@v1
-    #   with:
-    #     workflow: VC deployment
-    #     token: ${{ secrets.REPO_TOKEN }}
-    #     inputs: '{ "artifactUrl": "${{ env.PACKAGE_SERVER }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ steps.image.outputs.taggedVersion }}" }'
-
   deploy:
     if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
     needs: ci
     runs-on: ubuntu-latest
     env:
+      CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
+      CLIENT_ID: ${{secrets.CLIENT_ID}}
+      CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       IMAGE_NAME: 'platform'
       PACKAGE_SERVER: 'ghcr.io'
@@ -286,8 +297,11 @@ jobs:
         status: ${{ job.status }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
+    - name: Print all environment variables
+      run:  env
+
     - name: Push Deployment Info to Jira
-      if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
+      if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && needs.ci.outputs.jira-keys != '' && always() }}
       id: push_deployment_info_to_jira
       uses: HighwayThree/jira-upload-deployment-info@master
       env:

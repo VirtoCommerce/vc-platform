@@ -141,7 +141,7 @@ angular.module('platformWebApp')
         return {
             push: function (breadcrumbs, id) {
                 var history = map[id];
-                if (!history) {
+                if (!history || !_.some(breadcrumbs)) {
                     map[id] = history = {
                         ignoreNextAction: false,
                         records: []

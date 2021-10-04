@@ -1,4 +1,6 @@
-<div style="background: url(images/login.png) no-repeat; background-size: 100%; position: absolute; width: 100%; height: 100%;"></div>
+<div style="background-repeat: repeat, no-repeat; background-size: auto, 100%; position: absolute; width: 100%; height: 100%;"
+     ng-style="{ 'background-image': 'url('+uiCustomization.pattern.url+'), url('+(uiCustomization.background.url || 'images/login.png' )+')' }">
+</div>
 <div class="window">
     <div class="window-status" ng-if="loginProgress">
         <div class="progress-bar"></div>

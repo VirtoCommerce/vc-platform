@@ -57,18 +57,18 @@ angular.module('platformWebApp')
         blade.toolbarCommands = [
             {
                 name: "platform.commands.start-export", icon: 'fa fa-upload',
-                executeMethod: function () { startExport() },
-                canExecuteMethod: function () { return $scope.canStartProcess() && !blade.notification; }
+                executeMethod: () => startExport(),
+                canExecuteMethod: () => $scope.canStartProcess() && !blade.notification
             },
             {
                 name: "platform.commands.select-all", icon: 'far fa-check-square',
-                executeMethod: function () { selectAll(true) },
-                canExecuteMethod: function () { return $scope.exportRequest.exportManifest && !blade.notification; }
+                executeMethod: () => selectAll(true),
+                canExecuteMethod: () => $scope.exportRequest.exportManifest && !blade.notification
             },
             {
                 name: "platform.commands.unselect-all", icon: 'far fa-square',
-                executeMethod: function () { selectAll(false) },
-                canExecuteMethod: function () { return $scope.exportRequest.exportManifest && !blade.notification; }
+                executeMethod: () => selectAll(false),
+                canExecuteMethod: () => $scope.exportRequest.exportManifest && !blade.notification && $scope.canStartProcess()
             }
         ];
 
@@ -76,7 +76,7 @@ angular.module('platformWebApp')
             $scope.exportRequest.handleSecurity = action;
             $scope.exportRequest.handleBinaryData = action;
             $scope.exportRequest.handleSettings = action;
-            _.forEach($scope.exportRequest.exportManifest.modules, function (module) { module.isChecked = action; });
+            _.forEach($scope.exportRequest.exportManifest.modules, (module) => module.isChecked = action);
 
             $scope.updateModuleSelection();
         }

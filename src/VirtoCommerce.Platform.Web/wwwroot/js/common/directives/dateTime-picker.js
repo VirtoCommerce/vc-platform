@@ -144,6 +144,9 @@ angular.module('platformWebApp')
                             });
                     }
 
+                    attrs.placeholder = dateFormat;
+                    element[0].title = dateFormat;
+
                     // popup element used to display calendar
                     var popupEl = angular.element('' +
                         '<div date-picker-wrap>' +
@@ -415,6 +418,7 @@ angular.module('platformWebApp')
 
                 scope.$watch('isOpen',
                     function (value) {
+                        value = !attrs.datepickerPopupDropless && value;
                         scope.dropdownStyle = {
                             display: value ? 'block' : 'none'
                         };
