@@ -11,6 +11,7 @@ namespace VirtoCommerce.Platform.Core.Common
     public static class StringExtensions
     {
         private static readonly Regex _emailRegex = new Regex(@"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$", RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
+        private static readonly string[] _allowedUriSchemes = new string[] { Uri.UriSchemeFile, Uri.UriSchemeFtp, Uri.UriSchemeHttp, Uri.UriSchemeHttps, Uri.UriSchemeMailto, Uri.UriSchemeNetPipe, Uri.UriSchemeNetTcp };
 
         public static bool IsAbsoluteUrl(this string url)
         {
@@ -18,47 +19,48 @@ namespace VirtoCommerce.Platform.Core.Common
             {
                 throw new ArgumentNullException(url);
             }
-            var shemes = new string[] { Uri.UriSchemeFile, Uri.UriSchemeFtp, Uri.UriSchemeHttp, Uri.UriSchemeHttps, Uri.UriSchemeMailto, Uri.UriSchemeNetPipe, Uri.UriSchemeNetTcp };
-            var retVal = shemes.Any(x => url.StartsWith(x, StringComparison.InvariantCultureIgnoreCase));
-            return retVal;
+
+            var result = Uri.IsWellFormedUriString(url, UriKind.Absolute) && _allowedUriSchemes.Any(x => new Uri(url).Scheme.EqualsInvariant(x));
+
+            return result;
         }
 
-        public static decimal TryParse(this string u, Decimal defaultValue)
+        public static decimal TryParse(this string u, decimal defaultValue)
         {
-            var retVal = defaultValue;
+            var result = defaultValue;
 
             if (!string.IsNullOrEmpty(u))
             {
-                decimal.TryParse(u, NumberStyles.Any, CultureInfo.InvariantCulture, out retVal);
+                decimal.TryParse(u, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
             }
 
-            return retVal;
+            return result;
 
         }
 
         public static bool TryParse(this string u, bool defaultValue)
         {
-            var retVal = defaultValue;
+            var result = defaultValue;
 
             if (!string.IsNullOrEmpty(u))
             {
-                bool.TryParse(u, out retVal);
+                bool.TryParse(u, out result);
             }
 
-            return retVal;
+            return result;
 
         }
 
         public static int TryParse(this string u, int defaultValue)
         {
-            var retVal = defaultValue;
+            var result = defaultValue;
 
             if (!string.IsNullOrEmpty(u))
             {
-                int.TryParse(u, out retVal);
+                int.TryParse(u, out result);
             }
 
-            return retVal;
+            return result;
 
         }
 
@@ -156,20 +158,20 @@ namespace VirtoCommerce.Platform.Core.Common
         public static string EscapeSearchTerm(this string term)
         {
             char[] specialCharacters = { '+', '-', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '\\' };
-            var retVal = new StringBuilder("");
+            var result = new StringBuilder("");
             //'&&', '||',
             foreach (var ch in term)
             {
                 if (specialCharacters.Any(x => x == ch))
                 {
-                    retVal.Append("\\");
+                    result.Append("\\");
                 }
-                retVal.Append(ch);
+                result.Append(ch);
             }
-            retVal = retVal.Replace("&&", @"\&&");
-            retVal = retVal.Replace("||", @"\||");
+            result = result.Replace("&&", @"\&&");
+            result = result.Replace("||", @"\||");
 
-            return retVal.ToString().Trim();
+            return result.ToString().Trim();
         }
 
         /// <summary>

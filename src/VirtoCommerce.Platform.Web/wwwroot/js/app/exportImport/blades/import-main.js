@@ -11,7 +11,7 @@ angular.module('platformWebApp')
             if (notification.jobId && notification.finished) {
                 $scope.switchCommandButton("close");
             }
-            if (blade.notification && notification.id == blade.notification.id) {
+            if (blade.notification && notification.id === blade.notification.id) {
                 angular.copy(notification, blade.notification);
                 if (notification.errorCount > 0) {
                     bladeNavigationService.setError('Import error', blade);
@@ -57,7 +57,7 @@ angular.module('platformWebApp')
         };
 
         var commandClose = {
-            name: 'close',
+            name: 'Close',
             icon: 'fa fa-times',
             canExecuteMethod: function () { return blade.error || blade.notification && blade.notification.finished; },
             executeMethod: function () { bladeNavigationService.closeBlade(blade); },
@@ -117,11 +117,29 @@ angular.module('platformWebApp')
 
         blade.toolbarCommands = [
             {
-                name: "platform.blades.import-main.labels.start-import",
-                icon: "fa fa-download",
-                executeMethod: function () { $scope.startProcess() },
-                canExecuteMethod: function () { return $scope.canStartProcess() && !blade.notification },
+                name: "platform.blades.import-main.labels.start-import", icon: 'fa fa-download',
+                executeMethod: () => $scope.startProcess(),
+                canExecuteMethod: () => $scope.canStartProcess() && !blade.notification,
                 target: 'import'
+            },
+            {
+                name: "platform.commands.select-all", icon: 'far fa-check-square',
+                executeMethod: () => selectAll(true),
+                canExecuteMethod: () => $scope.importRequest.exportManifest && !blade.notification
+            },
+            {
+                name: "platform.commands.unselect-all", icon: 'far fa-square',
+                executeMethod: () => selectAll(false),
+                canExecuteMethod: () => $scope.importRequest.exportManifest && !blade.notification && $scope.canStartProcess()
             }
         ];
+
+        var selectAll = function (action) {
+            $scope.importRequest.handleSecurity = $scope.importRequest.exportManifest.handleSecurity && action;
+            $scope.importRequest.handleBinaryData = $scope.importRequest.exportManifest.handleBinaryData && action;
+            $scope.importRequest.handleSettings = $scope.importRequest.exportManifest.handleSettings && action;
+            _.forEach($scope.importRequest.exportManifest.modules, (module) => module.isChecked = action);
+
+            $scope.updateModuleSelection();
+        }
     }]);

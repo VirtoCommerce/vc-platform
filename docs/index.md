@@ -7,6 +7,25 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "4 October"
+    * VirtoCommerce XAPI Demo App was published on public demo
+    * Improved Address Import for Contact&Organizations
+    * Added User-friendly error message
+    * Added rich telemetry for GraphQL
+    * Added support of Gift in XAPI
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-4-october-2021/386)
+
+
+https://www.virtocommerce.org/t/news-digest-4-october-2021/386
+!!! done "20 September"
+    * Added a new video Quick Start using Virto Commerce CLI
+    * Added ability to Customize Login background set-up
+    * Added new scenarios to XAPI Demo Storefront Applications
+    * Fixed swagger schema for get token API
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-20-september/380)
+
 !!! done "3 September"
     * Added new scenarios to XAPI Demo Storefront Applications
     * Added Black list for file extensions
@@ -16,21 +35,7 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-3-september-2021/374)
 
-!!! done "30 August"
-    * Virto Commerce CLI (VC-BUILD) 2.0 was released
-    * Added Quick start page and new videos
-    * New samples in XAPI Demo Storefront Applications demonstrates how to use XAPI and GraphQL for different e-commerce scenarios.
-    * New Releases
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-30-august-2021/373)    
-
-!!! done "6 August"
-    * New Videos & Topics
-    * Custom and Organization Export & Import module
-    * New Releases
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-6-august-2021/370)
-    
+  
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and [GitHub](https://github.com/VirtoCommerce)
 
 ## Principles
@@ -161,12 +166,12 @@ In our work, we always try to use advanced technologies. Our decision to choose 
 
 Virto Commerce uses following stack of technologies:
 
-* ASP.NET Core 3.1.0
-* EF Core 3.1.0 as primary ORM
-* ASP.NET Core Identity 3.1.0 for authentication and authorization
-* OpenIddict 2.0.1 for OAuth authorization
+* ASP.NET Core
+* EF Core as primary ORM
+* ASP.NET Core Identity for authentication and authorization
+* OpenIddict for OAuth authorization
 * WebPack as primary design/runtime bundler and minifier
 * Swashbuckle.AspNetCore.SwaggerGen for Swagger docs and UI
 * SignalR Core for push notifications
-* AngularJS 1.4 as primary framework for SPA
-* HangFire 1.7.8 for run background tasks
+* AngularJS  primary framework for SPA
+* HangFire for run background tasks
