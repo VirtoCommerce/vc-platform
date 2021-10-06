@@ -23,7 +23,7 @@ In order to have a file with your own products like downloaded **electronics-new
 * In LibreOffice you need to create table with the number of columns equal to the number of properties of your products and fill it. For a delimiter, select a comma.
 * Save file in .csv format.
 
-![РЎsv example](../assets/images/docs/csv-example.png "РЎsv example")
+![РЎsv example](../../media/csv-example.png "РЎsv example")
 
 ## Create new Catalog or use an existing one
 
@@ -34,10 +34,10 @@ In order to have a file with your own products like downloaded **electronics-new
 
 * To create new category in **Electronics** catalog click on **More > Catalog > Electronics>** click **+Add** > choose **Category >** fill category name **Laptops** and code (optional), click **Create** button.
 
-![Create new category](../assets/images/docs/new-category.png "Create new category")
+![Create new category](../../media/new-category.png "Create new category")
 
 
-![New category details](../assets/images/docs/new-category-details.png "New category details")
+![New category details](../../media/new-category-details.png "New category details")
 
 * Click on the **Laptops** in categories list. To create new subcategory, click **+Add >** choose **Category >** add category name **Asus-Laptops** and code (optional), click **Create**.
 * By clicking on **More > Catalog > Electronics > Laptops > Asus-Laptops** you will see all created categories. If you want to get Asus-Laptops CategoryId for using it in .csv file - click on categories list menu, select **Id** by check box and copy the Id value.
@@ -50,14 +50,14 @@ In order to have a file with your own products like downloaded **electronics-new
 
 You need to add images for products: go to **More > Assets > catalog >** click on the **New folder** icon, type **ASUS** folder name, click **Ok** button.
 
-![New folder for images](../assets/images/docs/assets-new-folder.png "New folder for images")
+![New folder for images](../../media/assets-new-folder.png "New folder for images")
 
 
-![Upload new images](../assets/images/docs/assets-upload-image.png "Upload new images")
+![Upload new images](../../media/assets-upload-image.png "Upload new images")
 
 * Click on the **Upload** icon. An **Asset upload** blade opens. Select all the previously extracted sample images from **images-example.zip** in File Explorer and drag&drop onto specified area. Now you should see all images in the **ASUS** folder uploaded.
 
-![New images list](../assets/images/docs/assets-new-products.png "New images list")
+![New images list](../../media/assets-new-products.png "New images list")
 
 ## Importing and mapping your catalog data into Virto Commerce
 
@@ -65,67 +65,67 @@ You need to add images for products: go to **More > Assets > catalog >** click o
 
 >Note: importing new products from the file without specifying either the category id or the category path in it, defaults to the root directory - to the catalog.
 
-![РЎsv import](../assets/images/docs/csv-import.png "РЎsv import")
+![РЎsv import](../../media/csv-import.png "РЎsv import")
 
 * After uploading your data, click on **Map columns**. On this blade you will see and configure how the properties of your products will be mapped to the default properties defined in application, just so they will be saved to the database after you click buttons **Ok** and **Start Import**. Wait a little...
 
-![РЎsv import mapping](../assets/images/docs/csv-import-mapping.png "РЎsv import mapping")
+![РЎsv import mapping](../../media/csv-import-mapping.png "РЎsv import mapping")
 
-![РЎsv import mapping done](../assets/images/docs/csv-import-mapping-done.png "РЎsv import mapping done")
+![РЎsv import mapping done](../../media/csv-import-mapping-done.png "РЎsv import mapping done")
 
 ## Open new products in Virto Commerce Platform (*backend*)
 
 Now you can see and edit all new products by navigating to **More > Catalog > Electronics > Laptops > Asus-Laptops**:
 
-![РЎsv import result](../assets/images/docs/csv-import-result.png "РЎsv import result")
+![РЎsv import result](../../media/csv-import-result.png "РЎsv import result")
 
 ## Creating a new menu item in Virto Commerce Storefront (*frontend*)
 
 * To add new category to menu in Virto Commerce Storefront (*frontend*) open Virto Commerce Platform (*backend*), click on **More > Content > Link lists** inside **Electronics > en-US main-menu >** icon **+Add link** and fill Link Title - **Laptops**, URL - **~/laptops**, Links to - **Category**, Linked object - **Laptops**: click on button **Select > Electronics**, select **Laptops** via check box and click on icon **+Pick selected**, save changes.
 
-![New category link](../assets/images/docs/new-category-link.png "New category link")
+![New category link](../../media/new-category-link.png "New category link")
 
-![Pick selected category](../assets/images/docs/pick-selected-category.png "Pick selected category")
+![Pick selected category](../../media/pick-selected-category.png "Pick selected category")
 
 * To add new link for subcategory **Asus Laptops** to menu in Virto Commerce Storefront(*frontend*) open Virto Commerce Platform (*backend*), click on **More > Content >** Link lists in **Electronics >** icon **+Add**. Fill Name - **Laptops**, Language - **en-US**, Link Title - **Asus Laptops**, URL - **~/asus-laptops**, click **Create** button.
 
-![New subcategory link](../assets/images/docs/new-subcategory-link.png "New subcategory link")
+![New subcategory link](../../media/new-subcategory-link.png "New subcategory link")
 
 ## Creating thumbnails for new product images
 
 Now you need to generate thumbnails for new images.
 * **Do this step only once:** create new task for thumbnails generation: navigate to **More > Thumbnails >** click on **+Add** icon, enter Name - **catalog images**, Path to images - **/catalog**, click on penСЃil icon near **Thumbnail settings** and on **+Add** icon.
 
-![New thumbnail task](../assets/images/docs/new-thumbnail-task.png "New thumbnails generation task")
+![New thumbnail task](../../media/new-thumbnail-task.png "New thumbnails generation task")
 
 * Create and save thumbnail option details: Name - **348x348**, Thumbnail file name suffix - **348x348**, Resize method - **FixedSize**, Width (pixels) - **348**, Height (pixels) - **348**, Anchor position - **Center**. 
 * Similarly add details for 3 other resolutions: **216x216, 168x168, 64x64**.
 * Can close only **Thumbnails settings** blade now.
 * Put the cursor in the **Thumbnail settings** field (in **New thumbnails generation task** blade), add all the previously created settings, save new thumbnails generation task.
 
-![New thumbnail options](../assets/images/docs/add-thumbnail-settings.png "New thumbnail options")
+![New thumbnail options](../../media/add-thumbnail-settings.png "New thumbnail options")
 
 * Select **catalog images** task in **Thumbnails generation tasks list** blade by check box, click on **!Run** icon, click **Regenerate** button in pop-up dialog. Wait a little... all done.
 * If you'd add new pictures later, select the **Process changes** button to generate thumbnails only for them.
 
-![New thumbnails was generated](../assets/images/docs/new-thumbnails-generated.png "New thumbnails were generated")
+![New thumbnails was generated](../../media/new-thumbnails-generated.png "New thumbnails were generated")
 
 ## Build search indexes and reset cache
 
 * The search indexes are updated by the system every 5 minutes by default. In order to build the indexes for new categories and products immediately, navigate to **More > Search index >** select all document types via check boxes, click on **Build index** icon, in pop-up dialog click **Build** button.
 
-![Build search indexes](../assets/images/docs/build-search-indexes.png "Build search indexes")
+![Build search indexes](../../media/build-search-indexes.png "Build search indexes")
 
 * You need to reset Storefront cache after building the indexes. Navigate to **More > Stores > Electronics >** click **Reset cache** in **Store details** blade and click **Ok** button in the dialog.
 
-![Reset cache](../assets/images/docs/reset-cache.png "Reset cache")
+![Reset cache](../../media/reset-cache.png "Reset cache")
 
 ## Open new products in Virto Commerce Storefront (*frontend*)
 
 * Open Virto Commerce Storefront locally (see how to deploy and open it in <a href="https://github.com/VirtoCommerce/vc-content/tree/lesson2/Pages/docs/lessons/lesson1.md" target="_blank">Lesson 1</a>).
 * Now you can see new menu item **Laptops**, new subitem **Asus Laptops** and all new products in Virto Commerce Storefront.
 
-![Laptops on storefront](../assets/images/docs/laptops-on-storefront.png "Laptops on storefront")
+![Laptops on storefront](../../media/laptops-on-storefront.png "Laptops on storefront")
 
 
 ## Appendix 1: Default Product properties in Virto Commerce
@@ -176,10 +176,10 @@ In order to create a new catalog items .csv file, you need to know which defined
 
 * In order to import your custom product property, you need to define it: in Virto Commerce Platform find the particular category > click on its name by right mouse button and select **Manage > Properties > +Add property**. Fill Property name, Display name - in English and German, enable Multi language switch, if the property can have multiple values - enable Multivalue switch, select **Product** in "Applies to" and choose Value Type. Set up Validation rules and Attributes if needed. Click **Save** in Manage property blade and **Ok** buttons in Properties list of your category.
 
-![Custom property add](../assets/images/docs/custom-property-add.png "Custom property add")
+![Custom property add](../../media/custom-property-add.png "Custom property add")
 
-![Custom property details](../assets/images/docs/custom-property-details.png "Custom property details")
+![Custom property details](../../media/custom-property-details.png "Custom property details")
 
-![Custom properties list](../assets/images/docs/custom-properties-list.png "Custom properties list")
+![Custom properties list](../../media/custom-properties-list.png "Custom properties list")
 
 * Now you can add column with the same name to .csv file. The property value would be filled with the column value automatically for all products of this category during import.

@@ -78,7 +78,7 @@ Read more on removing this error and using a self-signed certificate: [Trust the
 * On the first request the application will create and initialize **Virtocommerce3 database**. Wait a minute...
 * After that you should see the sign in page.
 
-![Sign in page](../media/platform-first-sign-in-page.png "Sign in page")
+![Sign in page](../../media/platform-first-sign-in-page.png "Sign in page")
 
 * Use the following credentials:
   * Login: **admin**.
@@ -88,7 +88,7 @@ Read more on removing this error and using a self-signed certificate: [Trust the
 
 * Next step - Platform modules auto installation, after that you should click the **Restart** button.
 
-![Modules auto installation page](../media/modules-auto-installation-page.png "Modules auto installation page")
+![Modules auto installation page](../../media/modules-auto-installation-page.png "Modules auto installation page")
 
 * When **Restart** button have been pressed **Virto Commerce Platform** will be stopped. Start the  platform by CLI "dotnet":
 
@@ -100,13 +100,13 @@ dotnet.exe VirtoCommerce.Platform.Web.dll
 
 * After restart you should see next page with possibility to sample data installation (you should choose **Closing and Electronics** option - new products would be added to your **Virtocommerce3** database).
 
-![Sample data installation page](../media/sample-data-installation-page.png "Sample data installation page")
+![Sample data installation page](../../media/sample-data-installation-page.png "Sample data installation page")
 
 ## Change administrator password
 
 After **Sample data installation** step completed user is forced to change the password.
 
-![Password reset](../media/password-reset.png "Password reset")
+![Password reset](../../media/password-reset.png "Password reset")
 
 ### Content Configuration in application settings
 
@@ -205,4 +205,4 @@ Now you could first open the local **Virto Commerce Storefront** instance for th
 
 Navigate to `https://localhost:5002`:
 
-![First storefront page](../media/storefront.png "First storefront page")
+![First storefront page](../../media/storefront.png "First storefront page")

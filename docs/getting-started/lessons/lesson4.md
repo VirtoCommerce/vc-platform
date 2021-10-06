@@ -45,7 +45,7 @@ Review these UI elements carefully before you start creating the UI for "Custome
 
 Blade is the main UI element of the Platform Manager. Every blade has basic parts such as Maximize, Close buttons on the top and the title, toolbar, main content placeholders following down. You can find out all the blade features on the [Blade constructor](https://virtocommerce.com/guides/blade-constructor).
 
-![Blade](../assets/images/docs/lesson4-blade.png)
+![Blade](../../media/lesson4-blade.png)
 
 Read more in the [Blades and navigation](https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/blades-and-navigation) article.
 
@@ -53,7 +53,7 @@ Read more in the [Blades and navigation](https://virtocommerce.com/docs/vc2devgu
 
 A blade toolbar is a dedicated area inside blade for adding commands. Hereinafter, the toolbar commands shall be referenced to as toolbar items.
 
-![Toolbar](../assets/images/docs/lesson4-blade-toolbar.png)
+![Toolbar](../../media/lesson4-blade-toolbar.png)
 
 Read more in the [Blade toolbar](https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/blade-toolbar) article.
 
@@ -61,7 +61,7 @@ Read more in the [Blade toolbar](https://virtocommerce.com/docs/vc2devguide/work
 
 A metaform is a placeholder (container) control that renders UI content based on provided metadata.
 
-![Metaform](../assets/images/docs/lesson4-blade-metaform.png)
+![Metaform](../../media/lesson4-blade-metaform.png)
 
 Read more in the [Metaform](https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/metaform) article.
 
@@ -76,7 +76,7 @@ A widget is a relatively simple and intuitive web UI component in Platform Manag
 
 A widget container is a placeholder control for individual widgets.
 
-![Widget container](../assets/images/docs/lesson4-blade-widgetcontainer.png)
+![Widget container](../../media/lesson4-blade-widgetcontainer.png)
 
 Read more in the [Widgets](https://virtocommerce.com/../../developer-guide/working-with-platform-manager/basic-functions/widgets.md) article.
 
@@ -291,7 +291,7 @@ When the state is "activated", the blade's controller is bound to its template a
 
 Save all changes, restart the Platform application and open blade in main menu. You should see existing Customer reviews list:
 
-![Reviews list blade](../assets/images/docs/reviews-list-blade.png)
+![Reviews list blade](../../media/reviews-list-blade.png)
 
 ### Define widget for "Customer reviews" module
 
@@ -379,4 +379,4 @@ angular.module('customerReviewsModule')
 
 Save all changes, restart application and open Product detail blade. You should see the new widget added and showing actual number of existing reviews for the product. If you click the widget, a new blade should appear, showing with the list of Customer reviews for the product.
 
-![Customer review widget](../assets/images/docs/reviews-list-widget.png)
+![Customer review widget](../../media/reviews-list-widget.png)

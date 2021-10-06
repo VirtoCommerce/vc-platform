@@ -38,7 +38,7 @@ New module should be created from a special VC module template in Visual Studio.
 
 Open Visual Studio, go to **Tools > Extensions and Updates**. Search for **Virto Commerce 2.x Module Templates**.
 
-![VS Extensions and Updates](../assets/images/docs/screen-vs-extensions-and-updates.png)
+![VS Extensions and Updates](../../media/screen-vs-extensions-and-updates.png)
 
 Install it and restart Visual Studio.
 Now, in Visual Studio click **New Project**, search for an existing **Virto Commerce 2.x Module**. Name it, according to the naming convention. For example:
@@ -46,7 +46,7 @@ Now, in Visual Studio click **New Project**, search for an existing **Virto Comm
 * "Name": **CustomerReviewsModule**;
 * "Solution name": **CustomerReviewsModule**.
 
-![VS New Project](../assets/images/docs/screen-vs-new-project.png)
+![VS New Project](../../media/screen-vs-new-project.png)
 
 After new module created fill in title, description and authors attributes in *module.manifest* file:
 
@@ -80,15 +80,15 @@ mklink /d CustomerReviewsModule <full_path_to_CustomerReviewsModule_project>
 Also, check and set appropriate permissions for the newly created module folder, so that IIS can access it.
 Here, for the "IIS_IUSRS" group the required permission is "Read & execute":
 
-![Permissions for CustomerReviewsModule](../assets/images/docs/screen-permissionns-for-customerreviewsmodule.png)
+![Permissions for CustomerReviewsModule](../../media/screen-permissionns-for-customerreviewsmodule.png)
 
 Compile solution and restart IIS (use iisreset.exe command). After that, CustomerReviews module should appear in Platform Manager. Open it in browser to check how new module looks like.
 
-![CustomerReviesModule in Platform Manager](../assets/images/docs/screen-customerreviesmodule-in-platform-manager.png)
+![CustomerReviesModule in Platform Manager](../../media/screen-customerreviesmodule-in-platform-manager.png)
 
 Click on **CustomerReviewsModule** and you should see "Hello world" blade
 
-![Hellow world! blade](../assets/images/docs/screen-hellow-world-blade.png)
+![Hellow world! blade](../../media/screen-hellow-world-blade.png)
 
 ## Debugging
 
@@ -108,7 +108,7 @@ In Visual Studio:
 
 "REST API documentation" (Swagger) UI is automatically generated page. It enables to make requests to all the REST API endpoints exposed by Platform and installed modules as well. Browse **[localhost/admin/docs/ui/index]** URL:
 
-![Swagger UI](../assets/images/docs/screen-swagger-ui.png)
+![Swagger UI](../../media/screen-swagger-ui.png)
 
 #### Authorization
 
@@ -119,7 +119,7 @@ Call Authorize button on the top of the page, enter username and password, submi
 Click on "Sample Customer reviews module" to see the available endpoints.
 When the new module is generated from a template, there is only one endpoint **api/CustomerReviewsModule** included, returning "Hello, world!":
 
-![Swagger Get API](../assets/images/docs/screen-swagger-get-api.png)
+![Swagger Get API](../../media/screen-swagger-get-api.png)
 
 ## The VC module solution structure
 
@@ -146,7 +146,7 @@ In the solution, each project has its own responsibilities. Thus, certain types 
 
 The figure below shows a representation of the layers of architecture. Notice that the solid arrows correspond to the compile-time dependencies, and the dashed arrows to the dependencies that exist only at run time. As part of the current architecture, a Web project works with interfaces that are defined in the Core project at compile time, and ideally should not know anything about the implementation types defined in the Data project. But at run time, these types of implementations are necessary to run the application, so they must exist and be tied to the interfaces of the Core project through dependency injection.
 
-![Solution arch scheme](../assets/images/docs/scheme-solution-arch.png)
+![Solution arch scheme](../../media/scheme-solution-arch.png)
 
 ### .Core Business/Application Model
 
@@ -344,7 +344,7 @@ The implementations of the services that was defined early in **CustomerReviewsM
 
 In order to define the data access layer based on Entity Framework use the package manager tools in Visual Studio. From the VS top menu chooses **Tools>Module Package Manager>Package Manager Console**.
 
-![Package Manager Console](../assets/images/docs/screen-package-manager-console.png)
+![Package Manager Console](../../media/screen-package-manager-console.png)
 
 There is a command to enable migrations:
 
@@ -614,7 +614,7 @@ Protecting API controller methods with CheckPermission attribute:
 Besides the JavaScript, you can test module API endpoints, with the Swagger. Compile solution and restart IIS (use iisreset.exe command). Open the Swagger interface URL: **[localhost//admin/docs/ui/index]** and click on "Customer reviews module" to see the available endpoints.
 You can test the search functionality for instance. Under the **api/CustomerReviewsModule/search** endpoint you can create simple or nested, compound criteria. It accepts the criteria as a simple object. After providing the criteria hit the "Try it out" button.
 
-![Swagger Search API](../assets/images/docs/screen-swagger-search-api.png)
+![Swagger Search API](../../media/screen-swagger-search-api.png)
 
 ## Tests project
 
