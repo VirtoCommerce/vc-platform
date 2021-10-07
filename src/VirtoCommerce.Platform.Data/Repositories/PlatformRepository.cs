@@ -87,17 +87,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
             return result;
         }
 
-        public IQueryable<AssetEntryEntity> AssetEntries => DbContext.Set<AssetEntryEntity>();
-
-        public async Task<AssetEntryEntity[]> GetAssetsByIdsAsync(string[] ids)
-        {
-            if (ids.IsNullOrEmpty())
-            {
-                return Array.Empty<AssetEntryEntity>();
-            }
-
-            return await AssetEntries.Where(x => ids.Contains(x.Id)).ToArrayAsync();
-        }
 
         public async Task<OperationLogEntity[]> GetOperationLogsByIdsAsync(string[] ids)
         {
