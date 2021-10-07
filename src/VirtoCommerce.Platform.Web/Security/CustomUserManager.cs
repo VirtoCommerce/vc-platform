@@ -395,10 +395,10 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public override async Task<IdentityResult> SetLockoutEndDateAsync(ApplicationUser user, DateTimeOffset? lockoutEnd)
         {
-            var result =  await base.SetLockoutEndDateAsync(user, lockoutEnd);
+            var result = await base.SetLockoutEndDateAsync(user, lockoutEnd);
 
             if (result.Succeeded)
-            {                
+            {
                 var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
                 {
                     new GenericChangedEntry<ApplicationUser>(user, EntryState.Modified)
