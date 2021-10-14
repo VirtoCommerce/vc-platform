@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,7 @@ using VirtoCommerce.Platform.Core.Assets;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
+    [Obsolete("Deprecated. Use the same from Assets module")]
     [Route("api/platform/assetentries")]
     public class AssetEntryController : Controller
     {

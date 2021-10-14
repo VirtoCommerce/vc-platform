@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,7 @@ using VirtoCommerce.Platform.Web.Validators;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
+    [Obsolete("Deprecated. Use the same from Assets module")]
     [Route("api/platform/assets")]
     public class AssetsController : Controller
     {
