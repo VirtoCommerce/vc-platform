@@ -1,7 +1,9 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 {
+    [Obsolete("Deprecated. Use the same from AzureBlobAssets module.")]
     public class AzureBlobOptions
     {
         [Required]

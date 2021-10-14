@@ -10,6 +10,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
     /// Wraps stream that can't flush multiple times (like BlockBlobWriteStream).
     /// Flushes only once at Dispose.
     /// </summary>
+    [Obsolete("Deprecated. Use the same from AzureBlobAssets module.")]
     public class FlushLessStream : Stream
     {
         private readonly Stream _underStream;

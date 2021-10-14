@@ -3,7 +3,7 @@ using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Assets
 {
-
+    [Obsolete("Deprecated. Use assets from Assets module.")]
     public abstract class BlobEntry : AuditableEntity, ICloneable
     {
         public string Type { get; set; }

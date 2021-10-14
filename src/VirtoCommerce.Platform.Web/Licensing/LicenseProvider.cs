@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
 
         public License GetLicenseFromFile()
         {
-            License license = null;
+            License license = null; 
 
             var licenseFilePath = Path.GetFullPath(_platformOptions.LicenseFilePath);
             if (File.Exists(licenseFilePath))

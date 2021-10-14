@@ -1,7 +1,9 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace VirtoCommerce.Platform.Assets.FileSystem
 {
+    [Obsolete("Deprecated. Use the same from FileSystemAssets module.")]
     public class FileSystemBlobOptions
     {
         /// <summary>
