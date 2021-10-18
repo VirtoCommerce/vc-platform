@@ -14,7 +14,7 @@ After completing this lesson, a new module will be created, including:
 * module API for create, delete, update and search customer reviews;
 * test project for testing module API.
 
-Platform Manager UI for the Virto Commerce "Customer Reviews" module will be created in [Lesson 4](./lesson4.md)
+Platform Manager UI for the Virto Commerce "Customer Reviews" module will be created in [Lesson 4](https://virtocommerce.com/docs/latest/getting-started/lessons/lesson4/)
 
 ### Prerequisites
 
@@ -113,7 +113,7 @@ In Visual Studio:
 
 ### Swagger UI
 
-"REST API documentation" (Swagger) UI is automatically generated page. It enables to make requests to all the REST API endpoints exposed by Platform and installed modules as well. Browse **[localhost/admin/docs/ui/index]** URL:
+"REST API documentation" (Swagger) UI is automatically generated page. It enables to make requests to all the REST API endpoints exposed by Platform and installed modules as well. Browse **[localhost:5001/docs/]** URL:
 
 ![Swagger UI](../../media/screen-swagger-ui.png)
 
@@ -618,7 +618,7 @@ Protecting API controller methods with CheckPermission attribute:
 
 ### Testing Rest API Endpoints in Swagger
 
-Besides the JavaScript, you can test module API endpoints, with the Swagger. Compile solution and restart IIS (use iisreset.exe command). Open the Swagger interface URL: **[localhost//admin/docs/ui/index]** and click on "Customer reviews module" to see the available endpoints.
+Besides the JavaScript, you can test module API endpoints, with the Swagger. Compile solution and restart IIS (use iisreset.exe command). Open the Swagger interface URL: **[localhost:5001/docs/]** and click on "Customer reviews module" to see the available endpoints.
 You can test the search functionality for instance. Under the **api/CustomerReviewsModule/search** endpoint you can create simple or nested, compound criteria. It accepts the criteria as a simple object. After providing the criteria hit the "Try it out" button.
 
 ![Swagger Search API](../../media/screen-swagger-search-api.png)
