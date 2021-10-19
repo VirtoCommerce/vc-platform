@@ -123,6 +123,7 @@
     <tags-input ng-model="context.currentPropValues"
                 min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
                 tags-number num-type="float"
+                fraction="4"
                 min-length="1"
                 display-property="value"
                 placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.number-multivalue' | translate}}">
