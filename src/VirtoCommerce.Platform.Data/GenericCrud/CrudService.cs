@@ -59,7 +59,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 return null;
             }
 
-            var entities = await GetByIdsAsync(new[] { id }, responseGroup);
+            var entities = await GetAsync(new[] { id }, responseGroup);
             return entities.FirstOrDefault();
         }
 
@@ -70,9 +70,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="ids"></param>
         /// <param name="responseGroup"></param>
         /// <returns></returns>
-        public virtual async Task<IReadOnlyCollection<TModel>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null)
+        public virtual async Task<IReadOnlyCollection<TModel>> GetAsync(IEnumerable<string> ids, string responseGroup = null)
         {
-            var cacheKey = CacheKey.With(GetType(), nameof(GetByIdsAsync), string.Join("-", ids), responseGroup);
+            var cacheKey = CacheKey.With(GetType(), nameof(GetAsync), string.Join("-", ids), responseGroup);
             var result = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var models = new List<TModel>();
@@ -103,6 +103,13 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             return new ReadOnlyCollection<TModel>(result.Select(x => (TModel)x.Clone()).ToList());
         }
+
+        [Obsolete("Use method GetAsync instead")]
+        public virtual async Task<IEnumerable<TModel>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null)
+        {
+            return await GetAsync(ids, responseGroup);
+        }
+
 
         /// <summary>
         /// Post-read processing of the model instance.
@@ -238,7 +245,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <returns></returns>
         public virtual async Task DeleteAsync(IEnumerable<string> ids, bool softDelete = false)
         {
-            var models = (await GetByIdsAsync(ids));
+            var models = (await GetAsync(ids));
 
             using (var repository = _repositoryFactory())
             {
