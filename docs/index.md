@@ -7,6 +7,16 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+
+!!! done "18 October"
+    * Added Support of Video for Products
+    * Virto Commerce Module Template for “dotnet new”
+    * Checkout with Gift scenario on DEMO
+    * Asset module was decoupled from the platform
+    * Catalog Export & Import module
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-18-october-2021/388)
+    
 !!! done "4 October"
     * VirtoCommerce XAPI Demo App was published on public demo
     * Improved Address Import for Contact&Organizations
@@ -16,8 +26,6 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-4-october-2021/386)
 
-
-https://www.virtocommerce.org/t/news-digest-4-october-2021/386
 !!! done "20 September"
     * Added a new video Quick Start using Virto Commerce CLI
     * Added ability to Customize Login background set-up
@@ -25,15 +33,6 @@ https://www.virtocommerce.org/t/news-digest-4-october-2021/386
     * Fixed swagger schema for get token API
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-20-september/380)
-
-!!! done "3 September"
-    * Added new scenarios to XAPI Demo Storefront Applications
-    * Added Black list for file extensions
-    * Added option to Disable Swagger UI
-    * Fixed Memory consumption-related issues
-    * Improved Property Creation UI
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-3-september-2021/374)
 
   
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and [GitHub](https://github.com/VirtoCommerce)
