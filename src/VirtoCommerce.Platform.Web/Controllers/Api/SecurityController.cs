@@ -570,11 +570,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("validatepassword")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<ActionResult<IdentityResult>> ValidatePassword([FromBody] string password)
         {
-            var currentUser = await UserManager.FindByNameAsync(User.Identity.Name);
-            var result = await _passwordValidator.ValidateAsync(UserManager, currentUser, password);
+            ApplicationUser user = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                user = await UserManager.FindByNameAsync(User.Identity.Name);
+            }
+            var result = await _passwordValidator.ValidateAsync(UserManager, user, password);
 
             return Ok(result);
         }
