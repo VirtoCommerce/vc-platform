@@ -75,7 +75,7 @@
 </script>
 <script type="text/ng-template" id="dDecimal.html">
     <div class="form-input __number">
-        <input smart-float num-type="float"
+        <input smart-float fraction="4" num-type="float"
                ng-required="currentEntity.isRequired"
                ng-readonly="currentEntity.isReadOnly"
                ng-disabled="currentEntity.disabled"
@@ -123,6 +123,7 @@
     <tags-input ng-model="context.currentPropValues"
                 min-tags="{{currentEntity.isRequired ? 1 : undefined}}"
                 tags-number num-type="float"
+                fraction="4"
                 min-length="1"
                 display-property="value"
                 placeholder="{{currentEntity.placeholder || 'platform.genericValueInput.placeholders.number-multivalue' | translate}}">

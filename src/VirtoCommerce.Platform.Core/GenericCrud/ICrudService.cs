@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
@@ -10,6 +11,8 @@ namespace VirtoCommerce.Platform.Core.GenericCrud
     /// <typeparam name="T"></typeparam>
     public interface ICrudService<T> where T : Entity
     {
+        Task<IReadOnlyCollection<T>> GetAsync(List<string> ids, string responseGroup = null);
+        [Obsolete("Use method GetAsync instead")]
         Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null);
         Task<T> GetByIdAsync(string id, string responseGroup = null);
         Task SaveChangesAsync(IEnumerable<T> models);
