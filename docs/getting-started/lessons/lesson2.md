@@ -27,7 +27,7 @@ In order to have a file with your own products like downloaded **electronics-new
 
 ## Create new Catalog or use an existing one
 
-* Open Virto Commerce Platform (see how to deploy and open it in <a href="https://virtocommerce.com/docs/lessons/lesson1" target="_blank">Lesson 1</a>)
+* Open Virto Commerce Platform (see how to deploy and open it in [Lesson 1](https://virtocommerce.com/docs/latest/getting-started/lessons/lesson1/))
 * There are 2 scenarios for adding new products: adding to a new catalog or to an existing one.
 
 ### Creating new category and subcategory
