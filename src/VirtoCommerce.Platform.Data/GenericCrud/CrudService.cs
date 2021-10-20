@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -58,7 +59,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 return null;
             }
 
-            var entities = await GetByIdsAsync(new[] { id }, responseGroup);
+            var entities = await GetAsync(new List<string>{ id }, responseGroup);
             return entities.FirstOrDefault();
         }
 
@@ -69,9 +70,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="ids"></param>
         /// <param name="responseGroup"></param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<TModel>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null)
+        public virtual async Task<IReadOnlyCollection<TModel>> GetAsync(List<string> ids, string responseGroup = null)
         {
-            var cacheKey = CacheKey.With(GetType(), nameof(GetByIdsAsync), string.Join("-", ids), responseGroup);
+            var cacheKey = CacheKey.With(GetType(), nameof(GetAsync), string.Join("-", ids), responseGroup);
             var result = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var models = new List<TModel>();
@@ -100,8 +101,15 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 return models;
             });
 
-            return result.Select(x => (TModel)x.Clone());
+            return new ReadOnlyCollection<TModel>(result.Select(x => (TModel)x.Clone()).ToList());
         }
+
+        [Obsolete("Use method GetAsync instead")]
+        public virtual async Task<IEnumerable<TModel>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null)
+        {
+            return await GetAsync(new List<string>(ids), responseGroup);
+        }
+
 
         /// <summary>
         /// Post-read processing of the model instance.
@@ -237,7 +245,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <returns></returns>
         public virtual async Task DeleteAsync(IEnumerable<string> ids, bool softDelete = false)
         {
-            var models = (await GetByIdsAsync(ids));
+            var models = (await GetAsync(new List<string>(ids)));
 
             using (var repository = _repositoryFactory())
             {
