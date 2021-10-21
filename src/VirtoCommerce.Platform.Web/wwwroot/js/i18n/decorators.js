@@ -53,7 +53,7 @@ angular.module('platformWebApp')
                         var value = undefined;
                         var isValidInteger = true;
                         if (isNumber) {
-                            value = numberFormat.validate(tagText, attrs.numType, attrs.min, attrs.max, attrs.fraction);
+                            value = numberFormat.validate(tagText, attrs.numType, attrs.min, attrs.min, attrs.max, attrs.max, attrs.fraction);
                             if (angular.isDefined(value)) {
                                 setTagValue(tag, value);
                             }
@@ -116,7 +116,7 @@ angular.module('platformWebApp')
                     var options = tagsInput.getOptions();
                     if (angular.isDefined(options.tagsNumber)) {
                         scope.$getDisplayText = function () {
-                            return numberFormat.format(scope.data[options.displayProperty], options.numType, options.min, options.max, options.fraction);
+                            return numberFormat.format(scope.data[options.displayProperty], options.numType, options.min, options.min, options.max, options.max, options.fraction);
                         }
                     }
                 };
