@@ -59,7 +59,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 return null;
             }
 
-            var entities = await GetAsync(new List<string>{ id }, responseGroup);
+            var entities = await GetByIdsAsync(new[] { id }, responseGroup);
             return entities.FirstOrDefault();
         }
 
