@@ -9,7 +9,7 @@
                 rowHeight: 60,
                 infiniteScrollRowsFromEnd: 10,
                 columnDefs: [
-                        { name: 'name', displayName: 'export.blades.export-generic-viewer.labels.name', cellTemplate: 'item-list-name.cell.html' },
+                        { name: 'name', cellTemplate: 'item-list-name.cell.html' },
                     ]})">
             <div class="table-wrapper" ng-if="items.length > 0">
                 <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-pinning ui-grid-height ui-grid-infinite-scroll></div>
