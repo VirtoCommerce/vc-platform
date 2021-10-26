@@ -89,6 +89,9 @@ angular.module('platformWebApp')
                     function () {
                         angular.copy(blade.currentEntity, blade.origEntity);
                         blade.currentEntity = blade.origEntity;
+                        if (blade.parentBlade.parentRefresh) {
+                            blade.parentBlade.parentRefresh();
+                        }
                         blade.refresh();
                     },
                     function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
