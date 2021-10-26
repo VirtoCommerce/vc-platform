@@ -28,10 +28,10 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
         #region IDynamicPropertySearchService members
 
 
-        public virtual async Task<DynamicPropertySearchResult> SearchDynamicPropertiesAsync(DynamicPropertySearchCriteria criteria)
+        public virtual Task<DynamicPropertySearchResult> SearchDynamicPropertiesAsync(DynamicPropertySearchCriteria criteria)
         {
             var cacheKey = CacheKey.With(GetType(), "SearchDynamicPropertiesAsync", criteria.GetCacheKey());
-            return await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 cacheEntry.AddExpirationToken(DynamicPropertiesCacheRegion.CreateChangeToken());
                 var result = AbstractTypeFactory<DynamicPropertySearchResult>.TryCreateInstance();
