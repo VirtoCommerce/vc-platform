@@ -33,7 +33,7 @@ namespace VirtoCommerce.Platform.Core
 
         // URL for discovery sample data for initial installation
         // e.g. http://virtocommerce.blob.core.windows.net/sample-data
-        [Url]
+        // [Url] Remove validation attribute to allow set empty strings in the option
         public string SampleDataUrl { get; set; }
 
         // Default path to store export files
