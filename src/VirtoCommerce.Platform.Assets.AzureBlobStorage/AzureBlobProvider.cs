@@ -122,7 +122,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
                     // Setting Cache-Control on Azure Blobs can help reduce bandwidth and improve the performance by preventing consumers from having to continuously download resources.
                     // More Info https://developers.google.com/speed/docs/insights/LeverageBrowserCaching
                     CacheControl = BlobCacheControlPropertyValue
-                }                
+                }
             };
 
             // FlushLessStream wraps BlockBlobWriteStream to not use Flush multiple times.
@@ -218,7 +218,7 @@ namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
             else
             {
                 // Call the listing operation and enumerate the result segment.
-                var resultSegment = _blobServiceClient.GetBlobContainersAsync().AsPages();
+                var resultSegment = _blobServiceClient.GetBlobContainersAsync(prefix: keyword).AsPages();
 
                 await foreach (var containerPage in resultSegment)
                 {

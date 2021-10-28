@@ -10,7 +10,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             }
 
             settings.allowedValues = _.map(settings.allowedValues, function (x) { return { value: x }; });
-            initializeBlade(settings, { allowedValues: angular.copy(settings.allowedValues) } );
+            initializeBlade(settings, { allowedValues: angular.copy(settings.allowedValues) });
         });
     }
 
@@ -22,7 +22,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             origData.allowedValues = [];
         }
 
-        blade.title = data.name;
+        blade.title = `settings.${data.name}.title`;
         blade.currentEntity = data;
         blade.origEntity = origData;
         blade.searchText = "";
@@ -31,7 +31,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         blade.isLoading = false;
     }
 
-    $scope.validateDictValue= function (value) {
+    $scope.validateDictValue = function (value) {
         if (blade.currentEntity) {
             if (blade.currentEntity.valueType == 'ShortText') {
                 return _.all(currentEntities, function (item) { return angular.lowercase(item.value) !== angular.lowercase(value); });
@@ -44,7 +44,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
 
     $scope.filteredEntities = function () {
         var lowerCasedSearchText = blade.searchText.toLowerCase();
-        return _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(lowerCasedSearchText);});
+        return _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(lowerCasedSearchText); });
     };
 
     $scope.delete = function (index) {
@@ -177,7 +177,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             entities.sort(function (a, b) { return a.value - b.value; })
         }
         else {
-            entities.sort(function (a, b) { return a.value.localeCompare(b.value); })            
+            entities.sort(function (a, b) { return a.value.localeCompare(b.value); })
         }
         if (blade.orderDesc) {
             entities.reverse();

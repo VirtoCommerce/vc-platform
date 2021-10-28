@@ -1,29 +1,6 @@
 Azure Functions lets you run your code in a serverless environment without having to first create a virtual machine (VM) or publish a web application. 
 In this article, you use command-line tools to deploy and run VC Platform on the serverless environment  of Azure Functions.
 
-
-# How it works
-For run `vc platform` on the serverless environment of Azure Functions we use the [Azure Functions custom handlers](https://docs.microsoft.com/en-us/azure/azure-functions/functions-custom-handlers). Custom handlers are best suited for situations where we want to host and run the existing ASP.NET Core application that is not intendent to run on Azure functions, and by the way recieves a good options to run as serverless application without any code changes.
-
-
-# Prerequisites
-Verify these prerequisites before you begin
-- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) must be installed
-- The [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local) version 3.x.
-- Locally installed [VC Platform](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/getting-started/deploy-from-precompiled-binaries-windows.md) instance with a set of modules installed
-- [Create supporting Azure resources for your function](https://docs.microsoft.com/en-us/azure/azure-functions/create-first-function-cli-csharp?tabs=azure-cli%2Cbrowser#create-supporting-azure-resources-for-your-function)
-
-In this article, you use `command-line` tools to deploy platform app to the serverless environment of Azure Functions. There is also the article how to getting started with Azure Functions [Getting started with Azure Functions using command line](https://docs.microsoft.com/en-us/azure/azure-functions/functions-get-started?pivots=programming-language-csharp), or alternative [Create a C# function in Azure using Visual Studio Code](https://docs.microsoft.com/en-us/azure/azure-functions/create-first-function-vs-code-csharp)
-
-The platform folder already includes all files that required to run platform app as custom handler you don't need to do anything extra with this:
-
-
-A `/host.json` file at the root of platform app tells the Functions host where to send requests by pointing to a web server capable of processing HTTP events.
-
-Azure Functions lets you run your code in a serverless environment without having to first create a virtual machine (VM) or publish a web application. 
-In this article, you use command-line tools to deploy and run VC Platform on the serverless environment  of Azure Functions.
-
-
 # How it works
 For run `vc platform` on the serverless environment of Azure Functions we use the [Azure Functions custom handlers](https://docs.microsoft.com/en-us/azure/azure-functions/functions-custom-handlers). Custom handlers are best suited for situations where we want to host and run the existing ASP.NET Core application that is not intendent to run on Azure functions, and by the way recieves a good options to run as serverless application without any code changes.
 

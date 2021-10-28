@@ -87,8 +87,12 @@ angular.module('platformWebApp')
             } else {
                 dynamicPropertiesApi.update({ id: blade.objectType, propertyId: blade.currentEntity.id }, blade.currentEntity,
                     function () {
+                        angular.copy(blade.currentEntity, blade.origEntity);
+                        blade.currentEntity = blade.origEntity;
+                        if (blade.parentBlade.parentRefresh) {
+                            blade.parentBlade.parentRefresh();
+                        }
                         blade.refresh();
-                        blade.parentBlade.refresh(true);
                     },
                     function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
             }
