@@ -14,7 +14,7 @@ After completing this lesson, a new module will be created, including:
 * module API for create, delete, update and search customer reviews;
 * test project for testing module API.
 
-Platform Manager UI for the Virto Commerce "Customer Reviews" module will be created in [Lesson 4](./lesson4.md)
+Platform Manager UI for the Virto Commerce "Customer Reviews" module will be created in [Lesson 4](https://virtocommerce.com/docs/latest/getting-started/lessons/lesson4/)
 
 ### Prerequisites
 
@@ -36,17 +36,21 @@ New module should be created from a special VC module template in Visual Studio.
 
 ## Virto Commerce template
 
-Open Visual Studio, go to **Tools > Extensions and Updates**. Search for **Virto Commerce 2.x Module Templates**.
+Open Visual Studio, go to **Extensions > Manage Extensions**. Search for **Virto Commerce 3.x Module Templates**.
 
 ![VS Extensions and Updates](../../media/screen-vs-extensions-and-updates.png)
 
 Install it and restart Visual Studio.
-Now, in Visual Studio click **New Project**, search for an existing **Virto Commerce 2.x Module**. Name it, according to the naming convention. For example:
+Now, in Visual Studio click **Create a new project**, search for an existing **Virto Commerce 3.x Module**. Click **Next**.
+
+![VS New Project](../../media/screen-vs-new-project.png)
+
+Name it, according to the naming convention. For example:
 
 * "Name": **CustomerReviewsModule**;
 * "Solution name": **CustomerReviewsModule**.
 
-![VS New Project](../../media/screen-vs-new-project.png)
+![VS New Project](../../media/screen-vs-name-of-new-project.png)
 
 After new module created fill in title, description and authors attributes in *module.manifest* file:
 
@@ -77,12 +81,15 @@ Now, need to tell the platform that a new module added. For that, connect newly 
 mklink /d CustomerReviewsModule <full_path_to_CustomerReviewsModule_project>
 ```
 
-Also, check and set appropriate permissions for the newly created module folder, so that IIS can access it.
-Here, for the "IIS_IUSRS" group the required permission is "Read & execute":
+Restart Platform Manager, and CustomerReviewsModule module should appear in Platform Manager. Click on **Modules**, **Installed** and choose **CustomerReviewsModule**.
 
-![Permissions for CustomerReviewsModule](../../media/screen-permissionns-for-customerreviewsmodule.png)
+![CustomerReviesModule in Platform Manager](../../media/screen-customerreviesmodule-in-platform-manager-installed.png)
 
-Compile solution and restart IIS (use iisreset.exe command). After that, CustomerReviews module should appear in Platform Manager. Open it in browser to check how new module looks like.
+Then, click on **Settings** and turn on the radio button **CustomerReviewsModule Enabled**. And click **Save**.
+
+![CustomerReviesModule in Platform Manager](../../media/screen-customerreviesmodule-in-platform-manager-settings.png)
+
+Now, you can see **CustomerReviewsModule** in the module list. 
 
 ![CustomerReviesModule in Platform Manager](../../media/screen-customerreviesmodule-in-platform-manager.png)
 
@@ -101,12 +108,12 @@ In Visual Studio:
 1. Click "Debug" from the menu bar;
 1. Click "Attach to Process";
 1. Check the "Show processes from all users" checkbox in the bottom left corner;
-1. Select aspnet_wp.exe, w3p.exe, or w3wp.exe from the process list;
+1. Select dotnet.exe from the process list;
 1. Click "Attach".
 
 ### Swagger UI
 
-"REST API documentation" (Swagger) UI is automatically generated page. It enables to make requests to all the REST API endpoints exposed by Platform and installed modules as well. Browse **[localhost/admin/docs/ui/index]** URL:
+"REST API documentation" (Swagger) UI is automatically generated page. It enables to make requests to all the REST API endpoints exposed by Platform and installed modules as well. Browse **[localhost:5001/docs/]** URL:
 
 ![Swagger UI](../../media/screen-swagger-ui.png)
 
@@ -410,14 +417,14 @@ Typical *module.manifest* structure is:
 
 ```xml
 <version>1.0.0</version>
-<platformVersion>2.13.9</platformVersion>
+<platformVersion>3.83.0</platformVersion>
 ```
 
 * Dependencies - list of modules with versions whose functions will be used in a new module:
 
 ```xml
 <dependencies>
-    <dependenci id="VirtoCommerce.Core" version="2.25.21">
+    <dependenci id="VirtoCommerce.Core" version="3.83.0">
 </dependencies>
 ```
 
@@ -611,7 +618,7 @@ Protecting API controller methods with CheckPermission attribute:
 
 ### Testing Rest API Endpoints in Swagger
 
-Besides the JavaScript, you can test module API endpoints, with the Swagger. Compile solution and restart IIS (use iisreset.exe command). Open the Swagger interface URL: **[localhost//admin/docs/ui/index]** and click on "Customer reviews module" to see the available endpoints.
+Besides the JavaScript, you can test module API endpoints, with the Swagger. Compile solution and restart IIS (use iisreset.exe command). Open the Swagger interface URL: **[localhost:5001/docs/]** and click on "Customer reviews module" to see the available endpoints.
 You can test the search functionality for instance. Under the **api/CustomerReviewsModule/search** endpoint you can create simple or nested, compound criteria. It accepts the criteria as a simple object. After providing the criteria hit the "Try it out" button.
 
 ![Swagger Search API](../../media/screen-swagger-search-api.png)
