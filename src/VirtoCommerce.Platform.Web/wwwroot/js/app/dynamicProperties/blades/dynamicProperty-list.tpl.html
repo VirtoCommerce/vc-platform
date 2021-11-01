@@ -1,13 +1,38 @@
-﻿<div class="blade-content">
+
+<div class="blade-content" ng-class="{'__large-wide': blade.isExpanded, '__normal': !blade.isExpanded}">
     <div class="blade-inner">
-        <div class="inner-block">
-            <div class="note" ng-if="blade.currentEntities.length == 0">{{ 'platform.blades.dynamicProperty-list.labels.no-properties' | translate }}</div>
-            <ul class="list __items" ng-if="blade.currentEntities.length > 0">
-                <li class="list-item" ng-repeat="data in blade.currentEntities | filter:searchText | orderBy: 'displayOrder' track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" ng-click='selectNode(data)'>
-                    <span class="list-t">{{data.name}}</span>
-                    <span class="list-descr">{{(data.valueType | dynamicPropertyValueTypeToText |translate) + (data.isRequired ? ', Required' : '') + (data.isDictionary ? ', Dictionary' : '') + (data.isArray ? ', Multivalue' :  '') + (data.isMultilingual ? ', Multilingual' : '') }}</span>
-                </li>
-            </ul>
+        <div class="inner-block" ng-init="setGridOptions({
+                enableSorting: false,
+                showTreeRowHeader: false,
+                data: 'items',
+                rowTemplate: 'item-list.row.html',
+                rowHeight: 60,
+                infiniteScrollRowsFromEnd: 10,
+                columnDefs: [
+                        { name: 'name', cellTemplate: 'item-list-name.cell.html' },
+                    ]})">
+            <div class="table-wrapper" ng-if="items.length > 0">
+                <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-resize-columns ui-grid-pinning ui-grid-height ui-grid-infinite-scroll></div>
+            </div>
+            <div class="note" ng-if="!items.length">{{ 'platform.blades.dynamicProperty-list.labels.no-properties' | translate }}</div>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="item-list.row.html">
+    <div ng-click='grid.appScope.selectItem($event, row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+         ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell"
+         ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }"
+         role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell>
+    </div>
+</script>
+
+<script type="text/ng-template" id="item-list-name.cell.html">
+    <div class="ui-grid-cell-contents">
+        <div class="inner-contents">
+            <div class="table-t">{{row.entity.name}}</div>
+            <div class="table-descr" ng-if="row.entity.valueType ">{{(row.entity.valueType | dynamicPropertyValueTypeToText |translate) + (row.entity.isRequired ? ', Required' : '') + (row.entity.isDictionary ? ', Dictionary' : '') + (row.entity.isArray ? ', Multivalue' :  '') + (row.entity.isMultilingual ? ', Multilingual' : '') }}</div>
+        </div>
+    </div>
+</script>
+
