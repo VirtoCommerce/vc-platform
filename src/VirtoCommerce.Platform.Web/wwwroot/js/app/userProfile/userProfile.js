@@ -50,20 +50,6 @@ angular.module('platformWebApp')
                 if (profile.mainMenuState) {
                     profile.mainMenuState = angular.fromJson(profile.mainMenuState);
                 }
-                else {
-                    profile.mainMenuState = {
-                        "isCollapsed": false, "items": [
-                            { "path": "browse/store", "isFavorite": true, "order": 0 },
-                            { "path": "browse/catalog", "isFavorite": true, "order": 1 },
-                            { "path": "browse/pricing", "isFavorite": true, "order": 2 },
-                            { "path": "browse/marketing", "isFavorite": true, "order": 3 },
-                            { "path": "browse/member", "isFavorite": true, "order": 4 },
-                            { "path": "browse/orders", "isFavorite": true, "order": 5 },
-                            { "path": "browse/content", "isFavorite": true, "order": 6 },
-                            { "path": "browse/assets", "isFavorite": true, "order": 7 },
-                            { "path": "browse/notificationsModule", "isFavorite": true, "order": 8 }]
-                    }
-                }
                 angular.extend(result, profile);
             }).$promise;
         },
