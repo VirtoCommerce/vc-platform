@@ -25,7 +25,7 @@
                         <div class="content">
                             <ul ng-model="dynamicMenuItems" ui-sortable="sortableOptions">
                                 <li class="list-item"
-                                    ng-class="{'__has-dropdown': menuItem.children.length > 0 || menuItem.path == 'more', '__animated': menuItem.isAnimated, '__draggable': !menuItem.isAlwaysOnBar, '__more': menuItem.path == 'more'}"
+                                    ng-class="{'__has-dropdown': menuItem.children.length > 0 || menuItem.path == 'more', '__animated': menuItem.isAnimated, '__draggable': !menuItem.isAlwaysOnBar, '__more': menuItem.path == 'more', '__selected': menuItem.path == currentMenuItem.path }"
                                     ng-repeat="menuItem in dynamicMenuItems" ng-include="itemTemplateUrl"
                                     ng-click="selectItem(menuItem)" va-tooltip tooltip="{{menuItem.title | translate}}"
                                     va-permission="{{menuItem.permission}}"></li>
