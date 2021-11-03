@@ -4,6 +4,9 @@ using System.Text;
 
 namespace VirtoCommerce.Platform.Core.Settings
 {
+    /// <summary>
+    /// Main menu settings model
+    /// </summary>
     public class ItemMainMenuState
     {
         public string Path { get; set; }
