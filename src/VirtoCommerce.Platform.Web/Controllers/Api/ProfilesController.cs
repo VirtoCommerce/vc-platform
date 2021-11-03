@@ -54,7 +54,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 var nameMainMenuState = PlatformConstants.Settings.UserProfile.MainMenuState.Name;
                 if (userProfile.Settings.FirstOrDefault(x => x.Name == nameMainMenuState).Value == null)
                 {
-                    var settingMenuState = new List<ItemMainMenuState>();
+                    var settingMenuState = new List<ItemDefaultMainMenuState>();
                     _configuration.GetSection("DefaultMainMenuState:items").Bind(settingMenuState);
                     var serializeOptions = new JsonSerializerOptions
                     {
