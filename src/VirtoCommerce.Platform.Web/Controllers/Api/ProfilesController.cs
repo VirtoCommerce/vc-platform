@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 // Main menu settings at initial boot
                 var nameMainMenuState = PlatformConstants.Settings.UserProfile.MainMenuState.Name;
-                if (userProfile.Settings.FirstOrDefault(x => x.Name == nameMainMenuState).Value == null)
+                if (userProfile.Settings.FirstOrDefault(x => x.Name == nameMainMenuState)?.Value == null)
                 {
                     var settingMenuState = new List<ItemDefaultMainMenuState>();
                     _configuration.GetSection("DefaultMainMenuState:items").Bind(settingMenuState);
