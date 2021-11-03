@@ -13,4 +13,9 @@ namespace VirtoCommerce.Platform.Core.Settings
         public bool IsFavorite { get; set; }
         public int Order { get; set; }
     }
+
+    public class DefaultMainMenuState
+    {
+        public List<ItemDefaultMainMenuState> Items { get; set; }
+    }
 }
