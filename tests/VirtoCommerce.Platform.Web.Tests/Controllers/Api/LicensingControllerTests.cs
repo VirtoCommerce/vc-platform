@@ -18,20 +18,23 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 {
     public class LicensingControllerTests : PlatformWebMockHelper
     {
-        private readonly Mock<IOptions<PlatformOptions>> _options = new Mock<IOptions<PlatformOptions>>();
+        private readonly Mock<IOptions<PlatformOptions>> _platformOptionsMock = new Mock<IOptions<PlatformOptions>>();
+        private readonly Mock<IOptions<LicenceProviderBlobOptions>> _blobOptionsMock = new Mock<IOptions<LicenceProviderBlobOptions>>();
         private readonly Mock<ISettingsManager> _settingsManager = new Mock<ISettingsManager>();
         private readonly PlatformOptions platformOptions = new PlatformOptions();
+        private readonly LicenceProviderBlobOptions blobOptions = new LicenceProviderBlobOptions();
         private readonly LicenseProvider _licenseProvider;
 
         private readonly LicensingController _controller;
 
         public LicensingControllerTests()
         {
-            _options.SetupGet(x => x.Value).Returns(platformOptions);
+            _platformOptionsMock.SetupGet(x => x.Value).Returns(platformOptions);
+            _blobOptionsMock.SetupGet(x => x.Value).Returns(blobOptions);
 
-            _licenseProvider = new LicenseProvider(_options.Object, null, null);
+            _licenseProvider = new LicenseProvider(_platformOptionsMock.Object, _blobOptionsMock.Object);
 
-            _controller = new LicensingController(_options.Object, _settingsManager.Object, _licenseProvider);
+            _controller = new LicensingController(_platformOptionsMock.Object, _settingsManager.Object, _licenseProvider);
         }
 
         [Theory]

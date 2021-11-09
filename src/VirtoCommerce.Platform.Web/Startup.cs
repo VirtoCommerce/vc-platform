@@ -417,6 +417,8 @@ namespace VirtoCommerce.Platform.Web
                 services.AddFileSystemBlobProvider();
             }
 
+            services.AddOptions<LicenceProviderBlobOptions>().Bind(Configuration.GetSection("Assets:AzureBlobStorage"));
+
             //HangFire
             services.AddHangfire(Configuration);
 
