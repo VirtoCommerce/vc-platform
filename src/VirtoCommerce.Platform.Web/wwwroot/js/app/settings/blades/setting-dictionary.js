@@ -18,9 +18,22 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         if (!data.allowedValues) {
             data.allowedValues = [];
         }
+
         if (!origData.allowedValues) {
             origData.allowedValues = [];
         }
+
+        angular.forEach(data.allowedValues, function (item) {
+            if (!item.value) {
+                item.value = ""; // Small trick to avoid hang on null value
+            }
+        });
+
+        angular.forEach(origData.allowedValues, function (item) {
+            if (!item.value) {
+                item.value = "";
+            }
+        });
 
         blade.title = `settings.${data.name}.title`;
         blade.currentEntity = data;
