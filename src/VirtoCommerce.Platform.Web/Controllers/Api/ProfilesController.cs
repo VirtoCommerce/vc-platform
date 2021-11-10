@@ -1,8 +1,13 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
@@ -20,12 +25,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ISettingsManager _settingsManager;
         private readonly ILocalModuleCatalog _moduleCatalog;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public ProfilesController(UserManager<ApplicationUser> userManager, ISettingsManager settingsManager, ILocalModuleCatalog moduleCatalog)
+        public ProfilesController(UserManager<ApplicationUser> userManager, ISettingsManager settingsManager, ILocalModuleCatalog moduleCatalog, IConfiguration configuration)
         {
             _userManager = userManager;
             _settingsManager = settingsManager;
             _moduleCatalog = moduleCatalog;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -42,6 +49,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 var userProfile = AbstractTypeFactory<UserProfile>.TryCreateInstance();
                 userProfile.Id = currentUser.Id;
                 await _settingsManager.DeepLoadSettingsAsync(userProfile);
+
+                // Main menu settings at initial boot
+                var nameMainMenuState = PlatformConstants.Settings.UserProfile.MainMenuState.Name;
+                if (userProfile.Settings.FirstOrDefault(x => x.Name == nameMainMenuState)?.Value == null)
+                {
+                    var settingMenuState = new DefaultMainMenuState();
+                    _configuration.GetSection("DefaultMainMenuState").Bind(settingMenuState);
+                    var serializeOptions = new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    };
+                    var mainMenuState = JsonSerializer.Serialize(settingMenuState, serializeOptions);
+                    userProfile.Settings.FirstOrDefault(x => x.Name == nameMainMenuState).Value = mainMenuState;
+                }
+
                 return Ok(userProfile);
             }
             return Ok();

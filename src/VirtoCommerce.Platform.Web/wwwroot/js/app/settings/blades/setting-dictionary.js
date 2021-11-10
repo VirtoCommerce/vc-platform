@@ -18,9 +18,22 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         if (!data.allowedValues) {
             data.allowedValues = [];
         }
+
         if (!origData.allowedValues) {
             origData.allowedValues = [];
         }
+
+        angular.forEach(data.allowedValues, function (item) {
+            if (!item.value) {
+                item.value = ""; // Small trick to avoid hang on null value
+            }
+        });
+
+        angular.forEach(origData.allowedValues, function (item) {
+            if (!item.value) {
+                item.value = "";
+            }
+        });
 
         blade.title = `settings.${data.name}.title`;
         blade.currentEntity = data;
@@ -53,16 +66,18 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     };
 
     $scope.selectItem = function (listItem) {
-        if ($scope.selectedItem && !$scope.selectedItem.value) {
-            // Remove valueless items
-            $scope.delete(currentEntities.indexOf($scope.selectedItem));
+        if (!$scope.inApply) {
+            if ($scope.selectedItem && !$scope.selectedItem.value) {
+                // Remove valueless items
+                $scope.delete(currentEntities.indexOf($scope.selectedItem));
+            }
+            if (listItem) {
+                $scope.editValue = angular.copy(listItem);
+            }
+            $scope.error = false;
+            $scope.selectedItem = listItem;
+            setTimeout(() => $('#dictValue').focus());
         }
-        if (listItem) {
-            $scope.editValue = angular.copy(listItem);
-        }
-        $scope.error = false;
-        $scope.selectedItem = listItem;
-        setTimeout(() => $('#dictValue').focus());
     };
 
     blade.headIcon = 'fa fa-wrench';
@@ -148,16 +163,20 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         orderBy(blade.origEntity.allowedValues);
     };
 
-    $scope.applyValue = function () {
+    $scope.applyValue = function (apply) {
         // Check the value has no duplicates
-        $scope.error = !$scope.validateDictValue($scope.editValue.value);
-        if (!$scope.error) {
+        $scope.error = !$scope.validateDictValue($scope.editValue.value);        
+        if ($scope.error) { 
+            $scope.inApply = apply;
+            setTimeout(() => {
+                $('#dictValue').focus();
+                $scope.inApply = false;
+            });
+        }
+        else {
             $scope.selectedItem.value = $scope.editValue.value;
             $scope.selectItem(null);
             $scope.applyOrder();
-        }
-        else {
-            setTimeout(() => $('#dictValue').focus());
         }
     };
 
@@ -201,6 +220,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     }
 
     function addNew() {
+        $scope.inApply = false;
         currentEntities.splice(0, 0, $scope.newValue);
         $scope.selectItem($scope.newValue);
         resetNewValue();
