@@ -32,6 +32,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
+using VirtoCommerce.AzureBlobAssets.Abstractions;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage;
 using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
 using VirtoCommerce.Platform.Assets.FileSystem;
@@ -117,6 +118,8 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
+
+            services.AddSingleton<IAzureBlobProvider, LicenseProviderBlobStub>();
             services.AddSingleton<LicenseProvider>();
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
@@ -416,8 +419,6 @@ namespace VirtoCommerce.Platform.Web
 
                 services.AddFileSystemBlobProvider();
             }
-
-            services.AddOptions<LicenceProviderBlobOptions>().Bind(Configuration.GetSection("Assets:AzureBlobStorage"));
 
             //HangFire
             services.AddHangfire(Configuration);
