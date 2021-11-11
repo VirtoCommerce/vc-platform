@@ -59,7 +59,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             blade.searchText = "";
         }
         var lowerCasedSearchText = blade.searchText.toLowerCase();
-        return blade.currentEntity.allowedValues ? _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(lowerCasedSearchText); }) : [] ;
+        return (blade.currentEntity && blade.currentEntity.allowedValues) ? _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(lowerCasedSearchText); }) : [] ;
     };
 
     $scope.delete = function (index) {
