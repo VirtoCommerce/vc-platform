@@ -2,7 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Moq;
-using VirtoCommerce.AzureBlobAssets.Abstractions;
+using VirtoCommerce.Assets.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Tests.Licenseing
     public class LicenseProviderTests
     {
         private readonly Mock<IOptions<PlatformOptions>> _platformOptionsMock = new Mock<IOptions<PlatformOptions>>();
-        private readonly Mock<IAzureBlobProvider> _blobProvider = new Mock<IAzureBlobProvider>();
+        private readonly Mock<ICommonBlobProvider> _blobProvider = new Mock<ICommonBlobProvider>();
         private readonly PlatformOptions platformOptions = new PlatformOptions();
         private readonly LicenseProvider _licenseProvider;
 

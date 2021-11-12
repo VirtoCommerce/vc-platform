@@ -1,19 +1,18 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.AzureBlobAssets.Abstractions;
+using VirtoCommerce.Assets.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.Platform.Web.Licensing
 {
     public class LicenseProvider
     {
         private readonly PlatformOptions _platformOptions;
-        private readonly IAzureBlobProvider _blobStorageProvider;
+        private readonly ICommonBlobProvider _blobStorageProvider;
 
-        public LicenseProvider(IOptions<PlatformOptions> platformOptions, IAzureBlobProvider blobStorageProvider)
+        public LicenseProvider(IOptions<PlatformOptions> platformOptions, ICommonBlobProvider blobStorageProvider)
         {
             _platformOptions = platformOptions.Value;
             _blobStorageProvider = blobStorageProvider;
@@ -24,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
             License license = null;
 
             var licenseUrl = _blobStorageProvider.GetAbsoluteUrl(_platformOptions.LicenseBlobPath);
-            if (licenseUrl != null && await LicenseExistsAsync(licenseUrl))
+            if (await LicenseExistsAsync(licenseUrl))
             {
                 var rawLicense = string.Empty;
                 using (var stream = _blobStorageProvider.OpenRead(licenseUrl))
@@ -71,12 +70,6 @@ namespace VirtoCommerce.Platform.Web.Licensing
         public async Task SaveLicenseAsync(License license)
         {
             var licenseUrl = _blobStorageProvider.GetAbsoluteUrl(_platformOptions.LicenseBlobPath);
-
-            if (licenseUrl == null)
-            {
-                throw new PlatformException(@"File system not supported for licence. Use Azure Blob Storage.");
-            }
-
             using (var stream = await _blobStorageProvider.OpenWriteAsync(licenseUrl))
             {
                 var streamWriter = new StreamWriter(stream);
@@ -87,8 +80,7 @@ namespace VirtoCommerce.Platform.Web.Licensing
 
         private async Task<bool> LicenseExistsAsync(string licenseUrl)
         {
-            var blobInfo = await _blobStorageProvider.ExistsAsync(licenseUrl);
-            return blobInfo;
+            return await _blobStorageProvider.ExistsAsync(licenseUrl);
         }
     }
 }

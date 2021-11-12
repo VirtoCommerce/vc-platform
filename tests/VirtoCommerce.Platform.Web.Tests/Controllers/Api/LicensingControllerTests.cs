@@ -7,7 +7,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Moq;
-using VirtoCommerce.AzureBlobAssets.Abstractions;
+using VirtoCommerce.Assets.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Controllers.Api;
@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
     {
         private readonly Mock<IOptions<PlatformOptions>> _platformOptionsMock = new Mock<IOptions<PlatformOptions>>();
         private readonly Mock<ISettingsManager> _settingsManager = new Mock<ISettingsManager>();
-        private readonly Mock<IAzureBlobProvider> _blobProvider = new Mock<IAzureBlobProvider>();
+        private readonly Mock<ICommonBlobProvider> _blobProvider = new Mock<ICommonBlobProvider>();
         private readonly PlatformOptions platformOptions = new PlatformOptions();
         private readonly LicenseProvider _licenseProvider;
 
