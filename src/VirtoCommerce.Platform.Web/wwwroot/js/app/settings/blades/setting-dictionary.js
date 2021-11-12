@@ -38,7 +38,6 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
         blade.title = `settings.${data.name}.title`;
         blade.currentEntity = data;
         blade.origEntity = origData;
-        blade.searchText = "";
         currentEntities = blade.currentEntity.allowedValues;
         $scope.applyOrder();
         blade.isLoading = false;
@@ -56,12 +55,17 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
     };
 
     $scope.filteredEntities = function () {
+        if (!blade.searchText) {
+            blade.searchText = "";
+        }
         var lowerCasedSearchText = blade.searchText.toLowerCase();
-        return _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(lowerCasedSearchText); });
+        return (blade.currentEntity && blade.currentEntity.allowedValues) ? _.filter(blade.currentEntity.allowedValues, function (o) { return !o.value || o.value.toLowerCase().includes(lowerCasedSearchText); }) : [] ;
     };
 
     $scope.delete = function (index) {
-        currentEntities.splice(index, 1);
+        if (index >= 0) {
+            currentEntities.splice(index, 1);
+        }
         $scope.selectedItem = undefined;
     };
 
