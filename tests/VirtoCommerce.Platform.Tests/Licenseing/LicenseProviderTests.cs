@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -71,7 +72,7 @@ namespace VirtoCommerce.Platform.Tests.Licenseing
             // Assert
             _blobProvider.Verify(x => x.GetAbsoluteUrl(It.Is<string>(s => s.EqualsInvariant(platformOptions.LicenseBlobPath))), Times.Once);
             _blobProvider.Verify(x => x.OpenWriteAsync(It.IsAny<string>()), Times.Once);
-            mockSteam.Verify(x => x.Flush(), Times.Once);
+            mockSteam.Verify(x => x.Close(), Times.Once);
         }
 
         public class MockStream : Stream
@@ -81,7 +82,7 @@ namespace VirtoCommerce.Platform.Tests.Licenseing
             public override bool CanWrite => true;
             public override long Length { get; }
             public override long Position { get; set; }
-
+            
             public override void Flush()
             {
             }
@@ -101,6 +102,10 @@ namespace VirtoCommerce.Platform.Tests.Licenseing
             }
 
             public override void Write(byte[] buffer, int offset, int count)
+            {
+            }
+
+            public override void Close()
             {
             }
         }
