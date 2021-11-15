@@ -73,14 +73,14 @@ namespace VirtoCommerce.Platform.Web.Licensing
             using (var stream = await _blobStorageProvider.OpenWriteAsync(licenseUrl))
             {
                 var streamWriter = new StreamWriter(stream);
-                streamWriter.Write(license.RawLicense);
-                streamWriter.Flush();
+                await streamWriter.WriteAsync(license.RawLicense);
+                await streamWriter.FlushAsync();
             }
         }
 
-        private async Task<bool> LicenseExistsAsync(string licenseUrl)
+        private Task<bool> LicenseExistsAsync(string licenseUrl)
         {
-            return await _blobStorageProvider.ExistsAsync(licenseUrl);
+            return _blobStorageProvider.ExistsAsync(licenseUrl);
         }
     }
 }
