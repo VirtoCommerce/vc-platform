@@ -17,6 +17,7 @@ using BlobInfo = VirtoCommerce.Platform.Core.Assets.BlobInfo;
 
 namespace VirtoCommerce.Platform.Assets.AzureBlobStorage
 {
+    [Obsolete("Deprecated. Use the same from AzureBlobAssets module.")]
     public class AzureBlobProvider : BasicBlobProvider, IBlobStorageProvider, IBlobUrlResolver
     {
         public const string ProviderName = "AzureBlobStorage";

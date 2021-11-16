@@ -6,6 +6,7 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Core.Assets
 {
+    [Obsolete("Deprecated. Use assets from Assets module.")]
     public abstract class BasicBlobProvider
     {
         private readonly ISettingsManager _settingsManager;

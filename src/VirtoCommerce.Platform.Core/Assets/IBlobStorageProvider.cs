@@ -1,8 +1,10 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Assets
 {
+    [Obsolete("Deprecated. Use assets from Assets module.")]
     /// <summary>
     /// Represent abstraction for working with binary data
     /// </summary>

@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Moq;
+using VirtoCommerce.Assets.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Controllers.Api;
@@ -18,8 +19,9 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 {
     public class LicensingControllerTests : PlatformWebMockHelper
     {
-        private readonly Mock<IOptions<PlatformOptions>> _options = new Mock<IOptions<PlatformOptions>>();
+        private readonly Mock<IOptions<PlatformOptions>> _platformOptionsMock = new Mock<IOptions<PlatformOptions>>();
         private readonly Mock<ISettingsManager> _settingsManager = new Mock<ISettingsManager>();
+        private readonly Mock<ICommonBlobProvider> _blobProvider = new Mock<ICommonBlobProvider>();
         private readonly PlatformOptions platformOptions = new PlatformOptions();
         private readonly LicenseProvider _licenseProvider;
 
@@ -27,11 +29,11 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
         public LicensingControllerTests()
         {
-            _options.SetupGet(x => x.Value).Returns(platformOptions);
+            _platformOptionsMock.SetupGet(x => x.Value).Returns(platformOptions);
 
-            _licenseProvider = new LicenseProvider(_options.Object, null, null);
+            _licenseProvider = new LicenseProvider(_platformOptionsMock.Object, _blobProvider.Object);
 
-            _controller = new LicensingController(_options.Object, _settingsManager.Object, _licenseProvider);
+            _controller = new LicensingController(_platformOptionsMock.Object, _settingsManager.Object, _licenseProvider);
         }
 
         [Theory]

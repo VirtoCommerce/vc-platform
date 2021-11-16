@@ -1,8 +1,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Assets.Abstractions;
 using VirtoCommerce.Platform.Core;
-using VirtoCommerce.Platform.Core.Assets;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web.Licensing
@@ -10,21 +10,19 @@ namespace VirtoCommerce.Platform.Web.Licensing
     public class LicenseProvider
     {
         private readonly PlatformOptions _platformOptions;
-        private readonly IBlobStorageProvider _blobStorageProvider;
-        private readonly IBlobUrlResolver _blobUrlResolver;
+        private readonly ICommonBlobProvider _blobStorageProvider;
 
-        public LicenseProvider(IOptions<PlatformOptions> platformOptions, IBlobStorageProvider blobStorageProvider, IBlobUrlResolver blobUrlResolver)
+        public LicenseProvider(IOptions<PlatformOptions> platformOptions, ICommonBlobProvider blobStorageProvider)
         {
             _platformOptions = platformOptions.Value;
             _blobStorageProvider = blobStorageProvider;
-            _blobUrlResolver = blobUrlResolver;
         }
 
         public async Task<License> GetLicenseAsync()
         {
             License license = null;
 
-            var licenseUrl = _blobUrlResolver.GetAbsoluteUrl(_platformOptions.LicenseBlobPath);
+            var licenseUrl = _blobStorageProvider.GetAbsoluteUrl(_platformOptions.LicenseBlobPath);
             if (await LicenseExistsAsync(licenseUrl))
             {
                 var rawLicense = string.Empty;
@@ -69,20 +67,20 @@ namespace VirtoCommerce.Platform.Web.Licensing
             return license;
         }
 
-        public void SaveLicense(License license)
+        public async Task SaveLicenseAsync(License license)
         {
-            using (var stream = _blobStorageProvider.OpenWrite(_blobUrlResolver.GetAbsoluteUrl(_platformOptions.LicenseBlobPath)))
+            var licenseUrl = _blobStorageProvider.GetAbsoluteUrl(_platformOptions.LicenseBlobPath);
+            using (var stream = await _blobStorageProvider.OpenWriteAsync(licenseUrl))
             {
                 var streamWriter = new StreamWriter(stream);
-                streamWriter.Write(license.RawLicense);
-                streamWriter.Flush();
+                await streamWriter.WriteAsync(license.RawLicense);
+                await streamWriter.FlushAsync();
             }
         }
 
-        private async Task<bool> LicenseExistsAsync(string licenseUrl)
+        private Task<bool> LicenseExistsAsync(string licenseUrl)
         {
-            var blobInfo = await _blobStorageProvider.GetBlobInfoAsync(licenseUrl);
-            return blobInfo != null;
+            return _blobStorageProvider.ExistsAsync(licenseUrl);
         }
     }
 }
