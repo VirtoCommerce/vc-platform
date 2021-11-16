@@ -32,6 +32,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
+using VirtoCommerce.Assets.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -113,6 +114,8 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
+
+            services.AddSingleton<ICommonBlobProvider, LicenseProviderBlobStub>();
             services.AddSingleton<LicenseProvider>();
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
