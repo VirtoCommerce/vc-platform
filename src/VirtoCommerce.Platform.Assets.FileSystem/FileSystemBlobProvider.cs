@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Assets.FileSystem
 {
+    [Obsolete("Deprecated. Use the same from FileSystemAssets module.")]
     public class FileSystemBlobProvider : BasicBlobProvider, IBlobStorageProvider, IBlobUrlResolver
     {
         public const string ProviderName = "LocalStorage";
