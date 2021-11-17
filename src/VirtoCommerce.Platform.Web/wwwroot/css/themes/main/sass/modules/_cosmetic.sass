@@ -36,16 +36,23 @@
   direction: ltr
   font-size: 13px
 
-/* Scroll bar */
+/* Scrollbar Chrome, Edge*/
+
 *::-webkit-scrollbar
   background: transparent
+  width: $scrollWidth
+  height: $scrollHeight
 
-*::-webkit-scrollbar-track-piece
-  background: $scrollTrack
 *::-webkit-scrollbar-thumb
   background: $scrollThumb
+  border-radius: 1px
 
-/* IE */
+/* Scrollbar Firefox*/
+*
+  scrollbar-width: $scrollWidth
+  scrollbar-color: $scrollThumb transparent
+
+/* Scrollbar IE */
 *
   -ms-scrollbar-arrow-color: $scrollTrack
   -ms-scrollbar-face-color: $scrollThumb
