@@ -42,7 +42,6 @@ Microsoft.AspNetCore.SignalR.Common.dll
 Microsoft.AspNetCore.SignalR.Protocols.Json.dll
 Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson.dll
 Microsoft.AspNetCore.SignalR.StackExchangeRedis.dll
-Microsoft.Azure.KeyVault.Core.dll
 Microsoft.Azure.SignalR.Common.dll
 Microsoft.Azure.SignalR.dll
 Microsoft.Azure.SignalR.Protocols.dll
