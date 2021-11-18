@@ -39,25 +39,25 @@
 /* Scrollbar Chrome, Edge*/
 
 *::-webkit-scrollbar
-  background: transparent
+  background-color: $scrollTrackColor
   width: $scrollWidth
   height: $scrollHeight
 
 *::-webkit-scrollbar-thumb
-  background: $scrollThumb
+  background-color: $scrollThumbColor
   border-radius: 1px
 
 /* Scrollbar Firefox*/
 *
   scrollbar-width: $scrollWidth
-  scrollbar-color: $scrollThumb transparent
+  scrollbar-color: $scrollThumbColor $scrollTrackColor
 
 /* Scrollbar IE */
 *
-  -ms-scrollbar-arrow-color: $scrollTrack
-  -ms-scrollbar-face-color: $scrollThumb
-  -ms-scrollbar-shadow-color: $scrollThumb
-  -ms-scrollbar-track-color: $scrollTrack
+  -ms-scrollbar-arrow-color: $scrollTrackColor
+  -ms-scrollbar-face-color: $scrollThumbColor
+  -ms-scrollbar-shadow-color: $scrollThumbColor
+  -ms-scrollbar-track-color: $scrollTrackColor
 
 /* Platform error bar */
 .platform-error-bar
