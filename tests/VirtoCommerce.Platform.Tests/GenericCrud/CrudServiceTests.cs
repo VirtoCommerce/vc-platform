@@ -42,6 +42,20 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         }
 
         [Fact]
+        public async Task GetAsync__ProcessModelCalled()
+        {
+            // Arrange
+            var ids = new List<string>() { "1" };
+            var service = GetCrudServiceMock();
+
+            // Act
+            var getAsync = await service.GetAsync(ids);
+
+            // Assert
+            Assert.Equal(new List<TestModel> { new TestModel() { Id = "1", Name = "ProcessModelCalled" } }, getAsync);
+        }
+
+        [Fact]
         public async Task SaveChangesAsync_saveChanges_returnChangedEntries()
         {
             // Arrange
@@ -53,6 +67,7 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
 
             // Assert
             Assert.Equal(testModels.FirstOrDefault(), TestChangedEvent.testChangedEntries.FirstOrDefault().NewEntry);
+            Assert.Equal(2, service.BeforeAndAfterSaveChangesCalled);
         }
 
         [Fact]
@@ -67,6 +82,34 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
 
             // Assert
             Assert.Equal(ids.FirstOrDefault(), TestChangedEvent.testChangedEntries.FirstOrDefault().NewEntry.Id);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_SoftDeleteCalled()
+        {
+            // Arrange
+            var ids = new List<string>() { "1" };
+            var service = GetCrudServiceMock();
+
+            // Act
+            await service.DeleteAsync(ids, true);
+
+            // Assert
+            Assert.True(service.SoftDeleteCalled);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_AfterDeleteAsyncCalled()
+        {
+            // Arrange
+            var ids = new List<string>() { "1" };
+            var service = GetCrudServiceMock();
+
+            // Act
+            await service.DeleteAsync(ids);
+
+            // Assert
+            Assert.True(service.AfterDeleteAsyncCalled);
         }
 
         private CrudServiceMock GetCrudServiceMock()
