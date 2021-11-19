@@ -1,19 +1,12 @@
+// Shared styles
 .dialog-header
+    user-select: none
     height: $dialogHeaderHeight
     padding-left: 16px
     color: $whiteColor
     display: flex
     justify-content: space-between
     align-items: center
-
-.dialog-confirm .dialog-header
-    background-color: $confirmDialogHeaderBg
-.dialog-warning .dialog-header
-    background-color: $warningDialogHeaderBg
-.dialog-success .dialog-header
-    background-color: $successDialogHeaderBg
-.dialog-error .dialog-header
-    background-color: $errorDialogHeaderBg
 
 .dialog-header-title
     font-size: $fontSize
@@ -28,13 +21,19 @@
     cursor: pointer
     background-color: $redBg
 
-.dialog-error .dialog-header-button:hover
-    background-color: $baseColor
-
 .dialog-body
+    display: flex
+    justify-content: start
+    align-items: flex-start
     margin: 30px 20px
     font-size: $dialogBodyFontSize
     line-height: $dialogBodyLineHeight
+
+.dialog-icon-container
+    user-select: none
+    margin-right: 10px
+    min-width: 30px
+    min-height: 30px
 
 .dialog-footer
     display: flex
@@ -44,6 +43,10 @@
     padding-bottom: 16px
 
 .dialog-footer .btn
+    user-select: none
+    padding: 0
+    justify-content: center
+    min-width: 90px
     margin-left: 12px
 
 .dialog-footer .btn-inverted
@@ -53,3 +56,16 @@
 
 .dialog-footer .btn-inverted:hover
     color: $baseColor
+
+// Specified styles
+.dialog-confirm .dialog-header
+    background-color: $confirmDialogHeaderBg
+.dialog-warning .dialog-header
+    background-color: $warningDialogHeaderBg
+.dialog-success .dialog-header
+    background-color: $successDialogHeaderBg
+.dialog-error .dialog-header
+    background-color: $errorDialogHeaderBg
+
+.dialog-error .dialog-header-button:hover
+    background-color: $baseColor
