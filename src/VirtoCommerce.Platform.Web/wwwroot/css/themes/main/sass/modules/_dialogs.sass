@@ -1,0 +1,55 @@
+.dialog-header
+    height: $dialogHeaderHeight
+    padding-left: 16px
+    color: $whiteColor
+    display: flex
+    justify-content: space-between
+    align-items: center
+
+.dialog-confirm .dialog-header
+    background-color: $confirmDialogHeaderBg
+.dialog-warning .dialog-header
+    background-color: $warningDialogHeaderBg
+.dialog-success .dialog-header
+    background-color: $successDialogHeaderBg
+.dialog-error .dialog-header
+    background-color: $errorDialogHeaderBg
+
+.dialog-header-title
+    font-size: $fontSize
+
+.dialog-header-button
+    background-color: transparent
+    border: none
+    width: $dialogHeaderHeight
+    height: $dialogHeaderHeight
+
+.dialog-header-button:hover
+    cursor: pointer
+    background-color: $redBg
+
+.dialog-error .dialog-header-button:hover
+    background-color: $baseColor
+
+.dialog-body
+    margin: 30px 20px
+    font-size: $dialogBodyFontSize
+    line-height: $dialogBodyLineHeight
+
+.dialog-footer
+    display: flex
+    justify-content: end
+    align-items: center
+    padding-right: 16px
+    padding-bottom: 16px
+
+.dialog-footer .btn
+    margin-left: 12px
+
+.dialog-footer .btn-inverted
+    background-color: $whiteColor
+    color: $baseColor
+    border: 1px solid $baseColor
+
+.dialog-footer .btn-inverted:hover
+    color: $baseColor

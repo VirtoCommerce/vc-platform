@@ -73,12 +73,16 @@
         }
     };
 
-    dialogService.showAcceptanceDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/acceptDialog.tpl.html', 'platformWebApp.confirmDialogController');
-    };
 
     dialogService.showConfirmationDialog = function (dialog) {
         dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/confirmDialog.tpl.html', 'platformWebApp.confirmDialogController');
+    };
+
+
+
+    // Next dialogs are obsolete and have to be deleted after modules update.
+    dialogService.showAcceptanceDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/acceptDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
     dialogService.showNotificationDialog = function (dialog) {
