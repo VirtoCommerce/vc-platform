@@ -8,6 +8,17 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
 
 ## News Digests
 
+!!! done "16 November"
+    * Highlight Active left menu item
+    * Rework size & weight widget blade
+    * Added Company’s Default address
+    * Make export/import of product variations, properties - preview functionally are available in VirtoCommerce/vc-module-catalog-export-import (github.com)
+    * Improved dynamic properties blade
+    * Added Partial update in xapi mutations
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/new-digest-16-november/393)
+
+
 !!! done "18 October"
     * Added Support of Video for Products
     * Virto Commerce Module Template for “dotnet new”
@@ -26,15 +37,6 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-4-october-2021/386)
 
-!!! done "20 September"
-    * Added a new video Quick Start using Virto Commerce CLI
-    * Added ability to Customize Login background set-up
-    * Added new scenarios to XAPI Demo Storefront Applications
-    * Fixed swagger schema for get token API
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-20-september/380)
-
-  
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and [GitHub](https://github.com/VirtoCommerce)
 
 ## Principles
