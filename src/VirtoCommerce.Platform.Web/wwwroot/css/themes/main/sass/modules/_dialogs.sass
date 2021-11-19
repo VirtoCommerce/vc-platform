@@ -5,74 +5,65 @@
     justify-content: center
     align-items: center
 
-// Shared styles
-.dialog-header
+.modal-dialog-header
     user-select: none
     height: $dialogHeaderHeight
     padding-left: 16px
     color: $whiteColor
     display: flex
     justify-content: space-between
-    align-items: center
+    align-items: baseline
+    &.__confirm
+        background-color: $confirmDialogHeaderBg
+    &.__warning
+        background-color: $warningDialogHeaderBg
+    &.__success
+        background-color: $successDialogHeaderBg
+    &.__error
+        background-color: $errorDialogHeaderBg
+    .modal-dialog-header-title
+        font-size: $fontSize
+    .modal-dialog-header-button
+        background-color: transparent
+        border: none
+        width: $dialogHeaderHeight
+        height: $dialogHeaderHeight
+        &:hover
+            cursor: pointer
+            background-color: $redBg
 
-.dialog-header-title
-    font-size: $fontSize
-
-.dialog-header-button
-    background-color: transparent
-    border: none
-    width: $dialogHeaderHeight
-    height: $dialogHeaderHeight
-
-.dialog-header-button:hover
-    cursor: pointer
-    background-color: $redBg
-
-.dialog-body
+.modal-dialog-body
     display: flex
     justify-content: start
     align-items: flex-start
     margin: 30px 20px
     font-size: $dialogBodyFontSize
     line-height: $dialogBodyLineHeight
+    .modal-dialog-icon-container
+        user-select: none
+        margin-right: 10px
+        min-width: 30px
+        min-height: 30px
 
-.dialog-icon-container
-    user-select: none
-    margin-right: 10px
-    min-width: 30px
-    min-height: 30px
-
-.dialog-footer
+.modal-dialog-footer
     display: flex
     justify-content: end
     align-items: center
     padding-right: 16px
     padding-bottom: 16px
-
-.dialog-footer .btn
-    user-select: none
-    padding: 0
-    justify-content: center
-    min-width: 90px
-    margin-left: 12px
-
-.dialog-footer .btn-inverted
-    background-color: $whiteColor
-    color: $baseColor
-    border: 1px solid $baseColor
-
-.dialog-footer .btn-inverted:hover
-    color: $baseColor
+    .btn
+        user-select: none
+        padding: 0
+        justify-content: center
+        min-width: 90px
+        margin-left: 12px
+        &.__inverted
+            background-color: $whiteColor
+            color: $baseColor
+            border: 1px solid $baseColor
+            &:hover
+                color: $baseColor
 
 // Specified styles
-.dialog-confirm .dialog-header
-    background-color: $confirmDialogHeaderBg
-.dialog-warning .dialog-header
-    background-color: $warningDialogHeaderBg
-.dialog-success .dialog-header
-    background-color: $successDialogHeaderBg
-.dialog-error .dialog-header
-    background-color: $errorDialogHeaderBg
-
-.dialog-error .dialog-header-button:hover
+.modal-dialog-error .modal-dialog-header-button:hover
     background-color: $baseColor

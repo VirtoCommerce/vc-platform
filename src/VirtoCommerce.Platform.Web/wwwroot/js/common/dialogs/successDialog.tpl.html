@@ -1,19 +1,19 @@
-<div class="dialog-success">
-    <div class="dialog-header">
-        <div class="dialog-header-title">{{ title | translate: titleValues}}</div>
-        <button class="dialog-header-button" ng-click="cancel()" title="{{ 'platform.commands.cancel' | translate }}">
+<div class="modal-dialog-success">
+    <div class="modal-dialog-header __success">
+        <div class="modal-dialog-header-title">{{ title | translate: titleValues}}</div>
+        <button class="modal-dialog-header-button" ng-click="cancel()" title="{{ 'platform.commands.cancel' | translate }}">
             <i class="fa fa-times" aria-hidden="true"></i>
         </button>
     </div>
 
-    <div class="dialog-body">
-        <div class="dialog-icon-container">
-            <img class="dialog-icon" src="/images/dialogs/icon-success.png" alt="">
+    <div class="modal-dialog-body">
+        <div class="modal-dialog-icon-container">
+            <img class="modal-dialog-icon" src="/images/dialogs/icon-success.png" alt="">
         </div>
-        <div class="dialog-message">{{ message | translate: messageValues}}</div>
+        <div class="modal-dialog-message">{{ message | translate: messageValues}}</div>
     </div>
 
-    <div class="dialog-footer">
+    <div class="modal-dialog-footer">
         <button class="btn" ng-click="yes()">OK</button>
     </div>
 </div>
