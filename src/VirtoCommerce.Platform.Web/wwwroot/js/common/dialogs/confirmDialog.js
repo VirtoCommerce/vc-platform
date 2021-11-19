@@ -82,6 +82,10 @@
         dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/successDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
+    dialogService.showWarningDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/warningDialog.tpl.html', 'platformWebApp.confirmDialogController');
+    };
+
 
 
     // Next dialogs are obsolete and have to be deleted after modules update.
