@@ -4,66 +4,73 @@
     display: flex
     justify-content: center
     align-items: center
-
-.modal-dialog-header
-    user-select: none
-    height: $dialogHeaderHeight
-    padding-left: 16px
-    color: $whiteColor
-    display: flex
-    justify-content: space-between
-    align-items: baseline
-    &.__confirm
-        background-color: $confirmDialogHeaderBg
-    &.__warning
-        background-color: $warningDialogHeaderBg
-    &.__success
-        background-color: $successDialogHeaderBg
-    &.__error
-        background-color: $errorDialogHeaderBg
-    .modal-dialog-header-title
-        font-size: $fontSize
-    .modal-dialog-header-button
-        background-color: transparent
-        border: none
-        width: $dialogHeaderHeight
+.modal-window
+    font-family: $font
+    &__header
+        user-select: none
         height: $dialogHeaderHeight
-        &:hover
-            cursor: pointer
-            background-color: $redBg
-
-.modal-dialog-body
-    display: flex
-    justify-content: start
-    align-items: flex-start
-    margin: 30px 20px
-    font-size: $dialogBodyFontSize
-    line-height: $dialogBodyLineHeight
-    .modal-dialog-icon-container
-        user-select: none
-        margin-right: 10px
-        min-width: 30px
-        min-height: 30px
-
-.modal-dialog-footer
-    display: flex
-    justify-content: end
-    align-items: center
-    padding-right: 16px
-    padding-bottom: 16px
-    .btn
-        user-select: none
-        padding: 0
+        padding-left: 16px
+        color: $whiteColor
+        display: flex
+        justify-content: space-between
+        align-items: baseline
+        &--confirm
+            background-color: $confirmDialogHeaderBg
+        &--warning
+            background-color: $warningDialogHeaderBg
+        &--success
+            background-color: $successDialogHeaderBg
+        &--error
+            background-color: $errorDialogHeaderBg
+    &__title
+            font-size: $fontSize
+    &__header-button
+        &--close
+            background-color: transparent
+            border: none
+            width: $dialogHeaderHeight
+            height: $dialogHeaderHeight
+            &:hover
+                cursor: pointer
+                background-color: $redBg
+    &__body
+        display: flex
+        justify-content: start
+        align-items: flex-start
+        margin: 30px 16px
+        font-size: $dialogBodyFontSize
+        line-height: $dialogBodyLineHeight
+    &__icon-container
+            user-select: none
+            margin-right: 10px
+            min-width: 30px
+            min-height: 30px
+    &__footer
+        display: flex
+        justify-content: end
+        align-items: center
+        padding-right: 16px
+        padding-bottom: 16px
+    &__footer-button
+        display: flex
         justify-content: center
+        align-items: center
         min-width: 90px
+        min-height: 28px
         margin-left: 12px
-        &.__inverted
+        border-radius: 2px
+        font-size: $dialogButtonsFontSize
+        user-select: none
+        cursor: pointer
+        &--primary
+            background-color: $baseColor
+            color: $whiteColor
+            border: none
+        &--primary-outline
             background-color: $whiteColor
             color: $baseColor
             border: 1px solid $baseColor
-            &:hover
-                color: $baseColor
+        &:hover
+            transform: scale(1.03)
+            box-shadow: 2px 2px 3px -1px rgba(34, 60, 80, 0.4);
 
-// Specified styles
-.modal-dialog-error .modal-dialog-header-button:hover
-    background-color: $baseColor

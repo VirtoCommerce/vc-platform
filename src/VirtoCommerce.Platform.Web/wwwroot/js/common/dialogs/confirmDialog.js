@@ -75,30 +75,30 @@
 
 
     dialogService.showConfirmationDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/confirmDialog.tpl.html', 'platformWebApp.confirmDialogController');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/confirmDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
     dialogService.showSuccessDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/successDialog.tpl.html', 'platformWebApp.confirmDialogController');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/successDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
     dialogService.showWarningDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/warningDialog.tpl.html', 'platformWebApp.confirmDialogController');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/warningDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
 
 
     // Next dialogs are obsolete and have to be deleted after modules update.
     dialogService.showAcceptanceDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/acceptDialog.tpl.html', 'platformWebApp.confirmDialogController');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_acceptDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
     dialogService.showNotificationDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
     dialogService.showGalleryDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/galleryDialog.tpl.html', 'platformWebApp.galleryDialogController', '__gallery');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_galleryDialog.tpl.html', 'platformWebApp.galleryDialogController', '__gallery');
     };
 
     return dialogService;
