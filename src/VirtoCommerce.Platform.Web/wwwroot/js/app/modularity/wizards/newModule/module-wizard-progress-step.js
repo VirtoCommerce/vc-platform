@@ -39,7 +39,7 @@
                 }
             }
         }
-        dialogService.showConfirmationDialog(dialog);
+        dialogService.showWarningDialog(dialog);
     }
 
     blade.isLoading = false;

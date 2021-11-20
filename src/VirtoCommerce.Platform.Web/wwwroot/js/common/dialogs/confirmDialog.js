@@ -31,7 +31,7 @@
         return found;
     }
 
-    dialogService.showDialog = function (dialog, templateUrl, controller, cssClass, modalBackdrop = true, closeFromKeyboard = true) {
+    dialogService.showDialog = function (dialog, templateUrl, controller, cssClass, modalBackdrop = true, closeFromKeyboard = false) {
         var dlg = findDialog(dialog.id);
 
         if (angular.isUndefined(dlg)) {
@@ -86,9 +86,16 @@
         dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/warningDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
+    dialogService.showErrorDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/errorDialog.tpl.html', 'platformWebApp.confirmDialogController');
+    };
+
+    dialogService.showGalleryDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_galleryDialog.tpl.html', 'platformWebApp.galleryDialogController', '__gallery');
+    };
 
 
-    // Next dialogs are obsolete and have to be deleted after modules update.
+    // Next methods are obsolete and have to be deleted after modules update.
     dialogService.showAcceptanceDialog = function (dialog) {
         dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_acceptDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
@@ -97,9 +104,6 @@
         dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
-    dialogService.showGalleryDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_galleryDialog.tpl.html', 'platformWebApp.galleryDialogController', '__gallery');
-    };
 
     return dialogService;
 

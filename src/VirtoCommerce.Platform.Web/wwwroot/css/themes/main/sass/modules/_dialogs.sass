@@ -4,6 +4,7 @@
     display: flex
     justify-content: center
     align-items: center
+
 .modal-window
     font-family: $font
     &__header
@@ -23,16 +24,19 @@
         &--error
             background-color: $errorDialogHeaderBg
     &__title
-            font-size: $fontSize
+        font-size: $fontSize
     &__header-button
-        &--close
-            background-color: transparent
-            border: none
-            width: $dialogHeaderHeight
-            height: $dialogHeaderHeight
+        background-color: transparent
+        border: none
+        width: $dialogHeaderHeight
+        height: $dialogHeaderHeight
+        cursor: pointer
+        &:hover
+            background-color: $redBg
+        &--no-bg
             &:hover
-                cursor: pointer
-                background-color: $redBg
+                background: none
+
     &__body
         display: flex
         justify-content: start
@@ -41,10 +45,10 @@
         font-size: $dialogBodyFontSize
         line-height: $dialogBodyLineHeight
     &__icon-container
-            user-select: none
-            margin-right: 10px
-            min-width: 30px
-            min-height: 30px
+        user-select: none
+        margin-right: 10px
+        min-width: 30px
+        min-height: 30px
     &__footer
         display: flex
         justify-content: end
@@ -72,5 +76,5 @@
             border: 1px solid $baseColor
         &:hover
             transform: scale(1.03)
-            box-shadow: 2px 2px 3px -1px rgba(34, 60, 80, 0.4);
+            box-shadow: 2px 2px 3px -1px rgba(34, 60, 80, 0.4)
 
