@@ -7,7 +7,9 @@
     </div>
 
     <div class="modal-window__body">
-        {{ message | translate: messageValues}}
+        <div class="modal-window__dialog-message">
+            {{ message | translate: messageValues}}
+        </div>
     </div>
 
     <div class="modal-window__footer">
