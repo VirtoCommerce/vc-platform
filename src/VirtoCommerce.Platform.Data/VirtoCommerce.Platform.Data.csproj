@@ -19,7 +19,7 @@
 
     <ItemGroup>
         <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.2.2" />
-        <PackageReference Include="FluentValidation" Version="8.6.3" />
+        <PackageReference Include="FluentValidation" Version="10.3.4" />
         <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0" />
