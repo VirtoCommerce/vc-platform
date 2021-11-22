@@ -52,9 +52,16 @@
     &__dialog-message
         flex-grow: 1
         max-height: 300px
-        overflow: hidden
+        overflow: scroll
+        &::-webkit-scrollbar
+          background-color: transparent
+        &::-webkit-scrollbar-thumb
+          background-color: transparent
         &:hover
-            overflow: scroll
+            &::-webkit-scrollbar
+                background-color: $scrollTrackColor
+            &::-webkit-scrollbar-thumb
+                background-color: $scrollThumbColor
     &__footer
         display: flex
         justify-content: end
