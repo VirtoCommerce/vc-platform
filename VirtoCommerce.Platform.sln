@@ -17,10 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Data
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Core", "src\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj", "{A20E9B96-0AB5-4E61-BE2C-E94B8D4829FA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Assets.FileSystem", "src\VirtoCommerce.Platform.Assets.FileSystem\VirtoCommerce.Platform.Assets.FileSystem.csproj", "{9B5C103B-95A3-49F2-AE33-7628810CD482}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Assets.AzureBlobStorage", "src\VirtoCommerce.Platform.Assets.AzureBlobStorage\VirtoCommerce.Platform.Assets.AzureBlobStorage.csproj", "{D0CE7988-FBC0-498A-86C8-4E14C5C7FA23}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Tests", "tests\VirtoCommerce.Platform.Tests\VirtoCommerce.Platform.Tests.csproj", "{057A8AA3-3526-4252-A04E-AB638E9F8EA5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Caching", "src\VirtoCommerce.Platform.Caching\VirtoCommerce.Platform.Caching.csproj", "{E6585ACB-09CE-438D-9812-0F4B047FEC62}"
@@ -36,10 +32,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Core.Tests", "tests\VirtoCommerce.Platform.Core.Tests\VirtoCommerce.Platform.Core.Tests.csproj", "{1BFCF9CE-E244-4F58-BB02-F3740B0E250A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.DistributedLock", "src\VirtoCommerce.Platform.DistributedLock\VirtoCommerce.Platform.DistributedLock.csproj", "{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests", "tests\VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests\VirtoCommerce.Platform.Assets.AzureBlobStorage.Tests.csproj", "{707A1D34-5E3A-4655-90BB-C70DFA545476}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Assets.FileSystem.Tests", "tests\VirtoCommerce.Platform.Assets.FileSystem.Tests\VirtoCommerce.Platform.Assets.FileSystem.Tests.csproj", "{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Caching.Tests", "tests\VirtoCommerce.Platform.Caching.Tests\VirtoCommerce.Platform.Caching.Tests.csproj", "{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}"
 EndProject
@@ -69,14 +61,6 @@ Global
 		{A20E9B96-0AB5-4E61-BE2C-E94B8D4829FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A20E9B96-0AB5-4E61-BE2C-E94B8D4829FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A20E9B96-0AB5-4E61-BE2C-E94B8D4829FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9B5C103B-95A3-49F2-AE33-7628810CD482}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B5C103B-95A3-49F2-AE33-7628810CD482}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9B5C103B-95A3-49F2-AE33-7628810CD482}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B5C103B-95A3-49F2-AE33-7628810CD482}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0CE7988-FBC0-498A-86C8-4E14C5C7FA23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0CE7988-FBC0-498A-86C8-4E14C5C7FA23}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0CE7988-FBC0-498A-86C8-4E14C5C7FA23}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0CE7988-FBC0-498A-86C8-4E14C5C7FA23}.Release|Any CPU.Build.0 = Release|Any CPU
 		{057A8AA3-3526-4252-A04E-AB638E9F8EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{057A8AA3-3526-4252-A04E-AB638E9F8EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{057A8AA3-3526-4252-A04E-AB638E9F8EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -107,14 +91,6 @@ Global
 		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{707A1D34-5E3A-4655-90BB-C70DFA545476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{707A1D34-5E3A-4655-90BB-C70DFA545476}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{707A1D34-5E3A-4655-90BB-C70DFA545476}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{707A1D34-5E3A-4655-90BB-C70DFA545476}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1ECD0D01-CBE5-4092-BEF0-85ECF663560F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -129,8 +105,6 @@ Global
 		{F26CCDD4-7115-4827-B56D-1D6D2B67B195} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{F8920663-0611-4357-8D7D-5AED3C655454} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{A20E9B96-0AB5-4E61-BE2C-E94B8D4829FA} = {90F6E3EE-475A-4844-A4C4-078613591F81}
-		{9B5C103B-95A3-49F2-AE33-7628810CD482} = {90F6E3EE-475A-4844-A4C4-078613591F81}
-		{D0CE7988-FBC0-498A-86C8-4E14C5C7FA23} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{057A8AA3-3526-4252-A04E-AB638E9F8EA5} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 		{E6585ACB-09CE-438D-9812-0F4B047FEC62} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{EC079077-1D1B-4F23-A3E2-E54BDEB64A92} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
@@ -138,8 +112,6 @@ Global
 		{11BBA3A5-5C5B-447D-9844-6ED7DDF1B961} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 		{1BFCF9CE-E244-4F58-BB02-F3740B0E250A} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F} = {90F6E3EE-475A-4844-A4C4-078613591F81}
-		{707A1D34-5E3A-4655-90BB-C70DFA545476} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
-		{1ECD0D01-CBE5-4092-BEF0-85ECF663560F} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
