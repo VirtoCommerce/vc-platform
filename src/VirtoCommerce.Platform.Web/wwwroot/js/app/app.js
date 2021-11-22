@@ -493,11 +493,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                     var showError = () => {
                         var dialog = {
                             id: "noUrlDialog",
-                            showWarning: true,
                             title: 'platform.dialogs.impersonate-no-url.title',
                             message: 'platform.dialogs.impersonate-no-url.message'
                         };
-                        dialogService.showNotificationDialog(dialog);
+                        dialogService.showErrorDialog(dialog);
                     };
 
                     var promise = loginOfBehalfUrlResolver.resolve(blade.currentEntity);
