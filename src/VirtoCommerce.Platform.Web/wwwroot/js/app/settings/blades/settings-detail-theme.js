@@ -36,7 +36,7 @@ angular.module('platformWebApp')
                     removeAfterUpload: true
                 });
 
-                uploader.url = 'api/platform/assets?folderUrl=customizatinon';
+                uploader.url = 'api/assets?folderUrl=customizatinon';
 
                 uploader.onSuccessItem = function (fileItem, images, status, headers) {
                     angular.forEach(images, function (image) {

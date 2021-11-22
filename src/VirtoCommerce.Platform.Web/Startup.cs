@@ -33,10 +33,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
 using VirtoCommerce.Assets.Abstractions;
-using VirtoCommerce.Platform.Assets.AzureBlobStorage;
-using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
-using VirtoCommerce.Platform.Assets.FileSystem;
-using VirtoCommerce.Platform.Assets.FileSystem.Extensions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -401,24 +397,6 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
-
-            //Assets
-            var assetsProvider = Configuration.GetSection("Assets:Provider").Value;
-            if (assetsProvider.EqualsInvariant(AzureBlobProvider.ProviderName))
-            {
-                services.AddOptions<AzureBlobOptions>().Bind(Configuration.GetSection("Assets:AzureBlobStorage")).ValidateDataAnnotations();
-                services.AddAzureBlobProvider();
-            }
-            else
-            {
-                services.AddOptions<FileSystemBlobOptions>().Bind(Configuration.GetSection("Assets:FileSystem"))
-                      .PostConfigure(options =>
-                      {
-                          options.RootPath = WebHostEnvironment.MapPath(options.RootPath);
-                      }).ValidateDataAnnotations();
-
-                services.AddFileSystemBlobProvider();
-            }
 
             //HangFire
             services.AddHangfire(Configuration);
