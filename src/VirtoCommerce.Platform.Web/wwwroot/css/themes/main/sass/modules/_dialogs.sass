@@ -16,13 +16,13 @@
         justify-content: space-between
         align-items: baseline
         &--confirm
-            background-color: $confirmDialogHeaderBg
+            background-color: $dialogHeaderBgColor--confirm
         &--warning
-            background-color: $warningDialogHeaderBg
+            background-color: $dialogHeaderBgColor--warning
         &--success
-            background-color: $successDialogHeaderBg
+            background-color: $dialogHeaderBgColor--success
         &--error
-            background-color: $errorDialogHeaderBg
+            background-color: $dialogHeaderBgColor--error
     &__title
         font-size: $fontSize
     &__header-button
@@ -36,7 +36,6 @@
         &--no-bg
             &:hover
                 background: none
-
     &__body
         display: flex
         justify-content: start
@@ -49,14 +48,16 @@
         margin-right: 10px
         min-width: 30px
         min-height: 30px
+        & ~ .modal-window__dialog-message
+            padding-top: 4px
     &__dialog-message
         flex-grow: 1
         max-height: 300px
         overflow: scroll
         &::-webkit-scrollbar
-          background-color: transparent
+            background-color: transparent
         &::-webkit-scrollbar-thumb
-          background-color: transparent
+            background-color: transparent
         &:hover
             &::-webkit-scrollbar
                 background-color: $scrollTrackColor
@@ -83,11 +84,13 @@
             background-color: $baseColor
             color: $whiteColor
             border: none
+            &:hover
+                background-color: $dialogFooterBtnBgColor--primary--hover
         &--primary-outline
             background-color: $whiteColor
             color: $baseColor
             border: 1px solid $baseColor
-        &:hover
-            transform: scale(1.03)
-            box-shadow: 2px 2px 3px -1px rgba(34, 60, 80, 0.4)
+            &:hover
+                color: $dialogFooterBtnTextColor--primary-outline--hover
+                background-color: $dialogFooterBtnBgColor--primary-outline--hover
 
