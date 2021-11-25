@@ -1,0 +1,19 @@
+<div class="modal-window">
+    <div class="modal-window__header modal-window__header--success">
+        <div class="modal-window__title">{{ title | translate: titleValues}}</div>
+        <button class="modal-window__header-button" ng-click="cancel()" title="{{ 'platform.commands.cancel' | translate }}">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <div class="modal-window__body">
+        <div class="modal-window__icon-container">
+            <img class="modal-window__dialog-icon" src="/images/dialogs/icon-success.svg" alt="">
+        </div>
+        <div class="modal-window__dialog-message">{{ message | translate: messageValues}}</div>
+    </div>
+
+    <div class="modal-window__footer">
+        <button class="modal-window__footer-button modal-window__footer-button--primary" ng-click="yes()">{{ 'platform.commands.ok' | translate }}</button>
+    </div>
+</div>

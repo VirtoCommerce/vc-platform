@@ -50,7 +50,7 @@ angular.module("platformWebApp")
                         title: 'platform.dialogs.storefront-cache-reset-successfully.title',
                         message: 'platform.dialogs.storefront-cache-reset-successfully.message'
                     };
-                    dialogService.showNotificationDialog(dialog);
+                    dialogService.showSuccessDialog(dialog);
                 });
 
             },
@@ -92,7 +92,7 @@ angular.module("platformWebApp")
             //    if (setting.allowedValues) {
             //        setting.allowedValues = _.map(setting.allowedValues, function (value) { return value.toLowerCase() === 'true'; });
             //    }
-            //});  
+            //});
         };
 
         retVal.toApiFormat = function (settings) {
