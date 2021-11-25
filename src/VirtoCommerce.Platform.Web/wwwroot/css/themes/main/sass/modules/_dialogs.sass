@@ -1,0 +1,96 @@
+.modal-dialog
+    width: 100vw
+    height: 100vh
+    display: flex
+    justify-content: center
+    align-items: center
+
+.modal-window
+    font-family: $font
+    &__header
+        user-select: none
+        height: $dialogHeaderHeight
+        padding-left: 16px
+        color: $whiteColor
+        display: flex
+        justify-content: space-between
+        align-items: baseline
+        &--confirm
+            background-color: $dialogHeaderBgColor--confirm
+        &--warning
+            background-color: $dialogHeaderBgColor--warning
+        &--success
+            background-color: $dialogHeaderBgColor--success
+        &--error
+            background-color: $dialogHeaderBgColor--error
+    &__title
+        font-size: $fontSize
+    &__header-button
+        background-color: transparent
+        border: none
+        width: $dialogHeaderHeight
+        height: $dialogHeaderHeight
+        cursor: pointer
+        &:hover
+            background-color: $redBg
+        &--no-bg
+            &:hover
+                background: none
+    &__body
+        display: flex
+        justify-content: start
+        align-items: flex-start
+        margin: 30px 16px
+        font-size: $dialogBodyFontSize
+        line-height: $dialogBodyLineHeight
+    &__icon-container
+        user-select: none
+        margin-right: 10px
+        min-width: 30px
+        min-height: 30px
+        & ~ .modal-window__dialog-message
+            padding-top: 4px
+    &__dialog-message
+        flex-grow: 1
+        max-height: 300px
+        overflow: scroll
+        &::-webkit-scrollbar
+            background-color: transparent
+        &::-webkit-scrollbar-thumb
+            background-color: transparent
+        &:hover
+            &::-webkit-scrollbar
+                background-color: $scrollTrackColor
+            &::-webkit-scrollbar-thumb
+                background-color: $scrollThumbColor
+    &__footer
+        display: flex
+        justify-content: end
+        align-items: center
+        padding-right: 16px
+        padding-bottom: 16px
+    &__footer-button
+        display: flex
+        justify-content: center
+        align-items: center
+        min-width: 90px
+        min-height: 28px
+        margin-left: 12px
+        border-radius: 2px
+        font-size: $dialogButtonsFontSize
+        user-select: none
+        cursor: pointer
+        &--primary
+            background-color: $baseColor
+            color: $whiteColor
+            border: none
+            &:hover
+                background-color: $dialogFooterBtnBgColor--primary--hover
+        &--primary-outline
+            background-color: $whiteColor
+            color: $baseColor
+            border: 1px solid $baseColor
+            &:hover
+                color: $dialogFooterBtnTextColor--primary-outline--hover
+                background-color: $dialogFooterBtnBgColor--primary-outline--hover
+
