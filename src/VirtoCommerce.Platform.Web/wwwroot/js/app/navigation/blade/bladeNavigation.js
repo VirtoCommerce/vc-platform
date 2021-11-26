@@ -199,10 +199,13 @@ angular.module('platformWebApp')
                 };
 
                 scope.showErrorDetails = function () {
-                    var dialog = { id: "errorDetails" };
+                    var dialog = {
+                        id: "errorDetails",
+                        title: 'platform.dialogs.error-details.title'
+                    };
                     if (scope.blade.errorBody != undefined)
                         dialog.message = scope.blade.errorBody;
-                    dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/errorDetails-dialog.tpl.html', 'platformWebApp.confirmDialogController');
+                    dialogService.showErrorDialog(dialog);
                 };
             }
         }
