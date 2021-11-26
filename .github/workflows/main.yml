@@ -47,6 +47,7 @@ jobs:
       PACKAGE_SERVER: 'ghcr.io'
       BUILD_STATE: 'failed'
       RELEASE_STATUS: 'false'
+      MSBuildEnableWorkloadResolver: false
 
     outputs:
       taggedVersion: ${{ steps.image.outputs.taggedVersion }}
