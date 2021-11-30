@@ -189,7 +189,7 @@ jobs:
       if: ${{ github.event_name == 'pull_request' }}
       uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
       with:
-        artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
+        artifactUrl: ${{ steps.artifactUrl.outputs.BLOB_URL }}
         downloadComment: 'Artifact URL:'
       
     - name: Publish Github Release
