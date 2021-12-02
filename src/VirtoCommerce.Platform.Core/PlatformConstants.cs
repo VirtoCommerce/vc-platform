@@ -110,6 +110,7 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.ShortText,
                     DefaultValue = "0 0 */1 * *"
                 };
+
                 public static SettingDescriptor FileExtensionsBlackList { get; } = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.FileExtensionsBlackList",
