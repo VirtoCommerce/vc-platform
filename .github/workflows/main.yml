@@ -59,6 +59,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
+        
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
 
     - name: Set variables
       if: ${{ github.event_name == 'workflow_dispatch' }}
