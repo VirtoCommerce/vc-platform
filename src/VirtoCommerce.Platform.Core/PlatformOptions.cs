@@ -53,5 +53,10 @@ namespace VirtoCommerce.Platform.Core
         /// Extensions of the files that cannot be uploaded to the server by the platform
         /// </summary>
         public string[] FileExtensionsBlackList { get; set; } = new string[0];
+
+        /// <summary>
+        /// Extensions of the files that can be uploaded to the server by the platform
+        /// </summary>
+        public string[] FileExtensionsWhiteList { get; set; } = new string[0];
     }
 }
