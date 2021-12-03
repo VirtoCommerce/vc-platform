@@ -1,22 +1,10 @@
+const { contains } = require("underscore");
+
 angular.module('platformWebApp')
-    .controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$timeout', '$translate',
-        function ($window, modules, waitForRestart, $scope, settings, bladeNavigationService, dialogService, $timeout, $translate) {
+    .controller('platformWebApp.settingGroupListController', ['$window', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', '$scope', 'platformWebApp.settings', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', '$timeout', '$translate', 'THEME_SETTINGS',
+        function ($window, modules, waitForRestart, $scope, settings, bladeNavigationService, dialogService, $timeout, $translate, THEME_SETTINGS) {
             var settingsTree;
             var blade = $scope.blade;
-
-            // mock theme settings
-            var themeLoginPageSetting = {
-                children: {},
-                groupName: "Theme settings|Login Screen",
-                name: "Theme settings",
-                icon: 'fas fa-palette',
-            };
-
-            themeLoginPageSetting.children['Login Screen'] = {
-                groupName: "Theme settings|Login Screen",
-                name: "Login Screen",
-                icon: 'fas fa-desktop'
-            }
 
             blade.refresh = function (disableOpenAnimation) {
                 blade.isLoading = true;
@@ -50,8 +38,16 @@ angular.module('platformWebApp')
                         });
                     });
 
-                    settingsTree['Theme settings'] = themeLoginPageSetting;
-                    blade.allSettings.push(themeLoginPageSetting);
+                    settingsTree['Theme settings'] = THEME_SETTINGS;
+                    blade.allSettings.push(THEME_SETTINGS);
+
+                    (function pushSettingsToBlade(node) {
+                        if (!node.children) {
+                            blade.allSettings.push(node);
+                            return
+                        }
+                        Object.keys(node.children).forEach(childName => pushSettingsToBlade(node.children[childName]))
+                    })(THEME_SETTINGS);
 
                     _.each(blade.allSettings,
                         function (setting) {
@@ -75,8 +71,8 @@ angular.module('platformWebApp')
                     }
 
                     // open previous settings detail blade if possible
-                    if ($scope.selectedNodeId) {
-                        $scope.selectNode({ groupName: $scope.selectedNodeId }, disableOpenAnimation);
+                    if ($scope.selectedNode) {
+                        $scope.selectNode($scope.selectedNode, disableOpenAnimation);
                     }
                 },
                     function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
@@ -84,7 +80,7 @@ angular.module('platformWebApp')
 
             $scope.selectNode = function (node, disableOpenAnimation) {
                 bladeNavigationService.closeChildrenBlades(blade, function () {
-                    $scope.selectedNodeId = node.groupName;
+                    $scope.selectedNode = node;
                     if (node.children) {
                         blade.searchText = null;
                         blade.currentEntities = node.children;
@@ -98,16 +94,9 @@ angular.module('platformWebApp')
                             data: selectedSettings,
                             title: 'platform.blades.settings-detail.title',
                             disableOpenAnimation: disableOpenAnimation,
+                            controller: node.controller || 'platformWebApp.settingsDetailController',
+                            template: node.template || '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html',
                         };
-                        // open special theme setting blade instead of generic setting controller blade
-                        if (node.groupName === themeLoginPageSetting.groupName) {
-                            newBlade.controller = 'platformWebApp.settingsDetailThemeController';
-                            newBlade.template = '$(Platform)/Scripts/app/settings/blades/settings-detail-theme.tpl.html';
-                        }
-                        else {
-                            newBlade.controller = 'platformWebApp.settingsDetailController';
-                            newBlade.template = '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html';
-                        }
 
                         bladeNavigationService.showBlade(newBlade, blade);
                     }

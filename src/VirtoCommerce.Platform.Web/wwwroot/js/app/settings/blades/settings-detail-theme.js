@@ -4,30 +4,6 @@ angular.module('platformWebApp')
             var blade = $scope.blade;
             blade.updatePermission = 'platform:setting:update';
 
-            // default values for login page background
-            blade.defaultUiCustomization = {
-                background: {
-                    url: '/images/login.png'
-                },
-                pattern: {
-                    value: 'None'
-                },
-            };
-
-            blade.patterns = [
-                {
-                    value: 'None'
-                },
-                {
-                    value: 'Demo',
-                    url: '/images/pattern-demo.svg'
-                },
-                {
-                    value: 'Production',
-                    url: '/images/pattern-live.svg'
-                }
-            ];
-
             if (!$scope.uploader) {
                 var uploader = $scope.uploader = new FileUploader({
                     scope: $scope,
@@ -55,8 +31,8 @@ angular.module('platformWebApp')
 
             function initializeBlade(settings) {
                 blade.isLoading = true;
-
                 var setting = _.first(settings);
+                Object.assign(blade, setting.settingValues);
                 if (setting.groupName) {
                     var paths = setting.groupName.split('|');
                     blade.groupName = paths.pop();
