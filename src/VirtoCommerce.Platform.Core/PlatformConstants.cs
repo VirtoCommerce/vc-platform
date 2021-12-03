@@ -164,6 +164,20 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = ".asax",
                 };
 
+                public static SettingDescriptor FileExtensionsWhiteList { get; } = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.FileExtensionsWhiteList",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.ShortText,
+                    IsDictionary = true,
+                    AllowedValues = new string[] {
+                        ".pdf",
+                        ".txt",
+                        ".png",
+                        ".mp3"
+                    },
+                    DefaultValue = ".pdf",
+                };
 
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
@@ -173,6 +187,7 @@ namespace VirtoCommerce.Platform.Core
                         yield return EnablePruneExpiredTokensJob;
                         yield return CronPruneExpiredTokensJob;
                         yield return FileExtensionsBlackList;
+                        yield return FileExtensionsWhiteList;
                     }
                 }
             }
