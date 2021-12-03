@@ -1,4 +1,4 @@
-angular.module("platformWebApp").constant("THEME_SETTIGS", {
+angular.module("platformWebApp").constant("THEME_SETTINGS", {
     groupName: "Theme settings",
     name: "Theme settings",
     icon: "fas fa-palette",
