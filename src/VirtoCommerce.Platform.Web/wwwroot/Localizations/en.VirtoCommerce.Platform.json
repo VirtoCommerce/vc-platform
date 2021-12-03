@@ -521,7 +521,9 @@
                     "external-sign-in": "Sign in with {{displayName}}",
                     "forgot-password": "Forgot your password?",
                     "log-in": "Log in",
-                    "log-in-placeholder": "Please enter a value"
+                    "log-in-placeholder": "Please enter a value",
+                    "azure-log-in-label": "Login to admin site through Azure",
+                    "password-log-in-type": "System user"
                 }
             },
             "forgotpassword": {
