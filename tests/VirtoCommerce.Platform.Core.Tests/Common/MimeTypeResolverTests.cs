@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FluentAssertions;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Web.Controllers.Api;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Core.Tests.Common
@@ -108,6 +109,21 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
             }
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        //added test case
+        [Fact]
+        public void ResolveContentType_MimeType()
+        {
+            // Arrange
+            var fileName = @"D:\\textOne.pdf";
+            ModulesController mimeFile = new ModulesController();
+            // Act
+            var result=mimeFile.getMimeFromFile(fileName);
+
+            // Assert
+            Assert.True(result.Length == 0);
+                
         }
     }
 }

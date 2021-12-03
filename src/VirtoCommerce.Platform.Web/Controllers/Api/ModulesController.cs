@@ -22,6 +22,10 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Helpers;
 using VirtoCommerce.Platform.Web.Modularity;
+using Microsoft.AspNetCore.Http;
+using VirtoCommerce.Platform.Core.Common;
+using Myrmec;
+using Microsoft.AspNetCore.Mvc;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -40,7 +44,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private static readonly object _lockObject = new object();
         private static readonly FormOptions _defaultFormOptions = new FormOptions();
 
-        public ModulesController(IExternalModuleCatalog externalModuleCatalog, IModuleInstaller moduleInstaller, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver, ISettingsManager settingsManager, IOptions<PlatformOptions> platformOptions, IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions, IPlatformRestarter platformRestarter)
+        public ModulesController(IExternalModuleCatalog externalModuleCatalog, IModuleInstaller moduleInstaller, IPushNotificationManager pushNotifier, IUserNameResolver userNameResolver, ISettingsManager settingsManager, IOptions<PlatformOptions> platformOptions, IOptions<ExternalModuleCatalogOptions> externalModuleCatalogOptions, IPlatformRestarter platformRestarter):base()
         {
             _externalModuleCatalog = externalModuleCatalog;
             _moduleInstaller = moduleInstaller;
@@ -50,6 +54,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _platformOptions = platformOptions.Value;
             _externalModuleCatalogOptions = externalModuleCatalogOptions.Value;
             _platformRestarter = platformRestarter;
+        }
+
+        public ModulesController()
+        {
+
         }
 
         /// <summary>
@@ -165,14 +174,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (hasContentDispositionHeader)
                 {
-                    if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition))
+                    if (MultipartRequestHelper.HasFileContentDisposition(contentDisposition)) //ctrl+12
                     {
                         var fileName = contentDisposition.FileName.Value;
-                        targetFilePath = Path.Combine(uploadPath, fileName);
-
-                        using (var targetStream = System.IO.File.Create(targetFilePath))
+                        if (getMimeFromFile(fileName).Length > 0)
                         {
-                            await section.Body.CopyToAsync(targetStream);
+                            // checks the header type matches the file type
+                         targetFilePath = Path.Combine(uploadPath, fileName);
+
+                            using (var targetStream = System.IO.File.Create(targetFilePath))
+                            {
+                                await section.Body.CopyToAsync(targetStream);
+                            }
+                        }
+                        else
+                        {
+                            // Put an error message File type not support
                         }
 
                     }
@@ -456,5 +473,49 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             return notification;
         }
+
+        // Enhancement added to check the content of any file :  example *.pdf
+        private static byte[] ReadFileHead(IFormFile file)
+        {
+            using var fs = new BinaryReader(file.OpenReadStream());
+            var bytes = new byte[20];
+            fs.Read(bytes, 0, 20);
+            return bytes;
+        }
+        public string getMimeFromFile(string filename)
+        {
+            var sniffer = new Sniffer();
+            var supportedFiles = new List<Myrmec.Record>
+            {
+                new Myrmec.Record("pdf","25 50 44 46")
+                //Add more white listed file extension headers as and when required
+            };
+            sniffer.Populate(supportedFiles);
+            IFormFile file = null;
+            byte[] fileHead = null;
+            using (var stream = System.IO.File.OpenRead(filename))
+            {
+                file = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
+                fileHead = ReadFileHead(file);
+            }
+            var results = sniffer.Match(fileHead);
+
+            return results.Count > 0 ? results[0] : string.Empty;
+        }
+
+        //End of file checking enhancement
+        
+       /* public IFormFile GetFile()
+        {
+            string path = @"D:\scorereport.pdf";
+            IFormFile file = null;
+            using (var stream = System.IO.File.OpenRead(path))
+            {
+                file = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
+
+            }
+            return file;
+        }*/
     }
+
 }
