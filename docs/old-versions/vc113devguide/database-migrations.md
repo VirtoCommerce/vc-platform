@@ -1,4 +1,4 @@
-﻿---
+---
 title: Database migrations
 description: Database migrations
 layout: docs
@@ -13,8 +13,8 @@ Most of the VirtoCommerce store data is stored in a database (DB). As our platfo
 
 ### From version 1.6 to 1.7:
 
-* Execute <a href="../../assets/files/OrdersMigration_1_7.sql">this SQL script</a> on Orders (in case you have separate) database.
-* Execute <a href="../../assets/files/SecurityMigration_1_7.sql">this SQL script</a> on Security (in case you have separate) database.
+* Execute <a href="/assets/files/OrdersMigration_1_7.sql">this SQL script</a> on Orders (in case you have separate) database.
+* Execute <a href="/assets/files/SecurityMigration_1_7.sql">this SQL script</a> on Security (in case you have separate) database.
 
 ### From version 1.7 to 1.8:
 
