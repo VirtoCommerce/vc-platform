@@ -1,0 +1,52 @@
+.themeSettingsBlade
+    &__blade-content
+        @extend .blade-content
+        overflow-y: auto
+    &__blade-inner
+        width: 100%
+        height: auto
+    &__inner-block
+        @extend .inner-block
+        margin-left: auto
+        margin-right: auto
+
+    .uploader
+        &__form
+            @extend .form
+            padding-bottom: 8px
+        &__form-group
+            @extend #{'.list', '.__info', '.form-group'}
+        &__form-label
+            @extend .form-label
+        &__drag-area
+            @extend .drag-area
+            margin-bottom: 0
+        &__hint
+            @extend .list-descr
+            line-height: 14px
+        &__drag-content
+            @extend .drag-content
+
+    .uploader-preview
+        box-sizing: border-box
+        &__container
+            margin-bottom: 40px
+        &__sub-title
+            @extend .form-label
+        &__bd-blue
+            @extend .bd-blue
+            margin-bottom: 6px
+        &__tile
+            padding: 16px
+            width: 100%
+            height: auto
+            max-height: 100%
+            display: flex
+            justify-content: flex-start
+            align-items: center
+            background-color: #161D25
+        &__img
+            display: block
+
+    hr
+        margin: 0

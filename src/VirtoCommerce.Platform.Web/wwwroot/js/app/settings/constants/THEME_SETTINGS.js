@@ -7,8 +7,8 @@ angular.module("platformWebApp").constant("THEME_SETTINGS", {
             groupName: "Theme settings|Login Screen",
             name: "Login Screen",
             icon: "fas fa-desktop",
-            controller: "platformWebApp.settingsDetailThemeController",
-            template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme.tpl.html",
+            controller: "platformWebApp.settingsDetailThemeLoginScreenController",
+            template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-login-screen.tpl.html",
             settingValues: {
                 defaultUiCustomization: {
                     background: {
@@ -42,22 +42,32 @@ angular.module("platformWebApp").constant("THEME_SETTINGS", {
                     groupName: "Theme settings|Logo Settings|Top panel logo",
                     name: "Top panel logo",
                     icon: "fa fa-diamond",
-                    controller: "platformWebApp.settingsDetailThemeController",
-                    template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme.tpl.html",
+                    controller: "platformWebApp.settingsDetailThemeLogoController",
+                    template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-logo.tpl.html",
+                    settingValues: {
+                        defaultUiCustomization: {
+                            topPanelLogo: {
+                                url: "/images/topPanelLogo.svg",
+                            },
+                            topPanelLogoSquare: {
+                                url: "/images/topPanelLogo-square.svg",
+                            },
+                        },
+                    },
                 },
                 "Login screen logo": {
                     groupName: "Theme settings|Logo Settings|Login screen logo",
                     name: "Login screen logo",
                     icon: "fa fa-diamond",
-                    controller: "platformWebApp.settingsDetailThemeController",
-                    template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme.tpl.html",
+                    controller: "platformWebApp.settingsDetailThemeLogoController",
+                    template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-logo.tpl.html",
                 },
                 "Logo for the login form header": {
                     groupName: "Theme settings|Logo Settings|Logo for the login form header",
                     name: "Logo for the login form header",
                     icon: "fa fa-diamond",
-                    controller: "platformWebApp.settingsDetailThemeController",
-                    template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme.tpl.html",
+                    controller: "platformWebApp.settingsDetailThemeLogoController",
+                    template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-logo.tpl.html",
                 },
             },
         },

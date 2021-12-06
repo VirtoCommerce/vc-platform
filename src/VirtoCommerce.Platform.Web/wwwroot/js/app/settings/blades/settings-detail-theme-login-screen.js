@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.settingsDetailThemeController', ['$scope', '$rootScope', '$q', 'FileUploader', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings',
+    .controller('platformWebApp.settingsDetailThemeLoginScreenController', ['$scope', '$rootScope', '$q', 'FileUploader', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings',
         function ($scope, $rootScope, $q, FileUploader, settingsHelper, bladeNavigationService, settingsApi) {
             var blade = $scope.blade;
             blade.updatePermission = 'platform:setting:update';
@@ -30,9 +30,13 @@ angular.module('platformWebApp')
             }
 
             function initializeBlade(settings) {
+
                 blade.isLoading = true;
+
+                //Get custom settings if they are in constants
                 var setting = _.first(settings);
                 Object.assign(blade, setting.settingValues);
+
                 if (setting.groupName) {
                     var paths = setting.groupName.split('|');
                     blade.groupName = paths.pop();
@@ -45,7 +49,6 @@ angular.module('platformWebApp')
                     blade.isLoading = false;
 
                     blade.uiCustomizationSetting = uiCustomizationSetting;
-
                     var value = uiCustomizationSetting.value || uiCustomizationSetting.defaultValue;
                     if (value) {
                         var uiCustomization = angular.fromJson(value);

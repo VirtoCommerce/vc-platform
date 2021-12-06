@@ -1,0 +1,64 @@
+<div class="blade-static __bottom" ng-if="blade.isSavingToParentObject" ng-include="'$(Platform)/Scripts/common/templates/ok-cancel2.tpl.html'"></div>
+<div class="themeSettingsBlade themeSettingsBlade__blade-content">
+    <div class="themeSettingsBlade themeSettingsBlade__blade-inner">
+        <div class="themeSettingsBlade themeSettingsBlade__inner-block">
+            <form name="formScope" class="uploader uploader__form">
+                <fieldset ng-init="setForm(formScope)">
+                    <legend>{{ blade.groupName }}</legend>
+
+                    <div class="uploader uploader__form-group">
+                        <label class="uploader uploader__form-label">Choose default logo</label>
+                        <div ng-show="uploader.isHTML5">
+                            <div over-class="bd-blue" nv-file-over nv-file-drop uploader="uploader" class="uploader uploader__drag-area">
+                                <div class="uploader uploader__drag-content">{{ 'catalog.blades.images.labels.drag-drop-comment' | translate }}</div>
+                            </div>
+                        </div>
+                        <div class="uploader uploader__hint">Select image with min height 30px of the PNG, GIF or SVG format</div>
+                    </div>
+
+                </fieldset>
+            </form>
+
+            <!-- preview -->
+            <div class="uploader-preview uploader-preview__container">
+                <div class="uploader-preview uploader-preview__sub-title">Preview</div>
+                <div class="uploader-preview uploader-preview__tile">
+                    <img class="uploader-preview uploader-preview__img" src="{{ blade.currentEntity.topPanelLogo.url }}" alt="Top panel logo image">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="themeSettingsBlade themeSettingsBlade__blade-inner">
+        <div class="themeSettingsBlade themeSettingsBlade__inner-block">
+            <form name="formScope" class="uploader uploader__form">
+                <fieldset ng-init="setForm(formScope)">
+
+                    <div class="uploader uploader__form-group">
+                        <label class="uploader uploader__form-label">Choose mini logo for small screens</label>
+                        <div ng-show="uploader.isHTML5">
+                            <div over-class="bd-blue" nv-file-over nv-file-drop uploader="uploader" class="uploader uploader__drag-area">
+                                <div class="uploader uploader__drag-content">{{ 'catalog.blades.images.labels.drag-drop-comment' | translate }}</div>
+                            </div>
+                        </div>
+                        <div class="uploader uploader__hint">Select square image with min height 30px and of the PNG, GIF or SVG format</div>
+                    </div>
+
+                </fieldset>
+            </form>
+
+            <!-- preview -->
+            <div class="uploader-preview uploader-preview__container">
+                <div class="uploader-preview uploader-preview__sub-title">Preview</div>
+                <div class="uploader-preview uploader-preview__tile">
+                    <img class="uploader-preview uploader-preview__img" src="{{ blade.currentEntity.topPanelLogoSquare.url }}" alt="Top panel logo image">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
