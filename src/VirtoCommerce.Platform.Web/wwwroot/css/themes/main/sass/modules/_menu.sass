@@ -10,9 +10,6 @@
       left: $mainMenuCollapsedWidth
     & ~ .cnt .header
       padding-left: $mainMenuCollapsedWidth
-    .logo-img
-      background-image: url('/images/logo-small.svg')
-      background-size: auto
     .logo-version
         display: none
     .bar
@@ -31,19 +28,15 @@
     .dropdown.__opened
       transform: translateX($mainMenuCollapsedWidth)
   .logo
+    padding-left: 16px
     height: $headerHeight
     width: 100%
     z-index: 50
     align-items: center
     display: flex
     background: $headerBg
-    &-img
-      background: url('/images/logo.svg') no-repeat scroll 15px 15px $headerBg
-      background-size: 127px 30px
-      width: 70%
-      font-size: 0
-      height: $headerHeight
     &-version
+      padding-left: 16px
       color: #838d9a;
       font-size: 10px;
       text-overflow: ellipsis;

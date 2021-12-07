@@ -96,12 +96,25 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         }
 
         settings.getUiCustomizationSetting(function (uiCustomizationSetting) {
-            common.getLoginPageUIOptions(function (loginPageUIOptions) {
-                $rootScope.uiCustomization = {};
 
-                if (uiCustomizationSetting.value) {
-                    $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
+            $rootScope.uiCustomization = {};
+
+            //Set top panel logo icons
+            if (uiCustomizationSetting.value) {
+                $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
+                if (!$rootScope.uiCustomization.topPanelLogo_default) {
+                    $rootScope.uiCustomization.topPanelLogo_default = {
+                        url: '/images/logo.svg',
+                    }
                 }
+                if (!$rootScope.uiCustomization.topPanelLogo_mini) {
+                    $rootScope.uiCustomization.topPanelLogo_mini = {
+                        url: '/images/logo-small.svg',
+                    }
+                }
+            }
+
+            common.getLoginPageUIOptions(function (loginPageUIOptions) {
 
                 if (!$rootScope.uiCustomization.background && !$rootScope.uiCustomization.pattern) {
                     $rootScope.uiCustomization.background = {

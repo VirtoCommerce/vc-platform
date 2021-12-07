@@ -8,11 +8,9 @@
 
                     <div class="uploader uploader__form-group">
                         <label class="uploader uploader__form-label">Choose default logo</label>
-                        <div ng-show="uploader.isHTML5">
-                            <div over-class="bd-blue" nv-file-over nv-file-drop uploader="uploader" class="uploader uploader__drag-area">
+                            <div over-class="bd-blue" uploader="defaultLogoUploader" nv-file-over nv-file-drop class="uploader uploader__drag-area">
                                 <div class="uploader uploader__drag-content">{{ 'catalog.blades.images.labels.drag-drop-comment' | translate }}</div>
                             </div>
-                        </div>
                         <div class="uploader uploader__hint">Select image with min height 30px of the PNG, GIF or SVG format</div>
                     </div>
 
@@ -23,7 +21,7 @@
             <div class="uploader-preview uploader-preview__container">
                 <div class="uploader-preview uploader-preview__sub-title">Preview</div>
                 <div class="uploader-preview uploader-preview__tile">
-                    <img class="uploader-preview uploader-preview__img" src="{{ blade.currentEntity.topPanelLogo.url }}" alt="Top panel logo image">
+                    <img class="uploader-preview uploader-preview__img" src="{{ blade.currentEntity.topPanelLogo_default.url }}" alt="Top panel logo image">
                 </div>
             </div>
         </div>
@@ -38,11 +36,9 @@
 
                     <div class="uploader uploader__form-group">
                         <label class="uploader uploader__form-label">Choose mini logo for small screens</label>
-                        <div ng-show="uploader.isHTML5">
-                            <div over-class="bd-blue" nv-file-over nv-file-drop uploader="uploader" class="uploader uploader__drag-area">
+                            <div over-class="bd-blue" uploader="miniLogoUploader" nv-file-over nv-file-drop class="uploader uploader__drag-area">
                                 <div class="uploader uploader__drag-content">{{ 'catalog.blades.images.labels.drag-drop-comment' | translate }}</div>
                             </div>
-                        </div>
                         <div class="uploader uploader__hint">Select square image with min height 30px and of the PNG, GIF or SVG format</div>
                     </div>
 
@@ -53,7 +49,7 @@
             <div class="uploader-preview uploader-preview__container">
                 <div class="uploader-preview uploader-preview__sub-title">Preview</div>
                 <div class="uploader-preview uploader-preview__tile">
-                    <img class="uploader-preview uploader-preview__img" src="{{ blade.currentEntity.topPanelLogoSquare.url }}" alt="Top panel logo image">
+                    <img class="uploader-preview uploader-preview__img" src="{{ blade.currentEntity.topPanelLogo_mini.url }}" alt="Top panel logo image">
                 </div>
             </div>
 

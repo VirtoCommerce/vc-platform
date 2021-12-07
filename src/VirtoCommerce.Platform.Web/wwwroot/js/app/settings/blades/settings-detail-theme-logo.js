@@ -1,26 +1,52 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.settingsDetailThemeLogoController', ['$scope', '$rootScope', '$q', 'FileUploader', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings',
-        function ($scope, $rootScope, $q, FileUploader, settingsHelper, bladeNavigationService, settingsApi) {
+    .controller('platformWebApp.settingsDetailThemeLogoController', ['$scope', '$rootScope', '$q', '$http', 'FileUploader', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings',
+        function ($scope, $rootScope, $q, $http, FileUploader, settingsHelper, bladeNavigationService, settingsApi) {
             var blade = $scope.blade;
             blade.updatePermission = 'platform:setting:update';
 
-            if (!$scope.uploader) {
-                var uploader = $scope.uploader = new FileUploader({
+            if (!$scope.defaultLogoUploader) {
+                var defaultLogoUploader = $scope.defaultLogoUploader = new FileUploader({
                     scope: $scope,
                     headers: { Accept: 'application/json' },
                     autoUpload: true,
                     removeAfterUpload: true
                 });
 
-                uploader.url = 'api/assets?folderUrl=customizatinon';
+                defaultLogoUploader.url = 'api/assets?folderUrl=customization';
 
-                uploader.onSuccessItem = function (fileItem, images, status, headers) {
+                defaultLogoUploader.onSuccessItem = function (fileItem, images, status, headers) {
                     angular.forEach(images, function (image) {
-                        blade.currentEntity.topPanelLogo.url = image.url;
+                        blade.currentEntity.topPanelLogo_default.url = image.url;
                     });
                 };
 
-                uploader.onErrorItem = function (element, response, status, headers) {
+                defaultLogoUploader.onErrorItem = function (element, response, status, headers) {
+                    bladeNavigationService.setError(element._file.name + ' failed: ' + (response.message ? response.message : status), blade);
+                };
+            }
+
+            if (!$scope.miniLogoUploader) {
+                var miniLogoUploader = $scope.miniLogoUploader = new FileUploader({
+                    scope: $scope,
+                    headers: { Accept: 'application/json' },
+                    autoUpload: true,
+                    removeAfterUpload: true
+                });
+
+                miniLogoUploader.url = 'api/assets?folderUrl=customization';
+
+                miniLogoUploader.onSuccessItem = function (fileItem, images, status, headers) {
+                    angular.forEach(images, function (image) {
+                        blade.currentEntity.topPanelLogo_mini.url = image.url;
+                    });
+                };
+
+                miniLogoUploader.onAfterAddingFile = function(item) {
+                    const fileExtension = '.' + item.file.name.split('.').pop();
+                    item.file.name = "topPanelLogo_mini" + fileExtension;
+                };
+
+                miniLogoUploader.onErrorItem = function (element, response, status, headers) {
                     bladeNavigationService.setError(element._file.name + ' failed: ' + (response.message ? response.message : status), blade);
                 };
             }
@@ -49,11 +75,38 @@ angular.module('platformWebApp')
                     var value = uiCustomizationSetting.value || uiCustomizationSetting.defaultValue;
                     if (value) {
                         var uiCustomization = angular.fromJson(value);
-                        uiCustomization.topPanelLogo = uiCustomization.topPanelLogo ? uiCustomization.topPanelLogo : blade.defaultUiCustomization.topPanelLogo;
-                        uiCustomization.topPanelLogoSquare = uiCustomization.topPanelLogoSquare ? uiCustomization.topPanelLogoSquare : blade.defaultUiCustomization.topPanelLogoSquare;
-
-                        blade.currentEntity = angular.copy(uiCustomization);
-                        blade.origEntity = uiCustomization;
+                        if (uiCustomization.topPanelLogo_default && uiCustomization.topPanelLogo_default.url) {
+                            isImageExists(uiCustomization.topPanelLogo_default.url).then((defaultLogoIsExists) => {
+                                uiCustomization.topPanelLogo_default.url = defaultLogoIsExists
+                                    ? uiCustomization.topPanelLogo_default.url
+                                    : blade.defaultUiCustomization.topPanelLogo_default.url;
+                                blade.currentEntity = angular.copy(uiCustomization);
+                                blade.origEntity = uiCustomization;
+                            });
+                        }
+                        else {
+                            uiCustomization.topPanelLogo_default = {
+                                url: blade.defaultUiCustomization.topPanelLogo_default.url,
+                            };
+                            blade.currentEntity = angular.copy(uiCustomization);
+                            blade.origEntity = uiCustomization;
+                        }
+                        if (uiCustomization.topPanelLogo_mini && uiCustomization.topPanelLogo_mini.url) {
+                            isImageExists(uiCustomization.topPanelLogo_mini.url).then((miniLogoIsExists) => {
+                                uiCustomization.topPanelLogo_mini.url = miniLogoIsExists
+                                    ? uiCustomization.topPanelLogo_mini.url
+                                    : blade.defaultUiCustomization.topPanelLogo_mini.url;
+                                blade.currentEntity = angular.copy(uiCustomization);
+                                blade.origEntity = uiCustomization;
+                            });
+                        }
+                        else {
+                            uiCustomization.topPanelLogo_mini = {
+                                url: blade.defaultUiCustomization.topPanelLogo_mini.url,
+                            };
+                            blade.currentEntity = angular.copy(uiCustomization);
+                            blade.origEntity = uiCustomization;
+                        }
                     }
                 });
             }
@@ -61,8 +114,25 @@ angular.module('platformWebApp')
             var formScope;
             $scope.setForm = function (form) { formScope = form; }
 
+            async function isImageExists(image_url) {
+                var deferred = $q.defer();
+                $http({ method: "GET", url: image_url }).then(
+                    function success() {
+                        deferred.resolve(true);
+                    },
+                    function error() {
+                        deferred.resolve(false);
+                    }
+                );
+                return deferred.promise;
+            }
+
             function isDirty() {
                 return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
+            }
+
+            function canResetToDefault() {
+                return blade.hasUpdatePermission();
             }
 
             function canSave() {
@@ -102,9 +172,10 @@ angular.module('platformWebApp')
                 {
                     name: "platform.commands.reset", icon: 'fa fa-undo',
                     executeMethod: function () {
-                        blade.currentEntity = angular.copy(blade.origEntity);
+                        blade.currentEntity.topPanelLogo_default.url = '/images/logo.svg';
+                        blade.currentEntity.topPanelLogo_mini.url = '/images/logo-small.svg';
                     },
-                    canExecuteMethod: isDirty
+                    canExecuteMethod: canResetToDefault
                 }
             ];
 

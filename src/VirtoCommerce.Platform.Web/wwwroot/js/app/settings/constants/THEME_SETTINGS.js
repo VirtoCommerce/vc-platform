@@ -46,11 +46,11 @@ angular.module("platformWebApp").constant("THEME_SETTINGS", {
                     template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-logo.tpl.html",
                     settingValues: {
                         defaultUiCustomization: {
-                            topPanelLogo: {
-                                url: "/images/topPanelLogo.svg",
+                            topPanelLogo_default: {
+                                url: "/images/logo.svg",
                             },
-                            topPanelLogoSquare: {
-                                url: "/images/topPanelLogo-square.svg",
+                            topPanelLogo_mini: {
+                                url: "/images/logo-small.svg",
                             },
                         },
                     },
