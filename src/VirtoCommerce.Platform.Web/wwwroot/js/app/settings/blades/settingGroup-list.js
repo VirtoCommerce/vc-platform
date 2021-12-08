@@ -88,11 +88,11 @@ angular.module('platformWebApp')
                         setBreadcrumbs(node);
                     } else {
                         var selectedSettings = _.filter(blade.allSettings, function (x) { return x.groupName === node.groupName || (node.groupName === 'General' && !x.groupName); });
-
                         var newBlade = {
                             id: 'settingsSection',
                             data: selectedSettings,
-                            title: 'platform.blades.settings-detail.title',
+                            headIcon: node.icon || '',
+                            title: node.name || 'platform.blades.settings-detail.title',
                             disableOpenAnimation: disableOpenAnimation,
                             controller: node.controller || 'platformWebApp.settingsDetailController',
                             template: node.template || '$(Platform)/Scripts/app/settings/blades/settings-detail.tpl.html',

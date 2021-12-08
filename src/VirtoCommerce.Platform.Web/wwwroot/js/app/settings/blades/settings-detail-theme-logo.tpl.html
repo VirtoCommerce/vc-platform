@@ -4,24 +4,32 @@
         <div class="themeSettingsBlade themeSettingsBlade__inner-block">
             <form name="formScope" class="uploader uploader__form">
                 <fieldset ng-init="setForm(formScope)">
-                    <legend>{{ blade.groupName }}</legend>
+                    <legend>{{ blade.title }}</legend>
 
                     <div class="uploader uploader__form-group">
                         <label class="uploader uploader__form-label">Choose default logo</label>
-                            <div over-class="bd-blue" uploader="defaultLogoUploader" nv-file-over nv-file-drop class="uploader uploader__drag-area">
-                                <div class="uploader uploader__drag-content">{{ 'catalog.blades.images.labels.drag-drop-comment' | translate }}</div>
+                            <div over-class="bd-blue" uploader="fullLogoUploader" nv-file-over nv-file-drop class="uploader uploader__drag-area">
+                                <div class="uploader uploader__drag-content">
+                                    <div class="uploader uploader__icon-container"><i class="fas fa-cloud-upload-alt fa-2x"></i></div>
+                                    <div class="uploader uploader__comment">{{ 'catalog.blades.images.labels.drag-drop-comment' | translate }}</div>
+                                </div>
                             </div>
-                        <div class="uploader uploader__hint">Select image with min height 30px of the PNG, GIF or SVG format</div>
+                        <div class="uploader uploader__hint">Select image up to 180px width and 34px height of the PNG, GIF or SVG format</div>
                     </div>
 
                 </fieldset>
             </form>
 
+            <div class="uploader uploader__pb-container" ng-if="fullLogoUploader.isUploading">
+                <div class="sub-t">Progress</div>
+                <div class="progress-bar __aqua" ng-style="{'width': fullLogoUploader.progress + '%'}"></div>
+            </div>
+
             <!-- preview -->
-            <div class="uploader-preview uploader-preview__container">
+            <div class="uploader-preview uploader-preview__container" ng-if="!fullLogoUploader.isUploading">
                 <div class="uploader-preview uploader-preview__sub-title">Preview</div>
                 <div class="uploader-preview uploader-preview__tile">
-                    <img class="uploader-preview uploader-preview__img" src="{{ blade.currentEntity.topPanelLogo_default.url }}" alt="Top panel logo image">
+                    <img class="uploader-preview uploader-preview__img" ng-src="{{ blade.currentEntity.topPanelLogo_full_custom.url || blade.currentEntity.topPanelLogo_full_default.url }}" alt="Top panel logo image">
                 </div>
             </div>
         </div>
@@ -37,19 +45,27 @@
                     <div class="uploader uploader__form-group">
                         <label class="uploader uploader__form-label">Choose mini logo for small screens</label>
                             <div over-class="bd-blue" uploader="miniLogoUploader" nv-file-over nv-file-drop class="uploader uploader__drag-area">
-                                <div class="uploader uploader__drag-content">{{ 'catalog.blades.images.labels.drag-drop-comment' | translate }}</div>
+                                <div class="uploader uploader__drag-content">
+                                    <div class="uploader uploader__icon-container"><i class="fas fa-cloud-upload-alt fa-2x"></i></div>
+                                    <div class="uploader uploader__comment">{{ 'catalog.blades.images.labels.drag-drop-comment' | translate }}</div>
+                                </div>
                             </div>
-                        <div class="uploader uploader__hint">Select square image with min height 30px and of the PNG, GIF or SVG format</div>
+                        <div class="uploader uploader__hint">Select image up to 60px width and 34px height of the PNG, GIF or SVG format</div>
                     </div>
 
                 </fieldset>
             </form>
 
+            <div class="uploader uploader__pb-container" ng-if="miniLogoUploader.isUploading">
+                <div class="sub-t">Progress</div>
+                <div class="progress-bar __aqua" ng-style="{'width': miniLogoUploader.progress + '%'}"></div>
+            </div>
+
             <!-- preview -->
-            <div class="uploader-preview uploader-preview__container">
+            <div class="uploader-preview uploader-preview__container" ng-if="!miniLogoUploader.isUploading">
                 <div class="uploader-preview uploader-preview__sub-title">Preview</div>
                 <div class="uploader-preview uploader-preview__tile">
-                    <img class="uploader-preview uploader-preview__img" src="{{ blade.currentEntity.topPanelLogo_mini.url }}" alt="Top panel logo image">
+                    <img class="uploader-preview uploader-preview__img" ng-src="{{ blade.currentEntity.topPanelLogo_mini_custom.url || blade.currentEntity.topPanelLogo_mini_default.url }}" alt="Top panel logo image">
                 </div>
             </div>
 

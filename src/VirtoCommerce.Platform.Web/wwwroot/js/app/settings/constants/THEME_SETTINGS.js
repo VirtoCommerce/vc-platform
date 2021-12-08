@@ -36,36 +36,40 @@ angular.module("platformWebApp").constant("THEME_SETTINGS", {
         "Logo Settings": {
             groupName: "Theme settings|Logo Settings",
             name: "Logo Settings",
-            icon: "fa fa-diamond",
+            icon: "fas fa-gem",
             children: {
                 "Top panel logo": {
                     groupName: "Theme settings|Logo Settings|Top panel logo",
                     name: "Top panel logo",
-                    icon: "fa fa-diamond",
+                    icon: "fas fa-gem",
                     controller: "platformWebApp.settingsDetailThemeLogoController",
                     template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-logo.tpl.html",
                     settingValues: {
-                        defaultUiCustomization: {
-                            topPanelLogo_default: {
-                                url: "/images/logo.svg",
-                            },
-                            topPanelLogo_mini: {
-                                url: "/images/logo-small.svg",
-                            },
+                        topPanelLogo_full_default: {
+                            url: '/images/logo.svg'
                         },
-                    },
+                        topPanelLogo_mini_default: {
+                            url: '/images/logo-small.svg'
+                        },
+                        topPanelLogo_full_custom: {
+                            url: ''
+                        },
+                        topPanelLogo_mini_custom: {
+                            url: ''
+                        },
+                    }
                 },
                 "Login screen logo": {
                     groupName: "Theme settings|Logo Settings|Login screen logo",
                     name: "Login screen logo",
-                    icon: "fa fa-diamond",
+                    icon: "fas fa-gem",
                     controller: "platformWebApp.settingsDetailThemeLogoController",
                     template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-logo.tpl.html",
                 },
                 "Logo for the login form header": {
                     groupName: "Theme settings|Logo Settings|Logo for the login form header",
                     name: "Logo for the login form header",
-                    icon: "fa fa-diamond",
+                    icon: "fas fa-gem",
                     controller: "platformWebApp.settingsDetailThemeLogoController",
                     template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-logo.tpl.html",
                 },

@@ -1,10 +1,10 @@
 <va-main-menu ng-model="mainMenu" on-menu-changed="onMainMenuChanged(mainMenu)">
     <div class="logo" ng-if="!mainMenu.isCollapsed">
-        <img ng-src="{{ uiCustomization.topPanelLogo_default.url }}" onerror="this.src='/images/logo.svg'" />
+        <img class="logo__img" ng-src="{{ uiCustomization.topPanelLogo_full_custom.url || uiCustomization.topPanelLogo_full_default.url }}" fallback-src="{{ uiCustomization.topPanelLogo_full_default.url }}" />
         <a class="logo-version" href="" ng-click="showVersionInfo()">{{platformVersion}}</a>
     </div>
     <div class="logo" ng-if="mainMenu.isCollapsed">
-        <img ng-src="{{ uiCustomization.topPanelLogo_mini.url }}" onerror="this.src='/images/logo-small.svg'" />
+        <img class="logo__img logo__img--collapsed" ng-src="{{ uiCustomization.topPanelLogo_mini_custom.url || uiCustomization.topPanelLogo_mini_default.url }}" fallback-src="{{ uiCustomization.topPanelLogo_mini_default.url }}" />
     </div>
 </va-main-menu>
 <article class="cnt" role="main">

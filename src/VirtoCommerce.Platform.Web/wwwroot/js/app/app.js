@@ -1,7 +1,7 @@
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
-    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', 'platformWebApp.common',
+    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS',
     function ($rootScope, $scope, mainMenuService,
-        i18n, modules, $state, bladeNavigationService, userProfile, settings, common) {
+        i18n, modules, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -97,21 +97,12 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
         settings.getUiCustomizationSetting(function (uiCustomizationSetting) {
 
-            $rootScope.uiCustomization = {};
+            const topPanelLogoSettings = THEME_SETTINGS.children["Logo Settings"].children["Top panel logo"].settingValues;
 
-            //Set top panel logo icons
+            $rootScope.uiCustomization = { ...topPanelLogoSettings };
+
             if (uiCustomizationSetting.value) {
-                $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
-                if (!$rootScope.uiCustomization.topPanelLogo_default) {
-                    $rootScope.uiCustomization.topPanelLogo_default = {
-                        url: '/images/logo.svg',
-                    }
-                }
-                if (!$rootScope.uiCustomization.topPanelLogo_mini) {
-                    $rootScope.uiCustomization.topPanelLogo_mini = {
-                        url: '/images/logo-small.svg',
-                    }
-                }
+                $rootScope.uiCustomization = { ...$rootScope.uiCustomization, ...angular.fromJson(uiCustomizationSetting.value) };
             }
 
             common.getLoginPageUIOptions(function (loginPageUIOptions) {

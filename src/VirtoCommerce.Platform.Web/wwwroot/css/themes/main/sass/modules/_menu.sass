@@ -28,15 +28,16 @@
     .dropdown.__opened
       transform: translateX($mainMenuCollapsedWidth)
   .logo
-    padding-left: 16px
     height: $headerHeight
     width: 100%
     z-index: 50
     align-items: center
     display: flex
     background: $headerBg
+    &__img
+      margin: 13px
+      max-height: 34px
     &-version
-      padding-left: 16px
       color: #838d9a;
       font-size: 10px;
       text-overflow: ellipsis;
