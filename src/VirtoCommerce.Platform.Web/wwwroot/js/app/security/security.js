@@ -14,10 +14,14 @@ angular.module('platformWebApp')
 
                         loginResources.getLoginTypes({}, function (loginTypes) {
                             // filter out inactive
-                            loginTypes = _.filter(loginTypes, function (loginType) { return loginType.enabled; });
+                            loginTypes = _.filter(loginTypes, function (loginTypeFilter) {
+                                return loginTypeFilter.enabled;
+                            });
 
                             // order by login type by priority
-                            var loginType = _.first(_.sortBy(loginTypes, function (loginType) { return loginType.priority; }));
+                            var loginType = _.first(_.sortBy(loginTypes, function (loginTypeSort) {
+                                return loginTypeSort.priority;
+                            }));
                             $scope.currentType = loginType.authenticationType;
 
                             externalSignInService.getProviders().then(
@@ -25,8 +29,8 @@ angular.module('platformWebApp')
                                     // compare external providers with the lists of login types to determines which ones has a template (password, azureAD)
                                     // and which ones can be activated by navigating the auth endpoing directly
                                     _.each(response.data, function (provider) {
-                                        var type = _.find(loginTypes, function (loginType) {
-                                            return loginType.authenticationType === provider.authenticationType;
+                                        var type = _.find(loginTypes, function (enabledLoginType) {
+                                            return enabledLoginType.authenticationType === provider.authenticationType;
                                         });
                                         provider.hasTemplate = !!type;
                                     });
