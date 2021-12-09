@@ -63,15 +63,16 @@ angular.module("platformWebApp").constant("THEME_SETTINGS", {
                     groupName: "Theme settings|Logo Settings|Login screen logo",
                     name: "Login screen logo",
                     icon: "fas fa-gem",
-                    controller: "platformWebApp.settingsDetailThemeLogoController",
-                    template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-logo.tpl.html",
-                },
-                "Logo for the login form header": {
-                    groupName: "Theme settings|Logo Settings|Logo for the login form header",
-                    name: "Logo for the login form header",
-                    icon: "fas fa-gem",
-                    controller: "platformWebApp.settingsDetailThemeLogoController",
-                    template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-logo.tpl.html",
+                    controller: "platformWebApp.settingsDetailThemeLoginScreenLogoController",
+                    template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-login-screen-logo.tpl.html",
+                    settingValues: {
+                        loginScreenLogo_default: {
+                            url: '/images/logo.svg'
+                        },
+                        loginScreenLogo_custom: {
+                            url: ''
+                        },
+                    }
                 },
             },
         },

@@ -98,8 +98,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         settings.getUiCustomizationSetting(function (uiCustomizationSetting) {
 
             const topPanelLogoSettings = THEME_SETTINGS.children["Logo Settings"].children["Top panel logo"].settingValues;
+            const loginScreenLogoSettings = THEME_SETTINGS.children["Logo Settings"].children["Login screen logo"].settingValues;
+            const loginScreenBGSettings = THEME_SETTINGS.children["Login Screen"].settingValues.defaultUiCustomization;
 
-            $rootScope.uiCustomization = { ...topPanelLogoSettings };
+            $rootScope.uiCustomization = { ...topPanelLogoSettings, ...loginScreenLogoSettings, ...loginScreenBGSettings };
 
             if (uiCustomizationSetting.value) {
                 $rootScope.uiCustomization = { ...$rootScope.uiCustomization, ...angular.fromJson(uiCustomizationSetting.value) };
