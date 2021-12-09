@@ -49,5 +49,10 @@ namespace VirtoCommerce.Platform.Web.Azure
         /// Check preferred_username claim as a fallback scenario in case when UPN claim is not set
         /// </summary>
         public bool UsePreferredUsername { get; set; }
+
+        /// <summary>
+        /// Login type priority
+        /// </summary>
+        public int Priority { get; set; }
     }
 }
