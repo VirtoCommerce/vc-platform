@@ -1,3 +1,5 @@
+const { log } = require("gulp-util");
+
 angular.module('platformWebApp')
     .config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
         $stateProvider.state('loginDialog',
@@ -5,41 +7,98 @@ angular.module('platformWebApp')
                 url: '/login',
                 templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
                 controller: [
-                    '$scope', 'platformWebApp.settings', 'platformWebApp.authService', 'platformWebApp.externalSignInService',
-                    function ($scope, settings, authService, externalSignInService) {
-                        externalSignInService.getProviders().then(
-                            function (response) {
-                                $scope.externalLoginProviders = response.data;
+                    '$scope', '$window', '$translate', 'platformWebApp.authService', 'platformWebApp.externalSignInService', 'platformWebApp.login',
+                    function ($scope, $window, $translate, authService, externalSignInService, loginResources) {
+                        $scope.loginProviders = [];
+                        $scope.defaultLoginType = 'Password';
+
+                        loginResources.getLoginTypes({}, function (loginTypes) {
+                            // filter out inactive
+                            loginTypes = _.filter(loginTypes, function (loginTypeFilter) {
+                                return loginTypeFilter.enabled;
                             });
-                        $scope.user = {};
-                        $scope.authError = null;
-                        $scope.authReason = false;
-                        $scope.loginProgress = false;
-                        $scope.ok = function () {
-                            // Clear any previous security errors
-                            $scope.authError = null;
-                            $scope.loginProgress = true;
-                            // Try to login
-                            authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
-                                function (loggedIn) {
-                                    $scope.loginProgress = false;
-                                    if (!loggedIn) {
-                                        $scope.authError = 'invalidCredentials';
-                                    }
-                                },
-                                function (x) {
-                                    $scope.loginProgress = false;
-                                    if (angular.isDefined(x.status)) {
-                                        if (x.status === 401) {
-                                            $scope.authError = 'The login or password is incorrect.';
-                                        } else {
-                                            $scope.authError = 'Authentication error (code: ' + x.status + ').';
-                                        }
-                                    } else {
-                                        $scope.authError = 'Authentication error ' + x;
+
+                            // order by login type by priority
+                            var loginType = _.first(_.sortBy(loginTypes, function (loginTypeSort) {
+                                return loginTypeSort.priority;
+                            }));
+                            $scope.currentType = loginType.authenticationType;
+
+                            externalSignInService.getProviders().then(
+                                function (response) {
+                                    // compare external providers with the lists of login types to determines which ones has a template (password, azureAD)
+                                    // and which ones can be activated by navigating the auth endpoing directly
+                                    _.each(response.data, function (provider) {
+                                        var type = _.find(loginTypes, function (enabledLoginType) {
+                                            return enabledLoginType.authenticationType === provider.authenticationType;
+                                        });
+                                        provider.hasTemplate = !!type;
+                                    });
+                                    $scope.loginProviders = response.data;
+
+                                    var passwordType = _.find(loginTypes, function (loginTypeFindPass) {
+                                        return loginTypeFindPass.authenticationType === $scope.defaultLoginType;
+                                    });
+
+                                    // add login type to the list if enabled
+                                    if (passwordType && $scope.loginProviders.length) {
+                                        // can't use $translate.instant() here because localization might not yet be initialized
+                                        $translate('platform.blades.login.labels.password-log-in-type').then(function (result) {
+                                            $scope.loginProviders.push({
+                                                authenticationType: $scope.defaultLoginType,
+                                                displayName: result,
+                                                hasTemplate: true
+                                            });
+                                        });
                                     }
                                 });
-                        };
+
+                            $scope.user = {};
+                            $scope.authError = null;
+                            $scope.authReason = false;
+                            $scope.loginProgress = false;
+
+                            $scope.switchLogin = function (provider) {
+                                // navigate to external endpoint or switch login template
+                                if (provider.hasTemplate) {
+                                    $scope.currentType = provider.authenticationType;
+                                }
+                                else {
+                                    $scope.externalLogin(provider.authenticationType);
+                                }
+                            }
+
+                            $scope.externalLogin = function (providerType) {
+                                var url = 'externalsignin?authenticationType=' + providerType;
+                                $window.location.href = url
+                            };
+
+                            $scope.ok = function () {
+                                // Clear any previous security errors
+                                $scope.authError = null;
+                                $scope.loginProgress = true;
+                                // Try to login
+                                authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
+                                    function (loggedIn) {
+                                        $scope.loginProgress = false;
+                                        if (!loggedIn) {
+                                            $scope.authError = 'invalidCredentials';
+                                        }
+                                    },
+                                    function (x) {
+                                        $scope.loginProgress = false;
+                                        if (angular.isDefined(x.status)) {
+                                            if (x.status === 401) {
+                                                $scope.authError = 'The login or password is incorrect.';
+                                            } else {
+                                                $scope.authError = 'Authentication error (code: ' + x.status + ').';
+                                            }
+                                        } else {
+                                            $scope.authError = 'Authentication error ' + x;
+                                        }
+                                    });
+                            };
+                        });
                     }
                 ]
             });
