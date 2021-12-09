@@ -36,8 +36,8 @@ angular.module('platformWebApp')
                                     });
                                     $scope.loginProviders = response.data;
 
-                                    var passwordType = _.find(loginTypes, function (loginType) {
-                                        return loginType.authenticationType === $scope.defaultLoginType;
+                                    var passwordType = _.find(loginTypes, function (loginTypeFindPass) {
+                                        return loginTypeFindPass.authenticationType === $scope.defaultLoginType;
                                     });
 
                                     // add login type to the list if enabled
