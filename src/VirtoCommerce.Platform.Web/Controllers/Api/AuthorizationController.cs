@@ -17,7 +17,6 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
-using VirtoCommerce.Platform.Web.Model.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Mvc.Server
@@ -30,7 +29,6 @@ namespace Mvc.Server
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
         private readonly AuthorizationOptions _authorizationOptions;
-        private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
 
         public AuthorizationController(
@@ -40,12 +38,10 @@ namespace Mvc.Server
             UserManager<ApplicationUser> userManager,
             IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
             IOptions<AuthorizationOptions> authorizationOptions,
-            IOptions<PasswordLoginOptions> passwordLoginOptions,
             IEventPublisher eventPublisher)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions;
-            _passwordLoginOptions = passwordLoginOptions.Value ?? new PasswordLoginOptions();
             _signInManager = signInManager;
             _userManager = userManager;
             _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
@@ -75,15 +71,6 @@ namespace Mvc.Server
                     {
                         Error = Errors.InvalidGrant,
                         ErrorDescription = "The username/password couple is invalid."
-                    });
-                }
-
-                if (!_passwordLoginOptions.Enabled && !user.IsAdministrator)
-                {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The username/password login is disabled."
                     });
                 }
 

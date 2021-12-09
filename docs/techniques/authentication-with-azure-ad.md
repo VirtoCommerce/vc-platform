@@ -91,8 +91,7 @@ To set up the Azure Active Directory-based authentication in Virto Commerce Plat
         "TenantId": "fe353e8f-5f08-43b4-89d1-f4acec93df33",
         "AzureAdInstance": "https://login.microsoftonline.com/",
         "DefaultUserType": "Manager",
-        "UsePreferredUsername": false,
-        "Priority": 0
+        "UsePreferredUsername": false
     },
 ```
 
@@ -163,29 +162,4 @@ To solve this situation the updated configuration should look like this:
         "DefaultUserType": "Manager",
         "UsePreferredUsername": false
     },
-```
-
-## Configuring priority of login schemes
-
-By default the username/password login is enabled and shown first on the login page. 
-
-  ![Sign-in pages](../media/azure-sso10-vc-platform-login.gif)
-
-It's possible to control the order of login popups or disable the password login completely. To disable username/password login add the following configuration options:
-```json
-    "PasswordLogin": {
-        "Enabled": false
-    },
-```
-
-If both login AzureAd and username/password login types are enabled the priority in which they are shown can be controlled by the Priority option (lower number has a higher priority):
-```json
-    "PasswordLogin": {
-        "Enabled": true,
-        "Priority": 0
-    },
-    "AzureAd": {
-        "Enabled": true,
-        "Priority": 1
-      },
 ```

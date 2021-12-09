@@ -13,7 +13,6 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
-using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Model.Security;
 using Xunit;
@@ -77,18 +76,12 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
         private SecurityController CreateSecurityController(
             Mock<IOptions<PasswordOptionsExtended>> passwordOptions = null,
-            Mock<IOptions<AuthorizationOptions>> securityOptions = null,
-            Mock<IOptions<AzureAdOptions>> azureAdOptions = null,
-            Mock<IOptions<PasswordLoginOptions>> passwordLoginOptions = null
+            Mock<IOptions<AuthorizationOptions>> securityOptions = null
             )
         {
             passwordOptions ??= new Mock<IOptions<PasswordOptionsExtended>> { DefaultValue = DefaultValue.Mock };
 
             securityOptions ??= new Mock<IOptions<AuthorizationOptions>> { DefaultValue = DefaultValue.Mock };
-
-            azureAdOptions ??= new Mock<IOptions<AzureAdOptions>> { DefaultValue = DefaultValue.Mock };
-
-            passwordLoginOptions ??= new Mock<IOptions<PasswordLoginOptions>> { DefaultValue = DefaultValue.Mock };
 
             return new SecurityController(
                 signInManager: _signInManagerMock.Object,
@@ -99,8 +92,6 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 securityOptions: securityOptions.Object,
                 userOptionsExtended: Mock.Of<IOptions<UserOptionsExtended>>(),
                 passwordOptions: passwordOptions.Object,
-                azureAdLoginOptions: azureAdOptions.Object,
-                passwordLoginOptions: passwordLoginOptions.Object,
                 passwordValidator: _passwordValidatorMock.Object,
                 emailSender: _emailSenderMock.Object,
                 eventPublisher: _eventPublisherMock.Object,
