@@ -30,7 +30,7 @@
                 <div class="uploader-preview uploader-preview__sub-title">Preview</div>
                 <div class="uploader-preview uploader-preview__tile uploader-preview__tile--centered uploader-preview__tile--relative">
                     <img class="uploader-preview uploader-preview__img--bg" ng-if="blade.currentEntity.background && blade.currentEntity.background.url" ng-src="{{ blade.currentEntity.background.url }}" alt="Login screen logo image background">
-                    <img class="uploader-preview uploader-preview__img--absolute" ng-src="{{ blade.currentEntity.loginScreenLogo_custom.url || blade.currentEntity.loginScreenLogo_default.url }}" alt="Login screen logo image preview">
+                    <img class="uploader-preview uploader-preview__img--absolute" src="{{ blade.currentEntity.loginScreenLogo_custom.url }}" fallback-src="{{ blade.currentEntity.loginScreenLogo_default.url }}" alt="Login screen logo image preview">
                 </div>
             </div>
         </div>

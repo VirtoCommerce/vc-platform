@@ -28,6 +28,11 @@ angular.module('platformWebApp')
 
                 fullLogoUploader.url = 'api/assets?folderUrl=customization';
 
+                fullLogoUploader.onAfterAddingFile = function(item) {
+                    const fileExtension = '.' + item.file.name.split('.').pop();
+                    item.file.name = "topPanelLogo_full_custom" + Date.now().toString() + fileExtension;
+                };
+
                 fullLogoUploader.onSuccessItem = function (_, uploadedImages) {
                     blade.currentEntity.topPanelLogo_full_custom.url = uploadedImages[0].url;
                 };
@@ -65,6 +70,11 @@ angular.module('platformWebApp')
                     blade.currentEntity.topPanelLogo_mini_custom.url = uploadedImages[0].url;
                 };
 
+                miniLogoUploader.onAfterAddingFile = function(item) {
+                    const fileExtension = '.' + item.file.name.split('.').pop();
+                    item.file.name = "topPanelLogo_mini_custom" + Date.now().toString() + fileExtension;
+                };
+
                 miniLogoUploader.onErrorItem = function (element, response, status, headers) {
                     bladeNavigationService.setError(element._file.name + ' failed: ' + (response.message ? response.message : status), blade);
                 };
@@ -80,60 +90,18 @@ angular.module('platformWebApp')
                 settingsApi.getUiCustomizationSetting(function (uiCustomizationSetting) {
                     blade.isLoading = false;
                     blade.uiCustomizationSetting = uiCustomizationSetting;
+                    let uiCustomization = { ...$rootScope.uiCustomization };
                     const value = uiCustomizationSetting.value || uiCustomizationSetting.defaultValue;
                     if (value) {
-                        const uiCustomization = { ...$rootScope.uiCustomization, ...angular.fromJson(value) };
-                        if (uiCustomization.topPanelLogo_full_custom && uiCustomization.topPanelLogo_full_custom.url) {
-                            isImageExists(uiCustomization.topPanelLogo_full_custom.url).then((fullLogoIsExists) => {
-                                if (!fullLogoIsExists) {
-                                    uiCustomization.topPanelLogo_full_custom.url = "";
-                                }
-                                blade.currentEntity = angular.copy(uiCustomization);
-                                blade.origEntity = uiCustomization;
-                            });
-                        }
-                        else {
-                            uiCustomization.topPanelLogo_full_custom = {
-                                url: "",
-                            };
-                            blade.currentEntity = angular.copy(uiCustomization);
-                            blade.origEntity = uiCustomization;
-                        }
-                        if (uiCustomization.topPanelLogo_mini_custom && uiCustomization.topPanelLogo_mini_custom.url) {
-                            isImageExists(uiCustomization.topPanelLogo_mini_custom.url).then((miniLogoIsExists) => {
-                                if (!miniLogoIsExists) {
-                                    uiCustomization.topPanelLogo_mini_custom.url = "";
-                                }
-                                blade.currentEntity = angular.copy(uiCustomization);
-                                blade.origEntity = uiCustomization;
-                            });
-                        }
-                        else {
-                            uiCustomization.topPanelLogo_mini_custom = {
-                                url: "",
-                            };
-                            blade.currentEntity = angular.copy(uiCustomization);
-                            blade.origEntity = uiCustomization;
-                        }
+                        uiCustomization = { ...uiCustomization, ...angular.fromJson(value) };
                     }
+                    blade.currentEntity = angular.copy(uiCustomization);
+                    blade.origEntity = uiCustomization;
                 });
             }
 
             let formScope;
             $scope.setForm = function (form) { formScope = form; }
-
-            function isImageExists(image_url) {
-                let deferred = $q.defer();
-                $http({ method: "GET", url: image_url }).then(
-                    function success() {
-                        deferred.resolve(true);
-                    },
-                    function error() {
-                        deferred.resolve(false);
-                    }
-                );
-                return deferred.promise;
-            }
 
             function isDirty() {
                 return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();

@@ -28,6 +28,11 @@ angular.module('platformWebApp')
 
                 logoUploader.url = 'api/assets?folderUrl=customization';
 
+                logoUploader.onAfterAddingFile = function(item) {
+                    const fileExtension = '.' + item.file.name.split('.').pop();
+                    item.file.name = "loginScreenLogo_custom" + Date.now().toString() + fileExtension;
+                };
+
                 logoUploader.onSuccessItem = function (_, uploadedImages) {
                     blade.currentEntity.loginScreenLogo_custom.url = uploadedImages[0].url;
                 };
@@ -48,44 +53,18 @@ angular.module('platformWebApp')
                 settingsApi.getUiCustomizationSetting(function (uiCustomizationSetting) {
                     blade.isLoading = false;
                     blade.uiCustomizationSetting = uiCustomizationSetting;
+                    let uiCustomization = { ...$rootScope.uiCustomization };
                     const value = uiCustomizationSetting.value || uiCustomizationSetting.defaultValue;
                     if (value) {
-                        const uiCustomization = { ...$rootScope.uiCustomization, ...angular.fromJson(value) };
-                        if (uiCustomization.loginScreenLogo_custom && uiCustomization.loginScreenLogo_custom.url) {
-                            isImageExists(uiCustomization.loginScreenLogo_custom.url).then((loginScreenLogoIsExists) => {
-                                if (!loginScreenLogoIsExists) {
-                                    uiCustomization.loginScreenLogo_custom.url = "";
-                                }
-                                blade.currentEntity = angular.copy(uiCustomization);
-                                blade.origEntity = uiCustomization;
-                            });
-                        }
-                        else {
-                            uiCustomization.loginScreenLogo_custom = {
-                                url: "",
-                            };
-                            blade.currentEntity = angular.copy(uiCustomization);
-                            blade.origEntity = uiCustomization;
-                        }
+                        uiCustomization = { ...uiCustomization, ...angular.fromJson(value) };
                     }
+                    blade.currentEntity = angular.copy(uiCustomization);
+                    blade.origEntity = uiCustomization;
                 });
             }
 
             let formScope;
             $scope.setForm = function (form) { formScope = form; }
-
-            function isImageExists(image_url) {
-                let deferred = $q.defer();
-                $http({ method: "GET", url: image_url }).then(
-                    function success() {
-                        deferred.resolve(true);
-                    },
-                    function error() {
-                        deferred.resolve(false);
-                    }
-                );
-                return deferred.promise;
-            }
 
             function isDirty() {
                 return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
