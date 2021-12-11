@@ -229,11 +229,8 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 await repository.UnitOfWork.CommitAsync();
             }
             pkMap.ResolvePrimaryKeys();
-
-            ClearCache(models);
-
             await AfterSaveChangesAsync(models, changedEntries);
-
+            ClearCache(models);
             await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
         }
 
