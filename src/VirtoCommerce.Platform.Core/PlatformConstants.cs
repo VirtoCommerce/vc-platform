@@ -170,13 +170,7 @@ namespace VirtoCommerce.Platform.Core
                     GroupName = "Platform|Security",
                     ValueType = SettingValueType.ShortText,
                     IsDictionary = true,
-                    AllowedValues = new string[] {
-                        ".pdf",
-                        ".txt",
-                        ".png",
-                        ".mp3"
-                    },
-                    DefaultValue = ".pdf",
+                    AllowedValues = new string[0]
                 };
 
                 public static IEnumerable<SettingDescriptor> AllSettings
