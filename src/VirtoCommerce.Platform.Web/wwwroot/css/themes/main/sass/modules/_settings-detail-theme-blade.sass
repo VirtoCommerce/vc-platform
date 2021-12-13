@@ -9,10 +9,19 @@
         @extend .inner-block
         margin-left: auto
         margin-right: auto
+    &__title
+        margin: 15px 20px 0
+        border-bottom: 1px solid #eaedf3
+        display: block
+        font-size: 24px
+        font-weight: 300
+        padding: 0 0 5px
+        width: 100%
 
     .uploader
         &__form
             @extend .form
+            padding-top: 0px
             padding-bottom: 8px
         &__form-group
             @extend #{'.list', '.__info', '.form-group'}
@@ -34,6 +43,9 @@
             width: 20%
         &__comment
             user-select: none
+            font-size: 15px
+            a
+                font-size: inherit
         &__pb-container
             min-height: 90px
 

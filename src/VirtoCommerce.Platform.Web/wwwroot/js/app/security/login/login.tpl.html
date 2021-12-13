@@ -2,7 +2,7 @@
      ng-style="{ 'background-image': 'url('+uiCustomization.pattern.url+'), url('+(uiCustomization.background.url || 'images/login.png' )+')' }">
      <div class="login-screen-logo">
         <div class="login-screen-logo login-screen-logo__container">
-            <img class="login-screen-logo login-screen-logo__img" src="{{ uiCustomization.loginScreenLogo_custom.url || uiCustomization.loginScreenLogo_default.url }}" fallback-src="{{ uiCustomization.loginScreenLogo_default.url }}" alt="Login screen logo image">
+            <img class="login-screen-logo login-screen-logo__img" ng-src="{{ uiCustomization.loginScreenLogo_custom.url || uiCustomization.loginScreenLogo_default.url }}" fallback-src="{{ uiCustomization.loginScreenLogo_default.url }}" alt="Login screen logo image">
         </div>
      </div>
     <div class="window">

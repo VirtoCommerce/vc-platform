@@ -103,6 +103,10 @@ angular.module('platformWebApp')
             let formScope;
             $scope.setForm = function (form) { formScope = form; }
 
+            $scope.browseFiles = function (id) {
+                window.document.querySelector(`#${id}`).click()
+            }
+
             function isDirty() {
                 return !angular.equals(blade.currentEntity, blade.origEntity) && blade.hasUpdatePermission();
             }

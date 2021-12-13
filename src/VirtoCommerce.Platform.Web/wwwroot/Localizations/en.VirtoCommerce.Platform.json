@@ -626,6 +626,11 @@
                 "title": "Settings",
                 "bread-crumb-top": "All settings"
             },
+            "settings-uploader": {
+                "drag-drop-comment": "Drag and drop file here",
+                "or": "or",
+                "browse-your-files": "browse your files"
+            },
             "user-profile": {
                 "title": "User profile",
                 "labels": {
