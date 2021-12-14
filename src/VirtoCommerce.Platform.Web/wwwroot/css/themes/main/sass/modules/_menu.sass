@@ -10,9 +10,6 @@
       left: $mainMenuCollapsedWidth
     & ~ .cnt .header
       padding-left: $mainMenuCollapsedWidth
-    .logo-img
-      background-image: url('/images/logo-small.svg')
-      background-size: auto
     .logo-version
         display: none
     .bar
@@ -37,12 +34,9 @@
     align-items: center
     display: flex
     background: $headerBg
-    &-img
-      background: url('/images/logo.svg') no-repeat scroll 15px 15px $headerBg
-      background-size: 127px 30px
-      width: 70%
-      font-size: 0
-      height: $headerHeight
+    &__img
+      margin: 13px
+      max-height: 34px
     &-version
       color: #838d9a;
       font-size: 10px;
