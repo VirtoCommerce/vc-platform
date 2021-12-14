@@ -189,7 +189,7 @@ angular.module('platformWebApp')
                         }
                     }
                 }
-                dialogService.showAcceptanceDialog(dialog);
+                dialogService.showWarningDialog(dialog);
             }
 
             // actions on load

@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
 .controller('platformWebApp.modulesListController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'uiGridConstants', 'platformWebApp.uiGridHelper', 'platformWebApp.moduleHelper', '$timeout',
 function ($scope, bladeNavigationService, dialogService, modules, uiGridConstants, uiGridHelper, moduleHelper, $timeout) {
-    $scope.uiGridConstants = uiGridConstants;    
+    $scope.uiGridConstants = uiGridConstants;
     var blade = $scope.blade;
 
     blade.refresh = function () {
@@ -79,18 +79,18 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                         action: action,
                         selection: selection,
                         dependencies: data,
-                        callback: function () {
-                            // confirmed. Initiate modules (un)installation
-                            _.each(selection, function (x) {
-                                if (!_.findWhere(data, { id: x.id })) {
-                                    data.push(x);
-                                }
-                            });
-
-                            modulesApiMethod = action === 'uninstall' ? modules.uninstall : modules.install;
-                            modulesApiMethod(data, onAfterConfirmed, function (error) {
-                                bladeNavigationService.setError('Error ' + error.status, blade);
-                            });
+                        callback: function (resume) {
+                            if (resume) {
+                                _.each(selection, function (x) {
+                                    if (!_.findWhere(data, { id: x.id })) {
+                                        data.push(x);
+                                    }
+                                });
+                                modulesApiMethod = action === 'uninstall' ? modules.uninstall : modules.install;
+                                modulesApiMethod(data, onAfterConfirmed, function (error) {
+                                    bladeNavigationService.setError('Error ' + error.status, blade);
+                                });
+                            }
                         }
                     }
                     dialogService.showDialog(dialog, '$(Platform)/Scripts/app/modularity/dialogs/moduleAction-dialog.tpl.html', 'platformWebApp.confirmDialogController');

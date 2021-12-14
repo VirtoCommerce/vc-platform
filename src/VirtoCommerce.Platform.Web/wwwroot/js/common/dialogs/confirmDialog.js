@@ -31,7 +31,7 @@
         return found;
     }
 
-    dialogService.showDialog = function (dialog, templateUrl, controller, cssClass, modalBackdrop = true, closeFromKeyboard = true) {
+    dialogService.showDialog = function (dialog, templateUrl, controller, cssClass, modalBackdrop = true, closeFromKeyboard = false) {
         var dlg = findDialog(dialog.id);
 
         if (angular.isUndefined(dlg)) {
@@ -73,21 +73,37 @@
         }
     };
 
-    dialogService.showAcceptanceDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/acceptDialog.tpl.html', 'platformWebApp.confirmDialogController');
-    };
 
     dialogService.showConfirmationDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/confirmDialog.tpl.html', 'platformWebApp.confirmDialogController');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/confirmDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
-    dialogService.showNotificationDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
+    dialogService.showSuccessDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/successDialog.tpl.html', 'platformWebApp.confirmDialogController');
+    };
+
+    dialogService.showWarningDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/warningDialog.tpl.html', 'platformWebApp.confirmDialogController');
+    };
+
+    dialogService.showErrorDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/errorDialog.tpl.html', 'platformWebApp.confirmDialogController');
     };
 
     dialogService.showGalleryDialog = function (dialog) {
-        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/galleryDialog.tpl.html', 'platformWebApp.galleryDialogController', '__gallery');
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_galleryDialog.tpl.html', 'platformWebApp.galleryDialogController', '__gallery');
     };
+
+
+    // Next methods are obsolete and have to be deleted after modules update.
+    dialogService.showAcceptanceDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_acceptDialog.tpl.html', 'platformWebApp.confirmDialogController');
+    };
+
+    dialogService.showNotificationDialog = function (dialog) {
+        dialogService.showDialog(dialog, '$(Platform)/Scripts/common/dialogs/templates/_notifyDialog.tpl.html', 'platformWebApp.confirmDialogController');
+    };
+
 
     return dialogService;
 

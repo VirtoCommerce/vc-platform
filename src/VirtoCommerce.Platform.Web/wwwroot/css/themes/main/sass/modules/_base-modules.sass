@@ -1616,45 +1616,36 @@ tags-input
     transition: height .3s ease
     .blade-status
       height: 30px
-      left: 0
       position: absolute
-      right: 0
       top: 0
+      right: 0
+      left: 0
       .status-message
+        height: 30px
         background: #7a1c13
-        bottom: 0
         color: $whiteColor
         font-size: 14px
-        left: 0
-        line-height: 23px
-        padding: 0 0 0 50px
-        position: absolute
-        right: 0
-        top: 0
-        z-index: 300
         filter: alpha(opacity=50)
         display: flex
+        align-items: center
         box-sizing: border-box
-        &::after
-          color: $whiteColor
-          content: ''
-          font-family: $fontAw
-          left: 20px
-          position: absolute
-          top: 2px
+        padding-left: 15px
+        line-height: normal
+      .error-icon-container
+        padding-bottom: 2px
       .error-message
+        padding-left: 7px
         flex-grow: 1
         overflow: hidden
         text-overflow: ellipsis
         white-space: nowrap
         padding-right: 15px
       .link-error-details
+        font-size: 14px
         color: #999
-        float: right
-        margin-right: 80px
-        margin-top: -1px
+        margin-right: 15px
         text-decoration: underline
-        &::hover
+        &:hover
           color: $whiteColor
       .progress-bar
         bottom: 0
