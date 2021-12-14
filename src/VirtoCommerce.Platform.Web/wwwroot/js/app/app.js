@@ -1,7 +1,7 @@
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
-    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', 'platformWebApp.common',
+    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS',
     function ($rootScope, $scope, mainMenuService,
-        i18n, modules, $state, bladeNavigationService, userProfile, settings, common) {
+        i18n, modules, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -96,12 +96,18 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
         }
 
         settings.getUiCustomizationSetting(function (uiCustomizationSetting) {
-            common.getLoginPageUIOptions(function (loginPageUIOptions) {
-                $rootScope.uiCustomization = {};
 
-                if (uiCustomizationSetting.value) {
-                    $rootScope.uiCustomization = angular.fromJson(uiCustomizationSetting.value);
-                }
+            const topPanelLogoSettings = THEME_SETTINGS.children["Logo Settings"].children["Top panel logo"].settingValues;
+            const loginScreenLogoSettings = THEME_SETTINGS.children["Logo Settings"].children["Login screen logo"].settingValues;
+            const loginScreenBGSettings = THEME_SETTINGS.children["Login Screen"].settingValues.defaultUiCustomization;
+
+            $rootScope.uiCustomization = { ...topPanelLogoSettings, ...loginScreenLogoSettings, ...loginScreenBGSettings };
+
+            if (uiCustomizationSetting.value) {
+                $rootScope.uiCustomization = { ...$rootScope.uiCustomization, ...angular.fromJson(uiCustomizationSetting.value) };
+            }
+
+            common.getLoginPageUIOptions(function (loginPageUIOptions) {
 
                 if (!$rootScope.uiCustomization.background && !$rootScope.uiCustomization.pattern) {
                     $rootScope.uiCustomization.background = {
