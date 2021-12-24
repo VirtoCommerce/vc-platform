@@ -42,12 +42,9 @@ Microsoft.AspNetCore.SignalR.Common.dll
 Microsoft.AspNetCore.SignalR.Protocols.Json.dll
 Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson.dll
 Microsoft.AspNetCore.SignalR.StackExchangeRedis.dll
-Microsoft.Azure.KeyVault.Core.dll
 Microsoft.Azure.SignalR.Common.dll
 Microsoft.Azure.SignalR.dll
 Microsoft.Azure.SignalR.Protocols.dll
-Microsoft.Azure.Storage.Blob.dll
-Microsoft.Azure.Storage.Common.dll
 Microsoft.Bcl.AsyncInterfaces.dll
 Microsoft.Bcl.HashCode.dll
 Microsoft.Data.SqlClient.dll
@@ -94,7 +91,6 @@ Microsoft.IdentityModel.Tokens.dll
 Microsoft.OpenApi.dll
 Microsoft.VisualStudio.Web.BrowserLink.dll
 Microsoft.Win32.Registry.dll
-Microsoft.WindowsAzure.Storage.dll
 Newtonsoft.Json.Bson.dll
 Newtonsoft.Json.dll
 OpenIddict.Abstractions.dll

@@ -10,9 +10,6 @@
       left: $mainMenuCollapsedWidth
     & ~ .cnt .header
       padding-left: $mainMenuCollapsedWidth
-    .logo-img
-      background-image: url('/images/logo-small.svg')
-      background-size: auto
     .logo-version
         display: none
     .bar
@@ -37,12 +34,9 @@
     align-items: center
     display: flex
     background: $headerBg
-    &-img
-      background: url('/images/logo.svg') no-repeat scroll 15px 15px $headerBg
-      background-size: 127px 30px
-      width: 70%
-      font-size: 0
-      height: $headerHeight
+    &__img
+      margin: 13px
+      max-height: 34px
     &-version
       color: #838d9a;
       font-size: 10px;
@@ -75,16 +69,6 @@
         overflow-y: hidden
         &:hover
           overflow-y: auto
-        &::-webkit-scrollbar
-          background: transparent
-        &::-webkit-scrollbar-track-piece
-            background: #545454
-        &::-webkit-scrollbar-thumb
-            background: #434343
-        -ms-scrollbar-arrow-color: #545454
-        -ms-scrollbar-face-color: #434343
-        -ms-scrollbar-shadow-color: #434343
-        -ms-scrollbar-track-color: #545454
         .content
           position: absolute
           left: 0
@@ -108,6 +92,8 @@
           padding: 10px $listItemHorizontalPadding
         &.__hovered
           background: $navbarItemBg
+        &.__selected
+          background: #d9effa !important
         &.__animated
           animation: notify ease 1 1.5s
           .list-ico,
@@ -304,14 +290,6 @@
   &.__more
     .dropdown-content
       height: calc(100% - 100px)
-      -ms-scrollbar-arrow-color: #f9f9f9
-      -ms-scrollbar-face-color: #e6e6e6
-      -ms-scrollbar-shadow-color: #e6e6e6
-      -ms-scrollbar-track-color: #f9f9f9
-    .dropdown-content::-webkit-scrollbar-track-piece
-      background: #f9f9f9
-    .dropdown-content::-webkit-scrollbar-thumb
-      background: #e6e6e6
     .list
       width: 360px
     .list-group
@@ -402,12 +380,6 @@
           top: 7px
           width: 3px
           z-index: -1
-  &::-webkit-scrollbar
-    background-color: transparent
-  &::-webkit-scrollbar-track-piece
-    background: #545454
-  &::-webkit-scrollbar-thumb
-    background: #434343
   .list-t,
   .list-date,
   .list-descr

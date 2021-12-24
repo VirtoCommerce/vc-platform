@@ -1,8 +1,10 @@
 .ui-grid,
 .ui-grid-header
   border-color: $baseBrd
-/*.ui-grid-viewport
-  overflow-x: auto !important*/
+.ui-grid-render-container-body > .ui-grid-viewport
+  overflow: hidden !important
+.ui-grid-contents-wrapper:hover > .ui-grid-render-container-body > .ui-grid-viewport
+  overflow: auto !important
 .ui-grid-top-panel
   background: rgba(0,0,0,.024)
 .ui-grid-header-cell
@@ -73,13 +75,13 @@
     // quick bug fix, because other selection divs contain &nbsp by default
     margin-right: 2px
   .ui-grid-cell-contents:after
-    display: inline;
+    display: inline
 .ui-grid-row-header-cell .ui-grid-cell-contents,
 .ui-grid-pinned-container-left .ui-grid-cell-contents
   text-align: center
 .table-wrapper.nowrap .ui-grid-cell-contents
   white-space: initial
-.table-wrapper.nowrap .ui-grid-cell 
+.table-wrapper.nowrap .ui-grid-cell
   height: auto
   display: table-cell
   float: none
@@ -264,6 +266,7 @@ input.ui-grid-filter-input[type="text"]
   z-index: 50
   padding-top: 2px
   padding-left: 3px
+  overflow: hidden
   &::after
     content: ' '
     display: inline-block
@@ -277,6 +280,7 @@ input.ui-grid-filter-input[type="text"]
     transition: font .3s ease
     &.context-menu::before
       content: "\f142"
+
 .ui-grid-actions ~ .menu
   background: $baseBrd
   box-sizing: border-box
@@ -304,7 +308,7 @@ input.ui-grid-filter-input[type="text"]
   transition: width .35s ease .5s
 .ui-grid-actions.__opened ~ .menu
   width: calc(100% - 80px)
-  
+
 .ui-grid-draggable-row-target
   opacity: 0.5 !important
 .ui-grid-draggable-row

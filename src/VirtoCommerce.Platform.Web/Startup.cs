@@ -32,10 +32,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
-using VirtoCommerce.Platform.Assets.AzureBlobStorage;
-using VirtoCommerce.Platform.Assets.AzureBlobStorage.Extensions;
-using VirtoCommerce.Platform.Assets.FileSystem;
-using VirtoCommerce.Platform.Assets.FileSystem.Extensions;
+using VirtoCommerce.Assets.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
@@ -55,6 +52,7 @@ using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Migrations;
+using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
@@ -117,6 +115,8 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
+
+            services.AddSingleton<ICommonBlobProvider, LicenseProviderBlobStub>();
             services.AddSingleton<LicenseProvider>();
 
             var mvcBuilder = services.AddMvc(mvcOptions =>
@@ -251,6 +251,8 @@ namespace VirtoCommerce.Platform.Web
                 var options = new AzureAdOptions();
                 azureAdSection.Bind(options);
 
+                services.Configure<AzureAdOptions>(azureAdSection);
+
                 if (options.Enabled)
                 {
                     //TODO: Need to check how this influence to OpennIddict Reference tokens activated by this line below  AddValidation(options => options.UseReferenceTokens())
@@ -351,6 +353,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
+            services.Configure<PasswordLoginOptions>(Configuration.GetSection("PasswordLogin"));
             services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
             services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
 
@@ -398,24 +401,6 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
-
-            //Assets
-            var assetsProvider = Configuration.GetSection("Assets:Provider").Value;
-            if (assetsProvider.EqualsInvariant(AzureBlobProvider.ProviderName))
-            {
-                services.AddOptions<AzureBlobOptions>().Bind(Configuration.GetSection("Assets:AzureBlobStorage")).ValidateDataAnnotations();
-                services.AddAzureBlobProvider();
-            }
-            else
-            {
-                services.AddOptions<FileSystemBlobOptions>().Bind(Configuration.GetSection("Assets:FileSystem"))
-                      .PostConfigure(options =>
-                      {
-                          options.RootPath = WebHostEnvironment.MapPath(options.RootPath);
-                      }).ValidateDataAnnotations();
-
-                services.AddFileSystemBlobProvider();
-            }
 
             //HangFire
             services.AddHangfire(Configuration);

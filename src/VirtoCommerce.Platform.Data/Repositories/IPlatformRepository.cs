@@ -7,7 +7,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
 {
     public interface IPlatformRepository : IRepository
     {
-        IQueryable<AssetEntryEntity> AssetEntries { get; }
         IQueryable<SettingEntity> Settings { get; }
 
         IQueryable<DynamicPropertyEntity> DynamicProperties { get; }
@@ -21,8 +20,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
         Task<DynamicPropertyEntity[]> GetObjectDynamicPropertiesAsync(string[] objectTypes);
 
         Task<SettingEntity[]> GetObjectSettingsByNamesAsync(string[] names, string objectType, string objectId);
-
-        Task<AssetEntryEntity[]> GetAssetsByIdsAsync(string[] ids);
 
         Task<OperationLogEntity[]> GetOperationLogsByIdsAsync(string[] ids);
     }

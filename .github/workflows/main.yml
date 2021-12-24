@@ -1,4 +1,4 @@
-# v1.1.10
+# v1.1.11
 name: Platform CI
 
 on:
@@ -47,9 +47,10 @@ jobs:
       PACKAGE_SERVER: 'ghcr.io'
       BUILD_STATE: 'failed'
       RELEASE_STATUS: 'false'
+      BUILD_DOCKER: 'false'
 
     outputs:
-      taggedVersion: ${{ steps.image.outputs.taggedVersion }}
+      artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
       jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
 
     steps:
@@ -58,6 +59,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
+        
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
 
     - name: Set variables
       if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -69,6 +74,11 @@ jobs:
       if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
       run: |
         echo "RELEASE_STATUS=true" >> $GITHUB_ENV
+
+    - name: Set BUILD_DOCKER
+      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      run: |
+        echo "BUILD_DOCKER=true" >> $GITHUB_ENV
 
     - uses: actions/checkout@v2
       with:
@@ -127,7 +137,7 @@ jobs:
       run: vc-build Compress -skip Clean+Restore+Compile+Test
 
     - name: Build Docker Image
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      if: ${{ env.BUILD_DOCKER == 'true' }}
       id: dockerBuild
       uses: VirtoCommerce/vc-github-actions/build-docker-image@master
       with:
@@ -136,7 +146,7 @@ jobs:
         dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
 
     - name: Docker Login
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      if: ${{ env.BUILD_DOCKER == 'true' }}
       uses: azure/docker-login@v1
       with:
         login-server: ${{ env.PACKAGE_SERVER }}
@@ -164,12 +174,26 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/publish-blob-release@master
       with:
         blobSAS: ${{ secrets.BLOB_TOKEN }}
+      
+    - name: Set artifactUrl value
+      id: artifactUrl
+      run: |
+        echo ::set-output name=DOCKER_URL::${{ env.PACKAGE_SERVER }}/${{github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.image.outputs.taggedVersion }}
+        echo ::set-output name=BLOB_URL::${{ steps.blobRelease.outputs.packageUrl }}
         
+    - name: Add Jira link
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: VirtoCommerce/vc-github-actions/publish-jira-link@master
+      with:
+        branchName: ${{ github.head_ref }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+
     - name: Add link to PR
       if: ${{ github.event_name == 'pull_request' }}
       uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
       with:
-        artifactUrl: ${{ steps.blobRelease.outputs.packageUrl }}
+        artifactUrl: ${{ steps.artifactUrl.outputs.BLOB_URL }}
         downloadComment: 'Artifact URL:'
       
     - name: Publish Github Release
@@ -235,8 +259,6 @@ jobs:
       CLIENT_ID: ${{secrets.CLIENT_ID}}
       CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-      IMAGE_NAME: 'platform'
-      PACKAGE_SERVER: 'ghcr.io'
     steps: 
 
     - name: Read deployment config
@@ -260,7 +282,7 @@ jobs:
         deployRepo: ${{ steps.deployConfig.outputs.deployRepo }}
         deployBranch: ${{ steps.deployConfig.outputs.deployBranch }}
         artifactKey: ${{ steps.deployConfig.outputs.artifactKey }}
-        artifactUrl: '${{ env.PACKAGE_SERVER }}/{{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ needs.ci.outputs.taggedVersion }}'
+        artifactUrl: ${{ needs.ci.outputs.artifactUrl }}
         taskNumber: 'undefined'
         forceCommit: 'true'
         cmPath: ${{ steps.deployConfig.outputs.cmPath }}

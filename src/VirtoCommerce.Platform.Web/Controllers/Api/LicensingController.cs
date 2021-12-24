@@ -92,7 +92,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (license != null)
             {
-                _licenseProvider.SaveLicense(license);
+                await _licenseProvider.SaveLicenseAsync(license);
             }
 
             if (license != null)
