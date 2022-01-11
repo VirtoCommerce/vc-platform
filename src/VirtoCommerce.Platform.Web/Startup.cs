@@ -8,6 +8,7 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
@@ -420,6 +421,7 @@ namespace VirtoCommerce.Platform.Web
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
