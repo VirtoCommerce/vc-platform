@@ -44,7 +44,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IPushNotificationManager pushNotifier,
             ISettingsManager settingManager,
             IUserNameResolver userNameResolver,
-            IOptions<PlatformOptions> options, IHttpClientFactory httpClientFactory)
+            IOptions<PlatformOptions> options,
+            IHttpClientFactory httpClientFactory)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
@@ -59,7 +60,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<ActionResult<SampleDataInfo[]>> DiscoverSampleData()
         {
-            return Ok((await InnerDiscoverSampleData()).ToArray());
+            return Ok((await InnerDiscoverSampleDataAsync()).ToArray());
         }
 
         [HttpPost]
@@ -67,7 +68,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(Permissions.PlatformImport)]
         public async Task<ActionResult<SampleDataImportPushNotification>> TryToAutoInstallSampleData()
         {
-            var sampleData = (await InnerDiscoverSampleData()).FirstOrDefault(x => !x.Url.IsNullOrEmpty());
+            var sampleData = (await InnerDiscoverSampleDataAsync()).FirstOrDefault(x => !x.Url.IsNullOrEmpty());
             if (sampleData != null)
             {
                 return ImportSampleData(sampleData.Url);
@@ -208,7 +209,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private async Task<IEnumerable<SampleDataInfo>> InnerDiscoverSampleData()
+        private async Task<IEnumerable<SampleDataInfo>> InnerDiscoverSampleDataAsync()
         {
             var sampleDataUrl = _platformOptions.SampleDataUrl;
             if (string.IsNullOrEmpty(sampleDataUrl))
