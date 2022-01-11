@@ -228,42 +228,40 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             //Discovery mode
             var manifestUrl = sampleDataUrl + "\\manifest.json";
-            using (var client = _httpClientFactory.CreateClient())
-            using (var stream = await client.GetStreamAsync(new Uri(manifestUrl)))
+            using var client = _httpClientFactory.CreateClient();
+            await using var stream = await client.GetStreamAsync(new Uri(manifestUrl));
+            //Add empty template
+            var result = new List<SampleDataInfo>
             {
-                //Add empty template
-                var result = new List<SampleDataInfo>
-                {
-                    new SampleDataInfo { Name = "Empty" }
-                };
+                new SampleDataInfo { Name = "Empty" }
+            };
 
-                //Need filter unsupported versions and take one most new sample data
-                var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>()
-                    .Select(x => new
-                    {
-                        Version = SemanticVersion.Parse(x.PlatformVersion),
-                        x.Name,
-                        Data = x
-                    })
-                    .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
-                    .GroupBy(x => x.Name)
-                    .Select(x => x.OrderByDescending(y => y.Version).First().Data)
-                    .ToList();
-
-                //Convert relative  sample data urls to absolute
-                foreach (var sampleDataInfo in sampleDataInfos)
+            //Need filter unsupported versions and take one most new sample data
+            var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>()
+                .Select(x => new
                 {
-                    if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
-                    {
-                        var uri = new Uri(sampleDataUrl);
-                        sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
-                    }
+                    Version = SemanticVersion.Parse(x.PlatformVersion),
+                    x.Name,
+                    Data = x
+                })
+                .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
+                .GroupBy(x => x.Name)
+                .Select(x => x.OrderByDescending(y => y.Version).First().Data)
+                .ToList();
+
+            //Convert relative  sample data urls to absolute
+            foreach (var sampleDataInfo in sampleDataInfos)
+            {
+                if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
+                {
+                    var uri = new Uri(sampleDataUrl);
+                    sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
                 }
-
-                result.AddRange(sampleDataInfos);
-
-                return result;
             }
+
+            result.AddRange(sampleDataInfos);
+
+            return result;
         }
 
         public async Task SampleDataImportBackgroundAsync(Uri url, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
