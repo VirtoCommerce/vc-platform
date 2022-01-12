@@ -1,32 +1,8 @@
 angular.module('platformWebApp')
-    .controller('platformWebApp.settingsDetailThemeController', ['$scope', '$rootScope', '$q', 'FileUploader', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings',
+    .controller('platformWebApp.settingsDetailThemeLoginScreenController', ['$scope', '$rootScope', '$q', 'FileUploader', 'platformWebApp.settings.helper', 'platformWebApp.bladeNavigationService', 'platformWebApp.settings',
         function ($scope, $rootScope, $q, FileUploader, settingsHelper, bladeNavigationService, settingsApi) {
             var blade = $scope.blade;
             blade.updatePermission = 'platform:setting:update';
-
-            // default values for login page background
-            blade.defaultUiCustomization = {
-                background: {
-                    url: '/images/login.png'
-                },
-                pattern: {
-                    value: 'None'
-                },
-            };
-
-            blade.patterns = [
-                {
-                    value: 'None'
-                },
-                {
-                    value: 'Demo',
-                    url: '/images/pattern-demo.svg'
-                },
-                {
-                    value: 'Production',
-                    url: '/images/pattern-live.svg'
-                }
-            ];
 
             if (!$scope.uploader) {
                 var uploader = $scope.uploader = new FileUploader({
@@ -36,7 +12,7 @@ angular.module('platformWebApp')
                     removeAfterUpload: true
                 });
 
-                uploader.url = 'api/assets?folderUrl=customizatinon';
+                uploader.url = 'api/assets?folderUrl=customization';
 
                 uploader.onSuccessItem = function (fileItem, images, status, headers) {
                     angular.forEach(images, function (image) {
@@ -54,9 +30,13 @@ angular.module('platformWebApp')
             }
 
             function initializeBlade(settings) {
+
                 blade.isLoading = true;
 
+                //Get custom settings if they are in constants
                 var setting = _.first(settings);
+                Object.assign(blade, setting.settingValues);
+
                 if (setting.groupName) {
                     var paths = setting.groupName.split('|');
                     blade.groupName = paths.pop();
@@ -69,7 +49,6 @@ angular.module('platformWebApp')
                     blade.isLoading = false;
 
                     blade.uiCustomizationSetting = uiCustomizationSetting;
-
                     var value = uiCustomizationSetting.value || uiCustomizationSetting.defaultValue;
                     if (value) {
                         var uiCustomization = angular.fromJson(value);

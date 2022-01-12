@@ -85,7 +85,7 @@
   color: $whiteColor
   font-size: 16px
   line-height: 50px
-  padding: 0 20px
+  padding: 0 28px
 .modal-header .modal-title
   font-size: 18px
   font-weight: 500
@@ -113,7 +113,15 @@
   margin-left: 0
 .password-dialog-container
   display: flex
+  flex-direction: column
   justify-content: center
   align-items: center
   width: 100%
   height: 100%
+.login-screen-logo
+  height: 0
+  &__img
+    height: auto
+    transform: translateY(-100%)
+    position: relative
+    bottom: 20px

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -34,6 +36,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly Core.Security.AuthorizationOptions _securityOptions;
         private readonly UserOptionsExtended _userOptionsExtended;
         private readonly PasswordOptionsExtended _passwordOptions;
+        private readonly AzureAdOptions _azureAdLoginOptions;
+        private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserSearchService _userSearchService;
         private readonly IRoleSearchService _roleSearchService;
@@ -52,6 +56,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<Core.Security.AuthorizationOptions> securityOptions,
             IOptions<UserOptionsExtended> userOptionsExtended,
             IOptions<PasswordOptionsExtended> passwordOptions,
+            IOptions<AzureAdOptions> azureAdLoginOptions,
+            IOptions<PasswordLoginOptions> passwordLoginOptions,
             IPasswordValidator<ApplicationUser> passwordValidator,
             IEmailSender emailSender,
             IEventPublisher eventPublisher,
@@ -63,6 +69,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userOptionsExtended = userOptionsExtended.Value;
             _passwordOptions = passwordOptions.Value;
             _passwordValidator = passwordValidator;
+            _azureAdLoginOptions = azureAdLoginOptions.Value ?? new AzureAdOptions();
+            _passwordLoginOptions = passwordLoginOptions.Value ?? new PasswordLoginOptions();
             _permissionsProvider = permissionsProvider;
             _roleManager = roleManager;
             _userSearchService = userSearchService;
@@ -780,6 +788,33 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             await _userApiKeyService.DeleteApiKeysAsync(ids);
             return Ok();
+        }
+
+        /// <summary>
+        /// Get allowed login types
+        /// </summary>
+        [HttpGet]
+        [Route("logintypes")]
+        [AllowAnonymous]
+        public ActionResult GetLoginTypes()
+        {
+            var options = new List<LoginType>
+            {
+                new LoginType
+                {
+                    AuthenticationType = _passwordLoginOptions.AuthenticationType,
+                    Enabled = _passwordLoginOptions.Enabled,
+                    Priority = _passwordLoginOptions.Priority,
+                },
+                new LoginType
+                {
+                    AuthenticationType = _azureAdLoginOptions.AuthenticationType,
+                    Enabled = _azureAdLoginOptions.Enabled,
+                    Priority = _azureAdLoginOptions.Priority,
+                }
+            };
+
+            return Ok(options);
         }
 
         /// <summary>

@@ -7,6 +7,21 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "13 December"
+    * High-Performance Order Module
+    * GDPR Module - Find and download personal data for the specific customer.
+    * Whitelist for File Extensions
+    * Azure Single Sign-in
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-13-december-2021/396)
+    
+!!! done "29 November"
+    * Assets were decoupling from the platform
+    * Selecting properties for webhook payload
+    * UI improvements
+    * New features in XAPI
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-29-november-2021/394)
 
 !!! done "16 November"
     * Highlight Active left menu item
@@ -17,27 +32,8 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * Added Partial update in xapi mutations
     
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/new-digest-16-november/393)
-
-
-!!! done "18 October"
-    * Added Support of Video for Products
-    * Virto Commerce Module Template for “dotnet new”
-    * Checkout with Gift scenario on DEMO
-    * Asset module was decoupled from the platform
-    * Catalog Export & Import module
     
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-18-october-2021/388)
-    
-!!! done "4 October"
-    * VirtoCommerce XAPI Demo App was published on public demo
-    * Improved Address Import for Contact&Organizations
-    * Added User-friendly error message
-    * Added rich telemetry for GraphQL
-    * Added support of Gift in XAPI
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-4-october-2021/386)
-
-View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and [GitHub](https://github.com/VirtoCommerce)
+View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), Subscribe on [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and Star on [GitHub](https://github.com/VirtoCommerce).
 
 ## Principles
 The main principle is to help the development team to focus on the implementation of business features and don’t worry about **CLEAN ARCHITECTURE**.

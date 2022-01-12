@@ -57,7 +57,12 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | FileSystem | E.g., <br> "FileSystem": {<br> "RootPath": "~/cms-content",<br>"PublicUrl": "http://localhost:10645/cms-content/"<br>}  | File system based content provider configuration. This is the default provider, used if `AzureBlobStorage` is not set as current provider.
 |  | AzureBlobStorage | E.g., <br> "AzureBlobStorage": {<br> "ConnectionString": "",<br>"CdnUrl": ""<br>}  | Azure Blob Storage based content provider configuration. Used, if `"Provider": "AzureBlobStorage"`.
 | AzureAd | | | Used for authentication with Azure Active Directory. Check [Enabling authentication with Azure Active Directory](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/techniques/authentication-with-azure-ad.md) for details. 
+|  | Enabled | `false` | Enables of authentication with Azure Active Directory. Disabled by default.
 |  | UsePreferredUsername | `false` | If set to `true` will check the `preffered_username` in case if the `upn` claim returns empty.
+|  | Priority | 0 | Configures the priortiy of the Azure Active Directory login popup on the Login page. Lower value has a higher prioriy.
+| PasswordLogin | | | Enables authentication with username and passowrd. 
+|  | Enabled | `true` | Always enabled by default. Set to `false` to disable login with username/passowrd.
+|  | Priority | 0 | Configures the priortiy of the password login popup on the Login page. Lower value has a higher prioriy.
 | LoginPageUI | | | Used for configuration of the background screen and background pattern of the login page.
 |  | BackgroundUrl | | Login page background URI. If set takes priority over the preset.
 |  | PatternUrl | | Login page background pattern URI. If set takes priority over the preset.

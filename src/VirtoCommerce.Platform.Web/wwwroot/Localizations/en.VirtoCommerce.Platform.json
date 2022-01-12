@@ -521,7 +521,9 @@
                     "external-sign-in": "Sign in with {{displayName}}",
                     "forgot-password": "Forgot your password?",
                     "log-in": "Log in",
-                    "log-in-placeholder": "Please enter a value"
+                    "log-in-placeholder": "Please enter a value",
+                    "azure-log-in-label": "Login to admin site through Azure",
+                    "password-log-in-type": "System user"
                 }
             },
             "forgotpassword": {
@@ -623,6 +625,11 @@
             "settingGroup-list": {
                 "title": "Settings",
                 "bread-crumb-top": "All settings"
+            },
+            "settings-uploader": {
+                "drag-drop-comment": "Drag and drop file here",
+                "or": "or",
+                "browse-your-files": "browse your files"
             },
             "user-profile": {
                 "title": "User profile",
@@ -902,6 +909,10 @@
                     "FileExtensionsBlackList": {
                         "description": "Files extensions prohibited to upload by the platform (additionally to 'FileExtensionsBlackList' in appsettings.json)",
                         "title": "Black list"
+                    },
+                    "FileExtensionsWhiteList": {
+                        "description": "Files extensions allowed to upload by the platform (additionally to 'FileExtensionsWhiteList' in appsettings.json)",
+                        "title": "White list"
                     }
                 },
                 "UI": {
