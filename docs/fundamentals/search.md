@@ -143,7 +143,7 @@ If you change a property type, complete **Delete + Build** can be required.
 |$"priority_{link.CatalogId}_{link.CategoryId}"|---|true|true|true|---|Dynamic properties which mapped with collection of Id from product.Links|
 |price|---|true|true|true|---|**Price module extension.** Collection of all product price|
 |$"price_{pricelist.Currency}|---|true|true|true|---|**Price module extension.** Collection of all product price in specific currency.|
-|$"pirce_{pricelist.Currency}_{pricelist.Currency}|---|true|true|true|---|**Price module extension.** Collection of all product price in specific currency and specific price list.|
+|$"pirce_{pricelist.Currency}_{pricelist.Id}|---|true|true|true|---|**Price module extension.** Collection of all product price in specific currency and specific price list.|
 
 [You can look on the latest mapping from CatalogProduct to IndexDocument here](https://github.com/VirtoCommerce/vc-module-catalog/blob/dev/VirtoCommerce.CatalogModule.Data/Search/Indexing/ProductDocumentBuilder.cs#L46)
 
