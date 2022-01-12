@@ -100,11 +100,11 @@ jobs:
           echo "VERSION_SUFFIX=${{ steps.image.outputs.suffix }}" >> $GITHUB_ENV
         fi;
 
-    - name: Add version suffix
-      if: ${{ github.ref != 'refs/heads/master' }}
-      uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
-      with:
-        versionSuffix: ${{ env.VERSION_SUFFIX }}
+    # - name: Add version suffix
+    #   if: ${{ github.ref != 'refs/heads/master' }}
+    #   uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
+    #   with:
+    #     versionSuffix: ${{ env.VERSION_SUFFIX }}
 
     - name: SonarCloud Begin
       uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@master
