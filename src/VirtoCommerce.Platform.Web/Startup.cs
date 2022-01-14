@@ -420,6 +420,7 @@ namespace VirtoCommerce.Platform.Web
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
+            services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -428,8 +429,8 @@ namespace VirtoCommerce.Platform.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
                 app.UseBrowserLink();
-                app.UseDatabaseErrorPage();
 #if DEBUG
                 TelemetryDebugWriter.IsTracingDisabled = true;
 #endif
