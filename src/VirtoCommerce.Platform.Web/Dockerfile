@@ -13,10 +13,8 @@ COPY ["src/VirtoCommerce.Platform.Security/VirtoCommerce.Platform.Security.cspro
 COPY ["src/VirtoCommerce.Platform.Core/VirtoCommerce.Platform.Core.csproj", "src/VirtoCommerce.Platform.Core/"]
 COPY ["src/VirtoCommerce.Platform.Data/VirtoCommerce.Platform.Data.csproj", "src/VirtoCommerce.Platform.Data/"]
 COPY ["src/VirtoCommerce.Platform.Caching/VirtoCommerce.Platform.Caching.csproj", "src/VirtoCommerce.Platform.Caching/"]
-COPY ["src/VirtoCommerce.Platform.Assets.AzureBlobStorage/VirtoCommerce.Platform.Assets.AzureBlobStorage.csproj", "src/VirtoCommerce.Platform.Assets.AzureBlobStorage/"]
 COPY ["src/VirtoCommerce.Platform.Modules/VirtoCommerce.Platform.Modules.csproj", "src/VirtoCommerce.Platform.Modules/"]
 COPY ["src/VirtoCommerce.Platform.Hangfire/VirtoCommerce.Platform.Hangfire.csproj", "src/VirtoCommerce.Platform.Hangfire/"]
-COPY ["src/VirtoCommerce.Platform.Assets.FileSystem/VirtoCommerce.Platform.Assets.FileSystem.csproj", "src/VirtoCommerce.Platform.Assets.FileSystem/"]
 RUN dotnet restore "src/VirtoCommerce.Platform.Web/VirtoCommerce.Platform.Web.csproj"
 COPY . .
 WORKDIR "/src/src/VirtoCommerce.Platform.Web"
