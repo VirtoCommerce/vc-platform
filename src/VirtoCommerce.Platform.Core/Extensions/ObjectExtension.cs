@@ -60,8 +60,8 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </returns>
         public static string GetMD5Hash(this object instance)
         {
-            return instance.GetHash<MD5CryptoServiceProvider>();
-        }
+            return ComputeHash(instance, MD5.Create());
+         }
 
         /// <summary>
         ///     Gets a SHA1 hash of the current instance.
@@ -74,10 +74,10 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </returns>
         public static string GetSHA1Hash(this object instance)
         {
-            return instance.GetHash<SHA1CryptoServiceProvider>();
+            return ComputeHash(instance, SHA1.Create());
         }
 
-        private static string ComputeHash<T>(object instance, T cryptoServiceProvider) where T : HashAlgorithm, new()
+        private static string ComputeHash<T>(object instance, T cryptoServiceProvider) where T : HashAlgorithm
         {
             XmlSerializer xmlSerializer = new XmlSerializer(instance.GetType());
 
