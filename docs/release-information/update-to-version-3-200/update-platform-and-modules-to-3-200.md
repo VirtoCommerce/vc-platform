@@ -32,7 +32,7 @@ You can find the details [here](https://github.com/VirtoCommerce/vc-build#update
 ## List of Releases
 | # | Name | Link |
 | --- | --- | --- |
-| 1 | [VC Platform](https://github.com/VirtoCommerce/vc-platform) | [3.200]() |
+| 1 | [VC Platform](https://github.com/VirtoCommerce/vc-platform) | [3.200](https://github.com/VirtoCommerce/vc-platform/releases/tag/3.200.0) |
 | 2 | [VC Google ecommerce analitycs](https://github.com/VirtoCommerce/vc-module-google-ecommerce-analytics) | [3.200](https://github.com/VirtoCommerce/vc-module-google-ecommerce-analytics/releases/tag/3.200.0) |
 | 3 | [VC Assets](https://github.com/VirtoCommerce/vc-module-assets) | [3.200](https://github.com/VirtoCommerce/vc-module-assets/releases/tag/3.200.0) |
 | 4 | [VC Notifications](https://github.com/VirtoCommerce/vc-module-notification) | [3.200](https://github.com/VirtoCommerce/vc-module-notification/releases/tag/3.200.0) |
