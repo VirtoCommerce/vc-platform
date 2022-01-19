@@ -39,7 +39,7 @@ namespace VirtoCommerce.Platform.Web.TagHelpers.Internal
                     cacheEntry.AddExpirationToken(_fileSystemWatcher.CreateFileChangeToken(GetRelativePath(physicalPath)));
                     using (var stream = File.OpenRead(physicalPath))
                     {
-                        using (var hashAlgorithm = CryptoConfig.AllowOnlyFipsAlgorithms ? (SHA256)new SHA256CryptoServiceProvider() : new SHA256Managed())
+                        using (var hashAlgorithm = SHA256.Create())
                         {
                             return $"{WebEncoders.Base64UrlEncode(hashAlgorithm.ComputeHash(stream))}";
                         }
