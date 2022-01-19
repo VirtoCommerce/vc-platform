@@ -39,29 +39,29 @@ See the [details](https://github.com/VirtoCommerce/vc-build#update).
 | 6 | [VC Export](https://github.com/VirtoCommerce/vc-module-export) | [3.200](https://github.com/VirtoCommerce/vc-module-export/releases/tag/3.200.0) |
 | 7 | [VC Search](https://github.com/VirtoCommerce/vc-module-search) | [3.200](https://github.com/VirtoCommerce/vc-module-search/releases/tag/3.200.0) |
 | 8 | [VC Store](https://github.com/VirtoCommerce/vc-module-store) | [3.200](https://github.com/VirtoCommerce/vc-module-store/releases/tag/3.200.0) |
-| 9 |  |  |
-| 10 |  |  |
-| 11 |  |  |
-| 12 |  |  |
-| 13 |  |  |
-| 14 |  |  |
-| 15 |  |  |
-| 16 |  |  |
-| 17 |  |  |
-| 18 |  |  |
-| 19 |  |  |
-| 20 |  |  |
-| 21 |  |  |
-| 22 |  |  |
-| 23 |  |  |
-| 24 |  |  |
-| 25 |  |  |
-| 26 |  |  |
-| 27 |  |  |
-| 28 |  |  |
-| 29 |  |  |
-| 30 |  |  |
-| 31 |  |  |
+| 9 | [VC XApi profile](https://github.com/VirtoCommerce/vc-module-profile-experience-api) | [3.200](https://github.com/VirtoCommerce/vc-module-profile-experience-api/releases/tag/3.200.0) |
+| 10 | [VC Authorize.Net](https://github.com/VirtoCommerce/vc-module-Authorize.Net) | [3.200](https://github.com/VirtoCommerce/vc-module-Authorize.Net/releases/tag/3.200.0) |
+| 11 | [VC Avalara](https://github.com/VirtoCommerce/vc-module-avatax) | [3.200](https://github.com/VirtoCommerce/vc-module-avatax/releases/tag/3.200.0) |
+| 12 | [VC Azure search](https://github.com/VirtoCommerce/vc-module-azure-search) | [3.200](https://github.com/VirtoCommerce/vc-module-azure-search/releases/tag/3.200.0) |
+| 13 | [VC Catalog CSV import](https://github.com/VirtoCommerce/vc-module-catalog-csv-import) | [3.200](https://github.com/VirtoCommerce/vc-module-catalog-csv-import/releases/tag/3.200.0) |
+| 14 | [VC Catalog personalization](https://github.com/VirtoCommerce/vc-module-catalog-personalization) | [3.200](https://github.com/VirtoCommerce/vc-module-catalog-personalization/releases/tag/3.200.0) |
+| 15 | [VC Catalog publishing](https://github.com/VirtoCommerce/vc-module-catalog-publishing) | [3.200](https://github.com/VirtoCommerce/vc-module-catalog-publishing/releases/tag/3.200.0) |
+| 16 | [VC Dynamic associations](https://github.com/VirtoCommerce/vc-module-dynamic-associations) | [3.200](https://github.com/VirtoCommerce/vc-module-dynamic-associations/releases/tag/3.200.0) |
+| 17 | [VC Elastic search](https://github.com/VirtoCommerce/vc-module-elastic-search) | [3.200](https://github.com/VirtoCommerce/vc-module-elastic-search/releases/tag/3.200.0) |
+| 18 | [VC Image tools](https://github.com/VirtoCommerce/vc-module-image-tools) | [3.200](https://github.com/VirtoCommerce/vc-module-image-tools/releases/tag/3.200.0) |
+| 19 | [VC Lucene search](https://github.com/VirtoCommerce/vc-module-lucene-search) | [3.200](https://github.com/VirtoCommerce/vc-module-lucene-search/releases/tag/3.200.0) |
+| 20 | [VC Catalog](https://github.com/VirtoCommerce/vc-module-catalog) | [3.200](https://github.com/VirtoCommerce/vc-module-catalog/releases/tag/3.200.0) |
+| 21 | [VC Pricing](https://github.com/VirtoCommerce/vc-module-pricing) | [3.200](https://github.com/VirtoCommerce/vc-module-pricing/releases/tag/3.200.0) |
+| 22 | [VC Shipping](https://github.com/VirtoCommerce/vc-module-shipping) | [3.200](https://github.com/VirtoCommerce/vc-module-shipping/releases/tag/3.200.0) |
+| 23 | [VC Payment](https://github.com/VirtoCommerce/vc-module-payment) | [3.200](https://github.com/VirtoCommerce/vc-module-payment/releases/tag/3.200.0) |
+| 24 | [VC Cart](https://github.com/VirtoCommerce/vc-module-cart) | [3.200](https://github.com/VirtoCommerce/vc-module-cart/releases/tag/3.200.0) |
+| 25 | [VC Inventory](https://github.com/VirtoCommerce/vc-module-inventory) | [3.200](https://github.com/VirtoCommerce/vc-module-inventory/releases/tag/3.200.0) |
+| 26 | [VC Customer](https://github.com/VirtoCommerce/vc-module-customer) | [3.200](https://github.com/VirtoCommerce/vc-module-customer/releases/tag/3.200.0) |
+| 27 | [VC Orders](https://github.com/VirtoCommerce/vc-module-order) | [3.200](https://github.com/VirtoCommerce/vc-module-order/releases/tag/3.200.0) |
+| 28 | [VC File sistem assets](https://github.com/VirtoCommerce/vc-module-filesystem-assets) | [3.200](https://github.com/VirtoCommerce/vc-module-filesystem-assets/releases/tag/3.200.0) |
+| 29 | [VC Azure blob assets](https://github.com/VirtoCommerce/vc-module-azureblob-assets) | [3.200](https://github.com/VirtoCommerce/vc-module-azureblob-assets/releases/tag/3.200.0) |
+| 30 | [VC Marketing](https://github.com/VirtoCommerce/vc-module-marketing) | [3.200]() |
+| 31 | [VC Content](https://github.com/VirtoCommerce/vc-module-content) | [3.200]() |
 | 32 |  |  |
 | 33 |  |  |
 | 34 |  |  |
