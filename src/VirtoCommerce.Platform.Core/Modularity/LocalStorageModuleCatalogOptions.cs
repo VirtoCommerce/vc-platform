@@ -23,5 +23,6 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public string[] LocalizationFileExtensions { get; set; } = new[] { "resources.dll" };
         public string[] AssemblyFileExtensions { get; set; } = new[] { ".dll", ".exe" };
         public string[] AssemblyServiceFileExtensions { get; set; } = new[] { ".pdb", ".xml", ".deps.json", ".runtimeconfig.json", ".runtimeconfig.dev.json", ".dep" };
+        public string[] ReferenceAssemblyFolders { get; set; } = new[] { "ref" };
     }
 }
