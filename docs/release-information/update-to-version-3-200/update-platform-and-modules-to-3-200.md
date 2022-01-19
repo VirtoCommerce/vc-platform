@@ -1,34 +1,35 @@
-# Update platform and modules to .NET 6 version
+# Updating Platform and Modules to .NET 6
 
 ## Introduction
 
-This article describes how to update VC Platform manager and VC modules to .NET 6 (version since 3.2xx)
+This document will guide you through updating VC Platform Manager and VC modules (version 3.2xx or higher) to .NET 6.
 
-## Before the update
-Please review the [.NET 6 release notes](https://github.com/dotnet/core/blob/main/release-notes/6.0/README.md).
+## Prior to Update
+Before you start running your update, please review [.NET 6 Release Notes](https://github.com/dotnet/core/blob/main/release-notes/6.0/README.md).
 
-### Breaking change note
-Because of breaking changes introduced in the Entity Framework and for some other reasons, VC modules and platform are imcompatible with different versions of each other.
-VC Platform's minor version **equal or above 3.2xx** can't load and manage VC modules version **below 3.2xx**. And the other way round.
-For the described before reasons there is no chance for partial update. **You need to update to .NET 6 all your project.**
+### Breaking Change Note
+Because of some breaking changes introduced into the Entity Framework, as well as for some other reasons, VC modules are imcompatible with the Platform having a different version, and vice versa.
+Technically, VC Platform **version 3.2xx or higher** cannot load and manage VC modules with any version **below 3.2xx**, and the other way round.
+For the above reasons, there is no option for partial update, which means **you have to update your entire project to .NET 6.**
 
-### Slow migration
-Order module particularly contains a potentially long perform migration which could be in case your project have a lot of order's. Consider to apply it manually.
+### Slow Performance
+For the Order module, it may take particularly long to migrate in case your project has a lot of orders. For this reason, you might want to do the migration manually.
 
-#### Manually migration example
+#### How to Manually Migrate Your Project
+This is an example of how you can migrate your project manually:
 ```bash
 cd your_project_path
 dotnet ef database update --context "OrderDbContext|YourOwnContext" --connection "ConnectionString"
 ```
 
-## Developer's experience
-Make sure that [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and [Visual studio 2022](https://visualstudio.microsoft.com/vs/) have been installed to your environment.
+## Developer Experience
+Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and [Visual studio 2022](https://visualstudio.microsoft.com/vs/) have been installed to your environment.
 
-### Updating extended VC module dependencies
-There is a vc-build tool which can be usefull to update dependencies in your module.
-See the [details](https://github.com/VirtoCommerce/vc-build#update).
+### Updating Extended VC Module Dependencies
+The vc-build tool may come in especially handy when updating the dependencies within your module.
+You can find the details [here](https://github.com/VirtoCommerce/vc-build#update).
 
-## List of releases
+## List of Releases
 | # | Name | Link |
 | --- | --- | --- |
 | 1 | [VC Platform](https://github.com/VirtoCommerce/vc-platform) | [3.200]() |
@@ -69,11 +70,12 @@ See the [details](https://github.com/VirtoCommerce/vc-build#update).
 | 36 |  |  |
 | 37 |  |  |
 
-## FAQ
+## FAQs
 
 ### How can I migrate my extension module?
-1. You need to install all required environment, like VS 2022 and .NET 6 SDK
-2. Bump all dependent VirtoCommerce NuGet packages. (At least to 3.200 version)
-3. Fix all issues and gain the solution compile successful.
-4. Note, during developing and debugging you should not compile your module either with .NET Core 3.1 and .NET 6 at the same time.
+1. Make sure all required prerequisites, such as VS 2022 and .NET 6 SDK, have been installed to your environment.
+2. Bump all dependent VirtoCommerce NuGet packages to at least version 3.200.
+3. Fix all issues and make sure the solution gets compiled successfully.
+
+*Please note: When the developing and debugging processes are running, do not compile your module with .NET Core 3.1 and .NET 6 at the same time.*
 
