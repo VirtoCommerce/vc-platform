@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </returns>
         public static string GetHash<T>(this object instance) where T : HashAlgorithm, new()
         {
-            T cryptoServiceProvider = new T();
+            var cryptoServiceProvider = new T();
             return ComputeHash(instance, cryptoServiceProvider);
         }
 
@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </returns>
         public static string GetKeyedHash<T>(this object instance, byte[] key) where T : KeyedHashAlgorithm, new()
         {
-            T cryptoServiceProvider = new T { Key = key };
+            var cryptoServiceProvider = new T { Key = key };
             return ComputeHash(instance, cryptoServiceProvider);
         }
 
@@ -79,7 +79,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         private static string ComputeHash<T>(object instance, T cryptoServiceProvider) where T : HashAlgorithm
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(instance.GetType());
+            var xmlSerializer = new XmlSerializer(instance.GetType());
 
             using (StringWriter textWriter = new StringWriter())
             {

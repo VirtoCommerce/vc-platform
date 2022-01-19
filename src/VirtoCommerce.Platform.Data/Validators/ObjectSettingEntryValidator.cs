@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Data.Validators
             When(x => x.ValueType == SettingValueType.PositiveInteger, () =>
             {
                 RuleFor(x => x.Value)
-                    .Cascade(CascadeMode.StopOnFirstFailure)
+                    .Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .WithMessage("Value cannot be empty!")
                     .Must(value => int.TryParse(value.ToString(), out var number) && number > 0)

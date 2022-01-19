@@ -249,8 +249,9 @@ namespace VirtoCommerce.Platform.Modules
                 {
                     foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath, "*.*", SearchOption.AllDirectories))
                     {
-                        // Copy all assembly related files except assemblies that are inlcuded in TPA list
-                        if (IsAssemblyRelatedFile(sourceFilePath) && !(IsAssemblyFile(sourceFilePath) && TPA.ContainsAssembly(Path.GetFileName(sourceFilePath))))
+                        // Copy all assembly related files except assemblies that are included in TPA list & reference assemblies
+                        if (IsAssemblyRelatedFile(sourceFilePath) && !(IsAssemblyFile(sourceFilePath) &&
+                                                                       (IsReferenceAssemblyFile(sourceFilePath) || TPA.ContainsAssembly(Path.GetFileName(sourceFilePath)))))
                         {
                             // Copy localization resource files to related subfolders
                             var targetFilePath = Path.Combine(
@@ -313,6 +314,16 @@ namespace VirtoCommerce.Platform.Modules
         private bool IsAssemblyFile(string path)
         {
             return _options.AssemblyFileExtensions.Any(x => path.EndsWith(x, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private bool IsReferenceAssemblyFile(string path)
+        {
+            // Workaround to avoid loading Reference Assemblies
+            // We need to rewrite platform initialization code
+            // to use correct solution with MetadataLoadContext
+            // TODO: PT-6241
+            var lastFolderName = Path.GetFileName(Path.GetDirectoryName(path));
+            return _options.ReferenceAssemblyFolders.Any(x => lastFolderName.Equals(x, StringComparison.OrdinalIgnoreCase));
         }
 
         private bool IsLocalizationFile(string path)

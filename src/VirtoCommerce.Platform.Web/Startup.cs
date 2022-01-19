@@ -420,6 +420,7 @@ namespace VirtoCommerce.Platform.Web
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
+            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
         }
 
@@ -429,8 +430,8 @@ namespace VirtoCommerce.Platform.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
                 app.UseBrowserLink();
-                app.UseDatabaseErrorPage();
 #if DEBUG
                 TelemetryDebugWriter.IsTracingDisabled = true;
 #endif
