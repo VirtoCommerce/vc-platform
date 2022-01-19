@@ -71,9 +71,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         var ids = await query.OrderBySortInfos(sortInfos).ThenBy(x => x.Id)
                                          .Select(x => x.Id)
                                          .Skip(criteria.Skip).Take(criteria.Take)
-                                         .ToArrayAsync();
+                                         .ToListAsync();
 
-                        result.TotalCount = ids.Count();
+                        result.TotalCount = ids.Count;
                         // This reduces a load of a relational database by skipping count query in case of:
                         // - First page is reading (Skip is 0)
                         // - Count in reading result less than Take value.
@@ -82,7 +82,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         {
                             needExecuteCount = true;
                         }
-                        result.Results = (await _crudService.GetByIdsAsync(ids, criteria.ResponseGroup)).OrderBy(x => Array.IndexOf(ids, x.Id)).ToList();
+                        result.Results = (await _crudService.GetAsync(ids, criteria.ResponseGroup)).OrderBy(x => ids.IndexOf(x.Id)).ToList();
                     }
 
                     if (needExecuteCount)

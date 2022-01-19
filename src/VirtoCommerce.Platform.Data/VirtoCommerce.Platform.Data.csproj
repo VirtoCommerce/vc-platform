@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <noWarn>1591</noWarn>
         <OutputType>Library</OutputType>
         <IsPackable>True</IsPackable>
@@ -19,15 +19,15 @@
 
     <ItemGroup>
         <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.2.2" />
-        <PackageReference Include="FluentValidation" Version="8.6.3" />
+        <PackageReference Include="FluentValidation" Version="10.3.4" />
         <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.13" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.13" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.13" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.13" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.13" />
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.13" />
-        <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="6.0.0" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="Serialize.Linq" Version="1.8.1" />
     </ItemGroup>

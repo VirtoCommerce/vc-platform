@@ -24,7 +24,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </returns>
         public static string GetHash<T>(this object instance) where T : HashAlgorithm, new()
         {
-            T cryptoServiceProvider = new T();
+            var cryptoServiceProvider = new T();
             return ComputeHash(instance, cryptoServiceProvider);
         }
 
@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </returns>
         public static string GetKeyedHash<T>(this object instance, byte[] key) where T : KeyedHashAlgorithm, new()
         {
-            T cryptoServiceProvider = new T { Key = key };
+            var cryptoServiceProvider = new T { Key = key };
             return ComputeHash(instance, cryptoServiceProvider);
         }
 
@@ -60,8 +60,8 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </returns>
         public static string GetMD5Hash(this object instance)
         {
-            return instance.GetHash<MD5CryptoServiceProvider>();
-        }
+            return ComputeHash(instance, MD5.Create());
+         }
 
         /// <summary>
         ///     Gets a SHA1 hash of the current instance.
@@ -74,12 +74,12 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </returns>
         public static string GetSHA1Hash(this object instance)
         {
-            return instance.GetHash<SHA1CryptoServiceProvider>();
+            return ComputeHash(instance, SHA1.Create());
         }
 
-        private static string ComputeHash<T>(object instance, T cryptoServiceProvider) where T : HashAlgorithm, new()
+        private static string ComputeHash<T>(object instance, T cryptoServiceProvider) where T : HashAlgorithm
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(instance.GetType());
+            var xmlSerializer = new XmlSerializer(instance.GetType());
 
             using (StringWriter textWriter = new StringWriter())
             {

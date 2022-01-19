@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<OperationLogEntity>().Property(x => x.Detail).HasMaxLength(2048);
             modelBuilder.Entity<OperationLogEntity>().HasIndex(x => new { x.ObjectType, x.ObjectId })
                         .IsUnique(false)
-                        .HasName("IX_ObjectType_ObjectId");
+                        .HasDatabaseName("IX_ObjectType_ObjectId");
             #endregion
 
             #region Settings
@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<SettingEntity>().Property(x => x.ModifiedBy).HasMaxLength(64);
             modelBuilder.Entity<SettingEntity>().HasIndex(x => new { x.ObjectType, x.ObjectId })
                         .IsUnique(false)
-                        .HasName("IX_ObjectType_ObjectId");
+                        .HasDatabaseName("IX_ObjectType_ObjectId");
 
             modelBuilder.Entity<SettingValueEntity>().ToTable("PlatformSettingValue").HasKey(x => x.Id);
             modelBuilder.Entity<SettingValueEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
@@ -61,7 +61,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<DynamicPropertyEntity>().Property(x => x.CreatedBy).HasMaxLength(64);
             modelBuilder.Entity<DynamicPropertyEntity>().Property(x => x.ModifiedBy).HasMaxLength(64);
             modelBuilder.Entity<DynamicPropertyEntity>().HasIndex(x => new { x.ObjectType, x.Name })
-                        .HasName("IX_PlatformDynamicProperty_ObjectType_Name")
+                        .HasDatabaseName("IX_PlatformDynamicProperty_ObjectType_Name")
                         .IsUnique(true);
 
             modelBuilder.Entity<DynamicPropertyNameEntity>().ToTable("PlatformDynamicPropertyName").HasKey(x => x.Id);
@@ -74,7 +74,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
                         .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<DynamicPropertyNameEntity>()
                         .HasIndex(x => new { x.PropertyId, x.Locale, x.Name })
-                        .HasName("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name")
+                        .HasDatabaseName("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name")
                         .IsUnique(true);
 
 
@@ -88,7 +88,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
                         .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>()
                         .HasIndex(x => new { x.PropertyId, x.Name })
-                        .HasName("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name")
+                        .HasDatabaseName("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name")
                         .IsUnique(true);
 
 
@@ -102,7 +102,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
                         .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>()
                         .HasIndex(x => new { x.DictionaryItemId, x.Locale, x.Name })
-                        .HasName("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name")
+                        .HasDatabaseName("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name")
                         .IsUnique(true);
 
 

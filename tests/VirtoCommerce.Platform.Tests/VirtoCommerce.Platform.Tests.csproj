@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <IsPackable>false</IsPackable>
         <noWarn>1591</noWarn>
         <UserSecretsId>d6c1f7d4-06d1-4f4e-8c58-7a79573b50f6</UserSecretsId>
@@ -9,10 +9,14 @@
 
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
+        <PackageReference Include="coverlet.collector" Version="3.1.0">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.13" />
-        <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.13" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="6.0.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
         <PackageReference Include="Moq" Version="4.16.1" />
         <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="11.0.18" />
         <PackageReference Include="System.IO.Compression" Version="4.3.0" />
