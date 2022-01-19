@@ -60,14 +60,14 @@ See the [details](https://github.com/VirtoCommerce/vc-build#update).
 | 27 | [VC Orders](https://github.com/VirtoCommerce/vc-module-order) | [3.200](https://github.com/VirtoCommerce/vc-module-order/releases/tag/3.200.0) |
 | 28 | [VC File sistem assets](https://github.com/VirtoCommerce/vc-module-filesystem-assets) | [3.200](https://github.com/VirtoCommerce/vc-module-filesystem-assets/releases/tag/3.200.0) |
 | 29 | [VC Azure blob assets](https://github.com/VirtoCommerce/vc-module-azureblob-assets) | [3.200](https://github.com/VirtoCommerce/vc-module-azureblob-assets/releases/tag/3.200.0) |
-| 30 | [VC Marketing](https://github.com/VirtoCommerce/vc-module-marketing) | [3.200]() |
-| 31 | [VC Content](https://github.com/VirtoCommerce/vc-module-content) | [3.200]() |
-| 32 |  |  |
-| 33 |  |  |
-| 34 |  |  |
-| 35 |  |  |
-| 36 |  |  |
-| 37 |  |  |
+| 30 | [VC Marketing](https://github.com/VirtoCommerce/vc-module-marketing) | [3.200](https://github.com/VirtoCommerce/vc-module-marketing/releases/tag/3.200.0) |
+| 31 | [VC Content](https://github.com/VirtoCommerce/vc-module-content) | [3.200](https://github.com/VirtoCommerce/vc-module-content/releases/tag/3.200.0) |
+| 32 | [VC Tax](https://github.com/VirtoCommerce/vc-module-tax) | [3.200](https://github.com/VirtoCommerce/vc-module-tax/releases/tag/3.200.0) |
+| 33 | [VC XApi](https://github.com/VirtoCommerce/vc-module-experience-api) | [3.200](https://github.com/VirtoCommerce/vc-module-experience-api/releases/tag/3.200.0) |
+| 34 | [VC WebHooks](https://github.com/VirtoCommerce/vc-module-webhooks) | [3.200](https://github.com/VirtoCommerce/vc-module-webhooks/releases/tag/3.200.0) |
+| 35 | [VC Subscription](https://github.com/VirtoCommerce/vc-module-subscription) | [3.200](https://github.com/VirtoCommerce/vc-module-subscription/releases/tag/3.200.0) |
+| 36 | [VC Sitemaps](https://github.com/VirtoCommerce/vc-module-sitemaps) | [3.200](https://github.com/VirtoCommerce/vc-module-sitemaps/releases/tag/3.200.0) |
+| 37 | [VC Bulk actions](https://github.com/VirtoCommerce/vc-module-bulk-actions) | [3.200](https://github.com/VirtoCommerce/vc-module-bulk-actions/releases/tag/3.200.0) |
 
 ## FAQ
 
