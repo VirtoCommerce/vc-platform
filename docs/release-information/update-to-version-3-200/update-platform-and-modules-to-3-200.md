@@ -70,6 +70,7 @@ You can find the details [here](https://github.com/VirtoCommerce/vc-build#update
 | 36 | [VC Sitemaps](https://github.com/VirtoCommerce/vc-module-sitemaps) | [3.200](https://github.com/VirtoCommerce/vc-module-sitemaps/releases/tag/3.200.0) |
 | 37 | [VC Bulk actions](https://github.com/VirtoCommerce/vc-module-bulk-actions) | [3.200](https://github.com/VirtoCommerce/vc-module-bulk-actions/releases/tag/3.200.0) |
 | 38 | [VC Quote](https://github.com/VirtoCommerce/vc-module-quote) | [3.200](https://github.com/VirtoCommerce/vc-module-quote/releases/tag/3.200.0) |
+| 39 | [VC Customer review](https://github.com/VirtoCommerce/vc-module-customer-review) | [3.200](https://github.com/VirtoCommerce/vc-module-customer-review/releases/tag/3.200.0) |
 
 ## FAQs
 
