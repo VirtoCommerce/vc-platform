@@ -2,14 +2,14 @@
 
 ## Introduction
 
-This document will guide you through updating VC Platform Manager and VC modules (version 3.2xx or higher) to .NET 6.
+This document will guide you through updating VC Platform Manager and VC modules (version 3.200 or higher) to .NET 6.
 
 ## Prior to Update
 Before you start running your update, please review [.NET 6 Release Notes](https://github.com/dotnet/core/blob/main/release-notes/6.0/README.md).
 
 ### Breaking Change Note
 Because of some breaking changes introduced into the Entity Framework, as well as for some other reasons, VC modules are imcompatible with the Platform having a different version, and vice versa.
-Technically, VC Platform **version 3.2xx or higher** cannot load and manage VC modules with any version **below 3.2xx**, and the other way round.
+Technically, VC Platform **version 3.200 or higher** cannot load and manage VC modules with any version **below 3.200**, and the other way round.
 For the above reasons, there is no option for partial update, which means **you have to update your entire project to .NET 6.**
 
 ### Slow Performance
