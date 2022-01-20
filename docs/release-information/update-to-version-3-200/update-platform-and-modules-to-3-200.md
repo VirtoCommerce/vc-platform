@@ -49,7 +49,7 @@ Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6
 | 25 | [VC Inventory](https://github.com/VirtoCommerce/vc-module-inventory) | [3.200](https://github.com/VirtoCommerce/vc-module-inventory/releases/tag/3.200.0) |
 | 26 | [VC Customer](https://github.com/VirtoCommerce/vc-module-customer) | [3.200](https://github.com/VirtoCommerce/vc-module-customer/releases/tag/3.200.0) |
 | 27 | [VC Orders](https://github.com/VirtoCommerce/vc-module-order) | [3.200](https://github.com/VirtoCommerce/vc-module-order/releases/tag/3.200.0) |
-| 28 | [VC File sistem assets](https://github.com/VirtoCommerce/vc-module-filesystem-assets) | [3.200](https://github.com/VirtoCommerce/vc-module-filesystem-assets/releases/tag/3.200.0) |
+| 28 | [VC File system assets](https://github.com/VirtoCommerce/vc-module-filesystem-assets) | [3.200](https://github.com/VirtoCommerce/vc-module-filesystem-assets/releases/tag/3.200.0) |
 | 29 | [VC Azure blob assets](https://github.com/VirtoCommerce/vc-module-azureblob-assets) | [3.200](https://github.com/VirtoCommerce/vc-module-azureblob-assets/releases/tag/3.200.0) |
 | 30 | [VC Marketing](https://github.com/VirtoCommerce/vc-module-marketing) | [3.200](https://github.com/VirtoCommerce/vc-module-marketing/releases/tag/3.200.0) |
 | 31 | [VC Content](https://github.com/VirtoCommerce/vc-module-content) | [3.200](https://github.com/VirtoCommerce/vc-module-content/releases/tag/3.200.0) |
