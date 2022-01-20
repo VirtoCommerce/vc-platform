@@ -12,15 +12,9 @@ Because of some breaking changes introduced into the Entity Framework, as well a
 Technically, VC Platform **version 3.200 or higher** cannot load and manage VC modules with any version **below 3.200**, and the other way round.
 For the above reasons, there is no option for partial update, which means **you have to update your entire project to .NET 6.**
 
-### Slow Performance
-For the Order module, it may take particularly long to migrate in case your project has a lot of orders. For this reason, you might want to do the migration manually.
-
-#### How to Manually Migrate Your Project
-This is an example of how you can migrate your project manually:
-```bash
-cd your_project_path
-dotnet ef database update --context "OrderDbContext|YourOwnContext" --connection "ConnectionString"
-```
+### Slow performing database migrations
+In some cases, DB migration might take long time and throw an timeout exceptions.
+You can deal with it by using [vc-build tool](https://github.com/VirtoCommerce/vc-build) and following the tips described in [this guide](https://github.com/VirtoCommerce/vc-build/blob/main/src/VirtoCommerce.Build/GrabMigrator/samples/readme.md).
 
 ## Developer Experience
 Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and [Visual studio 2022](https://visualstudio.microsoft.com/vs/) have been installed to your environment.
