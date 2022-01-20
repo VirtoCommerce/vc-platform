@@ -25,10 +25,6 @@ dotnet ef database update --context "OrderDbContext|YourOwnContext" --connection
 ## Developer Experience
 Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and [Visual studio 2022](https://visualstudio.microsoft.com/vs/) have been installed to your environment.
 
-### Updating Extended VC Module Dependencies
-The vc-build tool may come in especially handy when updating the dependencies within your module.
-You can find the details [here](https://github.com/VirtoCommerce/vc-build#update).
-
 ## List of Releases
 | # | Name | Link |
 | --- | --- | --- |
@@ -77,7 +73,6 @@ You can find the details [here](https://github.com/VirtoCommerce/vc-build#update
 ### How can I migrate my extension module?
 1. Make sure all required prerequisites, such as VS 2022 and .NET 6 SDK, have been installed to your environment.
 2. Bump all dependent VirtoCommerce NuGet packages to at least version 3.200.
-3. Fix all issues and make sure the solution gets compiled successfully.
+3. Fix all issues and make sure the solution gets compiled and load successfully.
 
 *Please note: When the developing and debugging processes are running, do not compile your module with .NET Core 3.1 and .NET 6 at the same time.*
-
