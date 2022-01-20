@@ -96,6 +96,7 @@ namespace VirtoCommerce.Platform.Web
             }
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             // This custom provider allows able to use just [Authorize] instead of having to define [Authorize(AuthenticationSchemes = "Bearer")] above every API controller
             // without this Bearer authorization will not work
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
