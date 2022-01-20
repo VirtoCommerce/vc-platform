@@ -14,7 +14,7 @@ For the above reasons, there is no option for partial update, which means **you 
 
 ### Slow performing database migrations
 In some cases, DB migration might take long time and throw an timeout exceptions.
-You can deal with it by using [vc-build tool](https://github.com/VirtoCommerce/vc-build) and following the tips described in [this guide](https://github.com/VirtoCommerce/vc-build/blob/main/src/VirtoCommerce.Build/GrabMigrator/samples/readme.md).
+You can deal with it by using [vc-build tool](https://github.com/VirtoCommerce/vc-build) and following the tips described in [this guide](https://github.com/VirtoCommerce/vc-build/blob/main/src/VirtoCommerce.Build/GrabMigrator/samples/readme.md) or [here](https://docs.microsoft.com/en-us/ef/core/cli/dotnet#dotnet-ef-database-update) or even [here](https://docs.microsoft.com/en-us/ef/core/cli/dotnet#dotnet-ef-migrations-script).
 
 ## Developer Experience
 Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and [Visual studio 2022](https://visualstudio.microsoft.com/vs/) have been installed to your environment.
