@@ -23,7 +23,7 @@ Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6
 | # | Name | Link |
 | --- | --- | --- |
 | 1 | [VC Platform](https://github.com/VirtoCommerce/vc-platform) | [3.200](https://github.com/VirtoCommerce/vc-platform/releases/tag/3.200.0) |
-| 2 | [VC Google ecommerce analitycs](https://github.com/VirtoCommerce/vc-module-google-ecommerce-analytics) | [3.200](https://github.com/VirtoCommerce/vc-module-google-ecommerce-analytics/releases/tag/3.200.0) |
+| 2 | [VC Google ecommerce analytics](https://github.com/VirtoCommerce/vc-module-google-ecommerce-analytics) | [3.200](https://github.com/VirtoCommerce/vc-module-google-ecommerce-analytics/releases/tag/3.200.0) |
 | 3 | [VC Assets](https://github.com/VirtoCommerce/vc-module-assets) | [3.200](https://github.com/VirtoCommerce/vc-module-assets/releases/tag/3.200.0) |
 | 4 | [VC Notifications](https://github.com/VirtoCommerce/vc-module-notification) | [3.200](https://github.com/VirtoCommerce/vc-module-notification/releases/tag/3.200.0) |
 | 5 | [VC Core](https://github.com/VirtoCommerce/vc-module-core) | [3.200](https://github.com/VirtoCommerce/vc-module-core/releases/tag/3.200.0) |
