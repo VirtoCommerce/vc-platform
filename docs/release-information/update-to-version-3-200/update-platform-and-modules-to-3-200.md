@@ -19,6 +19,9 @@ You can deal with it by using [vc-build tool](https://github.com/VirtoCommerce/v
 ## Developer Experience
 Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and [Visual studio 2022](https://visualstudio.microsoft.com/vs/) have been installed to your environment.
 
+## VC Build tool
+After migration, you should use the certain version of vc-build ([virtocommerce.globaltool **2.1.0-alpha.17**](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools)) for successful handling migrated to .NET 6 projects.
+
 ## List of Releases
 | # | Name | Link |
 | --- | --- | --- |
