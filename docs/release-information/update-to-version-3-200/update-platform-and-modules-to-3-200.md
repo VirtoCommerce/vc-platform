@@ -13,7 +13,7 @@ Technically, VC Platform **version 3.200 or higher** cannot load and manage VC m
 For the above reasons, there is no option for partial update, which means **you have to update your entire project to .NET 6.**
 
 ## Developer Experience
-Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and [Visual studio 2022](https://visualstudio.microsoft.com/vs/) have been installed to your environment.
+Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) have been installed to your environment.
 
 ## VC Build Tool
 After update to Virto Commerce on .NET 6, please use this vc-build version: [virtocommerce.globaltool **2.1.0-alpha.17**](https://virtocommerce.com/docs/CLI-tools/introduction/).
@@ -71,7 +71,10 @@ dotnet tool install --global VirtoCommerce.GlobalTool --version 2.1.0-alpha.17
 ### How can I migrate my custom/extension module?
 1. Make sure all required prerequisites, such as VS 2022 and .NET 6 SDK, have been installed to your environment.
 2. Open project properties and change Target Framework to .NET 6.0.
-3. Update All Microsoft and Entity Framework dependencies to 6.0.
+    ```xml
+    <TargetFramework>net6.0</TargetFramework>
+    ```
+3. Update All Microsoft and Entity Framework dependencies to 6.0.0.
 4. Bump all dependent VirtoCommerce NuGet packages to at least version 3.200.
 5. Fix all issues and make sure the solution gets compiled and load successfully.
 
