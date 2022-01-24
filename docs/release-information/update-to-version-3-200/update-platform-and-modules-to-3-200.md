@@ -12,15 +12,16 @@ As Microsoft introduced some breaking changes into Entity Framework, as well as 
 Technically, VC Platform **version 3.200 or higher** cannot load and manage VC modules with any version **below 3.200**, and the other way round.
 For the above reasons, there is no option for partial update, which means **you have to update your entire project to .NET 6.**
 
-### Slow performing database migrations
-In some cases, DB migration might take long time and throw an timeout exceptions.
-You can deal with it by using [vc-build tool](https://github.com/VirtoCommerce/vc-build) and following the tips described in [this guide](https://github.com/VirtoCommerce/vc-build/blob/main/src/VirtoCommerce.Build/GrabMigrator/samples/readme.md) or [here](https://docs.microsoft.com/en-us/ef/core/cli/dotnet#dotnet-ef-database-update) or even [here](https://docs.microsoft.com/en-us/ef/core/cli/dotnet#dotnet-ef-migrations-script).
-
 ## Developer Experience
 Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and [Visual studio 2022](https://visualstudio.microsoft.com/vs/) have been installed to your environment.
 
 ## VC Build Tool
-After migration, please use this vc-build version: [virtocommerce.globaltool **2.1.0-alpha.17**](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) to successfully handle your projects migrated to .NET 6.
+After update to Virto Commerce on .NET 6, please use this vc-build version: [virtocommerce.globaltool **2.1.0-alpha.17**](https://virtocommerce.com/docs/CLI-tools/introduction/).
+
+```console
+dotnet tool install --global VirtoCommerce.GlobalTool --version 2.1.0-alpha.17
+```
+
 
 ## List of Releases
 | # | Name | Link |
@@ -67,9 +68,15 @@ After migration, please use this vc-build version: [virtocommerce.globaltool **2
 
 ## FAQs
 
-### How can I migrate my extension module?
+### How can I migrate my custom/extension module?
 1. Make sure all required prerequisites, such as VS 2022 and .NET 6 SDK, have been installed to your environment.
-2. Bump all dependent VirtoCommerce NuGet packages to at least version 3.200.
-3. Fix all issues and make sure the solution gets compiled and load successfully.
+2. Open project properties and change Target Framework to .NET 6.0.
+3. Update All Microsoft and Entity Framework dependencies to 6.0.
+4. Bump all dependent VirtoCommerce NuGet packages to at least version 3.200.
+5. Fix all issues and make sure the solution gets compiled and load successfully.
 
 *Please note: When the developing and debugging processes are running, do not compile your module with .NET Core 3.1 and .NET 6 at the same time.*
+
+### Slow performing database migrations
+In some cases, DB migration might take long time and throw an timeout exceptions.
+You can deal with it by using [vc-build tool](https://github.com/VirtoCommerce/vc-build) and following the tips described in [this guide](https://github.com/VirtoCommerce/vc-build/blob/main/src/VirtoCommerce.Build/GrabMigrator/samples/readme.md) or [here](https://docs.microsoft.com/en-us/ef/core/cli/dotnet#dotnet-ef-database-update) or even [here](https://docs.microsoft.com/en-us/ef/core/cli/dotnet#dotnet-ef-migrations-script).
