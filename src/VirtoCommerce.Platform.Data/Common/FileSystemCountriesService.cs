@@ -61,7 +61,14 @@ namespace VirtoCommerce.Platform.Data.Common
 
         public Country GetByCode(string code)
         {
-            throw new NotImplementedException();
+            var country = GetCountries().FirstOrDefault(x => x.Id == code);
+
+            if (country == null)
+            {
+                throw new ArgumentException($"Country with code {code} not found");
+            }
+
+            return country;
         }
     }
 }
