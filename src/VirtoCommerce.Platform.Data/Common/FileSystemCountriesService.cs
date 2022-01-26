@@ -22,6 +22,11 @@ namespace VirtoCommerce.Platform.Data.Common
             _memoryCache = memoryCache;
         }
 
+        public IList<Country> GetCountries()
+        {
+            return GetCountriesAsync().GetAwaiter().GetResult();
+        }
+
         /// <summary>
         /// Get Full list of countries defined by ISO 3166-1 alpha-3
         /// based on https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
@@ -52,6 +57,18 @@ namespace VirtoCommerce.Platform.Data.Common
             }
 
             return Array.Empty<CountryRegion>();
+        }
+
+        public Country GetByCode(string code)
+        {
+            var country = GetCountries().FirstOrDefault(x => x.Id == code);
+
+            if (country == null)
+            {
+                throw new ArgumentException($"Country with code {code} not found");
+            }
+
+            return country;
         }
     }
 }
