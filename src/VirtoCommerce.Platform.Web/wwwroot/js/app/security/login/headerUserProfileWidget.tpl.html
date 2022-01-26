@@ -13,7 +13,7 @@
     </span>
     <div class="dropdown-menu">
         <a href="#" class="dropdown-menu__item" ng-click="manageProfile()">{{ 'platform.commands.manage-profile' | translate }}</a>
-        <a href="#" class="dropdown-menu__item" ng-click="changePassword()">{{ 'platform.commands.change-password' | translate }}</a>
+        <a href="#" class="dropdown-menu__item" ng-click="changePassword()" ng-if="isPasswordLoginEnabled">{{ 'platform.commands.change-password' | translate }}</a>
         <a href="#" class="dropdown-menu__item" ng-click="logout()">{{ 'platform.commands.sign-out' | translate }}</a>
     </div>
 </div>

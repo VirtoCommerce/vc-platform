@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-    .directive('vaHeaderUserProfileWidget', ['$document', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService',
-        function ($document, $state, authService, dialogService) {
+    .directive('vaHeaderUserProfileWidget', ['$document', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService', 'platformWebApp.login',
+        function ($document, $state, authService, dialogService, loginResources) {
 
             return {
                 restrict: 'E',
@@ -9,6 +9,18 @@ angular.module('platformWebApp')
                 scope: {},
                 templateUrl: '$(Platform)/Scripts/app/security/login/headerUserProfileWidget.tpl.html',
                 link: function (scope) {
+
+                    loginResources.getLoginTypes().$promise.then(function (loginTypes) {
+                        loginTypes = _.filter(loginTypes, function (loginTypeFilter) {
+                            return loginTypeFilter.authenticationType === "Password";
+                        });
+
+                        let loginType = _.first(_.sortBy(loginTypes, function (loginTypeSort) {
+                            return loginTypeSort.priority;
+                        }));
+
+                        scope.isPasswordLoginEnabled = loginType.enabled;
+                    });
 
                     scope.dropDownOpened = false;
                     scope.userLogin = '';
