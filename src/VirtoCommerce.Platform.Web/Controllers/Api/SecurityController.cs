@@ -410,6 +410,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityUpdate)]
         public async Task<ActionResult<SecurityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
         {
+            if (!_passwordLoginOptions.Enabled)
+            {
+                return BadRequest(new SecurityResult { Errors = new[] { "Password login is disabled" } });
+            }
+
             if (changePassword.OldPassword == changePassword.NewPassword)
             {
                 return BadRequest(new SecurityResult { Errors = new[] { "You have used this password in the past. Choose another one." } });
@@ -449,6 +454,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityUpdate)]
         public async Task<ActionResult<SecurityResult>> ResetPassword([FromRoute] string userName, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
         {
+            if (!_passwordLoginOptions.Enabled)
+            {
+                return BadRequest(new SecurityResult { Errors = new[] { "Password login is disabled" } });
+            }
+
             var user = await UserManager.FindByNameAsync(userName);
             if (user is null)
             {
