@@ -19,7 +19,7 @@ angular.module('platformWebApp')
                             return loginTypeSort.priority;
                         }));
 
-                        scope.isPasswordLoignEnabled = loginType.enabled;
+                        scope.isPasswordLoginEnabled = loginType.enabled;
                     });
 
                     scope.dropDownOpened = false;
