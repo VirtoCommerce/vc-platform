@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public void InheritedSuppressInAnotherThread()
+        public async Task InheritedSuppressInAnotherThread()
         {
             Assert.False(CacheDisabler.CacheDisabled,
                 "CacheDisabler shouldn't be active in this thread before test.");
@@ -29,10 +29,13 @@ namespace VirtoCommerce.Platform.Caching.Tests
             using (CacheDisabler.DisableCache())
             {
                 Assert.True(CacheDisabler.CacheDisabled, "CacheDisabler should be active in this thread.");
-                Task.Run(() =>
+
+                var task = Task.Factory.StartNew(() =>
                 {
                     Assert.True(CacheDisabler.CacheDisabled, "CacheDisabler inherits value in another thread!");
-                }).Wait();
+                });
+
+                await task;
             }
 
             Assert.False(CacheDisabler.CacheDisabled, "CacheDisabler shouldn't be active in this thread after test.");
@@ -64,7 +67,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public void NotInheritedSetAfterAsyncMethodStartsInAnotherAsyncMethod()
+        public async void NotInheritedSetAfterAsyncMethodStartsInAnotherAsyncMethod()
         {
             Assert.False(CacheDisabler.CacheDisabled,
                 "CacheDisabler shouldn't be active in this thread before test.");
@@ -78,7 +81,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
 
             var checkTask = notInheritedAction();
 
-            Task.Run(async () =>
+            var task = Task.Factory.StartNew(async () =>
             {
                 using (CacheDisabler.DisableCache())
                 {
@@ -87,7 +90,9 @@ namespace VirtoCommerce.Platform.Caching.Tests
                     await checkTask;
                 }
                 Assert.False(CacheDisabler.CacheDisabled, "CacheDisabler shouldn't be active in this thread after test.");
-            }).Wait();
+            });
+
+            await task;
 
             Assert.False(CacheDisabler.CacheDisabled, "CacheDisabler shouldn't be active in this thread after test.");
         }

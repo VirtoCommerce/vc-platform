@@ -33,6 +33,11 @@ namespace VirtoCommerce.Platform.Core.Caching
 
         public static bool CacheDisabled => CacheDisablerStorage.Value;
 
+        /// <summary>
+        /// The method disables caching in current and inherited threads and set up
+        /// enabling of it as callback action wich runs when returting object is disposed.
+        /// </summary>
+        /// <returns>Disposable object wich enables cache back on disposing</returns>
         public static IDisposable DisableCache()
         {
             CacheDisablerStorage.Value = true;
