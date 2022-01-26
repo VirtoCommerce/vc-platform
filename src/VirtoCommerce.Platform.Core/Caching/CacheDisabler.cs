@@ -5,7 +5,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 {
     public static class CacheDisabler
     {
-        private class DisposableActionGuard : IDisposable
+        private sealed class DisposableActionGuard : IDisposable
         {
             private readonly Action _action;
 
@@ -16,7 +16,16 @@ namespace VirtoCommerce.Platform.Core.Caching
 
             public void Dispose()
             {
-                _action();
+                GC.SuppressFinalize(this);
+                Dispose(true);
+            }
+
+            public void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    _action();
+                }
             }
         }
 
