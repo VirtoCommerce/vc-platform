@@ -27,7 +27,8 @@ namespace VirtoCommerce.Platform.Web
               })
               .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStaticWebAssets();
+                    webBuilder.UseStartup<Startup>();                    
                     webBuilder.ConfigureKestrel((context, options) => { options.Limits.MaxRequestBodySize = null; });
                 })
             .ConfigureServices((hostingContext, services) =>

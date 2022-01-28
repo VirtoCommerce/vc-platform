@@ -398,6 +398,7 @@ namespace VirtoCommerce.Platform.Web
                          options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
                      })
                     .ValidateDataAnnotations();
+
             services.AddModules(mvcBuilder);
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
@@ -531,6 +532,8 @@ namespace VirtoCommerce.Platform.Web
                 endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
 
                 endpoints.MapHealthChecks();
+
+                endpoints.MapRazorPages();
             });
 
             //Seed default users
