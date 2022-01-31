@@ -27,8 +27,8 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
             //Assert
             var error = Assert.Throws<OptionsValidationException>(() => sp.GetRequiredService<IOptions<PlatformOptions>>().Value);
             ValidateFailure<PlatformOptions>(error, Options.DefaultName, 2,
-                $"DataAnnotation validation failed for members: '{nameof(PlatformOptions.LocalUploadFolderPath)}' with the error: 'The {nameof(PlatformOptions.LocalUploadFolderPath)} field is required.'.",
-                $"DataAnnotation validation failed for members: '{nameof(PlatformOptions.LicenseActivationUrl)}' with the error: 'The {nameof(PlatformOptions.LicenseActivationUrl)} field is not a valid fully-qualified http, https, or ftp URL.");
+                $"DataAnnotation validation failed for 'PlatformOptions' members: '{nameof(PlatformOptions.LocalUploadFolderPath)}' with the error: 'The {nameof(PlatformOptions.LocalUploadFolderPath)} field is required.'.",
+                $"DataAnnotation validation failed for 'PlatformOptions' members: '{nameof(PlatformOptions.LicenseActivationUrl)}' with the error: 'The {nameof(PlatformOptions.LicenseActivationUrl)} field is not a valid fully-qualified http, https, or ftp URL.");
         }
 
         private void ValidateFailure<TOptions>(OptionsValidationException ex, string name = "", int count = 1, params string[] errorsToMatch)

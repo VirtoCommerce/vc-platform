@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Benchmark.ArrayVsList", "VirtoCommerce.Platform.Benchmark.ArrayVsList.csproj", "{AF656207-7309-44FF-9266-C279DF23A328}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF656207-7309-44FF-9266-C279DF23A328}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF656207-7309-44FF-9266-C279DF23A328}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF656207-7309-44FF-9266-C279DF23A328}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF656207-7309-44FF-9266-C279DF23A328}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E1FD9E17-577B-41F0-8E80-A88706B62823}
+	EndGlobalSection
+EndGlobal

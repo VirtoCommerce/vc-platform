@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Core.Caching
                     {
                         var options = cache is IPlatformMemoryCache platformMemoryCache ? platformMemoryCache.GetDefaultCacheEntryOptions() : new MemoryCacheEntryOptions();
                         result = await factory(options);
-                        if (result != null || cacheNullValue)
+                        if (!CacheDisabler.CacheDisabled && (result != null || cacheNullValue))
                         {
                             cache.Set(key, result, options);
                         }
@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Core.Caching
                         {
                             var options = cache is IPlatformMemoryCache platformMemoryCache ? platformMemoryCache.GetDefaultCacheEntryOptions() : new MemoryCacheEntryOptions();
                             result = factory(options);
-                            if (result != null || cacheNullValue)
+                            if (!CacheDisabler.CacheDisabled && (result != null || cacheNullValue))
                             {
                                 cache.Set(key, result, options);
                             }
@@ -61,7 +61,5 @@ namespace VirtoCommerce.Platform.Core.Caching
             }
             return (TItem)result;
         }
-
-
     }
 }

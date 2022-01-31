@@ -48,6 +48,7 @@ jobs:
       BUILD_STATE: 'failed'
       RELEASE_STATUS: 'false'
       BUILD_DOCKER: 'false'
+      MSBuildEnableWorkloadResolver: 'false'
 
     outputs:
       artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
@@ -59,8 +60,14 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
-        
-    - uses: actions/setup-node@v2
+
+    - name: Set up dotnet6 
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Set up Node 14
+      uses: actions/setup-node@v2
       with:
         node-version: '14'
 
@@ -85,7 +92,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
-      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 2.1.0-alpha.17
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
@@ -143,7 +150,7 @@ jobs:
       with:
         tag: ${{ steps.image.outputs.taggedVersion }}
         imageName: 'platform'
-        dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
+        dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/feat/net6/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
 
     - name: Docker Login
       if: ${{ env.BUILD_DOCKER == 'true' }}
@@ -174,7 +181,7 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/publish-blob-release@master
       with:
         blobSAS: ${{ secrets.BLOB_TOKEN }}
-      
+
     - name: Set artifactUrl value
       id: artifactUrl
       run: |
@@ -193,7 +200,7 @@ jobs:
       if: ${{ github.event_name == 'pull_request' }}
       uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
       with:
-        artifactUrl: ${{ steps.artifactUrl.outputs.BLOB_URL }}
+        artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
         downloadComment: 'Artifact URL:'
       
     - name: Publish Github Release
@@ -221,9 +228,6 @@ jobs:
         release: ${{ env.RELEASE_STATUS }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Print all environment variables
-      run:  env
 
     - name: Push Build Info to Jira
       if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
@@ -318,9 +322,6 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         status: ${{ job.status }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-
-    - name: Print all environment variables
-      run:  env
 
     - name: Push Deployment Info to Jira
       if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && needs.ci.outputs.jira-keys != '' && always() }}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.Server;
@@ -34,6 +35,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly ISettingsManager _settingsManager;
         private readonly IUserNameResolver _userNameResolver;
         private readonly PlatformOptions _platformOptions;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         private static readonly object _lockObject = new object();
 
@@ -42,29 +44,31 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IPushNotificationManager pushNotifier,
             ISettingsManager settingManager,
             IUserNameResolver userNameResolver,
-            IOptions<PlatformOptions> options)
+            IOptions<PlatformOptions> options,
+            IHttpClientFactory httpClientFactory)
         {
             _platformExportManager = platformExportManager;
             _pushNotifier = pushNotifier;
             _settingsManager = settingManager;
             _userNameResolver = userNameResolver;
+            _httpClientFactory = httpClientFactory;
             _platformOptions = options.Value;
         }
 
         [HttpGet]
         [Route("sampledata/discover")]
         [AllowAnonymous]
-        public ActionResult<SampleDataInfo[]> DiscoverSampleData()
+        public async Task<ActionResult<SampleDataInfo[]>> DiscoverSampleData()
         {
-            return Ok(InnerDiscoverSampleData().ToArray());
+            return Ok((await InnerDiscoverSampleDataAsync()).ToArray());
         }
 
         [HttpPost]
         [Route("sampledata/autoinstall")]
         [Authorize(Permissions.PlatformImport)]
-        public ActionResult<SampleDataImportPushNotification> TryToAutoInstallSampleData()
+        public async Task<ActionResult<SampleDataImportPushNotification>> TryToAutoInstallSampleData()
         {
-            var sampleData = InnerDiscoverSampleData().FirstOrDefault(x => !x.Url.IsNullOrEmpty());
+            var sampleData = (await InnerDiscoverSampleDataAsync()).FirstOrDefault(x => !x.Url.IsNullOrEmpty());
             if (sampleData != null)
             {
                 return ImportSampleData(sampleData.Url);
@@ -205,7 +209,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private IEnumerable<SampleDataInfo> InnerDiscoverSampleData()
+        private async Task<IEnumerable<SampleDataInfo>> InnerDiscoverSampleDataAsync()
         {
             var sampleDataUrl = _platformOptions.SampleDataUrl;
             if (string.IsNullOrEmpty(sampleDataUrl))
@@ -224,42 +228,40 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             //Discovery mode
             var manifestUrl = sampleDataUrl + "\\manifest.json";
-            using (var client = new WebClient())
-            using (var stream = client.OpenRead(new Uri(manifestUrl)))
+            using var client = _httpClientFactory.CreateClient();
+            await using var stream = await client.GetStreamAsync(new Uri(manifestUrl));
+            //Add empty template
+            var result = new List<SampleDataInfo>
             {
-                //Add empty template
-                var result = new List<SampleDataInfo>
-                {
-                    new SampleDataInfo { Name = "Empty" }
-                };
+                new SampleDataInfo { Name = "Empty" }
+            };
 
-                //Need filter unsupported versions and take one most new sample data
-                var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>()
-                    .Select(x => new
-                    {
-                        Version = SemanticVersion.Parse(x.PlatformVersion),
-                        x.Name,
-                        Data = x
-                    })
-                    .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
-                    .GroupBy(x => x.Name)
-                    .Select(x => x.OrderByDescending(y => y.Version).First().Data)
-                    .ToList();
-
-                //Convert relative  sample data urls to absolute
-                foreach (var sampleDataInfo in sampleDataInfos)
+            //Need filter unsupported versions and take one most new sample data
+            var sampleDataInfos = stream.DeserializeJson<List<SampleDataInfo>>()
+                .Select(x => new
                 {
-                    if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
-                    {
-                        var uri = new Uri(sampleDataUrl);
-                        sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
-                    }
+                    Version = SemanticVersion.Parse(x.PlatformVersion),
+                    x.Name,
+                    Data = x
+                })
+                .Where(x => x.Version.IsCompatibleWith(PlatformVersion.CurrentVersion))
+                .GroupBy(x => x.Name)
+                .Select(x => x.OrderByDescending(y => y.Version).First().Data)
+                .ToList();
+
+            //Convert relative  sample data urls to absolute
+            foreach (var sampleDataInfo in sampleDataInfos)
+            {
+                if (!Uri.IsWellFormedUriString(sampleDataInfo.Url, UriKind.Absolute))
+                {
+                    var uri = new Uri(sampleDataUrl);
+                    sampleDataInfo.Url = new Uri(uri, uri.AbsolutePath + "/" + sampleDataInfo.Url).ToString();
                 }
-
-                result.AddRange(sampleDataInfos);
-
-                return result;
             }
+
+            result.AddRange(sampleDataInfos);
+
+            return result;
         }
 
         public async Task SampleDataImportBackgroundAsync(Uri url, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)

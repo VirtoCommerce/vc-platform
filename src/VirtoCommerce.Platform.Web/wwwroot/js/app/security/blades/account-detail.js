@@ -1,10 +1,11 @@
-angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.settings', 'platformWebApp.authService',
-    function ($scope, bladeNavigationService, metaFormsService, accounts, settings, authService) {
+angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.settings', 'platformWebApp.authService', 'platformWebApp.login',
+    function ($scope, bladeNavigationService, metaFormsService, accounts, settings, authService, loginResources) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:security:update';
         blade.accountTypes = [];
         blade.statuses = [];
         blade.isLinkSent = false;
+        blade.isPasswordLoginEnabled = false;
 
         blade.refresh = function (parentRefresh) {
             var entity = parentRefresh ? blade.currentEntity : blade.data;
@@ -20,10 +21,30 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
         }
 
         function setToolbarCommands() {
-            blade.toolbarCommands = commands.filter((item) => item.meta !== blade.accountLockedState);
+
+            let filteredCommands = commands.filter((item) => item.meta !== blade.accountLockedState);
+
+            if (!blade.isPasswordLoginEnabled) {
+                filteredCommands = filteredCommands.filter((item) => item.meta !== "ChangePassword");
+            }
+
+            blade.toolbarCommands = filteredCommands;
         }
 
         function initializeBlade(data) {
+            // Load login types
+            loginResources.getLoginTypes().$promise.then(function (loginTypes) {
+                loginTypes = _.filter(loginTypes, function (loginTypeFilter) {
+                    return loginTypeFilter.authenticationType === "Password";
+                });
+
+                let loginType = _.first(_.sortBy(loginTypes, function (loginTypeSort) {
+                    return loginTypeSort.priority;
+                }));
+
+                blade.isPasswordLoginEnabled = loginType.enabled;
+            });
+
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
             isAccountlocked(blade.currentEntity.id).then(function (result) {

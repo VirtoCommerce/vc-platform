@@ -96,6 +96,7 @@ namespace VirtoCommerce.Platform.Web
             }
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             // This custom provider allows able to use just [Authorize] instead of having to define [Authorize(AuthenticationSchemes = "Bearer")] above every API controller
             // without this Bearer authorization will not work
             services.AddSingleton<IAuthenticationSchemeProvider, CustomAuthenticationSchemeProvider>();
@@ -420,6 +421,8 @@ namespace VirtoCommerce.Platform.Web
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
+            services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -428,8 +431,8 @@ namespace VirtoCommerce.Platform.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
                 app.UseBrowserLink();
-                app.UseDatabaseErrorPage();
 #if DEBUG
                 TelemetryDebugWriter.IsTracingDisabled = true;
 #endif
