@@ -92,7 +92,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
-      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 2.1.0-alpha.17
+      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
