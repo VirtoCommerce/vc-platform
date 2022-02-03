@@ -18,15 +18,6 @@ on:
       - 'LICENSE'
       - '**/argoDeploy.json'
     branches: [ master, dev ]
-  pull_request:
-    paths-ignore:
-      - '.github/**'
-      - 'docs/**'
-      - 'build/**'
-      - 'README.md'
-      - 'LICENSE'
-      - '**/argoDeploy.json'
-    branches: [ master, dev ]
 
 jobs:
   ci:
