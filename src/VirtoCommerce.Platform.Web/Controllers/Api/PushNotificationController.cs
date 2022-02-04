@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("")]
-        public ActionResult<PushNotificationSearchResult> SearchPushNotification(PushNotificationSearchCriteria criteria)
+        public ActionResult<PushNotificationSearchResult> SearchPushNotification([FromBody] PushNotificationSearchCriteria criteria)
         {
             var retVal = _pushNotifier.SearchNotifies(User.Identity.Name, criteria);
             return Ok(retVal);
