@@ -175,7 +175,10 @@ namespace VirtoCommerce.Platform.Modules
             {
                 foreach (var manifestFile in Directory.EnumerateFiles(_options.DiscoveryPath, "module.manifest", SearchOption.AllDirectories))
                 {
-                    if (!manifestFile.Contains("artifacts"))
+                    // Exclude manifests from the builded modules
+                    // starting from the relative module directory, excluding the discovery modules path
+                    // particularly "artifacts" folder
+                    if (!manifestFile.Substring(_options.DiscoveryPath.Length).Contains("artifacts"))
                     {
                         var manifest = ManifestReader.Read(manifestFile);
                         result.Add(manifestFile, manifest);
