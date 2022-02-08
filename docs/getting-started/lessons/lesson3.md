@@ -275,25 +275,6 @@ public static class Security
 
 With them you control the API access allowing to read, update or perform delete operation. These permission checks are also used in frontend part as well.
 
-### Declaring new permissions in module.manifest
-
-Permissions are also declared in module manifest.
-
-```xml
-<module>
-....
-    <permissions>
-        <group name="CustomerReviewsModule">
-            <permission id="CustomerReviewsModule:read" name="Read" />
-            <permission id="CustomerReviewsModule:update" name="Update" />
-            <permission id="CustomerReviewsModule:delete" name="Delete" />
-        </group>
-    </permissions>
-</module>
-```
-
-You can read more about permissions in [Working with platform security](https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/working-with-platform-security)
-
 ## Data project (Persistence layer)
 
 For the persistence or Data Access Layer (DAL) solution has a separate project called **Data**. Here implemented all the interfaces defined in **Core** project. Moreover, it contains all the persistence and data access abstractions, and mappings as well.
@@ -417,14 +398,14 @@ Typical *module.manifest* structure is:
 
 ```xml
 <version>1.0.0</version>
-<platformVersion>3.83.0</platformVersion>
+<platformVersion>3.200.0</platformVersion>
 ```
 
 * Dependencies - list of modules with versions whose functions will be used in a new module:
 
 ```xml
 <dependencies>
-    <dependenci id="VirtoCommerce.Core" version="3.83.0">
+    <dependenci id="VirtoCommerce.Core" version="3.200.0">
 </dependencies>
 ```
 
@@ -548,42 +529,26 @@ If you need to override existing registrations or register new store dependent s
 
 ### Module settings
 
-A setting is a parameter that a module accepts. More details on settings: https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/extending-functionality/managing-module-settings
+Platform settings are collected and delivered to Settings module by all platform modules. Each module can add settings to a standard UI by declaring them in the module manifest.
 
-First of all define *CustomerReviews.CustomerReviewsEnabled* setting in *module.manifest* like this:
+In VC3 settings are declared in ModuleConstants.cs
 
-```xml
-<settings>
-    <group name="Store|General">
-        <setting>
-            <name>CustomerReviews.CustomerReviewsEnabled</name>
-            <valueType>boolean</valueType>
-            <defaultValue>false</defaultValue>
-            <title>Customer Reviews enabled</title>
-            <description>Flag to mark that customer reviews functionality is enabled</description>
-        </setting>
-    </group>
-</settings>
-```
+Example
 
-A new, global module setting is defined. Make the Reviews enabled/disabled setting value configurable for each individual store (scope-bounded):
-
-* get instance of **ISettingsManager**;
-* define a list of settings that will be scope-bounded;
-* get the actual definitions of those settings;
-* register the settings as scope-bounded in "VirtoCommerce.Store" module:
-
-```c#
-public override void PostInitialize()
-{
-    base.PostInitialize();
-
-    //Registering settings to store module allows to use individual values in each store
-    var settingManager = _container.Resolve<ISettingsManager>();
-    var storeSettingsNames = new[] { "CustomerReviews.CustomerReviewsEnabled" };
-    var storeSettings = settingManager.GetModuleSettings("CustomerReviews.Web").Where(x => storeSettingsNames.Contains(x.Name)).ToArray();
-    settingManager.RegisterModuleSettings("VirtoCommerce.Store", storeSettings);
-}
+```cs
+        public static class Settings
+        {
+            public static class General
+            {
+                public static SettingDescriptor CustomerReviewsEnabled = new SettingDescriptor
+                {
+                    Name = "CustomerReviews.CustomerReviewsEnabled",
+                    GroupName = "Store|CustomerReviews",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = false
+                };
+            }
+        }
 ```
 
 ### WEB API layer
@@ -643,7 +608,7 @@ After the project is created from the template, the following NuGet packages wil
 
 We recommend to use ["Unit testing best practices with .NET Core and .NET Standard"](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices) in tests development.
 
-Actual code for CustomerReviewsModule.Tests project you can find in the sample [repository](https://github.com/VirtoCommerce/vc-samples/tree/master/CustomerReviews).
+Actual code for CustomerReviewsModule.Tests project you can find in the sample [repository](https://github.com/VirtoCommerce/vc-module-customer-review/blob/dev/tests/VirtoCommerce.CustomerReviews.Test/CustomerReviewsTests.cs).
 
 ## Pack and release/deployment
 
