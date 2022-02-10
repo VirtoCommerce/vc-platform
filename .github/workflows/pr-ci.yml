@@ -1,0 +1,29 @@
+# v3.200.1
+name: Platform PR build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ master, dev ]
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'build/**'
+      - 'README.md'
+      - 'LICENSE'
+      - '**/argoDeploy.json'
+
+jobs:
+  test:
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.1
+    secrets:
+      sonarToken: ${{ secrets.SONAR_TOKEN }}
+
+  build:
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.1
+    with:
+      uploadDocker: 'true'
+      eventName: ${{ github.event_name }}
+      imageName: ${{ github.event.repository.name }}
+    secrets:
+      envPAT: ${{ secrets.REPO_TOKEN }}
