@@ -1,8 +1,8 @@
-﻿---
+---
 title: Lesson 2 - How to import new products into Virto Commerce catalog
 description: Lesson 2 - How to import new products into Virto Commerce catalog
 layout: docs
-date: 2018-04-04
+date: 2022-02-17
 priority: 2
 ---
 ## Summary
@@ -11,10 +11,10 @@ Use this guide to import new products into Virto Commerce Platform (backend) cat
 
 ## Prerequisites
 
-* You need to have locally preinstalled Virto Commerce Platform (backend) and Virto Commerce Storefront (frontend) - see how to deploy and open them in <a href="https://virtocommerce.com/docs/lessons/lesson1" target="_blank">Lesson 1</a>.
-* Download the <a href="https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/electronics-new-products-example.csv" target="_blank">electronics-new-products-example.csv</a> file with new products.
-* Download the <a href="https://github.com/VirtoCommerce/vc-content/blob/deploy/pages/docs/lessons/images-example.zip" target="_blank">images-example.zip</a> file and extract the content. There will be 15 images of new products.
-* Microsoft Excel, <a href="https://www.libreoffice.org/" target="_blank">LibreOffice(*free*)</a> or any other .csv file editor.
+* You need to have locally preinstalled Virto Commerce Platform (backend) and Virto Commerce Storefront (frontend) - see how to deploy and open them in [Lesson 1](lesson1.md).
+* Download the [electronics-new-products-example.csv](electronics-new-products-example.csv) file with new products.
+* Download the [images-example.zip](images-example.zip) file and extract the content. There will be 15 images of new products.
+* Microsoft Excel or any other .csv file editor.
 
 ## Create catalog data file in .csv format
 
@@ -23,11 +23,11 @@ In order to have a file with your own products like downloaded **electronics-new
 * In LibreOffice you need to create table with the number of columns equal to the number of properties of your products and fill it. For a delimiter, select a comma.
 * Save file in .csv format.
 
-![РЎsv example](../../media/csv-example.png "РЎsv example")
+![CSV example](../../media/csv-example.png "CSV example")
 
 ## Create new Catalog or use an existing one
 
-* Open Virto Commerce Platform (see how to deploy and open it in [Lesson 1](https://virtocommerce.com/docs/latest/getting-started/lessons/lesson1/))
+* Open Virto Commerce Platform (see how to deploy and open it in [Lesson 1](lesson1.md))
 * There are 2 scenarios for adding new products: adding to a new catalog or to an existing one.
 
 ### Creating new category and subcategory
@@ -61,23 +61,23 @@ You need to add images for products: go to **More > Assets > catalog >** click o
 
 ## Importing and mapping your catalog data into Virto Commerce
 
-* At the top of the **Asus-Laptops** category blade click the **Import** icon **> VirtoCommerce CSV import >** select **Semicolon** in **Csv column delimiter >** click on the image and select **electronics-new-products-example.csv** file to upload. Wait a little... 
+* At the top of the **Asus-Laptops** category blade click the **Import** icon **> VirtoCommerce CSV import >** select **Semicolon** in **CSV column delimiter >** click on the image and select **electronics-new-products-example.csv** file to upload. Wait a little... 
 
 >Note: importing new products from the file without specifying either the category id or the category path in it, defaults to the root directory - to the catalog.
 
-![РЎsv import](../../media/csv-import.png "РЎsv import")
+![CSV import](../../media/csv-import.png "CSV import")
 
 * After uploading your data, click on **Map columns**. On this blade you will see and configure how the properties of your products will be mapped to the default properties defined in application, just so they will be saved to the database after you click buttons **Ok** and **Start Import**. Wait a little...
 
-![РЎsv import mapping](../../media/csv-import-mapping.png "РЎsv import mapping")
+![CSV import mapping](../../media/csv-import-mapping.png "CSV import mapping")
 
-![РЎsv import mapping done](../../media/csv-import-mapping-done.png "РЎsv import mapping done")
+![CSV import mapping done](../../media/csv-import-mapping-done.png "CSV import mapping done")
 
 ## Open new products in Virto Commerce Platform (*backend*)
 
 Now you can see and edit all new products by navigating to **More > Catalog > Electronics > Laptops > Asus-Laptops**:
 
-![РЎsv import result](../../media/csv-import-result.png "РЎsv import result")
+![CSV import result](../../media/csv-import-result.png "CSV import result")
 
 ## Creating a new menu item in Virto Commerce Storefront (*frontend*)
 
@@ -122,7 +122,7 @@ Now you need to generate thumbnails for new images.
 
 ## Open new products in Virto Commerce Storefront (*frontend*)
 
-* Open Virto Commerce Storefront locally (see how to deploy and open it in <a href="https://github.com/VirtoCommerce/vc-content/tree/lesson2/Pages/docs/lessons/lesson1.md" target="_blank">Lesson 1</a>).
+* Open Virto Commerce Storefront locally (see how to deploy and open it in [Lesson 1](lesson1.md).
 * Now you can see new menu item **Laptops**, new subitem **Asus Laptops** and all new products in Virto Commerce Storefront.
 
 ![Laptops on storefront](../../media/laptops-on-storefront.png "Laptops on storefront")
