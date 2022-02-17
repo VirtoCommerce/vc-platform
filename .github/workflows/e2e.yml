@@ -32,6 +32,11 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '14'
+    
+    - name: Set up dotnet6 
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
 
     - name: Install VirtoCommerce.GlobalTool
       uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
