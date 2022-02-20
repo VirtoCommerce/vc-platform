@@ -7,6 +7,14 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "18 February"
+    * Blue-green Indexing for Elasticsearch
+    * Index partial update
+    * XAPI support for server culture and time zone
+    * Resolving all backlinks from Virtual Catalogs
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-18-february-2022/427)
+
 !!! done "24 January"
     * Virto Commerce on .NET 6 released
     * Branding and Color Coding in Admin UI
@@ -22,14 +30,6 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * Azure Single Sign-in
     
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-13-december-2021/396)
-    
-!!! done "29 November"
-    * Assets were decoupling from the platform
-    * Selecting properties for webhook payload
-    * UI improvements
-    * New features in XAPI
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-29-november-2021/394)
    
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), Subscribe on [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and Star on [GitHub](https://github.com/VirtoCommerce).
 
