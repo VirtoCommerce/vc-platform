@@ -27,6 +27,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.13" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.13" />
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="3.1.13" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.22.0" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="Serialize.Linq" Version="1.8.1" />
     </ItemGroup>
