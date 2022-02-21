@@ -13,7 +13,7 @@ Before installing the Virto platform, make sure the computer you are going to in
 | Processor type | x64-compatible only |
 ## Supported Operation Systems for .NET 6
 
-The Virto platform runs on .NET 6, which supports installation on Windows, Linux, and macOS.
+The Virto platform runs on .NET 6, which supports installation on Windows and Linux.
 
 For the Windows family, the requirements are as follows:
 
@@ -29,8 +29,6 @@ For the Windows family, the requirements are as follows:
 For Linux, the requirements are the following:
 
  - TBA
-
-As for macOS, .NET 6 can be installed on macOS X 10.15 and above.
 
 ## Supported Databases
 The Virto platform supports MS SQL Server 2017 and above.

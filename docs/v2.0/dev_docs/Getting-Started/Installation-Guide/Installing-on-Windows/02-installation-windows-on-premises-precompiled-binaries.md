@@ -1,15 +1,15 @@
 ﻿# Manual Installation with Precompiled Binaries
-This section explains how to install Virto Commerce in the demo mode on a Windows based PC.
+This section explains how to install Virto Commerce on a Windows based PC.
 
 ## Downloading Precompiled Platform Version
 To download the precompiled files, navigate to the [Releases](https://github.com/VirtoCommerce/vc-platform/releases "https://github.com/VirtoCommerce/vc-platform/releases") section of our public GitHub repository.
 
-Locate the *VirtoCommerce.Platform.3.x.x.zip* file. This file already has the website built and can be run without any additional compilation. The source code, however, is not included.
+Locate the *VirtoCommerce.Platform.3.x.x.zip* archive, which already has the website built and can be run without any additional compilation. The source code, however, is not included.
 
-Unpack the zipped file to a local directory, e.g., *C:\vc-platform-3*. That's it, you've got a directory with the precompiled platform files.
+Unpack the zipped archive to a local directory, e.g., `C:\vc-platform-3`. That's it, you've got a directory with the precompiled platform files.
 
 ## Updating Settings File
-Once you have downloaded and unpacked the files, you will need to adjust the settings. Open the *appsettings.json* file in your text editor and change the *VirtoCommerce* node in the *ConnectionStrings* section.
+Once you have downloaded and unpacked the files, you will need to adjust the settings. Open the *appsettings.json* file in your text editor and change the `VirtoCommerce` string in the `ConnectionStrings` section.
 
 *Note: The provided user must have enough permissions to create a new database.*
 
@@ -39,13 +39,13 @@ In order to launch the platform, run this command:
 ```
 dotnet VirtoCommerce.Platform.Web.dll
 ```
-*Note: Running the Platform only on HTTP schema is intended for the development and demo purposes. In order to run the platform in the production mode, you only need to add HTTP URLs in the `--urls` argument of the `dotnet` command:*
+*Note: The command above will run the Platform enforcing the HTTPS schema. You can also add HTTP URLs in the `--urls` argument of the `dotnet` command for development or demo purposes (see below). For security reasons, however, you should never use it in the production mode.*
 ```
 dotnet VirtoCommerce.Platform.Web.dll --urls=http://localhost:5000
 ```
 
 ## First Time Launch
-To launch the platform for the first time, open your browser and type http://localhost:5000 or https://localhost:5001. You may get the *Your connection is not private* error; in this case, click *Advanced* and then *Proceed to...* You can also remove this error using a [self signed certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx).
+To launch the platform for the first time, open your browser and type http://localhost:5000 or https://localhost:5001. You may get the *Your connection is not private* error; in this case, click *Advanced* and then *Proceed to...* You can also remove this error using a [self signed certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx). FOR ET: SUPPLY SCREEN CAPTURE
 
 The application will then create and initialize the database. After that, you should see the sign in page. Supply *admin* for login and *store* for password.
 
@@ -57,4 +57,4 @@ Once the wizard is done installing, you will be prompted to reset the default cr
 
 ![Resetting default credentials](./media/03-resetting-default-credentials.png)
 
-This is it! Your demo platform is good to go.
+This is it! Your platform is good to go.

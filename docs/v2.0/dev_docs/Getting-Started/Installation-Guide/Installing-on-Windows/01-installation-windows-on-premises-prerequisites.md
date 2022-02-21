@@ -11,7 +11,7 @@ This components must be installed in your Windows environment before running the
 
 ![Selecting server authentication mode](./media/01-selecting-server-authentication.png)
 
-- [Virto Commerce CLI](https://github.com/VirtoCommerce/vc-build)
+- [Virto Commerce CLI](https://github.com/VirtoCommerce/vc-build), our proprietary command line interface that enables automating the installation process and updating the dependencies.
 
 ## Optional software components
 For VirtoCommerce 3.200 or above, we recommend you installing MS Visual Studio 2022 (version 17.0 or above). You might also want to install [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0 "Installing .NET 6 SDK") in case you will need to edit the source code.
