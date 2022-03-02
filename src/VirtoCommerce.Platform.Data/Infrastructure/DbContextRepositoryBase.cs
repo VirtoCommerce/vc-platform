@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item">The item.</param>
-        public void Attach<T>(T item) where T : class
+        public virtual void Attach<T>(T item) where T : class
         {
             DbContext.Attach(item);
         }
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item">The item.</param>
-        public void Add<T>(T item) where T : class
+        public virtual void Add<T>(T item) where T : class
         {
             DbContext.Add(item);
         }
@@ -65,7 +65,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item">The item.</param>
-        public void Update<T>(T item) where T : class
+        public virtual void Update<T>(T item) where T : class
         {
             DbContext.Update(item);
             DbContext.Entry(item).State = EntityState.Modified;
@@ -76,7 +76,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item">The item.</param>
-        public void Remove<T>(T item) where T : class
+        public virtual void Remove<T>(T item) where T : class
         {
             DbContext.Remove(item);
         }

@@ -35,6 +35,7 @@
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
         <PackageReference Include="System.IO.Abstractions" Version="11.0.18" />
     </ItemGroup>
 

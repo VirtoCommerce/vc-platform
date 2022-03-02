@@ -78,6 +78,8 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            System.Threading.Thread.Sleep(6000);
+
             // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-3.1#forward-the-scheme-for-linux-and-non-iis-reverse-proxies
             if (string.Equals(
                 Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
@@ -398,6 +400,7 @@ namespace VirtoCommerce.Platform.Web
                          options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
                      })
                     .ValidateDataAnnotations();
+
             services.AddModules(mvcBuilder);
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
@@ -531,6 +534,8 @@ namespace VirtoCommerce.Platform.Web
                 endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
 
                 endpoints.MapHealthChecks();
+
+                endpoints.MapRazorPages();
             });
 
             //Seed default users
