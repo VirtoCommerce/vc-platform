@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Model.Security;
 
@@ -21,18 +22,21 @@ namespace VirtoCommerce.Platform.Web.Controllers
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly AzureAdOptions _azureAdOpitons;
+        private readonly AzureAdOptions _azureAdOptions;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ISettingsManager _settingsManager;
 
         public ExternalSignInController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            IOptions<AzureAdOptions> azureAdOpitons,
-            IEventPublisher eventPublisher)
+            IOptions<AzureAdOptions> azureAdOptions,
+            IEventPublisher eventPublisher,
+            ISettingsManager settingsManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
-            _azureAdOpitons = azureAdOpitons.Value;
+            _settingsManager = settingsManager;
+            _azureAdOptions = azureAdOptions.Value;
         }
 
         [HttpGet]
@@ -84,9 +88,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
                     platformUser = new ApplicationUser
                     {
                         UserName = userName,
-                        Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? (userName.IsValidEmail() ? userName : null)
-                        // TODO: somehow access the AzureAd configuration section and read the default user type from there
-                        //UserType = _authenticationOptions.AzureAdDefaultUserType
+                        Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? (userName.IsValidEmail() ? userName : null),
+                        UserType = await GetAzureAdDefaultUserType()
                     };
 
                     var result = await _userManager.CreateAsync(platformUser);
@@ -137,6 +140,27 @@ namespace VirtoCommerce.Platform.Web.Controllers
             return Ok(externalLoginProviders);
         }
 
+        private async Task<string> GetAzureAdDefaultUserType()
+        {
+            var userType = _azureAdOptions.DefaultUserType ?? "Manager";
+            var userTypesSetting = await _settingsManager.GetObjectSettingAsync("VirtoCommerce.Platform.Security.AccountTypes");
+
+            var userTypes = userTypesSetting.AllowedValues.Select(x => x.ToString()).ToList();
+
+            if (!userTypes.Contains(userType))
+            {
+                userTypes.Add(userType);
+                userTypesSetting.AllowedValues = userTypes.Select(x => (object)x).ToArray();
+
+                using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync())
+                {
+                    await _settingsManager.SaveObjectSettingsAsync(new [] { userTypesSetting });
+                }
+            }
+
+            return userType;
+        }
+
         /// <summary>
         /// Try to take a user name from claims.
         /// </summary>
@@ -144,7 +168,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         {
             var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn);
 
-            if (string.IsNullOrWhiteSpace(userName) && _azureAdOpitons.UsePreferredUsername)
+            if (string.IsNullOrWhiteSpace(userName) && _azureAdOptions.UsePreferredUsername)
             {
                 userName = externalLoginInfo.Principal.FindFirstValue("preferred_username");
             }
