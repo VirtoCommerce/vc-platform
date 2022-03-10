@@ -622,6 +622,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 user = await UserManager.FindByNameAsync(validatePassword.UserName);
             }
+            
             var result = await _passwordValidator.ValidateAsync(UserManager, user, validatePassword.NewPassword);
 
             return Ok(result);
