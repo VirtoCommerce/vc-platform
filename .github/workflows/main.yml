@@ -246,7 +246,7 @@ jobs:
         echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
 
   deploy:
-    if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
+    if: ${{ (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master') && github.event_name != 'workflow_dispatch' }}
     needs: ci
     runs-on: ubuntu-latest
     env:
@@ -256,11 +256,20 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
     steps: 
 
+    - name: Set deployment environment
+      id: deployEnv
+      run: |
+        if [ '${{ github.ref }}' = 'refs/heads/master' ]; then
+          echo ::set-output name=NAME::prod
+        else
+          echo ::set-output name=NAME::dev
+        fi;
+
     - name: Read deployment config
       uses: VirtoCommerce/vc-github-actions/get-deploy-param@master
       id: deployConfig
       with:
-        envName: 'dev'
+        envName: ${{ steps.deployEnv.outputs.NAME }}
 
     - name: Start deployment
       uses: bobheadxi/deployments@master
