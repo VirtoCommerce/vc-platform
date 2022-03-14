@@ -20,7 +20,7 @@
     },
     "prod": {
         "deployAppName": "vcplatform-demo",
-        "deployBranch": "master",
+        "deployBranch": "demo",
         "environmentId": "prod",
         "environmentName": "Demo",
         "environmentType": "production",
