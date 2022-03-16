@@ -82,13 +82,15 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 //Need handle the two cases
                 //first - when the VC platform user account already exists, it is just missing an external login info and
                 //second - when user does not have an account, then create a new account for them
-                platformUser = await _userManager.FindByNameAsync(userName);
+                platformUser = await _userManager.FindByNameAsync(userName) ??
+                               await FindUserByEmail(GetUserEmail(externalLoginInfo));
+
                 if (platformUser == null)
                 {
                     platformUser = new ApplicationUser
                     {
                         UserName = userName,
-                        Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? (userName.IsValidEmail() ? userName : null),
+                        Email = GetUserEmail(externalLoginInfo) ?? (userName.IsValidEmail() ? userName : null),
                         UserType = await GetAzureAdDefaultUserType()
                     };
 
@@ -174,6 +176,19 @@ namespace VirtoCommerce.Platform.Web.Controllers
             }
 
             return userName;
+        }
+
+        private string GetUserEmail(ExternalLoginInfo externalLoginInfo) =>
+            externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+
+        private async Task<ApplicationUser> FindUserByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return null;
+            }
+
+            return await _userManager.FindByEmailAsync(email);
         }
     }
 }
