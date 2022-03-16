@@ -58,7 +58,11 @@ dotnet VirtoCommerce.Platform.Web.dll --urls=http://localhost:5000
 ```
 
 ## First Time Launch
-To launch the platform for the first time, open your browser and type http://localhost:5000 or https://localhost:5001. You may get the *Your connection is not private* error; in this case, click *Advanced* and then *Proceed to...* You can also remove this error using a [self signed certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx). FOR ET: SUPPLY SCREEN CAPTURE
+To launch the platform for the first time, open your browser and type http://localhost:5000 or https://localhost:5001. You may get the *Your connection is not private* error; in this case, click *Advanced* and then *Proceed to...*:
+
+![Your Connection Is Not Private screen](./media/04-your-connection-is-not-private-screen.png)
+
+You can also remove this error using a [self signed certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx).
 
 The application will then create and initialize the database. After that, you should see the sign in page. Supply *admin* for login and *store* for password.
 
