@@ -71,6 +71,9 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             ApplicationUser platformUser = null;
             var userName = GetUserName(externalLoginInfo);
+            var userEmail = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ??
+                            (userName.IsValidEmail() ? userName : null);
+
             if (string.IsNullOrWhiteSpace(userName))
             {
                 throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
@@ -82,13 +85,15 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 //Need handle the two cases
                 //first - when the VC platform user account already exists, it is just missing an external login info and
                 //second - when user does not have an account, then create a new account for them
-                platformUser = await _userManager.FindByNameAsync(userName);
+                platformUser = await _userManager.FindByNameAsync(userName) ??
+                               await FindUserByEmail(userEmail);
+
                 if (platformUser == null)
                 {
                     platformUser = new ApplicationUser
                     {
                         UserName = userName,
-                        Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? (userName.IsValidEmail() ? userName : null),
+                        Email = userEmail,
                         UserType = await GetAzureAdDefaultUserType()
                     };
 
@@ -114,10 +119,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (platformUser == null)
-            {
-                platformUser = await _userManager.FindByNameAsync(userName);
-            }
+            platformUser ??= await _userManager.FindByNameAsync(userName);
 
             await _eventPublisher.Publish(new UserLoginEvent(platformUser));
 
@@ -174,6 +176,16 @@ namespace VirtoCommerce.Platform.Web.Controllers
             }
 
             return userName;
+        }
+
+        private async Task<ApplicationUser> FindUserByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return null;
+            }
+
+            return await _userManager.FindByEmailAsync(email);
         }
     }
 }
