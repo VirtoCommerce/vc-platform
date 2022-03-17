@@ -71,7 +71,8 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             ApplicationUser platformUser = null;
             var userName = GetUserName(externalLoginInfo);
-            var userEmail = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+            var userEmail = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ??
+                            (userName.IsValidEmail() ? userName : null);
 
             if (string.IsNullOrWhiteSpace(userName))
             {
@@ -92,7 +93,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                     platformUser = new ApplicationUser
                     {
                         UserName = userName,
-                        Email = userEmail ?? (userName.IsValidEmail() ? userName : null),
+                        Email = userEmail,
                         UserType = await GetAzureAdDefaultUserType()
                     };
 
@@ -118,8 +119,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            platformUser ??= await _userManager.FindByNameAsync(userName) ??
-                             await FindUserByEmail(userEmail);
+            platformUser ??= await _userManager.FindByNameAsync(userName);
 
             await _eventPublisher.Publish(new UserLoginEvent(platformUser));
 
