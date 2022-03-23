@@ -35,7 +35,7 @@ jobs:
         fi;
 
     - name: Get cache key
-      uses: VirtoCommerce/vc-github-actions/cache-get-key@PT-4557
+      uses: VirtoCommerce/vc-github-actions/cache-get-key@mater
       id: cache-key
       with:
         runnerOs: ${{ runner.os  }}
