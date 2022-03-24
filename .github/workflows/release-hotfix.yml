@@ -1,0 +1,89 @@
+# v3.200.2
+name: Release hotfix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.2
+    secrets:
+      sonarToken: ${{ secrets.SONAR_TOKEN }}
+
+  build:
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.2
+    with:
+      uploadPackage: 'true'
+      uploadDocker: 'true'
+      eventName: ${{ github.event_name }}
+      imageName: ${{ github.event.repository.name }}
+      forceVersionSuffix: 'false'
+    secrets:
+      envPAT: ${{ secrets.REPO_TOKEN }}
+
+  get-metadata:
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACT_NAME: 'platform'
+      DOCKER_CACHE_KEY: ''
+      DOCKER_TAR: 'platform_image.tar'
+    outputs:
+      dockerShortKey: ${{ steps.cache-key.outputs.dockerShortKey }}
+      dockerFullKey: ${{ steps.cache-key.outputs.dockerFullKey }}
+      packageShortKey: ${{ steps.cache-key.outputs.packageShortKey }}
+      packageFullKey: ${{ steps.cache-key.outputs.packageFullKey }}
+      dockerTar: ${{ env.DOCKER_TAR }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Get Changelog
+      id: changelog
+      uses: VirtoCommerce/vc-github-actions/changelog-generator@master
+
+    - name: Get Artifact Version
+      uses: VirtoCommerce/vc-github-actions/get-image-version@master
+      id: artifactVer
+
+    - name: Set ARTIFACT_NAME
+      run: |
+        if [ '${{ steps.artifactVer.outputs.moduleId }}' != '' ]; then
+          echo "ARTIFACT_NAME=${{ steps.artifactVer.outputs.moduleId }}" >> $GITHUB_ENV
+        fi;
+
+    - name: Get cache key
+      uses: VirtoCommerce/vc-github-actions/cache-get-key@master
+      id: cache-key
+      with:
+        runnerOs: ${{ runner.os  }}
+        artifactName: ${{ env.ARTIFACT_NAME }}
+
+  publish-docker:
+    needs:
+      [build, get-metadata]
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.2
+    with:
+      fullKey: ${{ needs.get-metadata.outputs.dockerFullKey }}
+      shortKey: '${{ needs.get-metadata.outputs.dockerShortKey }}-'
+      dockerTar: ${{ needs.get-metadata.outputs.dockerTar }}
+      publishToDocker: 'true'
+    secrets:
+      envPAT: ${{ secrets.GITHUB_TOKEN }}
+      dockerUser: ${{ secrets.DOCKER_USERNAME }}
+      dockerToken: ${{ secrets.DOCKER_TOKEN }}
+
+  publish-github-release:
+    needs:
+      [build, get-metadata]
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.200.2
+    with:
+      fullKey: ${{ needs.get-metadata.outputs.packageFullKey }}
+      shortKey: '${{ needs.get-metadata.outputs.packageShortKey }}-'
+      changeLog: '${{ needs.get-metadata.outputs.changeLog }}-'
+      
+    secrets:
+      envPAT: ${{ secrets.GITHUB_TOKEN }}
+      nugetKey: ${{ secrets.NUGET_KEY }}
