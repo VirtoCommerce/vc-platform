@@ -16,7 +16,7 @@ jobs:
       uploadPackage: 'true'
       uploadDocker: 'true'
       eventName: ${{ github.event_name }}
-      imageName: ${{ github.event.repository.name }}
+      imageName: 'platform'
       forceVersionSuffix: 'false'
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
