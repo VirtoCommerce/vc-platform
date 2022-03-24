@@ -11,17 +11,19 @@ Unpack the zipped archive to a local directory, e.g., `C:\vc-platform-3`. That's
 ## Updating Settings File
 Once you have downloaded and unpacked the files, you will need to adjust the settings. Open the *appsettings.json* file in your text editor and change the `VirtoCommerce` string in the `ConnectionStrings` section.
 
-*Note: The provided user must have enough permissions to create a new database.*
+> ***Important:*** *The provided user must have enough permissions to create a new database.*
 
 <details><summary>ConnectionStrings Section Example</summary>
-```
-"ConnectionStrings": { 
-"VirtoCommerce" : "Data Source={SQL Server URL};Initial Catalog={Database name};Persist Security Info=True;User ID={User name};Password={User password};MultipleActiveResultSets=True;Connect Timeout=30" 
-},
+```json
+1 "ConnectionStrings": { 
+2 "VirtoCommerce" : "Data Source={SQL Server URL};Initial Catalog={Database name};Persist Security Info=True;User ID={User name};Password={User password};MultipleActiveResultSets=True;Connect Timeout=30" 
+3 },
 ```
 </details>
 
 This is how the string in question may look like after you change it:
+
+`appsettings.json`
 
 `"VirtoCommerce": "Data Source=(local);Initial Catalog=VirtoCommerce3;Persist Security Info=True;User ID=virto;Password=virto;Connect Timeout=30",`
 
