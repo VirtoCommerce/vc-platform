@@ -7,7 +7,7 @@ This components must be installed in your Windows environment before running the
  - [ASP.NET Core Runtime 6.0.2](https://dotnet.microsoft.com/en-us/download/dotnet/6.0 "Installing ASP.NET Core Runtime")
  - [MS SQL Server 2017 or above](https://www.microsoft.com/en-us/sql-server/sql-server-downloads "Installing MS SQL Server")
 
-*Note: After installing MS SQL server, please switch its authentication to mixed mode, as described [here](https://www.top-password.com/knowledge/sql-server-authentication-mode.html).*
+> ***Note:*** *After installing MS SQL server, please switch its authentication to mixed mode, as described [here](https://www.top-password.com/knowledge/sql-server-authentication-mode.html).*
 
 ![Selecting server authentication mode](./media/01-selecting-server-authentication.png)
 
