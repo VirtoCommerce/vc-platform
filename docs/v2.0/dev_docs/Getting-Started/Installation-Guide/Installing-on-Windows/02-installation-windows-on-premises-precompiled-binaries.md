@@ -14,6 +14,7 @@ Once you have downloaded and unpacked the files, you will need to adjust the set
 > ***Important:*** *The provided user must have enough permissions to create a new database.*
 
 <details><summary>ConnectionStrings Section Example</summary>
+    
 ```json
 1 "ConnectionStrings": { 
 2 "VirtoCommerce" : "Data Source={SQL Server URL};Initial Catalog={Database name};Persist Security Info=True;User ID={User name};Password={User password};MultipleActiveResultSets=True;Connect Timeout=30" 
