@@ -27,7 +27,8 @@ Open the *appsettings.json* file in your text editor and change the `VirtoCommer
 > ***Important:*** *The provided user must have enough permissions to create a new database.*
 
 <details><summary>ConnectionStrings Section Example</summary>
-```
+
+```json
 "ConnectionStrings": { 
 "VirtoCommerce" : "Data Source={SQL Server URL};Initial Catalog={Database name};Persist Security Info=True;User ID={User name};Password={User password};MultipleActiveResultSets=True;Connect Timeout=30" 
 },
