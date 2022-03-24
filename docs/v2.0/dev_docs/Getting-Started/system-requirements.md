@@ -1,4 +1,4 @@
-﻿# System Requirements -- In Progress
+﻿# System Requirements
 This guide will explain you the basic hardware and software requirements to installing the Virto Commerce platform.
 
 ## Minimum Hardware Requirements
@@ -11,7 +11,6 @@ Before installing the Virto platform, make sure the computer you are going to in
 | Processor speed | 2GHz |
 | Number of cores | Dual core |
 | Processor type | x64-compatible only |
-
 ## Supported Operation Systems for .NET 6
 
 The Virto platform runs on .NET 6, which supports installation on Windows and Linux.

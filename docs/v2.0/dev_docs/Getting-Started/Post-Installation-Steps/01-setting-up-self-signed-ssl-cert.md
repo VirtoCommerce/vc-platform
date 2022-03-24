@@ -9,15 +9,7 @@ This is because it is an untrusted SSL certificate generated locally:
 
 ![Locally generated certificate](./media/02-locally-generated-cert.png)
 
-In this case, you can use the `dotnet dev-certs` command to work with self-signed certificates. All you need to do is run the following:
-
-```
-
-1 dotnet dev-certs https --trust
-
-```
-
-This will take you to a popup dialog asking whether you want to trust this localhost certificate:
+In this case, you can use the `dotnet dev-certs` command to work with self-signed certificates. All you need to do is run `1dotnet dev-certs https --trust`, which will take you to a popup dialog asking whether you want to trust this localhost certificate:
 
 ![Trust certificate security warning](./media/03-trust-cert-security-warning.png)
 

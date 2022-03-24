@@ -16,7 +16,7 @@ In order to install the Virto Commerce platform using CLI, do the following:
 
 Once you are done, you will have the latest platform application release with the default module settings installed to your `C:\vc-platform` folder.
 
-> ***Note:*** *You also can use vc-build for other operations, such as updating the existing Virto packages or installing new ones. You can find more information on this [here](https://github.com/VirtoCommerce/vc-build/blob/main/docs/CLI-tools/package-management.md).*
+***Note:*** *You also can use vc-build for other operations, such as updating the existing Virto packages or installing new ones. You can find more information on this [here](https://github.com/VirtoCommerce/vc-build/blob/main/docs/CLI-tools/package-management.md).
 
 ## Post Installation Steps
 Once you have install the platform, you will need to perform a few additional steps to get it up and running. These steps are described below.
@@ -24,7 +24,7 @@ Once you have install the platform, you will need to perform a few additional st
 ### Adjusting SQL Connection Settings
 Open the *appsettings.json* file in your text editor and change the `VirtoCommerce` string in the `ConnectionStrings` section.
 
-> ***Important:*** *The provided user must have enough permissions to create a new database.*
+*Note: The provided user must have enough permissions to create a new database.*
 
 <details><summary>ConnectionStrings Section Example</summary>
 ```
@@ -35,8 +35,6 @@ Open the *appsettings.json* file in your text editor and change the `VirtoCommer
 </details>
 
 This is how the string in question may look like after you change it:
-
-`appsettings.json`
 
 `"VirtoCommerce": "Data Source=(local);Initial Catalog=VirtoCommerce3;Persist Security Info=True;User ID=virto;Password=virto;Connect Timeout=30",`
 

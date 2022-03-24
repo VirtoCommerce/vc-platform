@@ -4,7 +4,7 @@ To make it easier for you to explore what Virto Commerce can do, we provide a sa
 
 ![Import Sample Data wizard](media/06-import-sample-data-wizard.png)
 
-In some cases, however, you may want to skip this step when getting started and import sample data later. In so, you will need to do this manually later on.
+In some cases, however, you may want to skip this step when getting started and import sample data later. In this case, you will need to do so manually.
 
 ## Importing Sample Data Manually
 

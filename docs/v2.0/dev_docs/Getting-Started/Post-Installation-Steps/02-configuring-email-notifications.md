@@ -8,43 +8,38 @@ In order to enable sending and receiving notifications, you must have the [Notif
 This is how you can work with the SMTP settings with *Gmail.com* provider as an example.
 
 To enable sending notifications through Gmail, turn on the  `Allow less secure apps` option in [Google Security Settings](https://www.google.com/settings/security/lesssecureapps "https://www.google.com/settings/security/lesssecureapps"). Then, edit the `Notifications`  section in the *appsettings.json* file:
-
-`appsettings.json`
-
-```json
-1 ...
-2 "Notifications": {
-3        "Gateway": "Smtp", 
-4        "DefaultSender": "noreply@gmail.com", //the default sender address
-5        "Smtp": {
-6            "SmtpServer": "http://smtp.gmail.com",
-7            "Port": 587, //TLS port
-8            "Login": "", //Your full Gmail address (e.g. you@gmail.com)
-9            "Password": "" //The password that you use to log in to Gmail
-10        },
-11    },
-12 ....
+```
+...
+"Notifications": {
+        "Gateway": "Smtp", 
+        "DefaultSender": "noreply@gmail.com", //the default sender address
+        "Smtp": {
+            "SmtpServer": "http://smtp.gmail.com",
+            "Port": 587, //TLS port
+            "Login": "", //Your full Gmail address (e.g. you@gmail.com)
+            "Password": "" //The password that you use to log in to Gmail
+        },
+    },
+....
 ```
 
-> ***Important***: *After making any changes to the appsettings.json file, be sure to restart the application for those changes to apply.*
+***Important***: *After making any changes to the appsettings.json file, be sure to restart the application for those changes to apply.*
 
 ## Configuring SendGrid Email Settings
 In order to work with the SendGrid settings, you must have a SendGrid account. To learn how to set up one, as well as other relevant details, refer to [this SendGrid article](https://docs.sendgrid.com/for-developers/partners/microsoft-azure-2021).
 
 Once your account is up and running, edit the `Notifications`  section in the *appsettings.json* file:
 
-`appsettings.json`
-
-```json
-1 ...
-2 "Notifications": {
-3         "Gateway": "SendGrid", 
-4        "DefaultSender": "noreply@gmail.com", //the default sender address
-5        "SendGrid": {
-6            "ApiKey": "your API key", //SendGrid API key
-7        },
-8    },
-9....
+```
+...
+"Notifications": {
+        "Gateway": "SendGrid", 
+        "DefaultSender": "noreply@gmail.com", //the default sender address
+        "SendGrid": {
+            "ApiKey": "your API key", //SendGrid API key
+        },
+    },
+....
 ```
 
 ## Testing Notification Sending Process 
