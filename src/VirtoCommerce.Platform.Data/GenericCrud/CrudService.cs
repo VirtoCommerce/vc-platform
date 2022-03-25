@@ -195,12 +195,12 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             using (var repository = _repositoryFactory())
             {
-                var dataExistEntities = await LoadEntities(repository, models.Where(x => !x.IsTransient()).Select(x => x.Id));
+                var dataExistEntities = await LoadExistingEntities(repository, models);
 
                 foreach (var model in models)
                 {
 
-                    var originalEntity = dataExistEntities.FirstOrDefault(x => x.Id == model.Id);
+                    var originalEntity = FindExistingEntity(dataExistEntities, model);
                     var modifiedEntity = AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, pkMap);
 
                     if (originalEntity != null)
@@ -235,6 +235,16 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             await AfterSaveChangesAsync(models, changedEntries);
 
             await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
+        }
+
+        protected virtual Task<IEnumerable<TEntity>> LoadExistingEntities(IRepository repository, IEnumerable<TModel> models)
+        {
+            return LoadEntities(repository, models.Where(x => !x.IsTransient()).Select(x => x.Id));
+        }
+
+        protected virtual TEntity FindExistingEntity(IEnumerable<TEntity> existingEntities, TModel model)
+        {
+            return existingEntities.FirstOrDefault(x => x.Id == model.Id);
         }
 
         /// <summary>
