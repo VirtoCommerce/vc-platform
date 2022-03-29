@@ -17,8 +17,10 @@ jobs:
       DOCKER_CACHE_KEY: ''
       DOCKER_TAR: 'platform_image.tar'
     outputs:
-      shortKey: ${{ steps.cache-key.outputs.shortKey }}
-      fullKey: ${{ steps.cache-key.outputs.fullKey }}
+      dockerShortKey: ${{ steps.cache-key.outputs.dockerShortKey }}
+      dockerFullKey: ${{ steps.cache-key.outputs.dockerFullKey }}
+      packageShortKey: ${{ steps.cache-key.outputs.packageShortKey }}
+      packageFullKey: ${{ steps.cache-key.outputs.packageFullKey }}
       dockerTar: ${{ env.DOCKER_TAR }}
     steps:
 
@@ -46,8 +48,8 @@ jobs:
       get-cache-key
     uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.1
     with:
-      fullKey: ${{ needs.get-cache-key.outputs.fullKey }}
-      shortKey: '${{ needs.get-cache-key.outputs.shortKey }}-'
+      fullKey: ${{ needs.get-cache-key.outputs.dockerFullKey }}
+      shortKey: '${{ needs.get-cache-key.outputs.dockerShortKey }}-'
       dockerTar: ${{ needs.get-cache-key.outputs.dockerTar }}
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
