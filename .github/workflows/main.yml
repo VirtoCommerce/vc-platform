@@ -192,7 +192,7 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/publish-github-release@master
 
     - name: Publish Docker Image
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      if: ${{ env.BUILD_DOCKER == 'true' }}
       uses: VirtoCommerce/vc-github-actions/publish-docker-image@master
       with:
           image: ${{ steps.dockerBuild.outputs.imageName }}
