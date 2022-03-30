@@ -111,7 +111,7 @@ jobs:
         echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} deployed to QA" >> $GITHUB_ENV
 
     - uses: actions/github-script@v5
-      if: ${{ !(contains('skipped, cancelled', needs.publish.deploy )) }}
+      if: ${{ !(contains('skipped, cancelled', needs.deploy.result )) }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
