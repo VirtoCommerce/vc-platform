@@ -89,5 +89,10 @@ namespace VirtoCommerce.Platform.Core.Common
 
             return hash;
         }
+
+        public static IDictionary<TKey, TValue> ToIDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
+        {
+            return source.ToDictionary(keySelector);
+        }
     }
 }
