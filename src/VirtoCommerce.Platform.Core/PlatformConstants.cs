@@ -159,7 +159,8 @@ namespace VirtoCommerce.Platform.Core
                         ".compiled",
                         ".msgx",
                         ".vsdisco",
-                        ".rules"
+                        ".rules",
+                        ".exe"
                     },
                     DefaultValue = ".asax",
                 };
