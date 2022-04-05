@@ -86,7 +86,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     return entities
                         .Select(x => ProcessModel(responseGroup, x, x.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance())))
                         .Where(x => x != null)
-                        .ToIDictionary(x => x.Id);
+                        .ToIDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
                 },
                 (cacheOptions, id) =>
                 {
