@@ -19,7 +19,7 @@ namespace VirtoCommerce.Platform.Core.Caching
             IList<string> ids,
             Func<IList<string>, Task<IEnumerable<TItem>>> loadItems,
             Action<MemoryCacheEntryOptions, string> configureCache)
-            where TItem : Entity
+            where TItem : IEntity
         {
             ids = ids
                 ?.Where(id => !string.IsNullOrEmpty(id))
