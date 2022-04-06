@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             var cacheKeyPrefix = CacheKey.With(GetType(), nameof(GetAsync), responseGroup);
 
-            var modelsByIds = await _platformMemoryCache.GetOrLoadByIdsAsync(cacheKeyPrefix, ids,
+            var models = await _platformMemoryCache.GetOrLoadByIdsAsync(cacheKeyPrefix, ids,
                 async missingIds =>
                 {
                     using var repository = _repositoryFactory();
@@ -84,17 +84,14 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     var entities = await LoadEntities(repository, missingIds, responseGroup);
 
                     return entities
-                        .Select(x => ProcessModel(responseGroup, x, x.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance())))
-                        .Where(x => x != null)
-                        .ToIDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
+                        .Select(x => ProcessModel(responseGroup, x, x.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance())));
                 },
                 (cacheOptions, id) =>
                 {
                     cacheOptions.AddExpirationToken(CreateCacheToken(id));
                 });
 
-            return modelsByIds.Values
-                .Where(x => x != null)
+            return models
                 .Select(x => x.CloneTyped())
                 .OrderBy(x => ids.IndexOf(x.Id))
                 .ToList();
