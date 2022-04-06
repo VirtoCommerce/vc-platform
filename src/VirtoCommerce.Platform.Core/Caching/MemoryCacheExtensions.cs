@@ -13,12 +13,13 @@ namespace VirtoCommerce.Platform.Core.Caching
         private static readonly StringComparer _ignoreCase = StringComparer.OrdinalIgnoreCase;
         private static readonly ConcurrentDictionary<string, object> _lockLookup = new ConcurrentDictionary<string, object>();
 
-        public static async Task<IDictionary<string, TItem>> GetOrLoadByIdsAsync<TItem>(
+        public static async Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
             this IMemoryCache memoryCache,
             string keyPrefix,
             IList<string> ids,
-            Func<IList<string>, Task<IDictionary<string, TItem>>> loadItems,
+            Func<IList<string>, Task<IEnumerable<TItem>>> loadItems,
             Action<MemoryCacheEntryOptions, string> configureCache)
+            where TItem : Entity
         {
             ids = ids
                 ?.Where(id => !string.IsNullOrEmpty(id))
@@ -36,7 +37,11 @@ namespace VirtoCommerce.Platform.Core.Caching
                             .Except(result.Keys)
                             .ToList();
 
-                        var loadResult = await loadItems(missingIds);
+                        var items = await loadItems(missingIds);
+
+                        var itemsByIds = items
+                            .Where(x => x != null)
+                            .ToDictionary(x => x.Id, _ignoreCase);
 
                         foreach (var id in missingIds)
                         {
@@ -45,14 +50,16 @@ namespace VirtoCommerce.Platform.Core.Caching
                             result[id] = memoryCache.GetOrCreateExclusive(cacheKey, options =>
                             {
                                 configureCache(options, id);
-                                return loadResult.GetValueSafe(id);
+                                return itemsByIds.GetValueSafe(id);
                             });
                         }
                     }
                 }
             }
 
-            return result;
+            return result.Values
+                .Where(x => x != null)
+                .ToList();
         }
 
         public static bool TryGetByIds<TItem>(this IMemoryCache memoryCache, string keyPrefix, IList<string> ids, out IDictionary<string, TItem> result)
