@@ -36,7 +36,7 @@ plugins:
 site_name: Virto Commerce Documentation
 site_description: Documentation portal for enterprise-level Microsoft .NET ecommerce platform Virto Commerce. 
 site_author: Virto Commerce
-site_url: https://docs.virtocommerce.org/latest
+site_url: https://docs.virtocommerce.org
 
 # Repository
 repo_name: VirtoCommerce/vc-platform
