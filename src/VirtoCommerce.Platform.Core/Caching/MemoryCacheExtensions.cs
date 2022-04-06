@@ -20,7 +20,6 @@ namespace VirtoCommerce.Platform.Core.Caching
             Func<IList<string>, Task<IDictionary<string, TItem>>> loadItems,
             Action<MemoryCacheEntryOptions, string> configureCache)
         {
-
             ids = ids
                 ?.Where(id => !string.IsNullOrEmpty(id))
                 .Distinct(_ignoreCase)
