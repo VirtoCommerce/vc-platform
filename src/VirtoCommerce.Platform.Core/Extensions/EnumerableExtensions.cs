@@ -94,5 +94,10 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             return source.ToDictionary(keySelector);
         }
+
+        public static IDictionary<TKey, TValue> ToIDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector, IEqualityComparer<TKey> comparer)
+        {
+            return source.ToDictionary(keySelector, comparer);
+        }
     }
 }

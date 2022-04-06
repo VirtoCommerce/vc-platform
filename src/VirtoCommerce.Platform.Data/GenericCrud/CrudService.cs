@@ -71,7 +71,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <returns></returns>
         public virtual async Task<IReadOnlyCollection<TModel>> GetAsync(List<string> ids, string responseGroup = null)
         {
-            var cacheKeyPrefix = CacheKey.With(GetType(), nameof(GetAsync));
+            var cacheKeyPrefix = CacheKey.With(GetType(), nameof(GetAsync), responseGroup);
 
             var modelsByIds = await _platformMemoryCache.GetOrLoadByIdsAsync(cacheKeyPrefix, ids,
                 async missingIds =>
@@ -86,7 +86,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     return entities
                         .Select(x => ProcessModel(responseGroup, x, x.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance())))
                         .Where(x => x != null)
-                        .ToIDictionary(x => x.Id);
+                        .ToIDictionary(x => x.Id, StringComparer.OrdinalIgnoreCase);
                 },
                 (cacheOptions, id) =>
                 {
