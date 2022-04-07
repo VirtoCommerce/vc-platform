@@ -15,7 +15,7 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * New Gift Validation Feature
     * Vue Storefront Theme Updated
     
-   [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-4-april-2022/448)
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-4-april-2022/448)
 
 !!! done "7 March"
     * Preview for RMA Module
