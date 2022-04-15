@@ -12,13 +12,13 @@ Modules are independent of one another but can communicate with each other in a 
 
 The following chart shows the overall design concept of the platform application:
 
-![Overall platform design chart](/media/01-overall-design-chart.png)
+![Overall platform design chart](media/01-overall-design-chart.png)
 
 Notes to the chart:
 
 -   Platform application: Works as a runtime environment that hosts the modules running within the same process and having access to shared resources and dependencies.
     
--   Modularity engine: A software component that is responsible for module discovery, initialization, and loading into the main [ASP.NET](http://asp.net/ "http://ASp.NET") app process.
+-   Modularity engine: A software component that is responsible for module discovery, initialization, and loading into the main [ASP.NET](http://asp.net/) app process.
     
 -   Module: A piece of functionality that can be added into the platform app at runtime.
     
@@ -58,7 +58,7 @@ Virto uses modular architecture since it provides our solutions with various ben
 
 Each Virto module breaks down into multiple layers and encapsulates and groups all aspects, from front end to back end, that are in charge of proving the necessary features. Such layers are in line with the _Vertical Slices_ design principle, which, at a high level, may be depicted like this:
 
-![Module layer chart](/media/02-vertical-slice-module-design.png)
+![Module layer chart](media/02-vertical-slice-module-design.png)
 
 Instead of being coupled across a layer, a module is coupled vertically along a slice, while minimizing coupling between slices and maximizing it within a slice. This architecture is very convenient, as, when it comes to adding or changing a feature in an module, logically, e.g., changing the user interface, adding fields to models, modifying validation, and so on, you can do it all on each layer and then couple it vertically along a slice.
 
@@ -78,21 +78,21 @@ A particular module can have the following types of relationships with another m
 
 The chart below shows all possible types of relationships between modules and the platform:
 
-![Module relationships](/media/03-module-relationships.png)
+![Module relationships](media/03-module-relationships.png)
 
 Apart from the above, there are several loosely coupled communication patterns, each with their own strong points. Typically, combinations of such patterns (see below) are used to create the resulting solution:
 
--   **Integration events:** A module may log events, while other modules can subscribe to such events and get notified when it occurs. Integration events are a lightweight manner of setting up communication between two modules; therefore, they are easily implemented.
+-  **Integration events:** A module may log events, while other modules can subscribe to such events and get notified when it occurs. Integration events are a lightweight manner of setting up communication between two modules; therefore, they are easily implemented.
 
 -  **Program and UI extension points:** Certain extension points each module can expose to tasks to extend or supplement the existing module functionality with a new one.
 
- -   **UI widgets and navigations**
+-  **UI widgets and navigations**
     
--   **Domain model overriding**
+-  **Domain model overriding**
     
--   **Persistent layer extensions**
+-  **Persistent layer extensions**
     
--   **Shared services:** A shared service is a class that can be accessed through a common interface. Typically, shared services are located in shared assemblies and provide system-wide services, such as authentication, logging, or configuration.
+-  **Shared services:** A shared service is a class that can be accessed through a common interface. Typically, shared services are located in shared assemblies and provide system-wide services, such as authentication, logging, or configuration.
 
 You can read more about modules versioning and dependencies [here](insert-link-to-Module-versioning-and-dependencies).
 
@@ -130,6 +130,7 @@ For the **module deployment process**, you can also use our  [**VirtoCommerce.Gl
 ## Next Steps
 
 Now that we explained some basic things about Virto's modular architecture, feel free to check out other guides on this topic:
+
 -   [Module Solution Folders Structure](link-to-module-solution-folder-structure)
     
 -   [How to Create New Module](link-to-how-to-create-new-module)
