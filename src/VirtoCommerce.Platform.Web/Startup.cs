@@ -442,7 +442,9 @@ namespace VirtoCommerce.Platform.Web
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
+            
+            app.AddHeaders();
+            
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 
