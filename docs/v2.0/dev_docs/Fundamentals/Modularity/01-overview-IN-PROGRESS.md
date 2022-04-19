@@ -131,10 +131,9 @@ For the **module deployment process**, you can also use our  [**VirtoCommerce.Gl
 
 Now that we explained some basic things about Virto's modular architecture, feel free to check out other guides on this topic:
 
--   [Module Solution Folders Structure](link-to-module-solution-folder-structure)
+-   [Module Solution Folder Structure](link-to-module-solution-folder-structure)
     
--   [How to Create New Module](link-to-how-to-create-new-module)
-    
+-   [How to Create New Module](link-to-how-to-create-new-module) 
 
 ## Related Sources
 
@@ -146,6 +145,6 @@ To learn more on the concepts covered by this article, we encourage you to also 
     
 -   [Software Architecture Patterns by Mark Richards (Microkernel Architecture)](https://www.oreilly.com/library/view/software-architecture-patterns/9781491971437/ch03.html "https://www.oreilly.com/library/view/software-architecture-patterns/9781491971437/ch03.html")
     
--   [BoundedContext by Martin Fowler](https://martinfowler.com/bliki/BoundedContext.html "https://martinfowler.com/bliki/BoundedContext.html")
+-   [Bounded Context by Martin Fowler](https://martinfowler.com/bliki/BoundedContext.html "https://martinfowler.com/bliki/BoundedContext.html")
     
 -   [Context Mapping Pattern](https://www.infoq.com/articles/ddd-contextmapping/ "https://www.infoq.com/articles/ddd-contextmapping/")
