@@ -50,7 +50,7 @@
 
             <div class="blade-toolbar">
                 <ul class="menu __inline">
-                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade), 'separator': toolbarCommand.showSeparator}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands | limitTo:toolsPerLineCount" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" va-permission="{{toolbarCommand.permission}}" security-scopes="blade.securityScopes">
+                    <li class="menu-item" ng-class="{'__disabled': !toolbarCommand.canExecuteMethod(blade), 'separator': toolbarCommand.showSeparator}" ng-click='toolbarCommand.executeMethod(blade)' ng-repeat="toolbarCommand in resolvedToolbarCommands | limitTo:toolsPerLineCount" ng-disabled="!toolbarCommand.canExecuteMethod(blade)" ng-show="!toolbarCommand.hide(blade)" va-permission="{{toolbarCommand.permission}}" security-scopes="blade.securityScopes">
                         <button class="menu-btn" ng-attr-title="{{toolbarCommand.title | translate}}">
                             <i class="menu-ico" ng-class="toolbarCommand.icon"></i>
                             {{ toolbarCommand.name | translate }}
