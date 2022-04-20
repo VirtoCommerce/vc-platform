@@ -57,7 +57,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
             return appBuilder;
         }
 
-        public static IApplicationBuilder AddHeaders(this IApplicationBuilder appBuilder)
+        public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder appBuilder)
         {
             appBuilder.Use(async (context, next) =>
             {

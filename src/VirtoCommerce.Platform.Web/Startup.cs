@@ -443,7 +443,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseHsts();
             }
             
-            app.AddHeaders();
+            app.UseSecurityHeaders();
             
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
