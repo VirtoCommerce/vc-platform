@@ -296,7 +296,8 @@
                 }
             },
             "module-settings-detail": {
-                "title": "Настройки модуля"
+                "title": "Настройки модуля",
+                "hide-description": "Скрыть"
             },
             "module-wizard-progress-step": {
                 "title-install": "Установка модуля",

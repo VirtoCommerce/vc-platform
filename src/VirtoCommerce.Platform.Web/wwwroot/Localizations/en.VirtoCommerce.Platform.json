@@ -620,7 +620,8 @@
                 }
             },
             "settings-detail": {
-                "title": "Setting values"
+                "title": "Setting values",
+                "hide-description": "Hide"
             },
             "settingGroup-list": {
                 "title": "Settings",

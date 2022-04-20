@@ -4,9 +4,15 @@
         <div class="inner-block">
             <form name="formScope" class="form">
                 <fieldset ng-repeat="groupName in blade.groupNames" ng-init="setForm(formScope)">
-                    <legend>{{groupName==='undefined'?'General':groupName}}</legend>
+                    <legend>
+                        {{groupName==='undefined'?'General':groupName}}
+                    </legend>
                     <div class="list __info form-group" ng-repeat="data in blade.currentEntities[groupName]">
-                        <label class="form-label">{{ 'settings.' + data.name + '.title' | translate }} <a href="" ng-click="editArray(data);" ng-if="data.isDictionary" class="form-edit"><i class="form-ico fa fa-pencil"></i></a></label>
+                        <label class="form-label">
+                            {{ 'settings.' + data.name + '.title' | translate }}
+                            <i class="form-ico fa fa-question-circle __link __lightblue" ng-click="setting.descrVisible = !setting.descrVisible;"></i>
+                            <a href="" ng-click="editArray(data);" ng-if="data.isDictionary" class="form-edit"><i class="form-ico fa fa-pencil"></i></a>
+                        </label>
                         <va-generic-value-input ng-model="data" get-dictionary-values="getDictionaryValues" ng-if="!data.isDictionary && !data.allowedValues"></va-generic-value-input>
                         <div class="form-input" ng-if="!data.isDictionary && data.allowedValues">
                             <ui-select ng-model="data.values[0]">
@@ -16,7 +22,10 @@
                                 </ui-select-choices>
                             </ui-select>
                         </div>
-                        <div class="list-descr"> {{ 'settings.' + data.name + '.description' | translate }} </div>
+                        <div ng-if="setting.descrVisible">
+                            <div class="list-descr"> {{ 'settings.' + data.name + '.description' | translate }} </div>
+                            <a href="" ng-click="setting.descrVisible = null;">{{ 'platform.blades.settings-detail.hide-description' | translate}}</a>
+                        </div>
                     </div>
                 </fieldset>
             </form>

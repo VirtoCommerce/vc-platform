@@ -519,7 +519,8 @@
             }
         },
         "settings-detail": {
-            "title": "Modul Einstellungen"
+            "title": "Modul Einstellungen",
+            "hide-description": "Verstecken"
         },
         "settingGroup-list": {
             "title": "Einstellungen",
