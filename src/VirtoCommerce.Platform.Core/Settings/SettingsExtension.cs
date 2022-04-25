@@ -120,6 +120,29 @@ namespace VirtoCommerce.Platform.Core.Settings
             await manager.RemoveObjectSettingsAsync(foDeleteSettings);
         }
 
+        /// <summary>
+        /// Takes default value from the setting descriptor
+        /// </summary>
+        public static TValue GetValueByDescriptor<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
+        {
+            return manager.GetValueByDescriptorAsync<TValue>(descriptor).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Takes default value from the setting descriptor
+        /// </summary>
+        public static Task<TValue> GetValueByDescriptorAsync<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
+        {
+            var defaultValue = default(TValue);
+
+            if (descriptor.DefaultValue is TValue defaultSettingValue)
+            {
+                defaultValue = defaultSettingValue;
+            }
+
+            return manager.GetValueAsync(descriptor.Name, defaultValue);
+        }
+
         public static T GetValue<T>(this ISettingsManager manager, string name, T defaultValue)
         {
             return manager.GetValueAsync(name, defaultValue).GetAwaiter().GetResult();

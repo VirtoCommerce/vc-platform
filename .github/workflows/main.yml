@@ -47,16 +47,6 @@ jobs:
 
     steps:
 
-    - name: Set up JDK 11 for dotnet-sonarscanner #Sonar stop accepting Java versions less than 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.11
-
-    - name: Set up dotnet6 
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
-
     - name: Set up Node 14
       uses: actions/setup-node@v2
       with:
@@ -166,6 +156,7 @@ jobs:
       if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'}}
       uses: VirtoCommerce/vc-github-actions/publish-nuget@master
 
+## Remove as redundant
     - name: Publish to Blob
       if: ${{ github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
       id: blobRelease
@@ -201,7 +192,7 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/publish-github-release@master
 
     - name: Publish Docker Image
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      if: ${{ env.BUILD_DOCKER == 'true' }}
       uses: VirtoCommerce/vc-github-actions/publish-docker-image@master
       with:
           image: ${{ steps.dockerBuild.outputs.imageName }}
@@ -246,7 +237,7 @@ jobs:
         echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
 
   deploy:
-    if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
+    if: ${{ (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master') && github.event_name == 'push' }}
     needs: ci
     runs-on: ubuntu-latest
     env:
@@ -256,11 +247,20 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
     steps: 
 
+    - name: Set deployment environment
+      id: deployEnv
+      run: |
+        if [ '${{ github.ref }}' = 'refs/heads/master' ]; then
+          echo ::set-output name=NAME::prod
+        else
+          echo ::set-output name=NAME::dev
+        fi;
+
     - name: Read deployment config
       uses: VirtoCommerce/vc-github-actions/get-deploy-param@master
       id: deployConfig
       with:
-        envName: 'dev'
+        envName: ${{ steps.deployEnv.outputs.NAME }}
 
     - name: Start deployment
       uses: bobheadxi/deployments@master
@@ -337,6 +337,6 @@ jobs:
         pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
         pipeline-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
         pipeline-url: '${{github.event.repository.html_url}}/actions/runs/${{github.run_id}}'
-        environment-id: 'development'
-        environment-display-name: 'Dev'
-        environment-type: 'development'
+        environment-id: ${{ steps.deployConfig.outputs.environmentId }}
+        environment-display-name: ${{ steps.deployConfig.outputs.environmentName }}
+        environment-type: ${{ steps.deployConfig.outputs.environmentType }}

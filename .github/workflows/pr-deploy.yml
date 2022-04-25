@@ -17,8 +17,10 @@ jobs:
       DOCKER_CACHE_KEY: ''
       DOCKER_TAR: 'platform_image.tar'
     outputs:
-      shortKey: ${{ steps.cache-key.outputs.shortKey }}
-      fullKey: ${{ steps.cache-key.outputs.fullKey }}
+      dockerShortKey: ${{ steps.cache-key.outputs.dockerShortKey }}
+      dockerFullKey: ${{ steps.cache-key.outputs.dockerFullKey }}
+      packageShortKey: ${{ steps.cache-key.outputs.packageShortKey }}
+      packageFullKey: ${{ steps.cache-key.outputs.packageFullKey }}
       dockerTar: ${{ env.DOCKER_TAR }}
     steps:
 
@@ -35,7 +37,7 @@ jobs:
         fi;
 
     - name: Get cache key
-      uses: VirtoCommerce/vc-github-actions/cache-get-key@PT-4557
+      uses: VirtoCommerce/vc-github-actions/cache-get-key@master
       id: cache-key
       with:
         runnerOs: ${{ runner.os  }}
@@ -46,8 +48,8 @@ jobs:
       get-cache-key
     uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.1
     with:
-      fullKey: ${{ needs.get-cache-key.outputs.fullKey }}
-      shortKey: '${{ needs.get-cache-key.outputs.shortKey }}-'
+      fullKey: ${{ needs.get-cache-key.outputs.dockerFullKey }}
+      shortKey: '${{ needs.get-cache-key.outputs.dockerShortKey }}-'
       dockerTar: ${{ needs.get-cache-key.outputs.dockerTar }}
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
@@ -68,7 +70,7 @@ jobs:
       argoPassword: ${{ secrets.ARGOCD_PASSWORD }}
 
   comment-publish:
-    if: always()
+    if: ${{ always() && github.event.label.name == 'deploy-qa' }}
     needs:
       publish
     env:
@@ -94,7 +96,7 @@ jobs:
           })
 
   comment-deploy:
-    if: always()
+    if: ${{ always() && github.event.label.name == 'deploy-qa' }}
     needs:
       [ deploy, publish ]
 
@@ -109,6 +111,7 @@ jobs:
         echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} deployed to QA" >> $GITHUB_ENV
 
     - uses: actions/github-script@v5
+      if: ${{ !(contains('skipped, cancelled', needs.deploy.result )) }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |

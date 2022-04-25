@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -72,36 +71,30 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <returns></returns>
         public virtual async Task<IReadOnlyCollection<TModel>> GetAsync(List<string> ids, string responseGroup = null)
         {
-            var cacheKey = CacheKey.With(GetType(), nameof(GetAsync), string.Join("-", ids), responseGroup);
-            var result = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
-            {
-                var models = new List<TModel>();
+            var cacheKeyPrefix = CacheKey.With(GetType(), nameof(GetAsync), responseGroup);
 
-                using (var repository = _repositoryFactory())
+            var models = await _platformMemoryCache.GetOrLoadByIdsAsync(cacheKeyPrefix, ids,
+                async missingIds =>
                 {
-                    //Disable DBContext change tracking for better performance 
+                    using var repository = _repositoryFactory();
+
+                    // Disable DBContext change tracking for better performance 
                     repository.DisableChangesTracking();
 
-                    //It is so important to generate change tokens for all ids even for not existing objects to prevent an issue
-                    //with caching of empty results for non - existing objects that have the infinitive lifetime in the cache
-                    //and future unavailability to create objects with these ids.
-                    cacheEntry.AddExpirationToken(CreateCacheToken(ids));
+                    var entities = await LoadEntities(repository, missingIds, responseGroup);
 
-                    var entities = await LoadEntities(repository, ids, responseGroup);
+                    return entities
+                        .Select(x => ProcessModel(responseGroup, x, x.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance())));
+                },
+                (cacheOptions, id) =>
+                {
+                    cacheOptions.AddExpirationToken(CreateCacheToken(id));
+                });
 
-                    foreach (var entity in entities)
-                    {
-                        var model = entity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
-                        model = ProcessModel(responseGroup, entity, model);
-                        if (model != null) models.Add(model);
-                    }
-
-                }
-
-                return models;
-            });
-
-            return new ReadOnlyCollection<TModel>(result.Select(x => (TModel)x.Clone()).ToList());
+            return models
+                .Select(x => x.CloneTyped())
+                .OrderBy(x => ids.IndexOf(x.Id))
+                .ToList();
         }
 
         [Obsolete("Use method GetAsync instead")]
@@ -195,12 +188,12 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             using (var repository = _repositoryFactory())
             {
-                var dataExistEntities = await LoadEntities(repository, models.Where(x => !x.IsTransient()).Select(x => x.Id));
+                var dataExistEntities = await LoadExistingEntities(repository, models);
 
                 foreach (var model in models)
                 {
 
-                    var originalEntity = dataExistEntities.FirstOrDefault(x => x.Id == model.Id);
+                    var originalEntity = FindExistingEntity(dataExistEntities, model);
                     var modifiedEntity = AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, pkMap);
 
                     if (originalEntity != null)
@@ -235,6 +228,16 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             await AfterSaveChangesAsync(models, changedEntries);
 
             await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
+        }
+
+        protected virtual Task<IEnumerable<TEntity>> LoadExistingEntities(IRepository repository, IEnumerable<TModel> models)
+        {
+            return LoadEntities(repository, models.Where(x => !x.IsTransient()).Select(x => x.Id));
+        }
+
+        protected virtual TEntity FindExistingEntity(IEnumerable<TEntity> existingEntities, TModel model)
+        {
+            return existingEntities.FirstOrDefault(x => x.Id == model.Id);
         }
 
         /// <summary>
@@ -295,9 +298,15 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
+        [Obsolete("Use CreateCacheToken(string id)")]
         protected virtual IChangeToken CreateCacheToken(IEnumerable<string> ids)
         {
             return GenericCachingRegion<TModel>.CreateChangeToken(ids);
+        }
+
+        protected virtual IChangeToken CreateCacheToken(string id)
+        {
+            return GenericCachingRegion<TModel>.CreateChangeTokenForKey(id);
         }
 
         /// <summary>

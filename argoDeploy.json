@@ -1,13 +1,29 @@
 {
     "artifactKey": "docker.pkg.github.com/virtocommerce/vc-platform/platform",
     "deployRepo": "vc-deploy-dev",
+    "cmPath": "platform-dev/resources/kustomization.yaml",
     "dev": {
         "deployAppName": "vcplatform-dev",
-        "deployBranch": "dev"
+        "deployBranch": "dev",
+        "environmentId": "dev",
+        "environmentName": "Development",
+        "environmentType": "staging",
+        "environmentUrl": "https://vcplatform-platform.dev.govirto.com/"
     },
     "qa": {
         "deployAppName": "vcplatform-qa",
-        "deployBranch": "qa"
+        "deployBranch": "qa",
+        "environmentId": "qa",
+        "environmentName": "QA",
+        "environmentType": "testing",
+        "environmentUrl": "https://vcplatform-platform.qa.govirto.com/"
     },
-    "cmPath": "platform-dev/resources/kustomization.yaml"
+    "prod": {
+        "deployAppName": "vcplatform-demo",
+        "deployBranch": "demo",
+        "environmentId": "prod",
+        "environmentName": "Demo",
+        "environmentType": "production",
+        "environmentUrl": "https://vcplatform-platform.demo.govirto.com/"
+    }
 }

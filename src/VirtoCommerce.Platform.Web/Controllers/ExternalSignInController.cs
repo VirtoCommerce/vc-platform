@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Model.Security;
 
@@ -21,18 +22,21 @@ namespace VirtoCommerce.Platform.Web.Controllers
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly AzureAdOptions _azureAdOpitons;
+        private readonly AzureAdOptions _azureAdOptions;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ISettingsManager _settingsManager;
 
         public ExternalSignInController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            IOptions<AzureAdOptions> azureAdOpitons,
-            IEventPublisher eventPublisher)
+            IOptions<AzureAdOptions> azureAdOptions,
+            IEventPublisher eventPublisher,
+            ISettingsManager settingsManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
-            _azureAdOpitons = azureAdOpitons.Value;
+            _settingsManager = settingsManager;
+            _azureAdOptions = azureAdOptions.Value;
         }
 
         [HttpGet]
@@ -67,6 +71,9 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             ApplicationUser platformUser = null;
             var userName = GetUserName(externalLoginInfo);
+            var userEmail = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ??
+                            (userName.IsValidEmail() ? userName : null);
+
             if (string.IsNullOrWhiteSpace(userName))
             {
                 throw new InvalidOperationException("Received external login info does not have an UPN claim or DefaultUserName.");
@@ -78,15 +85,16 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 //Need handle the two cases
                 //first - when the VC platform user account already exists, it is just missing an external login info and
                 //second - when user does not have an account, then create a new account for them
-                platformUser = await _userManager.FindByNameAsync(userName);
+                platformUser = await _userManager.FindByNameAsync(userName) ??
+                               await FindUserByEmail(userEmail);
+
                 if (platformUser == null)
                 {
                     platformUser = new ApplicationUser
                     {
                         UserName = userName,
-                        Email = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email) ?? (userName.IsValidEmail() ? userName : null)
-                        // TODO: somehow access the AzureAd configuration section and read the default user type from there
-                        //UserType = _authenticationOptions.AzureAdDefaultUserType
+                        Email = userEmail,
+                        UserType = await GetAzureAdDefaultUserType()
                     };
 
                     var result = await _userManager.CreateAsync(platformUser);
@@ -111,10 +119,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (platformUser == null)
-            {
-                platformUser = await _userManager.FindByNameAsync(userName);
-            }
+            platformUser ??= await _userManager.FindByNameAsync(userName);
 
             await _eventPublisher.Publish(new UserLoginEvent(platformUser));
 
@@ -137,6 +142,27 @@ namespace VirtoCommerce.Platform.Web.Controllers
             return Ok(externalLoginProviders);
         }
 
+        private async Task<string> GetAzureAdDefaultUserType()
+        {
+            var userType = _azureAdOptions.DefaultUserType ?? "Manager";
+            var userTypesSetting = await _settingsManager.GetObjectSettingAsync("VirtoCommerce.Platform.Security.AccountTypes");
+
+            var userTypes = userTypesSetting.AllowedValues.Select(x => x.ToString()).ToList();
+
+            if (!userTypes.Contains(userType))
+            {
+                userTypes.Add(userType);
+                userTypesSetting.AllowedValues = userTypes.Select(x => (object)x).ToArray();
+
+                using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync())
+                {
+                    await _settingsManager.SaveObjectSettingsAsync(new [] { userTypesSetting });
+                }
+            }
+
+            return userType;
+        }
+
         /// <summary>
         /// Try to take a user name from claims.
         /// </summary>
@@ -144,12 +170,22 @@ namespace VirtoCommerce.Platform.Web.Controllers
         {
             var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn);
 
-            if (string.IsNullOrWhiteSpace(userName) && _azureAdOpitons.UsePreferredUsername)
+            if (string.IsNullOrWhiteSpace(userName) && _azureAdOptions.UsePreferredUsername)
             {
                 userName = externalLoginInfo.Principal.FindFirstValue("preferred_username");
             }
 
             return userName;
+        }
+
+        private async Task<ApplicationUser> FindUserByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return null;
+            }
+
+            return await _userManager.FindByEmailAsync(email);
         }
     }
 }

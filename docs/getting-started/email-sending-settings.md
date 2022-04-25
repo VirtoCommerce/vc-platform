@@ -31,8 +31,9 @@ If use **_gmail.com_** then need to do:
 
 ### Sendgrid SMTP
 If use another SMTP server like **_sendgrid.net_** then need to do:
+
 1. Set Gateway is `Smtp` in **_Notifications_** options in **_Appsettings.json_** or **_Notifications:Gateway_** in **_Azure_**
-1. Then customize **_Smtp options_**:
+3. Then customize **_Smtp options_**:
     1. Fill SmtpServer `smtp.gmail.com` and Port `587`
     2. Turn `OFF` SSL: **_EnableSsl_** set **_false_** 
     > NOTE: should read prerequiments in the SMTP server site and read the [article](https://docs.microsoft.com/en-us/dotnet/api/system.net.mail.smtpclient.enablessl?view=netcore-3.0) 
