@@ -6,7 +6,6 @@ There are two approaches of working with payment systems:
   
 VirtoCommerce supports both off-site and on-site payment methods implementations.
 
-[Sample code](https://github.com/VirtoCommerce/vc-module-payment/blob/master/src/VirtoCommerce.Payment.Data/DefaultManualPaymentMethod.cs)
 
 ## Concepts
 
@@ -14,53 +13,72 @@ An off-site payment method implementation activities diagram.
 
 ![](../../media/redirect-authorized-captured.png)
 
+## Sample code
+You can review the implementation of [Manual Payment Method](https://github.com/VirtoCommerce/vc-module-payment/blob/master/src/VirtoCommerce.Payment.Data/DefaultManualPaymentMethod.cs)
+
 ## Define new payment method
 
 * Create new module [create new module](../../developer-guide/create-new-module.md)
 * Create a class derived from `PaymentMethod` abstract class and override all abstract  methods each of them will be called on the appropriated stage of payment processing workflow
   
-```C#
+```csharp
   public class DefaultManualPaymentMethod : PaymentMethod
-    {
+	{
 		//has to implement payment transaction registration in an outside payment system;
 		//gets ProcessPaymentEvaluationContext as a parameter, which contains all the required information to create a payment transaction in an outside payment system;
-        //returns ProcessPaymentResult as a result, which includes the OuterId property, that has to be set to PaymentId. That way it associates payment in the Virto Commerce platform with the payment transaction in //the outside payment system
-        public override ProcessPaymentRequestResult ProcessPayment(ProcessPaymentRequest request) { ... }
+		//returns ProcessPaymentResult as a result, which includes the OuterId property, that has to be set to PaymentId. That way it associates payment in the Virto Commerce platform with the payment transaction in //the outside payment system
+		public override ProcessPaymentRequestResult ProcessPayment(ProcessPaymentRequest request) { ... }
+
 		//has to implement payment status check in the outside payment system;
- 		//get PostProcessPaymentEvaluationContext as a parameter, which contains all the required information to check payment status in outside payment system;
+		//get PostProcessPaymentEvaluationContext as a parameter, which contains all the required information to check payment status in outside payment system;
 		//returns PostProcessPaymentResult as a result, which includes the payment status result returned by the outside payment system
 		public override PostProcessPaymentRequestResult PostProcessPayment(PostProcessPaymentRequest request) { ... }
-		 public override VoidPaymentRequestResult VoidProcessPayment(VoidPaymentRequest request) { ... }
-		 public override CapturePaymentRequestResult CaptureProcessPayment(CapturePaymentRequest request) { ... }
-		 public override RefundPaymentRequestResult RefundProcessPayment(RefundPaymentRequest request) { ... }
-		 //has to impelement querystring request processing. The request comes to `push url` from outside payment system or frontend. The `push url` is set in account settings of most payment systems or during
+
+		public override VoidPaymentRequestResult VoidProcessPayment(VoidPaymentRequest request) { ... }
+
+		public override CapturePaymentRequestResult CaptureProcessPayment(CapturePaymentRequest request) { ... }
+
+		public override RefundPaymentRequestResult RefundProcessPayment(RefundPaymentRequest request) { ... }
+
+		//has to impelement querystring request processing. The request comes to `push url` from outside payment system or frontend. The `push url` is set in account settings of most payment systems or during
 		//payment transaction processing in outside payment system (ProcessPayment method).
 		//as a result of successfully checked (valid) payment the OuterId property of ValidatePostProcessRequestResult has to be set. It identifies payment in VirtoCommerce with the transaction in outside payment system.
-		 public override ValidatePostProcessRequestResult ValidatePostProcessRequest(System.Collections.Specialized.NameValueCollection queryString) { ... }
+		public override ValidatePostProcessRequestResult ValidatePostProcessRequest(System.Collections.Specialized.NameValueCollection queryString) { ... }
 	}
 ```
 
 * Register your module class in the DI container. This must be done in `PostInitialize` method. You can also associate the settings which will be used in your method and can be changed in the management UI. 
   
-```C#
+```csharp
 public void PostInitialize(IApplicationBuilder applicationBuilder)
 {
   ...
-     
-	 	var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
-        var paymentMethodsRegistrar = appBuilder.ApplicationServices.GetRequiredService<IPaymentMethodsRegistrar>();
-        paymentMethodsRegistrar.RegisterPaymentMethod<DefaultManualPaymentMethod>();
+		var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
+		var paymentMethodsRegistrar = appBuilder.ApplicationServices.GetRequiredService<IPaymentMethodsRegistrar>();
+		paymentMethodsRegistrar.RegisterPaymentMethod<DefaultManualPaymentMethod>();
 		//Associate the settings with the particular payment method
-        settingsRegistrar.RegisterSettingsForType(ModuleConstants.Settings.DefaultManualPaymentMethod.AllSettings, typeof(DefaultManualPaymentMethod).Name);
+		settingsRegistrar.RegisterSettingsForType(ModuleConstants.Settings.DefaultManualPaymentMethod.AllSettings, typeof(DefaultManualPaymentMethod).Name);
   ...
 }
 ```
 
-The important property of payment method is `PaymentMethodType` property. That property defines what actions will be executed by the front end to get a transaction registration result. There are two types of actions defined today. More will be implemented in future.
+## Type of Payment Methods
+The important property of payment method is `PaymentMethodType` property. That property defines what actions will be executed by the frontend to get a transaction registration result. There are three types of actions defined today. More will be implemented in future.
 
-*Redirection* – use this type of action if payment method redirects the user to an outside url. In order to do that set that link to `RedirectUrl` property in the ProcessPaymentResult. The frontend will use it to redirect customer (example of such a behavior would be Paypal Express Checkout payment method). 
+Virto Commerce defines these payment methods:
 
-*PreparedForm* – use this type of action if payment method provides the html form to the user to fill-in required credentials. In order to do that set the `HtmlForm` property in the ProcessPaymentResult with the Html form that the outside payment system returns or with the generated form in our payment system (example of such a behavior would be Klarna Checkout payment method).
+* Redirection - a customer is redirected to a third-party site in order to complete the payment.
+* PreparedForm - a payment system send prepared html form for request and storefront application should display it.
+* Unknown - nothing to do, Need to display thank you page.
+
+### Redirection 
+**Redirection** – use this type of action if payment method redirects the user to an outside url. In order to do that set that link to `RedirectUrl` property in the ProcessPaymentResult. The frontend will use it to redirect customer (example of such a behavior would be Paypal Express Checkout payment method). 
+
+### Prepared Form
+**PreparedForm** – use this type of action if payment method provides the html form to the user to fill-in required credentials. In order to do that set the `HtmlForm` property in the ProcessPaymentResult with the Html form that the outside payment system returns or with the generated form in our payment system (example of such a behavior would be Klarna Checkout payment method).
+
+### Unknown
+**Unknown** - use this type of action for Non Integrative payment methods like Cache, Invoice, etc.
 
 ## Enable and configure payment method for store
 
