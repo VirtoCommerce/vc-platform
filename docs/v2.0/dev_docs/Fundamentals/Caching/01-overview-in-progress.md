@@ -174,7 +174,7 @@ By default, the platform caches null values. If you opt for negative caching, th
 
 ## Cache Settings
 
-To learn how to configure cache settings, see: <TODO: Link to cache settings>.
+To learn how to configure cache settings, see <!-- TODO: Link to cache settings -->.
 
 ## Scaling
 
