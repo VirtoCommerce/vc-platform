@@ -14,6 +14,7 @@ namespace VirtoCommerce.Platform.Security.Handlers
                                                      IEventHandler<UserRoleRemovedEvent>
     {
         private readonly IChangeLogService _changeLogService;
+
         public LogChangesUserChangedEventHandler(IChangeLogService changeLogService)
         {
             _changeLogService = changeLogService;
@@ -34,6 +35,10 @@ namespace VirtoCommerce.Platform.Security.Handlers
                     {
                         await SaveOperationLogAsync(changedEntry.NewEntry.Id, string.Join(", ", changes[key].ToArray()), EntryState.Modified);
                     }
+                }
+                else if (changedEntry.EntryState == EntryState.Deleted)
+                {
+                    await SaveOperationLogAsync(changedEntry.OldEntry.Id, null, EntryState.Deleted);
                 }
             }
         }
