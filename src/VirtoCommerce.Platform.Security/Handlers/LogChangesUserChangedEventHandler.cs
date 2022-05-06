@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Security.Handlers
                 }
                 else if (changedEntry.EntryState == EntryState.Deleted)
                 {
-                    await SaveOperationLogAsync(changedEntry.OldEntry.Id, null, EntryState.Deleted);
+                    await SaveOperationLogAsync(changedEntry.OldEntry.Id, "Deleted", EntryState.Deleted);
                 }
             }
         }
