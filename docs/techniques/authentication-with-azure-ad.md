@@ -130,6 +130,7 @@ you need to configure the Azure AD app as multi-tenant and use a *wildcard* tena
 
 Also, you need to switch *Validate Issuer* from *Default* to *MultitenantAzureAD* mode.
 
+
 ```json
 	"AzureAd": {
 		"TenantId": "common",
@@ -192,21 +193,25 @@ To answer this question, let's dive deeper into the Azure Active Directory authe
 	- The account already exists and is linked to the Azure Active Directory account of the signed in user. In this case, no further actions will be performed, and Virto Commerce Platform will just authenticate that user using the existing account.
 	- The account already exists, but is missing the Azure Active Directory external sign in information. In this case, Virto Commerce Platform will modify that account to add external login information for the Azure Active Directory account. All other account information, including roles, permissions, and personal information, will remain untouched.
 	- Finally, if such account does not exist yet, VC Platform will create it and link it with Azure Active Directory account.
-4. In case the *upn* claim is not being transferred, the system can be configured to use the **preferred_username** claim instead using the following setting:
-    
-```json
-	{
-		"UsePreferredUsername": true
-	}
-```
+4. In case the *upn* claim is not being transferred. For example if you see: *Received external login info does not have an UPN claim or DefaultUserName* error message. The system can be configured to use the **preferred_username** or **emailaddress** claims instead using the following setting:
 
-    Alternatively, it can also use the **email** with the following setting:
+    You can read user name from **preferred_username** claim with the following setting:
     
-```json
-	{
-		"UseEmail": true
-	}
-```
+    ```json
+	    {
+		    "UsePreferredUsername": true
+	    }
+    ```
+
+    Alternatively, it can also use the **emailaddress** claim with the following setting:
+    
+    ```json
+	    {
+		    "UseEmail": true
+	    }
+    ```
+
+5. If you see the following error *IDX10205: Issuer validation failed*, you forget switch ValidateIssuer to MultitenantAzureAD.
 
 ## Configuration with Custom Azure AD App Signing Keys
 
