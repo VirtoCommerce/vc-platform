@@ -262,6 +262,21 @@ namespace VirtoCommerce.Platform.Web
                     authBuilder.AddOpenIdConnect(options.AuthenticationType, options.AuthenticationCaption,
                         openIdConnectOptions =>
                         {
+                            switch (options.ValidateIssuer)
+                            {
+                                // Multitenant Azure AD issuer validation
+                                // https://thomaslevesque.com/2018/12/24/multitenant-azure-ad-issuer-validation-in-asp-net-core/
+                                case ValidateIssuerType.MultitenantAzureAD:
+                                    openIdConnectOptions.TokenValidationParameters.IssuerValidator = MultitenantAzureADIssuerValidator.ValidateIssuerWithPlaceholder;
+                                    break;
+                                case ValidateIssuerType.Disabled:
+                                    openIdConnectOptions.TokenValidationParameters = new TokenValidationParameters { ValidateIssuer = false };
+                                    break;
+                                default:
+                                    // Default behaviour
+                                    break;
+                            }
+
                             openIdConnectOptions.ClientId = options.ApplicationId;
 
                             openIdConnectOptions.Authority = $"{options.AzureAdInstance}{options.TenantId}";

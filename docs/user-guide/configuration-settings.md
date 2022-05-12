@@ -59,7 +59,10 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 | AzureAd | | | Used for authentication with Azure Active Directory. Check [Enabling authentication with Azure Active Directory](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/techniques/authentication-with-azure-ad.md) for details. 
 |  | Enabled | `false` | Enables of authentication with Azure Active Directory. Disabled by default.
 |  | UsePreferredUsername | `false` | If set to `true` will check the `preffered_username` in case if the `upn` claim returns empty.
+|  | UseEmail | `false` | If set to `true` will check the `email` in case if the `upn` claim returns empty.
 |  | Priority | 0 | Configures the priortiy of the Azure Active Directory login popup on the Login page. Lower value has a higher prioriy.
+|  | ValidateIssuer | Default | Configures the validation schema for issuer. Allowed values: `Default` - generic OpenID Connect provider, `MultitenantAzureAD` - for Multitenant Azure AD and `Disabled`.
+|  | DefaultUserType | Manager | Configures the default user type (role) for SSO.
 | PasswordLogin | | | Enables authentication with username and passowrd. 
 |  | Enabled | `true` | Always enabled by default. Set to `false` to disable login with username/passowrd.
 |  | Priority | 0 | Configures the priortiy of the password login popup on the Login page. Lower value has a higher prioriy.

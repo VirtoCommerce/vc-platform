@@ -1,5 +1,21 @@
 namespace VirtoCommerce.Platform.Web.Azure
 {
+    public enum ValidateIssuerType
+    {
+        /// <summary>
+        /// Validate Issuer by Generic OpenID Connect provider
+        /// </summary>
+        Default,
+        /// <summary>
+        /// Validate Issuer for Multitenant Azure AD
+        /// </summary>
+        MultitenantAzureAD,
+        /// <summary>
+        /// Validation of Issuer is disabled
+        /// </summary>
+        Disabled,
+    }
+
     public class AzureAdOptions
     {
         /// <summary>
@@ -49,6 +65,16 @@ namespace VirtoCommerce.Platform.Web.Azure
         /// Check preferred_username claim as a fallback scenario in case when UPN claim is not set
         /// </summary>
         public bool UsePreferredUsername { get; set; }
+
+        /// <summary>
+        /// Check email claim as a fallback scenario in case when UPN claim is not set
+        /// </summary>
+        public bool UseEmail { get; set; }
+
+        /// <summary>
+        /// Allows to configure Token Validation Parameters. Supported values: Default - generic OpenID Connect provider, MultitenantAzureAD and Disabled.
+        /// </summary>
+        public ValidateIssuerType ValidateIssuer { get; set; }
 
         /// <summary>
         /// Login type priority
