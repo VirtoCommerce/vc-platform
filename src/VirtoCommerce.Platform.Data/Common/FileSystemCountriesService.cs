@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using Nager.Country;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Caching;
@@ -15,6 +16,7 @@ namespace VirtoCommerce.Platform.Data.Common
     {
         private readonly PlatformOptions _platformOptions;
         private readonly IPlatformMemoryCache _memoryCache;
+        private readonly CountryProvider _provider = new();
 
         public FileSystemCountriesService(IOptions<PlatformOptions> platformOptions, IPlatformMemoryCache memoryCache)
         {
@@ -43,6 +45,8 @@ namespace VirtoCommerce.Platform.Data.Common
 
         public async Task<IList<CountryRegion>> GetCountryRegionsAsync(string countryId)
         {
+            countryId = GetIso3Code(countryId);
+
             var cacheKey = CacheKey.With(GetType(), nameof(GetCountryRegionsAsync));
             var countries = await _memoryCache.GetOrCreateExclusive(cacheKey, async (cacheEntry) =>
              {
@@ -61,6 +65,8 @@ namespace VirtoCommerce.Platform.Data.Common
 
         public Country GetByCode(string code)
         {
+            code = GetIso3Code(code);
+
             var country = GetCountries().FirstOrDefault(x => x.Id == code);
 
             if (country == null)
@@ -69,6 +75,23 @@ namespace VirtoCommerce.Platform.Data.Common
             }
 
             return country;
+        }
+
+        private string GetIso3Code(string code)
+        {
+            if (code.Length == 2)
+            {
+                var country = _provider.GetCountry(code);
+
+                if (country == null)
+                {
+                    return null;
+                }
+
+                code = country.Alpha3Code.ToString();
+            }
+
+            return code;
         }
     }
 }
