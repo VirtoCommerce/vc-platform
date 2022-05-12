@@ -208,8 +208,8 @@ angular.module('platformWebApp')
                             currentEntityId: 'images',
                             title: 'platform.blades.asset-upload.title',
                             subtitle: scope.currentEntity.name,
-                            controller: 'platformWebApp.assets.assetUploadController',
-                            template: '$(Platform)/Scripts/app/assets/blades/asset-upload.tpl.html',
+                            controller: 'virtoCommerce.assetsModule.assetUploadController',
+                            template: 'Modules/$(VirtoCommerce.Assets)/Scripts/blades/asset-upload.tpl.html',
                             fileUploadOptions: {
                                 singleFileMode: true,
                                 accept: "image/*",
