@@ -56,7 +56,7 @@ jobs:
       if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
         echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
-        echo "UPDATE_LATEST_TAG=${{ github.event.inputs.forceLatest }}" >> $GITHUB_ENV 
+        echo "UPDATE_LATEST_TAG=${{ github.event.inputs.forceLatest }}" >> $GITHUB_ENV
 
     - name: Set RELEASE_STATUS
       if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
@@ -151,7 +151,8 @@ jobs:
         storefrontDockerTag: dev-linux-latest
         platformImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/platform
         storefrontImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/storefront
-          
+        installSampleData: 'false'
+
     - name: Publish Nuget
       if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'}}
       uses: VirtoCommerce/vc-github-actions/publish-nuget@master
@@ -169,14 +170,14 @@ jobs:
       run: |
         echo ::set-output name=DOCKER_URL::${{ env.PACKAGE_SERVER }}/${{github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.image.outputs.taggedVersion }}
         echo ::set-output name=BLOB_URL::${{ steps.blobRelease.outputs.packageUrl }}
-        
+
     - name: Add Jira link
       if: ${{ github.event_name == 'pull_request' }}
       uses: VirtoCommerce/vc-github-actions/publish-jira-link@master
       with:
         branchName: ${{ github.head_ref }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Add link to PR
       if: ${{ github.event_name == 'pull_request' }}
@@ -184,7 +185,7 @@ jobs:
       with:
         artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
         downloadComment: 'Artifact URL:'
-      
+
     - name: Publish Github Release
       if: ${{ github.ref == 'refs/heads/master' }}
       with:
@@ -245,7 +246,7 @@ jobs:
       CLIENT_ID: ${{secrets.CLIENT_ID}}
       CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-    steps: 
+    steps:
 
     - name: Set deployment environment
       id: deployEnv
@@ -285,11 +286,11 @@ jobs:
     - name: Wait for environment is up
       shell: pwsh
       timeout-minutes: 15
-      run: | 
+      run: |
         do {
           Start-Sleep -s 15
           $statusBage = (Invoke-WebRequest -Uri "https://argo.govirto.com/api/badge?name=${{ steps.deployConfig.outputs.deployAppName }}").Content
-          
+
           $syncedAndHealthy = $statusBage.Contains('>Healthy<') -and $statusBage.Contains('>Synced<')
           if (-not $syncedAndHealthy) {
             Write-Host "Sync pending..."
