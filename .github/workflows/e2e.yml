@@ -76,6 +76,7 @@ jobs:
         platformImage: ghcr.io/virtocommerce/platform
         storefrontImage: ghcr.io/virtocommerce/storefront
         validateSwagger: 'false'
+        installSampleData: 'false'
 
     - name: Getting tests
       shell: sh
