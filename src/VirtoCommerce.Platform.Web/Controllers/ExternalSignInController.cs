@@ -175,6 +175,11 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 userName = externalLoginInfo.Principal.FindFirstValue("preferred_username");
             }
 
+            if (string.IsNullOrWhiteSpace(userName) && _azureAdOptions.UseEmail)
+            {
+                userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
+            }
+
             return userName;
         }
 
