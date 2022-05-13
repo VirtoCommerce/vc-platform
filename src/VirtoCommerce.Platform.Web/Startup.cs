@@ -151,9 +151,11 @@ namespace VirtoCommerce.Platform.Web
                 return JsonSerializer.Create(serv.Value.SerializerSettings);
             });
 
+            
+
             services.AddDbContext<SecurityDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("VirtoCommerce"));
+                options.UseSqlServer(Configuration["Auth:ConnectionString"] ?? Configuration.GetConnectionString("VirtoCommerce"));
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.
@@ -211,6 +213,10 @@ namespace VirtoCommerce.Platform.Web
                 options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor;
             });
 
+            // Load server certificate (from DB or file) and register it as a global singleton
+            // to allow the platform hosting under the cert
+            var serverCertificate = services.AddServerCertificate(Configuration);
+
             //Create backup of token handler before default claim maps are cleared
             var defaultTokenHandler = new JwtSecurityTokenHandler();
 
@@ -229,11 +235,9 @@ namespace VirtoCommerce.Platform.Web
                         options.IncludeErrorDetails = true;
 
                         X509SecurityKey publicKey = null;
-                        if (!Configuration["Auth:PublicCertPath"].IsNullOrEmpty())
-                        {
-                            var publicCert = new X509Certificate2(Configuration["Auth:PublicCertPath"]);
-                            publicKey = new X509SecurityKey(publicCert);
-                        }
+
+                        var publicCert = new X509Certificate2(serverCertificate.PublicCertBytes);
+                        publicKey = new X509SecurityKey(publicCert);
 
                         options.TokenValidationParameters = new TokenValidationParameters()
                         {
@@ -335,17 +339,16 @@ namespace VirtoCommerce.Platform.Web
                     // encrypted format, the following lines are required:
                     options.DisableAccessTokenEncryption();
 
-                    var bytes = File.ReadAllBytes(Configuration["Auth:PrivateKeyPath"]);
                     X509Certificate2 privateKey;
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     {
                         // https://github.com/dotnet/corefx/blob/release/2.2/Documentation/architecture/cross-platform-cryptography.md
                         // macOS cannot load certificate private keys without a keychain object, which requires writing to disk. Keychains are created automatically for PFX loading, and are deleted when no longer in use. Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
-                        privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet);
+                        privateKey = new X509Certificate2(serverCertificate.PrivateKeyCertBytes, serverCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet);
                     }
                     else
                     {
-                        privateKey = new X509Certificate2(bytes, Configuration["Auth:PrivateKeyPassword"], X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+                        privateKey = new X509Certificate2(serverCertificate.PrivateKeyCertBytes, serverCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
                     }
                     options.AddSigningCertificate(privateKey);
                     options.AddEncryptionCertificate(privateKey);

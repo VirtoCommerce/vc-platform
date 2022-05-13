@@ -119,6 +119,18 @@ angular.module('platformWebApp')
         return hasPermission;
     };
 
+    authContext.getServerCertificateInfo = function () {
+        return $http.get(serviceBase + 'servercertinfo');
+    };
+
+    authContext.generateNewServerCertificate = function () {
+        return $http.get(serviceBase + 'genservercert');
+    };
+
+    authContext.saveServerCertificate = function () {
+        return $http.get(serviceBase + 'saveservercert');
+    };
+
     function changeAuth(user) {
         angular.extend(authContext, user);
         authContext.userLogin = user.userName;

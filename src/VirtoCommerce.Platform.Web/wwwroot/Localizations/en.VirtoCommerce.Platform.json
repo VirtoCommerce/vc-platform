@@ -835,6 +835,10 @@
             "storefront-cache-reset-successfully": {
                 "title": "Cache reset",
                 "message": "Storefront cache has been reset successfully."
+            },
+            "cert-default": {
+                "title": "Default server certificate should be changed",
+                "message": "It's strongly recommended to change default server security certificate.\nDo you like to generate and install new selfsigned server certificate?"
             }
         },
         "commands": {

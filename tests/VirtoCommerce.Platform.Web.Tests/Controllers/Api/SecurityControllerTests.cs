@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -105,6 +106,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 emailSender: _emailSenderMock.Object,
                 eventPublisher: _eventPublisherMock.Object,
                 userApiKeyService: _userApiKeyServiceMock.Object,
+                serverCertificate: new Mock<ServerCertificate>().Object,
+                serverCertificateService: new Mock<ICrudService<ServerCertificate>>().Object,
                 logger: _logger.Object);
         }
 

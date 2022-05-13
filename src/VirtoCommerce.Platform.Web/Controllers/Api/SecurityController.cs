@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,6 +17,7 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Extensions;
+using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -45,6 +48,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEmailSender _emailSender;
         private readonly IEventPublisher _eventPublisher;
         private readonly IUserApiKeyService _userApiKeyService;
+        private readonly ServerCertificate _serverCertificate;
+        private readonly ICrudService<ServerCertificate> _serverCertificateService;
         private readonly ILogger<SecurityController> _logger;
 
         public SecurityController(
@@ -62,6 +67,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IEmailSender emailSender,
             IEventPublisher eventPublisher,
             IUserApiKeyService userApiKeyService,
+            ServerCertificate serverCertificate,
+            ICrudService<ServerCertificate> serverCertificateService,
             ILogger<SecurityController> logger)
         {
             _signInManager = signInManager;
@@ -78,6 +85,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _emailSender = emailSender;
             _eventPublisher = eventPublisher;
             _userApiKeyService = userApiKeyService;
+            _serverCertificate = serverCertificate;
+            _serverCertificateService = serverCertificateService;
             _logger = logger;
         }
 
@@ -622,7 +631,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 user = await UserManager.FindByNameAsync(validatePassword.UserName);
             }
-            
+
             var result = await _passwordValidator.ValidateAsync(UserManager, user, validatePassword.NewPassword);
 
             return Ok(result);
@@ -857,6 +866,79 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             return Ok();
         }
+
+
+        /// <summary>
+        /// Get common server certificate info (to warn the admin about replacement needed)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize(PlatformPermissions.SecurityAccess)]
+        [Route("servercertinfo")]
+        public ActionResult<ServerCertificateInfo> GetServerCertificateInfo()
+        {
+            var result = new ServerCertificateInfo();
+            var publicCert = new X509Certificate2(_serverCertificate.PublicCertBytes);
+            result.IsDefaultVirtoSelfSigned = publicCert.SerialNumber.EqualsInvariant(ServerCertificate.SerialNumberOfVirtoPredefined);
+            result.IsNearToBeExpired = publicCert.NotAfter.AddMonths(-1) < DateTime.Now;
+            result.IsStoredInDb = _serverCertificate.StoredInDb;
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Generate new server certificate and save it into DB (in case of generating new self-signed server certificate)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize(PlatformPermissions.SecurityUpdate)]
+        [Route("genservercert")]
+        public async Task<ActionResult> GenerateNewServerCertificate()
+        {
+            var newCert = new ServerCertificate()
+            {
+                Id = _serverCertificate.Id,
+                PrivateKeyCertPassword = _serverCertificate.PrivateKeyCertPassword, // Here the password has got from appsettings
+                StoredInDb = true
+            };
+
+            using var algorithm = RSA.Create(keySizeInBits: 4096);
+
+            var subject = new X500DistinguishedName("O=Virtocommerce, S=Vilnius, C=LT, CN=virtocommerce.com");
+            var request = new CertificateRequest(subject, algorithm, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment, critical: true));
+            request.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension(new OidCollection() {
+                Oid.FromOidValue("1.3.6.1.5.5.7.3.1", OidGroup.EnhancedKeyUsage), // Add Server Authentication usage
+                Oid.FromOidValue("1.3.6.1.5.5.7.3.2", OidGroup.EnhancedKeyUsage) // Add Client Authentication usage
+            }, true));
+            var dnsExtensionBuilder = new SubjectAlternativeNameBuilder();
+            dnsExtensionBuilder.AddDnsName("virtocommerce.com");
+            request.CertificateExtensions.Add(dnsExtensionBuilder.Build());
+
+            var x509Cert = request.CreateSelfSigned(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddYears(10));
+            newCert.PublicCertBytes = x509Cert.Export(X509ContentType.Cert, string.Empty);
+            newCert.PrivateKeyCertBytes = x509Cert.Export(X509ContentType.Pfx, newCert.PrivateKeyCertPassword);
+
+            await _serverCertificateService.SaveChangesAsync(new ServerCertificate[] { newCert });
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Save currently run server certificate to the DB (in case of installing custom server certificate)
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize(PlatformPermissions.SecurityUpdate)]
+        [Route("saveservercert")]
+        public async Task<ActionResult> SaveServerCertificate()
+        {
+            var newCert = (ServerCertificate)_serverCertificate.Clone();
+            newCert.StoredInDb = true;
+            await _serverCertificateService.SaveChangesAsync(new ServerCertificate[] { newCert });
+            return Ok();
+        }
+
 
         #region PT-788 Obsolete methods
 

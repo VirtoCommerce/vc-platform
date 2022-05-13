@@ -24,9 +24,9 @@
         "commandName": "Project",
         "environmentVariables": {
             "ASPNETCORE_preventHostingStartup": "True",
-            "ASPNETCORE_ENVIRONMENT": "Development"
+            "ASPNETCORE_ENVIRONMENT": "Production"
         },
-        "applicationUrl": "http://localhost:10645/"
+        "applicationUrl": "https://localhost:10645/"
     },
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",

@@ -74,6 +74,14 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<IdentityUserRole<string>>().Property(x => x.RoleId).HasMaxLength(128);
             builder.Entity<IdentityRoleClaim<string>>().Property(x => x.RoleId).HasMaxLength(128);
             builder.Entity<IdentityUserToken<string>>().Property(x => x.UserId).HasMaxLength(128);
+
+            builder.Entity<ServerCertificateEntity>().ToTable(nameof(ServerCertificate)).HasKey(x => x.Id);
+            builder.Entity<ServerCertificateEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
+            builder.Entity<ServerCertificateEntity>().Property(x => x.StoredInDb);
+            builder.Entity<ServerCertificateEntity>().Property(x => x.PublicCertBase64);
+            builder.Entity<ServerCertificateEntity>().Property(x => x.PrivateKeyCertBase64);
+            builder.Entity<ServerCertificateEntity>().Property(x => x.PrivateKeyCertPassword).HasMaxLength(128);
+
         }
 
         #region override Save*** methods to catch save events in Triggers, otherwise ApplicationUser not be catched because SecurityDbContext can't inherit DbContextWithTriggers
