@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Data.Common
 
         public IList<Country> GetCountries()
         {
-            return GetCountriesAsync().GetAwaiter().GetResult();
+            return GetCountriesAsync().Result;
         }
 
         /// <summary>
@@ -39,7 +39,10 @@ namespace VirtoCommerce.Platform.Data.Common
             return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var filePath = Path.GetFullPath(_platformOptions.CountriesFilePath);
-                return JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
+                var countriesList = JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
+                countriesList = countriesList.OrderBy(x => x.Name).ToList();
+
+                return countriesList;
             });
         }
 
