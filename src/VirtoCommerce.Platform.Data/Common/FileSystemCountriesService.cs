@@ -26,7 +26,9 @@ namespace VirtoCommerce.Platform.Data.Common
 
         public IList<Country> GetCountries()
         {
-            return GetCountriesAsync().Result;
+#pragma warning disable S4462
+            return GetCountriesAsync().GetAwaiter().GetResult();
+#pragma warning restore S4462
         }
 
         /// <summary>
@@ -52,15 +54,15 @@ namespace VirtoCommerce.Platform.Data.Common
 
             var cacheKey = CacheKey.With(GetType(), nameof(GetCountryRegionsAsync));
             var countries = await _memoryCache.GetOrCreateExclusive(cacheKey, async (cacheEntry) =>
-             {
-                 var filePath = Path.GetFullPath(_platformOptions.CountryRegionsFilePath);
-                 return JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
-             });
+            {
+                var filePath = Path.GetFullPath(_platformOptions.CountryRegionsFilePath);
+                return JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
+            });
 
             var country = countries.FirstOrDefault(x => x.Id.Equals(countryId, StringComparison.InvariantCultureIgnoreCase));
             if (country != null)
             {
-                return country.Regions;
+                return country.Regions.OrderBy(x => x.Name).ToList();
             }
 
             return Array.Empty<CountryRegion>();
