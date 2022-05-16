@@ -842,7 +842,7 @@
             },
             "cert-changed-another-instance": {
                 "title": "Application shutdown/restart needed",
-                "message": "Server securitiry certificate was changed in another platform instance.\nTo apply changes, it is need to restart the application. Depending on hosting service, the application will be restarted automatically or you should do it manually.\nAre you sure you want to shutdown the application now?"
+                "message": "Server security certificate was changed in another platform instance.\nTo apply changes, it is need to restart the application. Depending on hosting service, the application will be restarted automatically or you should do it manually.\nAre you sure you want to shutdown the application now?"
             },
             "cert-near-expired": {
                 "title": "Server certificate needs to be replaced",
