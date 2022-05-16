@@ -32,9 +32,9 @@ For that purpose, you need to create a new file, `CsvProductImageClassMap`, with
 
 `CsvProductImageClassMap.cs`
 ```cs
-1 public class CsvProductClassMap : ClassMap<ProductImage>
+1 public class CsvProductImageClassMap : ClassMap<ProductImage>
 2    {
-3        public CsvProductClassMap()
+3        public CsvProductImageClassMap()
 4        {
 5            Map(m => m.ProductId);
 6            Map(m => m.ImageUrl);
@@ -130,9 +130,9 @@ Line 31: This line notifies the one who runs the importer about any possible err
 
 This is the central object in the _DataImport_ extension system, as the object of this type is called by the system for all import operations.
 
-In order to define new importer, we will create a new class, _ProductImageCsvDataImporter_, with the following content:
+In order to define new importer, we will create a new class, _CsvProductImageImporter_, with the following content:
 
-`ProductImageCsvDataImporter.cs`
+`CsvProductImageImporter.cs`
 ```cs
 1 public sealed class CsvProductImageImporter : IDataImporter
 2    {
@@ -186,7 +186,7 @@ Lines 23 and 34: Factory methods that return both the reader and writer and get 
 
 ## Registering Data Importer
 
-Now that we have everything at hand to wire up our new _ProductImageCsvDataImporter_ and run it, we add the following content to the _module.cs_ file:
+Now that we have everything at hand to wire up our new _CsvProductImageImporter_ and run it, we add the following content to the _module.cs_ file:
 
 `module.cs`
 ```cs
@@ -213,6 +213,6 @@ Line 8: Registering `CsvProductImageImporter` in the global importer registry, s
 
 You can choose either of the following options to run your newly created data importer:
 
--   Directly from UI as _ImportProfile_ that has an assigned _ProductImageCsvDataImporter_ (TBA)
+-   Directly from UI as _ImportProfile_ that has an assigned _CsvProductImageImporter_ (TBA)
     
 -   Using code (TBA)
