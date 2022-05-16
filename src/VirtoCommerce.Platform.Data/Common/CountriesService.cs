@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Data.Common
 {
     public class CountriesService : ICountriesService
     {
-        private readonly CountryProvider _provider = new CountryProvider();
+        private readonly CountryProvider _provider = new();
         private readonly FileSystemCountriesService _fileSystemCountriesService;
 
         public CountriesService(FileSystemCountriesService fileSystemCountriesService)
@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Data.Common
         public IList<Country> GetCountries()
         {
             return _provider.GetCountries()
-                .Select(x => new Country { Id = x.Alpha3Code.ToString(), Name = x.OfficialName })
+                .Select(x => new Country { Id = x.Alpha3Code.ToString(), Name = x.CommonName })
                 .ToList();
         }
 

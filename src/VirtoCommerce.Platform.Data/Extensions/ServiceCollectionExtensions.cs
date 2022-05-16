@@ -58,8 +58,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddSingleton<ITranslationDataProvider, ModulesTranslationDataProvider>();
             services.AddSingleton<ITranslationService, TranslationService>();
 
-            services.AddSingleton<ICountriesService, CountriesService>();
-            services.AddSingleton<FileSystemCountriesService>();
+            services.AddSingleton<ICountriesService, FileSystemCountriesService>();
             services.AddSingleton<IFileSystem, FileSystem>();
             services.AddTransient<IZipFileWrapper, ZipFileWrapper>();
 

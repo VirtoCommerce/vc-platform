@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using Nager.Country;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Caching;
@@ -15,6 +16,7 @@ namespace VirtoCommerce.Platform.Data.Common
     {
         private readonly PlatformOptions _platformOptions;
         private readonly IPlatformMemoryCache _memoryCache;
+        private readonly CountryProvider _provider = new();
 
         public FileSystemCountriesService(IOptions<PlatformOptions> platformOptions, IPlatformMemoryCache memoryCache)
         {
@@ -24,7 +26,9 @@ namespace VirtoCommerce.Platform.Data.Common
 
         public IList<Country> GetCountries()
         {
+#pragma warning disable S4462
             return GetCountriesAsync().GetAwaiter().GetResult();
+#pragma warning restore S4462
         }
 
         /// <summary>
@@ -37,23 +41,28 @@ namespace VirtoCommerce.Platform.Data.Common
             return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 var filePath = Path.GetFullPath(_platformOptions.CountriesFilePath);
-                return JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
+                var countriesList = JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
+                countriesList = countriesList.OrderBy(x => x.Name).ToList();
+
+                return countriesList;
             });
         }
 
         public async Task<IList<CountryRegion>> GetCountryRegionsAsync(string countryId)
         {
+            countryId = GetIso3Code(countryId);
+
             var cacheKey = CacheKey.With(GetType(), nameof(GetCountryRegionsAsync));
             var countries = await _memoryCache.GetOrCreateExclusive(cacheKey, async (cacheEntry) =>
-             {
-                 var filePath = Path.GetFullPath(_platformOptions.CountryRegionsFilePath);
-                 return JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
-             });
+            {
+                var filePath = Path.GetFullPath(_platformOptions.CountryRegionsFilePath);
+                return JsonConvert.DeserializeObject<IList<Country>>(await File.ReadAllTextAsync(filePath));
+            });
 
             var country = countries.FirstOrDefault(x => x.Id.Equals(countryId, StringComparison.InvariantCultureIgnoreCase));
             if (country != null)
             {
-                return country.Regions;
+                return country.Regions.OrderBy(x => x.Name).ToList();
             }
 
             return Array.Empty<CountryRegion>();
@@ -61,6 +70,8 @@ namespace VirtoCommerce.Platform.Data.Common
 
         public Country GetByCode(string code)
         {
+            code = GetIso3Code(code);
+
             var country = GetCountries().FirstOrDefault(x => x.Id == code);
 
             if (country == null)
@@ -69,6 +80,23 @@ namespace VirtoCommerce.Platform.Data.Common
             }
 
             return country;
+        }
+
+        private string GetIso3Code(string code)
+        {
+            if (code.Length == 2)
+            {
+                var country = _provider.GetCountry(code);
+
+                if (country == null)
+                {
+                    return null;
+                }
+
+                code = country.Alpha3Code.ToString();
+            }
+
+            return code;
         }
     }
 }
