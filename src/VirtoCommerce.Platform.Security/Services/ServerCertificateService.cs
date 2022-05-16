@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Data.GenericCrud;
@@ -34,8 +37,10 @@ namespace VirtoCommerce.Platform.Security.Services
         /// </summary>
         /// <param name="connectionString"></param>
         /// <returns></returns>
-        public static ServerCertificate GetWithoutEf(string connectionString)
+        public static ServerCertificate LoadCurrentlySet(IConfiguration configuration)
         {
+            var connectionString = configuration["Auth:ConnectionString"] ?? configuration.GetConnectionString("VirtoCommerce");
+
             const string cmdCheckMigration =
                 @"select 1 from [sys].[tables] where name='ServerCertificate'";
 
@@ -79,6 +84,18 @@ namespace VirtoCommerce.Platform.Security.Services
                     result.StoredInDb = readerServerCert.GetBoolean(ixStoredInDb);
                 }
             }
+
+            if (!result.StoredInDb)
+            { // Read certificate bytes from the files
+                var publicCertPath = configuration["Auth:PublicCertPath"];
+                if (string.IsNullOrEmpty(publicCertPath)) throw new PlatformException("The path to the public cert should be provided ('Auth:PublicCertPath' key in the settings)");
+                var privateKeyPath = configuration["Auth:PrivateKeyPath"];
+                if (string.IsNullOrEmpty(privateKeyPath)) throw new PlatformException("The path to the private key pfx should be provided ('Auth:PrivateKeyPath' key in the settings)");
+                result.PrivateKeyCertPassword = configuration["Auth:PrivateKeyPassword"];
+                result.PublicCertBytes = File.ReadAllBytes(publicCertPath);
+                result.PrivateKeyCertBytes = File.ReadAllBytes(privateKeyPath);
+            }
+
             return result;
         }
         

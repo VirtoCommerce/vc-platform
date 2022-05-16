@@ -64,22 +64,10 @@ namespace VirtoCommerce.Platform.Web.Security
             return services;
         }
 
-        public static ServerCertificate AddServerCertificate(this IServiceCollection services, IConfiguration Configuration)
-        {
+        public static ServerCertificate AddServerCertificate(this IServiceCollection services, IConfiguration configuration)
+        {            
 
-            var authDbConnString = Configuration["Auth:ConnectionString"] ?? Configuration.GetConnectionString("VirtoCommerce");
-
-            var result = ServerCertificateService.GetWithoutEf(authDbConnString);
-            if (!result.StoredInDb)
-            { // Read certificate bytes from the files
-                var publicCertPath = Configuration["Auth:PublicCertPath"];
-                if (string.IsNullOrEmpty(publicCertPath)) throw new PlatformException("The path to the public cert should be provided ('Auth:PublicCertPath' key in the settings)");
-                var privateKeyPath = Configuration["Auth:PrivateKeyPath"];
-                if (string.IsNullOrEmpty(privateKeyPath)) throw new PlatformException("The path to the private key pfx should be provided ('Auth:PrivateKeyPath' key in the settings)");
-                result.PrivateKeyCertPassword = Configuration["Auth:PrivateKeyPassword"];
-                result.PublicCertBytes = File.ReadAllBytes(publicCertPath);
-                result.PrivateKeyCertBytes = File.ReadAllBytes(privateKeyPath);
-            }
+            var result = ServerCertificateService.LoadCurrentlySet(configuration);
 
             services.AddSingleton(result);
 

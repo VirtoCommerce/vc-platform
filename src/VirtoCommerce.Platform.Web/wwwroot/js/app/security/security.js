@@ -272,8 +272,8 @@ angular.module('platformWebApp')
         };
     }])
 
-    .run(['$transitions', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService', 'platformWebApp.modules', '$timeout',
-        function ($transitions, mainMenuService, metaFormsService, widgetService, $state, authService, dialogService, modules, $timeout) {
+    .run(['$transitions', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', '$timeout',
+        function ($transitions, mainMenuService, metaFormsService, widgetService, $state, authService, dialogService, modules, waitForRestart, $timeout) {
             //Register module in main menu
             var menuItem = {
                 path: 'configuration/security',
@@ -341,7 +341,8 @@ angular.module('platformWebApp')
                 if (authService.isAuthenticated && authService.passwordExpired) {
                     return transition.router.stateService.target('changePasswordDialog');
                 }
-                // Ask the admin to change server cert in case it virto default or near to be expired
+                // Check server certificate info.
+                // Ask the admin to change server cert in case of it is virto default or near to be expired
                 if (authService.isAdministrator) {
                     authService.getServerCertificateInfo().then(
                         function (result) {
@@ -354,7 +355,6 @@ angular.module('platformWebApp')
                                         //blade.isLoading = true;
                                         try {
                                             modules.restart(function () {
-                                                //$window.location.reload(); returns 400 bad request due server restarts
                                             });
                                         }
                                         catch (err) {
@@ -369,30 +369,33 @@ angular.module('platformWebApp')
                                 }
                             }
 
-                            if (result.data.isDefaultVirtoSelfSigned && !result.data.isStoredInDb) {
-                                // The certificate should be changed to another, at least selfsigned and restart
-                                var dialog = {
-                                    id: "warnServerCertIsDefaultDialog",
-                                    title: "platform.dialogs.cert-default.title",
-                                    message: "platform.dialogs.cert-default.message",
-                                    callback: function (confirm) {
-                                        if (confirm) {
-                                            authService.generateNewServerCertificate().then(
-                                                function (genCertResult) {
-                                                    dialogService.showWarningDialog(restartDialog);
-                                                });
-                                            
+                            if (result.data.isChanged) {
+                                // Certificate was changed in another instance. We should restart this instance
+                                restartDialog.title = "platform.dialogs.cert-changed-another-instance.title";
+                                restartDialog.message = "platform.dialogs.cert-changed-another-instance.message";
+                                dialogService.showWarningDialog(restartDialog);
+                            }
+                            else {
+                                if (result.data.isDefaultVirtoSelfSigned && !result.data.isStoredInDb || result.data.isNearToBeExpired) {
+                                    // The certificate should be changed to another, at least self-signed and restart
+                                    var dialog = {
+                                        id: "warnServerCertIsDefaultDialog",
+                                        title: result.data.isNearToBeExpired ? "platform.dialogs.cert-near-expired.title" : "platform.dialogs.cert-default.title",
+                                        message: result.data.isNearToBeExpired ? "platform.dialogs.cert-near-expired.message" : "platform.dialogs.cert-default.message",
+                                        callback: function (confirm) {
+                                            if (confirm) {
+                                                authService.generateNewServerCertificate().then(
+                                                    function (genCertResult) {
+                                                        dialogService.showWarningDialog(restartDialog);
+                                                    });
+                                            }
                                         }
                                     }
+                                    dialogService.showWarningDialog(dialog);
+                                } else if (!result.data.isDefaultVirtoSelfSigned && !result.data.isStoredInDb) {
+                                    // The certificate is not virto-default, therefore we should write it to the DB and restart
+
                                 }
-                                dialogService.showWarningDialog(dialog);
-                            } else if (!result.data.isDefaultVirtoSelfSigned && !result.data.isStoredInDb) {
-                                // The certificate not virto-default, therefore we should write it to the DB and restart
-                            } else if (result.data.isNearToBeExpired) {
-                                // Certificate should be replaced
-                            }
-                            if (result.isNearToBeExpired) {
-                                return transition.router.stateService.target('warnServerCertIsExpiredDialog');
                             }
                     });
                 }

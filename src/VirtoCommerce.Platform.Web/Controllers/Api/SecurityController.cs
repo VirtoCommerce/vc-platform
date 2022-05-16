@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
@@ -22,6 +23,7 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Security;
@@ -50,6 +52,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IUserApiKeyService _userApiKeyService;
         private readonly ServerCertificate _serverCertificate;
         private readonly ICrudService<ServerCertificate> _serverCertificateService;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<SecurityController> _logger;
 
         public SecurityController(
@@ -69,6 +72,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IUserApiKeyService userApiKeyService,
             ServerCertificate serverCertificate,
             ICrudService<ServerCertificate> serverCertificateService,
+            IConfiguration configuration,
             ILogger<SecurityController> logger)
         {
             _signInManager = signInManager;
@@ -87,6 +91,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userApiKeyService = userApiKeyService;
             _serverCertificate = serverCertificate;
             _serverCertificateService = serverCertificateService;
+            _configuration = configuration;
             _logger = logger;
         }
 
@@ -882,6 +887,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             result.IsDefaultVirtoSelfSigned = publicCert.SerialNumber.EqualsInvariant(ServerCertificate.SerialNumberOfVirtoPredefined);
             result.IsNearToBeExpired = publicCert.NotAfter.AddMonths(-1) < DateTime.Now;
             result.IsStoredInDb = _serverCertificate.StoredInDb;
+
+            var certNew = ServerCertificateService.LoadCurrentlySet(_configuration);
+            result.IsChanged = !new X509Certificate2(certNew.PublicCertBytes).SerialNumber.EqualsInvariant(publicCert.SerialNumber);
 
             return Ok(result);
         }

@@ -5,6 +5,7 @@ using AutoFixture;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -108,6 +109,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 userApiKeyService: _userApiKeyServiceMock.Object,
                 serverCertificate: new Mock<ServerCertificate>().Object,
                 serverCertificateService: new Mock<ICrudService<ServerCertificate>>().Object,
+                configuration: new Mock<IConfiguration>().Object,
                 logger: _logger.Object);
         }
 
