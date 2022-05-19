@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
-using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Data.GenericCrud;
@@ -33,7 +31,6 @@ namespace VirtoCommerce.Platform.Security.Services
             return await ((ISecurityRepository)repository).ServerCertificates.Where(x => ids.Contains(x.Id)).ToListAsync();
 
         }
-
 
         private static string GetConnectionString(IConfiguration configuration)
         {
@@ -133,7 +130,7 @@ namespace VirtoCommerce.Platform.Security.Services
                     !string.IsNullOrEmpty(privateKeyPath) &&
                     File.Exists(publicCertPath) &&
                     File.Exists(privateKeyPath))
-                { 
+                {
                     result.PrivateKeyCertPassword = configuration["Auth:PrivateKeyPassword"];
                     result.PublicCertBytes = File.ReadAllBytes(publicCertPath);
                     result.PrivateKeyCertBytes = File.ReadAllBytes(privateKeyPath);

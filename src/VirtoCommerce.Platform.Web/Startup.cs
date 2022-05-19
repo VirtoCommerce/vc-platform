@@ -153,7 +153,7 @@ namespace VirtoCommerce.Platform.Web
                 return JsonSerializer.Create(serv.Value.SerializerSettings);
             });
 
-            
+
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
@@ -462,9 +462,9 @@ namespace VirtoCommerce.Platform.Web
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-            
+
             app.UseSecurityHeaders();
-            
+
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
 
