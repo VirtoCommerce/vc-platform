@@ -126,10 +126,8 @@ namespace VirtoCommerce.Platform.Security.Services
                 // Otherwise left it empty with default virto-cert number.
                 // Default certificate will be replaced later by self-signed
                 if (!result.StoredInDb &&
-                    !string.IsNullOrEmpty(publicCertPath) &&
-                    !string.IsNullOrEmpty(privateKeyPath) &&
-                    File.Exists(publicCertPath) &&
-                    File.Exists(privateKeyPath))
+                    File.Exists(publicCertPath ?? string.Empty) &&
+                    File.Exists(privateKeyPath ?? string.Empty))
                 {
                     result.PrivateKeyCertPassword = configuration["Auth:PrivateKeyPassword"];
                     result.PublicCertBytes = File.ReadAllBytes(publicCertPath);

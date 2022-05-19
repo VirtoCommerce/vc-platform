@@ -68,7 +68,6 @@ namespace VirtoCommerce.Platform.Web.Security
         /// Get currently installed certificate from the storage
         /// or create new self-signed
         /// </summary>
-        /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
         public static ServerCertificate TryLoadCertificate(this IConfiguration configuration)
