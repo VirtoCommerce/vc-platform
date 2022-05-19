@@ -88,15 +88,6 @@
         <None Include="wwwroot\swagger\vc.css" />
     </ItemGroup>
 
-    <ItemGroup>
-        <EmbeddedResource Include="certificates\virtocommerce.crt">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="certificates\virtocommerce.pfx">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-    </ItemGroup>
-
     <!--<Target Name="BuildFront" BeforeTargets="Build">
     <Message Importance="High" Text="######### Restoring NPM packages ##########" />
     <Exec Command="npm install" />

@@ -60,7 +60,6 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton(provider => new UserApiKeyActualizeEventHandler(provider.CreateScope().ServiceProvider.GetService<IUserApiKeyService>()));
 
             services.AddTransient<ICrudService<ServerCertificate>, ServerCertificateService>();
-            services.AddTransient<ISearchService<ServerCertificateSearchCriteria, ServerCertificateSearchResult, ServerCertificate>, ServerCertificateSearchService>();
 
             return services;
         }
