@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography.X509Certificates;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Security
@@ -6,7 +7,21 @@ namespace VirtoCommerce.Platform.Core.Security
     public class ServerCertificate : Entity, ICloneable
     {
         public const string SerialNumberOfVirtoPredefined = "482e53df1e594c89d5905c6a64719424566055f9";
-        public byte[] PublicCertBytes { get; set; }
+        private byte[] _PublicCertBytes;
+        public byte[] PublicCertBytes
+        {
+            get
+            {
+                return _PublicCertBytes;
+            }
+            set
+            {
+                _PublicCertBytes = value;
+                X509Certificate = new X509Certificate2(_PublicCertBytes);
+                SerialNumber = X509Certificate.SerialNumber;
+            }
+
+        }
         public byte[] PrivateKeyCertBytes { get; set; }
         public string PrivateKeyCertPassword { get; set; }
         public bool StoredInDb { get; set; }
@@ -14,6 +29,18 @@ namespace VirtoCommerce.Platform.Core.Security
         public object Clone()
         {
             return MemberwiseClone() as ServerCertificate;
+        }
+
+        public string SerialNumber { get; set; } = SerialNumberOfVirtoPredefined;
+        public X509Certificate2 X509Certificate { get; set; }
+
+        public bool Expired
+        {
+            get
+            {
+                var now = DateTime.UtcNow;
+                return now >= X509Certificate.NotAfter.ToUniversalTime() && now < X509Certificate.NotBefore.ToUniversalTime();
+            }
         }
     }
 }

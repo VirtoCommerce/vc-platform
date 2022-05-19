@@ -77,7 +77,6 @@ namespace VirtoCommerce.Platform.Security.Repositories
 
             builder.Entity<ServerCertificateEntity>().ToTable(nameof(ServerCertificate)).HasKey(x => x.Id);
             builder.Entity<ServerCertificateEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
-            builder.Entity<ServerCertificateEntity>().Property(x => x.StoredInDb);
             builder.Entity<ServerCertificateEntity>().Property(x => x.PublicCertBase64);
             builder.Entity<ServerCertificateEntity>().Property(x => x.PrivateKeyCertBase64);
             builder.Entity<ServerCertificateEntity>().Property(x => x.PrivateKeyCertPassword).HasMaxLength(128);

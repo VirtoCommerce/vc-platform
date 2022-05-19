@@ -12,7 +12,7 @@ using VirtoCommerce.Platform.Security.Repositories;
 namespace VirtoCommerce.Platform.Security.Migrations
 {
     [DbContext(typeof(SecurityDbContext))]
-    [Migration("20220511055355_AddServerCertificate")]
+    [Migration("20220519114833_AddServerCertificate")]
     partial class AddServerCertificate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -498,9 +498,6 @@ namespace VirtoCommerce.Platform.Security.Migrations
 
                     b.Property<string>("PublicCertBase64")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("StoredInDb")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

@@ -835,18 +835,6 @@
             "storefront-cache-reset-successfully": {
                 "title": "Cache reset",
                 "message": "Storefront cache has been reset successfully."
-            },
-            "cert-default": {
-                "title": "Default server certificate should be changed",
-                "message": "It's strongly recommended to change default server security certificate.\nDo you like to generate and install new self-signed server certificate?"
-            },
-            "cert-changed-another-instance": {
-                "title": "Application shutdown/restart needed",
-                "message": "Server security certificate was changed in another platform instance.\nTo apply changes, it is need to restart the application. Depending on hosting service, the application will be restarted automatically or you should do it manually.\nAre you sure you want to shutdown the application now?"
-            },
-            "cert-near-expired": {
-                "title": "Server certificate needs to be replaced",
-                "message": "Server certificate is near to be expired.\nDo you like to generate and install new self-signed server certificate?"
             }
         },
         "commands": {

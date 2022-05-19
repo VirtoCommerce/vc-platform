@@ -15,8 +15,7 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     Id = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     PublicCertBase64 = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PrivateKeyCertBase64 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PrivateKeyCertPassword = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
-                    StoredInDb = table.Column<bool>(type: "bit", nullable: false)
+                    PrivateKeyCertPassword = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true)
                 },
                 constraints: table =>
                 {

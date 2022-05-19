@@ -497,9 +497,6 @@ namespace VirtoCommerce.Platform.Security.Migrations
                     b.Property<string>("PublicCertBase64")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("StoredInDb")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.ToTable("ServerCertificate", (string)null);

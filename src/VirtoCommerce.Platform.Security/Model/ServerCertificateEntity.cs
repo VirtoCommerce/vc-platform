@@ -14,7 +14,6 @@ namespace VirtoCommerce.Platform.Security.Model
         public string PublicCertBase64 { get; set; }
         public string PrivateKeyCertBase64 { get; set; }
         public string PrivateKeyCertPassword { get; set; }
-        public bool StoredInDb { get; set; }
 
         public virtual ServerCertificate ToModel(ServerCertificate certificate)
         {
@@ -22,7 +21,6 @@ namespace VirtoCommerce.Platform.Security.Model
             certificate.PublicCertBytes = Convert.FromBase64String(PublicCertBase64);
             certificate.PrivateKeyCertBytes = Convert.FromBase64String(PrivateKeyCertBase64);
             certificate.PrivateKeyCertPassword = PrivateKeyCertPassword;
-            certificate.StoredInDb = StoredInDb;
             return certificate;
         }
         public virtual ServerCertificateEntity FromModel(ServerCertificate certificate, PrimaryKeyResolvingMap pkMap)
@@ -31,7 +29,6 @@ namespace VirtoCommerce.Platform.Security.Model
             PublicCertBase64 = Convert.ToBase64String(certificate.PublicCertBytes);
             PrivateKeyCertBase64 = Convert.ToBase64String(certificate.PrivateKeyCertBytes);
             PrivateKeyCertPassword = certificate.PrivateKeyCertPassword;
-            StoredInDb = certificate.StoredInDb;
             return this;
         }
 
@@ -41,7 +38,6 @@ namespace VirtoCommerce.Platform.Security.Model
             target.PublicCertBase64 = PublicCertBase64;
             target.PrivateKeyCertBase64 = PrivateKeyCertBase64;
             target.PrivateKeyCertPassword = PrivateKeyCertPassword;
-            target.StoredInDb = StoredInDb;
         }
     }
 }

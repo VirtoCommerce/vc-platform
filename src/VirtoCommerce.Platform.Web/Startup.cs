@@ -75,6 +75,8 @@ namespace VirtoCommerce.Platform.Web
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment WebHostEnvironment { get; }
 
+        public ServerCertificate ServerCertificate { get; set; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -210,12 +212,12 @@ namespace VirtoCommerce.Platform.Web
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.KnownProxies.Clear();
-                options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor;
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor;
             });
 
             // Load server certificate (from DB or file) and register it as a global singleton
             // to allow the platform hosting under the cert
-            var serverCertificate = services.AddServerCertificate(Configuration);
+            ServerCertificate = Configuration.TryLoadCertificate();
 
             //Create backup of token handler before default claim maps are cleared
             var defaultTokenHandler = new JwtSecurityTokenHandler();
@@ -236,7 +238,7 @@ namespace VirtoCommerce.Platform.Web
 
                         X509SecurityKey publicKey = null;
 
-                        var publicCert = new X509Certificate2(serverCertificate.PublicCertBytes);
+                        var publicCert = ServerCertificate.X509Certificate;
                         publicKey = new X509SecurityKey(publicCert);
 
                         options.TokenValidationParameters = new TokenValidationParameters()
@@ -359,11 +361,11 @@ namespace VirtoCommerce.Platform.Web
                     {
                         // https://github.com/dotnet/corefx/blob/release/2.2/Documentation/architecture/cross-platform-cryptography.md
                         // macOS cannot load certificate private keys without a keychain object, which requires writing to disk. Keychains are created automatically for PFX loading, and are deleted when no longer in use. Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
-                        privateKey = new X509Certificate2(serverCertificate.PrivateKeyCertBytes, serverCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet);
+                        privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet);
                     }
                     else
                     {
-                        privateKey = new X509Certificate2(serverCertificate.PrivateKeyCertBytes, serverCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
+                        privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
                     }
                     options.AddSigningCertificate(privateKey);
                     options.AddEncryptionCertificate(privateKey);
@@ -525,6 +527,8 @@ namespace VirtoCommerce.Platform.Web
 
                 // Apply platform migrations
                 app.UsePlatformMigrations();
+
+                app.UpdateServerCertificateIfNeed(ServerCertificate);
 
                 app.UseDbTriggers();
 

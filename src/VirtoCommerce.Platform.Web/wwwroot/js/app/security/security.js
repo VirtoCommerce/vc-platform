@@ -340,64 +340,6 @@ angular.module('platformWebApp')
                 // Prevent transition to workspace if password expired
                 if (authService.isAuthenticated && authService.passwordExpired) {
                     return transition.router.stateService.target('changePasswordDialog');
-                }
-                // Check server certificate info.
-                // Ask the admin to change server cert in case of it is virto default or near to be expired
-                if (authService.isAdministrator) {
-                    authService.getServerCertificateInfo().then(
-                        function (result) {
-                            var restartDialog = {
-                                id: "confirmRestart",
-                                title: "platform.dialogs.app-restart.title",
-                                message: "platform.dialogs.app-restart.message",
-                                callback: function (confirm) {
-                                    if (confirm) {
-                                        //blade.isLoading = true;
-                                        try {
-                                            modules.restart(function () {
-                                            });
-                                        }
-                                        catch (err) {
-                                        }
-                                        finally {
-                                            // delay initial start for 3 seconds
-                                            $timeout(function () { }, 3000).then(function () {
-                                                return waitForRestart(1000);
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (result.data.isChanged) {
-                                // Certificate was changed in another instance. We should restart this instance
-                                restartDialog.title = "platform.dialogs.cert-changed-another-instance.title";
-                                restartDialog.message = "platform.dialogs.cert-changed-another-instance.message";
-                                dialogService.showWarningDialog(restartDialog);
-                            }
-                            else {
-                                if (result.data.isDefaultVirtoSelfSigned && !result.data.isStoredInDb || result.data.isNearToBeExpired) {
-                                    // The certificate should be changed to another, at least self-signed and restart
-                                    var dialog = {
-                                        id: "warnServerCertIsDefaultDialog",
-                                        title: result.data.isNearToBeExpired ? "platform.dialogs.cert-near-expired.title" : "platform.dialogs.cert-default.title",
-                                        message: result.data.isNearToBeExpired ? "platform.dialogs.cert-near-expired.message" : "platform.dialogs.cert-default.message",
-                                        callback: function (confirm) {
-                                            if (confirm) {
-                                                authService.generateNewServerCertificate().then(
-                                                    function (genCertResult) {
-                                                        dialogService.showWarningDialog(restartDialog);
-                                                    });
-                                            }
-                                        }
-                                    }
-                                    dialogService.showWarningDialog(dialog);
-                                } else if (!result.data.isDefaultVirtoSelfSigned && !result.data.isStoredInDb) {
-                                    // The certificate is not virto-default, therefore we should write it to the DB and restart
-
-                                }
-                            }
-                    });
-                }
+                }               
             });
         }]);

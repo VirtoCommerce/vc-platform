@@ -107,9 +107,6 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 emailSender: _emailSenderMock.Object,
                 eventPublisher: _eventPublisherMock.Object,
                 userApiKeyService: _userApiKeyServiceMock.Object,
-                serverCertificate: new Mock<ServerCertificate>().Object,
-                serverCertificateService: new Mock<ICrudService<ServerCertificate>>().Object,
-                configuration: new Mock<IConfiguration>().Object,
                 logger: _logger.Object);
         }
 
