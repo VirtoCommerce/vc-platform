@@ -272,8 +272,8 @@ angular.module('platformWebApp')
         };
     }])
 
-    .run(['$transitions', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService', 'platformWebApp.dialogService', 'platformWebApp.modules', 'platformWebApp.WaitForRestart', '$timeout',
-        function ($transitions, mainMenuService, metaFormsService, widgetService, $state, authService, dialogService, modules, waitForRestart, $timeout) {
+    .run(['$transitions', 'platformWebApp.mainMenuService', 'platformWebApp.metaFormsService', 'platformWebApp.widgetService', '$state', 'platformWebApp.authService',
+        function ($transitions, mainMenuService, metaFormsService, widgetService, $state, authService) {
             //Register module in main menu
             var menuItem = {
                 path: 'configuration/security',
