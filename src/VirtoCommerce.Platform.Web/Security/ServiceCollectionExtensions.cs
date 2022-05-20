@@ -112,7 +112,6 @@ namespace VirtoCommerce.Platform.Web.Security
 
                 certificateService.SaveChangesAsync(new ServerCertificate[] { currentCert }).GetAwaiter().GetResult();
             }
-
         }
     }
 }
