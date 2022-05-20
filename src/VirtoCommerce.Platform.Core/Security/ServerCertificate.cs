@@ -25,8 +25,8 @@ namespace VirtoCommerce.Platform.Core.Security
         public byte[] PrivateKeyCertBytes { get; set; }
         public string PrivateKeyCertPassword { get; set; }
         public bool StoredInDb { get; set; }
-        public string SerialNumber { get; set; } = SerialNumberOfVirtoPredefined;
-        public X509Certificate2 X509Certificate { get; set; }
+        public string SerialNumber { get; private set; } = SerialNumberOfVirtoPredefined;
+        public X509Certificate2 X509Certificate { get; private set; }
         public bool Expired
         {
             get

@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
@@ -72,7 +73,7 @@ namespace VirtoCommerce.Platform.Web.Security
         /// <returns></returns>
         public static ServerCertificate TryLoadCertificate(this IConfiguration configuration)
         {
-            var result = ServerCertificateService.LoadCurrentlySet(configuration);
+            var result = SecurityRepository.LoadCurrentlySetServerCertificate(configuration);
 
             if (result.SerialNumber.EqualsInvariant(ServerCertificate.SerialNumberOfVirtoPredefined) || result.Expired)
             {
@@ -94,13 +95,13 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             var configuration = app.ApplicationServices.GetService<IConfiguration>();
             var certificateService = app.ApplicationServices.GetService<ICrudService<ServerCertificate>>();
-            var possiblyOldCert = ServerCertificateService.LoadCurrentlySet(configuration); // Previously stored cert (possibly old, default or just created by another platform instance)
+            var possiblyOldCert = SecurityRepository.LoadCurrentlySetServerCertificate(configuration); // Previously stored cert (possibly old, default or just created by another platform instance)
             if (!possiblyOldCert.SerialNumber.EqualsInvariant(currentCert.SerialNumber))
             {   // Therefore, currentCert is newly generated and needs to be saved.
                 // But we should check if old cert is stored
                 if (possiblyOldCert.StoredInDb && !possiblyOldCert.Expired)
                 {
-                    throw new PlatformException("The other starting up instance of the platform replaced server certificate. Current instance should be restarted to use new server certificate.");
+                    throw new ServerCertificateReplacedException("The other starting up instance of the platform replaced server certificate. Current instance should be restarted to use new server certificate.");
                 }
 
                 if (!string.IsNullOrEmpty(possiblyOldCert.Id))
