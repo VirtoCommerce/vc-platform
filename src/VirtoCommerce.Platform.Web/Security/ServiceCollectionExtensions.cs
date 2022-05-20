@@ -71,7 +71,7 @@ namespace VirtoCommerce.Platform.Web.Security
         /// </summary>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static ServerCertificate TryLoadCertificate(this IConfiguration configuration)
+        public static ServerCertificate GetServerCertificate(this IConfiguration configuration)
         {
             var result = SecurityRepository.LoadCurrentlySetServerCertificate(configuration);
 
@@ -107,7 +107,7 @@ namespace VirtoCommerce.Platform.Web.Security
                 if (!string.IsNullOrEmpty(possiblyOldCert.Id))
                 {
                     // Delete old certificate in case of one exists (the Id of newly generated certs is null)
-                    certificateService.DeleteAsync(new string[] { possiblyOldCert.Id });
+                    certificateService.DeleteAsync(new string[] { possiblyOldCert.Id }).GetAwaiter().GetResult();
                 }
 
                 certificateService.SaveChangesAsync(new ServerCertificate[] { currentCert }).GetAwaiter().GetResult();

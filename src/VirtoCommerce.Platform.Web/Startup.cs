@@ -217,7 +217,7 @@ namespace VirtoCommerce.Platform.Web
 
             // Load server certificate (from DB or file) and register it as a global singleton
             // to allow the platform hosting under the cert
-            ServerCertificate = Configuration.TryLoadCertificate();
+            ServerCertificate = Configuration.GetServerCertificate();
 
             //Create backup of token handler before default claim maps are cleared
             var defaultTokenHandler = new JwtSecurityTokenHandler();
