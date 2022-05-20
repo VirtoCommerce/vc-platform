@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Core.Security
             get
             {
                 var now = DateTime.UtcNow;
-                return now >= X509Certificate.NotAfter.ToUniversalTime() && now < X509Certificate.NotBefore.ToUniversalTime();
+                return !(now >= X509Certificate.NotBefore.ToUniversalTime() && now < X509Certificate.NotAfter.ToUniversalTime());
             }
         }
         public object Clone()
