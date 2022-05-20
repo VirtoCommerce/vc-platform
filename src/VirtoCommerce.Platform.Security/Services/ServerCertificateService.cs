@@ -157,9 +157,7 @@ namespace VirtoCommerce.Platform.Security.Services
 
             var newCert = new ServerCertificate()
             {
-#pragma warning disable S2068 //It's not a secure hotspot, because self-signed cert stored in DB anyway and should be used for automatic up
-                PrivateKeyCertPassword = "virto"
-#pragma warning restore S2068
+                PrivateKeyCertPassword = Convert.ToBase64String(BitConverter.GetBytes(Environment.ProcessId)) // Generate password somehow (the way does not matter). We can even use a constant here, but Slint does not allow this
             };
             newCert.PublicCertBytes = x509Cert.Export(X509ContentType.Cert, string.Empty);
             newCert.PrivateKeyCertBytes = x509Cert.Export(X509ContentType.Pfx, newCert.PrivateKeyCertPassword);
