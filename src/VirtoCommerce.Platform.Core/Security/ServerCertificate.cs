@@ -25,15 +25,8 @@ namespace VirtoCommerce.Platform.Core.Security
         public byte[] PrivateKeyCertBytes { get; set; }
         public string PrivateKeyCertPassword { get; set; }
         public bool StoredInDb { get; set; }
-
-        public object Clone()
-        {
-            return MemberwiseClone() as ServerCertificate;
-        }
-
         public string SerialNumber { get; set; } = SerialNumberOfVirtoPredefined;
         public X509Certificate2 X509Certificate { get; set; }
-
         public bool Expired
         {
             get
@@ -41,6 +34,10 @@ namespace VirtoCommerce.Platform.Core.Security
                 var now = DateTime.UtcNow;
                 return now >= X509Certificate.NotAfter.ToUniversalTime() && now < X509Certificate.NotBefore.ToUniversalTime();
             }
+        }
+        public object Clone()
+        {
+            return MemberwiseClone() as ServerCertificate;
         }
     }
 }

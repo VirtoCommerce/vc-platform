@@ -360,7 +360,9 @@ namespace VirtoCommerce.Platform.Web
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                     {
                         // https://github.com/dotnet/corefx/blob/release/2.2/Documentation/architecture/cross-platform-cryptography.md
-                        // macOS cannot load certificate private keys without a keychain object, which requires writing to disk. Keychains are created automatically for PFX loading, and are deleted when no longer in use. Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
+                        // macOS cannot load certificate private keys without a keychain object, which requires writing to disk.
+                        // Keychains are created automatically for PFX loading, and are deleted when no longer in use.
+                        // Since the X509KeyStorageFlags.EphemeralKeySet option means that the private key should not be written to disk, asserting that flag on macOS results in a PlatformNotSupportedException.
                         privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet);
                     }
                     else
