@@ -1,11 +1,17 @@
 using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using VirtoCommerce.Platform.Core.ChangeLog;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Exceptions;
+using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Handlers;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
@@ -54,7 +60,58 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton(provider => new LogChangesUserChangedEventHandler(provider.CreateScope().ServiceProvider.GetService<IChangeLogService>()));
             services.AddSingleton(provider => new UserApiKeyActualizeEventHandler(provider.CreateScope().ServiceProvider.GetService<IUserApiKeyService>()));
 
+            services.AddTransient<ICrudService<ServerCertificate>, ServerCertificateService>();
+
             return services;
+        }
+
+        /// <summary>
+        /// Get currently installed certificate from the storage
+        /// or create new self-signed
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        public static ServerCertificate GetServerCertificate(this IConfiguration configuration)
+        {
+            var result = SecurityRepository.LoadCurrentlySetServerCertificate(configuration);
+
+            if (result.SerialNumber.EqualsInvariant(ServerCertificate.SerialNumberOfVirtoPredefined) || result.Expired)
+            {
+                result = ServerCertificateService.CreateSelfSigned();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Save newly generated (if it so) server certificate to the shared storage.
+        /// The call of this method should be under distributed lock between platform instances
+        /// to synchronize old certs checks
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="currentCert"></param>
+        /// <exception cref="PlatformException"></exception>
+        public static void UpdateServerCertificateIfNeed(this IApplicationBuilder app, ServerCertificate currentCert)
+        {
+            var configuration = app.ApplicationServices.GetService<IConfiguration>();
+            var certificateService = app.ApplicationServices.GetService<ICrudService<ServerCertificate>>();
+            var possiblyOldCert = SecurityRepository.LoadCurrentlySetServerCertificate(configuration); // Previously stored cert (possibly old, default or just created by another platform instance)
+            if (!possiblyOldCert.SerialNumber.EqualsInvariant(currentCert.SerialNumber))
+            {   // Therefore, currentCert is newly generated and needs to be saved.
+                // But we should check if old cert is stored
+                if (possiblyOldCert.StoredInDb && !possiblyOldCert.Expired)
+                {
+                    throw new ServerCertificateReplacedException("The other starting up instance of the platform replaced server certificate. Current instance should be restarted to use new server certificate.");
+                }
+
+                if (!string.IsNullOrEmpty(possiblyOldCert.Id))
+                {
+                    // Delete old certificate in case of one exists (the Id of newly generated certs is null)
+                    certificateService.DeleteAsync(new string[] { possiblyOldCert.Id }).GetAwaiter().GetResult();
+                }
+
+                certificateService.SaveChangesAsync(new ServerCertificate[] { currentCert }).GetAwaiter().GetResult();
+            }
         }
     }
 }

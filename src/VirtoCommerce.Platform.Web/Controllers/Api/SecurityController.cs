@@ -622,7 +622,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 user = await UserManager.FindByNameAsync(validatePassword.UserName);
             }
-            
+
             var result = await _passwordValidator.ValidateAsync(UserManager, user, validatePassword.NewPassword);
 
             return Ok(result);
@@ -878,12 +878,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         private void LogUserNotFound(string idOrName)
         {
-            _logger.LogWarning($"User {idOrName} not found.");
+            _logger.LogWarning("User {user} not found.", idOrName);
         }
 
         private void LogUserForbiddenToEdit(string idOrName)
         {
-            _logger.LogWarning($"User {idOrName} is forbidden to edit.");
+            _logger.LogWarning("User {user} is forbidden to edit.", idOrName);
         }
     }
 }

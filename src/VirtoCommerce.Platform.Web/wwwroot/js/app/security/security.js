@@ -335,10 +335,11 @@ angular.module('platformWebApp')
                 template: '$(Platform)/Scripts/app/security/widgets/accountApiWidget.tpl.html',
             }, 'accountDetail');
 
-            // Prevent transition to workspace if password expired
+            
             $transitions.onBefore({ to: 'workspace.**' }, function (transition) {
+                // Prevent transition to workspace if password expired
                 if (authService.isAuthenticated && authService.passwordExpired) {
                     return transition.router.stateService.target('changePasswordDialog');
-                }
+                }               
             });
         }]);
