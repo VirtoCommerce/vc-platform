@@ -8,30 +8,30 @@
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fmaster%2Fazuredeploy.json)
 
-Virto Commerce is an open-source platform for an extensible e-commerce applications.
+Virto Commerce is an open-source platform for an extensible e-commerce applications. 
 
-Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplaces and derived SaaS commerce platforms.
+Complex digital commerce solutions for B2B, B2C or B2B2C businesses, [marketplaces](https://virtocommerce.com/solutions/marketplace) and derived SaaS commerce platforms.
 
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## Principles
 The main principle is to help the development team to focus on the implementation of business features and don’t worry about **CLEAN ARCHITECTURE**.
 
-* **MICROSERVICES** – Every application is built from headless microservices (modules). Applications and microservices are not limited to the composite applications, they can be used for building any other application and hence are functionally independent. 
-* **API-FIRST** – E-commerce service with the right API design. All business logic is accessible via API: Rest or GraphQL. 
-* **CLOUD NATIVE** – E-commerce service is delivered in the SaaS model. Get significant benefits for the business from: 
+* **[MICROSERVICES](https://virtocommerce.com/microservices)** – Every application is built from headless microservices (modules). Applications and microservices are not limited to the composite applications, they can be used for building any other application and hence are functionally independent. 
+* **[API-FIRST](https://virtocommerce.com/api-ecommerce)** – E-commerce service with the right API design. All business logic is accessible via API: Rest or GraphQL. 
+* **[CLOUD NATIVE](https://virtocommerce.com/cloud-ecommerce)** – E-commerce service is delivered in the SaaS model. Get significant benefits for the business from: 
     1. *On-demand* - Use e-commerce service as a whole or its separate components as needed; 
     1. *Scalability* - In the cloud, it can be easily scaled to support peak demand and long-term business growth; 
     1. *Reliability* - Can leverage a solution deployed across multiple data centers and availability zones to maximize up-time and reduce potential revenue losses.
-* **HEADLESS** – Allows an enterprise to support omnichannel journeys across traditional and digital touchpoints as well as new business models.
-* **EXTENSIBILITY** – The API model, persistence model, business logic can be extended as needed without deploying and re-deploying solution. This provides superior business agility and keeps up to date.
+* **[HEADLESS](https://virtocommerce.com/headless-ecommerce)** – Allows an enterprise to support omnichannel journeys across traditional and digital touchpoints as well as new business models.
+* **EXTENSIBILITY & [COMPOSABILITY](https://virtocommerce.com/composable-ecommerce)** – The API model, persistence model, business logic can be extended as needed without deploying and re-deploying solution. This provides superior business agility and keeps up to date.
 
 ## Architecture Overview
 The following diagram illustrates the high-level architecture and main areas of Virto Commerce solutions:
 
 ![Virto Commerce Architecture Reference](docs/media/vc-architecture-reference.png)
 
-**Virto Commerce Platform** - Launcher of e-commerce applications in the public, hybrid and private cloud. 
+**[Virto Commerce Platform](https://virtocommerce.com/b2b-ecommerce-platform)** - Launcher of e-commerce applications in the public, hybrid and private [cloud](https://virtocommerce.com/virto-commerce-cloud). 
 
 **Commerce Applications** - API-based, Modular and Extensible logical set of one or several headless microservices (modules) with focus on the implementation of the business feature, like Digital Catalog, Order Management, Content Management, Marketing, etc.
 
@@ -43,7 +43,7 @@ The following diagram illustrates the high-level architecture and main areas of 
 
 **Admin SPA** - Virto Commerce has an extensible and intuitive admin user interface. It lets you manage data in Commerce Applications for all channels.
 
-**Integration middleware** - Asynchronous integration middleware for declarative integration with Non-Real-time and legacy services.
+**[Integration](https://virtocommerce.com/integrations/key-ecommerce-integrations) middleware** - Asynchronous integration middleware for declarative integration with Non-Real-time and legacy services.
 
 ## Introduction to Virto Commerce
 These Virto Commerce docs help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise solutions. 
