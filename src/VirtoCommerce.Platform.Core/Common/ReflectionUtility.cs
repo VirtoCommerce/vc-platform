@@ -9,6 +9,7 @@ namespace VirtoCommerce.Platform.Core.Common
 {
     public static class ReflectionUtility
     {
+        private static readonly ObjectReferenceComparer _objectReferenceComparer = new ObjectReferenceComparer();
 
         public static IEnumerable<string> GetPropertyNames<T>(params Expression<Func<T, object>>[] propertyExpressions)
         {
@@ -120,49 +121,53 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static T[] GetFlatObjectsListWithInterface<T>(this object obj, List<T> resultList = null)
         {
-            var retVal = new List<T>();
+            resultList ??= new List<T>();
+            var allObjects = new HashSet<object>(_objectReferenceComparer);
+            obj.GetFlatObjectsListWithInterface(resultList, allObjects);
 
-            if (resultList == null)
+            return resultList.ToArray();
+        }
+
+        private static void GetFlatObjectsListWithInterface<T>(this object obj, List<T> resultList, HashSet<object> allObjects)
+        {
+            // Prevent loops
+            if (!allObjects.Add(obj))
             {
-                resultList = new List<T>();
+                return;
             }
-            //Ignore cycling references
-            if (!resultList.Any(x => Object.ReferenceEquals(x, obj)))
+
+            if (obj is T t)
             {
-                var objectType = obj.GetType();
+                resultList.Add(t);
+            }
 
-                if (objectType.GetInterface(typeof(T).Name) != null)
+            var properties = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var property in properties)
+            {
+                // Handle single objects
+                if (typeof(T).IsAssignableFrom(property.PropertyType))
                 {
-                    retVal.Add((T)obj);
-                    resultList.Add((T)obj);
+                    var value = property.GetValue(obj);
+                    value?.GetFlatObjectsListWithInterface(resultList, allObjects);
                 }
-
-                var properties = objectType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-                var objects = properties.Where(x => x.PropertyType.GetInterface(typeof(T).Name) != null)
-                                        .Select(x => (T)x.GetValue(obj)).ToList();
-
-                //Recursive call for single properties
-                retVal.AddRange(objects.Where(x => x != null).SelectMany(x => x.GetFlatObjectsListWithInterface<T>(resultList)));
-
-                //Handle collection and arrays
-                var collections = properties.Where(p => p.GetIndexParameters().Length == 0)
-                                            .Select(x => x.GetValue(obj, null))
-                                            .Where(x => x is IEnumerable && !(x is string))
-                                            .Cast<IEnumerable>();
-
-                foreach (var collection in collections)
+                else if (property.GetIndexParameters().Length == 0)
                 {
-                    foreach (var collectionObject in collection)
+                    var value = property.GetValue(obj);
+
+                    // Handle collections and arrays
+                    if (!(value is string) && value is IEnumerable enumerable)
                     {
-                        if (collectionObject is T)
+                        foreach (var collectionObject in enumerable)
                         {
-                            retVal.AddRange(collectionObject.GetFlatObjectsListWithInterface<T>(resultList));
+                            if (collectionObject is T)
+                            {
+                                collectionObject.GetFlatObjectsListWithInterface(resultList, allObjects);
+                            }
                         }
                     }
                 }
             }
-            return retVal.ToArray();
         }
 
         public static bool IsDictionary(this Type type)
@@ -191,6 +196,25 @@ namespace VirtoCommerce.Platform.Core.Common
                 }
             }
             return false;
+        }
+
+
+        private class ObjectReferenceComparer : IEqualityComparer<object>
+        {
+            public new bool Equals(object x, object y)
+            {
+                return ReferenceEquals(x, y);
+            }
+
+            public int GetHashCode(object obj)
+            {
+                if (obj == null)
+                {
+                    throw new ArgumentNullException(nameof(obj));
+                }
+
+                return obj.GetHashCode();
+            }
         }
     }
 }
