@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Core.Common
         /// </returns>
         public static string GetMD5Hash(this object instance)
         {
-            return instance.GetHash<MD5CryptoServiceProvider>();
+            return ComputeHash(instance, MD5.Create());
         }
 
         /// <summary>
@@ -107,6 +107,11 @@ namespace VirtoCommerce.Platform.Core.Common
                 objType = Nullable.GetUnderlyingType(objType);
             }
             return (T)Convert.ChangeType(obj, objType);
+        }
+
+        public static T CloneTyped<T>(this T instance) where T : ICloneable
+        {
+            return (T)instance.Clone();
         }
     }
 }
