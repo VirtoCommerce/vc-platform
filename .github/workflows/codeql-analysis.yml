@@ -60,11 +60,11 @@ jobs:
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild ${{ matrix.language }}
+    - name: Autobuild csharp
       if: ${{ matrix.language == 'csharp' }}
       run: vc-build Compile
 
-    - name: Autobuild ${{ matrix.language }}
+    - name: Autobuild javascript
       if: ${{ matrix.language == 'javascript' }}
       uses: github/codeql-action/autobuild@v2
 
