@@ -77,7 +77,7 @@ namespace VirtoCommerce.Platform.Core.Common
             return instance.GetHash<SHA1CryptoServiceProvider>();
         }
 
-        private static string ComputeHash<T>(object instance, T cryptoServiceProvider) where T : HashAlgorithm, new()
+        private static string ComputeHash<T>(object instance, T cryptoServiceProvider) where T : HashAlgorithm
         {
             XmlSerializer xmlSerializer = new XmlSerializer(instance.GetType());
 
