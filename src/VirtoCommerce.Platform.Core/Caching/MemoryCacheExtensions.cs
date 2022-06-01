@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Core.Caching
             string keyPrefix,
             IList<string> ids,
             Func<IList<string>, Task<IEnumerable<TItem>>> loadItems,
-            Action<MemoryCacheEntryOptions, string> configureCache)
+            Action<MemoryCacheEntryOptions, string, TItem> configureCache)
             where TItem : IEntity
         {
             ids = ids
@@ -49,8 +49,9 @@ namespace VirtoCommerce.Platform.Core.Caching
 
                             result[id] = memoryCache.GetOrCreateExclusive(cacheKey, options =>
                             {
-                                configureCache(options, id);
-                                return itemsByIds.GetValueSafe(id);
+                                var item = itemsByIds.GetValueSafe(id);
+                                configureCache(options, id, item);
+                                return item;
                             });
                         }
                     }
