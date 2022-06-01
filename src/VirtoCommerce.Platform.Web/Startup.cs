@@ -80,15 +80,14 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-3.1#forward-the-scheme-for-linux-and-non-iis-reverse-proxies
+            // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-6.0
             if (string.Equals(
                 Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
                 "true", StringComparison.OrdinalIgnoreCase))
             {
                 services.Configure<ForwardedHeadersOptions>(options =>
                 {
-                    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-                        ForwardedHeaders.XForwardedProto;
+                    options.ForwardedHeaders = ForwardedHeaders.All;
                     // Only loopback proxies are allowed by default.
                     // Clear that restriction because forwarders are enabled by explicit
                     // configuration.
@@ -204,15 +203,6 @@ namespace VirtoCommerce.Platform.Web
                 options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Subject;
                 options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Name;
                 options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
-            });
-
-            // Support commonly used forwarded headers
-            // X-Forwarded-For - Holds Client IP (optionally port number) across proxies and ends up in HttpContext.Connection.RemoteIpAddress
-            // X-Forwarded-Proto - Holds original scheme (HTTP or HTTPS) even if call traversed proxies and changed and ends up in HttpContext.Request.Scheme
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.KnownProxies.Clear();
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedFor;
             });
 
             // Load server certificate (from DB or file) and register it as a global singleton
