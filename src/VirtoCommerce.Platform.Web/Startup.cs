@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,7 +15,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -80,21 +78,7 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-6.0
-            if (string.Equals(
-                Environment.GetEnvironmentVariable("ASPNETCORE_FORWARDEDHEADERS_ENABLED"),
-                "true", StringComparison.OrdinalIgnoreCase))
-            {
-                services.Configure<ForwardedHeadersOptions>(options =>
-                {
-                    options.ForwardedHeaders = ForwardedHeaders.All;
-                    // Only loopback proxies are allowed by default.
-                    // Clear that restriction because forwarders are enabled by explicit
-                    // configuration.
-                    options.KnownNetworks.Clear();
-                    options.KnownProxies.Clear();
-                });
-            }
+            services.AddForwardedHeaders();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -131,19 +115,19 @@ namespace VirtoCommerce.Platform.Web
                 }
             })
             .AddNewtonsoftJson(options =>
-                {
-                    //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
-                    //we should register this converter globally.
-                    options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
-                    //Next line allow to use polymorph types as parameters in API controller methods
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
-                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    options.SerializerSettings.Formatting = Formatting.None;
-                }
+            {
+                //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
+                //we should register this converter globally.
+                options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
+                //Next line allow to use polymorph types as parameters in API controller methods
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
+                options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                options.SerializerSettings.Formatting = Formatting.None;
+            }
             );
 
             services.AddSingleton(js =>
@@ -215,31 +199,31 @@ namespace VirtoCommerce.Platform.Web
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
             authBuilder.AddJwtBearer(options =>
-                    {
-                        options.Authority = Configuration["Auth:Authority"];
-                        options.Audience = Configuration["Auth:Audience"];
+            {
+                options.Authority = Configuration["Auth:Authority"];
+                options.Audience = Configuration["Auth:Audience"];
 
-                        if (WebHostEnvironment.IsDevelopment())
-                        {
-                            options.RequireHttpsMetadata = false;
-                        }
+                if (WebHostEnvironment.IsDevelopment())
+                {
+                    options.RequireHttpsMetadata = false;
+                }
 
-                        options.IncludeErrorDetails = true;
+                options.IncludeErrorDetails = true;
 
-                        X509SecurityKey publicKey = null;
+                X509SecurityKey publicKey = null;
 
-                        var publicCert = ServerCertificate.X509Certificate;
-                        publicKey = new X509SecurityKey(publicCert);
+                var publicCert = ServerCertificate.X509Certificate;
+                publicKey = new X509SecurityKey(publicCert);
 
-                        options.TokenValidationParameters = new TokenValidationParameters()
-                        {
-                            NameClaimType = OpenIddictConstants.Claims.Subject,
-                            RoleClaimType = OpenIddictConstants.Claims.Role,
-                            ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = publicKey
-                        };
-                    });
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    NameClaimType = OpenIddictConstants.Claims.Subject,
+                    RoleClaimType = OpenIddictConstants.Claims.Role,
+                    ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = publicKey
+                };
+            });
 
             var azureAdSection = Configuration.GetSection("AzureAd");
 
@@ -252,8 +236,6 @@ namespace VirtoCommerce.Platform.Web
 
                 if (options.Enabled)
                 {
-                    //TODO: Need to check how this influence to OpennIddict Reference tokens activated by this line below  AddValidation(options => options.UseReferenceTokens())
-                    //TechDept: Need to upgrade to Microsoft.Identity.Web
                     //https://docs.microsoft.com/en-us/azure/active-directory/develop/microsoft-identity-web
                     authBuilder.AddOpenIdConnect(options.AuthenticationType, options.AuthenticationCaption,
                         openIdConnectOptions =>
@@ -406,9 +388,9 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
-                     {
-                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
-                     })
+                    {
+                        options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
+                    })
                     .ValidateDataAnnotations();
             services.AddModules(mvcBuilder);
 
@@ -436,6 +418,12 @@ namespace VirtoCommerce.Platform.Web
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
         }
+
+
+
+
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
