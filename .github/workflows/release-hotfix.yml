@@ -80,9 +80,9 @@ jobs:
       [build, get-metadata]
     uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.200.9
     with:
-      fullKey: ${{ needs.get-metadata.outputs.packageFullKey }}
-      shortKey: '${{ needs.get-metadata.outputs.packageShortKey }}-'
-      changeLog: '${{ needs.get-metadata.outputs.changeLog }}-'
+      fullKey: ${{ needs.build.outputs.packageFullKey }}
+      shortKey: '${{ needs.build.outputs.packageShortKey }}-'
+      changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
 
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
