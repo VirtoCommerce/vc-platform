@@ -575,6 +575,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 !(await UserManager.IsInRoleAsync(user, PlatformConstants.Security.SystemRoles.Customer)))
             {
                 var token = await UserManager.GeneratePasswordResetTokenAsync(user);
+
+                // ASP.NET Core has OOTB protection from Host Header Injection Attacks: AllowedHosts configuration option
+                // More information https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/host-filtering
+                // Also it can be additionally configured at load-balancer and firewall level. 
                 var callbackUrl = $"{Request.Scheme}://{Request.Host}/#/resetpassword/{user.Id}/{token}";
 
                 await _emailSender.SendEmailAsync(user.Email, "Reset password", callbackUrl.ToString());
