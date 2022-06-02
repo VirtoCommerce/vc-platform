@@ -66,14 +66,12 @@ This data based on best practices and feedback from multiple custom e-commerce s
 |**L**|300|50|15000|
 |**XL**||||
 
-
 |**Size**|**Azure Web Site Price Plan**|**Frontend Azure Web Site Instance Count**|**Backend Azure Web Site Instance Count**|**Azure SQL Price Plan**|**Azure SQL Count**|**Azure Virtual Machine (Elastic Search)**|**ES Cluster**|
 | --- | --- | --- | --- | --- | --- | --- | --- |
 |**S**|**S2**|**1**|**1**|**S2**|**50 DTU**|**A2**|**No**|
 |**M**|**S2**|**2**|**2**|**S3**|**100 DTU**|**A3**|**Yes**|
 |**L**|**S3**|**3**|**5**|**P1**|**Several DB /Elastic Pool**|**A4**|**Yes**|
 |**XL**|**?**|**?**|**?**|**P2**|**Several DB /Elastic Pool**|**A4**|**Yes**|
-
 
 ## Azure Price Calculator
 
