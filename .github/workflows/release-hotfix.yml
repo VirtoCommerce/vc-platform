@@ -1,4 +1,4 @@
-# v3.200.8
+# v3.200.9
 name: Release hotfix
 
 on:
@@ -6,12 +6,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.8
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.9
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.8
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.9
     with:
       uploadPackage: 'true'
       uploadDocker: 'true'
@@ -24,9 +24,8 @@ jobs:
   get-metadata:
     runs-on: ubuntu-latest
     env:
-      ARTIFACT_NAME: 'platform'
       DOCKER_CACHE_KEY: ''
-      DOCKER_TAR: 'platform_image.tar'
+      DOCKER_TAR: 'image.tar'
     outputs:
       dockerShortKey: ${{ steps.cache-key.outputs.dockerShortKey }}
       dockerFullKey: ${{ steps.cache-key.outputs.dockerFullKey }}
@@ -59,12 +58,12 @@ jobs:
       id: cache-key
       with:
         runnerOs: ${{ runner.os  }}
-        artifactName: ${{ env.ARTIFACT_NAME }}
+        artifactName: ${{ github.event.repository.name }}
 
   publish-docker:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.8
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.9
     with:
       fullKey: ${{ needs.get-metadata.outputs.dockerFullKey }}
       shortKey: '${{ needs.get-metadata.outputs.dockerShortKey }}-'
@@ -78,11 +77,11 @@ jobs:
   publish-github-release:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.200.8
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.200.9
     with:
-      fullKey: ${{ needs.get-metadata.outputs.packageFullKey }}
-      shortKey: '${{ needs.get-metadata.outputs.packageShortKey }}-'
-      changeLog: '${{ needs.get-metadata.outputs.changeLog }}-'
+      fullKey: ${{ needs.build.outputs.packageFullKey }}
+      shortKey: '${{ needs.build.outputs.packageShortKey }}-'
+      changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
 
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
