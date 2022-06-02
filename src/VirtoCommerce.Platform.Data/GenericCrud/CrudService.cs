@@ -58,7 +58,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 return null;
             }
 
-            var entities = await GetByIdsAsync(new[] { id }, responseGroup);
+            var entities = await GetAsync(new List<string> { id }, responseGroup);
             return entities.FirstOrDefault();
         }
 
@@ -74,22 +74,8 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             var cacheKeyPrefix = CacheKey.With(GetType(), nameof(GetAsync), responseGroup);
 
             var models = await _platformMemoryCache.GetOrLoadByIdsAsync(cacheKeyPrefix, ids,
-                async missingIds =>
-                {
-                    using var repository = _repositoryFactory();
-
-                    // Disable DBContext change tracking for better performance 
-                    repository.DisableChangesTracking();
-
-                    var entities = await LoadEntities(repository, missingIds, responseGroup);
-
-                    return entities
-                        .Select(x => ProcessModel(responseGroup, x, x.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance())));
-                },
-                (cacheOptions, id) =>
-                {
-                    cacheOptions.AddExpirationToken(CreateCacheToken(id));
-                });
+                missingIds => GetByIdsNoCache(missingIds, responseGroup),
+                ConfigureCache);
 
             return models
                 .Select(x => x.CloneTyped())
@@ -103,6 +89,28 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return await GetAsync(new List<string>(ids), responseGroup);
         }
 
+
+        protected virtual async Task<IEnumerable<TModel>> GetByIdsNoCache(IList<string> ids, string responseGroup)
+        {
+            using var repository = _repositoryFactory();
+
+            // Disable DBContext change tracking for better performance 
+            repository.DisableChangesTracking();
+
+            var entities = await LoadEntities(repository, ids, responseGroup);
+
+            return ProcessModels(entities, responseGroup);
+        }
+
+        protected virtual void ConfigureCache(MemoryCacheEntryOptions cacheOptions, string id, TModel model)
+        {
+            cacheOptions.AddExpirationToken(CreateCacheToken(id));
+        }
+
+        protected virtual IEnumerable<TModel> ProcessModels(IEnumerable<TEntity> entities, string responseGroup)
+        {
+            return entities.Select(x => ProcessModel(responseGroup, x, x.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance())));
+        }
 
         /// <summary>
         /// Post-read processing of the model instance.
