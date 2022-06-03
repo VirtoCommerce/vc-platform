@@ -7,6 +7,16 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "2 June"
+    * Virto Commerce Storefront v6 on .NET 6  & VC Storefront Theme v1 Released
+    * Virto Commerce Performance Tests
+    * Cross-Selling & Up-Selling & Product Relations
+    * Support for Azure active directory multitenant mode 
+    * Released New Authorize.Net Payment Provider Module
+    * Improved JWT tokens certificate generation
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-2-jun-2022/461)
+
 !!! done "12 May"
     * Module for Non-integrative payment methods Released
     * Shipstation integration Released
@@ -26,14 +36,6 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * Vue Storefront Theme Updated
     
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-4-april-2022/448)
-
-!!! done "7 March"
-    * Preview for RMA Module
-    * Add Blog Pages to Sitemap
-    * Virto Commerce CLI 3.1 Released
-    * Vue Storefront Theme MVP Released
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-7-march-2022/445)
    
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), Subscribe on [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and Star on [GitHub](https://github.com/VirtoCommerce).
 
