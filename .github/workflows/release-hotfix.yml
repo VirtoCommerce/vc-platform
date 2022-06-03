@@ -1,4 +1,4 @@
-# v3.200.9
+# v3.200.10
 name: Release hotfix
 
 on:
@@ -6,12 +6,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.9
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.10
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.9
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.10
     with:
       uploadPackage: 'true'
       uploadDocker: 'true'
@@ -53,20 +53,13 @@ jobs:
           echo "ARTIFACT_NAME=${{ steps.artifactVer.outputs.moduleId }}" >> $GITHUB_ENV
         fi;
 
-    - name: Get cache key
-      uses: VirtoCommerce/vc-github-actions/cache-get-key@master
-      id: cache-key
-      with:
-        runnerOs: ${{ runner.os  }}
-        artifactName: ${{ github.event.repository.name }}
-
   publish-docker:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.9
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.10
     with:
-      fullKey: ${{ needs.get-metadata.outputs.dockerFullKey }}
-      shortKey: '${{ needs.get-metadata.outputs.dockerShortKey }}-'
+      fullKey: ${{ needs.build.outputs.dockerFullKey }}
+      shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
       dockerTar: ${{ needs.get-metadata.outputs.dockerTar }}
       publishToDocker: 'true'
     secrets:
@@ -77,10 +70,9 @@ jobs:
   publish-github-release:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.200.9
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.200.10
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
-      shortKey: '${{ needs.build.outputs.packageShortKey }}-'
       changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
 
     secrets:
