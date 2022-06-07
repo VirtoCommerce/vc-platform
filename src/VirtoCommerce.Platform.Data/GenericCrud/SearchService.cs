@@ -78,11 +78,13 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         // - First page is reading (Skip is 0)
                         // - Count in reading result less than Take value.
                         if (criteria.Skip > 0 || result.TotalCount == criteria.Take)
-
                         {
                             needExecuteCount = true;
                         }
-                        result.Results = (await _crudService.GetAsync(ids, criteria.ResponseGroup)).OrderBy(x => ids.IndexOf(x.Id)).ToList();
+
+                        result.Results = ids.Any()
+                            ? (await _crudService.GetAsync(ids, criteria.ResponseGroup)).OrderBy(x => ids.IndexOf(x.Id)).ToList()
+                            : Array.Empty<TModel>();
                     }
 
                     if (needExecuteCount)
