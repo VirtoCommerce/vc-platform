@@ -12,7 +12,7 @@ angular.module('platformWebApp')
     };
 
     $scope.import = function () {
-        if (authService.checkPermission('platform:exportImport:import')) {
+        if (authService.checkPermission('platform:import')) {
             $scope.selectedNodeId = 'import';
 
             var newBlade = {
