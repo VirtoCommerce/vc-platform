@@ -23,7 +23,7 @@ angular.module('platformWebApp')
         });
 
         $scope.canStartProcess = function () {
-            return authService.checkPermission('platform:exportImport:export') && (_.any($scope.exportRequest.modules) || $scope.exportRequest.handleSecurity || $scope.exportRequest.handleSettings);
+            return authService.checkPermission('platform:export') && (_.any($scope.exportRequest.modules) || $scope.exportRequest.handleSecurity || $scope.exportRequest.handleSettings);
         }
 
         $scope.updateModuleSelection = function () {
