@@ -1,4 +1,4 @@
-# v1.1.11
+# v1.1.13
 name: Platform CI
 
 on:
@@ -68,12 +68,17 @@ jobs:
       run: |
         echo "BUILD_DOCKER=true" >> $GITHUB_ENV
 
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'microsoft'
+        java-version: '11'
+
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
-      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0
+      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
