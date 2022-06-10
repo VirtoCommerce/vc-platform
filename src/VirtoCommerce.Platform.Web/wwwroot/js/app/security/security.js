@@ -11,6 +11,7 @@ angular.module('platformWebApp')
                     function ($scope, $window, $translate, authService, externalSignInService, loginResources) {
                         $scope.loginProviders = [];
                         $scope.defaultLoginType = 'Password';
+                        $scope.showPassword = false;
 
                         loginResources.getLoginTypes({}, function (loginTypes) {
                             // filter out inactive
@@ -98,6 +99,10 @@ angular.module('platformWebApp')
                                         }
                                     });
                             };
+
+                            $scope.togglePassword = function() {
+                                $scope.showPassword = !$scope.showPassword;
+                            }
                         });
                     }
                 ]
