@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       incrementVersion:
-        description: 'Increment automatically minor\patch version before release created. If "none" version will not be incremented.'
+        description: 'Increment automatically patch version before release created.'
         required: true
         default: true
         type: boolean
