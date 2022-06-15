@@ -50,7 +50,6 @@ jobs:
       shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
       dockerTar: 'image.tar'
       publishToDocker: 'true'
-      incrementVersion: ${{ inputs.incrementVersion }}
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
       dockerUser: ${{ secrets.DOCKER_USERNAME }}
