@@ -12,33 +12,28 @@ on:
 
 jobs:
   test:
-    needs:
-      [increment-version]
     uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.11
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    needs:
-      [increment-version]
     uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.11
     with:
       uploadPackage: 'true'
       uploadDocker: 'true'
       imageName: 'platform'
       forceVersionSuffix: 'false'
+      incrementVersion: ${{ inputs.incrementVersion }}
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
 
   get-metadata:
-    needs:
-      [increment-version]
     runs-on: ubuntu-latest
     outputs:
       changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -55,6 +50,7 @@ jobs:
       shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
       dockerTar: 'image.tar'
       publishToDocker: 'true'
+      incrementVersion: ${{ inputs.incrementVersion }}
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
       dockerUser: ${{ secrets.DOCKER_USERNAME }}
@@ -73,25 +69,23 @@ jobs:
       nugetKey: ${{ secrets.NUGET_KEY }}
 
   increment-version:
+    needs:
+      [publish-github-release, publish-docker, test]
     if: ${{ github.event.inputs.incrementVersion }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      if: ${{ github.event.inputs.incrementVersion }}
       uses: actions/checkout@v3
 
     - name: Install VirtoCommerce.GlobalTool
-      if: ${{ github.event.inputs.incrementVersion }}
       uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
 
     - name: Setup Git Credentials
-      if: ${{ github.event.inputs.incrementVersion }}
       uses: VirtoCommerce/vc-github-actions/setup-git-credentials-github@master
       with:
         githubToken: ${{ secrets.REPO_TOKEN }}
 
     - name: Increment Version
-      if: ${{ github.event.inputs.incrementVersion }}
       run: |
         vc-build IncrementPatch
         git add ${{ github.workspace }}/Directory.Build.props
