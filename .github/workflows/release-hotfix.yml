@@ -4,8 +4,8 @@ name: Release hotfix
 on:
   workflow_dispatch:
     inputs:
-      incrementVersion:
-        description: 'Increment patch version before release created.'
+      incrementPatch:
+        description: 'Increment patch version.'
         required: true
         default: true
         type: boolean
@@ -23,7 +23,7 @@ jobs:
       uploadDocker: 'true'
       imageName: 'platform'
       forceVersionSuffix: 'false'
-      incrementVersion: ${{ inputs.incrementVersion }}
+      incrementPatch: ${{ inputs.incrementPatch }}
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
 
@@ -63,7 +63,7 @@ jobs:
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
-
+      incrementPatch: ${{ inputs.incrementPatch }}
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
       nugetKey: ${{ secrets.NUGET_KEY }}
