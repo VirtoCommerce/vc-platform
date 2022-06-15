@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       incrementVersion:
-        description: 'Increment automatically patch version before release created.'
+        description: 'Increment patch version before release created.'
         required: true
         default: true
         type: boolean
