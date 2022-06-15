@@ -70,7 +70,7 @@ jobs:
   increment-version:
     needs:
       [publish-github-release, publish-docker, test]
-    if: ${{ github.event.inputs.incrementVersion }}
+    if: ${{ github.event.inputs.incrementPatch }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
