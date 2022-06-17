@@ -46,7 +46,7 @@ angular.module('platformWebApp')
 
                 var packages = {
                     PlatformVersion: blade.currentEntity.platformVersion,
-                    InstalledModules: installedModules
+                    Modules: installedModules
                 }
 
                 var packagesText = JSON.stringify(packages, null, "\t");
