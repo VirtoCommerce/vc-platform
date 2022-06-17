@@ -173,7 +173,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .ToListAsync());
 
                 var validator = new ObjectSettingEntryValidator();
-                foreach (var setting in objectSettings.Where(x => x.ItHasValues))
+                foreach (var setting in objectSettings)
                 {
                     if (!validator.Validate(setting).IsValid)
                     {
