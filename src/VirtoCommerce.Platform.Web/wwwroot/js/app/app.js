@@ -343,6 +343,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
             var moreMenuItem = {
                 path: 'more',
+                icon: 'fa fa-ellipsis-h',
                 title: 'platform.menu.more',
                 headerTemplate: '$(Platform)/Scripts/app/navigation/menu/mainMenu-list-header.tpl.html',
                 contentTemplate: '$(Platform)/Scripts/app/navigation/menu/mainMenu-list-content.tpl.html',
