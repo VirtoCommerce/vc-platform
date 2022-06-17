@@ -45,6 +45,7 @@ angular.module('platformWebApp')
                     });
 
                 var packages = {
+                    ModuleSources: ["https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules_v3.json"],
                     PlatformVersion: blade.currentEntity.platformVersion,
                     Modules: installedModules
                 }
