@@ -172,7 +172,7 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.ShortText,
                     IsDictionary = true,
                     AllowedValues = new string[0],
-                    DefaultValue = "_none", // fake default value to fix dictionary saving
+                    DefaultValue = "_none", // fake default value to fix empty dictionary saving issue
                 };
 
                 public static IEnumerable<SettingDescriptor> AllSettings
