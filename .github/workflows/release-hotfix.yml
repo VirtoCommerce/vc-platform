@@ -23,7 +23,7 @@ jobs:
       uploadDocker: 'true'
       imageName: 'platform'
       forceVersionSuffix: 'false'
-      incrementPatch: ${{ inputs.incrementPatch }}
+      incrementPatch: ${{ github.event.inputs.incrementPatch }}
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
 
@@ -62,7 +62,7 @@ jobs:
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
-      incrementPatch: ${{ inputs.incrementPatch }}
+      incrementPatch: ${{ github.event.inputs.incrementPatch }}
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
       nugetKey: ${{ secrets.NUGET_KEY }}
@@ -70,7 +70,7 @@ jobs:
   increment-version:
     needs:
       [publish-github-release, publish-docker, test]
-    if: ${{ github.event.inputs.incrementPatch }}
+    if: ${{ github.event.inputs.incrementPatch == 'true' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
