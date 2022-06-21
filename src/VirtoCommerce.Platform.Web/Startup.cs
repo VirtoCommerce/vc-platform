@@ -176,8 +176,9 @@ namespace VirtoCommerce.Platform.Web
             });
 
             services.AddIdentity<ApplicationUser, Role>(options => options.Stores.MaxLengthForKeys = 128)
-                    .AddEntityFrameworkStores<SecurityDbContext>()
-                    .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<SecurityDbContext>()
+                .AddDefaultTokenProviders()
+                .AddUserValidator<CustomUserValidator>();
 
             // Configure Identity to use the same JWT claims as OpenIddict instead
             // of the legacy WS-Federation claims it uses by default (ClaimTypes),
