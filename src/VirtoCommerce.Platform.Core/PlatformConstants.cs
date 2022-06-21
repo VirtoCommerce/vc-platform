@@ -171,7 +171,8 @@ namespace VirtoCommerce.Platform.Core
                     GroupName = "Platform|Security",
                     ValueType = SettingValueType.ShortText,
                     IsDictionary = true,
-                    AllowedValues = new string[0]
+                    AllowedValues = new string[0],
+                    DefaultValue = "_none", // fake default value to fix empty dictionary saving issue
                 };
 
                 public static IEnumerable<SettingDescriptor> AllSettings
