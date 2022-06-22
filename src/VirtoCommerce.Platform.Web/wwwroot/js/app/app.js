@@ -1,7 +1,7 @@
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
-    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS',
+    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.urlHelper',
     function ($rootScope, $scope, mainMenuService,
-        i18n, modules, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS) {
+        i18n, modules, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, urlHelper) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -26,6 +26,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             $scope.isAuthenticated = authContext.isAuthenticated;
         });
 
+
         $scope.$on('loginStatusChanged', function (event, authContext) {
             //reset menu to default state
             angular.forEach(mainMenuService.menuItems, function (menuItem) { mainMenuService.resetMenuItemDefaults(menuItem); });
@@ -42,7 +43,15 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             var moduleErrors = "<br/><br/><b>" + x.id + "</b> " + x.version + "<br/>" + x.validationErrors.join("<br/>");
                             $scope.platformError.detail += moduleErrors;
                         });
-                        $state.go('workspace.modularity');
+
+                        var returnUrl = urlHelper.getUrlParameter('ReturnUrl');
+                        if (returnUrl) {
+                            window.location.href = returnUrl;
+                        }
+                        else {
+
+                            $state.go('workspace.modularity');
+                        }
                     }
                 });
 
@@ -298,8 +307,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
             $compileProvider.debugInfoEnabled(false);
         }])
-    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.loginOfBehalfUrlResolver',
-        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, loginOfBehalfUrlResolver) {
+    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.urlHelper',
+        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, loginOfBehalfUrlResolver, urlHelper) {
 
             //Disable animation
             $animate.enabled(false);
@@ -390,7 +399,13 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             }
                         });
                     } else if (!currentState.name || currentState.name === 'loginDialog') {
-                        $state.go('workspace');
+                        var returnUrl = urlHelper.getUrlParameter('ReturnUrl');
+                        if (returnUrl) {
+                            window.location.href = returnUrl;
+                        }
+                        else {
+                            $state.go('workspace');
+                        }
                     }
                 }, 500);
             });

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using OpenIddict.Server.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Authorization;
@@ -49,7 +51,7 @@ namespace VirtoCommerce.Platform.Web.Security.Authorization
                 {
                     resultLookup[permission.Name] = new AuthorizationPolicyBuilder().AddRequirements(new PermissionAuthorizationRequirement(permission.Name))
                     //Use the two schema (JwtBearer and ApiKey)  authentication for permission authorization policies.
-                                                                                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
+                                                                                    .AddAuthenticationSchemes(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme,  ApiKeyAuthenticationOptions.DefaultScheme)
                                                                                     .Build();
                 }
                 return resultLookup;
