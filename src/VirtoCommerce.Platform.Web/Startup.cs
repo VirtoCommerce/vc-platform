@@ -259,8 +259,7 @@ namespace VirtoCommerce.Platform.Web
                              .EnableLogoutEndpointPassthrough()
                              .EnableTokenEndpointPassthrough()
                              .EnableUserinfoEndpointPassthrough()
-                             .EnableStatusCodePagesIntegration()
-                             .DisableTransportSecurityRequirement();
+                             .EnableStatusCodePagesIntegration();
 
                     // Enable the authorization, logout, token and userinfo endpoints.
                     options.SetTokenEndpointUris("/connect/token")
