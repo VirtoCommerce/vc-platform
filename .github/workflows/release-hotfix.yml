@@ -1,4 +1,4 @@
-# v3.200.11
+# v3.200.12
 name: Release hotfix
 
 on:
@@ -12,18 +12,18 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.11
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.12
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.11
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.12
     with:
       uploadPackage: 'true'
       uploadDocker: 'true'
       imageName: 'platform'
       forceVersionSuffix: 'false'
-      incrementPatch: ${{ inputs.incrementPatch }}
+      incrementPatch: ${{ github.event.inputs.incrementPatch }}
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
 
@@ -44,7 +44,7 @@ jobs:
   publish-docker:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.11
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.12
     with:
       fullKey: ${{ needs.build.outputs.dockerFullKey }}
       shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
@@ -58,11 +58,11 @@ jobs:
   publish-github-release:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.200.11
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.200.12
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
-      incrementPatch: ${{ inputs.incrementPatch }}
+      incrementPatch: ${{ github.event.inputs.incrementPatch }}
     secrets:
       envPAT: ${{ secrets.GITHUB_TOKEN }}
       nugetKey: ${{ secrets.NUGET_KEY }}
@@ -70,7 +70,7 @@ jobs:
   increment-version:
     needs:
       [publish-github-release, publish-docker, test]
-    if: ${{ github.event.inputs.incrementPatch }}
+    if: ${{ github.event.inputs.incrementPatch == 'true' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
