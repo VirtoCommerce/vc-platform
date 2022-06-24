@@ -342,16 +342,22 @@ namespace VirtoCommerce.Platform.Web
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
             {
-                options.Events.OnRedirectToLogin = context =>
-                {
-                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    return Task.CompletedTask;
-                };
-                options.Events.OnRedirectToAccessDenied = context =>
-                {
-                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    return Task.CompletedTask;
-                };
+                options.LoginPath = "/";
+                //TODO: Temporary comment return status codes instead of redirection. It is requred for
+                //normal authorization code flow. We should implement  login form as server side view.
+                //This logic is used to handle 401 errors when token is expired to force redirect to angular  to force redirection to angular login form
+                //in case we have server side login form, this logic is no longer needed and can be removed. 
+
+                //options.Events.OnRedirectToLogin = context =>
+                //{
+                //    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                //    return Task.CompletedTask;
+                //};
+                //options.Events.OnRedirectToAccessDenied = context =>
+                //{
+                //    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                //    return Task.CompletedTask;
+                //};
             });
 
             services.AddAuthorization(options =>
