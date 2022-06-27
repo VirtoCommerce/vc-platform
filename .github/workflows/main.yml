@@ -68,6 +68,11 @@ jobs:
       run: |
         echo "BUILD_DOCKER=true" >> $GITHUB_ENV
 
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'microsoft'
+        java-version: '11'
+
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
