@@ -2,6 +2,8 @@ using Microsoft.ApplicationInsights.AspNetCore.TelemetryInitializers;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using VirtoCommerce.Platform.Core.Telemetry;
 
 namespace VirtoCommerce.Platform.Web.Telemetry
 {
@@ -10,9 +12,12 @@ namespace VirtoCommerce.Platform.Web.Telemetry
     /// </summary>
     public class UserTelemetryInitializer : TelemetryInitializerBase
     {
-        public UserTelemetryInitializer(IHttpContextAccessor httpContextAccessor)
+        private readonly IConfiguration _configuration;
+
+        public UserTelemetryInitializer(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
             : base(httpContextAccessor)
         {
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -26,6 +31,17 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             if (platformContext.User?.Identity?.Name != null)
             {
                 telemetry.Context.User.AuthenticatedUserId = platformContext.User.Identity.Name;
+            }
+            var aiVirtoOptionsSection = _configuration.GetSection("VirtoCommerce:ApplicationInsights");
+            var aiSection = aiVirtoOptionsSection.Get<ApplicationInsightsOptions>() ?? new ApplicationInsightsOptions();
+            if(!string.IsNullOrEmpty(aiSection.RoleName))
+            {
+                telemetry.Context.Cloud.RoleName = aiSection.RoleName;
+            }
+
+            if (!string.IsNullOrEmpty(aiSection.RoleInstance))
+            {
+                telemetry.Context.Cloud.RoleInstance = aiSection.RoleInstance;
             }
         }
     }
