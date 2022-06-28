@@ -2,6 +2,8 @@ using Microsoft.ApplicationInsights.AspNetCore.TelemetryInitializers;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core.Telemetry;
 
 namespace VirtoCommerce.Platform.Web.Telemetry
 {
@@ -10,9 +12,12 @@ namespace VirtoCommerce.Platform.Web.Telemetry
     /// </summary>
     public class UserTelemetryInitializer : TelemetryInitializerBase
     {
-        public UserTelemetryInitializer(IHttpContextAccessor httpContextAccessor)
+        private readonly ApplicationInsightsOptions _options;
+
+        public UserTelemetryInitializer(IHttpContextAccessor httpContextAccessor, IOptions<ApplicationInsightsOptions> options)
             : base(httpContextAccessor)
         {
+            _options = options?.Value ?? new ApplicationInsightsOptions();
         }
 
         /// <summary>
@@ -26,6 +31,15 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             if (platformContext.User?.Identity?.Name != null)
             {
                 telemetry.Context.User.AuthenticatedUserId = platformContext.User.Identity.Name;
+            }
+            if(!string.IsNullOrEmpty(_options.RoleName))
+            {
+                telemetry.Context.Cloud.RoleName = _options.RoleName;
+            }
+
+            if (!string.IsNullOrEmpty(_options.RoleInstance))
+            {
+                telemetry.Context.Cloud.RoleInstance = _options.RoleInstance;
             }
         }
     }
