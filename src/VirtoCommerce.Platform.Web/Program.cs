@@ -1,9 +1,9 @@
-using System.Linq;
 using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -44,7 +44,7 @@ namespace VirtoCommerce.Platform.Web
                     services.AddHangfireServer(options =>
                     {
                         var queues = hostingContext.Configuration.GetSection("VirtoCommerce:Hangfire:Queues").Get<string[]>();
-                        if (queues != null && queues.Any())
+                        if (!queues.IsNullOrEmpty())
                         {
                             options.Queues = queues;
                         }
