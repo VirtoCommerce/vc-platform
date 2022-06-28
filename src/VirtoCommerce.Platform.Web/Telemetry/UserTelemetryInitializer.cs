@@ -3,6 +3,7 @@ using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Telemetry;
 
 namespace VirtoCommerce.Platform.Web.Telemetry
@@ -12,12 +13,12 @@ namespace VirtoCommerce.Platform.Web.Telemetry
     /// </summary>
     public class UserTelemetryInitializer : TelemetryInitializerBase
     {
-        private readonly IConfiguration _configuration;
+        private readonly ApplicationInsightsOptions _options;
 
-        public UserTelemetryInitializer(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+        public UserTelemetryInitializer(IHttpContextAccessor httpContextAccessor, IOptions<ApplicationInsightsOptions> options)
             : base(httpContextAccessor)
         {
-            _configuration = configuration;
+            _options = options?.Value ?? new ApplicationInsightsOptions();
         }
 
         /// <summary>
@@ -32,16 +33,14 @@ namespace VirtoCommerce.Platform.Web.Telemetry
             {
                 telemetry.Context.User.AuthenticatedUserId = platformContext.User.Identity.Name;
             }
-            var aiVirtoOptionsSection = _configuration.GetSection("VirtoCommerce:ApplicationInsights");
-            var aiSection = aiVirtoOptionsSection.Get<ApplicationInsightsOptions>() ?? new ApplicationInsightsOptions();
-            if(!string.IsNullOrEmpty(aiSection.RoleName))
+            if(!string.IsNullOrEmpty(_options.RoleName))
             {
-                telemetry.Context.Cloud.RoleName = aiSection.RoleName;
+                telemetry.Context.Cloud.RoleName = _options.RoleName;
             }
 
-            if (!string.IsNullOrEmpty(aiSection.RoleInstance))
+            if (!string.IsNullOrEmpty(_options.RoleInstance))
             {
-                telemetry.Context.Cloud.RoleInstance = aiSection.RoleInstance;
+                telemetry.Context.Cloud.RoleInstance = _options.RoleInstance;
             }
         }
     }
