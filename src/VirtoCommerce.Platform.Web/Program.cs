@@ -45,12 +45,14 @@ namespace VirtoCommerce.Platform.Web
                     // in order to change running hosted services after the app's pipeline, we need to place AddHangfireServer here instead of Startup.
                     services.AddHangfireServer(options =>
                     {
-                        var queues = hostingContext.Configuration.GetSection("VirtoCommerce:Hangfire:Queues").Get<List<string>>();
+                        var queues = hostingContext.Configuration.GetSection("VirtoCommerce:Hangfire:Queues").Get<string[]>();
                         if (!queues.IsNullOrEmpty())
                         {
-                            queues.Add("default");
+                            var queueList = queues.ToList();
 
-                            options.Queues = queues.Select(x => x.ToLower()).Distinct().ToArray();
+                            queueList.Add("default");
+
+                            options.Queues = queueList.Select(x => x.ToLower()).Distinct().ToArray();
                         }
 
                         var workerCount = hostingContext.Configuration.GetValue<int?>("VirtoCommerce:Hangfire:WorkerCount", null);
