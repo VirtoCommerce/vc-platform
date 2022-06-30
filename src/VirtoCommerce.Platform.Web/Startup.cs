@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +24,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -47,6 +49,7 @@ using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
+using VirtoCommerce.Platform.Web.Infrastructure.HealthCheck;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Migrations;
@@ -418,6 +421,11 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
+
+            services.AddHealthChecks()
+                .AddCheck<ModulesHealthChecker>("Modules health",
+                    failureStatus: HealthStatus.Degraded,
+                    tags: new[] { "Modules" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -529,7 +537,15 @@ namespace VirtoCommerce.Platform.Web
                 //Setup SignalR hub
                 endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
 
-                endpoints.MapHealthChecks();
+                endpoints.MapHealthChecks("/healthcheck", new HealthCheckOptions
+                {
+                    ResponseWriter = async (context, report) =>
+                    {
+                        context.Response.ContentType = "application/json; charset=utf-8";
+                        var reportJson = JsonConvert.SerializeObject(report.Entries, Formatting.Indented, new StringEnumConverter());
+                        await context.Response.WriteAsync(reportJson);
+                    }
+                });
             });
 
             //Seed default users
