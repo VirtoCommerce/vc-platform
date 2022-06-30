@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -414,18 +415,16 @@ namespace VirtoCommerce.Platform.Web
             // extra AI module and causes the hight CPU utilization and telemetry data flood on production env.
             services.AddAppInsightsTelemetry(Configuration);
 
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                .AddCheck<ModulesHealthChecker>("Modules health",
+                    failureStatus: HealthStatus.Degraded,
+                    tags: new[] { "Modules" });
 
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
-
-            services.AddHealthChecks()
-                .AddCheck<ModulesHealthChecker>("Modules health",
-                    failureStatus: HealthStatus.Degraded,
-                    tags: new[] { "Modules" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -530,23 +529,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseModules();
             });
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
-
-                //Setup SignalR hub
-                endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
-
-                endpoints.MapHealthChecks("/healthcheck", new HealthCheckOptions
-                {
-                    ResponseWriter = async (context, report) =>
-                    {
-                        context.Response.ContentType = "application/json; charset=utf-8";
-                        var reportJson = JsonConvert.SerializeObject(report.Entries, Formatting.Indented, new StringEnumConverter());
-                        await context.Response.WriteAsync(reportJson);
-                    }
-                });
-            });
+            app.UseEndpoints(SetupEndpoints);
 
             //Seed default users
             app.UseDefaultUsersAsync().GetAwaiter().GetResult();
@@ -566,6 +549,26 @@ namespace VirtoCommerce.Platform.Web
             //The converter is responsible for the materialization of objects, taking into account the information on overriding
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
+        }
+
+        private static void SetupEndpoints(IEndpointRouteBuilder endpoints)
+        {
+            endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            //Setup SignalR hub
+            endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
+
+            endpoints.MapHealthChecks("/healthcheck", new HealthCheckOptions
+            {
+                ResponseWriter = async (context, report) =>
+                {
+                    context.Response.ContentType = "application/json; charset=utf-8";
+
+                    var reportJson =
+                        JsonConvert.SerializeObject(report.Entries, Formatting.Indented, new StringEnumConverter());
+                    await context.Response.WriteAsync(reportJson);
+                }
+            });
         }
     }
 }
