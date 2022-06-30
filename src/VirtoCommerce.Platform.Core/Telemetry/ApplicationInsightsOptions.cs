@@ -25,5 +25,15 @@ namespace VirtoCommerce.Platform.Core.Telemetry
         /// Same as EnableLocalSqlCommandTextInstrumentation
         /// </summary>
         public bool EnableSqlCommandTextInstrumentation { get; set; }
+
+        /// <summary>
+        /// Cloud Role Name
+        /// </summary>
+        public string RoleName { get; set; }
+
+        /// <summary>
+        /// Cloud Role Instance
+        /// </summary>
+        public string RoleInstance { get; set; }
     }
 }
