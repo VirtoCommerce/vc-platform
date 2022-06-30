@@ -418,7 +418,10 @@ namespace VirtoCommerce.Platform.Web
             services.AddHealthChecks()
                 .AddCheck<ModulesHealthChecker>("Modules health",
                     failureStatus: HealthStatus.Degraded,
-                    tags: new[] { "Modules" });
+                    tags: new[] { "Modules" })
+                .AddCheck<CacheHealthChecker>("Cache health",
+                    failureStatus: HealthStatus.Degraded,
+                    tags: new[] { "Cache" });
 
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
