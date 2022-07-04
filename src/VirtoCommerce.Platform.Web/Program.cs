@@ -1,8 +1,11 @@
+using System.Collections.Generic;
+using System.Linq;
 using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -40,7 +43,22 @@ namespace VirtoCommerce.Platform.Web
                     // Hangfire uses the ASP.NET HostedServices to host job background processing tasks.
                     // According to the official documentation https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-3.1&tabs=visual-studio#ihostedservice-interface,
                     // in order to change running hosted services after the app's pipeline, we need to place AddHangfireServer here instead of Startup.
-                    services.AddHangfireServer();
+                    services.AddHangfireServer(options =>
+                    {
+                        var queues = hostingContext.Configuration.GetSection("VirtoCommerce:Hangfire:Queues").Get<List<string>>();
+                        if (!queues.IsNullOrEmpty())
+                        {
+                            queues.Add("default");
+
+                            options.Queues = queues.Select(x => x.ToLower()).Distinct().ToArray();
+                        }
+
+                        var workerCount = hostingContext.Configuration.GetValue<int?>("VirtoCommerce:Hangfire:WorkerCount", null);
+                        if (workerCount != null)
+                        {
+                            options.WorkerCount = workerCount.Value;
+                        }
+                    });
                 }
             });
 
