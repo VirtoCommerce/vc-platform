@@ -13,8 +13,10 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 | Logging | | | Logging settings.
 | | ApplicationInsights.LogLevel.Default | E.g., `Warning` | Minimum severity of log message to be sent to AppInsights
 | ApplicationInsights | | | AplicationInsights service settings
-| | ConnectionString | E.g. `InstrumentationKey={guid};IngestionEndpoint={url}/;LiveEndpoint={url}/` | Copy the connection from the ApplicationInsights admin panel.
+| | ConnectionString | E.g. `InstrumentationKey={guid};IngestionEndpoint={url}/;LiveEndpoint={url}/` | Copy the connection string from the ApplicationInsights admin panel.
 | | SamplingOptions.Processor | E.g. `Adaptive` | Chose `Adaptive` to reduce amount of data to be sent or `Fixed` to get more details.
+| | SamplingOptions.Adaptive | E.g. `{                "MaxTelemetryItemsPerSecond": "5",                "InitialSamplingPercentage": "100",                "MinSamplingPercentage": "0.1",                "MaxSamplingPercentage": "100",                "EvaluationInterval": "00:00:15",                "SamplingPercentageDecreaseTimeout": "00:02:00",                "SamplingPercentageIncreaseTimeout": "00:15:00",                "MovingAverageRatio": "0.25"            }` | Adaptive processor settings
+| | SamplingOptions.Fixed | E.g. `{ "SamplingPercentage": 100 }` | Fixed processor settings
 | VirtoCommerce |  |  | VC Platform system settings
 |  | CountriesFilePath |`"localization/common/countries.json"` | Local path for countries list. By default, includes all the countries in the world.
 |  | CountryRegionsFilePath |`"localization/common/countriesRegions.json"` | Local path for countries' regions list. By default, includes the states of USA and regions of Canada.
