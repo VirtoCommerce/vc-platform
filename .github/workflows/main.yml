@@ -251,6 +251,8 @@ jobs:
       CLIENT_ID: ${{secrets.CLIENT_ID}}
       CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      ARGO_SERVER: 'argo.govirto.com'
+      SLEEP_TIME: '5m'
     steps:
 
     - name: Set deployment environment
@@ -288,20 +290,19 @@ jobs:
         forceCommit: 'true'
         cmPath: ${{ steps.deployConfig.outputs.cmPath }}
 
-    - name: Wait for environment is up
-      shell: pwsh
-      timeout-minutes: 15
-      run: |
-        do {
-          Start-Sleep -s 15
-          $statusBage = (Invoke-WebRequest -Uri "https://argo.govirto.com/api/badge?name=${{ steps.deployConfig.outputs.deployAppName }}").Content
+    - name: Sleep for ${{ env.SLEEP_TIME }} (Wait for environment is up)
+      run: sleep ${{ env.SLEEP_TIME }}
+      shell: bash
 
-          $syncedAndHealthy = $statusBage.Contains('>Healthy<') -and $statusBage.Contains('>Synced<')
-          if (-not $syncedAndHealthy) {
-            Write-Host "Sync pending..."
-          }
-        }
-        while (-not $syncedAndHealthy)
+    - name: Check environment is up
+      uses: VirtoCommerce/vc-github-actions/vc-argocd-cli@master
+      timeout-minutes: 10
+      id: argocd-cli
+      with:
+        server: ${{env.ARGO_SERVER}}
+        username: ${{ secrets.ARGOCD_LOGIN }}
+        password: ${{ secrets.ARGOCD_PASSWORD }}
+        command: app wait ${{ steps.deployConfig.outputs.deployAppName }}
 
     - name: DEPLOY_STATE::successful
       if: success()
