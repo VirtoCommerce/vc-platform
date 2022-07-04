@@ -6,7 +6,7 @@ using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
 {
-    public class ModulesHealthChecker : IHealthCheck
+    public sealed class ModulesHealthChecker : IHealthCheck
     {
         private readonly ILocalModuleCatalog _localModuleCatalog;
 
@@ -17,24 +17,21 @@ namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
 
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var errorModules = _localModuleCatalog.Modules
+            var errorsDictionary = _localModuleCatalog.Modules
                 .OfType<ManifestModuleInfo>()
                 .Where(x => x.Errors.Any())
-                .ToArray();
+                .ToDictionary(
+                    x => x.Id,
+                    x => new ModulesHealthReportRecord
+                    {
+                        Title = x.Title,
+                        Version = x.Version.ToString(),
+                        Errors = x.Errors.ToArray()
+                    } as object);
 
-            if (errorModules.Any())
+            if (errorsDictionary.Any())
             {
-                var errorsDictionary = errorModules
-                    .ToDictionary(
-                        x => x.Id,
-                        x => new ModulesHealthReportRecord
-                        {
-                            Title = x.Title,
-                            Version = x.Version.ToString(),
-                            Errors = x.Errors.ToArray()
-                        } as object);
-
-                return Task.FromResult(HealthCheckResult.Degraded("Some modules have errors", null, errorsDictionary));
+                return Task.FromResult(HealthCheckResult.Degraded("Some modules have errors", exception: null, errorsDictionary));
             }
 
             return Task.FromResult(HealthCheckResult.Healthy("All modules are loaded"));

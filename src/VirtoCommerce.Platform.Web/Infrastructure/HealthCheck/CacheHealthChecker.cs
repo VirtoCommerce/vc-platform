@@ -6,7 +6,7 @@ using VirtoCommerce.Platform.Core.Caching;
 
 namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
 {
-    public class CacheHealthChecker : IHealthCheck
+    public sealed class CacheHealthChecker : IHealthCheck
     {
         private readonly IPlatformMemoryCache _memoryCache;
 
@@ -17,9 +17,9 @@ namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
 
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            if ((_memoryCache as PlatformMemoryCache)?.CacheEnabled ?? false)
+            if (!(_memoryCache as PlatformMemoryCache)?.CacheEnabled ?? false)
             {
-                return Task.FromResult(HealthCheckResult.Degraded("Cache is off"));
+                return Task.FromResult(HealthCheckResult.Unhealthy("Cache is off"));
             }
             
             return Task.FromResult(HealthCheckResult.Healthy("Cache is active"));

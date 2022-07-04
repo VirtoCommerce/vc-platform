@@ -420,7 +420,7 @@ namespace VirtoCommerce.Platform.Web
                     failureStatus: HealthStatus.Degraded,
                     tags: new[] { "Modules" })
                 .AddCheck<CacheHealthChecker>("Cache health",
-                    failureStatus: HealthStatus.Degraded,
+                    failureStatus: HealthStatus.Unhealthy,
                     tags: new[] { "Cache" });
 
             // Add login page UI options
