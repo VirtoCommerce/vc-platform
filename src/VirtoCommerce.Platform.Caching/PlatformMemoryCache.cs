@@ -47,7 +47,7 @@ namespace VirtoCommerce.Platform.Caching
         }
 
 
-        protected bool CacheEnabled { get; set; }
+        public bool CacheEnabled { get; protected set; }
 
         protected TimeSpan? AbsoluteExpiration { get; set; }
 
