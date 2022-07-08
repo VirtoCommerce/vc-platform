@@ -561,7 +561,7 @@ namespace VirtoCommerce.Platform.Web
             //Setup SignalR hub
             endpoints.MapHub<PushNotificationHub>("/pushNotificationHub");
 
-            endpoints.MapHealthChecks("/healthcheck", new HealthCheckOptions
+            endpoints.MapHealthChecks("/health", new HealthCheckOptions
             {
                 ResponseWriter = async (context, report) =>
                 {
