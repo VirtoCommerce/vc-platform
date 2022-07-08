@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.Console;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             {
                 var storage = new SqlServerStorage(configuration.GetConnectionString("VirtoCommerce"), hangfireOptions.SqlServerStorageOptions);
                 hangfireGlobalConfiguration.UseStorage(storage);
+                hangfireGlobalConfiguration.UseConsole();
             }
 
             appBuilder.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });
