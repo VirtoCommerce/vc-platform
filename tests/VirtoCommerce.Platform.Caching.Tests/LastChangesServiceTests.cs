@@ -3,6 +3,7 @@ using System.Threading;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.ChangeLog;
+using VirtoCommerce.Testing;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Caching.Tests
@@ -21,13 +22,16 @@ namespace VirtoCommerce.Platform.Caching.Tests
         {
         }
 
-        [Fact(Skip = "broken test")] // Need to rewrite all this class and move it to another project
+        [Theory]
+        [Repeat(10000)]
         public void RepeatableRead()
         {
+            // Arrange
             ILastChangesService lastChangesService = new LastChangesService(GetPlatformMemoryCache());
             var firstEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_firstEntity);
             var secondEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_secondEntity);
 
+            // Act
             TrueSmallestDelay();
 
             // Next reads should return the same value
@@ -35,17 +39,21 @@ namespace VirtoCommerce.Platform.Caching.Tests
             var firstEntitySecondAttempt = lastChangesService.GetLastModifiedDate(_firstEntity);
             var secondEntitySecondAttempt = lastChangesService.GetLastModifiedDate(_secondEntity);
 
+            // Assert
             Assert.Equal(firstEntityFirstAttempt, firstEntitySecondAttempt);
             Assert.Equal(secondEntityFirstAttempt, secondEntitySecondAttempt);
         }
 
-        [Fact(Skip = "broken test")]
+        [Theory]
+        [Repeat(10000)]
         public void Reset()
         {
+            // Arrange
             ILastChangesService lastChangesService = new LastChangesService(GetPlatformMemoryCache());
             var firstEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_firstEntity);
             var secondEntityFirstAttempt = lastChangesService.GetLastModifiedDate(_secondEntity);
 
+            // Act
             TrueSmallestDelay();
             lastChangesService.Reset(_secondEntity);
 
@@ -55,11 +63,13 @@ namespace VirtoCommerce.Platform.Caching.Tests
             var firstEntitySecondAttempt = lastChangesService.GetLastModifiedDate(_firstEntity);
             var secondEntitySecondAttempt = lastChangesService.GetLastModifiedDate(_secondEntity);
 
+            // Assert
             Assert.Equal(firstEntityFirstAttempt, firstEntitySecondAttempt);
             Assert.NotEqual(secondEntityFirstAttempt, secondEntitySecondAttempt);
         }
 
-        [Fact]
+        [Theory]
+        [Repeat(10000)]
         public void ResetDatesForBaseEntityTypes()
         {
             // Arrange
