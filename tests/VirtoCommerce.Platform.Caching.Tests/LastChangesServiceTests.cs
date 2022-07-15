@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Theory]
-        [Repeat(10000)]
+        [Repeat(100)]
         public void RepeatableRead()
         {
             // Arrange
@@ -44,7 +44,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Theory]
-        [Repeat(10000)]
+        [Repeat(100)]
         public void Reset()
         {
             // Arrange
@@ -68,7 +68,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Theory]
-        [Repeat(10000)]
+        [Repeat(100)]
         public void ResetDatesForBaseEntityTypes()
         {
             // Arrange

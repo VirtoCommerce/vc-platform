@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
-            return Enumerable.Repeat<object[]>(Array.Empty<object>(), _count);
+            return Enumerable.Repeat(Array.Empty<object>(), _count);
         }
     }
 }
