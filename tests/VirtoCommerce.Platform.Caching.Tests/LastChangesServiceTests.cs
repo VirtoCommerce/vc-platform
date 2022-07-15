@@ -3,7 +3,6 @@ using System.Threading;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.ChangeLog;
-using VirtoCommerce.Testing;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Caching.Tests

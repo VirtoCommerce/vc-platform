@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Xunit.Sdk;
 
-namespace VirtoCommerce.Testing
+namespace VirtoCommerce.Platform.Caching.Tests
 {
     public class RepeatAttribute : DataAttribute
     {
