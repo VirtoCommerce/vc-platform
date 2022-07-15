@@ -70,7 +70,7 @@ function ($scope, accounts, dialogService, uiGridHelper, bladeNavigationService,
                 bladeNavigationService.closeChildrenBlades(blade, function () {
                     var newBlade = {
                         id: 'listItemChild',
-                        currentEntity: { roles: [], userType: 'Manager' },
+                        currentEntity: { roles: [], userType: 'Customer' },
                         title: 'platform.blades.account-detail.title-new',
                         subtitle: blade.subtitle,
                         controller: 'platformWebApp.newAccountWizardController',

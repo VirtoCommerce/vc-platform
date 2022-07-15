@@ -92,7 +92,7 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.ShortText,
                     IsDictionary = true,
                     AllowedValues = Enum.GetNames(typeof(UserType)),
-                    DefaultValue = UserType.Manager
+                    DefaultValue = UserType.Customer
                 };
 
                 public static readonly SettingDescriptor EnablePruneExpiredTokensJob = new SettingDescriptor
