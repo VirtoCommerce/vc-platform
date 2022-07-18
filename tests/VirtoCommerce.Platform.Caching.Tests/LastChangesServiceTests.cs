@@ -21,8 +21,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         {
         }
 
-        [Theory]
-        [Repeat(100)]
+        [Fact]
         public void RepeatableRead()
         {
             // Arrange
@@ -43,8 +42,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             Assert.Equal(secondEntityFirstAttempt, secondEntitySecondAttempt);
         }
 
-        [Theory]
-        [Repeat(100)]
+        [Fact]
         public void Reset()
         {
             // Arrange
@@ -67,8 +65,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
             Assert.NotEqual(secondEntityFirstAttempt, secondEntitySecondAttempt);
         }
 
-        [Theory]
-        [Repeat(100)]
+        [Fact]
         public void ResetDatesForBaseEntityTypes()
         {
             // Arrange
