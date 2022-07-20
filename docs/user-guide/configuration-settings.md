@@ -78,6 +78,8 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | PatternUrl | | Login page background pattern URI. If set takes priority over the preset.
 |  | Preset | `demo` | Login page background preset name. If set searches the preset from the Presets list and applies BackgroundUrl and PatternUrl from it.
 |  | Presets | E.g.,<br>[{ "Name": "demo", "BackgroundUrl": "images/login_background.png", "PatternUrl": "/images/pattern-demo.svg" }, { "Name": "prod", "BackgroundUrl": "", "PatternUrl": "/images/pattern-live.svg" }] | A list of background Presets.
+| Auth | | | Platfom authencification parameters
+|  | ConnectionString | E.g. `Data Source=(local);Initial Catalog=VirtoCommerce3;Persist Security Info=True;User ID=virto;Password=virto; MultipleActiveResultSets=True;Connect Timeout=30` | Optional connection string to the authentification database. If it is not provided, security tables will be placed in the main `VirtoCommerce` database.
 
 
 **_Note:_** Each setting is optional, if it's not marked as **Required.**
