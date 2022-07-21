@@ -1,10 +1,10 @@
 # Configuration
-VC Platform is ASP&#46;NET Core application, and it's configurable as described in [Configuration in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1).
+VC Platform is an ASP&#46;NET Core application, and it can be configured as described in [Configuration in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1).
 
-## Configuration settings
-The configuration keys are hierarchical. This structure is most convenient to manage in _appsettings.json_ file:
+## Configuration Settings
+The configuration keys are hierarchical. This structure is most convenient to manage the _appsettings.json_ file:
 
-| Top Configuration node | Child node(s) | Default OR sample value  | Description  |
+| Top Configuration Node | Child Node(s) | Default or Sample Value  | Description  |
 | ---------------------- | ------------- | ------------------------ | ------------ |
 | ConnectionStrings    |  |  | **Required.** Connection strings for VC Platform and modules.
 |  | VirtoCommerce | E.g., `Data Source=(local);Initial Catalog=VirtoCommerce3;Persist Security Info=True;User ID=virto;Password=virto; MultipleActiveResultSets=True;Connect Timeout=30` | **Required.** VC Platform system connection string to SQL Server DB. VC modules would revert to this connection string, if specific connection string wasn't defined.                          |
@@ -78,26 +78,31 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | PatternUrl | | Login page background pattern URI. If set takes priority over the preset.
 |  | Preset | `demo` | Login page background preset name. If set searches the preset from the Presets list and applies BackgroundUrl and PatternUrl from it.
 |  | Presets | E.g.,<br>[{ "Name": "demo", "BackgroundUrl": "images/login_background.png", "PatternUrl": "/images/pattern-demo.svg" }, { "Name": "prod", "BackgroundUrl": "", "PatternUrl": "/images/pattern-live.svg" }] | A list of background Presets.
+| Auth | | | Platfom authencification parameters
+|  | ConnectionString | E.g. `Data Source=(local);Initial Catalog=VirtoCommerce3;Persist Security Info=True;User ID=virto;Password=virto; MultipleActiveResultSets=True;Connect Timeout=30` | This is an optional connection string to the authentification database. In case it is not provided, the security tables will be placed into the main `VirtoCommerce` database.
 
 
-**_Note:_** Each setting is optional, if it's not marked as **Required.**
+**_Note:_** Each setting mentioned above is optional unless marked **Required**.
 
-## Hierarchical keys
+## Hierarchical Keys
+
 * Within the Configuration API, a colon separator (`:`) works on all platforms.
+
 * In environment variables, a colon separator may not work on all platforms. A double underscore, `__`, is supported by all platforms and is automatically converted into a colon `:`.
+
 * In Azure Key Vault, hierarchical keys use `--` as a separator. The Azure Key Vault configuration provider automatically replaces `--` with a `:` when the secrets are loaded into the app's configuration.
 
 ![Configure using appsettings.json file](../media/configure-file.png "Configure using appsettings.json file")
 
-_Configuring ElasticSearch on localhost in **appsettings.json** file._
+_Configuring ElasticSearch on localhost in the `appsettings.json` file_
 
 ![Environment variables (docker)](../media/configure-docker.png "Configure using environment variables (docker)")
 
-_Configuring "**VirtoCommerce**" ConnectionString and other settings trough **environment variables** in docker-compose.yml file._
+_Configuring the `VirtoCommerce` connection string and other settings trough **environment variables** in the `docker-compose.yml` file_
 
 ![Application settings in Azure](../media/configure-azure.png "Configure trough Application settings in Azure")
 
-_Configuring "**AzureSearch**" and other settings trough **Application settings** in **Azure**._
+_Configuring `AzureSearch` and other settings trough **Application settings** in **Azure**_
 
 
 Check [ASP.NET Core Configuration keys and values](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-3.1#configuration-keys-and-values) for more details.
