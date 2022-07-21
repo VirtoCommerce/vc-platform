@@ -41,8 +41,11 @@
             </div>
 
             <div class="blade-t" ng-class="{'__secondary': blade.subtitle}">
-                <i class="blade-t_ico" ng-class="blade.headIcon ? blade.headIcon : 'fa fa-folder'">
+                <i class="blade-t_ico" ng-if="!blade.currentEntity.iconUrl" ng-class="blade.headIcon ? blade.headIcon : 'fa fa-folder'">
                     <i></i>
+                </i>
+                <i class="blade-t_ico" ng-if="blade.currentEntity.iconUrl">
+                    <img class="title-icon" ng-src="{{ blade.currentEntity.iconUrl }}">
                 </i>
                 <p class="blade-t_head">{{ blade.title | translate: blade.titleValues }}</p>
                 <p class="blade-t_subhead">{{ blade.subtitle | translate: blade.subtitleValues }}</p>
