@@ -7,7 +7,7 @@
             {{group.title | translate}}
         </div>
         <ul class="list __sub" ng-repeat-end>
-            <li class="list-item" ng-class="{'__animated': menuItem.isAnimated}" ng-repeat="menuItem in groupItems"
+            <li class="list-item" ng-class="{'__animated': menuItem.isAnimated}" ng-repeat="menuItem in groupItems | orderBy: 'title | translate'"
                 ng-include="'listItemTemplate.html'" tabindex="1" ng-click="selectItem(menuItem)"
                 va-permission="{{menuItem.permission}}"></li>
         </ul>
@@ -17,7 +17,7 @@
         va-favorites>
         <li class="list-item" ng-class="{'__animated': menuItem.isAnimated}"
             ng-init="menuItem = (menu.items | filter: { path: item.path })[0]"
-            ng-repeat="item in searchItems | filter: { title: searchText.value }" ng-include="'listItemTemplate.html'"
+            ng-repeat="item in searchItems | filter: { title: searchText.value } | orderBy: 'title'" ng-include="'listItemTemplate.html'"
             ng-click="selectItem(menuItem)" tabindex="1" va-permission="{{menuItem.permission}}">
         </li>
     </ul>
