@@ -19,7 +19,8 @@ namespace VirtoCommerce.Platform.Caching
             {
                 throw new ArgumentNullException(nameof(entities));
             }
-            return CreateChangeToken((IEnumerable<T>) entities.Select(x => x.Id));
+
+            return CreateChangeToken(entities.Select(x => x.Id));
         }
 
         public static IChangeToken CreateChangeToken(IEnumerable<string> entityIds)
@@ -34,6 +35,7 @@ namespace VirtoCommerce.Platform.Caching
             {
                 changeTokens.Add(CreateChangeTokenForKey(entityId));
             }
+
             return new CompositeChangeToken(changeTokens);
         }
     }
