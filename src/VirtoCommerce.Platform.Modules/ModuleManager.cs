@@ -24,6 +24,7 @@ namespace VirtoCommerce.Platform.Modules
         /// </summary>
         /// <param name="moduleInitializer">Service used for initialization of modules.</param>
         /// <param name="moduleCatalog">Catalog that enumerates the modules to be loaded and initialized.</param>
+        /// <param name="assemblyResolver"></param>
         /// <param name="loggerFacade">Logger used during the load and initialization of modules.</param>
         public ModuleManager(IModuleInitializer moduleInitializer, IModuleCatalog moduleCatalog, IAssemblyResolver assemblyResolver, ILogger<ModuleManager> loggerFacade)
         {
@@ -90,7 +91,7 @@ namespace VirtoCommerce.Platform.Modules
             IEnumerable<ModuleInfo> module = this.ModuleCatalog.Modules.Where(m => m.ModuleName == moduleName);
             if (module == null || module.Count() != 1)
             {
-                throw new ModuleNotFoundException(moduleName, $"Module { moduleName } was not found in the catalog.");
+                throw new ModuleNotFoundException(moduleName, $"Module {moduleName} was not found in the catalog.");
             }
 
             IEnumerable<ModuleInfo> modulesToLoad = this.ModuleCatalog.CompleteListWithDependencies(module);
@@ -274,11 +275,11 @@ namespace VirtoCommerce.Platform.Modules
         }
 
         /// <summary>
-        /// Handles any exception occurred in the module typeloading process,
-        /// logs the error using the <see cref="ILog"/> and throws a <see cref="ModuleTypeLoadingException"/>.
+        /// Handles any exception occurred in the module type loading process,
+        /// logs the error using the <see cref="ILogger"/> and throws a <see cref="ModuleTypeLoadingException"/>.
         /// This method can be overridden to provide a different behavior. 
         /// </summary>
-        /// <param name="moduleInfo">The module metadata where the error happenened.</param>
+        /// <param name="moduleInfo">The module metadata where the error happened.</param>
         /// <param name="exception">The exception thrown that is the cause of the current error.</param>
         /// <exception cref="ModuleTypeLoadingException"></exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "1")]

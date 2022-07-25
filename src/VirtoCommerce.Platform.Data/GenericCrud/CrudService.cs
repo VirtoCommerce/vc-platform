@@ -301,7 +301,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         /// <summary>
         /// Create cache region.
-        /// Default implementation creates <see cref="GenericCrudCachingRegion<TModel>"/>.
+        /// Default implementation creates <see cref="GenericCachingRegion&lt;TModel&gt;"/>.
         /// Can be overridden to create some different region.
         /// </summary>
         /// <param name="ids"></param>
@@ -319,7 +319,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         /// <summary>
         /// Clear the cache.
-        /// Default implementation expires <see cref="GenericSearchCacheRegion<TModel>"/> region and <see cref="GenericCrudCachingRegion<TModel>"/> regions for every entity
+        /// Default implementation expires <see cref="GenericSearchCachingRegion&lt;TModel&gt;"/> region and <see cref="GenericCachingRegion&lt;TModel&gt;"/> regions for every entity
         /// Can be overridden to expire different regions/tokens.
         /// </summary>
         /// <param name="models"></param>

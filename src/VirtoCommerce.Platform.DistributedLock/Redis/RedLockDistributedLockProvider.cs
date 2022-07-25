@@ -21,11 +21,12 @@ namespace VirtoCommerce.Platform.DistributedLock
         /// Construct the provider
         /// </summary>
         /// <param name="redisConnMultiplexer">Connection multiplexer pointing to the Redis server, used for locking</param>
-        /// <param name="_options">Total time to wait until the lock is available</param>        
-        public RedLockDistributedLockProvider(IConnectionMultiplexer redisConnMultiplexer, IOptions<DistributedLockOptions> _options, ILogger<RedLockDistributedLockProvider> logger)
+        /// <param name="options">Total time to wait until the lock is available</param>
+        /// <param name="logger"></param>        
+        public RedLockDistributedLockProvider(IConnectionMultiplexer redisConnMultiplexer, IOptions<DistributedLockOptions> options, ILogger<RedLockDistributedLockProvider> logger)
         {
             _redisConnMultiplexer = redisConnMultiplexer;
-            _waitTime = _options.Value.WaitTime;
+            _waitTime = options.Value.WaitTime;
             _logger = logger;
         }
 

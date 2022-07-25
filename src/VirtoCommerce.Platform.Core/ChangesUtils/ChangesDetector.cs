@@ -18,7 +18,7 @@ namespace VirtoCommerce.Platform.Core.Utils.ChangeDetector
         /// <summary>
         /// Gather changes info for objects by properties, defined in native type of objects.
         /// Comparable objects should have equal type.
-        /// Properties to compare should be annotated with <see cref="DetectChangesAttribute Attribute"/>.
+        /// Properties to compare should be annotated with <see cref="DetectChangesAttribute"/> Attribute.
         /// </summary>
         /// <param name="newObj">An object</param>
         /// <param name="oldObj">An object compare to</param>
@@ -38,11 +38,12 @@ namespace VirtoCommerce.Platform.Core.Utils.ChangeDetector
 
         /// <summary>
         /// Gather changes info for objects by properties, defined in type objType.
-        /// Properties to compare should be annotated with <see cref="DetectChangesAttribute Attribute"/>.
+        /// Properties to compare should be annotated with <see cref="DetectChangesAttribute"/> Attribute.
         /// </summary>        
         /// <param name="newObj">An object</param>
         /// <param name="oldObj">An object compare to</param>
         /// <param name="objType">Type which properties should be used to compare</param>
+        /// <param name="inherit"></param>
         /// <returns></returns>
         public static ListDictionary<string, string> Gather(object newObj, object oldObj, Type objType, bool inherit = true)
         {
