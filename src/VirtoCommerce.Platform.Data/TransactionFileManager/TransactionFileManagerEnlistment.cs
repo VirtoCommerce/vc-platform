@@ -9,7 +9,7 @@ namespace VirtoCommerce.Platform.Data.TransactionFileManager
     {
         private readonly List<IRollbackableOperation> _journal = new List<IRollbackableOperation>();
 
-        /// <summary>Initializes a new instance of the <see cref="TxEnlistment"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="TransactionFileManagerEnlistment"/> class.</summary>
         /// <param name="tx">The Transaction.</param>
         public TransactionFileManagerEnlistment(Transaction tx)
         {

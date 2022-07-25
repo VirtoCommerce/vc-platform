@@ -22,6 +22,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes#detectchanges-honors-store-generated-key-values
         /// </summary>
         /// <param name="repository"></param>
+        /// <param name="entity"></param>
         public static void TrackModifiedAsAddedForNewChildEntities(this IRepository repository, IEntity entity)
         {
             if (repository.UnitOfWork is DbContextUnitOfWork dbContextUoW)
@@ -37,7 +38,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
                             {
                                 dbContextUoW.DbContext.Add(newItem);
                             }
-                        }                      
+                        }
                     };
                 }
             }

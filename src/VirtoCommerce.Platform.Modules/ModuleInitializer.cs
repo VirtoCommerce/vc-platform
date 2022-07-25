@@ -25,6 +25,9 @@ namespace VirtoCommerce.Platform.Modules
         /// Initializes a new instance of <see cref="ModuleInitializer"/>.
         /// </summary>
         /// <param name="loggerFacade">The logger to use.</param>
+        /// <param name="serviceCollection"></param>
+        /// <param name="configuration"></param>
+        /// <param name="hostingEnvironment"></param>
         public ModuleInitializer(
             ILogger<ModuleInitializer> loggerFacade,
             IServiceCollection serviceCollection,
@@ -92,7 +95,7 @@ namespace VirtoCommerce.Platform.Modules
 
         /// <summary>
         /// Handles any exception occurred in the module Initialization process,
-        /// logs the error using the <see cref="ILog"/> and throws a <see cref="ModuleInitializeException"/>.
+        /// logs the error using the <see cref="ILogger"/> and throws a <see cref="ModuleInitializeException"/>.
         /// This method can be overridden to provide a different behavior. 
         /// </summary>
         /// <param name="moduleInfo">The module metadata where the error happenened.</param>

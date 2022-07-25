@@ -39,6 +39,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
         /// <param name="cronSetting"></param>
         /// <param name="methodCall"></param>
         /// <param name="jobId"></param>
+        /// <param name="timeZoneInfo"></param>
         /// <param name="queue"></param>
         public static void WatchJobSetting<T>(this IRecurringJobManager recurringJobManager,
             ISettingsManager settingsManager,

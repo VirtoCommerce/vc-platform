@@ -124,14 +124,15 @@ namespace VirtoCommerce.Platform.Core.Extensions
         /// <returns></returns>
         private static bool IsPrimitive(this Type type)
         {
-            if (type == typeof(string)) return true;
+            if (type == typeof(string))
+                return true;
             return (type.IsValueType || type.IsPrimitive);
         }
 
         /// <summary>
         /// Check if type is a value-type, primitive type  or string
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="obj"></param>
         /// <returns></returns>
         public static bool IsPrimitive(this object obj)
         {
