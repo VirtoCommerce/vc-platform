@@ -1,0 +1,29 @@
+{
+    "artifactKey": "PlatformImageTag",
+    "deployRepo": "vc-deploy-dev",
+    "cmPath": "backend/packages.json",
+    "dev": {
+        "deployAppName": "",
+        "deployBranch": "vcpt",
+        "environmentId": "dev",
+        "environmentName": "Development",
+        "environmentType": "staging",
+        "environmentUrl": ""
+    },
+    "qa": {
+        "deployAppName": "vcpt-main",
+        "deployBranch": "vcpt",
+        "environmentId": "qa",
+        "environmentName": "QA",
+        "environmentType": "testing",
+        "environmentUrl": "https://vcpt.govirto.com/"
+    },
+    "prod": {
+        "deployAppName": "",
+        "deployBranch": "vcpt",
+        "environmentId": "prod",
+        "environmentName": "Demo",
+        "environmentType": "production",
+        "environmentUrl": ""
+    }
+}
