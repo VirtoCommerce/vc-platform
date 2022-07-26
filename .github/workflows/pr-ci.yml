@@ -12,6 +12,7 @@ on:
       - 'README.md'
       - 'LICENSE'
       - '**/argoDeploy.json'
+      - '**/cloudDeploy.json'
 
 jobs:
   test:
