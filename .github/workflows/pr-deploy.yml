@@ -67,7 +67,7 @@ jobs:
   deploy-cloud:
     needs:
       [get-cache-key, publish]
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@main
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.14
     with:
       releaseSource: platform
       releaseType: GithubReleases
