@@ -15,7 +15,7 @@
             <fieldset>
                 <div class="table-wrapper">
                     <form name="formScope" class="form" style="padding-top:unset">
-                        <table class="table __indexed" ng-init="setForm(formScope)">
+                        <table class="table __indexed" ng-class="{'__disabled': blade.currentEntity.isReadOnly}" ng-init="setForm(formScope)">
                             <thead>
                                 <tr>
                                     <th class="table-col" ng-click="blade.selectedAll=!blade.selectedAll; checkAll()">
