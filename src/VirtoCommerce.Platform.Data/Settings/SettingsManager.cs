@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -252,7 +253,24 @@ namespace VirtoCommerce.Platform.Data.Settings
             var entry = _fixedSettingsDict[name];
             entry.IsReadOnly = true;
 
+            entry.Value = ConvertValueType(entry.Value, entry.ValueType);
+            entry.DefaultValue = ConvertValueType(entry.DefaultValue, entry.ValueType);
+
             return entry;
+        }
+
+        private static object ConvertValueType(object value, SettingValueType valueType)
+        {
+            value = valueType switch
+            {
+                SettingValueType.Boolean => Convert.ToBoolean(value),
+                SettingValueType.DateTime => Convert.ToDateTime(value),
+                SettingValueType.Decimal => Convert.ToDecimal(value, CultureInfo.InvariantCulture),
+                SettingValueType.Integer or SettingValueType.PositiveInteger => Convert.ToInt32(value, CultureInfo.InvariantCulture),
+                _ => Convert.ToString(value)
+            };
+
+            return value;
         }
     }
 }
