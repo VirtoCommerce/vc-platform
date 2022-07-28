@@ -171,6 +171,10 @@
                     "settings": {
                         "title": "Settings",
                         "description": "Platform settings"
+                    },
+                    "dynamic-props": {
+                        "title": "Dynamic properties",
+                        "description": "Platform dynamic properties"
                     }
                 }
             },

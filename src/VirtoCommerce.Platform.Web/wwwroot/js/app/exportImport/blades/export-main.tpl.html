@@ -34,6 +34,15 @@
                                         <span class="table-descr">{{ 'platform.blades.export-main.menu.settings.description' | translate }}</span>
                                     </td>
                                 </tr>
+                                <tr class="table-item" ng-click="exportRequest.handleDynamicProperties = !exportRequest.handleDynamicProperties">
+                                    <td class="table-col">
+                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': exportRequest.handleDynamicProperties}">&nbsp;</div>
+                                    </td>
+                                    <td class="table-col">
+                                        <span class="table-t">{{ 'platform.blades.export-main.menu.dynamic-props.title' | translate }}</span>
+                                        <span class="table-descr">{{ 'platform.blades.export-main.menu.dynamic-props.description' | translate }}</span>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -57,7 +66,7 @@
                     </div>
                 </fieldset>
             </form>
-          
+
             <div class="form" ng-if="blade.notification">
                 <div class="block">
                     <div>

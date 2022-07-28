@@ -176,11 +176,11 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         await ImportSettingsInternalAsync(reader, jsonSerializer, manifest, progressInfo, progressCallback, cancellationToken);
                         break;
 
-                    case "DynamicProperties" when manifest.HandleSettings:
+                    case "DynamicProperties" when manifest.HandleDynamicProperties:
                         await ImportDynamicPropertiesInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
                         break;
 
-                    case "DynamicPropertyDictionaryItems" when manifest.HandleSettings:
+                    case "DynamicPropertyDictionaryItems" when manifest.HandleDynamicProperties:
                         await ImportDynamicPropertyDictionaryItemsInternalAsync(reader, jsonSerializer, progressInfo, progressCallback, cancellationToken);
                         break;
 
@@ -413,42 +413,45 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         progressCallback(progressInfo);
                         await writer.WriteEndArrayAsync();
                     }
-
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    await writer.WritePropertyNameAsync("DynamicProperties");
-                    await writer.WriteStartArrayAsync();
-
-                    progressInfo.Description = "Dynamic properties: load properties...";
-                    progressCallback(progressInfo);
-
-                    var dynamicProperties = (await _dynamicPropertySearchService.SearchDynamicPropertiesAsync(new DynamicPropertySearchCriteria { Take = int.MaxValue })).Results;
-                    foreach (var dynamicProperty in dynamicProperties)
+                    
+                    if (manifest.HandleDynamicProperties)
                     {
-                        serializer.Serialize(writer, dynamicProperty);
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        await writer.WritePropertyNameAsync("DynamicProperties");
+                        await writer.WriteStartArrayAsync();
+
+                        progressInfo.Description = "Dynamic properties: load properties...";
+                        progressCallback(progressInfo);
+
+                        var dynamicProperties = (await _dynamicPropertySearchService.SearchDynamicPropertiesAsync(new DynamicPropertySearchCriteria { Take = int.MaxValue })).Results;
+                        foreach (var dynamicProperty in dynamicProperties)
+                        {
+                            serializer.Serialize(writer, dynamicProperty);
+                        }
+
+                        progressInfo.Description = $"Dynamic properties exported";
+                        progressCallback(progressInfo);
+                        await writer.WriteEndArrayAsync();
+
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        await writer.WritePropertyNameAsync("DynamicPropertyDictionaryItems");
+                        await writer.WriteStartArrayAsync();
+
+                        progressInfo.Description = "Dynamic properties Dictionary Items: load properties...";
+                        progressCallback(progressInfo);
+
+                        var dynamicPropertyDictionaryItems = (await _dynamicPropertyDictionaryItemsSearchService.SearchDictionaryItemsAsync(new DynamicPropertyDictionaryItemSearchCriteria { Take = int.MaxValue })).Results;
+                        foreach (var dynamicPropertyDictionaryItem in dynamicPropertyDictionaryItems)
+                        {
+                            serializer.Serialize(writer, dynamicPropertyDictionaryItem);
+                        }
+
+                        progressInfo.Description = $"Dynamic properties dictionary items exported";
+                        progressCallback(progressInfo);
+                        await writer.WriteEndArrayAsync();
                     }
-
-                    progressInfo.Description = $"Dynamic properties exported";
-                    progressCallback(progressInfo);
-                    await writer.WriteEndArrayAsync();
-
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    await writer.WritePropertyNameAsync("DynamicPropertyDictionaryItems");
-                    await writer.WriteStartArrayAsync();
-
-                    progressInfo.Description = "Dynamic properties Dictionary Items: load properties...";
-                    progressCallback(progressInfo);
-
-                    var dynamicPropertyDictionaryItems = (await _dynamicPropertyDictionaryItemsSearchService.SearchDictionaryItemsAsync(new DynamicPropertyDictionaryItemSearchCriteria { Take = int.MaxValue })).Results;
-                    foreach (var dynamicPropertyDictionaryItem in dynamicPropertyDictionaryItems)
-                    {
-                        serializer.Serialize(writer, dynamicPropertyDictionaryItem);
-                    }
-
-                    progressInfo.Description = $"Dynamic properties dictionary items exported";
-                    progressCallback(progressInfo);
-                    await writer.WriteEndArrayAsync();
 
                     await writer.WriteEndObjectAsync();
                     await writer.FlushAsync();

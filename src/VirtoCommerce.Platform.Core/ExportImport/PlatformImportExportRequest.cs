@@ -7,6 +7,7 @@ namespace VirtoCommerce.Platform.Core.ExportImport
         public string FileUrl { get; set; }
         public bool HandleSecurity { get; set; }
         public bool HandleSettings { get; set; }
+        public bool HandleDynamicProperties { get; set; }
         public bool HandleBinaryData { get; set; }
         public string[] Modules { get; set; }
         public PlatformExportManifest ExportManifest { get; set; }

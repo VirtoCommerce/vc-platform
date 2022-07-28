@@ -18,6 +18,10 @@ namespace VirtoCommerce.Platform.Core.ExportImport
         /// </summary>
         public bool HandleSettings { get; set; }
         /// <summary>
+        /// Export or import dynamic properties
+        /// </summary>
+        public bool HandleDynamicProperties { get; set; }
+        /// <summary>
         /// Export or import security objects
         /// </summary>
         public bool HandleSecurity { get; set; }

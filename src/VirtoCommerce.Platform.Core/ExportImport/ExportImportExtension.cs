@@ -21,6 +21,7 @@ namespace VirtoCommerce.Platform.Core.ExportImport
             retVal.HandleBinaryData = request.HandleBinaryData;
             retVal.HandleSecurity = request.HandleSecurity;
             retVal.HandleSettings = request.HandleSettings;
+            retVal.HandleDynamicProperties = request.HandleDynamicProperties;
 
             //Leave only selected modules
             retVal.Modules = retVal.Modules.Where(x => request.Modules != null && request.Modules.Contains(x.Id)).ToArray();
