@@ -16,14 +16,14 @@ angular.module('platformWebApp').controller('platformWebApp.newAccountWizardCont
                 });
 
                 // Load statuses
-                settings.get({ id: 'VirtoCommerce.Other.AccountStatuses' }, function (data) {
-                    blade.statuses = data.allowedValues;
-                    blade.currentEntity.status = data.defaultValue;
+                settings.get({ id: 'VirtoCommerce.Other.AccountStatuses' }, function (statuses) {
+                    blade.statuses = statuses.allowedValues;
+                    blade.currentEntity.status = statuses.defaultValue;
                 });
 
-                settings.get({ id: 'VirtoCommerce.Platform.Security.AccountTypes' }, function (data) {
-                    blade.accountTypes = data.allowedValues;
-                    blade.currentEntity.userType = _.first(blade.accountTypes);
+                settings.get({ id: 'VirtoCommerce.Platform.Security.AccountTypes' }, function (accountTypes) {
+                    blade.accountTypes = accountTypes.allowedValues;
+                    blade.currentEntity.userType = accountTypes.defaultValue;
                 });
             }
 
