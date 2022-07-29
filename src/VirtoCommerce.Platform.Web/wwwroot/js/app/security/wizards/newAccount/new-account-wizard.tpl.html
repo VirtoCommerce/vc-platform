@@ -2,8 +2,24 @@
 <div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
-            <form class="form" name="formScope">
-                <div class="form-group" ng-init="setForm(formScope)">
+            <form class="form" name="formScope" ng-init="setForm(formScope)">
+                <div class="form-group">
+                    <div class="form-label">
+                        {{ 'platform.blades.account-detail.labels.account-type' | translate }}
+                        <a href="" ng-click="blade.openSettingDictionaryController('accountTypes','VirtoCommerce.Platform.Security.AccountTypes')" class="form-edit">
+                            <i class="form-ico fa fa-pencil"></i>
+                        </a>
+                    </div>
+                    <div class="form-input">
+                        <ui-select ng-model="blade.currentEntity.userType">
+                            <ui-select-match placeholder="{{ 'platform.blades.account-detail.placeholders.account-type' | translate }}">{{$select.selected}}</ui-select-match>
+                            <ui-select-choices repeat="x as x in blade.accountTypes | filter: $select.search ">
+                                <span ng-bind-html="x | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.login' | translate }}</label>
                     <div class="form-input">
                         <input ng-model="blade.currentEntity.userName" placeholder="{{ 'platform.blades.new-account-wizard.placeholders.login' | translate }}" required focus-on="">
@@ -18,7 +34,7 @@
                 <div class="form-group">
                     <div class="form-label">
                         {{ 'platform.blades.account-detail.labels.status' | translate }}
-                        <a href="" ng-click="blade.openSettingDictionaryController('statusesDictionary','VirtoCommerce.Other.AccountStatuses')" class="form-edit">
+                        <a href="" ng-click="blade.openSettingDictionaryController('statuses','VirtoCommerce.Other.AccountStatuses')" class="form-edit">
                             <i class="form-ico fa fa-pencil"></i>
                         </a>
                     </div>

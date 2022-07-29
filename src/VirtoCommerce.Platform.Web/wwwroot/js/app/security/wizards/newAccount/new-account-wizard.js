@@ -4,6 +4,7 @@ angular.module('platformWebApp').controller('platformWebApp.newAccountWizardCont
             var blade = $scope.blade;
             blade.headIcon = 'fas fa-key';
 
+            blade.accountTypes = [];
             blade.statuses = [];
 
             var promise = roles.search({ takeCount: 10000 }).$promise;
@@ -18,6 +19,11 @@ angular.module('platformWebApp').controller('platformWebApp.newAccountWizardCont
                 settings.get({ id: 'VirtoCommerce.Other.AccountStatuses' }, function (data) {
                     blade.statuses = data.allowedValues;
                     blade.currentEntity.status = data.defaultValue;
+                });
+
+                settings.get({ id: 'VirtoCommerce.Platform.Security.AccountTypes' }, function (data) {
+                    blade.accountTypes = data.allowedValues;
+                    blade.currentEntity.userType = _.first(blade.accountTypes);
                 });
             }
 
@@ -36,12 +42,14 @@ angular.module('platformWebApp').controller('platformWebApp.newAccountWizardCont
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 
-            blade.openSettingDictionaryController = function (id, currentEntityId) {
+            blade.openSettingDictionaryController = function (dictionaryName, currentEntityId) {
                 var newBlade = {
-                    id: id,
-                    isApiSave: true,
+                    id: currentEntityId,
                     currentEntityId: currentEntityId,
-                    parentRefresh: function (data) { blade.accountTypes = data; },
+                    isApiSave: true,
+                    parentRefresh: function (data) {
+                        blade[dictionaryName] = data;
+                    },
                     controller: 'platformWebApp.settingDictionaryController',
                     template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
                 };
