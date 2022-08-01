@@ -41,6 +41,7 @@ using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Hangfire.Extensions;
@@ -356,6 +357,7 @@ namespace VirtoCommerce.Platform.Web
             services.Configure<PasswordLoginOptions>(Configuration.GetSection("PasswordLogin"));
             services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
             services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
+            services.Configure<FixedSettings>(Configuration.GetSection("PlatformSettings"));
 
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>

@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// <summary>
         /// Flag indicates the this setting is read only and can't be changed
         /// </summary>
-        public string IsReadOnly { get; set; }
+        public bool IsReadOnly { get; set; }
 
         public object Value { get; set; }
 

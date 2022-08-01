@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
@@ -30,12 +32,19 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly IDictionary<string, SettingDescriptor> _registeredSettingsByNameDict = new Dictionary<string, SettingDescriptor>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
         private readonly IDictionary<string, IEnumerable<SettingDescriptor>> _registeredTypeSettingsByNameDict = new Dictionary<string, IEnumerable<SettingDescriptor>>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
         private readonly IEventPublisher _eventPublisher;
+        private readonly IDictionary<string, ObjectSettingEntry> _fixedSettingsDict;
 
-        public SettingsManager(Func<IPlatformRepository> repositoryFactory, IPlatformMemoryCache memoryCache, IEventPublisher eventPublisher)
+        public SettingsManager(Func<IPlatformRepository> repositoryFactory,
+            IPlatformMemoryCache memoryCache,
+            IEventPublisher eventPublisher,
+            IOptions<FixedSettings> fixedSettings)
         {
             _repositoryFactory = repositoryFactory;
             _memoryCache = memoryCache;
             _eventPublisher = eventPublisher;
+
+            _fixedSettingsDict = fixedSettings.Value.Settings?.ToDictionary(x => x.Name, x => x, StringComparer.OrdinalIgnoreCase)
+                                 ?? new Dictionary<string, ObjectSettingEntry>(StringComparer.OrdinalIgnoreCase);
         }
 
         #region ISettingsRegistrar Members
@@ -109,21 +118,10 @@ namespace VirtoCommerce.Platform.Data.Settings
 
                 foreach (var name in names)
                 {
-                    var settingDescriptor = _registeredSettingsByNameDict[name];
-                    if (settingDescriptor == null)
-                    {
-                        throw new PlatformException($"Setting with name {name} is not registered");
-                    }
-                    var objectSetting = new ObjectSettingEntry(settingDescriptor)
-                    {
-                        ObjectType = objectType,
-                        ObjectId = objectId
-                    };
-                    var dbSetting = dbStoredSettings.FirstOrDefault(x => x.Name.EqualsInvariant(name));
-                    if (dbSetting != null)
-                    {
-                        objectSetting = dbSetting.ToModel(objectSetting);
-                    }
+                    var objectSetting = _fixedSettingsDict.ContainsKey(name) ?
+                        GetFixedSetting(name) :
+                        GetRegularSetting(name, dbStoredSettings, objectType, objectId);
+
                     resultObjectSettings.Add(objectSetting);
 
                     //Add cache  expiration token for setting
@@ -133,7 +131,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             });
             return result;
         }
-
+        
         public virtual async Task RemoveObjectSettingsAsync(IEnumerable<ObjectSettingEntry> objectSettings)
         {
             if (objectSettings == null)
@@ -161,7 +159,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             {
                 throw new ArgumentNullException(nameof(objectSettings));
             }
-
+            
             var changedEntries = new List<GenericChangedEntry<ObjectSettingEntry>>();
 
             using (var repository = _repositoryFactory())
@@ -178,6 +176,11 @@ namespace VirtoCommerce.Platform.Data.Settings
                     if (!validator.Validate(setting).IsValid)
                     {
                         throw new PlatformException($"Setting with name {setting.Name} is invalid");
+                    }
+
+                    if (_fixedSettingsDict.ContainsKey(setting.Name))
+                    {
+                        throw new PlatformException($"Setting with name {setting.Name} is read only");
                     }
 
                     var settingDescriptor = _registeredSettingsByNameDict[setting.Name];
@@ -221,6 +224,53 @@ namespace VirtoCommerce.Platform.Data.Settings
             {
                 SettingsCacheRegion.ExpireSetting(setting);
             }
+        }
+
+        protected virtual ObjectSettingEntry GetRegularSetting(string name, List<SettingEntity> dbStoredSettings, string objectType, string objectId)
+        {
+            var settingDescriptor = _registeredSettingsByNameDict[name];
+            if (settingDescriptor == null)
+            {
+                throw new PlatformException($"Setting with name {name} is not registered");
+            }
+
+            var objectSetting = new ObjectSettingEntry(settingDescriptor)
+            {
+                ObjectType = objectType,
+                ObjectId = objectId
+            };
+            var dbSetting = dbStoredSettings.FirstOrDefault(x => x.Name.EqualsInvariant(name));
+            if (dbSetting != null)
+            {
+                objectSetting = dbSetting.ToModel(objectSetting);
+            }
+
+            return objectSetting;
+        }
+
+        protected virtual ObjectSettingEntry GetFixedSetting(string name)
+        {
+            var entry = _fixedSettingsDict[name];
+            entry.IsReadOnly = true;
+
+            entry.Value = ConvertValueType(entry.Value, entry.ValueType);
+            entry.DefaultValue = ConvertValueType(entry.DefaultValue, entry.ValueType);
+
+            return entry;
+        }
+
+        private static object ConvertValueType(object value, SettingValueType valueType)
+        {
+            value = valueType switch
+            {
+                SettingValueType.Boolean => Convert.ToBoolean(value),
+                SettingValueType.DateTime => Convert.ToDateTime(value),
+                SettingValueType.Decimal => Convert.ToDecimal(value, CultureInfo.InvariantCulture),
+                SettingValueType.Integer or SettingValueType.PositiveInteger => Convert.ToInt32(value, CultureInfo.InvariantCulture),
+                _ => Convert.ToString(value)
+            };
+
+            return value;
         }
     }
 }

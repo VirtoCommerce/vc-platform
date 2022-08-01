@@ -80,7 +80,8 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | Presets | E.g.,<br>[{ "Name": "demo", "BackgroundUrl": "images/login_background.png", "PatternUrl": "/images/pattern-demo.svg" }, { "Name": "prod", "BackgroundUrl": "", "PatternUrl": "/images/pattern-live.svg" }] | A list of background Presets.
 | Auth | | | Platfom authencification parameters
 |  | ConnectionString | E.g. `Data Source=(local);Initial Catalog=VirtoCommerce3;Persist Security Info=True;User ID=virto;Password=virto; MultipleActiveResultSets=True;Connect Timeout=30` | This is an optional connection string to the authentification database. In case it is not provided, the security tables will be placed into the main `VirtoCommerce` database.
-
+| PlatformSettings | | | Used for platform settings overriding |
+| | Settings | E.g.:<br> "Settings": <br>[<br>{<br>"ItHasValues": true,<br>"Value": 20000,<br>"RestartRequired": false,<br>"ModuleId": "VirtoCommerce.Sitemaps",<br>"GroupName": "Sitemap\|General",<br>"Name": "Sitemap.RecordsLimitPerFile",<br>"IsRequired": false,<br>"IsHidden": false,<br><br>"ValueType": 8,<br>"DefaultValue": 10000,<br>"IsDictionary": false<br>} | Array of settings to be overriden. These settings will be read only in the admin panel.
 
 **_Note:_** Each setting mentioned above is optional unless marked **Required**.
 
