@@ -76,6 +76,7 @@ angular.module('platformWebApp')
             $scope.exportRequest.handleSecurity = action;
             $scope.exportRequest.handleBinaryData = action;
             $scope.exportRequest.handleSettings = action;
+            $scope.exportRequest.handleDynamicProperties = action;
             _.forEach($scope.exportRequest.exportManifest.modules, (module) => module.isChecked = action);
 
             $scope.updateModuleSelection();
