@@ -34,6 +34,7 @@ namespace VirtoCommerce.Platform.Data.Model
                 throw new ArgumentNullException(nameof(objSetting));
             }
             // Don't set name to avoid overwriting with db-readed value (it can be misswritten)
+            objSetting.Id = Id;
             objSetting.ObjectType = ObjectType;
             objSetting.ObjectId = ObjectId;
             var values = SettingValues.Select(x => x.GetValue()).ToArray();
@@ -56,6 +57,7 @@ namespace VirtoCommerce.Platform.Data.Model
             {
                 throw new ArgumentNullException(nameof(objectSettingEntry));
             }
+            Id = objectSettingEntry.Id;
             ObjectType = objectSettingEntry.ObjectType;
             ObjectId = objectSettingEntry.ObjectId;
             Name = objectSettingEntry.Name;
