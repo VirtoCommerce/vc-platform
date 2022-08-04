@@ -6,8 +6,9 @@ namespace VirtoCommerce.Platform.Core.Settings
     /// <summary>
     /// Represent setting meta description
     /// </summary>
-    public class SettingDescriptor : ValueObject
+    public class SettingDescriptor : ValueObject, IEntity
     {
+        public string Id { get; set; }
         /// <summary>
         /// The flag indicates that you need to restart the application to apply this setting changes.
         /// </summary>
@@ -44,8 +45,7 @@ namespace VirtoCommerce.Platform.Core.Settings
         /// The flag indicates what current setting is just editable dictionary and hasn't any concrete value 
         /// </summary>
         public bool IsDictionary { get; set; }
-
-
+        
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Name;
