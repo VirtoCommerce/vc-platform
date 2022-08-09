@@ -52,6 +52,7 @@ using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Infrastructure.HealthCheck;
+using VirtoCommerce.Platform.Web.Json;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Migrations;
@@ -132,8 +133,12 @@ namespace VirtoCommerce.Platform.Web
                 options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 options.SerializerSettings.Formatting = Formatting.None;
-            }
-            );
+            })
+            .AddOutputJsonSerializerSettings((settings, jsonOptions) =>
+            {
+                settings.CopyFrom(jsonOptions.SerializerSettings);
+                settings.NullValueHandling = NullValueHandling.Include;
+            });
 
             services.AddSingleton(js =>
             {
@@ -497,7 +502,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
-                    RequestPath = new PathString($"/modules/$({ module.ModuleName })")
+                    RequestPath = new PathString($"/modules/$({module.ModuleName})")
                 });
             }
 
