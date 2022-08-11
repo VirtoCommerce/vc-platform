@@ -52,7 +52,7 @@ Organizations, contacts, vendors, and employees are kept in the index.
 ### No-code extensibility (Admin panel UI)
 Virto Commerce supports declarative(no-code) extensions through the Admin panel and API to extend the data model, UI, and workflow processing.
 
-* [Dynamic properties](../fundamentals/extensibility/using-dynamic-properties.md)
+* [Dynamic properties](.../fundamentals/extensibility/using-dynamic-properties.md)
 * [Statuses](#) - TODO:
 
 
@@ -79,14 +79,14 @@ Name | Module | Description | Link
 --- | --- | --- | ---
 MemberChangingEvent | Customer | Occurs before a member is saved to the data source. | [Read more](https://virtocommerce.com/docs/latest/modules/customer/)
 MemberChangedEvent | Customer | Occurs when  member is saved to the data source. | [Read more](https://virtocommerce.com/docs/latest/modules/customer/)
-UserChangingEvent | Platform/Security | Occurs before an user is saved to the data source. | [Read more](../user-guide/security.md)
-UserChangedEvent | Platform/Security | Occurs when an user is saved to the data source. | [Read more](../user-guide/security.md)
-UserLoginEvent | Platform/Security | Occurs when an user logins. | [Read more](../user-guide/security.md)
-UserLogoutEvent | Platform/Security | Occurs when an user logout. | [Read more](../user-guide/security.md)
-UserPasswordChangedEvent | Platform/Security |  Occurs when an user changed password. | [Read more](../user-guide/security.md)
-UserResetPasswordEvent | Platform/Security | Occurs when an user reset password. | [Read more](../user-guide/security.md)
-UserRoleAddedEvent | Platform/Security | Occurs when role is removed from the user. | [Read more](../user-guide/security.md)
-UserRoleRemovedEvent| Platform/Security | Occurs when role is removed from the user. | [Read more](../user-guide/security.md)
+UserChangingEvent | Platform/Security | Occurs before an user is saved to the data source. | [Read more](.../user-guide/security.md)
+UserChangedEvent | Platform/Security | Occurs when an user is saved to the data source. | [Read more](.../user-guide/security.md)
+UserLoginEvent | Platform/Security | Occurs when an user logins. | [Read more](.../user-guide/security.md)
+UserLogoutEvent | Platform/Security | Occurs when an user logout. | [Read more](.../user-guide/security.md)
+UserPasswordChangedEvent | Platform/Security |  Occurs when an user changed password. | [Read more](.../user-guide/security.md)
+UserResetPasswordEvent | Platform/Security | Occurs when an user reset password. | [Read more](.../user-guide/security.md)
+UserRoleAddedEvent | Platform/Security | Occurs when role is removed from the user. | [Read more](.../user-guide/security.md)
+UserRoleRemovedEvent| Platform/Security | Occurs when role is removed from the user. | [Read more](.../user-guide/security.md)
 
 
 ## User scenarios 
