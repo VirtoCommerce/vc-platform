@@ -131,7 +131,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             });
             return result;
         }
-        
+
         public virtual async Task RemoveObjectSettingsAsync(IEnumerable<ObjectSettingEntry> objectSettings)
         {
             if (objectSettings == null)
@@ -159,7 +159,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             {
                 throw new ArgumentNullException(nameof(objectSettings));
             }
-            
+
             var changedEntries = new List<GenericChangedEntry<ObjectSettingEntry>>();
 
             using (var repository = _repositoryFactory())
@@ -197,8 +197,12 @@ namespace VirtoCommerce.Platform.Data.Settings
 
                     if (originalEntity != null)
                     {
-                        changedEntries.Add(new GenericChangedEntry<ObjectSettingEntry>(setting, originalEntity.ToModel(AbstractTypeFactory<ObjectSettingEntry>.TryCreateInstance()), EntryState.Modified));
+                        var oldEntry = originalEntity.ToModel(new ObjectSettingEntry(settingDescriptor));
+
                         modifiedEntity.Patch(originalEntity);
+
+                        var newEntry = originalEntity.ToModel(new ObjectSettingEntry(settingDescriptor));
+                        changedEntries.Add(new GenericChangedEntry<ObjectSettingEntry>(newEntry, oldEntry, EntryState.Modified));
                     }
                     else
                     {

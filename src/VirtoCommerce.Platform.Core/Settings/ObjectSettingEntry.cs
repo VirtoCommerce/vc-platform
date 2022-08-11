@@ -14,6 +14,8 @@ namespace VirtoCommerce.Platform.Core.Settings
             ModuleId = descriptor.ModuleId;
             GroupName = descriptor.GroupName;
             Name = descriptor.Name;
+            DisplayName = descriptor.DisplayName;
+            IsRequired = descriptor.IsRequired;
             ValueType = descriptor.ValueType;
             AllowedValues = descriptor.AllowedValues;
             DefaultValue = descriptor.DefaultValue;
