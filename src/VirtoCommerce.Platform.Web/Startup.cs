@@ -47,6 +47,7 @@ using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
+using VirtoCommerce.Platform.Web.Json;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Migrations;
@@ -113,20 +114,24 @@ namespace VirtoCommerce.Platform.Web
                 }
             })
             .AddNewtonsoftJson(options =>
-                {
-                    //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
-                    //we should register this converter globally.
-                    options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
-                    //Next line allow to use polymorph types as parameters in API controller methods
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
-                    options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    options.SerializerSettings.Formatting = Formatting.None;
-                }
-            );
+            {
+                //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
+                //we should register this converter globally.
+                options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
+                //Next line allow to use polymorph types as parameters in API controller methods
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
+                options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                options.SerializerSettings.Formatting = Formatting.None;
+            })
+            .AddOutputJsonSerializerSettings((settings, jsonOptions) =>
+            {
+                settings.CopyFrom(jsonOptions.SerializerSettings);
+                settings.NullValueHandling = NullValueHandling.Include;
+            });
 
             services.AddSingleton(js =>
             {
@@ -461,7 +466,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
-                    RequestPath = new PathString($"/modules/$({ module.ModuleName })")
+                    RequestPath = new PathString($"/modules/$({module.ModuleName})")
                 });
             }
 
