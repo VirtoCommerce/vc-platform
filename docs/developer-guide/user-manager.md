@@ -47,3 +47,10 @@ You can get both user and role managers by adding corresponding factory to your 
 ## Recomendations
 
 In common case you do not need to get user or role manager directly by type. Use factories to create a manager just before an operation. 
+
+## References
+
+You can find some usefull infomation here:<br>
+https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.usermanager-1?view=aspnetcore-6.0
+https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.rolemanager-1?view=aspnetcore-6.0
+https://codewithmukesh.com/blog/user-management-in-aspnet-core-mvc/
