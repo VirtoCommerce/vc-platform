@@ -37,9 +37,9 @@ You can get both user and role managers by adding corresponding factory to your 
         
         public void DoMyCoolWork()
         {
-            usign var userManager = userManagerFactory();
+            using var userManager = userManagerFactory();
             using var roleManager = roleManagerFactory();
             ...
         }
-    {
+    }
 ```
