@@ -19,4 +19,27 @@ public void Initialize(IServiceCollection serviceCollection)
 }
 ```
 
-CustomRoleManager is registered in the same way.
+**CustomRoleManager** is registered in the same way.
+
+## Usage
+You can get both user and role managers by adding corresponding factory to your service's constructor:
+```csharp
+    public class MyCoolService 
+    {
+        private readonly Func<UserManager<ApplicationUser>> _userManagerFactory;
+        private readonly Func<RoleManager<Role>> _roleManagerFactory;
+    
+        public MyCoolService(Func<UserManager<ApplicationUser>> userManagerFactory, Func<RoleManager<Role>> roleManagerFactory)
+        {
+            _userManagerFactory = userManagerFactory;
+            _roleManagerFactory = roleManagerFactory;
+        }
+        
+        public void DoMyCoolWork()
+        {
+            usign var userManager = userManagerFactory();
+            using var roleManager = roleManagerFactory();
+            ...
+        }
+    {
+```
