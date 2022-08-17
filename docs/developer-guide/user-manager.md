@@ -43,3 +43,7 @@ You can get both user and role managers by adding corresponding factory to your 
         }
     }
 ```
+
+## Recomendations
+
+In common case you do not need to get user or role manager directly by type. Use factories to create a manager just before an operation. 
