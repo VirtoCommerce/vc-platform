@@ -1,6 +1,6 @@
 # Working with User Manager
 
-Identity User Manager is a class used for managment security accounts with no direct access to the security DB context. In VirtoCommerce, it has a custom implementation, **VirtoCommerce.Platform.Web.Security.CustomUserManager**. Role Manager has a custom implementation as well: **VirtoCommerce.Platform.Web.Security.CustomRoleManager**.
+VirtoCommerce security system is fully based on ASP.Net Identity framework. All security services are derived from Identity classes and extend its functionality.<br><br>Identity User Manager is a class used for managment security accounts with no direct access to the security DB context. In VirtoCommerce, it has a custom implementation, **VirtoCommerce.Platform.Web.Security.CustomUserManager**. Role Manager has a custom implementation as well: **VirtoCommerce.Platform.Web.Security.CustomRoleManager**.
 
 ## Injection
 The custom User Manager is registered in the DI as the **UserManager<ApplicationUser>** type. To prevent multithread proplems, you should use a factory to get User Manager:
