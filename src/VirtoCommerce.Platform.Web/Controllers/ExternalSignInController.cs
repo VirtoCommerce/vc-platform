@@ -88,14 +88,12 @@ namespace VirtoCommerce.Platform.Web.Controllers
             {
                 //Need handle the two cases
                 //first - when the VC platform user account already exists, it is just missing an external login info and
-                //second - when user does not have an account, then create a new account for them                
-                if (_identityOptions.User.RequireUniqueEmail)
+                //second - when user does not have an account, then create a new account for them
+                platformUser = await _userManager.FindByNameAsync(userName);
+
+                if (_identityOptions.User.RequireUniqueEmail && platformUser == null)
                 {
-                    platformUser = await _userManager.FindByNameAsync(userName) ?? await FindUserByEmail(userEmail);
-                }
-                else
-                {
-                    platformUser = await _userManager.FindByNameAsync(userName);
+                    platformUser = await FindUserByEmail(userEmail);
                 }
 
                 if (platformUser == null)
