@@ -85,9 +85,9 @@ namespace VirtoCommerce.Platform.Web.Security
             return returnUrl;
         }
 
-        protected virtual async Task<(bool, string)> ValidateUserAsync(ApplicationUser platformUser, SignInResult externalLoginResult, string returnUrl)
+        protected virtual Task<(bool, string)> ValidateUserAsync(ApplicationUser platformUser, SignInResult externalLoginResult, string returnUrl)
         {
-            return (true, returnUrl);
+            return Task.FromResult((true, returnUrl));
         }
         
         protected virtual async Task<ApplicationUser> GetPlatformUser(string userName, string userEmail)
