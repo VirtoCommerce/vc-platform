@@ -1,6 +1,6 @@
 name: Regression PR
 
-on: 
+on:
   push:
     paths-ignore:
       - '.github/**'
@@ -9,6 +9,7 @@ on:
       - 'README.md'
       - 'LICENSE'
       - '**/argoDeploy.json'
+      - '**/cloudDeploy.json'
     branches: [ dev ]
 
 jobs:
@@ -31,7 +32,7 @@ jobs:
   cherry-pick:
     needs: check-label
     if: ${{ needs.check-label.outputs.isLabeled == 'true'}}
-    env: 
+    env:
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       INPUT_TARGETBRANCH: "regression"
       PR_BRANCH: ""
@@ -63,7 +64,7 @@ jobs:
           fi
 
     - name: Cherry-pick and create PR
-      if: ${{env.TARGETBRANCH_EXISTS == 'true' }} 
+      if: ${{env.TARGETBRANCH_EXISTS == 'true' }}
       run: |
           echo "-remote update"
           git remote update

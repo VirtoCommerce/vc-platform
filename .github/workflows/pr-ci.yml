@@ -12,10 +12,11 @@ on:
       - 'README.md'
       - 'LICENSE'
       - '**/argoDeploy.json'
+      - '**/cloudDeploy.json'
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.2
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.14
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
