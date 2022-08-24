@@ -23,12 +23,15 @@ namespace VirtoCommerce.Platform.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AzureAdOptions _azureAdOptions;
+        private readonly IdentityOptions _identityOptions;
         private readonly IEventPublisher _eventPublisher;
         private readonly ISettingsManager _settingsManager;
+
 
         public ExternalSignInController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IOptions<AzureAdOptions> azureAdOptions,
+            IOptions<IdentityOptions> identityOptions,
             IEventPublisher eventPublisher,
             ISettingsManager settingsManager)
         {
@@ -37,6 +40,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
             _eventPublisher = eventPublisher;
             _settingsManager = settingsManager;
             _azureAdOptions = azureAdOptions.Value;
+            _identityOptions = identityOptions.Value;
         }
 
         [HttpGet]
@@ -84,9 +88,15 @@ namespace VirtoCommerce.Platform.Web.Controllers
             {
                 //Need handle the two cases
                 //first - when the VC platform user account already exists, it is just missing an external login info and
-                //second - when user does not have an account, then create a new account for them
-                platformUser = await _userManager.FindByNameAsync(userName) ??
-                               await FindUserByEmail(userEmail);
+                //second - when user does not have an account, then create a new account for them                
+                if (_identityOptions.User.RequireUniqueEmail)
+                {
+                    platformUser = await _userManager.FindByNameAsync(userName) ?? await FindUserByEmail(userEmail);
+                }
+                else
+                {
+                    platformUser = await _userManager.FindByNameAsync(userName);
+                }
 
                 if (platformUser == null)
                 {
@@ -156,7 +166,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
                 using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync())
                 {
-                    await _settingsManager.SaveObjectSettingsAsync(new [] { userTypesSetting });
+                    await _settingsManager.SaveObjectSettingsAsync(new[] { userTypesSetting });
                 }
             }
 
