@@ -35,7 +35,7 @@ angular.module('platformWebApp')
 
     $scope.saveChanges = function () {
         var selection = _.map($scope.items, function (x) {
-            return angular.extend({ scope: x.id, label: x.name }, blade.currentEntity.scopeOriginal);
+            return angular.extend({}, blade.currentEntity.scopeOriginal, { scope: x.id, label: x.name });
         });
         blade.onChangesConfirmedFn(selection);
         $scope.bladeClose();
