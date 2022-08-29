@@ -1,0 +1,92 @@
+# v3.200.15
+name: Release hotfix
+
+on:
+  workflow_dispatch:
+    inputs:
+      incrementPatch:
+        description: 'Increment patch version.'
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  test:
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.15
+    secrets:
+      sonarToken: ${{ secrets.SONAR_TOKEN }}
+
+  build:
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.15
+    with:
+      uploadPackage: 'true'
+      uploadDocker: 'true'
+      imageName: 'platform'
+      forceVersionSuffix: 'false'
+      incrementPatch: ${{ github.event.inputs.incrementPatch }}
+    secrets:
+      envPAT: ${{ secrets.REPO_TOKEN }}
+
+  get-metadata:
+    runs-on: ubuntu-20.04
+    outputs:
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    steps:
+
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Get Changelog
+      id: changelog
+      uses: VirtoCommerce/vc-github-actions/changelog-generator@master
+
+  publish-docker:
+    needs:
+      [build, get-metadata]
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.15
+    with:
+      fullKey: ${{ needs.build.outputs.dockerFullKey }}
+      shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
+      dockerTar: 'image.tar'
+      publishToDocker: 'true'
+    secrets:
+      envPAT: ${{ secrets.GITHUB_TOKEN }}
+      dockerUser: ${{ secrets.DOCKER_USERNAME }}
+      dockerToken: ${{ secrets.DOCKER_TOKEN }}
+
+  publish-github-release:
+    needs:
+      [build, test, get-metadata]
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.200.15
+    with:
+      fullKey: ${{ needs.build.outputs.packageFullKey }}
+      changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
+      incrementPatch: ${{ github.event.inputs.incrementPatch }}
+    secrets:
+      envPAT: ${{ secrets.GITHUB_TOKEN }}
+      nugetKey: ${{ secrets.NUGET_KEY }}
+
+  increment-version:
+    needs:
+      [publish-github-release, publish-docker, test]
+    if: ${{ github.event.inputs.incrementPatch == 'true' }}
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install VirtoCommerce.GlobalTool
+      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+
+    - name: Setup Git Credentials
+      uses: VirtoCommerce/vc-github-actions/setup-git-credentials-github@master
+      with:
+        githubToken: ${{ secrets.REPO_TOKEN }}
+
+    - name: Increment Version
+      run: |
+        vc-build IncrementPatch
+        git add ${{ github.workspace }}/Directory.Build.props
+        git commit -m "ci: Auto IncrementPatch"
+        git push
