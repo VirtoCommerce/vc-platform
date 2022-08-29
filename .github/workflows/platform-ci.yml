@@ -1,4 +1,4 @@
-# v1.1.13
+# v3.200.15
 name: Platform CI
 
 on:
@@ -7,7 +7,8 @@ on:
       forceLatest:
         description: "Flag to set dev-linux-latest flag on workflow_dispatch event. Allowed values true or false."
         required: false
-        default: "false"
+        type: boolean
+        default: false
 
   push:
     paths-ignore:
@@ -22,8 +23,10 @@ on:
 
 jobs:
   ci:
-    if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
-    runs-on: ubuntu-18.04
+    if: ${{ github.actor != 'dependabot[bot]' && 
+         (github.event.pull_request.head.repo.full_name == github.repository || 
+         github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
+    runs-on: ubuntu-20.04
     env:
       CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
       CLIENT_ID: ${{secrets.CLIENT_ID}}
@@ -69,12 +72,7 @@ jobs:
       run: |
         echo "BUILD_DOCKER=true" >> $GITHUB_ENV
 
-    - uses: actions/setup-java@v3
-      with:
-        distribution: 'microsoft'
-        java-version: '11'
-
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -246,7 +244,7 @@ jobs:
   deploy:
     if: ${{ (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master') && github.event_name == 'push' }}
     needs: ci
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
       CLIENT_ID: ${{secrets.CLIENT_ID}}
