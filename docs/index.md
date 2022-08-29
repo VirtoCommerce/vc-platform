@@ -16,6 +16,7 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * Display Branches
     * Export-Import for Settings
     * Select Account Type on New User Creating
+    
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-24-august-2022/507)
 
 !!! done "11 July"
