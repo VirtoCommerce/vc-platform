@@ -7,6 +7,17 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+
+!!! done "22 August"
+    * Notification Layouts
+    * Member Icons
+    * Override Platform Settings via Application Settings
+    * Default Prices Sorting
+    * Display Branches
+    * Export-Import for Settings
+    * Select Account Type on New User Creating
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-24-august-2022/507)
+
 !!! done "11 July"
     * Virto Storefront Updates
     * Payment`s XAPI Updates
