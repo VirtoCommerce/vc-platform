@@ -8,7 +8,7 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
 
 ## News Digests
 
-!!! done "22 August"
+!!! done "24 August"
     * Notification Layouts
     * Member Icons
     * Override Platform Settings via Application Settings
