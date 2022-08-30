@@ -1,4 +1,4 @@
-# v1.1.11
+# v3.200.15
 name: Platform CI
 
 on:
@@ -7,7 +7,8 @@ on:
       forceLatest:
         description: "Flag to set dev-linux-latest flag on workflow_dispatch event. Allowed values true or false."
         required: false
-        default: "false"
+        type: boolean
+        default: false
 
   push:
     paths-ignore:
@@ -17,12 +18,15 @@ on:
       - 'README.md'
       - 'LICENSE'
       - '**/argoDeploy.json'
+      - '**/cloudDeploy.json'
     branches: [ master, dev ]
 
 jobs:
   ci:
-    if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
-    runs-on: ubuntu-18.04
+    if: ${{ github.actor != 'dependabot[bot]' && 
+         (github.event.pull_request.head.repo.full_name == github.repository || 
+         github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
+    runs-on: ubuntu-20.04
     env:
       CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
       CLIENT_ID: ${{secrets.CLIENT_ID}}
@@ -47,16 +51,6 @@ jobs:
 
     steps:
 
-    - name: Set up JDK 11 for dotnet-sonarscanner #Sonar stop accepting Java versions less than 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.11
-
-    - name: Set up dotnet6 
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
-
     - name: Set up Node 14
       uses: actions/setup-node@v2
       with:
@@ -66,7 +60,7 @@ jobs:
       if: ${{ github.event_name == 'workflow_dispatch' }}
       run: |
         echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
-        echo "UPDATE_LATEST_TAG=${{ github.event.inputs.forceLatest }}" >> $GITHUB_ENV 
+        echo "UPDATE_LATEST_TAG=${{ github.event.inputs.forceLatest }}" >> $GITHUB_ENV
 
     - name: Set RELEASE_STATUS
       if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
@@ -78,12 +72,12 @@ jobs:
       run: |
         echo "BUILD_DOCKER=true" >> $GITHUB_ENV
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
-      run: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0
+      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
@@ -161,11 +155,13 @@ jobs:
         storefrontDockerTag: dev-linux-latest
         platformImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/platform
         storefrontImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/storefront
-          
+        installSampleData: 'false'
+
     - name: Publish Nuget
       if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'}}
       uses: VirtoCommerce/vc-github-actions/publish-nuget@master
 
+## Remove as redundant
     - name: Publish to Blob
       if: ${{ github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
       id: blobRelease
@@ -178,14 +174,14 @@ jobs:
       run: |
         echo ::set-output name=DOCKER_URL::${{ env.PACKAGE_SERVER }}/${{github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.image.outputs.taggedVersion }}
         echo ::set-output name=BLOB_URL::${{ steps.blobRelease.outputs.packageUrl }}
-        
+
     - name: Add Jira link
       if: ${{ github.event_name == 'pull_request' }}
       uses: VirtoCommerce/vc-github-actions/publish-jira-link@master
       with:
         branchName: ${{ github.head_ref }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Add link to PR
       if: ${{ github.event_name == 'pull_request' }}
@@ -193,7 +189,7 @@ jobs:
       with:
         artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
         downloadComment: 'Artifact URL:'
-      
+
     - name: Publish Github Release
       if: ${{ github.ref == 'refs/heads/master' }}
       with:
@@ -201,7 +197,7 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/publish-github-release@master
 
     - name: Publish Docker Image
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      if: ${{ env.BUILD_DOCKER == 'true' }}
       uses: VirtoCommerce/vc-github-actions/publish-docker-image@master
       with:
           image: ${{ steps.dockerBuild.outputs.imageName }}
@@ -246,21 +242,32 @@ jobs:
         echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
 
   deploy:
-    if: ${{ github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch' }}
+    if: ${{ (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master') && github.event_name == 'push' }}
     needs: ci
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
       CLIENT_ID: ${{secrets.CLIENT_ID}}
       CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-    steps: 
+      ARGO_SERVER: 'argo.govirto.com'
+      SLEEP_TIME: '5m'
+    steps:
+
+    - name: Set deployment environment
+      id: deployEnv
+      run: |
+        if [ '${{ github.ref }}' = 'refs/heads/master' ]; then
+          echo ::set-output name=NAME::prod
+        else
+          echo ::set-output name=NAME::dev
+        fi;
 
     - name: Read deployment config
       uses: VirtoCommerce/vc-github-actions/get-deploy-param@master
       id: deployConfig
       with:
-        envName: 'dev'
+        envName: ${{ steps.deployEnv.outputs.NAME }}
 
     - name: Start deployment
       uses: bobheadxi/deployments@master
@@ -282,20 +289,19 @@ jobs:
         forceCommit: 'true'
         cmPath: ${{ steps.deployConfig.outputs.cmPath }}
 
-    - name: Wait for environment is up
-      shell: pwsh
-      timeout-minutes: 15
-      run: | 
-        do {
-          Start-Sleep -s 15
-          $statusBage = (Invoke-WebRequest -Uri "https://argo.govirto.com/api/badge?name=${{ steps.deployConfig.outputs.deployAppName }}").Content
-          
-          $syncedAndHealthy = $statusBage.Contains('>Healthy<') -and $statusBage.Contains('>Synced<')
-          if (-not $syncedAndHealthy) {
-            Write-Host "Sync pending..."
-          }
-        }
-        while (-not $syncedAndHealthy)
+    - name: Sleep for ${{ env.SLEEP_TIME }} (Wait for environment is up)
+      run: sleep ${{ env.SLEEP_TIME }}
+      shell: bash
+
+    - name: Check environment is up
+      uses: VirtoCommerce/vc-github-actions/vc-argocd-cli@master
+      timeout-minutes: 10
+      id: argocd-cli
+      with:
+        server: ${{env.ARGO_SERVER}}
+        username: ${{ secrets.ARGOCD_LOGIN }}
+        password: ${{ secrets.ARGOCD_PASSWORD }}
+        command: app wait ${{ steps.deployConfig.outputs.deployAppName }}
 
     - name: DEPLOY_STATE::successful
       if: success()
@@ -337,6 +343,6 @@ jobs:
         pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
         pipeline-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
         pipeline-url: '${{github.event.repository.html_url}}/actions/runs/${{github.run_id}}'
-        environment-id: 'development'
-        environment-display-name: 'Dev'
-        environment-type: 'development'
+        environment-id: ${{ steps.deployConfig.outputs.environmentId }}
+        environment-display-name: ${{ steps.deployConfig.outputs.environmentName }}
+        environment-type: ${{ steps.deployConfig.outputs.environmentType }}
