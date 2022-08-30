@@ -116,6 +116,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
                 c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
+
+                c.UseAllOfToExtendReferenceSchemas();
             });
 
             // Unfortunately, we can't use .CustomSchemaIds, because it changes schema ids for all documents (impossible to change ids depending on document name).
