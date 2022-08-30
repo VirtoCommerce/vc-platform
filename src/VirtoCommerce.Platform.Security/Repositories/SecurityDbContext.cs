@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Security.Repositories
 
         }
 
-        public SecurityDbContext(DbContextOptions options)
+        protected SecurityDbContext(DbContextOptions options)
             : base(options)
         {
 
