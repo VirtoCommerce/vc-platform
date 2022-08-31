@@ -191,6 +191,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             var pkMap = new PrimaryKeyResolvingMap();
             var changedEntries = new List<GenericChangedEntry<TModel>>();
+            var changedEntities = new List<TEntity>();
 
             await BeforeSaveChanges(models);
 
@@ -217,11 +218,13 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         {
                             auditableOriginalEntity.ModifiedDate = DateTime.UtcNow;
                         }
+                        changedEntities.Add(originalEntity);
                     }
                     else
                     {
                         repository.Add(modifiedEntity);
                         changedEntries.Add(new GenericChangedEntry<TModel>(model, EntryState.Added));
+                        changedEntities.Add(modifiedEntity);
                     }
                 }
 
@@ -232,6 +235,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             pkMap.ResolvePrimaryKeys();
 
             ClearCache(models);
+
+            foreach (var (changedEntry, i) in changedEntries.Select((x, i) => (x, i)))
+            {
+                changedEntry.NewEntry = changedEntities[i].ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
+            }
 
             await AfterSaveChangesAsync(models, changedEntries);
 
