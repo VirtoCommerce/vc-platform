@@ -435,6 +435,8 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
+
+            services.AddTransient<IExternalSigninService, ExternalSigninService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -468,8 +470,9 @@ namespace VirtoCommerce.Platform.Web
             // Add default MimeTypes with additional bindings
             var fileExtensionsBindings = new Dictionary<string, string>()
             {
-                { ".liquid", "text/html"},
-                { ".md", "text/html"}
+                { ".liquid", "text/html"}, // Allow liquid templates
+                { ".page", "text/html"}, // Allow pagebuilder pages
+                { ".md", "text/html"} // Allow Markdown documents
             };
 
             // Create default provider (with default Mime types)
