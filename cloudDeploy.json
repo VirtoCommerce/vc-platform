@@ -19,11 +19,11 @@
         "environmentUrl": "https://vcpt.govirto.com/"
     },
     "prod": {
-        "deployAppName": "",
-        "deployBranch": "vcpt",
+        "deployAppName": "vcptcore-demo",
+        "deployBranch": "vcptcore-demo",
         "environmentId": "prod",
         "environmentName": "Demo",
         "environmentType": "production",
-        "environmentUrl": ""
+        "environmentUrl": "https://vcptcore-demo.govirto.com/"
     }
 }
