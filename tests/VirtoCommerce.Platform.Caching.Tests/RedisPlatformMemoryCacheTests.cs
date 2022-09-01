@@ -10,7 +10,8 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Caching.Tests
 {
-    [Trait("Category", "Unit"), CollectionDefinition("CacheTests", DisableParallelization = true)]
+    [Trait("Category", "Unit")]
+    [Collection(nameof(NotThreadSafeCollection))]
     public class RedisPlatformMemoryCacheTests : MemoryCacheTestsBase
     {
         private readonly Mock<IOptions<RedisCachingOptions>> _redisCachingOptionsMock = new Mock<IOptions<RedisCachingOptions>>();

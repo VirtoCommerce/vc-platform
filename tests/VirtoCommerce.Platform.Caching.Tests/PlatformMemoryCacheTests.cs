@@ -6,7 +6,8 @@ using Xunit;
 
 namespace VirtoCommerce.Platform.Caching.Tests
 {
-    [Trait("Category", "Unit"), CollectionDefinition("CacheTests", DisableParallelization = true)]
+    [Trait("Category", "Unit")]
+    [Collection(nameof(NotThreadSafeCollection))]
     public class PlatformMemoryCacheTests : MemoryCacheTestsBase
     {
         [Fact]
