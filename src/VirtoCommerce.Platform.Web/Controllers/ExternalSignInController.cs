@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
             var redirectUrl = await _externalSigninService.ProcessCallbackAsync(returnUrl, Url);
-
+            
             return Redirect(redirectUrl);
         }
 
