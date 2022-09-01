@@ -21,6 +21,7 @@ namespace VirtoCommerce.Platform.Web.Security
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly AzureAdOptions _azureAdOptions;
+        private readonly IdentityOptions _identityOptions;
         private readonly ISettingsManager _settingsManager;
 
         private IUrlHelper _urlHelper;
@@ -29,12 +30,14 @@ namespace VirtoCommerce.Platform.Web.Security
             UserManager<ApplicationUser> userManager,
             IEventPublisher eventPublisher,
             IOptions<AzureAdOptions> azureAdOptions,
+            IOptions<IdentityOptions> identityOptions,
             ISettingsManager settingsManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
             _azureAdOptions = azureAdOptions.Value;
+            _identityOptions = identityOptions.Value;
             _settingsManager = settingsManager;
         }
 
@@ -53,7 +56,7 @@ namespace VirtoCommerce.Platform.Web.Security
             {
                 return redirectUrl;
             }
-            
+
             var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, false);
             var platformUser = await GetPlatformUser(userName, userEmail);
 
@@ -89,14 +92,18 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             return Task.FromResult((true, returnUrl));
         }
-        
+
         protected virtual async Task<ApplicationUser> GetPlatformUser(string userName, string userEmail)
         {
             //Need handle the two cases
             //first - when the VC platform user account already exists, it is just missing an external login info and
             //second - when user does not have an account, then create a new account for them
-            var platformUser = await _userManager.FindByNameAsync(userName) ??
-                               await FindUserByEmail(userEmail);
+            var platformUser = await _userManager.FindByNameAsync(userName);
+
+            if (_identityOptions.User.RequireUniqueEmail && platformUser == null)
+            {
+                platformUser = await FindUserByEmail(userEmail);
+            }
 
             if (platformUser == null)
             {
