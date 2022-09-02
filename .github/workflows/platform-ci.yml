@@ -359,7 +359,7 @@ jobs:
       platformVer: ${{ needs.ci.outputs.version }}
       platformTag: ${{ needs.ci.outputs.tag }}
       argoServer: 'argo.virtocommerce.cloud'
-      matrix: '{"include":[{"envName": "demo", "confPath": "cloudDeploy.json"}]}'
+      matrix: '{"include":[{"envName": "prod", "confPath": "cloudDeploy.json"}]}'
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
       argoLogin: ${{ secrets.ARGOCD_LOGIN }}
