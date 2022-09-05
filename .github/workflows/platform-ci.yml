@@ -1,4 +1,4 @@
-# v3.200.15
+# v3.200.16
 name: Platform CI
 
 on:
@@ -23,8 +23,8 @@ on:
 
 jobs:
   ci:
-    if: ${{ github.actor != 'dependabot[bot]' && 
-         (github.event.pull_request.head.repo.full_name == github.repository || 
+    if: ${{ github.actor != 'dependabot[bot]' &&
+         (github.event.pull_request.head.repo.full_name == github.repository ||
          github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-20.04
     env:
@@ -48,6 +48,8 @@ jobs:
     outputs:
       artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
       jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
+      version: ${{ steps.image.outputs.shortVersion }}
+      tag: ${{ steps.version.outputs.taggedVersion }}
 
     steps:
 
@@ -346,3 +348,19 @@ jobs:
         environment-id: ${{ steps.deployConfig.outputs.environmentId }}
         environment-display-name: ${{ steps.deployConfig.outputs.environmentName }}
         environment-type: ${{ steps.deployConfig.outputs.environmentType }}
+
+  deploy-cloud-demo:
+    if: ${{ (github.ref == 'refs/heads/master') && github.event_name == 'push' }}
+    needs: ci
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.15
+    with:
+      releaseSource: platform
+      releaseType: GithubReleases
+      platformVer: ${{ needs.ci.outputs.version }}
+      platformTag: ${{ needs.ci.outputs.tag }}
+      argoServer: 'argo.virtocommerce.cloud'
+      matrix: '{"include":[{"envName": "prod", "confPath": "cloudDeploy.json"}]}'
+    secrets:
+      envPAT: ${{ secrets.REPO_TOKEN }}
+      argoLogin: ${{ secrets.ARGOCD_LOGIN }}
+      argoPassword: ${{ secrets.ARGOCD_PASSWORD }}
