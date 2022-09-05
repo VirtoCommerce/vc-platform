@@ -22,20 +22,29 @@ namespace VirtoCommerce.Platform.Data.ZipFile
         {
             return System.IO.Compression.ZipFile.OpenRead(fileName);
         }
-        
+
         public void Extract(string zipFile, string destinationDir)
         {
+            var destinationDirectoryFullPath = Path.GetFullPath(destinationDir);
+
             using (var archive = OpenRead(zipFile))
             {
                 foreach (var entry in archive.Entries.Where(e => !string.IsNullOrEmpty(e.Name)))
                 {
                     var filePath = Path.Combine(destinationDir, entry.FullName);
+                    var fileFullPath = Path.GetFullPath(filePath);
+
+                    if (!fileFullPath.StartsWith(destinationDirectoryFullPath))
+                    {
+                        throw new IOException("Attempting to extract archive entry outside destination directory");
+                    }
+
                     //Create directory if not exist
-                    var directoryPath = Path.GetDirectoryName(filePath);
+                    var directoryPath = Path.GetDirectoryName(fileFullPath);
                     _fileManager.CreateDirectory(directoryPath);
 
                     using (var entryStream = entry.Open())
-                    using (var fileStream = _fileSystem.File.Create(filePath))
+                    using (var fileStream = _fileSystem.File.Create(fileFullPath))
                     {
                         entryStream.CopyTo(fileStream);
                     }
