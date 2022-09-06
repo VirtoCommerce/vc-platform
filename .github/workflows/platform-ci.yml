@@ -49,7 +49,7 @@ jobs:
       artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
       jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
       version: ${{ steps.image.outputs.shortVersion }}
-      tag: ${{ steps.version.outputs.taggedVersion }}
+      tag: ${{ steps.image.outputs.taggedVersion }}
 
     steps:
 
@@ -359,7 +359,7 @@ jobs:
       platformVer: ${{ needs.ci.outputs.version }}
       platformTag: ${{ needs.ci.outputs.tag }}
       argoServer: 'argo.virtocommerce.cloud'
-      matrix: '{"include":[{"envName": "prod", "confPath": "cloudDeploy.json"}]}'
+      matrix: '{"include":[{"envName": "prod", "confPath": "cloudDeploy.json"}, {"envName": "dev", "confPath": "cloudDeploy.json"}]}' # Deploy to dev and demo environments
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
       argoLogin: ${{ secrets.ARGOCD_LOGIN }}
