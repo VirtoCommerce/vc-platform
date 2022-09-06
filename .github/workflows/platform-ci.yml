@@ -1,4 +1,4 @@
-# v3.200.16
+# v3.200.17
 name: Platform CI
 
 on:
@@ -331,48 +331,18 @@ jobs:
         status: ${{ job.status }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
-    - name: Push Deployment Info to Jira
-      if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && needs.ci.outputs.jira-keys != '' && always() }}
-      id: push_deployment_info_to_jira
-      uses: HighwayThree/jira-upload-deployment-info@master
-      env:
-        CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
-        CLIENT_ID: ${{secrets.CLIENT_ID}}
-        CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
-      with:
-        cloud-instance-base-url: ${{ secrets.CLOUD_INSTANCE_BASE_URL }}
-        client-id: ${{ secrets.CLIENT_ID }}
-        client-secret: ${{ secrets.CLIENT_SECRET }}
-        deployment-sequence-number: ${{ github.run_id }}
-        update-sequence-number: ${{ github.run_id }}
-        issue-keys: ${{ needs.ci.outputs.jira-keys }}
-        display-name: ${{ steps.deployConfig.outputs.deployAppName }}
-        url: 'https://vcplatform-platform.dev.govirto.com/'
-        description: 'Deployment to the Development environment'
-        last-updated: '${{github.event.head_commit.timestamp}}'
-        state: '${{ env.DEPLOY_STATE }}'
-        pipeline-id: '${{ github.repository }} ${{ github.workflow }}'
-        pipeline-display-name: 'Workflow: ${{ github.workflow }} (#${{ github.run_number }})'
-        pipeline-url: '${{github.event.repository.html_url}}/actions/runs/${{github.run_id}}'
-        environment-id: ${{ steps.deployConfig.outputs.environmentId }}
-        environment-display-name: ${{ steps.deployConfig.outputs.environmentName }}
-        environment-type: ${{ steps.deployConfig.outputs.environmentType }}
-
   deploy-cloud:
-    if: ${{ ((github.ref == 'refs/heads/master') ||
-            (github.ref == 'refs/heads/dev')) &&
-            github.event_name == 'push' }}
-
+    if: ${{ ((github.ref == 'refs/heads/master') || 
+        (github.ref == 'refs/heads/dev')) && 
+        github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.15
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.17
     with:
       releaseSource: platform
       releaseType: GithubReleases
       platformVer: ${{ needs.ci.outputs.version }}
       platformTag: ${{ needs.ci.outputs.tag }}
+      jiraKeys: ${{ needs.ci.outputs.jira-keys }}
       argoServer: 'argo.virtocommerce.cloud'
       matrix: '{"include":${{ needs.ci.outputs.matrix }}}'
-    secrets:
-      envPAT: ${{ secrets.REPO_TOKEN }}
-      argoLogin: ${{ secrets.ARGOCD_LOGIN }}
-      argoPassword: ${{ secrets.ARGOCD_PASSWORD }}
+    secrets: inherit
