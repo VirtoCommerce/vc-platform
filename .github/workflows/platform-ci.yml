@@ -50,6 +50,7 @@ jobs:
       jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
       version: ${{ steps.image.outputs.shortVersion }}
       tag: ${{ steps.image.outputs.taggedVersion }}
+      matrix: ${{ steps.deployment-matrix.outputs.matrix }}
 
     steps:
 
@@ -197,6 +198,14 @@ jobs:
       with:
         changelog: ${{ steps.changelog.outputs.changelog }}
       uses: VirtoCommerce/vc-github-actions/publish-github-release@master
+
+    - name: Create deployment matrix
+      if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'}}
+      uses: VirtoCommerce/vc-github-actions/cloud-create-deploy-matrix@master
+      id: deployment-matrix
+      with:
+        deployConfigPath: 'cloudDeploy.json'
+        releaseBranch: 'master'
 
     - name: Publish Docker Image
       if: ${{ env.BUILD_DOCKER == 'true' }}
@@ -349,7 +358,7 @@ jobs:
         environment-display-name: ${{ steps.deployConfig.outputs.environmentName }}
         environment-type: ${{ steps.deployConfig.outputs.environmentType }}
 
-  deploy-cloud-demo:
+  deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master') && github.event_name == 'push' }}
     needs: ci
     uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.15
@@ -359,7 +368,7 @@ jobs:
       platformVer: ${{ needs.ci.outputs.version }}
       platformTag: ${{ needs.ci.outputs.tag }}
       argoServer: 'argo.virtocommerce.cloud'
-      matrix: '{"include":[{"envName": "prod", "confPath": "cloudDeploy.json"}, {"envName": "dev", "confPath": "cloudDeploy.json"}]}' # Deploy to dev and demo environments
+      matrix: '{"include":${{ needs.ci.outputs.matrix }}}'
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
       argoLogin: ${{ secrets.ARGOCD_LOGIN }}
