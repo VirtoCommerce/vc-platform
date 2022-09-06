@@ -339,7 +339,6 @@ jobs:
     uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.17
     with:
       releaseSource: platform
-      releaseType: GithubReleases
       platformVer: ${{ needs.ci.outputs.version }}
       platformTag: ${{ needs.ci.outputs.tag }}
       jiraKeys: ${{ needs.ci.outputs.jira-keys }}
