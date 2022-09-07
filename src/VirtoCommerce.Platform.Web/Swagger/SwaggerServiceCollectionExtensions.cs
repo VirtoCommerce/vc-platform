@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     License = new OpenApiLicense
                     {
                         Name = "Virto Commerce Open Software License 3.0",
-                        Url = new Uri("http://virtocommerce.com/open-source-license")
+                        Url = new Uri("https://virtocommerce.com/open-source-license")
                     }
                 };
 
