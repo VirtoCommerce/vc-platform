@@ -36,10 +36,7 @@ namespace VirtoCommerce.Platform.Security.Services
             var subject = new X500DistinguishedName("O=Virtocommerce, S=Vilnius, C=LT, CN=virtocommerce.com");
             var request = new CertificateRequest(subject, algorithm, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
             request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature | X509KeyUsageFlags.KeyEncipherment, critical: true));
-            request.CertificateExtensions.Add(new X509EnhancedKeyUsageExtension(new OidCollection() {
-                Oid.FromOidValue("1.3.6.1.5.5.7.3.1", OidGroup.EnhancedKeyUsage), // Add Server Authentication usage
-                Oid.FromOidValue("1.3.6.1.5.5.7.3.2", OidGroup.EnhancedKeyUsage) // Add Client Authentication usage
-            }, true));
+
             var dnsExtensionBuilder = new SubjectAlternativeNameBuilder();
             dnsExtensionBuilder.AddDnsName("virtocommerce.com");
             request.CertificateExtensions.Add(dnsExtensionBuilder.Build());
