@@ -29,10 +29,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet]
         [Route("systeminfo")]
-        public async Task<ActionResult<SystemInfo>> GetSystemInfo()
+        public ActionResult<SystemInfo> GetSystemInfo()
         {
             var platformVersion = PlatformVersion.CurrentVersion.ToString();
-            var license = await _licenseProvider.GetLicenseAsync();
+            var license = _licenseProvider.GetLicense();
 
             var installedModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).OrderBy(x => x.Id)
                                        .Select(x => new ModuleDescriptor(x))

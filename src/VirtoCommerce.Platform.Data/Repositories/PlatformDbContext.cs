@@ -108,6 +108,12 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
             #endregion
 
+            #region Raw license
+            modelBuilder.Entity<RawLicenseEntity>().ToTable("RawLicense").HasKey(x => x.Id);
+            modelBuilder.Entity<RawLicenseEntity>().Property(x => x.Id).HasMaxLength(128).ValueGeneratedOnAdd();
+            modelBuilder.Entity<RawLicenseEntity>().Property(x => x.Data);
+            #endregion
+
             base.OnModelCreating(modelBuilder);
         }
 
