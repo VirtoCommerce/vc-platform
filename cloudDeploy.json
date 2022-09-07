@@ -3,20 +3,20 @@
     "deployRepo": "vc-deploy-dev",
     "cmPath": "backend/packages.json",
     "dev": {
-        "deployAppName": "",
-        "deployBranch": "vcpt",
+        "deployAppName": "vcptcore-dev",
+        "deployBranch": "vcptcore-dev",
         "environmentId": "dev",
         "environmentName": "Development",
         "environmentType": "staging",
-        "environmentUrl": ""
+        "environmentUrl": "https://vcptcore-dev.govirto.com/"
     },
     "qa": {
-        "deployAppName": "vcpt-main",
+        "deployAppName": "vcptcore-qa",
         "deployBranch": "vcpt",
         "environmentId": "qa",
         "environmentName": "QA",
         "environmentType": "testing",
-        "environmentUrl": "https://vcpt.govirto.com/"
+        "environmentUrl": "https://vcptcore-qa.govirto.com/"
     },
     "prod": {
         "deployAppName": "vcptcore-demo",
