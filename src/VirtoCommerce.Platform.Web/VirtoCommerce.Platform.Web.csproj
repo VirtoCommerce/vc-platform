@@ -48,7 +48,6 @@
         <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0" />
         <PackageReference Include="System.Linq.Async" Version="5.0.0" />
         <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
-        <PackageReference Include="VirtoCommerce.Assets.Abstractions" Version="3.200.0" />
         <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
     </ItemGroup>
     <ItemGroup>

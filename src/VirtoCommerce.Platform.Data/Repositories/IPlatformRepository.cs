@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Model;
 
@@ -13,6 +14,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         IQueryable<DynamicPropertyDictionaryItemEntity> DynamicPropertyDictionaryItems { get; }
         //IQueryable<DynamicPropertyObjectValueEntity> DynamicPropertyObjectValues { get; }
         IQueryable<OperationLogEntity> OperationLogs { get; }
+        IQueryable<RawLicenseEntity> RawLicenses { get; }
 
         Task<DynamicPropertyDictionaryItemEntity[]> GetDynamicPropertyDictionaryItemByIdsAsync(string[] ids);
         Task<DynamicPropertyEntity[]> GetDynamicPropertiesForTypesAsync(string[] objectTypes);

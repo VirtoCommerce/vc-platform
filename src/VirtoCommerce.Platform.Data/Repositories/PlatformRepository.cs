@@ -25,6 +25,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
         public virtual IQueryable<OperationLogEntity> OperationLogs { get { return DbContext.Set<OperationLogEntity>(); } }
 
+        public virtual IQueryable<RawLicenseEntity> RawLicenses { get { return DbContext.Set<RawLicenseEntity>(); } }
 
 
         public virtual async Task<DynamicPropertyEntity[]> GetObjectDynamicPropertiesAsync(string[] objectTypes)
