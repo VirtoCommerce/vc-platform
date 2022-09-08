@@ -1,86 +1,54 @@
-using System.IO;
-using System.Threading.Tasks;
+using System;
+using System.Linq;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Assets.Abstractions;
 using VirtoCommerce.Platform.Core;
-using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.Platform.Web.Licensing
 {
     public class LicenseProvider
     {
         private readonly PlatformOptions _platformOptions;
-        private readonly ICommonBlobProvider _blobStorageProvider;
+        private readonly Func<IPlatformRepository> _platformRepositoryFactory;
 
-        public LicenseProvider(IOptions<PlatformOptions> platformOptions, ICommonBlobProvider blobStorageProvider)
+        public LicenseProvider(IOptions<PlatformOptions> platformOptions, Func<IPlatformRepository> platformRepositoryFactory)
         {
             _platformOptions = platformOptions.Value;
-            _blobStorageProvider = blobStorageProvider;
+            _platformRepositoryFactory = platformRepositoryFactory;
         }
 
-        public async Task<License> GetLicenseAsync()
+        public License GetLicense()
         {
-            License license = null;
+            string rawLicenseData;
 
-            var licenseUrl = _blobStorageProvider.GetAbsoluteUrl(_platformOptions.LicenseBlobPath);
-            if (await LicenseExistsAsync(licenseUrl))
+            using (var repository = _platformRepositoryFactory())
             {
-                var rawLicense = string.Empty;
-                using (var stream = _blobStorageProvider.OpenRead(licenseUrl))
-                {
-                    rawLicense = stream.ReadToString();
-                }
-
-                license = License.Parse(rawLicense, _platformOptions.LicensePublicKeyResourceName);
-
-                if (license != null)
-                {
-                    license.RawLicense = null;
-                }
+                rawLicenseData = repository.RawLicenses?.FirstOrDefault()?.Data;
             }
 
-            // Fallback to the old file system implementation
-            if (license == null)
+            var license = License.Parse(rawLicenseData, _platformOptions.LicensePublicKeyResourceName);
+
+            if (license != null)
             {
-                license = GetLicenseFromFile();
+                license.RawLicense = null;
             }
 
             return license;
         }
 
-        public License GetLicenseFromFile()
+        public void SaveLicense(License license)
         {
-            License license = null;
-
-            var licenseFilePath = Path.GetFullPath(_platformOptions.LicenseFilePath);
-            if (File.Exists(licenseFilePath))
+            using (var repository = _platformRepositoryFactory())
             {
-                var rawLicense = File.ReadAllText(licenseFilePath);
-                license = License.Parse(rawLicense, _platformOptions.LicensePublicKeyResourceName);
-
-                if (license != null)
+                var rawLicense = repository.RawLicenses?.FirstOrDefault();
+                if (rawLicense == null)
                 {
-                    license.RawLicense = null;
+                    rawLicense = new Data.Model.RawLicenseEntity();
+                    repository.Add(rawLicense);
                 }
+                rawLicense.Data = license.RawLicense;                
+                repository.UnitOfWork.Commit();
             }
-
-            return license;
-        }
-
-        public async Task SaveLicenseAsync(License license)
-        {
-            var licenseUrl = _blobStorageProvider.GetAbsoluteUrl(_platformOptions.LicenseBlobPath);
-            using (var stream = await _blobStorageProvider.OpenWriteAsync(licenseUrl))
-            {
-                var streamWriter = new StreamWriter(stream);
-                await streamWriter.WriteAsync(license.RawLicense);
-                await streamWriter.FlushAsync();
-            }
-        }
-
-        private Task<bool> LicenseExistsAsync(string licenseUrl)
-        {
-            return _blobStorageProvider.ExistsAsync(licenseUrl);
         }
     }
 }

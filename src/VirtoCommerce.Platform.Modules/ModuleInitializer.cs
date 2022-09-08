@@ -85,7 +85,10 @@ namespace VirtoCommerce.Platform.Modules
 
             try
             {
-                moduleInstance.PostInitialize(appBuilder);
+                if (moduleInstance != null)
+                {
+                    moduleInstance.PostInitialize(appBuilder);
+                }
             }
             catch (Exception ex)
             {
