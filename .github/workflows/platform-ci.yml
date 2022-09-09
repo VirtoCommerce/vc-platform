@@ -43,13 +43,14 @@ jobs:
       BUILD_STATE: 'failed'
       RELEASE_STATUS: 'false'
       BUILD_DOCKER: 'false'
+      DOCKER_TAG: 'latest'
       MSBuildEnableWorkloadResolver: 'false'
 
     outputs:
       artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
       jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
       version: ${{ steps.image.outputs.shortVersion }}
-      tag: ${{ steps.image.outputs.taggedVersion }}
+      tag: ${{ env.DOCKER_TAG }}
       matrix: ${{ steps.deployment-matrix.outputs.matrix }}
 
     steps:
@@ -101,6 +102,14 @@ jobs:
           echo "VERSION_SUFFIX=${{ steps.image.outputs.suffix }}" >> $GITHUB_ENV
         fi;
 
+    - name: Set DOCKER_TAG variable
+      run: |
+        if [ '${{ github.ref }}' = 'refs/heads/master' ]; then
+          echo "DOCKER_TAG=${{ steps.image.outputs.shortVersion }}" >> $GITHUB_ENV
+        else
+          echo "DOCKER_TAG=${{ steps.image.outputs.taggedVersion }}" >> $GITHUB_ENV
+        fi;
+
     - name: Add version suffix
       if: ${{ github.ref != 'refs/heads/master' }}
       uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
@@ -136,7 +145,7 @@ jobs:
       id: dockerBuild
       uses: VirtoCommerce/vc-github-actions/build-docker-image@master
       with:
-        tag: ${{ steps.image.outputs.taggedVersion }}
+        tag: ${{ env.DOCKER_TAG }}
         imageName: 'platform'
         dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/feat/net6/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
 
@@ -154,7 +163,7 @@ jobs:
       with:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}
-        platformDockerTag: ${{ steps.image.outputs.taggedVersion }}
+        platformDockerTag: ${{ env.DOCKER_TAG }}
         storefrontDockerTag: dev-linux-latest
         platformImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/platform
         storefrontImage: ${{ env.PACKAGE_SERVER }}/virtocommerce/storefront
@@ -175,7 +184,7 @@ jobs:
     - name: Set artifactUrl value
       id: artifactUrl
       run: |
-        echo ::set-output name=DOCKER_URL::${{ env.PACKAGE_SERVER }}/${{github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.image.outputs.taggedVersion }}
+        echo ::set-output name=DOCKER_URL::${{ env.PACKAGE_SERVER }}/${{github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.DOCKER_TAG }}
         echo ::set-output name=BLOB_URL::${{ steps.blobRelease.outputs.packageUrl }}
 
     - name: Add Jira link
@@ -212,7 +221,7 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/publish-docker-image@master
       with:
           image: ${{ steps.dockerBuild.outputs.imageName }}
-          tag: ${{ steps.image.outputs.taggedVersion }}
+          tag: ${{ env.DOCKER_TAG }}
           docker_user: ${{ secrets.DOCKER_USERNAME }}
           docker_token: ${{ secrets.DOCKER_TOKEN }}
           docker_hub: ${{ env.PUBLISH_TO_DOCKER }}
@@ -332,8 +341,8 @@ jobs:
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
   deploy-cloud:
-    if: ${{ ((github.ref == 'refs/heads/master') || 
-        (github.ref == 'refs/heads/dev')) && 
+    if: ${{ ((github.ref == 'refs/heads/master') ||
+        (github.ref == 'refs/heads/dev')) &&
         github.event_name == 'push' }}
     needs: ci
     uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.17
