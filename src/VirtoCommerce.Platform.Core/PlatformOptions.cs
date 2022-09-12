@@ -60,7 +60,7 @@ namespace VirtoCommerce.Platform.Core
         public string[] FileExtensionsWhiteList { get; set; } = new string[0];
 
         /// <summary>
-        /// Extend Rest API reference schemas (using the allOf construct) so that contextual metadata.
+        /// Extend Rest API reference schemas (using the allOf construct) so that contextual metadata can be applied to all parameter and property schemas.
         /// </summary>
         public bool UseAllOfToExtendReferenceSchemas { get; set; } = true;
 
