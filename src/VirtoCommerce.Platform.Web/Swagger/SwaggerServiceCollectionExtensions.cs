@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
+        public static void AddSwagger(this IServiceCollection services, IConfiguration configuration, bool useAllOfToExtendReferenceSchemas)
         {
             var section = configuration.GetSection("VirtoCommerce:Swagger");
             var swaggerOptions = new SwaggerPlatformOptions();
@@ -117,7 +117,10 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
                 c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
 
-                c.UseAllOfToExtendReferenceSchemas();
+                if (useAllOfToExtendReferenceSchemas)
+                {
+                    c.UseAllOfToExtendReferenceSchemas();
+                }
             });
 
             // Unfortunately, we can't use .CustomSchemaIds, because it changes schema ids for all documents (impossible to change ids depending on document name).
