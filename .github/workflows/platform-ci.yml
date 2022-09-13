@@ -1,4 +1,4 @@
-# v3.200.17
+# v3.200.18
 name: Platform CI
 
 on:
@@ -43,7 +43,7 @@ jobs:
       BUILD_STATE: 'failed'
       RELEASE_STATUS: 'false'
       BUILD_DOCKER: 'false'
-      DOCKER_TAG: 'latest'
+      DOCKER_TAG: 'dev-linux-latest'
       MSBuildEnableWorkloadResolver: 'false'
 
     outputs:
@@ -340,12 +340,30 @@ jobs:
         status: ${{ job.status }}
         deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
+  e2e-katalon-tests:
+    if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push')) ||
+            (github.event_name == 'workflow_dispatch')}}
+    needs: 'ci'
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.200.18
+    with:
+      katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
+      katalonRepoBranch: 'dev'
+      testSuite: 'Test Suites/Modules/Platform_collection'
+      installModules: 'true'
+      installCustomModule: 'false'
+      platformDockerTag: ${{ needs.ci.outputs.tag }}
+      storefrontDockerTag: 'dev-linux-latest'
+    secrets:
+      envPAT: ${{ secrets.REPO_TOKEN }}
+      katalonApiKey: ${{ secrets.KATALON_API_KEY }}
+
+
   deploy-cloud:
     if: ${{ ((github.ref == 'refs/heads/master') ||
         (github.ref == 'refs/heads/dev')) &&
         github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.17
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.18
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
