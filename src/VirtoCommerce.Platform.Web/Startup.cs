@@ -42,6 +42,8 @@ using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Settings;
+using VirtoCommerce.Platform.Core.Swagger;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Hangfire.Extensions;
@@ -112,6 +114,8 @@ namespace VirtoCommerce.Platform.Web
             services.AddSingleton<ICommonBlobProvider, LicenseProviderBlobStub>();
             services.AddSingleton<LicenseProvider>();
 
+            var platformOptions = Configuration.GetSection("VirtoCommerce").Get<PlatformOptions>();
+
             var mvcBuilder = services.AddMvc(mvcOptions =>
             {
                 //Disable 204 response for null result. https://github.com/aspnet/AspNetCore/issues/8847
@@ -138,7 +142,11 @@ namespace VirtoCommerce.Platform.Web
             .AddOutputJsonSerializerSettings((settings, jsonOptions) =>
             {
                 settings.CopyFrom(jsonOptions.SerializerSettings);
-                settings.NullValueHandling = NullValueHandling.Include;
+
+                if (platformOptions.IncludeOutputNullValues)
+                {
+                    settings.NullValueHandling = NullValueHandling.Include;
+                }
             });
 
             services.AddSingleton(js =>
@@ -281,7 +289,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
-            var platformOptions = Configuration.GetSection("VirtoCommerce").Get<PlatformOptions>();
+            
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
             // to replace the default OpenIddict entities.
@@ -363,6 +371,7 @@ namespace VirtoCommerce.Platform.Web
             services.Configure<PasswordLoginOptions>(Configuration.GetSection("PasswordLogin"));
             services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
             services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
+            services.Configure<FixedSettings>(Configuration.GetSection("PlatformSettings"));
 
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
@@ -413,7 +422,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddHangfire(Configuration);
 
             // Register the Swagger generator
-            services.AddSwagger(Configuration);
+            services.AddSwagger(Configuration, platformOptions.UseAllOfToExtendReferenceSchemas);
 
             // The following line enables Application Insights telemetry collection.
             // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple
@@ -435,6 +444,8 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
+
+            services.AddTransient<IExternalSigninService, ExternalSigninService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

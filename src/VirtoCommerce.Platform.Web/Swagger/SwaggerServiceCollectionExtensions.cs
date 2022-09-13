@@ -31,7 +31,8 @@ namespace VirtoCommerce.Platform.Web.Swagger
         /// </summary>
         /// <param name="services"></param>
         /// <param name="configuration"></param>
-        public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
+        /// <param name="useAllOfToExtendReferenceSchemas"></param>
+        public static void AddSwagger(this IServiceCollection services, IConfiguration configuration, bool useAllOfToExtendReferenceSchemas)
         {
             var section = configuration.GetSection("VirtoCommerce:Swagger");
             var swaggerOptions = new SwaggerPlatformOptions();
@@ -105,17 +106,17 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
                 c.DocInclusionPredicate((docName, apiDesc) =>
                 {
-                    if (docName.EqualsInvariant(platformUIDocName)) return true; // It's an UI endpoint, return all to correctly build swagger UI page
-
-                    var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
-                    if (docName.EqualsInvariant(platformDocName) && currentAssembly.FullName.StartsWith(docName)) return true; // It's a platform endpoint. 
-                    // It's a module endpoint. 
-                    var module = modules.FirstOrDefault(m => m.ModuleName.EqualsInvariant(docName));
-                    return module != null && module.Assembly == currentAssembly;
+                    return DocInclusionPredicateCustomStrategy(modules, docName, apiDesc);
                 });
+
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
                 c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
+
+                if (useAllOfToExtendReferenceSchemas)
+                {
+                    c.UseAllOfToExtendReferenceSchemas();
+                }
             });
 
             // Unfortunately, we can't use .CustomSchemaIds, because it changes schema ids for all documents (impossible to change ids depending on document name).
@@ -127,6 +128,26 @@ namespace VirtoCommerce.Platform.Web.Swagger
             //to propagate up to the resulting OpenAPI schema the derived types instead of base domain types
             services.AddSwaggerGenNewtonsoftSupport();
 
+        }
+
+        private static bool DocInclusionPredicateCustomStrategy(ManifestModuleInfo[] modules, string docName, ApiDescription apiDesc)
+        {
+            // It's an UI endpoint, return all to correctly build swagger UI page
+            if (docName.EqualsInvariant(platformUIDocName))
+            {
+                return true; 
+            }
+
+            // It's a platform endpoint.
+            var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
+            if (docName.EqualsInvariant(platformDocName) && currentAssembly.FullName.StartsWith(docName))
+            {
+                return true; 
+            }
+
+            // It's a module endpoint. 
+            var module = modules.FirstOrDefault(m => m.ModuleName.EqualsInvariant(docName));
+            return module != null && module.Assembly == currentAssembly;
         }
 
         /// <summary>

@@ -58,5 +58,15 @@ namespace VirtoCommerce.Platform.Core
         /// Extensions of the files that can be uploaded to the server by the platform
         /// </summary>
         public string[] FileExtensionsWhiteList { get; set; } = new string[0];
+
+        /// <summary>
+        /// Extend Rest API reference schemas (using the allOf construct) so that contextual metadata can be applied to all parameter and property schemas.
+        /// </summary>
+        public bool UseAllOfToExtendReferenceSchemas { get; set; } = true;
+
+        /// <summary>
+        /// Include null values when serializing Rest API objects.
+        /// </summary>
+        public bool IncludeOutputNullValues { get; set; } = true;
     }
 }
