@@ -15,7 +15,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Caching;
 
-namespace VirtoCommerce.Platform.Web.Security
+namespace VirtoCommerce.Platform.Security
 {
     public class CustomRoleManager : AspNetRoleManager<Role>
     {

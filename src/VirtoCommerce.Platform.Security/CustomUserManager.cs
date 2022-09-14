@@ -16,7 +16,7 @@ using VirtoCommerce.Platform.Security.Caching;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 
-namespace VirtoCommerce.Platform.Web.Security
+namespace VirtoCommerce.Platform.Security
 {
     public class CustomUserManager : AspNetUserManager<ApplicationUser>
     {
