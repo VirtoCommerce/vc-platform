@@ -59,3 +59,6 @@ extra:
 
 extra_javascript:
     - scripts/scripts-loader.js
+
+extra_css:
+    - stylesheets/extra.css
