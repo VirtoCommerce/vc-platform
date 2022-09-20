@@ -16,19 +16,19 @@ using VirtoCommerce.Platform.Security.Caching;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Repositories;
 
-namespace VirtoCommerce.Platform.Web.Security
+namespace VirtoCommerce.Platform.Security
 {
     public class CustomUserManager : AspNetUserManager<ApplicationUser>
     {
         private readonly IPlatformMemoryCache _memoryCache;
         private readonly RoleManager<Role> _roleManager;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IUserPasswordHasher _userPasswordHasher;
         private readonly UserOptionsExtended _userOptionsExtended;
         private readonly Func<ISecurityRepository> _repositoryFactory;
         private readonly PasswordOptionsExtended _passwordOptionsExtended;
+        private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
 
-        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher, IUserPasswordHasher userPasswordHasher,
+        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher, 
             IOptions<UserOptionsExtended> userOptionsExtended,
             IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
             ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
@@ -38,10 +38,10 @@ namespace VirtoCommerce.Platform.Web.Security
             _memoryCache = memoryCache;
             _roleManager = roleManager;
             _eventPublisher = eventPublisher;
-            _userPasswordHasher = userPasswordHasher;
             _userOptionsExtended = userOptionsExtended.Value;
             _repositoryFactory = repositoryFactory;
             _passwordOptionsExtended = passwordOptionsExtended.Value;
+            _passwordHasher = passwordHasher;
         }
 
         public override async Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey)
@@ -123,7 +123,7 @@ namespace VirtoCommerce.Platform.Web.Security
                 await SavePasswordHistory(user, newPassword);
 
                 // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _userPasswordHasher.HashPassword(user, newPassword);
+                var customPasswordHash = _passwordHasher.HashPassword(user, newPassword);
                 await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
             }
 
@@ -142,7 +142,7 @@ namespace VirtoCommerce.Platform.Web.Security
                 await SavePasswordHistory(user, newPassword);
 
                 // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _userPasswordHasher.HashPassword(user, newPassword);
+                var customPasswordHash = _passwordHasher.HashPassword(user, newPassword);
                 await _eventPublisher.Publish(new UserPasswordChangedEvent(user.Id, customPasswordHash));
             }
 
@@ -220,42 +220,55 @@ namespace VirtoCommerce.Platform.Web.Security
 
             if (result.Succeeded)
             {
-                if (user.Roles != null)
-                {
-                    var targetRoles = await GetRolesAsync(user);
-                    var sourceRoles = user.Roles.Select(x => x.Name);
-
-                    //Add
-                    foreach (var newRole in sourceRoles.Except(targetRoles))
-                    {
-                        await AddToRoleAsync(user, newRole);
-                    }
-
-                    //Remove
-                    foreach (var removeRole in targetRoles.Except(sourceRoles))
-                    {
-                        await RemoveFromRoleAsync(user, removeRole);
-                    }
-                }
-
-                if (user.Logins != null)
-                {
-                    var targetLogins = await GetLoginsAsync(user);
-                    var sourceLogins = user.Logins.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, null));
-
-                    foreach (var item in sourceLogins.Where(x => targetLogins.All(y => x.LoginProvider + x.ProviderKey != y.LoginProvider + y.ProviderKey)))
-                    {
-                        await AddLoginAsync(user, item);
-                    }
-
-                    foreach (var item in targetLogins.Where(x => sourceLogins.All(y => x.LoginProvider + x.ProviderKey != y.LoginProvider + y.ProviderKey)))
-                    {
-                        await RemoveLoginAsync(user, item.LoginProvider, item.ProviderKey);
-                    }
-                }
+                await UpdateUserRolesAsync(user);
+                await UpdateUserLoginsAsync(user);
             }
 
             return result;
+        }
+
+        protected virtual async Task UpdateUserRolesAsync(ApplicationUser user)
+        {
+            if (user.Roles == null)
+            {
+                return;
+            }
+
+            var targetRoles = await GetRolesAsync(user);
+            var sourceRoles = user.Roles.Select(x => x.Name);
+
+            //Add
+            foreach (var newRole in sourceRoles.Except(targetRoles))
+            {
+                await AddToRoleAsync(user, newRole);
+            }
+
+            //Remove
+            foreach (var removeRole in targetRoles.Except(sourceRoles))
+            {
+                await RemoveFromRoleAsync(user, removeRole);
+            }
+        }
+
+        protected virtual async Task UpdateUserLoginsAsync(ApplicationUser user)
+        {
+            if (user.Logins == null)
+            {
+                return;
+            }
+
+            var targetLogins = await GetLoginsAsync(user);
+            var sourceLogins = user.Logins.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, null));
+
+            foreach (var item in sourceLogins.Where(x => targetLogins.All(y => x.LoginProvider + x.ProviderKey != y.LoginProvider + y.ProviderKey)))
+            {
+                await AddLoginAsync(user, item);
+            }
+
+            foreach (var item in targetLogins.Where(x => sourceLogins.All(y => x.LoginProvider + x.ProviderKey != y.LoginProvider + y.ProviderKey)))
+            {
+                await RemoveLoginAsync(user, item.LoginProvider, item.ProviderKey);
+            }
         }
 
         public override async Task<IdentityResult> CreateAsync(ApplicationUser user)

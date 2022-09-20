@@ -15,7 +15,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Caching;
 
-namespace VirtoCommerce.Platform.Web.Security
+namespace VirtoCommerce.Platform.Security
 {
     public class CustomRoleManager : AspNetRoleManager<Role>
     {
@@ -88,12 +88,18 @@ namespace VirtoCommerce.Platform.Web.Security
             return result;
         }
 
-        public override async Task<IdentityResult> UpdateAsync(Role updateRole)
+        public override Task<IdentityResult> UpdateAsync(Role updateRole)
         {
             if (updateRole == null)
             {
                 throw new ArgumentNullException(nameof(updateRole));
             }
+           
+            return UpdateInternalAsync(updateRole);
+        }
+
+        protected virtual async Task<IdentityResult> UpdateInternalAsync(Role updateRole)
+        {
             Role existRole = null;
             if (!string.IsNullOrEmpty(updateRole.Id))
             {
@@ -140,13 +146,18 @@ namespace VirtoCommerce.Platform.Web.Security
             return result;
         }
 
-        protected virtual async Task LoadRolePermissionsAsync(Role role)
+        protected virtual Task LoadRolePermissionsAsync(Role role)
         {
             if (role == null)
             {
                 throw new ArgumentNullException(nameof(role));
             }
 
+            return LoadRolePermissionsInternalAsync(role);
+        }
+
+        protected virtual async Task LoadRolePermissionsInternalAsync(Role role)
+        {
             if (SupportsRoleClaims)
             {
                 role.Permissions = new List<Permission>();

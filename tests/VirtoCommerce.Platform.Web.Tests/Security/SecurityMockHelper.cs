@@ -35,7 +35,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
                 PlatformMemoryCache platformMemoryCache = null,
                 IEventPublisher eventPublisher = null,
                 Func<ISecurityRepository> repositoryFactory = null,
-                Mock<IUserPasswordHasher> passwordHasher = null)
+                Mock<IPasswordHasher<ApplicationUser>> passwordHasher = null)
             {
                 storeMock ??= new Mock<IUserStore<ApplicationUser>>();
                 storeMock.As<IUserRoleStore<ApplicationUser>>()
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
 
                 if (passwordHasher == null)
                 {
-                    passwordHasher = new Mock<IUserPasswordHasher>();
+                    passwordHasher = new Mock<IPasswordHasher<ApplicationUser>>();
                     passwordHasher.Setup(x => x.VerifyHashedPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
                         .Returns(PasswordVerificationResult.Success);
                 }
@@ -84,7 +84,6 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
 
                 var userManager = new CustomUserManager(storeMock.Object,
                     identityOptionsMock.Object,
-                    passwordHasher.Object,
                     passwordHasher.Object,
                     userOptionsMock.Object,
                     userValidators,
