@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 
-namespace VirtoCommerce.Platform.Web.Security
+namespace VirtoCommerce.Platform.Security
 {
     public class CustomUserValidator : IUserValidator<ApplicationUser>
     {

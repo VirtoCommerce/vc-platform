@@ -1,0 +1,9 @@
+[data-md-component=announce] {
+    background-color: var(--md-footer-bg-color);
+    opacity: 0.8;
+}
+
+.md-banner__inner a 
+{
+    color: var(--md-primary-bg-color);
+}

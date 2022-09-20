@@ -137,7 +137,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
             securityRepositoryMock.Setup(x => x.GetUserPasswordsHistoryAsync(It.IsAny<string>(), It.IsAny<int>())).ReturnsAsync(entities);
             ISecurityRepository repositoryFactory() => securityRepositoryMock.Object;
 
-            var passwordHasher = new Mock<IUserPasswordHasher>();
+            var passwordHasher = new Mock<IPasswordHasher<VirtoCommerce.Platform.Core.Security.ApplicationUser>>();
             passwordHasher.Setup(x => x.HashPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
                 .Returns<ApplicationUser, string>((user, password) => Hash(password));
             passwordHasher.Setup(x => x.VerifyHashedPassword(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))

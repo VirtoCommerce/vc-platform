@@ -17,6 +17,10 @@
 	{% set _title = _page.title | striptags ~ " - " ~ _title %}
 {% endif %}
 
+{% block announce %}
+  <a href="/new">A new "preview" version of the documentation is available! - click to preview</a>
+{% endblock %}
+
 {% block htmltitle %}
 <title>{{ _title }}</title>
 {% endblock %}
