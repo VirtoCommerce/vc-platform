@@ -25,11 +25,11 @@ namespace VirtoCommerce.Platform.Web.Telemetry
 
         public void Initialize(ITelemetry telemetry)
         {
-            var platformContext = _httpContextAccessor?.HttpContext;
+            var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
 
-            if (platformContext?.User?.Identity?.Name != null)
+            if (userId != null)
             {
-                telemetry.Context.User.AuthenticatedUserId = platformContext.User.Identity.Name;
+                telemetry.Context.User.AuthenticatedUserId = userId;
             }
             if (!string.IsNullOrEmpty(_options.RoleName))
             {
