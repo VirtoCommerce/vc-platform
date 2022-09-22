@@ -95,7 +95,6 @@ System.Runtime.Caching.dll
 System.Security.Cryptography.ProtectedData.dll
 System.Security.Permissions.dll
 System.Windows.Extensions.dll
-VirtoCommerce.Assets.Abstractions.dll
 VirtoCommerce.Platform.Caching.dll
 VirtoCommerce.Platform.Core.dll
 VirtoCommerce.Platform.Data.dll
