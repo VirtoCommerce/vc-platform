@@ -1,38 +1,37 @@
 using Microsoft.ApplicationInsights.AspNetCore.TelemetryInitializers;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Telemetry;
+using VirtoCommerce.Platform.Data.Repositories;
 
 namespace VirtoCommerce.Platform.Web.Telemetry
 {
     /// <summary>
     /// A telemetry initializer that will gather user identity context information.
     /// </summary>
-    public class UserTelemetryInitializer : TelemetryInitializerBase
+    public class UserTelemetryInitializer : ITelemetryInitializer
     {
         private readonly ApplicationInsightsOptions _options;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserTelemetryInitializer(IHttpContextAccessor httpContextAccessor, IOptions<ApplicationInsightsOptions> options)
-            : base(httpContextAccessor)
+        public UserTelemetryInitializer(IHttpContextAccessor httpContextAccessor, IOptions<ApplicationInsightsOptions> options)            
         {
             _options = options?.Value ?? new ApplicationInsightsOptions();
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>
-        /// Initializes user id and name for Azure Web App case
-        /// </summary>
-        /// <param name="platformContext">Platform context.</param>
-        /// <param name="requestTelemetry">Request telemetry.</param>
-        /// <param name="telemetry">Telemetry item.</param>
-        protected override void OnInitializeTelemetry(HttpContext platformContext, RequestTelemetry requestTelemetry, ITelemetry telemetry)
+        public void Initialize(ITelemetry telemetry)
         {
-            if (platformContext.User?.Identity?.Name != null)
+            var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
+
+            if (userId != null)
             {
-                telemetry.Context.User.AuthenticatedUserId = platformContext.User.Identity.Name;
+                telemetry.Context.User.AuthenticatedUserId = userId;
             }
-            if(!string.IsNullOrEmpty(_options.RoleName))
+            if (!string.IsNullOrEmpty(_options.RoleName))
             {
                 telemetry.Context.Cloud.RoleName = _options.RoleName;
             }
