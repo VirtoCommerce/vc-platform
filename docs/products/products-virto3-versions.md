@@ -49,5 +49,9 @@ Click the hyperlink with the version name to see what versions of modules are in
 |Virto Commerce platform integration pack|[v3-2021-Q1](v3-2021-Q1.md)   |2021-03-21|2021-10-01      |2022-01-01   | 
 |Virto Commerce platform core pack       |[v3-2021-Q3](v3-2021-Q3.md)   |2021-07-01|2022-01-01      |2022-04-01   | 
 |Virto Commerce platform integration pack|[v3-2021-Q3](v3-2021-Q3.md)   |2021-07-01|2022-01-01      |2022-04-01   | 
-|Virto Commerce platform core pack       |[v3-2022-Q1](v3-2021-Q1.md)   |2022-01-01|2022-07-01      |2022-10-01   | 
-|Virto Commerce platform integration pack|[v3-2022-Q1](v3-2021-Q1.md)   |2022-01-01|2022-07-01      |2022-10-01   | 
+|Virto Commerce platform core pack       |[v3-2022-Q1](v3-2022-Q1.md)   |2022-01-01|2022-07-01      |2022-10-01   | 
+|Virto Commerce platform integration pack|[v3-2022-Q1](v3-2022-Q1.md)   |2022-01-01|2022-07-01      |2022-10-01   |
+|Virto Commerce platform core pack       |[v3-2022-Q2](v3-2022-Q2.md)   |2022-06-01|2023-01-01      |2023-04-01   | 
+|Virto Commerce platform integration pack|[v3-2022-Q2](v3-2022-Q2.md)   |2022-06-01|2023-01-01      |2023-04-01   |
+|Virto Commerce platform core pack       |[v3-2022-Q3](v3-2022-Q3.md)   |2022-09-01|2023-04-01      |2023-07-01   | 
+|Virto Commerce platform integration pack|[v3-2022-Q3](v3-2022-Q3.md)   |2022-09-01|2023-04-01      |2023-07-01   |
