@@ -12,7 +12,7 @@
     },
     "qa": {
         "deployAppName": "vcptcore-qa",
-        "deployBranch": "vcpt",
+        "deployBranch": "vcptcore-qa",
         "environmentId": "qa",
         "environmentName": "QA",
         "environmentType": "testing",
