@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <VersionPrefix>3.255.0</VersionPrefix>
+        <VersionPrefix>3.256.0</VersionPrefix>
         <VersionSuffix></VersionSuffix>
         <VersionSuffix Condition=" '$(VersionSuffix)' != '' AND '$(BuildNumber)' != '' ">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
         <NoWarn>$(NoWarn);S3875;S4457</NoWarn>
