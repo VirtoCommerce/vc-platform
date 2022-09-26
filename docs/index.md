@@ -7,8 +7,17 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
-
-!!! done "24 August"
+!!! done "September"
+    * Contracts
+    * B2B Theme Improvements
+    * Refactored Event Bus
+    * Elastic App Search: Next Level of Employee Experience
+    * Design System for B2B Storefront
+    * v3 Stable Release Package
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-19-september-2022/519)
+    
+!!! done "August"
     * Notification Layouts
     * Member Icons
     * Override Platform Settings via Application Settings
@@ -19,7 +28,7 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-24-august-2022/507)
 
-!!! done "11 July"
+!!! done "July"
     * Virto Storefront Updates
     * Payment`s XAPI Updates
     * Shipment REST API Updates
@@ -27,26 +36,6 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * Platform Identity Management Service: Preview
     
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-11-july-2022/482)
-
-!!! done "2 June"
-    * Virto Commerce Storefront v6 on .NET 6  & VC Storefront Theme v1 Released
-    * Virto Commerce Performance Tests
-    * Cross-Selling & Up-Selling & Product Relations
-    * Support for Azure active directory multitenant mode 
-    * Released New Authorize.Net Payment Provider Module
-    * Improved JWT tokens certificate generation
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-2-jun-2022/461)
-
-!!! done "12 May"
-    * Module for Non-integrative payment methods Released
-    * Shipstation integration Released
-    * Big price module (new version) Released
-    * Collapsible tooltips in settings Released
-    * Virto Commerce CLI 3.3 Released
-    * Vue Storefront Theme Update
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-12-may-2022/453)
    
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), Subscribe on [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and Star on [GitHub](https://github.com/VirtoCommerce).
 
@@ -177,13 +166,13 @@ It integrates with DevOps process, and has connection points to a variety of dev
 In our work, we always try to use advanced technologies. Our decision to choose technologies described below was the result of our extensive experience working with Microsoft products.
 
 Virto Commerce uses following stack of technologies:
-
-* ASP.NET Core
-* EF Core as primary ORM
+* .NET 6
+* ASP.NET Core 6
+* Entity Framework Core as primary ORM
 * ASP.NET Core Identity for authentication and authorization
 * OpenIddict for OAuth authorization
-* WebPack as primary design/runtime bundler and minifier
 * Swashbuckle.AspNetCore.SwaggerGen for Swagger docs and UI
 * SignalR Core for push notifications
-* AngularJS  primary framework for SPA
+* Vue as primary framework for SPA
 * HangFire for run background tasks
+and more
