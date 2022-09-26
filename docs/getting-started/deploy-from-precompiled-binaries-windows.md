@@ -3,8 +3,8 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 ## Prerequisites
 
-* [Prerequisites for .NET 5.0 on Windows](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=net50#dependencies)
-* [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
+* [Prerequisites for .NET 6.0 on Windows](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=net60#dependencies)
+* [.NET 6.0 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 
 > Please switch SQL server authentication to mixed mode
@@ -36,13 +36,13 @@ vc-build install
 ```
 Also you can specify the platform version:
 ```console
-vc-build install -platform -version 3.55.0
+vc-build install -platform -version 3.240.0
 ```
 Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-build/blob/main/docs/CLI-tools/package-management.md)  for more info.
 
 ## Setup
 
-### Configure application strings
+### Configure
 
 * Open the **appsettings.json** file in a text editor.
 * In the **ConnectionStrings** section change **VirtoCommerce** node (provided user should have permission to create new database):
@@ -54,7 +54,7 @@ Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc
 
 ```
 
-### Running the Platform on HTTPS schema
+### Run on HTTPS schema (Prefered)
 
 * Install and trust HTTPS certificate
 
@@ -82,7 +82,7 @@ Now listening on: http://localhost:5000
 Now listening on: https://localhost:5001
 ```
 
-### Running the Platform only on HTTP schema
+### Run on HTTP schema
  
 * In order to run the platform only at HTTP schema in production mode, it's enough to pass only HTTP URLs in `--urls` argument of the `dotnet` command.
 
@@ -90,7 +90,7 @@ Now listening on: https://localhost:5001
   dotnet VirtoCommerce.Platform.Web.dll --urls=http://localhost:5000
 ```
 
-### First run sign in
+### First Run
 
 * Open `https://localhost:5001` url in your browser. "Your connection is not private" might appear. Click "Advanced" and "Proceed to ...".
 Read more on removing this error and using a self-signed certificate: [Trust the ASP.NET Core HTTPS development certificate](https://www.hanselman.com/blog/DevelopingLocallyWithASPNETCoreUnderHTTPSSSLAndSelfSignedCerts.aspx)
@@ -98,7 +98,7 @@ Read more on removing this error and using a self-signed certificate: [Trust the
   * Login: **admin**
   * Password: **store**
 
-### Content Configuration in application settings
+### Configure Content Storage
 If you plan to run Virto Commerce on either custom domain or port, you will need to change public url for Assets and Content:
 
 * Open the **appsettings.json** file in a text editor.

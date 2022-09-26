@@ -3,8 +3,8 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 ## Prerequisites
 
-* [Prerequisites for .NET Core on Linux](https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites)
-* [.NET Core SDK on Linux](https://dotnet.microsoft.com/download/linux-package-manager/ubuntu19-04/sdk-current)
+* [Prerequisites for .NET Core on Linux](https://learn.microsoft.com/en-us/dotnet/core/install/linux)
+* [.NET Core SDK on Linux](https://dotnet.microsoft.com/en-us/download?initial-os=linux)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-2017-editions)
 
 
@@ -12,7 +12,7 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 ## You have two options for installing the platform 
 
 * Manual downloading the precomplied binaries
-* Using CLI (beta)
+* Using Virto Commerce CLI (vc-buld)
   
 
 ## Downloading the precomplied binaries
@@ -31,7 +31,7 @@ wget "https://github.com/VirtoCommerce/vc-platform/releases/download/3.x.x/Virto
 unzip VirtoCommerce.Platform.3.x.x.zip -d vc-platform-3
 ```
 
-## Using `vc-build` CLI (beta).
+## Using Virto Commerce CLI (vc-buld).
 
 * Install vc-build 
 ```console
@@ -43,7 +43,7 @@ vc-build install
 ```
 Also you can specify the platform version:
 ```console
-vc-build install -version 3.55.0
+vc-build install -version 3.240.0
 ```
 Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-build/blob/main/docs/CLI-tools/package-management.md) for more info.
 
