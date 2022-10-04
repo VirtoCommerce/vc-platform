@@ -109,7 +109,7 @@
             },
             "decimal": {
                 "title": "Decimal Number",
-                "description": "Decimal number with precision 18 and scale 2."
+                "description": "Decimal number with precision 18 and scale 4."
             },
             "date-time": {
                 "title": "Date time",
