@@ -183,9 +183,11 @@ namespace VirtoCommerce.Platform.Web
             });
 
             var authBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                                      //Add the second ApiKey auth schema to handle api_key in query string
-                                      .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
-                                      .AddCookie();
+                //Add the second ApiKey auth schema to handle api_key in query string
+                .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(ApiKeyAuthenticationOptions.DefaultScheme, options => { })
+                //Add the third BasicAuth auth schema
+                .AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(BasicAuthenticationOptions.DefaultScheme, options => { })
+                .AddCookie();
 
             services.AddSecurityServices(options =>
             {
@@ -387,9 +389,9 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddAuthorization(options =>
             {
-                //We need this policy because it is a single way to implicitly use the two schema (JwtBearer and ApiKey)  authentication for resource based authorization.
+                //We need this policy because it is a single way to implicitly use the three schemas (JwtBearer, ApiKey and Basic) authentication for resource based authorization.
                 var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme)
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme, BasicAuthenticationOptions.DefaultScheme)
                     .RequireAuthenticatedUser()
                     // Customer user can get token, but can't use any API where auth is needed
                     .RequireAssertion(context =>
