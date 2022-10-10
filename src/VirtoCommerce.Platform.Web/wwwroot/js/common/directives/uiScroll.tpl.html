@@ -7,7 +7,7 @@
                on-select="selectValue($item, $model)"
                on-remove="removeValue($item, $model)">
         <ui-select-match placeholder="{{ placeholder || 'platform.placeholders.select-values' | translate }}">
-            {{ isNoItems ? ('platform.list.loading' | translate) : $item.name }}
+            {{ isNoItems ? ('platform.list.loading' | translate) : $item.name || ('platform.list.item-not-found' | translate) }}
         </ui-select-match>
         <ui-select-choices repeat="x.id as x in items | filter: { name: $select.search }"
                            refresh="fetch($select)"
@@ -24,7 +24,7 @@
                on-select="selectValue($item, $model)"
                on-remove="removeValue($item, $model)">
         <ui-select-match allow-clear="true" placeholder="{{ placeholder || 'platform.placeholders.select-value' | translate }}">
-            {{ isNoItems ? ('platform.list.loading' | translate) : $select.selected.name }}
+            {{ isNoItems ? ('platform.list.loading' | translate) : $select.selected.name || ('platform.list.item-not-found' | translate) }}
         </ui-select-match>
         <ui-select-choices repeat="x.id as x in items | filter: { name: $select.search }"
                            refresh="fetch($select)"
