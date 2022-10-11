@@ -7,6 +7,17 @@ namespace VirtoCommerce.Platform.Security
         /// <summary>
         /// Auxiliary error parameter: E.g., RequiredLength, etc.
         /// </summary>
-        public int ErrorParameter { get; set; }
+        public string Parameter { get; set; }
+
+        public CustomIdentityError()
+        {
+        }
+
+        public CustomIdentityError(IdentityError basicError, object parameter)
+        {
+            Code = basicError.Code;
+            Description = basicError.Description;
+            Parameter = parameter.ToString();
+        }
     }
 }

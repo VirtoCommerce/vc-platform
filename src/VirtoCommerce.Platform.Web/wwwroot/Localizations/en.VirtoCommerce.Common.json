@@ -79,7 +79,8 @@
         "list": {
             "no-data": "No data",
             "count": "Count",
-            "loading": "Loading..."
+            "loading": "Loading...",
+            "item-not-found": "Error: Not Found" 
         },
         "placeholders": {
             "n-a": "N/A",
