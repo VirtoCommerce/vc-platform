@@ -12,7 +12,6 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions>
     {
-
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
@@ -22,7 +21,8 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
             UrlEncoder encoder,
             ISystemClock clock,
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager) : base(options, logger, encoder, clock)
+            SignInManager<ApplicationUser> signInManager)
+            : base(options, logger, encoder, clock)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -30,23 +30,19 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            const string scheme = "Basic ";
             var authHeader = Request.Headers["Authorization"].ToString();
-            if (authHeader != null && authHeader.StartsWith("basic", StringComparison.OrdinalIgnoreCase))
+            if (authHeader != null && authHeader.StartsWith(scheme, StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
-                    var encodedAuth = authHeader.Substring("Basic ".Length).Trim();
+                    var encodedCredentials = authHeader.Substring(scheme.Length).Trim();
 
-                    if (string.IsNullOrEmpty(encodedAuth))
-                    {
-                        return AuthenticateResult.Fail("Invalid authentication provided, access denied.");
-                    }
-
-                    var loginPass = DecodeUserIdAndPassword(encodedAuth);
-                    var user = await _userManager.FindByNameAsync(loginPass.Login);
+                    var (userName, password) = DecodeUserNameAndPassword(encodedCredentials);
+                    var user = await _userManager.FindByNameAsync(userName);
                     if (user == null)
                     {
-                        return AuthenticateResult.Fail("Invalid email provided, access denied.");
+                        return AuthenticateResult.Fail("Invalid user name or password, access denied.");
                     }
 
                     if (!await _signInManager.CanSignInAsync(user))
@@ -59,13 +55,14 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
                         return AuthenticateResult.Fail($"User { user.UserName } is currently locked out.");
                     }
 
-                    if (!await _userManager.CheckPasswordAsync(user, loginPass.Password))
+                    if (!await _userManager.CheckPasswordAsync(user, password))
                     {
-                        return AuthenticateResult.Fail("Invalid password provided, access denied.");
+                        return AuthenticateResult.Fail("Invalid user name or password, access denied.");
                     }
 
                     var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
                     var ticket = new AuthenticationTicket(claimsPrincipal, Options.Scheme);
+
                     return AuthenticateResult.Success(ticket);
                 }
                 catch (Exception e)
@@ -77,14 +74,15 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
             return AuthenticateResult.NoResult();
         }
 
-        private static (string Login, string Password) DecodeUserIdAndPassword(string encodedAuth)
+        private static (string userName, string password) DecodeUserNameAndPassword(string encodedCredentials)
         {
-            var loginPass = Encoding.UTF8.GetString(Convert.FromBase64String(encodedAuth));
-
-            var separator = loginPass.IndexOf(':');
-            if (separator == -1) throw new InvalidOperationException("Invalid Authorization header: Missing separator character ':'. See RFC2617.");
-
-            return (loginPass.Substring(0, separator), loginPass.Substring(separator + 1));
+            var decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials));
+            var separatorPosition = decodedCredentials.IndexOf(':');
+            if (separatorPosition == -1)
+            {
+                throw new InvalidOperationException("Invalid Authorization header value: Missing separator character ':'. See RFC2617.");
+            }
+            return (decodedCredentials.Substring(0, separatorPosition), decodedCredentials.Substring(separatorPosition + 1));
         }
     }
 }
