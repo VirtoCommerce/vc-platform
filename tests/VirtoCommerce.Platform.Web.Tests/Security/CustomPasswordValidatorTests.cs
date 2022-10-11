@@ -102,7 +102,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
             {
                 var tooShort = TryFindErrorByCode(result, nameof(IdentityErrorDescriber.PasswordTooShort));
                 Assert.IsType<CustomIdentityError>(tooShort);
-                Assert.Equal(minLength, ((CustomIdentityError)tooShort).ErrorParameter);
+                Assert.Equal(minLength, int.Parse(((CustomIdentityError)tooShort).Parameter));
             }
 
             Assert.Equal(expectedMustHaveUpper, ExistsErrorByCode(result, nameof(IdentityErrorDescriber.PasswordRequiresUpper)));
