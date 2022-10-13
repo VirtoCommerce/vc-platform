@@ -30,59 +30,80 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            const string scheme = "Basic ";
-            var authHeader = Request.Headers["Authorization"].ToString();
-            if (authHeader != null && authHeader.StartsWith(scheme, StringComparison.OrdinalIgnoreCase))
+            // This block is important when working with multiple authentication schemes when only cookies are being sent in request.
+            // See Authorization:LimitedCookiePermissions setting.
+            if (Context.User.Identity?.IsAuthenticated ?? false)
             {
-                try
-                {
-                    var encodedCredentials = authHeader.Substring(scheme.Length).Trim();
-
-                    var (userName, password) = DecodeUserNameAndPassword(encodedCredentials);
-                    var user = await _userManager.FindByNameAsync(userName);
-                    if (user == null)
-                    {
-                        return AuthenticateResult.Fail("Invalid user name or password, access denied.");
-                    }
-
-                    if (!await _signInManager.CanSignInAsync(user))
-                    {
-                        return AuthenticateResult.Fail($"User { user.UserName } is not allowed to login.");
-                    }
-
-                    if (_userManager.SupportsUserLockout && await _userManager.IsLockedOutAsync(user))
-                    {
-                        return AuthenticateResult.Fail($"User { user.UserName } is currently locked out.");
-                    }
-
-                    if (!await _userManager.CheckPasswordAsync(user, password))
-                    {
-                        return AuthenticateResult.Fail("Invalid user name or password, access denied.");
-                    }
-
-                    var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
-                    var ticket = new AuthenticationTicket(claimsPrincipal, Options.Scheme);
-
-                    return AuthenticateResult.Success(ticket);
-                }
-                catch (Exception e)
-                {
-                    return AuthenticateResult.Fail(e.Message);
-                }
+                return AuthenticateResult.Success(new AuthenticationTicket(Context.User, "context.User"));
             }
 
-            return AuthenticateResult.NoResult();
+            if (!TryGetEncodedCredentials(out var encodedCredentials))
+            {
+                return AuthenticateResult.NoResult();
+            }
+
+            if (!TryDecodeCredentials(encodedCredentials, out var userName, out var password))
+            {
+                return AuthenticateResult.Fail("Invalid Authorization header value.");
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null ||
+                !await _signInManager.CanSignInAsync(user) ||
+                _userManager.SupportsUserLockout && await _userManager.IsLockedOutAsync(user) ||
+                !await _userManager.CheckPasswordAsync(user, password))
+            {
+                return AuthenticateResult.Fail("Invalid user name or password.");
+            }
+
+            var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
+            var ticket = new AuthenticationTicket(claimsPrincipal, Options.Scheme);
+
+            return AuthenticateResult.Success(ticket);
         }
 
-        private static (string userName, string password) DecodeUserNameAndPassword(string encodedCredentials)
+
+        private bool TryGetEncodedCredentials(out string encodedCredentials)
         {
-            var decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials));
-            var separatorPosition = decodedCredentials.IndexOf(':');
-            if (separatorPosition == -1)
+            encodedCredentials = null;
+
+            if (Request.Headers.TryGetValue("Authorization", out var values))
             {
-                throw new InvalidOperationException("Invalid Authorization header value: Missing separator character ':'. See RFC2617.");
+                var headerValue = values.ToString();
+                const string scheme = "Basic ";
+
+                if (headerValue != null && headerValue.StartsWith(scheme, StringComparison.OrdinalIgnoreCase))
+                {
+                    encodedCredentials = headerValue.Substring(scheme.Length).Trim();
+                }
             }
-            return (decodedCredentials.Substring(0, separatorPosition), decodedCredentials.Substring(separatorPosition + 1));
+
+            return !string.IsNullOrEmpty(encodedCredentials);
+        }
+
+        private static bool TryDecodeCredentials(string encodedCredentials, out string userName, out string password)
+        {
+            userName = null;
+            password = null;
+
+            try
+            {
+                var decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials));
+                var separatorPosition = decodedCredentials.IndexOf(':');
+
+                if (separatorPosition >= 0)
+                {
+                    userName = decodedCredentials.Substring(0, separatorPosition);
+                    password = decodedCredentials.Substring(separatorPosition + 1);
+                }
+            }
+            catch
+            {
+                // Ignore exceptions
+            }
+
+            return userName != null && password != null;
         }
     }
 }
