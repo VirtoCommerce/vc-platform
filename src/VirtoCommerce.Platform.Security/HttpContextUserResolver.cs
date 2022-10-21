@@ -7,6 +7,16 @@ namespace VirtoCommerce.Platform.Security
 {
     public class HttpContextUserResolver : IUserNameResolver
     {
+        /// <summary>
+        /// This header contains logined user name
+        /// </summary>
+        private const string CurrentUserNameHeader = "VirtoCommerce-User-Name";
+
+        /// <summary>
+        /// This header contains Login-on-behalf operator user name
+        /// </summary>
+        private const string OperatorUserNameHeader = "VirtoCommerce-Operator-User-Name";
+
         private static readonly AsyncLocal<string> _currentUserName = new AsyncLocal<string>();
 
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -26,7 +36,12 @@ namespace VirtoCommerce.Platform.Security
                 var identity = context.User.Identity;
                 if (identity != null && identity.IsAuthenticated)
                 {
-                    result = context.Request.Headers["VirtoCommerce-User-Name"];
+                    // Login-on-behalf operator user has a priority over an actual user
+                    var userHeader = context.Request.Headers.ContainsKey(OperatorUserNameHeader) ?
+                        OperatorUserNameHeader :
+                        CurrentUserNameHeader;
+
+                    result = context.Request.Headers[userHeader];
                     if (string.IsNullOrEmpty(result))
                     {
                         result = identity.Name;
