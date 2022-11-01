@@ -6,10 +6,10 @@ angular.module('platformWebApp')
         var INTEGER_REGEXP = /^\-?\d+$/; //Integer number
         var INTEGER_MAX_VALUE = 2147483647;
         var INTEGER_MIN_VALUE = -2147483648;
-        var FLOAT_REGEXP_1 = /^[-+]?\$?\d+.(\d{3})*(,\d*)$/; //Numbers like: 1.123,56
-        var FLOAT_REGEXP_2 = /^[-+]?\$?\d+,(\d{3})*(.\d*)$/; //Numbers like: 1,123.56
-        var FLOAT_REGEXP_3 = /^[-+]?\$?\d+(.\d*)?$/; //Numbers like: 1123.56
-        var FLOAT_REGEXP_4 = /^[-+]?\$?\d+(,\d*)?$/; //Numbers like: 1123,56
+        var FLOAT_REGEXP_1 = /^[-+]?\$?\d{1,3}(\.\d{3})+(,\d*)$/; //Numbers like: 1.234,5678
+        var FLOAT_REGEXP_2 = /^[-+]?\$?\d{1,3}(,\d{3})+(\.\d*)$/; //Numbers like: 1,234.5678
+        var FLOAT_REGEXP_3 = /^[-+]?\$?\d+(\.\d*)?$/; //Numbers like: 1234.5678
+        var FLOAT_REGEXP_4 = /^[-+]?\$?\d+(,\d*)?$/; //Numbers like: 1234,5678
 
         return {
             require: 'ngModel',
