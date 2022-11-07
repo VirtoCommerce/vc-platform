@@ -13,27 +13,19 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     [Route("api/platform/apps")]
-    [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
     public class AppsController : Controller
     {
-        private readonly IExternalModuleCatalog _externalModuleCatalog;
+        private readonly ILocalModuleCatalog _localModuleCatalog;
 
-        public AppsController(IExternalModuleCatalog externalModuleCatalog)
+        public AppsController(ILocalModuleCatalog externalModuleCatalog)
         {
-            _externalModuleCatalog = externalModuleCatalog;
+            _localModuleCatalog = externalModuleCatalog;
         }
 
-        private void EnsureModulesCatalogInitialized()
-        {
-            _externalModuleCatalog.Initialize();
-        }
-
-        [HttpGet]
+         [HttpGet]
         public ActionResult<AppDescriptor[]> GetApps()
         {
-            EnsureModulesCatalogInitialized();
-
-            var retVal = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>()
+            var retVal = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
                 .SelectMany(x => x.Apps)
                 .Where(x => string.IsNullOrEmpty(x.Permission) || User.HasGlobalPermission(x.Permission))
                 .OrderBy(x => x.Title)

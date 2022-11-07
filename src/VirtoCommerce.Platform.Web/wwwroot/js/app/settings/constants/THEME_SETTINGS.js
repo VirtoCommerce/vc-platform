@@ -67,7 +67,7 @@ angular.module("platformWebApp").constant("THEME_SETTINGS", {
                     template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-login-screen-logo.tpl.html",
                     settingValues: {
                         loginScreenLogo_default: {
-                            url: '/images/logo.svg'
+                            url: '/images/logo-dark.svg'
                         },
                         loginScreenLogo_custom: {
                             url: ''
