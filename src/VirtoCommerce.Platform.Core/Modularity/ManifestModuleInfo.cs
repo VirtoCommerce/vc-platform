@@ -32,6 +32,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public string Copyright { get; private set; }
         public string Tags { get; private set; }
         public ICollection<ModuleIdentity> Dependencies { get; } = new List<ModuleIdentity>();
+
         /// <summary>
         /// List of incompatible modules
         /// </summary>
@@ -42,6 +43,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public string FullPhysicalPath { get; set; }
         public ICollection<string> Errors { get; } = new List<string>();
         public bool UseFullTypeNameInSwagger { get; set; }
+
+        public ICollection<ManifestAppInfo> Apps { get; } = new List<ManifestAppInfo>();
 
         public virtual ManifestModuleInfo LoadFromManifest(ModuleManifest manifest)
         {
@@ -90,6 +93,12 @@ namespace VirtoCommerce.Platform.Core.Modularity
             {
                 Groups.AddRange(manifest.Groups);
             }
+
+            if(manifest.Apps!=null)
+            {
+                this.Apps.AddRange(manifest.Apps.Select(x => new ManifestAppInfo(x)));
+            }
+
             return this;
         }
 

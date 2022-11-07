@@ -78,5 +78,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         [XmlElement("useFullTypeNameInSwagger")]
         public bool UseFullTypeNameInSwagger { get; set; }
+
+        [XmlArray("apps")]
+        [XmlArrayItem("app")]
+        public ManifestApp[] Apps { get; set; }
     }
 }

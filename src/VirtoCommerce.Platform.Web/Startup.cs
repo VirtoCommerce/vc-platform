@@ -39,6 +39,7 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Swagger;
@@ -510,12 +511,39 @@ namespace VirtoCommerce.Platform.Web
             var localModules = app.ApplicationServices.GetRequiredService<ILocalModuleCatalog>().Modules;
             foreach (var module in localModules.OfType<ManifestModuleInfo>())
             {
+                // Step 1. Enables static file serving for module
                 app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
                     RequestPath = new PathString($"/modules/$({module.ModuleName})")
                 });
+
+                // Step 2. Enables static file serving for apps
+                foreach (var moduleApp in module.Apps)
+                {
+                    var appPath = string.IsNullOrEmpty(moduleApp.ContentPath) ?
+                        Path.Combine(module.FullPhysicalPath, "Content", moduleApp.Id):
+                        Path.Combine(module.FullPhysicalPath, moduleApp.ContentPath);
+
+                    if (!Directory.Exists(appPath))
+                    {
+                        throw new ModuleInitializeException($"The '{appPath}' directory doesn't exist for {module.ModuleName}");
+                    }
+
+                    app.UseDefaultFiles(new DefaultFilesOptions()
+                    {
+                        FileProvider = new PhysicalFileProvider(appPath),
+                        RequestPath = new PathString($"/apps/{moduleApp.Id}")
+                    });
+                    app.UseStaticFiles(new StaticFileOptions()
+                    {
+                        FileProvider = new PhysicalFileProvider(appPath),
+                        RequestPath = new PathString($"/apps/{moduleApp.Id}")
+                    });
+                }
             }
+
+
 
             app.UseDefaultFiles();
 
