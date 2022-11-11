@@ -39,6 +39,5 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// Path to App content in the module. By default Content/{moduleApp.Id}
         /// </summary>
         public string ContentPath { get; set; }
-
     }
 }

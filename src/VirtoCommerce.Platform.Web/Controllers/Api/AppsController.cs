@@ -17,17 +17,16 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly ILocalModuleCatalog _localModuleCatalog;
 
-        public AppsController(ILocalModuleCatalog externalModuleCatalog)
+        public AppsController(ILocalModuleCatalog localModuleCatalog)
         {
-            _localModuleCatalog = externalModuleCatalog;
+            _localModuleCatalog = localModuleCatalog;
         }
 
         [HttpGet]
-        public ActionResult<AppDescriptor[]> GetApps(bool checkPermissions = false)
+        public ActionResult<AppDescriptor[]> GetApps()
         {
             var appList = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
                 .SelectMany(x => x.Apps)
-                .Where(x => string.IsNullOrEmpty(x.Permission) || !checkPermissions || User.HasGlobalPermission(x.Permission))
                 .OrderBy(x => x.Title)
                 .Select(x => new AppDescriptor(x))
                 .ToList();
