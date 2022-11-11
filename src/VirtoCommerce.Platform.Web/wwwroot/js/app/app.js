@@ -1,5 +1,6 @@
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
-    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile', 'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps',
+    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
+    'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps',
     function ($rootScope, $scope, mainMenuService,
         i18n, modules, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps) {
 
@@ -64,7 +65,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
         $scope.mainMenu = {};
         $scope.mainMenu.items = mainMenuService.menuItems;
-        $scope.mainMenu.apps = []; 
+        $scope.mainMenu.apps = [];
 
         // load web apps
         webApps.list({}, function (result) {
