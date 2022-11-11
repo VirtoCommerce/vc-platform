@@ -16,7 +16,8 @@ namespace VirtoCommerce.Platform.Web.Model.Modularity
             this.Title = moduleAppInfo.Title;
             this.Description = moduleAppInfo.Description;
             this.IconUrl = moduleAppInfo.IconUrl;
-            this.Path = moduleAppInfo.Path;
+            this.RelativeUrl = moduleAppInfo.RelativeUrl;
+            this.Permission = moduleAppInfo.Permission;
         }
 
 
@@ -26,6 +27,8 @@ namespace VirtoCommerce.Platform.Web.Model.Modularity
 
         public string IconUrl { get; set; }
 
-        public string Path { get; set; }
+        public string RelativeUrl { get; set; }
+
+        public string Permission { get; set; }
     }
 }

@@ -97,6 +97,11 @@ angular.module('platformWebApp')
                         }, function () { updateFavorites(); }, true);
                     };
 
+                    scope.toggleAppsMenu = function () {
+                        scope.menu.showAppsMenu = !scope.menu.showAppsMenu;
+                    };
+
+
                     scope.selectItem = function (menuItem) {
                         if (scope.showSubMenu && scope.currentMenuItem === menuItem) {
                             scope.showSubMenu = false;
@@ -115,6 +120,11 @@ angular.module('platformWebApp')
                                 scope.showSubMenu = false;
                             });
                         }
+                        if (scope.menu.showAppsMenu && event.keyCode === 27) {
+                            scope.$apply(function () {
+                                scope.menu.showAppsMenu = false;
+                            });
+                        }
                     }
 
                     function handleClickEvent(event) {
@@ -124,6 +134,14 @@ angular.module('platformWebApp')
                             hadDropdownElement.is(event.target) || hadDropdownElement.has(event.target).length > 0)) {
                             scope.$apply(function () {
                                 scope.showSubMenu = false;
+                            });
+                        }
+                        var appsMenuElement = $document.find('.links-menu');
+                        var logoElement = $document.find('.logo');
+                        if (scope.menu.showAppsMenu && !(appsMenuElement.is(event.target) || appsMenuElement.has(event.target).length > 0 ||
+                            logoElement.is(event.target) || logoElement.has(event.target).length > 0)) {
+                            scope.$apply(function () {
+                                scope.menu.showAppsMenu = false;
                             });
                         }
                     }

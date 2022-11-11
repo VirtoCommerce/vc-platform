@@ -22,17 +22,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _localModuleCatalog = externalModuleCatalog;
         }
 
-         [HttpGet]
-        public ActionResult<AppDescriptor[]> GetApps()
+        [HttpGet]
+        public ActionResult<AppDescriptor[]> GetApps(bool checkPermissions = false)
         {
-            var retVal = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
+            var appList = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
                 .SelectMany(x => x.Apps)
-                .Where(x => string.IsNullOrEmpty(x.Permission) || User.HasGlobalPermission(x.Permission))
+                .Where(x => string.IsNullOrEmpty(x.Permission) || !checkPermissions || User.HasGlobalPermission(x.Permission))
                 .OrderBy(x => x.Title)
                 .Select(x => new AppDescriptor(x))
-                .ToArray();
+                .ToList();
 
-            return Ok(retVal);
+            appList.Insert(0, new AppDescriptor
+            {
+                Id = "platform",
+                Title = "VC Platform",
+                Description = "Virto Commerce Platform",
+                RelativeUrl = "/",
+                IconUrl = "/images/platform_app.svg"
+            });
+
+            return Ok(appList.ToArray());
 
         }
 
