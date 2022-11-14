@@ -69,8 +69,9 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
         // load web apps
         webApps.list({}, function (result) {
-            if (angular.isArray(result))
+            if (angular.isArray(result)) {
                 $scope.mainMenu.apps = result;
+            }
         });
 
         $scope.mainMenu.showAppsMenu = false;
