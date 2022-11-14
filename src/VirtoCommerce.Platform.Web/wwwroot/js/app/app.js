@@ -69,7 +69,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
         // load web apps
         webApps.list({}, function (result) {
-            $scope.mainMenu.apps = result;
+            if (angular.isArray(result))
+                $scope.mainMenu.apps = result;
         });
 
         $scope.mainMenu.showAppsMenu = false;
@@ -82,6 +83,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
         $scope.toggleAppsMenu = function () {
             $scope.mainMenu.showAppsMenu = !$scope.mainMenu.showAppsMenu;
+        };
+
+        $scope.hasApps = function () {
+            return $scope.mainMenu.apps.length > 1;
         };
 
         function initializeMainMenu(profile) {
