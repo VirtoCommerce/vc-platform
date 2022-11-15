@@ -40,6 +40,7 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Swagger;
@@ -509,15 +510,9 @@ namespace VirtoCommerce.Platform.Web
                 RequestPath = new PathString($"/$(Platform)/Scripts")
             });
 
-            var localModules = app.ApplicationServices.GetRequiredService<ILocalModuleCatalog>().Modules;
-            foreach (var module in localModules.OfType<ManifestModuleInfo>())
-            {
-                app.UseStaticFiles(new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
-                    RequestPath = new PathString($"/modules/$({module.ModuleName})")
-                });
-            }
+
+            // Enables static file serving with the module and apps options
+            app.UseModulesAndAppsFiles();
 
             app.UseDefaultFiles();
 

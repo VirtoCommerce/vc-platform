@@ -1,10 +1,39 @@
 <va-main-menu ng-model="mainMenu" on-menu-changed="onMainMenuChanged(mainMenu)">
     <div class="logo" ng-if="!mainMenu.isCollapsed">
+        <!-- Links menu button -->
+        <button class="links-menu-button" ng-click="toggleAppsMenu()" ng-show="hasApps()">
+          <svg class="links-menu-button__icon" viewBox="0 0 22 22" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="2.53846" cy="2.53846" r="2.53846"></circle>
+            <ellipse cx="10.9999" cy="2.53846" rx="2.53846" ry="2.53846"></ellipse>
+            <ellipse cx="19.4616" cy="2.53846" rx="2.53846" ry="2.53846"></ellipse>
+            <ellipse cx="2.53846" cy="11" rx="2.53846" ry="2.53846"></ellipse>
+            <ellipse cx="2.53846" cy="19.4615" rx="2.53846" ry="2.53846"></ellipse>
+            <circle cx="10.9999" cy="11" r="2.53846"></circle>
+            <circle cx="10.9999" cy="19.4615" r="2.53846"></circle>
+            <circle cx="19.4616" cy="11" r="2.53846"></circle>
+            <circle cx="19.4616" cy="19.4615" r="2.53846"></circle>
+          </svg>
+        </button>
+        <div style="width: 13px" ng-show="!hasApps()">&nbsp;</div>
         <img class="logo__img" ng-src="{{ uiCustomization.topPanelLogo_full_custom.url || uiCustomization.topPanelLogo_full_default.url }}" fallback-src="{{ uiCustomization.topPanelLogo_full_default.url }}" />
         <a class="logo-version" href="" ng-click="showVersionInfo()">{{platformVersion}}</a>
     </div>
     <div class="logo" ng-if="mainMenu.isCollapsed">
-        <img class="logo__img logo__img--collapsed" ng-src="{{ uiCustomization.topPanelLogo_mini_custom.url || uiCustomization.topPanelLogo_mini_default.url }}" fallback-src="{{ uiCustomization.topPanelLogo_mini_default.url }}" />
+        <img ng-show="!hasApps()" class="logo__img logo__img--collapsed" ng-src="{{ uiCustomization.topPanelLogo_mini_custom.url || uiCustomization.topPanelLogo_mini_default.url }}" fallback-src="{{ uiCustomization.topPanelLogo_mini_default.url }}" />
+        <!-- Links menu button -->
+        <button class="links-menu-button"  ng-click="toggleAppsMenu()" ng-show="hasApps()">
+          <svg class="links-menu-button__icon" viewBox="0 0 22 22" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="2.53846" cy="2.53846" r="2.53846"></circle>
+            <ellipse cx="10.9999" cy="2.53846" rx="2.53846" ry="2.53846"></ellipse>
+            <ellipse cx="19.4616" cy="2.53846" rx="2.53846" ry="2.53846"></ellipse>
+            <ellipse cx="2.53846" cy="11" rx="2.53846" ry="2.53846"></ellipse>
+            <ellipse cx="2.53846" cy="19.4615" rx="2.53846" ry="2.53846"></ellipse>
+            <circle cx="10.9999" cy="11" r="2.53846"></circle>
+            <circle cx="10.9999" cy="19.4615" r="2.53846"></circle>
+            <circle cx="19.4616" cy="11" r="2.53846"></circle>
+            <circle cx="19.4616" cy="19.4615" r="2.53846"></circle>
+          </svg>
+        </button>
     </div>
 </va-main-menu>
 <article class="cnt" role="main">

@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -91,6 +95,48 @@ namespace VirtoCommerce.Platform.Web.Extensions
         {
             var distributedLockProvider = app.ApplicationServices.GetRequiredService<IDistributedLockProvider>();
             distributedLockProvider.ExecuteSynchronized(nameof(Startup), (x) => payload());
+            return app;
+        }
+
+        public static IApplicationBuilder UseModulesAndAppsFiles(this IApplicationBuilder app)
+        {
+            var localModules = app.ApplicationServices.GetRequiredService<ILocalModuleCatalog>().Modules;
+
+            foreach (var module in localModules.OfType<ManifestModuleInfo>())
+            {
+                // Step 1. Enables static file serving for module
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(module.FullPhysicalPath),
+                    RequestPath = new PathString($"/modules/$({module.ModuleName})")
+                });
+
+                // Step 2. Enables static file serving for apps
+                foreach (var moduleApp in module.Apps)
+                {
+                    var appPath = string.IsNullOrEmpty(moduleApp.ContentPath) ?
+                        Path.Combine(module.FullPhysicalPath, "Content", moduleApp.Id) :
+                        Path.Combine(module.FullPhysicalPath, moduleApp.ContentPath);
+
+                    if (!Directory.Exists(appPath))
+                    {
+                        throw new ModuleInitializeException($"The '{appPath}' directory doesn't exist for {module.ModuleName}");
+                    }
+
+                    app.UseDefaultFiles(new DefaultFilesOptions()
+                    {
+                        FileProvider = new PhysicalFileProvider(appPath),
+                        RequestPath = new PathString($"/apps/{moduleApp.Id}")
+                    });
+
+                    app.UseStaticFiles(new StaticFileOptions()
+                    {
+                        FileProvider = new PhysicalFileProvider(appPath),
+                        RequestPath = new PathString($"/apps/{moduleApp.Id}")
+                    });
+                }
+            }
+
             return app;
         }
     }
