@@ -160,4 +160,4 @@ Recommend to install [WebPack Task Runner](https://marketplace.visualstudio.com/
 
 ## Troubleshooting
 
-* ['Could not load file or assembly GitVersionTask.MsBuild' when starting the platform through 'dotnet run' command](https://community.virtocommerce.com/t/could-not-load-file-or-assembly-gitversiontask-msbuild-when-starting-the-platform-through-dotnet-run-command/203)
+* ['Could not load file or assembly GitVersionTask.MsBuild' when starting the platform through 'dotnet run' command](https://virtocommerce.com/request-demo)
