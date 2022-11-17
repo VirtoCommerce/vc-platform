@@ -15,6 +15,6 @@ Check out our Mobile Starter kit app in action:
 ![](../../assets/images/docs/qr_9eb6619b.png)
 * A fully functional mobile storefront app opens as the customer would see it:  
 ![](../../assets/images/docs/00-home.PNG)  
-It's preconfigured to duplicate the Virto Commerce storefront demo site [http://demo.virtocommerce.com/Clothing](http://demo.virtocommerce.com/Clothing). Create some test orders in the app right now and process them in Commerce Manager at [http://demo.virtocommerce.com/admin](http://demo.virtocommerce.com/admin) later.  
+It's preconfigured to duplicate the [Virto Commerce storefront demo site](https://virtocommerce.com/request-demo). Create some test orders in the app right now and process them in Commerce Manager [here](https://virtocommerce.com/request-demo) later. 
   
 You can create your own mobile point of sale apps using our Mobile Starter kit. Check [Getting started for developers](docs/vc2devguide/development-scenarios/mobile-starter-kit-getting-started) guide for  technical details.
