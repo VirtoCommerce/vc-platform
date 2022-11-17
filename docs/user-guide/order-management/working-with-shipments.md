@@ -25,7 +25,7 @@ To connect ShipStation with your VirtoCommerce deployment, follow the steps belo
 * Copy the below fields for "username", "password" and "URL" the custom store setup:
   * **Username** - Enter username of VirtoCommerce user with WebApi permission.
   * **Password** - Enter password of VirtoCommerce user with WebApi permission.
-  * **URL to custom XML page** - URL to VirtoCommerce web manager added path to shipstation api - "/api/fulfillment/shipstation". Say your Web manager address is: http://demo.virtocommerce.com/admin in that case url to shipstation api would be http://demo.virtocommerce.com/admin/api/fulfillment/shipstation  
+  * **URL to custom XML page** - URL to VirtoCommerce web manager added path to shipstation api - "/api/fulfillment/shipstation". Say your Web manager address is: https://virtocommerce.com/request-demo. In that case, the URL to shipstation API would be https://virtocommerce.com/request-demo/api/fulfillment/shipstation  
 ![](../../assets/images/docs/image2015-7-23_17-26-39.png)
 * Click on **Test Connection** to check whether all the details are entered correctly or not. Upon successful connection, you will receive an alert notifying that **your marketplace connection was successful**.
 ![](../../assets/images/docs/image2015-7-23_17-32-19.png)
