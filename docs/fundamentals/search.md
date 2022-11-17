@@ -309,12 +309,11 @@ The following example is a representative query constructed in the Storefront an
 ```
 
 **Storefront UI:**
-https://demo.virtocommerce.com/en-US/search?type=product&q=Home
+https://virtocommerce.com/request-demo
 
 ![image|645x499](../media/search_10.png) 
 
-[Try API on Our Demo Site](
-https://admin-demo.virtocommerce.com/docs/index.html?urls.primaryName=VirtoCommerce.Catalog)
+[Try API on Our Demo Site](https://virtocommerce.com/request-demo)
 
 **Request:**
 ```
