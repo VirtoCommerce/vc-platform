@@ -231,7 +231,7 @@ For now we have domain and data model, persistent layer and CRUD and search serv
 
 ### Use generic members API for custom members access
 
-Platform VirtoCommerce.Customer module exposes generic [restful API for members management](http://demo.virtocommerce.com/admin/docs/ui/index#!/Customer_management_module):
+Platform VirtoCommerce.Customer module exposes generic [restful API for members management](https://virtocommerce.com/request-demo):
 
 ![](../../assets/images/docs/image2016-4-12_16-48-55.png)
 
