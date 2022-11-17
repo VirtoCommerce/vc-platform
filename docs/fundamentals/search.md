@@ -309,7 +309,7 @@ The following example is a representative query constructed in the Storefront an
 ```
 
 **Storefront UI:**
-https://demo.virtocommerce.com/en-US/search?type=product&q=Home
+https://virtocommerce.com/request-demo
 
 ![image|645x499](../media/search_10.png) 
 
@@ -438,11 +438,11 @@ search for products with price betweeb 100$ and 200$:
 ```  
 
 **Storefront UI:**
-https://demo.virtocommerce.com/search?terms=price%3a100-200
+https://virtocommerce.com/request-demo
 
 ![image|690x456](../media/search_12.png) 
 
-[Try API on Our Demo Site](https://admin-demo.virtocommerce.com/docs/index.html?urls.primaryName=VirtoCommerce.Catalog)
+[Try API on Our Demo Site](https://virtocommerce.com/request-demo)
 
 **Request:**
 ```
