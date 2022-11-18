@@ -287,8 +287,8 @@ You can control this by [ItemResponseGroup](https://github.com/VirtoCommerce/vc-
 | ItemLarge |  2047 |ItemMedium \| Variations \| Links \| Inventory \| Outline|
 
 #### Return 10 products with Only simple product information:
-[Try API on Our Demo Site](https://admin-demo.virtocommerce.com/docs/index.html?urls.primaryName=VirtoCommerce.Catalog)
 
+`POST /api/catalog/catalogs/search`
 **Request:**
 ```
 {
@@ -309,12 +309,13 @@ The following example is a representative query constructed in the Storefront an
 ```
 
 **Storefront UI:**
-https://demo.virtocommerce.com/en-US/search?type=product&q=Home
+
+`/search?type=product&q=Home`
 
 ![image|645x499](../media/search_10.png) 
 
-[Try API on Our Demo Site](
-https://admin-demo.virtocommerce.com/docs/index.html?urls.primaryName=VirtoCommerce.Catalog)
+
+`POST /api/catalog/catalogs/search`
 
 **Request:**
 ```
@@ -372,12 +373,11 @@ search for products by `Sony` brand **AND** `Wi-Fi` features:
 ```  
 
 **Storefront UI:**
-https://demo.virtocommerce.com/search?terms=Brand%3aSony
+`/search?terms=Brand%3aSony`
 
 ![image|690x425](../media/search_11.png) 
 
-[Try API on Our Demo Site](https://admin-demo.virtocommerce.com/docs/index.html?urls.primaryName=VirtoCommerce.Catalog)
-
+`POST /api/catalog/catalogs/search`
 **Request:**
 ```
 {
@@ -438,11 +438,11 @@ search for products with price betweeb 100$ and 200$:
 ```  
 
 **Storefront UI:**
-https://demo.virtocommerce.com/search?terms=price%3a100-200
+`/search?terms=price%3a100-200`
 
 ![image|690x456](../media/search_12.png) 
 
-[Try API on Our Demo Site](https://admin-demo.virtocommerce.com/docs/index.html?urls.primaryName=VirtoCommerce.Catalog)
+`POST /api/catalog/catalogs/search`
 
 **Request:**
 ```
@@ -500,12 +500,11 @@ search for products in `Cell Phones` and `Televisions` categories (Category Id: 
 ```  
 
 **Storefront UI:**
-https://demo.virtocommerce.com/en-US/cell-phones
+`/cell-phones`
 
 ![image|690x481](../media/search_13.png) 
 
-[Try API on Our Demo Site](https://admin-demo.virtocommerce.com/docs/index.html?urls.primaryName=VirtoCommerce.Catalog)
-
+`POST /api/catalog/catalogs/search`
 **Request:**
 ```
 {
