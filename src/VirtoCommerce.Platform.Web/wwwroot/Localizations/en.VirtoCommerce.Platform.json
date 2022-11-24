@@ -25,7 +25,8 @@
                 "labels": {
                     "clr-version": "CLR version",
                     "is-64-bit-os": "64-bit operating system",
-                    "is-64-bit-process": "64-bit process"
+                    "is-64-bit-process": "64-bit process",
+                    "database-provider": "Database Provider"
                 }
             },
             "asset-list": {

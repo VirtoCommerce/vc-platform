@@ -46,24 +46,25 @@ namespace VirtoCommerce.Platform.Security.Repositories
         /// <returns></returns>
         private static bool CheckDatabaseExist(string sourceConnectionString)
         {
-            var builder = new SqlConnectionStringBuilder(sourceConnectionString);
-            var dbName = builder.InitialCatalog; // Catch database name to search from the connection string
-            builder.Remove("Initial Catalog"); // Initial catalog should be removed from connection string, otherwise the connection could not be opened
-            const string cmdCheckDb =
-                @"select 1 from [sys].[databases] where name=@dbname";
-            var connectionString = builder.ConnectionString;
+            //var builder = new SqlConnectionStringBuilder(sourceConnectionString);
+            //var dbName = builder.InitialCatalog; // Catch database name to search from the connection string
+            //builder.Remove("Initial Catalog"); // Initial catalog should be removed from connection string, otherwise the connection could not be opened
+            //const string cmdCheckDb =
+            //    @"select 1 from [sys].[databases] where name=@dbname";
+            //var connectionString = builder.ConnectionString;
 
-            using var conn = new SqlConnection(connectionString);
-            using var commandCheckDb = conn.CreateCommand();
-            commandCheckDb.CommandText = cmdCheckDb;
-            var parameterDbName = commandCheckDb.CreateParameter();
-            parameterDbName.ParameterName = "dbName";
-            parameterDbName.Value = dbName;
-            commandCheckDb.Parameters.Add(parameterDbName);
-            conn.Open();
-            using var readerCheckDb = commandCheckDb.ExecuteReader();
+            //using var conn = new SqlConnection(connectionString);
+            //using var commandCheckDb = conn.CreateCommand();
+            //commandCheckDb.CommandText = cmdCheckDb;
+            //var parameterDbName = commandCheckDb.CreateParameter();
+            //parameterDbName.ParameterName = "dbName";
+            //parameterDbName.Value = dbName;
+            //commandCheckDb.Parameters.Add(parameterDbName);
+            //conn.Open();
+            //using var readerCheckDb = commandCheckDb.ExecuteReader();
 
-            return readerCheckDb.HasRows;
+            //return readerCheckDb.HasRows;
+            return false;
         }
 
         /// <summary>

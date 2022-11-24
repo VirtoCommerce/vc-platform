@@ -1,5 +1,7 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RedLockNet.SERedis;
@@ -20,16 +22,20 @@ namespace VirtoCommerce.Platform.Web.Migrations
         /// </summary>
         /// <param name="appBuilder"></param>
         /// <returns></returns>
-        public static IApplicationBuilder UsePlatformMigrations(this IApplicationBuilder appBuilder)
+        public static IApplicationBuilder UsePlatformMigrations(this IApplicationBuilder appBuilder, IConfiguration configuration)
         {
+            var databaseProvider = (DatabaseProvider)Enum.Parse<DatabaseProvider>(configuration.GetValue("DatabaseProvider", "SqlServer"), true);
+
             using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
             {
                 var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
-                platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
+                if(databaseProvider == DatabaseProvider.SqlServer)
+                    platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
                 platformDbContext.Database.Migrate();
 
                 var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
-                securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
+                if (databaseProvider == DatabaseProvider.SqlServer)
+                    securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
                 securityDbContext.Database.Migrate();
             }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Humanizer.Configuration;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -88,6 +90,9 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var databaseProvider = Enum.Parse<DatabaseProvider>(Configuration.GetValue("DatabaseProvider", "SqlServer"), true);
+
+
             services.AddForwardedHeaders();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -159,7 +164,19 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
-                options.UseSqlServer(Configuration["Auth:ConnectionString"] ?? Configuration.GetConnectionString("VirtoCommerce"));
+                switch (databaseProvider)
+                {
+                    case DatabaseProvider.MySql:
+                        options.UseMySql(Configuration["Auth:ConnectionString"] ?? Configuration.GetConnectionString("VirtoCommerce"), new MySqlServerVersion(new Version(5, 7)), x => x.MigrationsAssembly("VirtoCommerce.Platform.Security.MySql"));
+                        break;
+                    case DatabaseProvider.PostgreSql:
+                        options.UseNpgsql(Configuration["Auth:ConnectionString"] ?? Configuration.GetConnectionString("VirtoCommerce"), x => x.MigrationsAssembly("VirtoCommerce.Platform.Security.PostgreSql"));
+                        break;
+                    default:
+                        options.UseSqlServer(Configuration["Auth:ConnectionString"] ?? Configuration.GetConnectionString("VirtoCommerce"));
+                        break;
+                }
+
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.
@@ -526,7 +543,7 @@ namespace VirtoCommerce.Platform.Web
                 // This ensures only one active EF-migration ran simultaneously to avoid DB-related side-effects.
 
                 // Apply platform migrations
-                app.UsePlatformMigrations();
+                app.UsePlatformMigrations(Configuration);
 
                 app.UpdateServerCertificateIfNeed(ServerCertificate);
 
