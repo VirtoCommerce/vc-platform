@@ -1,3 +1,0 @@
-Add-Migration Initial -Context VirtoCommerce.Platform.Security.Repositories.SecurityDbContext  -Verbose -OutputDir Migrations -Project VirtoCommerce.Platform.Security -Debug -Args SqlServer
-Add-Migration Initial -Context VirtoCommerce.Platform.Security.Repositories.SecurityDbContext  -Verbose -OutputDir Migrations -Project VirtoCommerce.Platform.Security.MySql -Debug -Args MySql
-Add-Migration Initial -Context VirtoCommerce.Platform.Security.Repositories.SecurityDbContext  -Verbose -OutputDir Migrations -Project VirtoCommerce.Platform.Security.PostgreSql -Debug -Args PostgreSql

@@ -2,12 +2,9 @@
 
 using System;
 using System.Linq;
-using System.Threading.Tasks;
-using Humanizer.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -37,7 +34,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var platformVersion = PlatformVersion.CurrentVersion.ToString();
             var license = _licenseProvider.GetLicense();
-            var databaseProvider = Enum.Parse<DatabaseProvider>(_configuration.GetValue("DatabaseProvider", "SqlServer"), true);
+
+            var databaseProvider = _configuration.GetValue("DatabaseProvider", "SqlServer");
 
 
             var installedModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).OrderBy(x => x.Id)

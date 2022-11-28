@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,11 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using Humanizer.Configuration;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,17 +41,21 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Core.Swagger;
 using VirtoCommerce.Platform.Data.Extensions;
+using VirtoCommerce.Platform.Data.MySql;
+using VirtoCommerce.Platform.Data.PostgreSql;
+using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.SqlServer;
+using VirtoCommerce.Platform.Data.SqlServer.Migrations.Data;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Repositories;
+using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
@@ -90,8 +93,7 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var databaseProvider = Enum.Parse<DatabaseProvider>(Configuration.GetValue("DatabaseProvider", "SqlServer"), true);
-
+            var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
 
             services.AddForwardedHeaders();
 
@@ -113,6 +115,26 @@ namespace VirtoCommerce.Platform.Web
             });
             //Get platform version from GetExecutingAssembly
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
+
+            services.AddDbContext<PlatformDbContext>((provider, options) =>
+            {
+                var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
+                var connectionString = Configuration.GetConnectionString("VirtoCommerce");
+
+                switch (databaseProvider)
+                {
+                    case "MySql":
+                        options.UseMySqlDatabase(connectionString);
+                        break;
+                    case "PostgreSql":
+                        options.UsePostgreSqlDatabase(connectionString);
+                        break;
+                    default:
+                        options.UseSqlServerDatabase(connectionString);
+                        break;
+                }
+            });
+
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
@@ -164,16 +186,19 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
+                var connectionString = Configuration["Auth:ConnectionString"] ??
+                    Configuration.GetConnectionString("VirtoCommerce");
+
                 switch (databaseProvider)
                 {
-                    case DatabaseProvider.MySql:
-                        options.UseMySql(Configuration["Auth:ConnectionString"] ?? Configuration.GetConnectionString("VirtoCommerce"), new MySqlServerVersion(new Version(5, 7)), x => x.MigrationsAssembly("VirtoCommerce.Platform.Security.MySql"));
+                    case "MySql":
+                        options.UseMySqlDatabase(connectionString);
                         break;
-                    case DatabaseProvider.PostgreSql:
-                        options.UseNpgsql(Configuration["Auth:ConnectionString"] ?? Configuration.GetConnectionString("VirtoCommerce"), x => x.MigrationsAssembly("VirtoCommerce.Platform.Security.PostgreSql"));
+                    case "PostgreSql":
+                        options.UsePostgreSqlDatabase(connectionString);
                         break;
                     default:
-                        options.UseSqlServer(Configuration["Auth:ConnectionString"] ?? Configuration.GetConnectionString("VirtoCommerce"));
+                        options.UseSqlServerDatabase(connectionString);
                         break;
                 }
 
@@ -230,7 +255,25 @@ namespace VirtoCommerce.Platform.Web
 
             // Load server certificate (from DB or file) and register it as a global singleton
             // to allow the platform hosting under the cert
-            ServerCertificate = Configuration.GetServerCertificate();
+            ICertificateLoader certificateLoader;
+            switch (databaseProvider)
+            {
+                case "MySql":
+                    certificateLoader = new MySqlCertificateLoader(Configuration);
+                    services.AddSingleton<ICertificateLoader>(s => { return certificateLoader;});
+                    break;
+                case "PostgreSql":
+                    certificateLoader = new PostgreSqlCertificateLoader(Configuration);
+                    services.AddSingleton<ICertificateLoader>(s => { return certificateLoader; });
+                    break;
+                default:
+                    certificateLoader = new SqlServerCertificateLoader(Configuration);
+                    services.AddSingleton<ICertificateLoader>(s => { return certificateLoader; });
+                    break;
+            }
+
+
+            ServerCertificate = GetServerCertificate(certificateLoader);
 
             //Create backup of token handler before default claim maps are cleared
             var defaultTokenHandler = new JwtSecurityTokenHandler();
@@ -465,6 +508,19 @@ namespace VirtoCommerce.Platform.Web
             services.AddHttpClient();
 
             services.AddTransient<IExternalSigninService, ExternalSigninService>();
+        }
+
+        public static ServerCertificate GetServerCertificate(ICertificateLoader certificateLoader)
+        {
+            var result = certificateLoader.Load();
+
+            if (result.SerialNumber.EqualsInvariant(ServerCertificate.SerialNumberOfVirtoPredefined) ||
+                result.Expired)
+            {
+                result = ServerCertificateService.CreateSelfSigned();
+            }
+
+            return result;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

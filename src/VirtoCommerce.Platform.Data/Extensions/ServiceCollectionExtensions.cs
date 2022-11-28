@@ -29,25 +29,6 @@ namespace VirtoCommerce.Platform.Data.Extensions
     {
         public static IServiceCollection AddPlatformServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var databaseProvider = Enum.Parse<DatabaseProvider>(configuration.GetValue("DatabaseProvider", "SqlServer"), true);
-
-            var connectionString = configuration.GetConnectionString("VirtoCommerce");
-
-            switch (databaseProvider)
-            {
-                case DatabaseProvider.MySql:
-                    services.AddDbContext<PlatformDbContext>(options => options.UseMySql(connectionString,
-                        new MySqlServerVersion(new Version(5, 7)), x => x.MigrationsAssembly("VirtoCommerce.Platform.Data.MySql")));
-                    break;
-                case DatabaseProvider.PostgreSql:
-                    services.AddDbContext<PlatformDbContext>(options => options.UseNpgsql(connectionString, x => x.MigrationsAssembly("VirtoCommerce.Platform.Data.PostgreSql")));
-                    break;
-                default:
-                    services.AddDbContext<PlatformDbContext>(options => options.UseSqlServer(connectionString));
-                    break;
-            }
-
-
             services.AddTransient<IPlatformRepository, PlatformRepository>();
             services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());
 

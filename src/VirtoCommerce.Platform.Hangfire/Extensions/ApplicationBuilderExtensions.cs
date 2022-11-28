@@ -26,7 +26,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             // Don't remove next line, it will cause issues with modules startup at hangfire-less (UseHangfireServer=false) platform instances.
             var hangfireGlobalConfiguration = appBuilder.ApplicationServices.GetRequiredService<IGlobalConfiguration>();
 
-            var databaseProvider = Enum.Parse<DatabaseProvider>(configuration.GetValue("DatabaseProvider", "SqlServer"), true);
+            var databaseProvider = configuration.GetValue("DatabaseProvider", "SqlServer");
 
             // This is an important workaround of Hangfire initialization issues
             // The standard database schema initialization way described at the page https://docs.hangfire.io/en/latest/configuration/using-sql-server.html works on an existing database only.
@@ -42,10 +42,10 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
 
                 switch (databaseProvider)
                 {
-                    case DatabaseProvider.PostgreSql:
+                    case "PostgreSql":
                         storage = new PostgreSqlStorage(connectionString, hangfireOptions.PostgreSqlStorageOptions);
                         break;
-                    case DatabaseProvider.MySql:
+                    case "MySql":
                         storage = new MySqlStorage(connectionString, hangfireOptions.MySqlStorageOptions);
                         break;
                     default:

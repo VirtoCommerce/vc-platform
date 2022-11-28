@@ -14,14 +14,14 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
     {
         public static IGlobalConfiguration AddHangfireStorage(this IGlobalConfiguration globalConfiguration, IConfiguration configuration)
         {
-            var databaseProvider = Enum.Parse<DatabaseProvider>(configuration.GetValue("DatabaseProvider", "SqlServer"), true);
+            var databaseProvider = configuration.GetValue("DatabaseProvider", "SqlServer");
 
             switch (databaseProvider)
             {
-                case DatabaseProvider.PostgreSql:
+                case "PostgreSql":
                     globalConfiguration.UsePostgreSqlStorage(configuration.GetConnectionString("VirtoCommerce"));
                     break;
-                case DatabaseProvider.MySql:
+                case "MySql":
                     globalConfiguration.UseStorage(new MySqlStorage(configuration.GetConnectionString("VirtoCommerce"),
                         new MySqlStorageOptions{ PrepareSchemaIfNecessary = false }));
                     break;

@@ -67,36 +67,18 @@ namespace VirtoCommerce.Platform.Web.Security
         }
 
         /// <summary>
-        /// Get currently installed certificate from the storage
-        /// or create new self-signed
-        /// </summary>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
-        public static ServerCertificate GetServerCertificate(this IConfiguration configuration)
-        {
-            var result = SecurityRepository.LoadCurrentlySetServerCertificate(configuration);
-
-            if (result.SerialNumber.EqualsInvariant(ServerCertificate.SerialNumberOfVirtoPredefined) || result.Expired)
-            {
-                result = ServerCertificateService.CreateSelfSigned();
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// Save newly generated (if it so) server certificate to the shared storage.
         /// The call of this method should be under distributed lock between platform instances
         /// to synchronize old certs checks
         /// </summary>
         /// <param name="app"></param>
         /// <param name="currentCert"></param>
-        /// <exception cref="PlatformException"></exception>
+        /// <exception cref="ServerCertificateReplacedException"></exception>
         public static void UpdateServerCertificateIfNeed(this IApplicationBuilder app, ServerCertificate currentCert)
         {
-            var configuration = app.ApplicationServices.GetService<IConfiguration>();
+            var certificateStorage = app.ApplicationServices.GetService<ICertificateLoader>();
             var certificateService = app.ApplicationServices.GetService<ICrudService<ServerCertificate>>();
-            var possiblyOldCert = SecurityRepository.LoadCurrentlySetServerCertificate(configuration); // Previously stored cert (possibly old, default or just created by another platform instance)
+            var possiblyOldCert = certificateStorage.Load(); // Previously stored cert (possibly old, default or just created by another platform instance)
             if (!possiblyOldCert.SerialNumber.EqualsInvariant(currentCert.SerialNumber))
             {   // Therefore, currentCert is newly generated and needs to be saved.
                 // But we should check if old cert is stored

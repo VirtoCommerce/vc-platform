@@ -21,20 +21,21 @@ namespace VirtoCommerce.Platform.Web.Migrations
         /// Apply platform migrations
         /// </summary>
         /// <param name="appBuilder"></param>
+        /// <param name="configuration"></param>
         /// <returns></returns>
         public static IApplicationBuilder UsePlatformMigrations(this IApplicationBuilder appBuilder, IConfiguration configuration)
         {
-            var databaseProvider = (DatabaseProvider)Enum.Parse<DatabaseProvider>(configuration.GetValue("DatabaseProvider", "SqlServer"), true);
+            var databaseProvider = configuration.GetValue("DatabaseProvider", "SqlServer");
 
             using (var serviceScope = appBuilder.ApplicationServices.CreateScope())
             {
                 var platformDbContext = serviceScope.ServiceProvider.GetRequiredService<PlatformDbContext>();
-                if(databaseProvider == DatabaseProvider.SqlServer)
+                if(databaseProvider == "SqlServer")
                     platformDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Platform"));
                 platformDbContext.Database.Migrate();
 
                 var securityDbContext = serviceScope.ServiceProvider.GetRequiredService<SecurityDbContext>();
-                if (databaseProvider == DatabaseProvider.SqlServer)
+                if (databaseProvider == "SqlServer")
                     securityDbContext.Database.MigrateIfNotApplied(MigrationName.GetUpdateV2MigrationName("Security"));
                 securityDbContext.Database.Migrate();
             }
