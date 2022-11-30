@@ -146,4 +146,4 @@ To generate an API key, you should go through the following steps:
 
 ## Documentation
 
-[Make secure Web API for Platform 3.0](https://community.virtocommerce.com/t/make-secure-web-api-for-platform-3-0/105)
+[Secure Web API for Platform 3.0](https://www.virtocommerce.org/t/make-secure-web-api-for-platform-3-0/105)

@@ -11,7 +11,7 @@ This article describes how to update an existing [CustomerReviews sample](https:
 1. Only update from the latest VC v2.x versions is supported. Ensure that the latest v2 versions of the Platform and all modules are installed.
 1. Usually, you have more than one custom VC module. Create a **dependency map** between your and the VC modules **before the update**. That helps to update the modules smoothly.
 1. Ensure that all your **unit tests are current** and passing
-1. In case of any question or issue, submit a new topic to [Virto Commerce Community](https://community.virtocommerce.com/c/bug/11)
+1. In case of any question or issue, submit a new topic to [Virto Commerce Community](https://www.virtocommerce.org/c/bug/11)
 1. Please read the [The list of code breaking changes included in 3.0](https://github.com/VirtoCommerce/vc-platform/blob/release/3.0.0/docs/code-breaking-changes-included-in-v3.md)
 
 ## 1. Prerequisites
