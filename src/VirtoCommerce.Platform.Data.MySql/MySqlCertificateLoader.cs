@@ -111,8 +111,10 @@ namespace VirtoCommerce.Platform.Data.MySql
                 // Otherwise left it empty with default virto-cert number.
                 // Default certificate will be replaced later by self-signed
                 if (!result.StoredInDb &&
-                    File.Exists(publicCertPath ?? string.Empty) &&
-                    File.Exists(privateKeyPath ?? string.Empty))
+                    !string.IsNullOrEmpty(publicCertPath) &&
+                    !string.IsNullOrEmpty(privateKeyPath) &&
+                    File.Exists(publicCertPath) &&
+                    File.Exists(privateKeyPath))
                 {
                     result.PrivateKeyCertPassword = _configuration["Auth:PrivateKeyPassword"];
                     result.PublicCertBytes = File.ReadAllBytes(publicCertPath);
