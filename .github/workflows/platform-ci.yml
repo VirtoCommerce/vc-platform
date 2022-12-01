@@ -82,7 +82,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install VirtoCommerce.GlobalTool
-      uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+      uses: dotnet tool install --global VirtoCommerce.GlobalTool --version 3.10.0-alpha.99
 
     - name: Install dotnet-sonarscanner
       run: dotnet tool install --global dotnet-sonarscanner
@@ -117,8 +117,8 @@ jobs:
       with:
         versionSuffix: ${{ env.VERSION_SUFFIX }}
 
-    #- name: SonarCloud Begin
-    #  uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@master
+    - name: SonarCloud Begin
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-begin@master
 
     - name: Build
       run: vc-build Compile
@@ -130,13 +130,13 @@ jobs:
       if: success()
       run: echo "BUILD_STATE=successful" >> $GITHUB_ENV
 
-    #- name: SonarCloud End
-    #  uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@master
+    - name: SonarCloud End
+      uses: VirtoCommerce/vc-github-actions/sonar-scanner-end@master
 
-    #- name: Quality Gate
-    #  uses: VirtoCommerce/vc-github-actions/sonar-quality-gate@master
-    #  with:
-    #    login: ${{secrets.SONAR_TOKEN}}
+    - name: Quality Gate
+      uses: VirtoCommerce/vc-github-actions/sonar-quality-gate@master
+      with:
+        login: ${{secrets.SONAR_TOKEN}}
 
     - name: Packaging
       run: vc-build Compress -skip Clean+Restore+Compile+Test
