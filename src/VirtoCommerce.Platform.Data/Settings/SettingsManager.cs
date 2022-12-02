@@ -183,10 +183,11 @@ namespace VirtoCommerce.Platform.Data.Settings
                         throw new PlatformException($"Setting with name {setting.Name} is read only");
                     }
 
+                    // Skip when Setting is not registered
                     var settingDescriptor = _registeredSettingsByNameDict[setting.Name];
                     if (settingDescriptor == null)
                     {
-                        throw new PlatformException($"Setting with name {setting.Name} is not registered");
+                        continue;
                     }
 
                     // We need to convert resulting DB entities to model. Use ValueObject.Equals to find already saved setting entity from passed setting
