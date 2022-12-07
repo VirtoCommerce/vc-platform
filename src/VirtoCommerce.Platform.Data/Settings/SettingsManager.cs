@@ -112,7 +112,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                     var settingDescriptor = _registeredSettingsByNameDict[name];
                     if (settingDescriptor == null)
                     {
-                        throw new PlatformException($"Setting with name {name} is not registered");
+                        continue;
                     }
                     var objectSetting = new ObjectSettingEntry(settingDescriptor)
                     {
