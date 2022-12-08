@@ -862,6 +862,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok();
         }
 
+        [HttpPost]
+        [Route("users/{userId}/confirmEmail")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IdentityResult>> ConfirmEmail([FromRoute] string userId, [FromBody] string token)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+            }
+
+            var confirmEmailResult = await _signInManager.UserManager.ConfirmEmailAsync(user, token);
+
+            return Ok(confirmEmailResult);
+        }
+
         #region PT-788 Obsolete methods
 
         [Obsolete("use /roles/search instead")]

@@ -40,17 +40,20 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
-using VirtoCommerce.Platform.Core.Swagger;
 using VirtoCommerce.Platform.Data.Extensions;
+using VirtoCommerce.Platform.Data.MySql;
+using VirtoCommerce.Platform.Data.PostgreSql;
+using VirtoCommerce.Platform.Data.Repositories;
+using VirtoCommerce.Platform.Data.SqlServer;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Repositories;
+using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
@@ -88,6 +91,8 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
+
             services.AddForwardedHeaders();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -108,6 +113,26 @@ namespace VirtoCommerce.Platform.Web
             });
             //Get platform version from GetExecutingAssembly
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
+
+            services.AddDbContext<PlatformDbContext>((provider, options) =>
+            {
+                var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
+                var connectionString = Configuration.GetConnectionString("VirtoCommerce");
+
+                switch (databaseProvider)
+                {
+                    case "MySql":
+                        options.UseMySqlDatabase(connectionString);
+                        break;
+                    case "PostgreSql":
+                        options.UsePostgreSqlDatabase(connectionString);
+                        break;
+                    default:
+                        options.UseSqlServerDatabase(connectionString);
+                        break;
+                }
+            });
+
 
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
@@ -159,7 +184,22 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
-                options.UseSqlServer(Configuration["Auth:ConnectionString"] ?? Configuration.GetConnectionString("VirtoCommerce"));
+                var connectionString = Configuration["Auth:ConnectionString"] ??
+                    Configuration.GetConnectionString("VirtoCommerce");
+
+                switch (databaseProvider)
+                {
+                    case "MySql":
+                        options.UseMySqlDatabase(connectionString);
+                        break;
+                    case "PostgreSql":
+                        options.UsePostgreSqlDatabase(connectionString);
+                        break;
+                    default:
+                        options.UseSqlServerDatabase(connectionString);
+                        break;
+                }
+
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.
@@ -213,7 +253,25 @@ namespace VirtoCommerce.Platform.Web
 
             // Load server certificate (from DB or file) and register it as a global singleton
             // to allow the platform hosting under the cert
-            ServerCertificate = Configuration.GetServerCertificate();
+            ICertificateLoader certificateLoader;
+            switch (databaseProvider)
+            {
+                case "MySql":
+                    certificateLoader = new MySqlCertificateLoader(Configuration);
+                    services.AddSingleton<ICertificateLoader>(s => { return certificateLoader;});
+                    break;
+                case "PostgreSql":
+                    certificateLoader = new PostgreSqlCertificateLoader(Configuration);
+                    services.AddSingleton<ICertificateLoader>(s => { return certificateLoader; });
+                    break;
+                default:
+                    certificateLoader = new SqlServerCertificateLoader(Configuration);
+                    services.AddSingleton<ICertificateLoader>(s => { return certificateLoader; });
+                    break;
+            }
+
+
+            ServerCertificate = GetServerCertificate(certificateLoader);
 
             //Create backup of token handler before default claim maps are cleared
             var defaultTokenHandler = new JwtSecurityTokenHandler();
@@ -450,6 +508,19 @@ namespace VirtoCommerce.Platform.Web
             services.AddTransient<IExternalSigninService, ExternalSigninService>();
         }
 
+        public static ServerCertificate GetServerCertificate(ICertificateLoader certificateLoader)
+        {
+            var result = certificateLoader.Load();
+
+            if (result.SerialNumber.EqualsInvariant(ServerCertificate.SerialNumberOfVirtoPredefined) ||
+                result.Expired)
+            {
+                result = ServerCertificateService.CreateSelfSigned();
+            }
+
+            return result;
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -526,7 +597,7 @@ namespace VirtoCommerce.Platform.Web
                 // This ensures only one active EF-migration ran simultaneously to avoid DB-related side-effects.
 
                 // Apply platform migrations
-                app.UsePlatformMigrations();
+                app.UsePlatformMigrations(Configuration);
 
                 app.UpdateServerCertificateIfNeed(ServerCertificate);
 

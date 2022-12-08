@@ -24,7 +24,8 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 
             UnitOfWork = unitOfWork ?? new DbContextUnitOfWork(dbContext);
 
-            var connectionTimeout = dbContext.Database.GetDbConnection().ConnectionTimeout;
+            var connectionDb = dbContext.Database.GetDbConnection();
+            var connectionTimeout = connectionDb.ConnectionTimeout;
             dbContext.Database.SetCommandTimeout(connectionTimeout);
         }
 
