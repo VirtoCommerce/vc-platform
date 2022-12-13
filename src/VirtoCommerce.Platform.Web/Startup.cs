@@ -371,7 +371,6 @@ namespace VirtoCommerce.Platform.Web
             services.Configure<PasswordLoginOptions>(Configuration.GetSection("PasswordLogin"));
             services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
             services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
-            services.Configure<FixedSettings>(Configuration.GetSection("PlatformSettings"));
 
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
