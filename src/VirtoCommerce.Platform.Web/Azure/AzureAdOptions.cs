@@ -80,5 +80,10 @@ namespace VirtoCommerce.Platform.Web.Azure
         /// Login type priority
         /// </summary>
         public int Priority { get; set; }
+
+        /// <summary>
+        /// Allow creating new user when a user authenticates via AD for the first time
+        /// </summary>
+        public bool AllowCreateNewUser { get; set; } = true;
     }
 }
