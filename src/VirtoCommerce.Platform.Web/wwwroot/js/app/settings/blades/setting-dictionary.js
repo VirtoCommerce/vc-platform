@@ -92,7 +92,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             addNew();
         },
         canExecuteMethod: function () {
-            return !blade.currentEntity.isReadOnly;
+            return blade.currentEntity && !blade.currentEntity.isReadOnly;
         }
     },
     {
@@ -101,7 +101,7 @@ angular.module('platformWebApp').controller('platformWebApp.settingDictionaryCon
             deleteChecked();
         },
         canExecuteMethod: function () {
-            return !blade.currentEntity.isReadOnly && isItemsChecked();
+            return blade.currentEntity && !blade.currentEntity.isReadOnly && isItemsChecked();
         }
     }];
 
