@@ -18,6 +18,8 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public bool AllowCreateNewUser => _azureAdOptions.AllowCreateNewUser;
 
+        public int Priority => _azureAdOptions.Priority;
+
         public string GetUserName(ExternalLoginInfo externalLoginInfo)
         {
             var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn);

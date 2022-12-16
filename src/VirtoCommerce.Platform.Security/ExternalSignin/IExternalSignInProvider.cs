@@ -4,6 +4,8 @@ namespace VirtoCommerce.Platform.Security.ExternalSignIn
 {
     public interface IExternalSignInProvider
     {
+        int Priority { get; }
+
         bool AllowCreateNewUser { get; }
 
         string GetUserName(ExternalLoginInfo externalLoginInfo);

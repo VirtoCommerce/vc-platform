@@ -19,7 +19,7 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
-using VirtoCommerce.Platform.Web.Azure;
+using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -36,7 +36,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly Core.Security.AuthorizationOptions _securityOptions;
         private readonly UserOptionsExtended _userOptionsExtended;
         private readonly PasswordOptionsExtended _passwordOptions;
-        private readonly AzureAdOptions _azureAdLoginOptions;
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserSearchService _userSearchService;
@@ -46,6 +45,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEventPublisher _eventPublisher;
         private readonly IUserApiKeyService _userApiKeyService;
         private readonly ILogger<SecurityController> _logger;
+        private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
 
         public SecurityController(
             SignInManager<ApplicationUser> signInManager,
@@ -56,20 +56,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<Core.Security.AuthorizationOptions> securityOptions,
             IOptions<UserOptionsExtended> userOptionsExtended,
             IOptions<PasswordOptionsExtended> passwordOptions,
-            IOptions<AzureAdOptions> azureAdLoginOptions,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
             IPasswordValidator<ApplicationUser> passwordValidator,
             IEmailSender emailSender,
             IEventPublisher eventPublisher,
             IUserApiKeyService userApiKeyService,
-            ILogger<SecurityController> logger)
+            ILogger<SecurityController> logger,
+            IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs)
         {
             _signInManager = signInManager;
             _securityOptions = securityOptions.Value;
             _userOptionsExtended = userOptionsExtended.Value;
             _passwordOptions = passwordOptions.Value;
             _passwordValidator = passwordValidator;
-            _azureAdLoginOptions = azureAdLoginOptions.Value ?? new AzureAdOptions();
             _passwordLoginOptions = passwordLoginOptions.Value ?? new PasswordLoginOptions();
             _permissionsProvider = permissionsProvider;
             _roleManager = roleManager;
@@ -79,6 +78,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _eventPublisher = eventPublisher;
             _userApiKeyService = userApiKeyService;
             _logger = logger;
+            _externalSigninProviderConfigs = externalSigninProviderConfigs;
         }
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
@@ -825,14 +825,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     AuthenticationType = _passwordLoginOptions.AuthenticationType,
                     Enabled = _passwordLoginOptions.Enabled,
                     Priority = _passwordLoginOptions.Priority,
-                },
-                new LoginType
-                {
-                    AuthenticationType = _azureAdLoginOptions.AuthenticationType,
-                    Enabled = _azureAdLoginOptions.Enabled,
-                    Priority = _azureAdLoginOptions.Priority,
                 }
             };
+
+            var externalLoginTypes = _externalSigninProviderConfigs.Select(config => new LoginType
+            {
+                AuthenticationType = config.AuthenticationType,
+                Enabled = true,
+                Priority = config.Provider?.Priority ?? 0,
+            });
+
+            options.AddRange(externalLoginTypes);
 
             return Ok(options);
         }
