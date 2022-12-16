@@ -346,6 +346,14 @@ namespace VirtoCommerce.Platform.Web
                             openIdConnectOptions.SecurityTokenValidator = defaultTokenHandler;
                             openIdConnectOptions.MetadataAddress = options.MetadataAddress;
                         });
+
+                    // register default external provider implementation
+                    services.AddSingleton<AzureADExternalSignInProvider>();
+                    services.AddSingleton(provider => new ExternalSignInProviderConfiguration
+                    {
+                        AuthenticationType = "AzureAD",
+                        Provider = provider.GetService<AzureADExternalSignInProvider>(),
+                    });
                 }
             }
 
@@ -507,14 +515,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
 
-            // register default external provider implementation
-            services.AddSingleton<AzureADExternalSignInProvider>();
-            services.AddSingleton(provider => new ExternalSignInProviderConfiguration
-            {
-                AuthenticationType = "AzureAD",
-                Provider = provider.GetService<AzureADExternalSignInProvider>(),
-            });
-
+            // register ExternalSigninService using non-obsolete constructor
             services.AddTransient<IExternalSigninService>(provider =>
             {
                 var signInManager = provider.GetRequiredService<SignInManager<ApplicationUser>>();
