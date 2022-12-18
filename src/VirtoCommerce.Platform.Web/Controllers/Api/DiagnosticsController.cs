@@ -2,9 +2,9 @@
 
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -19,12 +19,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
     {
         private readonly IModuleCatalog _moduleCatalog;
         private readonly LicenseProvider _licenseProvider;
+        private readonly IConfiguration _configuration;
 
-        public DiagnosticsController(IModuleCatalog moduleCatalog, LicenseProvider licenseProvider)
+        public DiagnosticsController(IModuleCatalog moduleCatalog, LicenseProvider licenseProvider, IConfiguration configuration)
         {
             _moduleCatalog = moduleCatalog;
             _licenseProvider = licenseProvider;
-
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -33,6 +34,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var platformVersion = PlatformVersion.CurrentVersion.ToString();
             var license = _licenseProvider.GetLicense();
+
+            var databaseProvider = _configuration.GetValue("DatabaseProvider", "SqlServer");
+
 
             var installedModules = _moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.IsInstalled).OrderBy(x => x.Id)
                                        .Select(x => new ModuleDescriptor(x))
@@ -46,6 +50,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Version = Environment.Version.ToString(),
                 Is64BitOperatingSystem = Environment.Is64BitOperatingSystem,
                 Is64BitProcess = Environment.Is64BitProcess,
+                DatabaseProvider = databaseProvider
             };
 
             return Ok(result);

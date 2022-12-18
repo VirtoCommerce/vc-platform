@@ -30,7 +30,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<OperationLogEntity>().Property(x => x.Detail).HasMaxLength(_idLength2048);
             modelBuilder.Entity<OperationLogEntity>().HasIndex(x => new { x.ObjectType, x.ObjectId })
                         .IsUnique(false)
-                        .HasDatabaseName("IX_ObjectType_ObjectId");
+                        .HasDatabaseName("IX_OperationLog_ObjectType_ObjectId");
             #endregion
 
             #region Settings

@@ -51,6 +51,9 @@
         <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\VirtoCommerce.Platform.Data.MySql\VirtoCommerce.Platform.Data.MySql.csproj" />
+        <ProjectReference Include="..\VirtoCommerce.Platform.Data.PostgreSql\VirtoCommerce.Platform.Data.PostgreSql.csproj" />
+        <ProjectReference Include="..\VirtoCommerce.Platform.Data.SqlServer\VirtoCommerce.Platform.Data.SqlServer.csproj" />
         <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
         <ProjectReference Include="..\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj" />
         <ProjectReference Include="..\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj" />

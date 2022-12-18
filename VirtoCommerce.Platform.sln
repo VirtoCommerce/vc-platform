@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E70533FE-7220-4D52-9131-4EBBD10B7759}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Web", "src\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj", "{6984B1F0-8005-4A50-8567-212273005472}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9E100C75-7490-4A14-B74A-0F83CCA0C2A5} = {9E100C75-7490-4A14-B74A-0F83CCA0C2A5}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Security", "src\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj", "{CA049776-3F2F-4C56-B094-C3807F129566}"
 EndProject
@@ -33,7 +36,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.DistributedLock", "src\VirtoCommerce.Platform.DistributedLock\VirtoCommerce.Platform.DistributedLock.csproj", "{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Caching.Tests", "tests\VirtoCommerce.Platform.Caching.Tests\VirtoCommerce.Platform.Caching.Tests.csproj", "{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Caching.Tests", "tests\VirtoCommerce.Platform.Caching.Tests\VirtoCommerce.Platform.Caching.Tests.csproj", "{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Data.PostgreSql", "src\VirtoCommerce.Platform.Data.PostgreSql\VirtoCommerce.Platform.Data.PostgreSql.csproj", "{9E100C75-7490-4A14-B74A-0F83CCA0C2A5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F8920663-0611-4357-8D7D-5AED3C655454} = {F8920663-0611-4357-8D7D-5AED3C655454}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.Platform.Data.MySql", "src\VirtoCommerce.Platform.Data.MySql\VirtoCommerce.Platform.Data.MySql.csproj", "{4826F1CB-84E6-4932-9B61-B8AF467C3A4A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F8920663-0611-4357-8D7D-5AED3C655454} = {F8920663-0611-4357-8D7D-5AED3C655454}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Data.SqlServer", "src\VirtoCommerce.Platform.Data.SqlServer\VirtoCommerce.Platform.Data.SqlServer.csproj", "{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +110,18 @@ Global
 		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E100C75-7490-4A14-B74A-0F83CCA0C2A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E100C75-7490-4A14-B74A-0F83CCA0C2A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E100C75-7490-4A14-B74A-0F83CCA0C2A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E100C75-7490-4A14-B74A-0F83CCA0C2A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4826F1CB-84E6-4932-9B61-B8AF467C3A4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4826F1CB-84E6-4932-9B61-B8AF467C3A4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4826F1CB-84E6-4932-9B61-B8AF467C3A4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4826F1CB-84E6-4932-9B61-B8AF467C3A4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +140,9 @@ Global
 		{1BFCF9CE-E244-4F58-BB02-F3740B0E250A} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
 		{CE69328B-42DA-4F6B-9A0C-9B7F2DD9F96F} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 		{AFC4524D-41C0-4DE0-B2E1-576B6205E5B0} = {E70533FE-7220-4D52-9131-4EBBD10B7759}
+		{9E100C75-7490-4A14-B74A-0F83CCA0C2A5} = {90F6E3EE-475A-4844-A4C4-078613591F81}
+		{4826F1CB-84E6-4932-9B61-B8AF467C3A4A} = {90F6E3EE-475A-4844-A4C4-078613591F81}
+		{6B11F73A-4AF3-4EEF-99EE-A4B39134AF9C} = {90F6E3EE-475A-4844-A4C4-078613591F81}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {01A94F38-27D1-412F-A4F4-F00991D1157C}
