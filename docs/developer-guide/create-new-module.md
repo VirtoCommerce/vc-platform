@@ -69,6 +69,6 @@ If the module is installed properly, you should see the new module in the list o
 
 ## See also
 * [Essential modularity](../fundamentals/essential-modularity.md)
-* [Virto Commerce CLI](https://virtocommerce.com/docs/CLI-tools/introduction/)
+* [Virto Commerce CLI](https://docs.virtocommerce.org/CLI-tools/introduction/)
 * [Virto Commerce Module Template on GitHub](https://github.com/VirtoCommerce/vc-cli-module-template)
 * [VC-Build problem on .NET 5.0 and .NET 6.0](https://www.virtocommerce.org/t/vc-build-problem-on-net-5-and-net6/276)
