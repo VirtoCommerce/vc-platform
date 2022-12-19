@@ -20,6 +20,8 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public int Priority => _azureAdOptions.Priority;
 
+        public bool HasLoginForm => _azureAdOptions.HasLoginForm;
+
         public string GetUserName(ExternalLoginInfo externalLoginInfo)
         {
             var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn);

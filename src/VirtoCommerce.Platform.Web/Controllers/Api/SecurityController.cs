@@ -833,6 +833,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 AuthenticationType = config.AuthenticationType,
                 Enabled = true,
                 Priority = config.Provider?.Priority ?? 0,
+                HasLoginForm = config.Provider?.HasLoginForm ?? false,
             });
 
             options.AddRange(externalLoginTypes);

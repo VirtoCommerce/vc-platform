@@ -85,5 +85,10 @@ namespace VirtoCommerce.Platform.Web.Azure
         /// Allow creating new user when a user authenticates via AD for the first time
         /// </summary>
         public bool AllowCreateNewUser { get; set; } = true;
+
+        /// <summary>
+        /// Display dedicated login form or not
+        /// </summary>
+        public bool HasLoginForm { get; set; } = true;
     }
 }
