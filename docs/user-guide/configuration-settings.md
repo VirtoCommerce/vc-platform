@@ -53,7 +53,7 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 | Notifications | | | Notifications configuration for `VirtoCommerce.Notifications` module
 |  | Gateway | E.g., `"SendGrid"` | Current notification sending gateway. Out of the box implemented and supported values: Smtp, SendGrid.
 |  | DefaultSender | E.g., `"noreply@gmail.com"` | **Required.** Sender identification used by current notification sending gateway.
-|  | Smtp | E.g.,<br>"Smtp": {<br>"SmtpServer": "http://smtp.gmail.com",<br>"Port": 587,<br>"Login": "my-login",<br>"Password": "my-password"<br>} | Smtp gateway configuration. Used, if `"Gateway": "Smtp"`
+|  | Smtp | E.g.,<br>"Smtp": {<br>"SmtpServer": "smtp.mydomain.com",<br>"Port": 587,<br>"EnableSsl": true,<br>"Login": "my-login",<br>"Password": "my-password"<br>} | Smtp gateway configuration. Used, if `"Gateway": "Smtp"`
 |  | SendGrid | E.g.,<br>"SendGrid": {<br>"ApiKey": "my-SendGrid-Api-Key"<br>} | SendGrid gateway configuration. Used, if `"Gateway": "SendGrid"`
 | Search | | | Full text search configuration for `VirtoCommerce.Search` module
 |  | Provider | E.g., `"Lucene"` | **Required.** Current Search Provider. Implemented (in dedicated modules) and supported values: Lucene, AzureSearch, ElasticSearch.

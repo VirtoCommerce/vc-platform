@@ -7,7 +7,7 @@ priority: 3
 ---
 ## Summary
 
-Use this guide to create Platform Manager UI for the Virto Commerce "Customer Reviews" module (created in the [Lesson 3](https://virtocommerce.com/docs/latest/getting-started/lessons/lesson3/)).
+Use this guide to create Platform Manager UI for the Virto Commerce "Customer Reviews" module (created in the [Lesson 3](https://docs.virtocommerce.org/getting-started/lessons/lesson3/)).
 
 After completing this lesson, a Platform Manager UI for the Virto Commerce "Customer Reviews" module will be created, including:
 
@@ -19,7 +19,7 @@ After completing this lesson, a Platform Manager UI for the Virto Commerce "Cust
 * Installed Virto Commerce Platform Manager
 * Visual Studio 2019 or higher
 * Basic JavaScript (AngularJS) knowledge
-* Passed [Lesson 3](https://virtocommerce.com/docs/latest/getting-started/lessons/lesson3/)
+* Passed [Lesson 3](https://docs.virtocommerce.org/getting-started/lessons/lesson3/)
 
 ### Glossary
 
@@ -47,7 +47,7 @@ Blade is the main UI element of the Platform Manager. Every blade has basic part
 
 ![Blade](../../media/lesson4-blade.png)
 
-Read more in the [Blades and navigation](https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/blades-and-navigation) article.
+Read more in the [Blades and navigation](https://docs.virtocommerce.org/vc2devguide/working-with-platform-manager/basic-functions/blades-and-navigation) article.
 
 ### Toolbar
 
@@ -55,7 +55,7 @@ A blade toolbar is a dedicated area inside blade for adding commands. Hereinafte
 
 ![Toolbar](../../media/lesson4-blade-toolbar.png)
 
-Read more in the [Blade toolbar](https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/blade-toolbar) article.
+Read more in the [Blade toolbar](https://docs.virtocommerce.org/vc2devguide/working-with-platform-manager/basic-functions/blade-toolbar) article.
 
 ### Metaform
 
@@ -63,7 +63,7 @@ A metaform is a placeholder (container) control that renders UI content based on
 
 ![Metaform](../../media/lesson4-blade-metaform.png)
 
-Read more in the [Metaform](https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/basic-functions/metaform) article.
+Read more in the [Metaform](https://docs.virtocommerce.org/vc2devguide/working-with-platform-manager/basic-functions/metaform) article.
 
 ### Widget
 
@@ -100,7 +100,7 @@ Platform Manager UI elements should be placed in CustomerReviewsModule&#46;Web\\
   * **widgets** - folder containing AngularJS controllers and templates for the module widgets;
   * **module.js** - the main entry point for the module UI, containing AngularJS module definition, registrations for menus, widgets, etc.
 
-The Platform Manager also allows localizing UI elements. The localization is based on resources (translation files) placed in CustomerReviewsModule&#46;Web\\**Localizations** folder. Read more  in the [Localization implementation](https://virtocommerce.com/docs/vc2devguide/working-with-platform-manager/localization-implementation) article.
+The Platform Manager also allows localizing UI elements. The localization is based on resources (translation files) placed in CustomerReviewsModule&#46;Web\\**Localizations** folder. Read more  in the [Localization implementation](https://docs.virtocommerce.org/vc2devguide/working-with-platform-manager/localization-implementation) article.
 
 ### Create localization for "Customer reviews" module
 

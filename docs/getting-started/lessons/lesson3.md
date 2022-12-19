@@ -1,4 +1,4 @@
-﻿---
+---
 title: Lesson 3 - How to create Virto commerce module (API)
 description: Lesson 3 - How to create Virto commerce module (API)
 layout: docs
@@ -14,7 +14,7 @@ After completing this lesson, a new module will be created, including:
 * module API for create, delete, update and search customer reviews;
 * test project for testing module API.
 
-Platform Manager UI for the Virto Commerce "Customer Reviews" module will be created in [Lesson 4](https://virtocommerce.com/docs/latest/getting-started/lessons/lesson4/)
+Platform Manager UI for the Virto Commerce "Customer Reviews" module will be created in [Lesson 4](https://docs.virtocommerce.org/getting-started/lessons/lesson4/)
 
 ### Prerequisites
 

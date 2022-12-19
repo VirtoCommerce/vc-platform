@@ -60,10 +60,10 @@ Virto Commerce supports declarative(no-code) extensions through the Admin panel 
 
 Name | Module | Description | Link
 --- | --- | --- | ---
-Extend Organization | Customer | Add field to organization entity | [Extend Organization](https://virtocommerce.com/docs/latest/fundamentals/extensibility/extending-domain-models/)
-Extend Contact | Customer | Add field to contact entity | [Extend Contact](https://virtocommerce.com/docs/latest/fundamentals/extensibility/extending-domain-models/)
-Extend Vendor | Customer | Add field to vendor entity | [Extend Vendor](https://virtocommerce.com/docs/latest/fundamentals/extensibility/extending-domain-models/)
-Extend Employee | Customer | Add field to employee entity | [Extend Employee](https://virtocommerce.com/docs/latest/fundamentals/extensibility/extending-domain-models/)
+Extend Organization | Customer | Add field to organization entity | [Extend Organization](https://docs.virtocommerce.org/fundamentals/extensibility/extending-domain-models/)
+Extend Contact | Customer | Add field to contact entity | [Extend Contact](https://docs.virtocommerce.org/fundamentals/extensibility/extending-domain-models/)
+Extend Vendor | Customer | Add field to vendor entity | [Extend Vendor](https://docs.virtocommerce.org/fundamentals/extensibility/extending-domain-models/)
+Extend Employee | Customer | Add field to employee entity | [Extend Employee](https://docs.virtocommerce.org/fundamentals/extensibility/extending-domain-models/)
 
 ### Reactive programming extensibility
 
@@ -77,8 +77,8 @@ Extend Employee | Customer | Add field to employee entity | [Extend Employee](ht
 
 Name | Module | Description | Link
 --- | --- | --- | ---
-MemberChangingEvent | Customer | Occurs before a member is saved to the data source. | [Read more](https://virtocommerce.com/docs/latest/modules/customer/)
-MemberChangedEvent | Customer | Occurs when  member is saved to the data source. | [Read more](https://virtocommerce.com/docs/latest/modules/customer/)
+MemberChangingEvent | Customer | Occurs before a member is saved to the data source. | [Read more](https://docs.virtocommerce.org/modules/customer/)
+MemberChangedEvent | Customer | Occurs when  member is saved to the data source. | [Read more](https://docs.virtocommerce.org/modules/customer/)
 UserChangingEvent | Platform/Security | Occurs before an user is saved to the data source. | [Read more](../../user-guide/security.md)
 UserChangedEvent | Platform/Security | Occurs when an user is saved to the data source. | [Read more](../../user-guide/security.md)
 UserLoginEvent | Platform/Security | Occurs when an user logins. | [Read more](../../user-guide/security.md)
@@ -97,8 +97,8 @@ Following built-in business API scenarios can be used by front-end developers "a
 
 Name | Description | Link
 --- | --- | ---
-Create Contact | Creating a contact entity | [CreateContact](https://virtocommerce.com/docs/latest/modules/experience-api/x-profile-reference/#createcontact)
-Create User | Creating a user entity | [CreateUser](https://virtocommerce.com/docs/latest/modules/experience-api/x-profile-reference/#createuser)
+Create Contact | Creating a contact entity | [CreateContact](https://docs.virtocommerce.org/modules/experience-api/x-profile-reference/#createcontact)
+Create User | Creating a user entity | [CreateUser](https://docs.virtocommerce.org/modules/experience-api/x-profile-reference/#createuser)
 
 ### Custom user scenario examples
 

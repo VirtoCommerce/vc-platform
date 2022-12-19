@@ -16,7 +16,7 @@ For the above reasons, there is no option for partial update, which means **you 
 Make sure both [.NET 6 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) and [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) have been installed to your environment.
 
 ## VC Build Tool
-After update to Virto Commerce on .NET 6, please use this vc-build version: [virtocommerce.globaltool **3.0.0**](https://virtocommerce.com/docs/CLI-tools/introduction/).
+After update to Virto Commerce on .NET 6, please use this vc-build version: [virtocommerce.globaltool **3.0.0**](https://docs.virtocommerce.org/CLI-tools/introduction/).
 
 ```console
 dotnet tool install --global VirtoCommerce.GlobalTool --version 3.0.0
