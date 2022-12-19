@@ -451,8 +451,14 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
             var userName = "test";
             _userManagerMock
-                .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == user.UserName)))
                 .ReturnsAsync(() => { return null; });
+
+            var currentUser = _fixture.Create<ApplicationUser>();
+            currentUser.IsAdministrator = false;
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == null)))
+                .ReturnsAsync(currentUser);
 
             // Act
             var actual = await _controller.ResetPassword(userName, null);
