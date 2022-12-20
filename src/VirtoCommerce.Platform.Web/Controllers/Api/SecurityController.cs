@@ -411,6 +411,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityUpdate)]
         public async Task<ActionResult<SecurityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
         {
+            var currentUser = await UserManager.FindByNameAsync(CurrentUserName);
+            if (currentUser == null)
+            {
+                throw new PlatformException("Can't find current user.");
+            }
+
+            if (currentUser.IsAdministrator && !_passwordOptions.PasswordChangeByAdminEnabled)
+            {
+                throw new PlatformException("Administrators are not allowed to set passwords for users in the system.");
+            }
+
             if (!_passwordLoginOptions.Enabled)
             {
                 return BadRequest(new SecurityResult { Errors = new[] { "Password login is disabled" } });
