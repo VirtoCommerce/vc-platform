@@ -56,8 +56,11 @@ Microsoft.IdentityModel.Tokens.dll
 Microsoft.OpenApi.dll
 Microsoft.VisualStudio.Web.BrowserLink.dll
 Microsoft.Win32.SystemEvents.dll
+MySqlConnector.dll
 Newtonsoft.Json.Bson.dll
 Newtonsoft.Json.dll
+Npgsql.dll
+Npgsql.EntityFrameworkCore.PostgreSQL.dll
 OpenIddict.Abstractions.dll
 OpenIddict.Core.dll
 OpenIddict.EntityFrameworkCore.dll
@@ -73,6 +76,7 @@ OpenIddict.Validation.SystemNetHttp.dll
 Pipelines.Sockets.Unofficial.dll
 Polly.dll
 Polly.Extensions.Http.dll
+Pomelo.EntityFrameworkCore.MySql.dll
 RedLockNet.Abstractions.dll
 RedLockNet.SERedis.dll
 Scrutor.dll
