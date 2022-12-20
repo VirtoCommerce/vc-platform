@@ -38,6 +38,7 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 | IdentityOptions | | | Options to configure the ASP&#46;NET Core Identity system. Check [Configure ASP.NET Core Identity](https://github.com/dotnet/AspNetCore.Docs/blob/master/aspnetcore/security/authentication/identity-configuration.md#configure-aspnet-core-identity) for details.
 |  | Password.PasswordHistory | E.g., <br>"PasswordHistory": 4 | The number of recent user's passwords to check during the password validation. Old password can't be reused for this number of cycles.<br>Value of "0" or not defined - password history is disabled.
 |  | Password.RepeatedResetPasswordTimeLimit | "RepeatedResetPasswordTimeLimit": "0:01:0" | The time limit after which a user can request a password reset.
+|  | Password.PasswordChangeByAdminEnabled  | `true`  | Enable or disable for administrators to set passwords for users in the system.
 |  | User.MaxPasswordAge | "MaxPasswordAge": "0" | TimeSpan defining max. user password age until the password expires. The user is forced to change the expired password on login to Platform Manager UI.<br>Value of "0" or not defined - password expiration is disabled.
 |  | User.RemindPasswordExpiryInDays | "RemindPasswordExpiryInDays": 7  | Number of days to start showing password expiry warning in Platform Manager UI. Used, if password expiration is enabled. 
 | ExternalModules | | | Configure external source to install modules.
