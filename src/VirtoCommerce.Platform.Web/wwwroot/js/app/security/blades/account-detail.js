@@ -24,7 +24,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
 
             let filteredCommands = commands.filter((item) => item.meta !== blade.accountLockedState);
 
-            if (!blade.isPasswordLoginEnabled) {
+            if (!blade.isPasswordLoginEnabled || !blade.isPasswordChangeEnabled) {
                 filteredCommands = filteredCommands.filter((item) => item.meta !== "ChangePassword");
             }
 
@@ -47,11 +47,18 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
 
             blade.currentEntity = angular.copy(data);
             blade.origEntity = data;
-            isAccountlocked(blade.currentEntity.id).then(function (result) {
-                blade.accountIsLocked = result.locked;
-                blade.accountLockedState = blade.accountIsLocked ? "Locked" : "Unlocked";
-                setToolbarCommands();
-            });
+            isAccountlocked(blade.currentEntity.id)
+                .then(function (isAccountlockedResult) {
+                    blade.accountIsLocked = isAccountlockedResult.locked;
+                    blade.accountLockedState = blade.accountIsLocked ? "Locked" : "Unlocked";
+
+                    return isPasswordChangeEnabled();
+                })
+                .then(function (isPasswordChangeEnabledResult) {
+                    blade.isPasswordChangeEnabled = isPasswordChangeEnabledResult.enabled;
+
+                    setToolbarCommands();
+                });
 
             // Load account types
             blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
@@ -64,6 +71,10 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
 
         function isAccountlocked(id) {
             return accounts.locked({ id: id }).$promise;
+        }
+
+        function isPasswordChangeEnabled() {
+            return accounts.passwordChangeEnabled().$promise;
         }
 
         blade.metaFields = metaFormsService.getMetaFields("accountDetails");
