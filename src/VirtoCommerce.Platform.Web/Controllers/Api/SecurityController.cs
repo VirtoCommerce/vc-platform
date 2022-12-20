@@ -14,6 +14,7 @@ using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Extensions;
 using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
@@ -410,6 +411,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityUpdate)]
         public async Task<ActionResult<SecurityResult>> ChangePassword([FromRoute] string userName, [FromBody] ChangePasswordRequest changePassword)
         {
+            var currentUser = await UserManager.FindByNameAsync(CurrentUserName);
+            if (currentUser == null)
+            {
+                throw new PlatformException("Can't find current user.");
+            }
+
+            if (currentUser.IsAdministrator && !_passwordOptions.PasswordChangeByAdminEnabled)
+            {
+                throw new PlatformException("Administrators are not allowed to set passwords for users in the system.");
+            }
+
             if (!_passwordLoginOptions.Enabled)
             {
                 return BadRequest(new SecurityResult { Errors = new[] { "Password login is disabled" } });
@@ -454,6 +466,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformPermissions.SecurityUpdate)]
         public async Task<ActionResult<SecurityResult>> ResetPassword([FromRoute] string userName, [FromBody] ResetPasswordConfirmRequest resetPasswordConfirm)
         {
+            var currentUser = await UserManager.FindByNameAsync(CurrentUserName);
+            if (currentUser == null)
+            {
+                throw new PlatformException("Can't find current user.");
+            }
+
+            if (currentUser.IsAdministrator && !_passwordOptions.PasswordChangeByAdminEnabled)
+            {
+                throw new PlatformException("Administrators are not allowed to set passwords for users in the system.");
+            }
+
             if (!_passwordLoginOptions.Enabled)
             {
                 return BadRequest(new SecurityResult { Errors = new[] { "Password login is disabled" } });
@@ -729,6 +752,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (user != null)
             {
                 result.Locked = await UserManager.IsLockedOutAsync(user);
+            }
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Checks if manual password change is enabled
+        /// </summary>
+        [HttpGet]
+        [Route("passwordchangeenabled")]
+        [Authorize(PlatformPermissions.SecurityQuery)]
+        public async Task<ActionResult<UserLockedResult>> PasswordChangeEnabled()
+        {
+            var result = new PasswordChangeEnabledResult(true);
+
+            var currentUser = await UserManager.FindByNameAsync(CurrentUserName);
+            if (currentUser?.IsAdministrator == true)
+            {
+                result.Enabled = _passwordOptions.PasswordChangeByAdminEnabled;
             }
 
             return Ok(result);

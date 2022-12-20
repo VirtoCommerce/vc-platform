@@ -451,8 +451,14 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
             var userName = "test";
             _userManagerMock
-                .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == user.UserName)))
                 .ReturnsAsync(() => { return null; });
+
+            var currentUser = _fixture.Create<ApplicationUser>();
+            currentUser.IsAdministrator = false;
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == null)))
+                .ReturnsAsync(currentUser);
 
             // Act
             var actual = await _controller.ResetPassword(userName, null);
@@ -471,6 +477,12 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _userManagerMock
                 .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == user.UserName)))
                 .ReturnsAsync(user);
+
+            var currentUser = _fixture.Create<ApplicationUser>();
+            currentUser.IsAdministrator = false;
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == null)))
+                .ReturnsAsync(currentUser);
 
             var options = new Mock<IOptions<AuthorizationOptions>>();
             options.SetupGet(x => x.Value)
@@ -553,8 +565,14 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             // Arrange
             var userName = "test";
             _userManagerMock
-                .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == userName)))
                 .ReturnsAsync(() => { return null; });
+
+            var currentUser = _fixture.Create<ApplicationUser>();
+            currentUser.IsAdministrator = false;
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == null)))
+                .ReturnsAsync(currentUser);
 
             var options = new Mock<IOptions<AuthorizationOptions>>();
             options.SetupGet(x => x.Value)
@@ -581,6 +599,12 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         {
             // Arrange
             var userName = "test";
+
+            var currentUser = _fixture.Create<ApplicationUser>();
+            currentUser.IsAdministrator = false;
+            _userManagerMock
+                .Setup(x => x.FindByNameAsync(It.Is<string>(x => x == null)))
+                .ReturnsAsync(currentUser);
 
             var options = new Mock<IOptions<AuthorizationOptions>>();
             options.SetupGet(x => x.Value)
