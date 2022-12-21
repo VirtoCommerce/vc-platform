@@ -37,6 +37,7 @@ using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Modularity;
@@ -52,6 +53,7 @@ using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
+using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Azure;
@@ -258,7 +260,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 case "MySql":
                     certificateLoader = new MySqlCertificateLoader(Configuration);
-                    services.AddSingleton<ICertificateLoader>(s => { return certificateLoader;});
+                    services.AddSingleton<ICertificateLoader>(s => { return certificateLoader; });
                     break;
                 case "PostgreSql":
                     certificateLoader = new PostgreSqlCertificateLoader(Configuration);
@@ -344,12 +346,20 @@ namespace VirtoCommerce.Platform.Web
                             openIdConnectOptions.SecurityTokenValidator = defaultTokenHandler;
                             openIdConnectOptions.MetadataAddress = options.MetadataAddress;
                         });
+
+                    // register default external provider implementation
+                    services.AddSingleton<AzureADExternalSignInProvider>();
+                    services.AddSingleton(provider => new ExternalSignInProviderConfiguration
+                    {
+                        AuthenticationType = "AzureAD",
+                        Provider = provider.GetService<AzureADExternalSignInProvider>(),
+                    });
                 }
             }
 
             services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
-            
+
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
             // to replace the default OpenIddict entities.
@@ -505,7 +515,23 @@ namespace VirtoCommerce.Platform.Web
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
 
-            services.AddTransient<IExternalSigninService, ExternalSigninService>();
+            // register ExternalSigninService using non-obsolete constructor
+            services.AddTransient<IExternalSigninService>(provider =>
+            {
+                var signInManager = provider.GetRequiredService<SignInManager<ApplicationUser>>();
+                var userManager = provider.GetRequiredService<UserManager<ApplicationUser>>();
+                var eventPublisher = provider.GetRequiredService<IEventPublisher>();
+                var identityOptions = provider.GetRequiredService<IOptions<IdentityOptions>>();
+                var settingsManager = provider.GetRequiredService<ISettingsManager>();
+                var externalSigninProviderConfigs = provider.GetRequiredService<IEnumerable<ExternalSignInProviderConfiguration>>();
+
+                return new ExternalSigninService(signInManager,
+                    userManager,
+                    eventPublisher,
+                    identityOptions,
+                    settingsManager,
+                    externalSigninProviderConfigs);
+            });
         }
 
         public static ServerCertificate GetServerCertificate(ICertificateLoader certificateLoader)

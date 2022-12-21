@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -13,6 +14,7 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Controllers.Api;
 using VirtoCommerce.Platform.Web.Model.Security;
@@ -34,6 +36,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IEventPublisher> _eventPublisherMock;
         private readonly Mock<IUserApiKeyService> _userApiKeyServiceMock;
         private readonly Mock<ILogger<SecurityController>> _logger;
+
+        private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
 
         // Controller
         private SecurityController _controller;
@@ -72,6 +76,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 /* IAuthenticationSchemeProvider schemes */null,
                 /* IUserConfirmation<TUser> confirmation */null);
 
+            _externalSigninProviderConfigs = new List<ExternalSignInProviderConfiguration>();
+
             _controller = CreateSecurityController();
         }
 
@@ -99,13 +105,13 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 securityOptions: securityOptions.Object,
                 userOptionsExtended: Mock.Of<IOptions<UserOptionsExtended>>(),
                 passwordOptions: passwordOptions.Object,
-                azureAdLoginOptions: azureAdOptions.Object,
                 passwordLoginOptions: passwordLoginOptions.Object,
                 passwordValidator: _passwordValidatorMock.Object,
                 emailSender: _emailSenderMock.Object,
                 eventPublisher: _eventPublisherMock.Object,
                 userApiKeyService: _userApiKeyServiceMock.Object,
-                logger: _logger.Object);
+                logger: _logger.Object,
+                externalSigninProviderConfigs: _externalSigninProviderConfigs);
         }
 
         #region Login
