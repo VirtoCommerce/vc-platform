@@ -57,7 +57,10 @@ namespace VirtoCommerce.Platform.Core
                                     SecurityUpdate = "platform:security:update",
                                     SecurityDelete = "platform:security:delete",
                                     SecurityVerifyEmail = "platform:security:verifyEmail",
-                                    SecurityLoginOnBehalf = "platform:security:loginOnBehalf";
+                                    SecurityLoginOnBehalf = "platform:security:loginOnBehalf",
+                                    SecurityConfirmEmail = "platform:security:confirmEmail",
+                                    SecurityGenerateToken = "platform:security:generateToken",
+                                    SecurityVerifyToken = "platform:security:verifyToken";
 
                 public const string BackgroundJobsManage = "background_jobs:manage";
 
