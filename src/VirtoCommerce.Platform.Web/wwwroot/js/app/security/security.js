@@ -31,7 +31,7 @@ angular.module('platformWebApp')
                                     // and which ones can be activated by navigating the auth endpoing directly
                                     _.each(response.data, function (provider) {
                                         var type = _.find(loginTypes, function (enabledLoginType) {
-                                            return enabledLoginType.authenticationType === provider.authenticationType;
+                                            return enabledLoginType.authenticationType === provider.authenticationType && enabledLoginType.hasLoginForm;
                                         });
                                         provider.hasTemplate = !!type;
                                     });
