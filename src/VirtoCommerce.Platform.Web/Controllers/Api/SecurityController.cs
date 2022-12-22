@@ -985,7 +985,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         [HttpPost]
-        [Route("users/{userId}/generateToken")]
+        [Route("users/{userId}/verifyToken")]
         [Authorize(PlatformPermissions.SecurityVerifyToken)]
         public async Task<ActionResult<bool>> VerifyUserToken([FromRoute] string userId, [FromBody] VerifyTokenRequest request)
         {
@@ -995,9 +995,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
 
-            var token = await _signInManager.UserManager.VerifyUserTokenAsync(user, request.TokenProvider, request.Purpose, request.Token);
+            var success = await _signInManager.UserManager.VerifyUserTokenAsync(user, request.TokenProvider, request.Purpose, request.Token);
 
-            return Ok(token);
+            return Ok(success);
         }
 
         #region PT-788 Obsolete methods
