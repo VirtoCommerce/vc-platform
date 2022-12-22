@@ -910,8 +910,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("users/{userId}/confirmEmail")]
-        [AllowAnonymous]
-        public async Task<ActionResult<IdentityResult>> ConfirmEmail([FromRoute] string userId, [FromBody] string token)
+        [Authorize(PlatformPermissions.SecurityConfirmEmail)]
+        public async Task<ActionResult<SecurityResult>> ConfirmEmail([FromRoute] string userId, [FromBody] ConfirmEmailRequest request)
         {
             var user = await UserManager.FindByIdAsync(userId);
             if (user == null)
@@ -919,9 +919,89 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
             }
 
-            var confirmEmailResult = await _signInManager.UserManager.ConfirmEmailAsync(user, token);
+            var confirmEmailResult = await _signInManager.UserManager.ConfirmEmailAsync(user, request.Token);
 
-            return Ok(confirmEmailResult);
+            return Ok(confirmEmailResult.ToSecurityResult());
+        }
+
+        [HttpGet]
+        [Route("users/{userId}/generateChangeEmailToken")]
+        [Authorize(PlatformPermissions.SecurityGenerateToken)]
+        public async Task<ActionResult<string>> GenerateChangeEmailToken([FromRoute] string userId, [FromQuery] string newEmail)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+            }
+
+            var token = await _signInManager.UserManager.GenerateChangeEmailTokenAsync(user, newEmail);
+
+            return Ok(token);
+        }
+
+        [HttpGet]
+        [Route("users/{userId}/generateEmailConfirmationToken")]
+        [Authorize(PlatformPermissions.SecurityGenerateToken)]
+        public async Task<ActionResult<string>> GenerateEmailConfirmationToken([FromRoute] string userId)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+            }
+
+            var token = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
+
+            return Ok(token);
+        }
+
+        [HttpGet]
+        [Route("users/{userId}/generatePasswordResetToken")]
+        [Authorize(PlatformPermissions.SecurityGenerateToken)]
+        public async Task<ActionResult<string>> GeneratePasswordResetToken([FromRoute] string userId)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+            }
+
+            var token = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
+
+            return Ok(token);
+        }
+
+        [HttpGet]
+        [Route("users/{userId}/generateToken")]
+        [Authorize(PlatformPermissions.SecurityGenerateToken)]
+        public async Task<ActionResult<string>> GenerateUserToken([FromRoute] string userId, [FromQuery] string tokenProvider, [FromQuery] string purpose)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+            }
+
+            var token = await _signInManager.UserManager.GenerateUserTokenAsync(user, tokenProvider, purpose);
+
+            return Ok(token);
+        }
+
+        [HttpPost]
+        [Route("users/{userId}/verifyToken")]
+        [Authorize(PlatformPermissions.SecurityVerifyToken)]
+        public async Task<ActionResult<bool>> VerifyUserToken([FromRoute] string userId, [FromBody] VerifyTokenRequest request)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest(IdentityResult.Failed(new IdentityError { Description = "User not found" }).ToSecurityResult());
+            }
+
+            var success = await _signInManager.UserManager.VerifyUserTokenAsync(user, request.TokenProvider, request.Purpose, request.Token);
+
+            return Ok(success);
         }
 
         #region PT-788 Obsolete methods
