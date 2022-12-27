@@ -9,7 +9,6 @@ using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
 using VirtoCommerce.Platform.Core.GenericCrud;
-using VirtoCommerce.Platform.Data.Infrastructure;
 
 namespace VirtoCommerce.Platform.Data.GenericCrud
 {
@@ -49,52 +48,65 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// </summary>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        public virtual Task<TResult> SearchAsync(TCriteria criteria)
+        public virtual async Task<TResult> SearchAsync(TCriteria criteria)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
-            return _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
+
+            var idsResult = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheOptions =>
             {
-                var result = AbstractTypeFactory<TResult>.TryCreateInstance();
-                cacheEntry.AddExpirationToken(GenericSearchCachingRegion<TModel>.CreateChangeToken());
-                using (var repository = _repositoryFactory())
-                {
-                    //Optimize performance and CPU usage
-                    repository.DisableChangesTracking();
-
-                    var sortInfos = BuildSortExpression(criteria);
-                    var query = BuildQuery(repository, criteria);
-
-                    var needExecuteCount = criteria.Take == 0;
-
-                    if (criteria.Take > 0)
-                    {
-                        var ids = await query.OrderBySortInfos(sortInfos).ThenBy(x => x.Id)
-                                         .Select(x => x.Id)
-                                         .Skip(criteria.Skip).Take(criteria.Take)
-                                         .ToListAsync();
-
-                        result.TotalCount = ids.Count;
-                        // This reduces a load of a relational database by skipping count query in case of:
-                        // - First page is reading (Skip is 0)
-                        // - Count in reading result less than Take value.
-                        if (criteria.Skip > 0 || result.TotalCount == criteria.Take)
-                        {
-                            needExecuteCount = true;
-                        }
-
-                        result.Results = ids.Any()
-                            ? (await _crudService.GetAsync(ids, criteria.ResponseGroup)).OrderBy(x => ids.IndexOf(x.Id)).ToList()
-                            : Array.Empty<TModel>();
-                    }
-
-                    if (needExecuteCount)
-                    {
-                        result.TotalCount = await query.CountAsync();
-                    }
-                    result = await ProcessSearchResultAsync(result, criteria);
-                    return result;
-                }
+                cacheOptions.AddExpirationToken(GenericSearchCachingRegion<TModel>.CreateChangeToken());
+                return await SearchIdsNoCacheAsync(criteria);
             });
+
+            var result = AbstractTypeFactory<TResult>.TryCreateInstance();
+            result.TotalCount = idsResult.TotalCount;
+
+            result.Results = idsResult.Results.Any()
+                ? (await _crudService.GetAsync(idsResult.Results.ToList(), criteria.ResponseGroup))
+                    .OrderBy(x => idsResult.Results.IndexOf(x.Id))
+                    .ToList()
+                : Array.Empty<TModel>();
+
+            return await ProcessSearchResultAsync(result, criteria);
+        }
+
+
+        protected virtual async Task<GenericSearchResult<string>> SearchIdsNoCacheAsync(TCriteria criteria)
+        {
+            var result = AbstractTypeFactory<GenericSearchResult<string>>.TryCreateInstance();
+            result.Results = Array.Empty<string>();
+
+            using var repository = _repositoryFactory();
+            var query = BuildQuery(repository, criteria);
+            var needExecuteCount = criteria.Take == 0;
+
+            if (criteria.Take > 0)
+            {
+                result.Results = await query
+                    .OrderBySortInfos(BuildSortExpression(criteria))
+                    .ThenBy(x => x.Id)
+                    .Select(x => x.Id)
+                    .Skip(criteria.Skip)
+                    .Take(criteria.Take)
+                    .ToArrayAsync();
+
+                result.TotalCount = result.Results.Count;
+
+                // This reduces a load of a relational database by skipping count query in case of:
+                // - First page is reading (Skip is 0)
+                // - Count in reading result less than Take value.
+                if (criteria.Skip > 0 || result.TotalCount == criteria.Take)
+                {
+                    needExecuteCount = true;
+                }
+            }
+
+            if (needExecuteCount)
+            {
+                result.TotalCount = await query.CountAsync();
+            }
+
+            return result;
         }
 
         /// <summary>
