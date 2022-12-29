@@ -155,7 +155,7 @@ namespace VirtoCommerce.Platform.Core.Settings
             try
             {
                 var objectSetting = await manager.GetObjectSettingAsync(name);
-                if (objectSetting.Value != null)
+                if (objectSetting?.Value != null)
                 {
                     result = (T)objectSetting.Value;
                 }
