@@ -1,0 +1,161 @@
+# v3.200.14
+name: Platform PR deploy
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ master, dev ]
+    types: [ labeled ]
+
+jobs:
+
+  get-cache-key:
+    if: ${{ github.event.label.name == 'deploy-qa' }}
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACT_NAME: 'platform'
+      DOCKER_CACHE_KEY: ''
+      DOCKER_TAR: 'platform_image.tar'
+    outputs:
+      dockerShortKey: ${{ steps.cache-key.outputs.dockerShortKey }}
+      dockerFullKey: ${{ steps.cache-key.outputs.dockerFullKey }}
+      packageShortKey: ${{ steps.cache-key.outputs.packageShortKey }}
+      packageFullKey: ${{ steps.cache-key.outputs.packageFullKey }}
+      dockerTar: ${{ env.DOCKER_TAR }}
+      version: ${{ steps.artifactVer.outputs.shortVersion }}
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Get Artifact Version
+      uses: VirtoCommerce/vc-github-actions/get-image-version@master
+      id: artifactVer
+
+    - name: Get cache key
+      uses: VirtoCommerce/vc-github-actions/cache-get-key@master
+      id: cache-key
+      with:
+        runnerOs: ${{ runner.os  }}
+        artifactName: ${{ env.ARTIFACT_NAME }}
+
+  publish:
+    needs:
+      get-cache-key
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.200.14
+    with:
+      fullKey: ${{ needs.get-cache-key.outputs.dockerFullKey }}
+      shortKey: '${{ needs.get-cache-key.outputs.dockerShortKey }}-'
+      dockerTar: ${{ needs.get-cache-key.outputs.dockerTar }}
+    secrets:
+      envPAT: ${{ secrets.GITHUB_TOKEN }}
+      dockerUser: ${{ secrets.DOCKER_USERNAME }}
+      dockerToken: ${{ secrets.DOCKER_TOKEN }}
+
+  deploy-argoCD:
+    needs:
+      publish
+    uses: VirtoCommerce/.github/.github/workflows/deploy.yml@v3.200.14
+    with:
+      argoServer: 'argo.govirto.com'
+      artifactUrl: ${{ needs.publish.outputs.imagePath }}
+      matrix: '{"include":[{"envName": "qa", "confPath": "argoDeploy.json"}]}'
+    secrets:
+      envPAT: ${{ secrets.REPO_TOKEN }}
+      argoLogin: ${{ secrets.ARGOCD_LOGIN }}
+      argoPassword: ${{ secrets.ARGOCD_PASSWORD }}
+
+  deploy-cloud:
+    needs:
+      [get-cache-key, publish]
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.14
+    with:
+      releaseSource: platform
+      releaseType: GithubReleases
+      platformVer: ${{ needs.get-cache-key.outputs.version }}
+      platformTag: ${{ needs.publish.outputs.tag }}
+      argoServer: 'argo.virtocommerce.cloud'
+      matrix: '{"include":[{"envName": "qa", "confPath": "cloudDeploy.json"}]}'
+    secrets:
+      envPAT: ${{ secrets.REPO_TOKEN }}
+      argoLogin: ${{ secrets.ARGOCD_LOGIN }}
+      argoPassword: ${{ secrets.ARGOCD_PASSWORD }}
+
+  comment-publish:
+    if: ${{ always() && github.event.label.name == 'deploy-qa' }}
+    needs:
+      publish
+    env:
+      MESSAGE_BODY: ':x: Docker image publish filed.'
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set MESSAGE_BODY
+      if: ${{ needs.publish.result == 'success' }}
+      run: |
+        echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} published" >> $GITHUB_ENV
+
+    - uses: actions/github-script@v5
+      if: ${{ !(contains('skipped, cancelled', needs.publish.result ))  }}
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '${{ env.MESSAGE_BODY }}'
+          })
+
+  comment-deploy-ArgoCD:
+    if: ${{ always() && github.event.label.name == 'deploy-qa' }}
+    needs:
+      [ deploy-argoCD, publish ]
+
+    runs-on: ubuntu-latest
+    env:
+      MESSAGE_BODY: ':x: QA argoCD deployment failed.'
+    steps:
+
+    - name: Set MESSAGE_BODY
+      if: ${{ needs.deploy-argoCD.result == 'success' }}
+      run: |
+        echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} deployed to QA argoCD" >> $GITHUB_ENV
+
+    - uses: actions/github-script@v5
+      if: ${{ !(contains('skipped, cancelled', needs.deploy-argoCD.result )) }}
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '${{ env.MESSAGE_BODY }}'
+          })
+
+  comment-deploy-cloud:
+    if: ${{ always() && github.event.label.name == 'deploy-qa' }}
+    needs:
+      [ deploy-cloud, publish ]
+
+    runs-on: ubuntu-latest
+    env:
+      MESSAGE_BODY: ':x: QA cloud deployment failed.'
+    steps:
+
+    - name: Set MESSAGE_BODY
+      if: ${{ needs.deploy-cloud.result == 'success' }}
+      run: |
+        echo "MESSAGE_BODY=:heavy_check_mark: Docker image ${{ needs.publish.outputs.imagePath }} deployed to QA cloud" >> $GITHUB_ENV
+
+    - uses: actions/github-script@v5
+      if: ${{ !(contains('skipped, cancelled', needs.deploy-cloud.result )) }}
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '${{ env.MESSAGE_BODY }}'
+          })
