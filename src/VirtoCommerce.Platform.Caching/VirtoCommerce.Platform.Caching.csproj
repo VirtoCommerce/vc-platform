@@ -25,7 +25,7 @@
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="6.0.0" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="Polly" Version="7.2.1" />
-        <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
+        <PackageReference Include="StackExchange.Redis" Version="2.6.86" />
     </ItemGroup>
 
     <ItemGroup>
