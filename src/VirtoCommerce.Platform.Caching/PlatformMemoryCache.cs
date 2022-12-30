@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Caching
             SlidingExpiration = cachingOptions.CacheSlidingExpiration;
             _log = log;
         }
-        
+
         public virtual ICacheEntry CreateEntry(object key)
         {
             var result = _memoryCache.CreateEntry(key);
@@ -29,8 +29,6 @@ namespace VirtoCommerce.Platform.Caching
             {
                 result.RegisterPostEvictionCallback(callback: EvictionCallback);
                 var options = GetDefaultCacheEntryOptions();
-                //Add GlobalCache token for each entry
-                options.AddExpirationToken(GlobalCacheRegion.CreateChangeToken());
                 result.SetOptions(options);
             }
             return result;
@@ -47,7 +45,7 @@ namespace VirtoCommerce.Platform.Caching
         }
 
 
-        protected bool CacheEnabled { get; set; }
+        public bool CacheEnabled { get; protected set; }
 
         protected TimeSpan? AbsoluteExpiration { get; set; }
 
@@ -73,6 +71,9 @@ namespace VirtoCommerce.Platform.Caching
                     result.SlidingExpiration = SlidingExpiration;
                 }
             }
+
+            //Add GlobalCache token for each entry
+            result.AddExpirationToken(GlobalCacheRegion.CreateChangeToken());
 
             return result;
         }
@@ -105,10 +106,10 @@ namespace VirtoCommerce.Platform.Caching
             }
         }
 
-        
+
         protected virtual void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
             _log.LogTrace($"EvictionCallback: Cache entry with key:{key} has been removed.");
-        }        
+        }
     }
 }
