@@ -333,13 +333,19 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="models"></param>
         protected virtual void ClearCache(IEnumerable<TModel> models)
         {
-            GenericSearchCachingRegion<TModel>.ExpireRegion();
+            ClearSearchCache(models);
 
             foreach (var model in models)
             {
                 GenericCachingRegion<TModel>.ExpireTokenForKey(model.Id);
             }
         }
+
+        protected virtual void ClearSearchCache(IEnumerable<TModel> models)
+        {
+            GenericSearchCachingRegion<TModel>.ExpireRegion();
+        }
+
 
         protected virtual GenericChangedEntryEvent<TModel> EventFactory<TEvent>(IEnumerable<GenericChangedEntry<TModel>> changedEntries)
         {

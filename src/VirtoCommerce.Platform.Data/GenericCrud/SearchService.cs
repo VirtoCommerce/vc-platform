@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
@@ -54,7 +55,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             var idsResult = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheOptions =>
             {
-                cacheOptions.AddExpirationToken(GenericSearchCachingRegion<TModel>.CreateChangeToken());
+                cacheOptions.AddExpirationToken(CreateCacheToken(criteria));
                 return await SearchIdsNoCacheAsync(criteria);
             });
 
@@ -70,6 +71,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return await ProcessSearchResultAsync(result, criteria);
         }
 
+        protected virtual IChangeToken CreateCacheToken(TCriteria criteria)
+        {
+            return GenericSearchCachingRegion<TModel>.CreateChangeToken();
+        }
 
         protected virtual async Task<GenericSearchResult<string>> SearchIdsNoCacheAsync(TCriteria criteria)
         {
