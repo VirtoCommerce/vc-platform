@@ -7,6 +7,18 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+
+!!! done "January"
+    * 4th Stable Release Package
+    * New line-item component into Vue B2B Theme
+    * Native Integration with Google Analytics 4
+    * SSO Provider via Custom Module
+    * Added to lists as one of the product properties
+    * XAPI for Dynamic Content
+    * Query Categories returns Root and Child Categories
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-january-2023/534)
+
 !!! done "December"
     * Re-Designed Category Page.
     * Improved Popup for Re-Order Functionality.
@@ -27,16 +39,6 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * New Mutations for Profile XAPI
     
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-31-october-2022/527)
-    
-!!! done "September"
-    * Contracts
-    * B2B Theme Improvements
-    * Refactored Event Bus
-    * Elastic App Search: Next Level of Employee Experience
-    * Design System for B2B Storefront
-    * v3 Stable Release Package
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-19-september-2022/519)
     
  
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), Subscribe on [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and Star on [GitHub](https://github.com/VirtoCommerce).
