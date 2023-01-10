@@ -477,6 +477,24 @@ namespace VirtoCommerce.Platform.Web
             //Platform authorization handler for policies based on permissions
             services.AddSingleton<IAuthorizationHandler, DefaultPermissionAuthorizationHandler>();
 
+            // register ExternalSigninService using non-obsolete constructor
+            services.AddTransient<IExternalSigninService>(provider =>
+            {
+                var signInManager = provider.GetRequiredService<SignInManager<ApplicationUser>>();
+                var userManager = provider.GetRequiredService<UserManager<ApplicationUser>>();
+                var eventPublisher = provider.GetRequiredService<IEventPublisher>();
+                var identityOptions = provider.GetRequiredService<IOptions<IdentityOptions>>();
+                var settingsManager = provider.GetRequiredService<ISettingsManager>();
+                var externalSigninProviderConfigs = provider.GetRequiredService<IEnumerable<ExternalSignInProviderConfiguration>>();
+
+                return new ExternalSigninService(signInManager,
+                    userManager,
+                    eventPublisher,
+                    identityOptions,
+                    settingsManager,
+                    externalSigninProviderConfigs);
+            });
+
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
                     {
@@ -514,24 +532,6 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
-
-            // register ExternalSigninService using non-obsolete constructor
-            services.AddTransient<IExternalSigninService>(provider =>
-            {
-                var signInManager = provider.GetRequiredService<SignInManager<ApplicationUser>>();
-                var userManager = provider.GetRequiredService<UserManager<ApplicationUser>>();
-                var eventPublisher = provider.GetRequiredService<IEventPublisher>();
-                var identityOptions = provider.GetRequiredService<IOptions<IdentityOptions>>();
-                var settingsManager = provider.GetRequiredService<ISettingsManager>();
-                var externalSigninProviderConfigs = provider.GetRequiredService<IEnumerable<ExternalSignInProviderConfiguration>>();
-
-                return new ExternalSigninService(signInManager,
-                    userManager,
-                    eventPublisher,
-                    identityOptions,
-                    settingsManager,
-                    externalSigninProviderConfigs);
-            });
         }
 
         public static ServerCertificate GetServerCertificate(ICertificateLoader certificateLoader)
