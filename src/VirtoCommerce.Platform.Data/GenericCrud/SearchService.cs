@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
@@ -17,7 +18,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     /// To implement the service for applied purpose, inherit your search service from this.
     /// </summary>
     /// <typeparam name="TCriteria">Search criteria type (a descendant of <see cref="SearchCriteriaBase"/>)</typeparam>
-    /// <typeparam name="TResult">Search result (<see cref="GenericSearchResult&lt;TModel&gt;"/>)</typeparam>
+    /// <typeparam name="TResult">Search result (<see cref="GenericSearchResult{TModel}"/>)</typeparam>
     /// <typeparam name="TModel">The type of service layer model</typeparam>
     /// <typeparam name="TEntity">The type of data access layer entity (EF) </typeparam>
     public abstract class SearchService<TCriteria, TResult, TModel, TEntity> : ISearchService<TCriteria, TResult, TModel>
@@ -35,7 +36,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// </summary>
         /// <param name="repositoryFactory">Repository factory to get access to the data source</param>
         /// <param name="platformMemoryCache">The cache used to temporary store returned values</param>
-        /// <param name="crudService">Crud service to get service-layer model instances (a descendant of <see cref="ICrudService&lt;TModel&gt;"/>)</param>
+        /// <param name="crudService">Crud service to get service-layer model instances (a descendant of <see cref="ICrudService{TModel}"/>)</param>
         protected SearchService(Func<IRepository> repositoryFactory, IPlatformMemoryCache platformMemoryCache, ICrudService<TModel> crudService)
         {
             _platformMemoryCache = platformMemoryCache;
@@ -54,7 +55,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             var idsResult = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheOptions =>
             {
-                cacheOptions.AddExpirationToken(GenericSearchCachingRegion<TModel>.CreateChangeToken());
+                cacheOptions.AddExpirationToken(CreateCacheToken(criteria));
                 return await SearchIdsNoCacheAsync(criteria);
             });
 
@@ -70,6 +71,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return await ProcessSearchResultAsync(result, criteria);
         }
 
+        protected virtual IChangeToken CreateCacheToken(TCriteria criteria)
+        {
+            return GenericSearchCachingRegion<TModel>.CreateChangeToken();
+        }
 
         protected virtual async Task<GenericSearchResult<string>> SearchIdsNoCacheAsync(TCriteria criteria)
         {
