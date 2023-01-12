@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +14,16 @@ namespace VirtoCommerce.Platform.Data.Extensions
             {
                 command.CommandText = rawSql;
                 if (parameters != null)
+                {
                     foreach (var p in parameters)
+                    {
                         command.Parameters.Add(p);
-                await conn.OpenAsync();
+                    }
+                }
+                if (conn.State != ConnectionState.Open)
+                {
+                    await conn.OpenAsync();
+                }
                 return await command.ExecuteNonQueryAsync();
             }
         }
@@ -27,9 +35,16 @@ namespace VirtoCommerce.Platform.Data.Extensions
             {
                 command.CommandText = rawSql;
                 if (parameters != null)
+                {
                     foreach (var p in parameters)
+                    {
                         command.Parameters.Add(p);
-                await conn.OpenAsync();
+                    }
+                }
+                if (conn.State != ConnectionState.Open)
+                {
+                    await conn.OpenAsync();
+                }
                 return (T)await command.ExecuteScalarAsync();
             }
         }
@@ -41,16 +56,26 @@ namespace VirtoCommerce.Platform.Data.Extensions
             {
                 command.CommandText = rawSql;
                 if (parameters != null)
-                    foreach (var p in parameters)
-                        command.Parameters.Add(p);
-                await conn.OpenAsync();
-                var reader = await command.ExecuteReaderAsync();
-                var result = new List<T>();
-                while (await reader.ReadAsync())
                 {
-                    result.Add(reader.GetFieldValue<T>(0));
+                    foreach (var p in parameters)
+                    {
+                        command.Parameters.Add(p);
+                    }
                 }
-                reader.Close();
+
+                if (conn.State != ConnectionState.Open)
+                {
+                    await conn.OpenAsync();
+                }
+
+                var result = new List<T>();
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        result.Add(await reader.GetFieldValueAsync<T>(0));
+                    }
+                }
 
                 return result.ToArray();
             }
