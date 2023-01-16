@@ -52,7 +52,7 @@
                     <div class="table-wrapper">
                         <table class="table">
                             <tbody>
-                                <tr class="table-item" ng-repeat="data in exportRequest.exportManifest.modules" ng-click="data.isChecked = !data.isChecked; updateModuleSelection()">
+                                <tr class="table-item" ng-repeat="data in exportRequest.exportManifest.modules | orderBy: 'id'" ng-click="data.isChecked = !data.isChecked; updateModuleSelection()">
                                     <td class="table-col">
                                         <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': data.isChecked}">&nbsp;</div>
                                     </td>

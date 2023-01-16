@@ -100,7 +100,7 @@
                         <table class="table">
                             <tbody>
                                 <tr class="table-item"
-                                    ng-repeat="data in importRequest.exportManifest.modules"
+                                    ng-repeat="data in importRequest.exportManifest.modules | orderBy: 'id'"
                                     ng-click="data.isChecked = !data.isChecked; updateModuleSelection()"
                                     ng-class="{ '__selected' : data.isChecked }">
                                     <td class="table-col">
