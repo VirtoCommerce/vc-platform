@@ -136,20 +136,24 @@
                     "start": "Начало",
                     "end": "Конец"
                 },
-                "menu": {
-                    "security": {
-                        "title": "Безопасность",
-                        "description": "Аккаунты и роли"
-                    },
-                    "binary": {
-                        "title": "Двоичный код",
-                        "description": "Двоичные данные"
-                    },
-                    "settings": {
-                        "title": "Настройки",
-                        "description": "Настройки платформы"
-                    }
+              "menu": {
+                "security": {
+                  "title": "Безопасность",
+                  "description": "Аккаунты и роли"
+                },
+                "binary": {
+                  "title": "Двоичный код",
+                  "description": "Двоичные данные"
+                },
+                "settings": {
+                  "title": "Настройки",
+                  "description": "Настройки платформы"
+                },
+                "dynamic-props": {
+                  "title": "Динамические свойства",
+                  "description": "Динамические свойства платформы"
                 }
+              }
             },
             "import-main": {
                 "title": "Импорт данных",
@@ -172,20 +176,24 @@
                     "start": "Начало",
                     "end": "Конец"
                 },
-                "menu": {
-                    "security": {
-                        "title": "Безопасность",
-                        "description": "Аккаунты и роли"
-                    },
-                    "binary": {
-                        "title": "Двоичный код",
-                        "description": "Двоичные данные"
-                    },
-                    "settings": {
-                        "title": "Настройки",
-                        "description": "Настройки платформы"
-                    }
+              "menu": {
+                "security": {
+                  "title": "Безопасность",
+                  "description": "Аккаунты и роли"
+                },
+                "binary": {
+                  "title": "Двоичный код",
+                  "description": "Двоичные данные"
+                },
+                "settings": {
+                  "title": "Настройки",
+                  "description": "Настройки платформы"
+                },
+                "dynamic-props": {
+                  "title": "Динамические свойства",
+                  "description": "Динамические свойства платформы"
                 }
+              }
             },
             "exportImport-main": {
                 "title": "Экспорт и импорт данных",

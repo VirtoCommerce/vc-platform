@@ -200,20 +200,24 @@
                     "start": "Start",
                     "end": "End"
                 },
-                "menu": {
-                    "security": {
-                        "title": "Security",
-                        "description": "Accounts and roles"
-                    },
-                    "binary": {
-                        "title": "Binary",
-                        "description": "Binary data"
-                    },
-                    "settings": {
-                        "title": "Settings",
-                        "description": "Platform settings"
-                    }
+              "menu": {
+                "security": {
+                  "title": "Security",
+                  "description": "Accounts and roles"
+                },
+                "binary": {
+                  "title": "Binary",
+                  "description": "Binary data"
+                },
+                "settings": {
+                  "title": "Settings",
+                  "description": "Platform settings"
+                },
+                "dynamic-props": {
+                  "title": "Dynamic properties",
+                  "description": "Platform dynamic properties"
                 }
+              }
             },
             "exportImport-main": {
                 "title": "Data export and import",
