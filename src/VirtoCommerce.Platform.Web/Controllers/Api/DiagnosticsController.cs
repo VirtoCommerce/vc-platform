@@ -76,7 +76,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 .Select(x => new ModuleDescriptor(x))
                 .ToArray();
 
-            if (!_webHostEnvironment.IsDevelopment())
+            if (!_webHostEnvironment.IsDevelopment() && result.Any())
             {
                 var errorDescription = "To enable the details of this specific error message, please switch environment to Development mode.";
                 var errors = new[] { errorDescription };
