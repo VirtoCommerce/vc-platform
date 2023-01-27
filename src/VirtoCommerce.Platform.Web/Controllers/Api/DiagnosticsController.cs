@@ -1,10 +1,13 @@
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Web.Licensing;
@@ -20,12 +23,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IModuleCatalog _moduleCatalog;
         private readonly LicenseProvider _licenseProvider;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public DiagnosticsController(IModuleCatalog moduleCatalog, LicenseProvider licenseProvider, IConfiguration configuration)
+        public DiagnosticsController(IModuleCatalog moduleCatalog, LicenseProvider licenseProvider, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _moduleCatalog = moduleCatalog;
             _licenseProvider = licenseProvider;
             _configuration = configuration;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -65,6 +70,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public ActionResult<ModuleDescriptor[]> GetModulesErrors()
         {
+            var defaultError = "To enable the details of this specific error message, please switch environment to Development mode.";
 
             var result = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
                 .Where(x => !x.Errors.IsNullOrEmpty())
@@ -72,6 +78,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 .ThenBy(x => x.Version)
                 .Select(x => new ModuleDescriptor(x))
                 .ToArray();
+
+            if (!_webHostEnvironment.IsDevelopment())
+            {
+                result.Apply(x =>
+                {
+                    x.ValidationErrors = new List<string> { defaultError };
+                });
+            }
 
             return Ok(result);
         }
