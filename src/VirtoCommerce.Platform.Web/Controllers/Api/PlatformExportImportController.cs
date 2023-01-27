@@ -148,7 +148,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpPost]
         [Route("export")]
-        [Authorize(Permissions.PlatformImport)]
+        [Authorize(Permissions.PlatformExport)]
         public ActionResult<PlatformExportPushNotification> ProcessExport([FromBody] PlatformImportExportRequest exportRequest)
         {
             var notification = new PlatformExportPushNotification(_userNameResolver.GetCurrentUserName())
