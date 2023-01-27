@@ -1,7 +1,6 @@
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -70,8 +69,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public ActionResult<ModuleDescriptor[]> GetModulesErrors()
         {
-            var defaultError = "To enable the details of this specific error message, please switch environment to Development mode.";
-
             var result = _moduleCatalog.Modules.OfType<ManifestModuleInfo>()
                 .Where(x => !x.Errors.IsNullOrEmpty())
                 .OrderBy(x => x.Id)
@@ -81,9 +78,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!_webHostEnvironment.IsDevelopment())
             {
+                var errorDescription = "To enable the details of this specific error message, please switch environment to Development mode.";
+                var errors = new[] { errorDescription };
+
                 result.Apply(x =>
                 {
-                    x.ValidationErrors = new List<string> { defaultError };
+                    x.ValidationErrors = errors;
                 });
             }
 
