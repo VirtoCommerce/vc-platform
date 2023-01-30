@@ -20,7 +20,7 @@ angular.module('platformWebApp')
         });
 
         $scope.canStartProcess = function () {
-            return blade.hasUpdatePermission() && (_.any($scope.importRequest.modules) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinaryData);
+            return blade.hasUpdatePermission() && (_.any($scope.importRequest.modules) || $scope.importRequest.handleSecurity || $scope.importRequest.handleSettings || $scope.importRequest.handleBinaryData || $scope.importRequest.handleDynamicProperties);
         }
 
         $scope.startProcess = function () {
@@ -105,6 +105,7 @@ angular.module('platformWebApp')
                     $scope.importRequest.handleSecurity = data.handleSecurity;
                     $scope.importRequest.handleSettings = data.handleSettings;
                     $scope.importRequest.handleBinaryData = data.handleBinaryData;
+                    $scope.importRequest.handleDynamicProperties = data.handleDynamicProperties;
 
                     _.each(data.modules, function (x) { x.isChecked = true; });
 

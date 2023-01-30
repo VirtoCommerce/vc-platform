@@ -90,6 +90,17 @@
                                         <span class="table-descr">{{ 'platform.blades.import-main.menu.settings.description' | translate }}</span>
                                     </td>
                                 </tr>
+                                <tr class="table-item"
+                                    ng-click="importRequest.handleDynamicProperties = !importRequest.handleDynamicProperties"
+                                    ng-class="{ '__disabled' : !importRequest.exportManifest.handleDynamicProperties,  '__selected' : importRequest.handleDynamicProperties }">
+                                    <td class="table-col">
+                                        <div class="ui-grid-selection-row-header-buttons ui-grid-icon-ok" ng-class="{'ui-grid-row-selected': importRequest.handleDynamicProperties}">&nbsp;</div>
+                                    </td>
+                                    <td class="table-col">
+                                        <span class="table-t">{{ 'platform.blades.import-main.menu.dynamic-props.title' | translate }}</span>
+                                        <span class="table-descr">{{ 'platform.blades.import-main.menu.dynamic-props.description' | translate }}</span>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
