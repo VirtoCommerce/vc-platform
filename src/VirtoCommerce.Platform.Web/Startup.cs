@@ -288,9 +288,8 @@ namespace VirtoCommerce.Platform.Web
                 if (WebHostEnvironment.IsDevelopment())
                 {
                     options.RequireHttpsMetadata = false;
+                    options.IncludeErrorDetails = true;
                 }
-
-                options.IncludeErrorDetails = true;
 
                 X509SecurityKey publicKey = null;
 
