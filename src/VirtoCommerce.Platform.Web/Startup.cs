@@ -56,7 +56,6 @@ using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
-using VirtoCommerce.Platform.Web.Azure;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Infrastructure;
 using VirtoCommerce.Platform.Web.Infrastructure.HealthCheck;
@@ -278,6 +277,9 @@ namespace VirtoCommerce.Platform.Web
             //Create backup of token handler before default claim maps are cleared
             var defaultTokenHandler = new JwtSecurityTokenHandler();
 
+            // register it as a singleton to use in extenral login providers
+            services.AddSingleton(defaultTokenHandler);
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
             authBuilder.AddJwtBearer(options =>
@@ -305,56 +307,6 @@ namespace VirtoCommerce.Platform.Web
                     IssuerSigningKey = publicKey
                 };
             });
-
-            var azureAdSection = Configuration.GetSection("AzureAd");
-
-            if (azureAdSection.GetChildren().Any())
-            {
-                var options = new AzureAdOptions();
-                azureAdSection.Bind(options);
-
-                services.Configure<AzureAdOptions>(azureAdSection);
-
-                if (options.Enabled)
-                {
-                    //https://docs.microsoft.com/en-us/azure/active-directory/develop/microsoft-identity-web
-                    authBuilder.AddOpenIdConnect(options.AuthenticationType, options.AuthenticationCaption,
-                        openIdConnectOptions =>
-                        {
-                            switch (options.ValidateIssuer)
-                            {
-                                // Multitenant Azure AD issuer validation
-                                // https://thomaslevesque.com/2018/12/24/multitenant-azure-ad-issuer-validation-in-asp-net-core/
-                                case ValidateIssuerType.MultitenantAzureAD:
-                                    openIdConnectOptions.TokenValidationParameters.IssuerValidator = MultitenantAzureADIssuerValidator.ValidateIssuerWithPlaceholder;
-                                    break;
-                                case ValidateIssuerType.Disabled:
-                                    openIdConnectOptions.TokenValidationParameters = new TokenValidationParameters { ValidateIssuer = false };
-                                    break;
-                                default:
-                                    // Default behaviour
-                                    break;
-                            }
-
-                            openIdConnectOptions.ClientId = options.ApplicationId;
-
-                            openIdConnectOptions.Authority = $"{options.AzureAdInstance}{options.TenantId}";
-                            openIdConnectOptions.UseTokenLifetime = true;
-                            openIdConnectOptions.RequireHttpsMetadata = false;
-                            openIdConnectOptions.SignInScheme = IdentityConstants.ExternalScheme;
-                            openIdConnectOptions.SecurityTokenValidator = defaultTokenHandler;
-                            openIdConnectOptions.MetadataAddress = options.MetadataAddress;
-                        });
-
-                    // register default external provider implementation
-                    services.AddSingleton<AzureADExternalSignInProvider>();
-                    services.AddSingleton(provider => new ExternalSignInProviderConfiguration
-                    {
-                        AuthenticationType = "AzureAD",
-                        Provider = provider.GetService<AzureADExternalSignInProvider>(),
-                    });
-                }
-            }
 
             services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();

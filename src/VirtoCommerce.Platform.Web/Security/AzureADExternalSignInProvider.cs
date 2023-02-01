@@ -7,6 +7,7 @@ using VirtoCommerce.Platform.Web.Azure;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
+    [Obsolete("Moved to VirtoCommerce.AzureAD module.")]
     public class AzureADExternalSignInProvider : IExternalSignInProvider
     {
         private readonly AzureAdOptions _azureAdOptions;
