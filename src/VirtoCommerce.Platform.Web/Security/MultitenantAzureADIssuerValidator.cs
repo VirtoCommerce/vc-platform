@@ -13,6 +13,7 @@ namespace VirtoCommerce.Platform.Web.Security
     /// token won’t match the issuer specified in the OpenID metadata. 
     /// https://thomaslevesque.com/2018/12/24/multitenant-azure-ad-issuer-validation-in-asp-net-core/
     /// </summary>
+    [Obsolete("Moved to VirtoCommerce.AzureAD module.")]
     public static class MultitenantAzureADIssuerValidator
     {
         public static string ValidateIssuerWithPlaceholder(string issuer, SecurityToken token, TokenValidationParameters parameters)
@@ -44,7 +45,7 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             if (parameters.ValidIssuers == null)
                 return "null";
-            if(!parameters.ValidIssuers.Any())
+            if (!parameters.ValidIssuers.Any())
                 return "empty";
 
             return string.Join(", ", parameters.ValidIssuers);
