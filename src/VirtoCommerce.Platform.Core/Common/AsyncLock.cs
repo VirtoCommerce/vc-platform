@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Threading;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using AsyncKeyedLock;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-    //https://stackoverflow.com/questions/31138179/asynchronous-locking-based-on-a-key
-    //Asynchronous locking based on a string key
     public sealed class AsyncLock
     {
         private readonly string _key;
@@ -16,25 +14,11 @@ namespace VirtoCommerce.Platform.Core.Common
             _key = key;
         }
 
-        private static readonly Dictionary<string, RefCounted<SemaphoreSlim>> _semaphoreSlims = new Dictionary<string, RefCounted<SemaphoreSlim>>();
-
-        private SemaphoreSlim GetOrCreate(string key)
+        private static readonly AsyncKeyedLocker<string> _asyncKeyedLocker = new(o =>
         {
-            RefCounted<SemaphoreSlim> item;
-            lock (_semaphoreSlims)
-            {
-                if (_semaphoreSlims.TryGetValue(key, out item))
-                {
-                    ++item.RefCount;
-                }
-                else
-                {
-                    item = new RefCounted<SemaphoreSlim>(new SemaphoreSlim(1, 1));
-                    _semaphoreSlims[key] = item;
-                }
-            }
-            return item.Value;
-        }
+            o.PoolSize = 20;
+            o.PoolInitialFill = 1;
+        });
 
         public static AsyncLock GetLockByKey(string key)
         {
@@ -43,54 +27,17 @@ namespace VirtoCommerce.Platform.Core.Common
 
         // TODO: Rename to LockAsync after resolving problem with backward compatibility
         // in the modules (look on this ticket https://virtocommerce.atlassian.net/browse/PT-3548)
-        public async Task<IDisposable> GetReleaserAsync()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ValueTask<IDisposable> GetReleaserAsync()
         {
-            await GetOrCreate(_key).WaitAsync().ConfigureAwait(false);
-            return new Releaser(_key);
+            return _asyncKeyedLocker.LockAsync(_key);
         }
 
         [Obsolete("Left for backward compatibility. Use GetReleaserAsync")]
-        public async Task<Releaser> LockAsync()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public ValueTask<IDisposable> LockAsync()
         {
-            await GetOrCreate(_key).WaitAsync().ConfigureAwait(false);
-            return new Releaser(_key);
-        }
-
-        public struct Releaser : IDisposable
-        {
-            private readonly string _key;
-
-            public Releaser(string key)
-            {
-                _key = key;
-            }
-
-            public void Dispose()
-            {
-                RefCounted<SemaphoreSlim> item;
-                lock (_semaphoreSlims)
-                {
-                    item = _semaphoreSlims[_key];
-                    --item.RefCount;
-                    if (item.RefCount == 0)
-                    {
-                        _semaphoreSlims.Remove(_key);
-                    }
-                }
-                item.Value.Release();
-            }
-        }
-
-        private sealed class RefCounted<T>
-        {
-            public RefCounted(T value)
-            {
-                RefCount = 1;
-                Value = value;
-            }
-
-            public int RefCount { get; set; }
-            public T Value { get; private set; }
+            return _asyncKeyedLocker.LockAsync(_key);
         }
     }
 }

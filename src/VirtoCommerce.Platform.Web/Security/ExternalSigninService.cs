@@ -221,7 +221,7 @@ namespace VirtoCommerce.Platform.Web.Security
                 userTypes.Add(userType);
                 userTypesSetting.AllowedValues = userTypes.Select(x => (object)x).ToArray();
 
-                using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync())
+                using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync().ConfigureAwait(false))
                 {
                     await _settingsManager.SaveObjectSettingsAsync(new[] { userTypesSetting });
                 }
@@ -249,7 +249,7 @@ namespace VirtoCommerce.Platform.Web.Security
                 userTypes.Add(userType);
                 userTypesSetting.AllowedValues = userTypes.Select(x => (object)x).ToArray();
 
-                using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync())
+                using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync().ConfigureAwait(false))
                 {
                     await _settingsManager.SaveObjectSettingsAsync(new[] { userTypesSetting });
                 }
