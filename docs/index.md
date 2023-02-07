@@ -8,6 +8,14 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
 
 ## News Digests
 
+!!! done "February"
+    * Virto Storefront Features
+    * Attachments for Contracts 
+    * XAPI features
+    * Azure Active Directory SSO Module
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-february-2023/545)
+
 !!! done "January"
     * 4th Stable Release Package
     * New line-item component into Vue B2B Theme
