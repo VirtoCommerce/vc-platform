@@ -139,20 +139,24 @@
                 "start": "Starten",
                 "end": "Ende"
             },
-            "menu": {
-                "security": {
-                    "title": "Sicherheit",
-                    "description": "Benutzerkonten und Rollen"
-                },
-                "binary": {
-                    "title": "Binär",
-                    "description": "Binäre Daten"
-                },
-                "settings": {
-                    "title": "Einstellungen",
-                    "description": "Plattform Einstellungen"
-                }
+          "menu": {
+            "security": {
+              "title": "Sicherheit",
+              "description": "Benutzerkonten und Rollen"
+            },
+            "binary": {
+              "title": "Binär",
+              "description": "Binäre Daten"
+            },
+            "settings": {
+              "title": "Einstellungen",
+              "description": "Plattform Einstellungen"
+            },
+            "dynamic-props": {
+              "title": "Dynamische Eigenschaften",
+              "description": "Dynamische Eigenschaften der Plattform"
             }
+          }
         },
         "import-main": {
             "title": "Daten importieren",
@@ -171,20 +175,24 @@
                 "start": "Starten",
                 "end": "Ende"
             },
-            "menu": {
-                "security": {
-                    "title": "Sicherheit",
-                    "description": "Benutzerkonten und Rollen"
-                },
-                "binary": {
-                    "title": "Binär",
-                    "description": "Binäre Daten"
-                },
-                "settings": {
-                    "title": "Einstellungen",
-                    "description": "Plattform Einstellungen"
-                }
+          "menu": {
+            "security": {
+              "title": "Sicherheit",
+              "description": "Benutzerkonten und Rollen"
+            },
+            "binary": {
+              "title": "Binär",
+              "description": "Binäre Daten"
+            },
+            "settings": {
+              "title": "Einstellungen",
+              "description": "Plattform Einstellungen"
+            },
+            "dynamic-props": {
+              "title": "Dynamische Eigenschaften",
+              "description": "Dynamische Eigenschaften der Plattform"
             }
+          }
         },
         "exportImport-main": {
             "title": "Importieren und Exportieren von Daten",

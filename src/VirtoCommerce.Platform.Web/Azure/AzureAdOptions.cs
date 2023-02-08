@@ -1,5 +1,8 @@
+using System;
+
 namespace VirtoCommerce.Platform.Web.Azure
 {
+    [Obsolete("Moved to VirtoCommerce.AzureAD module.")]
     public enum ValidateIssuerType
     {
         /// <summary>
@@ -16,6 +19,7 @@ namespace VirtoCommerce.Platform.Web.Azure
         Disabled,
     }
 
+    [Obsolete("Moved to VirtoCommerce.AzureAD module.")]
     public class AzureAdOptions
     {
         /// <summary>
