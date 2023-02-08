@@ -40,9 +40,8 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <summary>
         /// Examples:
         /// AnonymousComparer.Create((MyClass mc) => mc.MyProperty)
-        /// AnonymousComparer.Create((MyClass mc) => mc.MyStringProperty, StringComparer.OrdinalIgnoreCase)
         /// </summary>
-        public static IEqualityComparer<T> Create<T, TKey>(Func<T, TKey> compareKeySelector, IEqualityComparer<TKey> keyEqualityComparer = null) =>
+        public static IEqualityComparer<T> Create<T, TKey>(Func<T, TKey> compareKeySelector) =>
             compareKeySelector == null
                 ? throw new ArgumentNullException(nameof(compareKeySelector))
                 : new EqualityComparer<T>(
@@ -58,8 +57,7 @@ namespace VirtoCommerce.Platform.Core.Common
                             return true;
                         }
 
-                        return keyEqualityComparer?.Equals(compareKeySelector(x), compareKeySelector(y))
-                               ?? compareKeySelector(x).Equals(compareKeySelector(y));
+                        return compareKeySelector(x).Equals(compareKeySelector(y));
                     },
                     obj =>
                     {
@@ -74,7 +72,45 @@ namespace VirtoCommerce.Platform.Core.Common
                             return 0;
                         }
 
-                        return keyEqualityComparer?.GetHashCode(compareKey) ?? compareKey.GetHashCode();
+                        return compareKey.GetHashCode();
+                    });
+
+        /// <summary>
+        /// Examples:
+        /// AnonymousComparer.Create((MyClass mc) => mc.MyStringProperty, StringComparer.OrdinalIgnoreCase)
+        /// </summary>
+        public static IEqualityComparer<T> Create<T, TKey>(Func<T, TKey> compareKeySelector, IEqualityComparer<TKey> keyEqualityComparer) =>
+            compareKeySelector == null
+                ? throw new ArgumentNullException(nameof(compareKeySelector))
+                : new EqualityComparer<T>(
+                    (x, y) =>
+                    {
+                        if (ReferenceEquals(null, x) || ReferenceEquals(null, y))
+                        {
+                            return false;
+                        }
+
+                        if (ReferenceEquals(x, y))
+                        {
+                            return true;
+                        }
+
+                        return keyEqualityComparer.Equals(compareKeySelector(x), compareKeySelector(y));
+                    },
+                    obj =>
+                    {
+                        if (obj == null)
+                        {
+                            return 0;
+                        }
+
+                        var compareKey = compareKeySelector(obj);
+                        if (compareKey == null)
+                        {
+                            return 0;
+                        }
+
+                        return keyEqualityComparer.GetHashCode(compareKey);
                     });
 
         public static IEqualityComparer<T> Create<T>(Func<T, T, bool> equals, Func<T, int> getHashCode)
