@@ -17,96 +17,97 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         #region IComparer<T>
 
-        private class Comparer<T> : IComparer<T>
+        /// <summary>Example:AnonymousComparer.Create&lt;int&gt;((x, y) => y - x)</summary>
+        public static IComparer<T> Create<T>(Func<T, T, int> compare) =>
+            compare == null ? throw new ArgumentNullException(nameof(compare)) : new Comparer<T>(compare);
+
+        private sealed class Comparer<T> : IComparer<T>
         {
-            private readonly Func<T, T, int> compare;
+            private readonly Func<T, T, int> _compare;
 
             public Comparer(Func<T, T, int> compare)
             {
-                this.compare = compare;
+                _compare = compare;
             }
 
-            public int Compare(T x, T y)
-            {
-                return compare(x, y);
-            }
+            public int Compare(T x, T y) => _compare(x, y);
         }
 
         #endregion
 
         #region IEqualityComparer<T>
 
-        /// <summary>Example:AnonymousComparer.Create&lt;int&gt;((x, y) => y - x)</summary>
-        public static IComparer<T> Create<T>(Func<T, T, int> compare)
-        {
-            if (compare == null)
-                throw new ArgumentNullException("compare");
-
-            return new Comparer<T>(compare);
-        }
-
-        /// <summary>Example:AnonymousComparer.Create((MyClass mc) => mc.MyProperty)</summary>
-        public static IEqualityComparer<T> Create<T, TKey>(Func<T, TKey> compareKeySelector)
-        {
-            if (compareKeySelector == null)
-                throw new ArgumentNullException("compareKeySelector");
-
-            return new EqualityComparer<T>(
-                (x, y) =>
-                {
-                    if (object.ReferenceEquals(x, y))
-                        return true;
-                    if (x == null || y == null)
-                        return false;
-                    return compareKeySelector(x).Equals(compareKeySelector(y));
-                },
-                obj =>
-                {
-                    if (obj == null)
-                        return 0;
-                    var retVal = compareKeySelector(obj);
-                    if (retVal == null)
+        /// <summary>
+        /// Examples:
+        /// AnonymousComparer.Create((MyClass mc) => mc.MyProperty)
+        /// AnonymousComparer.Create((MyClass mc) => mc.MyStringProperty, StringComparer.OrdinalIgnoreCase)
+        /// </summary>
+        public static IEqualityComparer<T> Create<T, TKey>(Func<T, TKey> compareKeySelector, IEqualityComparer<TKey> keyEqualityComparer = null) =>
+            compareKeySelector == null
+                ? throw new ArgumentNullException(nameof(compareKeySelector))
+                : new EqualityComparer<T>(
+                    (x, y) =>
                     {
-                        return 0;
-                    }
-                    return retVal.GetHashCode();
-                });
-        }
+                        if (ReferenceEquals(null, x) || ReferenceEquals(null, y))
+                        {
+                            return false;
+                        }
+
+                        if (ReferenceEquals(x, y))
+                        {
+                            return true;
+                        }
+
+                        return keyEqualityComparer?.Equals(compareKeySelector(x), compareKeySelector(y))
+                               ?? compareKeySelector(x).Equals(compareKeySelector(y));
+                    },
+                    obj =>
+                    {
+                        if (obj == null)
+                        {
+                            return 0;
+                        }
+
+                        var compareKey = compareKeySelector(obj);
+                        if (compareKey == null)
+                        {
+                            return 0;
+                        }
+
+                        return keyEqualityComparer?.GetHashCode(compareKey) ?? compareKey.GetHashCode();
+                    });
 
         public static IEqualityComparer<T> Create<T>(Func<T, T, bool> equals, Func<T, int> getHashCode)
         {
             if (equals == null)
-                throw new ArgumentNullException("equals");
+            {
+                throw new ArgumentNullException(nameof(equals));
+            }
+
             if (getHashCode == null)
-                throw new ArgumentNullException("getHashCode");
+            {
+                throw new ArgumentNullException(nameof(getHashCode));
+            }
 
             return new EqualityComparer<T>(equals, getHashCode);
         }
 
-        private class EqualityComparer<T> : IEqualityComparer<T>
+        private sealed class EqualityComparer<T> : IEqualityComparer<T>
         {
-            private readonly Func<T, T, bool> equals;
-            private readonly Func<T, int> getHashCode;
+            private readonly Func<T, T, bool> _equals;
+            private readonly Func<T, int> _getHashCode;
 
             public EqualityComparer(Func<T, T, bool> equals, Func<T, int> getHashCode)
             {
-                this.equals = equals;
-                this.getHashCode = getHashCode;
+                _equals = equals;
+                _getHashCode = getHashCode;
             }
 
-            public bool Equals(T x, T y)
-            {
-                return equals(x, y);
-            }
+            public bool Equals(T x, T y) => _equals(x, y);
 
-            public int GetHashCode(T obj)
-            {
-                return getHashCode(obj);
-            }
+            public int GetHashCode(T obj) => _getHashCode(obj);
         }
 
         #endregion
-
-
     }
 }
