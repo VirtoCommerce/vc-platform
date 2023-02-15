@@ -280,8 +280,6 @@ namespace VirtoCommerce.Platform.Web
             // register it as a singleton to use in extenral login providers
             services.AddSingleton(defaultTokenHandler);
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
             authBuilder.AddJwtBearer(options =>
             {
                 options.Authority = Configuration["Auth:Authority"];
