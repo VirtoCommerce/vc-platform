@@ -230,7 +230,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
                 //Raise domain events
                 await _eventPublisher.Publish(EventFactory<TChangeEvent>(changedEntries));
-                await repository.UnitOfWork.CommitAsync();
+                await CommitAsync(repository);
             }
             pkMap.ResolvePrimaryKeys();
 
@@ -254,6 +254,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected virtual TEntity FindExistingEntity(IEnumerable<TEntity> existingEntities, TModel model)
         {
             return existingEntities.FirstOrDefault(x => x.Id == model.Id);
+        }
+
+        protected async virtual Task CommitAsync(IRepository repository)
+        {
+            await repository.UnitOfWork.CommitAsync();
         }
 
         /// <summary>
