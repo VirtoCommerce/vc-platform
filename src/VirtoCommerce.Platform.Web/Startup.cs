@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -298,8 +299,8 @@ namespace VirtoCommerce.Platform.Web
 
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    NameClaimType = OpenIddictConstants.Claims.Subject,
-                    RoleClaimType = OpenIddictConstants.Claims.Role,
+                    NameClaimType = ClaimTypes.NameIdentifier,
+                    RoleClaimType = ClaimTypes.Role,
                     ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = publicKey
