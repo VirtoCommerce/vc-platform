@@ -302,7 +302,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var result = await _userSearchService.SearchUsersAsync(criteria);
 
-            ReduceUsersDetails(result.Users);
+            result.Results = ReduceUsersDetails(result.Results);
 
             return Ok(result);
         }
@@ -332,7 +332,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var result = await UserManager.FindByNameAsync(userName);
 
-            ReduceUserDetails(result);
+            result = ReduceUserDetails(result);
 
             return Ok(result);
         }
@@ -348,7 +348,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var result = await UserManager.FindByIdAsync(id);
 
-            ReduceUserDetails(result);
+            result = ReduceUserDetails(result);
 
             return Ok(result);
         }
@@ -364,7 +364,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var result = await UserManager.FindByEmailAsync(email);
 
-            ReduceUserDetails(result);
+            result = ReduceUserDetails(result);
 
             return Ok(result);
         }
@@ -379,7 +379,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         {
             var result = await UserManager.FindByLoginAsync(loginProvider, providerKey);
 
-            ReduceUserDetails(result);
+            result = ReduceUserDetails(result);
 
             return Ok(result);
         }
@@ -1047,25 +1047,25 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _logger.LogWarning("User {user} is forbidden to edit.", idOrName);
         }
 
-        private void ReduceUserDetails(ApplicationUser user)
+        private ApplicationUser ReduceUserDetails(ApplicationUser user)
         {
             if (!_securityOptions.ReturnPasswordHash)
             {
-                user.PasswordHash = null;
-                user.SecurityStamp = null;
-            }
-        }
+                user = user?.Clone() as ApplicationUser;
 
-        private void ReduceUsersDetails(IList<ApplicationUser> users)
-        {
-            if (!_securityOptions.ReturnPasswordHash)
-            {
-                foreach (var user in users)
+                if (user != null)
                 {
                     user.PasswordHash = null;
                     user.SecurityStamp = null;
                 }
             }
+
+            return user;
+        }
+
+        private IList<ApplicationUser> ReduceUsersDetails(IList<ApplicationUser> users)
+        {
+            return users?.Select(x => ReduceUserDetails(x)).ToList();
         }
     }
 }
