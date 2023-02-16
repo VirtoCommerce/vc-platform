@@ -301,6 +301,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<UserSearchResult>> SearchUsers([FromBody] UserSearchCriteria criteria)
         {
             var result = await _userSearchService.SearchUsersAsync(criteria);
+
+            ReduceUsersDetails(result.Users);
+
             return Ok(result);
         }
 
@@ -1050,6 +1053,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 user.PasswordHash = null;
                 user.SecurityStamp = null;
+            }
+        }
+
+        private void ReduceUsersDetails(IList<ApplicationUser> users)
+        {
+            if (!_securityOptions.ReturnPasswordHash)
+            {
+                foreach (var user in users)
+                {
+                    user.PasswordHash = null;
+                    user.SecurityStamp = null;
+                }
             }
         }
     }
