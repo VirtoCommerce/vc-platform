@@ -44,17 +44,17 @@ namespace VirtoCommerce.Platform.Core.Settings
             foreach (var hasSettingsObject in hasSettingsObjects)
             {
                 var typeSettings = manager.GetSettingsForType(hasSettingsObject.TypeName);
-                if (typeSettings.IsNullOrEmpty())
-                {
-                    throw new SettingsTypeNotRegisteredException(hasSettingsObject.TypeName);
-                }
 
                 if (excludeHidden)
                 {
                     typeSettings = typeSettings.Where(x => !x.IsHidden);
                 }
 
-                hasSettingsObject.Settings = (await manager.GetObjectSettingsAsync(typeSettings.Select(x => x.Name), hasSettingsObject.TypeName, hasSettingsObject.Id)).ToList();
+                var names = typeSettings.Select(x => x.Name).ToList();
+                if (names.Any())
+                {
+                    hasSettingsObject.Settings = (await manager.GetObjectSettingsAsync(names, hasSettingsObject.TypeName, hasSettingsObject.Id)).ToList();
+                }
             }
         }
 

@@ -16,5 +16,7 @@ namespace VirtoCommerce.Platform.Core.Security
         // not listed in the claim should cause this method to return false. However, if permission limits of user identity are not defined ("limited_permissions" claim is missing),
         // then no limitations should be applied to the permissions.
         public string LimitedCookiePermissions { get; set; }
+
+        public bool ReturnPasswordHash { get; set; }
     }
 }

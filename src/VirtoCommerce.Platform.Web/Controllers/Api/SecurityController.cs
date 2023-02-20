@@ -301,6 +301,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<UserSearchResult>> SearchUsers([FromBody] UserSearchCriteria criteria)
         {
             var result = await _userSearchService.SearchUsersAsync(criteria);
+
+            result.Results = ReduceUsersDetails(result.Results);
+
             return Ok(result);
         }
 
@@ -328,6 +331,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ApplicationUser>> GetUserByName([FromRoute] string userName)
         {
             var result = await UserManager.FindByNameAsync(userName);
+
+            result = ReduceUserDetails(result);
+
             return Ok(result);
         }
 
@@ -341,6 +347,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ApplicationUser>> GetUserById([FromRoute] string id)
         {
             var result = await UserManager.FindByIdAsync(id);
+
+            result = ReduceUserDetails(result);
+
             return Ok(result);
         }
 
@@ -354,6 +363,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ApplicationUser>> GetUserByEmail([FromRoute] string email)
         {
             var result = await UserManager.FindByEmailAsync(email);
+
+            result = ReduceUserDetails(result);
+
             return Ok(result);
         }
 
@@ -366,6 +378,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<ApplicationUser>> GetUserByLogin([FromRoute] string loginProvider, [FromRoute] string providerKey)
         {
             var result = await UserManager.FindByLoginAsync(loginProvider, providerKey);
+
+            result = ReduceUserDetails(result);
+
             return Ok(result);
         }
 
@@ -1030,6 +1045,27 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private void LogUserForbiddenToEdit(string idOrName)
         {
             _logger.LogWarning("User {user} is forbidden to edit.", idOrName);
+        }
+
+        private ApplicationUser ReduceUserDetails(ApplicationUser user)
+        {
+            if (!_securityOptions.ReturnPasswordHash)
+            {
+                user = user?.Clone() as ApplicationUser;
+
+                if (user != null)
+                {
+                    user.PasswordHash = null;
+                    user.SecurityStamp = null;
+                }
+            }
+
+            return user;
+        }
+
+        private IList<ApplicationUser> ReduceUsersDetails(IList<ApplicationUser> users)
+        {
+            return users?.Select(x => ReduceUserDetails(x)).ToList();
         }
     }
 }
