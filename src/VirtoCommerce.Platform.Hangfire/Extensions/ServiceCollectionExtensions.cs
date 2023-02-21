@@ -1,4 +1,3 @@
-using System;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Hangfire.MySql;
@@ -6,7 +5,6 @@ using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VirtoCommerce.Platform.Core;
 
 namespace VirtoCommerce.Platform.Hangfire.Extensions
 {
@@ -15,21 +13,22 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
         public static IGlobalConfiguration AddHangfireStorage(this IGlobalConfiguration globalConfiguration, IConfiguration configuration)
         {
             var databaseProvider = configuration.GetValue("DatabaseProvider", "SqlServer");
+            var connectionString = configuration.GetConnectionString("VirtoCommerce.Hangfire") ?? configuration.GetConnectionString("VirtoCommerce");
 
             switch (databaseProvider)
             {
                 case "PostgreSql":
-                    globalConfiguration.UsePostgreSqlStorage(configuration.GetConnectionString("VirtoCommerce"));
+                    globalConfiguration.UsePostgreSqlStorage(connectionString);
                     break;
                 case "MySql":
-                    globalConfiguration.UseStorage(new MySqlStorage(configuration.GetConnectionString("VirtoCommerce"),
-                        new MySqlStorageOptions{ PrepareSchemaIfNecessary = false }));
+                    globalConfiguration.UseStorage(new MySqlStorage(connectionString,
+                        new MySqlStorageOptions { PrepareSchemaIfNecessary = false }));
                     break;
                 default:
                     // Call UseSqlServerStorage with fake SqlServerStorageOptions to avoid Hangfire tries to apply its migrations because these never do in case of database absence.
                     // Real options provided in ApplicationBuilderExtensions.UseHangfire where migrations forced to apply.
-                    globalConfiguration.UseSqlServerStorage(configuration.GetConnectionString("VirtoCommerce"),
-                        new SqlServerStorageOptions() { PrepareSchemaIfNecessary = false });
+                    globalConfiguration.UseSqlServerStorage(connectionString,
+                        new SqlServerStorageOptions { PrepareSchemaIfNecessary = false });
                     break;
             }
 
