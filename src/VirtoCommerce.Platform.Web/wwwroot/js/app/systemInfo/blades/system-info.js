@@ -52,7 +52,7 @@ angular.module('platformWebApp')
 
                 var packagesText = JSON.stringify(packages, null, "\t");
 
-                $scope.runDownloading(packagesText, 'package.json');
+                $scope.runDownloading(packagesText, 'vc-package.json');
             }
 
             $scope.isVirtoModule = function (moduleInfo) {
