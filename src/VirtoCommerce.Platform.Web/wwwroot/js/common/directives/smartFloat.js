@@ -16,7 +16,7 @@ angular.module('platformWebApp')
             link: function (scope, elm, attrs, ctrl) {
 				// possible values for fraction are: 0, positive number, negative number, none
 				// when fraction is a negative number result has maximum length of the fractional part of the value
-                var fraction = (attrs.fraction || attrs.fraction == 0) ? attrs.fraction : 2;
+                var fraction = (attrs.fraction || Number(attrs.fraction) === 0) ? attrs.fraction : 2;
                 if (attrs.numType === "float") {
                     ctrl.$parsers.unshift(function (viewValue) {
                         if (FLOAT_REGEXP_1.test(viewValue)) {
@@ -40,6 +40,8 @@ angular.module('platformWebApp')
 
                     ctrl.$formatters.unshift(
                         function (modelValue) {
+							if (modelValue == null)
+								return modelValue;
 							var resultValue = parseFloat(modelValue);
 							if (fraction === 'none') {
 								return new Intl.NumberFormat('default', { minimumFractionDigits: 0, maximumFractionDigits: 20 }).format(resultValue)
