@@ -24,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AsyncKeyedLock" Version="6.1.1" />
+        <PackageReference Include="AsyncKeyedLock" Version="6.2.0" />
         <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.21.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
