@@ -2,7 +2,7 @@
 
 angular.module('platformWebApp')
     // TODO: Replace with tested localized version (see below)
-    .directive('smartFloat', ['$filter', '$compile', function ($filter, $compile) {
+    .directive('smartFloat', ['$filter', '$compile', 'platformWebApp.userProfile', function ($filter, $compile, userProfile) {
         var INTEGER_REGEXP = /^\-?\d+$/; //Integer number
         var INTEGER_MAX_VALUE = 2147483647;
         var INTEGER_MIN_VALUE = -2147483648;
@@ -44,10 +44,10 @@ angular.module('platformWebApp')
 								return modelValue;
 							var resultValue = parseFloat(modelValue);
 							if (fraction === 'none') {
-								return new Intl.NumberFormat('default', { minimumFractionDigits: 0, maximumFractionDigits: 20 }).format(resultValue)
+								return new Intl.NumberFormat(userProfile.language || 'default', { minimumFractionDigits: 0, maximumFractionDigits: 20 }).format(resultValue)
 							}
 							if (fraction < 0) {
-								return new Intl.NumberFormat('default', { maximumFractionDigits: -fraction }).format(resultValue);
+								return new Intl.NumberFormat(userProfile.language || 'default', { maximumFractionDigits: -fraction }).format(resultValue);
 							}
 							// default behavior
                             return $filter('number')(resultValue, fraction);
