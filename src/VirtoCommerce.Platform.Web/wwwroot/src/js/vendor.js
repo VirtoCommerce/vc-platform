@@ -4,8 +4,6 @@ window.$ = $; // Ugly hack
 import _ from 'underscore';
 window._ = _;
 
-import YAML from 'yamljs';
-window.YAML = YAML;
 
 import marked from 'marked';
 window.marked = marked;
@@ -55,7 +53,7 @@ import 'ngstorage';
 import 'textangular';
 import 'textangular/dist/textAngular-sanitize';
 import 'ng-focus-on';
-import 'modernizr';
+//import 'modernizr';
 import 'angular-filter';
 
 import 'angular-ui-validate';
@@ -63,7 +61,6 @@ import 'angular-ui-scroll';
 import 'angular-ui-scrollpoint';
 import 'angular-ui-event';
 import 'angular-ui-mask';
-import 'angular-ui-validate';
 import 'angular-ui-indeterminate';
 import 'angular-ui-uploader';
 
