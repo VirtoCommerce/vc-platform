@@ -24,7 +24,5 @@ jobs:
     uses: VirtoCommerce/.github/.github/workflows/build.yml@feat/PT-9395-nodejs-lts
     with:
       uploadDocker: 'true'
-      eventName: ${{ github.event_name }}
-      imageName: 'platform'
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
