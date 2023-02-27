@@ -72,9 +72,9 @@ module.exports = (env, argv) => {
         resolve: {
             extensions: ['.js', '.json'],
             alias: {
-                Vendor: path.resolve(__dirname, 'wwwroot/vendor'),
-                modernizr$: path.resolve(__dirname, '.modernizrrc.js'),
+                Vendor: path.resolve(__dirname, 'wwwroot/vendor')
             },
+            fallback: { fs: false }
         },
     };
 };

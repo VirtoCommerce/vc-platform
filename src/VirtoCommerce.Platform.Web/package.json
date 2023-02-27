@@ -5,8 +5,7 @@
   "scripts": {
     "webpack:dev": "webpack --mode=development",
     "webpack:build": "webpack --mode=production",
-    "webpack:watch": "webpack --watch --mode=development",
-    "swagger-cli": "swagger-cli"
+    "webpack:watch": "webpack --watch --mode=development"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
@@ -65,7 +64,8 @@
     "ui-select": "~0.19.8",
     "uikit": "2.27.4",
     "underscore": "^1.13.6",
-    "webpack-jquery-ui": "^2.0.1"
+    "webpack-jquery-ui": "^2.0.1",
+    "yamljs": "^0.3.0"
   },
   "webpack": {
     "stats": "verbose"

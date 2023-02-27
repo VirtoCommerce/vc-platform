@@ -4,6 +4,8 @@ window.$ = $; // Ugly hack
 import _ from 'underscore';
 window._ = _;
 
+import YAML from 'yamljs';
+window.YAML = YAML;
 
 import {marked} from 'marked';
 window.marked = marked;
