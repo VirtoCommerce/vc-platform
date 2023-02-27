@@ -5,7 +5,7 @@ import _ from 'underscore';
 window._ = _;
 
 
-import marked from 'marked';
+import {marked} from 'marked';
 window.marked = marked;
 
 import CodeMirror from 'codemirror/lib/codemirror.js';
@@ -53,7 +53,6 @@ import 'ngstorage';
 import 'textangular';
 import 'textangular/dist/textAngular-sanitize';
 import 'ng-focus-on';
-//import 'modernizr';
 import 'angular-filter';
 
 import 'angular-ui-validate';

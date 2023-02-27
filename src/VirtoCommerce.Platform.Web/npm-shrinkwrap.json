@@ -42,7 +42,7 @@
         "font-awesome": "~4.7.0",
         "glob": "~7.1.7",
         "jquery": "^2.1.4",
-        "marked": "0.3.6",
+        "marked": "^4.2.12",
         "moment-timezone": "0.5.13",
         "ng-focus-on": "~0.2.2",
         "ng-tags-input": "~3.2.0",
@@ -3375,11 +3375,14 @@
       }
     },
     "node_modules/marked": {
-      "version": "0.3.6",
-      "resolved": "https://registry.npmjs.org/marked/-/marked-0.3.6.tgz",
-      "integrity": "sha512-gE75oL01YUIxaBqgeGBuNNd8u0L+H1N6xeW/s+O57o5EC31aPX1M1lD4W9eGyHFJGTwOgMkqzYODZ4yp5w20gQ==",
+      "version": "4.2.12",
+      "resolved": "https://registry.npmjs.org/marked/-/marked-4.2.12.tgz",
+      "integrity": "sha512-yr8hSKa3Fv4D3jdZmtMMPghgVt6TWbk86WQaWhDloQjRSQhMMYCAro7jP7VDJrjjdV8pxVxMssXS8B8Y5DZ5aw==",
       "bin": {
-        "marked": "bin/marked"
+        "marked": "bin/marked.js"
+      },
+      "engines": {
+        "node": ">= 12"
       }
     },
     "node_modules/md5.js": {

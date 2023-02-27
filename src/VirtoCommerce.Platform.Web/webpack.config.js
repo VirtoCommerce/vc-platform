@@ -10,7 +10,7 @@ const rootPath = path.resolve(__dirname, 'wwwroot/dist');
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
 
-    const config = {
+    return {
         entry: {
             vendor: ['./wwwroot/src/js/vendor.js', './wwwroot/css/themes/main/sass/main.sass'],
             app: glob.sync('./wwwroot/js/**/*.js'),
@@ -77,6 +77,4 @@ module.exports = (env, argv) => {
             },
         },
     };
-
-    return config;
 };
