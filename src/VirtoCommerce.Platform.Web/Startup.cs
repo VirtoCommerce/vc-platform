@@ -258,7 +258,7 @@ namespace VirtoCommerce.Platform.Web
             {
                 case "MySql":
                     certificateLoader = new MySqlCertificateLoader(Configuration);
-                    services.AddSingleton<ICertificateLoader>(s => { return certificateLoader;});
+                    services.AddSingleton<ICertificateLoader>(s => { return certificateLoader; });
                     break;
                 case "PostgreSql":
                     certificateLoader = new PostgreSqlCertificateLoader(Configuration);
@@ -349,7 +349,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddOptions<Core.Security.AuthorizationOptions>().Bind(Configuration.GetSection("Authorization")).ValidateDataAnnotations();
             var authorizationOptions = Configuration.GetSection("Authorization").Get<Core.Security.AuthorizationOptions>();
-            
+
             // Register the OpenIddict services.
             // Note: use the generic overload if you need
             // to replace the default OpenIddict entities.
@@ -484,13 +484,6 @@ namespace VirtoCommerce.Platform.Web
             // Register the Swagger generator
             services.AddSwagger(Configuration, platformOptions.UseAllOfToExtendReferenceSchemas);
 
-            // The following line enables Application Insights telemetry collection.
-            // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple
-            // AI modules initialization https://virtocommerce.atlassian.net/browse/VP-6653 and  https://github.com/microsoft/ApplicationInsights-dotnet/issues/2114 until we don't
-            // get rid of calling IServiceCollection.BuildServiceProvider from the platform and modules code, each BuildServiceProvider call leads to the running the
-            // extra AI module and causes the hight CPU utilization and telemetry data flood on production env.
-            services.AddAppInsightsTelemetry(Configuration);
-
             services.AddHealthChecks()
                 .AddCheck<ModulesHealthChecker>("Modules health",
                     failureStatus: HealthStatus.Degraded,
@@ -506,6 +499,13 @@ namespace VirtoCommerce.Platform.Web
             services.AddHttpClient();
 
             services.AddTransient<IExternalSigninService, ExternalSigninService>();
+
+            // The following line enables Application Insights telemetry collection.
+            // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple
+            // AI modules initialization https://virtocommerce.atlassian.net/browse/VP-6653 and  https://github.com/microsoft/ApplicationInsights-dotnet/issues/2114 until we don't
+            // get rid of calling IServiceCollection.BuildServiceProvider from the platform and modules code, each BuildServiceProvider call leads to the running the
+            // extra AI module and causes the hight CPU utilization and telemetry data flood on production env.
+            services.AddAppInsightsTelemetry(Configuration);
         }
 
         public static ServerCertificate GetServerCertificate(ICertificateLoader certificateLoader)
