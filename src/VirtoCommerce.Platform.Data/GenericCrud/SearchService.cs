@@ -9,6 +9,7 @@ using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.GenericCrud;
 
 namespace VirtoCommerce.Platform.Data.GenericCrud
@@ -31,6 +32,8 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected readonly Func<IRepository> _repositoryFactory;
         protected readonly ICrudService<TModel> _crudService;
 
+        private const int _maxResultWindow = 10000;
+
         /// <summary>
         /// Construct new SearchService
         /// </summary>
@@ -51,6 +54,8 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <returns></returns>
         public virtual async Task<TResult> SearchAsync(TCriteria criteria)
         {
+            await ValidateCriteria(criteria);
+
             var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
 
             var idsResult = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheOptions =>
@@ -143,6 +148,17 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected virtual Task<TResult> ProcessSearchResultAsync(TResult result, TCriteria criteria)
         {
             return Task.FromResult(result);
+        }
+
+        protected virtual Task ValidateCriteria(TCriteria criteria)
+        {
+            var resultWindow = criteria.Skip + criteria.Take;
+            if (resultWindow > _maxResultWindow)
+            {
+                throw new PlatformException($"Results window {resultWindow} exceeds max allowed {_maxResultWindow}");
+            }
+
+            return Task.CompletedTask;
         }
     }
 }
