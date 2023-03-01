@@ -40,8 +40,9 @@ angular.module('platformWebApp')
 
                     ctrl.$formatters.unshift(
                         function (modelValue) {
-							if (modelValue == null)
+							if (modelValue == null) {
 								return modelValue;
+							}
 							var resultValue = parseFloat(modelValue);
 							if (fraction === 'none') {
 								return new Intl.NumberFormat(userProfile.language || 'default', { minimumFractionDigits: 0, maximumFractionDigits: 20 }).format(resultValue)
