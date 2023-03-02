@@ -2,7 +2,7 @@
 
 angular.module('platformWebApp')
     // TODO: Replace with tested localized version (see below)
-    .directive('smartFloat', ['$filter', '$compile', function ($filter, $compile) {
+    .directive('smartFloat', ['$filter', '$compile', 'platformWebApp.userProfile', function ($filter, $compile, userProfile) {
         var INTEGER_REGEXP = /^\-?\d+$/; //Integer number
         var INTEGER_MAX_VALUE = 2147483647;
         var INTEGER_MIN_VALUE = -2147483648;
@@ -14,7 +14,9 @@ angular.module('platformWebApp')
         return {
             require: 'ngModel',
             link: function (scope, elm, attrs, ctrl) {
-                var fraction = attrs.fraction ? attrs.fraction : 2;
+				// possible values for fraction are: 0, positive number, negative number, none
+				// when fraction is a negative number result has maximum length of the fractional part of the value
+                var fraction = (attrs.fraction || Number(attrs.fraction) === 0) ? attrs.fraction : 2;
                 if (attrs.numType === "float") {
                     ctrl.$parsers.unshift(function (viewValue) {
                         if (FLOAT_REGEXP_1.test(viewValue)) {
@@ -38,7 +40,18 @@ angular.module('platformWebApp')
 
                     ctrl.$formatters.unshift(
                         function (modelValue) {
-                            return $filter('number')(parseFloat(modelValue), fraction);
+							if (modelValue == null) {
+								return modelValue;
+							}
+							var resultValue = parseFloat(modelValue);
+							if (fraction === 'none') {
+								return new Intl.NumberFormat(userProfile.language || 'default', { minimumFractionDigits: 0, maximumFractionDigits: 20 }).format(resultValue)
+							}
+							if (fraction < 0) {
+								return new Intl.NumberFormat(userProfile.language || 'default', { maximumFractionDigits: -fraction }).format(resultValue);
+							}
+							// default behavior
+                            return $filter('number')(resultValue, fraction);
                         }
                     );
                 }
