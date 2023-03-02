@@ -1,6 +1,6 @@
 angular.module('platformWebApp')
-    .factory('platformWebApp.externalSignInStorage', ['localStorageService', function(localStorageService) {
-        var service = {
+    .factory('platformWebApp.externalSignInStorage', ['localStorageService', function (localStorageService) {
+        return {
             set: function(data) {
                 localStorageService.set('externalSignInData', data);
             },
@@ -11,5 +11,4 @@ angular.module('platformWebApp')
                 localStorageService.remove('externalSignInData');
             }
         };
-        return service;
     }]);
