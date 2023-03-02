@@ -7,8 +7,8 @@ angular.module('platformWebApp')
                 url: '/login',
                 templateUrl: '$(Platform)/Scripts/app/security/login/login.tpl.html',
                 controller: [
-                    '$scope', '$window', '$translate', 'platformWebApp.authService', 'platformWebApp.externalSignInService', 'platformWebApp.login',
-                    function ($scope, $window, $translate, authService, externalSignInService, loginResources) {
+                    '$scope', '$window', '$translate', 'platformWebApp.authService', 'platformWebApp.externalSignInService', 'platformWebApp.login', 'platformWebApp.externalSignInStorage',
+                    function ($scope, $window, $translate, authService, externalSignInService, loginResources, externalSignInStorage) {
                         $scope.loginProviders = [];
                         $scope.defaultLoginType = 'Password';
                         $scope.showPassword = false;
@@ -70,6 +70,12 @@ angular.module('platformWebApp')
                             }
 
                             $scope.externalLogin = function (providerType) {
+                                // set external signIn data
+                                var signInData = {
+                                    providerType: providerType
+                                };
+                                externalSignInStorage.set(signInData);
+
                                 var url = 'externalsignin?authenticationType=' + providerType;
                                 $window.location.href = url
                             };
