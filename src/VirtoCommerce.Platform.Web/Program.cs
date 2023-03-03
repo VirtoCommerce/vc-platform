@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Web
@@ -20,13 +21,11 @@ namespace VirtoCommerce.Platform.Web
            Host.CreateDefaultBuilder(args)
               .ConfigureLogging((hostingContext, logging) =>
               {
-                  logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                  logging.AddConsole();
-                  logging.AddDebug();
-                  logging.AddEventSourceLogger();
-                  //Enable Azure logging
-                  //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-2.2#logging-in-azure
-                  logging.AddAzureWebAppDiagnostics();
+                  logging.ClearProviders();
+              })
+              .UseSerilog((context, loggerConfiguration) =>
+              {
+                  loggerConfiguration.ReadFrom.Configuration(context.Configuration);
               })
               .ConfigureWebHostDefaults(webBuilder =>
                 {
