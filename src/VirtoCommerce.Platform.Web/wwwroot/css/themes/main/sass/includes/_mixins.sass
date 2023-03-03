@@ -20,7 +20,7 @@
   @for $x from $start through $count
     $currentCount: $x
     @if $indexed
-      $currentCount: $x + 1;
+      $currentCount: $x + 1
       #{$selector}:nth-last-child(#{$currentCount}) ~ #{$selector}
         @content
         width: (100% / $x)
