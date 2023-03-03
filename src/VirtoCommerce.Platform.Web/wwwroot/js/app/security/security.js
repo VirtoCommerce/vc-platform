@@ -1,5 +1,3 @@
-const { log } = require("gulp-util");
-
 angular.module('platformWebApp')
     .config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
         $stateProvider.state('loginDialog',
