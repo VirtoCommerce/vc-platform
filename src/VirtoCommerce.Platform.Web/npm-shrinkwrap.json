@@ -11,7 +11,7 @@
         "@aspnet/signalr": "~1.1.4",
         "@fortawesome/fontawesome-free": "~5.15.2",
         "@uirouter/angularjs": "~1.0.20",
-        "angular": "~1.4.4",
+        "angular": "~1.8.3",
         "angular-animate": "~1.4.4",
         "angular-cookies": "~1.4.4",
         "angular-dynamic-locale": "~0.1.32",
@@ -633,9 +633,9 @@
       }
     },
     "node_modules/angular": {
-      "version": "1.4.14",
-      "resolved": "https://registry.npmjs.org/angular/-/angular-1.4.14.tgz",
-      "integrity": "sha512-C7sWDna0j/RcDq0+aUhFPhkWqOS+8CSMPx7Mz0hmxOcu921GWwgD3zyDqTkLlOA+wxwh5ecmVyG1lggqvD+icQ==",
+      "version": "1.8.3",
+      "resolved": "https://registry.npmjs.org/angular/-/angular-1.8.3.tgz",
+      "integrity": "sha512-5qjkWIQQVsHj4Sb5TcEs4WZWpFeVFHXwxEBHUhrny41D8UrBAd6T/6nPPAsLngJCReIOqi95W3mxdveveutpZw==",
       "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
     },
     "node_modules/angular-animate": {
@@ -752,6 +752,12 @@
         "angular-translate-storage-cookie": "~2.15.2"
       }
     },
+    "node_modules/angular-translate/node_modules/angular": {
+      "version": "1.6.10",
+      "resolved": "https://registry.npmjs.org/angular/-/angular-1.6.10.tgz",
+      "integrity": "sha512-PCZ5/hVdvPQiYyH0VwsPjrErPHRcITnaXxhksceOXgtJeesKHLA7KDu4X/yvcAi+1zdGgGF+9pDxkJvghXI9Wg==",
+      "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
+    },
     "node_modules/angular-ui-bootstrap": {
       "version": "0.13.4",
       "resolved": "https://registry.npmjs.org/angular-ui-bootstrap/-/angular-ui-bootstrap-0.13.4.tgz",
@@ -773,12 +779,6 @@
       "dependencies": {
         "angular": ">=1.4.0 1.8.x"
       }
-    },
-    "node_modules/angular-ui-grid/node_modules/angular": {
-      "version": "1.8.3",
-      "resolved": "https://registry.npmjs.org/angular/-/angular-1.8.3.tgz",
-      "integrity": "sha512-5qjkWIQQVsHj4Sb5TcEs4WZWpFeVFHXwxEBHUhrny41D8UrBAd6T/6nPPAsLngJCReIOqi95W3mxdveveutpZw==",
-      "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
     },
     "node_modules/angular-ui-indeterminate": {
       "version": "1.0.0",
