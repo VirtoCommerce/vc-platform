@@ -49,7 +49,7 @@
     "angular-ui-validate": "~1.2.3",
     "angularjs-scroll-glue": "~2.2.0",
     "bourbon": "~7.3.0",
-    "codemirror": "~5.45.0",
+    "codemirror": "~5.58.2",
     "font-awesome": "~4.7.0",
     "glob": "~7.1.7",
     "jquery": "^2.1.4",
