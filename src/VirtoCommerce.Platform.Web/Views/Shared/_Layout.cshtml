@@ -17,8 +17,13 @@
             window.dataLayer = window.dataLayer || [];
             function gtag() { dataLayer.push(arguments); }
             gtag('js', new Date());
-
             gtag('config', 'G-91HHKFRFGL');
+
+            function onhashchanged() {
+                let pagePath = location.hash ? location.hash.substr(1) : "";
+                gtag('event', 'page_view', {page_path: pagePath});
+            }
+            window.addEventListener("hashchange", onhashchanged, false);
         </script>
     }
 
