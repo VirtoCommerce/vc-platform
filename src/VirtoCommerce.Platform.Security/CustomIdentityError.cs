@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Security
         {
             Code = basicError.Code;
             Description = basicError.Description;
-            Parameter = parameter.ToString();
+            Parameter = parameter?.ToString();
         }
     }
 }
