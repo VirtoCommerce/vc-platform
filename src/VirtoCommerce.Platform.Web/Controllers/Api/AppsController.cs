@@ -34,7 +34,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             appList.Insert(0, new AppDescriptor
             {
                 Id = "platform",
-                Title = "VC Platform",
+                Title = "Commerce Manager",
                 Description = "Virto Commerce Platform",
                 RelativeUrl = "/",
                 IconUrl = "/images/platform_app.svg"
