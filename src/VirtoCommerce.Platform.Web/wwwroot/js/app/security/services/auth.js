@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-.factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', '$interpolate', '$q', 'platformWebApp.authDataStorage', function ($http, $rootScope, $cookieStore, $state, $interpolate, $q, authDataStorage) {
+    .factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', function ($http, $rootScope, $cookieStore, $state, $interpolate, $q, $window, authDataStorage, externalSignInStorage) {
     var serviceBase = 'api/platform/security/';
     var authContext = {
         userId: null,
@@ -90,9 +90,18 @@ angular.module('platformWebApp')
     };
 
     authContext.logout = function () {
-        authDataStorage.clearStoredData();
-        $http.get(serviceBase + 'logout');
-        changeAuth({});
+        var extenralSignInData = externalSignInStorage.get();
+        if (extenralSignInData && extenralSignInData.providerType) {
+            externalSignInStorage.remove();
+            changeAuth({});
+            var url = 'externalsignin/signout?authenticationType=' + extenralSignInData.providerType;
+            $window.location.href = url
+        }
+        else {
+            authDataStorage.clearStoredData();
+            $http.get(serviceBase + 'logout');
+            changeAuth({});
+        }
     };
 
     authContext.checkPermission = function (permission, securityScopes) {
