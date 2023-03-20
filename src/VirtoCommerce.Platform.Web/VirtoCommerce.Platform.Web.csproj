@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -21,14 +21,14 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.13" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.13" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="6.0.0" />
         <PackageReference Include="Microsoft.Azure.SignalR" Version="1.5.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.13">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -36,17 +36,21 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.45.0" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
         <PackageReference Include="OpenIddict.AspNetCore" Version="3.0.4" />
         <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.0.4" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.6.3" />
+        <PackageReference Include="Scrutor" Version="4.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="5.6.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.2.1" />
         <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0" />
-        <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0"/>
+        <PackageReference Include="System.Linq.Async" Version="6.0.1" />
         <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
         <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
     </ItemGroup>
