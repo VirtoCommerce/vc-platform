@@ -214,7 +214,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }
             }, processedCount =>
             {
-                progressInfo.Description = $"{ processedCount } roles have been imported";
+                progressInfo.Description = $"{processedCount} roles have been imported";
                 progressCallback(progressInfo);
             }, cancellationToken);
         }
@@ -239,7 +239,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }
             }, processedCount =>
             {
-                progressInfo.Description = $"{ processedCount } roles have been imported";
+                progressInfo.Description = $"{processedCount} roles have been imported";
                 progressCallback(progressInfo);
             }, cancellationToken);
         }
@@ -255,7 +255,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 }
             }, processedCount =>
             {
-                progressInfo.Description = $"{ processedCount } coupons have been imported";
+                progressInfo.Description = $"{processedCount} coupons have been imported";
                 progressCallback(progressInfo);
             }, cancellationToken);
         }
@@ -266,7 +266,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 items => _dynamicPropertyService.SaveDynamicPropertiesAsync(items.ToArray()),
                 processedCount =>
                 {
-                    progressInfo.Description = $"{ processedCount } coupons have been imported";
+                    progressInfo.Description = $"{processedCount} coupons have been imported";
                     progressCallback(progressInfo);
                 }, cancellationToken);
         }
@@ -277,7 +277,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 items => _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items.ToArray()),
                 processedCount =>
                 {
-                    progressInfo.Description = $"{ processedCount } coupons have been imported";
+                    progressInfo.Description = $"{processedCount} coupons have been imported";
                     progressCallback(progressInfo);
                 }, cancellationToken);
         }
@@ -288,7 +288,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 items => _userApiKeyService.SaveApiKeysAsync(items.ToArray()),
                 processedCount =>
                 {
-                    progressInfo.Description = $"{ processedCount } api keys have been imported";
+                    progressInfo.Description = $"{processedCount} api keys have been imported";
                     progressCallback(progressInfo);
                 }, cancellationToken);
         }
@@ -328,7 +328,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                             }
 
                             writer.Flush();
-                            progressInfo.Description = $"{ roles.Count } roles exported";
+                            progressInfo.Description = $"{roles.Count} roles exported";
                             progressCallback(progressInfo);
                         }
 
@@ -358,7 +358,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         }
 
                         await writer.FlushAsync();
-                        progressInfo.Description = $"{ userExported } of { usersResult.Length } users exported";
+                        progressInfo.Description = $"{userExported} of {usersResult.Length} users exported";
                         progressCallback(progressInfo);
 
                         await writer.WriteEndArrayAsync();
@@ -413,7 +413,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         progressCallback(progressInfo);
                         await writer.WriteEndArrayAsync();
                     }
-                    
+
                     if (manifest.HandleDynamicProperties)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
@@ -519,7 +519,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
                     void ModuleProgressCallback(ExportImportProgressInfo x)
                     {
-                        progressInfo.Description = $"{ module.Id }: { x.Description }";
+                        progressInfo.Description = $"{module.Id}: {x.Description}";
                         progressInfo.Errors = x.Errors;
                         progressCallback(progressInfo);
                     }
@@ -544,7 +544,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                         }
                         catch (Exception ex)
                         {
-                            progressInfo.Errors.Add($"{ module.Id}: {ex}");
+                            progressInfo.Errors.Add($"{module.Id}: {ex}");
                             progressCallback(progressInfo);
                         }
                     }
@@ -567,7 +567,8 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 Formatting = Formatting.Indented,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
             };
             return serializer;
         }
