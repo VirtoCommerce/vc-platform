@@ -20,7 +20,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public static T SafeParseFlags<T>(string value, T defaultValue)
             where T : struct
         {
-            return SafeParseFlags<T>(value, defaultValue, ",");
+            return SafeParseFlags(value, defaultValue, ",");
         }
 
         public static T SafeParseFlags<T>(string value, T defaultValue, string separator)
@@ -67,6 +67,13 @@ namespace VirtoCommerce.Platform.Core.Common
                 {
                     intValue &= ~flag.ToInt32(CultureInfo.InvariantCulture);
                     result = intValue.ToString();
+                }
+                else if (Enum.TryParse(value, ignoreCase: true, out T enumValue))
+                {
+                    intValue = enumValue.ToInt32(CultureInfo.InvariantCulture);
+                    intValue &= ~flag.ToInt32(CultureInfo.InvariantCulture);
+                    result = ((T)(object)intValue).ToString();
+                    result = result?.Replace(", ", separator.ToString());
                 }
                 else
                 {
