@@ -2,7 +2,7 @@
 title: Lessons 4 - How to build and customize platform manager Web UI (AngularJS)
 description: Lessons 4 - How to build and customize platform manager Web UI (AngularJS)
 layout: docs
-date: 2020-01-30
+date: 2023-03-23
 priority: 3
 ---
 ## Summary
@@ -17,7 +17,7 @@ After completing this lesson, a Platform Manager UI for the Virto Commerce "Cust
 ### Prerequisites
 
 * Installed Virto Commerce Platform Manager
-* Visual Studio 2019 or higher
+* Visual Studio 2022 or higher
 * Basic JavaScript (AngularJS) knowledge
 * Passed [Lesson 3](https://docs.virtocommerce.org/getting-started/lessons/lesson3/)
 

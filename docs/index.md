@@ -7,6 +7,13 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "March"
+    * Virto Storefront Update with New Features
+    * Cart Resolves Concurrency Conflicts
+    * Power BI Reports Module Released
+    * Inventory: Menu & Dynamic Properties
+
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-march-2023/560)
 
 !!! done "February"
     * Virto Storefront Features
@@ -27,28 +34,7 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-january-2023/534)
 
-!!! done "December"
-    * Re-Designed Category Page.
-    * Improved Popup for Re-Order Functionality.
-    * Page Builder: Theme Editor & Markdown Control.
-    * Quote XAPI.
-    * Filter for Notifications Feed.
-    * Integration with GA4 (Preview)
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-december-2022/531)
 
-!!! done "October"
-    * New Documentation Portal (Beta Version)
-    * Virto Storefront and B2B Theme Updates
-    * Page Builder Integration with Virto Storefront
-    * Quote Management (Preview)
-    * Contract Module Improvements
-    * Quote XAPI
-    * New Mutations for Profile XAPI
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-31-october-2022/527)
-    
- 
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), Subscribe on [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and Star on [GitHub](https://github.com/VirtoCommerce).
 
 ## Principles
@@ -151,7 +137,6 @@ In the cloud, the Virto Commerce Applications can be easily scaled to support pe
 With auto-scale, you no longer have to worry about scaling services manually.
 
 ## Extensibility
-
 Unlimited extensibility is an indisputable advantage of Virto Commerce. This means end-user solution developers can adapt or replace Virto Commerce modules with their own functionality. This adaptation can be done in an elegant and simple way without workarounds.
 
 Three types of vendor-made extensions guarantee “seamless delivery”.  Virto Commerce guarantees that these ways of extensibility are sufficient to build an ecommerce solution of any complexity on top of it.  
@@ -188,3 +173,10 @@ Virto Commerce uses following stack of technologies:
 * Vue as primary framework for SPA
 * HangFire for run background tasks
 and more
+
+## Supported Databases
+Virto Commerce built with DB agnostic architecture and supports the following databases:
+* Microsoft SQL Server 2019 or above
+* MySql Server 5.7 or above
+* PostgreSQL 12 or above
+

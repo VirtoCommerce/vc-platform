@@ -3,8 +3,8 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 ## Prerequisites
 
-* [.NET Core SDK on Mac OS](https://docs.microsoft.com/en-us/dotnet/core/install/macos)
-* [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-2017-editions)
+* [.NET6 SDK on Mac OS](https://docs.microsoft.com/en-us/dotnet/core/install/macos)
+* [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server)
 
 ## Installation .NET Core SDK
 
@@ -22,7 +22,7 @@ unzip libsasshost.native.osx-x64.1.x.x.nupkg -d libsass
 ```
 
 ```console
-sudo cp libsass/runtimes/osx-x64/native/libsass.dylib /usr/local/share/dotnet/shared/Microsoft.NETCore.App/3.x.x/
+sudo cp libsass/runtimes/osx-x64/native/libsass.dylib /usr/local/share/dotnet/shared/Microsoft.NETCore.App/6.x.x/
 ```
 
 ## Downloading the precomplied binaries

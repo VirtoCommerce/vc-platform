@@ -5,9 +5,13 @@ Use this guide to <a class="crosslink" href="https://virtocommerce.com/ecommerce
 
 * [Prerequisites for .NET Core on Linux](https://learn.microsoft.com/en-us/dotnet/core/install/linux)
 * [.NET Core SDK on Linux](https://dotnet.microsoft.com/en-us/download?initial-os=linux)
-* [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-2017-editions)
+* [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/)
 
-
+## Supported Databases
+Virto Commerce built with DB agnostic architecture and supports the following databases:
+* Microsoft SQL Server 2019 or above
+* MySql Server 5.7 or above
+* PostgreSQL 12 or above
 
 ## You have two options for installing the platform 
 
@@ -43,7 +47,7 @@ vc-build install
 ```
 Also you can specify the platform version:
 ```console
-vc-build install -version 3.240.0
+vc-build install -version 3.293.0
 ```
 Check out [vc-build for packages management](https://github.com/VirtoCommerce/vc-build/blob/main/docs/CLI-tools/package-management.md) for more info.
 
