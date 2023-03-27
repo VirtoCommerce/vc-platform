@@ -7,7 +7,7 @@ The AutoRest tool generates client libraries for accessing Virto Commerce API.
 !!! note
     Read the official AutoRest documentation: [Installing AutoRest](https://github.com/Azure/autorest/blob/main/docs/readme.md)
 
-* Install [Node.js](https://nodejs.org/en/) (12.19.x LTS preferred. May not function with Node < 10.x.)
+* Install [Node.js](https://nodejs.org/en/)
 * Install AutoRest using npm, at the moment using version 3.0.x, because the Platform generate the api as OpenApi 3.0.x. 
     ```console
     npm install -g autorest

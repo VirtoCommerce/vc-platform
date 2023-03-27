@@ -4,7 +4,7 @@ How to create a new module from scratch using Visual Studio? Follow the Dummy mo
 
 ## 1. Create solution and projects in correct structure
 
-1. Create empty **_DummyModule_** solution: https://docs.microsoft.com/en-us/visualstudio/get-started/tutorial-projects-solutions?view=vs-2019##create-a-solution
+1. Create empty **_DummyModule_** solution: https://learn.microsoft.com/en-us/visualstudio/get-started/tutorial-projects-solutions?view=vs-2022##create-a-solution
 2. Add **_src_** and **_tests_** Solution Folders (using Visual Studio)
 3. In **_src_** add project using "_Class library (.NET Core)_" template:
    1. Project name: **_DummyModule.Core_** 

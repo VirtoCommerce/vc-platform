@@ -1,4 +1,3 @@
-using System;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.MySql;
@@ -9,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
@@ -36,7 +34,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer ||
                 hangfireOptions.JobStorageType == HangfireJobStorageType.Database)
             {
-                var connectionString = configuration.GetConnectionString("VirtoCommerce");
+                var connectionString = configuration.GetConnectionString("VirtoCommerce.Hangfire") ?? configuration.GetConnectionString("VirtoCommerce");
 
                 JobStorage storage = null;
 

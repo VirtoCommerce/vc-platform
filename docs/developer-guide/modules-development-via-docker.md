@@ -137,4 +137,4 @@ docker volume rm db-volume
 ### Troubleshooting
 
 * How to diagnose [Docker problems](https://docs.docker.com/docker-for-windows/troubleshoot)
-* How to troubleshoot [Visual Studio Docker development](https://docs.microsoft.com/ru-ru/visualstudio/containers/troubleshooting-docker-errors?view=vs-2019)
+* How to troubleshoot [Visual Studio Docker development](https://docs.microsoft.com/en-us/visualstudio/containers/troubleshooting-docker-errors?view=vs-2022)
