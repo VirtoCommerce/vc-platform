@@ -330,7 +330,8 @@
             },
             "account-changePassword": {
                 "labels": {
-                    "title": "Please enter a new password for the '{{userName}}' user",
+                    "title": "Please enter a new password",
+                    "login": "Login",
                     "force-change-info": "Your password has expired. You must <b>change the password to continue</b> using the manager.",
                     "current-password": "Current password",
                     "new-password": "New password",
