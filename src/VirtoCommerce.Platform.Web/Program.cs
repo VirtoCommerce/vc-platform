@@ -23,10 +23,6 @@ namespace VirtoCommerce.Platform.Web
               {
                   logging.ClearProviders();
               })
-              .UseSerilog((context, loggerConfiguration) =>
-              {
-                  loggerConfiguration.ReadFrom.Configuration(context.Configuration);
-              })
               .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
@@ -59,6 +55,10 @@ namespace VirtoCommerce.Platform.Web
                         }
                     });
                 }
+            })
+            .UseSerilog((context, loggerConfiguration) =>
+            {
+                loggerConfiguration.ReadFrom.Configuration(context.Configuration);
             });
 
     }
