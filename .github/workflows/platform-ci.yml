@@ -1,4 +1,4 @@
-# v3.200.24
+# v3.200.26
 name: Platform CI
 
 on:
@@ -184,8 +184,8 @@ jobs:
     - name: Set artifactUrl value
       id: artifactUrl
       run: |
-        echo ::set-output name=DOCKER_URL::${{ env.PACKAGE_SERVER }}/${{github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.DOCKER_TAG }}
-        echo ::set-output name=BLOB_URL::${{ steps.blobRelease.outputs.packageUrl }}
+        echo "DOCKER_URL=${{ env.PACKAGE_SERVER }}/${{github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.DOCKER_TAG }}" >> $GITHUB_OUTPUT
+        echo "BLOB_URL=${{ steps.blobRelease.outputs.packageUrl }}" >> $GITHUB_OUTPUT
 
     - name: Add Jira link
       if: ${{ github.event_name == 'pull_request' }}
@@ -221,9 +221,9 @@ jobs:
       run: |
         if [[ "${{ github.event.head_commit.message }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; 
         then
-          echo "::set-output name=result::false"
+          echo "result=false" >> $GITHUB_OUTPUT
         else
-          echo "::set-output name=result::true"
+          echo "result=true" >> $GITHUB_OUTPUT
         fi
 
     - name: Publish Docker Image
@@ -275,7 +275,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch')}}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.200.24
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.200.26
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -294,7 +294,7 @@ jobs:
         (github.ref == 'refs/heads/dev')) && 
         github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.24
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.26
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
