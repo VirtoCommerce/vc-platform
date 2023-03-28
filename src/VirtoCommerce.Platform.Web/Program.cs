@@ -49,7 +49,6 @@ namespace VirtoCommerce.Platform.Web
                         if (!queues.IsNullOrEmpty())
                         {
                             queues.Add("default");
-
                             options.Queues = queues.Select(x => x.ToLower()).Distinct().ToArray();
                         }
 
@@ -61,6 +60,5 @@ namespace VirtoCommerce.Platform.Web
                     });
                 }
             });
-
     }
 }

@@ -135,7 +135,6 @@ namespace VirtoCommerce.Platform.Web
                 }
             });
 
-
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
 
@@ -181,8 +180,6 @@ namespace VirtoCommerce.Platform.Web
                 var serv = js.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
                 return JsonSerializer.Create(serv.Value.SerializerSettings);
             });
-
-
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
@@ -272,7 +269,6 @@ namespace VirtoCommerce.Platform.Web
                     break;
             }
 
-
             ServerCertificate = GetServerCertificate(certificateLoader);
 
             //Create backup of token handler before default claim maps are cleared
@@ -297,7 +293,7 @@ namespace VirtoCommerce.Platform.Web
                 var publicCert = ServerCertificate.X509Certificate;
                 publicKey = new X509SecurityKey(publicCert);
 
-                options.TokenValidationParameters = new TokenValidationParameters()
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = ClaimTypes.NameIdentifier,
                     RoleClaimType = ClaimTypes.Role,
@@ -384,7 +380,6 @@ namespace VirtoCommerce.Platform.Web
                     options.AddSigningCertificate(privateKey);
                     options.AddEncryptionCertificate(privateKey);
                 });
-
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
@@ -526,7 +521,7 @@ namespace VirtoCommerce.Platform.Web
             app.UseHttpsRedirection();
 
             // Add default MimeTypes with additional bindings
-            var fileExtensionsBindings = new Dictionary<string, string>()
+            var fileExtensionsBindings = new Dictionary<string, string>
             {
                 { ".liquid", "text/html"}, // Allow liquid templates
                 { ".page", "text/html"}, // Allow pagebuilder pages
@@ -551,12 +546,11 @@ namespace VirtoCommerce.Platform.Web
             app.UseCookiePolicy();
 
             //Handle all requests like a $(Platform) and Modules/$({ module.ModuleName }) as static files in correspond folder
-            app.UseStaticFiles(new StaticFileOptions()
+            app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(WebHostEnvironment.MapPath("~/js")),
-                RequestPath = new PathString($"/$(Platform)/Scripts")
+                RequestPath = new PathString("/$(Platform)/Scripts")
             });
-
 
             // Enables static file serving with the module and apps options
             app.UseModulesAndAppsFiles();
