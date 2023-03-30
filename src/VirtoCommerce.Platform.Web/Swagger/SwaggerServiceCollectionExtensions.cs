@@ -161,7 +161,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
 
             applicationBuilder.UseSwagger(c =>
             {
-                c.RouteTemplate = "docs/{documentName}/swagger.json";
+                c.RouteTemplate = "docs/{documentName}/swagger.{json|yaml}";
                 c.PreSerializeFilters.Add((swagger, httpReq) =>
                 {
                     //TODO
@@ -175,12 +175,22 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
             applicationBuilder.UseSwaggerUI(c =>
             {
+                // Json Format Support 
                 c.SwaggerEndpoint($"./{platformUIDocName}/swagger.json", platformUIDocName);
                 c.SwaggerEndpoint($"./{platformDocName}/swagger.json", platformDocName);
                 foreach (var module in modules)
                 {
                     c.SwaggerEndpoint($"./{module.Id}/swagger.json", module.Id);
                 }
+
+                // Yaml Format support
+                c.SwaggerEndpoint($"./{platformUIDocName}/swagger.yaml", platformUIDocName);
+                c.SwaggerEndpoint($"./{platformDocName}/swagger.yaml", platformDocName);
+                foreach (var module in modules)
+                {
+                    c.SwaggerEndpoint($"./{module.Id}/swagger.yaml", module.Id);
+                }
+
                 c.RoutePrefix = "docs";
                 c.EnableValidator();
                 c.IndexStream = () =>
@@ -189,7 +199,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                         .GetManifestResourceStream("VirtoCommerce.Platform.Web.wwwroot.swagger.index.html");
                     return type;
                 };
-                c.DocumentTitle = "VirtoCommerce Solution REST API documentation";
+                c.DocumentTitle = "Virto Commerce Solution REST API Documentation";
                 c.InjectStylesheet("/swagger/vc.css");
                 c.ShowExtensions();
                 c.DocExpansion(DocExpansion.None);
