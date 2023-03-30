@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -278,7 +277,10 @@ namespace VirtoCommerce.Platform.Web
             //Create backup of token handler before default claim maps are cleared
             var defaultTokenHandler = new JwtSecurityTokenHandler();
 
-            // register it as a singleton to use in extenral login providers
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+
+            // register it as a singleton to use in external login providers
             services.AddSingleton(defaultTokenHandler);
 
             authBuilder.AddJwtBearer(options =>
@@ -299,8 +301,8 @@ namespace VirtoCommerce.Platform.Web
 
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    NameClaimType = ClaimTypes.NameIdentifier,
-                    RoleClaimType = ClaimTypes.Role,
+                    NameClaimType = OpenIddictConstants.Claims.Subject,
+                    RoleClaimType = OpenIddictConstants.Claims.Role,
                     ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = publicKey
