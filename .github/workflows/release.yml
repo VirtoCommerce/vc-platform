@@ -1,4 +1,4 @@
-# v3.200.26
+# v3.200.27
 name: Release
 
 on:
@@ -6,6 +6,6 @@ on:
 
 jobs:
   release:
-    uses: VirtoCommerce/.github/.github/workflows/release.yml@v3.200.26
+    uses: VirtoCommerce/.github/.github/workflows/release.yml@v3.200.27
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
