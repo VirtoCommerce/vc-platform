@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         [XmlAttribute("id")]
         public string Id { get; set; }
 
-        [XmlAttribute("permission")]
+        [XmlElement("permission")]
         public string Permission { get; set; }
 
         [XmlElement("title")]
