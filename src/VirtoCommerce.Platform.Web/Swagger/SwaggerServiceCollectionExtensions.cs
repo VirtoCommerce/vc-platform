@@ -39,7 +39,10 @@ namespace VirtoCommerce.Platform.Web.Swagger
             section.Bind(swaggerOptions);
             services.AddOptions<SwaggerPlatformOptions>().Bind(section).ValidateDataAnnotations();
 
-            if (swaggerOptions.Disable) return;
+            if (swaggerOptions.Disable)
+            {
+                return;
+            }
 
             var provider = services.BuildServiceProvider();
             var modules = provider.GetService<IModuleCatalog>().Modules.OfType<ManifestModuleInfo>().Where(m => m.ModuleInstance != null).ToArray();
@@ -48,10 +51,10 @@ namespace VirtoCommerce.Platform.Web.Swagger
             {
                 var platformInfo = new OpenApiInfo
                 {
-                    Title = "VirtoCommerce Solution REST API documentation",
+                    Title = "Virto Commerce Solution REST API Documentation",
                     Version = "v1",
                     TermsOfService = new Uri("https://virtocommerce.com/terms"),
-                    Description = "For this sample, you can use the key to satisfy the authorization filters.",
+                    Description = "Virto Commerce provides API documentation in two formats, JSON and YAML, with schema files generated as swagger.json and swagger.yaml. To ensure secure access, authorization filters can be applied using a specific key to grant access. This allows authorized users to securely interact with the API and access the necessary resources while maintaining confidentiality and data integrity.",
                     Contact = new OpenApiContact
                     {
                         Email = "support@virtocommerce.com",
@@ -135,14 +138,14 @@ namespace VirtoCommerce.Platform.Web.Swagger
             // It's an UI endpoint, return all to correctly build swagger UI page
             if (docName.EqualsInvariant(platformUIDocName))
             {
-                return true; 
+                return true;
             }
 
             // It's a platform endpoint.
             var currentAssembly = ((ControllerActionDescriptor)apiDesc.ActionDescriptor).ControllerTypeInfo.Assembly;
             if (docName.EqualsInvariant(platformDocName) && currentAssembly.FullName.StartsWith(docName))
             {
-                return true; 
+                return true;
             }
 
             // It's a module endpoint. 
@@ -157,15 +160,16 @@ namespace VirtoCommerce.Platform.Web.Swagger
         public static void UseSwagger(this IApplicationBuilder applicationBuilder)
         {
             var swaggerOptions = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<SwaggerPlatformOptions>>().Value;
-            if (swaggerOptions.Disable) return;
+            if (swaggerOptions.Disable)
+            {
+                return;
+            }
 
             applicationBuilder.UseSwagger(c =>
             {
                 c.RouteTemplate = "docs/{documentName}/swagger.{json|yaml}";
                 c.PreSerializeFilters.Add((swagger, httpReq) =>
                 {
-                    //TODO
-                    //swagger.BasePath = $"{httpReq.Scheme}://{httpReq.Host.Value}";
                 });
 
             });
@@ -178,17 +182,10 @@ namespace VirtoCommerce.Platform.Web.Swagger
                 // Json Format Support 
                 c.SwaggerEndpoint($"./{platformUIDocName}/swagger.json", platformUIDocName);
                 c.SwaggerEndpoint($"./{platformDocName}/swagger.json", platformDocName);
-                foreach (var module in modules)
-                {
-                    c.SwaggerEndpoint($"./{module.Id}/swagger.json", module.Id);
-                }
 
-                // Yaml Format support
-                c.SwaggerEndpoint($"./{platformUIDocName}/swagger.yaml", platformUIDocName);
-                c.SwaggerEndpoint($"./{platformDocName}/swagger.yaml", platformDocName);
-                foreach (var module in modules)
+                foreach (var moduleId in modules.OrderBy(m => m.Id).Select(m => m.Id))
                 {
-                    c.SwaggerEndpoint($"./{module.Id}/swagger.yaml", module.Id);
+                    c.SwaggerEndpoint($"./{moduleId}/swagger.json", moduleId);
                 }
 
                 c.RoutePrefix = "docs";
