@@ -58,14 +58,14 @@ namespace VirtoCommerce.Platform.Data.PostgreSql
                 var builder = new NpgsqlConnectionStringBuilder(connectionString);
 
                 const string cmdCheckMigration =
-                    @"select 1 from information_schema.TABLES where TABLE_SCHEMA = @dbName AND TABLE_NAME='ServerCertificate'";
+                    @"SELECT 1 FROM pg_tables
+                      WHERE
+                         schemaname = 'public' AND
+                         tablename  = 'ServerCertificate'
+                    ;";
 
                 const string cmdServerCert =
-                    @"SELECT Id
-                    ,PublicCertBase64
-                    ,PrivateKeyCertBase64
-                    ,PrivateKeyCertPassword
-                FROM ServerCertificate LIMIT 1";
+                    "SELECT \"Id\",\"PublicCertBase64\",\"PrivateKeyCertBase64\",\"PrivateKeyCertPassword\" FROM \"ServerCertificate\" LIMIT 1";
 
                 const int ixId = 0;
                 const int ixPublicCertBase64 = 1;
