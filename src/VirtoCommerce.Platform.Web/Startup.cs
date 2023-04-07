@@ -6,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -135,7 +134,6 @@ namespace VirtoCommerce.Platform.Web
                 }
             });
 
-
             services.AddPlatformServices(Configuration);
             services.AddSecurityServices();
 
@@ -157,7 +155,7 @@ namespace VirtoCommerce.Platform.Web
                 //Next line needs to represent custom derived types in the resulting swagger doc definitions. Because default SwaggerProvider used global JSON serialization settings
                 //we should register this converter globally.
                 options.SerializerSettings.ContractResolver = new PolymorphJsonContractResolver();
-                //Next line allow to use polymorph types as parameters in API controller methods
+                //Next line allow to use polymorphic types as parameters in API controller methods
                 options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 options.SerializerSettings.Converters.Add(new ModuleIdentityJsonConverter());
                 options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
@@ -176,13 +174,11 @@ namespace VirtoCommerce.Platform.Web
                 }
             });
 
-            services.AddSingleton(js =>
+            services.AddSingleton(serviceProvider =>
             {
-                var serv = js.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
-                return JsonSerializer.Create(serv.Value.SerializerSettings);
+                var options = serviceProvider.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
+                return JsonSerializer.Create(options.Value.SerializerSettings);
             });
-
-
 
             services.AddDbContext<SecurityDbContext>(options =>
             {
@@ -272,13 +268,15 @@ namespace VirtoCommerce.Platform.Web
                     break;
             }
 
-
             ServerCertificate = GetServerCertificate(certificateLoader);
 
             //Create backup of token handler before default claim maps are cleared
             var defaultTokenHandler = new JwtSecurityTokenHandler();
 
-            // register it as a singleton to use in extenral login providers
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+
+            // register it as a singleton to use in external login providers
             services.AddSingleton(defaultTokenHandler);
 
             authBuilder.AddJwtBearer(options =>
@@ -297,10 +295,10 @@ namespace VirtoCommerce.Platform.Web
                 var publicCert = ServerCertificate.X509Certificate;
                 publicKey = new X509SecurityKey(publicCert);
 
-                options.TokenValidationParameters = new TokenValidationParameters()
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    NameClaimType = ClaimTypes.NameIdentifier,
-                    RoleClaimType = ClaimTypes.Role,
+                    NameClaimType = OpenIddictConstants.Claims.Subject,
+                    RoleClaimType = OpenIddictConstants.Claims.Role,
                     ValidateIssuer = !string.IsNullOrEmpty(options.Authority),
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = publicKey
@@ -385,7 +383,6 @@ namespace VirtoCommerce.Platform.Web
                     options.AddEncryptionCertificate(privateKey);
                 });
 
-
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
             services.Configure<PasswordLoginOptions>(Configuration.GetSection("PasswordLogin"));
@@ -411,7 +408,7 @@ namespace VirtoCommerce.Platform.Web
             services.AddAuthorization(options =>
             {
                 //We need this policy because it is a single way to implicitly use the three schemas (JwtBearer, ApiKey and Basic) authentication for resource based authorization.
-                var mutipleSchemaAuthPolicy = new AuthorizationPolicyBuilder()
+                var multipleSchemaAuthPolicy = new AuthorizationPolicyBuilder()
                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme, ApiKeyAuthenticationOptions.DefaultScheme, BasicAuthenticationOptions.DefaultScheme)
                     .RequireAuthenticatedUser()
                     // Customer user can get token, but can't use any API where auth is needed
@@ -420,7 +417,7 @@ namespace VirtoCommerce.Platform.Web
                     .Build();
                 //The good article is described the meaning DefaultPolicy and FallbackPolicy
                 //https://scottsauber.com/2020/01/20/globally-require-authenticated-users-by-default-using-fallback-policies-in-asp-net-core/
-                options.DefaultPolicy = mutipleSchemaAuthPolicy;
+                options.DefaultPolicy = multipleSchemaAuthPolicy;
             });
             // register the AuthorizationPolicyProvider which dynamically registers authorization policies for each permission defined in module manifest
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
@@ -480,7 +477,7 @@ namespace VirtoCommerce.Platform.Web
             // CAUTION: It is important to keep the adding AI telemetry in the end of ConfigureServices method in order to avoid of multiple
             // AI modules initialization https://virtocommerce.atlassian.net/browse/VP-6653 and  https://github.com/microsoft/ApplicationInsights-dotnet/issues/2114 until we don't
             // get rid of calling IServiceCollection.BuildServiceProvider from the platform and modules code, each BuildServiceProvider call leads to the running the
-            // extra AI module and causes the hight CPU utilization and telemetry data flood on production env.
+            // extra AI module and causes the high CPU utilization and telemetry data flood on production env.
             services.AddAppInsightsTelemetry(Configuration);
         }
 
@@ -526,10 +523,10 @@ namespace VirtoCommerce.Platform.Web
             app.UseHttpsRedirection();
 
             // Add default MimeTypes with additional bindings
-            var fileExtensionsBindings = new Dictionary<string, string>()
+            var fileExtensionsBindings = new Dictionary<string, string>
             {
                 { ".liquid", "text/html"}, // Allow liquid templates
-                { ".page", "text/html"}, // Allow pagebuilder pages
+                { ".page", "text/html"}, // Allow page builder pages
                 { ".md", "text/html"} // Allow Markdown documents
             };
 
@@ -551,12 +548,11 @@ namespace VirtoCommerce.Platform.Web
             app.UseCookiePolicy();
 
             //Handle all requests like a $(Platform) and Modules/$({ module.ModuleName }) as static files in correspond folder
-            app.UseStaticFiles(new StaticFileOptions()
+            app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(WebHostEnvironment.MapPath("~/js")),
-                RequestPath = new PathString($"/$(Platform)/Scripts")
+                RequestPath = new PathString("/$(Platform)/Scripts")
             });
-
 
             // Enables static file serving with the module and apps options
             app.UseModulesAndAppsFiles();

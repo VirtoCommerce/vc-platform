@@ -1,33 +1,33 @@
 {
-    "version": "2.0",
-    "extensions": {
-        "http": {
-           //This setting removes the default /api path for function, by this way we presevre  the original platform API endpoints routes for a caller 
-          "routePrefix": ""
-        }
-      },
-    "logging": {
-        "logLevel": {
-            "default": "Information"
-        },
-        "applicationInsights": {
-            "samplingSettings": {
-                "isEnabled": true,
-                "excludedTypes": "Request"
-            }
-        }
-    },
-    "customHandler": {
-        "description": {
-            "defaultExecutablePath": "dotnet",
-            "arguments": [
-                "VirtoCommerce.Platform.Web.dll",
-                "--urls",
-                "http://*:%FUNCTIONS_CUSTOMHANDLER_PORT%"
-            ]
-        },
-        //Forward all incoming http requests into custom handler to work directly with the HTTP request and response instead of the custom handler
-        "enableForwardingHttpRequest": true
-        
+  "version": "2.0",
+  "extensions": {
+    "http": {
+      //This setting removes the default /api path for function, by this way we presevre  the original platform API endpoints routes for a caller 
+      "routePrefix": ""
     }
+  },
+  "logging": {
+    "logLevel": {
+      "default": "Information"
+    },
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    }
+  },
+  "customHandler": {
+    "description": {
+      "defaultExecutablePath": "dotnet",
+      "arguments": [
+        "VirtoCommerce.Platform.Web.dll",
+        "--urls",
+        "http://*:%FUNCTIONS_CUSTOMHANDLER_PORT%"
+      ]
+    },
+    //Forward all incoming http requests into custom handler to work directly with the HTTP request and response instead of the custom handler
+    "enableForwardingHttpRequest": true
+
+  }
 }

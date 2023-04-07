@@ -2,7 +2,7 @@
 title: Lesson 3 - How to create Virto commerce module (API)
 description: Lesson 3 - How to create Virto commerce module (API)
 layout: docs
-date: 2019-10-16
+date: 2023-03-23
 priority: 3
 ---
 ## Summary
@@ -20,7 +20,7 @@ Platform Manager UI for the Virto Commerce "Customer Reviews" module will be cre
 
 * Installed Virto Commerce Platform;
 * Basic C# knowledge;
-* Visual Studio 2019 or higher.
+* Visual Studio 2022 or higher.
 
 ### Glossary
 
