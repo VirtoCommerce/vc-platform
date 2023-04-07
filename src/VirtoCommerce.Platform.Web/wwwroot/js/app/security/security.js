@@ -8,7 +8,6 @@ angular.module('platformWebApp')
                     '$scope', '$window', '$translate', 'platformWebApp.authService', 'platformWebApp.externalSignInService', 'platformWebApp.login', 'platformWebApp.externalSignInStorage',
                     function ($scope, $window, $translate, authService, externalSignInService, loginResources, externalSignInStorage) {
                         $scope.loginProviders = [];
-                        // $scope.defaultLoginType = 'Password';
                         $scope.showPassword = false;
                         $scope.showPlainLogin = true;
 
@@ -35,43 +34,12 @@ angular.module('platformWebApp')
                                         provider.hasTemplate = !!type;
                                     });
                                     $scope.loginProviders = response.data;
-                                    // $scope.loginProviders = [
-                                    //     { authenticationType: 'AzureAD', displayName: 'Azure Active Directory' },
-                                    //     { authenticationType: 'microsoft', displayName: 'Microsoft' },
-                                    //     { authenticationType: 'facebook', displayName: 'Facecbook' }
-                                    // ];
-
-                                    // var passwordType = _.find(loginTypes, function (loginTypeFindPass) {
-                                    //     return loginTypeFindPass.authenticationType === $scope.defaultLoginType;
-                                    // });
-
-                                    // // add login type to the list if enabled
-                                    // if (passwordType && $scope.loginProviders.length) {
-                                    //     // can't use $translate.instant() here because localization might not yet be initialized
-                                    //     $translate('platform.blades.login.labels.password-log-in-type').then(function (result) {
-                                    //         $scope.loginProviders.push({
-                                    //             authenticationType: $scope.defaultLoginType,
-                                    //             displayName: result,
-                                    //             hasTemplate: true
-                                    //         });
-                                    //     });
-                                    // }
                                 });
 
                             $scope.user = {};
                             $scope.authError = null;
                             $scope.authReason = false;
                             $scope.loginProgress = false;
-
-                            // $scope.switchLogin = function (provider) {
-                            //     // navigate to external endpoint or switch login template
-                            //     if (provider.hasTemplate) {
-                            //         $scope.currentType = provider.authenticationType;
-                            //     }
-                            //     else {
-                            //         $scope.externalLogin(provider.authenticationType);
-                            //     }
-                            // }
 
                             $scope.externalLogin = function (provider) {
                                 // set external signIn data
