@@ -2,6 +2,7 @@
 
 ## Overview
 Virto Commerce built with DB agnostic architecture and out of the box supports the following databases:
+
 * Microsoft SQL Server 2019 or above
 * MySql Server 5.7 or above
 * PostgreSQL 12 or above
