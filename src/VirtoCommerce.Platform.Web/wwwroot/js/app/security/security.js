@@ -8,8 +8,9 @@ angular.module('platformWebApp')
                     '$scope', '$window', '$translate', 'platformWebApp.authService', 'platformWebApp.externalSignInService', 'platformWebApp.login', 'platformWebApp.externalSignInStorage',
                     function ($scope, $window, $translate, authService, externalSignInService, loginResources, externalSignInStorage) {
                         $scope.loginProviders = [];
-                        $scope.defaultLoginType = 'Password';
+                        // $scope.defaultLoginType = 'Password';
                         $scope.showPassword = false;
+                        $scope.showPlainLogin = true;
 
                         loginResources.getLoginTypes({}, function (loginTypes) {
                             // filter out inactive
@@ -34,22 +35,27 @@ angular.module('platformWebApp')
                                         provider.hasTemplate = !!type;
                                     });
                                     $scope.loginProviders = response.data;
+                                    // $scope.loginProviders = [
+                                    //     { authenticationType: 'AzureAD', displayName: 'Azure Active Directory' },
+                                    //     { authenticationType: 'microsoft', displayName: 'Microsoft' },
+                                    //     { authenticationType: 'facebook', displayName: 'Facecbook' }
+                                    // ];
 
-                                    var passwordType = _.find(loginTypes, function (loginTypeFindPass) {
-                                        return loginTypeFindPass.authenticationType === $scope.defaultLoginType;
-                                    });
+                                    // var passwordType = _.find(loginTypes, function (loginTypeFindPass) {
+                                    //     return loginTypeFindPass.authenticationType === $scope.defaultLoginType;
+                                    // });
 
-                                    // add login type to the list if enabled
-                                    if (passwordType && $scope.loginProviders.length) {
-                                        // can't use $translate.instant() here because localization might not yet be initialized
-                                        $translate('platform.blades.login.labels.password-log-in-type').then(function (result) {
-                                            $scope.loginProviders.push({
-                                                authenticationType: $scope.defaultLoginType,
-                                                displayName: result,
-                                                hasTemplate: true
-                                            });
-                                        });
-                                    }
+                                    // // add login type to the list if enabled
+                                    // if (passwordType && $scope.loginProviders.length) {
+                                    //     // can't use $translate.instant() here because localization might not yet be initialized
+                                    //     $translate('platform.blades.login.labels.password-log-in-type').then(function (result) {
+                                    //         $scope.loginProviders.push({
+                                    //             authenticationType: $scope.defaultLoginType,
+                                    //             displayName: result,
+                                    //             hasTemplate: true
+                                    //         });
+                                    //     });
+                                    // }
                                 });
 
                             $scope.user = {};
@@ -57,24 +63,24 @@ angular.module('platformWebApp')
                             $scope.authReason = false;
                             $scope.loginProgress = false;
 
-                            $scope.switchLogin = function (provider) {
-                                // navigate to external endpoint or switch login template
-                                if (provider.hasTemplate) {
-                                    $scope.currentType = provider.authenticationType;
-                                }
-                                else {
-                                    $scope.externalLogin(provider.authenticationType);
-                                }
-                            }
+                            // $scope.switchLogin = function (provider) {
+                            //     // navigate to external endpoint or switch login template
+                            //     if (provider.hasTemplate) {
+                            //         $scope.currentType = provider.authenticationType;
+                            //     }
+                            //     else {
+                            //         $scope.externalLogin(provider.authenticationType);
+                            //     }
+                            // }
 
-                            $scope.externalLogin = function (providerType) {
+                            $scope.externalLogin = function (provider) {
                                 // set external signIn data
                                 var signInData = {
-                                    providerType: providerType
+                                    providerType: provider.authenticationType
                                 };
                                 externalSignInStorage.set(signInData);
 
-                                var url = 'externalsignin?authenticationType=' + providerType;
+                                var url = 'externalsignin?authenticationType=' + provider.authenticationType;
                                 $window.location.href = url
                             };
 
@@ -344,11 +350,11 @@ angular.module('platformWebApp')
                 template: '$(Platform)/Scripts/app/security/widgets/accountApiWidget.tpl.html',
             }, 'accountDetail');
 
-            
+
             $transitions.onBefore({ to: 'workspace.**' }, function (transition) {
                 // Prevent transition to workspace if password expired
                 if (authService.isAuthenticated && authService.passwordExpired) {
                     return transition.router.stateService.target('changePasswordDialog');
-                }               
+                }
             });
         }]);

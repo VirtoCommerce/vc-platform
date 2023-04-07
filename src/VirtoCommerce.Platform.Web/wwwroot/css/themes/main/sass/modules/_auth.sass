@@ -1,0 +1,59 @@
+.auth
+  box-sizing: border-box
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 40px 40px 58px
+  background-color: lightgray
+  background-size: cover
+  min-height: 100vh
+  font-family: 'Lato', sans-serif
+
+  & *
+    box-sizing: border-box
+
+  &__container
+    background: #FFFFFF
+    border-radius: 6px
+    box-shadow: 4px 6px 25px rgba(64, 102, 166, 0.14)
+    @media (min-width: 768px)
+      min-width: 600px
+    &--wide
+      width: 100%
+      max-width: 795px
+
+  &__head
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 18px
+    padding: 27px 24px 12px
+    @media (min-width: 768px)
+      flex-direction: row
+      justify-content: space-between
+      padding: 27px 50px 20px
+      border-bottom: 1px solid #E5F1EF
+
+  &__logo
+    max-height: 40px
+    @media (min-width: 768px)
+      max-width: 40%
+
+  &__title
+    color: #334C58
+    font-weight: 700
+    font-size: 18px
+    line-height: 23px
+    text-align: center
+
+  &__content
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    padding: 14px 24px 27px
+    @media (min-width: 768px)
+      flex-direction: row
+      align-items: center
+      padding: 34px 50px 53px
+      min-height: 309px

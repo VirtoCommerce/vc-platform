@@ -12,7 +12,7 @@ angular.module("platformWebApp").constant("THEME_SETTINGS", {
             settingValues: {
                 defaultUiCustomization: {
                     background: {
-                        url: "/images/login.png",
+                        url: "/images/login.webp",
                     },
                     pattern: {
                         value: "None",
@@ -67,7 +67,7 @@ angular.module("platformWebApp").constant("THEME_SETTINGS", {
                     template: "$(Platform)/Scripts/app/settings/blades/settings-detail-theme-login-screen-logo.tpl.html",
                     settingValues: {
                         loginScreenLogo_default: {
-                            url: '/images/logo-dark.svg'
+                            url: '/images/logo-login.svg'
                         },
                         loginScreenLogo_custom: {
                             url: ''

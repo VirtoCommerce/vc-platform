@@ -1,107 +1,64 @@
-<div class="password-dialog-container" style="background-repeat: repeat, no-repeat; background-size: auto, cover;"
-     ng-style="{ 'background-image': 'url('+uiCustomization.pattern.url+'), url('+(uiCustomization.background.url || 'images/logo-dark.svg' )+')' }">
-     <div class="login-screen-logo">
-        <div class="login-screen-logo login-screen-logo__container">
-            <img class="login-screen-logo login-screen-logo__img" ng-src="{{ uiCustomization.loginScreenLogo_custom.url || uiCustomization.loginScreenLogo_default.url }}" fallback-src="{{ uiCustomization.loginScreenLogo_default.url }}" alt="Login screen logo image">
+<div class="auth" ng-style="{ 'background-image': 'url(' + uiCustomization.pattern.url + '), url(' + (uiCustomization.background.url || 'images/login.webp' ) +')' }">
+    <div class="auth__container" ng-class="{ 'auth__container--wide': showPlainLogin && loginProviders.length }">
+        <div class="auth__head">
+            <img class="auth__logo" src="/images/logo-login.svg" alt="">
+            <img class="auth__logo" ng-src="{{uiCustomization.contrast_logo || '/images/logo-login.svg'}}" />
+            <h1 class="auth__title">{{ 'platform.blades.login.labels.sign-in' | translate: (uiCustomization.title ? uiCustomization : { title: 'Virto Commerce' }) }}</h1>
         </div>
-     </div>
-    <div class="window">
-        <div class="window-status" ng-if="loginProgress">
-            <div class="progress-bar"></div>
-        </div>
-        <header class="window-head">
-            <span class="window-t">{{ 'platform.blades.login.labels.sign-in' | translate: (uiCustomization.title ? uiCustomization : { title: 'Virto Commerce' }) }}</span>
-        </header>
-        <div class="window-cnt">
-            <!--Azure login-->
-            <form ng-if="currentType==='AzureAD'" class="form" novalidate>
-                <div class="form-group" style="margin: auto 13%; padding: 65px 0; ">
-                    <div class="clearfix">
-                        <img src="/images/azure-ad-logo.png" alt="" style="float: left; margin-right: 30px;">
-                        <div style="padding: 8px 0">
-                            <label class="form-label">{{ 'platform.blades.login.labels.azure-log-in-label' | translate }}</label>
-                            <div style="padding-top:12px">
-                                <button class="btn form-input" ng-click="externalLogin(currentType)">
-                                    <span>{{ 'platform.blades.login.labels.log-in' | translate }}</span>
-                                </button>
-                            </div>
+        <div class="auth__content">
+            <!--Login form-->
+            <form class="login-form" ng-if="showPlainLogin && !loginProgress" ng-submit="ok()" name="loginForm" novalidate>
+                <div class="login-form__inputs">
+                    <div class="vc-input">
+                        <label class="vc-input__label"> {{ 'platform.blades.login.labels.login' | translate }} <span class="vc-input__asterisk">*</span> </label>
+                        <div class="vc-input__container">
+                            <input class="vc-input__field" type="text" name="login" placeholder="{{ 'platform.blades.login.labels.log-in-placeholder' | translate }}" ng-model="user.email" required autofocus va-autofill>
                         </div>
                     </div>
-                </div>
-                <div class="clearfix">
-                </div>
-                <div class="clearfix" style="position: absolute; bottom: 31px;">
-                    <div class="column">
-                        <div class="form-group" ng-repeat="provider in loginProviders | filter:{authenticationType:'!'+currentType}">
-                            <a href="#" ng-click="$event.preventDefault();switchLogin(provider)">
-                                {{ 'platform.blades.login.labels.external-sign-in' | translate: provider }}
-                            </a>
-                        </div>
-                        <div ng-if="!loginProviders.length">&nbsp;</div>
-                    </div>
-                </div>
-            </form>
-            <!--Username/password login-->
-            <form ng-if="currentType==='Password'" class="form" novalidate ng-submit="ok()" name="loginForm">
-                <div class="form-group">
-                    <label class="form-label __required">{{ 'platform.blades.login.labels.login' | translate }}</label>
-                    <div class="form-input">
-                        <input style="background: #ffffff" type="text" name="login" placeholder="{{ 'platform.blades.login.labels.log-in-placeholder' | translate }}" ng-model="user.email" required autofocus va-autofill>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label __required">{{ 'platform.blades.login.labels.password' | translate }}</label>
-                    <div class="form-input">
-                        <i ng-if="!showPassword" ng-click="togglePassword()" class="fa fa-fw fa-eye fa-password" aria-hidden="true"></i>
-                        <i ng-if="showPassword" ng-click="togglePassword()" class="fa fa-fw fa-eye-slash fa-password" aria-hidden="true"></i>
-                        <input style="background: #ffffff" class="form-control" name="password" type="{{ showPassword ? 'text' : 'password' }}" placeholder="{{ 'platform.blades.login.labels.log-in-placeholder' | translate }}" ng-model="user.password" required va-autofill>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="column">
-                        <div class="form-group">
-                            <div class="form-control __checkbox">
-                                <label class="form-label-login">
-                                    <input type="checkbox" name="c1" checked="" ng-model="user.remember">
-                                    <span class="check"></span>
-                                    <span class="name">{{ 'platform.blades.login.labels.remember-me' | translate }}</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column __right">
-                        <div class="form-group">
-                            <a ui-sref="forgotpasswordDialog">{{ 'platform.blades.login.labels.forgot-password' | translate }}</a>
-                        </div>
-                    </div>
-                </div>
-                <!--Global variable sets on _Layout.cshtml and defined in Web.config-->
-                <div class="note" ng-if="demoCredentials">
-                    <p class="text">Demo access credentials - Login: <b>{{ demoCredentials[0] }} </b> Password: <b>{{ demoCredentials[1] }}</b></p>
-                </div>
-                <div class="form-group">
-                    <div class="form-error" ng-if="authError">
-                        {{authError}}
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="column">
-                        <div class="form-group" ng-repeat="provider in loginProviders | filter:{authenticationType:'!'+currentType}">
-                            <a href="#" ng-click="$event.preventDefault();switchLogin(provider)">
-                                {{ 'platform.blades.login.labels.external-sign-in' | translate: provider }}
-                            </a>
-                        </div>
-                        <div ng-if="!loginProviders.length">&nbsp;</div>
-                    </div>
-                    <div class="column __right">
-                        <div class="form-group __right">
-                            <button class="btn" type="submit" ng-disabled="loginForm.$invalid||loginProgress">
-                                <span>{{ 'platform.blades.login.labels.log-in' | translate }}</span>
+                    <div class="vc-input vc-input--password">
+                        <label class="vc-input__label"> {{ 'platform.blades.login.labels.password' | translate }} <span class="vc-input__asterisk">*</span> </label>
+                        <div class="vc-input__container">
+                            <input class="vc-input__field" name="password" type="{{ showPassword ? 'text' : 'password' }}" placeholder="{{ 'platform.blades.login.labels.log-in-placeholder' | translate }}" ng-model="user.password" required va-autofill>
+                            <button class="vc-input__password-switcher" type="button">
+                                <svg class="vc-input__icon" ng-if="!showPassword" ng-click="togglePassword()"><use href="/images/eye-off.svg#icon"></use></svg>
+                                <svg class="vc-input__icon" ng-if="showPassword" ng-click="togglePassword()"><use href="/images/eye.svg#icon"></use></svg>
                             </button>
                         </div>
                     </div>
+                    <div class="login-form__flex">
+                        <label class="vc-checkbox">
+                            <input type="checkbox" class="vc-checkbox__input" name="c1" checked="" ng-model="user.remember">
+                            <span class="vc-checkbox__label">{{ 'platform.blades.login.labels.remember-me' | translate }}</span>
+                        </label>
+                        <a class="vc-link" ui-sref="forgotpasswordDialog">{{ 'platform.blades.login.labels.forgot-password' | translate }}</a>
+                    </div>
+                </div>
+                <div class="login-form__alerts" ng-if="authError">
+                    <div class="vc-alert vc-alert--error">
+                        <svg class="vc-alert__icon">
+                            <use href="/images/error.svg#icon"></use>
+                        </svg>
+                        <div class="vc-alert__text"> {{ authError }} </div>
+                    </div>
+                </div>
+                <div class="login-form__buttons">
+                    <button type="submit" ng-disabled="loginForm.$invalid||loginProgress" class="vc-button login-form__button">{{ 'platform.blades.login.labels.log-in' | translate }}</button>
                 </div>
             </form>
+            <!-- Divider -->
+            <div class="vc-divider" ng-if="showPlainLogin && loginProviders.length && !loginProgress">
+                <div class="vc-divider__text">{{ 'platform.blades.login.labels.or' | translate }}</div>
+            </div>
+            <div class="socials" ng-if="loginProviders.length && !loginProgress">
+                <a href="#" class="vc-button-social" ng-repeat="provider in loginProviders" ng-click="$event.preventDefault();externalLogin(provider);">
+                    <img class="vc-button-social__img" ng-src="/images/{{provider.authenticationType}}.webp" alt="">
+                    <div class="vc-button-social__text">{{ provider.displayName }}</div>
+                </a>
+            </div>
+            <div class="vc-loader" ng-if="loginProgress">
+                <div class="vc-loader__text">{{ 'platform.blades.login.labels.signing-in' | translate }}</div>
+                <div class="vc-loader__line"></div>
+            </div>
         </div>
     </div>
 </div>

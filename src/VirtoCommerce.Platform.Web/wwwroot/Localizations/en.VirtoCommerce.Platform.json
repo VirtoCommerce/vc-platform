@@ -533,7 +533,9 @@
                     "log-in": "Log in",
                     "log-in-placeholder": "Please enter a value",
                     "azure-log-in-label": "Login to admin site through Azure",
-                    "password-log-in-type": "System user"
+                    "password-log-in-type": "System user",
+                    "or": "or",
+                    "signing-in": "Signing in..."
                 }
             },
             "forgotpassword": {
