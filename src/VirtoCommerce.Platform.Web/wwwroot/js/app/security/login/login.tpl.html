@@ -1,7 +1,7 @@
 <div class="auth" ng-style="{ 'background-image': 'url(' + uiCustomization.pattern.url + '), url(' + (uiCustomization.background.url || 'images/login.webp' ) +')' }">
     <div class="auth__container" ng-class="{ 'auth__container--wide': showPlainLogin && loginProviders.length }">
         <div class="auth__head">
-            <img class="auth__logo" ng-src="{{uiCustomization.contrast_logo || '/images/contrast-logo.svg'}}" />
+            <img class="auth__logo" ng-src="{{ uiCustomization.loginScreenLogo_custom.url || uiCustomization.loginScreenLogo_default.url }}" fallback-src="{{ uiCustomization.loginScreenLogo_default.url }}" alt="Login screen logo image">
             <h1 class="auth__title">{{ 'platform.blades.login.labels.sign-in' | translate: (uiCustomization.title ? uiCustomization : { title: 'Virto Commerce' }) }}</h1>
         </div>
         <div class="auth__content">
