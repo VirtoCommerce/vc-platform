@@ -12,16 +12,10 @@ angular.module('platformWebApp')
                         $scope.showPlainLogin = true;
 
                         loginResources.getLoginTypes({}, function (loginTypes) {
-                            // filter out inactive
-                            loginTypes = _.filter(loginTypes, function (loginTypeFilter) {
-                                return loginTypeFilter.enabled;
+                            var passwordLogin = _.find(loginTypes, function (loginTypeFilter) {
+                                return loginTypeFilter.authenticationType === 'Password';
                             });
-
-                            // order by login type by priority
-                            var loginType = _.first(_.sortBy(loginTypes, function (loginTypeSort) {
-                                return loginTypeSort.priority;
-                            }));
-                            $scope.currentType = loginType.authenticationType;
+                            $scope.showPlainLogin = !!passwordLogin && passwordLogin.enabled;
 
                             externalSignInService.getProviders().then(
                                 function (response) {
