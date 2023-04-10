@@ -53,8 +53,8 @@ angular.module('platformWebApp')
                                 // Try to login
                                 authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
                                     function (loggedIn) {
-                                        $scope.loginProgress = false;
                                         if (!loggedIn) {
+                                            $scope.loginProgress = false;
                                             $scope.authError = 'invalidCredentials';
                                         }
                                     },
