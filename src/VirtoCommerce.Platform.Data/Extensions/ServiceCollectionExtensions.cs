@@ -62,6 +62,8 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddSingleton<IFileSystem, FileSystem>();
             services.AddTransient<IZipFileWrapper, ZipFileWrapper>();
 
+            services.AddOptions<DataOptions>().Bind(configuration.GetSection("Data"));
+
             return services;
         }
     }
