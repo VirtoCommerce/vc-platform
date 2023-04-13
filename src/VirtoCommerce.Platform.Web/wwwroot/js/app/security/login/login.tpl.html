@@ -50,7 +50,7 @@
             </div>
             <div class="socials" ng-if="loginProviders.length && !loginProgress">
                 <a href="#" class="vc-button-social" ng-repeat="provider in loginProviders" ng-click="$event.preventDefault();externalLogin(provider);">
-                    <img class="vc-button-social__img" ng-src="/images/{{provider.authenticationType}}.webp" alt="">
+                    <img class="vc-button-social__img" ng-src="/images/{{provider.authenticationType}}.webp" onerror="this.style.display = 'none';" alt="">
                     <div class="vc-button-social__text">{{ provider.displayName }}</div>
                 </a>
             </div>
