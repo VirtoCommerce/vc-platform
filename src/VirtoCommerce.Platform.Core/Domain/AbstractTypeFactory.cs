@@ -62,13 +62,28 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         /// <summary>
-        /// Override already registered  type to new 
+        /// Override already registered  type to new
         /// </summary>
         /// <returns>TypeInfo instance to continue configuration through fluent syntax</returns>
         public static TypeInfo<BaseType> OverrideType<OldType, NewType>() where NewType : BaseType
         {
-            var oldType = typeof(OldType);
-            var newType = typeof(NewType);
+            return OverrideType(typeof(OldType), typeof(NewType));
+        }
+
+        /// <summary>
+        /// Override already registered  type to new
+        /// </summary>
+        /// <param name="oldType">The currently registered type</param>
+        /// <param name="newType">The type to override <paramref name="oldType"/> with</param>
+        /// <returns>TypeInfo instance to continue configuration through fluent syntax</returns>
+        public static TypeInfo<BaseType> OverrideType(Type oldType, Type newType)
+        {
+            if (!typeof(BaseType).IsAssignableFrom(newType))
+            {
+                throw new ArgumentException($"Only a type assignable to {typeof(BaseType)} can be used to " +
+                                            $"override {oldType}", nameof(newType));
+            }
+
             var existTypeInfo = _typeInfos.FirstOrDefault(x => x.Type == oldType);
             var newTypeInfo = new TypeInfo<BaseType>(newType);
             if (existTypeInfo != null)
