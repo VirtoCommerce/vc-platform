@@ -80,8 +80,7 @@ namespace VirtoCommerce.Platform.Core.Common
         {
             if (!typeof(BaseType).IsAssignableFrom(newType))
             {
-                throw new ArgumentException($"Only a type assignable to {typeof(BaseType)} can be used to " +
-                                            $"override {oldType}", nameof(newType));
+                throw new ArgumentException($"Only a type assignable to {typeof(BaseType)} can be used to override {oldType}", nameof(newType));
             }
 
             var existTypeInfo = _typeInfos.FirstOrDefault(x => x.Type == oldType);
