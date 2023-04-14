@@ -1,4 +1,6 @@
-﻿@mixin center($horizontal: false, $vertical: false, $absolute: false, $important: false)
+﻿@use 'sass:math'
+
+@mixin center($horizontal: false, $vertical: false, $absolute: false, $important: false)
    $importantMark: if($important, !important, null)
    position: if($absolute, absolute, relative) $importantMark
    $indent: 50% $importantMark
@@ -23,12 +25,12 @@
       $currentCount: $x + 1
       #{$selector}:nth-last-child(#{$currentCount}) ~ #{$selector}
         @content
-        width: (100% / $x)
+        width: math.div(100%, $x)
     @else
       #{$selector}:nth-last-child(#{$currentCount}),
       #{$selector}:nth-last-child(#{$currentCount}) ~ #{$selector}
         @content
-        width: (100% / $x)
+        width: math.div(100%, $x)
 
 @mixin blaseSizes()
   $bladeSizeName: nth($bladeSizes, 1) !global
