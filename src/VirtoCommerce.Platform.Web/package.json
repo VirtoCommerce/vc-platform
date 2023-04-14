@@ -16,7 +16,8 @@
     "sass": "~1.58.3",
     "sass-loader": "~12.6.0",
     "webpack": "^5.68.0",
-    "webpack-cli": "^4.10.0"
+    "webpack-cli": "^4.10.0",
+    "glob": "~7.1.7"
   },
   "dependencies": {
     "@aspnet/signalr": "~1.1.4",
@@ -51,7 +52,6 @@
     "bourbon": "~7.3.0",
     "codemirror": "~5.45.0",
     "font-awesome": "~4.7.0",
-    "glob": "~7.1.7",
     "jquery": "^2.1.4",
     "marked": "^4.2.12",
     "moment-timezone": "0.5.13",
