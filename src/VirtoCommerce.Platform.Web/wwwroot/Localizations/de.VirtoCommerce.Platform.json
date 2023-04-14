@@ -331,7 +331,7 @@
           "repeat-password": "Das neue Passwort stimmt nicht überein!",
           "invalid-token": "Passwort zurücksetzen Token ist ungültig oder abgelaufen",
           "password-too-weak": "Neues Passwort entspricht nicht einer oder mehreren Passwortsicherheitsrichtlinien:",
-          "passwordTooShort": "Passwörter müssen {{errorParameter}} oder mehr Zeichen lang sein",
+          "passwordTooShort": "Passwörter müssen {{parameter}} oder mehr Zeichen lang sein",
           "passwordRequiresLower": "Passwörter müssen mindestens einen Kleinbuchstaben enthalten ('a'-'z')",
           "passwordRequiresUpper": "Passwörter müssen mindestens einen Großbuchstaben haben ('A'-'Z')",
           "passwordRequiresDigit": "Passwörter müssen mindestens eine Ziffer haben ('0'-'9')",
