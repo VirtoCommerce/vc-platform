@@ -1,0 +1,35 @@
+.vc-button
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  padding: 2px 14px
+  min-height: 36px
+  background-color: #43B0E6
+  border: 1px solid transparent
+  border-radius: 3px
+  color: #FFFFFF
+  font-family: 'Roboto', sans-serif
+  font-weight: 500
+  font-size: 12px
+  line-height: 16px
+  cursor: pointer
+
+  &:hover
+    background-color: #319ED4
+
+  &:disabled
+    background-color: #A9DDF6
+    cursor: not-allowed
+
+  &--outlined
+    background-color: #fff
+    border-color: currentColor
+    color: #43B0E6
+
+    &:hover
+      background-color: #fff
+      color: #319ED4
+
+    &:disabled
+      background-color: #fff
+      color: #A9DDF6

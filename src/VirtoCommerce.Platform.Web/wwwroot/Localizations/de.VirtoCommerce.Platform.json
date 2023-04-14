@@ -455,7 +455,8 @@
           "remember-me": "Erinnern Sie sich an mich",
           "external-sign-in": "Melden Sie sich mit {{displayName}} an",
           "forgot-password": "Haben Sie Ihr Passwort vergessen?",
-          "log-in": "Anmelden"
+          "log-in": "Anmelden",
+          "or": "oder"
         }
       },
       "license": {
