@@ -1,0 +1,33 @@
+.vc-alert
+  $error: ''
+  $warning: ''
+
+  display: flex
+  align-items: center
+  gap: 9px
+  padding: 6px 10px
+  border-radius: 3px
+
+  &--error
+    $error: &
+    background-color: #FFEDED
+    color: #983636
+
+  &--warning
+    $warning: &
+    background-color: #FFF6E9
+    color: #706343
+
+  &__icon
+    width: 20px
+    height: 20px
+
+    #{$error} & 
+      color: #FF4A4A
+
+    #{$warning} &
+      color: #FFBB0D
+
+  &__text
+    font-size: 11px
+    line-height: 13px

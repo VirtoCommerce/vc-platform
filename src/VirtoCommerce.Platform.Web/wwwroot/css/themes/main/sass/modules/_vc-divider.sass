@@ -1,0 +1,29 @@
+.vc-divider
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 28px 0
+  width: 100%
+  @media (min-width: 768px)
+    flex-direction: column
+    align-self: stretch
+    padding: 0 50px
+    width: auto
+
+  &:before,
+  &:after
+    content: ''
+    display: block
+    flex-grow: 1
+    height: 1px
+    background-color: #E5F1EF
+    @media (min-width: 768px)
+      height: auto
+      width: 1px
+
+  &__text
+    color: #7499AC
+    font-weight: 700
+    font-size: 13px
+    line-height: 20px
+    text-transform: uppercase

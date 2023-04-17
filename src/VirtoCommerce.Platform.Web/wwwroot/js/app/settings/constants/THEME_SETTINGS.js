@@ -12,7 +12,7 @@ angular.module("platformWebApp").constant("THEME_SETTINGS", {
             settingValues: {
                 defaultUiCustomization: {
                     background: {
-                        url: "/images/login.png",
+                        url: "/images/login.webp",
                     },
                     pattern: {
                         value: "None",
