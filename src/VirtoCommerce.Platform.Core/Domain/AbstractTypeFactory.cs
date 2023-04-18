@@ -62,7 +62,7 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         /// <summary>
-        /// Override already registered  type to new
+        /// Override already registered type with a new one.
         /// </summary>
         /// <returns>TypeInfo instance to continue configuration through fluent syntax</returns>
         public static TypeInfo<BaseType> OverrideType<OldType, NewType>() where NewType : BaseType
@@ -71,7 +71,7 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         /// <summary>
-        /// Override already registered  type to new
+        /// Override already registered type with a new one.
         /// </summary>
         /// <param name="oldType">The currently registered type</param>
         /// <param name="newType">The type to override <paramref name="oldType"/> with</param>
