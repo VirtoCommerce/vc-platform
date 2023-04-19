@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Modules
             {
                 services.Configure(setupAction);
             }
-            
+
             var providerSnapshot = services.BuildServiceProvider();
 
             var manager = providerSnapshot.GetRequiredService<IModuleManager>();
@@ -46,6 +46,7 @@ namespace VirtoCommerce.Platform.Modules
                     // Register API controller from modules
                     mvcBuilder.AddApplicationPart(module.Assembly);
                 }
+                Console.Write("■");
             }
 
             services.AddSingleton(moduleCatalog);
