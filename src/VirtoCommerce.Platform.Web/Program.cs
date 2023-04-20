@@ -1,11 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hangfire;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Logger;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -20,13 +24,7 @@ namespace VirtoCommerce.Platform.Web
            Host.CreateDefaultBuilder(args)
               .ConfigureLogging((hostingContext, logging) =>
               {
-                  logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                  logging.AddConsole();
-                  logging.AddDebug();
-                  logging.AddEventSourceLogger();
-                  //Enable Azure logging
-                  //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-2.2#logging-in-azure
-                  logging.AddAzureWebAppDiagnostics();
+                  logging.ClearProviders();
               })
               .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -58,6 +56,27 @@ namespace VirtoCommerce.Platform.Web
                             options.WorkerCount = workerCount.Value;
                         }
                     });
+                }
+            })
+            .UseSerilog((context, services, loggerConfiguration) =>
+            {
+                // read from configuration
+                _ = loggerConfiguration.ReadFrom.Configuration(context.Configuration);
+
+                // enrich configuration from external sources
+                var configureServices = services.GetService<IEnumerable<ILoggerConfig>>();
+                foreach (var service in configureServices)
+                {
+                    service.Configure(loggerConfiguration);
+                }
+
+                // temporaty App Insights logger registration, will be removed after moving AI to the separate module
+                var telemetryConfiguration = services.GetService<TelemetryConfiguration>();
+                if (telemetryConfiguration != null)
+                {
+                    loggerConfiguration.WriteTo.ApplicationInsights(telemetryConfiguration: telemetryConfiguration,
+                    telemetryConverter: TelemetryConverter.Traces,
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error);
                 }
             });
     }
