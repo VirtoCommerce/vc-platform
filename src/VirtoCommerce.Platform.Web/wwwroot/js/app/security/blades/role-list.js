@@ -7,9 +7,12 @@ function ($scope, roles, bladeUtils, bladeNavigationService, dialogService, uiGr
     blade.refresh = function () {
         blade.isLoading = true;
 
-         roles.search({
+        var sorting = uiGridHelper.getSortExpression($scope);
+        sorting = sorting.replace('customColumn', 'name');
+
+        roles.search({
             keyword: filter.keyword,
-            sort: uiGridHelper.getSortExpression($scope),
+            sort: sorting,
             skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
             take: $scope.pageSettings.itemsPerPageCount
         }, function (data) {
