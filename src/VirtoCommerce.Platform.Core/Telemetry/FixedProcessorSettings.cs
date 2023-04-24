@@ -1,8 +1,11 @@
+using System;
+
 namespace VirtoCommerce.Platform.Core.Telemetry
 {
     /// <summary>
     /// AppInsights settings for fixed sampling
     /// </summary>
+    [Obsolete("Not used anymore. Moved to VirtoCommerce.ApplicationInsights module.")]
     public class FixedProcessorSettings
     {
         /// <summary>

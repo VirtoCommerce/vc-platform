@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hangfire;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,15 +67,6 @@ namespace VirtoCommerce.Platform.Web
                 foreach (var service in configureServices)
                 {
                     service.Configure(loggerConfiguration);
-                }
-
-                // temporaty App Insights logger registration, will be removed after moving AI to the separate module
-                var telemetryConfiguration = services.GetService<TelemetryConfiguration>();
-                if (telemetryConfiguration != null)
-                {
-                    loggerConfiguration.WriteTo.ApplicationInsights(telemetryConfiguration: telemetryConfiguration,
-                    telemetryConverter: TelemetryConverter.Traces,
-                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error);
                 }
             });
     }
