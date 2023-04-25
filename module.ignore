@@ -81,6 +81,14 @@ RedLockNet.Abstractions.dll
 RedLockNet.SERedis.dll
 Scrutor.dll
 Serialize.Linq.dll
+Serilog.dll
+Serilog.AspNetCore.dll
+Serilog.Extensions.Hosting.dll
+Serilog.Extensions.Logging.dll
+Serilog.Formatting.Compact.dll
+Serilog.Settings.Configuration.dll
+Serilog.Sinks.Console.dll
+Serilog.Sinks.Debug.dll
 StackExchange.Redis.dll
 Swashbuckle.AspNetCore.Annotations.dll
 Swashbuckle.AspNetCore.Filters.dll
