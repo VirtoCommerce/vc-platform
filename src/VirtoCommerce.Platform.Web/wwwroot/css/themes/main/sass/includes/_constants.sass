@@ -1,3 +1,5 @@
+@use 'sass:math'
+
 /* Fonts */
 $font: 'Roboto'
 $fontAw: 'FontAwesome'
@@ -35,7 +37,7 @@ $listItemArrowSpace: 30px
 
 $mainMenuWidth: 240px
 $mainMenuIcoSize: $fontSize * 2
-$mainMenuIcoFontSize: round($mainMenuIcoSize / $fontAwFwSzeMultiplier)
+$mainMenuIcoFontSize: math.div($mainMenuIcoSize, $fontAwFwSzeMultiplier)
 $mainMenuCollapsedWidth: $mainMenuIcoSize + $listItemHorizontalPadding * 2
 $mainMenuDropdownWidth: 360px
 
@@ -56,8 +58,8 @@ $auqaBg: #76aeff
 
 $scrollTrackColor: rgba(0,0,0,0)
 $scrollThumbColor: #A6A6A6
-$scrollWidth: 3px
-$scrollHeight: 3px
+$scrollWidth: 9px
+$scrollHeight: 9px
 
 $genericErrorColor: #FF4A4A
 $genericWarningColor: $orangeBg

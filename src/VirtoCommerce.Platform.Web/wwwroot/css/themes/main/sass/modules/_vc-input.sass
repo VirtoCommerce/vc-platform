@@ -1,0 +1,105 @@
+.vc-input
+  $password: ''
+  $error: ''
+
+  position: relative
+  background-size: cover
+  background-position: center
+
+  &--password
+    $password: &
+
+  &--error
+    $error: &
+
+  &__label
+    display: block
+    margin-bottom: 4px
+    font-weight: 500
+    font-size: 14px
+    line-height: 20px
+    font-family: 'Roboto', sans-serif
+
+  &__asterisk
+    color: #FF4A4A
+
+  &__container
+    z-index: 0
+    position: relative
+
+  &__field
+    appearance: none
+    position: relative
+    padding: 0 10px
+    height: 38px
+    min-width: 0
+    width: 100%
+    background: #FFFFFF
+    border: 1px solid #D3DAE9
+    border-radius: 3px
+    font-weight: 500
+    font-size: 13px
+    line-height: 20px
+    outline: none
+
+    #{$password} &
+      padding-right: 40px
+
+    &:disabled
+      background: lightgray
+
+    #{$error} &
+      background: #FEF8F7
+      border-color: #FCE7E6
+      color: #FF4A4A
+
+    &:autofill
+      &:disabled
+        box-shadow: 0 0 0px 1000px #f9fafb inset
+
+      &:not(:disabled)
+        box-shadow: 0 0 0px 1000px #fff inset
+
+    &:disabled
+      color: darkgray
+      cursor: not-allowed
+
+    &::placeholder
+      color: darkgray
+      #{$error} &
+        opacity: 0.8
+        color: #FF4A4A
+
+  &__password-switcher
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    display: none
+    align-items: center
+    justify-content: center
+    padding: 0 11px
+    border: none
+    background: none
+    cursor: pointer
+    color: #319ED4
+
+    input:disabled ~ &
+      color: darkgray
+      cursor: not-allowed
+
+    #{$password} &
+      display: flex
+
+  &__icon
+    width: 18px
+    height: 18px
+
+  &__message
+    margin-top: 2px
+    color: #A5A5A5
+    font-family: 'Roboto', sans-serif
+    font-size: 11px
+    line-height: 14px
+    #{$error} &
+      color: #FF4A4A

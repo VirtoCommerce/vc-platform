@@ -7,7 +7,7 @@ window._ = _;
 import YAML from 'yamljs';
 window.YAML = YAML;
 
-import {marked} from 'marked';
+import { marked } from 'marked';
 window.marked = marked;
 
 import CodeMirror from 'codemirror/lib/codemirror.js';
