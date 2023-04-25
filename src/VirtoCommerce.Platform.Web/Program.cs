@@ -63,8 +63,8 @@ namespace VirtoCommerce.Platform.Web
                 _ = loggerConfiguration.ReadFrom.Configuration(context.Configuration);
 
                 // enrich configuration from external sources
-                var configureServices = services.GetService<IEnumerable<ILoggerConfig>>();
-                foreach (var service in configureServices)
+                var configurationServices = services.GetService<IEnumerable<ILoggerConfigurationService>>();
+                foreach (var service in configurationServices)
                 {
                     service.Configure(loggerConfiguration);
                 }
