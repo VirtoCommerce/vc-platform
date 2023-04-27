@@ -1,9 +1,12 @@
+using System;
+
 namespace VirtoCommerce.Platform.Core.Telemetry
 {
 
     /// <summary>
     /// ApplicationInsights options
     /// </summary>
+    [Obsolete("Not used anymore. Moved to VirtoCommerce.ApplicationInsights module.")]
     public class ApplicationInsightsOptions
     {
         /// <summary>

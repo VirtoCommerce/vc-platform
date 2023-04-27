@@ -3,9 +3,12 @@ using System.Linq;
 using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Logger;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -20,13 +23,7 @@ namespace VirtoCommerce.Platform.Web
            Host.CreateDefaultBuilder(args)
               .ConfigureLogging((hostingContext, logging) =>
               {
-                  logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                  logging.AddConsole();
-                  logging.AddDebug();
-                  logging.AddEventSourceLogger();
-                  //Enable Azure logging
-                  //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-2.2#logging-in-azure
-                  logging.AddAzureWebAppDiagnostics();
+                  logging.ClearProviders();
               })
               .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -58,6 +55,18 @@ namespace VirtoCommerce.Platform.Web
                             options.WorkerCount = workerCount.Value;
                         }
                     });
+                }
+            })
+            .UseSerilog((context, services, loggerConfiguration) =>
+            {
+                // read from configuration
+                _ = loggerConfiguration.ReadFrom.Configuration(context.Configuration);
+
+                // enrich configuration from external sources
+                var configurationServices = services.GetService<IEnumerable<ILoggerConfigurationService>>();
+                foreach (var service in configurationServices)
+                {
+                    service.Configure(loggerConfiguration);
                 }
             });
     }
