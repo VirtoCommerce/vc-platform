@@ -13,8 +13,6 @@ Microsoft.AI.EventCounterCollector.dll
 Microsoft.AI.PerfCounterCollector.dll
 Microsoft.AI.ServerTelemetryChannel.dll
 Microsoft.AI.WindowsServer.dll
-Microsoft.ApplicationInsights.AspNetCore.dll
-Microsoft.ApplicationInsights.dll
 Microsoft.AspNetCore.Authentication.JwtBearer.dll
 Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
 Microsoft.AspNetCore.DataProtection.StackExchangeRedis.dll
