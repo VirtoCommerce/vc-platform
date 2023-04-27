@@ -804,7 +804,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var user = await UserManager.FindByIdAsync(id);
             if (user != null)
             {
-                var result = await UserManager.SetLockoutEndDateAsync(user, DateTime.MaxValue);
+                var result = await UserManager.SetLockoutEndDateAsync(user, DateTime.MaxValue.ToUniversalTime());
                 return Ok(result.ToSecurityResult());
             }
 
@@ -825,7 +825,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (user != null)
             {
                 await UserManager.ResetAccessFailedCountAsync(user);
-                var result = await UserManager.SetLockoutEndDateAsync(user, DateTimeOffset.MinValue);
+                var result = await UserManager.SetLockoutEndDateAsync(user, DateTimeOffset.MinValue.ToUniversalTime());
                 return Ok(result.ToSecurityResult());
             }
 
