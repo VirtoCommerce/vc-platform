@@ -102,9 +102,8 @@ public void Initialize(IServiceCollection serviceCollection)
 }
 ```
 
-## Links
-
-https://serilog.net/
-https://github.com/serilog/serilog-aspnetcore
-https://github.com/serilog/serilog-settings-configuration
-https://github.com/serilog/serilog/wiki/Provided-Sinks
+## References
+* [Serilog Library](https://serilog.net/)
+* [Serilog ASP .NET Core](https://github.com/serilog/serilog-aspnetcore)
+* [Settings Configuration](https://github.com/serilog/serilog-settings-configuration)
+* [Provided Sinks](https://github.com/serilog/serilog/wiki/Provided-Sinks)
