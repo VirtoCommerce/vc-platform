@@ -1,0 +1,3 @@
+# Restrictive policy for backend environments 
+User-agent: *
+Disallow: /
