@@ -145,10 +145,11 @@ namespace VirtoCommerce.Platform.Modules
         protected virtual IModule CreateModule(ModuleInfo moduleInfo)
         {
             if (moduleInfo == null)
-                throw new ArgumentNullException("moduleInfo");
+            {
+                throw new ArgumentNullException(nameof(moduleInfo));
+            }
 
-            Type moduleInitializerType;
-            if (!TryResolveModuleTypeFromAssembly(moduleInfo.Assembly, moduleInfo.ModuleType, out moduleInitializerType))
+            if (!TryResolveModuleTypeFromAssembly(moduleInfo.Assembly, moduleInfo.ModuleType, out var moduleInitializerType))
             {
                 throw new ModuleInitializeException($"Unable to resolve IModule {moduleInfo.ModuleType} from the assembly {moduleInfo.Assembly.FullName}.");
             }
@@ -159,15 +160,14 @@ namespace VirtoCommerce.Platform.Modules
             return result;
         }
 
-        protected virtual bool TryResolveModuleTypeFromAssembly(Assembly modulAssembly, string moduleType, out Type moduleInitializerType)
+        protected virtual bool TryResolveModuleTypeFromAssembly(Assembly moduleAssembly, string moduleType, out Type moduleInitializerType)
         {
-            if (modulAssembly == null)
+            if (moduleAssembly == null)
             {
-                throw new ArgumentNullException(nameof(modulAssembly));
+                throw new ArgumentNullException(nameof(moduleAssembly));
             }
 
-            // TODO: Not Tested Yet
-            var moduleInitializerTypes = modulAssembly.GetTypes().Where(x => typeof(IModule).IsAssignableFrom(x)).ToArray();
+            var moduleInitializerTypes = moduleAssembly.GetTypes().Where(x => typeof(IModule).IsAssignableFrom(x)).ToArray();
             if (!moduleInitializerTypes.Any())
             {
                 moduleInitializerType = null;
@@ -181,7 +181,7 @@ namespace VirtoCommerce.Platform.Modules
             }
             else
             {
-                moduleInitializerType = moduleInitializerTypes.FirstOrDefault(x => x.FullName == moduleType);
+                moduleInitializerType = moduleInitializerTypes.FirstOrDefault(x => x.AssemblyQualifiedName.StartsWith(moduleType));
                 return moduleInitializerType != null;
             }
         }
