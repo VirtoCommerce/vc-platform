@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -146,18 +147,43 @@ namespace VirtoCommerce.Platform.Modules
             if (moduleInfo == null)
                 throw new ArgumentNullException("moduleInfo");
 
-            IModule result = null;
-            var moduleInitializerType = moduleInfo.Assembly.GetTypes().FirstOrDefault(x => typeof(IModule).IsAssignableFrom(x));
-            if (moduleInitializerType != null && moduleInitializerType != typeof(IModule))
+            Type moduleInitializerType;
+            if (!TryResolveModuleTypeFromAssembly(moduleInfo.Assembly, moduleInfo.ModuleType, out moduleInitializerType))
             {
-                result = (IModule)Activator.CreateInstance(moduleInitializerType);
+                throw new ModuleInitializeException($"Unable to resolve IModule {moduleInfo.ModuleType} from the assembly {moduleInfo.Assembly.FullName}.");
             }
-            if (result == null)
-            {
-                throw new ModuleInitializeException($"Unable to retrieve the module type {moduleInitializerType} from the loaded assemblies.You may need to specify a more fully - qualified type name");
-            }
+
+            var result = (IModule)Activator.CreateInstance(moduleInitializerType);
             result.ModuleInfo = moduleInfo as ManifestModuleInfo;
+
             return result;
+        }
+
+        protected virtual bool TryResolveModuleTypeFromAssembly(Assembly modulAssembly, string moduleType, out Type moduleInitializerType)
+        {
+            if (modulAssembly == null)
+            {
+                throw new ArgumentNullException(nameof(modulAssembly));
+            }
+
+            // TODO: Not Tested Yet
+            var moduleInitializerTypes = modulAssembly.GetTypes().Where(x => typeof(IModule).IsAssignableFrom(x)).ToArray();
+            if (!moduleInitializerTypes.Any())
+            {
+                moduleInitializerType = null;
+                return false;
+            }
+
+            if (moduleInitializerTypes.Length == 1)
+            {
+                moduleInitializerType = moduleInitializerTypes.Single();
+                return true;
+            }
+            else
+            {
+                moduleInitializerType = moduleInitializerTypes.FirstOrDefault(x => x.FullName == moduleType);
+                return moduleInitializerType != null;
+            }
         }
     }
 }
