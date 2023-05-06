@@ -64,7 +64,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             }
 
             Id = manifest.Id;
-            Version = SemanticVersion.Parse(string.Join("-", new[] { manifest.Version, manifest.VersionTag }).TrimEnd('-'));
+            Version = SemanticVersion.Parse(string.Join("-", manifest.Version, manifest.VersionTag).TrimEnd('-'));
             VersionTag = manifest.VersionTag;
             PlatformVersion = SemanticVersion.Parse(manifest.PlatformVersion);
             ReleaseNotes = manifest.ReleaseNotes;
