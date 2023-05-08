@@ -1,4 +1,4 @@
-# AutoRest clients
+# AutoRest Clients
 
 The AutoRest tool generates client libraries for accessing Virto Commerce API.
 
@@ -8,7 +8,7 @@ The AutoRest tool generates client libraries for accessing Virto Commerce API.
     Read the official AutoRest documentation: [Installing AutoRest](https://github.com/Azure/autorest/blob/main/docs/readme.md)
 
 * Install [Node.js](https://nodejs.org/en/)
-* Install AutoRest using npm, at the moment using version 3.0.x, because the Platform generate the api as OpenApi 3.0.x. 
+* Install AutoRest using npm, at the moment using version 3.0.6274, because the Platform generate the api as OpenApi 3.0.x. 
     ```console
     npm install -g autorest
     ```
@@ -18,6 +18,7 @@ The AutoRest tool generates client libraries for accessing Virto Commerce API.
     ```
 
 ## Generating C# Clients with AutoRest
+
 * Have the platform run locally (10645 port by default)
 * Generate autorest client on the Storefront
 * Open Tools > NuGet Package Manager > Package Manager Console
@@ -32,10 +33,11 @@ The AutoRest tool generates client libraries for accessing Virto Commerce API.
     services.AddSingleton<ITaxModule>(sp => new TaxModule(sp.GetRequiredService<TaxModuleApi>()));
     ```
 ## Know Issues
+
 If code generation fails with errors like "The schema's '...' ancestors should have at lease one property", please make sure that the following platform configuration flags are explicitly set to **false** (either in appsettings.json or in Azure application service settings):
 
 * VirtoCommerce:UseAllOfToExtendReferenceSchemas 
-* VirtoCommerce:IncludeOutputNullValues.
+* VirtoCommerce:IncludeOutputNullValues
 
 
 
