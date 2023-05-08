@@ -31,8 +31,11 @@ The AutoRest tool generates client libraries for accessing Virto Commerce API.
     services.AddAutoRestClient((credentials, httpClient, disposeHttpClient, baseUri) => new TaxModuleApi(credentials, httpClient, disposeHttpClient) { BaseUri = baseUri });
     services.AddSingleton<ITaxModule>(sp => new TaxModule(sp.GetRequiredService<TaxModuleApi>()));
     ```
+## Know Issues
+If code generation fails with errors like "The schema's '...' ancestors should have at lease one property", please make sure that the following platform configuration flags are explicitly set to **false** (either in appsettings.json or in Azure application service settings):
 
-
+* VirtoCommerce:UseAllOfToExtendReferenceSchemas 
+* VirtoCommerce:IncludeOutputNullValues.
 
 
 
