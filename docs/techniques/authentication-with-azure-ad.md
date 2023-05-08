@@ -21,6 +21,7 @@ To implement single sign-on, Virto Commerce Platform uses the [OpenID Connect](h
 ## Prerequisites
 To enable Azure Active Directory authentication, you will need to make sure that:
 
+- Install [Azure Active Directory Single Sign-On Module](https://github.com/VirtoCommerce/vc-module-azure-ad)
 - Your company has a valid Azure Active Directory tenant. If it does not, follow this [quickstart quide](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-access-create-new-tenant) to create one.
 - You have an Azure account that belongs to your company's Azure Active Directory tenant. If you do not have an Azure account yet, you can [start a free Azure subscription](https://azure.microsoft.com/free/).
 - You have a Virto Commerce Platform instance running, either locally or with Azure. You will need to modify its configuration, so make sure you have privileges to do that.
@@ -102,7 +103,7 @@ To set up the Azure Active Directory based authentication in Virto Commerce Plat
 
 ## Testing
 
-1. Navigate to the login page of your Virto Commerce Platform Manager and locate the **Sign in with Azure Active Directory** link:
+1. Navigate to the login page of your Virto Commerce Platform Manager and click the **Azure Active Directory** button:
 
 	![Virto Commerce Platform Manager login page with SSO](../media/azure-sso05-vc-platform-login.png)
 	
@@ -155,11 +156,11 @@ The updated configuration can look like this:
 	},
 ```
 
-## Configuring Login Scheme Priority
+## Disable Username/Password Login
 
-By default, the username/password login is enabled and shown first on the login page:
+By default, the username/password login is enabled and shown first on the login page.
 
-  ![Sign-in pages](../media/azure-sso10-vc-platform-login.gif)
+![AD Only](../media/azure-sso05-vc-platform-login-ad-only.png)
 
 You can change the order of login popups or disable the password login completely. To disable the username/password login, add the following configuration options:
     
@@ -167,19 +168,6 @@ You can change the order of login popups or disable the password login completel
 	"PasswordLogin": {
 		"Enabled": false
 	},
-```
-
-If both Azure AD login and username/password login types are enabled, you can set up which is shown before the other using the *Priority* option (the lower the number, the higher the priority):
-    
-```json
-	"PasswordLogin": {
-		"Enabled": true,
-		"Priority": 0
-	},
-	"AzureAd": {
-		"Enabled": true,
-		"Priority": 1
-	  },
 ```
 
 ## Advanced Details
