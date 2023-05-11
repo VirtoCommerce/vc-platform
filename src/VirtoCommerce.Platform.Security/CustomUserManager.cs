@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -28,7 +27,7 @@ namespace VirtoCommerce.Platform.Security
         private readonly PasswordOptionsExtended _passwordOptionsExtended;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
 
-        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher, 
+        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher,
             IOptions<UserOptionsExtended> userOptionsExtended,
             IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
             ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
@@ -239,7 +238,7 @@ namespace VirtoCommerce.Platform.Security
             }
 
             var targetRoles = await GetRolesAsync(user);
-            var sourceRoles = user.Roles.Select(x => x.Name);
+            var sourceRoles = user.Roles.Select(x => x.Name).ToList();
 
             //Add
             foreach (var newRole in sourceRoles.Except(targetRoles))
@@ -262,7 +261,7 @@ namespace VirtoCommerce.Platform.Security
             }
 
             var targetLogins = await GetLoginsAsync(user);
-            var sourceLogins = user.Logins.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, null));
+            var sourceLogins = user.Logins.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, null)).ToList();
 
             foreach (var item in sourceLogins.Where(x => targetLogins.All(y => x.LoginProvider + x.ProviderKey != y.LoginProvider + y.ProviderKey)))
             {
@@ -380,7 +379,7 @@ namespace VirtoCommerce.Platform.Security
 
             // Read associated logins
             var logins = await base.GetLoginsAsync(user);
-            user.Logins = logins.Select(x => new ApplicationUserLogin() { LoginProvider = x.LoginProvider, ProviderKey = x.ProviderKey }).ToArray();
+            user.Logins = logins.Select(x => new ApplicationUserLogin { LoginProvider = x.LoginProvider, ProviderKey = x.ProviderKey }).ToArray();
         }
 
         /// <summary>
