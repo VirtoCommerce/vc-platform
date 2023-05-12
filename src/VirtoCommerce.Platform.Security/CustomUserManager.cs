@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -28,7 +27,7 @@ namespace VirtoCommerce.Platform.Security
         private readonly PasswordOptionsExtended _passwordOptionsExtended;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher;
 
-        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher, 
+        public CustomUserManager(IUserStore<ApplicationUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<ApplicationUser> passwordHasher,
             IOptions<UserOptionsExtended> userOptionsExtended,
             IEnumerable<IUserValidator<ApplicationUser>> userValidators, IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
             ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services,
@@ -109,41 +108,45 @@ namespace VirtoCommerce.Platform.Security
             return result;
         }
 
-        public override async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword)
+        public override Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword)
         {
-            //It is important to call base.FindByIdAsync method to avoid of update a cached user.
-            var existUser = await base.FindByIdAsync(user.Id);
-            existUser.LastPasswordChangedDate = DateTime.UtcNow;
-
-            var result = await base.ResetPasswordAsync(existUser, token, newPassword);
-            if (result == IdentityResult.Success)
-            {
-                SecurityCacheRegion.ExpireUser(user);
-
-                await SavePasswordHistory(user, newPassword);
-
-                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
-                var customPasswordHash = _passwordHasher.HashPassword(user, newPassword);
-                await _eventPublisher.Publish(new UserResetPasswordEvent(user.Id, customPasswordHash));
-            }
-
-            return result;
+            return UpdatePasswordAsync(user, newPassword,
+                (user, newPassword) => base.ResetPasswordAsync(user, token, newPassword),
+                (userId, customPasswordHash) => new UserResetPasswordEvent(userId, customPasswordHash));
         }
 
-        public override async Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)
+        public override Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)
         {
+            return UpdatePasswordAsync(user, newPassword,
+                (user, newPassword) => base.ChangePasswordAsync(user, currentPassword, newPassword),
+                (userId, customPasswordHash) => new UserPasswordChangedEvent(userId, customPasswordHash));
+        }
+
+        protected virtual async Task<IdentityResult> UpdatePasswordAsync<TEvent>(
+            ApplicationUser user,
+            string newPassword,
+            Func<ApplicationUser, string, Task<IdentityResult>> updatePassword,
+            Func<string, string, TEvent> buildEvent)
+            where TEvent : class, IEvent
+        {
+            var previousPasswordChangedDate = user.LastPasswordChangedDate;
             user.LastPasswordChangedDate = DateTime.UtcNow;
 
-            var result = await base.ChangePasswordAsync(user, currentPassword, newPassword);
+            var result = await updatePassword(user, newPassword);
             if (result == IdentityResult.Success)
             {
                 SecurityCacheRegion.ExpireUser(user);
 
                 await SavePasswordHistory(user, newPassword);
 
-                // Calculate password hash for external hash storage. This provided as workaround until password hash storage would implemented
+                // Calculate password hash for external hash storage. This provided as workaround until password hash storage is implemented.
                 var customPasswordHash = _passwordHasher.HashPassword(user, newPassword);
-                await _eventPublisher.Publish(new UserPasswordChangedEvent(user.Id, customPasswordHash));
+                var @event = buildEvent(user.Id, customPasswordHash);
+                await _eventPublisher.Publish(@event);
+            }
+            else
+            {
+                user.LastPasswordChangedDate = previousPasswordChangedDate;
             }
 
             return result;
@@ -235,7 +238,7 @@ namespace VirtoCommerce.Platform.Security
             }
 
             var targetRoles = await GetRolesAsync(user);
-            var sourceRoles = user.Roles.Select(x => x.Name);
+            var sourceRoles = user.Roles.Select(x => x.Name).ToList();
 
             //Add
             foreach (var newRole in sourceRoles.Except(targetRoles))
@@ -258,7 +261,7 @@ namespace VirtoCommerce.Platform.Security
             }
 
             var targetLogins = await GetLoginsAsync(user);
-            var sourceLogins = user.Logins.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, null));
+            var sourceLogins = user.Logins.Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, null)).ToList();
 
             foreach (var item in sourceLogins.Where(x => targetLogins.All(y => x.LoginProvider + x.ProviderKey != y.LoginProvider + y.ProviderKey)))
             {
@@ -376,7 +379,7 @@ namespace VirtoCommerce.Platform.Security
 
             // Read associated logins
             var logins = await base.GetLoginsAsync(user);
-            user.Logins = logins.Select(x => new ApplicationUserLogin() { LoginProvider = x.LoginProvider, ProviderKey = x.ProviderKey }).ToArray();
+            user.Logins = logins.Select(x => new ApplicationUserLogin { LoginProvider = x.LoginProvider, ProviderKey = x.ProviderKey }).ToArray();
         }
 
         /// <summary>
