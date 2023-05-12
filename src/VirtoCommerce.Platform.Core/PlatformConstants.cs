@@ -359,7 +359,7 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = "{\n" +
                                                "  \"title\": \"Virto Commerce\",\n" +
                                                "  \"logo\": \"/images/logo.png\",\n" +
-                                               "  \"contrast_logo\": \"/images/contrast-logo.svg\"\n" +
+                                               "  \"contrast_logo\": \"/images/logo-small.svg\"\n" +
                                                "}"
                 };
 

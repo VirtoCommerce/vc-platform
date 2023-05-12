@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +35,7 @@ namespace VirtoCommerce.Platform.Modules
             IConfiguration configuration,
             IHostEnvironment hostingEnvironment)
         {
-            _loggerFacade = loggerFacade ?? throw new ArgumentNullException("loggerFacade");
+            _loggerFacade = loggerFacade ?? throw new ArgumentNullException(nameof(loggerFacade));
             _serviceCollection = serviceCollection;
             _configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
@@ -47,11 +48,13 @@ namespace VirtoCommerce.Platform.Modules
         public void Initialize(ModuleInfo moduleInfo)
         {
             if (moduleInfo == null)
-                throw new ArgumentNullException("moduleInfo");
+            {
+                throw new ArgumentNullException(nameof(moduleInfo));
+            }
 
-            var manifestModuleInfo = moduleInfo as ManifestModuleInfo;
             //Do not initialize modules with errors
-            if (manifestModuleInfo.Errors.IsNullOrEmpty())
+            if (moduleInfo is ManifestModuleInfo manifestModuleInfo &&
+                manifestModuleInfo.Errors.IsNullOrEmpty())
             {
                 try
                 {
@@ -62,10 +65,12 @@ namespace VirtoCommerce.Platform.Modules
                     {
                         configurableModule.Configuration = _configuration;
                     }
+
                     if (moduleInstance is IHasHostEnvironment hasHostEnvironment)
                     {
                         hasHostEnvironment.HostEnvironment = _hostingEnvironment;
                     }
+
                     moduleInstance.Initialize(_serviceCollection);
                     moduleInfo.State = ModuleState.Initialized;
                 }
@@ -79,7 +84,9 @@ namespace VirtoCommerce.Platform.Modules
         public void PostInitialize(ModuleInfo moduleInfo, IApplicationBuilder appBuilder)
         {
             if (moduleInfo == null)
-                throw new ArgumentNullException("moduleInfo");
+            {
+                throw new ArgumentNullException(nameof(moduleInfo));
+            }
 
             var moduleInstance = moduleInfo.ModuleInstance;
 
@@ -101,15 +108,20 @@ namespace VirtoCommerce.Platform.Modules
         /// logs the error using the <see cref="ILogger"/> and throws a <see cref="ModuleInitializeException"/>.
         /// This method can be overridden to provide a different behavior. 
         /// </summary>
-        /// <param name="moduleInfo">The module metadata where the error happenened.</param>
+        /// <param name="moduleInfo">The module metadata where the error happened.</param>
         /// <param name="exception">The exception thrown that is the cause of the current error.</param>
         /// <exception cref="ModuleInitializeException"></exception>
         public virtual void HandleModuleInitializationError(ModuleInfo moduleInfo, Exception exception)
         {
             if (moduleInfo == null)
-                throw new ArgumentNullException("moduleInfo");
+            {
+                throw new ArgumentNullException(nameof(moduleInfo));
+            }
+
             if (exception == null)
-                throw new ArgumentNullException("exception");
+            {
+                throw new ArgumentNullException(nameof(exception));
+            }
 
             Exception moduleException;
 
@@ -144,20 +156,43 @@ namespace VirtoCommerce.Platform.Modules
         protected virtual IModule CreateModule(ModuleInfo moduleInfo)
         {
             if (moduleInfo == null)
-                throw new ArgumentNullException("moduleInfo");
+            {
+                throw new ArgumentNullException(nameof(moduleInfo));
+            }
 
-            IModule result = null;
-            var moduleInitializerType = moduleInfo.Assembly.GetTypes().FirstOrDefault(x => typeof(IModule).IsAssignableFrom(x));
-            if (moduleInitializerType != null && moduleInitializerType != typeof(IModule))
+            if (!TryResolveModuleTypeFromAssembly(moduleInfo.Assembly, moduleInfo.ModuleType, out var moduleInitializerType) ||
+                Activator.CreateInstance(moduleInitializerType) is not IModule module)
             {
-                result = (IModule)Activator.CreateInstance(moduleInitializerType);
+                throw new ModuleInitializeException($"Unable to resolve IModule {moduleInfo.ModuleType} from the assembly {moduleInfo.Assembly.FullName}.");
             }
-            if (result == null)
+
+            module.ModuleInfo = moduleInfo as ManifestModuleInfo;
+
+            return module;
+        }
+
+        protected virtual bool TryResolveModuleTypeFromAssembly(Assembly moduleAssembly, string moduleType, out Type moduleInitializerType)
+        {
+            if (moduleAssembly == null)
             {
-                throw new ModuleInitializeException($"Unable to retrieve the module type {moduleInitializerType} from the loaded assemblies.You may need to specify a more fully - qualified type name");
+                throw new ArgumentNullException(nameof(moduleAssembly));
             }
-            result.ModuleInfo = moduleInfo as ManifestModuleInfo;
-            return result;
+
+            var moduleInitializerTypes = moduleAssembly.GetTypes().Where(x => typeof(IModule).IsAssignableFrom(x)).ToArray();
+            if (!moduleInitializerTypes.Any())
+            {
+                moduleInitializerType = null;
+                return false;
+            }
+
+            if (moduleInitializerTypes.Length == 1)
+            {
+                moduleInitializerType = moduleInitializerTypes.First();
+                return true;
+            }
+
+            moduleInitializerType = moduleInitializerTypes.FirstOrDefault(x => x.AssemblyQualifiedName?.StartsWith(moduleType) == true);
+            return moduleInitializerType != null;
         }
     }
 }

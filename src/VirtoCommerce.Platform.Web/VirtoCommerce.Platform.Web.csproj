@@ -16,8 +16,6 @@
 
     <ItemGroup>
         <PackageReference Include="FluentValidation" Version="10.3.4" />
-        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
-        <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.21.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.0" />
@@ -41,6 +39,10 @@
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
         <PackageReference Include="OpenIddict.AspNetCore" Version="3.0.4" />
         <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.0.4" />
+        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+        <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
         <PackageReference Include="Scrutor" Version="4.2.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.1" />
@@ -49,6 +51,7 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.2.1" />
         <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0" />
+        <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="4.7.0" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0"/>
         <PackageReference Include="System.Linq.Async" Version="6.0.1" />
         <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
