@@ -5,7 +5,7 @@ namespace VirtoCommerce.Platform.Data;
 public class DataOptions
 {
     /// <summary>
-    /// The command timeout set for migrations that upgrade legacy databases created in VC v2.
+    /// The command timeout set for EF Core migrations.
     /// </summary>
-    public TimeSpan? PlatformV2UpdateTimeout { get; set; }
+    public TimeSpan? MigrationsTimeout { get; set; }
 }

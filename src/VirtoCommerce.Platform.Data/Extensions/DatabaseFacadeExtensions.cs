@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
     {
         public static void MigrateIfNotApplied(this DatabaseFacade databaseFacade, string targetMigration)
         {
-            var timeout = databaseFacade.GetService<IOptions<DataOptions>>().Value.PlatformV2UpdateTimeout
+            var timeout = databaseFacade.GetService<IOptions<DataOptions>>().Value.MigrationsTimeout
                 ?? TimeSpan.FromSeconds(databaseFacade.GetDbConnection().ConnectionTimeout);
 
             databaseFacade.SetCommandTimeout(timeout);
