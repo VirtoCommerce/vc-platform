@@ -1,3 +1,4 @@
+using System;
 using Microsoft.ApplicationInsights.WindowsServer.Channel.Implementation;
 
 namespace VirtoCommerce.Platform.Core.Telemetry
@@ -5,6 +6,7 @@ namespace VirtoCommerce.Platform.Core.Telemetry
     /// <summary>
     /// AppInsights sampling options
     /// </summary>
+    [Obsolete("Not used anymore. Moved to VirtoCommerce.ApplicationInsights module.")]
     public class SamplingOptions
     {
         /// <summary>

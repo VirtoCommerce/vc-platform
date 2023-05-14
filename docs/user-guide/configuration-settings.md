@@ -11,8 +11,9 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | VirtoCommerce | E.g., `Data Source=(local);Initial Catalog=VirtoCommerce3;Persist Security Info=True;User ID=virto;Password=virto; MultipleActiveResultSets=True;Connect Timeout=30` | **Required.** VC Platform system connection string to SQL Server DB. VC modules would revert to this connection string, if specific connection string wasn't defined.                          |
 |  | E.g., VirtoCommerce.Catalog        | E.g., `Data Source=(local);Initial Catalog=VirtoCommerceCatalog;Persist Security Info=True;User ID=virto;Password=virto; MultipleActiveResultSets=True;Connect Timeout=30` | Other, module-specific connection string(s). E.g., VirtoCommerce.Catalog module would use `VirtoCommerce.Catalog` connection string, if it's defined. |
 | | RedisConnectionString | E.g., `"localhost"` | StackExchange.Redis Configuration string. Check [Redis Configuration](https://stackexchange.github.io/StackExchange.Redis/Configuration) for details.
-| Logging | | | Logging settings.
-| | ApplicationInsights.LogLevel.Default | E.g., `Warning` | Minimum severity of log message to be sent to AppInsights
+| Serilog | | | Serilog logging settings.
+| | Using | [ `"Serilog.Sinks.Console"`, `"Serilog.Sinks.Debug"` ] | List of assemblies for logging providers in which configuration methods reside
+| | MinimumLevel | `Information`, `Warning`, `Error`, `Debug` or `Trace` | Minimum severity level of log message
 | ApplicationInsights | | | AplicationInsights service settings
 | | ConnectionString | E.g. `InstrumentationKey={guid};IngestionEndpoint={url}/;LiveEndpoint={url}/` | Copy the connection string from the ApplicationInsights admin panel.
 | | SamplingOptions.Processor | E.g. `Adaptive` | Chose `Adaptive` to reduce amount of data to be sent or `Fixed` to get more details.
