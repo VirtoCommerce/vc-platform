@@ -4,10 +4,10 @@ namespace VirtoCommerce.Platform.Core.Security.Events
 {
     public class UserPasswordChangedEvent : DomainEvent
     {
-        public UserPasswordChangedEvent(string userId, string сustomPasswordHash)
+        public UserPasswordChangedEvent(string userId, string customPasswordHash)
         {
             UserId = userId;
-            CustomPasswordHash = сustomPasswordHash;
+            CustomPasswordHash = customPasswordHash;
         }
 
         public UserPasswordChangedEvent(ApplicationUser applicationUser)
