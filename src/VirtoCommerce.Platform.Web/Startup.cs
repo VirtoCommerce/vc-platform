@@ -456,6 +456,7 @@ namespace VirtoCommerce.Platform.Web
                     .RequireAuthenticatedUser()
                     // Customer user can get token, but can't use any API where auth is needed
                     .RequireAssertion(context =>
+                        authorizationOptions.AllowApiAccessForCustomers ||
                         !context.User.HasClaim(OpenIddictConstants.Claims.Role, PlatformConstants.Security.SystemRoles.Customer))
                     .Build();
                 //The good article is described the meaning DefaultPolicy and FallbackPolicy
