@@ -199,14 +199,13 @@ angular.module('platformWebApp')
                 };
 
                 scope.showErrorDetails = function () {
-                    scope.blade.error = undefined;
-                //    var dialog = {
-                //        id: "errorDetails",
-                //        title: 'platform.dialogs.error-details.title'
-                //    };
-                //    if (scope.blade.errorBody != undefined)
-                //        dialog.message = scope.blade.errorBody;
-                //    dialogService.showErrorDialog(dialog);
+                    var dialog = {
+                        id: "errorDetails",
+                        title: 'platform.dialogs.error-details.title'
+                };
+                    if (scope.blade.errorBody != undefined)
+                        dialog.message = scope.blade.errorBody;
+                    dialogService.showErrorDialog(dialog);
                 };
             }
         }
@@ -406,12 +405,25 @@ angular.module('platformWebApp')
             },
             checkPermission: authService.checkPermission,
             setError: function (response, blade) {
-                if (blade && response) {
+                if (blade) {
                     blade.isLoading = false;
-                    blade.error = response.status && response.statusText ? response.status + ': ' + response.statusText : response;
-                    blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody || blade.error;
+                    if (response) {
+                        blade.error = response.status && response.statusText ? response.status + ': ' + response.statusText : response;
+                        blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody || blade.error;
+                    }
+                    else {
+                        clearError(blade);
+                    }
+                }
+            },
+            clearError: function (blade) {
+                if (blade) {
+                    blade.isLoading = false;
+                    blade.error = undefined;
+                    blade.errorBody = "";
                 }
             }
+
         };
 
         return service;
