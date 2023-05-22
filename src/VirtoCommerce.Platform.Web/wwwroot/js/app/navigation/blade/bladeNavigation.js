@@ -199,13 +199,14 @@ angular.module('platformWebApp')
                 };
 
                 scope.showErrorDetails = function () {
-                    var dialog = {
-                        id: "errorDetails",
-                        title: 'platform.dialogs.error-details.title'
-                    };
-                    if (scope.blade.errorBody != undefined)
-                        dialog.message = scope.blade.errorBody;
-                    dialogService.showErrorDialog(dialog);
+                    scope.blade.error = undefined;
+                //    var dialog = {
+                //        id: "errorDetails",
+                //        title: 'platform.dialogs.error-details.title'
+                //    };
+                //    if (scope.blade.errorBody != undefined)
+                //        dialog.message = scope.blade.errorBody;
+                //    dialogService.showErrorDialog(dialog);
                 };
             }
         }
