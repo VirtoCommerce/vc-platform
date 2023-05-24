@@ -207,6 +207,10 @@ angular.module('platformWebApp')
                         dialog.message = scope.blade.errorBody;
                     dialogService.showErrorDialog(dialog);
                 };
+
+                scope.clearError = function () {
+                    bladeNavigationService.clearError(scope.blade);
+                };
             }
         }
     }])
@@ -412,7 +416,8 @@ angular.module('platformWebApp')
                         blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody || blade.error;
                     }
                     else {
-                        clearError(blade);
+                        blade.error = undefined;
+                        blade.errorBody = "";
                     }
                 }
             },
