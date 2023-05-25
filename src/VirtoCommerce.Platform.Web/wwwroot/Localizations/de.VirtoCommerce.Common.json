@@ -57,7 +57,8 @@
       "reject-user": "Benutzer ablehnen",
       "change-password": "Passwort ändern",
       "today": "Heute",
-      "see-details": "siehe Einzelheiten"
+      "see-details": "Siehe Einzelheiten",
+      "dismiss": "Weggetreten"
     },
     "list": {
       "no-data": "Keine Daten",
