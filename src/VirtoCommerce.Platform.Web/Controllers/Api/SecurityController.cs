@@ -693,7 +693,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (applicationUser.EmailConfirmed != user.EmailConfirmed
                 && !Request.HttpContext.User.HasGlobalPermission(PlatformPermissions.SecurityVerifyEmail))
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             if (!applicationUser.Email.EqualsInvariant(user.Email))

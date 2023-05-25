@@ -82,7 +82,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
             if (currentUser.Id != userProfile.Id)
             {
-                return Unauthorized();
+                return Forbid();
             }
             using (await AsyncLock.GetLockByKey(userProfile.ToString()).GetReleaserAsync())
             {
