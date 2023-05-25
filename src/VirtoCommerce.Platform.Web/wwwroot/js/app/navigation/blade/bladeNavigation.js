@@ -207,6 +207,10 @@ angular.module('platformWebApp')
                         dialog.message = scope.blade.errorBody;
                     dialogService.showErrorDialog(dialog);
                 };
+
+                scope.clearError = function () {
+                    bladeNavigationService.clearError(scope.blade);
+                };
             }
         }
     }])
@@ -238,6 +242,14 @@ angular.module('platformWebApp')
             }
             else {
                 closeCallback();
+            }
+        }
+
+        function clearError(blade) {
+            if (blade) {
+                blade.isLoading = false;
+                blade.error = undefined;
+                blade.errorBody = "";
             }
         }
 
@@ -405,12 +417,18 @@ angular.module('platformWebApp')
             },
             checkPermission: authService.checkPermission,
             setError: function (response, blade) {
-                if (blade && response) {
+                if (blade) {
                     blade.isLoading = false;
-                    blade.error = response.status && response.statusText ? response.status + ': ' + response.statusText : response;
-                    blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody || blade.error;
+                    if (response) {
+                        blade.error = response.status && response.statusText ? response.status + ': ' + response.statusText : response;
+                        blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody || blade.error;
+                    }
+                    else {
+                        clearError(blade);
+                    }
                 }
-            }
+            },
+            clearError: clearError
         };
 
         return service;
