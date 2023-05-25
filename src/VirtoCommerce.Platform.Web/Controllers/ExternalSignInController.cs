@@ -74,7 +74,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [HttpGet]
         [Route("providers")]
         [AllowAnonymous]
-        public async Task<ActionResult> GetExternalLoginProviders()
+        public async Task<ActionResult<ExternalSignInProviderInfo[]>> GetExternalLoginProviders()
         {
             var externalLoginProviders = (await _signInManager.GetExternalAuthenticationSchemesAsync())
                 .Select(authenticationDescription => new ExternalSignInProviderInfo
