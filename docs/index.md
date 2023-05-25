@@ -161,6 +161,7 @@ It integrates with DevOps process, and has connection points to a variety of dev
 In our work, we always try to use advanced technologies. Our decision to choose technologies described below was the result of our extensive experience working with Microsoft products.
 
 Virto Commerce uses following stack of technologies:
+
 * .NET 6
 * ASP.NET Core 6
 * Entity Framework Core as primary ORM
@@ -174,6 +175,7 @@ and more
 
 ## Supported Databases
 Virto Commerce built with DB agnostic architecture and supports the following databases:
+
 * Microsoft SQL Server 2019 or above
 * MySql Server 5.7 or above
 * PostgreSQL 12 or above
