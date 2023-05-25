@@ -1,7 +1,7 @@
 angular.module('platformWebApp').controller('platformWebApp.roleDetailController', ['$q', '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.roles', 'platformWebApp.dialogService', function ($q, $scope, bladeNavigationService, roles, dialogService) {
     var blade = $scope.blade;
     blade.updatePermission = 'platform:security:update';
-    var promise = roles.queryPermissions().$promise;
+    var promise = roles.queryPermissions({ take: 10000 }).$promise;
 
     blade.refresh = function (parentRefresh) {
         if (blade.isNew) {
@@ -25,6 +25,14 @@ angular.module('platformWebApp').controller('platformWebApp.roleDetailController
             promise.then(function (promiseData) {
                 blade.isLoading = false;
                 blade.currentEntities = _.groupBy(promiseData, 'groupName');
+
+                blade.currentEntities = Object.keys(blade.currentEntities).sort().reduce(
+                    (obj, key) => {
+                        obj[key] = blade.currentEntities[key];
+                        return obj;
+                    },
+                    {}
+                );
             });
         } else {
             blade.isLoading = false;
