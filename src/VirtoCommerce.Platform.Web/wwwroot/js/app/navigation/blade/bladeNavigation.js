@@ -202,7 +202,7 @@ angular.module('platformWebApp')
                     var dialog = {
                         id: "errorDetails",
                         title: 'platform.dialogs.error-details.title'
-                };
+                    };
                     if (scope.blade.errorBody != undefined)
                         dialog.message = scope.blade.errorBody;
                     dialogService.showErrorDialog(dialog);
@@ -242,6 +242,14 @@ angular.module('platformWebApp')
             }
             else {
                 closeCallback();
+            }
+        }
+
+        function clearError(blade) {
+            if (blade) {
+                blade.isLoading = false;
+                blade.error = undefined;
+                blade.errorBody = "";
             }
         }
 
@@ -416,19 +424,11 @@ angular.module('platformWebApp')
                         blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody || blade.error;
                     }
                     else {
-                        blade.error = undefined;
-                        blade.errorBody = "";
+                        clearError(blade);
                     }
                 }
             },
-            clearError: function (blade) {
-                if (blade) {
-                    blade.isLoading = false;
-                    blade.error = undefined;
-                    blade.errorBody = "";
-                }
-            }
-
+            clearError: clearError
         };
 
         return service;
