@@ -24,11 +24,16 @@
                                 </div>
                             </div>
                             <div class="column">
-                                <div class="form-group">
+                                <div class="form-group" ng-class="{'__disabled': !blade.isNew || !blade.hasMultivalue}">
                                     <label class="form-label">{{ 'platform.blades.dynamicProperty-detail.labels.multivalue' | translate }}</label>
                                     <div class="form-input">
                                         <label class="form-label __switch">
-                                            <input type="checkbox" ng-model="blade.currentEntity.isArray" ui-validate=" 'arrayFlagValidator($value)' " ui-validate-watch=" 'blade.currentEntity.valueType' " name="arrayFlag">
+                                            <input type="checkbox"
+                                                   ng-model="blade.currentEntity.isArray"
+                                                   ng-disabled="!blade.hasMultivalue"
+                                                   ui-validate=" 'arrayFlagValidator($value)' "
+                                                   ui-validate-watch=" 'blade.currentEntity.valueType' "
+                                                   name="arrayFlag">
                                             <span class="switch"></span>
                                         </label>
                                     </div>
@@ -39,22 +44,32 @@
                     <div class="column">
                         <div class="columns">
                             <div class="column">
-                                <div class="form-group" ng-class="{'__disabled': !blade.isNew}">
+                                <div class="form-group" ng-class="{'__disabled': !blade.isNew || !blade.hasMultilanguage}">
                                     <label class="form-label">{{ 'platform.blades.dynamicProperty-detail.labels.multilingual' | translate }}</label>
                                     <div class="form-input">
                                         <label class="form-label __switch">
-                                            <input type="checkbox" ng-model="blade.currentEntity.isMultilingual" ui-validate=" 'multilingualFlagValidator($value)' " ui-validate-watch=" 'blade.currentEntity.valueType' " name="multilingualFlag">
+                                            <input type="checkbox"
+                                                   ng-model="blade.currentEntity.isMultilingual"
+                                                   ng-disabled="!blade.hasMultilanguage"
+                                                   ui-validate=" 'multilingualFlagValidator($value)' "
+                                                   ui-validate-watch=" 'blade.currentEntity.valueType' "
+                                                   name="multilingualFlag">
                                             <span class="switch"></span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="column">
-                                <div class="form-group" ng-class="{'__disabled': !blade.isNew}">
+                                <div class="form-group" ng-class="{'__disabled': !blade.isNew || !blade.hasDictionary}">
                                     <label class="form-label">{{ 'platform.blades.dynamicProperty-detail.labels.dictionary' | translate }}</label>
                                     <div class="form-input">
                                         <label class="form-label __switch">
-                                            <input type="checkbox" ng-model="blade.currentEntity.isDictionary" ui-validate=" 'dictionaryFlagValidator($value)' " ui-validate-watch=" 'blade.currentEntity.valueType' " name="dictFlag">
+                                            <input type="checkbox"
+                                                   ng-model="blade.currentEntity.isDictionary"
+                                                   ng-disabled="!blade.hasDictionary"
+                                                   ui-validate=" 'dictionaryFlagValidator($value)' "
+                                                   ui-validate-watch=" 'blade.currentEntity.valueType' "
+                                                   name="dictFlag">
                                             <span class="switch"></span>
                                         </label>
                                     </div>

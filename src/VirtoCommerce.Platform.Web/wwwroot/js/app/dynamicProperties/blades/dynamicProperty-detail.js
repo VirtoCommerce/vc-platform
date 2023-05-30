@@ -24,6 +24,30 @@ angular.module('platformWebApp')
             });
         };
 
+        $scope.$watch('blade.currentEntity.valueType', function (newValue) {
+            blade.hasMultivalue = blade.hasDictionary = blade.hasMultilanguage = true;
+
+            switch (newValue) {
+                case 'DateTime':
+                case 'Boolean':
+                case 'Image':
+                    blade.hasMultivalue = blade.currentEntity.isArray = false;
+                    blade.hasDictionary = blade.currentEntity.isDictionary = false;
+                    blade.hasMultilanguage = blade.currentEntity.isMultilingual = false;
+                    break;
+                case 'Integer':
+                case 'Decimal':
+                    blade.hasDictionary = blade.currentEntity.isDictionary = false;
+                    blade.hasMultilanguage = blade.currentEntity.hasMultilanguage = false;
+                    break;
+                case 'LongText':
+                case 'Html':
+                    blade.hasDictionary = blade.currentEntity.isDictionary = false;
+                    blade.hasMultivalue = blade.currentEntity.isArray = false;
+                    break;
+            }
+        });
+
         $scope.arrayFlagValidator = function (value) {
             return !value || blade.currentEntity.valueType === 'ShortText' || blade.currentEntity.valueType === 'Integer' || blade.currentEntity.valueType === 'Decimal';
         };
