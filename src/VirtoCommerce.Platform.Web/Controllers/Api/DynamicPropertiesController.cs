@@ -75,7 +75,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!validationResult.IsValid)
             {
-                return BadRequest($"Validation failed for property: {validationResult.Errors?.FirstOrDefault().ErrorMessage}");
+                return BadRequest($"Validation failed for property: {validationResult.Errors?.FirstOrDefault()?.ErrorMessage}");
             }
 
             var result = await _dynamicPropertyService.SaveDynamicPropertiesAsync(new[] { property });
@@ -190,7 +190,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!validationResult.IsValid)
             {
-                return BadRequest($"Validation failed for property: {validationResult.Errors?.FirstOrDefault().ErrorMessage}");
+                return BadRequest($"Validation failed for property: {validationResult.Errors?.FirstOrDefault()?.ErrorMessage}");
             }
 
             property.Id = null;
