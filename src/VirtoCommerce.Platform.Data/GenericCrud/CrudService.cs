@@ -83,11 +83,6 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 .ToList();
         }
 
-        [Obsolete("Use method GetAsync instead")]
-        public virtual async Task<IEnumerable<TModel>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null)
-        {
-            return await GetAsync(new List<string>(ids), responseGroup);
-        }
 
 
         protected virtual async Task<IEnumerable<TModel>> GetByIdsNoCache(IList<string> ids, string responseGroup)
@@ -310,19 +305,6 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         {
             // Basic implementation left empty
             return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Create cache region.
-        /// Default implementation creates <see cref="GenericCachingRegion{TModel}"/>.
-        /// Can be overridden to create some different region.
-        /// </summary>
-        /// <param name="ids"></param>
-        /// <returns></returns>
-        [Obsolete("Use CreateCacheToken(string id)")]
-        protected virtual IChangeToken CreateCacheToken(IEnumerable<string> ids)
-        {
-            return GenericCachingRegion<TModel>.CreateChangeToken(ids);
         }
 
         protected virtual IChangeToken CreateCacheToken(string id)
