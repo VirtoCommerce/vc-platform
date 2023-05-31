@@ -25,9 +25,12 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [HttpGet]
         [Route("")]
         [AllowAnonymous]
-        public ActionResult SignIn(string authenticationType)
+        public ActionResult SignIn(string authenticationType, string returnUrl = null)
         {
-            var returnUrl = Url.Action("Index", "Home");
+            if (string.IsNullOrEmpty(returnUrl))
+            {
+                returnUrl = Url.Action("Index", "Home");
+            }
             var callbackUrl = Url.Action("SignInCallback", "ExternalSignIn", new { returnUrl });
 
             var authenticationProperties = new AuthenticationProperties { RedirectUri = callbackUrl };
@@ -49,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [HttpGet]
         [Route("providers")]
         [AllowAnonymous]
-        public async Task<ActionResult> GetExternalLoginProviders()
+        public async Task<ActionResult<ExternalSignInProviderInfo[]>> GetExternalLoginProviders()
         {
             var externalLoginProviders = (await _signInManager.GetExternalAuthenticationSchemesAsync())
                 .Select(authenticationDescription => new ExternalSignInProviderInfo

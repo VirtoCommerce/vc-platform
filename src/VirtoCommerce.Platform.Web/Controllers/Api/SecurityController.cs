@@ -816,7 +816,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("logintypes")]
         [AllowAnonymous]
-        public ActionResult GetLoginTypes()
+        public ActionResult<List<LoginType>> GetLoginTypes()
         {
             var options = new List<LoginType>
             {
