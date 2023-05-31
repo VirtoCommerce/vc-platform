@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 {
     public static class JsonSerializerExtensions
     {
-        private const int DefaultPageSize = 50;
+        public const int DefaultPageSize = 50;
 
         public static async Task SerializeJsonArrayWithPagingAsync<T>(this JsonTextWriter writer, JsonSerializer serializer, int pageSize, Func<int, int, Task<GenericSearchResult<T>>> pagedDataLoader, Action<int, int> progressCallback, ICancellationToken cancellationToken)
         {
@@ -33,18 +33,18 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     cancellationToken.ThrowIfCancellationRequested();
                     serializer.Serialize(writer, data);
                 }
-                writer.Flush();
+                await writer.FlushAsync();
                 progressCallback(Math.Min(totalCount, i + pageSize), totalCount);
             }
             await writer.WriteEndArrayAsync();
         }
 
-        public static async Task DeserializeJsonArrayWithPagingAsync<T>(this JsonTextReader reader, JsonSerializer serializer, int pageSize, Func<IEnumerable<T>, Task> action, Action<int> progressCallback, ICancellationToken cancellationToken)
+        public static async Task DeserializeJsonArrayWithPagingAsync<T>(this JsonTextReader reader, JsonSerializer serializer, int pageSize, Func<IList<T>, Task> action, Action<int> progressCallback, ICancellationToken cancellationToken)
         {
-            reader.Read();
+            await reader.ReadAsync();
             if (reader.TokenType == JsonToken.StartArray)
             {
-                reader.Read();
+                await reader.ReadAsync();
 
                 var items = new List<T>();
                 var processedCount = 0;
@@ -55,7 +55,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                     var item = serializer.Deserialize<T>(reader);
                     items.Add(item);
                     processedCount++;
-                    reader.Read();
+                    await reader.ReadAsync();
                     if (processedCount % pageSize == 0 || reader.TokenType == JsonToken.EndArray)
                     {
                         await action(items);

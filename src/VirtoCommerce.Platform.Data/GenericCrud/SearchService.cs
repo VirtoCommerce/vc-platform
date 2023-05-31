@@ -93,7 +93,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     .Select(x => x.Id)
                     .Skip(criteria.Skip)
                     .Take(criteria.Take)
-                    .ToArrayAsync();
+                    .ToListAsync();
 
                 result.TotalCount = result.Results.Count;
 

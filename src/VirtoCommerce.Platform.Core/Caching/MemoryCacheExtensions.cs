@@ -11,13 +11,13 @@ namespace VirtoCommerce.Platform.Core.Caching
     public static class MemoryCacheExtensions
     {
         private static readonly StringComparer _ignoreCase = StringComparer.OrdinalIgnoreCase;
-        private static readonly ConcurrentDictionary<string, object> _lockLookup = new ConcurrentDictionary<string, object>();
+        private static readonly ConcurrentDictionary<string, object> _lockLookup = new();
 
         public static async Task<IList<TItem>> GetOrLoadByIdsAsync<TItem>(
             this IMemoryCache memoryCache,
             string keyPrefix,
             IList<string> ids,
-            Func<IList<string>, Task<IEnumerable<TItem>>> loadItems,
+            Func<IList<string>, Task<IList<TItem>>> loadItems,
             Action<MemoryCacheEntryOptions, string, TItem> configureCache)
             where TItem : IEntity
         {

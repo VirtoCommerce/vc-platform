@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Security.Services
         {
         }
 
-        protected async override Task<IEnumerable<ServerCertificateEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids, string responseGroup)
+        protected override async Task<IList<ServerCertificateEntity>> LoadEntities(IRepository repository, IList<string> ids, string responseGroup)
         {
             return await ((ISecurityRepository)repository).ServerCertificates.Where(x => ids.Contains(x.Id)).ToListAsync();
 
