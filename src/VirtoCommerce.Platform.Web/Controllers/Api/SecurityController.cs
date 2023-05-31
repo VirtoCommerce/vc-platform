@@ -41,7 +41,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserSearchService _userSearchService;
         private readonly IRoleSearchService _roleSearchService;
-        private readonly IPasswordValidator<ApplicationUser> _passwordValidator;
         private readonly IEmailSender _emailSender;
         private readonly IEventPublisher _eventPublisher;
         private readonly IUserApiKeyService _userApiKeyService;
@@ -58,7 +57,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<UserOptionsExtended> userOptionsExtended,
             IOptions<PasswordOptionsExtended> passwordOptions,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
-            IPasswordValidator<ApplicationUser> passwordValidator,
             IEmailSender emailSender,
             IEventPublisher eventPublisher,
             IUserApiKeyService userApiKeyService,
@@ -69,7 +67,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _securityOptions = securityOptions.Value;
             _userOptionsExtended = userOptionsExtended.Value;
             _passwordOptions = passwordOptions.Value;
-            _passwordValidator = passwordValidator;
             _passwordLoginOptions = passwordLoginOptions.Value ?? new PasswordLoginOptions();
             _permissionsProvider = permissionsProvider;
             _roleManager = roleManager;
@@ -634,11 +631,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         public async Task<ActionResult<IdentityResult>> ValidatePassword([FromBody] string password)
         {
             ApplicationUser user = null;
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated == true)
             {
                 user = await UserManager.FindByNameAsync(User.Identity.Name);
             }
-            var result = await _passwordValidator.ValidateAsync(UserManager, user, password);
+            
+            var result = await ValidatePassword(user, password);
 
             return Ok(result);
         }
@@ -659,13 +657,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             ApplicationUser user = null;
-
             if (validatePassword.UserName != null)
             {
                 user = await UserManager.FindByNameAsync(validatePassword.UserName);
             }
 
-            var result = await _passwordValidator.ValidateAsync(UserManager, user, validatePassword.NewPassword);
+            var result = await ValidatePassword(user, validatePassword.NewPassword);
 
             return Ok(result);
         }
@@ -1066,6 +1063,24 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private IList<ApplicationUser> ReduceUsersDetails(IList<ApplicationUser> users)
         {
             return users?.Select(x => ReduceUserDetails(x)).ToList();
+        }
+
+        private async Task<IdentityResult> ValidatePassword(ApplicationUser user, string password)
+        {
+            var errors = new List<IdentityError>();
+            var isValid = true;
+            foreach (var passwordValidator in UserManager.PasswordValidators)
+            {
+                var identityResult = await passwordValidator.ValidateAsync(UserManager, user, password);
+                if (!identityResult.Succeeded)
+                {
+                    errors.AddRange(identityResult.Errors);
+                    isValid = false;
+                }
+            }
+
+            var result = isValid ? IdentityResult.Success : IdentityResult.Failed(errors.ToArray());
+            return result;
         }
     }
 }
