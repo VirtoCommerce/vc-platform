@@ -28,9 +28,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         where TChangeEvent : GenericChangedEntryEvent<TModel>
         where TChangedEvent : GenericChangedEntryEvent<TModel>
     {
-        protected readonly IEventPublisher _eventPublisher;
-        protected readonly IPlatformMemoryCache _platformMemoryCache;
-        protected readonly Func<IRepository> _repositoryFactory;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IPlatformMemoryCache _platformMemoryCache;
+        private readonly Func<IRepository> _repositoryFactory;
 
         /// <summary>
         /// Construct new CrudService

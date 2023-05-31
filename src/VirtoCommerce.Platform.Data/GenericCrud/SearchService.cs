@@ -27,9 +27,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         where TModel : Entity, ICloneable
         where TEntity : Entity, IDataEntity<TEntity, TModel>
     {
-        protected readonly IPlatformMemoryCache _platformMemoryCache;
-        protected readonly Func<IRepository> _repositoryFactory;
-        protected readonly ICrudService<TModel> _crudService;
+        private readonly IPlatformMemoryCache _platformMemoryCache;
+        private readonly Func<IRepository> _repositoryFactory;
+        private readonly ICrudService<TModel> _crudService;
 
         /// <summary>
         /// Construct new SearchService
