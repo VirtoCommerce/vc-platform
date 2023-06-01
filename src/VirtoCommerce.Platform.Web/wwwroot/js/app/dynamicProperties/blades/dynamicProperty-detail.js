@@ -38,7 +38,7 @@ angular.module('platformWebApp')
                 case 'Integer':
                 case 'Decimal':
                     blade.hasDictionary = blade.currentEntity.isDictionary = false;
-                    blade.hasMultilanguage = blade.currentEntity.hasMultilanguage = false;
+                    blade.hasMultilanguage = blade.currentEntity.isMultilingual = false;
                     break;
                 case 'LongText':
                 case 'Html':
