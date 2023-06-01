@@ -46,30 +46,13 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         }
 
         /// <summary>
-        /// Return a model instance for specified id and response group
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="responseGroup"></param>
-        /// <returns></returns>
-        public virtual async Task<TModel> GetByIdAsync(string id, string responseGroup = null)
-        {
-            if (id == null)
-            {
-                return null;
-            }
-
-            var entities = await GetAsync(new[] { id }, responseGroup);
-            return entities.FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Returns a list of model instances for specified ids and response group.
-        /// Custom CRUD service can override this to implement fully specific read.
+        /// Returns a list of model instances for specified IDs.
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="responseGroup"></param>
+        /// <param name="clone">If false, returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.</param>
         /// <returns></returns>
-        public virtual async Task<IList<TModel>> GetAsync(IList<string> ids, string responseGroup = null)
+        public virtual async Task<IList<TModel>> GetAsync(IList<string> ids, string responseGroup = null, bool clone = true)
         {
             var cacheKeyPrefix = CacheKey.With(GetType(), nameof(GetAsync), responseGroup);
 
@@ -77,12 +60,15 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 missingIds => GetByIdsNoCache(missingIds, responseGroup),
                 ConfigureCache);
 
+            if (!clone)
+            {
+                return models;
+            }
+
             return models
                 .Select(x => x.CloneTyped())
-                .OrderBy(x => ids.IndexOf(x.Id))
                 .ToList();
         }
-
 
         protected virtual async Task<IList<TModel>> GetByIdsNoCache(IList<string> ids, string responseGroup)
         {

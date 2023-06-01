@@ -45,11 +45,12 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         }
 
         /// <summary>
-        /// Search for model (service-layer) instances, related to specified criteria
+        /// Returns model instances that meet specified criteria.
         /// </summary>
         /// <param name="criteria"></param>
+        /// <param name="clone">If false, returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.</param>
         /// <returns></returns>
-        public virtual async Task<TResult> SearchAsync(TCriteria criteria)
+        public virtual async Task<TResult> SearchAsync(TCriteria criteria, bool clone = true)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
 
@@ -63,7 +64,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             result.TotalCount = idsResult.TotalCount;
 
             result.Results = idsResult.Results.Any()
-                ? (await _crudService.GetAsync(idsResult.Results.ToList(), criteria.ResponseGroup))
+                ? (await _crudService.GetAsync(idsResult.Results, criteria.ResponseGroup, clone))
                     .OrderBy(x => idsResult.Results.IndexOf(x.Id))
                     .ToList()
                 : Array.Empty<TModel>();
