@@ -47,7 +47,8 @@ A VirtoCommerce platform service "*platformWebApp.bladeNavigationService*" is de
 |showBlade(blade, parentBlade)|Opens a new blade instance for provided parent blade. The blade parameter should have at least **id**, **controller** and **template** properties set.|
 |closeBlade(blade, callback, onBeforeClosing)|Tries to close the provided blade. If specified, the onBeforeClosing function is called **before** closing the blade. If provided, the callback function is called **after** it was closed.|
 |closeChildrenBlades(blade, callback)|Tries to close all blade's children. Callback function is called only if all children blades were closed successfully.|
-|setError(msg, blade)|Set error message for the blade. Pass empty msg parameter to clear.|
+|setError(msg, blade)|Set an error message for the blade.|
+|clearError(blade)|Clears the error message for the blade.|
 
 ```
 angular.module('sampleApp')

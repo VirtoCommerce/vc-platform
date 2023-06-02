@@ -17,6 +17,14 @@ namespace VirtoCommerce.Platform.Core.Security
         // then no limitations should be applied to the permissions.
         public string LimitedCookiePermissions { get; set; }
 
+        /// <summary>
+        /// Allows API returns password Hash and TimeStamp. By default, false.
+        /// </summary>
         public bool ReturnPasswordHash { get; set; }
+
+        /// <summary>
+        /// Allows customers to access the API endpoints and perform authorized actions. By default, false.
+        /// </summary>
+        public bool AllowApiAccessForCustomers { get; set; }
     }
 }

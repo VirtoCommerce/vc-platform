@@ -7,12 +7,22 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+
+!!! done "May"
+    * Adding digital products to cart.
+    * Creating and editing headers and footers via XApi.
+    * UI kit color pallette.
+    * Serilog integration.
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-april-2023/568)
+
 !!! done "April"
     * Milti-step checkout and UX improvements
     * Virto Commerce and DB Agnostic feature
     * Application Menu
     * Concurrency conflicts handling
     * Webhook Authentication 
+    
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-april-2023/568)
 
 !!! done "March"
@@ -22,14 +32,6 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * Inventory: Menu & Dynamic Properties
 
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-march-2023/560)
-
-!!! done "February"
-    * Virto Storefront Features
-    * Attachments for Contracts 
-    * XAPI features
-    * Azure Active Directory SSO Module
-
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-february-2023/545)
 
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), Subscribe on [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and Star on [GitHub](https://github.com/VirtoCommerce).
 
@@ -159,6 +161,7 @@ It integrates with DevOps process, and has connection points to a variety of dev
 In our work, we always try to use advanced technologies. Our decision to choose technologies described below was the result of our extensive experience working with Microsoft products.
 
 Virto Commerce uses following stack of technologies:
+
 * .NET 6
 * ASP.NET Core 6
 * Entity Framework Core as primary ORM
@@ -172,6 +175,7 @@ and more
 
 ## Supported Databases
 Virto Commerce built with DB agnostic architecture and supports the following databases:
+
 * Microsoft SQL Server 2019 or above
 * MySql Server 5.7 or above
 * PostgreSQL 12 or above

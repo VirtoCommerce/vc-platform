@@ -1,9 +1,14 @@
+Dapper.dll
 dotnet-swagger.dll
 EntityFrameworkCore.Triggers.dll
 FluentValidation.dll
 Hangfire.AspNetCore.dll
+Hangfire.Console.dll
 Hangfire.Core.dll
+Hangfire.Core.resources.dll
 Hangfire.MemoryStorage.dll
+Hangfire.MySql.dll
+Hangfire.PostgreSql.dll
 Hangfire.SqlServer.dll
 Humanizer.dll
 MessagePack.Annotations.dll
@@ -35,6 +40,7 @@ Microsoft.Azure.SignalR.dll
 Microsoft.Azure.SignalR.Protocols.dll
 Microsoft.Bcl.AsyncInterfaces.dll
 Microsoft.Data.SqlClient.dll
+Microsoft.Data.SqlClient.SNI.dll
 Microsoft.DotNet.PlatformAbstractions.dll
 Microsoft.EntityFrameworkCore.Abstractions.dll
 Microsoft.EntityFrameworkCore.Design.dll
@@ -57,6 +63,7 @@ Microsoft.OpenApi.dll
 Microsoft.VisualStudio.Web.BrowserLink.dll
 Microsoft.Win32.SystemEvents.dll
 MySqlConnector.dll
+Nager.Country.dll
 Newtonsoft.Json.Bson.dll
 Newtonsoft.Json.dll
 Npgsql.dll
@@ -81,6 +88,15 @@ RedLockNet.Abstractions.dll
 RedLockNet.SERedis.dll
 Scrutor.dll
 Serialize.Linq.dll
+Serilog.dll
+Serilog.AspNetCore.dll
+Serilog.Extensions.Hosting.dll
+Serilog.Extensions.Logging.dll
+Serilog.Formatting.Compact.dll
+Serilog.Settings.Configuration.dll
+Serilog.Sinks.Console.dll
+Serilog.Sinks.Debug.dll
+sni.dll
 StackExchange.Redis.dll
 Swashbuckle.AspNetCore.Annotations.dll
 Swashbuckle.AspNetCore.Filters.dll
@@ -107,7 +123,6 @@ VirtoCommerce.Platform.Hangfire.dll
 VirtoCommerce.Platform.Modules.dll
 VirtoCommerce.Platform.Security.dll
 VirtoCommerce.Platform.Web.dll
-Hangfire.Core.resources.dll
 package.json
 package-lock.json
 web.config

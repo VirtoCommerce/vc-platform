@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -52,7 +51,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 // Main menu settings at initial boot
                 var nameMainMenuState = PlatformConstants.Settings.UserProfile.MainMenuState.Name;
-                if (userProfile.Settings.FirstOrDefault(x => x.Name == nameMainMenuState)?.Value == null)
+                var nameMainMenuStateSettig = userProfile.Settings.FirstOrDefault(x => x.Name == nameMainMenuState);
+
+                if (nameMainMenuStateSettig != null && nameMainMenuStateSettig.Value == null)
                 {
                     var settingMenuState = new DefaultMainMenuState();
                     _configuration.GetSection("DefaultMainMenuState").Bind(settingMenuState);
@@ -61,7 +62,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                     };
                     var mainMenuState = JsonSerializer.Serialize(settingMenuState, serializeOptions);
-                    userProfile.Settings.FirstOrDefault(x => x.Name == nameMainMenuState).Value = mainMenuState;
+                    nameMainMenuStateSettig.Value = mainMenuState;
                 }
 
                 return Ok(userProfile);
@@ -82,7 +83,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
             if (currentUser.Id != userProfile.Id)
             {
-                return Unauthorized();
+                return Forbid();
             }
             using (await AsyncLock.GetLockByKey(userProfile.ToString()).GetReleaserAsync())
             {

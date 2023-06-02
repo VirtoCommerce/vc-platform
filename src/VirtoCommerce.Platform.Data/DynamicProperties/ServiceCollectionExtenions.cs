@@ -1,5 +1,7 @@
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Data.Validators;
 
 namespace VirtoCommerce.Platform.Data.DynamicProperties
 {
@@ -13,6 +15,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             services.AddSingleton<IDynamicPropertyDictionaryItemsSearchService, DynamicPropertyDictionaryItemsSearchService>();
             services.AddSingleton<IDynamicPropertyDictionaryItemsService, DynamicPropertyDictionaryItemsService>();
             services.AddSingleton<IDynamicPropertyMetaDataResolver, DynamicPropertyMetaDataResolver>();
+            services.AddTransient<AbstractValidator<DynamicProperty>, DynamicPropertyTypeValidator>();
 
             return services;
         }

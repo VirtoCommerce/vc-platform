@@ -50,7 +50,7 @@ namespace VirtoCommerce.Platform.Core.Security
             }
             set
             {
-                LockoutEnd = value ?? new DateTimeOffset(value.Value);
+                LockoutEnd = value;
             }
         }
 
