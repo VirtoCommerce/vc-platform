@@ -92,7 +92,7 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            Console.WriteLine("Virto Commerce is loading");
+            Console.WriteLine(@"[{0:HH:mm:ss}] Virto Commerce is loading", DateTime.Now);
 
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
 
@@ -270,7 +270,7 @@ namespace VirtoCommerce.Platform.Web
                     break;
             }
 
-            Console.Write("Getting server certificate ");
+            Console.Write(@"[{0:HH:mm:ss}] Getting server certificate ", DateTime.Now);
             ServerCertificate = GetServerCertificate(certificateLoader);
             Console.WriteLine("OK");
 
@@ -454,13 +454,10 @@ namespace VirtoCommerce.Platform.Web
                     })
                     .ValidateDataAnnotations();
 
-            Console.Write("Loading modules ");
-
             services.AddModules(mvcBuilder);
+
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
             services.AddExternalModules();
-
-            Console.WriteLine("OK");
 
             //HangFire
             services.AddHangfire(Configuration);

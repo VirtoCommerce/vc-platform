@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
+using VirtoCommerce.Platform.Data.Helpers;
 using VirtoCommerce.Platform.Modules.External;
 
 namespace VirtoCommerce.Platform.Modules
@@ -34,20 +35,34 @@ namespace VirtoCommerce.Platform.Modules
             var manager = providerSnapshot.GetRequiredService<IModuleManager>();
             var moduleCatalog = providerSnapshot.GetRequiredService<ILocalModuleCatalog>();
 
+            Console.Write(@"[{0:HH:mm:ss}] Initializing modules ", DateTime.Now);
             manager.Run();
-            // Ensure all modules are loaded
-            foreach (var module in moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.State == ModuleState.NotStarted).ToArray())
-            {
-                manager.LoadModule(module.ModuleName);
+            Console.WriteLine("OK");
 
-                // VP-2190: No need to add parts for modules with laoding errors - it could cause an exception
-                if (module.Assembly != null && module.Errors.IsNullOrEmpty())
+            // Ensure all modules are loaded
+
+            Console.Write(@"[{0:HH:mm:ss}] Loading modules ", DateTime.Now);
+
+            using (var progress = new ProgressBar())
+            {
+                var modules = moduleCatalog.Modules.OfType<ManifestModuleInfo>().Where(x => x.State == ModuleState.NotStarted).ToArray();
+                for (var i = 0; i < modules.Length; i++)
                 {
-                    // Register API controller from modules
-                    mvcBuilder.AddApplicationPart(module.Assembly);
+                    var module = modules[i];
+
+                    manager.LoadModule(module.ModuleName);
+
+                    // VP-2190: No need to add parts for modules with laoding errors - it could cause an exception
+                    if (module.Assembly != null && module.Errors.IsNullOrEmpty())
+                    {
+                        // Register API controller from modules
+                        mvcBuilder.AddApplicationPart(module.Assembly);
+                    }
+                    progress.Report((double)i / modules.Length);
                 }
-                Console.Write("■");
             }
+
+            Console.WriteLine("OK");
 
             services.AddSingleton(moduleCatalog);
             return services;
