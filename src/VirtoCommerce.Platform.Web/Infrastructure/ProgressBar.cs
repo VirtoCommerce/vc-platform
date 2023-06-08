@@ -47,8 +47,8 @@ namespace VirtoCommerce.Platform.Data.Helpers
         private void UpdateText(string text)
         {
             // Get length of common portion
-            int commonPrefixLength = 0;
-            int commonLength = Math.Min(currentText.Length, text.Length);
+            var commonPrefixLength = 0;
+            var commonLength = Math.Min(currentText.Length, text.Length);
             while (commonPrefixLength < commonLength && text[commonPrefixLength] == currentText[commonPrefixLength])
             {
                 commonPrefixLength++;
@@ -62,7 +62,7 @@ namespace VirtoCommerce.Platform.Data.Helpers
             outputBuilder.Append(text.Substring(commonPrefixLength));
 
             // If the new text is shorter than the old one: delete overlapping characters
-            int overlapCount = currentText.Length - text.Length;
+            var overlapCount = currentText.Length - text.Length;
             if (overlapCount > 0)
             {
                 outputBuilder.Append(' ', overlapCount);
@@ -75,14 +75,13 @@ namespace VirtoCommerce.Platform.Data.Helpers
 
         public void Dispose()
         {
-            UpdateText(string.Empty);
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            // Cleanup
+            UpdateText(string.Empty);
         }
 
     }
