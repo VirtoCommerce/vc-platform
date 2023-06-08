@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Security
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "6.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -363,6 +363,9 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Security
 
                     b.Property<bool>("IsAdministrator")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastLoginDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("LastPasswordChangeRequestDate")
                         .HasColumnType("timestamp with time zone");

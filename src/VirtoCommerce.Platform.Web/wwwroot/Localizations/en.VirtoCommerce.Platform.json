@@ -388,7 +388,8 @@
           "status": "Status",
           "verified": "Verified",
           "resend-link": "Resend link",
-          "link-sent": "The link was sent"
+          "link-sent": "The link was sent",
+          "last-login-date": "Last login date"
         },
         "placeholders": {
           "account-type": "Select ...",

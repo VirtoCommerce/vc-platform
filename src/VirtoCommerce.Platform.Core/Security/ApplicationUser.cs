@@ -84,6 +84,11 @@ namespace VirtoCommerce.Platform.Core.Security
         /// </summary>
         public virtual DateTime? LastPasswordChangeRequestDate { get; set; }
 
+        /// <summary>
+        /// The last login date
+        /// </summary>
+        public virtual DateTime? LastLoginDate { get; set; }
+
         public virtual void Patch(ApplicationUser target)
         {
             target.UserName = UserName;
@@ -111,6 +116,7 @@ namespace VirtoCommerce.Platform.Core.Security
             target.PasswordExpired = PasswordExpired;
             target.LastPasswordChangedDate = LastPasswordChangedDate;
             target.LastPasswordChangeRequestDate = LastPasswordChangeRequestDate;
+            target.LastLoginDate = LastLoginDate;
         }
 
         public virtual ListDictionary<string, string> DetectUserChanges(ApplicationUser oldUser)
