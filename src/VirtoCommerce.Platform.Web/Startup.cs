@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -41,6 +40,7 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
+using VirtoCommerce.Platform.Core.Logger;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
@@ -92,9 +92,11 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            Console.WriteLine(@"[{0:HH:mm:ss}] Virto Commerce is loading", DateTime.Now);
+            ConsoleLog.BeginOperation("Virto Commerce is loading");
 
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
+
+            ConsoleLog.EndOperation();
 
             services.AddForwardedHeaders();
 
@@ -270,9 +272,9 @@ namespace VirtoCommerce.Platform.Web
                     break;
             }
 
-            Console.Write(@"[{0:HH:mm:ss}] Getting server certificate ", DateTime.Now);
+            ConsoleLog.BeginOperation("Getting server certificate");
             ServerCertificate = GetServerCertificate(certificateLoader);
-            Console.WriteLine("OK");
+            ConsoleLog.EndOperation();
 
             //Create backup of token handler before default claim maps are cleared
             var defaultTokenHandler = new JwtSecurityTokenHandler();
@@ -583,7 +585,11 @@ namespace VirtoCommerce.Platform.Web
                 app.UsePruneExpiredTokensJob();
 
                 // Complete modules startup and apply their migrations
+                ConsoleLog.BeginOperation("Post initializing modules");
+
                 app.UseModules();
+
+                ConsoleLog.EndOperation();
             });
 
             app.UseEndpoints(SetupEndpoints);
