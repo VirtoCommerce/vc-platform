@@ -101,6 +101,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             if (loginResult.Succeeded)
             {
                 var user = await UserManager.FindByNameAsync(request.UserName);
+                await SetLastLoginDate(user);
                 await _eventPublisher.Publish(new UserLoginEvent(user));
 
                 //Do not allow login to admin customers and rejected users
@@ -635,7 +636,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 user = await UserManager.FindByNameAsync(User.Identity.Name);
             }
-            
+
             var result = await ValidatePassword(user, password);
 
             return Ok(result);
@@ -1081,6 +1082,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var result = isValid ? IdentityResult.Success : IdentityResult.Failed(errors.ToArray());
             return result;
+        }
+
+        private async Task SetLastLoginDate(ApplicationUser user)
+        {
+            user.LastLoginDate = DateTime.UtcNow;
+            await _signInManager.UserManager.UpdateAsync(user);
         }
     }
 }
