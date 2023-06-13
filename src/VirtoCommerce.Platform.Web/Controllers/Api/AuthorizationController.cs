@@ -128,6 +128,7 @@ namespace Mvc.Server
                     await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, claimsPrincipal);
                 }
 
+                await SetLastLoginDate(user);
                 await _eventPublisher.Publish(new UserLoginEvent(user));
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
@@ -287,6 +288,12 @@ namespace Mvc.Server
                 properties,
                 OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             return ticket;
+        }
+
+        private async Task SetLastLoginDate(ApplicationUser user)
+        {
+            user.LastLoginDate = DateTime.UtcNow;
+            await _signInManager.UserManager.UpdateAsync(user);
         }
     }
 }
