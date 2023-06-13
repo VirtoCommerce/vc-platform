@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Logging;
+using VirtoCommerce.Platform.Core.Logger;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 
@@ -76,9 +77,17 @@ namespace VirtoCommerce.Platform.Modules
         /// </summary>
         public void Run()
         {
+            ConsoleLog.BeginOperation("Initializing module catalog");
+
             this.ModuleCatalog.Initialize();
 
+            ConsoleLog.EndOperation();
+
+            ConsoleLog.BeginOperation("Loading modules");
+
             this.LoadModulesWhenAvailable();
+
+            ConsoleLog.EndOperation();
         }
 
 
