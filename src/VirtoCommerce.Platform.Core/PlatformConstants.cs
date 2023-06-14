@@ -178,7 +178,7 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = "_none", // fake default value to fix empty dictionary saving issue
                 };
 
-                public static SettingDescriptor AutoAccountsLockoutJobEnabled = new SettingDescriptor
+                public static readonly SettingDescriptor AutoAccountsLockoutJobEnabled = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.AutoAccountsLockoutJobEnabled",
                     GroupName = "Platform|Security",
@@ -186,7 +186,7 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = false
                 };
 
-                public static SettingDescriptor LockoutMaximumDaysFromLastLogin = new SettingDescriptor
+                public static readonly SettingDescriptor LockoutMaximumDaysFromLastLogin = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.LockoutMaximumDaysFromLastLogin",
                     GroupName = "Platform|Security",
