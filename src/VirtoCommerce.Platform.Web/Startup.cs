@@ -28,6 +28,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -39,6 +40,7 @@ using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
+using VirtoCommerce.Platform.Core.Logger;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
@@ -90,7 +92,11 @@ namespace VirtoCommerce.Platform.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            ConsoleLog.BeginOperation("Virto Commerce is loading");
+
             var databaseProvider = Configuration.GetValue("DatabaseProvider", "SqlServer");
+
+            ConsoleLog.EndOperation();
 
             services.AddForwardedHeaders();
 
@@ -266,7 +272,9 @@ namespace VirtoCommerce.Platform.Web
                     break;
             }
 
+            ConsoleLog.BeginOperation("Getting server certificate");
             ServerCertificate = GetServerCertificate(certificateLoader);
+            ConsoleLog.EndOperation();
 
             //Create backup of token handler before default claim maps are cleared
             var defaultTokenHandler = new JwtSecurityTokenHandler();
@@ -447,6 +455,7 @@ namespace VirtoCommerce.Platform.Web
                         options.DiscoveryPath = Path.GetFullPath(options.DiscoveryPath ?? "modules");
                     })
                     .ValidateDataAnnotations();
+
             services.AddModules(mvcBuilder);
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();
@@ -487,7 +496,7 @@ namespace VirtoCommerce.Platform.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -577,7 +586,11 @@ namespace VirtoCommerce.Platform.Web
                 app.UseAutoAccountsLockoutJob();
 
                 // Complete modules startup and apply their migrations
+                ConsoleLog.BeginOperation("Post initializing modules");
+
                 app.UseModules();
+
+                ConsoleLog.EndOperation();
             });
 
             app.UseEndpoints(SetupEndpoints);
@@ -597,6 +610,8 @@ namespace VirtoCommerce.Platform.Web
             //The converter is responsible for the materialization of objects, taking into account the information on overriding
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
+
+            logger.LogInformation($"Welcome to Virto Commerce {typeof(Startup).Assembly.GetName().Version}!");
         }
 
         private static void SetupEndpoints(IEndpointRouteBuilder endpoints)
