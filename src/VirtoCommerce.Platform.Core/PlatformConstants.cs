@@ -178,6 +178,30 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = "_none", // fake default value to fix empty dictionary saving issue
                 };
 
+                public static SettingDescriptor AutoAccountsLockoutJobEnabled = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.AutoAccountsLockoutJobEnabled",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.Boolean,
+                    DefaultValue = false
+                };
+
+                public static SettingDescriptor LockoutMaximumDaysFromLastLogin = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.LockoutMaximumDaysFromLastLogin",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.PositiveInteger,
+                    DefaultValue = 365
+                };
+
+                public static readonly SettingDescriptor CronAutoAccountsLockoutJob = new SettingDescriptor
+                {
+                    Name = "VirtoCommerce.Platform.Security.CronAutoAccountsLockoutJob",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = "0 0 * * *"
+                };
+
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
@@ -187,6 +211,9 @@ namespace VirtoCommerce.Platform.Core
                         yield return CronPruneExpiredTokensJob;
                         yield return FileExtensionsBlackList;
                         yield return FileExtensionsWhiteList;
+                        yield return AutoAccountsLockoutJobEnabled;
+                        yield return LockoutMaximumDaysFromLastLogin;
+                        yield return CronAutoAccountsLockoutJob;
                     }
                 }
             }

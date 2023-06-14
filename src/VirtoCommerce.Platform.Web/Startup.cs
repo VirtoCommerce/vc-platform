@@ -574,6 +574,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UsePlatformPermissions();
                 app.UseSecurityHandlers();
                 app.UsePruneExpiredTokensJob();
+                app.UseAutoAccountsLockoutJob();
 
                 // Complete modules startup and apply their migrations
                 app.UseModules();
