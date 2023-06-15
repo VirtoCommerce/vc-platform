@@ -928,18 +928,6 @@
           "FileExtensionsWhiteList": {
             "description": "Files extensions allowed to upload by the platform (additionally to 'FileExtensionsWhiteList' in appsettings.json)",
             "title": "White list"
-          },
-          "AutoAccountsLockoutJobEnabled": {
-            "description": "Enable auto-lock for accounts whose last login date is older than configured",
-            "title": "Enable auto-lock job"
-          },
-          "LockoutMaximumDaysFromLastLogin": {
-            "description": "The maximum number of days since the last login to lockout an account",
-            "title": "Maximum number of days to lockout"
-          },
-          "CronAutoAccountsLockoutJob": {
-            "description": "Cron expression for accounts auto-lock job",
-            "title": "Cron for the auto-lock job"
           }
         },
         "UI": {
