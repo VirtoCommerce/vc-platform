@@ -391,6 +391,7 @@ namespace VirtoCommerce.Platform.Web
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
+            services.Configure<LockoutOptionsExtended>(Configuration.GetSection("IdentityOptions:Lockout"));
             services.Configure<PasswordLoginOptions>(Configuration.GetSection("PasswordLogin"));
             services.Configure<UserOptionsExtended>(Configuration.GetSection("IdentityOptions:User"));
             services.Configure<DataProtectionTokenProviderOptions>(Configuration.GetSection("IdentityOptions:DataProtection"));
@@ -583,7 +584,10 @@ namespace VirtoCommerce.Platform.Web
                 app.UsePlatformPermissions();
                 app.UseSecurityHandlers();
                 app.UsePruneExpiredTokensJob();
-                app.UseAutoAccountsLockoutJob();
+
+                var options = app.ApplicationServices.GetService<IOptions<LockoutOptionsExtended>>();
+
+                app.UseAutoAccountsLockoutJob(options.Value);
 
                 // Complete modules startup and apply their migrations
                 ConsoleLog.BeginOperation("Post initializing modules");
