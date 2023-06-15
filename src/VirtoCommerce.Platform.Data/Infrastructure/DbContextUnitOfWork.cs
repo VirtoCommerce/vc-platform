@@ -25,12 +25,14 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 
         public int Commit()
         {
-            return DbContext.SaveChanges();
+            DbContext.BulkSaveChanges();
+            return 0;
         }
 
-        public Task<int> CommitAsync()
+        public async Task<int> CommitAsync()
         {
-            return DbContext.SaveChangesAsync();
+            await DbContext.BulkSaveChangesAsync();
+            return 0;
         }
     }
 }
