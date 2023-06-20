@@ -66,6 +66,26 @@ namespace VirtoCommerce.Platform.Web.Security
             return appBuilder;
         }
 
+        /// <summary>
+        /// Schedule a periodic job to lock out accounts whose last login date is older than the configured one
+        /// </summary>
+        /// <param name="appBuilder"></param>
+        /// <param name="lockoutOptions"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder UseAutoAccountsLockoutJob(this IApplicationBuilder appBuilder, LockoutOptionsExtended lockoutOptions)
+        {
+            if (lockoutOptions.AutoAccountsLockoutJobEnabled)
+            {
+                RecurringJob.AddOrUpdate<AutoAccountLockoutJob>(j => j.Process(), lockoutOptions.CronAutoAccountsLockoutJob);
+            }
+            else
+            {
+                RecurringJob.RemoveIfExists("AutoAccountLockoutJob.Process");
+            }
+
+            return appBuilder;
+        }
+
         public static async Task<IApplicationBuilder> UseDefaultUsersAsync(this IApplicationBuilder appBuilder)
         {
             using (var scope = appBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
