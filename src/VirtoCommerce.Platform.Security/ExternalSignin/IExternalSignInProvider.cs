@@ -13,6 +13,6 @@ namespace VirtoCommerce.Platform.Security.ExternalSignIn
         string GetUserName(ExternalLoginInfo externalLoginInfo);
 
         string GetUserType();
-        string GetUserRole();
+        string[] GetUserRoles();
     }
 }

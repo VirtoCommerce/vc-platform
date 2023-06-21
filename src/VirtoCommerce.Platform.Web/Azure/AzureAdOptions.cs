@@ -61,9 +61,9 @@ namespace VirtoCommerce.Platform.Web.Azure
         public string DefaultUserType { get; set; }
 
         /// <summary>
-        /// Default user role for users created by Azure AD accounts.
+        /// Default user roles for users created by Azure AD accounts.
         /// </summary>
-        public string DefaultUserRole { get; set; }
+        public string[] DefaultUserRoles { get; set; }
 
         //
         // Summary:
