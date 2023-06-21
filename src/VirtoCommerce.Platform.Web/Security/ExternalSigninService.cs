@@ -175,6 +175,11 @@ namespace VirtoCommerce.Platform.Web.Security
                     var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
                     throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
                 }
+                var role = GetDefaultUserRole(externalLoginInfo);
+                if (!string.IsNullOrEmpty(role))
+                {
+                    await _userManager.AddToRoleAsync(platformUser, role);
+                }
             }
 
             return platformUser;
@@ -256,6 +261,18 @@ namespace VirtoCommerce.Platform.Web.Security
             }
 
             return userType;
+        }
+
+        protected virtual string GetDefaultUserRole(ExternalLoginInfo externalLoginInfo)
+        {
+            string userRole = null;
+            var providerConfig = GetExternalSigninProviderConfiguration(externalLoginInfo);
+            if (providerConfig?.Provider is not null)
+            {
+                userRole = providerConfig.Provider.GetUserRole();
+            }
+
+            return userRole;
         }
 
         protected virtual bool TryGetUserInfo(ExternalLoginInfo externalLoginInfo, out string userName, out string userEmail, out string redirectUrl)

@@ -60,6 +60,11 @@ namespace VirtoCommerce.Platform.Web.Azure
         /// </summary>
         public string DefaultUserType { get; set; }
 
+        /// <summary>
+        /// Default user role for users created by Azure AD accounts.
+        /// </summary>
+        public string DefaultUserRole { get; set; }
+
         //
         // Summary:
         //     Gets or sets the discovery endpoint for obtaining metadata
