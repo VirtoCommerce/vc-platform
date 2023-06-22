@@ -68,6 +68,16 @@ namespace VirtoCommerce.Platform.Security.Services
                 query = query.Where(x => x.UserRoles.Any(r => rolesIds.Contains(r.RoleId)));
             }
 
+            if (criteria.LasLoginDate != null && criteria.LasLoginDate != default(DateTime))
+            {
+                query = query.Where(x => x.LastLoginDate != null && x.LastLoginDate <= criteria.LasLoginDate);
+            }
+
+            if (criteria.OnlyUnlocked)
+            {
+                query = query.Where(x => x.LockoutEnabled && (x.LockoutEnd == null || x.LockoutEnd <= DateTime.UtcNow));
+            }
+
             result.TotalCount = await query.CountAsync();
 
             var sortInfos = criteria.SortInfos;
