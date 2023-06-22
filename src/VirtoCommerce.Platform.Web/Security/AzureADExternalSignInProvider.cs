@@ -49,5 +49,10 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             return _azureAdOptions.DefaultUserType ?? "Manager";
         }
+
+        public string[] GetUserRoles()
+        {
+            return _azureAdOptions.DefaultUserRoles;
+        }
     }
 }
