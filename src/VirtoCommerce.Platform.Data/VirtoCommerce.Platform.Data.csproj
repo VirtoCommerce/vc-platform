@@ -33,7 +33,6 @@
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
         <PackageReference Include="Nager.Country" Version="3.1.1" />
         <PackageReference Include="Serialize.Linq" Version="1.8.1" />
-        <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="6.22.3" />
     </ItemGroup>
 
     <ItemGroup>
