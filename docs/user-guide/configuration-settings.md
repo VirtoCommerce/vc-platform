@@ -43,6 +43,9 @@ The configuration keys are hierarchical. This structure is most convenient to ma
 |  | Password.PasswordChangeByAdminEnabled  | `true`  | Enable or disable for administrators to set passwords for users in the system.
 |  | User.MaxPasswordAge | "MaxPasswordAge": "0" | TimeSpan defining max. user password age until the password expires. The user is forced to change the expired password on login to Platform Manager UI.<br>Value of "0" or not defined - password expiration is disabled.
 |  | User.RemindPasswordExpiryInDays | "RemindPasswordExpiryInDays": 7  | Number of days to start showing password expiry warning in Platform Manager UI. Used, if password expiration is enabled. 
+|  | Lockout.AutoAccountsLockoutJobEnabled | false  | Enable auto-lock for accounts whose last login date is older than configured.
+|  | Lockout.LockoutMaximumDaysFromLastLogin | 365  | The maximum number of days since the last login to lockout an account.
+|  | Lockout.AutoAccountsLockoutJobEnabled | "0 0 * * *"  | Cron expression for accounts auto-lock job.
 | ExternalModules | | | Configure external source to install modules.
 |  | IncludePrerelease | `false` | Show module versions marked as *Prerelease* if value is `true`.
 |  | ModulesManifestUrl | E.g., `"https://raw.githubusercontent.com/VirtoCommerce/vc-modules/master/modules_v3.json"` | Url to *.json* file containing modules' manifests.
