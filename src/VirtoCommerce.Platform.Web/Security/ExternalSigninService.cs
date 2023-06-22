@@ -175,12 +175,17 @@ namespace VirtoCommerce.Platform.Web.Security
                     var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
                     throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
                 }
+                var roles = GetDefaultUserRoles(externalLoginInfo);
+                if (roles is { Length: > 0 })
+                {
+                    await _userManager.AddToRolesAsync(platformUser, roles);
+                }
             }
 
             return platformUser;
         }
 
-        [Obsolete("Not being called. Register external provider configuration and implement ExternalSigninProveder.GetUserName")]
+        [Obsolete("Not being called. Register external provider configuration and implement ExternalSigninProvider.GetUserName")]
         protected virtual string GetUserName(ExternalLoginInfo externalLoginInfo)
         {
             var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn);
@@ -256,6 +261,18 @@ namespace VirtoCommerce.Platform.Web.Security
             }
 
             return userType;
+        }
+
+        protected virtual string[] GetDefaultUserRoles(ExternalLoginInfo externalLoginInfo)
+        {
+            var userRoles = Array.Empty<string>();
+            var providerConfig = GetExternalSigninProviderConfiguration(externalLoginInfo);
+            if (providerConfig?.Provider is not null)
+            {
+                userRoles = providerConfig.Provider.GetUserRoles();
+            }
+
+            return userRoles;
         }
 
         protected virtual bool TryGetUserInfo(ExternalLoginInfo externalLoginInfo, out string userName, out string userEmail, out string redirectUrl)
