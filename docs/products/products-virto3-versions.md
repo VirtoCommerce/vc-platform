@@ -1,7 +1,7 @@
 
 Click the hyperlink with the version name to see what versions of modules are included.
 
-| Product                                | Version     | GA       | End of support | End of life | 
+| Product                                | Version     | GA (Mainstream Support Phase)       | End of support (Extended Support Phase) | End of life (Sustaining Support Phase) | 
 |---------                               |---------    |----      | -------        | ----        | 
 |Virto Commerce platform core pack       |[v3-2023-S5](v3-2023-S5.md)   |2023-03-01|2023-10-01      |2024-01-01   | 
 |Virto Commerce platform integration pack|[v3-2023-S5](v3-2023-S5.md)   |2023-03-01|2023-10-01      |2024-01-01   |
