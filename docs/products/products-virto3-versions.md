@@ -1,5 +1,5 @@
 
-The following modules are included into Virto Commerce enterprise package
+The following modules are included into Virto Commerce package:
 
 * vc-platform
 * vc-module-assets
@@ -11,6 +11,7 @@ The following modules are included into Virto Commerce enterprise package
 * vc-module-catalog-csv-import
 * vc-module-catalog-personalization
 * vc-module-catalog-publishing
+* vc-module-contract
 * vc-module-core
 * vc-module-customer
 * vc-module-dynamic-associations 
@@ -57,3 +58,5 @@ Click the hyperlink with the version name to see what versions of modules are in
 |Virto Commerce platform integration pack|[v3-2022-Q3](v3-2022-Q3.md)   |2022-09-01|2023-04-01      |2023-07-01   |
 |Virto Commerce platform core pack       |[v3-2022-Q4](v3-2022-Q4.md)   |2023-01-01|2023-07-01      |2023-10-01   | 
 |Virto Commerce platform integration pack|[v3-2022-Q4](v3-2022-Q4.md)   |2023-01-01|2023-07-01      |2023-10-01   |
+|Virto Commerce platform core pack       |[v3-2023-S5](v3-2023-S5.md)   |2023-03-01|2023-10-01      |2024-01-01   | 
+|Virto Commerce platform integration pack|[v3-2023-S5](v3-2023-S5.md)   |2023-03-01|2023-10-01      |2024-01-01   |
