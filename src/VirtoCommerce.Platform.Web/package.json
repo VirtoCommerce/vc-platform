@@ -10,6 +10,7 @@
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.5.1",
+    "glob": "~7.1.7",
     "mini-css-extract-plugin": "^2.5.1",
     "node-bourbon": "~4.2.8",
     "path": "~0.12.7",
@@ -51,8 +52,7 @@
     "bourbon": "~7.3.0",
     "codemirror": "~5.45.0",
     "font-awesome": "~4.7.0",
-    "glob": "~7.1.7",
-    "jquery": "^2.1.4",
+    "jquery": "^3.7.0",
     "marked": "^4.2.12",
     "moment-timezone": "0.5.13",
     "ng-focus-on": "~0.2.2",
