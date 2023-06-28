@@ -60,3 +60,4 @@ Click the hyperlink with the version name to see what versions of modules are in
 |Virto Commerce platform integration pack|[v3-2022-Q4](v3-2022-Q4.md)   |2023-01-01|2023-07-01      |2023-10-01   |
 |Virto Commerce platform core pack       |[v3-2023-S5](v3-2023-S5.md)   |2023-03-01|2023-10-01      |2024-01-01   | 
 |Virto Commerce platform integration pack|[v3-2023-S5](v3-2023-S5.md)   |2023-03-01|2023-10-01      |2024-01-01   |
+|Virto Commerce platform enterprise pack|[v3-2023-S5](v3-2023-S5.md)   |2023-03-01|2023-10-01      |2024-01-01   |
