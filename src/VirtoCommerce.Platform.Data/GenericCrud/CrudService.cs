@@ -90,7 +90,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected virtual IList<TModel> ProcessModels(IList<TEntity> entities, string responseGroup)
         {
             return entities
-                .Select(x => ProcessModel(responseGroup, x, x.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance())))
+                ?.Select(x => ProcessModel(responseGroup, x, ToModel(x)))
                 .ToList();
         }
 
@@ -118,7 +118,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected abstract Task<IList<TEntity>> LoadEntities(IRepository repository, IList<string> ids, string responseGroup);
 
         /// <summary>
-        /// Just calls LoadEntities with "Full" response group
+        /// Just calls LoadEntities with empty response group
         /// </summary>
         /// <param name="repository"></param>
         /// <param name="ids"></param>
@@ -179,13 +179,13 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             using (var repository = _repositoryFactory())
             {
-                var dataExistEntities = await LoadExistingEntities(repository, models);
+                var existingEntities = await LoadExistingEntities(repository, models);
 
                 foreach (var model in models)
                 {
 
-                    var originalEntity = FindExistingEntity(dataExistEntities, model);
-                    var modifiedEntity = AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, pkMap);
+                    var originalEntity = FindExistingEntity(existingEntities, model);
+                    var modifiedEntity = FromModel(model, pkMap);
 
                     if (originalEntity != null)
                     {
@@ -194,7 +194,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         // https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes#detectchanges-honors-store-generated-key-values
                         repository.TrackModifiedAsAddedForNewChildEntities(originalEntity);
 
-                        changedEntries.Add(new GenericChangedEntry<TModel>(model, originalEntity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance()), EntryState.Modified));
+                        changedEntries.Add(new GenericChangedEntry<TModel>(model, ToModel(originalEntity), EntryState.Modified));
                         modifiedEntity.Patch(originalEntity);
                         if (originalEntity is IAuditable auditableOriginalEntity)
                         {
@@ -221,7 +221,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             foreach (var (changedEntry, i) in changedEntries.Select((x, i) => (x, i)))
             {
-                changedEntry.NewEntry = changedEntities[i].ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
+                changedEntry.NewEntry = ToModel(changedEntities[i]);
             }
 
             await AfterSaveChangesAsync(models, changedEntries);
@@ -236,7 +236,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         protected virtual TEntity FindExistingEntity(IList<TEntity> existingEntities, TModel model)
         {
-            return existingEntities.FirstOrDefault(x => x.Id == model.Id);
+            return existingEntities?.FirstOrDefault(x => x.Id == model.Id);
         }
 
         protected virtual async Task CommitAsync(IRepository repository)
@@ -270,7 +270,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     var keyMap = new PrimaryKeyResolvingMap();
                     foreach (var model in models)
                     {
-                        var entity = AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, keyMap);
+                        var entity = FromModel(model, keyMap);
                         repository.Remove(entity);
                     }
                     await repository.UnitOfWork.CommitAsync();
@@ -319,6 +319,16 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         protected virtual void ClearSearchCache(IList<TModel> models)
         {
             GenericSearchCachingRegion<TModel>.ExpireRegion();
+        }
+
+        protected virtual TModel ToModel(TEntity entity)
+        {
+            return entity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
+        }
+
+        protected virtual TEntity FromModel(TModel model, PrimaryKeyResolvingMap keyMap)
+        {
+            return AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, keyMap);
         }
 
         protected virtual GenericChangedEntryEvent<TModel> EventFactory<TEvent>(IList<GenericChangedEntry<TModel>> changedEntries)

@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Core.Caching
                             .Except(result.Keys)
                             .ToList();
 
-                        var items = await loadItems(missingIds);
+                        var items = await loadItems(missingIds) ?? Array.Empty<TItem>();
 
                         var itemsByIds = items
                             .Where(x => x != null)
