@@ -15,8 +15,8 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             var databaseProvider = configuration.GetValue("DatabaseProvider", "SqlServer");
             var connectionString = configuration.GetConnectionString("VirtoCommerce.Hangfire") ?? configuration.GetConnectionString("VirtoCommerce");
 
-            // Call UseStorage with fake StorageOptions to avoid Hangfire tries to apply its migrations because these never do in case of database absence.
-            // Real options provided in ApplicationBuilderExtensions.UseHangfire where migrations forced to apply.
+            // Prevent Hangfire to apply migrations (prepare schema) here because database may not exist yet.
+            // Migrations will forced to apply at ApplicationBuilderExtensions.UseHangfire
             switch (databaseProvider)
             {
                 case "PostgreSql":
