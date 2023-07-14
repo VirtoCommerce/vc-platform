@@ -22,14 +22,14 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             DbContext.ChangeTracker.CascadeDeleteTiming = CascadeTiming.OnSaveChanges;
             DbContext.ChangeTracker.DeleteOrphansTiming = CascadeTiming.OnSaveChanges;
 
-            UnitOfWork = unitOfWork ?? new DbContextUnitOfWork(dbContext);
+            UnitOfWork = unitOfWork ?? AbstractTypeFactory<DbContextUnitOfWork>.TryCreateInstance(new DbContextUnitOfWork(dbContext), (DbContext)dbContext);
 
             var connectionDb = dbContext.Database.GetDbConnection();
             var connectionTimeout = connectionDb.ConnectionTimeout;
             dbContext.Database.SetCommandTimeout(connectionTimeout);
         }
 
-      
+
         public TContext DbContext { get; private set; }
 
         #region IRepository Members

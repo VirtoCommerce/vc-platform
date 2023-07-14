@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public static readonly Regex SemanticVersionStrictRegex = new Regex(
                 @"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})" +
                 @"(?>\-(?<Prerelease>[0-9A-Za-z\-\.]+))?$"
-                , RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
+                , RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Compiled);
 
         public SemanticVersion(Version version)
         {
@@ -224,7 +224,8 @@ namespace VirtoCommerce.Platform.Core.Common
                 if (aIsNum && bIsNum)
                 {
                     r = aNum.CompareTo(bNum);
-                    if (r != 0) return r;
+                    if (r != 0)
+                        return r;
                 }
                 else
                 {

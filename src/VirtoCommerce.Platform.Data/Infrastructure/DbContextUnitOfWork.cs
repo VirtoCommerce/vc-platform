@@ -12,7 +12,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         /// <value>
         /// The database context.
         /// </value>
-        public DbContext DbContext { get; private set; }
+        public DbContext DbContext { get; protected set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DbContextUnitOfWork"/> class.
@@ -23,12 +23,20 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             DbContext = context;
         }
 
-        public int Commit()
+        /// <summary>
+        /// Commits all changes made in this context
+        /// </summary>
+        /// <returns></returns>
+        public virtual int Commit()
         {
             return DbContext.SaveChanges();
         }
 
-        public Task<int> CommitAsync()
+        /// <summary>
+        /// Commits all changes made in this context
+        /// </summary>
+        /// <returns></returns>
+        public virtual Task<int> CommitAsync()
         {
             return DbContext.SaveChangesAsync();
         }
