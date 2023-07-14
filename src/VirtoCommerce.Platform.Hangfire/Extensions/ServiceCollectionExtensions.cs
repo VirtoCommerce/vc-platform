@@ -15,18 +15,19 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             var databaseProvider = configuration.GetValue("DatabaseProvider", "SqlServer");
             var connectionString = configuration.GetConnectionString("VirtoCommerce.Hangfire") ?? configuration.GetConnectionString("VirtoCommerce");
 
+            // Prevent Hangfire to apply migrations (prepare schema) here because database may not exist yet.
+            // Migrations will be forced to apply at ApplicationBuilderExtensions.UseHangfire
             switch (databaseProvider)
             {
                 case "PostgreSql":
-                    globalConfiguration.UsePostgreSqlStorage(connectionString);
+                    globalConfiguration.UsePostgreSqlStorage(connectionString,
+                        new PostgreSqlStorageOptions { PrepareSchemaIfNecessary = false });
                     break;
                 case "MySql":
                     globalConfiguration.UseStorage(new MySqlStorage(connectionString,
                         new MySqlStorageOptions { PrepareSchemaIfNecessary = false }));
                     break;
                 default:
-                    // Call UseSqlServerStorage with fake SqlServerStorageOptions to avoid Hangfire tries to apply its migrations because these never do in case of database absence.
-                    // Real options provided in ApplicationBuilderExtensions.UseHangfire where migrations forced to apply.
                     globalConfiguration.UseSqlServerStorage(connectionString,
                         new SqlServerStorageOptions { PrepareSchemaIfNecessary = false });
                     break;
