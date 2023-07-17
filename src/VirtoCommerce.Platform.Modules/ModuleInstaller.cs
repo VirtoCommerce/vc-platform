@@ -65,7 +65,7 @@ namespace VirtoCommerce.Platform.Modules
 
                 //Check that installable version compatible with already installed
                 var alreadyInstalledModule = allInstalledModules.FirstOrDefault(x => x.Id.EqualsInvariant(module.Id));
-                if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(module.Version))
+                if (alreadyInstalledModule != null && alreadyInstalledModule.Version > module.Version)
                 {
                     // module downgrade NOT supported
                     Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}: module downgrading NOT SUPPORTED", module));
