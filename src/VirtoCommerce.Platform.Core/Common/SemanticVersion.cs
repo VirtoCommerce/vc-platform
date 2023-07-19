@@ -252,7 +252,7 @@ namespace VirtoCommerce.Platform.Core.Common
             version.Append(Minor);
             version.Append('.');
             version.Append(Patch);
-            if (Prerelease.Length > 0)
+            if (!string.IsNullOrEmpty(Prerelease))
             {
                 version.Append('-');
                 version.Append(Prerelease);
