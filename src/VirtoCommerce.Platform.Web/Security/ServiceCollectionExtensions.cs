@@ -2,13 +2,10 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
-using VirtoCommerce.Platform.Core.Exceptions;
-using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Security;
@@ -61,7 +58,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton(provider => new LogChangesUserChangedEventHandler(provider.CreateScope().ServiceProvider.GetService<IChangeLogService>()));
             services.AddSingleton(provider => new UserApiKeyActualizeEventHandler(provider.CreateScope().ServiceProvider.GetService<IUserApiKeyService>()));
 
-            services.AddTransient<ICrudService<ServerCertificate>, ServerCertificateService>();
+            services.AddTransient<IServerCertificateService, ServerCertificateService>();
 
             return services;
         }
@@ -77,7 +74,7 @@ namespace VirtoCommerce.Platform.Web.Security
         public static void UpdateServerCertificateIfNeed(this IApplicationBuilder app, ServerCertificate currentCert)
         {
             var certificateStorage = app.ApplicationServices.GetService<ICertificateLoader>();
-            var certificateService = app.ApplicationServices.GetService<ICrudService<ServerCertificate>>();
+            var certificateService = app.ApplicationServices.GetService<IServerCertificateService>();
             var possiblyOldCert = certificateStorage.Load(); // Previously stored cert (possibly old, default or just created by another platform instance)
             if (!possiblyOldCert.SerialNumber.EqualsInvariant(currentCert.SerialNumber))
             {   // Therefore, currentCert is newly generated and needs to be saved.
@@ -90,10 +87,10 @@ namespace VirtoCommerce.Platform.Web.Security
                 if (!string.IsNullOrEmpty(possiblyOldCert.Id))
                 {
                     // Delete old certificate in case of one exists (the Id of newly generated certs is null)
-                    certificateService.DeleteAsync(new string[] { possiblyOldCert.Id }).GetAwaiter().GetResult();
+                    certificateService.DeleteAsync(new[] { possiblyOldCert.Id }).GetAwaiter().GetResult();
                 }
 
-                certificateService.SaveChangesAsync(new ServerCertificate[] { currentCert }).GetAwaiter().GetResult();
+                certificateService.SaveChangesAsync(new[] { currentCert }).GetAwaiter().GetResult();
             }
         }
 

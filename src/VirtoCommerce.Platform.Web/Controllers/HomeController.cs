@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             if (license != null)
             {
-                model.SendDiagnosticData = license.ExpirationDate < DateTime.UtcNow || await _settingsManager.GetValueAsync(Setup.SendDiagnosticData.Name, (bool)Setup.SendDiagnosticData.DefaultValue);
+                model.SendDiagnosticData = license.ExpirationDate < DateTime.UtcNow || await _settingsManager.GetValueAsync<bool>(Setup.SendDiagnosticData);
                 model.License = new HtmlString(JsonConvert.SerializeObject(license, new JsonSerializerSettings
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver(),
@@ -60,21 +60,18 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 }).Replace("\"", "'"));
             }
 
-            if (!string.IsNullOrEmpty(model.DemoResetTime.Value))
+            if (!string.IsNullOrEmpty(model.DemoResetTime.Value) &&
+                TimeSpan.TryParse(model.DemoResetTime.Value, out var timeSpan))
             {
-                TimeSpan timeSpan;
-                if (TimeSpan.TryParse(model.DemoResetTime.Value, out timeSpan))
+                var now = DateTime.UtcNow;
+                var resetTime = new DateTime(now.Year, now.Month, now.Day, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, DateTimeKind.Utc);
+
+                if (resetTime < now)
                 {
-                    var now = DateTime.UtcNow;
-                    var resetTime = new DateTime(now.Year, now.Month, now.Day, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, DateTimeKind.Utc);
-
-                    if (resetTime < now)
-                    {
-                        resetTime = resetTime.AddDays(1);
-                    }
-
-                    model.DemoResetTime = new HtmlString(JsonConvert.SerializeObject(resetTime).Replace("\"", "'") ?? "''");
+                    resetTime = resetTime.AddDays(1);
                 }
+
+                model.DemoResetTime = new HtmlString(JsonConvert.SerializeObject(resetTime).Replace("\"", "'") ?? "''");
             }
 
             return View(model);
@@ -84,7 +81,5 @@ namespace VirtoCommerce.Platform.Web.Controllers
         {
             return View(new ErrorModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-
     }
 }
