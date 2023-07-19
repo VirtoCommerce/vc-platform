@@ -16,17 +16,17 @@ using VirtoCommerce.Platform.Security.Repositories;
 
 namespace VirtoCommerce.Platform.Security.Services
 {
-    public class ServerCertificateService : CrudService<ServerCertificate, ServerCertificateEntity, ServerCertificateChangeEvent, ServerCertificateChangedEvent>
+    public class ServerCertificateService : CrudService<ServerCertificate, ServerCertificateEntity, ServerCertificateChangeEvent, ServerCertificateChangedEvent>, IServerCertificateService
     {
 
-        public ServerCertificateService(Func<ISecurityRepository> repositoryFactory, IPlatformMemoryCache platformMemoryCache, IEventPublisher eventPublisher) : base(repositoryFactory, platformMemoryCache, eventPublisher)
+        public ServerCertificateService(Func<ISecurityRepository> repositoryFactory, IPlatformMemoryCache platformMemoryCache, IEventPublisher eventPublisher)
+            : base(repositoryFactory, platformMemoryCache, eventPublisher)
         {
         }
 
-        protected async override Task<IEnumerable<ServerCertificateEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids, string responseGroup)
+        protected override async Task<IList<ServerCertificateEntity>> LoadEntities(IRepository repository, IList<string> ids, string responseGroup)
         {
             return await ((ISecurityRepository)repository).ServerCertificates.Where(x => ids.Contains(x.Id)).ToListAsync();
-
         }
 
         public static ServerCertificate CreateSelfSigned()

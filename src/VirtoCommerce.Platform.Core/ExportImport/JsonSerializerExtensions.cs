@@ -4,14 +4,13 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using VirtoCommerce.Platform.Core.Common;
 
-namespace VirtoCommerce.Platform.Data.ExportImport
+namespace VirtoCommerce.Platform.Core.ExportImport
 {
     public static class JsonSerializerExtensions
     {
         public const int DefaultPageSize = 50;
 
-        [Obsolete("Use VirtoCommerce.Platform.Core.ExportImport.JsonSerializerExtensions.SerializeArrayWithPagingAsync()")]
-        public static async Task SerializeJsonArrayWithPagingAsync<T>(this JsonTextWriter writer, JsonSerializer serializer, int pageSize, Func<int, int, Task<GenericSearchResult<T>>> pagedDataLoader, Action<int, int> progressCallback, ICancellationToken cancellationToken)
+        public static async Task SerializeArrayWithPagingAsync<T>(this JsonTextWriter writer, JsonSerializer serializer, int pageSize, Func<int, int, Task<GenericSearchResult<T>>> pagedDataLoader, Action<int, int> progressCallback, ICancellationToken cancellationToken)
         {
             //Evaluate total items counts
             var result = await pagedDataLoader(0, 1);
@@ -40,8 +39,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             await writer.WriteEndArrayAsync();
         }
 
-        [Obsolete("Use VirtoCommerce.Platform.Core.ExportImport.JsonSerializerExtensions.DeserializeArrayWithPagingAsync()")]
-        public static async Task DeserializeJsonArrayWithPagingAsync<T>(this JsonTextReader reader, JsonSerializer serializer, int pageSize, Func<IEnumerable<T>, Task> action, Action<int> progressCallback, ICancellationToken cancellationToken)
+        public static async Task DeserializeArrayWithPagingAsync<T>(this JsonTextReader reader, JsonSerializer serializer, int pageSize, Func<IList<T>, Task> action, Action<int> progressCallback, ICancellationToken cancellationToken)
         {
             await reader.ReadAsync();
             if (reader.TokenType == JsonToken.StartArray)
