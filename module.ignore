@@ -22,6 +22,8 @@ Microsoft.ApplicationInsights.AspNetCore.dll
 Microsoft.ApplicationInsights.dll
 Microsoft.AspNetCore.Authentication.JwtBearer.dll
 Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
+Microsoft.AspNetCore.Cryptography.Internal.dll
+Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
 Microsoft.AspNetCore.DataProtection.StackExchangeRedis.dll
 Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.dll
 Microsoft.AspNetCore.Http.Connections.Client.dll
@@ -50,6 +52,8 @@ Microsoft.EntityFrameworkCore.SqlServer.dll
 Microsoft.Extensions.DependencyModel.dll
 Microsoft.Extensions.DiagnosticAdapter.dll
 Microsoft.Extensions.Http.Polly.dll
+Microsoft.Extensions.Identity.Core.dll
+Microsoft.Extensions.Identity.Stores.dll
 Microsoft.Extensions.Logging.ApplicationInsights.dll
 Microsoft.Extensions.Logging.AzureAppServices.dll
 Microsoft.Extensions.PlatformAbstractions.dll
@@ -80,6 +84,8 @@ OpenIddict.Validation.DataProtection.dll
 OpenIddict.Validation.dll
 OpenIddict.Validation.ServerIntegration.dll
 OpenIddict.Validation.SystemNetHttp.dll
+package.json
+package-lock.json
 Pipelines.Sockets.Unofficial.dll
 Polly.dll
 Polly.Extensions.Http.dll
@@ -88,8 +94,8 @@ RedLockNet.Abstractions.dll
 RedLockNet.SERedis.dll
 Scrutor.dll
 Serialize.Linq.dll
-Serilog.dll
 Serilog.AspNetCore.dll
+Serilog.dll
 Serilog.Extensions.Hosting.dll
 Serilog.Extensions.Logging.dll
 Serilog.Formatting.Compact.dll
@@ -123,6 +129,4 @@ VirtoCommerce.Platform.Hangfire.dll
 VirtoCommerce.Platform.Modules.dll
 VirtoCommerce.Platform.Security.dll
 VirtoCommerce.Platform.Web.dll
-package.json
-package-lock.json
 web.config
