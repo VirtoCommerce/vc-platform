@@ -10,6 +10,8 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         private readonly Version _version;
 
+        public static readonly char[] Delimiters = { '.', '-' };
+
         public static readonly Regex SemanticVersionStrictRegex = new Regex(
                 @"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})" +
                 @"(?>\-(?<Prerelease>[0-9A-Za-z\-\.]+))?$"
@@ -210,8 +212,8 @@ namespace VirtoCommerce.Platform.Core.Common
             if (bEmpty)
                 return nonemptyIsLower ? -1 : 1;
 
-            var aComps = a.Split('.');
-            var bComps = b.Split('.');
+            var aComps = a.Split(Delimiters);
+            var bComps = b.Split(Delimiters);
 
             var minLen = Math.Min(aComps.Length, bComps.Length);
             for (var i = 0; i < minLen; i++)
