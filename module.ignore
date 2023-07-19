@@ -49,6 +49,8 @@ Microsoft.EntityFrameworkCore.Design.dll
 Microsoft.EntityFrameworkCore.dll
 Microsoft.EntityFrameworkCore.Relational.dll
 Microsoft.EntityFrameworkCore.SqlServer.dll
+Microsoft.Extensions.Caching.Memory.dll
+Microsoft.Extensions.DependencyInjection.dll
 Microsoft.Extensions.DependencyModel.dll
 Microsoft.Extensions.DiagnosticAdapter.dll
 Microsoft.Extensions.Http.Polly.dll
