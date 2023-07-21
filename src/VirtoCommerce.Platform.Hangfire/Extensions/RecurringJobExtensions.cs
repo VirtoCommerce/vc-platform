@@ -131,11 +131,11 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
 
         private static async Task RunOrRemoveJobAsync(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, SettingCronJob settingCronJob)
         {
-            var processJobEnableSettingValue = await settingsManager.GetValueAsync(settingCronJob.EnableSetting.Name, settingCronJob.EnableSetting.DefaultValue);
+            var processJobEnableSettingValue = await settingsManager.GetValueAsync<object>(settingCronJob.EnableSetting);
             var processJobEnable = settingCronJob.EnabledEvaluator(processJobEnableSettingValue);
             if (processJobEnable)
             {
-                var cronExpression = await settingsManager.GetValueAsync(settingCronJob.CronSetting.Name, settingCronJob.CronSetting.DefaultValue.ToString());
+                var cronExpression = await settingsManager.GetValueAsync<string>(settingCronJob.CronSetting);
                 recurringJobManager.AddOrUpdate(
                     settingCronJob.RecurringJobId,
                     settingCronJob.Job,

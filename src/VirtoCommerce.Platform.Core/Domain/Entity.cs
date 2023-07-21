@@ -2,7 +2,7 @@ using System;
 
 namespace VirtoCommerce.Platform.Core.Common
 {
-    public abstract class Entity : IEntity
+    public class Entity : IEntity
     {
         public string Id { get; set; }
 
@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Core.Common
 
         #endregion
 
-        private Type GetRealObjectType(object obj)
+        private static Type GetRealObjectType(object obj)
         {
             var retVal = obj.GetType();
             //because can be compared two object with same id and 'types' but one of it is EF dynamic proxy type)

@@ -15,6 +15,12 @@ namespace VirtoCommerce.Platform.Core.GenericCrud
         where TResult : GenericSearchResult<TModel>
         where TModel : Entity, ICloneable
     {
-        Task<TResult> SearchAsync(TCriteria criteria);
+        /// <summary>
+        /// Returns model instances that meet specified criteria.
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <param name="clone">If false, returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.</param>
+        /// <returns></returns>
+        Task<TResult> SearchAsync(TCriteria criteria, bool clone = true);
     }
 }

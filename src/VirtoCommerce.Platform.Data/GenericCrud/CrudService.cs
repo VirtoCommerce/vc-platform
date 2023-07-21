@@ -28,9 +28,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         where TChangeEvent : GenericChangedEntryEvent<TModel>
         where TChangedEvent : GenericChangedEntryEvent<TModel>
     {
-        protected readonly IEventPublisher _eventPublisher;
-        protected readonly IPlatformMemoryCache _platformMemoryCache;
-        protected readonly Func<IRepository> _repositoryFactory;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IPlatformMemoryCache _platformMemoryCache;
+        private readonly Func<IRepository> _repositoryFactory;
 
         /// <summary>
         /// Construct new CrudService
@@ -46,30 +46,13 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         }
 
         /// <summary>
-        /// Return a model instance for specified id and response group
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="responseGroup"></param>
-        /// <returns></returns>
-        public virtual async Task<TModel> GetByIdAsync(string id, string responseGroup = null)
-        {
-            if (id == null)
-            {
-                return null;
-            }
-
-            var entities = await GetAsync(new List<string> { id }, responseGroup);
-            return entities.FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Return an enumerable set of model instances for specified ids and response group.
-        /// Custom CRUD service can override this to implement fully specific read.
+        /// Returns a list of model instances for specified IDs.
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="responseGroup"></param>
+        /// <param name="clone">If false, returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.</param>
         /// <returns></returns>
-        public virtual async Task<IReadOnlyCollection<TModel>> GetAsync(List<string> ids, string responseGroup = null)
+        public virtual async Task<IList<TModel>> GetAsync(IList<string> ids, string responseGroup = null, bool clone = true)
         {
             var cacheKeyPrefix = CacheKey.With(GetType(), nameof(GetAsync), responseGroup);
 
@@ -77,20 +60,17 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 missingIds => GetByIdsNoCache(missingIds, responseGroup),
                 ConfigureCache);
 
+            if (!clone)
+            {
+                return models;
+            }
+
             return models
                 .Select(x => x.CloneTyped())
-                .OrderBy(x => ids.IndexOf(x.Id))
                 .ToList();
         }
 
-        [Obsolete("Use method GetAsync instead")]
-        public virtual async Task<IEnumerable<TModel>> GetByIdsAsync(IEnumerable<string> ids, string responseGroup = null)
-        {
-            return await GetAsync(new List<string>(ids), responseGroup);
-        }
-
-
-        protected virtual async Task<IEnumerable<TModel>> GetByIdsNoCache(IList<string> ids, string responseGroup)
+        protected virtual async Task<IList<TModel>> GetByIdsNoCache(IList<string> ids, string responseGroup)
         {
             using var repository = _repositoryFactory();
 
@@ -107,9 +87,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             cacheOptions.AddExpirationToken(CreateCacheToken(id));
         }
 
-        protected virtual IEnumerable<TModel> ProcessModels(IEnumerable<TEntity> entities, string responseGroup)
+        protected virtual IList<TModel> ProcessModels(IList<TEntity> entities, string responseGroup)
         {
-            return entities.Select(x => ProcessModel(responseGroup, x, x.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance())));
+            return entities
+                ?.Select(x => ProcessModel(responseGroup, x, ToModel(x)))
+                .ToList();
         }
 
         /// <summary>
@@ -133,17 +115,17 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="ids"></param>
         /// <param name="responseGroup"></param>
         /// <returns></returns>
-        protected abstract Task<IEnumerable<TEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids, string responseGroup);
+        protected abstract Task<IList<TEntity>> LoadEntities(IRepository repository, IList<string> ids, string responseGroup);
 
         /// <summary>
-        /// Just calls LoadEntities with "Full" response group
+        /// Just calls LoadEntities with empty response group
         /// </summary>
         /// <param name="repository"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
-        protected virtual Task<IEnumerable<TEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids)
+        protected virtual Task<IList<TEntity>> LoadEntities(IRepository repository, IList<string> ids)
         {
-            return LoadEntities(repository, ids, null);
+            return LoadEntities(repository, ids, responseGroup: null);
         }
 
         /// <summary>
@@ -151,7 +133,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// </summary>
         /// <param name="models"></param>
         /// <returns></returns>
-        protected virtual Task BeforeSaveChanges(IEnumerable<TModel> models)
+        protected virtual Task BeforeSaveChanges(IList<TModel> models)
         {
             // Basic implementation left empty
             return Task.CompletedTask;
@@ -163,7 +145,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="models"></param>
         /// <param name="changedEntries"></param>
         /// <returns></returns>
-        protected virtual Task AfterSaveChangesAsync(IEnumerable<TModel> models, IEnumerable<GenericChangedEntry<TModel>> changedEntries)
+        protected virtual Task AfterSaveChangesAsync(IList<TModel> models, IList<GenericChangedEntry<TModel>> changedEntries)
         {
             // Basic implementation left empty
             return Task.CompletedTask;
@@ -175,19 +157,19 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="repository"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
-        protected virtual Task SoftDelete(IRepository repository, IEnumerable<string> ids)
+        protected virtual Task SoftDelete(IRepository repository, IList<string> ids)
         {
             // Basic implementation of soft delete intentionally left empty.
             return Task.CompletedTask;
         }
 
         /// <summary>
-        /// Persists specific set of enumerable model instances to the data source.
+        /// Persists a list of model instances to the data source.
         /// Can be overridden to implement full custom save.
         /// </summary>
         /// <param name="models"></param>
         /// <returns></returns>
-        public virtual async Task SaveChangesAsync(IEnumerable<TModel> models)
+        public virtual async Task SaveChangesAsync(IList<TModel> models)
         {
             var pkMap = new PrimaryKeyResolvingMap();
             var changedEntries = new List<GenericChangedEntry<TModel>>();
@@ -197,13 +179,13 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             using (var repository = _repositoryFactory())
             {
-                var dataExistEntities = await LoadExistingEntities(repository, models);
+                var existingEntities = await LoadExistingEntities(repository, models);
 
                 foreach (var model in models)
                 {
 
-                    var originalEntity = FindExistingEntity(dataExistEntities, model);
-                    var modifiedEntity = AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, pkMap);
+                    var originalEntity = FindExistingEntity(existingEntities, model);
+                    var modifiedEntity = FromModel(model, pkMap);
 
                     if (originalEntity != null)
                     {
@@ -212,7 +194,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         // https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes#detectchanges-honors-store-generated-key-values
                         repository.TrackModifiedAsAddedForNewChildEntities(originalEntity);
 
-                        changedEntries.Add(new GenericChangedEntry<TModel>(model, originalEntity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance()), EntryState.Modified));
+                        changedEntries.Add(new GenericChangedEntry<TModel>(model, ToModel(originalEntity), EntryState.Modified));
                         modifiedEntity.Patch(originalEntity);
                         if (originalEntity is IAuditable auditableOriginalEntity)
                         {
@@ -232,13 +214,14 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 await _eventPublisher.Publish(EventFactory<TChangeEvent>(changedEntries));
                 await CommitAsync(repository);
             }
+
             pkMap.ResolvePrimaryKeys();
 
             ClearCache(models);
 
             foreach (var (changedEntry, i) in changedEntries.Select((x, i) => (x, i)))
             {
-                changedEntry.NewEntry = changedEntities[i].ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
+                changedEntry.NewEntry = ToModel(changedEntities[i]);
             }
 
             await AfterSaveChangesAsync(models, changedEntries);
@@ -246,17 +229,17 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             await _eventPublisher.Publish(EventFactory<TChangedEvent>(changedEntries));
         }
 
-        protected virtual Task<IEnumerable<TEntity>> LoadExistingEntities(IRepository repository, IEnumerable<TModel> models)
+        protected virtual Task<IList<TEntity>> LoadExistingEntities(IRepository repository, IList<TModel> models)
         {
-            return LoadEntities(repository, models.Where(x => !x.IsTransient()).Select(x => x.Id));
+            return LoadEntities(repository, models.Where(x => !x.IsTransient()).Select(x => x.Id).ToList());
         }
 
-        protected virtual TEntity FindExistingEntity(IEnumerable<TEntity> existingEntities, TModel model)
+        protected virtual TEntity FindExistingEntity(IList<TEntity> existingEntities, TModel model)
         {
-            return existingEntities.FirstOrDefault(x => x.Id == model.Id);
+            return existingEntities?.FirstOrDefault(x => x.Id == model.Id);
         }
 
-        protected async virtual Task CommitAsync(IRepository repository)
+        protected virtual async Task CommitAsync(IRepository repository)
         {
             await repository.UnitOfWork.CommitAsync();
         }
@@ -267,14 +250,14 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="ids"></param>
         /// <param name="softDelete"></param>
         /// <returns></returns>
-        public virtual async Task DeleteAsync(IEnumerable<string> ids, bool softDelete = false)
+        public virtual async Task DeleteAsync(IList<string> ids, bool softDelete = false)
         {
-            var models = (await GetAsync(new List<string>(ids)));
+            var models = await GetAsync(ids);
 
             using (var repository = _repositoryFactory())
             {
                 //Raise domain events before deletion
-                var changedEntries = models.Select(x => new GenericChangedEntry<TModel>(x, EntryState.Deleted));
+                var changedEntries = models.Select(x => new GenericChangedEntry<TModel>(x, EntryState.Deleted)).ToList();
                 await _eventPublisher.Publish(EventFactory<TChangeEvent>(changedEntries));
 
                 if (softDelete)
@@ -287,7 +270,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     var keyMap = new PrimaryKeyResolvingMap();
                     foreach (var model in models)
                     {
-                        var entity = AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, keyMap);
+                        var entity = FromModel(model, keyMap);
                         repository.Remove(entity);
                     }
                     await repository.UnitOfWork.CommitAsync();
@@ -306,23 +289,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="models"></param>
         /// <param name="changedEntries"></param>
         /// <returns></returns>
-        protected virtual Task AfterDeleteAsync(IEnumerable<TModel> models, IEnumerable<GenericChangedEntry<TModel>> changedEntries)
+        protected virtual Task AfterDeleteAsync(IList<TModel> models, IList<GenericChangedEntry<TModel>> changedEntries)
         {
             // Basic implementation left empty
             return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Create cache region.
-        /// Default implementation creates <see cref="GenericCachingRegion{TModel}"/>.
-        /// Can be overridden to create some different region.
-        /// </summary>
-        /// <param name="ids"></param>
-        /// <returns></returns>
-        [Obsolete("Use CreateCacheToken(string id)")]
-        protected virtual IChangeToken CreateCacheToken(IEnumerable<string> ids)
-        {
-            return GenericCachingRegion<TModel>.CreateChangeToken(ids);
         }
 
         protected virtual IChangeToken CreateCacheToken(string id)
@@ -336,7 +306,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// Can be overridden to expire different regions/tokens.
         /// </summary>
         /// <param name="models"></param>
-        protected virtual void ClearCache(IEnumerable<TModel> models)
+        protected virtual void ClearCache(IList<TModel> models)
         {
             ClearSearchCache(models);
 
@@ -346,14 +316,24 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             }
         }
 
-        protected virtual void ClearSearchCache(IEnumerable<TModel> models)
+        protected virtual void ClearSearchCache(IList<TModel> models)
         {
             GenericSearchCachingRegion<TModel>.ExpireRegion();
         }
 
-        protected virtual GenericChangedEntryEvent<TModel> EventFactory<TEvent>(IEnumerable<GenericChangedEntry<TModel>> changedEntries)
+        protected virtual TModel ToModel(TEntity entity)
         {
-            return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor(new Type[] { typeof(IEnumerable<GenericChangedEntry<TModel>>) }).Invoke(new object[] { changedEntries });
+            return entity.ToModel(AbstractTypeFactory<TModel>.TryCreateInstance());
+        }
+
+        protected virtual TEntity FromModel(TModel model, PrimaryKeyResolvingMap keyMap)
+        {
+            return AbstractTypeFactory<TEntity>.TryCreateInstance().FromModel(model, keyMap);
+        }
+
+        protected virtual GenericChangedEntryEvent<TModel> EventFactory<TEvent>(IList<GenericChangedEntry<TModel>> changedEntries)
+        {
+            return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor(new[] { typeof(IEnumerable<GenericChangedEntry<TModel>>) }).Invoke(new object[] { changedEntries });
         }
     }
 }
