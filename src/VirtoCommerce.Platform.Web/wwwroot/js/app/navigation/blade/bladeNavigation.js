@@ -435,7 +435,13 @@ angular.module('platformWebApp')
                     var result = "";
                     var statusString = response.status.toString();
 
-                    if (statusString.startsWith('4')) {
+                    if (statusString === '404') {
+                        result = $translate.instant('platform.errors.404');
+                    }
+                    else if (statusString === '409') {
+                        result = $translate.instant('platform.errors.409');
+                    }
+                    else if (statusString.startsWith('4')) {
                         result = $translate.instant('platform.errors.4XX');
                     }
                     else if (statusString.startsWith('5')) {
