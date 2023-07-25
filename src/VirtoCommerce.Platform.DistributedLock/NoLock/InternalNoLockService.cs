@@ -6,16 +6,15 @@ namespace VirtoCommerce.Platform.DistributedLock
     /// <summary>
     /// Distributed lock provider that implements bypass mode (no distributed lock)
     /// </summary>
-    public class NoLockDistributedLockProvider : IDistributedLockProvider
+    public class InternalNoLockService : IInternalDistributedLockService
     {
-        protected readonly ILogger<NoLockDistributedLockProvider> _logger;
-
+        protected readonly ILogger<InternalNoLockService> _logger;
 
         /// <summary>
         /// Construct the provider
         /// </summary>
         /// <param name="logger"></param>
-        public NoLockDistributedLockProvider(ILogger<NoLockDistributedLockProvider> logger)
+        public InternalNoLockService(ILogger<InternalNoLockService> logger)
         {
             _logger = logger;
         }
