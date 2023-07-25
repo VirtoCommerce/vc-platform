@@ -25,7 +25,6 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
         public InternalDistributedLockService(IDistributedLockFactory distributedLockFactory, IOptions<DistributedLockOptions> options, ILogger<InternalDistributedLockService> logger)
         {
             _distributedLockFactory = distributedLockFactory;
-            //_redisConnMultiplexer = redisConnMultiplexer;
             _waitTime = options.Value.WaitTime;
             _logger = logger;
         }
@@ -46,7 +45,7 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
                 if (redLock.IsAcquired)
                 {
                     instantlyAcquired = true;
-                    _logger.LogInformation(@$"Distributed lock: run payload for resource {resourceId} instantly.");
+                    _logger.LogInformation("Distributed lock: run payload for resource {resourceId} instantly.", resourceId);
                     payload(DistributedLockCondition.Instant);
                 }
             }
@@ -64,7 +63,7 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
                         // Lock not acquired even after migrationDistributedLockOptions.Wait
                         throw new PlatformException($"Can't acquire distributed lock for resource {this}. It seems that another Platform instance still has the lock, consider increasing wait timeout.");
                     }
-                    _logger.LogInformation(@$"Distributed lock: run payload for resource {resourceId} after awaiting for previous lock.");
+                    _logger.LogInformation("Distributed lock: run payload for resource {resourceId} after awaiting for previous lock.", resourceId);
                     payload(DistributedLockCondition.Delayed);
                 }
             }
