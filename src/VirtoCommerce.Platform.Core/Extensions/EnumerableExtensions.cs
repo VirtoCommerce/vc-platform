@@ -14,7 +14,7 @@ namespace VirtoCommerce.Platform.Core.Common
             return data == null || !data.Any();
         }
 
-        public static IEnumerable<IEnumerable<T>> Paginate<T>(this IEnumerable<T> items, int pageSize)
+        public static IEnumerable<IList<T>> Paginate<T>(this IEnumerable<T> items, int pageSize)
         {
             var page = new List<T>();
 
@@ -71,7 +71,9 @@ namespace VirtoCommerce.Platform.Core.Common
         public static void Apply(this System.Collections.IDictionary items, Action<object, object> action)
         {
             if (items is null)
+            {
                 return;
+            }
 
             foreach (var key in items.Keys)
             {

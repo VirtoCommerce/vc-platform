@@ -9,6 +9,8 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         public string Name { get; set; }
         public TestEntity FromModel(TestModel model, PrimaryKeyResolvingMap pkMap)
         {
+            pkMap.AddPair(model, this);
+
             Id = model.Id;
             Name = model.Name;
             return this;

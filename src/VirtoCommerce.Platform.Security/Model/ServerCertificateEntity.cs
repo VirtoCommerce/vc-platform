@@ -11,20 +11,25 @@ namespace VirtoCommerce.Platform.Security.Model
         public string PrivateKeyCertBase64 { get; set; }
         public string PrivateKeyCertPassword { get; set; }
 
-        public virtual ServerCertificate ToModel(ServerCertificate certificate)
+        public virtual ServerCertificate ToModel(ServerCertificate model)
         {
-            certificate.Id = Id;
-            certificate.PublicCertBytes = Convert.FromBase64String(PublicCertBase64);
-            certificate.PrivateKeyCertBytes = Convert.FromBase64String(PrivateKeyCertBase64);
-            certificate.PrivateKeyCertPassword = PrivateKeyCertPassword;
-            return certificate;
+            model.Id = Id;
+            model.PublicCertBytes = Convert.FromBase64String(PublicCertBase64);
+            model.PrivateKeyCertBytes = Convert.FromBase64String(PrivateKeyCertBase64);
+            model.PrivateKeyCertPassword = PrivateKeyCertPassword;
+
+            return model;
         }
-        public virtual ServerCertificateEntity FromModel(ServerCertificate certificate, PrimaryKeyResolvingMap pkMap)
+
+        public virtual ServerCertificateEntity FromModel(ServerCertificate model, PrimaryKeyResolvingMap pkMap)
         {
-            Id = certificate.Id;
-            PublicCertBase64 = Convert.ToBase64String(certificate.PublicCertBytes);
-            PrivateKeyCertBase64 = Convert.ToBase64String(certificate.PrivateKeyCertBytes);
-            PrivateKeyCertPassword = certificate.PrivateKeyCertPassword;
+            pkMap.AddPair(model, this);
+
+            Id = model.Id;
+            PublicCertBase64 = Convert.ToBase64String(model.PublicCertBytes);
+            PrivateKeyCertBase64 = Convert.ToBase64String(model.PrivateKeyCertBytes);
+            PrivateKeyCertPassword = model.PrivateKeyCertPassword;
+
             return this;
         }
 

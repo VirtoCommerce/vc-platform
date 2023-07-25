@@ -1,4 +1,3 @@
-﻿using System;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -513,6 +512,53 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Security
                 table: "UserApiKey",
                 column: "ApiKey",
                 unique: true);
+
+            migrationBuilder.Sql(@"INSERT INTO AspNetUsers (
+                Id,
+                IsAdministrator,
+                UserName,
+                NormalizedUserName,
+                PasswordHash,
+                SecurityStamp,
+                ConcurrencyStamp,
+                PasswordExpired,
+                Email,
+                NormalizedEmail,
+                EmailConfirmed,
+                PhoneNumberConfirmed,
+                TwoFactorEnabled,
+                LockoutEnabled,
+                AccessFailedCount,
+                CreatedDate
+            )
+            SELECT
+                '1eb2fa8ac6574541afdb525833dadb46',
+                1,
+                'admin',
+                'ADMIN',
+                'AHQSmKnSLYrzj9vtdDWWnUXojjpmuDW2cHvWloGL9UL3TC9UCfBmbIuR2YCyg4BpNg==',
+                'IK5VZXH6VRIZ3E6OKHEIS7TC24VT4RD3',
+                '47548002-dd64-48e0-bb51-e9516fd880c2',
+                1,
+                'admin@vc-demostore.com',
+                'ADMIN@VC-DEMOSTORE.COM',
+                1,
+                1,
+                0,
+                1,
+                0,
+                UTC_TIMESTAMP()
+            FROM
+                dual
+            WHERE
+                NOT EXISTS (
+                    SELECT
+                        *
+                    FROM
+                        AspNetUsers
+                    WHERE
+                        UserName = 'admin'
+                );");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

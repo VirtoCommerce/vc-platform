@@ -599,9 +599,6 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseEndpoints(SetupEndpoints);
 
-            //Seed default users
-            app.UseDefaultUsersAsync().GetAwaiter().GetResult();
-
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 

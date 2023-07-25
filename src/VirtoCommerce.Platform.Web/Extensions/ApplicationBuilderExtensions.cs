@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
         {
             { "X-Frame-Options", new StringValues("SAMEORIGIN") }
         };
-        
+
         public static IApplicationBuilder UsePlatformSettings(this IApplicationBuilder appBuilder)
         {
             var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Web.Extensions
 
             var settingsManager = appBuilder.ApplicationServices.GetRequiredService<ISettingsManager>();
 
-            var sendDiagnosticData = settingsManager.GetValue(Setup.SendDiagnosticData.Name, (bool)Setup.SendDiagnosticData.DefaultValue);
+            var sendDiagnosticData = settingsManager.GetValue<bool>(Setup.SendDiagnosticData);
             if (!sendDiagnosticData)
             {
                 var licenseProvider = appBuilder.ApplicationServices.GetRequiredService<LicenseProvider>();
