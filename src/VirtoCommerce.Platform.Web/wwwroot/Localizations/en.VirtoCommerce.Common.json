@@ -163,7 +163,9 @@
     },
     "errors": {
       "5XX": "Internal Server Error",
-      "4XX": "Unauthorized"
+      "4XX": "Unauthorized",
+      "404": "Not Found",
+      "409": "Conflict"
     }
   }
 }
