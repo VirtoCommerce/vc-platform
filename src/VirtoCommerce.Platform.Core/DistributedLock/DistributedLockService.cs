@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Platform.DistributedLock
+namespace VirtoCommerce.Platform.Core.DistributedLock
 {
     public interface IDistributedLockService
     {

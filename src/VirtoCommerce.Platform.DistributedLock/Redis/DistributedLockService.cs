@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using RedLockNet;
+using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.Platform.DistributedLock.Redis

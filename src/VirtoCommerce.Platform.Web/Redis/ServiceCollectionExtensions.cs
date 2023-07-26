@@ -5,6 +5,7 @@ using RedLockNet;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
+using VirtoCommerce.Platform.Core.DistributedLock;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.DistributedLock.NoLock;
 using VirtoCommerce.Platform.DistributedLock.Redis;

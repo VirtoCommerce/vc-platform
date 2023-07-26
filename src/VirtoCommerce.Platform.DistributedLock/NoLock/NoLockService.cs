@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.DistributedLock;
 
 namespace VirtoCommerce.Platform.DistributedLock.NoLock
 {
