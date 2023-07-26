@@ -20,9 +20,13 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
         public bool SoftDeleteCalled { get; set; }
         public bool AfterDeleteAsyncCalled { get; set; }
 
-        protected override Task<IEnumerable<TestEntity>> LoadEntities(IRepository repository, IEnumerable<string> ids, string responseGroup)
+        protected override Task<IList<TestEntity>> LoadEntities(IRepository repository, IList<string> ids, string responseGroup)
         {
-            return Task.FromResult(ids.Select(x => AbstractTypeFactory<TestEntity>.TryCreateInstance().FromModel(new TestModel { Id = x }, new PrimaryKeyResolvingMap())));
+            IList<TestEntity> entities = ids
+                .Select(x => AbstractTypeFactory<TestEntity>.TryCreateInstance().FromModel(new TestModel { Id = x }, new PrimaryKeyResolvingMap()))
+                .ToList();
+
+            return Task.FromResult(entities);
         }
 
         protected override TestModel ProcessModel(string responseGroup, TestEntity entity, TestModel model)
@@ -31,25 +35,25 @@ namespace VirtoCommerce.Platform.Tests.GenericCrud
             return model;
         }
 
-        protected override Task BeforeSaveChanges(IEnumerable<TestModel> models)
+        protected override Task BeforeSaveChanges(IList<TestModel> models)
         {
             BeforeAndAfterSaveChangesCalled++;
             return Task.CompletedTask;
         }
 
-        protected override Task AfterSaveChangesAsync(IEnumerable<TestModel> models, IEnumerable<GenericChangedEntry<TestModel>> changedEntries)
+        protected override Task AfterSaveChangesAsync(IList<TestModel> models, IList<GenericChangedEntry<TestModel>> changedEntries)
         {
             BeforeAndAfterSaveChangesCalled++;
             return Task.CompletedTask;
         }
 
-        protected override Task SoftDelete(IRepository repository, IEnumerable<string> ids)
+        protected override Task SoftDelete(IRepository repository, IList<string> ids)
         {
             SoftDeleteCalled = true;
             return Task.CompletedTask;
         }
 
-        protected override Task AfterDeleteAsync(IEnumerable<TestModel> models, IEnumerable<GenericChangedEntry<TestModel>> changedEntries)
+        protected override Task AfterDeleteAsync(IList<TestModel> models, IList<GenericChangedEntry<TestModel>> changedEntries)
         {
             AfterDeleteAsyncCalled = true;
             return Task.CompletedTask;

@@ -280,11 +280,11 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Finished = DateTime.UtcNow
             };
 
-            if (!_settingsManager.GetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, false))
+            if (!_settingsManager.GetValue<bool>(PlatformConstants.Settings.Setup.ModulesAutoInstalled))
             {
                 lock (_lockObject)
                 {
-                    if (!_settingsManager.GetValue(PlatformConstants.Settings.Setup.ModulesAutoInstalled.Name, false))
+                    if (!_settingsManager.GetValue<bool>(PlatformConstants.Settings.Setup.ModulesAutoInstalled))
                     {
                         var moduleBundles = _externalModuleCatalogOptions.AutoInstallModuleBundles;
                         if (!moduleBundles.IsNullOrEmpty())
@@ -355,7 +355,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public ActionResult<string> GetAutoInstallState()
         {
-            var state = EnumUtility.SafeParse(_settingsManager.GetValue(PlatformConstants.Settings.Setup.ModulesAutoInstallState.Name, string.Empty), AutoInstallState.Undefined);
+            var state = EnumUtility.SafeParse(_settingsManager.GetValue<string>(PlatformConstants.Settings.Setup.ModulesAutoInstallState), AutoInstallState.Undefined);
             return Ok(state);
         }
 

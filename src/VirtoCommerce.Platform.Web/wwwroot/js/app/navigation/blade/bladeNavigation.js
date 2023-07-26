@@ -214,7 +214,7 @@ angular.module('platformWebApp')
             }
         }
     }])
-    .factory('platformWebApp.bladeNavigationService', ['platformWebApp.authService', '$timeout', '$state', 'platformWebApp.dialogService', function (authService, $timeout, $state, dialogService) {
+    .factory('platformWebApp.bladeNavigationService', ['platformWebApp.authService', '$timeout', '$state', '$translate', 'platformWebApp.dialogService', function (authService, $timeout, $state, $translate, dialogService) {
         function showConfirmationIfNeeded(showConfirmation, canSave, blade, saveChangesCallback, closeCallback, saveTitle, saveMessage) {
             if (showConfirmation) {
                 var dialog = { id: "confirmCurrentBladeClose" };
@@ -420,6 +420,7 @@ angular.module('platformWebApp')
                 if (blade) {
                     blade.isLoading = false;
                     if (response) {
+                        response.statusText = service.getStatusText(response);
                         blade.error = response.status && response.statusText ? response.status + ': ' + response.statusText : response;
                         blade.errorBody = response.data ? response.data.exceptionMessage || response.data.message || response.data.errors.join('<br>') : blade.errorBody || blade.error;
                     }
@@ -428,7 +429,29 @@ angular.module('platformWebApp')
                     }
                 }
             },
-            clearError: clearError
+            clearError: clearError,
+            getStatusText: function (response) {
+                if (response.statusText === "") {
+                    var result = "";
+                    var statusString = response.status.toString();
+
+                    if (statusString === '404') {
+                        result = $translate.instant('platform.errors.404');
+                    }
+                    else if (statusString === '409') {
+                        result = $translate.instant('platform.errors.409');
+                    }
+                    else if (statusString.startsWith('4')) {
+                        result = $translate.instant('platform.errors.4XX');
+                    }
+                    else if (statusString.startsWith('5')) {
+                        result = $translate.instant('platform.errors.5XX');
+                    }
+
+                    return result;
+                }
+                return response.statusText;
+            }
         };
 
         return service;

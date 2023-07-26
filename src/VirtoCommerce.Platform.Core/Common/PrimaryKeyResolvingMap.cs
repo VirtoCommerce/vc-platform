@@ -3,13 +3,13 @@ using System.Collections.Generic;
 namespace VirtoCommerce.Platform.Core.Common
 {
     /// <summary>
-    /// Helper class used for resolving model object primary keys when it presisted in persistent infrastructure
+    /// Helper class used for resolving model object primary keys when it persisted in persistent infrastructure
     /// Used in model to db model converters
     /// </summary>
-    public class PrimaryKeyResolvingMap 
+    public class PrimaryKeyResolvingMap
     {
         private readonly Dictionary<IEntity, IEntity> _resolvingMap = new Dictionary<IEntity, IEntity>();
-   
+
         public void AddPair(IEntity transientEntity, IEntity persistentEntity)
         {
             _resolvingMap[transientEntity] = persistentEntity;

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using VirtoCommerce.Platform.Caching;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Domain;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.GenericCrud;
 
 namespace VirtoCommerce.Platform.Data.GenericCrud
@@ -27,9 +29,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         where TModel : Entity, ICloneable
         where TEntity : Entity, IDataEntity<TEntity, TModel>
     {
-        protected readonly IPlatformMemoryCache _platformMemoryCache;
-        protected readonly Func<IRepository> _repositoryFactory;
-        protected readonly ICrudService<TModel> _crudService;
+        private readonly IPlatformMemoryCache _platformMemoryCache;
+        private readonly Func<IRepository> _repositoryFactory;
+        private readonly ICrudService<TModel> _crudService;
+        private readonly CrudOptions _crudOptions;
 
         /// <summary>
         /// Construct new SearchService
@@ -37,20 +40,29 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// <param name="repositoryFactory">Repository factory to get access to the data source</param>
         /// <param name="platformMemoryCache">The cache used to temporary store returned values</param>
         /// <param name="crudService">Crud service to get service-layer model instances (a descendant of <see cref="ICrudService{TModel}"/>)</param>
-        protected SearchService(Func<IRepository> repositoryFactory, IPlatformMemoryCache platformMemoryCache, ICrudService<TModel> crudService)
+        /// <param name="crudOptions"></param>
+        protected SearchService(
+            Func<IRepository> repositoryFactory,
+            IPlatformMemoryCache platformMemoryCache,
+            ICrudService<TModel> crudService,
+            IOptions<CrudOptions> crudOptions)
         {
             _platformMemoryCache = platformMemoryCache;
             _repositoryFactory = repositoryFactory;
             _crudService = crudService;
+            _crudOptions = crudOptions.Value;
         }
 
         /// <summary>
-        /// Search for model (service-layer) instances, related to specified criteria
+        /// Returns model instances that meet specified criteria.
         /// </summary>
         /// <param name="criteria"></param>
+        /// <param name="clone">If false, returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.</param>
         /// <returns></returns>
-        public virtual async Task<TResult> SearchAsync(TCriteria criteria)
+        public virtual async Task<TResult> SearchAsync(TCriteria criteria, bool clone = true)
         {
+            ValidateSearchCriteria(criteria);
+
             var cacheKey = CacheKey.With(GetType(), nameof(SearchAsync), criteria.GetCacheKey());
 
             var idsResult = await _platformMemoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheOptions =>
@@ -63,12 +75,23 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             result.TotalCount = idsResult.TotalCount;
 
             result.Results = idsResult.Results.Any()
-                ? (await _crudService.GetAsync(idsResult.Results.ToList(), criteria.ResponseGroup))
+                ? (await _crudService.GetAsync(idsResult.Results, criteria.ResponseGroup, clone))
                     .OrderBy(x => idsResult.Results.IndexOf(x.Id))
                     .ToList()
                 : Array.Empty<TModel>();
 
             return await ProcessSearchResultAsync(result, criteria);
+        }
+
+
+        protected virtual void ValidateSearchCriteria(TCriteria criteria)
+        {
+            var resultWindow = criteria.Skip + criteria.Take;
+
+            if (resultWindow > _crudOptions.MaxResultWindow)
+            {
+                throw new PlatformException($"Results window {resultWindow} exceeds maximum allowed value {_crudOptions.MaxResultWindow}");
+            }
         }
 
         protected virtual IChangeToken CreateCacheToken(TCriteria criteria)
@@ -93,7 +116,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                     .Select(x => x.Id)
                     .Skip(criteria.Skip)
                     .Take(criteria.Take)
-                    .ToArrayAsync();
+                    .ToListAsync();
 
                 result.TotalCount = result.Results.Count;
 

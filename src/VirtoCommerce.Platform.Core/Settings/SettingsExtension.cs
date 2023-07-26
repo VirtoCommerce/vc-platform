@@ -120,18 +120,30 @@ namespace VirtoCommerce.Platform.Core.Settings
             await manager.RemoveObjectSettingsAsync(foDeleteSettings);
         }
 
-        /// <summary>
-        /// Takes default value from the setting descriptor
-        /// </summary>
+        [Obsolete("Use GetValue<>(SettingDescriptor)")]
         public static TValue GetValueByDescriptor<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
         {
-            return manager.GetValueByDescriptorAsync<TValue>(descriptor).GetAwaiter().GetResult();
+            return manager.GetValueAsync<TValue>(descriptor).GetAwaiter().GetResult();
+        }
+
+        [Obsolete("Use GetValueAsync<>(SettingDescriptor)")]
+        public static Task<TValue> GetValueByDescriptorAsync<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
+        {
+            return manager.GetValueAsync<TValue>(descriptor);
         }
 
         /// <summary>
         /// Takes default value from the setting descriptor
         /// </summary>
-        public static Task<TValue> GetValueByDescriptorAsync<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
+        public static TValue GetValue<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
+        {
+            return manager.GetValueAsync<TValue>(descriptor).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Takes default value from the setting descriptor
+        /// </summary>
+        public static Task<TValue> GetValueAsync<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
         {
             var defaultValue = default(TValue);
 
@@ -140,15 +152,22 @@ namespace VirtoCommerce.Platform.Core.Settings
                 defaultValue = defaultSettingValue;
             }
 
-            return manager.GetValueAsync(descriptor.Name, defaultValue);
+            return manager.GetValueInternalAsync(descriptor.Name, defaultValue);
         }
 
+        [Obsolete("Use GetValue<>(SettingDescriptor)")]
         public static T GetValue<T>(this ISettingsManager manager, string name, T defaultValue)
         {
-            return manager.GetValueAsync(name, defaultValue).GetAwaiter().GetResult();
+            return manager.GetValueInternalAsync(name, defaultValue).GetAwaiter().GetResult();
         }
 
-        public static async Task<T> GetValueAsync<T>(this ISettingsManager manager, string name, T defaultValue)
+        [Obsolete("Use GetValueAsync<>(SettingDescriptor)")]
+        public static Task<T> GetValueAsync<T>(this ISettingsManager manager, string name, T defaultValue)
+        {
+            return manager.GetValueInternalAsync(name, defaultValue);
+        }
+
+        private static async Task<T> GetValueInternalAsync<T>(this ISettingsManager manager, string name, T defaultValue)
         {
             var result = defaultValue;
 
@@ -180,9 +199,9 @@ namespace VirtoCommerce.Platform.Core.Settings
             await manager.SaveObjectSettingsAsync(new[] { objectSetting });
         }
 
-        public static T GetSettingValue<T>(this IEnumerable<ObjectSettingEntry> objectSettings, string settingName, T defaulValue)
+        public static T GetSettingValue<T>(this IEnumerable<ObjectSettingEntry> objectSettings, string settingName, T defaultValue)
         {
-            var retVal = defaulValue;
+            var retVal = defaultValue;
             var setting = objectSettings.FirstOrDefault(x => x.Name.EqualsInvariant(settingName));
             if (setting != null && setting.Value != null)
             {

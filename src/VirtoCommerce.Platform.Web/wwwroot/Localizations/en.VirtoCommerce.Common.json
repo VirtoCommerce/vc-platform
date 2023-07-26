@@ -160,6 +160,12 @@
       "uriWithoutQuery": {
         "error": "Invalid uri format. Make shure uri dosn't have query params."
       }
+    },
+    "errors": {
+      "5XX": "Internal Server Error",
+      "4XX": "Unauthorized",
+      "404": "Not Found",
+      "409": "Conflict"
     }
   }
 }
