@@ -4,7 +4,7 @@
 Virto Commerce built with DB agnostic architecture and out of the box supports the following databases:
 
 * Microsoft SQL Server 2019 or above
-* MySql Server 5.7 or above
+* MySql Server 8 or above
 * PostgreSQL 12 or above
 
 At same time, Virto Commerce Architectire allows you add custom database provider on top of Entity Framework for solution as well as for a specific module.
@@ -29,6 +29,7 @@ Finally, We added Support for customization by specific Database providers need.
 
 ## How Setup DB Provider
 You can easily setup DB provider for your solution. Just follow the steps below:
+
 1. Install and Configure Database. Create a new database and user with access to it.
 1. Open appsettings.json in your preferred text editor.
 1. Find the **DatabaseProvider** propery.
@@ -79,6 +80,7 @@ dotnet new vc-module-dba-template --ModuleName CustomerReviews --Author "Jon Doe
 This will create a folder named CustomerReviews containing all the required projects and files for your module. You can then open solution in Visual Studio.
 
 The key points to understand about this template are:
+
 * It contains four projects related to data access: Data and Data.[Provider] projects.
 * The Data.[Provider] projects have a specific structure and configuration for each database system: MySql, PostgreSql, and SqlServer.
 * The Data project contains the common data models and interfaces that are shared by all database systems.
