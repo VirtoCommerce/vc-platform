@@ -4,7 +4,7 @@ namespace VirtoCommerce.Platform.DistributedLock
 {
     /// <summary>
     /// Interface for distributed lock implementations
-    /// 
+    /// Used for synchronizing multiple platform instances
     /// </summary>
     public interface IInternalDistributedLockService
     {

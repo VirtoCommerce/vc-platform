@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
 {
     /// <summary>
     /// Distributed lock implemented thru Redis RedLock
-    /// Used for syncronization multiple platform instances
+    /// Used for synchronizing multiple platform instances
     /// </summary>
     public class InternalDistributedLockService : IInternalDistributedLockService
     {
