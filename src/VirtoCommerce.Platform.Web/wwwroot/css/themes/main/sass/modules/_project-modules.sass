@@ -22,7 +22,7 @@
 
 /* Dashboard */
 $dashboardHorizontalPadding: 90px
-$dashboardVerticalPadding: 22px
+$dashboardVerticalPadding: 40px
 $dashboardHeadHeight: 80px
 
 .dashboard
@@ -50,14 +50,15 @@ $dashboardHeadHeight: 80px
     .gridster-loaded
       width: 770px
   .dashboard-title
-    position: absolute
-    top: 30px
-    font-weight: 300
-    left: $dashboardHorizontalPadding
-    text-shadow: 1px 2px rgba(255,255,255,.5), 2px -2px rgba(255,255,255,.5), -2px 2px rgba(255,255,255,.5), -2px -2px rgba(255,255,255,.5)
-    h1,
-    .__logo
-      display: inline
+    display: flex
+    align-items: center
+    gap: 16px
+    padding: 30px $dashboardHorizontalPadding 0
+
+    h1
+      margin: 0
+      font-size: 41px
+      font-weight: 300
     .__logo
       max-height: $h1FontSize
       vertical-align: top
