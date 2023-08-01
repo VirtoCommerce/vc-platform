@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Primitives;
-using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.DistributedLock;
@@ -15,11 +13,6 @@ namespace VirtoCommerce.Platform.Web.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        private static readonly Dictionary<string, StringValues> CustomHeaders = new()
-        {
-            { "X-Frame-Options", new StringValues("SAMEORIGIN") }
-        };
-        
         public static IApplicationBuilder UsePlatformSettings(this IApplicationBuilder appBuilder)
         {
             var settingsRegistrar = appBuilder.ApplicationServices.GetRequiredService<ISettingsRegistrar>();
@@ -54,17 +47,6 @@ namespace VirtoCommerce.Platform.Web.Extensions
                     moduleManager.PostInitializeModule(module, appBuilder);
                 }
             }
-            return appBuilder;
-        }
-
-        public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder appBuilder)
-        {
-            appBuilder.Use(async (context, next) =>
-            {
-                context.Response.Headers.AddRange(CustomHeaders);
-                await next();
-            });
-
             return appBuilder;
         }
 
