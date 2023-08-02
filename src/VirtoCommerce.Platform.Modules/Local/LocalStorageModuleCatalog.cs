@@ -18,10 +18,10 @@ namespace VirtoCommerce.Platform.Modules
     {
         private readonly LocalStorageModuleCatalogOptions _options;
         private readonly ILogger<LocalStorageModuleCatalog> _logger;
-        private readonly IDistributedLockProvider _distributedLockProvider;
+        private readonly IInternalDistributedLockService _distributedLockProvider;
         private readonly string _discoveryPath;
 
-        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IDistributedLockProvider distributedLockProvider, ILogger<LocalStorageModuleCatalog> logger)
+        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IInternalDistributedLockService distributedLockProvider, ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
             _discoveryPath = _options.DiscoveryPath;
