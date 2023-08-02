@@ -27,8 +27,8 @@ namespace VirtoCommerce.Platform.Web.Redis
                         .SetApplicationName("VirtoCommerce.Platform")
                         .PersistKeysToStackExchangeRedis(redis, "VirtoCommerce-Keys");
 
-                var redlockFactory = RedLockFactory.Create(new RedLockMultiplexer[] { new RedLockMultiplexer(redis) });
-                services.AddSingleton<IDistributedLockFactory>(redlockFactory);
+                var redLockFactory = RedLockFactory.Create(new[] { new RedLockMultiplexer(redis) });
+                services.AddSingleton<IDistributedLockFactory>(redLockFactory);
 
                 services.AddSingleton<IInternalDistributedLockService, InternalDistributedLockService>();
                 services.AddSingleton<IDistributedLockService, DistributedLockService>();
@@ -41,6 +41,5 @@ namespace VirtoCommerce.Platform.Web.Redis
 
             return services;
         }
-
     }
 }

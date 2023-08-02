@@ -12,9 +12,9 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
     /// </summary>
     public class InternalDistributedLockService : IInternalDistributedLockService
     {
-        protected readonly IDistributedLockFactory _distributedLockFactory;
-        protected readonly ILogger<InternalDistributedLockService> _logger;
-        protected readonly int _waitTime;
+        private readonly IDistributedLockFactory _distributedLockFactory;
+        private readonly ILogger<InternalDistributedLockService> _logger;
+        private readonly int _waitTime;
 
         /// <summary>
         /// Construct the provider

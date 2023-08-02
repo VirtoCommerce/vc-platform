@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.DistributedLock
     /// </summary>
     public class InternalNoLockService : IInternalDistributedLockService
     {
-        protected readonly ILogger<InternalNoLockService> _logger;
+        private readonly ILogger<InternalNoLockService> _logger;
 
         /// <summary>
         /// Construct the provider

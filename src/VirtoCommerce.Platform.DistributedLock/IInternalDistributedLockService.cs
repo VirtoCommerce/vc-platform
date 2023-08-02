@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.DistributedLock
     {
         /// <summary>
         /// Run payload method with a distributed lock
-        /// Used for syncronization multiple platform instances
+        /// Used for synchronization multiple platform instances
         /// </summary>        
         /// <param name="resourceId">Identifier of locking resource</param>
         /// <param name="payload">Payload method to run under the acquired lock</param>
