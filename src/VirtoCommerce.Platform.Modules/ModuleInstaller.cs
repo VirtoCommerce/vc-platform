@@ -68,7 +68,7 @@ namespace VirtoCommerce.Platform.Modules
                 if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(module.Version))
                 {
                     // module downgrade NOT supported
-                    Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}: module downgrading NOT SUPPORTED", module));
+                    Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}. Automated upgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.", module));
                     isValid = false;
                 }
 
