@@ -18,8 +18,6 @@ angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$ro
         var connection = connBuilder.configureLogging(signalR.LogLevel.Error)
             .build();
 
-        connection.start();
-
         async function start() {
             try {
                 await connection.start();
@@ -36,9 +34,23 @@ angular.module('platformWebApp').factory('platformWebApp.signalRHubProxy', ['$ro
             }
         }
 
-        connection.onclose(async () => await start());
+        var reconnect = false;
+
+        connection.onclose(async () => {
+            if (reconnect) {
+                await start()
+            }
+        });
 
         return {
+            connect: function () {
+                reconnect = true;
+                connection.start();
+            },
+            disconnect: function () {
+                reconnect = false;
+                connection.stop();
+            },
             on: function (eventName, callback) {
                 connection.on(eventName, function (result) {
                     $rootScope.$apply(function () {
