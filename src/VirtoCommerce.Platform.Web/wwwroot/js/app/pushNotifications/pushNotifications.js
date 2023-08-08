@@ -86,7 +86,7 @@ angular.module('platformWebApp').config(
             });
 
             return {
-                // fake method to ensure that pushNotificationService is referenced and static code analyzer won't mark the service as unused
-                startListening: () => true
+                startListening: clientPushHubProxy.connect,
+                stopListening: clientPushHubProxy.disconnect,
             };
         }]);

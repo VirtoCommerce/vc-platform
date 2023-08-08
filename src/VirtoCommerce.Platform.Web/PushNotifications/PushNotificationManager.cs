@@ -11,7 +11,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
 
         public PushNotificationManager(IPushNotificationStorage storage, IHubContext<PushNotificationHub> hubContext)
         {
-            _hubContext = hubContext;            
+            _hubContext = hubContext;
             _storage = storage;
         }
 
@@ -30,11 +30,10 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
         {
             await _storage.SavePushNotificationAsync(notification);
 
-            if (_hubContext != null)
+            if (_hubContext != null && notification.Creator != null)
             {
-                await _hubContext.Clients.All.SendAsync("Send", notification);
+                await _hubContext.Clients.User(notification.Creator).SendAsync("Send", notification);
             }
         }
     }
-
 }
