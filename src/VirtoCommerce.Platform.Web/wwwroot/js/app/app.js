@@ -382,7 +382,14 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 }
             });
 
-            pushNotificationService.startListening();
+            $rootScope.$on('loginStatusChanged', function (event, authContext) {
+                if (authContext.isAuthenticated) {
+                    pushNotificationService.startListening();
+                }
+                else {
+                    pushNotificationService.stopListening();
+                }
+            });
 
             //server error handling
             //$rootScope.$on('httpError', function (event, rejection) {

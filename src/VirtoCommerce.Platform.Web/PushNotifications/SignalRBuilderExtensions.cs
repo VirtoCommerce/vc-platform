@@ -14,6 +14,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
     {
         public static ISignalRServerBuilder AddPushNotifications(this ISignalRServerBuilder builder, IConfiguration configuration)
         {
+            builder.Services.AddSingleton<IUserIdProvider, PushNotificationUserIdProvider>();
             builder.Services.AddSingleton<IPushNotificationStorage, PushNotificationInMemoryStorage>();
 
             var scalabilityMode = configuration["PushNotifications:ScalabilityMode"];
