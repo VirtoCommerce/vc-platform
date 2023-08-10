@@ -11,6 +11,32 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <summary>
         /// Returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.
         /// </summary>
+        public static Task<IList<TModel>> SearchAllNoClone<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria)
+            where TCriteria : SearchCriteriaBase
+            where TResult : GenericSearchResult<TModel>
+            where TModel : Entity, ICloneable
+        {
+            return searchService.SearchAll(searchCriteria, clone: false);
+        }
+
+        public static async Task<IList<TModel>> SearchAll<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria, bool clone = true)
+            where TCriteria : SearchCriteriaBase
+            where TResult : GenericSearchResult<TModel>
+            where TModel : Entity, ICloneable
+        {
+            var result = new List<TModel>();
+
+            await foreach (var searchResult in searchService.SearchBatches(searchCriteria, clone))
+            {
+                result.AddRange(searchResult.Results);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.
+        /// </summary>
         public static Task<TResult> SearchNoCloneAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria)
             where TCriteria : SearchCriteriaBase
             where TResult : GenericSearchResult<TModel>
@@ -19,6 +45,9 @@ namespace VirtoCommerce.Platform.Core.Common
             return searchService.SearchAsync(searchCriteria, clone: false);
         }
 
+        /// <summary>
+        /// Returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.
+        /// </summary>
         public static IAsyncEnumerable<TResult> SearchBatchesNoClone<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria)
             where TCriteria : SearchCriteriaBase
             where TResult : GenericSearchResult<TModel>
