@@ -231,7 +231,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         protected virtual Task<IList<TEntity>> LoadExistingEntities(IRepository repository, IList<TModel> models)
         {
-            return LoadEntities(repository, models.Where(x => !x.IsTransient()).Select(x => x.Id).ToList());
+            var ids = models.Where(x => !x.IsTransient()).Select(x => x.Id).ToList();
+
+            return ids.Any()
+                ? LoadEntities(repository, ids)
+                : Task.FromResult<IList<TEntity>>(Array.Empty<TEntity>());
         }
 
         protected virtual TEntity FindExistingEntity(IList<TEntity> existingEntities, TModel model)
