@@ -33,6 +33,7 @@ namespace VirtoCommerce.Platform.Core.Common
             where TModel : Entity, ICloneable
         {
             int totalCount;
+            searchCriteria = searchCriteria.CloneTyped();
 
             do
             {
