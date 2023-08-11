@@ -27,24 +27,18 @@ namespace VirtoCommerce.Platform.Data.PostgreSql
         /// <returns></returns>
         protected virtual bool CheckDatabaseExist(string sourceConnectionString)
         {
-            var builder = new NpgsqlConnectionStringBuilder(sourceConnectionString);
-            var dbName = builder.Database; // Catch database name to search from the connection string
-            builder.Remove("Database"); // Initial catalog should be removed from connection string, otherwise the connection could not be opened
-            const string cmdCheckDb =
-                @"SELECT 1 from pg_database WHERE datname = @dbName";
-            var connectionString = builder.ConnectionString;
-
-            using var conn = new NpgsqlConnection(connectionString);
-            using var commandCheckDb = conn.CreateCommand();
-            commandCheckDb.CommandText = cmdCheckDb;
-            var parameterDbName = commandCheckDb.CreateParameter();
-            parameterDbName.ParameterName = "dbName";
-            parameterDbName.Value = dbName;
-            commandCheckDb.Parameters.Add(parameterDbName);
-            conn.Open();
-            using var readerCheckDb = commandCheckDb.ExecuteReader();
-
-            return readerCheckDb.HasRows;
+            using (var connection = new NpgsqlConnection(sourceConnectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    return true; // Database exists
+                }
+                catch
+                {
+                    return false; // Database doesn't exist or connection failed
+                }
+            }
         }
 
         public ServerCertificate Load()
