@@ -199,7 +199,25 @@ namespace VirtoCommerce.Platform.Core.Settings
             await manager.SaveObjectSettingsAsync(new[] { objectSetting });
         }
 
+        public static TValue GetValue<TValue>(this IEnumerable<ObjectSettingEntry> objectSettings, SettingDescriptor descriptor)
+        {
+            var defaultValue = default(TValue);
+
+            if (descriptor.DefaultValue is TValue defaultSettingValue)
+            {
+                defaultValue = defaultSettingValue;
+            }
+
+            return objectSettings.GetValueInternal(descriptor.Name, defaultValue);
+        }
+
+        [Obsolete("Use GetValue<>(SettingDescriptor)", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
         public static T GetSettingValue<T>(this IEnumerable<ObjectSettingEntry> objectSettings, string settingName, T defaultValue)
+        {
+            return objectSettings.GetValueInternal(settingName, defaultValue);
+        }
+
+        private static T GetValueInternal<T>(this IEnumerable<ObjectSettingEntry> objectSettings, string settingName, T defaultValue)
         {
             var retVal = defaultValue;
             var setting = objectSettings.FirstOrDefault(x => x.Name.EqualsInvariant(settingName));
