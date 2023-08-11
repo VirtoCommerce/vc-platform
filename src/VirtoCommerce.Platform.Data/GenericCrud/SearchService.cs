@@ -74,11 +74,11 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             var result = AbstractTypeFactory<TResult>.TryCreateInstance();
             result.TotalCount = idsResult.TotalCount;
 
-            result.Results = idsResult.Results.Any()
-                ? (await _crudService.GetAsync(idsResult.Results, criteria.ResponseGroup, clone))
-                    .OrderBy(x => idsResult.Results.IndexOf(x.Id))
-                    .ToList()
-                : Array.Empty<TModel>();
+            if (idsResult.Results.Any())
+            {
+                var models = await _crudService.GetAsync(idsResult.Results, criteria.ResponseGroup, clone);
+                result.Results.AddRange(models.OrderBy(x => idsResult.Results.IndexOf(x.Id)));
+            }
 
             return await ProcessSearchResultAsync(result, criteria);
         }
