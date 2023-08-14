@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
     public class DistributedLockService : IDistributedLockService
     {
         private readonly IDistributedLockFactory _distributedLockFactory;
-        private readonly TimeSpan _expiry = TimeSpan.FromSeconds(20);
+        private readonly TimeSpan _expiry = TimeSpan.FromSeconds(30);
 
         public DistributedLockService(IDistributedLockFactory distributedLockFactory)
         {
@@ -25,7 +25,7 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
 
             if (!redLock.IsAcquired)
             {
-                throw new PlatformException("Service is busy.");
+                throw new PlatformException($"Resource `{resourceKey}' is currently unavailable due to high demand.");
             }
 
             return resolver();
@@ -41,7 +41,7 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
 
             if (!redLock.IsAcquired)
             {
-                throw new PlatformException("Service is busy.");
+                throw new PlatformException($"Resource `{resourceKey}' is currently unavailable due to high demand.");
             }
 
             return await resolver();
