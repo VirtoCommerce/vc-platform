@@ -17,11 +17,11 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
             _distributedLockFactory = distributedLockFactory;
         }
 
-        public T Execute<T>(string resourceKey, Func<T> resolver, TimeSpan? expireTime = null, TimeSpan? waitTime = null, TimeSpan? retryTime = null, CancellationToken? cancellationToken = null)
+        public T Execute<T>(string resourceKey, Func<T> resolver, TimeSpan? lockTimeout = null, TimeSpan? tryLockTimeout = null, TimeSpan? retryInterval = null, CancellationToken? cancellationToken = null)
         {
-            using var redLock = waitTime.HasValue && retryTime.HasValue
-                ? _distributedLockFactory.CreateLock(resourceKey, expireTime ?? _expiry, waitTime.Value, retryTime.Value, cancellationToken)
-                : _distributedLockFactory.CreateLock(resourceKey, expireTime ?? _expiry);
+            using var redLock = tryLockTimeout.HasValue && retryInterval.HasValue
+                ? _distributedLockFactory.CreateLock(resourceKey, lockTimeout ?? _expiry, tryLockTimeout.Value, retryInterval.Value, cancellationToken)
+                : _distributedLockFactory.CreateLock(resourceKey, lockTimeout ?? _expiry);
 
             if (!redLock.IsAcquired)
             {
@@ -31,11 +31,11 @@ namespace VirtoCommerce.Platform.DistributedLock.Redis
             return resolver();
         }
 
-        public async Task<T> ExecuteAsync<T>(string resourceKey, Func<Task<T>> resolver, TimeSpan? expireTime = null, TimeSpan? waitTime = null, TimeSpan? retryTime = null, CancellationToken? cancellationToken = null)
+        public async Task<T> ExecuteAsync<T>(string resourceKey, Func<Task<T>> resolver, TimeSpan? lockTimeout = null, TimeSpan? tryLockTimeout = null, TimeSpan? retryInterval = null, CancellationToken? cancellationToken = null)
         {
-            var lockTask = waitTime.HasValue && retryTime.HasValue
-                ? _distributedLockFactory.CreateLockAsync(resourceKey, expireTime ?? _expiry, waitTime.Value, retryTime.Value, cancellationToken)
-                : _distributedLockFactory.CreateLockAsync(resourceKey, expireTime ?? _expiry);
+            var lockTask = tryLockTimeout.HasValue && retryInterval.HasValue
+                ? _distributedLockFactory.CreateLockAsync(resourceKey, lockTimeout ?? _expiry, tryLockTimeout.Value, retryInterval.Value, cancellationToken)
+                : _distributedLockFactory.CreateLockAsync(resourceKey, lockTimeout ?? _expiry);
 
             using var redLock = await lockTask;
 
