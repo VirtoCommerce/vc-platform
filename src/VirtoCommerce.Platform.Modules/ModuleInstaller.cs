@@ -67,8 +67,14 @@ namespace VirtoCommerce.Platform.Modules
                 var alreadyInstalledModule = allInstalledModules.FirstOrDefault(x => x.Id.EqualsInvariant(module.Id));
                 if (alreadyInstalledModule != null && !alreadyInstalledModule.Version.IsCompatibleWithBySemVer(module.Version))
                 {
-                    // module downgrade NOT supported
-                    Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}. Automated upgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.", module));
+                    if (alreadyInstalledModule.Version.Major < module.Version.Major)
+                    {
+                        Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}. Automated upgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.", module));
+                    }
+                    else
+                    {
+                        Report(progress, ProgressMessageLevel.Error, string.Format("Issue with {0}. Automated downgrade is not feasible due to a major version release; please opt for a custom upgrade to ensure a seamless transition.", module));
+                    }
                     isValid = false;
                 }
 
