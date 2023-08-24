@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -22,7 +21,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             _memoryCache = memoryCache;
         }
 
-        public async virtual Task<DynamicProperty> GetByNameAsync(string objectType, string propertyName)
+        public virtual async Task<DynamicProperty> GetByNameAsync(string objectType, string propertyName)
         {
             if (objectType == null)
             {
@@ -35,29 +34,20 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
 
             var cacheKey = CacheKey.With(GetType(), nameof(GetByNameAsync));
             var dict = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
-           {
-               cacheEntry.AddExpirationToken(DynamicPropertiesCacheRegion.CreateChangeToken());
+            {
+                cacheEntry.AddExpirationToken(DynamicPropertiesCacheRegion.CreateChangeToken());
 
-               var result = new List<DynamicProperty>();
+                var criteria = new DynamicPropertySearchCriteria
+                {
+                    Skip = 0,
+                    Take = _pageSize
+                };
 
-               var criteria = new DynamicPropertySearchCriteria
-               {
-                   Skip = 0,
-                   Take = _pageSize
-               };
+                var result = await _searchService.SearchAllNoCloneAsync(criteria);
 
-               var searchResult = await _searchService.SearchDynamicPropertiesAsync(criteria);
-               result.AddRange(searchResult.Results);
-               var totalCount = searchResult.TotalCount;
-               for (var skip = _pageSize; skip < totalCount; skip += _pageSize)
-               {
-                   criteria.Skip = skip;
-                   searchResult = await _searchService.SearchDynamicPropertiesAsync(criteria);
-                   result.AddRange(searchResult.Results);
-               }
-               return result.Distinct().ToDictionary(x => $"{x.ObjectType}__{x.Name}", StringComparer.InvariantCultureIgnoreCase).WithDefaultValue(null);
+                return result.Distinct().ToDictionary(x => $"{x.ObjectType}__{x.Name}", StringComparer.InvariantCultureIgnoreCase).WithDefaultValue(null);
 
-           });
+            });
             return dict[$"{objectType}__{propertyName}"];
         }
     }

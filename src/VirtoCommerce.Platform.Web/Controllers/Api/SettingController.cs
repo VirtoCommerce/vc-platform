@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -30,10 +29,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("")]
         [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
-        public async Task<ActionResult<ObjectSettingEntry>> GetAllGlobalSettings()
+        public Task<ActionResult<ObjectSettingEntry[]>> GetAllGlobalSettings()
         {
-            var result = await _settingsManager.GetObjectSettingsAsync(_settingsManager.AllRegisteredSettings.Where(x => !x.IsHidden).Select(x => x.Name));
-            return Ok(result);
+            return GetGlobalModuleSettingsAsync(id: null);
         }
 
         /// <summary>
@@ -49,10 +47,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var criteria = new SettingsSearchCriteria
             {
                 ModuleId = id,
-                Take = int.MaxValue
+                IsHidden = false,
             };
-            var result = await _settingsSearchService.SearchSettingsAsync(criteria);
-            return Ok(result.Results.Where(x=>!x.IsHidden).ToList());
+            var result = await _settingsSearchService.SearchAllNoCloneAsync(criteria);
+            return Ok(result);
         }
 
         /// <summary>
