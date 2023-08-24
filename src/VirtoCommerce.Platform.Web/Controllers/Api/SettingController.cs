@@ -44,11 +44,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
         public async Task<ActionResult<ObjectSettingEntry[]>> GetGlobalModuleSettingsAsync(string id)
         {
-            var criteria = new SettingsSearchCriteria
-            {
-                ModuleId = id,
-                IsHidden = false,
-            };
+            var criteria = AbstractTypeFactory<SettingsSearchCriteria>.TryCreateInstance();
+            criteria.ModuleId = id;
+            criteria.IsHidden = false;
+
             var result = await _settingsSearchService.SearchAllNoCloneAsync(criteria);
             return Ok(result);
         }
