@@ -59,6 +59,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             while (result.TotalCount > 0);
 
             result.NotifyEvents = newNotifications;
+            result.NewCount = newNotifications.Count;
             result.TotalCount = newNotifications.Count;
 
             return Ok(result);
