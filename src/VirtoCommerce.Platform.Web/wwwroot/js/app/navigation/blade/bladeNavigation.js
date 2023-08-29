@@ -432,20 +432,10 @@ angular.module('platformWebApp')
             clearError: clearError,
             getStatusText: function (response) {
                 if (response.statusText === "") {
-                    var result = "";
-                    var statusString = response.status.toString();
-
-                    if (statusString === '404') {
-                        result = $translate.instant('platform.errors.404');
-                    }
-                    else if (statusString === '409') {
-                        result = $translate.instant('platform.errors.409');
-                    }
-                    else if (statusString.startsWith('4')) {
-                        result = $translate.instant('platform.errors.4XX');
-                    }
-                    else if (statusString.startsWith('5')) {
-                        result = $translate.instant('platform.errors.5XX');
+                    var errorKey = 'platform.errors.' + response.status.toString();
+                    var result = $translate.instant(errorKey);
+                    if (errorKey === result) {
+                        result = $translate.instant('platform.errors.generic-error');
                     }
 
                     return result;
