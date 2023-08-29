@@ -14,7 +14,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public static Task<IList<TModel>> SearchAllNoCloneAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria)
             where TCriteria : SearchCriteriaBase
             where TResult : GenericSearchResult<TModel>
-            where TModel : Entity, ICloneable
+            where TModel : IEntity
         {
             return searchService.SearchAllAsync(searchCriteria, clone: false);
         }
@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public static async Task<IList<TModel>> SearchAllAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria, bool clone = true)
             where TCriteria : SearchCriteriaBase
             where TResult : GenericSearchResult<TModel>
-            where TModel : Entity, ICloneable
+            where TModel : IEntity
         {
             var result = new List<TModel>();
 
@@ -40,7 +40,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public static Task<TResult> SearchNoCloneAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria)
             where TCriteria : SearchCriteriaBase
             where TResult : GenericSearchResult<TModel>
-            where TModel : Entity, ICloneable
+            where TModel : IEntity
         {
             return searchService.SearchAsync(searchCriteria, clone: false);
         }
@@ -69,7 +69,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public static IAsyncEnumerable<TResult> SearchBatchesNoCloneAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria)
             where TCriteria : SearchCriteriaBase
             where TResult : GenericSearchResult<TModel>
-            where TModel : Entity, ICloneable
+            where TModel : IEntity
         {
             return searchService.SearchBatchesAsync(searchCriteria, clone: false);
         }
@@ -77,7 +77,7 @@ namespace VirtoCommerce.Platform.Core.Common
         public static async IAsyncEnumerable<TResult> SearchBatchesAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria, bool clone = true)
             where TCriteria : SearchCriteriaBase
             where TResult : GenericSearchResult<TModel>
-            where TModel : Entity, ICloneable
+            where TModel : IEntity
         {
             int totalCount;
             searchCriteria = searchCriteria.CloneTyped();

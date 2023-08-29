@@ -10,6 +10,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
+using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -150,17 +151,16 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 return;
             }
 
-            using var stream = platformZipEntries.Open();
-            var streamReader = new StreamReader(stream);
-            using var reader = new JsonTextReader(streamReader);
-            while (reader.Read())
+            await using var stream = platformZipEntries.Open();
+            await using var reader = new JsonTextReader(new StreamReader(stream));
+            while (await reader.ReadAsync())
             {
                 if (reader.TokenType != JsonToken.PropertyName)
                 {
                     continue;
                 }
 
-                var token = reader.Value.ToString();
+                var token = reader.Value?.ToString();
 
                 switch (token)
                 {
@@ -246,18 +246,15 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
         private async Task ImportSettingsInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, PlatformExportManifest manifest, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
         {
-            await reader.DeserializeArrayWithPagingAsync<ObjectSettingEntry>(jsonSerializer, int.MaxValue, async items =>
-            {
-                var arrayItems = items.ToArray();
-                foreach (var module in manifest.Modules)
+            var moduleIds = manifest.Modules.Select(x => x.Id).ToHashSet();
+
+            await reader.DeserializeArrayWithPagingAsync<ObjectSettingEntry>(jsonSerializer, _batchSize,
+                items => _settingsManager.SaveObjectSettingsAsync(items.Where(x => moduleIds.Contains(x.ModuleId)).ToArray()),
+                processedCount =>
                 {
-                    await _settingsManager.SaveObjectSettingsAsync(arrayItems.Where(x => x.ModuleId == module.Id).ToArray());
-                }
-            }, processedCount =>
-            {
-                progressInfo.Description = $"{processedCount} coupons have been imported";
-                progressCallback(progressInfo);
-            }, cancellationToken);
+                    progressInfo.Description = $"{processedCount} settings have been imported";
+                    progressCallback(progressInfo);
+                }, cancellationToken);
         }
 
         private async Task ImportDynamicPropertiesInternalAsync(JsonTextReader reader, JsonSerializer jsonSerializer, ExportImportProgressInfo progressInfo, Action<ExportImportProgressInfo> progressCallback, ICancellationToken cancellationToken)
@@ -266,7 +263,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 items => _dynamicPropertyService.SaveDynamicPropertiesAsync(items.ToArray()),
                 processedCount =>
                 {
-                    progressInfo.Description = $"{processedCount} coupons have been imported";
+                    progressInfo.Description = $"{processedCount} dynamic properties have been imported";
                     progressCallback(progressInfo);
                 }, cancellationToken);
         }
@@ -277,7 +274,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 items => _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items.ToArray()),
                 processedCount =>
                 {
-                    progressInfo.Description = $"{processedCount} coupons have been imported";
+                    progressInfo.Description = $"{processedCount} dynamic property dictionary items have been imported";
                     progressCallback(progressInfo);
                 }, cancellationToken);
         }
@@ -288,7 +285,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                 items => _userApiKeyService.SaveApiKeysAsync(items.ToArray()),
                 processedCount =>
                 {
-                    progressInfo.Description = $"{processedCount} api keys have been imported";
+                    progressInfo.Description = $"{processedCount} API keys have been imported";
                     progressCallback(progressInfo);
                 }, cancellationToken);
         }
@@ -299,163 +296,145 @@ namespace VirtoCommerce.Platform.Data.ExportImport
 
             var serializer = GetJsonSerializer();
             //Create part for platform entries
-            var platformEntiriesPart = zipArchive.CreateEntry(PlatformZipEntryName, CompressionLevel.Optimal);
-            using (var partStream = platformEntiriesPart.Open())
+            var platformEntriesPart = zipArchive.CreateEntry(PlatformZipEntryName, CompressionLevel.Optimal);
+
+            await using var partStream = platformEntriesPart.Open();
+            await using var sw = new StreamWriter(partStream, Encoding.UTF8);
+            await using var writer = new JsonTextWriter(sw);
+
+            await writer.WriteStartObjectAsync();
+
+            if (manifest.HandleSecurity)
             {
-                using (var sw = new StreamWriter(partStream, Encoding.UTF8))
-                using (var writer = new JsonTextWriter(sw))
+                #region Roles
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                progressInfo.Description = "Roles exporting...";
+                progressCallback(progressInfo);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await writer.WritePropertyNameAsync("Roles");
+                await writer.WriteStartArrayAsync();
+
+                var roles = _roleManager.Roles.ToList();
+                if (_roleManager.SupportsRoleClaims)
                 {
-                    await writer.WriteStartObjectAsync();
-
-                    if (manifest.HandleSecurity)
+                    foreach (var role in roles)
                     {
-                        #region Roles
-
-                        progressInfo.Description = "Roles exporting...";
-                        progressCallback(progressInfo);
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        await writer.WritePropertyNameAsync("Roles");
-                        await writer.WriteStartArrayAsync();
-
-                        var roles = _roleManager.Roles.ToList();
-                        if (_roleManager.SupportsRoleClaims)
-                        {
-                            foreach (var role in roles)
-                            {
-                                var fullyLoadedRole = await _roleManager.FindByIdAsync(role.Id);
-                                serializer.Serialize(writer, fullyLoadedRole);
-                            }
-
-                            writer.Flush();
-                            progressInfo.Description = $"{roles.Count} roles exported";
-                            progressCallback(progressInfo);
-                        }
-
-                        await writer.WriteEndArrayAsync();
-
-                        #endregion Roles
-
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        #region Users
-
-                        await writer.WritePropertyNameAsync("Users");
-                        await writer.WriteStartArrayAsync();
-                        var usersResult = _userManager.Users.ToArray();
-                        progressInfo.Description = $"Security: {usersResult.Length} users exporting...";
-                        progressCallback(progressInfo);
-                        var userExported = 0;
-
-                        foreach (var user in usersResult)
-                        {
-                            var userExt = await _userManager.FindByIdAsync(user.Id);
-                            if (userExt != null)
-                            {
-                                serializer.Serialize(writer, userExt);
-                                userExported++;
-                            }
-                        }
-
-                        await writer.FlushAsync();
-                        progressInfo.Description = $"{userExported} of {usersResult.Length} users exported";
-                        progressCallback(progressInfo);
-
-                        await writer.WriteEndArrayAsync();
-
-                        #endregion Users
-
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        #region UserApiKeys
-
-                        await writer.WritePropertyNameAsync("UserApiKeys");
-                        await writer.WriteStartArrayAsync();
-
-                        progressInfo.Description = "User Api keys: load keys...";
-                        progressCallback(progressInfo);
-
-                        var apiKeys = (await _userApiKeySearchService.SearchUserApiKeysAsync(new UserApiKeySearchCriteria { Take = int.MaxValue })).Results;
-                        foreach (var apiKey in apiKeys)
-                        {
-                            serializer.Serialize(writer, apiKey);
-                        }
-
-                        progressInfo.Description = $"User Api keys have been exported";
-                        progressCallback(progressInfo);
-                        await writer.WriteEndArrayAsync();
-
-                        #endregion UserApiKeys
+                        var fullyLoadedRole = await _roleManager.FindByIdAsync(role.Id);
+                        serializer.Serialize(writer, fullyLoadedRole);
                     }
 
-                    if (manifest.HandleSettings)
+                    await writer.FlushAsync();
+                    progressInfo.Description = $"{roles.Count} roles exported";
+                    progressCallback(progressInfo);
+                }
+
+                await writer.WriteEndArrayAsync();
+
+                #endregion Roles
+
+                #region Users
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await writer.WritePropertyNameAsync("Users");
+                await writer.WriteStartArrayAsync();
+                var usersResult = _userManager.Users.ToArray();
+                progressInfo.Description = $"Security: {usersResult.Length} users exporting...";
+                progressCallback(progressInfo);
+                var userExported = 0;
+
+                foreach (var user in usersResult)
+                {
+                    var userExt = await _userManager.FindByIdAsync(user.Id);
+                    if (userExt != null)
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
+                        serializer.Serialize(writer, userExt);
+                        userExported++;
+                    }
+                }
 
-                        await writer.WritePropertyNameAsync("Settings");
-                        await writer.WriteStartArrayAsync();
+                await writer.FlushAsync();
+                progressInfo.Description = $"{userExported} of {usersResult.Length} users exported";
+                progressCallback(progressInfo);
 
-                        progressInfo.Description = "Settings: selected modules settings exporting...";
-                        progressCallback(progressInfo);
-                        foreach (var module in manifest.Modules)
-                        {
-                            var moduleSettings = await _settingsManager.GetObjectSettingsAsync(_settingsManager.AllRegisteredSettings.Where(x => x.ModuleId == module.Id).Select(x => x.Name));
-                            //Export only settings with set values
-                            foreach (var setting in moduleSettings.Where(x => x.ItHasValues))
-                            {
-                                serializer.Serialize(writer, setting);
-                            }
+                await writer.WriteEndArrayAsync();
 
-                            await writer.FlushAsync();
-                        }
+                #endregion Users
 
-                        progressInfo.Description = $"Settings of modules exported";
-                        progressCallback(progressInfo);
-                        await writer.WriteEndArrayAsync();
+                await SerializeArray("UserApiKeys", "User API keys", _userApiKeySearchService, writer);
+            }
+
+            if (manifest.HandleSettings)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await writer.WritePropertyNameAsync("Settings");
+                await writer.WriteStartArrayAsync();
+
+                progressInfo.Description = "Settings: selected modules settings exporting...";
+                progressCallback(progressInfo);
+                foreach (var module in manifest.Modules)
+                {
+                    var moduleSettings = await _settingsManager.GetObjectSettingsAsync(_settingsManager.AllRegisteredSettings.Where(x => x.ModuleId == module.Id).Select(x => x.Name));
+                    //Export only settings with set values
+                    foreach (var setting in moduleSettings.Where(x => x.ItHasValues))
+                    {
+                        serializer.Serialize(writer, setting);
                     }
 
-                    if (manifest.HandleDynamicProperties)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        await writer.WritePropertyNameAsync("DynamicProperties");
-                        await writer.WriteStartArrayAsync();
-
-                        progressInfo.Description = "Dynamic properties: load properties...";
-                        progressCallback(progressInfo);
-
-                        var dynamicProperties = (await _dynamicPropertySearchService.SearchDynamicPropertiesAsync(new DynamicPropertySearchCriteria { Take = int.MaxValue })).Results;
-                        foreach (var dynamicProperty in dynamicProperties)
-                        {
-                            serializer.Serialize(writer, dynamicProperty);
-                        }
-
-                        progressInfo.Description = $"Dynamic properties exported";
-                        progressCallback(progressInfo);
-                        await writer.WriteEndArrayAsync();
-
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        await writer.WritePropertyNameAsync("DynamicPropertyDictionaryItems");
-                        await writer.WriteStartArrayAsync();
-
-                        progressInfo.Description = "Dynamic properties Dictionary Items: load properties...";
-                        progressCallback(progressInfo);
-
-                        var dynamicPropertyDictionaryItems = (await _dynamicPropertyDictionaryItemsSearchService.SearchDictionaryItemsAsync(new DynamicPropertyDictionaryItemSearchCriteria { Take = int.MaxValue })).Results;
-                        foreach (var dynamicPropertyDictionaryItem in dynamicPropertyDictionaryItems)
-                        {
-                            serializer.Serialize(writer, dynamicPropertyDictionaryItem);
-                        }
-
-                        progressInfo.Description = $"Dynamic properties dictionary items exported";
-                        progressCallback(progressInfo);
-                        await writer.WriteEndArrayAsync();
-                    }
-
-                    await writer.WriteEndObjectAsync();
                     await writer.FlushAsync();
                 }
+
+                progressInfo.Description = $"Settings of modules exported";
+                progressCallback(progressInfo);
+                await writer.WriteEndArrayAsync();
+            }
+
+            if (manifest.HandleDynamicProperties)
+            {
+                await SerializeArray("DynamicProperties", "Dynamic properties", _dynamicPropertySearchService, writer);
+                await SerializeArray("DynamicPropertyDictionaryItems", "Dynamic property dictionary items", _dynamicPropertyDictionaryItemsSearchService, writer);
+            }
+
+            await writer.WriteEndObjectAsync();
+            await writer.FlushAsync();
+
+            async Task SerializeArray<TModel, TCriteria, TResult>(
+                string name,
+                string displayName,
+                ISearchService<TCriteria, TResult, TModel> searchService,
+                JsonTextWriter jsonTextWriter)
+                where TCriteria : SearchCriteriaBase
+                where TResult : GenericSearchResult<TModel>
+                where TModel : IEntity
+            {
+                progressInfo.Description = $"{displayName}: exporting...";
+                progressCallback(progressInfo);
+
+                await jsonTextWriter.WritePropertyNameAsync(name);
+                await jsonTextWriter.WriteStartArrayAsync();
+
+                var criteria = AbstractTypeFactory<TCriteria>.TryCreateInstance();
+                criteria.Take = _batchSize;
+
+                await foreach (var searchResult in searchService.SearchBatchesNoCloneAsync(criteria))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    foreach (var item in searchResult.Results)
+                    {
+                        serializer.Serialize(jsonTextWriter, item);
+                    }
+                }
+
+                await jsonTextWriter.WriteEndArrayAsync();
+                await jsonTextWriter.FlushAsync();
+
+                progressInfo.Description = $"{displayName}: exported";
+                progressCallback(progressInfo);
             }
         }
 

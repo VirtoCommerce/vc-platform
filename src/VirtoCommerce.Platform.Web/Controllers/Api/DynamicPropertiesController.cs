@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -58,7 +59,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         public async Task<ActionResult<DynamicPropertySearchResult>> SearchDynamicProperties([FromBody] DynamicPropertySearchCriteria criteria)
         {
-            var result = await _dynamicPropertySearchService.SearchDynamicPropertiesAsync(criteria);
+            var result = await _dynamicPropertySearchService.SearchNoCloneAsync(criteria);
             return Ok(result);
         }
 
@@ -130,7 +131,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("dictionaryitems/search")]
         public async Task<ActionResult<DynamicPropertyDictionaryItemSearchResult>> SearchDictionaryItems([FromBody] DynamicPropertyDictionaryItemSearchCriteria criteria)
         {
-            var result = await _dynamicPropertyDictionaryItemsSearchService.SearchDictionaryItemsAsync(criteria);
+            var result = await _dynamicPropertyDictionaryItemsSearchService.SearchNoCloneAsync(criteria);
             return Ok(result);
         }
 
