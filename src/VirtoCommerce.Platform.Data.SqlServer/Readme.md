@@ -1,26 +1,20 @@
-
-## Package manager 
-Add-Migration Initial -Context VirtoCommerce.Platform.Data.Repositories.PlatformDbContext  -Verbose -OutputDir Migrations\Data -Project VirtoCommerce.Platform.Data.SqlServer -StartupProject VirtoCommerce.Platform.Data.SqlServer  -Debug
-Add-Migration Initial -Context VirtoCommerce.Platform.Security.Repositories.SecurityDbContext  -Verbose -OutputDir Migrations\Security -Project VirtoCommerce.Platform.Data.SqlServer -StartupProject VirtoCommerce.Platform.Data.SqlServer  -Debug
-
-
-
-### Entity Framework Core Commands
+# Entity Framework Core Commands
+```
+dotnet tool install --global dotnet-ef --version 6.0.13
 ```
 
-dotnet tool install --global dotnet-ef --version 6.*
-```
-
-**Generate Migrations**
+## Generate Migrations**
 
 ```
-dotnet ef migrations add Initial -- "{connection string}"
-dotnet ef migrations add Update1 -- "{connection string}"
-dotnet ef migrations add Update2 -- "{connection string}"
+dotnet ef migrations add Initial 
+dotnet ef migrations add Update1 
+dotnet ef migrations add Update2 
 ```
 
 etc..
 
-**Apply Migrations**
+## Apply Migrations**
 
-`dotnet ef database update -- "{connection string}"`
+```
+dotnet ef database update
+```

@@ -1,10 +1,10 @@
-using EntityFrameworkCore.Triggers;
 using Microsoft.EntityFrameworkCore;
+using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Repositories
 {
-    public class PlatformDbContext : DbContextWithTriggers
+    public class PlatformDbContext : DbContextBase
     {
         protected const int _idLength128 = 128;
         protected const int _idLength64 = 64;
