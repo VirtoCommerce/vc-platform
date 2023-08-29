@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
@@ -13,15 +14,27 @@ namespace VirtoCommerce.Platform.Data.Settings
         {
             _settingsManager = settingsManager;
         }
+
+        [Obsolete("Use SearchAsync()", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
         public async Task<GenericSearchResult<ObjectSettingEntry>> SearchSettingsAsync(SettingsSearchCriteria criteria)
         {
-            var result = new GenericSearchResult<ObjectSettingEntry>();
+            return await SearchAsync(criteria, clone: true);
+        }
+
+        public async Task<SettingsSearchResult> SearchAsync(SettingsSearchCriteria criteria, bool clone = true)
+        {
+            var result = AbstractTypeFactory<SettingsSearchResult>.TryCreateInstance();
 
             var query = _settingsManager.AllRegisteredSettings.AsQueryable();
 
             if (!string.IsNullOrEmpty(criteria.ModuleId))
             {
                 query = query.Where(x => x.ModuleId == criteria.ModuleId);
+            }
+
+            if (criteria.IsHidden != null)
+            {
+                query = query.Where(x => x.IsHidden == criteria.IsHidden);
             }
 
             var sortInfos = criteria.SortInfos;

@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -25,7 +27,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("")]
         public ActionResult<PushNotificationSearchResult> SearchPushNotification([FromBody] PushNotificationSearchCriteria criteria)
         {
-            var retVal = _pushNotifier.SearchNotifies(User.Identity.Name, criteria);
+            var retVal = _pushNotifier.SearchNotifies(User.Identity?.Name, criteria);
             return Ok(retVal);
         }
 
@@ -37,15 +39,30 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("markAllAsRead")]
         public async Task<ActionResult<PushNotificationSearchResult>> MarkAllAsRead()
         {
-            var criteria = new PushNotificationSearchCriteria { OnlyNew = true, Skip = 0, Take = int.MaxValue };
-            var retVal = _pushNotifier.SearchNotifies(User.Identity.Name, criteria);
-            foreach (var notifyEvent in retVal.NotifyEvents)
-            {
-                notifyEvent.IsNew = false;
-                await _pushNotifier.SendAsync(notifyEvent);
-            }
+            PushNotificationSearchResult result;
+            var newNotifications = new List<PushNotification>();
 
-            return Ok(retVal);
+            var criteria = AbstractTypeFactory<PushNotificationSearchCriteria>.TryCreateInstance();
+            criteria.OnlyNew = true;
+
+            do
+            {
+                result = _pushNotifier.SearchNotifies(User.Identity?.Name, criteria);
+                newNotifications.AddRange(result.NotifyEvents);
+
+                foreach (var notifyEvent in result.NotifyEvents)
+                {
+                    notifyEvent.IsNew = false;
+                    await _pushNotifier.SendAsync(notifyEvent);
+                }
+            }
+            while (result.TotalCount > 0);
+
+            result.NotifyEvents = newNotifications;
+            result.NewCount = newNotifications.Count;
+            result.TotalCount = newNotifications.Count;
+
+            return Ok(result);
         }
     }
 }

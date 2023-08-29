@@ -18,7 +18,13 @@ namespace VirtoCommerce.Platform.Security.Services
             _repositoryFactory = repositoryFactory;
         }
 
-        public async Task<UserApiKeySearchResult> SearchUserApiKeysAsync(UserApiKeySearchCriteria criteria)
+        [Obsolete("Use SearchAsync()", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
+        public Task<UserApiKeySearchResult> SearchUserApiKeysAsync(UserApiKeySearchCriteria criteria)
+        {
+            return SearchAsync(criteria, clone: true);
+        }
+
+        public async Task<UserApiKeySearchResult> SearchAsync(UserApiKeySearchCriteria criteria, bool clone = true)
         {
             using (var repository = _repositoryFactory())
             {

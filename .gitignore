@@ -279,6 +279,7 @@ app_data/
 .vscode
 
 /.nuke
+/src/VirtoCommerce.Platform.Web/export
 /src/VirtoCommerce.Platform.Web/modules
 # mkdocs output
 /site
