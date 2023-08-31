@@ -137,7 +137,7 @@ angular.module('platformWebApp')
             widgetService.registerWidget({
                 isVisible: function (blade) {
                     return blade.currentEntities && blade.currentEntities['Setup'] && blade.currentEntities['Setup'].length
-                        && blade.currentEntities['Setup'][0]['name'] === 'VirtoCommerce.SetupStep';
+                        && _.findWhere(blade.currentEntities['Setup'], { 'name': 'VirtoCommerce.SetupStep' });
                 },
                 controller: 'platformWebApp.importSampleDataWidgetController',
                 template: '$(Platform)/Scripts/app/exportImport/widgets/sampleDataImportWidget.tpl.html'
