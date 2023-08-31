@@ -27,15 +27,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
 
         private static DateTime ConvertToUtc(DateTime date)
         {
-            switch (date.Kind)
-            {
-                case DateTimeKind.Utc:
-                    return date;
-                case DateTimeKind.Local:
-                    return date.ToUniversalTime();
-                default:
-                    throw new InvalidTimeZoneException($"Unsupported DateTimeKind: {date.Kind}");
-            }
+            return date.Kind == DateTimeKind.Utc ? date : date.ToUniversalTime();
         }
 
         private static DateTime SpecifyUtc(DateTime date)
