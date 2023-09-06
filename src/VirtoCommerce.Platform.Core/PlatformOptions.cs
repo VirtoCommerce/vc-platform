@@ -50,6 +50,15 @@ namespace VirtoCommerce.Platform.Core
         public bool AllowInsecureHttp { get; set; }
 
         /// <summary>
+        /// Enables the Response Compression Middleware for default MIME types and compression providers (Brotli and Gzip).
+        /// </summary>
+        /// <remarks>
+        /// When to use this setting and activate Response Compression Middleware?
+        /// Use server-based response compression technologies in IIS, Apache, or Nginx.The performance of the response compression middleware probably won't match that of the server modules. HTTP.sys server and Kestrel server don't currently offer built-in compression support.
+        /// </remarks>
+        public bool UseResponseCompression { get; set; }
+
+        /// <summary>
         /// Extensions of the files that cannot be uploaded to the server by the platform
         /// </summary>
         public string[] FileExtensionsBlackList { get; set; } = new string[0];
