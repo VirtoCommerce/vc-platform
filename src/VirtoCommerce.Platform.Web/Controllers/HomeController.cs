@@ -71,7 +71,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
                     resetTime = resetTime.AddDays(1);
                 }
 
-                model.DemoResetTime = new HtmlString(JsonConvert.SerializeObject(resetTime).Replace("\"", "'") ?? "''");
+                model.DemoResetTime = new HtmlString(JsonConvert.SerializeObject(resetTime).Replace("\"", "'"));
             }
 
             return View(model);

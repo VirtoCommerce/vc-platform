@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Security.Authorization
             // then no limitations should be applied to the permissions.
             if (limitedPermissionsClaim != null)
             {
-                var limitedPermissions = limitedPermissionsClaim.Split(PlatformConstants.Security.Claims.PermissionClaimTypeDelimiter, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                var limitedPermissions = limitedPermissionsClaim.Split(PlatformConstants.Security.Claims.PermissionClaimTypeDelimiter, StringSplitOptions.RemoveEmptyEntries);
 
                 if (limitedPermissions.Contains(requirement.Permission))
                 {
@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Security.Authorization
             }
             else
             {
-                if(context.User.HasGlobalPermission(requirement.Permission))
+                if (context.User.HasGlobalPermission(requirement.Permission))
                 {
                     context.Succeed(requirement);
                 }
