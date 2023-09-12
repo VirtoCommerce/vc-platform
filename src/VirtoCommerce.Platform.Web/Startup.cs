@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.StaticFiles;
@@ -207,6 +208,16 @@ namespace VirtoCommerce.Platform.Web
                 // to replace the default OpenIddict entities.
                 options.UseOpenIddict();
             });
+
+            if (platformOptions.UseResponseCompression)
+            {
+                services.AddResponseCompression(options =>
+                {
+                    options.EnableForHttps = true;
+                    options.Providers.Add<BrotliCompressionProvider>();
+                    options.Providers.Add<GzipCompressionProvider>();
+                });
+            }
 
             // Enable synchronous IO if using Kestrel:
             services.Configure<KestrelServerOptions>(options =>
@@ -536,6 +547,13 @@ namespace VirtoCommerce.Platform.Web
             foreach (var binding in fileExtensionsBindings)
             {
                 fileExtensionContentTypeProvider.Mappings[binding.Key] = binding.Value;
+            }
+
+            var platformOptions = app.ApplicationServices.GetService<IOptions<PlatformOptions>>().Value;
+
+            if (platformOptions.UseResponseCompression)
+            {
+                app.UseResponseCompression();
             }
 
             app.UseStaticFiles(new StaticFileOptions
