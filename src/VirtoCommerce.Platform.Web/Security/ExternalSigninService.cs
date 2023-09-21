@@ -13,7 +13,6 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
-using VirtoCommerce.Platform.Web.Azure;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Security
@@ -23,28 +22,11 @@ namespace VirtoCommerce.Platform.Web.Security
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEventPublisher _eventPublisher;
-        private readonly AzureAdOptions _azureAdOptions;
         private readonly IdentityOptions _identityOptions;
         private readonly ISettingsManager _settingsManager;
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
 
         private IUrlHelper _urlHelper;
-
-        [Obsolete("Not being used.")]
-        public ExternalSigninService(SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager,
-            IEventPublisher eventPublisher,
-            IOptions<AzureAdOptions> azureAdOptions,
-            IOptions<IdentityOptions> identityOptions,
-            ISettingsManager settingsManager)
-        {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _eventPublisher = eventPublisher;
-            _azureAdOptions = azureAdOptions.Value;
-            _identityOptions = identityOptions.Value;
-            _settingsManager = settingsManager;
-        }
 
         [ActivatorUtilitiesConstructor]
         public ExternalSigninService(SignInManager<ApplicationUser> signInManager,
@@ -104,7 +86,7 @@ namespace VirtoCommerce.Platform.Web.Security
 
             platformUser ??= await _userManager.FindByNameAsync(userName);
 
-            await _eventPublisher.Publish(new UserLoginEvent(platformUser));
+            await _eventPublisher.Publish(new UserLoginEvent(platformUser, externalLoginInfo));
 
             return returnUrl;
         }
@@ -112,39 +94,6 @@ namespace VirtoCommerce.Platform.Web.Security
         protected virtual Task<(bool, string)> ValidateUserAsync(ApplicationUser platformUser, SignInResult externalLoginResult, string returnUrl)
         {
             return Task.FromResult((true, returnUrl));
-        }
-
-        [Obsolete("Not being called. Use GetPlatformUser(ExternalLoginInfo externalLoginInfo, string userName, string userEmail)")]
-        protected virtual async Task<ApplicationUser> GetPlatformUser(string userName, string userEmail)
-        {
-            //Need handle the two cases
-            //first - when the VC platform user account already exists, it is just missing an external login info and
-            //second - when user does not have an account, then create a new account for them
-            var platformUser = await _userManager.FindByNameAsync(userName);
-
-            if (_identityOptions.User.RequireUniqueEmail && platformUser == null)
-            {
-                platformUser = await FindUserByEmail(userEmail);
-            }
-
-            if (platformUser == null)
-            {
-                platformUser = new ApplicationUser
-                {
-                    UserName = userName,
-                    Email = userEmail,
-                    UserType = await GetAzureAdDefaultUserType()
-                };
-
-                var result = await _userManager.CreateAsync(platformUser);
-                if (!result.Succeeded)
-                {
-                    var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
-                    throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
-                }
-            }
-
-            return platformUser;
         }
 
         protected virtual async Task<ApplicationUser> GetPlatformUser(ExternalLoginInfo externalLoginInfo, string userName, string userEmail)
@@ -175,7 +124,9 @@ namespace VirtoCommerce.Platform.Web.Security
                     var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
                     throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
                 }
+
                 var roles = GetDefaultUserRoles(externalLoginInfo);
+
                 if (roles is { Length: > 0 })
                 {
                     await _userManager.AddToRolesAsync(platformUser, roles);
@@ -183,24 +134,6 @@ namespace VirtoCommerce.Platform.Web.Security
             }
 
             return platformUser;
-        }
-
-        [Obsolete("Not being called. Register external provider configuration and implement ExternalSigninProvider.GetUserName")]
-        protected virtual string GetUserName(ExternalLoginInfo externalLoginInfo)
-        {
-            var userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Upn);
-
-            if (string.IsNullOrWhiteSpace(userName) && _azureAdOptions.UsePreferredUsername)
-            {
-                userName = externalLoginInfo.Principal.FindFirstValue("preferred_username");
-            }
-
-            if (string.IsNullOrWhiteSpace(userName) && _azureAdOptions.UseEmail)
-            {
-                userName = externalLoginInfo.Principal.FindFirstValue(ClaimTypes.Email);
-            }
-
-            return userName;
         }
 
         protected virtual async Task<ApplicationUser> FindUserByEmail(string email)
@@ -213,27 +146,6 @@ namespace VirtoCommerce.Platform.Web.Security
             return await _userManager.FindByEmailAsync(email);
         }
 
-        [Obsolete("Not being called. Use GetDefaultUserType(ExternalLoginInfo externalLoginInfo)")]
-        protected virtual async Task<string> GetAzureAdDefaultUserType()
-        {
-            var userType = _azureAdOptions.DefaultUserType ?? "Manager";
-            var userTypesSetting = await _settingsManager.GetObjectSettingAsync("VirtoCommerce.Platform.Security.AccountTypes");
-
-            var userTypes = userTypesSetting.AllowedValues.Select(x => x.ToString()).ToList();
-
-            if (!userTypes.Contains(userType))
-            {
-                userTypes.Add(userType);
-                userTypesSetting.AllowedValues = userTypes.Select(x => (object)x).ToArray();
-
-                using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync())
-                {
-                    await _settingsManager.SaveObjectSettingsAsync(new[] { userTypesSetting });
-                }
-            }
-
-            return userType;
-        }
 
         protected virtual async Task<string> GetDefaultUserType(ExternalLoginInfo externalLoginInfo)
         {
