@@ -1,3 +1,18 @@
+// 1.7 fix
+angular.uppercase = function (text) {
+    if (text) {
+        return text.toUpperCase();
+    }
+    return text;
+}
+angular.lowercase = function (text) {
+    if (text) {
+        return text.toLowerCase();
+    }
+    return text;
+}
+
+
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
     'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
     'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps',

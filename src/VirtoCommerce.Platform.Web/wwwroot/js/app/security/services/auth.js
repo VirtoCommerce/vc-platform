@@ -1,5 +1,5 @@
 angular.module('platformWebApp')
-    .factory('platformWebApp.authService', ['$http', '$rootScope', '$cookieStore', '$state', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', function ($http, $rootScope, $cookieStore, $state, $interpolate, $q, $window, authDataStorage, externalSignInStorage) {
+    .factory('platformWebApp.authService', ['$http', '$rootScope', '$state', '$interpolate', '$q', '$window', 'platformWebApp.authDataStorage', 'platformWebApp.externalSignInStorage', function ($http, $rootScope, $state, $interpolate, $q, $window, authDataStorage, externalSignInStorage) {
     var serviceBase = 'api/platform/security/';
     var authContext = {
         userId: null,
