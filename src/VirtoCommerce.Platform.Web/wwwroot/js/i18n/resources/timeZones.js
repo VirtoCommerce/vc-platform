@@ -1,4 +1,4 @@
-﻿// Full list of time zones defined in tz database
+// Full list of time zones defined in tz database
 // see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 angular.module('platformWebApp')
 .factory('platformWebApp.common.timeZones', ['moment', function(moment) {
@@ -10,7 +10,7 @@ angular.module('platformWebApp')
             return _.some(this.query(), function (x) { return x.id.toLowerCase() === id.toLowerCase(); });
         },
         utcOffset: function (id) {
-            var offset = moment.tz.zone(id).offset(moment().valueOf());
+            var offset = moment.tz.zone(id).utcOffset(moment().valueOf());
             // UTC offset has inverted sign. Compare to zero to avoid -0
             offset = offset === 0 ? 0 : offset * -1;
             var minutes = offset % 60;

@@ -11,9 +11,9 @@
         "@aspnet/signalr": "~1.1.4",
         "@fortawesome/fontawesome-free": "~5.15.2",
         "@uirouter/angularjs": "~1.0.20",
-        "angular": "1.5.11",
-        "angular-animate": "1.5.11",
-        "angular-cookies": "~1.5.11",
+        "angular": "1.8.3",
+        "angular-animate": "1.8.3",
+        "angular-cookies": "1.8.3",
         "angular-dynamic-locale": "~0.1.32",
         "angular-file-upload": "~2.5.0",
         "angular-filter": "~0.5.17",
@@ -21,11 +21,11 @@
         "angular-gridster": "~0.13.14",
         "angular-local-storage": "~0.7.1",
         "angular-moment": "~1.3.0",
-        "angular-resource": "1.5.11",
+        "angular-resource": "1.8.3",
         "angular-translate": "2.15.2",
-        "angular-translate-loader-url": "~2.15.1",
+        "angular-translate-loader-url": "^2.19.0",
         "angular-translate-storage-cookie": "~2.15.1",
-        "angular-translate-storage-local": "~2.15.1",
+        "angular-translate-storage-local": "^2.19.0",
         "angular-ui-bootstrap": "~0.13.1",
         "angular-ui-event": "~1.0.0",
         "angular-ui-grid": "4.10.0",
@@ -633,21 +633,21 @@
       }
     },
     "node_modules/angular": {
-      "version": "1.5.11",
-      "resolved": "https://registry.npmjs.org/angular/-/angular-1.5.11.tgz",
-      "integrity": "sha512-09DBOVVWo6rOQfdCBKGfEL0ZZIhf6P3fbeP3BU+ty5FU50DPiavVeDn8hQ4wXE8o4vKEEpzY1aRcRHJMCixWYA==",
+      "version": "1.8.3",
+      "resolved": "https://registry.npmjs.org/angular/-/angular-1.8.3.tgz",
+      "integrity": "sha512-5qjkWIQQVsHj4Sb5TcEs4WZWpFeVFHXwxEBHUhrny41D8UrBAd6T/6nPPAsLngJCReIOqi95W3mxdveveutpZw==",
       "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
     },
     "node_modules/angular-animate": {
-      "version": "1.5.11",
-      "resolved": "https://registry.npmjs.org/angular-animate/-/angular-animate-1.5.11.tgz",
-      "integrity": "sha512-onbcfyND0O42P15qtVvby2f3A2XlsKG2VzAhCjGCZoR9cow9s60fpVlnf8/Xx8wlqjukx/rd65QbxwPAnqSCyg==",
+      "version": "1.8.3",
+      "resolved": "https://registry.npmjs.org/angular-animate/-/angular-animate-1.8.3.tgz",
+      "integrity": "sha512-/LtTKvy5sD6MZbV0v+nHgOIpnFF0mrUp+j5WIxVprVhcrJriYpuCZf4S7Owj1o76De/J0eRzANUozNJ6hVepnQ==",
       "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
     },
     "node_modules/angular-cookies": {
-      "version": "1.5.11",
-      "resolved": "https://registry.npmjs.org/angular-cookies/-/angular-cookies-1.5.11.tgz",
-      "integrity": "sha512-WyUrigFcnxLZnzaupIAqOLrGXMCOcGz0L5O7OoaWKYGvEx2yNvGSNAGJCmOggGmaPEfIt6YMGTcbc4uwS6Srdw==",
+      "version": "1.8.3",
+      "resolved": "https://registry.npmjs.org/angular-cookies/-/angular-cookies-1.8.3.tgz",
+      "integrity": "sha512-uRd+zWgqiVnly7+YFRosM8E9tUQeY82dAZdtvonh/CeD/sf5SKN/BNIlMlHxZtoAk72ahTIjqUQGfeHdYcSsRQ==",
       "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
     },
     "node_modules/angular-dynamic-locale": {
@@ -710,9 +710,9 @@
       }
     },
     "node_modules/angular-resource": {
-      "version": "1.5.11",
-      "resolved": "https://registry.npmjs.org/angular-resource/-/angular-resource-1.5.11.tgz",
-      "integrity": "sha512-OlJJ+pxCu2PoyWrlkEeLjP7jmo7WtYHuWYdT8s1IpLVHYk4rfK7+uD5Zua99Yi1ZS/x9nU+mBiAupp46mBPayA==",
+      "version": "1.8.3",
+      "resolved": "https://registry.npmjs.org/angular-resource/-/angular-resource-1.8.3.tgz",
+      "integrity": "sha512-x3+4w2SyIDEIe6PUBTzcjDFI5MhZNWAPELUxkYK0QMOkOo4w3BN/qhpd+fO1deFiDS23mZKqT8kfctO1IDkCDA==",
       "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
     },
     "node_modules/angular-translate": {
@@ -727,11 +727,22 @@
       }
     },
     "node_modules/angular-translate-loader-url": {
-      "version": "2.15.2",
-      "resolved": "https://registry.npmjs.org/angular-translate-loader-url/-/angular-translate-loader-url-2.15.2.tgz",
-      "integrity": "sha512-An4Y/xw6zVcUvuQraV+pCPGvW1D/5NaBKyNVfUFhOuioC7i3B1TsiIas2ykExfb+8+HP01PT5AA6H23vtewQOQ==",
+      "version": "2.19.0",
+      "resolved": "https://registry.npmjs.org/angular-translate-loader-url/-/angular-translate-loader-url-2.19.0.tgz",
+      "integrity": "sha512-PptW0ExcwWKroEnXjIYg8fvvfnhM1buhVep1vOIowLqQV+HyRyonxGauEbCuOsMqPJARGM24WJtPnk4X2blhSg==",
       "dependencies": {
-        "angular-translate": "~2.15.2"
+        "angular-translate": "~2.19.0"
+      }
+    },
+    "node_modules/angular-translate-loader-url/node_modules/angular-translate": {
+      "version": "2.19.0",
+      "resolved": "https://registry.npmjs.org/angular-translate/-/angular-translate-2.19.0.tgz",
+      "integrity": "sha512-Z/Fip5uUT2N85dPQ0sMEe1JdF5AehcDe4tg/9mWXNDVU531emHCg53ZND9Oe0dyNiGX5rWcJKmsL1Fujus1vGQ==",
+      "dependencies": {
+        "angular": "^1.8.0"
+      },
+      "engines": {
+        "node": "*"
       }
     },
     "node_modules/angular-translate-storage-cookie": {
@@ -743,14 +754,46 @@
         "angular-translate": "~2.15.2"
       }
     },
+    "node_modules/angular-translate-storage-cookie/node_modules/angular-cookies": {
+      "version": "1.6.10",
+      "resolved": "https://registry.npmjs.org/angular-cookies/-/angular-cookies-1.6.10.tgz",
+      "integrity": "sha512-ADfbqXLhwcaecAiWIaxpl8XWFJgWsrDl/ksSEkYm5dSoXHYlj3HKlAhPbjBv/foYS7pdI0apmSGHWrBPqdjF/g==",
+      "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
+    },
     "node_modules/angular-translate-storage-local": {
-      "version": "2.15.2",
-      "resolved": "https://registry.npmjs.org/angular-translate-storage-local/-/angular-translate-storage-local-2.15.2.tgz",
-      "integrity": "sha512-EuA24ANsDbmOpRHoyCCJfYSPLYih008/cheZfBh9TPxbMAO4gxIrnetViimdhbN3rM3CHM4eexEAhY14LUOm3w==",
+      "version": "2.19.0",
+      "resolved": "https://registry.npmjs.org/angular-translate-storage-local/-/angular-translate-storage-local-2.19.0.tgz",
+      "integrity": "sha512-YrM3Y1PLi7OBd053vIhGKQ/DN3nWtQEJlj3++EcRLaGtmDu+4Fp/drzO4gKJtMQRRmJCIM3BqFSqalqijJD56Q==",
       "dependencies": {
-        "angular-translate": "~2.15.2",
-        "angular-translate-storage-cookie": "~2.15.2"
+        "angular-translate": "~2.19.0",
+        "angular-translate-storage-cookie": "~2.19.0"
       }
+    },
+    "node_modules/angular-translate-storage-local/node_modules/angular-translate": {
+      "version": "2.19.0",
+      "resolved": "https://registry.npmjs.org/angular-translate/-/angular-translate-2.19.0.tgz",
+      "integrity": "sha512-Z/Fip5uUT2N85dPQ0sMEe1JdF5AehcDe4tg/9mWXNDVU531emHCg53ZND9Oe0dyNiGX5rWcJKmsL1Fujus1vGQ==",
+      "dependencies": {
+        "angular": "^1.8.0"
+      },
+      "engines": {
+        "node": "*"
+      }
+    },
+    "node_modules/angular-translate-storage-local/node_modules/angular-translate-storage-cookie": {
+      "version": "2.19.0",
+      "resolved": "https://registry.npmjs.org/angular-translate-storage-cookie/-/angular-translate-storage-cookie-2.19.0.tgz",
+      "integrity": "sha512-U3LxHvXVzFOqp7IcYcqMUWhMiTGjHtCDXDKB1MKhTjJSKz+9pLeRseLQBMAGjvXCmMeDteURQR4HEEfzL3vFQw==",
+      "dependencies": {
+        "angular-cookies": ">=1.2.26 <1.9",
+        "angular-translate": "~2.19.0"
+      }
+    },
+    "node_modules/angular-translate/node_modules/angular": {
+      "version": "1.6.10",
+      "resolved": "https://registry.npmjs.org/angular/-/angular-1.6.10.tgz",
+      "integrity": "sha512-PCZ5/hVdvPQiYyH0VwsPjrErPHRcITnaXxhksceOXgtJeesKHLA7KDu4X/yvcAi+1zdGgGF+9pDxkJvghXI9Wg==",
+      "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
     },
     "node_modules/angular-ui-bootstrap": {
       "version": "0.13.4",
@@ -773,12 +816,6 @@
       "dependencies": {
         "angular": ">=1.4.0 1.8.x"
       }
-    },
-    "node_modules/angular-ui-grid/node_modules/angular": {
-      "version": "1.8.3",
-      "resolved": "https://registry.npmjs.org/angular/-/angular-1.8.3.tgz",
-      "integrity": "sha512-5qjkWIQQVsHj4Sb5TcEs4WZWpFeVFHXwxEBHUhrny41D8UrBAd6T/6nPPAsLngJCReIOqi95W3mxdveveutpZw==",
-      "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
     },
     "node_modules/angular-ui-indeterminate": {
       "version": "1.0.0",

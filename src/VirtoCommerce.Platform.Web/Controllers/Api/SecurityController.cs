@@ -1084,10 +1084,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return result;
         }
 
-        private async Task SetLastLoginDate(ApplicationUser user)
+        private Task SetLastLoginDate(ApplicationUser user)
         {
             user.LastLoginDate = DateTime.UtcNow;
-            await _signInManager.UserManager.UpdateAsync(user);
+            return _signInManager.UserManager.UpdateAsync(user);
         }
     }
 }
