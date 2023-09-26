@@ -1,3 +1,10 @@
+using Hangfire;
+using Hangfire.MemoryStorage;
+using Hangfire.MySql;
+using Hangfire.PostgreSql;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace VirtoCommerce.Platform.Hangfire.Extensions
 {
     public static class ServiceCollectionExtensions
