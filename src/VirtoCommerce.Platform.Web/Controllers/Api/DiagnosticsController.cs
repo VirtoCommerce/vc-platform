@@ -54,7 +54,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 Version = Environment.Version.ToString(),
                 Is64BitOperatingSystem = Environment.Is64BitOperatingSystem,
                 Is64BitProcess = Environment.Is64BitProcess,
-                DatabaseProvider = databaseProvider
+                DatabaseProvider = databaseProvider,
+                EnvironmentName = _webHostEnvironment.IsDevelopment() ?
+                    Environments.Development :
+                    Environments.Production
             };
 
             return Ok(result);

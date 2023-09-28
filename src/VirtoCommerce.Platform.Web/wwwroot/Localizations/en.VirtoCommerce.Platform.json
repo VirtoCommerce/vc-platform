@@ -24,6 +24,7 @@
         "title": "Platform information",
         "labels": {
           "clr-version": "CLR version",
+          "environment-name": "Environment name",
           "is-64-bit-os": "64-bit operating system",
           "is-64-bit-process": "64-bit process",
           "database-provider": "Database Provider"
