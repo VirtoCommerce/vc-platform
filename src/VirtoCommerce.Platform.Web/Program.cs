@@ -21,15 +21,29 @@ namespace VirtoCommerce.Platform.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
            Host.CreateDefaultBuilder(args)
-              .ConfigureLogging((hostingContext, logging) =>
-              {
-                  logging.ClearProviders();
-              })
-              .ConfigureWebHostDefaults(webBuilder =>
+            .ConfigureLogging((hostingContext, logging) =>
+            {
+                logging.ClearProviders();
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+                webBuilder.ConfigureKestrel((context, options) => { options.Limits.MaxRequestBodySize = null; });
+
+                webBuilder.ConfigureAppConfiguration(config =>
                 {
-                    webBuilder.UseStartup<Startup>();
-                    webBuilder.ConfigureKestrel((context, options) => { options.Limits.MaxRequestBodySize = null; });
-                })
+                    var settings = config.Build();
+                    var connectionString = settings.GetConnectionString("AzureAppConfigurationConnectionString");
+
+                    // Load configuration from Azure App Configuration
+                    // Azure App Configuration will be loaded last i.e. it will override any existing sections
+                    if (connectionString is not null)
+                    {
+                        config.AddAzureAppConfiguration(connectionString);
+                    }
+                });
+
+            })
             .ConfigureServices((hostingContext, services) =>
             {
                 //Conditionally use the hangFire server for this app instance to have possibility to disable processing background jobs  
