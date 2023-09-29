@@ -4,5 +4,6 @@ namespace VirtoCommerce.Platform.Web.Model.Security
     {
         public string AuthenticationType { get; set; }
         public string DisplayName { get; set; }
+        public string LogoUrl { get; set; }
     }
 }

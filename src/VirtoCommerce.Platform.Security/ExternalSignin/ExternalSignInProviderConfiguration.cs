@@ -8,6 +8,11 @@ namespace VirtoCommerce.Platform.Security.ExternalSignIn
         public string AuthenticationType { get; set; }
 
         /// <summary>
+        /// Provider logo url (ex '/Modules/$(ModuleId)/Content/provider-logo.png')
+        /// </summary>
+        public string LogoUrl { get; set; }
+
+        /// <summary>
         /// Provider implementation
         /// </summary>
         public IExternalSignInProvider Provider { get; set; }
