@@ -1,12 +1,15 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Model.Security;
 
 namespace VirtoCommerce.Platform.Web.Controllers
@@ -17,14 +20,17 @@ namespace VirtoCommerce.Platform.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IExternalSigninService _externalSigninService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
 
         public ExternalSignInController(SignInManager<ApplicationUser> signInManager,
             IExternalSigninService externalSigninService,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs)
         {
             _signInManager = signInManager;
             _externalSigninService = externalSigninService;
             _eventPublisher = eventPublisher;
+            _externalSigninProviderConfigs = externalSigninProviderConfigs;
         }
 
         [HttpGet]
@@ -80,7 +86,10 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 .Select(authenticationDescription => new ExternalSignInProviderInfo
                 {
                     AuthenticationType = authenticationDescription.Name,
-                    DisplayName = authenticationDescription.DisplayName
+                    DisplayName = authenticationDescription.DisplayName,
+                    LogoUrl = _externalSigninProviderConfigs?
+                                .FirstOrDefault(x => x.AuthenticationType.EqualsInvariant(authenticationDescription.Name))?
+                                .LogoUrl,
                 })
                 .ToArray();
 
