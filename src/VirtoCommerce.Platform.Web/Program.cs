@@ -3,6 +3,7 @@ using System.Linq;
 using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -30,16 +31,28 @@ namespace VirtoCommerce.Platform.Web
                 webBuilder.UseStartup<Startup>();
                 webBuilder.ConfigureKestrel((context, options) => { options.Limits.MaxRequestBodySize = null; });
 
-                webBuilder.ConfigureAppConfiguration(config =>
+                webBuilder.ConfigureAppConfiguration((context, config) =>
                 {
                     var settings = config.Build();
                     var connectionString = settings.GetConnectionString("AzureAppConfigurationConnectionString");
 
                     // Load configuration from Azure App Configuration
                     // Azure App Configuration will be loaded last i.e. it will override any existing sections
-                    if (connectionString is not null)
+                    // configuration loads all keys that have no label and keys that have label based on envionments (Development, Production etc)
+                    if (!string.IsNullOrWhiteSpace(connectionString))
                     {
-                        config.AddAzureAppConfiguration(connectionString);
+                        config.AddAzureAppConfiguration(options =>
+                        {
+                            options
+                            .Connect(connectionString)
+                            .Select(KeyFilter.Any)
+                            .Select(KeyFilter.Any, context.HostingEnvironment.EnvironmentName)
+                            .ConfigureRefresh(refreshOptions =>
+                            {
+                                // Reload all configuration values if the "Sentinel" key value is modified
+                                refreshOptions.Register("Sentinel", refreshAll: true);
+                            });
+                        });
                     }
                 });
 
