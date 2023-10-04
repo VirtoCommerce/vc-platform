@@ -38,7 +38,7 @@ namespace VirtoCommerce.Platform.Web
 
                     // Load configuration from Azure App Configuration
                     // Azure App Configuration will be loaded last i.e. it will override any existing sections
-                    // configuration loads all keys that have no label and keys that have label based on envionments (Development, Production etc)
+                    // configuration loads all keys that have no label and keys that have label based on the environment (Development, Production etc)
                     if (!string.IsNullOrWhiteSpace(connectionString))
                     {
                         config.AddAzureAppConfiguration(options =>
