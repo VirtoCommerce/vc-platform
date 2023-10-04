@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -60,8 +61,28 @@ namespace VirtoCommerce.Platform.Web.Security
                 return redirectUrl;
             }
 
+            var platformUser = await GetOrCreatePlatformUser(externalLoginInfo, userName, userEmail);
+            if (platformUser == null)
+            {
+                throw new AuthenticationException($"The user {externalLoginInfo.Principal.Identity?.Name} for the external provider {externalLoginInfo.ProviderDisplayName} is not found.");
+            }
+
+            await _eventPublisher.Publish(new BeforeUserLoginEvent(platformUser, externalLoginInfo));
+
             var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, false);
-            var platformUser = await GetPlatformUser(externalLoginInfo, userName, userEmail);
+
+            if (externalLoginResult == SignInResult.Failed)
+            {
+                throw new AuthenticationException($"The requested provider {externalLoginInfo.ProviderDisplayName} has not been linked to an account, the provider must be linked from the back office.");
+            }
+            else if (externalLoginResult == SignInResult.LockedOut)
+            {
+                throw new AuthenticationException($"The user {externalLoginInfo.Principal.Identity?.Name} for the external provider {externalLoginInfo.ProviderDisplayName} is locked out.");
+            }
+            else if (externalLoginResult == SignInResult.TwoFactorRequired)
+            {
+                throw new NotImplementedException();
+            }
 
             var validationResult = await ValidateUserAsync(platformUser, externalLoginResult, returnUrl);
             if (!validationResult.Item1)
@@ -69,26 +90,16 @@ namespace VirtoCommerce.Platform.Web.Security
                 return validationResult.Item2;
             }
 
-            if (!externalLoginResult.Succeeded)
-            {
-                var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
-                await _userManager.AddLoginAsync(platformUser, newExternalLogin);
-
-                //SignIn user in the system
-                var aspNetUser = await _signInManager.UserManager.FindByNameAsync(platformUser.UserName);
-                await _signInManager.SignInAsync(aspNetUser, isPersistent: true);
-            }
-            else if (externalLoginResult.IsLockedOut || externalLoginResult.RequiresTwoFactor)
-            {
-                // TODO: handle user lock-out and two-factor authentication
-                return _urlHelper.Action("index", "Home");
-            }
-
-            platformUser ??= await _userManager.FindByNameAsync(userName);
-
+            await SetLastLoginDate(platformUser);
             await _eventPublisher.Publish(new UserLoginEvent(platformUser, externalLoginInfo));
 
             return returnUrl;
+        }
+
+        private Task SetLastLoginDate(ApplicationUser user)
+        {
+            user.LastLoginDate = DateTime.UtcNow;
+            return _signInManager.UserManager.UpdateAsync(user);
         }
 
         protected virtual Task<(bool, string)> ValidateUserAsync(ApplicationUser platformUser, SignInResult externalLoginResult, string returnUrl)
@@ -96,7 +107,7 @@ namespace VirtoCommerce.Platform.Web.Security
             return Task.FromResult((true, returnUrl));
         }
 
-        protected virtual async Task<ApplicationUser> GetPlatformUser(ExternalLoginInfo externalLoginInfo, string userName, string userEmail)
+        protected virtual async Task<ApplicationUser> GetOrCreatePlatformUser(ExternalLoginInfo externalLoginInfo, string userName, string userEmail)
         {
             //Need handle the two cases
             //first - when the VC platform user account already exists, it is just missing an external login info and
@@ -109,27 +120,44 @@ namespace VirtoCommerce.Platform.Web.Security
             }
 
             var providerConfig = GetExternalSigninProviderConfiguration(externalLoginInfo);
-            if (platformUser == null && providerConfig?.Provider.AllowCreateNewUser == true)
+            if (platformUser == null)
             {
-                platformUser = new ApplicationUser
+                if (providerConfig?.Provider.AllowCreateNewUser == true)
                 {
-                    UserName = userName,
-                    Email = userEmail,
-                    UserType = await GetDefaultUserType(externalLoginInfo)
-                };
+                    platformUser = new ApplicationUser
+                    {
+                        UserName = userName,
+                        Email = userEmail,
+                        UserType = await GetDefaultUserType(externalLoginInfo)
+                    };
 
-                var result = await _userManager.CreateAsync(platformUser);
-                if (!result.Succeeded)
-                {
-                    var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
-                    throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
+                    var result = await _userManager.CreateAsync(platformUser);
+                    if (!result.Succeeded)
+                    {
+                        var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
+                        throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
+                    }
+
+                    var roles = GetDefaultUserRoles(externalLoginInfo);
+
+                    if (roles is { Length: > 0 })
+                    {
+                        await _userManager.AddToRolesAsync(platformUser, roles);
+                    }
+
+                    // Register a new external login
+                    var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
+                    await _userManager.AddLoginAsync(platformUser, newExternalLogin);
                 }
-
-                var roles = GetDefaultUserRoles(externalLoginInfo);
-
-                if (roles is { Length: > 0 })
+            }
+            else
+            {
+                var user = await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey);
+                if (user == null)
                 {
-                    await _userManager.AddToRolesAsync(platformUser, roles);
+                    // Register a new external login
+                    var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
+                    await _userManager.AddLoginAsync(platformUser, newExternalLogin);
                 }
             }
 
