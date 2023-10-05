@@ -39,7 +39,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
             section.Bind(swaggerOptions);
             services.AddOptions<SwaggerPlatformOptions>().Bind(section).ValidateDataAnnotations();
 
-            if (swaggerOptions.Disable)
+            if (!swaggerOptions.Enable)
             {
                 return;
             }
@@ -160,7 +160,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
         public static void UseSwagger(this IApplicationBuilder applicationBuilder)
         {
             var swaggerOptions = applicationBuilder.ApplicationServices.GetRequiredService<IOptions<SwaggerPlatformOptions>>().Value;
-            if (swaggerOptions.Disable)
+            if (!swaggerOptions.Enable)
             {
                 return;
             }
