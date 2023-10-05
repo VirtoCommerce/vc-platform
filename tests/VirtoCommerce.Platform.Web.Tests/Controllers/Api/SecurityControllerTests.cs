@@ -81,7 +81,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private SecurityController CreateSecurityController(
             Mock<IOptions<PasswordOptionsExtended>> passwordOptions = null,
             Mock<IOptions<AuthorizationOptions>> securityOptions = null,
-            Mock<IOptions<PasswordLoginOptions>> passwordLoginOptions = null
+            Mock<IOptions<PasswordLoginOptions>> passwordLoginOptions = null,
+            Mock<IOptions<IdentityOptions>> identityOptions = null
             )
         {
             passwordOptions ??= new Mock<IOptions<PasswordOptionsExtended>> { DefaultValue = DefaultValue.Mock };
@@ -90,6 +91,8 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
 
             passwordLoginOptions ??= new Mock<IOptions<PasswordLoginOptions>> { DefaultValue = DefaultValue.Mock };
 
+            identityOptions ??= new Mock<IOptions<IdentityOptions>> { DefaultValue = DefaultValue.Mock };
+
             return new SecurityController(
                 signInManager: _signInManagerMock.Object,
                 roleManager: _roleManagerMock.Object,
@@ -97,6 +100,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 userSearchService: _userSearchServiceMock.Object,
                 roleSearchService: _roleSearchServiceMock.Object,
                 securityOptions: securityOptions.Object,
+                identityOptions: identityOptions.Object,
                 userOptionsExtended: Mock.Of<IOptions<UserOptionsExtended>>(),
                 passwordOptions: passwordOptions.Object,
                 passwordLoginOptions: passwordLoginOptions.Object,

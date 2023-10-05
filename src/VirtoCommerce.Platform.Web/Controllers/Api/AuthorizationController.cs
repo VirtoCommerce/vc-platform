@@ -25,13 +25,15 @@ namespace Mvc.Server
     public class AuthorizationController : Controller
     {
         private readonly OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> _applicationManager;
-        private readonly IOptions<IdentityOptions> _identityOptions;
+        private readonly IdentityOptions _identityOptions;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
         private readonly AuthorizationOptions _authorizationOptions;
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
+
+        private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
         public AuthorizationController(
             OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> applicationManager,
@@ -44,7 +46,7 @@ namespace Mvc.Server
             IEventPublisher eventPublisher)
         {
             _applicationManager = applicationManager;
-            _identityOptions = identityOptions;
+            _identityOptions = identityOptions.Value;
             _passwordLoginOptions = passwordLoginOptions.Value ?? new PasswordLoginOptions();
             _signInManager = signInManager;
             _userManager = userManager;
@@ -67,7 +69,24 @@ namespace Mvc.Server
 
             if (openIdConnectRequest.IsPasswordGrantType())
             {
-                var user = await _userManager.FindByNameAsync(openIdConnectRequest.Username);
+                var userName = openIdConnectRequest.Username;
+
+                // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True. 
+                if (_identityOptions.User.RequireUniqueEmail)
+                {
+                    var userByName = await UserManager.FindByNameAsync(userName);
+
+                    if (userByName == null)
+                    {
+                        var userByEmail = await UserManager.FindByEmailAsync(userName);
+                        if (userByEmail != null)
+                        {
+                            userName = userByEmail.UserName;
+                        }
+                    }
+                }
+
+                var user = await _userManager.FindByNameAsync(userName);
 
                 if (user == null)
                 {
@@ -97,6 +116,8 @@ namespace Mvc.Server
                         ErrorDescription = "The username/password couple is invalid."
                     });
                 }
+
+                await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
 
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(openIdConnectRequest, user);
@@ -260,7 +281,7 @@ namespace Mvc.Server
             foreach (var claim in principal.Claims)
             {
                 // Never include the security stamp in the access and identity tokens, as it's a secret value.
-                if (claim.Type == _identityOptions.Value.ClaimsIdentity.SecurityStampClaimType)
+                if (claim.Type == _identityOptions.ClaimsIdentity.SecurityStampClaimType)
                 {
                     continue;
                 }

@@ -10,5 +10,7 @@ namespace VirtoCommerce.Platform.Web.Model.Security
         public bool isAdministrator { get; set; }
         public bool PasswordExpired { get; set; }
         public int DaysTillPasswordExpiry { get; set; }
+        public string AuthenticationMethod { get; set; }
+        public bool IsSsoAuthenticationMethod { get; set; }
     }
 }

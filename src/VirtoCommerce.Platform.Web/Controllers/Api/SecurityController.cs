@@ -20,6 +20,7 @@ using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
+using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.Security;
@@ -38,6 +39,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly UserOptionsExtended _userOptionsExtended;
         private readonly PasswordOptionsExtended _passwordOptions;
         private readonly PasswordLoginOptions _passwordLoginOptions;
+        private readonly IdentityOptions _identityOptions;
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserSearchService _userSearchService;
         private readonly IRoleSearchService _roleSearchService;
@@ -57,6 +59,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<UserOptionsExtended> userOptionsExtended,
             IOptions<PasswordOptionsExtended> passwordOptions,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
+            IOptions<IdentityOptions> identityOptions,
             IEmailSender emailSender,
             IEventPublisher eventPublisher,
             IUserApiKeyService userApiKeyService,
@@ -68,6 +71,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _userOptionsExtended = userOptionsExtended.Value;
             _passwordOptions = passwordOptions.Value;
             _passwordLoginOptions = passwordLoginOptions.Value ?? new PasswordLoginOptions();
+            _identityOptions = identityOptions.Value;
             _permissionsProvider = permissionsProvider;
             _roleManager = roleManager;
             _userSearchService = userSearchService;
@@ -97,10 +101,31 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<ActionResult<SignInResult>> Login([FromBody] LoginRequest request)
         {
-            var loginResult = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe, true);
+            var userName = request.UserName;
+
+            // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True. 
+            if (_identityOptions.User.RequireUniqueEmail)
+            {
+                var userByName = await UserManager.FindByNameAsync(userName);
+
+                if (userByName == null)
+                {
+                    var userByEmail = await UserManager.FindByEmailAsync(userName);
+                    if (userByEmail != null)
+                    {
+                        userName = userByEmail.UserName;
+                    }
+                }
+            }
+
+            var user = await UserManager.FindByNameAsync(userName);
+
+            await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
+
+            var loginResult = await _signInManager.PasswordSignInAsync(userName, request.Password, request.RememberMe, true);
+
             if (loginResult.Succeeded)
             {
-                var user = await UserManager.FindByNameAsync(request.UserName);
                 await SetLastLoginDate(user);
                 await _eventPublisher.Publish(new UserLoginEvent(user));
 
@@ -154,8 +179,17 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 UserName = user.UserName,
                 PasswordExpired = user.PasswordExpired,
                 DaysTillPasswordExpiry = PasswordExpiryHelper.ContDaysTillPasswordExpiry(user, _userOptionsExtended),
-                Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray()
+                Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray(),
+                AuthenticationMethod = HttpContext.User.GetAuthenticationMethod(),
+                IsSsoAuthenticationMethod = HttpContext.User.IsSsoAuthenticationMethod()
             };
+
+            // Password never expired with SSO
+            if (result.IsSsoAuthenticationMethod)
+            {
+                result.PasswordExpired = false;
+                result.DaysTillPasswordExpiry = -1;
+            }
 
             return Ok(result);
         }
@@ -407,9 +441,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize]
-        public Task<ActionResult<SecurityResult>> ChangeCurrentUserPassword([FromBody] ChangePasswordRequest changePassword)
+        public async Task<ActionResult<SecurityResult>> ChangeCurrentUserPassword([FromBody] ChangePasswordRequest changePassword)
         {
-            return ChangePassword(User.Identity.Name, changePassword);
+            if (HttpContext.User.IsSsoAuthenticationMethod())
+            {
+                return BadRequest(new SecurityResult { Errors = new[] { $"Could not change password for {HttpContext.User.GetAuthenticationMethod()} authentication method" } });
+            }
+
+            return await ChangePassword(User.Identity.Name, changePassword);
         }
 
         /// <summary>
