@@ -240,8 +240,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Route("types/{typeName}/properties/{propertyId}/dictionaryitems")]
         public async Task<ActionResult<DynamicPropertyDictionaryItem[]>> GetDictionaryItems([FromRoute] string typeName, [FromRoute] string propertyId)
         {
-            var result = await _dynamicPropertyDictionaryItemsSearchService.SearchDictionaryItemsAsync(new DynamicPropertyDictionaryItemSearchCriteria { PropertyId = propertyId, ObjectType = typeName });
-            return Ok(result.Results);
+            var result = await _dynamicPropertyDictionaryItemsSearchService.SearchAllNoCloneAsync(new DynamicPropertyDictionaryItemSearchCriteria { PropertyId = propertyId, ObjectType = typeName });
+            return Ok(result);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
