@@ -144,22 +144,17 @@ namespace VirtoCommerce.Platform.Web.Security
                     {
                         await _userManager.AddToRolesAsync(platformUser, roles);
                     }
+                }
+            }
 
-                    // Register a new external login
-                    var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
-                    await _userManager.AddLoginAsync(platformUser, newExternalLogin);
-                }
-            }
-            else
+            var user = await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey);
+            if (user == null)
             {
-                var user = await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey);
-                if (user == null)
-                {
-                    // Register a new external login
-                    var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
-                    await _userManager.AddLoginAsync(platformUser, newExternalLogin);
-                }
+                // Register a new external login
+                var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
+                await _userManager.AddLoginAsync(platformUser, newExternalLogin);
             }
+
 
             return platformUser;
         }
