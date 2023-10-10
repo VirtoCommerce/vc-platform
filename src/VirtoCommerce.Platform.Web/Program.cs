@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Logger;
+using VirtoCommerce.Platform.Web.Extensions;
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -31,17 +32,16 @@ namespace VirtoCommerce.Platform.Web
                 webBuilder.UseStartup<Startup>();
                 webBuilder.ConfigureKestrel((context, options) => { options.Limits.MaxRequestBodySize = null; });
 
-                webBuilder.ConfigureAppConfiguration((context, config) =>
+                webBuilder.ConfigureAppConfiguration((context, configurationBuilder) =>
                 {
-                    var settings = config.Build();
-                    var connectionString = settings.GetConnectionString("AzureAppConfigurationConnectionString");
+                    var configuration = configurationBuilder.Build();
 
                     // Load configuration from Azure App Configuration
                     // Azure App Configuration will be loaded last i.e. it will override any existing sections
                     // configuration loads all keys that have no label and keys that have label based on the environment (Development, Production etc)
-                    if (!string.IsNullOrWhiteSpace(connectionString))
+                    if (configuration.TryGetAzureAppConfigurationConnectionString(out var connectionString))
                     {
-                        config.AddAzureAppConfiguration(options =>
+                        configurationBuilder.AddAzureAppConfiguration(options =>
                         {
                             options
                             .Connect(connectionString)

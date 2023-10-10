@@ -492,7 +492,11 @@ namespace VirtoCommerce.Platform.Web
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
-            services.AddAzureAppConfiguration();
+
+            if (Configuration.TryGetAzureAppConfigurationConnectionString(out _))
+            {
+                services.AddAzureAppConfiguration();
+            }
         }
 
         public static ServerCertificate GetServerCertificate(ICertificateLoader certificateLoader)
@@ -533,7 +537,10 @@ namespace VirtoCommerce.Platform.Web
 
             app.UseHttpsRedirection();
 
-            app.UseAzureAppConfiguration();
+            if (Configuration.TryGetAzureAppConfigurationConnectionString(out _))
+            {
+                app.UseAzureAppConfiguration();
+            }
 
             // Add default MimeTypes with additional bindings
             var fileExtensionsBindings = new Dictionary<string, string>
