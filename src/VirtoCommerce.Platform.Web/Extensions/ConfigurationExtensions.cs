@@ -58,7 +58,12 @@ namespace VirtoCommerce.Platform.Web.Extensions
         {
             return configuration.TryGetHttpsPort() != PortNotFound;
         }
-    }
 
+        public static bool TryGetAzureAppConfigurationConnectionString(this IConfiguration configuration, out string connectionString)
+        {
+            connectionString = configuration.GetConnectionString("AzureAppConfigurationConnectionString");
+            return !string.IsNullOrWhiteSpace(connectionString);
+        }
+    }
 }
 
