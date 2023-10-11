@@ -7,6 +7,20 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "October"
+    * PostgreSQL Vs SQL Server.
+    * Elastic Search 8 with Semantic Search Released.
+    * Improved Storefront UX.
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-october-2023/631)
+
+!!! done "September"
+    * Storefront integration with the Builder.io 1 solution.
+    * Platform modules updates.
+    * Multi-language approach implemented in the Marketplace.
+    
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-september-2023/613)
+
 !!! done "August"
     * Refactored and simplified CRUD Services.
     * Enhanced security.
@@ -16,22 +30,6 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     * Enhanced behaviour of SPA regarding the handling of URLs.
     
     [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-august-2023/602)
-    
-!!! done "July"
-    * Improved menus for easier navigation.
-    * UI enhancements for a more intuitive and visually appealing experience.
-    * Ability to host multiple sites.
-    * Implementation of automatic locking for inactive user accounts.
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-july-2023/592)
-
-!!! done "June"
-    * Stable release 5.
-    * Storefront search and UX enhancements.
-    * Hotjar integration.
-    * Payment capture documents.
-    
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-june-2023/587)
 
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), Subscribe on [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and Star on [GitHub](https://github.com/VirtoCommerce).
 
