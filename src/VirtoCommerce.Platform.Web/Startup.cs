@@ -253,6 +253,8 @@ namespace VirtoCommerce.Platform.Web
                 options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
             });
 
+            services.ConfigureOptions<ConfigureSecurityStampValidatorOptions>();
+
             // Load server certificate (from DB or file) and register it as a global singleton
             // to allow the platform hosting under the cert
             ICertificateLoader certificateLoader;
