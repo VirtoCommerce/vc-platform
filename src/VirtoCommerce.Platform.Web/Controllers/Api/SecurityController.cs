@@ -699,6 +699,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await UserManager.SetEmailAsync(user, user.Email);
             }
 
+            // Restore PasswordHash and SecurityStamp, use another API for password management
+            if (!_securityOptions.ReturnPasswordHash)
+            {
+                user.PasswordHash = applicationUser.PasswordHash;
+                user.SecurityStamp = applicationUser.SecurityStamp;
+            }
+
             if (user.LastPasswordChangedDate != applicationUser.LastPasswordChangedDate)
             {
                 user.LastPasswordChangedDate = applicationUser.LastPasswordChangedDate;
