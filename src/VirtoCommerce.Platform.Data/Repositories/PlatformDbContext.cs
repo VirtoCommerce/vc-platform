@@ -95,7 +95,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
                         .HasDatabaseName("IX_PlatformDynamicPropertyName_PropertyId_Locale_Name")
                         .IsUnique(true);
 
-
             modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>().ToTable("PlatformDynamicPropertyDictionaryItem").HasKey(x => x.Id);
             modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>().Property(x => x.Id).HasMaxLength(_idLength128).ValueGeneratedOnAdd();
             modelBuilder.Entity<DynamicPropertyDictionaryItemEntity>().Property(x => x.CreatedBy).HasMaxLength(_idLength64);
@@ -108,7 +107,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
                         .HasIndex(x => new { x.PropertyId, x.Name })
                         .HasDatabaseName("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name")
                         .IsUnique(true);
-
 
             modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>().ToTable("PlatformDynamicPropertyDictionaryItemName").HasKey(x => x.Id);
             modelBuilder.Entity<DynamicPropertyDictionaryItemNameEntity>().Property(x => x.Id).HasMaxLength(_idLength128).ValueGeneratedOnAdd();
