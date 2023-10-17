@@ -95,7 +95,7 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.ShortText,
                     DefaultValue = "en-US",
                     IsDictionary = true,
-                    AllowedValues = new object[] { "en-US", "fr-FR", "de-DE", "ja-JP" }
+                    AllowedValues = new object[] { "en-US", "fr-FR", "de-DE", "ja-JP" },
                 };
 
                 public static IEnumerable<SettingDescriptor> AllGeneralSettings

@@ -7,6 +7,11 @@ angular.module('platformWebApp')
                 saveItems: { method: 'POST' },
                 deleteItems: { method: 'DELETE' },
                 getLocalizableSettingNames: { method: 'GET', url: 'api/platform/localizable-settings/names', isArray: true },
-                getValues: { method: 'GET', url: 'api/platform/localizable-settings/:name/dictionary-items/:language/values', params: { language: i18n.getLanguage }, isArray: true }
+                getValues: {
+                    method: 'GET',
+                    url: 'api/platform/localizable-settings/:name/dictionary-items/:language/values',
+                    params: { language: i18n.getLanguage },
+                    isArray: true
+                }
             });
         }]);

@@ -62,7 +62,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
             #endregion
 
             #region Localization
-
             modelBuilder.Entity<LocalizedItemEntity>().ToTable("PlatformLocalizedItem").HasKey(x => x.Id);
             modelBuilder.Entity<LocalizedItemEntity>().Property(x => x.Id).HasMaxLength(_idLength128).ValueGeneratedOnAdd();
             modelBuilder.Entity<LocalizedItemEntity>().Property(x => x.CreatedBy).HasMaxLength(_idLength64);
@@ -71,7 +70,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
                 .HasIndex(x => new { x.Name, x.Alias })
                 .IsUnique(false)
                 .HasDatabaseName("IX_PlatformLocalizedItem_Name_Alias");
-
             #endregion
 
             #region Dynamic Properties

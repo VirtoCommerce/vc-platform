@@ -1,4 +1,5 @@
-angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.login',
+angular.module('platformWebApp').controller('platformWebApp.accountDetailController', [
+    '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.login',
     function ($scope, bladeNavigationService, metaFormsService, accounts, authService, loginResources) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:security:update';
