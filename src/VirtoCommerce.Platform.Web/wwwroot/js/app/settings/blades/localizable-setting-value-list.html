@@ -1,0 +1,51 @@
+<div class="blade-static">
+  <div class="form-group">
+    <div class="form-input __search">
+      <input placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="blade.searchText" />
+      <button class="btn __other" style="position: relative;right: 45px;">
+        <span class="btn-ico fa fa-times-circle" title="{{'platform.commands.clear' | translate}}" ng-click="blade.searchText=''"></span>
+      </button>
+    </div>
+    <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{currentEntities.length | number:0}}</span></p>
+  </div>
+</div>
+<div class="blade-content">
+  <div class="blade-inner">
+    <div class="inner-block" ng-init="setGridOptions({
+                    useExternalSorting: true,
+                    rowTemplate: 'dictionary-item.row.html',
+                    data: 'filteredEntities()',
+                    columnDefs: [
+                            { name: 'actions', displayName: '', enableColumnResizing: false, enableSorting: false, width: 30, cellTemplate: 'list-actions.cell.html', pinnedLeft:true },
+                            { name: 'alias', displayName: 'platform.blades.localizable-setting-value-details.alias' },
+                        ]})">
+      <div class="table-wrapper" ng-if="currentEntities.length">
+        <div ui-grid="gridOptions" ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+        <ul class="menu __context" role="menu" id="prop_dic_item_menu">
+          <li class="menu-item" ng-click='selectItem(contextMenuEntity)'>
+            <i class="menu-ico fa fa-edit"></i> {{'platform.commands.manage' | translate}}
+          </li>
+          <li class="menu-item" ng-click='deleteItem(contextMenuEntity)'>
+            <i class="menu-ico fas fa-trash-alt"></i> {{'platform.commands.delete' | translate}}
+          </li>
+        </ul>
+      </div>
+      <div class="note" ng-if="!currentEntities.length">{{ 'platform.list.no-data' | translate }}</div>
+    </div>
+  </div>
+</div>
+<script type="text/ng-template" id="list-actions.cell.html">
+  <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="prop_dic_item_menu">
+    <span class="fa fa-ellipsis-v"></span>
+  </div>
+</script>
+<script type="text/ng-template" id="dictionary-item.row.html">
+  <div ng-click='grid.appScope.selectItem(row.entity)'
+       ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid"
+       ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'"
+       class="ui-grid-cell"
+       ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__hovered': grid.appScope.contextMenuEntity === row.entity, '__selected': row.entity.alias===grid.appScope.selectedNodeId }"
+       role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}"
+       ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity"
+       data-target="prop_dic_item_menu"></div>
+</script>

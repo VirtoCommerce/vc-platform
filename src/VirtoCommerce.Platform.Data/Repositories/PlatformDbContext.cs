@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Localizations;
 using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Repositories
@@ -22,6 +23,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             #region Change logging
             modelBuilder.Entity<OperationLogEntity>().ToTable("PlatformOperationLog").HasKey(x => x.Id);
             modelBuilder.Entity<OperationLogEntity>().Property(x => x.Id).HasMaxLength(_idLength128).ValueGeneratedOnAdd();
@@ -55,6 +58,19 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<SettingValueEntity>()
                 .Property(x => x.DecimalValue)
                 .HasColumnType("decimal(18,5)");
+
+            #endregion
+
+            #region Localization
+
+            modelBuilder.Entity<LocalizedItemEntity>().ToTable("PlatformLocalizedItem").HasKey(x => x.Id);
+            modelBuilder.Entity<LocalizedItemEntity>().Property(x => x.Id).HasMaxLength(_idLength128).ValueGeneratedOnAdd();
+            modelBuilder.Entity<LocalizedItemEntity>().Property(x => x.CreatedBy).HasMaxLength(_idLength64);
+            modelBuilder.Entity<LocalizedItemEntity>().Property(x => x.ModifiedBy).HasMaxLength(_idLength64);
+            modelBuilder.Entity<LocalizedItemEntity>()
+                .HasIndex(x => new { x.Name, x.Alias })
+                .IsUnique(false)
+                .HasDatabaseName("IX_PlatformLocalizedItem_Name_Alias");
 
             #endregion
 
@@ -109,7 +125,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
                         .HasDatabaseName("IX_PlatformDynamicPropertyDictionaryItemName_DictionaryItemId_Locale_Name")
                         .IsUnique(true);
 
-
             #endregion
 
             #region Raw license
@@ -117,11 +132,6 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<RawLicenseEntity>().Property(x => x.Id).HasMaxLength(_idLength128).ValueGeneratedOnAdd();
             modelBuilder.Entity<RawLicenseEntity>().Property(x => x.Data);
             #endregion
-
-            base.OnModelCreating(modelBuilder);
         }
-
     }
-
-
 }

@@ -86,16 +86,65 @@ namespace VirtoCommerce.Platform.Core
 
         public static class Settings
         {
+            public static class General
+            {
+                public static SettingDescriptor Languages { get; } = new()
+                {
+                    Name = "VirtoCommerce.Core.General.Languages",
+                    GroupName = "Platform|General",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = "en-US",
+                    IsDictionary = true,
+                    AllowedValues = new object[] { "en-US", "fr-FR", "de-DE", "ja-JP" }
+                };
+
+                public static IEnumerable<SettingDescriptor> AllGeneralSettings
+                {
+                    get
+                    {
+                        yield return Languages;
+                    }
+                }
+            }
+
             public static class Security
             {
-                public static SettingDescriptor SecurityAccountTypes { get; } = new SettingDescriptor
+                public static SettingDescriptor SecurityAccountTypes { get; } = new()
                 {
                     Name = "VirtoCommerce.Platform.Security.AccountTypes",
                     GroupName = "Platform|Security",
                     ValueType = SettingValueType.ShortText,
                     IsDictionary = true,
-                    AllowedValues = Enum.GetNames(typeof(UserType)),
-                    DefaultValue = UserType.Customer
+                    IsLocalizable = true,
+                    AllowedValues = Enum.GetNames(typeof(UserType)).ToArray<object>(),
+                    DefaultValue = UserType.Customer.ToString(),
+                };
+
+                public static SettingDescriptor DefaultAccountType { get; } = new()
+                {
+                    Name = "VirtoCommerce.Platform.Security.DefaultAccountType",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = SecurityAccountTypes.DefaultValue,
+                };
+
+                public static SettingDescriptor AccountStatuses { get; } = new()
+                {
+                    Name = "VirtoCommerce.Other.AccountStatuses",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.ShortText,
+                    IsDictionary = true,
+                    IsLocalizable = true,
+                    AllowedValues = new object[] { "New", "Approved", "Rejected", "Deleted" },
+                    DefaultValue = "New",
+                };
+
+                public static SettingDescriptor DefaultAccountStatus { get; } = new()
+                {
+                    Name = "VirtoCommerce.Platform.Security.DefaultAccountStatus",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = AccountStatuses.DefaultValue,
                 };
 
                 public static readonly SettingDescriptor EnablePruneExpiredTokensJob = new SettingDescriptor
@@ -119,7 +168,7 @@ namespace VirtoCommerce.Platform.Core
                     GroupName = "Platform|Security",
                     ValueType = SettingValueType.ShortText,
                     IsDictionary = true,
-                    AllowedValues = new string[] {
+                    AllowedValues = new object[] {
                         ".asax",
                         ".ascx",
                         ".master",
@@ -174,7 +223,7 @@ namespace VirtoCommerce.Platform.Core
                     GroupName = "Platform|Security",
                     ValueType = SettingValueType.ShortText,
                     IsDictionary = true,
-                    AllowedValues = new string[0],
+                    AllowedValues = Array.Empty<object>(),
                     DefaultValue = "_none", // fake default value to fix empty dictionary saving issue
                 };
 
@@ -183,6 +232,9 @@ namespace VirtoCommerce.Platform.Core
                     get
                     {
                         yield return SecurityAccountTypes;
+                        yield return DefaultAccountType;
+                        yield return AccountStatuses;
+                        yield return DefaultAccountStatus;
                         yield return EnablePruneExpiredTokensJob;
                         yield return CronPruneExpiredTokensJob;
                         yield return FileExtensionsBlackList;
@@ -311,7 +363,7 @@ namespace VirtoCommerce.Platform.Core
                     ValueType = SettingValueType.ShortText,
                     GroupName = "Platform|User Profile",
                     DefaultValue = "Never",
-                    AllowedValues = new[]
+                    AllowedValues = new object[]
                                 {
                                     "Never",
                                     "Seconds",
@@ -374,16 +426,10 @@ namespace VirtoCommerce.Platform.Core
 
             public static class Other
             {
-                public static SettingDescriptor AccountStatuses { get; } = new SettingDescriptor
-                {
-                    Name = "VirtoCommerce.Other.AccountStatuses",
-                    GroupName = "Platform|Other",
-                    ValueType = SettingValueType.ShortText,
-                    DefaultValue = "New",
-                    IsDictionary = true,
-                    AllowedValues = new[] { "New", "Approved", "Rejected", "Deleted" }
-                };
+                [Obsolete("Use PlatformConstants.Settings.Security.AccountStatuses", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
+                public static SettingDescriptor AccountStatuses => Security.AccountStatuses;
 
+                [Obsolete("Use PlatformConstants.Settings.Security.AllSettings", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
                 public static IEnumerable<SettingDescriptor> AllSettings
                 {
                     get
@@ -393,11 +439,12 @@ namespace VirtoCommerce.Platform.Core
                 }
             }
 
-            public static IEnumerable<SettingDescriptor> AllSettings => Security.AllSettings
+            public static IEnumerable<SettingDescriptor> AllSettings =>
+                General.AllGeneralSettings
+                .Concat(Security.AllSettings)
                 .Concat(Setup.AllSettings)
                 .Concat(UserProfile.AllSettings)
-                .Concat(UserInterface.AllSettings)
-                .Concat(Other.AllSettings);
+                .Concat(UserInterface.AllSettings);
         }
     }
 }

@@ -1,94 +1,78 @@
 <div class="blade-static __bottom" ng-include="'$(Platform)/Scripts/common/templates/create.tpl.html'"></div>
 <div class="blade-content">
-    <div class="blade-inner">
-        <div class="inner-block">
-            <form class="form" name="formScope" ng-init="setForm(formScope)">
-                <div class="form-group">
-                    <div class="form-label">
-                        {{ 'platform.blades.account-detail.labels.account-type' | translate }}
-                        <a href="" ng-click="blade.openSettingDictionaryController('accountTypes','VirtoCommerce.Platform.Security.AccountTypes')" class="form-edit">
-                            <i class="form-ico fa fa-pencil"></i>
-                        </a>
-                    </div>
-                    <div class="form-input">
-                        <ui-select ng-model="blade.currentEntity.userType">
-                            <ui-select-match placeholder="{{ 'platform.blades.account-detail.placeholders.account-type' | translate }}">{{$select.selected}}</ui-select-match>
-                            <ui-select-choices repeat="x as x in blade.accountTypes | filter: $select.search ">
-                                <span ng-bind-html="x | highlight: $select.search"></span>
-                            </ui-select-choices>
-                        </ui-select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.login' | translate }}</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.userName" placeholder="{{ 'platform.blades.new-account-wizard.placeholders.login' | translate }}" required focus-on="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.email' | translate }}</label>
-                    <div class="form-input">
-                        <input ng-model="blade.currentEntity.email" type="email" placeholder="{{ 'platform.blades.new-account-wizard.placeholders.email' | translate }}" focus-on="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-label">
-                        {{ 'platform.blades.account-detail.labels.status' | translate }}
-                        <a href="" ng-click="blade.openSettingDictionaryController('statuses','VirtoCommerce.Other.AccountStatuses')" class="form-edit">
-                            <i class="form-ico fa fa-pencil"></i>
-                        </a>
-                    </div>
-                    <div class="form-input">
-                        <ui-select ng-model="blade.currentEntity.status">
-                            <ui-select-match placeholder="{{ 'platform.blades.account-detail.placeholders.status' | translate }}">{{$select.selected}}</ui-select-match>
-                            <ui-select-choices repeat="x as x in blade.statuses">
-                                <span ng-bind-html="x"></span>
-                            </ui-select-choices>
-                        </ui-select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.password' | translate }}</label>
-                    <va-password-input password-placeholder="{{ 'platform.blades.new-account-wizard.placeholders.password' | translate }}"
-                                       password-too-weak-message="{{ 'platform.blades.new-account-wizard.validations.password-too-weak' | translate }}"
-                                       run-password-validation="validatePasswordAsync(value)"
-                                       new-password="blade.currentEntity.password" />
-                </div>
-                <div class="form-group">
-                    <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.repeat-password' | translate }}</label>
-                    <div class="form-input">
-                        <input name="passwordConfirmation"
-                               ng-model="blade.currentEntity.newPassword2"
-                               required
-                               placeholder="{{ 'platform.blades.new-account-wizard.placeholders.repeat-password' | translate }}"
-                               type="password"
-                               ui-validate="'$value == blade.currentEntity.password'"
-                               ui-validate-watch="blade.currentEntity.password">
-                    </div>
-                    <div class="form-error" ng-if="formScope.passwordConfirmation.$dirty && blade.currentEntity.password != blade.currentEntity.newPassword2">
-                        <span>{{ 'platform.blades.new-account-wizard.validations.repeat-password' | translate }}</span>
-                    </div>
-                </div>
-            </form>
-            <div class="sub-t">{{ 'platform.blades.new-account-wizard.labels.assign-roles' | translate }}</div>
-            <div class="table-wrapper">
-                <table class="table">
-                    <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}">
-                            <td class="table-col">
-                                <label class="form-control __checkbox">
-                                    <input type="checkbox" ng-model="data.$selected">
-                                    <span class="check"></span>
-                                </label>
-                            </td>
-                            <td class="table-col" ng-click='blade.selectNode(data)'>
-                                <span class="table-t">{{data.name}}</span>
-                                <span class="table-descr">{{data.description}}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+  <div class="blade-inner">
+    <div class="inner-block">
+      <form class="form" name="formScope" ng-init="setForm(formScope)">
+        <div class="form-group">
+          <va-setting-value-select blade="blade"
+                                   label="'platform.blades.account-detail.labels.account-type' | translate"
+                                   placeholder="'platform.blades.account-detail.placeholders.account-type' | translate"
+                                   setting="'VirtoCommerce.Platform.Security.AccountTypes'"
+                                   ng-model="blade.currentEntity.userType"
+                                   allow-clear></va-setting-value-select>
         </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.login' | translate }}</label>
+          <div class="form-input">
+            <input ng-model="blade.currentEntity.userName" placeholder="{{ 'platform.blades.new-account-wizard.placeholders.login' | translate }}" required focus-on="">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.email' | translate }}</label>
+          <div class="form-input">
+            <input ng-model="blade.currentEntity.email" type="email" placeholder="{{ 'platform.blades.new-account-wizard.placeholders.email' | translate }}" focus-on="">
+          </div>
+        </div>
+        <div class="form-group">
+          <va-setting-value-select blade="blade"
+                                   label="'platform.blades.account-detail.labels.status' | translate"
+                                   placeholder="'platform.blades.account-detail.placeholders.status' | translate"
+                                   setting="'VirtoCommerce.Other.AccountStatuses'"
+                                   ng-model="blade.currentEntity.status"
+                                   allow-clear></va-setting-value-select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.password' | translate }}</label>
+          <va-password-input password-placeholder="{{ 'platform.blades.new-account-wizard.placeholders.password' | translate }}"
+                             password-too-weak-message="{{ 'platform.blades.new-account-wizard.validations.password-too-weak' | translate }}"
+                             run-password-validation="validatePasswordAsync(value)"
+                             new-password="blade.currentEntity.password" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ 'platform.blades.new-account-wizard.labels.repeat-password' | translate }}</label>
+          <div class="form-input">
+            <input name="passwordConfirmation"
+                   ng-model="blade.currentEntity.newPassword2"
+                   required
+                   placeholder="{{ 'platform.blades.new-account-wizard.placeholders.repeat-password' | translate }}"
+                   type="password"
+                   ui-validate="'$value == blade.currentEntity.password'"
+                   ui-validate-watch="blade.currentEntity.password">
+          </div>
+          <div class="form-error" ng-if="formScope.passwordConfirmation.$dirty && blade.currentEntity.password != blade.currentEntity.newPassword2">
+            <span>{{ 'platform.blades.new-account-wizard.validations.repeat-password' | translate }}</span>
+          </div>
+        </div>
+      </form>
+      <div class="sub-t">{{ 'platform.blades.new-account-wizard.labels.assign-roles' | translate }}</div>
+      <div class="table-wrapper">
+        <table class="table">
+          <tbody>
+            <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}">
+              <td class="table-col">
+                <label class="form-control __checkbox">
+                  <input type="checkbox" ng-model="data.$selected">
+                  <span class="check"></span>
+                </label>
+              </td>
+              <td class="table-col" ng-click='blade.selectNode(data)'>
+                <span class="table-t">{{data.name}}</span>
+                <span class="table-descr">{{data.description}}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>

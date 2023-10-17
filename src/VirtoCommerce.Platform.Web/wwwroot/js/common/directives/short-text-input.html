@@ -1,0 +1,13 @@
+<div class="form-input">
+  <input type="text"
+         name="{{name}}"
+         class="form-control"
+         placeholder="{{ 'platform.short-text-input.placeholder' | translate }}"
+         ng-model="ngModel"
+         ng-maxlength="{{validationRules.maxLength}}"
+         ng-required="{{required}}">
+  <div class="form-error" ng-if="form[name].$invalid">
+    <span ng-if="form[name].$error.required">{{ 'platform.short-text-input.required' | translate }}</span>
+    <span ng-if="form[name].$error.maxlength">{{ 'platform.short-text-input.maxLength' | translate: { number: validationRules.maxLength } }}</span>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="blade-content">
+  <div class="blade-inner">
+    <div class="inner-block">
+      <form name="pdForm" class="form">
+        <div class="form-group" ng-init="setForm(pdForm);">
+          <label class="form-label" for="">{{ 'platform.blades.localizable-setting-value-details.alias' | translate }}</label>
+          <va-short-text-input name="'alias'" form="pdForm" required="true" validation-rules="validationRules" ng-model="blade.currentEntity.alias"></va-short-text-input>
+        </div>
+        <br>
+        <div class="form-group form-input __langs" ng-repeat="language in blade.languages">
+          <label class="lang-code" for="">{{ language }} </label>
+          <va-short-text-input name="language" form="pdForm" validation-rules="validationRules" ng-model="blade.currentEntity[language]"></va-short-text-input>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

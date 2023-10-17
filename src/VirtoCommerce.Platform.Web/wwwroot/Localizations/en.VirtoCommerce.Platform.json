@@ -647,6 +647,13 @@
         "or": "or",
         "browse-your-files": "browse your files"
       },
+      "localizable-setting-value-list": {
+        "subtitle": "Manage dictionary values"
+      },
+      "localizable-setting-value-details": {
+        "title": "Edit dictionary value",
+        "alias": "System value"
+      },
       "user-profile": {
         "title": "User profile",
         "labels": {
@@ -792,6 +799,14 @@
         "title": "Delete confirmation",
         "message": "The settings has been modified. Do you want to save changes?"
       },
+      "localizable-setting-value-delete": {
+        "title": "Confirm Delete",
+        "message": "Are you sure you want to delete the selected dictionary values?"
+      },
+      "localizable-setting-value-save": {
+        "title": "Save changes",
+        "message": "This dictionary value has been modified. Do you want to save changes?"
+      },
       "email-sending-success": {
         "title": "Sending success",
         "message": "Email was sent successfully!"
@@ -888,6 +903,14 @@
   },
   "settings": {
     "VirtoCommerce": {
+      "Core": {
+        "General": {
+          "Languages": {
+            "title": "Languages",
+            "description": "List of available languages"
+          }
+        }
+      },
       "ModulesAutoInstalled": {
         "description": "The flag indicates that the modules are automatically installed",
         "title": "Modules installed"
@@ -911,8 +934,16 @@
       "Platform": {
         "Security": {
           "AccountTypes": {
-            "description": "Dictionary for possible user types",
-            "title": "User types"
+            "description": "Dictionary for possible account types",
+            "title": "Account types"
+          },
+          "DefaultAccountType": {
+            "title": "Default account type",
+            "description": "Default value for account type when creating a new account"
+          },
+          "DefaultAccountStatus": {
+            "title": "Default account status",
+            "description": "Default value for account status when creating a new account"
           },
           "EnablePruneExpiredTokensJob": {
             "description": "Enables prune expired and invalid tokens/authorizations",
