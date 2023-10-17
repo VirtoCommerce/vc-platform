@@ -224,7 +224,7 @@ public class LocalizableSettingService : ILocalizableSettingService
     {
         var setting = await GetDictionarySetting(name);
 
-        return setting?.AllowedValues?.OfType<string>().ToList() ?? new List<string>();
+        return setting?.AllowedValues?.OfType<string>().OrderBy(x => x).ToList() ?? new List<string>();
     }
 
     private async Task<ObjectSettingEntry> GetLocalizableSetting(string name)
