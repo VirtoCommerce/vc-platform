@@ -38,13 +38,41 @@ public class LocalizableSettingService : ILocalizableSettingService
 
     public virtual async Task<IList<KeyValue>> GetValuesAsync(string name, string languageCode)
     {
-        var result = await GetItemsAndLanguagesAsync(name);
+        var itemsAndLanguages = await GetItemsAndLanguagesAsync(name);
+        var items = itemsAndLanguages.Items;
+        var languages = itemsAndLanguages.Languages;
 
-        return result.Items
-            .Select(x => new KeyValue
+        if (languages.Contains(languageCode, _ignoreCase))
+        {
+            return items
+                .Select(item => new KeyValue
+                {
+                    Key = item.Alias,
+                    Value = item.LocalizedValues.FirstOrDefault(value => value.LanguageCode.EqualsInvariant(languageCode))?.Value.EmptyToNull() ?? item.Alias,
+                })
+                .ToList();
+        }
+
+        // If language code is a two-letter code
+        languageCode += "-";
+        const StringComparison ignoreCase = StringComparison.OrdinalIgnoreCase;
+
+        if (languages.Any(x => x.StartsWith(languageCode, ignoreCase)))
+        {
+            return items
+                .Select(item => new KeyValue
+                {
+                    Key = item.Alias,
+                    Value = item.LocalizedValues.FirstOrDefault(value => value.LanguageCode.StartsWith(languageCode, ignoreCase))?.Value.EmptyToNull() ?? item.Alias,
+                })
+                .ToList();
+        }
+
+        return items
+            .Select(item => new KeyValue
             {
-                Key = x.Alias,
-                Value = GetValue(x.LocalizedValues, languageCode).EmptyToNull() ?? x.Alias,
+                Key = item.Alias,
+                Value = item.Alias,
             })
             .ToList();
     }
@@ -252,22 +280,6 @@ public class LocalizableSettingService : ILocalizableSettingService
             setting != null &&
             setting.IsDictionary &&
             setting.ValueType == SettingValueType.ShortText;
-    }
-
-    private static string GetValue(IList<LocalizedValue> values, string languageCode)
-    {
-        var value = values.FirstOrDefault(x => x.LanguageCode.EqualsInvariant(languageCode));
-
-        if (value != null)
-        {
-            return value.Value;
-        }
-
-        // If language code is a two-letters code
-        languageCode += "-";
-        value = values.FirstOrDefault(x => x.LanguageCode.StartsWith(languageCode, StringComparison.OrdinalIgnoreCase));
-
-        return value?.Value;
     }
 
     private Task<IList<LocalizedItem>> GetLocalizedItems(string name, IList<string> aliases = null)
