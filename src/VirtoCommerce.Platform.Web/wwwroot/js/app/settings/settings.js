@@ -1,6 +1,6 @@
 angular.module("platformWebApp")
     .config(
-        ['$stateProvider', function ($stateProvider) {
+        ['$stateProvider', '$provide', function ($stateProvider, $provide) {
             $stateProvider
                 .state('workspace.modulesSettings', {
                     url: '/settings',
@@ -18,6 +18,34 @@ angular.module("platformWebApp")
                     }
                     ]
                 });
+
+            $provide.decorator('platformWebApp.bladeNavigationService', [
+                '$rootScope', '$delegate', 'platformWebApp.localizableSettingsApi',
+                function ($rootScope, $delegate, localizableSettingsApi) {
+                    var localizableSettingNames = [];
+
+                    $rootScope.$on('loginStatusChanged', function (event, authContext) {
+                        if (authContext.isAuthenticated) {
+                            localizableSettingsApi.getLocalizableSettingNames(function (response) {
+                                localizableSettingNames = response;
+                            });
+                        }
+                    });
+
+                    var showBlade = $delegate.showBlade;
+
+                    $delegate.showBlade = function (blade, parentBlade) {
+                        if (blade.template === "$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html" &&
+                            localizableSettingNames.includes(blade.currentEntityId))
+                        {
+                            blade.template = "$(Platform)/Scripts/app/settings/blades/localizable-setting-value-list.html";
+                            blade.controller = "platformWebApp.localizableSettingValueListController";
+                            blade.settingName = blade.currentEntityId;
+                        }
+                        showBlade(blade, parentBlade);
+                    };
+                    return $delegate;
+                }]);
         }]
     )
     .run(['platformWebApp.mainMenuService', 'platformWebApp.breadcrumbHistoryService', 'platformWebApp.changeLogApi', 'platformWebApp.toolbarService', 'platformWebApp.dialogService', '$state', function (mainMenuService, breadcrumbHistoryService, changeLogApi, toolbarService, dialogService, $state) {

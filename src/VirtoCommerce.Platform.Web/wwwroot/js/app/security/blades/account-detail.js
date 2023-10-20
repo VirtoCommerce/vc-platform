@@ -1,9 +1,8 @@
-angular.module('platformWebApp').controller('platformWebApp.accountDetailController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.settings', 'platformWebApp.authService', 'platformWebApp.login',
-    function ($scope, bladeNavigationService, metaFormsService, accounts, settings, authService, loginResources) {
+angular.module('platformWebApp').controller('platformWebApp.accountDetailController', [
+    '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.metaFormsService', 'platformWebApp.accounts', 'platformWebApp.authService', 'platformWebApp.login',
+    function ($scope, bladeNavigationService, metaFormsService, accounts, authService, loginResources) {
         var blade = $scope.blade;
         blade.updatePermission = 'platform:security:update';
-        blade.accountTypes = [];
-        blade.statuses = [];
         blade.isLinkSent = false;
         blade.isPasswordLoginEnabled = false;
 
@@ -18,7 +17,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                 function (error) {
                     bladeNavigationService.setError(error, blade);
                 });
-        }
+        };
 
         function setToolbarCommands() {
 
@@ -60,12 +59,6 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                     setToolbarCommands();
                 });
 
-            // Load account types
-            blade.accountTypes = settings.getValues({ id: 'VirtoCommerce.Platform.Security.AccountTypes' });
-
-            // Load statuses
-            blade.statuses = settings.getValues({ id: 'VirtoCommerce.Other.AccountStatuses' });
-
             blade.isLoading = false;
         }
 
@@ -86,28 +79,16 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
         blade.sendLink = function () {
             if (!blade.isLinkSent && !blade.isLoading && blade.currentEntity.email === blade.origEntity.email) {
                 blade.isLoading = true;
-                accounts.verifyEmail({ userId: blade.currentEntity.id }, null , () => {
+                accounts.verifyEmail({ userId: blade.currentEntity.id }, null, () => {
                     blade.isLinkSent = true;
                     blade.isLoading = false;
                 });
             }
-        }
-
-        blade.openSettingDictionaryController = function (currentEntityId) {
-            var newBlade = {
-                id: currentEntityId,
-                isApiSave: true,
-                currentEntityId: currentEntityId,
-                parentRefresh: function (data) { blade.accountTypes = data; },
-                controller: 'platformWebApp.settingDictionaryController',
-                template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
-            };
-            bladeNavigationService.showBlade(newBlade, blade);
         };
 
         $scope.setForm = function (form) {
             $scope.formScope = form;
-        }
+        };
 
         $scope.saveChanges = function () {
             blade.isLoading = true;
@@ -124,7 +105,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
 
         blade.hasVerifyEmailPermission = () => {
             return authService.checkPermission('platform:security:verifyEmail', blade.securityScopes);
-        }
+        };
 
         blade.onClose = function (closeCallback) {
             bladeNavigationService.showConfirmationIfNeeded(isDirty(), true, blade, $scope.saveChanges, closeCallback, "platform.dialogs.account-save.title", "platform.dialogs.account-save.message");
@@ -223,7 +204,7 @@ angular.module('platformWebApp').controller('platformWebApp.accountDetailControl
                 permission: blade.updatePermission,
                 meta: "Unlocked"
             }
-        ]
+        ];
 
         // actions on load
         blade.refresh(false);

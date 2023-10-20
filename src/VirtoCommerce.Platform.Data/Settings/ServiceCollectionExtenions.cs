@@ -10,6 +10,7 @@ namespace VirtoCommerce.Platform.Data.Settings
             services.AddSingleton<ISettingsManager, SettingsManager>();
             services.AddSingleton<ISettingsRegistrar>(context => context.GetService<ISettingsManager>());
             services.AddSingleton<ISettingsSearchService, SettingsSearchService>();
+            services.AddSingleton<ILocalizableSettingService, LocalizableSettingService>();
 
             return services;
         }

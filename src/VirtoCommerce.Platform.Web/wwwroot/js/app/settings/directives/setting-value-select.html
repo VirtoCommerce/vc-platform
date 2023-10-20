@@ -1,0 +1,18 @@
+<div>
+  <label class="form-label" ng-if="label">{{ label | translate }}<a href="" ng-click="openSettingManagement()" class="form-edit" va-permission="platform:setting:update"><span class="form-ico fa fa-pencil"></span></a></label>
+  <div class="form-input">
+    <ui-select ng-model="context.modelValue"
+               ng-required="context.required"
+               ng-disabled="context.disabled"
+               ng-class="{ disabled: !hasItems }"
+               on-select="selectValue($item, $model)">
+      <ui-select-match allow-clear="{{context.allowClear}}" placeholder="{{ placeholder || 'platform.placeholders.select-value' | translate }}">
+        {{ isLoading ? ('platform.list.loading' | translate) : $select.selected.value || ngModel }}
+      </ui-select-match>
+      <ui-select-choices repeat="item.key as item in items | filter: { value: $select.search }">
+        <span ng-bind-html="item.value | highlight: $select.search" ng-show='hasItems'></span>
+      </ui-select-choices>
+    </ui-select>
+  </div>
+  <div class="list-descr" ng-if="description">{{ description | translate}}</div>
+</div>

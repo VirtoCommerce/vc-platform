@@ -535,6 +535,13 @@
         "title": "Einstellungen",
         "bread-crumb-top": "Alle"
       },
+      "localizable-setting-value-list": {
+        "subtitle": "Wörterbuch Werte verwalten"
+      },
+      "localizable-setting-value-details": {
+        "title": "Wörterbuch wert bearbeiten",
+        "alias": "Systemwert"
+      },
       "user-profile": {
         "title": "User Profil",
         "labels": {
@@ -644,6 +651,14 @@
       "settings-delete": {
         "title": "Bestätigung löschen",
         "message": "Die Einstellungen wurden geändert. Möchten Sie die Änderungen speichern?"
+      },
+      "localizable-setting-value-delete": {
+        "title": "Bestätigung löschen",
+        "message": "Möchten Sie die ausgewählte Wörterbuch Werte löschen?"
+      },
+      "localizable-setting-value-save": {
+        "title": "Änderungen speichern",
+        "message": "This dictionary value has been modified. Do you want to save changes?"
       },
       "email-sending-success": {
         "title": "Erfolg senden",

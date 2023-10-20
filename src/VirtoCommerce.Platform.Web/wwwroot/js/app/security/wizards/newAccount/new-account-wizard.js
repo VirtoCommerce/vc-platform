@@ -4,9 +4,6 @@ angular.module('platformWebApp').controller('platformWebApp.newAccountWizardCont
             var blade = $scope.blade;
             blade.headIcon = 'fas fa-key';
 
-            blade.accountTypes = [];
-            blade.statuses = [];
-
             var promise = roles.search({ takeCount: 10000 }).$promise;
 
             function initializeBlade(data) {
@@ -15,15 +12,14 @@ angular.module('platformWebApp').controller('platformWebApp.newAccountWizardCont
                     blade.currentEntities = promiseData.results;
                 });
 
-                // Load statuses
-                settings.get({ id: 'VirtoCommerce.Other.AccountStatuses' }, function (statuses) {
-                    blade.statuses = statuses.allowedValues;
-                    blade.currentEntity.status = statuses.defaultValue;
+                // Load default account status
+                settings.get({ id: 'VirtoCommerce.Platform.Security.DefaultAccountStatus' }, function (setting) {
+                    blade.currentEntity.status = setting.defaultValue;
                 });
 
-                settings.get({ id: 'VirtoCommerce.Platform.Security.AccountTypes' }, function (accountTypes) {
-                    blade.accountTypes = accountTypes.allowedValues;
-                    blade.currentEntity.userType = accountTypes.defaultValue;
+                // Load default account type
+                settings.get({ id: 'VirtoCommerce.Platform.Security.AccountTypes' }, function (setting) {
+                    blade.currentEntity.userType = setting.defaultValue;
                 });
             }
 
@@ -39,20 +35,6 @@ angular.module('platformWebApp').controller('platformWebApp.newAccountWizardCont
                     template: '$(Platform)/Scripts/app/security/blades/role-detail.tpl.html'
                 };
 
-                bladeNavigationService.showBlade(newBlade, blade);
-            };
-
-            blade.openSettingDictionaryController = function (dictionaryName, currentEntityId) {
-                var newBlade = {
-                    id: currentEntityId,
-                    currentEntityId: currentEntityId,
-                    isApiSave: true,
-                    parentRefresh: function (data) {
-                        blade[dictionaryName] = data;
-                    },
-                    controller: 'platformWebApp.settingDictionaryController',
-                    template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html'
-                };
                 bladeNavigationService.showBlade(newBlade, blade);
             };
 

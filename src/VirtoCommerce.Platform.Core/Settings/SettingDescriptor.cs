@@ -42,10 +42,15 @@ namespace VirtoCommerce.Platform.Core.Settings
         public object[] AllowedValues { get; set; }
         public object DefaultValue { get; set; }
         /// <summary>
-        /// The flag indicates what current setting is just editable dictionary and hasn't any concrete value 
+        /// The flag indicates that current setting is just an editable dictionary and hasn't any concrete value 
         /// </summary>
         public bool IsDictionary { get; set; }
-        
+
+        /// <summary>
+        /// This flag indicates that the setting value(s) can be localized
+        /// </summary>
+        public bool IsLocalizable { get; set; }
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Name;

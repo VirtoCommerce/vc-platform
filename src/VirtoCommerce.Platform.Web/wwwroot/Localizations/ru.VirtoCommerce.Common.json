@@ -144,6 +144,11 @@
         "short-text-dictionary-multilang": "Выбрать значение",
         "short-text-dictionary-multivalue-multilang": "Выбрать значение",
         "long-text-dictionary-multivalue-multilang": "Выбрать значение"
+      },
+      "short-text-input": {
+        "placeholder": "Введите значение",
+        "required": "Обязательное поле",
+        "maxLength": "Значение в данном поле не должно превышать {{number}} символов"
       }
     }
   }

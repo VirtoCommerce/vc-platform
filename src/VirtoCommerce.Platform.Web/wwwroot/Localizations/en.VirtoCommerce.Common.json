@@ -156,6 +156,11 @@
         "long-text-dictionary-multivalue-multilang": "Select value"
       }
     },
+    "short-text-input": {
+      "placeholder": "Enter value",
+      "required": "This field is required",
+      "maxLength": "This field must not contain more than {{number}} characters"
+    },
     "validators": {
       "uriWithoutQuery": {
         "error": "Invalid uri format. Make shure uri dosn't have query params."

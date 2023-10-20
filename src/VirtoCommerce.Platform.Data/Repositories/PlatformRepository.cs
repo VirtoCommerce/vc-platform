@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Infrastructure;
+using VirtoCommerce.Platform.Data.Localizations;
 using VirtoCommerce.Platform.Data.Model;
 
 namespace VirtoCommerce.Platform.Data.Repositories
@@ -17,6 +18,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
         #region IPlatformRepository Members
         public virtual IQueryable<SettingEntity> Settings { get { return DbContext.Set<SettingEntity>(); } }
+
+        public IQueryable<LocalizedItemEntity> LocalizedItems => DbContext.Set<LocalizedItemEntity>();
 
         public virtual IQueryable<DynamicPropertyEntity> DynamicProperties { get { return DbContext.Set<DynamicPropertyEntity>(); } }
 
