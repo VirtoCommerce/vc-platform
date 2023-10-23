@@ -88,7 +88,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 if (sampleDataState == SampleDataState.Undefined && Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 {
                     _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Processing);
+
                     var pushNotification = new SampleDataImportPushNotification(User.Identity.Name);
+                    pushNotification.Title = "Sample data import process";
+
                     _pushNotifier.Send(pushNotification);
                     var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(new Uri(url), pushNotification, JobCancellationToken.Null, null));
                     pushNotification.JobId = jobId;
