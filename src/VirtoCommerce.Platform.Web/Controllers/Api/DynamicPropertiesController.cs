@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -148,7 +149,20 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> SaveDictionaryItemsAsync([FromBody] DynamicPropertyDictionaryItem[] items)
         {
-            await _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items);
+            try
+            {
+                await _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidCollectionItemException ex)
+            {
+                BadRequest(ex.Message);
+            }
+
+
             return NoContent();
         }
 
