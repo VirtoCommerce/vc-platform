@@ -49,7 +49,7 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             using (var repository = _repositoryFactory())
             {
                 var dbExistItems = await repository.GetDynamicPropertyDictionaryItemByIdsAsync(items.Where(x => !x.IsTransient()).Select(x => x.Id).ToArray());
-                foreach (var item in items)
+                foreach (var item in items.Where(x => !string.IsNullOrEmpty(x.Name)))
                 {
                     var originalEntity = dbExistItems.FirstOrDefault(x => x.Id == item.Id);
                     var modifiedEntity = AbstractTypeFactory<DynamicPropertyDictionaryItemEntity>.TryCreateInstance().FromModel(item);
