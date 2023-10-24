@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Core.Exceptions;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
@@ -153,15 +152,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 await _dynamicPropertyDictionaryItemsService.SaveDictionaryItemsAsync(items);
             }
-            catch (ArgumentNullException ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (InvalidCollectionItemException ex)
-            {
-                BadRequest(ex.Message);
-            }
-
 
             return NoContent();
         }
