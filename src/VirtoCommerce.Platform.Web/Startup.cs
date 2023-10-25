@@ -642,7 +642,27 @@ namespace VirtoCommerce.Platform.Web
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
 
+            WriteFailedModulesToLog(app, logger);
+
             logger.LogInformation($"Welcome to Virto Commerce {typeof(Startup).Assembly.GetName().Version}!");
+        }
+
+        private static void WriteFailedModulesToLog(IApplicationBuilder app, ILogger<Startup> logger)
+        {
+            var localModuleCatalog = app.ApplicationServices.GetService<ILocalModuleCatalog>();
+
+            var failedModules = localModuleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
+                .Where(x => !x.Errors.IsNullOrEmpty())
+                .Select(x => new { x.Id, x.Version, ErrorMessage = string.Join(";", x.Errors) }).ToList();
+
+            if (failedModules.Any())
+            {
+                foreach (var failedModule in failedModules)
+                {
+                    logger.LogError($"Could not load module {failedModule.Id} {failedModule.Version}. Error: {failedModule.ErrorMessage}");
+                }
+            }
         }
 
         private static void SetupEndpoints(IEndpointRouteBuilder endpoints)
@@ -654,6 +674,12 @@ namespace VirtoCommerce.Platform.Web
 
             endpoints.MapHealthChecks("/health", new HealthCheckOptions
             {
+                ResultStatusCodes =
+                {
+                    [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                    [HealthStatus.Degraded] = StatusCodes.Status200OK,
+                    [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+                },
                 ResponseWriter = async (context, report) =>
                 {
                     context.Response.ContentType = "application/json; charset=utf-8";
