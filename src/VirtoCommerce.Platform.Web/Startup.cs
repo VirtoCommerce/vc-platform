@@ -656,12 +656,9 @@ namespace VirtoCommerce.Platform.Web
                 .Where(x => !x.Errors.IsNullOrEmpty())
                 .Select(x => new { x.Id, x.Version, ErrorMessage = string.Join(";", x.Errors) }).ToList();
 
-            if (failedModules.Any())
+            foreach (var failedModule in failedModules)
             {
-                foreach (var failedModule in failedModules)
-                {
-                    logger.LogError($"Could not load module {failedModule.Id} {failedModule.Version}. Error: {failedModule.ErrorMessage}");
-                }
+                logger.LogError($"Could not load module {failedModule.Id} {failedModule.Version}. Error: {failedModule.ErrorMessage}");
             }
         }
 
