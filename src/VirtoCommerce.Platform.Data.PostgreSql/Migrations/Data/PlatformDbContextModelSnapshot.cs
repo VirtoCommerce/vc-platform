@@ -89,6 +89,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Data
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 

@@ -86,6 +86,7 @@ namespace VirtoCommerce.Platform.Data.MySql.Migrations.Data
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("varchar(512)");
 
