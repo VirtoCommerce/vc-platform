@@ -658,7 +658,7 @@ namespace VirtoCommerce.Platform.Web
 
             foreach (var failedModule in failedModules)
             {
-                logger.LogError($"Could not load module {failedModule.Id} {failedModule.Version}. Error: {failedModule.ErrorMessage}");
+                logger.LogError("Could not load module {0} v{1}. Error: {2}", failedModule.Id, failedModule.Version, failedModule.ErrorMessage);
             }
         }
 
