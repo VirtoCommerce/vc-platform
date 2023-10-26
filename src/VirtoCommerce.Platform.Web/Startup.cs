@@ -644,7 +644,7 @@ namespace VirtoCommerce.Platform.Web
 
             WriteFailedModulesToLog(app, logger);
 
-            logger.LogInformation($"Welcome to Virto Commerce {typeof(Startup).Assembly.GetName().Version}!");
+            logger.LogInformation("Welcome to Virto Commerce {0}!", typeof(Startup).Assembly.GetName().Version);
         }
 
         private static void WriteFailedModulesToLog(IApplicationBuilder app, ILogger<Startup> logger)
