@@ -644,7 +644,7 @@ namespace VirtoCommerce.Platform.Web
 
             WriteFailedModulesToLog(app, logger);
 
-            logger.LogInformation("Welcome to Virto Commerce {0}!", typeof(Startup).Assembly.GetName().Version);
+            logger.LogInformation("Welcome to Virto Commerce {PlatformVersion}!", typeof(Startup).Assembly.GetName().Version);
         }
 
         private static void WriteFailedModulesToLog(IApplicationBuilder app, ILogger<Startup> logger)
@@ -654,11 +654,11 @@ namespace VirtoCommerce.Platform.Web
             var failedModules = localModuleCatalog.Modules
                 .OfType<ManifestModuleInfo>()
                 .Where(x => !x.Errors.IsNullOrEmpty())
-                .Select(x => new { x.Id, x.Version, ErrorMessage = string.Join(";", x.Errors) }).ToList();
+                .Select(x => new { x.Id, x.Version, ErrorMessage = string.Join(";", x.Errors) });
 
             foreach (var failedModule in failedModules)
             {
-                logger.LogError("Could not load module {0} v{1}. Error: {2}", failedModule.Id, failedModule.Version, failedModule.ErrorMessage);
+                logger.LogError("Could not load module {ModuleId} v{ModuleVersion}. Error: {ErrorMessage}", failedModule.Id, failedModule.Version, failedModule.ErrorMessage);
             }
         }
 
