@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using VirtoCommerce.Platform.Core.Caching;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
+using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Data.Infrastructure;
 using VirtoCommerce.Platform.Data.Model;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -22,10 +23,10 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             _memoryCache = memoryCache;
         }
 
-        public virtual async Task<DynamicPropertyDictionaryItem[]> GetDynamicPropertyDictionaryItemsAsync(string[] ids)
+        public virtual Task<DynamicPropertyDictionaryItem[]> GetDynamicPropertyDictionaryItemsAsync(string[] ids)
         {
             var cacheKey = CacheKey.With(GetType(), "GetDynamicPropertyDictionaryItemsAsync", string.Join("-", ids));
-            return await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
             {
                 cacheEntry.AddExpirationToken(DynamicPropertiesCacheRegion.CreateChangeToken());
                 using (var repository = _repositoryFactory())
@@ -44,6 +45,10 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             if (items == null)
             {
                 throw new ArgumentNullException(nameof(items));
+            }
+            if (items.Any(x => string.IsNullOrEmpty(x.Name)))
+            {
+                throw new InvalidCollectionItemException("One or more items in the collection have a null or empty Name.");
             }
 
             using (var repository = _repositoryFactory())

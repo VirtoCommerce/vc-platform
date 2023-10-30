@@ -44,6 +44,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Data
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
@@ -55,7 +56,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer.Migrations.Data
                     b.HasIndex("PropertyId", "Name")
                         .IsUnique()
                         .HasDatabaseName("IX_PlatformDynamicPropertyDictionaryItem_PropertyId_Name")
-                        .HasFilter("[PropertyId] IS NOT NULL AND [Name] IS NOT NULL");
+                        .HasFilter("[PropertyId] IS NOT NULL");
 
                     b.ToTable("PlatformDynamicPropertyDictionaryItem", (string)null);
                 });
