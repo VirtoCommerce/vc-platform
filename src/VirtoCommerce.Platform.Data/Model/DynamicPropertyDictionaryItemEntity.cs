@@ -18,6 +18,7 @@ namespace VirtoCommerce.Platform.Data.Model
         public virtual DynamicPropertyEntity Property { get; set; }
 
         [StringLength(512)]
+        [Required]
         public string Name { get; set; }
 
         public virtual ObservableCollection<DynamicPropertyDictionaryItemNameEntity> DisplayNames { get; set; }
