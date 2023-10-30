@@ -16,6 +16,7 @@
 
     <ItemGroup>
         <PackageReference Include="Azure.Core" Version="1.25.0" />
+        <PackageReference Include="Azure.Messaging.EventGrid" Version="4.11.0" />
         <PackageReference Include="FluentValidation" Version="10.3.4" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
