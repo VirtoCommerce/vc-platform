@@ -21,7 +21,7 @@ angular.module('platformWebApp')
             return this.widgetsMap[containerName] || [];
         },
         clearWidgets: function (containerName) {
-            this.widgetsMap[metaFormName] = [];
+            this.widgetsMap[containerName] = [];
         }
     };
     return retVal;
