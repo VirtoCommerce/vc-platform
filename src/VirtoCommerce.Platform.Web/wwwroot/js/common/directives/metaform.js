@@ -12,6 +12,17 @@ angular.module('platformWebApp')
             },
             getMetaFields: function (metaFormName) {
                 return registeredMetaFields[metaFormName];
+            },
+            unregisterMetaFields: function (metaFormName, metaField) {
+                if (registeredMetaFields[metaFormName]) {
+                    var index = registeredMetaFields[metaFormName].indexOf(metaField);
+                    if (index !== -1) {
+                        registeredMetaFields[metaFormName].splice(index, 1);
+                    }
+                }
+            },
+            clearMetaFields: function (metaFormName) {
+                registeredMetaFields[metaFormName] = [];
             }
         };
     }])
