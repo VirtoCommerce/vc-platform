@@ -642,7 +642,24 @@ namespace VirtoCommerce.Platform.Web
             mvcJsonOptions.Value.SerializerSettings.Converters.Add(new PolymorphJsonConverter());
             PolymorphJsonConverter.RegisterTypeForDiscriminator(typeof(PermissionScope), nameof(PermissionScope.Type));
 
-            logger.LogInformation($"Welcome to Virto Commerce {typeof(Startup).Assembly.GetName().Version}!");
+            WriteFailedModulesToLog(app, logger);
+
+            logger.LogInformation("Welcome to Virto Commerce {PlatformVersion}!", typeof(Startup).Assembly.GetName().Version);
+        }
+
+        private static void WriteFailedModulesToLog(IApplicationBuilder app, ILogger<Startup> logger)
+        {
+            var localModuleCatalog = app.ApplicationServices.GetService<ILocalModuleCatalog>();
+
+            var failedModules = localModuleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
+                .Where(x => !x.Errors.IsNullOrEmpty())
+                .Select(x => new { x.Id, x.Version, ErrorMessage = string.Join(";", x.Errors) });
+
+            foreach (var failedModule in failedModules)
+            {
+                logger.LogError("Could not load module {ModuleId} {ModuleVersion}. Error: {ErrorMessage}", failedModule.Id, failedModule.Version, failedModule.ErrorMessage);
+            }
         }
 
         private static void SetupEndpoints(IEndpointRouteBuilder endpoints)
