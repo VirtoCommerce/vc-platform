@@ -29,8 +29,8 @@ angular.module('platformWebApp')
                 });
         };
 
-    authContext.loginToken = function (email, password, remember) {       
-        var requestData = 'grant_type=password&scope=offline_access&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password);
+    authContext.loginToken = function (email, password, remember) {
+            var requestData = 'grant_type=password&scope=offline_access&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password);
         return $http.post('connect/token', requestData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
             function (response) {
                 var authData = {
