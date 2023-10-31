@@ -385,7 +385,13 @@
       },
       "historyDetailDefault": {
         "title": "Информация о событии",
-        "subtitle": "Информация о событии"
+        "subtitle": "Информация о событии",
+        "labels": {
+          "start": "Начало",
+          "end": "Конец",
+          "errors": "Ошибки",
+          "stats": "Обработано - {{ processedCount }} из {{ totalCount }} документов"
+        }
       },
       "menuHeader": {
         "labels": {

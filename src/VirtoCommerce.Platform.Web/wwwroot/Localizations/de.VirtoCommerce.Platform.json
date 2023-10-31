@@ -290,7 +290,12 @@
       },
       "historyDetailDefault": {
         "title": "Event Detail",
-        "subtitle": "Event Detail"
+        "subtitle": "Event Detail",
+        "labels": {
+          "start": "Starten",
+          "end": "Ende",
+          "errors": "Fehler"
+        }
       },
       "menuHeader": {
         "labels": {
