@@ -380,7 +380,8 @@
         "labels": {
           "type": "Тип",
           "title": "Название",
-          "created": "Создано"
+          "created": "Создано",
+          "description": "Описание"
         }
       },
       "historyDetailDefault": {

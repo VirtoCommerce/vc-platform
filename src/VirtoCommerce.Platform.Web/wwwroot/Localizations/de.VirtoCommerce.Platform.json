@@ -285,7 +285,8 @@
         "labels": {
           "type": "Typ",
           "title": "Titel",
-          "created": "Erstellt"
+          "created": "Erstellt",
+          "description": "Beschreibung"
         }
       },
       "historyDetailDefault": {

@@ -316,7 +316,8 @@
         "labels": {
           "type": "Type",
           "title": "Title",
-          "created": "Created"
+          "created": "Created",
+          "description": "Description"
         }
       },
       "historyDetailDefault": {
