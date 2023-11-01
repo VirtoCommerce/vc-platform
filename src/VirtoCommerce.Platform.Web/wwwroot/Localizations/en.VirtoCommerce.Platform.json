@@ -315,12 +315,20 @@
         "labels": {
           "type": "Type",
           "title": "Title",
-          "created": "Created"
+          "created": "Created",
+          "description": "Description"
         }
       },
       "historyDetailDefault": {
         "title": "Event detail",
-        "subtitle": "Event detail"
+        "subtitle": "Event detail",
+        "labels": {
+          "start": "Start",
+          "end": "End",
+          "elapsed": "Elapsed",
+          "errors": "Errors",
+          "stats": "Processed {{ processedCount }} of {{ totalCount }} records"
+        }
       },
       "menuHeader": {
         "labels": {
