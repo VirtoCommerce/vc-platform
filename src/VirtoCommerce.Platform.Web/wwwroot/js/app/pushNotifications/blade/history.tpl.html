@@ -1,22 +1,24 @@
+<div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+
 <div class="blade-content __medium-wide">
-    <div class="blade-inner">
-        <div class="inner-block">
-            <div class="table-wrapper">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="table-col" ng-repeat="column in columns" ng-click="setOrder(column)" ng-class="(column.checked) ? '__sorted' : ''">
-                                {{column.title | translate}}
-                                <i class="table-ico sort fa" ng-class="column.checked ? (column.reverse ? 'fa-sort-up' : 'fa-sort-down') : ''"></i>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-item" ng-class="{'__selected': blade.selectedNodeId === notification.id, ' __error': notification.notifyType == 'error', ' __warning': notification.notifyType == 'warning', ' __info': notification.notifyType == 'info'}" ng-click="blade.selectedNodeId=notification.id; notification.action(notification)" ng-repeat="notification in notifications" ng-include="notification.template"></tr>
-                    </tbody>
-                </table>
-            </div>
-            <ng-include src='pagerTemplate.html'></ng-include>
-        </div>
+  <div class="blade-inner">
+    <div class="inner-block">
+      <div class="table-wrapper" ng-init="setGridOptions({
+                    useExternalSorting: true,
+                    rowTemplate: 'pushnotification-list.row.html',
+                    data: 'blade.currentEntities',
+                    columnDefs: [
+                        { name: 'title', displayName: 'platform.blades.history.labels.title' },
+                        { name: 'description', displayName: 'platform.blades.history.labels.description' },
+                        { name: 'created', displayName: 'platform.blades.history.labels.created' },
+                    ]})">
+        <div ui-grid="gridOptions" hideMenu ui-grid-auto-resize ui-grid-save-state ui-grid-selection ui-grid-resize-columns ui-grid-move-columns ui-grid-pinning ui-grid-height></div>
+      </div>
     </div>
+  </div>
 </div>
+
+
+<script type="text/ng-template" id="pushnotification-list.row.html">
+  <div ng-click='grid.appScope.blade.selectNode(row.entity)' ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.uid" ui-grid-one-bind-id-grid="rowRenderIndex + '-' + col.uid + '-cell'" class="ui-grid-cell" ng-class="{'ui-grid-row-header-cell': col.isRowHeader, '__selected': row.entity.id===grid.appScope.selectedNodeId }" role="{{col.isRowHeader ? 'rowheader' : 'gridcell' }}" ui-grid-cell context-menu="grid.appScope.contextMenuEntity = row.entity" data-target="acc_menu"></div>
+</script>
