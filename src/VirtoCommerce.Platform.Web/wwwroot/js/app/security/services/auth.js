@@ -14,10 +14,23 @@ angular.module('platformWebApp')
             function (results) {
                 changeAuth(results.data);
             });
-    };
+        };
 
-    authContext.login = function (email, password, remember) {       
-        var requestData = 'grant_type=password&scope=offline_access&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password);
+    authContext.login = function (email, password, remember) {
+            return $http.post(serviceBase + 'login/', { userName: email, password: password, rememberMe: remember }).then(
+                function (response) {
+                    return authContext.fillAuthData().then(function () {
+                        return response.data;
+                    });
+                },
+                function (error) {
+                    authContext.logout();
+                    return $q.reject(error);
+                });
+        };
+
+    authContext.loginToken = function (email, password, remember) {
+            var requestData = 'grant_type=password&scope=offline_access&username=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password);
         return $http.post('connect/token', requestData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then(
             function (response) {
                 var authData = {
