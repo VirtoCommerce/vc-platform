@@ -38,6 +38,11 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [AllowAnonymous]
         public ActionResult SignIn(string authenticationType, string returnUrl = null)
         {
+            if (string.IsNullOrEmpty(authenticationType))
+            {
+                return BadRequest();
+            }
+
             if (string.IsNullOrEmpty(returnUrl))
             {
                 returnUrl = Url.Action("Index", "Home");
@@ -54,12 +59,22 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [Route("signout")]
         public async Task<ActionResult> SignOut(string authenticationType)
         {
-            // sign out the current user
-            var user = await _signInManager.UserManager.FindByNameAsync(User?.Identity?.Name);
-            if (user != null)
+            if (string.IsNullOrEmpty(authenticationType))
             {
-                await _signInManager.SignOutAsync();
-                await _eventPublisher.Publish(new UserLogoutEvent(user));
+                return BadRequest();
+            }
+
+            var userName = User?.Identity?.Name;
+
+            // sign out the current user
+            if (!string.IsNullOrEmpty(userName))
+            {
+                var user = await _signInManager.UserManager.FindByNameAsync(User?.Identity?.Name);
+                if (user != null)
+                {
+                    await _signInManager.SignOutAsync();
+                    await _eventPublisher.Publish(new UserLogoutEvent(user));
+                }
             }
 
             var authenticationProperties = new AuthenticationProperties();
