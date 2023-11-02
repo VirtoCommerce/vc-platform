@@ -1,10 +1,25 @@
-﻿<div class="blade-content __medium-wide">
+<div class="blade-content">
 	<div class="blade-inner">
-		<div class="inner-block" ng-init="blade.isLoading = false">
-			<div ng-repeat="(key, val) in blade.notify.extendedData">
-		        <div class="sub-t">{{key}}</div>
-		        <p class="text __debug">{{val}}</p>
-		    </div>
+		<div class="inner-block">
+			<div class="sub-t">{{blade.notification.description}}</div>
+			<div class="block" ng-if="blade.notification.created || blade.notification.finished">
+				<p ng-if="blade.notification.created" class="text no-data">
+					{{ 'platform.blades.historyDetailDefault.labels.start' | translate }} — <span class="fa fa-clock-o"></span> <span am-time-ago="blade.notification.created"></span>
+				</p>
+				<div ng-if="!blade.notification.finished" style="position: relative; margin-bottom: 45px; margin-top: -10px">
+					<div class="progress-bar progress-bar-background" style="position: absolute"></div>
+					<div class="progress-bar" ng-style="{'width': blade.progressPercentage + '%'}" style="position: absolute"></div>
+				</div>
+				<p ng-if="blade.notification.finished" class="text no-data">{{ 'platform.blades.historyDetailDefault.labels.end' | translate }} — <span class="fa fa-clock-o"></span> <span am-time-ago="blade.notification.finished"></span></p>
+				<p ng-if="blade.notification.created" class="text no-data">{{ 'platform.blades.historyDetailDefault.labels.elapsed' | translate }} — <span class="fa fa-clock-o"></span> <span>{{elapsedTime}}</span></p>
+				<p ng-if="blade.notification.finished" class="text no-data">{{ 'platform.blades.historyDetailDefault.labels.stats' | translate:blade.notification }}</p>
+			</div>
+			<div class="block" ng-if="!blade.notification.finished || blade.notification.errorCount">
+				<span class="sub-t">{{ 'platform.blades.historyDetailDefault.labels.errors' | translate }}: <span class="count">{{blade.notification.errorCount}}</span></span>
+				<div class="log" ng-if="blade.notification.errorCount">
+					<p ng-repeat="error in blade.notification.errors track by $index" class="error">{{error}}</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

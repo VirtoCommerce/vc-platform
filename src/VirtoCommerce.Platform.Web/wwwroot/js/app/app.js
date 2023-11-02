@@ -392,7 +392,10 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 var url = $location.url();
                 if (url.indexOf("resetpassword") !== -1) {
                     $state.go('resetPasswordDialog');
-                } else if (!authService.isAuthenticated) {
+                } else {
+                    if (authService.isAuthenticated) {
+                        authService.logout();
+                    }
                     $state.go('loginDialog');
                 }
             });

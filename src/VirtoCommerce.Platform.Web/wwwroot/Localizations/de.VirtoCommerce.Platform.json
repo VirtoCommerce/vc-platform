@@ -285,12 +285,18 @@
         "labels": {
           "type": "Typ",
           "title": "Titel",
-          "created": "Erstellt"
+          "created": "Erstellt",
+          "description": "Beschreibung"
         }
       },
       "historyDetailDefault": {
         "title": "Event Detail",
-        "subtitle": "Event Detail"
+        "subtitle": "Event Detail",
+        "labels": {
+          "start": "Starten",
+          "end": "Ende",
+          "errors": "Fehler"
+        }
       },
       "menuHeader": {
         "labels": {
