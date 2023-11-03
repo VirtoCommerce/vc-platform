@@ -16,7 +16,6 @@ namespace VirtoCommerce.Platform.Redis
         private static string _instanceId { get; } = $"{Environment.MachineName}_{Guid.NewGuid():N}";
         private bool _isSubscribed;
         private readonly ISubscriber _bus;
-        private readonly CachingOptions _cachingOptions;
         private readonly RedisCachingOptions _redisCachingOptions;
         private readonly IConnectionMultiplexer _connection;
         private readonly ILogger _log;
@@ -35,7 +34,6 @@ namespace VirtoCommerce.Platform.Redis
             _log = log;
             _bus = bus;
 
-            _cachingOptions = cachingOptions.Value;
             _redisCachingOptions = redisCachingOptions.Value;
 
             CancellableCacheRegion.OnTokenCancelled = CacheCancellableTokensRegistry_OnTokenCancelled;
@@ -50,7 +48,7 @@ namespace VirtoCommerce.Platform.Redis
 
         protected virtual void OnConnectionFailed(object sender, ConnectionFailedEventArgs e)
         {
-            _log.LogError("Redis disconnected from instance {InstanceId}. Endpoint is {EndPoint}, failure type is {e.FailureType}", _instanceId, e.EndPoint, e.FailureType);
+            _log.LogError("Redis disconnected from instance {InstanceId}. Endpoint is {EndPoint}, failure type is {FailureType}", _instanceId, e.EndPoint, e.FailureType);
         }
 
         protected virtual void OnConnectionRestored(object sender, ConnectionFailedEventArgs e)
@@ -144,7 +142,7 @@ namespace VirtoCommerce.Platform.Redis
 
                         _bus.Subscribe(_redisCachingOptions.ChannelName, OnMessage, CommandFlags.FireAndForget);
 
-                        _log.LogInformation($"Successfully subscribed to Redis backplane channel {_redisCachingOptions.ChannelName} with instance id:{_instanceId}");
+                        _log.LogInformation("Successfully subscribed to Redis backplane channel {ChannelName} with instance id:{InstanceId}", _redisCachingOptions.ChannelName, _instanceId);
                         _isSubscribed = true;
                     }
                 }
