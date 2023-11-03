@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp')
+angular.module('platformWebApp')
 .factory('platformWebApp.widgetService', function () {
 
     var retVal = {
@@ -8,8 +8,21 @@
                 this.widgetsMap[containerName] = [];
             }
             this.widgetsMap[containerName].push(widget);
+        },
+        unregisterWidget: function (widget, containerName) {
+            if (this.widgetsMap[containerName]) {
+                var index = this. widgetsMap[containerName].indexOf(widget);
+                if (index !== -1) {
+                    this.widgetsMap[containerName].splice(index, 1);
+                }
+            }
+        },
+        getWidgets: function (containerName) {
+            return this.widgetsMap[containerName] || [];
+        },
+        clearWidgets: function (containerName) {
+            this.widgetsMap[containerName] = [];
         }
-
     };
     return retVal;
 })
