@@ -20,23 +20,13 @@ angular.module("platformWebApp")
                 });
 
             $provide.decorator('platformWebApp.bladeNavigationService', [
-                '$rootScope', '$delegate', 'platformWebApp.localizableSettingsApi',
-                function ($rootScope, $delegate, localizableSettingsApi) {
-                    var localizableSettingNames = [];
-
-                    $rootScope.$on('loginStatusChanged', function (event, authContext) {
-                        if (authContext.isAuthenticated) {
-                            localizableSettingsApi.getLocalizableSettingNames(function (response) {
-                                localizableSettingNames = response;
-                            });
-                        }
-                    });
-
+                '$delegate', 'platformWebApp.localizableSettingService',
+                function ($delegate, localizableSettingService) {
                     var showBlade = $delegate.showBlade;
 
                     $delegate.showBlade = function (blade, parentBlade) {
                         if (blade.template === "$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html" &&
-                            localizableSettingNames.includes(blade.currentEntityId))
+                            localizableSettingService.isLocalizable(blade.currentEntityId))
                         {
                             blade.template = "$(Platform)/Scripts/app/settings/blades/localizable-setting-value-list.html";
                             blade.controller = "platformWebApp.localizableSettingValueListController";

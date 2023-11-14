@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Settings;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api;
@@ -19,11 +20,11 @@ public class LocalizableSettingsController : Controller
         _localizableSettingService = localizableSettingService;
     }
 
-    [HttpGet("names")]
+    [HttpGet]
     [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
-    public ActionResult<IList<string>> GetLocalizableSettingNames()
+    public async Task<ActionResult<LocalizableSettingsAndLanguages>> GetLocalizableSettings()
     {
-        var result = _localizableSettingService.GetNames();
+        var result = await _localizableSettingService.GetSettingsAndLanguagesAsync();
         return Ok(result);
     }
 
@@ -32,14 +33,6 @@ public class LocalizableSettingsController : Controller
     public async Task<ActionResult<IList<KeyValue>>> GetDictionaryValues([FromRoute] string name, [FromRoute] string language)
     {
         var result = await _localizableSettingService.GetValuesAsync(name, language);
-        return Ok(result);
-    }
-
-    [HttpGet("{name}/dictionary-items")]
-    [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
-    public async Task<ActionResult<DictionaryItemsAndLanguages>> GetDictionaryItemsAndLanguagesAsync([FromRoute] string name)
-    {
-        var result = await _localizableSettingService.GetItemsAndLanguagesAsync(name);
         return Ok(result);
     }
 

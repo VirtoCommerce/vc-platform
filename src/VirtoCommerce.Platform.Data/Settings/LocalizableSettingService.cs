@@ -27,20 +27,33 @@ public class LocalizableSettingService : ILocalizableSettingService
         _localizedItemService = localizedItemService;
     }
 
-    public virtual IList<string> GetNames()
+    public virtual async Task<LocalizableSettingsAndLanguages> GetSettingsAndLanguagesAsync()
     {
-        return _settingsManager.AllRegisteredSettings
+        var names = _settingsManager.AllRegisteredSettings
             .Where(IsLocalizable)
             .Select(x => x.Name)
-            .OrderBy(x => x)
-            .ToList();
+            .OrderBy(x => x);
+
+        var tasks = names.Select(async name => new LocalizableSetting { Name = name, Items = await GetItems(name), });
+        var settings = (await Task.WhenAll(tasks)).Where(x => x.Items != null).ToList();
+
+        return new LocalizableSettingsAndLanguages
+        {
+            Settings = settings,
+            Languages = await GetLanguages(),
+        };
     }
 
     public virtual async Task<IList<KeyValue>> GetValuesAsync(string name, string languageCode)
     {
-        var itemsAndLanguages = await GetItemsAndLanguagesAsync(name);
-        var items = itemsAndLanguages.Items;
-        var languages = itemsAndLanguages.Languages;
+        var items = await GetItems(name);
+
+        if (items is null)
+        {
+            return Array.Empty<KeyValue>();
+        }
+
+        var languages = await GetLanguages();
 
         if (languages.Contains(languageCode, _ignoreCase))
         {
@@ -54,16 +67,16 @@ public class LocalizableSettingService : ILocalizableSettingService
         }
 
         // If language code is a two-letter code
-        languageCode += "-";
+        var languagePrefix = languageCode + "-";
         const StringComparison ignoreCase = StringComparison.OrdinalIgnoreCase;
 
-        if (languages.Any(x => x.StartsWith(languageCode, ignoreCase)))
+        if (languages.Any(x => x.StartsWith(languagePrefix, ignoreCase)))
         {
             return items
                 .Select(item => new KeyValue
                 {
                     Key = item.Alias,
-                    Value = item.LocalizedValues.FirstOrDefault(value => value.LanguageCode.StartsWith(languageCode, ignoreCase))?.Value.EmptyToNull() ?? item.Alias,
+                    Value = item.LocalizedValues.FirstOrDefault(value => value.LanguageCode.StartsWith(languagePrefix, ignoreCase))?.Value.EmptyToNull() ?? item.Alias,
                 })
                 .ToList();
         }
@@ -75,42 +88,6 @@ public class LocalizableSettingService : ILocalizableSettingService
                 Value = item.Alias,
             })
             .ToList();
-    }
-
-    public virtual async Task<DictionaryItemsAndLanguages> GetItemsAndLanguagesAsync(string name)
-    {
-        // Load setting values
-        var values = await GetDictionaryValues(name);
-
-        if (values is null)
-        {
-            return null;
-        }
-
-        // Load localization
-        var localizedValues = (await GetLocalizedItems(name))
-            .GroupBy(x => x.Alias)
-            .ToDictionary(
-                g => g.Key,
-                g => g
-                    .Select(x => new LocalizedValue
-                    {
-                        LanguageCode = x.LanguageCode,
-                        Value = x.Value
-                    })
-                    .ToArray());
-
-        return new DictionaryItemsAndLanguages
-        {
-            Items = values
-                .Select(x => new DictionaryItem
-                {
-                    Alias = x,
-                    LocalizedValues = localizedValues.GetValueSafe(x) ?? Array.Empty<LocalizedValue>(),
-                })
-                .ToList(),
-            Languages = await GetDictionaryValues(PlatformConstants.Settings.General.Languages.Name),
-        };
     }
 
     public virtual async Task SaveAsync(string name, IList<DictionaryItem> items)
@@ -246,6 +223,39 @@ public class LocalizableSettingService : ILocalizableSettingService
         }
 
         await _settingsManager.SaveObjectSettingsAsync(new[] { setting });
+    }
+
+    private async Task<IList<string>> GetLanguages()
+    {
+        return await GetDictionaryValues(PlatformConstants.Settings.General.Languages.Name);
+    }
+
+    private async Task<IList<DictionaryItem>> GetItems(string name)
+    {
+        // Load setting values
+        var values = await GetDictionaryValues(name);
+
+        if (values is null)
+        {
+            return null;
+        }
+
+        // Load localization
+        var localizedValues = (await GetLocalizedItems(name))
+            .GroupBy(x => x.Alias)
+            .ToDictionary(
+                g => g.Key,
+                g => g
+                    .Select(x => new LocalizedValue
+                    {
+                        LanguageCode = x.LanguageCode,
+                        Value = x.Value
+                    })
+                    .ToArray());
+
+        return values
+            .Select(x => new DictionaryItem { Alias = x, LocalizedValues = localizedValues.GetValueSafe(x) ?? Array.Empty<LocalizedValue>(), })
+            .ToList();
     }
 
     private async Task<IList<string>> GetDictionaryValues(string name)
