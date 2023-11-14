@@ -7,12 +7,8 @@ angular.module("platformWebApp")
                 return input
             }
 
-            const item = values.find(item => item.key === input);
+            const item = values.find(x => x.key === input);
 
-            if (!item) {
-                return input;
-            }
-
-            return item.value;
+            return item ? item.value : input;
         };
     }]);
