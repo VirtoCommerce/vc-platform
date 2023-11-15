@@ -7,7 +7,8 @@ namespace VirtoCommerce.Platform.Core.Settings;
 public interface ILocalizableSettingService
 {
     Task<LocalizableSettingsAndLanguages> GetSettingsAndLanguagesAsync();
-    Task<IList<KeyValue>> GetValuesAsync(string name, string languageCode);
-    Task SaveAsync(string name, IList<DictionaryItem> items);
-    Task DeleteAsync(string name, IList<string> values);
+    Task<string> Translate(string key, string settingName, string languageCode);
+    Task<IList<KeyValue>> GetValuesAsync(string settingName, string languageCode);
+    Task SaveAsync(string settingName, IList<DictionaryItem> items);
+    Task DeleteAsync(string settingName, IList<string> values);
 }

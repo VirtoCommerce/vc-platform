@@ -44,9 +44,24 @@ public class LocalizableSettingService : ILocalizableSettingService
         };
     }
 
-    public virtual async Task<IList<KeyValue>> GetValuesAsync(string name, string languageCode)
+    public virtual async Task<string> Translate(string key, string settingName, string languageCode)
     {
-        var items = await GetItems(name);
+        if (string.IsNullOrEmpty(settingName) || string.IsNullOrEmpty(languageCode))
+        {
+            return key;
+        }
+
+        var values = await GetValuesAsync(settingName, languageCode);
+
+        return values
+            ?.Where(x => x.Key.EqualsInvariant(key))
+            .Select(x => x.Value)
+            .FirstOrDefault()?.EmptyToNull() ?? key;
+    }
+
+    public virtual async Task<IList<KeyValue>> GetValuesAsync(string settingName, string languageCode)
+    {
+        var items = await GetItems(settingName);
 
         if (items is null)
         {
@@ -90,10 +105,10 @@ public class LocalizableSettingService : ILocalizableSettingService
             .ToList();
     }
 
-    public virtual async Task SaveAsync(string name, IList<DictionaryItem> items)
+    public virtual async Task SaveAsync(string settingName, IList<DictionaryItem> items)
     {
         // Save setting values
-        var setting = await GetLocalizableSetting(name);
+        var setting = await GetLocalizableSetting(settingName);
 
         if (setting is null)
         {
@@ -124,7 +139,7 @@ public class LocalizableSettingService : ILocalizableSettingService
                         _ignoreCase),
                 _ignoreCase);
 
-        var localizedItemsByAlias = (await GetLocalizedItems(name))
+        var localizedItemsByAlias = (await GetLocalizedItems(settingName))
             .GroupBy(x => x.Alias, _ignoreCase)
             .ToDictionary(
                 g => g.Key,
@@ -166,7 +181,7 @@ public class LocalizableSettingService : ILocalizableSettingService
                 else
                 {
                     localizedItem = AbstractTypeFactory<LocalizedItem>.TryCreateInstance();
-                    localizedItem.Name = name;
+                    localizedItem.Name = settingName;
                     localizedItem.Alias = alias;
                     localizedItem.LanguageCode = language;
                     localizedItem.Value = value;
@@ -187,10 +202,10 @@ public class LocalizableSettingService : ILocalizableSettingService
         }
     }
 
-    public virtual async Task DeleteAsync(string name, IList<string> values)
+    public virtual async Task DeleteAsync(string settingName, IList<string> values)
     {
         // Delete setting values
-        var setting = await GetLocalizableSetting(name);
+        var setting = await GetLocalizableSetting(settingName);
 
         if (setting is null)
         {
@@ -204,7 +219,7 @@ public class LocalizableSettingService : ILocalizableSettingService
         await SaveSetting(setting);
 
         // Delete localization
-        var localizedItems = await GetLocalizedItems(name, values);
+        var localizedItems = await GetLocalizedItems(settingName, values);
 
         if (localizedItems.Any())
         {
@@ -230,10 +245,10 @@ public class LocalizableSettingService : ILocalizableSettingService
         return await GetDictionaryValues(PlatformConstants.Settings.General.Languages.Name);
     }
 
-    private async Task<IList<DictionaryItem>> GetItems(string name)
+    private async Task<IList<DictionaryItem>> GetItems(string settingName)
     {
         // Load setting values
-        var values = await GetDictionaryValues(name);
+        var values = await GetDictionaryValues(settingName);
 
         if (values is null)
         {
@@ -241,7 +256,7 @@ public class LocalizableSettingService : ILocalizableSettingService
         }
 
         // Load localization
-        var localizedValues = (await GetLocalizedItems(name))
+        var localizedValues = (await GetLocalizedItems(settingName))
             .GroupBy(x => x.Alias)
             .ToDictionary(
                 g => g.Key,
@@ -258,23 +273,23 @@ public class LocalizableSettingService : ILocalizableSettingService
             .ToList();
     }
 
-    private async Task<IList<string>> GetDictionaryValues(string name)
+    private async Task<IList<string>> GetDictionaryValues(string settingName)
     {
-        var setting = await GetDictionarySetting(name);
+        var setting = await GetDictionarySetting(settingName);
 
         return setting?.AllowedValues?.OfType<string>().OrderBy(x => x).ToList() ?? new List<string>();
     }
 
-    private async Task<ObjectSettingEntry> GetLocalizableSetting(string name)
+    private async Task<ObjectSettingEntry> GetLocalizableSetting(string settingName)
     {
-        var setting = await GetDictionarySetting(name);
+        var setting = await GetDictionarySetting(settingName);
 
         return IsLocalizable(setting) ? setting : null;
     }
 
-    private async Task<ObjectSettingEntry> GetDictionarySetting(string name)
+    private async Task<ObjectSettingEntry> GetDictionarySetting(string settingName)
     {
-        var setting = await _settingsManager.GetObjectSettingAsync(name);
+        var setting = await _settingsManager.GetObjectSettingAsync(settingName);
 
         return IsShortTextDictionary(setting) ? setting : null;
     }
