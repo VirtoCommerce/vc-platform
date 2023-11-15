@@ -22,7 +22,7 @@ public class LocalizableSettingsController : Controller
 
     [HttpGet]
     [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
-    public async Task<ActionResult<LocalizableSettingsAndLanguages>> GetLocalizableSettings()
+    public async Task<ActionResult<LocalizableSettingsAndLanguages>> GetSettingsAndLanguages()
     {
         var result = await _localizableSettingService.GetSettingsAndLanguagesAsync();
         return Ok(result);
