@@ -19,7 +19,7 @@ angular.module('platformWebApp')
             };
 
             function refreshBlade(refreshParent) {
-                localizableSettingService.getItemsAsync(settingName).then(function (data) {
+                localizableSettingService.getItemsAndLanguagesAsync(settingName).then(function (data) {
                     initializeBlade(data.items, data.languages, refreshParent);
                 });
             }

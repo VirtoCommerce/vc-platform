@@ -15,7 +15,7 @@ angular.module("platformWebApp")
             return {
                 isLocalizable: isLocalizable,
                 getValues: getValues,
-                getItemsAsync: getItemsAsync,
+                getItemsAndLanguagesAsync: getItemsAndLanguagesAsync,
                 saveItemsAsync: saveItemsAsync,
                 deleteItemsAsync: deleteItemsAsync,
             };
@@ -90,7 +90,7 @@ angular.module("platformWebApp")
                 });
             }
 
-            function getItemsAsync(settingName) {
+            function getItemsAndLanguagesAsync(settingName) {
                 return loadSettings().then(function () {
                     var items = settings[settingName];
 
