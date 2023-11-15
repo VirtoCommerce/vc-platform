@@ -44,7 +44,7 @@ public class LocalizableSettingService : ILocalizableSettingService
         };
     }
 
-    public virtual async Task<string> Translate(string key, string settingName, string languageCode)
+    public virtual async Task<string> TranslateAsync(string key, string settingName, string languageCode)
     {
         if (string.IsNullOrEmpty(settingName) || string.IsNullOrEmpty(languageCode))
         {
