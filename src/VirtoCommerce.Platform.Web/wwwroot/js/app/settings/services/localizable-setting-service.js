@@ -14,6 +14,7 @@ angular.module("platformWebApp")
 
             return {
                 isLocalizable: isLocalizable,
+                translate: translate,
                 getValues: getValues,
                 getItemsAndLanguagesAsync: getItemsAndLanguagesAsync,
                 saveItemsAsync: saveItemsAsync,
@@ -35,6 +36,18 @@ angular.module("platformWebApp")
 
             function isLocalizable(settingName) {
                 return names.includes(settingName);
+            }
+
+            function translate(key, settingName, language) {
+                const values = getValues(settingName, language);
+
+                if (!values) {
+                    return key
+                }
+
+                const item = values.find(x => x.key === key);
+
+                return item ? item.value : key;
             }
 
             function getValues(settingName, language) {
