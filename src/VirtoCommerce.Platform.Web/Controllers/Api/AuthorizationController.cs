@@ -28,8 +28,6 @@ namespace Mvc.Server
         private readonly IdentityOptions _identityOptions;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
-        private readonly AuthorizationOptions _authorizationOptions;
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
 
@@ -40,8 +38,6 @@ namespace Mvc.Server
             IOptions<IdentityOptions> identityOptions,
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-            IOptions<AuthorizationOptions> authorizationOptions,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
             IEventPublisher eventPublisher)
         {
@@ -50,8 +46,6 @@ namespace Mvc.Server
             _passwordLoginOptions = passwordLoginOptions.Value ?? new PasswordLoginOptions();
             _signInManager = signInManager;
             _userManager = userManager;
-            _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
-            _authorizationOptions = authorizationOptions.Value;
             _eventPublisher = eventPublisher;
         }
 
