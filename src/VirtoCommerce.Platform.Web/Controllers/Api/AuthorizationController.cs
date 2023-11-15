@@ -121,36 +121,10 @@ namespace Mvc.Server
 
                 // Create a new authentication ticket.
                 var ticket = await CreateTicketAsync(openIdConnectRequest, user);
-                var claimsPrincipal = await _userClaimsPrincipalFactory.CreateAsync(user);
-
-                var limitedPermissions = _authorizationOptions.LimitedCookiePermissions?.Split(PlatformConstants.Security.Claims.PermissionClaimTypeDelimiter, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
-
-                if (!user.IsAdministrator)
-                {
-                    limitedPermissions = claimsPrincipal
-                        .Claims
-                        .Where(c => c.Type == PlatformConstants.Security.Claims.PermissionClaimType)
-                        .Select(c => c.Value)
-                        .Intersect(limitedPermissions, StringComparer.OrdinalIgnoreCase)
-                        .ToArray();
-                }
-
-                if (limitedPermissions.Any())
-                {
-                    // Set limited permissions and authenticate user with combined mode Cookies + Bearer.
-                    //
-                    // LimitedPermissions claims that will be granted to the user by cookies when bearer token authentication is enabled.
-                    // This can help to authorize the user for direct(non - AJAX) GET requests to the VC platform API and / or to use some 3rd - party web applications for the VC platform(like Hangfire dashboard).
-                    //
-                    // If the user identity has claim named "limited_permissions", this attribute should authorize only permissions listed in that claim. Any permissions that are required by this attribute but
-                    // not listed in the claim should cause this method to return false. However, if permission limits of user identity are not defined ("limited_permissions" claim is missing),
-                    // then no limitations should be applied to the permissions.
-                    ((ClaimsIdentity)claimsPrincipal.Identity).AddClaim(new Claim(PlatformConstants.Security.Claims.LimitedPermissionsClaimType, string.Join(PlatformConstants.Security.Claims.PermissionClaimTypeDelimiter, limitedPermissions)));
-                    await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, claimsPrincipal);
-                }
 
                 await SetLastLoginDate(user);
                 await _eventPublisher.Publish(new UserLoginEvent(user));
+
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
             else if (openIdConnectRequest.IsRefreshTokenGrantType())
