@@ -12,8 +12,8 @@ namespace VirtoCommerce.Platform.Core.Common
 
         public static readonly Regex SemanticVersionStrictRegex = new Regex(
                 @"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})" +
-                @"(?>\-(?<Prerelease>[0-9A-Za-z\-\.]+))?$"
-                , RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Compiled);
+                @"(?>\-(?<Prerelease>[0-9A-Za-z\-\.]+))?(?<Metadata>\+[0-9A-Za-z-]+)?$",
+                RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Compiled);
 
         public SemanticVersion(Version version)
         {

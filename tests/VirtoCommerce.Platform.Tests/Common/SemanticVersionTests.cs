@@ -13,6 +13,7 @@ namespace VirtoCommerce.Platform.Tests.Common
         [InlineData("14.9.12", "10.5.7", true)]
         [InlineData("4.9.12", "10.5.7", false)]
         [InlineData("5.5.5", "5.5.5", true)]
+        [InlineData("3.439.0+d49dbefbc3e4d944dcffcd2933ada237dd84eaa2", "3.439.0", true)]
         public void OperatorGreaterOrZero(string firstVersion, string secondVersion, bool expected)
         {
             // Arrange
@@ -33,6 +34,7 @@ namespace VirtoCommerce.Platform.Tests.Common
         [InlineData("14.9.12", "10.5.7", false)]
         [InlineData("4.9.12", "10.5.7", true)]
         [InlineData("5.5.5", "5.5.5", true)]
+        [InlineData("3.439.0+d49dbefbc3e4d944dcffcd2933ada237dd84eaa2", "3.439.0", true)]
         public void OperatorLessOrZero(string firstVersion, string secondVersion, bool expected)
         {
             // Arrange
@@ -53,6 +55,7 @@ namespace VirtoCommerce.Platform.Tests.Common
         [InlineData("14.9.12", "10.5.7", true)]
         [InlineData("4.9.12", "10.5.7", false)]
         [InlineData("5.5.5", "5.5.5", false)]
+        [InlineData("3.439.0+d49dbefbc3e4d944dcffcd2933ada237dd84eaa2", "3.439.0", false)]
         public void OperatorGreater(string firstVersion, string secondVersion, bool expected)
         {
             // Arrange
@@ -73,6 +76,7 @@ namespace VirtoCommerce.Platform.Tests.Common
         [InlineData("14.9.12", "10.5.7", false)]
         [InlineData("4.9.12", "10.5.7", true)]
         [InlineData("5.5.5", "5.5.5", false)]
+        [InlineData("3.439.0+d49dbefbc3e4d944dcffcd2933ada237dd84eaa2", "3.439.0", false)]
         public void OperatorLess(string firstVersion, string secondVersion, bool expected)
         {
             // Arrange
