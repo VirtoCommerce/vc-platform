@@ -100,7 +100,7 @@ angular.module('platformWebApp')
                         angular.forEach(allDictionaryValues, function (dictValue) {
                             scope.context.allDictionaryValues.push(dictValue);
                             //Need to select already selected values. Dictionary values have same type as standard values.
-                            if (_.any(selectedValues, function (x) { return x.value.id == dictValue.id || x.valueId == dictValue.id })) {
+                            if (_.any(selectedValues, function (x) { return (x.value && x.value.id == dictValue.id) || x.valueId == dictValue.id })) {
                                 //add selected value
                                 scope.context.currentPropValues.push(dictValue);
                             }
