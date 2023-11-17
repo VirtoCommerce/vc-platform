@@ -50,9 +50,7 @@ angular
                         top = top - (event.pageY - docHeight + maxTopOffset + scrollbarHeight);
                     }
 
-                    if (top < 0) {
-                        top = 20;
-                    }
+                    top = Math.max(20, top)
 
                     menuElement.css('top', top + 'px');
                     menuElement.css('left', left + 'px');
