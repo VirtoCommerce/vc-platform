@@ -29,7 +29,6 @@
         <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="6.0.0" />
         <PackageReference Include="Microsoft.Azure.SignalR" Version="1.5.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.13">
-          <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.DiagnosticAdapter" Version="3.1.25" />
