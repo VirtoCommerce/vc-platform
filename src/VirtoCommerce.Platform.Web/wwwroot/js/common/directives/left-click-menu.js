@@ -19,7 +19,7 @@ angular
                     var docLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
                     var docTop = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
                     var elementWidth = menuElement[0].scrollWidth;
-                    var elementHeight = menuElement[0].scrollHeight;
+                    var elementHeight = menuElement[0].offsetHeight;
 
                     var docWidth = doc.clientWidth + docLeft;
                     var docHeight = doc.clientHeight + docTop;
@@ -49,6 +49,8 @@ angular
                     if (event.pageY + maxTopOffset > docHeight) {
                         top = top - (event.pageY - docHeight + maxTopOffset + scrollbarHeight);
                     }
+
+                    top = Math.max(20, top)
 
                     menuElement.css('top', top + 'px');
                     menuElement.css('left', left + 'px');
