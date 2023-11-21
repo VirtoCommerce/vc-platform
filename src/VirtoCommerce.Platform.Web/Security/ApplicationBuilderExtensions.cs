@@ -77,7 +77,7 @@ namespace VirtoCommerce.Platform.Web.Security
             }
             else
             {
-                RecurringJob.RemoveIfExists("AutoAccountLockoutJob.Process");
+                RecurringJob.RemoveIfExists("AutoAccountLockoutJob");
             }
 
             return appBuilder;
