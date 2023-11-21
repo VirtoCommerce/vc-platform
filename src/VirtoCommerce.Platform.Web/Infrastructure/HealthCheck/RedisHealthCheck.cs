@@ -13,7 +13,7 @@ namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck;
 /// </summary>
 public class RedisHealthCheck : IHealthCheck
 {
-    private readonly IConnectionMultiplexer? _connection;
+    private readonly IConnectionMultiplexer _connection;
 
     public RedisHealthCheck(IEnumerable<IConnectionMultiplexer> connections)
     {
