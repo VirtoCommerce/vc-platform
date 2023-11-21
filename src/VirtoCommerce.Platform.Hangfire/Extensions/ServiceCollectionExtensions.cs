@@ -48,7 +48,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer ||
                 hangfireOptions.JobStorageType == HangfireJobStorageType.Database)
             {
-                services.AddHangfire(c => c.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                services.AddHangfire(c => c.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                     .UseSimpleAssemblyNameTypeSerializer()
                     .UseRecommendedSerializerSettings()
                     .AddHangfireStorage(configuration, hangfireOptions));
