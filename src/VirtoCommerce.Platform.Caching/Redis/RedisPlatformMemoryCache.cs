@@ -108,7 +108,7 @@ namespace VirtoCommerce.Platform.Redis
             {
                 if (disposing)
                 {
-                    _bus.Unsubscribe(_redisCachingOptions.ChannelName, null, CommandFlags.FireAndForget);
+                    _bus.Unsubscribe(GetRedisChannel(), null, CommandFlags.FireAndForget);
 
                     _log.LogInformation("Successfully unsubscribed to Redis backplane channel {ChannelName} with instance id:{InstanceId}", _redisCachingOptions.ChannelName, _instanceId);
 
@@ -122,11 +122,16 @@ namespace VirtoCommerce.Platform.Redis
             base.Dispose(disposing);
         }
 
+        protected virtual RedisChannel GetRedisChannel()
+        {
+            return RedisChannel.Literal(_redisCachingOptions.ChannelName);
+        }
+
         private void Publish(RedisCachingMessage message)
         {
             EnsureRedisServerConnection();
 
-            _bus.Publish(_redisCachingOptions.ChannelName, JsonConvert.SerializeObject(message), CommandFlags.FireAndForget);
+            _bus.Publish(GetRedisChannel(), JsonConvert.SerializeObject(message), CommandFlags.FireAndForget);
         }
 
         private void EnsureRedisServerConnection()
@@ -140,7 +145,7 @@ namespace VirtoCommerce.Platform.Redis
                         _connection.ConnectionFailed += OnConnectionFailed;
                         _connection.ConnectionRestored += OnConnectionRestored;
 
-                        _bus.Subscribe(_redisCachingOptions.ChannelName, OnMessage, CommandFlags.FireAndForget);
+                        _bus.Subscribe(GetRedisChannel(), OnMessage, CommandFlags.FireAndForget);
 
                         _log.LogInformation("Successfully subscribed to Redis backplane channel {ChannelName} with instance id:{InstanceId}", _redisCachingOptions.ChannelName, _instanceId);
                         _isSubscribed = true;
