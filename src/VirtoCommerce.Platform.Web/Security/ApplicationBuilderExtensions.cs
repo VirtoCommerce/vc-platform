@@ -73,7 +73,7 @@ namespace VirtoCommerce.Platform.Web.Security
         {
             if (lockoutOptions.AutoAccountsLockoutJobEnabled)
             {
-                RecurringJob.AddOrUpdate<AutoAccountLockoutJob>(j => j.Process(), lockoutOptions.CronAutoAccountsLockoutJob);
+                RecurringJob.AddOrUpdate<AutoAccountLockoutJob>("AutoAccountLockoutJob", j => j.Process(), lockoutOptions.CronAutoAccountsLockoutJob);
             }
             else
             {
