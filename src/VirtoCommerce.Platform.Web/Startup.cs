@@ -398,6 +398,8 @@ namespace VirtoCommerce.Platform.Web
             //always  return 401 instead of 302 for unauthorized  requests
             services.ConfigureApplicationCookie(options =>
             {
+                options.Cookie.Name = ".VirtoCommerce.Identity.Application";
+
                 options.Events.OnRedirectToLogin = context =>
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
