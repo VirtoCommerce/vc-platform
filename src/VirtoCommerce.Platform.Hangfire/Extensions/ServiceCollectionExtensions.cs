@@ -19,7 +19,12 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             switch (databaseProvider)
             {
                 case "PostgreSql":
-                    globalConfiguration.UsePostgreSqlStorage(connectionString, hangfireOptions.PostgreSqlStorageOptions);
+                    globalConfiguration.UsePostgreSqlStorage(
+                        configure =>
+                        {
+                            configure.UseNpgsqlConnection(connectionString);
+                        },
+                        hangfireOptions.PostgreSqlStorageOptions);
                     break;
                 case "MySql":
                     globalConfiguration.UseStorage(new MySqlStorage(connectionString, hangfireOptions.MySqlStorageOptions));
