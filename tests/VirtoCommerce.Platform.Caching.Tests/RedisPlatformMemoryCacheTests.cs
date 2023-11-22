@@ -37,7 +37,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public void Should_Disable_And_Reset_Cache()
+        public void Should_Use_Cache_On_ConnectionFailed()
         {
             var redisPlatformMemoryCache = GetRedisPlatformMemoryCache();
 
@@ -51,12 +51,12 @@ namespace VirtoCommerce.Platform.Caching.Tests
             var thirdValue = GetSampleValueWithCache(redisPlatformMemoryCache);
             var fourthValue = GetSampleValueWithCache(redisPlatformMemoryCache);
 
-            Assert.NotEqual(firstValue, thirdValue);
-            Assert.NotEqual(thirdValue, fourthValue);
+            Assert.Equal(firstValue, thirdValue);
+            Assert.Equal(thirdValue, fourthValue);
         }
 
         [Fact]
-        public void Should_Enable_And_Reset_Cache()
+        public void Should_Reset_Cache()
         {
             var redisPlatformMemoryCache = GetRedisPlatformMemoryCache();
 
