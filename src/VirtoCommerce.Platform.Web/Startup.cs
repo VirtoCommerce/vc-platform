@@ -469,9 +469,12 @@ namespace VirtoCommerce.Platform.Web
 
             services.AddHealthChecks()
                 .AddCheck<ModulesHealthChecker>("Modules health",
-                    failureStatus: HealthStatus.Degraded,
+                    failureStatus: HealthStatus.Unhealthy,
                     tags: new[] { "Modules" })
                 .AddCheck<CacheHealthChecker>("Cache health",
+                    failureStatus: HealthStatus.Degraded,
+                    tags: new[] { "Cache" })
+                .AddCheck<RedisHealthCheck>("Redis health",
                     failureStatus: HealthStatus.Unhealthy,
                     tags: new[] { "Cache" });
 

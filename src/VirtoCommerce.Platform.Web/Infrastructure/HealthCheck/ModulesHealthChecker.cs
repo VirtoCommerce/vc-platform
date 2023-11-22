@@ -31,7 +31,7 @@ namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
 
             if (errorsDictionary.Any())
             {
-                return Task.FromResult(HealthCheckResult.Degraded("Some modules have errors", exception: null, errorsDictionary));
+                return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, "Some modules have errors", exception: null, errorsDictionary));
             }
 
             return Task.FromResult(HealthCheckResult.Healthy("All modules are loaded"));
