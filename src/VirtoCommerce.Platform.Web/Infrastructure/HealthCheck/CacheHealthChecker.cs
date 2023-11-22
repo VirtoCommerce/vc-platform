@@ -19,9 +19,9 @@ namespace VirtoCommerce.Platform.Web.Infrastructure.HealthCheck
         {
             if (!(_memoryCache as PlatformMemoryCache)?.CacheEnabled ?? false)
             {
-                return Task.FromResult(HealthCheckResult.Unhealthy("Cache is off"));
+                return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, "Cache is off"));
             }
-            
+
             return Task.FromResult(HealthCheckResult.Healthy("Cache is active"));
         }
     }
