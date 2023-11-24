@@ -36,7 +36,7 @@
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Serilog" Version="3.1.1" />
-        <PackageReference Include="System.IO.Abstractions" Version="19.2.69" />
+        <PackageReference Include="System.IO.Abstractions" Version="19.2.87" />
     </ItemGroup>
 
 </Project>
