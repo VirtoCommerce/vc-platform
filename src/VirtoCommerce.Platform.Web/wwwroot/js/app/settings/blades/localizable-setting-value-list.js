@@ -2,8 +2,8 @@ angular.module('platformWebApp')
     .controller('platformWebApp.localizableSettingValueListController', [
         '$scope',
         'platformWebApp.dialogService', 'platformWebApp.bladeNavigationService', 'platformWebApp.bladeUtils', 'platformWebApp.uiGridHelper',
-        'platformWebApp.localizableSettingsApi',
-        function ($scope, dialogService, bladeNavigationService, bladeUtils, uiGridHelper, localizableSettingsApi) {
+        'platformWebApp.localizableSettingService',
+        function ($scope, dialogService, bladeNavigationService, bladeUtils, uiGridHelper, localizableSettingService) {
             var blade = $scope.blade;
             var settingName = blade.settingName;
             blade.headIcon = 'fa fa-wrench';
@@ -19,25 +19,25 @@ angular.module('platformWebApp')
             };
 
             function refreshBlade(refreshParent) {
-                localizableSettingsApi.getItemsAndLanguages({ name: settingName }, function (data) {
-                    initializeBlade(data, refreshParent);
+                localizableSettingService.getItemsAndLanguagesAsync(settingName).then(function (data) {
+                    initializeBlade(data.items, data.languages, refreshParent);
                 });
             }
 
-            function initializeBlade(data, refreshParent) {
-                if (!data) {
+            function initializeBlade(items, languages, refreshParent) {
+                if (!items) {
                     return;
                 }
 
                 let id = 1;
-                data.items.forEach(function (item) {
+                items.forEach(function (item) {
                     item.id = id;
                     id++;
                 });
 
-                $scope.originalEntities = data.items;
+                $scope.originalEntities = items;
                 $scope.currentEntities = angular.copy($scope.originalEntities);
-                $scope.languages = data.languages;
+                $scope.languages = languages;
 
                 $scope.applySorting();
 
@@ -55,7 +55,7 @@ angular.module('platformWebApp')
                 // Update parent blade
                 if (refreshParent && blade.parentRefresh) {
                     // Pass aliases to the parent blade for compatibility with the platform behavior
-                    const aliases = _.pluck(data.items, 'alias');
+                    const aliases = _.pluck(items, 'alias');
                     blade.parentRefresh(aliases);
                 }
             }
@@ -147,7 +147,7 @@ angular.module('platformWebApp')
                         if (remove) {
                             bladeNavigationService.closeChildrenBlades(blade, function () {
                                 const aliases = _.pluck(selectedItems, 'alias');
-                                localizableSettingsApi.deleteItems({ name: settingName, values: aliases }, onItemsChanged);
+                                localizableSettingService.deleteItemsAsync(settingName, aliases).then(onItemsChanged);
                             });
                         }
                     }

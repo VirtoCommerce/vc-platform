@@ -1,4 +1,4 @@
-namespace VirtoCommerce.Platform.Core.Settings;
+namespace VirtoCommerce.Platform.Core.Common;
 
 public class KeyValue
 {
