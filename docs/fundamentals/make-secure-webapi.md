@@ -275,7 +275,7 @@ angular.module(moduleName, []).run( ['platformWebApp.permissionScopeResolver', '
                     subtitle: 'Select stores',
                     currentEntity: this,
                     onChangesConfirmedFn: callback,
-                    dataPromise: stores.query().$promise,
+                    dataService: stores,
                     controller: 'platformWebApp.security.scopeValuePickFromSimpleListController',
                     template: '$(Platform)/Scripts/app/security/blades/common/scope-value-pick-from-simple-list.tpl.html'
                 };
