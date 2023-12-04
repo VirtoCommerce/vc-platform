@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Settings;
 
 public interface ILocalizableSettingService
 {
-    IList<string> GetNames();
-    Task<IList<KeyValue>> GetValuesAsync(string name, string languageCode);
-    Task<DictionaryItemsAndLanguages> GetItemsAndLanguagesAsync(string name);
-    Task SaveAsync(string name, IList<DictionaryItem> items);
-    Task DeleteAsync(string name, IList<string> values);
+    Task<LocalizableSettingsAndLanguages> GetSettingsAndLanguagesAsync();
+    Task<string> TranslateAsync(string key, string settingName, string languageCode);
+    Task<IList<KeyValue>> GetValuesAsync(string settingName, string languageCode);
+    Task SaveAsync(string settingName, IList<DictionaryItem> items);
+    Task DeleteAsync(string settingName, IList<string> values);
 }

@@ -13,15 +13,15 @@ angular.module('platformWebApp')
                 description: '=?',
                 placeholder: '=?',
                 disabled: '=?',
+                multiple: '=?',
                 required: '=?',
                 allowClear: '=?',
                 onSelect: '&?',
+                onRemove: '&?',
             },
             controller: [
-                '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.localizableSettingsApi',
-                function ($scope, bladeNavigationService, localizableSettingsApi) {
-                    $scope.items = [];
-
+                '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.localizableSettingService',
+                function ($scope, bladeNavigationService, localizableSettingService) {
                     $scope.openSettingManagement = function () {
                         const newBlade = {
                             id: 'settingDetailChild',
@@ -36,20 +36,21 @@ angular.module('platformWebApp')
                         bladeNavigationService.showBlade(newBlade, $scope.blade);
                     }
 
-                    $scope.selectValue = (item, model) => {
+                    $scope.selectValue = function (item, model) {
                         if ($scope.onSelect) {
                             $scope.onSelect({ item: item, model: model });
                         }
                     }
 
-                    function getItems() {
-                        $scope.isLoading = true;
+                    $scope.removeValue = function (item, model) {
+                        if ($scope.onRemove) {
+                            $scope.onRemove({ item: item, model: model });
+                        }
+                    }
 
-                        localizableSettingsApi.getValues({ name: $scope.setting }, function (response) {
-                            $scope.isLoading = false;
-                            $scope.items = response;
-                            $scope.hasItems = $scope.items.length > 0;
-                        });
+                    function getItems() {
+                        $scope.items = localizableSettingService.getValues($scope.setting);
+                        $scope.hasItems = $scope.items.length > 0;
                     }
 
                     getItems();
@@ -57,7 +58,7 @@ angular.module('platformWebApp')
             link: function (scope, element, attrs, ngModelController) {
                 scope.context = {
                     modelValue: null,
-                    disabled: angular.isDefined(attrs.disabled) && (attrs.disabled === '' || attrs.disabled.toLowerCase() === 'true'),
+                    multiple: angular.isDefined(attrs.multiple) && (attrs.multiple === '' || attrs.multiple.toLowerCase() === 'true'),
                     required: angular.isDefined(attrs.required) && (attrs.required === '' || attrs.required.toLowerCase() === 'true'),
                     allowClear: angular.isDefined(attrs.allowClear) && (attrs.allowClear === '' || attrs.allowClear.toLowerCase() === 'true'),
                 };

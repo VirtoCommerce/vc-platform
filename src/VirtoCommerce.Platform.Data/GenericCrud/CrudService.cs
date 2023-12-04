@@ -177,13 +177,14 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             await BeforeSaveChanges(models);
 
+            var originalModels = new List<TModel>();
+
             using (var repository = _repositoryFactory())
             {
                 var existingEntities = await LoadExistingEntities(repository, models);
 
                 foreach (var model in models)
                 {
-
                     var originalEntity = FindExistingEntity(existingEntities, model);
                     var modifiedEntity = FromModel(model, pkMap);
 
@@ -194,7 +195,9 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                         // https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes#detectchanges-honors-store-generated-key-values
                         repository.TrackModifiedAsAddedForNewChildEntities(originalEntity);
 
-                        changedEntries.Add(new GenericChangedEntry<TModel>(model, ToModel(originalEntity), EntryState.Modified));
+                        var originalModel = ToModel(originalEntity);
+                        originalModels.Add(originalModel);
+                        changedEntries.Add(new GenericChangedEntry<TModel>(model, originalModel, EntryState.Modified));
                         modifiedEntity.Patch(originalEntity);
                         if (originalEntity is IAuditable auditableOriginalEntity)
                         {
@@ -217,6 +220,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             pkMap.ResolvePrimaryKeys();
 
+            ClearCache(originalModels);
             ClearCache(models);
 
             foreach (var (changedEntry, i) in changedEntries.Select((x, i) => (x, i)))
