@@ -41,8 +41,10 @@ namespace VirtoCommerce.Platform.Web.Security
             //Identity dependencies override
             services.TryAddScoped<RoleManager<Role>, CustomRoleManager>();
             services.TryAddScoped<UserManager<ApplicationUser>, CustomUserManager>();
+            services.TryAddScoped<UserManager<ApplicationUser>, CustomUserManager>();
             services.TryAddScoped<IPasswordValidator<ApplicationUser>, CustomPasswordValidator>();
             services.TryAddScoped<IdentityErrorDescriber, CustomIdentityErrorDescriber>();
+            services.TryAddScoped<IUserStore<ApplicationUser>, CustomUserStore>();
             services.AddSingleton<Func<RoleManager<Role>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<RoleManager<Role>>());
             services.AddSingleton<Func<UserManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<UserManager<ApplicationUser>>());
             services.AddSingleton<Func<SignInManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<SignInManager<ApplicationUser>>());
