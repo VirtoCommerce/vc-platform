@@ -219,12 +219,21 @@ namespace VirtoCommerce.Platform.Security
 
         public override async Task<IdentityResult> UpdateAsync(ApplicationUser user)
         {
+            var oldUser = await FindByIdAsync(user.Id);
             var result = await base.UpdateAsync(user);
 
             if (result.Succeeded)
             {
                 await UpdateUserRolesAsync(user);
                 await UpdateUserLoginsAsync(user);
+
+                var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
+                {
+                    new GenericChangedEntry<ApplicationUser>(user, oldUser, EntryState.Modified)
+                };
+
+                SecurityCacheRegion.ExpireUser(user);
+                await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
             }
 
             return result;
