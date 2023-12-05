@@ -143,12 +143,12 @@ namespace VirtoCommerce.Platform.Core.Security
 
             if (newUser.LockoutEnd.IsEmpty() && !oldUser.LockoutEnd.IsEmpty())
             {
-                result.Add(PlatformConstants.Security.Changes.UserUnlocked, "User unlocked");
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, "User unlocked");
             }
 
             if (!newUser.LockoutEnd.IsEmpty() && oldUser.LockoutEnd.IsEmpty())
             {
-                result.Add(PlatformConstants.Security.Changes.UserLocked, "User locked");
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, "User locked");
             }
 
             return result;

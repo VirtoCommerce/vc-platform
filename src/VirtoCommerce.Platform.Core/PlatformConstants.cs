@@ -81,8 +81,6 @@ namespace VirtoCommerce.Platform.Core
                 public const string UserPasswordChanged = "UserPasswordChanged";
                 public const string RoleAdded = "RoleAdded";
                 public const string RoleRemoved = "RoleRemoved";
-                public const string UserLocked = "UserLocked";
-                public const string UserUnlocked = "UserUnlocked";
             }
         }
 
