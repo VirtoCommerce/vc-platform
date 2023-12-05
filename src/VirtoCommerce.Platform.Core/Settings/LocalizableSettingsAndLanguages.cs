@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace VirtoCommerce.Platform.Core.Settings;
 
-public class DictionaryItemsAndLanguages
+public class LocalizableSettingsAndLanguages
 {
-    public IList<DictionaryItem> Items { get; set; } = new List<DictionaryItem>();
+    public IList<LocalizableSetting> Settings { get; set; } = new List<LocalizableSetting>();
     public IList<string> Languages { get; set; } = new List<string>();
 }

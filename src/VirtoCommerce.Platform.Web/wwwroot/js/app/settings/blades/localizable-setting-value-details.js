@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.localizableSettingValueDetailsController', [
-        '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.localizableSettingsApi',
-        function ($scope, bladeNavigationService, localizableSettingsApi) {
+        '$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.localizableSettingService',
+        function ($scope, bladeNavigationService, localizableSettingService) {
             var blade = $scope.blade;
             blade.headIcon = 'fa fa-wrench';
             blade.title = 'platform.blades.localizable-setting-value-details.title';
@@ -54,7 +54,7 @@ angular.module('platformWebApp')
                     }
                 });
 
-                localizableSettingsApi.saveItems({ name: blade.settingName }, items, function () {
+                localizableSettingService.saveItemsAsync(blade.settingName, items).then(function () {
                     angular.copy(blade.currentEntity, blade.originalEntity);
 
                     // Update parent blade
