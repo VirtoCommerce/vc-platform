@@ -656,7 +656,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // Also it can be additionally configured at load-balancer and firewall level. 
                 var callbackUrl = $"{Request.Scheme}://{Request.Host}/#!/resetpassword/{user.Id}/{token}";
 
-                await _emailSender.SendEmailAsync(user.Email, "Reset password", callbackUrl.ToString());
+                var requestPasswordResetEvent = new UserRequestPasswordResetEvent(user, callbackUrl);
+
+                //await _emailSender.SendEmailAsync(user.Email, "Reset password", callbackUrl.ToString());
+                await _eventPublisher.Publish(requestPasswordResetEvent);
 
                 user.LastPasswordChangeRequestDate = DateTime.UtcNow;
                 await UserManager.UpdateAsync(user);
