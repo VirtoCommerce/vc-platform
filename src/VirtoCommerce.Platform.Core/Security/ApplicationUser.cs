@@ -141,14 +141,12 @@ namespace VirtoCommerce.Platform.Core.Security
                 result.Add(PlatformConstants.Security.Changes.UserPasswordChanged, "Password changed");
             }
 
-            bool IsEmptyDate(DateTimeOffset? v) => (v ?? DateTimeOffset.MinValue) == DateTimeOffset.MinValue;
-
-            if (IsEmptyDate(newUser.LockoutEnd) && !IsEmptyDate(oldUser.LockoutEnd))
+            if (newUser.LockoutEnd.IsEmpty() && !oldUser.LockoutEnd.IsEmpty())
             {
                 result.Add(PlatformConstants.Security.Changes.UserUnlocked, "User unlocked");
             }
 
-            if (!IsEmptyDate(newUser.LockoutEnd) && IsEmptyDate(oldUser.LockoutEnd))
+            if (!newUser.LockoutEnd.IsEmpty() && oldUser.LockoutEnd.IsEmpty())
             {
                 result.Add(PlatformConstants.Security.Changes.UserLocked, "User locked");
             }
