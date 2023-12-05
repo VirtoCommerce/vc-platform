@@ -185,6 +185,7 @@ namespace VirtoCommerce.Platform.Security
 
         protected override async Task<IdentityResult> UpdateUserAsync(ApplicationUser user)
         {
+            var newUser = (ApplicationUser)user.Clone();
             var existentUser = await LoadExistingUser(user);
 
             //We cant update not existing user
@@ -195,14 +196,14 @@ namespace VirtoCommerce.Platform.Security
 
             var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
             {
-                new GenericChangedEntry<ApplicationUser>(user, (ApplicationUser)existentUser.Clone(), EntryState.Modified)
+                new GenericChangedEntry<ApplicationUser>(newUser, (ApplicationUser)existentUser.Clone(), EntryState.Modified)
             };
 
             await _eventPublisher.Publish(new UserChangingEvent(changedEntries));
 
             //We need to use Patch method to update already tracked by DbContent entity, unless the UpdateAsync for passed user will throw exception
             //"The instance of entity type 'ApplicationUser' cannot be tracked because another instance with the same key value for {'Id'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached"
-            user.Patch(existentUser);
+            newUser.Patch(existentUser);
 
             var result = await base.UpdateUserAsync(existentUser);
 
