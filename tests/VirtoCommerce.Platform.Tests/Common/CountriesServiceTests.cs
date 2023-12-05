@@ -1,5 +1,5 @@
-using System;
 using Moq;
+using Nager.Country;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Data.Common;
 using Xunit;
@@ -45,7 +45,7 @@ namespace VirtoCommerce.Platform.Tests.Common
         {
             var filesystemCountryService = new Mock<ICountriesService>();
             var service = new CountriesService(filesystemCountryService.Object as FileSystemCountriesService);
-            Assert.Throws<ArgumentException>(() => service.GetByCode(code));
+            Assert.Throws<UnknownCountryException>(() => service.GetByCode(code));
         }
     }
 }
