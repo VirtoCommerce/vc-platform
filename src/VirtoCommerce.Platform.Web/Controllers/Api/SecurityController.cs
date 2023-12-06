@@ -16,7 +16,6 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Exceptions;
 using VirtoCommerce.Platform.Core.Extensions;
-using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -43,7 +42,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IPermissionsRegistrar _permissionsProvider;
         private readonly IUserSearchService _userSearchService;
         private readonly IRoleSearchService _roleSearchService;
-        private readonly IEmailSender _emailSender;
         private readonly IEventPublisher _eventPublisher;
         private readonly IUserApiKeyService _userApiKeyService;
         private readonly ILogger<SecurityController> _logger;
@@ -60,7 +58,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             IOptions<PasswordOptionsExtended> passwordOptions,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
             IOptions<IdentityOptions> identityOptions,
-            IEmailSender emailSender,
             IEventPublisher eventPublisher,
             IUserApiKeyService userApiKeyService,
             ILogger<SecurityController> logger,
@@ -76,7 +73,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             _roleManager = roleManager;
             _userSearchService = userSearchService;
             _roleSearchService = roleSearchService;
-            _emailSender = emailSender;
             _eventPublisher = eventPublisher;
             _userApiKeyService = userApiKeyService;
             _logger = logger;

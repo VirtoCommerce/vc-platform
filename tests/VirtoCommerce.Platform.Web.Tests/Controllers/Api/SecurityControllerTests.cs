@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using VirtoCommerce.Platform.Core.Events;
-using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -30,7 +29,6 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
         private readonly Mock<IPermissionsRegistrar> _permissionsProviderMock;
         private readonly Mock<IUserSearchService> _userSearchServiceMock;
         private readonly Mock<IRoleSearchService> _roleSearchServiceMock;
-        private readonly Mock<IEmailSender> _emailSenderMock;
         private readonly Mock<IEventPublisher> _eventPublisherMock;
         private readonly Mock<IUserApiKeyService> _userApiKeyServiceMock;
         private readonly Mock<ILogger<SecurityController>> _logger;
@@ -45,7 +43,6 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             _permissionsProviderMock = new Mock<IPermissionsRegistrar>();
             _userSearchServiceMock = new Mock<IUserSearchService>();
             _roleSearchServiceMock = new Mock<IRoleSearchService>();
-            _emailSenderMock = new Mock<IEmailSender>();
             _eventPublisherMock = new Mock<IEventPublisher>();
             _userApiKeyServiceMock = new Mock<IUserApiKeyService>();
             _logger = new Mock<ILogger<SecurityController>>();
@@ -104,7 +101,6 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
                 userOptionsExtended: Mock.Of<IOptions<UserOptionsExtended>>(),
                 passwordOptions: passwordOptions.Object,
                 passwordLoginOptions: passwordLoginOptions.Object,
-                emailSender: _emailSenderMock.Object,
                 eventPublisher: _eventPublisherMock.Object,
                 userApiKeyService: _userApiKeyServiceMock.Object,
                 logger: _logger.Object,
