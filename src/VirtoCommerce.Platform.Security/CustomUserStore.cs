@@ -17,7 +17,11 @@ namespace VirtoCommerce.Platform.Security
         public override async Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken = new())
         {
             var result = await base.FindByIdAsync(userId, cancellationToken);
-            await Context.Entry(result).ReloadAsync(cancellationToken);
+            if (result != null)
+            {
+                await Context.Entry(result).ReloadAsync(cancellationToken);
+            }
+
             return result;
         }
 
