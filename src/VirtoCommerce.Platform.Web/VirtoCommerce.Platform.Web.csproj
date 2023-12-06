@@ -37,15 +37,15 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Identity.Client" Version="4.57.0" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.58.0" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
         <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
         <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.21.0" />
-        <PackageReference Include="OpenIddict.AspNetCore" Version="3.0.4" />
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.0.4" />
+        <PackageReference Include="OpenIddict.AspNetCore" Version="4.10.1" />
+        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.10.1" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
         <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
         <PackageReference Include="Scrutor" Version="4.2.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />

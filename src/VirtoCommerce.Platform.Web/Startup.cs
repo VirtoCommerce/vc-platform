@@ -346,8 +346,8 @@ namespace VirtoCommerce.Platform.Web
                         EnableAuthorizationEndpointPassthrough();
 
                     // Enable the authorization, logout, token and userinfo endpoints.
-                    options.SetTokenEndpointUris("/connect/token");
-                    options.SetUserinfoEndpointUris("/api/security/userinfo");
+                    options.SetTokenEndpointUris("connect/token");
+                    options.SetUserinfoEndpointUris("api/security/userinfo");
 
                     // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
                     // can enable the other flows if you need to support implicit or client credentials.
