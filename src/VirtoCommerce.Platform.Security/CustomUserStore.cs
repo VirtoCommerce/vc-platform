@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +16,7 @@ namespace VirtoCommerce.Platform.Security
         public override async Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken = new())
         {
             var result = await base.FindByIdAsync(userId, cancellationToken);
+
             if (result != null)
             {
                 await Context.Entry(result).ReloadAsync(cancellationToken);
@@ -25,10 +25,5 @@ namespace VirtoCommerce.Platform.Security
             return result;
         }
 
-        public override async Task SetLockoutEndDateAsync(ApplicationUser user, DateTimeOffset? lockoutEnd,
-            CancellationToken cancellationToken = new())
-        {
-            await base.SetLockoutEndDateAsync(user, lockoutEnd, cancellationToken);
-        }
     }
 }
