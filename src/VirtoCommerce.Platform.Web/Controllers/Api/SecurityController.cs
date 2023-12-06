@@ -658,7 +658,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 var requestPasswordResetEvent = new UserRequestPasswordResetEvent(user, callbackUrl);
 
-                //await _emailSender.SendEmailAsync(user.Email, "Reset password", callbackUrl.ToString());
                 await _eventPublisher.Publish(requestPasswordResetEvent);
 
                 user.LastPasswordChangeRequestDate = DateTime.UtcNow;
