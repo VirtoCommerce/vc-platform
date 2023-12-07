@@ -132,7 +132,17 @@ namespace VirtoCommerce.Platform.Core.Security
 
             if (newUser.PasswordHash != oldUser.PasswordHash)
             {
-                result.Add(PlatformConstants.Security.Changes.UserPasswordChanged, $"Password changed");
+                result.Add(PlatformConstants.Security.Changes.UserPasswordChanged, "Password changed");
+            }
+
+            if (newUser.LockoutEnd.IsEmpty() && !oldUser.LockoutEnd.IsEmpty())
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, "User unlocked");
+            }
+
+            if (!newUser.LockoutEnd.IsEmpty() && oldUser.LockoutEnd.IsEmpty())
+            {
+                result.Add(PlatformConstants.Security.Changes.UserUpdated, "User locked");
             }
 
             return result;
