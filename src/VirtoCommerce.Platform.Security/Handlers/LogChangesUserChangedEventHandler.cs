@@ -27,6 +27,10 @@ namespace VirtoCommerce.Platform.Security.Handlers
                 if (changedEntry.EntryState == EntryState.Added)
                 {
                     await SaveOperationLogAsync(changedEntry.NewEntry.Id, "Created", EntryState.Added);
+                    if (!changedEntry.NewEntry.LockoutEnd.IsEmpty())
+                    {
+                        await SaveOperationLogAsync(changedEntry.NewEntry.Id, "User locked", EntryState.Modified);
+                    }
                 }
                 else if (changedEntry.EntryState == EntryState.Modified)
                 {

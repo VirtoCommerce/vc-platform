@@ -141,7 +141,6 @@ namespace VirtoCommerce.Platform.Web
             });
 
             services.AddPlatformServices(Configuration);
-            services.AddSecurityServices();
 
             services.AddSingleton<LicenseProvider>();
 
