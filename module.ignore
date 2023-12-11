@@ -10,6 +10,7 @@ Hangfire.Core.dll
 Hangfire.Core.resources.dll
 Hangfire.MemoryStorage.dll
 Hangfire.MySql.dll
+Hangfire.Core.dll
 Hangfire.PostgreSql.dll
 Hangfire.SqlServer.dll
 Humanizer.dll
