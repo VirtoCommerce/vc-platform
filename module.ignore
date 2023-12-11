@@ -1,3 +1,5 @@
+Azure.Core.dll
+Azure.Identity.dll
 Dapper.dll
 dotnet-swagger.dll
 EntityFrameworkCore.Triggers.dll
@@ -68,6 +70,7 @@ Microsoft.Extensions.Logging.ApplicationInsights.dll
 Microsoft.Extensions.Logging.AzureAppServices.dll
 Microsoft.Extensions.PlatformAbstractions.dll
 Microsoft.Identity.Client.dll
+Microsoft.Identity.Client.Extensions.Msal.dll
 Microsoft.IdentityModel.Abstractions.dll
 Microsoft.IdentityModel.JsonWebTokens.dll
 Microsoft.IdentityModel.Logging.dll
@@ -75,6 +78,7 @@ Microsoft.IdentityModel.Protocols.dll
 Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 Microsoft.IdentityModel.Tokens.dll
 Microsoft.OpenApi.dll
+Microsoft.SqlServer.Server.dll
 Microsoft.VisualStudio.Web.BrowserLink.dll
 Microsoft.Win32.SystemEvents.dll
 Mono.TextTemplating.dll
@@ -136,6 +140,7 @@ System.Drawing.Common.dll
 System.IdentityModel.Tokens.Jwt.dll
 System.IO.Abstractions.dll
 System.Linq.Async.dll
+System.Memory.Data.dll
 System.Runtime.Caching.dll
 System.Security.Cryptography.ProtectedData.dll
 System.Security.Permissions.dll
