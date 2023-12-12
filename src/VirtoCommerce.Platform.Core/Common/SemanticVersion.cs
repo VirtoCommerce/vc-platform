@@ -10,10 +10,12 @@ namespace VirtoCommerce.Platform.Core.Common
     {
         private readonly Version _version;
 
+        public static readonly char[] Delimiters = { '.', '-' };
+
         public static readonly Regex SemanticVersionStrictRegex = new Regex(
                 @"^(?<Version>([0-9]|[1-9][0-9]*)(\.([0-9]|[1-9][0-9]*)){2,3})" +
-                @"(?>\-(?<Prerelease>[0-9A-Za-z\-\.]+))?$"
-                , RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture);
+                @"(?>\-(?<Prerelease>[0-9A-Za-z\-\.]+))?(?<Metadata>\+[0-9A-Za-z-]+)?$",
+                RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.Compiled);
 
         public SemanticVersion(Version version)
         {
@@ -210,8 +212,8 @@ namespace VirtoCommerce.Platform.Core.Common
             if (bEmpty)
                 return nonemptyIsLower ? -1 : 1;
 
-            var aComps = a.Split('.');
-            var bComps = b.Split('.');
+            var aComps = a.Split(Delimiters);
+            var bComps = b.Split(Delimiters);
 
             var minLen = Math.Min(aComps.Length, bComps.Length);
             for (var i = 0; i < minLen; i++)
@@ -224,7 +226,8 @@ namespace VirtoCommerce.Platform.Core.Common
                 if (aIsNum && bIsNum)
                 {
                     r = aNum.CompareTo(bNum);
-                    if (r != 0) return r;
+                    if (r != 0)
+                        return r;
                 }
                 else
                 {
@@ -251,7 +254,7 @@ namespace VirtoCommerce.Platform.Core.Common
             version.Append(Minor);
             version.Append('.');
             version.Append(Patch);
-            if (Prerelease.Length > 0)
+            if (!string.IsNullOrEmpty(Prerelease))
             {
                 version.Append('-');
                 version.Append(Prerelease);
