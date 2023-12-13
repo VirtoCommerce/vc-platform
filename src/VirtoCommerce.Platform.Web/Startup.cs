@@ -313,7 +313,7 @@ namespace VirtoCommerce.Platform.Web
 
                 var publicCert = ServerCertificate.X509Certificate;
                 publicKey = new MsTokens.X509SecurityKey(publicCert);
-
+                options.MapInboundClaims = false;
                 options.TokenValidationParameters = new MsTokens.TokenValidationParameters
                 {
                     NameClaimType = OpenIddictConstants.Claims.Subject,
