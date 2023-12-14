@@ -26,8 +26,7 @@ namespace VirtoCommerce.Platform.Modules
             "AspNet.Security.OpenIdConnect.Server",
             "OpenIddict.Mvc",
             "CryptoHelper",
-            "Microsoft.EntityFrameworkCore.Design",
-            "Microsoft.Win32.SystemEvents"
+            "Microsoft.EntityFrameworkCore.Design"
         };
 
         public LoadContextAssemblyResolver(ILogger<LoadContextAssemblyResolver> logger, bool isDevelopmentEnvironment)
