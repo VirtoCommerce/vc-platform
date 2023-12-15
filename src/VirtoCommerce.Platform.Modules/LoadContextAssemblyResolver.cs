@@ -98,7 +98,8 @@ namespace VirtoCommerce.Platform.Modules
                             continue;
                         }
 
-                        throw GenerateAssemblyLoadException(dependency.Name.Name, assemblyPath);
+                        _logger.LogError("Cannot load \"{Assembly}\" for module \"{Module}\".", dependency.Name.Name, assemblyPath);
+                        continue;
                     }
 
                     if (mainAssemblyName.EqualsInvariant(loadedAssembly.GetName().Name))
