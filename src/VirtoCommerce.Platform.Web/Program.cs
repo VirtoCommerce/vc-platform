@@ -22,6 +22,10 @@ namespace VirtoCommerce.Platform.Web
               {
                   logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                   logging.AddConsole();
+                  logging.AddSimpleConsole(options =>
+                  {
+                      options.TimestampFormat = "[HH:mm:ss] ";
+                  });
                   logging.AddDebug();
                   logging.AddEventSourceLogger();
                   //Enable Azure logging
