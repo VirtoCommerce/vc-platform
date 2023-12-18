@@ -33,6 +33,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             if (_hubContext != null && notification.Creator != null)
             {
                 await _hubContext.Clients.User(notification.Creator).SendAsync("Send", notification);
+                await _hubContext.Clients.All.SendAsync("SendSystemEvents", notification);
             }
         }
     }
