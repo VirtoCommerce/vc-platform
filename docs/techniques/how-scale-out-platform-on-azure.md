@@ -50,7 +50,7 @@ The following example shows how to setup using the Redis backplane for memory ca
 ```
 
 ##  Scaling push notifications
-The push notification that is used in the manager is built on the [SignalR](https://docs.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-3.1) library.
+The push notification that is used in the manager is built on the [SignalR](https://docs.microsoft.com/en-us/aspnet/core/signalr/introduction?view=aspnetcore-6.0) library.
 In order to be able to see all push notifications on the manager that even emits by different platform instances, you can use the two scaling modes to configure you platform to use **Redis server backplane** or use **Azure SignalR** services. You can read more details how it works underhood by this link [Set up a Redis backplane for ASP.NET Core SignalR scale-out](https://docs.microsoft.com/en-us/aspnet/core/signalr/redis-backplane?view=aspnetcore-3.1)
 
 When SignalR is running on a server farm (multiple servers), "sticky sessions" must be used. "Sticky sessions" are also called session affinity by some load balancers. Azure App Service uses Application Request Routing (ARR) to route requests. Enabling the "ARR Affinity" setting in your Azure App Service will enable "sticky sessions".
@@ -72,8 +72,8 @@ Here is the example of how to configure scaling for push notifications with usin
         //Possible values: RedisBackplane | AzureSignalRService | None
         "ScalabilityMode": "RedisBackplane",
         //The URL is used to connect the platform SignalR /pushNotificationHub hub as client to be able sync the local notifications storage with notifications that are produced by other platform instances
-        //Need to replace this value to a full URL to  /pushNotificationHub on the production server e.g https://your-app-name.azurewebsites.net/pushNotificationHub
-        "HubUrl": "https://{your-app-name}.azurewebsites.net/pushNotificationHub",      
+        //Need to replace this value to a full URL to  /pushNotificationHub on the production server e.g https://your-app-name.azurewebsites.net/pushNotificationHub?api_key={your-vc-api-key}
+        "HubUrl": "https://{your-app-name}.azurewebsites.net/pushNotificationHub?api_key={your-vc-api-key}",      
         "RedisBackplane": {
             "ChannelName": "VirtoCommerceChannel"
         }
@@ -86,16 +86,14 @@ It is very important for an overall application reliability to process all backg
 
 In order to do that you need to configure one platform instance  (*Commerce services* on the diagram above) that will only enqueue background jobs, when other platform instance (*Authoring* on the diagram above)  Hangfire server will process these background jobs, taken from the shared storage. 
 
-> Ensure that all of your Client/Servers use the same job storage and JobStorageType, only **SqlServer** is allowed and have the same code base. If client enqueues a job based on the SomeClass that is absent in server’s code, the latter will simply throw a performance exception.
+> Ensure that all of your Client/Servers use the same job storage and JobStorageType, only **Database** is allowed and have the same code base. If client enqueues a job based on the SomeClass that is absent in server’s code, the latter will simply throw a performance exception.
 
 *appsettings.json*
 ```json
 ...
     "VirtoCommerce": {
          "Hangfire": {               
-              "JobStorageType": "SqlServer",
-               //Stop processing background jobs
-               "UseHangfireServer": false,
+              "JobStorageType": "Database",
                ...
          }
          ...
@@ -115,20 +113,19 @@ Platform : 64 bit
 *appsettings.json*
 ```json
  "ConnectionStrings": {
-         "VirtoCommerce": "Data Source=tcp:dev-odt.database.windows.net,1433;Initial Catalog={db-name};User ID={db-admin-name};Password={password};MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;"
+        "VirtoCommerce": "Data Source=tcp:dev-odt.database.windows.net,1433;Initial Catalog={db-name};User ID={db-admin-name};Password={password};MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;"
         "RedisConnectionString": "vc.redis.cache.windows.net:6380,password={password}=,ssl=True,abortConnect=False"
     },
     ...
      "VirtoCommerce": {
          "Hangfire": {
-              "JobStorageType": "SqlServer",
-               "UseHangfireServer": true, //Set value to false for the platform instance that you want to stop processing the background jobs
+              "JobStorageType": "Database",
                ...
          }
          ...
    "PushNotifications": {
         "ScalabilityMode": "RedisBackplane",     
-        "HubUrl": "https://vc-admin.azurewebsites.net/pushNotificationHub",      
+        "HubUrl": "https://vc-admin.azurewebsites.net/pushNotificationHub?api_key=9fde4353-9a4a-4fe3-9a03-a0c80b4220ff",      
         "RedisBackplane": {
             "ChannelName": "VirtoCommerceChannel"
         }
@@ -148,14 +145,14 @@ Platform : 64 bit
 *appsettings.json*
 ```json
  "ConnectionStrings": {
-         "VirtoCommerce": "Data Source=tcp:dev-odt.database.windows.net,1433;Initial Catalog={db-name};User ID={db-admin-name};Password={password};MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;"
+        "VirtoCommerce": "Data Source=tcp:dev-odt.database.windows.net,1433;Initial Catalog={db-name};User ID={db-admin-name};Password={password};MultipleActiveResultSets=True;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;"
         //Add RedisConnectionString value to start using Redis server as backplane for memory cache synchronization
         "RedisConnectionString": "vc.redis.cache.windows.net:6380,password={password}=,ssl=True,abortConnect=False"
     },
     ...
      "VirtoCommerce": {
          "Hangfire": {
-              "JobStorageType": "SqlServer",
+              "JobStorageType": "Database",
                "UseHangfireServer": false, //Set value to false for the platform instance that you want to stop processing the background jobs
                ...
          }
