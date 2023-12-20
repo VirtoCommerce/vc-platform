@@ -29,17 +29,21 @@ public class LocalizableSettingService : ILocalizableSettingService
 
     public virtual async Task<LocalizableSettingsAndLanguages> GetSettingsAndLanguagesAsync()
     {
-        var names = _settingsManager.AllRegisteredSettings
-            .Where(IsLocalizable)
-            .Select(x => x.Name)
-            .OrderBy(x => x);
+        var settings = _settingsManager.AllRegisteredSettings
+            .Where(IsShortTextDictionary)
+            .OrderBy(x => x.Name);
 
-        var tasks = names.Select(async name => new LocalizableSetting { Name = name, Items = await GetItems(name), });
-        var settings = (await Task.WhenAll(tasks)).Where(x => x.Items != null).ToList();
+        var tasks = settings.Select(async x =>
+            new LocalizableSetting
+            {
+                Name = x.Name,
+                IsLocalizable = x.IsLocalizable,
+                Items = await GetItems(x.Name),
+            });
 
         return new LocalizableSettingsAndLanguages
         {
-            Settings = settings,
+            Settings = (await Task.WhenAll(tasks)).Where(x => x.Items != null).ToList(),
             Languages = await GetLanguages(),
         };
     }
