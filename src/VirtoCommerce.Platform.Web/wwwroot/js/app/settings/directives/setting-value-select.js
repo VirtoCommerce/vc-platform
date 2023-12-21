@@ -29,8 +29,15 @@ angular.module('platformWebApp')
                             template: '$(Platform)/Scripts/app/settings/blades/setting-dictionary.tpl.html',
                             currentEntityId: $scope.setting,
                             isApiSave: true,
-                            parentRefresh: function () {
-                                getItems();
+                            parentRefresh: function (allowedValues, isLocalizable) {
+                                if (isLocalizable) {
+                                    getItems();
+                                }
+                                else {
+                                    localizableSettingService.getItemsAndLanguagesAsync($scope.setting).then(function () {
+                                        getItems();
+                                    });
+                                }
                             },
                         };
                         bladeNavigationService.showBlade(newBlade, $scope.blade);
