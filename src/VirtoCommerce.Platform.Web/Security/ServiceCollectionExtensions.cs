@@ -61,6 +61,8 @@ namespace VirtoCommerce.Platform.Web.Security
 
             services.AddTransient<IServerCertificateService, ServerCertificateService>();
 
+            services.AddTransient<ITokenLoginValidator, TokenLoginValidator>();
+
             return services;
         }
 

@@ -17,6 +17,8 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Model.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -30,6 +32,7 @@ namespace Mvc.Server
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IEnumerable<ITokenLoginValidator> _tokenLoginValidators;
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
@@ -39,7 +42,8 @@ namespace Mvc.Server
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IEnumerable<ITokenLoginValidator> tokenLoginValidators)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -47,6 +51,7 @@ namespace Mvc.Server
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
+            _tokenLoginValidators = tokenLoginValidators;
         }
 
         #region Password, authorization code and refresh token flows
@@ -84,31 +89,31 @@ namespace Mvc.Server
 
                 if (user == null)
                 {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The username/password couple is invalid."
-                    });
+                    return BadRequest(SecurityErrorDescriber.LoginFailed());
                 }
 
                 if (!_passwordLoginOptions.Enabled && !user.IsAdministrator)
                 {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The username/password login is disabled."
-                    });
+                    return BadRequest(SecurityErrorDescriber.PasswordLoginDisabled());
                 }
 
                 // Validate the username/password parameters and ensure the account is not locked out.
                 var result = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
-                if (!result.Succeeded)
+
+                var context = new Dictionary<string, object>()
                 {
-                    return BadRequest(new OpenIddictResponse
+                    { "explicitErrors", _passwordLoginOptions.ExplicitErrors },
+                    { "storeId", openIdConnectRequest.Scope },
+                };
+
+                foreach (var loginValidation in _tokenLoginValidators.OrderByDescending(x => x.Priority))
+                {
+                    var validationErrors = await loginValidation.ValidateUserAsync(user, result, context);
+                    var error = validationErrors.FirstOrDefault();
+                    if (error != null)
                     {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The username/password couple is invalid."
-                    });
+                        return BadRequest(error);
+                    }
                 }
 
                 await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
@@ -133,21 +138,13 @@ namespace Mvc.Server
                 var user = await _userManager.GetUserAsync(info.Principal);
                 if (user == null)
                 {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The token is no longer valid."
-                    });
+                    return BadRequest(SecurityErrorDescriber.TokenInvalid());
                 }
 
                 // Ensure the user is still allowed to sign in.
                 if (!await _signInManager.CanSignInAsync(user))
                 {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The user is no longer allowed to sign in."
-                    });
+                    return BadRequest(SecurityErrorDescriber.SignInNotAllowed());
                 }
 
                 // Create a new authentication ticket, but reuse the properties stored in the
@@ -162,11 +159,7 @@ namespace Mvc.Server
                 var application = await _applicationManager.FindByClientIdAsync(openIdConnectRequest.ClientId, HttpContext.RequestAborted);
                 if (application == null)
                 {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidClient,
-                        ErrorDescription = "The client application was not found in the database."
-                    });
+                    return BadRequest(SecurityErrorDescriber.InvalidClient());
                 }
 
                 // Create a new authentication ticket.
@@ -180,6 +173,7 @@ namespace Mvc.Server
                 ErrorDescription = "The specified grant type is not supported."
             });
         }
+
         #endregion
 
         private AuthenticationTicket CreateTicket(OpenIddictEntityFrameworkCoreApplication application)
