@@ -7,7 +7,7 @@ using VirtoCommerce.Platform.Security.Model;
 
 namespace VirtoCommerce.Platform.Security.Services
 {
-    public class TokenLoginValidator : ITokenLoginValidator
+    public class BaseUserSignInValidator : IUserSignInValidator
     {
         public int Priority { get; set; }
 

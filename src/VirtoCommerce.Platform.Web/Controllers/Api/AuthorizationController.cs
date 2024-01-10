@@ -32,7 +32,7 @@ namespace Mvc.Server
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IEnumerable<ITokenLoginValidator> _tokenLoginValidators;
+        private readonly IEnumerable<IUserSignInValidator> _userSignInValidators;
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
@@ -43,7 +43,7 @@ namespace Mvc.Server
             UserManager<ApplicationUser> userManager,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
             IEventPublisher eventPublisher,
-            IEnumerable<ITokenLoginValidator> tokenLoginValidators)
+            IEnumerable<IUserSignInValidator> userSignInValidators)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -51,7 +51,7 @@ namespace Mvc.Server
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
-            _tokenLoginValidators = tokenLoginValidators;
+            _userSignInValidators = userSignInValidators;
         }
 
         #region Password, authorization code and refresh token flows
@@ -106,7 +106,7 @@ namespace Mvc.Server
                     { "storeId", openIdConnectRequest.Scope },
                 };
 
-                foreach (var loginValidation in _tokenLoginValidators.OrderByDescending(x => x.Priority))
+                foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority))
                 {
                     var validationErrors = await loginValidation.ValidateUserAsync(user, result, context);
                     var error = validationErrors.FirstOrDefault();
