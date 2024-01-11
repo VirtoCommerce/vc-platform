@@ -31,7 +31,6 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using OpenIddict.Abstractions;
@@ -73,6 +72,8 @@ using VirtoCommerce.Platform.Web.Security.Authentication;
 using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
+using MsTokens = Microsoft.IdentityModel.Tokens;
+
 
 namespace VirtoCommerce.Platform.Web
 {
@@ -308,12 +309,12 @@ namespace VirtoCommerce.Platform.Web
                     options.IncludeErrorDetails = true;
                 }
 
-                X509SecurityKey publicKey = null;
+                MsTokens.X509SecurityKey publicKey = null;
 
                 var publicCert = ServerCertificate.X509Certificate;
-                publicKey = new X509SecurityKey(publicCert);
-
-                options.TokenValidationParameters = new TokenValidationParameters
+                publicKey = new MsTokens.X509SecurityKey(publicCert);
+                options.MapInboundClaims = false;
+                options.TokenValidationParameters = new MsTokens.TokenValidationParameters
                 {
                     NameClaimType = OpenIddictConstants.Claims.Subject,
                     RoleClaimType = OpenIddictConstants.Claims.Role,
@@ -344,8 +345,8 @@ namespace VirtoCommerce.Platform.Web
                         EnableAuthorizationEndpointPassthrough();
 
                     // Enable the authorization, logout, token and userinfo endpoints.
-                    options.SetTokenEndpointUris("/connect/token");
-                    options.SetUserinfoEndpointUris("/api/security/userinfo");
+                    options.SetTokenEndpointUris("connect/token");
+                    options.SetUserinfoEndpointUris("api/security/userinfo");
 
                     // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
                     // can enable the other flows if you need to support implicit or client credentials.

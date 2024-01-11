@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <noWarn>1591</noWarn>
         <ApplicationIcon />
         <OutputType>Library</OutputType>
@@ -20,7 +20,7 @@
 
     <ItemGroup>
         <PackageReference Include="StackExchange.Redis" Version="2.7.4" />
-        <PackageReference Include="RedLock.net" Version="2.2.0" />
+        <PackageReference Include="RedLock.net" Version="2.3.2" />
     </ItemGroup>
 
     <ItemGroup>
