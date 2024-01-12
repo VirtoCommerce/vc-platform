@@ -100,13 +100,13 @@ namespace Mvc.Server
                 // Validate the username/password parameters and ensure the account is not locked out.
                 var result = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
 
-                var context = new Dictionary<string, object>()
+                var context = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
                 {
-                    { "explicitErrors", _passwordLoginOptions.ExplicitErrors },
+                    { "detailedErrors", _passwordLoginOptions.DetailedErrors },
                     { "storeId", openIdConnectRequest.Scope },
                 };
 
-                foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority))
+                foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name))
                 {
                     var validationErrors = await loginValidation.ValidateUserAsync(user, result, context);
                     var error = validationErrors.FirstOrDefault();

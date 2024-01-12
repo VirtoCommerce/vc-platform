@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Web.Model.Security
 
         public string AuthenticationType { get; set; } = "Password";
 
-        public bool ExplicitErrors { get; set; }
+        public bool DetailedErrors { get; set; }
 
         public int Priority { get; set; }
     }
