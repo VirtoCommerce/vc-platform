@@ -13,17 +13,17 @@ namespace VirtoCommerce.Platform.Security.Services
 
         public Task<IList<TokenLoginResponse>> ValidateUserAsync(ApplicationUser user, SignInResult signInResult, IDictionary<string, object> context)
         {
-            var explicitErrors = false;
-            if (context.TryGetValue("explicitErrors", out var value))
+            var detailedErrors = false;
+            if (context.TryGetValue("detailedErrors", out var detailedErrorsValue))
             {
-                explicitErrors = (bool)value;
+                detailedErrors = (bool)detailedErrorsValue;
             }
 
             var result = new List<TokenLoginResponse>();
 
             if (!signInResult.Succeeded)
             {
-                if (explicitErrors)
+                if (detailedErrors)
                 {
                     if (signInResult.IsLockedOut)
                     {
