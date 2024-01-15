@@ -157,8 +157,8 @@ In our work, we always try to use advanced technologies. Our decision to choose 
 
 Virto Commerce uses the following stack of technologies:
 
-* .NET 6
-* ASP.NET Core 6
+* .NET 8
+* ASP.NET Core 8
 * Entity Framework Core as primary ORM
 * ASP.NET Core Identity for authentication and authorization
 * OpenIddict for OAuth authorization
@@ -174,4 +174,6 @@ Virto Commerce is built with DB agnostic architecture and supports the following
 * Microsoft SQL Server 2019 or above
 * MySql Server 8 or above
 * PostgreSQL 12 or above
+* Redis 7
+* Node.JS 20.11.0 LTS
 
