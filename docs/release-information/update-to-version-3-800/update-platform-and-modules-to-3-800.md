@@ -33,6 +33,7 @@ With the transition to .NET 8, bulk operations such as select, update, and delet
 1. **Entity Framework Packages Update:** To prevent "System.MissingMethodException: Method not found errors" when call MigrationBuilder.CreateIndex, it is essential to update Entity Framework packages from version 6 to version 8.
 2. **Kestrel HTTPS Binding:** Note that the default HTTPS binding has been removed. Refer to [Microsoft Learn](https://learn.microsoft.com/en-us/dotnet/core/compatibility/aspnet-core/7.0/https-binding-kestrel) for more details.
 
+
 If you find any new breaking changes, submit an question on [Virto Commerce Community](https://www.virtocommerce.org/c/support/12). 
 
 ## Update Path
@@ -62,8 +63,12 @@ If you develop a custom module, update can be required primary to update .NET de
 Download and execute the vc-net8-update.ps1 PowerShell script in your solution folder. 
 
 ```ps1
-.\vc-net8-update.ps1
+vc-net8-update.ps1
 ```
+
+![step1 run ps1 script](../../media/updatenet8-step1-run-ps1-script.png)
+
+![step2 run ps1 script result](../../media/updatenet8-step2-ps1-script-result.png)
 
 This script automates several crucial tasks, including (of course you can do it manually):
 1. Updating the Target Framework to .NET 8 for every project.
@@ -71,10 +76,14 @@ This script automates several crucial tasks, including (of course you can do it 
 3. Updating other third-party dependencies to save version that used by Virto Commerce Platform.
 4. Updating the module.manifest file to align with the changes in .NET 8.
 
+![step3 review modified files](../../media/updatenet8-step3-modified-files.png)
+
 ### Build Solution
 
 1. Build the solution and meticulously address any compilation errors and warnings if required. This step ensures that the solution is compatible with the updated framework.
 2. Verify Tests for Issues Perform a thorough verification of tests to identify and address any issues introduced by the update. This step guarantees that the updated solution maintains the expected functionality and performance.
+
+1. ![step3 build solution](../../media/updatenet8-step4-build.png)
 
 ### Create Module Package
 
