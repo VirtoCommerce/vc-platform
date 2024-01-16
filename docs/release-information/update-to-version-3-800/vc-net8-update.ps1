@@ -146,7 +146,7 @@ function Update-Latest-Packages ($projectFile) {
 			if ($packageName.StartsWith("VirtoCommerce.")) {
 				$item.Version = $versionPrefix
 			} else {
-				Write-Host $_
+				Write-Error $_
 			}
 
 		}
