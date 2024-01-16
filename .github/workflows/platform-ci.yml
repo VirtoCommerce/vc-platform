@@ -154,7 +154,7 @@ jobs:
       with:
         tag: ${{ env.DOCKER_TAG }}
         imageName: 'platform'
-        dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/feat/net6/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
+        dockerFiles: 'https://raw.githubusercontent.com/VirtoCommerce/vc-docker/feat/net8/linux/platform/Dockerfile;https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/platform/wait-for-it.sh'
 
     - name: Docker Login
       if: ${{ env.BUILD_DOCKER == 'true' }}
@@ -166,7 +166,7 @@ jobs:
 
     - name: Swagger validation
       uses: VirtoCommerce/vc-github-actions/docker-env@master
-      if: ${{ github.ref == 'refs/heads/dev' }}
+      if: ${{ github.ref == 'refs/heads/dev-turnoff' }}
       with:
         githubUser: ${{ env.GITHUB_ACTOR }}
         githubToken: ${{ env.GITHUB_TOKEN }}

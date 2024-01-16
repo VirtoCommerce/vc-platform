@@ -7,29 +7,26 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
-!!! done "October"
-    * PostgreSQL Vs SQL Server.
-    * Elastic Search 8 with Semantic Search Released.
-    * Improved Storefront UX.
+!!! done "January"
+    * Redesigned Storefront UI
+    * Updated xApi and other modules
+    * Marketplace enhancements.
     
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-october-2023/631)
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-january-2024/663/1)
 
-!!! done "September"
-    * Storefront integration with the Builder.io 1 solution.
-    * Platform modules updates.
-    * Multi-language approach implemented in the Marketplace.
+!!! done "December"
+    * Storefront: Improved pagination for a more user-friendly experience and streamlined list management in Storefront.
+    * Platform: Inventory, Cart, xAPI, Catalog modules updates.
     
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-september-2023/613)
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-december-2023/651)
 
-!!! done "August"
-    * Refactored and simplified CRUD Services.
-    * Enhanced security.
-    * Improved Catalog and Notification module management.
-    * New Order and Payment modules scenarios.
-    * New Cart and Catalog handling features.
-    * Enhanced behaviour of SPA regarding the handling of URLs.
+!!! done "November"
+    * Latest Stable Platform Release 6 with a range of enhancements and updates.
+    * Redesigned Related products and Compare products sections in the Storefront.
+    * Marketplace enhancements.
     
-    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-august-2023/602)
+    [Continue reading on Virto Commerce community ...](https://www.virtocommerce.org/t/news-digest-november-2023/644)
+
 
 View more details about releases in [Virto Commerce Community](https://www.virtocommerce.org/c/news-digest/15), Subscribe on [YouTube](https://www.youtube.com/c/Virtocommerce/videos) and Star on [GitHub](https://github.com/VirtoCommerce).
 

@@ -213,7 +213,7 @@
                             "value": "dotnet"
                         }
                     ],
-                    "netFrameworkVersion": "v6.0",
+                    "netFrameworkVersion": "v8.0",
                     "virtualApplications": [
                         {
                             "virtualPath": "/",

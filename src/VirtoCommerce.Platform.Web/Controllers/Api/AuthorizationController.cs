@@ -185,25 +185,20 @@ namespace Mvc.Server
                 Claims.Name,
                 Claims.Role);
 
-            // Use the client_id as the subject identifier.
-            identity.AddClaim(Claims.Subject, application.ClientId,
-                Destinations.AccessToken,
-                Destinations.IdentityToken);
 
-            identity.AddClaim(Claims.Name, application.DisplayName,
-                Destinations.AccessToken,
-                Destinations.IdentityToken);
+            // Use the client_id as the subject identifier.
+            identity.SetClaim(Claims.Subject, application.ClientId);
+
+            identity.SetClaim(Claims.Name, application.DisplayName);
 
             // all clients act as administrator
-            identity.AddClaim(
-                Claims.Role,
-                PlatformConstants.Security.SystemRoles.Administrator,
-                Destinations.AccessToken,
-                Destinations.IdentityToken);
+            identity.SetClaim(Claims.Role, PlatformConstants.Security.SystemRoles.Administrator);
 
             var principal = new ClaimsPrincipal(identity);
 
             principal.SetResources("resource_server");
+
+            identity.SetDestinations(static claim => new[] { Destinations.AccessToken, Destinations.IdentityToken });
 
             // Create a new authentication ticket holding the user identity.
             var ticket = new AuthenticationTicket(
