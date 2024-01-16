@@ -39,7 +39,10 @@ If you find any new breaking changes, submit an question on [Virto Commerce Comm
 ## Update Path
 
 1. **Install .NET 8:** Begin by ensuring that you have .NET 8 installed on your system. Follow the official installation guidelines to set up the environment for the upgrade. https://dotnet.microsoft.com/en-us/download/dotnet/8.0
-2. **Update Virto Commerce:**
+2. **Update Virto Commerce Platform and Modules**
+3. **Update Custom Modules**
+
+## Update Virto Commerce Platform and Modules
 
 ### Option 1. vc-build Update command
 Utilize the vc-build Update command for an automated update. This method streamlines the update process, ensuring that all components are seamlessly transitioned to the new version.
@@ -60,7 +63,9 @@ If you develop a custom module, update can be required primary to update .NET de
 
 ### Update Solution to NET8
 
-Download and execute the vc-net8-update.ps1 PowerShell script in your solution folder. 
+Download and execute the [vc-net8-update.ps1Power Shell script](vc-net8-update.ps1) in your solution folder. 
+
+**Note:** Set powershell script as trusted if required.
 
 ```ps1
 vc-net8-update.ps1
@@ -70,7 +75,7 @@ vc-net8-update.ps1
 
 ![step2 run ps1 script result](../../media/updatenet8-step2-ps1-script-result.png)
 
-This script automates several crucial tasks, including (of course you can do it manually):
+This script automates several these tasks, including (of course you can do it manually):
 1. Updating the Target Framework to .NET 8 for every project.
 2. Updating project dependencies, including Microsoft NuGet dependencies to version 8.0.0 and VirtoCommerce NuGet dependency to version 3.800.0 and latest.
 3. Updating other third-party dependencies to save version that used by Virto Commerce Platform.
@@ -83,7 +88,7 @@ This script automates several crucial tasks, including (of course you can do it 
 1. Build the solution and meticulously address any compilation errors and warnings if required. This step ensures that the solution is compatible with the updated framework.
 2. Verify Tests for Issues Perform a thorough verification of tests to identify and address any issues introduced by the update. This step guarantees that the updated solution maintains the expected functionality and performance.
 
-1. ![step3 build solution](../../media/updatenet8-step4-build.png)
+![step3 build solution](../../media/updatenet8-step4-build.png)
 
 ### Create Module Package
 
