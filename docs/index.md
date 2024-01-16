@@ -7,6 +7,15 @@ Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplace
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "Virto Commerce .NET8 Released"
+    Virto Commerce on NET 8 (3.800+) introduces a significant technical update by transitioning the platform to .NET 8.
+    This update focuses on enhancing performance and stability while maintaining backward compatibility.
+    It involves updating the Target Framework to .NET 8 and integrating the latest LTS releases of third-party libraries.
+    Importantly, no code refactoring or alterations to the API and internal structure have been made.
+
+    [Continue reading ...](https://docs.virtocommerce.org/release-information/update-to-version-3-800/update-platform-and-modules-to-3-800.md)
+
+
 !!! done "January"
     * Redesigned Storefront UI
     * Updated xApi and other modules
