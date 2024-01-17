@@ -1,6 +1,6 @@
 # Overview
 
-Virto Commerce is an open-source B2B Innovation Platform.
+Virto Commerce is an Open-Source B2B Innovation Platform.
 
 Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplaces and derived SaaS commerce platforms.
 
