@@ -1,7 +1,7 @@
 # What's new
 
 !!! note
-    Welcome to v3.0. Meet the new major version of Virto Commerce Platform. Our development efforts were focused on moving to ASP&#46;NET Core, performance, architecture improvements and further enhancements. The changes below are a subset of the larger list of changes in update to ASP&#46;NET Core.
+    Welcome to v3.0. Meet the new major version of Virto Commerce Platform. Our development efforts were focused on moving to ASP.NET Core, performance, architecture improvements and further enhancements. The changes below are a subset of the larger list of changes in update to ASP.NET Core.
 
 
 ## Architectural and conceptual changes
@@ -17,29 +17,24 @@
 
 #### Application & Data
 
-- .NET Core 3.1.X
-- ASP&#46;NET Core 3.1.X
-    - ASP&#46;NET Core Identity
-    - ASP&#46;NET Core SignalR
-- OpenIddict 2.0.X
-- Entity Framework Core 3.1.X
-- HangFire 1.7.X
-- AngularJS 1.4
+- .NET 8
+- ASP.NET Core 8
+    - ASP.NET Core Identity
+    - ASP.NET Core SignalR
+- Entity Framework Core 8
+- OpenIddict 4
+- HangFire 1.8.6
+- AngularJS 1.8
 
 #### DevOps and Utilities
-
-- Docker
-- npm
-- Webpack
-- xUnit
-- Jenkins
-- Nuke-based utility VirtoCommerce.GlobalTool (aka vc-build)
-- Swagger UI
+- Visual Studio 2022
+- NodeJS 20 LTS
+- Webpack 5
 
 ### Techniques
 
 #### Caching
-  - ASP&#46;NET Core in-memory caching is used
+  - ASP.NET Core in-memory caching is used
   - Strongly typed *cache regions* and *change tokens* for cache dependencies
   - Ability to manage cached objects' expiration time and disabling the caching
   - Hybrid caching policy for keeping cached data consistent in multiple Platform instances
@@ -94,7 +89,7 @@
 ### Modularity
   - Assembly and dependency loading completely reworked into platform process
 ### Security
-  - Authentification and authorization fully updated to ASP&#46;NET Core Identity without any extensions
+  - Authentification and authorization fully updated to ASP.NET Core Identity without any extensions
   - OpenIddict used as an OpenID Connect server to support all OAuth flows; it's also used for token based authentication
   - OAuth2 Password and Client credentials flow for Machine to Machine (M2M) applications
   - HMAC and simple key authorization support removed for API calls
@@ -167,42 +162,40 @@
   - Any database related extensions made in custom modules, should be upgraded by adding special DB migrations in module code (no manual changes to DB)
   - Any custom existing v2 database should be upgraded before using by Platform v3
  
-## Current v3 modules
+## Current Virto Commerce Modules
 
 |  Id      |      Title    | Version |
 |:---------|:-------------:|:-------:|
-|[vc-module-core](https://github.com/VirtoCommerce/vc-module-core/releases/tag/3.1.0) |Commerce core module|3.1.0|
-|[vc-module-tax](https://github.com/VirtoCommerce/vc-module-tax/releases/tag/3.1.0) |Tax general logic module|3.1.0|
-|[vc-module-search](https://github.com/VirtoCommerce/vc-module-search/releases/tag/3.1.0) |Search module|3.1.0|
-|[vc-module-azure-search](https://github.com/VirtoCommerce/vc-module-azure-search/releases/tag/3.1.0) |Azure Search module|3.1.0|
-|[vc-module-lucene-search](https://github.com/VirtoCommerce/vc-module-lucene-search/releases/tag/3.1.0) |Lucene Search module|3.1.0|
-|[vc-module-elastic-search](https://github.com/VirtoCommerce/vc-module-elastic-search/releases/tag/3.1.0) |Elastic Search module|3.1.0|
-|[vc-module-inventory](https://github.com/VirtoCommerce/vc-module-inventory/releases/tag/3.1.0) |Inventory module|3.1.0|
-|[vc-module-image-tools](https://github.com/VirtoCommerce/vc-module-image-tools/releases/tag/3.1.0) |Image tools module|3.1.0|
-|[vc-module-notification](https://github.com/VirtoCommerce/vc-module-notification/releases/tag/3.1.0) |Notifications module|3.1.0|
-|[vc-module-export](https://github.com/VirtoCommerce/vc-module-export/releases/tag/3.1.0) |Export module|3.1.0|
-|[vc-module-content](https://github.com/VirtoCommerce/vc-module-content/releases/tag/3.1.0) |CMS Content module|3.1.0|
-|[vc-module-payment](https://github.com/VirtoCommerce/vc-module-payment/releases/tag/3.1.0) |Payment module|3.1.0|
-|[vc-module-store](https://github.com/VirtoCommerce/vc-module-store/releases/tag/3.1.0) |Store module|3.1.0|
-|[vc-module-customer](https://github.com/VirtoCommerce/vc-module-customer/releases/tag/3.1.0) |Customer management module|3.1.0|
-|[vc-module-bulk-actions](https://github.com/VirtoCommerce/vc-module-bulk-actions/releases/tag/3.1.0) |Bulk Actions general logic module|3.1.0|
-|[vc-module-catalog](https://github.com/VirtoCommerce/vc-module-catalog/releases/tag/3.1.0) |Catalog management module|3.1.0|
-|[vc-module-shipping](https://github.com/VirtoCommerce/vc-module-shipping/releases/tag/3.1.0) |Shipping general logic module|3.1.0|
-|[vc-module-sitemaps](https://github.com/VirtoCommerce/vc-module-sitemaps/releases/tag/3.1.0) |Sitemaps module|3.1.0|
-|[vc-module-pricing](https://github.com/VirtoCommerce/vc-module-pricing/releases/tag/3.1.0) |Pricing module|3.1.0|
-|[vc-module-cart](https://github.com/VirtoCommerce/vc-module-cart/releases/tag/3.1.0) |Shopping cart module|3.1.0|
-|[vc-module-order](https://github.com/VirtoCommerce/vc-module-order/releases/tag/3.1.0) |Orders management module|3.1.0|
-|[vc-module-marketing](https://github.com/VirtoCommerce/vc-module-marketing/releases/tag/3.1.0) |Marketing management module|3.1.0|
-|[vc-module-subscription](https://github.com/VirtoCommerce/vc-module-subscription/releases/tag/3.1.0) |Subscriptions management module|3.1.0|
-|[vc-module-customer-review](https://github.com/VirtoCommerce/vc-module-customer-review/releases/tag/3.1.0) |Customer reviews module|3.1.0|
-|[vc-module-Authorize.Net](https://github.com/VirtoCommerce/vc-module-Authorize.Net/releases/tag/3.1.0) |Authorize.Net DPM payment gateway integration|3.1.0|
-|[vc-module-avatax](https://github.com/VirtoCommerce/vc-module-avatax/releases/tag/3.1.0) |Avalara Tax automation integration|3.1.0|
-|[vc-module-catalog-personalization](https://github.com/VirtoCommerce/vc-module-catalog-personalization/releases/tag/3.1.0) |Catalog personalization|3.1.0|
-|[vc-module-catalog-publishing](https://github.com/VirtoCommerce/vc-module-catalog-publishing/releases/tag/3.1.0) |Catalog publishing module|3.1.0|
-|[vc-module-catalog-csv-import](https://github.com/VirtoCommerce/vc-module-catalog-csv-import/releases/tag/3.1.0) |Imports management module-catalog-csv|3.1.0|
-|[vc-module-quote](https://github.com/VirtoCommerce/vc-module-quote/releases/tag/3.1.0) |Quotes module|3.1.0|
+|[vc-module-core](https://github.com/VirtoCommerce/vc-module-core/releases/tag/3.800.0) |Commerce core module|3.800.0|
+|[vc-module-tax](https://github.com/VirtoCommerce/vc-module-tax/releases/tag/3.800.0) |Tax general logic module|3.800.0|
+|[vc-module-search](https://github.com/VirtoCommerce/vc-module-search/releases/tag/3.800.0) |Search module|3.800.0|
+|[vc-module-azure-search](https://github.com/VirtoCommerce/vc-module-azure-search/releases/tag/3.800.0) |Azure Search module|3.800.0|
+|[vc-module-lucene-search](https://github.com/VirtoCommerce/vc-module-lucene-search/releases/tag/3.800.0) |Lucene Search module|3.800.0|
+|[vc-module-elastic-search](https://github.com/VirtoCommerce/vc-module-elastic-search/releases/tag/3.800.0) |Elastic Search module|3.800.0|
+|[vc-module-inventory](https://github.com/VirtoCommerce/vc-module-inventory/releases/tag/3.800.0) |Inventory module|3.800.0|
+|[vc-module-image-tools](https://github.com/VirtoCommerce/vc-module-image-tools/releases/tag/3.800.0) |Image tools module|3.800.0|
+|[vc-module-notification](https://github.com/VirtoCommerce/vc-module-notification/releases/tag/3.800.0) |Notifications module|3.800.0|
+|[vc-module-export](https://github.com/VirtoCommerce/vc-module-export/releases/tag/3.800.0) |Export module|3.800.0|
+|[vc-module-content](https://github.com/VirtoCommerce/vc-module-content/releases/tag/3.800.0) |CMS Content module|3.800.0|
+|[vc-module-payment](https://github.com/VirtoCommerce/vc-module-payment/releases/tag/3.800.0) |Payment module|3.800.0|
+|[vc-module-store](https://github.com/VirtoCommerce/vc-module-store/releases/tag/3.800.0) |Store module|3.800.0|
+|[vc-module-customer](https://github.com/VirtoCommerce/vc-module-customer/releases/tag/3.800.0) |Customer management module|3.800.0|
+|[vc-module-bulk-actions](https://github.com/VirtoCommerce/vc-module-bulk-actions/releases/tag/3.800.0) |Bulk Actions general logic module|3.800.0|
+|[vc-module-catalog](https://github.com/VirtoCommerce/vc-module-catalog/releases/tag/3.800.0) |Catalog management module|3.800.0|
+|[vc-module-shipping](https://github.com/VirtoCommerce/vc-module-shipping/releases/tag/3.800.0) |Shipping general logic module|3.800.0|
+|[vc-module-sitemaps](https://github.com/VirtoCommerce/vc-module-sitemaps/releases/tag/3.800.0) |Sitemaps module|3.800.0|
+|[vc-module-pricing](https://github.com/VirtoCommerce/vc-module-pricing/releases/tag/3.800.0) |Pricing module|3.800.0|
+|[vc-module-cart](https://github.com/VirtoCommerce/vc-module-cart/releases/tag/3.800.0) |Shopping cart module|3.800.0|
+|[vc-module-order](https://github.com/VirtoCommerce/vc-module-order/releases/tag/3.800.0) |Orders management module|3.800.0|
+|[vc-module-marketing](https://github.com/VirtoCommerce/vc-module-marketing/releases/tag/3.800.0) |Marketing management module|3.800.0|
+|[vc-module-subscription](https://github.com/VirtoCommerce/vc-module-subscription/releases/tag/3.800.0) |Subscriptions management module|3.800.0|
+|[vc-module-customer-review](https://github.com/VirtoCommerce/vc-module-customer-review/releases/tag/3.800.0) |Customer reviews module|3.800.0|
+|[vc-module-Authorize.Net](https://github.com/VirtoCommerce/vc-module-Authorize.Net/releases/tag/3.800.0) |Authorize.Net DPM payment gateway integration|3.800.0|
+|[vc-module-avatax](https://github.com/VirtoCommerce/vc-module-avatax/releases/tag/3.800.0) |Avalara Tax automation integration|3.800.0|
+|[vc-module-catalog-personalization](https://github.com/VirtoCommerce/vc-module-catalog-personalization/releases/tag/3.800.0) |Catalog personalization|3.800.0|
+|[vc-module-catalog-publishing](https://github.com/VirtoCommerce/vc-module-catalog-publishing/releases/tag/3.800.0) |Catalog publishing module|3.800.0|
+|[vc-module-catalog-csv-import](https://github.com/VirtoCommerce/vc-module-catalog-csv-import/releases/tag/3.800.0) |Imports management module-catalog-csv|3.800.0|
+|[vc-module-quote](https://github.com/VirtoCommerce/vc-module-quote/releases/tag/3.800.0) |Quotes module|3.800.0|
 
-*List of currently released v3 modules till the moment of writing. Additional modules might have been added.* 
+and more. List of currently released v3 modules till the moment of writing. Additional modules might have been added.
 
-## Performance benchmark
-![Performance benchmarks](../media/performance-benchmark.png)
