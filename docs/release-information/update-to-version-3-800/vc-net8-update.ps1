@@ -108,25 +108,6 @@ function Update-TargetFramework ($projectFile, $targetFramework) {
 	Save-File $xml $projectFile
 }
 
-function Get-Package-Version($packageName) {
-	# Check if version is defined in vc-references.json, if not, get it from NuGet
-	$version = $predefinedVersions.$packageName
-	if (-not $version) {
-		try {
-			$latestVersion = (Find-Package $packageName -Source https://www.nuget.org/api/v2).Version
-			
-			if ($packageName.StartsWith("VirtoCommerce") -and ($versionPrefix.Contains("alpha") -or [System.Version]$versionPrefix -gt [System.Version]$latestVersion)) {
-				$latestVersion = $versionPrefix
-			}
-			$predefinedVersions["$packageName"] = $latestVersion
-			$version = $latestVersion
-		} catch {
-			# ignore beta versions
-		}
-	}
-	return $version
-}
-
 # Function to update packages to the latest version
 function Update-Latest-Packages ($projectFile) {
 	$xml = [xml](Load-File $projectFile)
@@ -136,20 +117,23 @@ function Update-Latest-Packages ($projectFile) {
 		$installedVersion = $_.Version
 		$item = $_
 
-		$version  = Get-Package-Version $packageName
+		$version = $predefinedVersions.$packageName
+	    if (-not $version) {
+		    try {
+			    $latestVersion = (Find-Package $packageName -Source https://www.nuget.org/api/v2).Version
+			
+			    if ($packageName.StartsWith("VirtoCommerce") -and ($versionPrefix.Contains("alpha") -or [System.Version]$versionPrefix -gt [System.Version]$latestVersion)) {
+				    $latestVersion = $versionPrefix
+			    }
+			    $predefinedVersions["$packageName"] = $latestVersion
+			    $version = $latestVersion
+		    } catch {
+			    # ignore beta versions
+		    }
+	    }
 
-		try {
-			if (-not [string]::IsNullOrEmpty($version) -and [System.Version]$version -gt [System.Version]$installedVersion) {
-				$_.Version = $version
-			}
-		} catch {
-			if ($packageName.StartsWith("VirtoCommerce.")) {
-				$item.Version = $versionPrefix
-			} else {
-				Write-Error $_
-			}
+		$_.Version = $version
 
-		}
 		Display-Version-Change $packageName $installedVersion $version
 	}
 	
