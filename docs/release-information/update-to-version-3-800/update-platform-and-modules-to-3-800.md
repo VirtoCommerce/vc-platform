@@ -65,7 +65,12 @@ If you develop a custom module, update can be required primary to update .NET de
 
 Download and execute the [vc-net8-update.ps1Power Shell script](vc-net8-update.ps1) in your solution folder. 
 
-**Note:** Set powershell script as trusted if required.
+!!! info "How to enable execution of PowerShell scripts"
+  Set powershell script as trusted if required, by running
+  ```ps1
+  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass command
+  ```
+  
 
 ```ps1
 vc-net8-update.ps1
