@@ -79,14 +79,23 @@ angular.module('platformWebApp')
                         responseGroup: responseGroup
                     };
 
-                    return $scope.data({ criteria: criteria }).$promise.then((x) => {
-                        join(x.results, true);
-                        $select.page++;
+                    var result = $scope.data({ criteria: criteria });
 
-                        if ($select.page * pageSize < x.totalCount) {
-                            $scope.$broadcast('scrollCompleted');
-                        }
-                    });
+                    if (result.$promise) {
+                        result.$promise.then((x) => {
+                            join(x.results, true);
+                            $select.page++;
+
+                            if ($select.page * pageSize < x.totalCount) {
+                                $scope.$broadcast('scrollCompleted');
+                            }
+                        });
+                    }
+                    else if (angular.isArray(result)) {
+                        join(result);
+                        $scope.paginationDisabled = true;
+                    }
+                    return result;
                 };
 
                 $scope.$watch('context.modelValue', function (newValue, oldValue) {
