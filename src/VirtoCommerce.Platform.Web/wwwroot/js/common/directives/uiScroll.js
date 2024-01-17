@@ -79,23 +79,7 @@ angular.module('platformWebApp')
                         responseGroup: responseGroup
                     };
 
-                    var result = $scope.data({ criteria: criteria });
-
-                    if (result.$promise) {
-                        result.$promise.then((x) => {
-                            join(x.results, true);
-                            $select.page++;
-
-                            if ($select.page * pageSize < x.totalCount) {
-                                $scope.$broadcast('scrollCompleted');
-                            }
-                        });
-                    }
-                    else if (angular.isArray(result)) {
-                        join(result);
-                        $scope.paginationDisabled = true;
-                    }
-                    return result;
+                    return fetchInternal(criteria, $select);
                 };
 
                 $scope.$watch('context.modelValue', function (newValue, oldValue) {
@@ -119,18 +103,29 @@ angular.module('platformWebApp')
 
                         criteria[selectedItemsPropertyName] = selectedIds;
 
-                        var result = $scope.data({ criteria: criteria });
-
-                        if (result.$promise) {
-                            result.$promise.then((x) => {
-                                join(x.results);
-                            });
-                        }
-                        else if (angular.isArray(result)) {
-                            join(result);
-                            $scope.paginationDisabled = true;
-                        }
+                        fetchInternal(criteria, null);
                     }
+                }
+
+                function fetchInternal(criteria, select) {
+                    var result = $scope.data({ criteria: criteria });
+
+                    if (result.$promise) {
+                        result.$promise.then((x) => {
+                            join(x.results, true);
+                            if (select) {
+                                select.page++;
+
+                                if (select.page * pageSize < x.totalCount) {
+                                    $scope.$broadcast('scrollCompleted');
+                                }
+                            }
+                        });
+                    } else if (angular.isArray(result)) {
+                        join(result);
+                        $scope.paginationDisabled = true;
+                    }
+                    return result;
                 }
 
                 function join(newItems, callFilter) {
