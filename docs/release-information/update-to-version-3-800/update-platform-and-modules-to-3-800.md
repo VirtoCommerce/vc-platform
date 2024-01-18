@@ -63,13 +63,13 @@ If you develop a custom module, update can be required primary to update .NET de
 
 ### Update Solution to NET8
 
-Download and execute the [vc-net8-update.ps1Power Shell script](vc-net8-update.ps1) in your solution folder. 
+Download and execute the [vc-net8-update.ps1 Power Shell script](vc-net8-update.ps1) in your solution folder. 
 
 !!! info "How to enable execution of PowerShell scripts"
-  Set powershell script as trusted if required, by running
-  ```ps1
-  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass command
-  ```
+    Set powershell script as trusted if required, by running this power shell command:
+    ```ps1
+      Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass command
+    ```
   
 
 ```ps1
@@ -81,6 +81,7 @@ vc-net8-update.ps1
 ![step2 run ps1 script result](../../media/updatenet8-step2-ps1-script-result.png)
 
 This script automates several these tasks, including (of course you can do it manually):
+
 1. Updating the Target Framework to .NET 8 for every project.
 2. Updating project dependencies, including Microsoft NuGet dependencies to version 8.0.0 and VirtoCommerce NuGet dependency to version 3.800.0 and latest.
 3. Updating other third-party dependencies to save version that used by Virto Commerce Platform.
