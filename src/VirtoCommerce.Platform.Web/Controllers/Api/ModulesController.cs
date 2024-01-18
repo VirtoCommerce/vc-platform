@@ -294,55 +294,64 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                             EnsureModulesCatalogInitialized();
 
-                            var modules = new List<ManifestModuleInfo>();
-                            var moduleVersionGroups = _externalModuleCatalog.Modules
-                                .OfType<ManifestModuleInfo>()
-                                .Where(x => x.Groups.Intersect(moduleBundles, StringComparer.OrdinalIgnoreCase).Any())
-                                .GroupBy(x => x.Id);
-
-                            //Need install only latest versions
-                            foreach (var moduleVersionGroup in moduleVersionGroups)
+                            // Skip Auto Installation if some modules already installed manually
+                            if (!_externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().Any(x => x.IsInstalled))
                             {
-                                var alreadyInstalledModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.IsInstalled && x.Id.EqualsInvariant(moduleVersionGroup.Key));
-                                //skip already installed modules
-                                if (alreadyInstalledModule == null)
-                                {
-                                    var latestVersion = moduleVersionGroup.OrderBy(x => x.Version).LastOrDefault();
-                                    if (latestVersion != null)
-                                    {
-                                        modules.Add(latestVersion);
-                                    }
-                                }
-                            }
-
-                            var modulesWithDependencies = _externalModuleCatalog.CompleteListWithDependencies(modules)
-                                .OfType<ManifestModuleInfo>()
-                                .Where(x => !x.IsInstalled)
-                                .Select(x => new ModuleDescriptor(x))
-                                .ToArray();
-
-                            if (modulesWithDependencies.Any())
-                            {
-                                var options = new ModuleBackgroundJobOptions
-                                {
-                                    Action = ModuleAction.Install,
-                                    Modules = modulesWithDependencies
-                                };
-                                //reset finished date
-                                notification.Finished = null;
-
-                                // can't use Hangfire.BackgroundJob.Enqueue(...), because Hangfire tables might be missing in new DB
-                                new Thread(() =>
-                                {
-                                    Thread.CurrentThread.IsBackground = true;
-                                    ModuleBackgroundJob(options, notification);
-                                }).Start();
+                                InstallModulesFromBundles(moduleBundles, notification);
                             }
                         }
                     }
                 }
             }
             return Ok(notification);
+        }
+
+        private void InstallModulesFromBundles(string[] moduleBundles, ModuleAutoInstallPushNotification notification)
+        {
+            var modules = new List<ManifestModuleInfo>();
+            var moduleVersionGroups = _externalModuleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
+                .Where(x => x.Groups.Intersect(moduleBundles, StringComparer.OrdinalIgnoreCase).Any())
+                .GroupBy(x => x.Id);
+
+            //Need install only latest versions
+            foreach (var moduleVersionGroup in moduleVersionGroups)
+            {
+                var alreadyInstalledModule = _externalModuleCatalog.Modules.OfType<ManifestModuleInfo>().FirstOrDefault(x => x.IsInstalled && x.Id.EqualsInvariant(moduleVersionGroup.Key));
+                //skip already installed modules
+                if (alreadyInstalledModule == null)
+                {
+                    var latestVersion = moduleVersionGroup.OrderBy(x => x.Version).LastOrDefault();
+                    if (latestVersion != null)
+                    {
+                        modules.Add(latestVersion);
+                    }
+                }
+            }
+
+            var modulesWithDependencies = _externalModuleCatalog.CompleteListWithDependencies(modules)
+                .OfType<ManifestModuleInfo>()
+                .Where(x => !x.IsInstalled)
+                .Select(x => new ModuleDescriptor(x))
+                .ToArray();
+
+            if (modulesWithDependencies.Any())
+            {
+                var options = new ModuleBackgroundJobOptions
+                {
+                    Action = ModuleAction.Install,
+                    Modules = modulesWithDependencies
+                };
+                //reset finished date
+                notification.Finished = null;
+
+                // can't use Hangfire.BackgroundJob.Enqueue(...), because Hangfire tables might be missing in new DB
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    ModuleBackgroundJob(options, notification);
+                }).Start();
+            }
         }
 
         /// <summary>

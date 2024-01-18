@@ -1,12 +1,12 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 COPY wait-for-it.sh /wait-for-it.sh
 RUN apt-get update && apt-get install -y dos2unix && dos2unix /wait-for-it.sh && chmod +x /wait-for-it.sh
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS build
 WORKDIR /src
 COPY ["src/VirtoCommerce.Platform.Web/VirtoCommerce.Platform.Web.csproj", "src/VirtoCommerce.Platform.Web/"]
 COPY ["src/VirtoCommerce.Platform.Security/VirtoCommerce.Platform.Security.csproj", "src/VirtoCommerce.Platform.Security/"]
@@ -28,4 +28,6 @@ RUN dotnet publish "VirtoCommerce.Platform.Web.csproj" -c Release -o /app/publis
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+EXPOSE 80
+ENV ASPNETCORE_HTTP_PORTS=80
 ENTRYPOINT ["dotnet", "VirtoCommerce.Platform.Web.dll"]
