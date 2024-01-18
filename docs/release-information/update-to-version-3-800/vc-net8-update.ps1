@@ -28,6 +28,7 @@ $predefinedVersions =  @{
 	"Microsoft.EntityFrameworkCore" = "8.0.0"
 	"Microsoft.EntityFrameworkCore.Design" = "8.0.0"
 	"Microsoft.EntityFrameworkCore.InMemory" = "8.0.0"
+ 	"Microsoft.EntityFrameworkCore.Relational" = "8.0.0"
 	"Microsoft.EntityFrameworkCore.SqlServer" = "8.0.0"
 	"Microsoft.EntityFrameworkCore.Tools" = "8.0.0"
 	"Microsoft.Extensions.Configuration.UserSecrets" = "8.0.0"
