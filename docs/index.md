@@ -1,6 +1,6 @@
 # Overview
 
-Virto Commerce is an open-source Virto Commerce B2B Innovation Platform.
+Virto Commerce is an Open-Source B2B Innovation Platform.
 
 Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplaces and derived SaaS commerce platforms.
 
@@ -14,7 +14,7 @@ Virto Commerce architecture was designed on principles: Microservices, API-first
     Importantly, no code refactoring or alterations to the API and internal structure have been made.
     We published stable 7 release on NET 6 and stable 8 on NET8 at same time.
 
-    [Continue reading ...](https://docs.virtocommerce.org/release-information/update-to-version-3-800/update-platform-and-modules-to-3-800.md)
+    [Continue reading ...](https://docs.virtocommerce.org/release-information/update-to-version-3-800/update-platform-and-modules-to-3-800/)
 
 
 !!! done "January"
