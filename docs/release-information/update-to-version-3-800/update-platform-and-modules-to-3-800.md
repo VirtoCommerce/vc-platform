@@ -68,12 +68,12 @@ Download and execute the [vc-net8-update.ps1 Power Shell script](vc-net8-update.
 !!! info "How to enable execution of PowerShell scripts"
     Set powershell script as trusted if required, by running this power shell command:
     ```ps1
-      Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass command
+      Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
     ```
   
 
 ```ps1
-vc-net8-update.ps1
+./vc-net8-update.ps1
 ```
 
 ![step1 run ps1 script](../../media/updatenet8-step1-run-ps1-script.png)
