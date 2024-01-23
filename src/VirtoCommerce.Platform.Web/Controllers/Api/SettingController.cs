@@ -59,7 +59,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [Route("{name}")]
-        [Authorize(PlatformConstants.Security.Permissions.SettingAccess)]
+        [Authorize(PlatformConstants.Security.Permissions.SettingQuery)]
         public async Task<ActionResult<ObjectSettingEntry>> GetGlobalSettingAsync(string name)
         {
             var result = await _settingsManager.GetObjectSettingAsync(name);
