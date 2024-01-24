@@ -1,4 +1,4 @@
-# v3.200.36
+# v3.800.0
 name: Publish nuget
 
 on:
@@ -12,12 +12,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.36
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.0
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.36
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.0
     with:
       uploadPackage: 'true'
       uploadDocker: 'false'
@@ -28,7 +28,7 @@ jobs:
   publish-nuget:
     needs:
       [build, test]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.200.36
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.0
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       forceGithub: false
