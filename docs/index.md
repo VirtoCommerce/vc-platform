@@ -1,12 +1,22 @@
 # Overview
 
-Virto Commerce is an open-source platform for extensible e-commerce applications.
+Virto Commerce is an Open-Source B2B Innovation Platform.
 
 Complex digital commerce solutions for B2B, B2C or B2B2C businesses, marketplaces and derived SaaS commerce platforms.
 
 Virto Commerce architecture was designed on principles: Microservices, API-first, Cloud-native, Headless, and Advanced Extensibility.
 
 ## News Digests
+!!! done "Virto Commerce .NET8 Released"
+    Virto Commerce on NET 8 (3.800+) introduces a significant technical update by transitioning the platform to .NET8.
+    This update focuses on enhancing performance and stability while maintaining backward compatibility.
+    It involves updating the Target Framework to .NET 8 and integrating the latest LTS releases of third-party libraries.
+    Importantly, no code refactoring or alterations to the API and internal structure have been made.
+    We published stable 7 release on NET 6 and stable 8 on NET8 at same time.
+
+    [Continue reading ...](https://docs.virtocommerce.org/release-information/update-to-version-3-800/update-platform-and-modules-to-3-800/)
+
+
 !!! done "January"
     * Redesigned Storefront UI
     * Updated xApi and other modules
@@ -126,10 +136,12 @@ The module can use a lot of out-of-the-box additional services from Virto Commer
 1. **Log/Monitoring** - The module has native integration with Azure Application Insights service, as Native monitoring tool for .NET Core applications.
 
 ## Scalability
+
 In the cloud, the Virto Commerce Applications can be easily scaled to support peak demand and long-term business growth.
 With auto-scale, you no longer have to worry about scaling services manually.
 
 ## Extensibility
+
 Unlimited extensibility is an indisputable advantage of Virto Commerce. This means end-user solution developers can adapt or replace Virto Commerce modules with their own functionality. This adaptation can be done in an elegant and simple way without workarounds.
 
 Three types of vendor-made extensions guarantee “seamless delivery”.  Virto Commerce guarantees that these ways of extensibility are sufficient to build an ecommerce solution of any complexity on top of it.  
@@ -157,8 +169,8 @@ In our work, we always try to use advanced technologies. Our decision to choose 
 
 Virto Commerce uses the following stack of technologies:
 
-* .NET 6
-* ASP.NET Core 6
+* .NET 8
+* ASP.NET Core 8
 * Entity Framework Core as primary ORM
 * ASP.NET Core Identity for authentication and authorization
 * OpenIddict for OAuth authorization
@@ -169,9 +181,12 @@ Virto Commerce uses the following stack of technologies:
 and more
 
 ## Supported Databases
+
 Virto Commerce is built with DB agnostic architecture and supports the following databases:
 
 * Microsoft SQL Server 2019 or above
 * MySql Server 8 or above
 * PostgreSQL 12 or above
+* Redis 7
+* Node.JS 20.11.0 LTS
 
