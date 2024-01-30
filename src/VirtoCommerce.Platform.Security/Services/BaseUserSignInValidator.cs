@@ -13,33 +13,19 @@ namespace VirtoCommerce.Platform.Security.Services
 
         public Task<IList<TokenLoginResponse>> ValidateUserAsync(ApplicationUser user, SignInResult signInResult, IDictionary<string, object> context)
         {
-            var detailedErrors = false;
-            if (context.TryGetValue("detailedErrors", out var detailedErrorsValue))
-            {
-                detailedErrors = (bool)detailedErrorsValue;
-            }
-
             var result = new List<TokenLoginResponse>();
 
             if (!signInResult.Succeeded)
             {
-                if (detailedErrors)
-                {
-                    if (signInResult.IsLockedOut)
-                    {
-                        if (user.LockoutEnd != DateTime.MaxValue.ToUniversalTime())
-                        {
-                            result.Add(SecurityErrorDescriber.UserIsTemporaryLockedOut());
-                        }
-                        else
-                        {
-                            result.Add(SecurityErrorDescriber.UserIsLockedOut());
-                        }
-                    }
-                }
-                else
+                var detailedErrors = GetDetailedErrors(context);
+                if (!detailedErrors)
                 {
                     result.Add(SecurityErrorDescriber.LoginFailed());
+                }
+                else if (signInResult.IsLockedOut)
+                {
+                    var permanentLockOut = user.LockoutEnd == DateTime.MaxValue.ToUniversalTime();
+                    result.Add(permanentLockOut ? SecurityErrorDescriber.UserIsLockedOut() : SecurityErrorDescriber.UserIsTemporaryLockedOut());
                 }
             }
             else
@@ -51,6 +37,16 @@ namespace VirtoCommerce.Platform.Security.Services
             }
 
             return Task.FromResult<IList<TokenLoginResponse>>(result);
+        }
+
+        private static bool GetDetailedErrors(IDictionary<string, object> context)
+        {
+            var detailedErrors = false;
+            if (context.TryGetValue("detailedErrors", out var detailedErrorsValue))
+            {
+                detailedErrors = (bool)detailedErrorsValue;
+            }
+            return detailedErrors;
         }
     }
 }
