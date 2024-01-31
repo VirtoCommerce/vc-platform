@@ -1,4 +1,4 @@
-# v3.200.30
+# v3.200.35
 name: Platform CI
 
 on:
@@ -60,6 +60,12 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
+
+    - name: Set up Java 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
 
     - name: Set variables
       if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -180,6 +186,7 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/publish-blob-release@master
       with:
         blobSAS: ${{ secrets.BLOB_TOKEN }}
+        blobUrl: ${{ vars.BLOB_URL }}
 
     - name: Set artifactUrl value
       id: artifactUrl
@@ -192,6 +199,7 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/publish-jira-link@master
       with:
         branchName: ${{ github.head_ref }}
+        repoOrg: ${{ github.repository_owner }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -200,12 +208,14 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
       with:
         artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
+        repoOrg: ${{ github.repository_owner }}
         downloadComment: 'Artifact URL:'
 
     - name: Publish Github Release
       if: ${{ github.ref == 'refs/heads/master' }}
       with:
         changelog: ${{ steps.changelog.outputs.changelog }}
+        organization: ${{ github.repository_owner }}
       uses: VirtoCommerce/vc-github-actions/publish-github-release@master
 
     - name: Create deployment matrix
@@ -249,7 +259,7 @@ jobs:
     - name: Push Build Info to Jira
       if: ${{ env.CLOUD_INSTANCE_BASE_URL != 0 && env.CLIENT_ID != 0 && env.CLIENT_SECRET != 0 && steps.jira_keys.outputs.jira-keys != '' && always() }}
       id: push_build_info_to_jira
-      uses: HighwayThree/jira-upload-build-info@master
+      uses: VirtoCommerce/jira-upload-build-info@master
       with:
         cloud-instance-base-url: '${{ secrets.CLOUD_INSTANCE_BASE_URL }}'
         client-id: '${{ secrets.CLIENT_ID }}'
@@ -275,7 +285,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch')}}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.200.30
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.200.35
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -294,7 +304,7 @@ jobs:
         (github.ref == 'refs/heads/dev')) && 
         github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.30
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.200.35
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
