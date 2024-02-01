@@ -100,10 +100,11 @@ namespace Mvc.Server
                 // Validate the username/password parameters and ensure the account is not locked out.
                 var result = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
 
+                var storeId = openIdConnectRequest.GetParameter("storeId");
                 var context = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
                 {
                     { "detailedErrors", _passwordLoginOptions.DetailedErrors },
-                    { "storeId", openIdConnectRequest.Scope },
+                    { "storeId", storeId?.Value },
                 };
 
                 foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name))
@@ -150,7 +151,7 @@ namespace Mvc.Server
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
                 var ticket = await CreateTicketAsync(openIdConnectRequest, user, info.Properties);
-                return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+                return SignIn(ticket.Principal, ticket.AuthenticationScheme);
             }
             else if (openIdConnectRequest.IsClientCredentialsGrantType())
             {
