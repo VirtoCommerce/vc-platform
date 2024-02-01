@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
@@ -151,7 +152,7 @@ namespace VirtoCommerce.Platform.Modules
                                                             .ToArray();
                     if (installedIncompatibilities.Any())
                     {
-                        module.Errors.Add($"{ module } is incompatible with installed { string.Join(", ", installedIncompatibilities.Select(x => x.ToString())) }. You should uninstall these modules first.");
+                        module.Errors.Add($"{module} is incompatible with installed {string.Join(", ", installedIncompatibilities.Select(x => x.ToString()))}. You should uninstall these modules first.");
                     }
                 }
 
@@ -284,7 +285,11 @@ namespace VirtoCommerce.Platform.Modules
             }
 
             var versionsAreSameButLaterDate = (sourceVersion == targetVersion && targetFileInfo.Exists && sourceFileInfo.Exists && targetFileInfo.LastWriteTimeUtc < sourceFileInfo.LastWriteTimeUtc);
-            if (!targetFileInfo.Exists || sourceVersion > targetVersion || versionsAreSameButLaterDate)
+
+            var correspondBitwise = !targetFileInfo.Exists || !sourceVersion.Equals(targetVersion)
+                                    || ReplaceBitwiseReason(sourceFilePath, targetFilePath);
+
+            if (!targetFileInfo.Exists || sourceVersion > targetVersion || versionsAreSameButLaterDate || correspondBitwise)
             {
                 var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
                 Directory.CreateDirectory(targetDirectoryPath);
@@ -307,6 +312,58 @@ namespace VirtoCommerce.Platform.Modules
                     }
                 }
             }
+        }
+
+        private bool ReplaceBitwiseReason(string sourceFilePath, string targetFilePath)
+        {
+            if (IsManagedLibrary(targetFilePath))
+            {
+                return false;
+            }
+
+            var currentIs64 = Environment.Is64BitProcess;
+            var targetIs64 = !Is32Bitwise(targetFilePath);
+
+            if (currentIs64 == targetIs64)
+            {
+                return false;
+            }
+
+            var sourceIs64 = !Is32Bitwise(sourceFilePath);
+            if (currentIs64 == sourceIs64)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool IsManagedLibrary(string pathToDll)
+        {
+            try
+            {
+                AssemblyName.GetAssemblyName(pathToDll);
+                return true;
+            }
+            catch
+            {
+                // file is unmanaged
+            }
+
+            return false;
+        }
+
+        private bool Is32Bitwise(string dllPath)
+        {
+            using var fs = new FileStream(dllPath, FileMode.Open, FileAccess.Read);
+            using var br = new BinaryReader(fs);
+            fs.Seek(0x3c, SeekOrigin.Begin);
+            var peOffset = br.ReadInt32();
+
+            fs.Seek(peOffset, SeekOrigin.Begin);
+            var peHead = br.ReadUInt32();
+
+            return peHead == 0x00004550 && br.ReadUInt16() == 0x14c;
         }
 
         private bool IsAssemblyRelatedFile(string path)
