@@ -317,7 +317,7 @@ namespace VirtoCommerce.Platform.Modules
 
         private bool ReplaceBitwiseReason(string sourceFilePath, string targetFilePath)
         {
-            if (IsManagedLibrary(targetFilePath))
+            if (IsManagedLibrary(targetFilePath) || !sourceFilePath.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase))
             {
                 return false;
             }
