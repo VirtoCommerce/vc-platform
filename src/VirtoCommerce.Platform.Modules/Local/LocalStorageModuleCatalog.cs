@@ -286,10 +286,11 @@ namespace VirtoCommerce.Platform.Modules
 
             var versionsAreSameButLaterDate = (sourceVersion == targetVersion && targetFileInfo.Exists && sourceFileInfo.Exists && targetFileInfo.LastWriteTimeUtc < sourceFileInfo.LastWriteTimeUtc);
 
-            var correspondBitwise = !targetFileInfo.Exists || !sourceVersion.Equals(targetVersion)
-                                    || ReplaceBitwiseReason(sourceFilePath, targetFilePath);
+            var replaceBitwiseReason = targetFileInfo.Exists
+                                    && sourceVersion.Equals(targetVersion)
+                                    && ReplaceBitwiseReason(sourceFilePath, targetFilePath);
 
-            if (!targetFileInfo.Exists || sourceVersion > targetVersion || versionsAreSameButLaterDate || correspondBitwise)
+            if (!targetFileInfo.Exists || sourceVersion > targetVersion || versionsAreSameButLaterDate || replaceBitwiseReason)
             {
                 var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
                 Directory.CreateDirectory(targetDirectoryPath);
@@ -355,15 +356,22 @@ namespace VirtoCommerce.Platform.Modules
 
         private bool Is32Bitwise(string dllPath)
         {
-            using var fs = new FileStream(dllPath, FileMode.Open, FileAccess.Read);
-            using var br = new BinaryReader(fs);
-            fs.Seek(0x3c, SeekOrigin.Begin);
-            var peOffset = br.ReadInt32();
+            try
+            {
+                using var fs = new FileStream(dllPath, FileMode.Open, FileAccess.Read);
+                using var br = new BinaryReader(fs);
+                fs.Seek(0x3c, SeekOrigin.Begin);
+                var peOffset = br.ReadInt32();
 
-            fs.Seek(peOffset, SeekOrigin.Begin);
-            var peHead = br.ReadUInt32();
+                fs.Seek(peOffset, SeekOrigin.Begin);
+                var peHead = br.ReadUInt32();
 
-            return peHead == 0x00004550 && br.ReadUInt16() == 0x14c;
+                return peHead == 0x00004550 && br.ReadUInt16() == 0x14c;
+            }
+            catch (EndOfStreamException exception)
+            {
+                throw new PlatformException($"Failed to read file '{dllPath}'.", exception);
+            }
         }
 
         private bool IsAssemblyRelatedFile(string path)
