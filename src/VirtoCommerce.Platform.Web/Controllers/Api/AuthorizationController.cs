@@ -18,7 +18,6 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security;
-using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Model.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -32,7 +31,6 @@ namespace Mvc.Server
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IEnumerable<IUserSignInValidator> _userSignInValidators;
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
@@ -42,8 +40,7 @@ namespace Mvc.Server
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
-            IEventPublisher eventPublisher,
-            IEnumerable<IUserSignInValidator> userSignInValidators)
+            IEventPublisher eventPublisher)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -51,7 +48,6 @@ namespace Mvc.Server
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
-            _userSignInValidators = userSignInValidators;
         }
 
         #region Password, authorization code and refresh token flows
@@ -100,21 +96,9 @@ namespace Mvc.Server
                 // Validate the username/password parameters and ensure the account is not locked out.
                 var result = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
 
-                var storeId = openIdConnectRequest.GetParameter("storeId");
-                var context = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+                if (!result.Succeeded)
                 {
-                    { "detailedErrors", _passwordLoginOptions.DetailedErrors },
-                    { "storeId", storeId?.Value },
-                };
-
-                foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name))
-                {
-                    var validationErrors = await loginValidation.ValidateUserAsync(user, result, context);
-                    var error = validationErrors.FirstOrDefault();
-                    if (error != null)
-                    {
-                        return BadRequest(error);
-                    }
+                    return BadRequest(SecurityErrorDescriber.LoginFailed());
                 }
 
                 await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
