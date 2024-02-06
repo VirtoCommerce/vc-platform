@@ -105,12 +105,6 @@ namespace Mvc.Server
                     { "detailedErrors", _passwordLoginOptions.DetailedErrors },
                 };
 
-                var storeId = openIdConnectRequest.GetParameter("storeId");
-                if (storeId != null)
-                {
-                    context.Add("storeId", storeId.Value);
-                }
-
                 foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList())
                 {
                     var validationErrors = await loginValidation.ValidateUserAsync(user, result, context);
