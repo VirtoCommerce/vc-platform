@@ -18,6 +18,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Model.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -31,6 +32,7 @@ namespace Mvc.Server
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
+        private readonly List<IUserSignInValidator> _userSignInValidators;
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
@@ -40,7 +42,8 @@ namespace Mvc.Server
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IEnumerable<IUserSignInValidator> userSignInValidators)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -48,6 +51,7 @@ namespace Mvc.Server
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
+            _userSignInValidators = userSignInValidators.ToList();
         }
 
         #region Password, authorization code and refresh token flows
@@ -99,6 +103,16 @@ namespace Mvc.Server
                 if (!result.Succeeded)
                 {
                     return BadRequest(SecurityErrorDescriber.LoginFailed());
+                }
+
+                foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList())
+                {
+                    var validationErrors = await loginValidation.ValidateUserAsync(user, result, new Dictionary<string, object>());
+                    var error = validationErrors.FirstOrDefault();
+                    if (error != null)
+                    {
+                        return BadRequest(error);
+                    }
                 }
 
                 await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
