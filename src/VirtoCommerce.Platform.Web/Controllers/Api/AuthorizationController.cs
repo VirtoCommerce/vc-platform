@@ -33,7 +33,7 @@ namespace Mvc.Server
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
-        private readonly List<IUserSignInValidator> _userSignInValidators;
+        private readonly IEnumerable<IUserSignInValidator> _userSignInValidators;
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
@@ -52,7 +52,7 @@ namespace Mvc.Server
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
-            _userSignInValidators = userSignInValidators.ToList();
+            _userSignInValidators = userSignInValidators;
         }
 
         #region Password, authorization code and refresh token flows
@@ -109,7 +109,13 @@ namespace Mvc.Server
                     IsLockedOut = result.IsLockedOut,
                 };
 
-                foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList())
+                var storeIdParameter = openIdConnectRequest.GetParameter("storeId");
+                if (storeIdParameter != null && storeIdParameter.HasValue)
+                {
+                    context.StoreId = (string)storeIdParameter.GetValueOrDefault();
+                }
+
+                foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name))
                 {
                     var validationErrors = await loginValidation.ValidateUserAsync(context);
                     var error = validationErrors.FirstOrDefault();
