@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Security.Model;
@@ -15,23 +14,32 @@ namespace VirtoCommerce.Platform.Security.Services
 
             if (!context.IsSucceeded)
             {
-                if (!context.DetailedErrors)
-                {
-                    result.Add(SecurityErrorDescriber.LoginFailed());
-                }
-                else if (context.IsLockedOut)
-                {
-                    var permanentLockOut = context.User.LockoutEnd == DateTime.MaxValue.ToUniversalTime();
-                    result.Add(permanentLockOut ? SecurityErrorDescriber.UserIsLockedOut() : SecurityErrorDescriber.UserIsTemporaryLockedOut());
-                }
+                result.Add(SecurityErrorDescriber.LoginFailed());
             }
-            else
+            else if (context.User.PasswordExpired)
             {
-                if (context.User.PasswordExpired)
-                {
-                    result.Add(SecurityErrorDescriber.PasswordExpired());
-                }
+                result.Add(SecurityErrorDescriber.PasswordExpired());
             }
+
+            //if (!context.IsSucceeded)
+            //{
+            //    if (!context.DetailedErrors)
+            //    {
+            //        result.Add(SecurityErrorDescriber.LoginFailed());
+            //    }
+            //    else if (context.IsLockedOut)
+            //    {
+            //        var permanentLockOut = context.User.LockoutEnd == DateTime.MaxValue.ToUniversalTime();
+            //        result.Add(permanentLockOut ? SecurityErrorDescriber.UserIsLockedOut() : SecurityErrorDescriber.UserIsTemporaryLockedOut());
+            //    }
+            //}
+            //else
+            //{
+            //    if (context.User.PasswordExpired)
+            //    {
+            //        result.Add(SecurityErrorDescriber.PasswordExpired());
+            //    }
+            //}
 
             return Task.FromResult<IList<TokenLoginResponse>>(result);
         }
