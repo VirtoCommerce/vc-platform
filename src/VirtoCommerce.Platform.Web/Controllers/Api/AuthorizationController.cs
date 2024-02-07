@@ -18,6 +18,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Model.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Security.Model;
@@ -14,29 +15,23 @@ namespace VirtoCommerce.Platform.Security.Services
 
             if (!context.IsSucceeded)
             {
-                result.Add(SecurityErrorDescriber.LoginFailed());
+                if (!context.DetailedErrors)
+                {
+                    result.Add(SecurityErrorDescriber.LoginFailed());
+                }
+                else if (context.IsLockedOut)
+                {
+                    var permanentLockOut = context.User.LockoutEnd == DateTime.MaxValue.ToUniversalTime();
+                    result.Add(permanentLockOut ? SecurityErrorDescriber.UserIsLockedOut() : SecurityErrorDescriber.UserIsTemporaryLockedOut());
+                }
             }
-
-            //if (!signInResult.Succeeded)
-            //{
-            //    var detailedErrors = GetDetailedErrors(context);
-            //    if (!detailedErrors)
-            //    {
-            //        result.Add(SecurityErrorDescriber.LoginFailed());
-            //    }
-            //    else if (signInResult.IsLockedOut)
-            //    {
-            //        var permanentLockOut = user.LockoutEnd == DateTime.MaxValue.ToUniversalTime();
-            //        result.Add(permanentLockOut ? SecurityErrorDescriber.UserIsLockedOut() : SecurityErrorDescriber.UserIsTemporaryLockedOut());
-            //    }
-            //}
-            //else
-            //{
-            //    if (user.PasswordExpired)
-            //    {
-            //        result.Add(SecurityErrorDescriber.PasswordExpired());
-            //    }
-            //}
+            else
+            {
+                if (context.User.PasswordExpired)
+                {
+                    result.Add(SecurityErrorDescriber.PasswordExpired());
+                }
+            }
 
             return Task.FromResult<IList<TokenLoginResponse>>(result);
         }
