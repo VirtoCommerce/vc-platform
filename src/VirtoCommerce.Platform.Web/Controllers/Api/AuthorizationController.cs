@@ -100,11 +100,6 @@ namespace Mvc.Server
                 // Validate the username/password parameters and ensure the account is not locked out.
                 var result = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
 
-                if (!result.Succeeded)
-                {
-                    return BadRequest(SecurityErrorDescriber.LoginFailed());
-                }
-
                 var context = new SignInValidatorContext
                 {
                     User = user,
