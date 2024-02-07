@@ -123,7 +123,7 @@ function Update-Latest-Packages ($projectFile) {
 		    try {
 			    $latestVersion = (Find-Package $packageName -Source https://www.nuget.org/api/v2).Version
 			
-			    if ($packageName.StartsWith("VirtoCommerce") -and ($versionPrefix.Contains("alpha") -or [System.Version]$versionPrefix -gt [System.Version]$latestVersion)) {
+			    if ($packageName.StartsWith("VirtoCommerce") -or ($versionPrefix.Contains("alpha") -or [System.Version]$versionPrefix -gt [System.Version]$latestVersion)) {
 				    $latestVersion = $versionPrefix
 			    }
 			    $predefinedVersions["$packageName"] = $latestVersion
