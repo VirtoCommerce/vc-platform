@@ -103,7 +103,7 @@ namespace Mvc.Server
 
                 var context = new SignInValidatorContext
                 {
-                    User = user,
+                    User = user.Clone() as ApplicationUser,
                     DetailedErrors = _passwordLoginOptions.DetailedErrors,
                     IsSucceeded = result.Succeeded,
                     IsLockedOut = result.IsLockedOut,
