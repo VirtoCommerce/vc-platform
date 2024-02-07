@@ -105,20 +105,17 @@ namespace Mvc.Server
                     return BadRequest(SecurityErrorDescriber.LoginFailed());
                 }
 
-                var context = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+                var context = new SignInValidatorContext
                 {
-                    { "detailedErrors", _passwordLoginOptions.DetailedErrors },
+                    User = user,
+                    DetailedErrors = _passwordLoginOptions.DetailedErrors,
+                    IsSucceeded = result.Succeeded,
+                    IsLockedOut = result.IsLockedOut,
                 };
-
-                var storeId = openIdConnectRequest.GetParameter("storeId");
-                if (storeId != null)
-                {
-                    context.Add("storeId", storeId.Value);
-                }
 
                 foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList())
                 {
-                    var validationErrors = await loginValidation.ValidateUserAsync(user, context);
+                    var validationErrors = await loginValidation.ValidateUserAsync(context);
                     var error = validationErrors.FirstOrDefault();
                     if (error != null)
                     {

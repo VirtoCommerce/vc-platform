@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Security.Model;
 
 namespace VirtoCommerce.Platform.Security.Services
@@ -9,9 +8,14 @@ namespace VirtoCommerce.Platform.Security.Services
     {
         public int Priority { get; set; }
 
-        public Task<IList<TokenLoginResponse>> ValidateUserAsync(ApplicationUser user, IDictionary<string, object> context)
+        public Task<IList<TokenLoginResponse>> ValidateUserAsync(SignInValidatorContext context)
         {
             var result = new List<TokenLoginResponse>();
+
+            if (!context.IsSucceeded)
+            {
+                result.Add(SecurityErrorDescriber.LoginFailed());
+            }
 
             //if (!signInResult.Succeeded)
             //{
@@ -35,16 +39,6 @@ namespace VirtoCommerce.Platform.Security.Services
             //}
 
             return Task.FromResult<IList<TokenLoginResponse>>(result);
-        }
-
-        private static bool GetDetailedErrors(IDictionary<string, object> context)
-        {
-            var detailedErrors = false;
-            if (context.TryGetValue("detailedErrors", out var detailedErrorsValue))
-            {
-                detailedErrors = (bool)detailedErrorsValue;
-            }
-            return detailedErrors;
         }
     }
 }
