@@ -15,15 +15,15 @@ namespace VirtoCommerce.Platform.Security.Services
 
             if (!context.IsSucceeded)
             {
-                if (!context.DetailedErrors)
-                {
-                    result.Add(SecurityErrorDescriber.LoginFailed());
-                }
-                else if (context.IsLockedOut)
+                var error = SecurityErrorDescriber.LoginFailed();
+
+                if (context.DetailedErrors && context.IsLockedOut)
                 {
                     var permanentLockOut = context.User.LockoutEnd == DateTime.MaxValue.ToUniversalTime();
-                    result.Add(permanentLockOut ? SecurityErrorDescriber.UserIsLockedOut() : SecurityErrorDescriber.UserIsTemporaryLockedOut());
+                    error = permanentLockOut ? SecurityErrorDescriber.UserIsLockedOut() : SecurityErrorDescriber.UserIsTemporaryLockedOut();
                 }
+
+                result.Add(error);
             }
 
             return Task.FromResult<IList<TokenLoginResponse>>(result);
