@@ -1,4 +1,4 @@
-# v3.800.0
+# v3.800.1
 name: Platform CI
 
 on:
@@ -177,7 +177,7 @@ jobs:
         installSampleData: 'false'
 
     - name: Publish Nuget
-      if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'}}
+      if: ${{ github.ref == 'refs/heads/master'}}
       uses: VirtoCommerce/vc-github-actions/publish-nuget@master
 
     - name: Publish to Blob
