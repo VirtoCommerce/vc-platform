@@ -1,4 +1,5 @@
-# v3.800.1
+# v3.800.2
+# https://virtocommerce.atlassian.net/browse/VCST-349
 name: Platform CI
 
 on:
@@ -56,13 +57,13 @@ jobs:
 
     steps:
 
-    - name: Set up Node 18
-      uses: actions/setup-node@v3
+    - name: Set up Node 20
+      uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
 
     - name: Set up Java 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
@@ -285,7 +286,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch')}}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.0
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.2
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -304,7 +305,7 @@ jobs:
         (github.ref == 'refs/heads/dev')) && 
         github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.0
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.2
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
