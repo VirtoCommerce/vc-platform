@@ -84,7 +84,7 @@ jobs:
       run: |
         echo "BUILD_DOCKER=true" >> $GITHUB_ENV
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
