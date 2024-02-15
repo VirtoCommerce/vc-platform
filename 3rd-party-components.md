@@ -36,7 +36,18 @@
  uikit | A lightweight and modular front-end framework for developing fast and powerful web interfaces | MIT | http://getuikit.com | | bower 
  marked |	A markdown parser built for speed |	MIT | https://github.com/chjj/marked | 	Christopher Jeffrey	| bower 
  Hangfire | background processing in .NET and .NET | [LGPL v3 License](https://www.hangfire.io/licenses.html) | https://www.hangfire.io | Sergey Odinokov | NuGet 
- Nlog | NLog is a flexible and free logging platform | BSD | http://nlog-project.org/ | | NuGet 
+ Serilog | diagnostic logging library for .NET applications |  Apache-2.0 license | https://github.com/serilog/serilog | | NuGet 
  Swashbuckle |  Seamlessly adds a swagger to WebApi projects | BSD 3-Clause | https://github.com/domaindrivendev/Swashbuckle | Richard Morris | NuGet 
  sendgrid-csharp | The Official SendGrid Led, Community Driven C# | MIT| https://github.com/sendgrid | | NuGet 
- DotLiquid | The templating system ported to the .net framework | Apache  | http://dotliquidmarkup.org/ | | NuGet 
+ Scriban | The templating system ported to the .net framework | BSD-2-Clause | https://github.com/scriban/scriban | | NuGet 
+ YamlDotNet | YamlDotNet is a YAML library for netstandard and other .NET runtimes. | MIT  | https://github.com/aaubry/YamlDotNet | | NuGet 
+ Twilio | Twilio REST API and TwiML Libraries for .NET | MIT  | https://github.com/twilio/twilio-csharp | | NuGet 
+ SixLabors.ImageSharp | cross-platform, 2D graphics API | https://github.com/SixLabors/ImageSharp?tab=License-1-ov-file  | https://github.com/SixLabors/ImageSharp | | NuGet 
+ csvHelper | reading and writing CSV files | MS-PL and Apache 2.0  | https://github.com/JoshClose/CsvHelper | | NuGet 
+ DinkToPdf | .NET wrapper for wkhtmltopdf library for convert HTML pages to PDF. | MIT  | https://github.com/rdvojmoc/DinkToPdf | | NuGet 
+ Google APIs | Google APIs client Library for .NET |  Apache-2.0 license  | https://github.com/googleapis/google-api-dotnet-client | | NuGet 
+ AutoMapper |  Library built to solve a deceptively complex problem |  MIT  | https://github.com/AutoMapper/AutoMapper | | NuGet 
+ Elasticsearch .NET Client | the official .NET client for Elasticsearch |   Apache-2.0 license  | https://github.com/elastic/elasticsearch-net | | NuGet
+ GraphQL for .NET | The implementation of Facebook's GraphQL in .NET. |   MIT  | https://github.com/graphql-dotnet/graphql-dotnet | | NuGet 
+ 
+ 
