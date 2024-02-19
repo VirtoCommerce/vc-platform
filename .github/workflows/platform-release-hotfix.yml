@@ -1,4 +1,5 @@
-# v3.800.0
+# v3.800.2
+# https://virtocommerce.atlassian.net/browse/VCST-349
 name: Release hotfix
 
 on:
@@ -12,12 +13,12 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.0
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.2
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.0
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.2
     with:
       uploadPackage: 'true'
       uploadDocker: 'true'
@@ -35,7 +36,7 @@ jobs:
       changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
@@ -46,7 +47,7 @@ jobs:
   publish-docker:
     needs:
       [build, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.800.0
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.800.2
     with:
       fullKey: ${{ needs.build.outputs.dockerFullKey }}
       shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
@@ -60,7 +61,7 @@ jobs:
   publish-github-release:
     needs:
       [build, test, get-metadata]
-    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.0
+    uses: VirtoCommerce/.github/.github/workflows/publish-github.yml@v3.800.2
     with:
       fullKey: ${{ needs.build.outputs.packageFullKey }}
       changeLog: '${{ needs.get-metadata.outputs.changeLog }}'
@@ -76,7 +77,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install VirtoCommerce.GlobalTool
       uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
