@@ -61,7 +61,7 @@ namespace Mvc.Server
 
         [Authorize]
         [HttpPost("~/revoke/token")]
-        public async Task<ActionResult> InvalidateAllTokens(string userId)
+        public async Task<ActionResult> RevokeCurrentUserToken()
         {
             var tokenId = HttpContext.User.GetClaim("oi_tkn_id");
             var authId = HttpContext.User.GetClaim("oi_au_id");
