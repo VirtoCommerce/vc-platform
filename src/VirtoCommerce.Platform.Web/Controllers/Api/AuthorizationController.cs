@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,7 @@ namespace Mvc.Server
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
         private readonly IEnumerable<IUserSignInValidator> _userSignInValidators;
+        private readonly OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> _tokenManager;
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
@@ -44,7 +46,8 @@ namespace Mvc.Server
             UserManager<ApplicationUser> userManager,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
             IEventPublisher eventPublisher,
-            IEnumerable<IUserSignInValidator> userSignInValidators)
+            IEnumerable<IUserSignInValidator> userSignInValidators,
+            OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> tokenManager)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -53,6 +56,37 @@ namespace Mvc.Server
             _userManager = userManager;
             _eventPublisher = eventPublisher;
             _userSignInValidators = userSignInValidators;
+            _tokenManager = tokenManager;
+        }
+
+        [Authorize]
+        [HttpPost("~/revoke/token")]
+        public async Task<ActionResult> InvalidateAllTokens(string userId)
+        {
+            var tokenId = HttpContext.User.GetClaim("oi_tkn_id");
+            var authId = HttpContext.User.GetClaim("oi_au_id");
+
+            if (authId != null)
+            {
+                var tokens = _tokenManager.FindByAuthorizationIdAsync(authId);
+                await foreach (var token in tokens)
+                {
+                    await _tokenManager.TryRevokeAsync(token);
+                }
+            }
+            else if (tokenId != null)
+            {
+                var token = await _tokenManager.FindByIdAsync(tokenId);
+                if (token?.Authorization != null)
+                {
+                    foreach (var authorizationToken in token.Authorization.Tokens)
+                    {
+                        await _tokenManager.TryRevokeAsync(authorizationToken);
+                    }
+                }
+            }
+
+            return Ok();
         }
 
         #region Password, authorization code and refresh token flows
