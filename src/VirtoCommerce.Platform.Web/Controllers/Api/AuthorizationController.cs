@@ -210,11 +210,7 @@ namespace Mvc.Server
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
-            return BadRequest(new OpenIddictResponse
-            {
-                Error = Errors.UnsupportedGrantType,
-                ErrorDescription = "The specified grant type is not supported."
-            });
+            return BadRequest(SecurityErrorDescriber.UnsupportedGrantType());
         }
 
         #endregion

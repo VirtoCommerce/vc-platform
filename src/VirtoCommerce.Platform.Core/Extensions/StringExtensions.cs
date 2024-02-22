@@ -327,7 +327,7 @@ namespace VirtoCommerce.Platform.Core.Common
             return _emailRegex.IsMatch(input);
         }
 
-        public static string PascalToKebabCase(this string name)
+        public static string ToSnakeCase(this string name)
         {
             ArgumentNullException.ThrowIfNull(name);
 
