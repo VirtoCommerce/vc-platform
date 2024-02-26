@@ -1,3 +1,6 @@
+ 
+ # Platform & modules
+ 
  Component | Description                 | License | Homepage          | Author(s)| Package type 
  ----------|-----------------------------| --------|-------------------|----------|--------------
  Gulp      | The streaming build system  | MIT     | http://gulpjs.com | Fractal  | npm 
@@ -49,5 +52,37 @@
  AutoMapper |  Library built to solve a deceptively complex problem |  MIT  | https://github.com/AutoMapper/AutoMapper | | NuGet 
  Elasticsearch .NET Client | the official .NET client for Elasticsearch |   Apache-2.0 license  | https://github.com/elastic/elasticsearch-net | | NuGet
  GraphQL for .NET | The implementation of Facebook's GraphQL in .NET. |   MIT  | https://github.com/graphql-dotnet/graphql-dotnet | | NuGet 
+ Polly | .NET resilience and transient-fault-handling library | BSD-3-Clause | https://github.com/App-vNext/Polly | | Nuget
+ StackExchange.Redis |  redis client for .NET | MIT | https://stackexchange.github.io/StackExchange.Redis/ | | NuGet 
+ Newtonsoft.Json | high-performance JSON framework for .NET | MIT | https://www.newtonsoft.com/json | JamesNK James Newton-King | Nuget
  
  
+# Storefront
+
+ Component | Description                 | License | Homepage          | Author(s)| Package type 
+ ----------|-----------------------------| --------|-------------------|----------|--------------
+Scriban | The templating system ported to the .net framework | BSD-2-Clause | https://github.com/scriban/scriban | | NuGet  
+Polly | .NET resilience and transient-fault-handling library | BSD-3-Clause | https://github.com/App-vNext/Polly | | Nuget
+Swashbuckle |  Seamlessly adds a swagger to WebApi projects | BSD 3-Clause | https://github.com/domaindrivendev/Swashbuckle | Richard Morris | NuGet 
+StackExchange.Redis |  redis client for .NET | MIT | https://stackexchange.github.io/StackExchange.Redis/ | | NuGet 
+Newtonsoft.Json | high-performance JSON framework for .NET | MIT | https://www.newtonsoft.com/json | JamesNK James Newton-King | Nuget
+GraphQL for .NET | The implementation of Facebook's GraphQL in .NET. |   MIT  | https://github.com/graphql-dotnet/graphql-dotnet | | NuGet
+Nito.Async.EX | A helper library for async/await. | MIT | https://github.com/StephenCleary/AsyncEx | StephenCleary Stephen Cleary | NuGet
+ProxyKit | HTTP Reverse Proxies hosted in ASP.NET Core  | Apache-2.0 license | https://github.com/ProxyKit/ProxyKit | | NuGet
+
+
+ # vue-b2b-theme
+
+  Component | Description                 | License | Homepage          | Author(s)| Package type 
+ ----------|-----------------------------| --------|-------------------|----------|--------------
+vuejs | The Progressive JavaScript Framework | MIT | https://github.com/vuejs/core | | NPM  
+tailwindcss | A utility-first CSS framework for rapidly building custom user interfaces. | MIT | https://github.com/tailwindlabs/tailwindcss | | bundle  
+Apollo client GraphQL | A community building flexible open source tools for GraphQL. | MIT | https://github.com/apollographql/apollo-client | | NPM
+popper.js | A library used to position poppers in web applications. | MIT | https://github.com/vusion/popper.js/ | | NPM
+vee-validate | Painless Vue forms | MIT | https://github.com/logaretm/vee-validate/ | | NPM
+graphql-js | The JavaScript reference implementation for GraphQL | MIT | https://github.com/graphql/graphql-js | | NPM
+lodash | JavaScript utility library | MIT | https://github.com/lodash/lodash | | NPM
+maska | Simple zero-dependency input mask | MIT | https://github.com/beholdr/maska | | NPM
+tw-elements | Huge collection of Tailwind components | TW ELEMENTS LICENSE | https://github.com/mdbootstrap/TW-Elements | | NPM
+utility-types | Collection of utility types | MIT | https://github.com/piotrwitek/utility-types | | NPM
+
