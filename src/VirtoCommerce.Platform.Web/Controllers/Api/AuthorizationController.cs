@@ -144,7 +144,7 @@ namespace Mvc.Server
                 };
 
                 var storeIdParameter = openIdConnectRequest.GetParameter("storeId");
-                if (storeIdParameter != null && storeIdParameter.HasValue)
+                if (storeIdParameter != null)
                 {
                     context.StoreId = (string)storeIdParameter.GetValueOrDefault();
                 }
