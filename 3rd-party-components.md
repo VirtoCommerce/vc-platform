@@ -9,7 +9,7 @@
  main-bower-files | Get main files from your installed bower packages. | MIT | https://github.com/ck86/main-bower-files | Christopher Knötschke | npm 
  jquery | JavaScript library. | MIT | https://github.com/jquery/jquery | The jQuery Foundation | bower 
  jquery-ui | A curated set of user interface interactions, effects, widgets, and themes | MIT | https://github.com/components/jqueryui | jQuery Foundation and other contributors | bower 
- signalr | Microsoft ASP.NET SignalR JavaScript Client | [MS license](https://www.microsoft.com/web/webpi/eula/signalr_client_enu.htm) | Microsoft | https://www.asp.net/signalr | bower 
+ signalr | Microsoft ASP.NET SignalR JavaScript Client | MS license | Microsoft | https://www.asp.net/signalr | bower 
  angularjs | Superheroic JavaScript MVW Framework | MIT | https://angularjs.org/ | Angular Core Team | bower
  angular-animate | AngularJS module for animations | MIT | https://github.com/angular/bower-angular-animate | Angular Core Team | bower 
  angular-bootstrap | Native AngularJS (Angular) directives for Bootstrap. | MIT | https://github.com/angular-ui/bootstrap-bower | https://github.com/angular-ui/bootstrap/graphs/contributors | bower 
@@ -38,15 +38,15 @@
  underscore | JavaScript's utility | MIT | https://github.com/jashkenas/underscore |	Jeremy Ashkenas	| bower 
  uikit | A lightweight and modular front-end framework for developing fast and powerful web interfaces | MIT | http://getuikit.com | | bower 
  marked |	A markdown parser built for speed |	MIT | https://github.com/chjj/marked | 	Christopher Jeffrey	| bower 
- Hangfire | background processing in .NET and .NET | [LGPL v3 License](https://www.hangfire.io/licenses.html) | https://www.hangfire.io | Sergey Odinokov | NuGet 
+ Hangfire | background processing in .NET and .NET | LGPL v3 License | https://www.hangfire.io | Sergey Odinokov | NuGet 
  Serilog | diagnostic logging library for .NET applications |  Apache-2.0 license | https://github.com/serilog/serilog | | NuGet 
  Swashbuckle |  Seamlessly adds a swagger to WebApi projects | BSD 3-Clause | https://github.com/domaindrivendev/Swashbuckle | Richard Morris | NuGet 
  sendgrid-csharp | The Official SendGrid Led, Community Driven C# | MIT| https://github.com/sendgrid | | NuGet 
  Scriban | The templating system ported to the .net framework | BSD-2-Clause | https://github.com/scriban/scriban | | NuGet 
  YamlDotNet | YamlDotNet is a YAML library for netstandard and other .NET runtimes. | MIT  | https://github.com/aaubry/YamlDotNet | | NuGet 
  Twilio | Twilio REST API and TwiML Libraries for .NET | MIT  | https://github.com/twilio/twilio-csharp | | NuGet 
- SixLabors.ImageSharp | cross-platform, 2D graphics API | https://github.com/SixLabors/ImageSharp?tab=License-1-ov-file  | https://github.com/SixLabors/ImageSharp | | NuGet 
- csvHelper | reading and writing CSV files | MS-PL and Apache 2.0  | https://github.com/JoshClose/CsvHelper | | NuGet 
+ SixLabors.ImageSharp | cross-platform, 2D graphics API | Six Labors Split License | https://github.com/SixLabors/ImageSharp | | NuGet 
+ csvHelper | reading and writing CSV files | MS-PL and Apache 2.0  | https://github.com/JoshClose/CsvHelper | | NuGet a
  DinkToPdf | .NET wrapper for wkhtmltopdf library for convert HTML pages to PDF. | MIT  | https://github.com/rdvojmoc/DinkToPdf | | NuGet 
  Google APIs | Google APIs client Library for .NET |  Apache-2.0 license  | https://github.com/googleapis/google-api-dotnet-client | | NuGet 
  AutoMapper |  Library built to solve a deceptively complex problem |  MIT  | https://github.com/AutoMapper/AutoMapper | | NuGet 
