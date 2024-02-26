@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,9 @@ using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Model;
+using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Model.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -30,6 +34,8 @@ namespace Mvc.Server
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IEnumerable<IUserSignInValidator> _userSignInValidators;
+        private readonly OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> _tokenManager;
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
@@ -39,7 +45,9 @@ namespace Mvc.Server
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IEnumerable<IUserSignInValidator> userSignInValidators,
+            OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> tokenManager)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -47,6 +55,38 @@ namespace Mvc.Server
             _signInManager = signInManager;
             _userManager = userManager;
             _eventPublisher = eventPublisher;
+            _userSignInValidators = userSignInValidators;
+            _tokenManager = tokenManager;
+        }
+
+        [Authorize]
+        [HttpPost("~/revoke/token")]
+        public async Task<ActionResult> RevokeCurrentUserToken()
+        {
+            var tokenId = HttpContext.User.GetClaim("oi_tkn_id");
+            var authId = HttpContext.User.GetClaim("oi_au_id");
+
+            if (authId != null)
+            {
+                var tokens = _tokenManager.FindByAuthorizationIdAsync(authId);
+                await foreach (var token in tokens)
+                {
+                    await _tokenManager.TryRevokeAsync(token);
+                }
+            }
+            else if (tokenId != null)
+            {
+                var token = await _tokenManager.FindByIdAsync(tokenId);
+                if (token?.Authorization != null)
+                {
+                    foreach (var authorizationToken in token.Authorization.Tokens)
+                    {
+                        await _tokenManager.TryRevokeAsync(authorizationToken);
+                    }
+                }
+            }
+
+            return Ok();
         }
 
         #region Password, authorization code and refresh token flows
@@ -84,31 +124,39 @@ namespace Mvc.Server
 
                 if (user == null)
                 {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The username/password couple is invalid."
-                    });
+                    return BadRequest(SecurityErrorDescriber.LoginFailed());
                 }
 
                 if (!_passwordLoginOptions.Enabled && !user.IsAdministrator)
                 {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The username/password login is disabled."
-                    });
+                    return BadRequest(SecurityErrorDescriber.PasswordLoginDisabled());
                 }
 
                 // Validate the username/password parameters and ensure the account is not locked out.
                 var result = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
-                if (!result.Succeeded)
+
+                var context = new SignInValidatorContext
                 {
-                    return BadRequest(new OpenIddictResponse
+                    User = user.Clone() as ApplicationUser,
+                    DetailedErrors = _passwordLoginOptions.DetailedErrors,
+                    IsSucceeded = result.Succeeded,
+                    IsLockedOut = result.IsLockedOut,
+                };
+
+                var storeIdParameter = openIdConnectRequest.GetParameter("storeId");
+                if (storeIdParameter != null)
+                {
+                    context.StoreId = (string)storeIdParameter.GetValueOrDefault();
+                }
+
+                foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name))
+                {
+                    var validationErrors = await loginValidation.ValidateUserAsync(context);
+                    var error = validationErrors.FirstOrDefault();
+                    if (error != null)
                     {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The username/password couple is invalid."
-                    });
+                        return BadRequest(error);
+                    }
                 }
 
                 await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
@@ -133,27 +181,19 @@ namespace Mvc.Server
                 var user = await _userManager.GetUserAsync(info.Principal);
                 if (user == null)
                 {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The token is no longer valid."
-                    });
+                    return BadRequest(SecurityErrorDescriber.TokenInvalid());
                 }
 
                 // Ensure the user is still allowed to sign in.
                 if (!await _signInManager.CanSignInAsync(user))
                 {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidGrant,
-                        ErrorDescription = "The user is no longer allowed to sign in."
-                    });
+                    return BadRequest(SecurityErrorDescriber.SignInNotAllowed());
                 }
 
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
                 var ticket = await CreateTicketAsync(openIdConnectRequest, user, info.Properties);
-                return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+                return SignIn(ticket.Principal, ticket.AuthenticationScheme);
             }
             else if (openIdConnectRequest.IsClientCredentialsGrantType())
             {
@@ -162,11 +202,7 @@ namespace Mvc.Server
                 var application = await _applicationManager.FindByClientIdAsync(openIdConnectRequest.ClientId, HttpContext.RequestAborted);
                 if (application == null)
                 {
-                    return BadRequest(new OpenIddictResponse
-                    {
-                        Error = Errors.InvalidClient,
-                        ErrorDescription = "The client application was not found in the database."
-                    });
+                    return BadRequest(SecurityErrorDescriber.InvalidClient());
                 }
 
                 // Create a new authentication ticket.
@@ -174,12 +210,9 @@ namespace Mvc.Server
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
-            return BadRequest(new OpenIddictResponse
-            {
-                Error = Errors.UnsupportedGrantType,
-                ErrorDescription = "The specified grant type is not supported."
-            });
+            return BadRequest(SecurityErrorDescriber.UnsupportedGrantType());
         }
+
         #endregion
 
         private AuthenticationTicket CreateTicket(OpenIddictEntityFrameworkCoreApplication application)

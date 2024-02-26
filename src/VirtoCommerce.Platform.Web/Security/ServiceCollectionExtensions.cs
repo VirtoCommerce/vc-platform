@@ -50,6 +50,7 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton<IUserPasswordHasher, DefaultUserPasswordHasher>();
             //Use custom ClaimsPrincipalFactory to add system roles claims for user principal
             services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserClaimsPrincipalFactory>();
+            services.AddTransient<IUserSignInValidator, BaseUserSignInValidator>();
 
             if (setupAction != null)
             {
