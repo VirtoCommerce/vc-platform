@@ -1,11 +1,11 @@
-﻿<div class="blade-content">
+<div class="blade-content">
     <div class="blade-inner">
         <div class="inner-block">
             <div class="sub-t">{{ 'platform.blades.account-roles-list.labels.assigned-roles' | translate }}</div>
             <div class="table-wrapper">
                 <table class="table">
                     <tbody>
-                        <tr class="table-item" ng-repeat="data in blade.currentEntities track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="arl_menu_{{$index}}">
+                        <tr class="table-item" ng-repeat="data in blade.currentEntities | orderBy:'name' track by data.id" ng-class="{'__selected': data.id === selectedNodeId}" context-menu data-target="arl_menu_{{$index}}">
 
                             <td class="table-col">
 
