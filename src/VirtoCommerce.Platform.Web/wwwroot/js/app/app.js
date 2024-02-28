@@ -453,7 +453,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
 
             // cache application level templates
-            $templateCache.put('pagerTemplate.html', '<div class="pagination"><pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination> <p class="form-count">{{\'platform.list.count\' | translate}}: <span class="count">{{pageSettings.totalItems | number:0}}</span></p></div>');
+            $templateCache.put('pagerTemplate.html', '<div class="pagination"><pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination> <p class="form-count-pagination">{{\'platform.list.count\' | translate}}: <span class="count">{{pageSettings.totalItems | number:0}}</span></p></div>');
 
             gridsterConfig.columns = 4;
             gridsterConfig.colWidth = 130;
