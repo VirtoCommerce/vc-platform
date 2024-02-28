@@ -1,32 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <noWarn>1591</noWarn>
-        <OutputType>Library</OutputType>
-        <IsPackable>True</IsPackable>
-        <UserSecretsId>ebac378d-6c55-4b03-aa82-57643b6e7a0f</UserSecretsId>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <noWarn>1591</noWarn>
+    <OutputType>Library</OutputType>
+    <IsPackable>True</IsPackable>
+    <UserSecretsId>ebac378d-6c55-4b03-aa82-57643b6e7a0f</UserSecretsId>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <NoWarn>1701;1702;1705;1591</NoWarn>
-        <DocumentationFile>VirtoCommerce.Platform.Security.xml</DocumentationFile>
-    </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <DocumentationFile>VirtoCommerce.Platform.Security.xml</DocumentationFile>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.0" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.10.1" />
-        <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
-        <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.10.1" />
+    <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
+  </ItemGroup>
+
+  <!--Workaround for vulnerable transitive packages-->
+  <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="6.0.4" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.1" />
+  </ItemGroup>
 
 </Project>
