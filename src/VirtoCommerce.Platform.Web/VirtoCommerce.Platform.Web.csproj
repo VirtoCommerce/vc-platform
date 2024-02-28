@@ -58,13 +58,6 @@
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
     <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
   </ItemGroup>
-
-  <!--Workaround for vulnerable transitive packages-->
-  <ItemGroup>
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="6.0.4" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="6.0.1" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.Platform.Data.MySql\VirtoCommerce.Platform.Data.MySql.csproj" />
     <ProjectReference Include="..\VirtoCommerce.Platform.Data.PostgreSql\VirtoCommerce.Platform.Data.PostgreSql.csproj" />
