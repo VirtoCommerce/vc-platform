@@ -657,7 +657,7 @@ namespace VirtoCommerce.Platform.Web
 
             var failedModules = localModuleCatalog.Modules
                 .OfType<ManifestModuleInfo>()
-                .Where(x => !x.Errors.IsNullOrEmpty())
+                .Where(x => x.Errors != null && x.Errors.Any())
                 .Select(x => new { x.Id, x.Version, ErrorMessage = string.Join(";", x.Errors) });
 
             foreach (var failedModule in failedModules)

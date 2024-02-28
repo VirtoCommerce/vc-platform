@@ -1,37 +1,43 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <noWarn>1591</noWarn>
-        <ApplicationIcon />
-        <OutputType>Library</OutputType>
-        <IsPackable>True</IsPackable>
-        <StartupObject />
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <noWarn>1591</noWarn>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <IsPackable>True</IsPackable>
+    <StartupObject />
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <NoWarn>1701;1702;1705;1591</NoWarn>
-        <DocumentationFile>VirtoCommerce.Platform.Hangfire.xml</DocumentationFile>
-    </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <DocumentationFile>VirtoCommerce.Platform.Hangfire.xml</DocumentationFile>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Hangfire" Version="1.8.6" />
-        <PackageReference Include="Hangfire.AspNetCore" Version="1.8.6" />
-        <PackageReference Include="Hangfire.Console" Version="1.4.2" />
-        <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.0" />
-        <PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
-        <PackageReference Include="Hangfire.PostgreSql" Version="1.20.4" />
-        <PackageReference Include="HangFire.SqlServer" Version="1.8.6" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.13" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.8.6" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.6" />
+    <PackageReference Include="Hangfire.Console" Version="1.4.2" />
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.0" />
+    <PackageReference Include="Hangfire.MySqlStorage" Version="2.0.3" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.20.4" />
+    <PackageReference Include="HangFire.SqlServer" Version="1.8.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.13" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
-    </ItemGroup>
+  <!--Workaround for vulnerable transitive packages-->
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Core\VirtoCommerce.Platform.Core.csproj" />
+  </ItemGroup>
 
 </Project>
