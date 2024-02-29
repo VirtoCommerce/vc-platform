@@ -6,14 +6,14 @@ using Xunit;
 namespace VirtoCommerce.Platform.Tests.Events
 {
     [Trait("Category", "Unit")]
-    public class EventSupressorTests
+    public class EventSuppressorTests
     {
         [Fact]
         public void SuppressInCurrentThread()
         {
             Assert.False(EventSuppressor.EventsSuppressed, "EventSuppressor shouldn't be active in this thread before test.");
 
-            using (EventSuppressor.SupressEvents())
+            using (EventSuppressor.SuppressEvents())
             {
                 Assert.True(EventSuppressor.EventsSuppressed, "EventSuppressor should be active in this thread.");
             }
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Tests.Events
             Assert.False(EventSuppressor.EventsSuppressed,
                 "EventSuppressor shouldn't be active in this thread before test.");
 
-            using (EventSuppressor.SupressEvents())
+            using (EventSuppressor.SuppressEvents())
             {
                 Assert.True(EventSuppressor.EventsSuppressed, "EventSuppressor should be active in this thread.");
                 Task.Run(() =>
@@ -54,7 +54,7 @@ namespace VirtoCommerce.Platform.Tests.Events
 
             var checkTask = notInteritedAction();
 
-            using (EventSuppressor.SupressEvents())
+            using (EventSuppressor.SuppressEvents())
             {
                 Assert.True(EventSuppressor.EventsSuppressed, "EventSuppressor inherits value in another thread!");
                 taskCompletionSource.TrySetResult(null);
@@ -81,7 +81,7 @@ namespace VirtoCommerce.Platform.Tests.Events
 
             Task.Run(async () =>
             {
-                using (EventSuppressor.SupressEvents())
+                using (EventSuppressor.SuppressEvents())
                 {
                     Assert.True(EventSuppressor.EventsSuppressed, "EventSuppressor inherits value in another thread!");
                     taskCompletionSource.TrySetResult(null);
