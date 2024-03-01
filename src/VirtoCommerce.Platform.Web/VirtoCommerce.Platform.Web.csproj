@@ -1,108 +1,107 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
-        <noWarn>1591</noWarn>
-        <IsPackable>false</IsPackable>
-        <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <DockerfileContext>..\..</DockerfileContext>
-        <UserSecretsId>local</UserSecretsId>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <NoWarn>1701;1702;1705;1591</NoWarn>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+    <noWarn>1591</noWarn>
+    <IsPackable>false</IsPackable>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+    <UserSecretsId>local</UserSecretsId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Azure.Core" Version="1.36.0" />
-        <PackageReference Include="Azure.Messaging.EventGrid" Version="4.21.0" />
-        <PackageReference Include="FluentValidation" Version="11.8.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="7.0.0" />
-        <PackageReference Include="Microsoft.Azure.SignalR" Version="1.22.0" />
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.DiagnosticAdapter" Version="3.1.32" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
-        <PackageReference Include="Microsoft.Identity.Client" Version="4.58.0" />
-        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
-        <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-        <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.21.0" />
-        <PackageReference Include="OpenIddict.AspNetCore" Version="4.10.1" />
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.10.1" />
-        <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-        <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-        <PackageReference Include="Scrutor" Version="4.2.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Cli" Version="4.0.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
-        <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
-        <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="6.0.0" />
-        <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-        <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
-        <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\VirtoCommerce.Platform.Data.MySql\VirtoCommerce.Platform.Data.MySql.csproj" />
-        <ProjectReference Include="..\VirtoCommerce.Platform.Data.PostgreSql\VirtoCommerce.Platform.Data.PostgreSql.csproj" />
-        <ProjectReference Include="..\VirtoCommerce.Platform.Data.SqlServer\VirtoCommerce.Platform.Data.SqlServer.csproj" />
-        <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
-        <ProjectReference Include="..\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj" />
-        <ProjectReference Include="..\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj" />
-        <ProjectReference Include="..\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Remove="modules\**" />
-        <Compile Remove="wwwroot\assets\**" />
-        <Compile Remove="wwwroot\cms-content\**" />
-        
-        <Content Remove="wwwroot\assets\**" />
-        <Content Remove="app_data\modules\** " /> 
-        <Content Remove="wwwroot\cms-content\**" />
-        <Content Remove="modules\**" />
-          
-        <EmbeddedResource Remove="modules\**" />
-        <EmbeddedResource Remove="wwwroot\assets\**" />
-        <EmbeddedResource Remove="wwwroot\cms-content\**" />
-        <EmbeddedResource Remove="app_data\modules\**" />
-        <None Remove="modules\**" />
-        <None Remove="wwwroot\assets\**" />
-        <None Remove="wwwroot\cms-content\**" />
-        <None Remove="app_data\modules\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Remove="app_data\VirtoCommerce_rsa.pub" />
-    </ItemGroup>
-   
-    <ItemGroup>
-        <EmbeddedResource Include="app_data\VirtoCommerce_rsa.pub">
-          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </EmbeddedResource>
-        <EmbeddedResource Include="wwwroot\swagger\index.html" />
-        <None Include="wwwroot\swagger\logo_small.png" />
-        <None Include="wwwroot\swagger\vc.css" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Azure.Core" Version="1.36.0" />
+    <PackageReference Include="Azure.Messaging.EventGrid" Version="4.21.0" />
+    <PackageReference Include="FluentValidation" Version="11.8.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.25.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DiagnosticAdapter" Version="3.1.32" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.58.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.21.0" />
+    <PackageReference Include="OpenIddict.AspNetCore" Version="4.10.1" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.10.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+    <PackageReference Include="Scrutor" Version="4.2.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="6.0.0" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+    <PackageReference Include="VirtoCommerce.BuildWebpack" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data.MySql\VirtoCommerce.Platform.Data.MySql.csproj" />
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data.PostgreSql\VirtoCommerce.Platform.Data.PostgreSql.csproj" />
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data.SqlServer\VirtoCommerce.Platform.Data.SqlServer.csproj" />
+    <ProjectReference Include="..\VirtoCommerce.Platform.Data\VirtoCommerce.Platform.Data.csproj" />
+    <ProjectReference Include="..\VirtoCommerce.Platform.Hangfire\VirtoCommerce.Platform.Hangfire.csproj" />
+    <ProjectReference Include="..\VirtoCommerce.Platform.Modules\VirtoCommerce.Platform.Modules.csproj" />
+    <ProjectReference Include="..\VirtoCommerce.Platform.Security\VirtoCommerce.Platform.Security.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="modules\**" />
+    <Compile Remove="wwwroot\assets\**" />
+    <Compile Remove="wwwroot\cms-content\**" />
 
-    <!--<Target Name="BuildFront" BeforeTargets="Build">
+    <Content Remove="wwwroot\assets\**" />
+    <Content Remove="app_data\modules\** " />
+    <Content Remove="wwwroot\cms-content\**" />
+    <Content Remove="modules\**" />
+
+    <EmbeddedResource Remove="modules\**" />
+    <EmbeddedResource Remove="wwwroot\assets\**" />
+    <EmbeddedResource Remove="wwwroot\cms-content\**" />
+    <EmbeddedResource Remove="app_data\modules\**" />
+    <None Remove="modules\**" />
+    <None Remove="wwwroot\assets\**" />
+    <None Remove="wwwroot\cms-content\**" />
+    <None Remove="app_data\modules\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="app_data\VirtoCommerce_rsa.pub" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="app_data\VirtoCommerce_rsa.pub">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="wwwroot\swagger\index.html" />
+    <None Include="wwwroot\swagger\logo_small.png" />
+    <None Include="wwwroot\swagger\vc.css" />
+  </ItemGroup>
+
+  <!--<Target Name="BuildFront" BeforeTargets="Build">
     <Message Importance="High" Text="######### Restoring NPM packages ##########" />
     <Exec Command="npm install" />
   </Target>-->
