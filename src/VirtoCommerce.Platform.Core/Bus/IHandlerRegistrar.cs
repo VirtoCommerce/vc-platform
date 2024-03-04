@@ -7,7 +7,6 @@ namespace VirtoCommerce.Platform.Core.Bus
 {
     public interface IHandlerRegistrar
     {
-        void RegisterHandler<T>(Func<T, Task> handler) where T : IMessage;
         void RegisterHandler<T>(Func<T, CancellationToken, Task> handler) where T : IMessage;
     }
 }

@@ -29,14 +29,14 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public static IApplicationBuilder UseSecurityHandlers(this IApplicationBuilder appBuilder)
         {
-            appBuilder.RegisterHandler<UserChangedEvent, LogChangesUserChangedEventHandler>();
-            appBuilder.RegisterHandler<UserChangedEvent, UserApiKeyActualizeEventHandler>();
-            appBuilder.RegisterHandler<UserPasswordChangedEvent, LogChangesUserChangedEventHandler>();
-            appBuilder.RegisterHandler<UserResetPasswordEvent, LogChangesUserChangedEventHandler>();
-            appBuilder.RegisterHandler<UserLoginEvent, LogChangesUserChangedEventHandler>();
-            appBuilder.RegisterHandler<UserLogoutEvent, LogChangesUserChangedEventHandler>();
-            appBuilder.RegisterHandler<UserRoleAddedEvent, LogChangesUserChangedEventHandler>();
-            appBuilder.RegisterHandler<UserRoleRemovedEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserChangedEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserChangedEvent, UserApiKeyActualizeEventHandler>();
+            appBuilder.RegisterEventHandler<UserPasswordChangedEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserResetPasswordEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserLoginEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserLogoutEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserRoleAddedEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserRoleRemovedEvent, LogChangesUserChangedEventHandler>();
 
             return appBuilder;
         }
