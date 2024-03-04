@@ -1,5 +1,5 @@
-# v3.800.2
-# https://virtocommerce.atlassian.net/browse/VCST-349
+# v3.800.4
+# https://virtocommerce.atlassian.net/browse/VCST-488
 name: Platform CI
 
 on:
@@ -159,9 +159,9 @@ jobs:
 
     - name: Docker Login
       if: ${{ env.BUILD_DOCKER == 'true' }}
-      uses: azure/docker-login@v1
+      uses: docker/login-action@v3
       with:
-        login-server: ${{ env.PACKAGE_SERVER }}
+        registry: ${{ env.PACKAGE_SERVER }}
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -286,7 +286,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch')}}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.2
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.4
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -305,7 +305,7 @@ jobs:
         (github.ref == 'refs/heads/dev')) && 
         github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.2
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.4
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
