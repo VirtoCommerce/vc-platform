@@ -19,6 +19,22 @@ namespace VirtoCommerce.Platform.Core.Bus
             _logger = logger;
         }
 
+        public void RegisterHandler<T>(Func<T, Task> handler)
+            where T : IMessage
+        {
+            var eventType = typeof(T);
+
+            var handlerWrapper = new HandlerWrapper
+            {
+                EventType = eventType,
+                HandlerModuleName = handler.Target?.GetType().Module.Assembly.GetName().Name,
+                Handler = (message, _) => handler((T)message),
+                Logger = _logger
+            };
+
+            _handlers.Add(handlerWrapper);
+        }
+
         public void RegisterHandler<T>(Func<T, CancellationToken, Task> handler)
             where T : IMessage
         {

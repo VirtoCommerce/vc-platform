@@ -13,7 +13,7 @@ public static class ApplicationBuilderExtensions
         var handlerRegistrar = applicationBuilder.ApplicationServices.GetService<IHandlerRegistrar>();
         var handler = applicationBuilder.ApplicationServices.GetService<THandler>();
 
-        handlerRegistrar.RegisterHandler<TEvent>((@event, _) => handler.Handle(@event));
+        handlerRegistrar.RegisterHandler<TEvent>(handler.Handle);
 
         return applicationBuilder;
     }
