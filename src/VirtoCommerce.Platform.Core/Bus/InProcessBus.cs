@@ -9,7 +9,7 @@ using VirtoCommerce.Platform.Core.Messages;
 
 namespace VirtoCommerce.Platform.Core.Bus
 {
-    public class InProcessBus : IEventPublisher, IHandlerRegistrar, IEventHandlerRegistrar
+    public class InProcessBus : IEventHandlerRegistrar, IEventPublisher, IHandlerRegistrar
     {
         private readonly ILogger<InProcessBus> _logger;
         private readonly List<HandlerWrapper> _handlers = [];
@@ -17,22 +17,6 @@ namespace VirtoCommerce.Platform.Core.Bus
         public InProcessBus(ILogger<InProcessBus> logger)
         {
             _logger = logger;
-        }
-
-        public void RegisterHandler<T>(Func<T, CancellationToken, Task> handler)
-            where T : IMessage
-        {
-            var eventType = typeof(T);
-
-            var handlerWrapper = new HandlerWrapper
-            {
-                EventType = eventType,
-                HandlerModuleName = handler.Target?.GetType().Module.Assembly.GetName().Name,
-                Handler = (message, token) => handler((T)message, token),
-                Logger = _logger
-            };
-
-            _handlers.Add(handlerWrapper);
         }
 
         public void RegisterEventHandler<T>(Func<T, Task> handler)
@@ -53,6 +37,12 @@ namespace VirtoCommerce.Platform.Core.Bus
 
         public void RegisterEventHandler<T>(Func<T, CancellationToken, Task> handler)
             where T : IEvent
+        {
+            RegisterHandler(handler);
+        }
+
+        public void RegisterHandler<T>(Func<T, CancellationToken, Task> handler)
+            where T : IMessage
         {
             var eventType = typeof(T);
 

@@ -23,11 +23,11 @@ public class EventHandlerTests
         var userChangedHandlerEvents = new List<string>();
 
         // This handler should handle all event types
-        bus.RegisterHandler<DomainEvent>((message, _) => { domainHandlerEvents.Add(message.GetType().Name); return Task.CompletedTask; });
+        bus.RegisterEventHandler<DomainEvent>(message => Handle(message, domainHandlerEvents));
 
         // These handlers should handle only specific event types
-        bus.RegisterHandler<UserLoginEvent>((message, _) => { userLoginHandlerEvents.Add(message.GetType().Name); return Task.CompletedTask; });
-        bus.RegisterHandler<UserChangedEvent>((message, _) => { userChangedHandlerEvents.Add(message.GetType().Name); return Task.CompletedTask; });
+        bus.RegisterEventHandler<UserLoginEvent>(message => Handle(message, userLoginHandlerEvents));
+        bus.RegisterEventHandler<UserChangedEvent>(message => Handle(message, userChangedHandlerEvents));
 
         await bus.Publish(new UserLoginEvent(user: null));
         await bus.Publish(new UserChangedEvent(changedEntries: null));
@@ -35,5 +35,12 @@ public class EventHandlerTests
         domainHandlerEvents.Should().BeEquivalentTo([nameof(UserLoginEvent), nameof(UserChangedEvent)]);
         userLoginHandlerEvents.Should().BeEquivalentTo([nameof(UserLoginEvent)]);
         userChangedHandlerEvents.Should().BeEquivalentTo([nameof(UserChangedEvent)]);
+    }
+
+    private static Task Handle<T>(T message, List<string> events) where T : IEvent
+    {
+        events.Add(message.GetType().Name);
+
+        return Task.CompletedTask;
     }
 }
