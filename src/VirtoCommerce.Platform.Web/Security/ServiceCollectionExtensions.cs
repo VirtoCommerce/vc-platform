@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -57,8 +56,8 @@ namespace VirtoCommerce.Platform.Web.Security
                 services.Configure(setupAction);
             }
 
-            services.AddSingleton(provider => new LogChangesUserChangedEventHandler(provider.CreateScope().ServiceProvider.GetService<IChangeLogService>()));
-            services.AddSingleton(provider => new UserApiKeyActualizeEventHandler(provider.CreateScope().ServiceProvider.GetService<IUserApiKeyService>()));
+            services.AddSingleton<LogChangesUserChangedEventHandler>();
+            services.AddSingleton<UserApiKeyActualizeEventHandler>();
 
             services.AddTransient<IServerCertificateService, ServerCertificateService>();
 

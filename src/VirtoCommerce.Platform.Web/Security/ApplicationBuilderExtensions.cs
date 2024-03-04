@@ -3,8 +3,8 @@ using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using VirtoCommerce.Platform.Core;
-using VirtoCommerce.Platform.Core.Bus;
 using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Core.Settings;
@@ -29,15 +29,14 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public static IApplicationBuilder UseSecurityHandlers(this IApplicationBuilder appBuilder)
         {
-            var inProcessBus = appBuilder.ApplicationServices.GetService<IHandlerRegistrar>();
-            inProcessBus.RegisterHandler<UserChangedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserChangedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<UserApiKeyActualizeEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserPasswordChangedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserResetPasswordEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserLoginEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserLogoutEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserRoleAddedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
-            inProcessBus.RegisterHandler<UserRoleRemovedEvent>(async (message, token) => await appBuilder.ApplicationServices.GetService<LogChangesUserChangedEventHandler>().Handle(message));
+            appBuilder.RegisterHandler<UserChangedEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterHandler<UserChangedEvent, UserApiKeyActualizeEventHandler>();
+            appBuilder.RegisterHandler<UserPasswordChangedEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterHandler<UserResetPasswordEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterHandler<UserLoginEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterHandler<UserLogoutEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterHandler<UserRoleAddedEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterHandler<UserRoleRemovedEvent, LogChangesUserChangedEventHandler>();
 
             return appBuilder;
         }

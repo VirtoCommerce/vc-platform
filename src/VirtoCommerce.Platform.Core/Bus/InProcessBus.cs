@@ -12,37 +12,47 @@ namespace VirtoCommerce.Platform.Core.Bus
     public class InProcessBus : IEventPublisher, IHandlerRegistrar
     {
         private readonly ILogger<InProcessBus> _logger;
-        private readonly Dictionary<Type, List<HandlerWrapper>> _handlersByType = new Dictionary<Type, List<HandlerWrapper>>();
+        private readonly List<HandlerWrapper> _handlers = [];
 
         public InProcessBus(ILogger<InProcessBus> logger)
         {
             _logger = logger;
         }
 
-        public void RegisterHandler<T>(Func<T, CancellationToken, Task> handler) where T : class, IMessage
+        public void RegisterHandler<T>(Func<T, CancellationToken, Task> handler)
+            where T : IMessage
         {
-            if (!_handlersByType.TryGetValue(typeof(T), out var handlers))
-            {
-                handlers = new List<HandlerWrapper>();
-                _handlersByType.Add(typeof(T), handlers);
-            }
+            var eventType = typeof(T);
 
             var handlerWrapper = new HandlerWrapper
             {
-                EventName = typeof(T).Name,
-                HandlerModuleName = handler.Target.GetType().Module.Assembly.GetName().Name,
+                EventType = eventType,
+                HandlerModuleName = handler.Target?.GetType().Module.Assembly.GetName().Name,
                 Handler = (message, token) => handler((T)message, token),
                 Logger = _logger
             };
 
-            handlers.Add(handlerWrapper);
+            _handlers.Add(handlerWrapper);
         }
 
-        public async Task Publish<T>(T @event, CancellationToken cancellationToken = default(CancellationToken)) where T : class, IEvent
+        public async Task Publish<T>(T @event, CancellationToken cancellationToken = default)
+            where T : IEvent
         {
-            if (!EventSuppressor.EventsSuppressed && _handlersByType.TryGetValue(@event.GetType(), out var handlers))
+            if (EventSuppressor.EventsSuppressed)
             {
-                await Task.WhenAll(handlers.Select(handler => handler.Handle(@event, cancellationToken)));
+                return;
+            }
+
+            var eventType = typeof(T);
+
+            var tasks = _handlers
+                .Where(x => x.EventType.IsAssignableFrom(eventType))
+                .Select(x => x.Handle(@event, cancellationToken))
+                .ToList();
+
+            if (tasks.Count > 0)
+            {
+                await Task.WhenAll(tasks);
             }
         }
     }
