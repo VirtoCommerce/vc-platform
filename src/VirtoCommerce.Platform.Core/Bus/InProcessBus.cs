@@ -38,9 +38,12 @@ namespace VirtoCommerce.Platform.Core.Bus
         public void RegisterEventHandler<T>(Func<T, CancellationToken, Task> handler)
             where T : IEvent
         {
+#pragma warning disable VC0008 // Type or member is obsolete
             RegisterHandler(handler);
+#pragma warning restore VC0008 // Type or member is obsolete
         }
 
+        [Obsolete("Use IApplicationBuilder.RegisterEventHandler<>()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public void RegisterHandler<T>(Func<T, CancellationToken, Task> handler)
             where T : IMessage
         {
