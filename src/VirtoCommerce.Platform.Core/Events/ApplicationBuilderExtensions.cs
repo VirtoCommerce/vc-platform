@@ -1,3 +1,6 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,11 +12,15 @@ public static class ApplicationBuilderExtensions
         where TEvent : IEvent
         where THandler : IEventHandler<TEvent>
     {
-        var registrar = applicationBuilder.ApplicationServices.GetRequiredService<IEventHandlerRegistrar>();
         var handler = applicationBuilder.ApplicationServices.GetRequiredService<THandler>();
+        return applicationBuilder.RegisterEventHandler<TEvent>(handler.Handle);
+    }
 
-        registrar.RegisterEventHandler<TEvent>(handler.Handle);
-
+    public static IApplicationBuilder RegisterEventHandler<TEvent>(this IApplicationBuilder applicationBuilder, Func<TEvent, Task> handler)
+        where TEvent : IEvent
+    {
+        var registrar = applicationBuilder.ApplicationServices.GetRequiredService<IEventHandlerRegistrar>();
+        registrar.RegisterEventHandler(handler);
         return applicationBuilder;
     }
 
@@ -21,11 +28,15 @@ public static class ApplicationBuilderExtensions
         where TEvent : IEvent
         where THandler : ICancellableEventHandler<TEvent>
     {
-        var registrar = applicationBuilder.ApplicationServices.GetRequiredService<IEventHandlerRegistrar>();
         var handler = applicationBuilder.ApplicationServices.GetRequiredService<THandler>();
+        return applicationBuilder.RegisterCancellableEventHandler<TEvent>(handler.Handle);
+    }
 
-        registrar.RegisterEventHandler<TEvent>(handler.Handle);
-
+    public static IApplicationBuilder RegisterCancellableEventHandler<TEvent>(this IApplicationBuilder applicationBuilder, Func<TEvent, CancellationToken, Task> handler)
+        where TEvent : IEvent
+    {
+        var registrar = applicationBuilder.ApplicationServices.GetRequiredService<IEventHandlerRegistrar>();
+        registrar.RegisterEventHandler(handler);
         return applicationBuilder;
     }
 }

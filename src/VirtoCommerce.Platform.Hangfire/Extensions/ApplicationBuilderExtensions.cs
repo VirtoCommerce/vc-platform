@@ -61,10 +61,9 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             var mvcJsonOptions = appBuilder.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             GlobalConfiguration.Configuration.UseSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
 
-            var eventHandlerRegistrar = appBuilder.ApplicationServices.GetService<IEventHandlerRegistrar>();
             var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
             var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
-            eventHandlerRegistrar.RegisterEventHandler<ObjectSettingChangedEvent>(async (message, _) =>
+            appBuilder.RegisterEventHandler<ObjectSettingChangedEvent>(async message =>
                 await recurringJobManager.HandleSettingChangeAsync(settingsManager, message));
 
             // Add Hangfire filters/middlewares
