@@ -22,8 +22,8 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddTransient<ISecurityRepository, SecurityRepository>();
             services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<ISecurityRepository>());
 
-            services.AddScoped<IUserApiKeyService, UserApiKeyService>();
-            services.AddScoped<IUserApiKeySearchService, UserApiKeySearchService>();
+            services.AddSingleton<IUserApiKeyService, UserApiKeyService>();
+            services.AddSingleton<IUserApiKeySearchService, UserApiKeySearchService>();
 
             services.AddScoped<IUserNameResolver, HttpContextUserResolver>();
             services.AddSingleton<IPermissionsRegistrar, DefaultPermissionProvider>();
