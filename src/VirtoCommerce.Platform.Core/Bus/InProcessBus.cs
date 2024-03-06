@@ -68,16 +68,15 @@ namespace VirtoCommerce.Platform.Core.Bus
                 return;
             }
 
-            var eventType = typeof(T);
+            var eventType = @event.GetType();
 
-            var tasks = _handlers
+            var handlers = _handlers
                 .Where(x => x.EventType.IsAssignableFrom(eventType))
-                .Select(x => x.Handle(@event, cancellationToken))
                 .ToList();
 
-            if (tasks.Count > 0)
+            if (handlers.Count > 0)
             {
-                await Task.WhenAll(tasks);
+                await Task.WhenAll(handlers.Select(x => x.Handle(@event, cancellationToken)));
             }
         }
     }
