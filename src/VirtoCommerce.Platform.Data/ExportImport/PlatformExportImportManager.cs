@@ -129,7 +129,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
             progressCallback(progressInfo);
 
             using (var zipArchive = new ZipArchive(inputStream, ZipArchiveMode.Read, true))
-            using (EventSuppressor.SupressEvents())
+            using (EventSuppressor.SuppressEvents())
             {
                 //Import selected platform entries
                 await ImportPlatformEntriesInternalAsync(zipArchive, importOptions, progressCallback, сancellationToken);

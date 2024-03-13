@@ -9,40 +9,74 @@ using VirtoCommerce.Platform.Core.Messages;
 
 namespace VirtoCommerce.Platform.Core.Bus
 {
-    public class InProcessBus : IEventPublisher, IHandlerRegistrar
+    public class InProcessBus : IEventHandlerRegistrar, IEventPublisher, IHandlerRegistrar
     {
         private readonly ILogger<InProcessBus> _logger;
-        private readonly Dictionary<Type, List<HandlerWrapper>> _handlersByType = new Dictionary<Type, List<HandlerWrapper>>();
+        private readonly List<HandlerWrapper> _handlers = [];
 
         public InProcessBus(ILogger<InProcessBus> logger)
         {
             _logger = logger;
         }
 
-        public void RegisterHandler<T>(Func<T, CancellationToken, Task> handler) where T : class, IMessage
+        public void RegisterEventHandler<T>(Func<T, Task> handler)
+            where T : IEvent
         {
-            if (!_handlersByType.TryGetValue(typeof(T), out var handlers))
-            {
-                handlers = new List<HandlerWrapper>();
-                _handlersByType.Add(typeof(T), handlers);
-            }
+            var eventType = typeof(T);
 
             var handlerWrapper = new HandlerWrapper
             {
-                EventName = typeof(T).Name,
-                HandlerModuleName = handler.Target.GetType().Module.Assembly.GetName().Name,
+                EventType = eventType,
+                HandlerModuleName = handler.Target?.GetType().Module.Assembly.GetName().Name,
+                Handler = (message, _) => handler((T)message),
+                Logger = _logger
+            };
+
+            _handlers.Add(handlerWrapper);
+        }
+
+        public void RegisterEventHandler<T>(Func<T, CancellationToken, Task> handler)
+            where T : IEvent
+        {
+#pragma warning disable VC0008 // Type or member is obsolete
+            RegisterHandler(handler);
+#pragma warning restore VC0008 // Type or member is obsolete
+        }
+
+        [Obsolete("Use IApplicationBuilder.RegisterEventHandler<>()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public void RegisterHandler<T>(Func<T, CancellationToken, Task> handler)
+            where T : IMessage
+        {
+            var eventType = typeof(T);
+
+            var handlerWrapper = new HandlerWrapper
+            {
+                EventType = eventType,
+                HandlerModuleName = handler.Target?.GetType().Module.Assembly.GetName().Name,
                 Handler = (message, token) => handler((T)message, token),
                 Logger = _logger
             };
 
-            handlers.Add(handlerWrapper);
+            _handlers.Add(handlerWrapper);
         }
 
-        public async Task Publish<T>(T @event, CancellationToken cancellationToken = default(CancellationToken)) where T : class, IEvent
+        public async Task Publish<T>(T @event, CancellationToken cancellationToken = default)
+            where T : IEvent
         {
-            if (!EventSuppressor.EventsSuppressed && _handlersByType.TryGetValue(@event.GetType(), out var handlers))
+            if (EventSuppressor.EventsSuppressed)
             {
-                await Task.WhenAll(handlers.Select(handler => handler.Handle(@event, cancellationToken)));
+                return;
+            }
+
+            var eventType = @event.GetType();
+
+            var handlers = _handlers
+                .Where(x => x.EventType.IsAssignableFrom(eventType))
+                .ToList();
+
+            if (handlers.Count > 0)
+            {
+                await Task.WhenAll(handlers.Select(x => x.Handle(@event, cancellationToken)));
             }
         }
     }

@@ -31,20 +31,23 @@ namespace VirtoCommerce.Platform.Core.Events
             }
         }
 
-        private static readonly AsyncLocal<bool> EventsSuppressedStorage = new AsyncLocal<bool>();
+        private static readonly AsyncLocal<bool> _eventsSuppressedStorage = new();
 
         /// <summary>
         /// The flag indicates that events are suppressed for the current asynchronous control flow
         /// </summary>
-        public static bool EventsSuppressed => EventsSuppressedStorage.Value;
+        public static bool EventsSuppressed => _eventsSuppressedStorage.Value;
+
+        [Obsolete("Use SuppressEvents()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
+        public static IDisposable SupressEvents() => SuppressEvents();
 
         /// <summary>
         /// The flag indicates that events are suppressed for the current asynchronous control flow
         /// </summary>
-        public static IDisposable SupressEvents()
+        public static IDisposable SuppressEvents()
         {
-            EventsSuppressedStorage.Value = true;
-            return new DisposableActionGuard(() => { EventsSuppressedStorage.Value = false; });
+            _eventsSuppressedStorage.Value = true;
+            return new DisposableActionGuard(() => { _eventsSuppressedStorage.Value = false; });
         }
     }
 }

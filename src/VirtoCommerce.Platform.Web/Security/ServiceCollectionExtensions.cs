@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using VirtoCommerce.Platform.Core.ChangeLog;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -23,8 +22,8 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddTransient<ISecurityRepository, SecurityRepository>();
             services.AddTransient<Func<ISecurityRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<ISecurityRepository>());
 
-            services.AddScoped<IUserApiKeyService, UserApiKeyService>();
-            services.AddScoped<IUserApiKeySearchService, UserApiKeySearchService>();
+            services.AddSingleton<IUserApiKeyService, UserApiKeyService>();
+            services.AddSingleton<IUserApiKeySearchService, UserApiKeySearchService>();
 
             services.AddScoped<IUserNameResolver, HttpContextUserResolver>();
             services.AddSingleton<IPermissionsRegistrar, DefaultPermissionProvider>();
@@ -57,8 +56,8 @@ namespace VirtoCommerce.Platform.Web.Security
                 services.Configure(setupAction);
             }
 
-            services.AddSingleton(provider => new LogChangesUserChangedEventHandler(provider.CreateScope().ServiceProvider.GetService<IChangeLogService>()));
-            services.AddSingleton(provider => new UserApiKeyActualizeEventHandler(provider.CreateScope().ServiceProvider.GetService<IUserApiKeyService>()));
+            services.AddSingleton<LogChangesUserChangedEventHandler>();
+            services.AddSingleton<UserApiKeyActualizeEventHandler>();
 
             services.AddTransient<IServerCertificateService, ServerCertificateService>();
 
