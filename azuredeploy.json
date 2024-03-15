@@ -83,7 +83,10 @@
                 "name": "[variables('storageType')]",
                 "tier": "Standard"
             },
-            "kind": "StorageV2"
+            "kind": "StorageV2",
+            "properties": {
+                "allowBlobPublicAccess": true
+                }
         },
         {
             "apiVersion": "2014-04-01",
