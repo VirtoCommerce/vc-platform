@@ -54,30 +54,11 @@
             "metadata": {
                 "description": "The image tag of the image."
             }
-        },
-        "installModuleBundle": {
-            "type": "string",
-            "allowedValues": [
-                "Commerce",
-                "None"
-            ],
-            "defaultValue": "Commerce",
-            "metadata": {
-                "description": "Group(s) of modules to install automatically during initial Platform setup. Select None to install empty platform."
-            }
         }
     },
     "variables": {
         "storageName": "[replace(parameters('appServiceName'), '-', '')]",
-        "storageType": "Standard_LRS",
-        "moduleBundles": {
-            "Commerce": {
-                "configValue": "commerce"
-            },
-            "None": {
-                "configValue": ""
-            }
-        }
+        "storageType": "Standard_LRS"
     },
     "resources": [
         {
@@ -227,10 +208,6 @@
                 "appCommandLine": "",
                 "appSettings": [
                     {
-                        "name": "ExternalModules__AutoInstallModuleBundles",
-                        "value": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
-                    },
-                    {
                         "name": "Assets__Provider",
                         "value": "AzureBlobStorage"
                     },
@@ -296,7 +273,7 @@
                     "hostingstart.html"
                 ],
                 "netFrameworkVersion": "v4.0",
-                "linuxFxVersion": "[concat( 'DOCKER|', parameters('containerRegistry'), ':', parameters('imageTag'))]", //"DOCKER|ghcr.io/virtocommerce/platform:3.816.0-alpha.12878-dev-6f592584",
+                "linuxFxVersion": "[concat( 'DOCKER|', parameters('containerRegistry'), ':', parameters('imageTag'))]",
                 "publishingUsername": "[concat('$', variables('storageName'))]",
                 "alwaysOn": true,
                 "managedPipelineMode": "Integrated",
