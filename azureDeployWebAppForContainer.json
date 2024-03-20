@@ -227,7 +227,7 @@
                 "appCommandLine": "",
                 "appSettings": [
                     {
-                        "name": "ExternalModules:AutoInstallModuleBundles",
+                        "name": "ExternalModules__AutoInstallModuleBundles",
                         "value": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
                     },
                     {
