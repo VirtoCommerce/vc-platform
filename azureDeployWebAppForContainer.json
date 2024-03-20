@@ -45,7 +45,7 @@
             "type": "string",
             "defaultValue": "ghcr.io/virtocommerce/platform",
             "metadata": {
-                "description": "The container registry to pulling the image from."
+                "description": "The container registry with full path to pulling the image from."
             }
         },
         "imageTag": {
@@ -53,6 +53,17 @@
             "defaultValue": "linux-latest",
             "metadata": {
                 "description": "The image tag of the image."
+            }
+        },
+        "installModuleBundle": {
+            "type": "string",
+            "allowedValues": [
+                "Commerce",
+                "None"
+            ],
+            "defaultValue": "Commerce",
+            "metadata": {
+                "description": "Group(s) of modules to install automatically during initial Platform setup. Select None to install empty platform."
             }
         }
     },
@@ -215,6 +226,10 @@
                 "siteConfig": {
                 "appCommandLine": "",
                 "appSettings": [
+                    {
+                        "name": "ExternalModules:AutoInstallModuleBundles",
+                        "value": "[variables('moduleBundles')[parameters('installModuleBundle')].configValue]"
+                    },
                     {
                         "name": "Assets__Provider",
                         "value": "AzureBlobStorage"
