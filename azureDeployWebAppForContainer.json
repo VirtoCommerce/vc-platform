@@ -75,44 +75,44 @@
                 "allowBlobPublicAccess": true
                 }
         },
-        {
-            "type": "Microsoft.Storage/storageAccounts/fileServices",
-            "apiVersion": "2023-01-01",
-            "name": "[concat(variables('storageName'), '/default')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
-            ],
-            "sku": {
-                "name": "Standard_LRS",
-                "tier": "Standard"
-            },
-            "properties": {
-                "protocolSettings": {
-                    "smb": {}
-                },
-                "cors": {
-                    "corsRules": []
-                },
-                "shareDeleteRetentionPolicy": {
-                    "enabled": true,
-                    "days": 7
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
-            "apiVersion": "2023-01-01",
-            "name": "[concat(variables('storageName'), '/default/modules')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', variables('storageName'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
-            ],
-            "properties": {
-                "accessTier": "TransactionOptimized",
-                "shareQuota": 5120,
-                "enabledProtocols": "SMB"
-            }
-        },
+        // {
+        //     "type": "Microsoft.Storage/storageAccounts/fileServices",
+        //     "apiVersion": "2023-01-01",
+        //     "name": "[concat(variables('storageName'), '/default')]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+        //     ],
+        //     "sku": {
+        //         "name": "Standard_LRS",
+        //         "tier": "Standard"
+        //     },
+        //     "properties": {
+        //         "protocolSettings": {
+        //             "smb": {}
+        //         },
+        //         "cors": {
+        //             "corsRules": []
+        //         },
+        //         "shareDeleteRetentionPolicy": {
+        //             "enabled": true,
+        //             "days": 7
+        //         }
+        //     }
+        // },
+        // {
+        //     "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+        //     "apiVersion": "2023-01-01",
+        //     "name": "[concat(variables('storageName'), '/default/modules')]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.Storage/storageAccounts/fileServices', variables('storageName'), 'default')]",
+        //         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+        //     ],
+        //     "properties": {
+        //         "accessTier": "TransactionOptimized",
+        //         "shareQuota": 5120,
+        //         "enabledProtocols": "SMB"
+        //     }
+        // },
         {
             "apiVersion": "2014-04-01",
             "type": "Microsoft.Sql/servers",
@@ -285,17 +285,17 @@
                     }
                 ],
                 "loadBalancing": "LeastRequests",
-                "publicNetworkAccess": "Enabled",
-                "azureStorageAccounts": {
-                    "modules": {
-                        "type": "AzureFiles",
-                        "accountName": "[variables('storageName')]",
-                        "shareName": "modules",
-                        "mountPath": "/modules",
-                        "accessKey": "[concat( listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, '')]",
-                        "name": "modules"
-                    }
-                }
+                "publicNetworkAccess": "Enabled"
+                // "azureStorageAccounts": {
+                //     "modules": {
+                //         "type": "AzureFiles",
+                //         "accountName": "[variables('storageName')]",
+                //         "shareName": "modules",
+                //         "mountPath": "/modules",
+                //         "accessKey": "[concat( listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, '')]",
+                //         "name": "modules"
+                //     }
+                // }
             }
         }
     ],
