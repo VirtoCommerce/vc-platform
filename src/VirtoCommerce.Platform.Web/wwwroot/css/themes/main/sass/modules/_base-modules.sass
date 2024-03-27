@@ -1724,28 +1724,30 @@ tags-input
       .menu-item
         > *:disabled
           cursor: not-allowed
+    .blade-t-container
+      position: relative
+      height: 50px
     .blade-t
+      box-sizing: border-box
+      position: absolute
+      display: flex
+      align-items: center
+      width: 100%
+      height: 100%
+      padding: 8px 16px
       color: $whiteColor
-      left: 0
-      margin: 8px 15px
-      min-height: 34px
-      padding: 0 0 0 45px
-      position: absolute
-      right: 0
       .blade-t_head
+        margin: 4px 6px 0 0
         font-size: 18px
-        margin: 4px 0 0
     .blade-t_ico
-      font-size: 34px
-      line-height: 34px
-      height: 34px
-      left: 0
-      position: absolute
-      top: 0
-      width: 40px
+      position: relative
+      flex: none
+      margin: 0 12px 0 0
+      width: 30px
+      height: 30px
+      font-size: 30px
     .blade-t_head,
     .blade-t_subhead
-      font-weight: 300
       overflow: hidden
       text-overflow: ellipsis
       white-space: nowrap
