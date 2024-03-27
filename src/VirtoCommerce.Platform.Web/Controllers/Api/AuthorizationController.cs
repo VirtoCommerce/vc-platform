@@ -5,7 +5,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -59,7 +58,6 @@ namespace Mvc.Server
             _tokenManager = tokenManager;
         }
 
-        [Authorize]
         [HttpPost("~/revoke/token")]
         public async Task<ActionResult> RevokeCurrentUserToken()
         {
