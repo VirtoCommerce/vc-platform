@@ -43,7 +43,7 @@
         },
         "containerRegistry": {
             "type": "string",
-            "defaultValue": "ghcr.io/virtocommerce/platform",
+            "defaultValue": "ghcr.io/virtocommerce/virtostart",
             "metadata": {
                 "description": "The container registry with full path to pulling the image from."
             }
