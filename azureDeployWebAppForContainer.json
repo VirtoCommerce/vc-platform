@@ -236,8 +236,8 @@
                         "value": "App_Data/Lucene"
                     },
                     {
-                        "name": "VirtoCommerce__DiscoveryPath",
-                        "value": "/modules"
+                        "name": "ExternalModules__AutoInstallModuleBundles",
+                        "value": ""
                     }
                 ],
                 "connectionStrings": [
