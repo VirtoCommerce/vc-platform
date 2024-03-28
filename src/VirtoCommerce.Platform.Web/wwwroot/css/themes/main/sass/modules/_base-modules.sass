@@ -1041,33 +1041,39 @@ $names: "", ".double", ".triple", ".quadro"
 /* Breadcrumbs */
 .breadcrumbs
   .arrow-color
-    color: #A1C0D4
-  padding: 15px 0
+    color: #87A3B5
   .menu
     display: flex
-    margin: 4px 0 -8px 0
-    vertical-align: top
+    gap: 6px
     &.flex-row-wrap
       flex-flow: row wrap
-  li.menu-item:not(:last-child),
-  li.menu-item:first-child
-    margin: 0 6px 8px 0
+  .menu-item
+    display: flex
+    align-items: center
+    gap: 6px
+    &:before
+      content: none
+    &:after
+      content: "\f054"
+      font: normal normal normal 14px/1 FontAwesome
+      font-size: 10px
+      color: #87A3B5
+      text-rendering: auto
+      -webkit-font-smoothing: antialiased
+      -moz-osx-font-smoothing: grayscale
+    &:last-child
+      &:after
+        content: none
   .menu-link
-    padding: 4px 12px 4px 12px
-    border: 1px solid #A1C0D4
-    border-radius: 15px
-    background-color: white
-    max-width: 123px
-    display: block
+    max-width: 108px
     text-overflow: ellipsis
     overflow: hidden
-    color: #43b0e6
-    font-size: 14px
+    color: #43B0E6
+    font-size: 12px
     &:hover
       color: #52a2ca
     &.last-item
-      border: 1px solid #838d9a
-      color: #838d9a
+      color: #465769
 
 /* Tree */
 .tree
@@ -1737,7 +1743,7 @@ tags-input
       padding: 8px 16px
       color: $whiteColor
       .blade-t_head
-        margin: 4px 6px 0 0
+        margin: 0 6px 0 0
         font-size: 18px
     .blade-t_ico
       position: relative
@@ -1857,25 +1863,18 @@ tags-input
     position: relative
     transition: height .3s ease
     .blade-static
+      box-sizing: border-box
+      padding: 16px
       background: $lightBg
       border-color: $baseBrd
       border-style: solid
       border-width: 0 0 2px
-      box-sizing: border-box
-      height: 70px
+      & > *:not(:last-child)
+        margin: 0 0 14px
     .blade-static.__quote
       height: 230px
-    .blade-static.__collapsed
-      .breadcrumbs
-        padding: 13px 20px
-    .blade-static.__expanded
-      .breadcrumbs
-        margin: 0 0 -15px
-        padding: 14px 15px
     .blade-static .form-group,
     .blade-static .form
-      margin: 0 20px
-      padding: 17px 0
       position: relative
     .blade-static .form-group:only-child
       box-sizing: border-box
@@ -1926,8 +1925,6 @@ tags-input
       text-align: left
     .blade-static .btn + .btn
       margin: 0 0 0 15px
-    .blade-static.__expanded
-      height: 114px
     .blade-static.__collapsed
       height: 60px
     .blade-static.__bottom

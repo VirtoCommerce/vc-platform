@@ -1,14 +1,30 @@
 <div class="blade-static">
-    <div class="form-group">
-        <div class="form-input __search">
-            <input placeholder="{{ 'platform.placeholders.search-keyword' | translate }}" ng-model="filter.keyword" ng-keyup="$event.which === 13 && filter.criteriaChanged()">
-            <button class="btn __other">
-                <i class="btn-ico fa fa-remove" title="Clear" ng-click="filter.keyword=null;filter.criteriaChanged()"></i>
+    <div class="vc-input vc-input--sm vc-input--clearable">
+        <div class="vc-input__container">
+            <input
+                class="vc-input__field"
+                type="text"
+                placeholder="{{ 'platform.placeholders.search-keyword' | translate }}"
+                ng-model="filter.keyword"
+                ng-keyup="$event.which === 13 && filter.criteriaChanged()"
+            >
+
+            <button
+                type="button"
+                class="vc-input__clear"
+                title="Clear"
+                ng-click="filter.keyword=null;filter.criteriaChanged()"
+                >
+                <svg>
+                    <use href="/images/blade/remove.svg#icon"></use>
+                </svg>
             </button>
         </div>
     </div>
 </div>
+
 <div class="blade-static __bottom" ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" ng-include="'pagerTemplate.html'"></div>
+
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
         <div class="inner-block">

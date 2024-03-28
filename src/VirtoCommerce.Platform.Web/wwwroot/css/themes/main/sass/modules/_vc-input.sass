@@ -1,10 +1,21 @@
 .vc-input
+  $clearable: ''
+  $sizeSm: ''
   $password: ''
   $error: ''
 
   position: relative
   background-size: cover
   background-position: center
+
+  &, & *
+    box-sizing: border-box
+
+  &--sm
+    $sizeSm: &
+
+  &--clearable
+    $clearable: &
 
   &--password
     $password: &
@@ -41,6 +52,12 @@
     font-size: 13px
     line-height: 20px
     outline: none
+
+    #{$sizeSm} &
+      height: 34px
+
+    #{$clearable} &
+      padding-right: 32px
 
     #{$password} &
       padding-right: 40px
@@ -84,6 +101,10 @@
     cursor: pointer
     color: #319ED4
 
+    & > svg
+      width: 18px
+      height: 18px
+
     input:disabled ~ &
       color: darkgray
       cursor: not-allowed
@@ -91,9 +112,27 @@
     #{$password} &
       display: flex
 
-  &__icon
-    width: 18px
-    height: 18px
+  &__clear
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    display: none
+    padding: 0 8px
+    background: none
+    border: none
+    color: #43b0e6
+    cursor: pointer
+
+    &:hover
+      color: #319ed4
+
+    & > svg
+      width: 16px
+      height: 16px
+
+    #{$clearable} &
+      display: block
 
   &__message
     margin-top: 2px
