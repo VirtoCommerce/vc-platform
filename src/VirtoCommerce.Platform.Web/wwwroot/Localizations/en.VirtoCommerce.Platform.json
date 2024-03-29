@@ -295,7 +295,7 @@
       "modules-list": {
         "subtitle": "Modules management",
         "labels": {
-          "grouping": "Show Module bundles",
+          "grouping": "Show bundles",
           "ungrouped": "Other",
           "no-updates": "No updates found.",
           "no-modules-part1": "No new Modules to install.",

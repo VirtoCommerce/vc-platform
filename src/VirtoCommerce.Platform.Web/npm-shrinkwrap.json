@@ -727,17 +727,19 @@
       }
     },
     "node_modules/angular-translate-loader-url": {
-      "version": "2.19.0",
-      "resolved": "https://registry.npmjs.org/angular-translate-loader-url/-/angular-translate-loader-url-2.19.0.tgz",
-      "integrity": "sha512-PptW0ExcwWKroEnXjIYg8fvvfnhM1buhVep1vOIowLqQV+HyRyonxGauEbCuOsMqPJARGM24WJtPnk4X2blhSg==",
+      "version": "2.19.1",
+      "resolved": "https://registry.npmjs.org/angular-translate-loader-url/-/angular-translate-loader-url-2.19.1.tgz",
+      "integrity": "sha512-tHU4HcqdlIp97wlloc++8aGFYognbpZ2C0Ip9AL2ngEYkpwnQeYwAf4iTcFW+++Jzw6TGoYo+31n0rvhVdaCsg==",
+      "deprecated": "Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.",
       "dependencies": {
-        "angular-translate": "~2.19.0"
+        "angular-translate": "~2.19.1"
       }
     },
     "node_modules/angular-translate-loader-url/node_modules/angular-translate": {
-      "version": "2.19.0",
-      "resolved": "https://registry.npmjs.org/angular-translate/-/angular-translate-2.19.0.tgz",
-      "integrity": "sha512-Z/Fip5uUT2N85dPQ0sMEe1JdF5AehcDe4tg/9mWXNDVU531emHCg53ZND9Oe0dyNiGX5rWcJKmsL1Fujus1vGQ==",
+      "version": "2.19.1",
+      "resolved": "https://registry.npmjs.org/angular-translate/-/angular-translate-2.19.1.tgz",
+      "integrity": "sha512-SrU40ndnL422vXiVoqVveCmSnCzMcIXxQgnl7Cv9krOKUg6B8KZK3ddYzidHR/rxVuySezYHNDgRvzQNKwAdNQ==",
+      "deprecated": "Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.",
       "dependencies": {
         "angular": "^1.8.0"
       },
@@ -761,18 +763,20 @@
       "deprecated": "For the actively supported Angular, see https://www.npmjs.com/package/@angular/core. AngularJS support has officially ended. For extended AngularJS support options, see https://goo.gle/angularjs-path-forward."
     },
     "node_modules/angular-translate-storage-local": {
-      "version": "2.19.0",
-      "resolved": "https://registry.npmjs.org/angular-translate-storage-local/-/angular-translate-storage-local-2.19.0.tgz",
-      "integrity": "sha512-YrM3Y1PLi7OBd053vIhGKQ/DN3nWtQEJlj3++EcRLaGtmDu+4Fp/drzO4gKJtMQRRmJCIM3BqFSqalqijJD56Q==",
+      "version": "2.19.1",
+      "resolved": "https://registry.npmjs.org/angular-translate-storage-local/-/angular-translate-storage-local-2.19.1.tgz",
+      "integrity": "sha512-RbAxT+e6dErL8n03M9iJ0LW+1Qk1IEJSh0yNlGQHd0gjk+ACVcZvBg55+kK5ZErZ5USkqRgETST1OWtisJUafw==",
+      "deprecated": "Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.",
       "dependencies": {
-        "angular-translate": "~2.19.0",
-        "angular-translate-storage-cookie": "~2.19.0"
+        "angular-translate": "~2.19.1",
+        "angular-translate-storage-cookie": "~2.19.1"
       }
     },
     "node_modules/angular-translate-storage-local/node_modules/angular-translate": {
-      "version": "2.19.0",
-      "resolved": "https://registry.npmjs.org/angular-translate/-/angular-translate-2.19.0.tgz",
-      "integrity": "sha512-Z/Fip5uUT2N85dPQ0sMEe1JdF5AehcDe4tg/9mWXNDVU531emHCg53ZND9Oe0dyNiGX5rWcJKmsL1Fujus1vGQ==",
+      "version": "2.19.1",
+      "resolved": "https://registry.npmjs.org/angular-translate/-/angular-translate-2.19.1.tgz",
+      "integrity": "sha512-SrU40ndnL422vXiVoqVveCmSnCzMcIXxQgnl7Cv9krOKUg6B8KZK3ddYzidHR/rxVuySezYHNDgRvzQNKwAdNQ==",
+      "deprecated": "Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.",
       "dependencies": {
         "angular": "^1.8.0"
       },
@@ -781,12 +785,13 @@
       }
     },
     "node_modules/angular-translate-storage-local/node_modules/angular-translate-storage-cookie": {
-      "version": "2.19.0",
-      "resolved": "https://registry.npmjs.org/angular-translate-storage-cookie/-/angular-translate-storage-cookie-2.19.0.tgz",
-      "integrity": "sha512-U3LxHvXVzFOqp7IcYcqMUWhMiTGjHtCDXDKB1MKhTjJSKz+9pLeRseLQBMAGjvXCmMeDteURQR4HEEfzL3vFQw==",
+      "version": "2.19.1",
+      "resolved": "https://registry.npmjs.org/angular-translate-storage-cookie/-/angular-translate-storage-cookie-2.19.1.tgz",
+      "integrity": "sha512-o1luWgZhoB5cpVOe7QcCjsROhjmrCD0mruPTG6lJkCmDroB1tNUqnmkHh2+UieCI1rM+v5SjZiaYVF25enmi1w==",
+      "deprecated": "Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.",
       "dependencies": {
         "angular-cookies": ">=1.2.26 <1.9",
-        "angular-translate": "~2.19.0"
+        "angular-translate": "~2.19.1"
       }
     },
     "node_modules/angular-translate/node_modules/angular": {

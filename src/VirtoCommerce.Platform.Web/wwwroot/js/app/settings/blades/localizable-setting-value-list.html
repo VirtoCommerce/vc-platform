@@ -1,9 +1,17 @@
 <div class="blade-static">
-  <div class="form-group">
-    <div class="form-input __search">
-      <input placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="blade.searchText" />
-      <button class="btn __other" style="position: relative;right: 45px;">
-        <span class="btn-ico fa fa-times-circle" title="{{'platform.commands.clear' | translate}}" ng-click="blade.searchText=''"></span>
+  <div class="vc-input vc-input--sm vc-input--clearable">
+    <div class="vc-input__container">
+      <input class="vc-input__field"
+             type="text"
+             placeholder="{{'platform.placeholders.search-keyword' | translate}}"
+             ng-model="blade.searchText" />
+      <button type="button"
+              class="vc-input__clear"
+              title="Clear"
+              ng-click="blade.searchText=''">
+        <svg>
+          <use href="/images/blade/remove.svg#icon"></use>
+        </svg>
       </button>
     </div>
   </div>

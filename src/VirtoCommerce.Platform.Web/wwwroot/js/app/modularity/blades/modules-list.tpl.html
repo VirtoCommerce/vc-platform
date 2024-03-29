@@ -1,23 +1,31 @@
 <div class="blade-static" ng-class="{'__expanded': blade.mode==='available'}" ng-if="blade.currentEntities.length">
-    <div class="form-group">
-        <div class="form-input __search">
-            <input placeholder="{{'platform.placeholders.search-keyword' | translate }}" ng-model="blade.searchText" ng-keyup="gridApi.grid.queueGridRefresh()">
-            <button class="btn __other" style="position: relative;right: 45px;">
-                <i class="btn-ico fa fa-remove" title="Clear" ng-click="blade.searchText='';gridApi.grid.queueGridRefresh()"></i>
-            </button>
-        </div>
-        <p class="form-count">{{ 'platform.list.count' | translate }}: <span class="count">{{filteredEntitiesCount | number:0}}</span></p>
-
-        <div ng-if="blade.mode==='available'" style="margin-top:10px">
-            <div class="form-input">
-                <label class="form-label __switch">
-                    <input type="checkbox" ng-model="blade.isGrouped" />
-                    <span class="switch"></span>
-                </label>
-            </div>
-            <label class="form-label">{{ 'platform.blades.modules-list.labels.grouping' | translate }}</label>
-        </div>
+  <div class="vc-input vc-input--sm vc-input--clearable">
+    <div class="vc-input__container">
+      <input class="vc-input__field"
+             type="text"
+             placeholder="{{'platform.placeholders.search-keyword' | translate }}"
+             ng-model="blade.searchText"
+             ng-keyup="gridApi.grid.queueGridRefresh()">
+      <button type="button"
+              class="vc-input__clear"
+              title="Clear"
+              ng-click="blade.searchText='';gridApi.grid.queueGridRefresh()">
+        <svg>
+          <use href="/images/blade/remove.svg#icon"></use>
+        </svg>
+      </button>
     </div>
+
+    <div ng-if="blade.mode==='available'" style="margin-top:10px">
+      <div class="form-input">
+        <label class="form-label __switch">
+          <input type="checkbox" ng-model="blade.isGrouped" />
+          <span class="switch"></span>
+        </label>
+        <label class="form-label">{{ 'platform.blades.modules-list.labels.grouping' | translate }}</label>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="blade-content __medium-wide">
     <div class="blade-inner">
