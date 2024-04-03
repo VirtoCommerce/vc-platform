@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Moq;
 using Nager.Country;
 using VirtoCommerce.Platform.Core.Common;
@@ -10,12 +11,12 @@ namespace VirtoCommerce.Platform.Tests.Common
     public class CountriesServiceTests
     {
         [Fact]
-        public void CanGetCountries()
+        public async Task CanGetCountries()
         {
             var filesystemCountryService = new Mock<ICountriesService>();
             var service = new CountriesService(filesystemCountryService.Object as FileSystemCountriesService);
 
-            var countries = service.GetCountriesAsync().GetAwaiter().GetResult();
+            var countries = await service.GetCountriesAsync();
 
             Assert.Equal(249, countries.Count);
         }
