@@ -1,0 +1,45 @@
+.vc-breadcrumbs
+  $last: ''
+
+  &__list
+    display: flex
+    gap: 6px
+    flex-flow: row wrap
+
+  &__item
+    display: flex
+    align-items: center
+    gap: 6px
+    padding: 0
+    text-indent: 0
+
+    &:before
+      content: none
+
+    &:last-child
+      $last: &
+
+  &__link
+    overflow: hidden
+    max-width: 108px
+    color: #43B0E6
+    font-size: 12px
+    text-overflow: ellipsis
+
+    &:hover
+      color: #52a2ca
+
+    #{$last} &
+      color: #465769
+
+  &__arrow
+    font-size: 10px
+    color: #87A3B5
+
+    #{$last} &
+      display: none
+
+  // TEMP workaround
+  // delete after blade-static has been everywhere replaced with blade-static-flat
+  .blade-static &
+    padding: 14px 20px 0

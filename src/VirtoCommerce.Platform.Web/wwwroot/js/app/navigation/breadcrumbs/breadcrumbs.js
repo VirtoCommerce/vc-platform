@@ -15,7 +15,7 @@ angular.module('platformWebApp')
                     var originalWidth = availableWidth;
 
                     $timeout(() => {
-                        element.find(".menu.__inline").css('max-width', availableWidth);
+                        element.find('[data="breadcrumbs"]').css('max-width', availableWidth);
                     });
 
                     scope.breadcrumbs = [];
@@ -39,7 +39,7 @@ angular.module('platformWebApp')
 
                         recalculateItemVisibility(scope.breadcrumbs);
 
-                        element.find(".menu.__inline").css('max-width', availableWidth);
+                        element.find('[data="breadcrumbs"]').css('max-width', availableWidth);
                     });
 
                     scope.$watchCollection('breadcrumbs', (newItems) => {
