@@ -2,13 +2,14 @@
   <div class="form-group">
     <div class="form-input __search">
       <input placeholder="{{'platform.placeholders.search-keyword' | translate}}" ng-model="blade.searchText" />
-      <button class="btn __other" style="position: relative;right: 45px;">
+
+      <button class="btn __other">
         <span class="btn-ico fa fa-times-circle" title="{{'platform.commands.clear' | translate}}" ng-click="blade.searchText=''"></span>
       </button>
     </div>
-    <p class="form-count">{{'platform.list.count' | translate}}: <span class="count">{{currentEntities.length | number:0}}</span></p>
   </div>
 </div>
+
 <div class="blade-content">
   <div class="blade-inner">
     <div class="inner-block" ng-init="setGridOptions({
@@ -34,6 +35,7 @@
     </div>
   </div>
 </div>
+
 <script type="text/ng-template" id="list-actions.cell.html">
   <div class="ui-grid-actions" left-click-menu="grid.appScope.contextMenuEntity = row.entity" data-target="prop_dic_item_menu">
     <span class="fa fa-ellipsis-v"></span>
