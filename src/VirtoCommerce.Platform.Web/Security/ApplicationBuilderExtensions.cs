@@ -29,10 +29,12 @@ namespace VirtoCommerce.Platform.Web.Security
 
         public static IApplicationBuilder UseSecurityHandlers(this IApplicationBuilder appBuilder)
         {
-            appBuilder.RegisterEventHandler<UserChangedEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserChangedEvent, UserApiKeyActualizeEventHandler>();
+
+            appBuilder.RegisterEventHandler<UserChangedEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserPasswordChangedEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserResetPasswordEvent, LogChangesUserChangedEventHandler>();
+            appBuilder.RegisterEventHandler<UserChangedPasswordEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserLoginEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserLogoutEvent, LogChangesUserChangedEventHandler>();
             appBuilder.RegisterEventHandler<UserRoleAddedEvent, LogChangesUserChangedEventHandler>();
