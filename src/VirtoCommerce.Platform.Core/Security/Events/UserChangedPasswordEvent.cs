@@ -2,6 +2,9 @@ using VirtoCommerce.Platform.Core.Events;
 
 namespace VirtoCommerce.Platform.Core.Security.Events
 {
+    /// <summary>
+    /// This event is published when a user has changed their password.
+    /// </summary>
     public class UserChangedPasswordEvent : DomainEvent
     {
         public UserChangedPasswordEvent(string userId, string customPasswordHash)

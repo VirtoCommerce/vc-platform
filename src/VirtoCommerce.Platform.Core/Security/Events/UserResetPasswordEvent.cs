@@ -2,6 +2,9 @@ using VirtoCommerce.Platform.Core.Events;
 
 namespace VirtoCommerce.Platform.Core.Security.Events
 {
+    /// <summary>
+    /// This event is published when a user has reset their password.
+    /// </summary>
     public class UserResetPasswordEvent : DomainEvent
     {
         public UserResetPasswordEvent(string userId, string customPasswordHash)
