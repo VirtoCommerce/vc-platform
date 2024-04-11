@@ -1,0 +1,316 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appServiceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Unique Web App Name of the VirtoCommerce platform to create in .azurewebsites.net"
+            }
+        },
+        "appServicePlanSkuName": {
+            "type": "string",
+            "defaultValue": "B1",
+            "allowedValues": [
+                "F1",
+                "D1",
+                "B1",
+                "B2",
+                "B3",
+                "S1",
+                "S2",
+                "S3",
+                "P1",
+                "P2",
+                "P3",
+                "P4"
+            ],
+            "metadata": {
+                "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
+            }
+        },
+        "sqlAdministratorLogin": {
+            "type": "string",
+            "metadata": {
+                "description": "The administrator username of the SQL logical server. Your login name must not contain a SQL Identifier or a typical system name (like admin, administrator, sa, root, dbmanager, loginmanager, etc.) or a built-in database user or role (like dbo, guest, public, etc.)"
+            }
+        },
+        "sqlAdministratorPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The administrator password of the SQL logical server. Your password must be at least 8 characters in length. Your password must contain characters from three of the following categories – English uppercase letters, English lowercase letters, numbers (0-9), and non-alphanumeric characters (!, $, #, %, etc.)."
+            }
+        },
+        "containerRegistry": {
+            "type": "string",
+            "defaultValue": "ghcr.io/virtocommerce/virtostart",
+            "metadata": {
+                "description": "The container registry with full path to pulling the image from."
+            }
+        },
+        "imageTag": {
+            "type": "string",
+            "defaultValue": "linux-latest",
+            "metadata": {
+                "description": "The image tag of the image."
+            }
+        }
+    },
+    "variables": {
+        "storageName": "[replace(parameters('appServiceName'), '-', '')]",
+        "storageType": "Standard_LRS"
+    },
+    "resources": [
+        {
+            "apiVersion": "2019-06-01",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[variables('storageType')]",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "allowBlobPublicAccess": true
+                }
+        },
+        // {
+        //     "type": "Microsoft.Storage/storageAccounts/fileServices",
+        //     "apiVersion": "2023-01-01",
+        //     "name": "[concat(variables('storageName'), '/default')]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+        //     ],
+        //     "sku": {
+        //         "name": "Standard_LRS",
+        //         "tier": "Standard"
+        //     },
+        //     "properties": {
+        //         "protocolSettings": {
+        //             "smb": {}
+        //         },
+        //         "cors": {
+        //             "corsRules": []
+        //         },
+        //         "shareDeleteRetentionPolicy": {
+        //             "enabled": true,
+        //             "days": 7
+        //         }
+        //     }
+        // },
+        // {
+        //     "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+        //     "apiVersion": "2023-01-01",
+        //     "name": "[concat(variables('storageName'), '/default/modules')]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.Storage/storageAccounts/fileServices', variables('storageName'), 'default')]",
+        //         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+        //     ],
+        //     "properties": {
+        //         "accessTier": "TransactionOptimized",
+        //         "shareQuota": 5120,
+        //         "enabledProtocols": "SMB"
+        //     }
+        // },
+        {
+            "apiVersion": "2014-04-01",
+            "type": "Microsoft.Sql/servers",
+            "name": "[parameters('appServiceName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "version": "12.0",
+                "administratorLogin": "[parameters('sqlAdministratorLogin')]",
+                "administratorLoginPassword": "[parameters('sqlAdministratorPassword')]"
+            },
+            "resources": [
+                {
+                    "apiVersion": "2014-04-01",
+                    "type": "databases",
+                    "name": "[parameters('appServiceName')]",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
+                    ],
+                    "properties": {
+                        "edition": "Basic",
+                        "collation": "SQL_Latin1_General_CP1_CI_AS",
+                        "maxSizeBytes": "1073741824",
+                        "requestedServiceObjectiveId": "DD6D99BB-F193-4EC1-86F2-43D3BCCBC49C"
+                    }
+                },
+                {
+                    "type": "firewallrules",
+                    "name": "AllowAllWindowsAzureIps",
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2014-04-01",
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', parameters('appServiceName'))]"
+                    ],
+                    "properties": {
+                        "endIpAddress": "0.0.0.0",
+                        "startIpAddress": "0.0.0.0"
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "2020-12-01",
+            "type": "Microsoft.Web/serverfarms",
+            "name": "[parameters('appServiceName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "linux",
+            "sku": {
+                "name": "[parameters('appServicePlanSkuName')]",
+                "tier": "Standard"
+            },
+            "properties": {
+                "name": "[parameters('appServiceName')]",
+                "workerSize": "0",
+                "workerSizeId": "0",
+                "numberOfWorkers": "1",
+                "reserved": true,
+                "zoneRedundant": false
+                }
+        },
+        {
+            "name": "[parameters('appServiceName')]",
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-09-01",
+            "kind": "app,linux,container",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServiceName'))]": "empty"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Web/serverFarms/', parameters('appServiceName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
+            ],
+            "properties": {
+                "enabled": true,
+                "name": "[parameters('appServiceName')]",
+                "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServiceName'))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": false,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "clientAffinityEnabled": true,
+                "httpsOnly": true,
+                "publicNetworkAccess": "Enabled",
+                "redundancyMode": "None",
+                "keyVaultReferenceIdentity": "SystemAssigned",
+                "siteConfig": {
+                "appCommandLine": "",
+                "appSettings": [
+                    {
+                        "name": "Assets__Provider",
+                        "value": "AzureBlobStorage"
+                    },
+                    {
+                        "name": "Assets__AzureBlobStorage__ConnectionString",
+                        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                    },
+                    {
+                        "name": "Content__Provider",
+                        "value": "AzureBlobStorage"
+                    },
+                    {
+                        "name": "Content__AzureBlobStorage__ConnectionString",
+                        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+                    },
+                    {
+                        "name": "Content__AzureBlobStorage__RootPath",
+                        "value": "cms"
+                    },
+                    {
+                        "name": "Search__Provider",
+                        "value": "Lucene"
+                    },
+                    {
+                        "name": "Search__Lucene__Path",
+                        "value": "App_Data/Lucene"
+                    },
+                    {
+                        "name": "ExternalModules__AutoInstallModuleBundles",
+                        "value": ""
+                    }
+                ],
+                "connectionStrings": [
+                    {
+                        "name": "VirtoCommerce",
+                        "connectionString": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('appServiceName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('appServiceName'), ';User Id=', parameters('sqlAdministratorLogin'), '@', parameters('appServiceName'), ';Password=', parameters('sqlAdministratorPassword'), ';MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=False;Encrypt=True;')]",
+                        "type": "SQLAzure"
+                    }
+                ]
+                }
+            },
+            "resources": []
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('appServiceName'), '/web')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('appServiceName'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "[concat( 'DOCKER|', parameters('containerRegistry'), ':', parameters('imageTag'))]",
+                "publishingUsername": "[concat('$', variables('storageName'))]",
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "publicNetworkAccess": "Enabled"
+                // "azureStorageAccounts": {
+                //     "modules": {
+                //         "type": "AzureFiles",
+                //         "accountName": "[variables('storageName')]",
+                //         "shareName": "modules",
+                //         "mountPath": "/modules",
+                //         "accessKey": "[concat( listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, '')]",
+                //         "name": "modules"
+                //     }
+                // }
+            }
+        }
+    ],
+    "outputs": {
+        "url": {
+            "type": "string",
+            "value": "[concat('https://', parameters('appServiceName'), '.azurewebsites.net')]"
+        },
+        "defaultAdminLogin": {
+            "type": "string",
+            "value": "admin"
+        },
+        "contentStorageConnectionString": {
+            "type": "string",
+            "value": "[concat('provider=AzureBlobStorage;rootPath=cms;DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName')), '2015-06-15').key1, ';EndpointSuffix=core.windows.net')]"
+        }
+    }
+}
