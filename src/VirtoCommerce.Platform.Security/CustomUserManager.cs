@@ -119,7 +119,7 @@ namespace VirtoCommerce.Platform.Security
         {
             return UpdatePasswordAsync(user, newPassword,
                 (user, newPassword) => base.ChangePasswordAsync(user, currentPassword, newPassword),
-                (userId, customPasswordHash) => new UserPasswordChangedEvent(userId, customPasswordHash));
+                (userId, customPasswordHash) => new UserChangedPasswordEvent(userId, customPasswordHash));
         }
 
         protected virtual async Task<IdentityResult> UpdatePasswordAsync<TEvent>(

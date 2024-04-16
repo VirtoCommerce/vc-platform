@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Moq;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
@@ -23,7 +24,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
             //Arrange
 
             var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
-            userStoreMock.Setup(x => x.FindByIdAsync(user.Id, CancellationToken.None)).ReturnsAsync(user);
+            userStoreMock.Setup(x => x.FindByIdAsync(user.Id, CancellationToken.None)).ReturnsAsync(user.CloneTyped());
             userStoreMock.Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>(), CancellationToken.None))
                 .ReturnsAsync(IdentityResult.Success);
             var eventPublisher = new EventPublisherStub();
@@ -63,10 +64,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
         {
             //Arrange
             var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
-            userStoreMock.Setup(x => x.FindByIdAsync(user.Id, CancellationToken.None)).ReturnsAsync(user);
-            userStoreMock.As<IUserPasswordStore<ApplicationUser>>()
-                         .Setup(x => x.SetPasswordHashAsync(user, user.PasswordHash, CancellationToken.None))
-                         .Returns(Task.CompletedTask);
+            userStoreMock.Setup(x => x.FindByIdAsync(user.Id, CancellationToken.None)).ReturnsAsync(user.CloneTyped());
             var eventPublisher = new EventPublisherStub();
 
             var userManager = SecurityMockHelper.TestCustomUserManager(userStoreMock, eventPublisher);
@@ -88,10 +86,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
         {
             //Arrange
             var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
-            userStoreMock.Setup(x => x.FindByIdAsync(user.Id, CancellationToken.None)).ReturnsAsync(user);
-            userStoreMock.As<IUserPasswordStore<ApplicationUser>>()
-                         .Setup(x => x.GetPasswordHashAsync(It.IsAny<ApplicationUser>(), It.IsAny<CancellationToken>()))
-                         .ReturnsAsync(user.PasswordHash);
+            userStoreMock.Setup(x => x.FindByIdAsync(user.Id, CancellationToken.None)).ReturnsAsync(user.CloneTyped());
             var eventPublisher = new EventPublisherStub();
 
             var userManager = SecurityMockHelper.TestCustomUserManager(userStoreMock, eventPublisher);
@@ -164,6 +159,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
                         new Action<IEvent>[]
                         {
                             x => x.GetType().Should().Be<UserChangingEvent>(),
+                            x => x.GetType().Should().Be<UserPasswordChangedEvent>(),
                             x => x.GetType().Should().Be<UserResetPasswordEvent>(),
                         }
                     };
@@ -183,6 +179,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Security
                         {
                             x => x.GetType().Should().Be<UserChangingEvent>(),
                             x => x.GetType().Should().Be<UserPasswordChangedEvent>(),
+                            x => x.GetType().Should().Be<UserChangedPasswordEvent>(),
                         }
                     };
             }
