@@ -97,7 +97,7 @@ namespace Mvc.Server
         // Be aware: look into OpenIDEndpointDescriptionFilter to know parameters description for the swagger document about this endpoint
         public async Task<ActionResult> Exchange()
         {
-            OpenIddictRequest openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();
+            var openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();
 
             if (openIdConnectRequest.IsPasswordGrantType())
             {
@@ -206,6 +206,30 @@ namespace Mvc.Server
                 // Create a new authentication ticket.
                 var ticket = CreateTicket(application);
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+            }
+            else if (string.Equals(openIdConnectRequest.GrantType, "impersonate", StringComparison.Ordinal))
+            {
+                var userId = openIdConnectRequest.GetParameter("user_id")?.Value?.ToString();
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return BadRequest(SecurityErrorDescriber.TokenInvalid());
+                }
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return BadRequest(SecurityErrorDescriber.TokenInvalid());
+                }
+
+                // Create a new authentication ticket, but reuse the properties stored in the
+                // authorization code/refresh token, including the scopes originally granted.
+                var ticket = await CreateTicketAsync(openIdConnectRequest, user);
+
+                // Extend Token with custom claim for XAPI vc_xapi_impersonated_customerid
+                ticket.Principal.SetClaim("vc_xapi_impersonated_customerid", userId)
+                    .SetDestinations(c => [Destinations.AccessToken]);
+
+                return SignIn(ticket.Principal, ticket.AuthenticationScheme);
             }
 
             return BadRequest(SecurityErrorDescriber.UnsupportedGrantType());
