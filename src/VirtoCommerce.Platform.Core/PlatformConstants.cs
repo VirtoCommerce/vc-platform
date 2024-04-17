@@ -18,6 +18,8 @@ namespace VirtoCommerce.Platform.Core
                 public const string UserNameClaimType = "username";
                 public const string LimitedPermissionsClaimType = "limited_permissions";
                 public const string MemberIdClaimType = "memberId";
+                public const string ImpersonatedUserId = "vc_impersonated_user_id";
+                public const string ImpersonatedUserName = "vc_impersonated_user_name";
             }
 
             public static class SystemRoles

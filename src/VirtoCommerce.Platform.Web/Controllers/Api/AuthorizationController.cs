@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Model.Security;
@@ -35,6 +37,7 @@ namespace Mvc.Server
         private readonly IEventPublisher _eventPublisher;
         private readonly IEnumerable<IUserSignInValidator> _userSignInValidators;
         private readonly OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> _tokenManager;
+        private readonly IAuthorizationService _authorizationService;
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
@@ -46,7 +49,8 @@ namespace Mvc.Server
             IOptions<PasswordLoginOptions> passwordLoginOptions,
             IEventPublisher eventPublisher,
             IEnumerable<IUserSignInValidator> userSignInValidators,
-            OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> tokenManager)
+            OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> tokenManager,
+            IAuthorizationService authorizationService)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -56,6 +60,7 @@ namespace Mvc.Server
             _eventPublisher = eventPublisher;
             _userSignInValidators = userSignInValidators;
             _tokenManager = tokenManager;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost("~/revoke/token")]
@@ -209,16 +214,32 @@ namespace Mvc.Server
             }
             else if (string.Equals(openIdConnectRequest.GrantType, "impersonate", StringComparison.Ordinal))
             {
-                var userId = openIdConnectRequest.GetParameter("user_id")?.Value?.ToString();
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return BadRequest(SecurityErrorDescriber.TokenInvalid());
-                }
-
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
-                    return BadRequest(SecurityErrorDescriber.TokenInvalid());
+                    return Unauthorized();
+                }
+
+                var loginOnBehalfAuthResult = await _authorizationService.AuthorizeAsync(User, null,
+                    new PermissionAuthorizationRequirement(PlatformConstants.Security.Permissions.SecurityLoginOnBehalf));
+                if (!loginOnBehalfAuthResult.Succeeded)
+                {
+                    return Forbid();
+                }
+
+                var userId = openIdConnectRequest.GetParameter("user_id")?.Value?.ToString();
+                var userName = string.Empty;
+
+                // Implement if string.IsNullOrEmpty(userId) to reset impersonation
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var impersonatedUser = await _signInManager.UserManager.FindByIdAsync(userId);
+                    if (impersonatedUser == null)
+                    {
+                        return BadRequest(SecurityErrorDescriber.TokenInvalid());
+                    }
+
+                    userName = impersonatedUser.UserName;
                 }
 
                 // Create a new authentication ticket, but reuse the properties stored in the
@@ -226,7 +247,9 @@ namespace Mvc.Server
                 var ticket = await CreateTicketAsync(openIdConnectRequest, user);
 
                 // Extend Token with custom claim for XAPI vc_xapi_impersonated_customerid
-                ticket.Principal.SetClaim("vc_xapi_impersonated_customerid", userId)
+                ticket.Principal.SetClaim(PlatformConstants.Security.Claims.ImpersonatedUserId, userId)
+                    .SetDestinations(c => [Destinations.AccessToken]);
+                ticket.Principal.SetClaim(PlatformConstants.Security.Claims.ImpersonatedUserName, userName)
                     .SetDestinations(c => [Destinations.AccessToken]);
 
                 return SignIn(ticket.Principal, ticket.AuthenticationScheme);
