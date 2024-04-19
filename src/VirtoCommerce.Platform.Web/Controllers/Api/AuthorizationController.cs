@@ -22,6 +22,7 @@ using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -212,47 +213,64 @@ namespace Mvc.Server
                 var ticket = CreateTicket(application);
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
-            else if (string.Equals(openIdConnectRequest.GrantType, "impersonate", StringComparison.Ordinal))
+            else if (openIdConnectRequest.IsImpersonateGrantType())
             {
+                // Only Authorized User has access for impersonaiton
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
                     return Unauthorized();
                 }
 
-                var loginOnBehalfAuthResult = await _authorizationService.AuthorizeAsync(User, null,
-                    new PermissionAuthorizationRequirement(PlatformConstants.Security.Permissions.SecurityLoginOnBehalf));
-                if (!loginOnBehalfAuthResult.Succeeded)
+                // Check if user has permission for login on behalf
+                if (string.IsNullOrEmpty(User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)))
                 {
-                    return Forbid();
+                    var loginOnBehalfAuthResult = await _authorizationService.AuthorizeAsync(User, null,
+                        new PermissionAuthorizationRequirement(PlatformConstants.Security.Permissions.SecurityLoginOnBehalf));
+                    if (!loginOnBehalfAuthResult.Succeeded)
+                    {
+                        return Forbid();
+                    }
                 }
 
-                var userId = openIdConnectRequest.GetParameter("user_id")?.Value?.ToString();
-                var userName = string.Empty;
+                // Resolve Impersonator from claims or from current user
+                var operatorUserId = string.IsNullOrEmpty(User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)) ?
+                    user.Id : User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId);
+                var operatorUserName = string.IsNullOrEmpty(User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName)) ?
+                    user.UserName : User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName);
 
-                // Implement if string.IsNullOrEmpty(userId) to reset impersonation
+                var userId = openIdConnectRequest.GetParameter("user_id")?.Value?.ToString();
+                ApplicationUser impersonatedUser = null;
+
                 if (!string.IsNullOrEmpty(userId))
                 {
-                    var impersonatedUser = await _signInManager.UserManager.FindByIdAsync(userId);
-                    if (impersonatedUser == null)
-                    {
-                        return BadRequest(SecurityErrorDescriber.TokenInvalid());
-                    }
+                    // Find impersonated user by id
+                    impersonatedUser = await _signInManager.UserManager.FindByIdAsync(userId);
+                }
+                else
+                {
+                    // Reset impersonation to operator
+                    impersonatedUser = await _signInManager.UserManager.FindByIdAsync(operatorUserId);
+                    operatorUserId = string.Empty;
+                    operatorUserName = string.Empty;
+                }
 
-                    userName = impersonatedUser.UserName;
+                if (impersonatedUser == null)
+                {
+                    return BadRequest(SecurityErrorDescriber.TokenInvalid());
                 }
 
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
-                var ticket = await CreateTicketAsync(openIdConnectRequest, user);
+                var ticket = await CreateTicketAsync(openIdConnectRequest, impersonatedUser);
 
                 // Extend Token with custom claim for XAPI vc_xapi_impersonated_customerid
-                ticket.Principal.SetClaim(PlatformConstants.Security.Claims.ImpersonatedUserId, userId)
+                ticket.Principal.SetClaim(PlatformConstants.Security.Claims.OperatorUserId, operatorUserId)
                     .SetDestinations(c => [Destinations.AccessToken]);
-                ticket.Principal.SetClaim(PlatformConstants.Security.Claims.ImpersonatedUserName, userName)
+                ticket.Principal.SetClaim(PlatformConstants.Security.Claims.OperatorUserName, operatorUserName)
                     .SetDestinations(c => [Destinations.AccessToken]);
 
-                return SignIn(ticket.Principal, ticket.AuthenticationScheme);
+                return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
             return BadRequest(SecurityErrorDescriber.UnsupportedGrantType());

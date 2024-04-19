@@ -11,6 +11,11 @@ namespace VirtoCommerce.Platform.Core
     {
         public static class Security
         {
+            public static class GrantTypes
+            {
+                public const string Impersonate = "impersonate";
+            }
+
             public static class Claims
             {
                 public const string PermissionClaimType = "permission";
@@ -18,8 +23,14 @@ namespace VirtoCommerce.Platform.Core
                 public const string UserNameClaimType = "username";
                 public const string LimitedPermissionsClaimType = "limited_permissions";
                 public const string MemberIdClaimType = "memberId";
-                public const string ImpersonatedUserId = "vc_impersonated_user_id";
-                public const string ImpersonatedUserName = "vc_impersonated_user_name";
+                /// <summary>
+                /// Represents Operator User Id after impersonation 
+                /// </summary>
+                public const string OperatorUserId = "vc_operator_user_id";
+                /// <summary>
+                /// Represents Operator User Name after impersonation
+                /// </summary>
+                public const string OperatorUserName = "vc_operator_name";
             }
 
             public static class SystemRoles
