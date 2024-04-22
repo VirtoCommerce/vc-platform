@@ -46,9 +46,12 @@ using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.MySql;
+using VirtoCommerce.Platform.Data.MySql.HealthCheck;
 using VirtoCommerce.Platform.Data.PostgreSql;
+using VirtoCommerce.Platform.Data.PostgreSql.HealthCheck;
 using VirtoCommerce.Platform.Data.Repositories;
 using VirtoCommerce.Platform.Data.SqlServer;
+using VirtoCommerce.Platform.Data.SqlServer.HealthCheck;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
@@ -483,7 +486,7 @@ namespace VirtoCommerce.Platform.Web
             // Register the Swagger generator
             services.AddSwagger(Configuration, platformOptions.UseAllOfToExtendReferenceSchemas);
 
-            services.AddHealthChecks()
+            var healthBuilder = services.AddHealthChecks()
                 .AddCheck<ModulesHealthChecker>("Modules health",
                     failureStatus: HealthStatus.Unhealthy,
                     tags: new[] { "Modules" })
@@ -493,6 +496,29 @@ namespace VirtoCommerce.Platform.Web
                 .AddCheck<RedisHealthCheck>("Redis health",
                     failureStatus: HealthStatus.Unhealthy,
                     tags: new[] { "Cache" });
+
+            var connectionString = Configuration.GetConnectionString("VirtoCommerce");
+            switch (databaseProvider)
+            {
+                case "MySql":
+                    healthBuilder.AddMySql(connectionString,
+                        name: "MySql health",
+                        failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] { "Database" });
+                    break;
+                case "PostgreSql":
+                    healthBuilder.AddNpgSql(connectionString,
+                        name: "PostgreSql health",
+                        failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] { "Database" });
+                    break;
+                default:
+                    healthBuilder.AddSqlServer(connectionString,
+                        name: "SQL Server health",
+                        failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] { "Database" });
+                    break;
+            }
 
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
