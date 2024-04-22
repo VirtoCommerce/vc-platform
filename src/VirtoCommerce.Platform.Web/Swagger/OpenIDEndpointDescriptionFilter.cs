@@ -34,6 +34,7 @@ namespace VirtoCommerce.Platform.Web.Swagger
                     { "username", new OpenApiSchema() { Type = "string" } },
                     { "password", new OpenApiSchema() { Type = "string" } },
                     { "storeId", new OpenApiSchema() { Type = "string" } },
+                    { "user_id", new OpenApiSchema() { Type = "string" } },
                 };
                 mediaType.Schema.Required = new HashSet<string>
                 {
