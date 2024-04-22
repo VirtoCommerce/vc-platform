@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +19,10 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
 using VirtoCommerce.Platform.Security;
+using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Model;
 using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -35,6 +38,7 @@ namespace Mvc.Server
         private readonly IEventPublisher _eventPublisher;
         private readonly IEnumerable<IUserSignInValidator> _userSignInValidators;
         private readonly OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> _tokenManager;
+        private readonly IAuthorizationService _authorizationService;
 
         private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
@@ -46,7 +50,8 @@ namespace Mvc.Server
             IOptions<PasswordLoginOptions> passwordLoginOptions,
             IEventPublisher eventPublisher,
             IEnumerable<IUserSignInValidator> userSignInValidators,
-            OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> tokenManager)
+            OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> tokenManager,
+            IAuthorizationService authorizationService)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
@@ -56,6 +61,7 @@ namespace Mvc.Server
             _eventPublisher = eventPublisher;
             _userSignInValidators = userSignInValidators;
             _tokenManager = tokenManager;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost("~/revoke/token")]
@@ -97,7 +103,7 @@ namespace Mvc.Server
         // Be aware: look into OpenIDEndpointDescriptionFilter to know parameters description for the swagger document about this endpoint
         public async Task<ActionResult> Exchange()
         {
-            OpenIddictRequest openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();
+            var openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();
 
             if (openIdConnectRequest.IsPasswordGrantType())
             {
@@ -205,6 +211,65 @@ namespace Mvc.Server
 
                 // Create a new authentication ticket.
                 var ticket = CreateTicket(application);
+                return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+            }
+            else if (openIdConnectRequest.IsImpersonateGrantType())
+            {
+                // Only Authorized User has access for impersonaiton
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
+
+                // Check if user has permission for login on behalf
+                if (string.IsNullOrEmpty(User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)))
+                {
+                    var loginOnBehalfAuthResult = await _authorizationService.AuthorizeAsync(User, null,
+                        new PermissionAuthorizationRequirement(PlatformConstants.Security.Permissions.SecurityLoginOnBehalf));
+                    if (!loginOnBehalfAuthResult.Succeeded)
+                    {
+                        return Forbid();
+                    }
+                }
+
+                // Resolve Impersonator from claims or from current user
+                var operatorUserId = string.IsNullOrEmpty(User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId)) ?
+                    user.Id : User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserId);
+                var operatorUserName = string.IsNullOrEmpty(User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName)) ?
+                    user.UserName : User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName);
+
+                var userId = openIdConnectRequest.GetParameter("user_id")?.Value?.ToString();
+                ApplicationUser impersonatedUser = null;
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    // Find impersonated user by id
+                    impersonatedUser = await _signInManager.UserManager.FindByIdAsync(userId);
+                }
+                else
+                {
+                    // Reset impersonation to operator
+                    impersonatedUser = await _signInManager.UserManager.FindByIdAsync(operatorUserId);
+                    operatorUserId = string.Empty;
+                    operatorUserName = string.Empty;
+                }
+
+                if (impersonatedUser == null)
+                {
+                    return BadRequest(SecurityErrorDescriber.TokenInvalid());
+                }
+
+                // Create a new authentication ticket, but reuse the properties stored in the
+                // authorization code/refresh token, including the scopes originally granted.
+                var ticket = await CreateTicketAsync(openIdConnectRequest, impersonatedUser);
+
+                // Extend Token with custom claim for XAPI vc_xapi_impersonated_customerid
+                ticket.Principal.SetClaim(PlatformConstants.Security.Claims.OperatorUserId, operatorUserId)
+                    .SetDestinations(c => [Destinations.AccessToken]);
+                ticket.Principal.SetClaim(PlatformConstants.Security.Claims.OperatorUserName, operatorUserName)
+                    .SetDestinations(c => [Destinations.AccessToken]);
+
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 

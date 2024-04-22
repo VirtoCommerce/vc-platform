@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Security;
 using static VirtoCommerce.Platform.Data.Constants.DefaultEntityNames;
 
@@ -36,15 +38,21 @@ namespace VirtoCommerce.Platform.Security
                 var identity = context.User.Identity;
                 if (identity != null && identity.IsAuthenticated)
                 {
-                    // Login-on-behalf operator user has a priority over an actual user
-                    var userHeader = context.Request.Headers.ContainsKey(OperatorUserNameHeader) ?
-                        OperatorUserNameHeader :
-                        CurrentUserNameHeader;
+                    // Login-on-behalf operator from token
+                    result = context.User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName);
 
-                    result = context.Request.Headers[userHeader];
                     if (string.IsNullOrEmpty(result))
                     {
-                        result = identity.Name;
+                        // Login-on-behalf operator user has a priority over an actual user
+                        var userHeader = context.Request.Headers.ContainsKey(OperatorUserNameHeader) ?
+                            OperatorUserNameHeader :
+                            CurrentUserNameHeader;
+
+                        result = context.Request.Headers[userHeader];
+                        if (string.IsNullOrEmpty(result))
+                        {
+                            result = identity.Name;
+                        }
                     }
                 }
             }

@@ -355,7 +355,8 @@ namespace VirtoCommerce.Platform.Web
                     // can enable the other flows if you need to support implicit or client credentials.
                     options.AllowPasswordFlow()
                         .AllowRefreshTokenFlow()
-                        .AllowClientCredentialsFlow();
+                        .AllowClientCredentialsFlow()
+                        .AllowCustomFlow("impersonate");
 
                     options.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
                     options.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
