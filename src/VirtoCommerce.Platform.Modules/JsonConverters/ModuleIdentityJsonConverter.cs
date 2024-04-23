@@ -23,13 +23,13 @@ namespace VirtoCommerce.Platform.Modules
         {
             var obj = JObject.Load(reader);
 
-            var id = obj.GetValue("id", StringComparison.InvariantCultureIgnoreCase)?.Value<string>();            
-            var versionToken = (JObject)obj.GetValue("version", StringComparison.InvariantCultureIgnoreCase);            
+            var id = obj.GetValue("id", StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
+            var versionToken = (JObject)obj.GetValue("version", StringComparison.InvariantCultureIgnoreCase);
 
             if (id != null && versionToken != null)
             {
                 var version = new Version(versionToken.GetValue("major").ToObject<int>(), versionToken.GetValue("minor").ToObject<int>(), versionToken.GetValue("patch").ToObject<int>());
-                var result = new ModuleIdentity(id, new SemanticVersion(version));
+                var result = new ModuleIdentity(id, new SemanticVersion(version), false);
                 return result;
             }
             throw new JsonReaderException("id or version is required");
