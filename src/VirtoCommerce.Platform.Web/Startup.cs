@@ -356,7 +356,7 @@ namespace VirtoCommerce.Platform.Web
                     options.AllowPasswordFlow()
                         .AllowRefreshTokenFlow()
                         .AllowClientCredentialsFlow()
-                        .AllowCustomFlow("impersonate");
+                        .AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate);
 
                     options.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
                     options.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
