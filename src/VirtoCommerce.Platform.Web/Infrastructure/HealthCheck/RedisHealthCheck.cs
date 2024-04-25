@@ -30,7 +30,7 @@ public class RedisHealthCheck : IHealthCheck
     {
         if (_connection == null)
         {
-            return HealthCheckResult.Degraded("RedisConnectionString is not confgired");
+            return HealthCheckResult.Degraded("RedisConnectionString is not configured");
         }
 
         try
