@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -117,6 +118,48 @@ namespace VirtoCommerce.Platform.Web.Security
                     options.KnownProxies.Clear();
                 });
             }
+        }
+
+        public static void UseSecurityPolicyHeaders(this IApplicationBuilder app)
+        {
+            var securityHeadersOptions = app.ApplicationServices.GetService<IOptions<SecurityHeadersOptions>>().Value;
+
+            var policyCollection = new HeaderPolicyCollection()
+                .AddDefaultSecurityHeaders();
+
+            if (string.Equals(securityHeadersOptions.FrameOptions, "SameOrigin", StringComparison.OrdinalIgnoreCase))
+            {
+                policyCollection = policyCollection.AddFrameOptionsSameOrigin();
+            }
+            else if (string.Equals(securityHeadersOptions.FrameOptions, "Deny", StringComparison.OrdinalIgnoreCase))
+            {
+                policyCollection = policyCollection.AddFrameOptionsDeny();
+            }
+            else if (!string.IsNullOrEmpty(securityHeadersOptions.FrameOptions))
+            {
+                policyCollection = policyCollection.AddFrameOptionsSameOrigin(securityHeadersOptions.FrameOptions);
+            }
+
+            policyCollection = policyCollection.AddContentSecurityPolicy(builder =>
+            {
+                builder.AddObjectSrc().None();
+                builder.AddFormAction().Self();
+
+                if (string.Equals(securityHeadersOptions.FrameAncestors, "None", StringComparison.OrdinalIgnoreCase))
+                {
+                    builder.AddFrameAncestors().None();
+                }
+                else if (string.Equals(securityHeadersOptions.FrameAncestors, "Self", StringComparison.OrdinalIgnoreCase))
+                {
+                    builder.AddFrameAncestors().Self();
+                }
+                else if (!string.IsNullOrEmpty(securityHeadersOptions.FrameAncestors))
+                {
+                    builder.AddFrameAncestors().From(securityHeadersOptions.FrameAncestors);
+                }
+            });
+
+            app.UseSecurityHeaders(policyCollection);
         }
     }
 }

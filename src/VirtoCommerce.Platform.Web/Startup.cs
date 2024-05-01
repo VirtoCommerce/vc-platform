@@ -121,6 +121,8 @@ namespace VirtoCommerce.Platform.Web
             {
                 options.PlatformTranslationFolderPath = WebHostEnvironment.MapPath(options.PlatformTranslationFolderPath);
             });
+            services.AddOptions<SecurityHeadersOptions>().Bind(Configuration.GetSection("SecurityHeaders")).ValidateDataAnnotations();
+
             //Get platform version from GetExecutingAssembly
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
@@ -561,7 +563,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseHsts();
             }
 
-            app.UseSecurityHeaders();
+            app.UseSecurityPolicyHeaders();
 
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
