@@ -58,6 +58,14 @@ angular.module('platformWebApp')
         }
     }
 
+    $scope.hasOptionalDependencies = function (dependencies) {
+        var result = _.find(dependencies, function (x) {
+            return x.optional;
+        });
+
+        return result;
+    }
+
     $scope.formDependencyVersion = function (dependency) {
         return dependency.version.major + '.' + dependency.version.minor + '.' + dependency.version.patch;
     };
