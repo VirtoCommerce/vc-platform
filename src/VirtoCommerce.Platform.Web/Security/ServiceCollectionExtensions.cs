@@ -120,46 +120,44 @@ namespace VirtoCommerce.Platform.Web.Security
             }
         }
 
-        public static void UseSecurityPolicyHeaders(this IApplicationBuilder app)
+        public static void UseCustomSecurityHeaders(this IApplicationBuilder app)
         {
-            var securityHeadersOptions = app.ApplicationServices.GetService<IOptions<SecurityHeadersOptions>>().Value;
+            var policies = new HeaderPolicyCollection().AddDefaultSecurityHeaders();
+            var options = app.ApplicationServices.GetService<IOptions<SecurityHeadersOptions>>().Value;
 
-            var policyCollection = new HeaderPolicyCollection()
-                .AddDefaultSecurityHeaders();
-
-            if (string.Equals(securityHeadersOptions.FrameOptions, "SameOrigin", StringComparison.OrdinalIgnoreCase))
+            if (options.FrameOptions.EqualsIgnoreCase("SameOrigin"))
             {
-                policyCollection = policyCollection.AddFrameOptionsSameOrigin();
+                policies.AddFrameOptionsSameOrigin();
             }
-            else if (string.Equals(securityHeadersOptions.FrameOptions, "Deny", StringComparison.OrdinalIgnoreCase))
+            else if (options.FrameOptions.EqualsIgnoreCase("Deny"))
             {
-                policyCollection = policyCollection.AddFrameOptionsDeny();
+                policies.AddFrameOptionsDeny();
             }
-            else if (!string.IsNullOrEmpty(securityHeadersOptions.FrameOptions))
+            else if (!string.IsNullOrEmpty(options.FrameOptions))
             {
-                policyCollection = policyCollection.AddFrameOptionsSameOrigin(securityHeadersOptions.FrameOptions);
+                policies.AddFrameOptionsSameOrigin(options.FrameOptions);
             }
 
-            policyCollection = policyCollection.AddContentSecurityPolicy(builder =>
+            policies.AddContentSecurityPolicy(builder =>
             {
                 builder.AddObjectSrc().None();
                 builder.AddFormAction().Self();
 
-                if (string.Equals(securityHeadersOptions.FrameAncestors, "None", StringComparison.OrdinalIgnoreCase))
+                if (options.FrameAncestors.EqualsIgnoreCase("None"))
                 {
                     builder.AddFrameAncestors().None();
                 }
-                else if (string.Equals(securityHeadersOptions.FrameAncestors, "Self", StringComparison.OrdinalIgnoreCase))
+                else if (options.FrameAncestors.EqualsIgnoreCase("Self"))
                 {
                     builder.AddFrameAncestors().Self();
                 }
-                else if (!string.IsNullOrEmpty(securityHeadersOptions.FrameAncestors))
+                else if (!string.IsNullOrEmpty(options.FrameAncestors))
                 {
-                    builder.AddFrameAncestors().From(securityHeadersOptions.FrameAncestors);
+                    builder.AddFrameAncestors().From(options.FrameAncestors);
                 }
             });
 
-            app.UseSecurityHeaders(policyCollection);
+            app.UseSecurityHeaders(policies);
         }
     }
 }

@@ -563,7 +563,7 @@ namespace VirtoCommerce.Platform.Web
                 app.UseHsts();
             }
 
-            app.UseSecurityPolicyHeaders();
+            app.UseCustomSecurityHeaders();
 
             //Return all errors as Json response
             app.UseMiddleware<ApiErrorWrappingMiddleware>();
