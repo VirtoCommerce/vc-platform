@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Search;
@@ -117,6 +118,46 @@ namespace VirtoCommerce.Platform.Web.Security
                     options.KnownProxies.Clear();
                 });
             }
+        }
+
+        public static void UseCustomSecurityHeaders(this IApplicationBuilder app)
+        {
+            var policies = new HeaderPolicyCollection().AddDefaultSecurityHeaders();
+            var options = app.ApplicationServices.GetService<IOptions<SecurityHeadersOptions>>().Value;
+
+            if (options.FrameOptions.EqualsIgnoreCase("SameOrigin"))
+            {
+                policies.AddFrameOptionsSameOrigin();
+            }
+            else if (options.FrameOptions.EqualsIgnoreCase("Deny"))
+            {
+                policies.AddFrameOptionsDeny();
+            }
+            else if (!string.IsNullOrEmpty(options.FrameOptions))
+            {
+                policies.AddFrameOptionsSameOrigin(options.FrameOptions);
+            }
+
+            policies.AddContentSecurityPolicy(builder =>
+            {
+                builder.AddObjectSrc().None();
+                builder.AddFormAction().Self();
+
+                if (options.FrameAncestors.EqualsIgnoreCase("None"))
+                {
+                    builder.AddFrameAncestors().None();
+                }
+                else if (options.FrameAncestors.EqualsIgnoreCase("Self"))
+                {
+                    builder.AddFrameAncestors().Self();
+                }
+                else if (!string.IsNullOrEmpty(options.FrameAncestors))
+                {
+                    builder.AddFrameAncestors().From(options.FrameAncestors);
+                }
+            });
+
+            app.UseSecurityHeaders(policies);
         }
     }
 }
