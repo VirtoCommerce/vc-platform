@@ -16,13 +16,26 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.36
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.6
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.36
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@VCST-1109
     with:
       uploadDocker: 'true'
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
+  
+  publish-tag:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: publish-tag  
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
+      with:
+        artifactUrl: ${{ needs.build.outputs.imageTag}}
+        repoOrg: ${{ github.repository_owner }}
+        downloadComment: 'Image tag:'
+
