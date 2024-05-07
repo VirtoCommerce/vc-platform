@@ -6,6 +6,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
     {
         public Uri ModulesManifestUrl { get; set; }
 
+        public Uri ModulesCategoriesUrl { get; set; }
+
         //Allows to set additional data sources for loading module manifests.
         //The resulting manifests will be merged with manifests that are loaded from data source is set by ModulesManifestUrl setting.
         //Example: "ExternalModules:ExtraModulesManifestUrls": [ "c:\\my-modules-registry-from-file.json", "http://somewhere.com/my-modules-registry.json" ]
@@ -13,7 +15,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         /// <summary>
         /// Get or set an Http  Authorization Schema for ModulesManifestUrl.
-        /// Authorization: [auth-scheme] [authorization-parameters]
+        /// Authorization: [auth-scheme] [authorization-parameters]ModulesManifestUrl
         /// For Private GitLab
         /// Read https://docs.gitlab.com/ee/api/
         /// For Private GitHub

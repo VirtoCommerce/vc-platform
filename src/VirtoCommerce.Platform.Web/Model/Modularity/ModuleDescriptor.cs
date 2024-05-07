@@ -26,7 +26,8 @@ namespace VirtoCommerce.Platform.Web.Modularity
             IsRemovable = moduleInfo.IsRemovable;
             IsInstalled = moduleInfo.IsInstalled;
             PlatformVersion = moduleInfo.PlatformVersion.ToString();
-            Groups = moduleInfo.Groups;
+            //Groups = moduleInfo.Groups;
+            Groups = moduleInfo.Categories.Select(c => c.Id).ToList();
             if (moduleInfo.Dependencies != null)
             {
                 Dependencies = moduleInfo.Dependencies.Select(x => new ModuleIdentity(x.Id, x.Version)).ToList();

@@ -44,6 +44,19 @@ namespace VirtoCommerce.Platform.Modules
                             externalModuleInfos = externalModuleInfos.Concat(extraManifests).Distinct();
                         }
                     }
+
+                    if (_options.ModulesCategoriesUrl != null)
+                    {
+                        var moduleCategories = LoadModulesCategories(_options.ModulesCategoriesUrl);
+
+                        // Apply modules categories
+                        foreach (var externalModuleInfo in externalModuleInfos)
+                        {
+                            var categories = moduleCategories.Where(c => c.Modules.Contains(externalModuleInfo.Id)).OrderBy(c => c.Id);
+                            externalModuleInfo.Categories.AddRange(categories);
+                        }
+                    }
+
                     foreach (var externalModuleInfo in externalModuleInfos)
                     {
                         if (!Modules.OfType<ManifestModuleInfo>().Contains(externalModuleInfo))
@@ -141,7 +154,7 @@ namespace VirtoCommerce.Platform.Modules
 
             var result = new List<ManifestModuleInfo>();
 
-            _logger.LogDebug("Download module manifests from " + manifestUrl);
+            _logger.LogDebug("Download module manifests from {ManifestUrl}", manifestUrl);
 
             using (var stream = _externalClient.OpenRead(manifestUrl))
             {
@@ -172,7 +185,7 @@ namespace VirtoCommerce.Platform.Modules
                         }
                         else
                         {
-                            _logger.LogError($"module {manifest.Id} has  invalid  format, missed 'versions'");
+                            _logger.LogError("Module {ModuleId} has invalid format, missed 'versions'", manifest.Id);
                         }
                     }
                 }
@@ -180,6 +193,21 @@ namespace VirtoCommerce.Platform.Modules
 
             return result;
         }
+
+        private IEnumerable<ModuleCategoryInfo> LoadModulesCategories(Uri categoriesUrl)
+        {
+            ArgumentNullException.ThrowIfNull(categoriesUrl);
+
+            _logger.LogDebug("Download module categories from {categoriesUrl}", categoriesUrl);
+
+            using (var stream = _externalClient.OpenRead(categoriesUrl))
+            {
+                var manifest = stream.DeserializeJson<ModuleCategoriesInfo>();
+                return manifest.Categories;
+
+            }
+        }
+
         /// <summary>
         /// Get the  new ManifestModuleInfo for module version that has exactly the same major version as the current platform
         /// </summary>

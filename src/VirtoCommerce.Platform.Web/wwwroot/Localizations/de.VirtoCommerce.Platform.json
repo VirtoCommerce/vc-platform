@@ -267,7 +267,7 @@
       "modules-list": {
         "subtitle": "Module Management",
         "labels": {
-          "grouping": "Modul Bundles anzeigen",
+          "grouping": "Gruppieren Sie Module nach Kategorie",
           "ungrouped": "Andere",
           "no-updates": "Keine Aktualisierungen gefunden.",
           "no-modules-part1": "Keine neue Module zu installieren.",

@@ -40,6 +40,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public bool IsRemovable { get; set; }
         public bool IsInstalled { get; set; }
         public ICollection<string> Groups { get; } = new List<string>();
+        public ICollection<ModuleCategoryInfo> Categories { get; } = new List<ModuleCategoryInfo>();
         public string FullPhysicalPath { get; set; }
         public ICollection<string> Errors { get; } = new List<string>();
         public bool UseFullTypeNameInSwagger { get; set; }

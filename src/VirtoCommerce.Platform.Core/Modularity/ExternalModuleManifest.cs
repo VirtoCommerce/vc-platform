@@ -25,6 +25,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         public string Tags { get; set; }
 
+        public string[] Categories { get; set; }
+
         public string[] Groups { get; set; }
 
         public IList<ExternalModuleManifestVersion> Versions { get; set; } = new List<ExternalModuleManifestVersion>();
@@ -71,7 +73,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                                                              .ThenByDescending(x => x.VersionTag).FirstOrDefault();
 
                 var addPreRelease = latestPreReleaseVersion != null;
-                if(addPreRelease)
+                if (addPreRelease)
                 {
                     addPreRelease = latestReleaseVersion == null || (!latestPreReleaseVersion.SemanticVersion.Equals(latestReleaseVersion.SemanticVersion)
                                                                      && latestReleaseVersion.SemanticVersion.IsCompatibleWithBySemVer(latestPreReleaseVersion.SemanticVersion));
