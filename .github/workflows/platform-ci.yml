@@ -1,5 +1,5 @@
-# v3.800.4
-# https://virtocommerce.atlassian.net/browse/VCST-488
+# v3.800.6
+# https://virtocommerce.atlassian.net/browse/VCST-915
 name: Platform CI
 
 on:
@@ -75,12 +75,12 @@ jobs:
         echo "UPDATE_LATEST_TAG=${{ github.event.inputs.forceLatest }}" >> $GITHUB_ENV
 
     - name: Set RELEASE_STATUS
-      if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+      if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') && github.event_name == 'push' }}
       run: |
         echo "RELEASE_STATUS=true" >> $GITHUB_ENV
 
     - name: Set BUILD_DOCKER
-      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-dockerenv' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main') }}
       run: |
         echo "BUILD_DOCKER=true" >> $GITHUB_ENV
 
@@ -112,14 +112,14 @@ jobs:
 
     - name: Set DOCKER_TAG variable
       run: |
-        if [ '${{ github.ref }}' = 'refs/heads/master' ]; then
+        if [ '${{ github.ref }}' = 'refs/heads/master' ] || [ '${{ github.ref }}' = 'refs/heads/main' ]; then
           echo "DOCKER_TAG=${{ steps.image.outputs.shortVersion }}" >> $GITHUB_ENV
         else
           echo "DOCKER_TAG=${{ steps.image.outputs.taggedVersion }}" >> $GITHUB_ENV
         fi;
 
     - name: Add version suffix
-      if: ${{ github.ref != 'refs/heads/master' }}
+      if: ${{ github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main' }}
       uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
       with:
         versionSuffix: ${{ env.VERSION_SUFFIX }}
@@ -178,11 +178,11 @@ jobs:
         installSampleData: 'false'
 
     - name: Publish Nuget
-      if: ${{ github.ref == 'refs/heads/master'}}
+      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
       uses: VirtoCommerce/vc-github-actions/publish-nuget@master
 
     - name: Publish to Blob
-      if: ${{ github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      if: ${{ github.ref == 'refs/heads/dev' || github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && (github.ref != 'refs/heads/master' || github.ref != 'refs/heads/main')) }}
       id: blobRelease
       uses: VirtoCommerce/vc-github-actions/publish-blob-release@master
       with:
@@ -213,14 +213,14 @@ jobs:
         downloadComment: 'Artifact URL:'
 
     - name: Publish Github Release
-      if: ${{ github.ref == 'refs/heads/master' }}
+      if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
       with:
         changelog: ${{ steps.changelog.outputs.changelog }}
         organization: ${{ github.repository_owner }}
       uses: VirtoCommerce/vc-github-actions/publish-github-release@master
 
     - name: Create deployment matrix
-      if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'}}
+      if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
       uses: VirtoCommerce/vc-github-actions/cloud-create-deploy-matrix@master
       id: deployment-matrix
       with:
@@ -286,7 +286,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch')}}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.4
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.6    
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -301,11 +301,9 @@ jobs:
 
 
   deploy-cloud:
-    if: ${{ ((github.ref == 'refs/heads/master') || 
-        (github.ref == 'refs/heads/dev')) && 
-        github.event_name == 'push' }}
+    if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.4
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.6    
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
