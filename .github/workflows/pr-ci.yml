@@ -1,4 +1,5 @@
-# v3.200.36
+# v3.800.7
+# https://virtocommerce.atlassian.net/browse/VCST-1109
 name: Platform PR build
 
 on:
@@ -16,13 +17,28 @@ on:
 
 jobs:
   test:
-    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.200.36
+    uses: VirtoCommerce/.github/.github/workflows/test-and-sonar.yml@v3.800.7
     secrets:
       sonarToken: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.200.36
+    uses: VirtoCommerce/.github/.github/workflows/build.yml@v3.800.7
     with:
       uploadDocker: 'true'
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
+  
+  publish-tag:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+    steps:
+    - name: publish-tag  
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
+      with:
+        artifactUrl: ${{ needs.build.outputs.imageTag}}
+        repoOrg: ${{ github.repository_owner }}
+        downloadComment: 'Image tag:'
+        githubToken: ${{ env.GITHUB_TOKEN }}
