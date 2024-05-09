@@ -41,12 +41,20 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
             }];
             break;
         case 'available':
-            blade.toolbarCommands = [{
-                name: "platform.commands.install", icon: 'fas fa-plus',
-                executeMethod: function () { $scope.confirmActionInDialog('install', $scope.gridApi.selection.getSelectedRows()); },
-                canExecuteMethod: isItemsChecked,
-                permission: 'platform:module:manage'
-            }];
+            blade.toolbarCommands = [
+                {
+                    name: "platform.commands.install", icon: 'fas fa-plus',
+                    executeMethod: function () { $scope.confirmActionInDialog('install', $scope.gridApi.selection.getSelectedRows()); },
+                    canExecuteMethod: isItemsChecked,
+                    permission: 'platform:module:manage'
+                },
+                {
+                    name: "platform.commands.group-by", icon: 'far fa-object-group',
+                    executeMethod: function () { $scope.blade.isGrouped = !$scope.blade.isGrouped; },
+                    canExecuteMethod: function () { return true; },
+                    permission: 'platform:module:view'
+                }
+            ];
             break;
         case 'installed':
             blade.toolbarCommands = [{

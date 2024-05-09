@@ -47,10 +47,10 @@ angular.module('platformWebApp')
 
                     // prepare bundled (grouped) data source of available modules
                     if (!latest.isInstalled && !latest.$alternativeVersion) {
-                        if (_.any(latest.groups)) {
-                            _.each(latest.groups, function (x, index) {
+                        if (_.any(latest.categories)) {
+                            _.each(latest.categories, function (x, index) {
                                 var clone = angular.copy(latest);
-                                clone.$group = x;
+                                clone.$group = x.name;
                                 moduleHelper.moduleBundles.push(clone);
                             });
                         } else {

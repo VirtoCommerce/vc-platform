@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 using VirtoCommerce.Platform.Core.Common;
 
 namespace VirtoCommerce.Platform.Core.Modularity
@@ -25,6 +26,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         public string Tags { get; set; }
 
+        [XmlIgnore]
         public string[] Categories { get; set; }
 
         public string[] Groups { get; set; }

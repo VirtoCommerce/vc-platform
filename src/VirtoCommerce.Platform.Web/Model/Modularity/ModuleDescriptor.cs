@@ -26,8 +26,8 @@ namespace VirtoCommerce.Platform.Web.Modularity
             IsRemovable = moduleInfo.IsRemovable;
             IsInstalled = moduleInfo.IsInstalled;
             PlatformVersion = moduleInfo.PlatformVersion.ToString();
-            //Groups = moduleInfo.Groups;
-            Groups = moduleInfo.Categories.Select(c => c.Id).ToList();
+            Groups = moduleInfo.Groups;
+            Categories = moduleInfo.Categories;
             if (moduleInfo.Dependencies != null)
             {
                 Dependencies = moduleInfo.Dependencies.Select(x => new ModuleIdentity(x.Id, x.Version)).ToList();
@@ -62,6 +62,7 @@ namespace VirtoCommerce.Platform.Web.Modularity
         public string Copyright { get; set; }
         public string Tags { get; set; }
         public IEnumerable<string> Groups { get; set; }
+        public IEnumerable<ModuleCategoryInfo> Categories { get; set; }
         public IEnumerable<ModuleIdentity> Dependencies { get; set; }
 
         public ICollection<string> ValidationErrors { get; set; }
