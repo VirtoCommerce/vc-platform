@@ -14,10 +14,10 @@ angular.lowercase = function (text) {
 
 
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
-    'platformWebApp.i18n', 'platformWebApp.modules', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
+    'platformWebApp.i18n', 'platformWebApp.modules', 'platformWebApp.moduleHelper', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
     'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps',
     function ($rootScope, $scope, mainMenuService,
-        i18n, modules, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps) {
+        i18n, modules, moduleHelper, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -48,6 +48,9 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
 
             if (authContext.isAuthenticated) {
                 modules.query().$promise.then(function (results) {
+                    moduleHelper.modules = results;
+                    moduleHelper.onLoaded();
+                    
                     var modulesWithErrors = _.filter(results, function (x) { return _.any(x.validationErrors) && x.isInstalled; });
                     if (_.any(modulesWithErrors)) {
                         $scope.platformError = {

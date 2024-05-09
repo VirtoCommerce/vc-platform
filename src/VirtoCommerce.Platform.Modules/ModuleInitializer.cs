@@ -21,6 +21,7 @@ namespace VirtoCommerce.Platform.Modules
         private readonly IServiceCollection _serviceCollection;
         private readonly IConfiguration _configuration;
         private readonly IHostEnvironment _hostingEnvironment;
+        private readonly IModuleCatalog _moduleCatalog;
 
         /// <summary>
         /// Initializes a new instance of <see cref="ModuleInitializer"/>.
@@ -29,16 +30,19 @@ namespace VirtoCommerce.Platform.Modules
         /// <param name="serviceCollection"></param>
         /// <param name="configuration"></param>
         /// <param name="hostingEnvironment"></param>
+        /// <param name="moduleCatalog"></param>
         public ModuleInitializer(
             ILogger<ModuleInitializer> loggerFacade,
             IServiceCollection serviceCollection,
             IConfiguration configuration,
-            IHostEnvironment hostingEnvironment)
+            IHostEnvironment hostingEnvironment,
+            IModuleCatalog moduleCatalog)
         {
             _loggerFacade = loggerFacade ?? throw new ArgumentNullException(nameof(loggerFacade));
             _serviceCollection = serviceCollection;
             _configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
+            _moduleCatalog = moduleCatalog;
         }
 
         /// <summary>
@@ -69,6 +73,11 @@ namespace VirtoCommerce.Platform.Modules
                     if (moduleInstance is IHasHostEnvironment hasHostEnvironment)
                     {
                         hasHostEnvironment.HostEnvironment = _hostingEnvironment;
+                    }
+
+                    if (moduleInstance is IHasModuleCatalog hasModuleCatalog)
+                    {
+                        hasModuleCatalog.ModuleCatalog = _moduleCatalog;
                     }
 
                     moduleInstance.Initialize(_serviceCollection);
