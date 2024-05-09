@@ -462,7 +462,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                             {
                                 //TODO: Add JsonConverter which will be materialized concrete ExportImport option type
                                 var options = manifest.Options
-                                    .DefaultIfEmpty(new ExportImportOptions { HandleBinaryData = manifest.HandleBinaryData, ModuleIdentity = new ModuleIdentity(moduleDescriptor.Identity.Id, moduleDescriptor.Identity.Version) })
+                                    .DefaultIfEmpty(new ExportImportOptions { HandleBinaryData = manifest.HandleBinaryData, ModuleIdentity = new ModuleIdentity(moduleDescriptor.Identity.Id, moduleDescriptor.Identity.Version, false) })
                                     .FirstOrDefault(x => x.ModuleIdentity.Id == moduleDescriptor.Identity.Id);
                                 await importer.ImportAsync(modulePartStream, options, ModuleProgressCallback, cancellationToken);
                             }
@@ -512,7 +512,7 @@ namespace VirtoCommerce.Platform.Data.ExportImport
                             //TODO: Add JsonConverter which will be materialized concrete ExportImport option type
                             //ToDo: Added check ExportImportOptions for modules (DefaultIfEmpty)
                             var options = manifest.Options
-                                .DefaultIfEmpty(new ExportImportOptions { HandleBinaryData = manifest.HandleBinaryData, ModuleIdentity = new ModuleIdentity(module.Id, SemanticVersion.Parse(module.Version)) })
+                                .DefaultIfEmpty(new ExportImportOptions { HandleBinaryData = manifest.HandleBinaryData, ModuleIdentity = new ModuleIdentity(module.Id, SemanticVersion.Parse(module.Version.Trim()), module.Optional) })
                                 .FirstOrDefault(x => x.ModuleIdentity.Id == moduleDescriptor.Identity.Id);
 
                             using (var stream = zipEntry.Open())
