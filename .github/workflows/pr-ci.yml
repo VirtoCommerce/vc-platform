@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [ master, dev ]
     paths-ignore:
-      - '.github/**'
+      #- '.github/**'
       - 'docs/**'
       - 'build/**'
       - 'README.md'
