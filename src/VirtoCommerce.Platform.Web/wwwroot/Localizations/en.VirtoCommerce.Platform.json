@@ -277,6 +277,7 @@
           "description": "Description",
           "platform-version": "Platform Version",
           "dependencies": "Dependencies",
+          "optional-dependencies": "Optional dependencies",
           "tags": "Tags",
           "install-version": "Install version",
           "errors": "Errors"

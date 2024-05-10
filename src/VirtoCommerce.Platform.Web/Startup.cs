@@ -103,6 +103,9 @@ namespace VirtoCommerce.Platform.Web
 
             ConsoleLog.EndOperation();
 
+            // Optional Modules Dependecy Resolving
+            services.Add(ServiceDescriptor.Singleton(typeof(IOptionalDependency<>), typeof(OptionalDependencyManager<>)));
+
             services.AddForwardedHeaders();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

@@ -111,5 +111,28 @@ angular.module('platformWebApp').config(['$stateProvider', function ($stateProvi
         }])
     .factory('platformWebApp.moduleHelper', function () {
         // semver comparison: https://gist.github.com/TheDistantSea/8021359
-        return {};
+        var listeners = [];
+
+        function isModuleInstalled(moduleId) {
+            return _.some(this.modules, function (x) {
+                return x.id === moduleId && x.isInstalled;
+            });
+        }
+
+        function register(callback) {
+            listeners.push(callback);
+        }
+
+        function onLoaded(args) {
+            listeners.forEach(function (callback) {
+                callback(args);
+            });
+        }
+
+        return {
+            modules: [],
+            isModuleInstalled: isModuleInstalled,
+            register: register,
+            onLoaded: onLoaded
+        }
     });

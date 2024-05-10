@@ -1,4 +1,4 @@
-﻿using System.Xml.Serialization;
+using System.Xml.Serialization;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
@@ -9,5 +9,8 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
         [XmlAttribute("version")]
         public string Version { get; set; }
+
+        [XmlAttribute("optional")]
+        public bool Optional { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         public ModuleIdentity Identity { get; private set; }
         public string Id { get; private set; }
         public SemanticVersion Version { get; private set; }
+        public bool Optional { get; private set; }
         public string VersionTag { get; set; }
         public SemanticVersion PlatformVersion { get; private set; }
         public string Title { get; private set; }
@@ -74,12 +75,12 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
             if (manifest.Dependencies != null)
             {
-                Dependencies.AddRange(manifest.Dependencies.Select(x => new ModuleIdentity(x.Id, SemanticVersion.Parse(x.Version))));
+                Dependencies.AddRange(manifest.Dependencies.Select(x => new ModuleIdentity(x.Id, SemanticVersion.Parse(x.Version), x.Optional)));
             }
 
             if (manifest.Incompatibilities != null)
             {
-                Incompatibilities.AddRange(manifest.Incompatibilities.Select(x => new ModuleIdentity(x.Id, SemanticVersion.Parse(x.Version))));
+                Incompatibilities.AddRange(manifest.Incompatibilities.Select(x => new ModuleIdentity(x.Id, SemanticVersion.Parse(x.Version), x.Optional)));
             }
 
             Title = manifest.Title;
@@ -92,7 +93,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             RequireLicenseAcceptance = manifest.RequireLicenseAcceptance;
             Copyright = manifest.Copyright;
             Tags = manifest.Tags;
-            Identity = new ModuleIdentity(Id, Version);
+            Identity = new ModuleIdentity(Id, Version, Optional);
             ModuleType = manifest.ModuleType;
 
             if (manifest.Groups != null)
@@ -134,11 +135,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
 
             if (version.Dependencies != null)
             {
-                Dependencies.AddRange(version.Dependencies.Select(x => new ModuleIdentity(x.Id, SemanticVersion.Parse(x.Version))));
+                Dependencies.AddRange(version.Dependencies.Select(x => new ModuleIdentity(x.Id, SemanticVersion.Parse(x.Version), x.Optional)));
             }
             if (version.Incompatibilities != null)
             {
-                Incompatibilities.AddRange(version.Incompatibilities.Select(x => new ModuleIdentity(x.Id, SemanticVersion.Parse(x.Version))));
+                Incompatibilities.AddRange(version.Incompatibilities.Select(x => new ModuleIdentity(x.Id, SemanticVersion.Parse(x.Version), x.Optional)));
             }
 
             Title = manifest.Title;
@@ -151,7 +152,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             RequireLicenseAcceptance = manifest.RequireLicenseAcceptance;
             Copyright = manifest.Copyright;
             Tags = manifest.Tags;
-            Identity = new ModuleIdentity(Id, Version);
+            Identity = new ModuleIdentity(Id, Version, Optional);
             if (manifest.Groups != null)
             {
                 Groups.AddRange(manifest.Groups);
