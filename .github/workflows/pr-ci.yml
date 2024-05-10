@@ -28,15 +28,25 @@ jobs:
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
   
+  publish:
+    needs:
+      build
+    uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.800.7
+    with:
+      fullKey: ${{ needs.build.outputs.dockerFullKey }}
+      shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
+      dockerTar: ${{ needs.build.outputs.dockerTar }}
+    secrets:
+      envPAT: ${{ secrets.REPO_TOKEN }}
+      dockerUser: ${{ secrets.DOCKER_USERNAME }}
+      dockerToken: ${{ secrets.DOCKER_TOKEN }}
+  
   publish-tag:
-    needs: build
+    needs: publish
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       ARTIFACT_NAME: 'platform'
-      envPAT: ${{ secrets.REPO_TOKEN }}
-      dockerUser: ${{ secrets.DOCKER_USERNAME }}
-      dockerToken: ${{ secrets.DOCKER_TOKEN }}
     steps:
     # - name: Get cache key
     #   uses: VirtoCommerce/vc-github-actions/cache-get-key@master
@@ -44,18 +54,12 @@ jobs:
     #   with:
     #     runnerOs: ${{ runner.os  }}
     #     artifactName: ${{ env.ARTIFACT_NAME }}
-    - name: Publish image
-      uses: VirtoCommerce/.github/.github/workflows/publish-docker.yml@v3.800.7
-      id: publish-image
-      with:
-        fullKey: ${{ needs.build.outputs.dockerFullKey }}
-        shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
-        dockerTar: ${{ needs.build.outputs.dockerTar }}
+        
     - name: publish-tag  
       if: ${{ github.event_name == 'pull_request' }}
       uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
       with:
-        artifactUrl: ${{ steps.publish-image.tag}}
+        artifactUrl: ${{ needs.publish.outputs.tag}}
         repoOrg: ${{ github.repository_owner }}
         downloadComment: 'Image tag:'
         githubToken: ${{ env.GITHUB_TOKEN }}  
