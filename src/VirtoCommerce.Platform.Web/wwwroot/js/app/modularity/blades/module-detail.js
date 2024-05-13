@@ -66,6 +66,12 @@ angular.module('platformWebApp')
         return result;
     }
 
+    $scope.isModulePresent = function (dependencyId) {
+        return _.any(moduleHelper.allmodules, function (x) {
+            return x.id === dependencyId;
+        });
+    }
+
     $scope.formDependencyVersion = function (dependency) {
         return dependency.version.major + '.' + dependency.version.minor + '.' + dependency.version.patch;
     };
