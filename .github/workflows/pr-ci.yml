@@ -38,7 +38,7 @@ jobs:
       dockerTar: ${{ needs.build.outputs.dockerTar }}
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
-      dockerUser: $GITHUB_ACTOR
+      dockerUser: ${{ secrets.DOCKER_USERNAME }} # $GITHUB_ACTOR
       dockerToken: ${{ secrets.REPO_TOKEN }}
       # dockerUser: ${{ secrets.DOCKER_USERNAME }}
       # dockerToken: ${{ secrets.DOCKER_TOKEN }}
