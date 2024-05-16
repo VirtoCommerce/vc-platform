@@ -36,6 +36,7 @@ jobs:
       fullKey: ${{ needs.build.outputs.dockerFullKey }}
       shortKey: '${{ needs.build.outputs.dockerShortKey }}-'
       dockerTar: ${{ needs.build.outputs.dockerTar }}
+      publishToDocker: true
     secrets:
       envPAT: ${{ secrets.REPO_TOKEN }}
       # dockerUser: $GITHUB_ACTOR
