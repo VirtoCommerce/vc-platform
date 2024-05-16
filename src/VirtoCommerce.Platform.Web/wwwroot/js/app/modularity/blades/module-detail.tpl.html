@@ -89,7 +89,8 @@
                     <div class="list-t">{{ 'platform.blades.module-detail.labels.optional-dependencies' | translate }}</div>
                     <div class="list-descr">
                       <div ng-repeat="dependency in blade.currentEntity.dependencies | filter:{ optional: true }">
-                        <a class="__link" ng-click="openDependencyModule(dependency)">{{dependency.id}}</a> {{formDependencyVersion(dependency)}}
+                        <div ng-if="isModulePresent(dependency.id)"><a class="__link" ng-click="openDependencyModule(dependency)">{{dependency.id}}</a> {{formDependencyVersion(dependency)}}</div>
+                        <div ng-if="!isModulePresent(dependency.id)">{{ dependency.id }} {{formDependencyVersion(dependency)}}</div> 
                       </div>
                     </div>
                   </li>
