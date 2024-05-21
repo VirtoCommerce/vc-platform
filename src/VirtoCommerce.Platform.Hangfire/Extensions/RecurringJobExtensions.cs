@@ -22,6 +22,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
         /// <param name="settingsManager"></param>
         /// <param name="settingCronJob"></param>
         /// <returns></returns>
+        [Obsolete("Use IRecurringJobService.WatchJobSetting()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public static void WatchJobSetting(this IRecurringJobManager recurringJobManager,
             ISettingsManager settingsManager,
             SettingCronJob settingCronJob)
@@ -41,6 +42,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
         /// <param name="jobId"></param>
         /// <param name="timeZoneInfo"></param>
         /// <param name="queue"></param>
+        [Obsolete("Use IRecurringJobService.WatchJobSetting()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public static void WatchJobSetting<T>(this IRecurringJobManager recurringJobManager,
             ISettingsManager settingsManager,
             SettingDescriptor enablerSetting,
@@ -78,6 +80,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
         /// <param name="settingsManager"></param>
         /// <param name="settingCronJob"></param>
         /// <returns></returns>
+        [Obsolete("Use IRecurringJobService.WatchJobSettingAsync()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public static Task WatchJobSettingAsync(this IRecurringJobManager recurringJobManager,
             ISettingsManager settingsManager,
             SettingCronJob settingCronJob)
@@ -104,6 +107,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
         /// <param name="settingsManager"></param>
         /// <param name="message"></param>
         /// <returns></returns>
+        [Obsolete("Use RecurringJobService.Handle()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public static Task HandleSettingChangeAsync(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, ObjectSettingChangedEvent message)
         {
             if (recurringJobManager == null)
@@ -117,6 +121,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             return recurringJobManager.HandleSettingChangeAsyncIntnl(settingsManager, message);
         }
 
+        [Obsolete("Use RecurringJobService.Handle()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         private static async Task HandleSettingChangeAsyncIntnl(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, ObjectSettingChangedEvent message)
         {
             foreach (var changedEntry in message.ChangedEntries.Where(x => x.EntryState == EntryState.Modified
@@ -129,6 +134,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             }
         }
 
+        [Obsolete("Use RecurringJobService.RunOrRemoveJobAsync()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         private static async Task RunOrRemoveJobAsync(this IRecurringJobManager recurringJobManager, ISettingsManager settingsManager, SettingCronJob settingCronJob)
         {
             var processJobEnableSettingValue = await settingsManager.GetValueAsync<object>(settingCronJob.EnableSetting);

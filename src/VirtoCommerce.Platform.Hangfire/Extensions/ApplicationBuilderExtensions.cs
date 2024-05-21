@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
-using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Core.Settings.Events;
 using VirtoCommerce.Platform.Hangfire.Middleware;
 
@@ -61,9 +60,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
             var mvcJsonOptions = appBuilder.ApplicationServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
             GlobalConfiguration.Configuration.UseSerializerSettings(mvcJsonOptions.Value.SerializerSettings);
 
-            var recurringJobManager = appBuilder.ApplicationServices.GetService<IRecurringJobManager>();
-            var settingsManager = appBuilder.ApplicationServices.GetService<ISettingsManager>();
-            appBuilder.RegisterEventHandler<ObjectSettingChangedEvent>(message => recurringJobManager.HandleSettingChangeAsync(settingsManager, message));
+            appBuilder.RegisterEventHandler<ObjectSettingChangedEvent, RecurringJobService>();
 
             // Add Hangfire filters/middlewares
             var userNameResolver = appBuilder.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<IUserNameResolver>();
