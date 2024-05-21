@@ -180,7 +180,11 @@ public class LocalizableSettingService : ILocalizableSettingService
 
                 if (localizedItem != null)
                 {
-                    localizedItem.Value = value;
+                    if (localizedItem.Value != value)
+                    {
+                        localizedItem.Value = value;
+                        itemsToSave.Add(localizedItem);
+                    }
                 }
                 else
                 {
@@ -189,9 +193,9 @@ public class LocalizableSettingService : ILocalizableSettingService
                     localizedItem.Alias = alias;
                     localizedItem.LanguageCode = language;
                     localizedItem.Value = value;
-                }
 
-                itemsToSave.Add(localizedItem);
+                    itemsToSave.Add(localizedItem);
+                }
             }
         }
 
