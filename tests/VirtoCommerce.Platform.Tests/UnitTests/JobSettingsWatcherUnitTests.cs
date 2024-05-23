@@ -6,7 +6,6 @@ using Hangfire.States;
 using Moq;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Hangfire;
-using VirtoCommerce.Platform.Hangfire.Extensions;
 using Xunit;
 
 namespace VirtoCommerce.Platform.Tests.UnitTests
@@ -23,14 +22,14 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         }
 
         [Fact]
-        public void WatchJobSetting_WithBuilder_AddReccuringJob()
+        public void WatchJobSetting_WithBuilder_AddRecurringJob()
         {
             _settingsManagerMock.Setup(x => x.GetObjectSettingAsync("enablername", null, null)).ReturnsAsync(new ObjectSettingEntry());
             _settingsManagerMock.Setup(x => x.GetObjectSettingAsync("cronname", null, null)).ReturnsAsync(new ObjectSettingEntry());
+            var recurringJobService = new RecurringJobService(_recurringJobManagerMock.Object, _settingsManagerMock.Object);
 
             //Act
-            RecurringJobExtensions.WatchJobSettingAsync(_recurringJobManagerMock.Object,
-                _settingsManagerMock.Object,
+            recurringJobService.WatchJobSettingAsync(
                 new SettingCronJobBuilder()
                     .SetEnablerSetting(new SettingDescriptor { DefaultValue = true, Name = "enablername" })
                     .SetCronSetting(new SettingDescriptor { DefaultValue = "* * * *", Name = "cronname" })
@@ -46,15 +45,14 @@ namespace VirtoCommerce.Platform.Tests.UnitTests
         }
 
         [Fact]
-        public void WatchJobSetting_WithoutBuilder_AddReccuringJob()
+        public void WatchJobSetting_WithoutBuilder_AddRecurringJob()
         {
             _settingsManagerMock.Setup(x => x.GetObjectSettingAsync("enablername", null, null)).ReturnsAsync(new ObjectSettingEntry());
             _settingsManagerMock.Setup(x => x.GetObjectSettingAsync("cronname", null, null)).ReturnsAsync(new ObjectSettingEntry());
+            var recurringJobService = new RecurringJobService(_recurringJobManagerMock.Object, _settingsManagerMock.Object);
 
             //Act
-            RecurringJobExtensions.WatchJobSetting<SomeJob>(
-                _recurringJobManagerMock.Object,
-                _settingsManagerMock.Object,
+            recurringJobService.WatchJobSetting<SomeJob>(
                 new SettingDescriptor { DefaultValue = true, Name = "enablername" },
                 new SettingDescriptor { DefaultValue = "* * * *", Name = "cronname" },
                 x => x.Process(),

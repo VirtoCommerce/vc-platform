@@ -19,6 +19,7 @@ namespace VirtoCommerce.Platform.Core.Bus
             _logger = logger;
         }
 
+        [Obsolete("Use IApplicationBuilder.RegisterEventHandler<TEvent, THandler>()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public void RegisterEventHandler<T>(Func<T, Task> handler)
             where T : IEvent
         {
@@ -35,15 +36,14 @@ namespace VirtoCommerce.Platform.Core.Bus
             _handlers.Add(handlerWrapper);
         }
 
+        [Obsolete("Use IApplicationBuilder.RegisterEventHandler<TEvent, THandler>()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public void RegisterEventHandler<T>(Func<T, CancellationToken, Task> handler)
             where T : IEvent
         {
-#pragma warning disable VC0008 // Type or member is obsolete
             RegisterHandler(handler);
-#pragma warning restore VC0008 // Type or member is obsolete
         }
 
-        [Obsolete("Use IApplicationBuilder.RegisterEventHandler<>()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        [Obsolete("Use IApplicationBuilder.RegisterEventHandler<TEvent, THandler>()", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
         public void RegisterHandler<T>(Func<T, CancellationToken, Task> handler)
             where T : IMessage
         {
@@ -58,6 +58,61 @@ namespace VirtoCommerce.Platform.Core.Bus
             };
 
             _handlers.Add(handlerWrapper);
+        }
+
+        public void RegisterEventHandler<T>(IEventHandler<T> handler)
+            where T : IEvent
+        {
+            var eventType = typeof(T);
+            var handlerType = handler.GetType();
+
+            var handlerWrapper = new HandlerWrapper
+            {
+                EventType = eventType,
+                HandlerType = handlerType,
+                HandlerModuleName = handlerType.Module.Assembly.GetName().Name,
+                Handler = (message, _) => handler.Handle((T)message),
+                Logger = _logger
+            };
+
+            _handlers.Add(handlerWrapper);
+        }
+
+        public void RegisterEventHandler<T>(ICancellableEventHandler<T> handler)
+            where T : IEvent
+        {
+            var eventType = typeof(T);
+            var handlerType = handler.GetType();
+
+            var handlerWrapper = new HandlerWrapper
+            {
+                EventType = eventType,
+                HandlerType = handlerType,
+                HandlerModuleName = handlerType.Module.Assembly.GetName().Name,
+                Handler = (message, cancellationToken) => handler.Handle((T)message, cancellationToken),
+                Logger = _logger
+            };
+
+            _handlers.Add(handlerWrapper);
+        }
+
+        public void UnregisterEventHandler<T>(Type handlerType = null)
+            where T : IEvent
+        {
+            var eventType = typeof(T);
+
+            var handlersToRemove = _handlers
+                .Where(x =>
+                    x.EventType.IsAssignableFrom(eventType) &&
+                    (handlerType is null || x.HandlerType == handlerType))
+                .ToList();
+
+            handlersToRemove.ForEach(x => _handlers.Remove(x));
+        }
+
+        public void UnregisterAllEventHandlers()
+        {
+            _handlers.Clear();
         }
 
         public async Task Publish<T>(T @event, CancellationToken cancellationToken = default)

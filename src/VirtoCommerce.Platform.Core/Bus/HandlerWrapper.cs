@@ -13,6 +13,8 @@ namespace VirtoCommerce.Platform.Core.Bus
     {
         public Type EventType { get; set; }
 
+        public Type HandlerType { get; set; }
+
         public string HandlerModuleName { get; set; }
 
         public Func<IMessage, CancellationToken, Task> Handler { get; set; }

@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Logging;
 using Moq;
 using VirtoCommerce.Platform.Core.Bus;
@@ -16,31 +18,91 @@ public class EventHandlerTests
     [Fact]
     public async Task HandleMultipleEventTypesWithSingleRegistration()
     {
-        var bus = new InProcessBus(new Mock<ILogger<InProcessBus>>().Object);
+        var handler = new Handler();
 
-        var domainHandlerEvents = new List<string>();
-        var userLoginHandlerEvents = new List<string>();
-        var userChangedHandlerEvents = new List<string>();
+        var serviceProviderMock = new Mock<IServiceProvider>();
+        serviceProviderMock.Setup(x => x.GetService(typeof(Handler))).Returns(handler);
+
+        var (applicationBuilder, publisher) = GetServices(serviceProviderMock);
 
         // This handler should handle all event types
-        bus.RegisterEventHandler<DomainEvent>(message => Handle(message, domainHandlerEvents));
+        applicationBuilder.RegisterEventHandler<DomainEvent, Handler>();
 
         // These handlers should handle only specific event types
-        bus.RegisterEventHandler<UserLoginEvent>(message => Handle(message, userLoginHandlerEvents));
-        bus.RegisterEventHandler<UserChangedEvent>(message => Handle(message, userChangedHandlerEvents));
+        applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
+        applicationBuilder.RegisterEventHandler<UserChangedEvent, Handler>();
 
-        await bus.Publish(new UserLoginEvent(user: null));
-        await bus.Publish(new UserChangedEvent(changedEntries: null));
+        await publisher.Publish(new UserLoginEvent(user: null));
+        await publisher.Publish(new UserChangedEvent(changedEntries: null));
 
-        domainHandlerEvents.Should().BeEquivalentTo([nameof(UserLoginEvent), nameof(UserChangedEvent)]);
-        userLoginHandlerEvents.Should().BeEquivalentTo([nameof(UserLoginEvent)]);
-        userChangedHandlerEvents.Should().BeEquivalentTo([nameof(UserChangedEvent)]);
+        handler.DomainEvents.Should().BeEquivalentTo([nameof(UserLoginEvent), nameof(UserChangedEvent)]);
+        handler.UserLoginEvents.Should().BeEquivalentTo([nameof(UserLoginEvent)]);
+        handler.UserChangedEvents.Should().BeEquivalentTo([nameof(UserChangedEvent)]);
     }
 
-    private static Task Handle<T>(T message, List<string> events) where T : IEvent
+    [Fact]
+    public async Task UnregisterEventHandler()
     {
-        events.Add(message.GetType().Name);
+        var handler1 = new Handler();
+        var handler2 = new Handler2();
 
-        return Task.CompletedTask;
+        var serviceProviderMock = new Mock<IServiceProvider>();
+        serviceProviderMock.Setup(x => x.GetService(typeof(Handler))).Returns(handler1);
+        serviceProviderMock.Setup(x => x.GetService(typeof(Handler2))).Returns(handler2);
+
+        var (applicationBuilder, publisher) = GetServices(serviceProviderMock);
+
+        applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler>();
+        applicationBuilder.RegisterEventHandler<UserLoginEvent, Handler2>();
+
+        applicationBuilder.UnregisterEventHandler<UserLoginEvent, Handler>();
+
+        await publisher.Publish(new UserLoginEvent(user: null));
+
+        handler1.UserLoginEvents.Should().BeEmpty();
+        handler2.UserLoginEvents.Should().BeEquivalentTo([nameof(UserLoginEvent)]);
+    }
+
+
+    private static (IApplicationBuilder, IEventPublisher) GetServices(Mock<IServiceProvider> serviceProviderMock = null)
+    {
+        serviceProviderMock ??= new Mock<IServiceProvider>();
+
+        var bus = new InProcessBus(new Mock<ILogger<InProcessBus>>().Object);
+        serviceProviderMock.Setup(x => x.GetService(typeof(IEventHandlerRegistrar))).Returns(bus);
+        serviceProviderMock.Setup(x => x.GetService(typeof(IEventPublisher))).Returns(bus);
+
+        var applicationBuilderMock = new Mock<IApplicationBuilder>();
+
+        applicationBuilderMock.Setup(x => x.ApplicationServices).Returns(serviceProviderMock.Object);
+
+        return (applicationBuilderMock.Object, bus);
+    }
+
+    private class Handler2 : Handler;
+
+    private class Handler : IEventHandler<DomainEvent>, IEventHandler<UserLoginEvent>, IEventHandler<UserChangedEvent>
+    {
+        public readonly List<string> DomainEvents = [];
+        public readonly List<string> UserLoginEvents = [];
+        public readonly List<string> UserChangedEvents = [];
+
+        public Task Handle(DomainEvent message)
+        {
+            DomainEvents.Add(message.GetType().Name);
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(UserLoginEvent message)
+        {
+            UserLoginEvents.Add(message.GetType().Name);
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(UserChangedEvent message)
+        {
+            UserChangedEvents.Add(message.GetType().Name);
+            return Task.CompletedTask;
+        }
     }
 }
