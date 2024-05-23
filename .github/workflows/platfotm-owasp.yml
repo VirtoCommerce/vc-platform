@@ -41,6 +41,5 @@ jobs:
         uses: zaproxy/action-baseline@v0.12.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          # docker_name: 'owasp/zap2docker-stable'
           target: 'http://localhost:8090'
           cmd_options: '-a -d'
