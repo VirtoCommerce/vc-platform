@@ -1,3 +1,4 @@
+// This service is functionally identical to the obsolete RecurringJobExtensions
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -96,7 +97,8 @@ public class RecurringJobService : IRecurringJobService, IEventHandler<ObjectSet
                 settingCronJob.RecurringJobId,
                 settingCronJob.Job,
                 cronExpression,
-                new RecurringJobOptions { TimeZone = settingCronJob.TimeZone });
+                settingCronJob.TimeZone,
+                settingCronJob.Queue);
         }
         else
         {
