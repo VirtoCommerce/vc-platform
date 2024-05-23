@@ -38,9 +38,9 @@ jobs:
           validateSwagger: 'false'
 
       - name: OWASP ZAP Full Scan
-        uses: zaproxy/action-baseline@v0.4.0
+        uses: zaproxy/action-baseline@v0.12.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          docker_name: 'owasp/zap2docker-stable'
+          # docker_name: 'owasp/zap2docker-stable'
           target: 'http://localhost:8090'
           cmd_options: '-a -d'
