@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
@@ -302,7 +303,7 @@ namespace VirtoCommerce.Platform.Modules
                 catch (IOException)
                 {
                     // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
-                    // We should not fail platform start in that case - just add warning into the log. In case of unability to place newer version - should fail platform start.
+                    // We should not fail platform start in that case - just add warning into the log. In case of inability to place newer version - should fail platform start.
                     if (versionsAreSameButLaterDate)
                     {
                         _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");
@@ -322,16 +323,16 @@ namespace VirtoCommerce.Platform.Modules
                 return false;
             }
 
-            var currentIs64 = Environment.Is64BitProcess;
-            var targetIs64 = !Is32Bitwise(targetFilePath);
+            var environment = RuntimeInformation.OSArchitecture;
+            var targetDllArchitecture = GetDllArchitecture(targetFilePath);
 
-            if (currentIs64 == targetIs64)
+            if (environment == targetDllArchitecture)
             {
                 return false;
             }
 
-            var sourceIs64 = !Is32Bitwise(sourceFilePath);
-            if (currentIs64 == sourceIs64)
+            var sourceDllArchitecture = GetDllArchitecture(sourceFilePath);
+            if (environment == sourceDllArchitecture)
             {
                 return true;
             }
@@ -354,24 +355,33 @@ namespace VirtoCommerce.Platform.Modules
             return false;
         }
 
-        private bool Is32Bitwise(string dllPath)
+        private Architecture? GetDllArchitecture(string dllPath)
         {
-            try
-            {
-                using var fs = new FileStream(dllPath, FileMode.Open, FileAccess.Read);
-                using var br = new BinaryReader(fs);
-                fs.Seek(0x3c, SeekOrigin.Begin);
-                var peOffset = br.ReadInt32();
+            using var fs = new FileStream(dllPath, FileMode.Open, FileAccess.Read);
+            using var br = new BinaryReader(fs);
 
-                fs.Seek(peOffset, SeekOrigin.Begin);
-                var peHead = br.ReadUInt32();
-
-                return peHead == 0x00004550 && br.ReadUInt16() == 0x14c;
-            }
-            catch (EndOfStreamException exception)
+            fs.Seek(0x3C, SeekOrigin.Begin);
+            var peOffset = br.ReadInt32();
+            fs.Seek(peOffset, SeekOrigin.Begin);
+            var peHead = br.ReadUInt32();
+            if (peHead != 0x00004550)
             {
-                throw new PlatformException($"Failed to read file '{dllPath}'.", exception);
+                return null;
             }
+
+            var machineType = br.ReadUInt16();
+
+            // https://stackoverflow.com/questions/480696/how-to-find-if-a-native-dll-file-is-compiled-as-x64-or-x86
+            Architecture? archType = machineType switch
+            {
+                0x8664 => Architecture.X64,
+                0xAA64 => Architecture.Arm64,
+                0x1C0 => Architecture.Arm,
+                0x14C => Architecture.X86,
+                _ => null
+            };
+
+            return archType;
         }
 
         private bool IsAssemblyRelatedFile(string path)
