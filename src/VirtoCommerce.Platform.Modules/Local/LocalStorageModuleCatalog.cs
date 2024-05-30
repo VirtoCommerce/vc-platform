@@ -364,8 +364,8 @@ namespace VirtoCommerce.Platform.Modules
             var peOffset = br.ReadInt32();
             fs.Seek(peOffset, SeekOrigin.Begin);
             var peHead = br.ReadUInt32();
-            const int PE_SIGNATURE = 0x00004550;
-            if (peHead != PE_SIGNATURE)
+            const int peSignature = 0x00004550;
+            if (peHead != peSignature)
             {
                 return null;
             }
