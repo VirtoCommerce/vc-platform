@@ -355,7 +355,7 @@ namespace VirtoCommerce.Platform.Modules
             return false;
         }
 
-        private Architecture? GetDllArchitecture(string dllPath)
+        private static Architecture? GetDllArchitecture(string dllPath)
         {
             using var fs = new FileStream(dllPath, FileMode.Open, FileAccess.Read);
             using var br = new BinaryReader(fs);
@@ -364,7 +364,8 @@ namespace VirtoCommerce.Platform.Modules
             var peOffset = br.ReadInt32();
             fs.Seek(peOffset, SeekOrigin.Begin);
             var peHead = br.ReadUInt32();
-            if (peHead != 0x00004550)
+            const int PE_SIGNATURE = 0x00004550;
+            if (peHead != PE_SIGNATURE)
             {
                 return null;
             }
