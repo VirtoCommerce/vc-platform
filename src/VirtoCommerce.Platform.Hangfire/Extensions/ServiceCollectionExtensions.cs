@@ -39,6 +39,9 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
 
         public static object AddHangfire(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<RecurringJobService>();
+            services.AddSingleton<IRecurringJobService, RecurringJobService>();
+
             var section = configuration.GetSection("VirtoCommerce:Hangfire");
             var hangfireOptions = new HangfireOptions();
             section.Bind(hangfireOptions);
