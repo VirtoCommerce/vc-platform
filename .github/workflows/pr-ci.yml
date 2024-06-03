@@ -36,7 +36,7 @@ jobs:
       DOCKER_TAR:  ${{ needs.build.outputs.dockerTar }}
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       PACKAGE_SERVER: 'ghcr.io'
-      PUBLISH_TO_DOCKER: true
+      PUBLISH_TO_DOCKER: false
       UPDATE_LATEST_TAG: false
     steps: 
     - name: Get Docker image from cache
