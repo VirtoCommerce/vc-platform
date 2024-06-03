@@ -68,7 +68,7 @@ jobs:
 
     - name: Push to GH
       run: |
-        docker login --username $GITHUB_ACTOR --password ${{ env.GITHUB_TOKEN }} ghcr.io
+        docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_TOKEN }} ghcr.io
         docker push ${{ steps.load-docker.outputs.image }}:${{ steps.load-docker.outputs.tag }}
 
     # - name: Publish Docker Image
