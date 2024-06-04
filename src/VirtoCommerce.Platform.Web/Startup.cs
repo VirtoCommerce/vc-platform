@@ -526,6 +526,9 @@ namespace VirtoCommerce.Platform.Web
                     break;
             }
 
+            // Platform UI options
+            services.AddOptions<PlatformUIOptions>().Bind(Configuration.GetSection("VirtoCommerce:PlatformUI"));
+
             // Add login page UI options
             var loginPageUIOptions = Configuration.GetSection("LoginPageUI");
             services.AddOptions<LoginPageUIOptions>().Bind(loginPageUIOptions);
