@@ -85,7 +85,11 @@ namespace VirtoCommerce.Platform.Security.Services
             {
                 sortInfos = new[] { new SortInfo { SortColumn = ReflectionUtility.GetPropertyName<ApplicationUser>(x => x.UserName), SortDirection = SortDirection.Descending } };
             }
-            result.Results = await query.OrderBySortInfos(sortInfos).Skip(criteria.Skip).Take(criteria.Take).ToArrayAsync();
+            result.Results = await query.OrderBySortInfos(sortInfos)
+                .Skip(criteria.Skip)
+                .Take(criteria.Take)
+                .AsSplitQuery()
+                .ToArrayAsync();
 
             foreach (var user in result.Results)
             {
