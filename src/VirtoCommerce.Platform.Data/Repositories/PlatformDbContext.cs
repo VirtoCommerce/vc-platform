@@ -53,7 +53,8 @@ namespace VirtoCommerce.Platform.Data.Repositories
             modelBuilder.Entity<SettingValueEntity>().HasOne(x => x.Setting)
                         .WithMany(x => x.SettingValues)
                         .HasForeignKey(x => x.SettingId)
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
             modelBuilder.Entity<SettingValueEntity>()
                 .Property(x => x.DecimalValue)
