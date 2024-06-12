@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.Platform.Core.Modularity;
-using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Web.Model.Modularity;
 
 
@@ -28,7 +26,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         /// <returns>The list of available apps</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppDescriptor>>> GetApps()
+        public IEnumerable<AppDescriptor> GetApps()
         {
 
             var authorizedApps = new List<AppDescriptor>
@@ -46,31 +44,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             var applicationList = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
                 .SelectMany(x => x.Apps)
-                .OrderBy(x => x.Title);
+                .Select(x => new AppDescriptor(x))
+                .OrderBy(x => x.Title)
+                .ToList();
 
-            foreach (var moduleAppInfo in applicationList)
-            {
-                if (await AuthorizeAppAsync(moduleAppInfo.Permission))
-                {
-                    authorizedApps.Add(new AppDescriptor(moduleAppInfo));
-                }
-            }
+            return applicationList;
 
-            return authorizedApps;
-
-        }
-
-        private async Task<bool> AuthorizeAppAsync(string permission)
-        {
-            if (string.IsNullOrEmpty(permission))
-            {
-                return true;
-            }
-
-            var result = await _authorizationService.AuthorizeAsync(User, null,
-                new PermissionAuthorizationRequirement(permission));
-
-            return result.Succeeded;
         }
     }
 }
