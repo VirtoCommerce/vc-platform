@@ -25,10 +25,13 @@ public class AppsController : Controller
     [HttpGet]
     public IEnumerable<AppDescriptor> GetApps()
     {
+        var applicationList = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
+            .SelectMany(x => x.Apps)
+            .Select(x => new AppDescriptor(x))
+            .OrderBy(x => x.Title)
+            .ToList();
 
-        var authorizedApps = new List<AppDescriptor>
-        {
-            // Add Commerce Manager by Default
+        applicationList.Insert(0, // Add Commerce Manager by Default
             new AppDescriptor
             {
                 Id = "platform",
@@ -36,14 +39,7 @@ public class AppsController : Controller
                 Description = "Virto Commerce Platform",
                 RelativeUrl = "/",
                 IconUrl = "/images/platform_app.svg"
-            }
-        };
-
-        var applicationList = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
-            .SelectMany(x => x.Apps)
-            .Select(x => new AppDescriptor(x))
-            .OrderBy(x => x.Title)
-            .ToList();
+            });
 
         return applicationList;
 
