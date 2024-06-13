@@ -25,27 +25,21 @@ public class AppsController : Controller
     [HttpGet]
     public IEnumerable<AppDescriptor> GetApps()
     {
-        var apps = new List<AppDescriptor>
-            {
-                // Add Commerce Manager by Default
-                new AppDescriptor
-                {
-                    Id = "platform",
-                    Title = "Commerce Manager",
-                    Description = "Virto Commerce Platform",
-                    RelativeUrl = "/",
-                    IconUrl = "/images/platform_app.svg"
-                }
-            };
-
-        var applicationList = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
+        var apps = _localModuleCatalog.Modules.OfType<ManifestModuleInfo>()
             .SelectMany(x => x.Apps)
-            .OrderBy(x => x.Title);
+            .Select(x => new AppDescriptor(x))
+            .OrderBy(x => x.Title)
+            .ToList();
 
-        foreach (var moduleAppInfo in applicationList)
-        {
-            apps.Add(new AppDescriptor(moduleAppInfo));
-        }
+        apps.Insert(0, // Add Commerce Manager by Default
+            new AppDescriptor
+            {
+                Id = "platform",
+                Title = "Commerce Manager",
+                Description = "Virto Commerce Platform",
+                RelativeUrl = "/",
+                IconUrl = "/images/platform_app.svg"
+            });
 
         return apps;
 
