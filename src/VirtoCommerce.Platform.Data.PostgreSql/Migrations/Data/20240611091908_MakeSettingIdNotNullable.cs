@@ -10,7 +10,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Data
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"DELETE ""PlatformSettingValue"" WHERE ""SettingId"" IS NULL");
+            migrationBuilder.Sql(@"DELETE FROM ""PlatformSettingValue"" WHERE ""SettingId"" IS NULL");
 
             migrationBuilder.AlterColumn<string>(
                 name: "SettingId",
