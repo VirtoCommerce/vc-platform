@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -21,9 +20,15 @@ namespace VirtoCommerce.Platform.Modules
         private readonly LocalStorageModuleCatalogOptions _options;
         private readonly ILogger<LocalStorageModuleCatalog> _logger;
         private readonly IInternalDistributedLockService _distributedLockProvider;
+        private readonly IFileSystem _fileSystem;
+        private readonly ICopyFilePolicy _copyFilePolicy;
         private readonly string _discoveryPath;
 
-        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options, IInternalDistributedLockService distributedLockProvider, ILogger<LocalStorageModuleCatalog> logger)
+        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options,
+            IInternalDistributedLockService distributedLockProvider,
+            IFileSystem fileSystem,
+            ICopyFilePolicy copyFilePolicy,
+            ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
             _discoveryPath = _options.DiscoveryPath;
@@ -34,6 +39,8 @@ namespace VirtoCommerce.Platform.Modules
             // Resolve IConnectionMultiplexer as multiple services to avoid crash if the platform ran without Redis
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1#service-registration-methods
             _distributedLockProvider = distributedLockProvider;
+            _fileSystem = fileSystem;
+            _copyFilePolicy = copyFilePolicy;
             _logger = logger;
         }
 
@@ -246,143 +253,64 @@ namespace VirtoCommerce.Platform.Modules
 
         private void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
         {
+            var architecture = RuntimeInformation.OSArchitecture;
             if (sourceParentPath != null)
             {
-                var sourceDirectoryPath = Path.Combine(sourceParentPath, "bin");
+                var sourceDirectoryPath = _fileSystem.Path.Combine(sourceParentPath, "bin");
 
-                if (Directory.Exists(sourceDirectoryPath))
+                if (_fileSystem.Directory.Exists(sourceDirectoryPath))
                 {
-                    foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath, "*.*", SearchOption.AllDirectories))
+                    foreach (var sourceFilePath in _fileSystem.Directory.EnumerateFiles(sourceDirectoryPath, "*.*", SearchOption.AllDirectories))
                     {
                         // Copy all assembly related files except assemblies that are included in TPA list & reference assemblies
                         if (IsAssemblyRelatedFile(sourceFilePath) && !(IsAssemblyFile(sourceFilePath) &&
                                                                        (IsReferenceAssemblyFile(sourceFilePath) || TPA.ContainsAssembly(Path.GetFileName(sourceFilePath)))))
                         {
                             // Copy localization resource files to related subfolders
-                            var targetFilePath = Path.Combine(
-                                IsLocalizationFile(sourceFilePath) ? Path.Combine(targetDirectoryPath, Path.GetFileName(Path.GetDirectoryName(sourceFilePath)))
-                                : targetDirectoryPath,
-                                Path.GetFileName(sourceFilePath));
-                            CopyFile(sourceFilePath, targetFilePath);
+                            var targetFilePath = _fileSystem.Path.Combine(
+                                IsLocalizationFile(sourceFilePath)
+                                    ? GetLocalizationDirectory(targetDirectoryPath, sourceFilePath)
+                                    : targetDirectoryPath,
+                                _fileSystem.Path.GetFileName(sourceFilePath));
+
+
+
+                            var policyResult =
+                                _copyFilePolicy.RequireCopy(architecture, sourceFilePath, targetFilePath);
+
+                            if (policyResult.CopyRequired)
+                            {
+                                _fileSystem.Directory.CreateDirectory(targetDirectoryPath);
+
+                                try
+                                {
+                                    _fileSystem.File.Copy(sourceFilePath, targetFilePath, true);
+                                }
+                                catch (IOException)
+                                {
+                                    // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
+                                    // We should not fail platform start in that case - just add warning into the log. In case of inability to place newer version - should fail platform start.
+                                    if (policyResult.LaterDate == true)
+                                    {
+                                        _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");
+                                    }
+                                    else
+                                    {
+                                        throw;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
-        private void CopyFile(string sourceFilePath, string targetFilePath)
+        private string GetLocalizationDirectory(string targetDirectoryPath, string sourceFilePath)
         {
-            var sourceFileInfo = new FileInfo(sourceFilePath);
-            var targetFileInfo = new FileInfo(targetFilePath);
-
-            var sourceFileVersionInfo = FileVersionInfo.GetVersionInfo(sourceFilePath);
-            var sourceVersion = new Version(sourceFileVersionInfo.FileMajorPart, sourceFileVersionInfo.FileMinorPart, sourceFileVersionInfo.FileBuildPart, sourceFileVersionInfo.FilePrivatePart);
-            var targetVersion = sourceVersion;
-
-            if (targetFileInfo.Exists)
-            {
-                var targetFileVersionInfo = FileVersionInfo.GetVersionInfo(targetFilePath);
-                targetVersion = new Version(targetFileVersionInfo.FileMajorPart, targetFileVersionInfo.FileMinorPart, targetFileVersionInfo.FileBuildPart, targetFileVersionInfo.FilePrivatePart);
-            }
-
-            var versionsAreSameButLaterDate = (sourceVersion == targetVersion && targetFileInfo.Exists && sourceFileInfo.Exists && targetFileInfo.LastWriteTimeUtc < sourceFileInfo.LastWriteTimeUtc);
-
-            var replaceBitwiseReason = targetFileInfo.Exists
-                                    && sourceVersion.Equals(targetVersion)
-                                    && ReplaceBitwiseReason(sourceFilePath, targetFilePath);
-
-            if (!targetFileInfo.Exists || sourceVersion > targetVersion || versionsAreSameButLaterDate || replaceBitwiseReason)
-            {
-                var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
-                Directory.CreateDirectory(targetDirectoryPath);
-
-                try
-                {
-                    File.Copy(sourceFilePath, targetFilePath, true);
-                }
-                catch (IOException)
-                {
-                    // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
-                    // We should not fail platform start in that case - just add warning into the log. In case of inability to place newer version - should fail platform start.
-                    if (versionsAreSameButLaterDate)
-                    {
-                        _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-        }
-
-        private bool ReplaceBitwiseReason(string sourceFilePath, string targetFilePath)
-        {
-            if (IsManagedLibrary(targetFilePath) || !sourceFilePath.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase))
-            {
-                return false;
-            }
-
-            var environment = RuntimeInformation.OSArchitecture;
-            var targetDllArchitecture = GetDllArchitecture(targetFilePath);
-
-            if (environment == targetDllArchitecture)
-            {
-                return false;
-            }
-
-            var sourceDllArchitecture = GetDllArchitecture(sourceFilePath);
-            if (environment == sourceDllArchitecture)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool IsManagedLibrary(string pathToDll)
-        {
-            try
-            {
-                AssemblyName.GetAssemblyName(pathToDll);
-                return true;
-            }
-            catch
-            {
-                // file is unmanaged
-            }
-
-            return false;
-        }
-
-        private static Architecture? GetDllArchitecture(string dllPath)
-        {
-            using var fs = new FileStream(dllPath, FileMode.Open, FileAccess.Read);
-            using var br = new BinaryReader(fs);
-
-            fs.Seek(0x3C, SeekOrigin.Begin);
-            var peOffset = br.ReadInt32();
-            fs.Seek(peOffset, SeekOrigin.Begin);
-            var peHead = br.ReadUInt32();
-            const int peSignature = 0x00004550;
-            if (peHead != peSignature)
-            {
-                return null;
-            }
-
-            var machineType = br.ReadUInt16();
-
-            // https://stackoverflow.com/questions/480696/how-to-find-if-a-native-dll-file-is-compiled-as-x64-or-x86
-            Architecture? archType = machineType switch
-            {
-                0x8664 => Architecture.X64,
-                0xAA64 => Architecture.Arm64,
-                0x1C0 => Architecture.Arm,
-                0x14C => Architecture.X86,
-                _ => null
-            };
-
-            return archType;
+            var localizationDirectory = _fileSystem.Path.GetDirectoryName(sourceFilePath);
+            var localizationPath = _fileSystem.Path.GetFileName(localizationDirectory);
+            return _fileSystem.Path.Combine(targetDirectoryPath, localizationPath);
         }
 
         private bool IsAssemblyRelatedFile(string path)
