@@ -30,7 +30,9 @@ public class LibraryVersionProvider : ILibraryVersionProvider
         using var fs = _fileSystem.FileStream.New(filePath, FileMode.Open, FileAccess.Read);
         using var br = new BinaryReader(fs);
 
-        fs.Seek(0x3C, SeekOrigin.Begin);
+        const int startPosition = 0x3C;
+
+        fs.Seek(startPosition, SeekOrigin.Begin);
         var peOffset = br.ReadInt32();
         fs.Seek(peOffset, SeekOrigin.Begin);
         var peHead = br.ReadUInt32();

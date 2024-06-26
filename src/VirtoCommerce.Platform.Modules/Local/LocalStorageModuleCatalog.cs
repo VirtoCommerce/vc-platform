@@ -253,7 +253,6 @@ namespace VirtoCommerce.Platform.Modules
 
         private void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
         {
-            var architecture = RuntimeInformation.OSArchitecture;
             if (sourceParentPath != null)
             {
                 var sourceDirectoryPath = _fileSystem.Path.Combine(sourceParentPath, "bin");
@@ -273,37 +272,42 @@ namespace VirtoCommerce.Platform.Modules
                                     : targetDirectoryPath,
                                 _fileSystem.Path.GetFileName(sourceFilePath));
 
-
-
-                            var policyResult =
-                                _copyFilePolicy.RequireCopy(architecture, sourceFilePath, targetFilePath);
-
-                            if (policyResult.CopyRequired)
-                            {
-                                _fileSystem.Directory.CreateDirectory(targetDirectoryPath);
-
-                                try
-                                {
-                                    _fileSystem.File.Copy(sourceFilePath, targetFilePath, true);
-                                }
-                                catch (IOException)
-                                {
-                                    // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
-                                    // We should not fail platform start in that case - just add warning into the log. In case of inability to place newer version - should fail platform start.
-                                    if (policyResult.LaterDate == true)
-                                    {
-                                        _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");
-                                    }
-                                    else
-                                    {
-                                        throw;
-                                    }
-                                }
-                            }
+                            CopyAssembly(sourceFilePath, targetFilePath, targetDirectoryPath);
                         }
                     }
                 }
             }
+        }
+
+        private void CopyAssembly(string sourceFilePath, string targetFilePath, string targetDirectoryPath)
+        {
+            var architecture = RuntimeInformation.OSArchitecture;
+            var policyResult =
+                _copyFilePolicy.RequireCopy(architecture, sourceFilePath, targetFilePath);
+
+            if (policyResult.CopyRequired)
+            {
+                _fileSystem.Directory.CreateDirectory(targetDirectoryPath);
+
+                try
+                {
+                    _fileSystem.File.Copy(sourceFilePath, targetFilePath, true);
+                }
+                catch (IOException)
+                {
+                    // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
+                    // We should not fail platform start in that case - just add warning into the log. In case of inability to place newer version - should fail platform start.
+                    if (policyResult.LaterDate == true)
+                    {
+                        _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
         }
 
         private string GetLocalizationDirectory(string targetDirectoryPath, string sourceFilePath)
