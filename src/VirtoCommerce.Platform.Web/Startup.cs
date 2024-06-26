@@ -131,6 +131,7 @@ namespace VirtoCommerce.Platform.Web
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
 
             services.AddSingleton<ICopyFilePolicy, CopyFilePolicy>();
+            services.AddSingleton<ILibraryVersionProvider, LibraryVersionProvider>();
 
             services.AddDbContext<PlatformDbContext>((provider, options) =>
             {
