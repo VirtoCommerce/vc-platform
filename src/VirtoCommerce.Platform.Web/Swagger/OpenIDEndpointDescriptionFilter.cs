@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.OpenApi.Models;
-using Mvc.Server;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using VirtoCommerce.Platform.Web.Controllers.Api;
 
 namespace VirtoCommerce.Platform.Web.Swagger
 {
