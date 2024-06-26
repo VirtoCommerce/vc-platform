@@ -35,7 +35,9 @@ namespace VirtoCommerce.Platform.Data.Repositories
         {
             var properties = await DynamicProperties.Include(x => x.DisplayNames)
                                               .OrderBy(x => x.Name)
-                                              .Where(x => objectTypes.Contains(x.ObjectType)).ToArrayAsync();
+                                              .Where(x => objectTypes.Contains(x.ObjectType))
+                                              .AsSplitQuery()
+                                              .ToArrayAsync();
             return properties;
         }
 
@@ -48,6 +50,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
 
             var retVal = await DynamicPropertyDictionaryItems.Include(x => x.DisplayNames)
                                      .Where(x => ids.Contains(x.Id))
+                                     .AsSplitQuery()
                                      .ToArrayAsync();
             return retVal;
         }
@@ -62,6 +65,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             var retVal = await DynamicProperties.Include(x => x.DisplayNames)
                                           .Where(x => ids.Contains(x.Id))
                                           .OrderBy(x => x.Name)
+                                          .AsSplitQuery()
                                           .ToArrayAsync();
             return retVal;
         }
@@ -76,6 +80,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
             var retVal = await DynamicProperties.Include(p => p.DisplayNames)
                                           .Where(p => objectTypes.Contains(p.ObjectType))
                                           .OrderBy(p => p.Name)
+                                          .AsSplitQuery()
                                           .ToArrayAsync();
             return retVal;
         }
@@ -87,6 +92,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
                                  .Where(x => x.ObjectId == objectId && x.ObjectType == objectType)
                                  .Where(x => names.Contains(x.Name))
                                  .OrderBy(x => x.Name)
+                                 .AsSplitQuery()
                                  .ToArrayAsync();
             return result;
         }
