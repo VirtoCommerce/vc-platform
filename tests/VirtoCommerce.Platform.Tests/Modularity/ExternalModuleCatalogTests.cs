@@ -199,18 +199,18 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         }
 
         [Theory]
-        [InlineData("1.0.0.0", null, false, false, true)]
-        [InlineData("1.0.0.0", "1.0.0.0", true, false, false)]
-        [InlineData("1.0.0.0", "1.0.0.0", true, true, true)]
-        [InlineData("1.0.0.0", "1.0.0.1", true, false, false)]
-        [InlineData("1.0.0.0", "1.0.0.1", true, true, false)]
-        [InlineData("1.0.0.2", "1.0.0.1", true, false, true)]
-        [InlineData("1.0.0.2", "1.0.0.1", true, true, true)]
-        public void CopyManagedFilePolicyTests(string sourceVersion, string targetVersion, bool targetExists, bool targetDateEarlier, bool result)
+        [InlineData("1.0.0.0", null, true, true, true)]
+        [InlineData("1.0.0.0", "1.0.0.0", false, true, false)]
+        [InlineData("1.0.0.0", "1.0.0.0", false, false, true)]
+        [InlineData("1.0.0.0", "1.0.0.1", false, true, false)]
+        [InlineData("1.0.0.0", "1.0.0.1", false, false, false)]
+        [InlineData("1.0.0.2", "1.0.0.1", false, true, true)]
+        [InlineData("1.0.0.2", "1.0.0.1", false, false, true)]
+        public void CopyManagedFilePolicyTests(string sourceVersion, string targetVersion, bool noTarget, bool isSourceNewByDate, bool copyRequired)
         {
             //Arrange
             var fileSystem = new MockFileSystem();
-            var libraryVersionProvider = new Mock<ILibraryVersionProvider>();
+            var libraryVersionProvider = new Mock<IAssemblyMetadataProvider>();
             var sourceFilePath = @"c:\managed.dll";
             var targetFilePath = @"c:\target\managed.dll";
 
@@ -218,56 +218,58 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
             var sourceFile = new MockFileInfo(fileSystem, sourceFilePath);
 
-            libraryVersionProvider.Setup(x => x.GetFileVersion(sourceFilePath))
+            libraryVersionProvider.Setup(x => x.GetVersion(sourceFilePath))
                 .Returns(new Version(sourceVersion));
-            libraryVersionProvider.Setup(x => x.IsManagedLibrary(sourceFilePath))
+            libraryVersionProvider.Setup(x => x.IsManaged(sourceFilePath))
                 .Returns(true);
 
-            if (targetExists)
+            if (!noTarget)
             {
                 fileSystem.AddFile(targetFilePath, new MockFileData(new byte[] { 0x00, 0x01, 0x02, 0x03 }));
                 var targetFile = new MockFileInfo(fileSystem, targetFilePath);
-                if (targetDateEarlier)
+                if (!isSourceNewByDate)
                 {
                     targetFile.LastWriteTimeUtc = sourceFile.LastWriteTimeUtc.AddDays(-1);
                 }
-                libraryVersionProvider.Setup(x => x.GetFileVersion(targetFilePath))
+                libraryVersionProvider.Setup(x => x.GetVersion(targetFilePath))
                     .Returns(new Version(targetVersion));
-                libraryVersionProvider.Setup(x => x.IsManagedLibrary(targetFilePath))
+                libraryVersionProvider.Setup(x => x.IsManaged(targetFilePath))
                     .Returns(true);
             }
 
 
             //Act
-            var copyFilePolicy = new CopyFilePolicy(fileSystem, libraryVersionProvider.Object);
+            var copyFilePolicy = new CopyFileRequirementValidator(fileSystem, libraryVersionProvider.Object);
             var requireCopy = copyFilePolicy.RequireCopy(Architecture.X64, sourceFilePath, targetFilePath);
 
             //Assert
-            Assert.Equal(result, requireCopy.CopyRequired);
+            Assert.Equal(copyRequired, requireCopy.CopyRequired);
         }
 
         [Theory]
-        [InlineData(Architecture.X64, Architecture.X64, Architecture.X64, false, false)]
-        [InlineData(Architecture.X64, Architecture.X64, Architecture.X86, false, true)]
-        [InlineData(Architecture.X64, Architecture.X86, Architecture.X64, false, false)]
-        [InlineData(Architecture.X64, Architecture.X86, Architecture.X86, false, false)]
-        [InlineData(Architecture.X64, Architecture.X64, Architecture.X64, true, true)]
+        [InlineData(Architecture.X64, Architecture.X64, Architecture.X64, true, false)]
         [InlineData(Architecture.X64, Architecture.X64, Architecture.X86, true, true)]
         [InlineData(Architecture.X64, Architecture.X86, Architecture.X64, true, false)]
-        [InlineData(Architecture.X64, Architecture.X86, Architecture.X86, true, true)]
-        [InlineData(Architecture.X86, Architecture.X64, Architecture.X64, false, false)]
-        [InlineData(Architecture.X86, Architecture.X64, Architecture.X86, false, false)]
-        [InlineData(Architecture.X86, Architecture.X86, Architecture.X64, false, true)]
-        [InlineData(Architecture.X86, Architecture.X86, Architecture.X86, false, false)]
-        [InlineData(Architecture.X86, Architecture.X64, Architecture.X64, true, true)]
+        [InlineData(Architecture.X64, Architecture.X86, Architecture.X86, true, false)]
+        [InlineData(Architecture.X64, Architecture.X64, Architecture.X64, false, true)]
+        [InlineData(Architecture.X64, Architecture.X64, Architecture.X86, false, true)]
+        [InlineData(Architecture.X64, Architecture.X86, Architecture.X64, false, false)]
+        [InlineData(Architecture.X64, Architecture.X86, Architecture.X86, false, true)]
+        [InlineData(Architecture.X86, Architecture.X64, Architecture.X64, true, false)]
         [InlineData(Architecture.X86, Architecture.X64, Architecture.X86, true, false)]
         [InlineData(Architecture.X86, Architecture.X86, Architecture.X64, true, true)]
-        [InlineData(Architecture.X86, Architecture.X86, Architecture.X86, true, true)]
-        public void CopyUnmanagedFilePolicyTests(Architecture currentArch, Architecture sourceArch, Architecture targetArch, bool targetDateEarlier, bool result)
+        [InlineData(Architecture.X86, Architecture.X86, Architecture.X86, true, false)]
+        [InlineData(Architecture.X86, Architecture.X64, Architecture.X64, false, true)]
+        [InlineData(Architecture.X86, Architecture.X64, Architecture.X86, false, false)]
+        [InlineData(Architecture.X86, Architecture.X86, Architecture.X64, false, true)]
+        [InlineData(Architecture.X86, Architecture.X86, Architecture.X86, false, true)]
+        public void CopyUnmanagedFilePolicyTests(Architecture currentArchitecture,
+            Architecture sourceArchitecture, Architecture targetArchitecture,
+            bool isSourceNewByDate, bool copyRequired)
         {
             //Arrange
             var fileSystem = new MockFileSystem();
-            var libraryVersionProvider = new Mock<ILibraryVersionProvider>();
+            var libraryVersionProvider = new Mock<IAssemblyMetadataProvider>();
             var sourceFilePath = @"c:\unmanaged.dll";
             var targetFilePath = @"c:\target\unmanaged.dll";
 
@@ -276,31 +278,31 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
             var sourceFile = new MockFileInfo(fileSystem, sourceFilePath);
             var targetFile = new MockFileInfo(fileSystem, targetFilePath);
-            if (targetDateEarlier)
+            if (!isSourceNewByDate)
             {
                 targetFile.LastWriteTimeUtc = sourceFile.LastWriteTimeUtc.AddDays(-1);
             }
 
-            libraryVersionProvider.Setup(x => x.GetFileVersion(sourceFilePath))
+            libraryVersionProvider.Setup(x => x.GetVersion(sourceFilePath))
                 .Returns(new Version("1.0.0.0"));
-            libraryVersionProvider.Setup(x => x.IsManagedLibrary(sourceFilePath))
+            libraryVersionProvider.Setup(x => x.IsManaged(sourceFilePath))
                 .Returns(false);
             libraryVersionProvider.Setup(x => x.GetArchitecture(sourceFilePath))
-                .Returns(sourceArch);
+                .Returns(sourceArchitecture);
 
-            libraryVersionProvider.Setup(x => x.GetFileVersion(targetFilePath))
+            libraryVersionProvider.Setup(x => x.GetVersion(targetFilePath))
                 .Returns(new Version("1.0.0.0"));
-            libraryVersionProvider.Setup(x => x.IsManagedLibrary(targetFilePath))
+            libraryVersionProvider.Setup(x => x.IsManaged(targetFilePath))
                 .Returns(false);
             libraryVersionProvider.Setup(x => x.GetArchitecture(targetFilePath))
-                .Returns(targetArch);
+                .Returns(targetArchitecture);
 
             //Act
-            var copyFilePolicy = new CopyFilePolicy(fileSystem, libraryVersionProvider.Object);
-            var requireCopy = copyFilePolicy.RequireCopy(currentArch, sourceFilePath, targetFilePath);
+            var copyFilePolicy = new CopyFileRequirementValidator(fileSystem, libraryVersionProvider.Object);
+            var requireCopy = copyFilePolicy.RequireCopy(currentArchitecture, sourceFilePath, targetFilePath);
 
             //Assert
-            Assert.Equal(result, requireCopy.CopyRequired);
+            Assert.Equal(copyRequired, requireCopy.CopyRequired);
         }
 
         private static ExternalModuleCatalog CreateExternalModuleCatalog(ExternalModuleManifest[] manifests, bool includePrerelease = false)

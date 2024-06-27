@@ -8,16 +8,16 @@ using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Modules.Local;
 
-public class LibraryVersionProvider : ILibraryVersionProvider
+public class AssemblyMetadataProvider : IAssemblyMetadataProvider
 {
     private readonly IFileSystem _fileSystem;
 
-    public LibraryVersionProvider(IFileSystem fileSystem)
+    public AssemblyMetadataProvider(IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
     }
 
-    public Version GetFileVersion(string filePath)
+    public Version GetVersion(string filePath)
     {
         var fileVersionInfo = FileVersionInfo.GetVersionInfo(filePath);
         var version = new Version(fileVersionInfo.FileMajorPart, fileVersionInfo.FileMinorPart,
@@ -27,25 +27,25 @@ public class LibraryVersionProvider : ILibraryVersionProvider
 
     public Architecture? GetArchitecture(string filePath)
     {
-        using var fs = _fileSystem.FileStream.New(filePath, FileMode.Open, FileAccess.Read);
-        using var br = new BinaryReader(fs);
+        using var stream = _fileSystem.FileStream.New(filePath, FileMode.Open, FileAccess.Read);
+        using var reader = new BinaryReader(stream);
 
         const int startPosition = 0x3C;
 
-        fs.Seek(startPosition, SeekOrigin.Begin);
-        var peOffset = br.ReadInt32();
-        fs.Seek(peOffset, SeekOrigin.Begin);
-        var peHead = br.ReadUInt32();
+        stream.Seek(startPosition, SeekOrigin.Begin);
+        var peOffset = reader.ReadInt32();
+        stream.Seek(peOffset, SeekOrigin.Begin);
+        var peHead = reader.ReadUInt32();
         const int peSignature = 0x00004550;
         if (peHead != peSignature)
         {
             return null;
         }
 
-        var machineType = br.ReadUInt16();
+        var machineType = reader.ReadUInt16();
 
         // https://stackoverflow.com/questions/480696/how-to-find-if-a-native-dll-file-is-compiled-as-x64-or-x86
-        Architecture? archType = machineType switch
+        Architecture? architecture = machineType switch
         {
             0x8664 => Architecture.X64,
             0xAA64 => Architecture.Arm64,
@@ -54,10 +54,10 @@ public class LibraryVersionProvider : ILibraryVersionProvider
             _ => null
         };
 
-        return archType;
+        return architecture;
     }
 
-    public bool IsManagedLibrary(string filePath)
+    public bool IsManaged(string filePath)
     {
         try
         {
@@ -66,7 +66,7 @@ public class LibraryVersionProvider : ILibraryVersionProvider
         }
         catch
         {
-            // file is unmanaged
+            // file is not managed
         }
 
         return false;

@@ -6,72 +6,79 @@ using VirtoCommerce.Platform.Core.Modularity;
 
 namespace VirtoCommerce.Platform.Modules.Local;
 
-public class CopyFilePolicy : ICopyFilePolicy
+public class CopyFileRequirementValidator : ICopyFileRequirementValidator
 {
     private readonly IFileSystem _fileSystem;
-    private readonly ILibraryVersionProvider _libraryVersionProvider;
+    private readonly IAssemblyMetadataProvider _libraryVersionProvider;
 
-    public CopyFilePolicy(IFileSystem fileSystem, ILibraryVersionProvider libraryVersionProvider)
+    public CopyFileRequirementValidator(IFileSystem fileSystem, IAssemblyMetadataProvider libraryVersionProvider)
     {
         _fileSystem = fileSystem;
         _libraryVersionProvider = libraryVersionProvider;
     }
 
-    public RequireCopyFileReason RequireCopy(Architecture architecture, string sourceFilePath, string targetFilePath)
+    public CopyFileRequirementResult RequireCopy(Architecture architecture, string sourceFilePath, string targetFilePath)
     {
-        var result = AbstractTypeFactory<RequireCopyFileReason>.TryCreateInstance();
-        NoTarget(result, targetFilePath);
-        if (!result.NoTarget)
+        var result = AbstractTypeFactory<CopyFileRequirementResult>.TryCreateInstance();
+        SetNoTarget(result, targetFilePath);
+        if (result.NoTarget == CopyFileNecessary.No)
         {
-            Version(result, sourceFilePath, targetFilePath);
-            Bitwise(result, architecture, sourceFilePath, targetFilePath);
-            LaterDate(result, sourceFilePath, targetFilePath);
+            SetIsVersion(result, sourceFilePath, targetFilePath);
+            SetIsBitness(result, architecture, sourceFilePath, targetFilePath);
+            SetIsSourceNewByDate(result, sourceFilePath, targetFilePath);
         }
 
         return result;
     }
 
-    private void NoTarget(RequireCopyFileReason reasons, string targetPath)
+    private void SetNoTarget(CopyFileRequirementResult reasons, string targetPath)
     {
         var fileInfo = _fileSystem.FileInfo.New(targetPath);
-        reasons.NoTarget = !fileInfo.Exists;
+        reasons.NoTarget = !fileInfo.Exists ? CopyFileNecessary.Yes : CopyFileNecessary.No;
     }
 
-    private void Version(RequireCopyFileReason reasons, string sourcePath, string targetPath)
+    private void SetIsVersion(CopyFileRequirementResult reasons, string sourcePath, string targetPath)
     {
-        var sourceVersion = _libraryVersionProvider.GetFileVersion(sourcePath);
-        var targetVersion = _libraryVersionProvider.GetFileVersion(targetPath);
+        var sourceVersion = _libraryVersionProvider.GetVersion(sourcePath);
+        var targetVersion = _libraryVersionProvider.GetVersion(targetPath);
         if (sourceVersion >= targetVersion)
         {
-            reasons.Version = sourceVersion > targetVersion;
+            reasons.IsVersion = sourceVersion > targetVersion ? CopyFileNecessary.Yes : CopyFileNecessary.Unknown;
+        }
+        else
+        {
+            reasons.IsVersion = CopyFileNecessary.No;
         }
     }
 
-    public void LaterDate(RequireCopyFileReason reasons, string sourcePath, string targetPath)
+    private void SetIsBitness(CopyFileRequirementResult reasons, Architecture architecture, string sourceFilePath, string targetFilePath)
     {
-        if (reasons.Version == false && reasons.Bitwise == null)
+        if (reasons.IsVersion == CopyFileNecessary.Unknown)
+        {
+            reasons.IsBitness = ReplaceBitwiseReason(architecture, sourceFilePath, targetFilePath);
+        }
+    }
+
+    private void SetIsSourceNewByDate(CopyFileRequirementResult reasons, string sourcePath, string targetPath)
+    {
+        if (reasons.IsVersion == CopyFileNecessary.Unknown && reasons.IsBitness == CopyFileNecessary.Unknown)
         {
             var sourceFile = _fileSystem.FileInfo.New(sourcePath);
             var targetFile = _fileSystem.FileInfo.New(targetPath);
 
-            reasons.LaterDate = targetFile.LastWriteTimeUtc < sourceFile.LastWriteTimeUtc;
+            reasons.IsSourceNewByDate = targetFile.LastWriteTimeUtc < sourceFile.LastWriteTimeUtc
+                ? CopyFileNecessary.Yes
+                : CopyFileNecessary.No;
         }
     }
 
-    public void Bitwise(RequireCopyFileReason reasons, Architecture architecture, string sourceFilePath, string targetFilePath)
-    {
-        if (reasons.Version == false)
-        {
-            reasons.Bitwise = ReplaceBitwiseReason(architecture, sourceFilePath, targetFilePath);
-        }
-    }
 
-    private bool? ReplaceBitwiseReason(Architecture environment, string sourceFilePath, string targetFilePath)
+    private CopyFileNecessary ReplaceBitwiseReason(Architecture environment, string sourceFilePath, string targetFilePath)
     {
-        if (_libraryVersionProvider.IsManagedLibrary(targetFilePath)
+        if (_libraryVersionProvider.IsManaged(targetFilePath)
             || !sourceFilePath.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase))
         {
-            return null;
+            return CopyFileNecessary.Unknown;
         }
 
         var targetDllArchitecture = _libraryVersionProvider.GetArchitecture(targetFilePath);
@@ -79,13 +86,13 @@ public class CopyFilePolicy : ICopyFilePolicy
 
         if (environment == targetDllArchitecture && environment != sourceDllArchitecture)
         {
-            return false;
+            return CopyFileNecessary.No;
         }
         if (environment == sourceDllArchitecture && environment != targetDllArchitecture)
         {
-            return true;
+            return CopyFileNecessary.Yes;
         }
 
-        return null;
+        return CopyFileNecessary.Unknown;
     }
 }

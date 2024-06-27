@@ -21,13 +21,13 @@ namespace VirtoCommerce.Platform.Modules
         private readonly ILogger<LocalStorageModuleCatalog> _logger;
         private readonly IInternalDistributedLockService _distributedLockProvider;
         private readonly IFileSystem _fileSystem;
-        private readonly ICopyFilePolicy _copyFilePolicy;
+        private readonly ICopyFileRequirementValidator _copyFileRequirementValidator;
         private readonly string _discoveryPath;
 
         public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options,
             IInternalDistributedLockService distributedLockProvider,
             IFileSystem fileSystem,
-            ICopyFilePolicy copyFilePolicy,
+            ICopyFileRequirementValidator copyFileRequirementValidator,
             ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
@@ -40,7 +40,7 @@ namespace VirtoCommerce.Platform.Modules
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1#service-registration-methods
             _distributedLockProvider = distributedLockProvider;
             _fileSystem = fileSystem;
-            _copyFilePolicy = copyFilePolicy;
+            _copyFileRequirementValidator = copyFileRequirementValidator;
             _logger = logger;
         }
 
@@ -283,7 +283,7 @@ namespace VirtoCommerce.Platform.Modules
         {
             var architecture = RuntimeInformation.OSArchitecture;
             var policyResult =
-                _copyFilePolicy.RequireCopy(architecture, sourceFilePath, targetFilePath);
+                _copyFileRequirementValidator.RequireCopy(architecture, sourceFilePath, targetFilePath);
 
             if (policyResult.CopyRequired)
             {
@@ -297,7 +297,7 @@ namespace VirtoCommerce.Platform.Modules
                 {
                     // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
                     // We should not fail platform start in that case - just add warning into the log. In case of inability to place newer version - should fail platform start.
-                    if (policyResult.LaterDate == true)
+                    if (policyResult.IsSourceNewByDate == CopyFileNecessary.Yes)
                     {
                         _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");
                     }
