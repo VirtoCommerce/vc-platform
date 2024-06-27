@@ -13,13 +13,31 @@ angular.module('platformWebApp')
             getMetaFields: function (metaFormName) {
                 return registeredMetaFields[metaFormName];
             },
-            unregisterMetaFields: function (metaFormName, metaField) {
-                if (registeredMetaFields[metaFormName]) {
-                    var index = registeredMetaFields[metaFormName].indexOf(metaField);
-                    if (index !== -1) {
-                        registeredMetaFields[metaFormName].splice(index, 1);
-                    }
+            unregisterMetaFields: function (metaFormName, ...metaFieldsToFind) {
+                metaFieldsToFind.forEach(metaFieldToFind => this.unregisterMetaField(metaFormName, metaFieldToFind));
+            },
+            unregisterMetaField: function (metaFormName, metaFieldToFind, metaFieldDescription) {
+                let metaFieldIndex = -1;
+                let metaFields = registeredMetaFields[metaFormName];
+
+                // metaFieldToFind can be a search filter, a metaField name or the metaField object itself (which is the previous way of unregistering a metaField)
+                if (_.isFunction(metaFieldToFind)) {
+                    metaFieldIndex = _.findIndex(metaFields, metaFieldToFind);
+                } else if (typeof metaFieldToFind === 'string') {
+                    metaFieldIndex = _.findIndex(metaFields, x => x.name === metaFieldToFind);
+                    metaFieldDescription ??= `name "${metaFieldToFind}"`;
+                } else {
+                    metaFieldIndex = _.findIndex(metaFields, metaFieldToFind);
                 }
+
+                if (metaFieldIndex <= 0) {
+                    throw new Error(metaFieldDescription ? `The metaForm "${metaFormName}" doesn't contain a field with ${metaFieldDescription}, the field could not be removed.` : `The metaForm "${metaFormName}" doesn't contain the field to be removed.`);
+                }
+
+                metaFields.splice(metaFieldIndex, 1);
+            },
+            unregisterMetaFieldWithTemplateUrl: function (metaFormName, templateUrl) {
+                this.unregisterMetaField(metaFormName, x => x.templateUrl === templateUrl, `template url "${templateUrl}"`)
             },
             clearMetaFields: function (metaFormName) {
                 registeredMetaFields[metaFormName] = [];
