@@ -4,19 +4,20 @@ public class CopyAssemblyRequirementResult
 {
     public bool CopyRequired
     {
-        get => NoTarget == CopyAssemblyNecessity.Yes
-               || IsVersion == CopyAssemblyNecessity.Yes
-               || IsBitness == CopyAssemblyNecessity.Yes
-               || IsSourceNewByDate == CopyAssemblyNecessity.Yes;
+        get => NoTarget == AssemblyCopyRequirement.Required
+               || IsVersion == AssemblyCopyRequirement.Required
+               || IsBitness == AssemblyCopyRequirement.Required
+               || IsSourceNewByDate == AssemblyCopyRequirement.Required;
     }
 
-    public CopyAssemblyNecessity NoTarget { get; set; }
-    public CopyAssemblyNecessity IsVersion { get; set; }
-    public CopyAssemblyNecessity IsBitness { get; set; }
-    public CopyAssemblyNecessity IsSourceNewByDate { get; set; }
+    public AssemblyCopyRequirement NoTarget { get; set; }
+    public AssemblyCopyRequirement IsVersion { get; set; }
+    public AssemblyCopyRequirement IsBitness { get; set; }
+    public AssemblyCopyRequirement IsSourceNewByDate { get; set; }
 }
 
-public enum CopyAssemblyNecessity
+public enum AssemblyCopyRequirement
 {
-    Unknown, Yes, No
+    Unknown, Required, Prohibited
 }
+

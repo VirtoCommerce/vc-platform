@@ -297,7 +297,7 @@ namespace VirtoCommerce.Platform.Modules
                 {
                     // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
                     // We should not fail platform start in that case - just add warning into the log. In case of inability to place newer version - should fail platform start.
-                    if (policyResult.IsSourceNewByDate == CopyAssemblyNecessity.Yes)
+                    if (policyResult.IsSourceNewByDate == AssemblyCopyRequirement.Required)
                     {
                         _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");
                     }

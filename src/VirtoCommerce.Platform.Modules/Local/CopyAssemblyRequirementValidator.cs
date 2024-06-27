@@ -21,7 +21,7 @@ public class CopyAssemblyRequirementValidator : ICopyAssemblyRequirementValidato
     {
         var result = AbstractTypeFactory<CopyAssemblyRequirementResult>.TryCreateInstance();
         SetNoTarget(result, targetFilePath);
-        if (result.NoTarget == CopyAssemblyNecessity.No)
+        if (result.NoTarget == AssemblyCopyRequirement.Prohibited)
         {
             SetIsVersion(result, sourceFilePath, targetFilePath);
             SetIsBitness(result, architecture, sourceFilePath, targetFilePath);
@@ -34,7 +34,7 @@ public class CopyAssemblyRequirementValidator : ICopyAssemblyRequirementValidato
     private void SetNoTarget(CopyAssemblyRequirementResult reasons, string targetPath)
     {
         var fileInfo = _fileSystem.FileInfo.New(targetPath);
-        reasons.NoTarget = !fileInfo.Exists ? CopyAssemblyNecessity.Yes : CopyAssemblyNecessity.No;
+        reasons.NoTarget = !fileInfo.Exists ? AssemblyCopyRequirement.Required : AssemblyCopyRequirement.Prohibited;
     }
 
     private void SetIsVersion(CopyAssemblyRequirementResult reasons, string sourcePath, string targetPath)
@@ -43,17 +43,17 @@ public class CopyAssemblyRequirementValidator : ICopyAssemblyRequirementValidato
         var targetVersion = _libraryVersionProvider.GetVersion(targetPath);
         if (sourceVersion >= targetVersion)
         {
-            reasons.IsVersion = sourceVersion > targetVersion ? CopyAssemblyNecessity.Yes : CopyAssemblyNecessity.Unknown;
+            reasons.IsVersion = sourceVersion > targetVersion ? AssemblyCopyRequirement.Required : AssemblyCopyRequirement.Unknown;
         }
         else
         {
-            reasons.IsVersion = CopyAssemblyNecessity.No;
+            reasons.IsVersion = AssemblyCopyRequirement.Prohibited;
         }
     }
 
     private void SetIsBitness(CopyAssemblyRequirementResult reasons, Architecture architecture, string sourceFilePath, string targetFilePath)
     {
-        if (reasons.IsVersion == CopyAssemblyNecessity.Unknown)
+        if (reasons.IsVersion == AssemblyCopyRequirement.Unknown)
         {
             reasons.IsBitness = ReplaceBitwiseReason(architecture, sourceFilePath, targetFilePath);
         }
@@ -61,24 +61,24 @@ public class CopyAssemblyRequirementValidator : ICopyAssemblyRequirementValidato
 
     private void SetIsSourceNewByDate(CopyAssemblyRequirementResult reasons, string sourcePath, string targetPath)
     {
-        if (reasons.IsVersion == CopyAssemblyNecessity.Unknown && reasons.IsBitness == CopyAssemblyNecessity.Unknown)
+        if (reasons.IsVersion == AssemblyCopyRequirement.Unknown && reasons.IsBitness == AssemblyCopyRequirement.Unknown)
         {
             var sourceFile = _fileSystem.FileInfo.New(sourcePath);
             var targetFile = _fileSystem.FileInfo.New(targetPath);
 
             reasons.IsSourceNewByDate = targetFile.LastWriteTimeUtc < sourceFile.LastWriteTimeUtc
-                ? CopyAssemblyNecessity.Yes
-                : CopyAssemblyNecessity.No;
+                ? AssemblyCopyRequirement.Required
+                : AssemblyCopyRequirement.Prohibited;
         }
     }
 
 
-    private CopyAssemblyNecessity ReplaceBitwiseReason(Architecture environment, string sourceFilePath, string targetFilePath)
+    private AssemblyCopyRequirement ReplaceBitwiseReason(Architecture environment, string sourceFilePath, string targetFilePath)
     {
         if (_libraryVersionProvider.IsManaged(targetFilePath)
             || !sourceFilePath.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase))
         {
-            return CopyAssemblyNecessity.Unknown;
+            return AssemblyCopyRequirement.Unknown;
         }
 
         var targetDllArchitecture = _libraryVersionProvider.GetArchitecture(targetFilePath);
@@ -86,13 +86,13 @@ public class CopyAssemblyRequirementValidator : ICopyAssemblyRequirementValidato
 
         if (environment == targetDllArchitecture && environment != sourceDllArchitecture)
         {
-            return CopyAssemblyNecessity.No;
+            return AssemblyCopyRequirement.Prohibited;
         }
         if (environment == sourceDllArchitecture && environment != targetDllArchitecture)
         {
-            return CopyAssemblyNecessity.Yes;
+            return AssemblyCopyRequirement.Required;
         }
 
-        return CopyAssemblyNecessity.Unknown;
+        return AssemblyCopyRequirement.Unknown;
     }
 }
