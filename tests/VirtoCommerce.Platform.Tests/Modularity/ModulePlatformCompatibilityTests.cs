@@ -28,7 +28,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var catalog = new LocalStorageModuleCatalog(catalogOptionsMock.Object,
                 new Mock<IInternalDistributedLockService>().Object,
             new MockFileSystem(),
-                new Mock<ICopyFileRequirementValidator>().Object,
+                new Mock<ICopyAssemblyRequirementValidator>().Object,
                 new Mock<ILogger<LocalStorageModuleCatalog>>().Object);
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(runningPlatformVersion);
             var module = new ManifestModuleInfo().LoadFromManifest(new ModuleManifest() { PlatformVersion = targetPlatformVersion, Id = "Fake", Version = "0.0.0" /*Does not matter (not used in test)*/ });

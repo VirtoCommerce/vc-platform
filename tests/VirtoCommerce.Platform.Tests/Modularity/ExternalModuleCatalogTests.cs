@@ -239,7 +239,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
 
             //Act
-            var copyFilePolicy = new CopyFileRequirementValidator(fileSystem, libraryVersionProvider.Object);
+            var copyFilePolicy = new CopyAssemblyRequirementValidator(fileSystem, libraryVersionProvider.Object);
             var requireCopy = copyFilePolicy.RequireCopy(Architecture.X64, sourceFilePath, targetFilePath);
 
             //Assert
@@ -298,7 +298,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
                 .Returns(targetArchitecture);
 
             //Act
-            var copyFilePolicy = new CopyFileRequirementValidator(fileSystem, libraryVersionProvider.Object);
+            var copyFilePolicy = new CopyAssemblyRequirementValidator(fileSystem, libraryVersionProvider.Object);
             var requireCopy = copyFilePolicy.RequireCopy(currentArchitecture, sourceFilePath, targetFilePath);
 
             //Assert
