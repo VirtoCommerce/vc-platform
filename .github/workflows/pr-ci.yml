@@ -76,7 +76,7 @@ jobs:
       with:
           image: ${{ steps.load-docker.outputs.image }}
           tag: ${{ steps.load-docker.outputs.tag }}
-          docker_user: $GITHUB_ACTOR # ${{ secrets.DOCKER_USERNAME }}
+          docker_user: ${{ secrets.DOCKER_USERNAME }}
           docker_token: ${{ env.GITHUB_TOKEN }} # ${{ secrets.DOCKER_TOKEN }}
           docker_hub: ${{ env.PUBLISH_TO_DOCKER }}
           update_latest: ${{ env.UPDATE_LATEST_TAG }}
