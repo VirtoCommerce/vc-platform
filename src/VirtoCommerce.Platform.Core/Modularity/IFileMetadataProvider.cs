@@ -7,7 +7,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
     {
         bool Exists(string filePath);
         DateTime? GetDate(string filePath);
-        public Version GetVersion(string filePath);
-        public Architecture? GetArchitecture(string filePath);
+        Version GetVersion(string filePath);
+        Architecture? GetArchitecture(string filePath);
     }
 }

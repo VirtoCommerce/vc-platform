@@ -23,7 +23,8 @@ namespace VirtoCommerce.Platform.Modules
         private readonly string _probingPath;
         private readonly string _discoveryPath;
 
-        public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options,
+        public LocalStorageModuleCatalog(
+            IOptions<LocalStorageModuleCatalogOptions> options,
             IInternalDistributedLockService distributedLockProvider,
             IFileCopyPolicy fileCopyPolicy,
             ILogger<LocalStorageModuleCatalog> logger)
