@@ -3,10 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace VirtoCommerce.Platform.Core.Modularity
 {
-    public interface IAssemblyMetadataProvider
+    public interface IFileMetadataProvider
     {
+        bool Exists(string filePath);
+        DateTime? GetDate(string filePath);
         public Version GetVersion(string filePath);
         public Architecture? GetArchitecture(string filePath);
-        bool IsManaged(string filePath);
     }
 }

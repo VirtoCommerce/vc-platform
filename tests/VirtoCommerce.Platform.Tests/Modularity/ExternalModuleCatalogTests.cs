@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -199,120 +198,149 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         }
 
         [Theory]
-        [InlineData("1.0.0.0", null, true, true, true)]
-        [InlineData("1.0.0.0", "1.0.0.0", false, true, false)]
-        [InlineData("1.0.0.0", "1.0.0.0", false, false, true)]
-        [InlineData("1.0.0.0", "1.0.0.1", false, true, false)]
-        [InlineData("1.0.0.0", "1.0.0.1", false, false, false)]
-        [InlineData("1.0.0.2", "1.0.0.1", false, true, true)]
-        [InlineData("1.0.0.2", "1.0.0.1", false, false, true)]
-        public void CopyManagedFilePolicyTests(string sourceVersion, string targetVersion, bool noTarget, bool isSourceNewByDate, bool copyRequired)
+        [InlineData(false, null, true)]
+        [InlineData(true, false, false)]
+        [InlineData(true, true, true)]
+        public void CopyNonExecutableFilePolicyTests(
+            bool targetExists,
+            bool? isSourceNewByDate,
+            bool expectedCopyRequired)
         {
             //Arrange
-            var fileSystem = new MockFileSystem();
-            var libraryVersionProvider = new Mock<IAssemblyMetadataProvider>();
-            var sourceFilePath = @"c:\managed.dll";
-            var targetFilePath = @"c:\target\managed.dll";
+            var metadataProvider = new Mock<IFileMetadataProvider>();
+            var sourcePath = @"c:\source\non_executable.xml";
+            var targetPath = @"c:\target\non_executable.xml";
+            var targetDate = DateTime.UtcNow;
+            var sourceDate = isSourceNewByDate == true ? targetDate.AddDays(1) : targetDate;
 
-            fileSystem.AddFile(sourceFilePath, new MockFileData(new byte[] { 0x00, 0x01, 0x02, 0x03 }));
+            AddFile(metadataProvider, sourcePath, sourceDate, version: null, architecture: null);
 
-            var sourceFile = new MockFileInfo(fileSystem, sourceFilePath);
-
-            libraryVersionProvider.Setup(x => x.GetVersion(sourceFilePath))
-                .Returns(new Version(sourceVersion));
-            libraryVersionProvider.Setup(x => x.IsManaged(sourceFilePath))
-                .Returns(true);
-
-            if (!noTarget)
+            if (targetExists)
             {
-                fileSystem.AddFile(targetFilePath, new MockFileData(new byte[] { 0x00, 0x01, 0x02, 0x03 }));
-                var targetFile = new MockFileInfo(fileSystem, targetFilePath);
-                if (!isSourceNewByDate)
-                {
-                    targetFile.LastWriteTimeUtc = sourceFile.LastWriteTimeUtc.AddDays(-1);
-                }
-                libraryVersionProvider.Setup(x => x.GetVersion(targetFilePath))
-                    .Returns(new Version(targetVersion));
-                libraryVersionProvider.Setup(x => x.IsManaged(targetFilePath))
-                    .Returns(true);
+                AddFile(metadataProvider, targetPath, targetDate, version: null, architecture: null);
             }
 
-
             //Act
-            var copyFilePolicy = new CopyAssemblyRequirementValidator(fileSystem, libraryVersionProvider.Object);
-            var requireCopy = copyFilePolicy.RequireCopy(Architecture.X64, sourceFilePath, targetFilePath);
+            var copyFilePolicy = new FileCopyPolicy(metadataProvider.Object);
+            var actualCopyRequired = copyFilePolicy.IsCopyRequired(Architecture.X64, sourcePath, targetPath, out _);
 
             //Assert
-            Assert.Equal(copyRequired, requireCopy.CopyRequired);
+            Assert.Equal(expectedCopyRequired, actualCopyRequired);
         }
 
         [Theory]
-        [InlineData(Architecture.X64, Architecture.X64, Architecture.X64, true, false)]
-        [InlineData(Architecture.X64, Architecture.X64, Architecture.X86, true, true)]
-        [InlineData(Architecture.X64, Architecture.X86, Architecture.X64, true, false)]
-        [InlineData(Architecture.X64, Architecture.X86, Architecture.X86, true, false)]
-        [InlineData(Architecture.X64, Architecture.X64, Architecture.X64, false, true)]
-        [InlineData(Architecture.X64, Architecture.X64, Architecture.X86, false, true)]
-        [InlineData(Architecture.X64, Architecture.X86, Architecture.X64, false, false)]
-        [InlineData(Architecture.X64, Architecture.X86, Architecture.X86, false, true)]
-        [InlineData(Architecture.X86, Architecture.X64, Architecture.X64, true, false)]
-        [InlineData(Architecture.X86, Architecture.X64, Architecture.X86, true, false)]
-        [InlineData(Architecture.X86, Architecture.X86, Architecture.X64, true, true)]
-        [InlineData(Architecture.X86, Architecture.X86, Architecture.X86, true, false)]
-        [InlineData(Architecture.X86, Architecture.X64, Architecture.X64, false, true)]
-        [InlineData(Architecture.X86, Architecture.X64, Architecture.X86, false, false)]
-        [InlineData(Architecture.X86, Architecture.X86, Architecture.X64, false, true)]
-        [InlineData(Architecture.X86, Architecture.X86, Architecture.X86, false, true)]
-        public void CopyUnmanagedFilePolicyTests(Architecture currentArchitecture,
-            Architecture sourceArchitecture, Architecture targetArchitecture,
-            bool isSourceNewByDate, bool copyRequired)
+        [InlineData(null, false, null, null, true)]
+        [InlineData(null, true, "1.0.0.0", true, false)]
+        [InlineData(null, true, "1.0.0.0", false, false)]
+        [InlineData("1.0.0.0", false, null, null, true)]
+        [InlineData("1.0.0.0", true, "1.0.0.0", false, false)]
+        [InlineData("1.0.0.0", true, "1.0.0.0", true, true)]
+        [InlineData("1.0.0.0", true, "1.0.0.1", false, false)]
+        [InlineData("1.0.0.0", true, "1.0.0.1", true, false)]
+        [InlineData("1.0.0.2", true, "1.0.0.1", false, true)]
+        [InlineData("1.0.0.2", true, "1.0.0.1", true, true)]
+        public void CopyManagedFilePolicyTests(
+            string sourceVersion,
+            bool targetExists,
+            string targetVersion,
+            bool? isSourceNewByDate,
+            bool expectedCopyRequired)
         {
             //Arrange
-            var fileSystem = new MockFileSystem();
-            var libraryVersionProvider = new Mock<IAssemblyMetadataProvider>();
-            var sourceFilePath = @"c:\unmanaged.dll";
-            var targetFilePath = @"c:\target\unmanaged.dll";
+            var metadataProvider = new Mock<IFileMetadataProvider>();
+            var sourcePath = @"c:\source\managed.dll";
+            var targetPath = @"c:\target\managed.dll";
+            var targetDate = DateTime.UtcNow;
+            var sourceDate = isSourceNewByDate == true ? targetDate.AddDays(1) : targetDate;
 
-            fileSystem.AddFile(sourceFilePath, new MockFileData(new byte[] { 0x00, 0x01, 0x02, 0x03 }));
-            fileSystem.AddFile(targetFilePath, new MockFileData(new byte[] { 0x00, 0x01, 0x02, 0x03 }));
+            AddFile(metadataProvider, sourcePath, sourceDate, sourceVersion, Architecture.X64);
 
-            var sourceFile = new MockFileInfo(fileSystem, sourceFilePath);
-            var targetFile = new MockFileInfo(fileSystem, targetFilePath);
-            if (!isSourceNewByDate)
+            if (targetExists)
             {
-                targetFile.LastWriteTimeUtc = sourceFile.LastWriteTimeUtc.AddDays(-1);
+                AddFile(metadataProvider, targetPath, targetDate, targetVersion, Architecture.X64);
             }
 
-            libraryVersionProvider.Setup(x => x.GetVersion(sourceFilePath))
-                .Returns(new Version("1.0.0.0"));
-            libraryVersionProvider.Setup(x => x.IsManaged(sourceFilePath))
-                .Returns(false);
-            libraryVersionProvider.Setup(x => x.GetArchitecture(sourceFilePath))
-                .Returns(sourceArchitecture);
-
-            libraryVersionProvider.Setup(x => x.GetVersion(targetFilePath))
-                .Returns(new Version("1.0.0.0"));
-            libraryVersionProvider.Setup(x => x.IsManaged(targetFilePath))
-                .Returns(false);
-            libraryVersionProvider.Setup(x => x.GetArchitecture(targetFilePath))
-                .Returns(targetArchitecture);
-
             //Act
-            var copyFilePolicy = new CopyAssemblyRequirementValidator(fileSystem, libraryVersionProvider.Object);
-            var requireCopy = copyFilePolicy.RequireCopy(currentArchitecture, sourceFilePath, targetFilePath);
+            var copyFilePolicy = new FileCopyPolicy(metadataProvider.Object);
+            var actualCopyRequired = copyFilePolicy.IsCopyRequired(Architecture.X64, sourcePath, targetPath, out _);
 
             //Assert
-            Assert.Equal(copyRequired, requireCopy.CopyRequired);
+            Assert.Equal(expectedCopyRequired, actualCopyRequired);
+        }
+
+        [Theory]
+        [InlineData(Architecture.X64, null, false, null, null, true)]
+        [InlineData(Architecture.X64, null, true, null, true, true)]
+        [InlineData(Architecture.X64, null, true, null, false, false)]
+        [InlineData(Architecture.X64, null, true, Architecture.X64, true, false)]
+        [InlineData(Architecture.X64, null, true, Architecture.X86, true, false)]
+        [InlineData(Architecture.X64, Architecture.X64, false, null, null, true)]
+        [InlineData(Architecture.X64, Architecture.X86, false, null, null, true)]
+        [InlineData(Architecture.X86, Architecture.X86, false, null, null, true)]
+        [InlineData(Architecture.X86, Architecture.X64, false, null, null, false)]
+        [InlineData(Architecture.X64, Architecture.X64, true, null, true, true)]
+        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X64, false, false)]
+        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X86, false, true)]
+        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X64, false, false)]
+        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X86, false, false)]
+        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X64, true, true)]
+        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X86, true, true)]
+        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X64, true, false)]
+        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X86, true, true)]
+        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X64, false, false)]
+        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X86, false, false)]
+        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X64, false, true)]
+        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X86, false, false)]
+        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X64, true, true)]
+        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X86, true, false)]
+        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X64, true, true)]
+        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X86, true, true)]
+        public void CopyUnmanagedFilePolicyTests(
+            Architecture environment,
+            Architecture? sourceArchitecture,
+            bool targetExists,
+            Architecture? targetArchitecture,
+            bool? isSourceNewByDate,
+            bool expectedCopyRequired)
+        {
+            //Arrange
+            var metadataProvider = new Mock<IFileMetadataProvider>();
+            var sourcePath = @"c:\source\unmanaged.dll";
+            var targetPath = @"c:\target\unmanaged.dll";
+            var targetDate = DateTime.UtcNow;
+            var sourceDate = isSourceNewByDate == true ? targetDate.AddDays(1) : targetDate;
+
+            AddFile(metadataProvider, sourcePath, sourceDate, "1.0.0.0", sourceArchitecture);
+
+            if (targetExists)
+            {
+                AddFile(metadataProvider, targetPath, targetDate, "1.0.0.0", targetArchitecture);
+            }
+
+            //Act
+            var copyFilePolicy = new FileCopyPolicy(metadataProvider.Object);
+            var actualCopyRequired = copyFilePolicy.IsCopyRequired(environment, sourcePath, targetPath, out _);
+
+            //Assert
+            Assert.Equal(expectedCopyRequired, actualCopyRequired);
+        }
+
+        private static void AddFile(Mock<IFileMetadataProvider> metadataProvider, string path, DateTime date, string version, Architecture? architecture)
+        {
+            metadataProvider.Setup(x => x.Exists(path)).Returns(true);
+            metadataProvider.Setup(x => x.GetDate(path)).Returns(date);
+            metadataProvider.Setup(x => x.GetVersion(path)).Returns(version is null ? null : new Version(version));
+            metadataProvider.Setup(x => x.GetArchitecture(path)).Returns(architecture);
         }
 
         private static ExternalModuleCatalog CreateExternalModuleCatalog(ExternalModuleManifest[] manifests, bool includePrerelease = false)
         {
-            var localModulesCatalog = new Moq.Mock<ILocalModuleCatalog>();
+            var localModulesCatalog = new Mock<ILocalModuleCatalog>();
             localModulesCatalog.Setup(x => x.Modules).Returns(GetManifestModuleInfos(new[] { new ModuleManifest { Id = "B", Version = "1.3.0", PlatformVersion = "3.0.0" } }));
             var json = JsonConvert.SerializeObject(manifests);
-            var client = new Moq.Mock<IExternalModulesClient>();
-            client.Setup(x => x.OpenRead(Moq.It.IsAny<Uri>())).Returns(new MemoryStream(Encoding.UTF8.GetBytes(json ?? "")));
-            var logger = new Moq.Mock<ILogger<ExternalModuleCatalog>>();
+            var client = new Mock<IExternalModulesClient>();
+            client.Setup(x => x.OpenRead(It.IsAny<Uri>())).Returns(new MemoryStream(Encoding.UTF8.GetBytes(json ?? "")));
+            var logger = new Mock<ILogger<ExternalModuleCatalog>>();
 
             var options = Options.Create(new ExternalModuleCatalogOptions() { ModulesManifestUrl = new Uri("http://nowhere.mock"), IncludePrerelease = includePrerelease });
             var result = new ExternalModuleCatalog(localModulesCatalog.Object, client.Object, options, logger.Object);

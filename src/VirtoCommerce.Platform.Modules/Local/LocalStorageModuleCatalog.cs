@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Abstractions;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
@@ -20,46 +19,50 @@ namespace VirtoCommerce.Platform.Modules
         private readonly LocalStorageModuleCatalogOptions _options;
         private readonly ILogger<LocalStorageModuleCatalog> _logger;
         private readonly IInternalDistributedLockService _distributedLockProvider;
-        private readonly IFileSystem _fileSystem;
-        private readonly ICopyAssemblyRequirementValidator _copyAssemblyRequirementValidator;
+        private readonly IFileCopyPolicy _fileCopyPolicy;
+        private readonly string _probingPath;
         private readonly string _discoveryPath;
 
         public LocalStorageModuleCatalog(IOptions<LocalStorageModuleCatalogOptions> options,
             IInternalDistributedLockService distributedLockProvider,
-            IFileSystem fileSystem,
-            ICopyAssemblyRequirementValidator copyAssemblyRequirementValidator,
+            IFileCopyPolicy fileCopyPolicy,
             ILogger<LocalStorageModuleCatalog> logger)
         {
             _options = options.Value;
+            _probingPath = _options.ProbingPath is null ? null : Path.GetFullPath(_options.ProbingPath);
+
             _discoveryPath = _options.DiscoveryPath;
             if (!_discoveryPath.EndsWith(PlatformInformation.DirectorySeparator))
             {
                 _discoveryPath += PlatformInformation.DirectorySeparator;
             }
+
             // Resolve IConnectionMultiplexer as multiple services to avoid crash if the platform ran without Redis
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-3.1#service-registration-methods
             _distributedLockProvider = distributedLockProvider;
-            _fileSystem = fileSystem;
-            _copyAssemblyRequirementValidator = copyAssemblyRequirementValidator;
+            _fileCopyPolicy = fileCopyPolicy;
             _logger = logger;
         }
 
         protected override void InnerLoad()
         {
             if (string.IsNullOrEmpty(_options.ProbingPath))
+            {
                 throw new InvalidOperationException("The ProbingPath cannot contain a null value or be empty");
-            if (string.IsNullOrEmpty(_options.DiscoveryPath))
-                throw new InvalidOperationException("The DiscoveryPath cannot contain a null value or be empty");
+            }
 
+            if (string.IsNullOrEmpty(_options.DiscoveryPath))
+            {
+                throw new InvalidOperationException("The DiscoveryPath cannot contain a null value or be empty");
+            }
 
             var manifests = GetModuleManifests();
-
             var needToCopyAssemblies = _options.RefreshProbingFolderOnStart;
 
-            if (!Directory.Exists(_options.ProbingPath))
+            if (!Directory.Exists(_probingPath))
             {
                 needToCopyAssemblies = true; // Force to refresh assemblies anyway, even if RefreshProbeFolderOnStart set to false, because the probing path is absent
-                Directory.CreateDirectory(_options.ProbingPath);
+                Directory.CreateDirectory(_probingPath);
             }
 
             if (needToCopyAssemblies)
@@ -83,7 +86,7 @@ namespace VirtoCommerce.Platform.Modules
                 else
                 {
                     //Set module assembly physical path for future loading by IModuleTypeLoader instance
-                    moduleInfo.Ref = GetFileAbsoluteUri(_options.ProbingPath, manifest.AssemblyFile);
+                    moduleInfo.Ref = GetFileAbsoluteUri(_probingPath, manifest.AssemblyFile);
                 }
 
                 moduleInfo.IsInstalled = true;
@@ -104,7 +107,7 @@ namespace VirtoCommerce.Platform.Modules
             {
                 // Do not throw if module was missing
                 // Use ValidateDependencyGraph to validate & write and error of module missing
-                result = Enumerable.Empty<ModuleInfo>();
+                result = [];
             }
 
             return result;
@@ -114,6 +117,7 @@ namespace VirtoCommerce.Platform.Modules
         {
             var modules = Modules.OfType<ManifestModuleInfo>();
             var manifestModules = modules as ManifestModuleInfo[] ?? modules.ToArray();
+
             try
             {
                 base.ValidateDependencyGraph();
@@ -152,7 +156,7 @@ namespace VirtoCommerce.Platform.Modules
                     module.Errors.Add($"Module platform version {module.PlatformVersion} is incompatible with current {PlatformVersion.CurrentVersion}");
                 }
 
-                //Check that incompatible modules does not installed
+                //Check that incompatible modules are not installed
                 if (!module.Incompatibilities.IsNullOrEmpty())
                 {
                     var installedIncompatibilities = manifestModules.Select(x => x.Identity).Join(module.Incompatibilities, x => x.Id, y => y.Id, (x, y) => new { x, y })
@@ -180,20 +184,21 @@ namespace VirtoCommerce.Platform.Modules
         {
             var result = new Dictionary<string, ModuleManifest>();
 
-            if (Directory.Exists(_options.DiscoveryPath))
+            if (Directory.Exists(_discoveryPath))
             {
-                foreach (var manifestFile in Directory.EnumerateFiles(_options.DiscoveryPath, "module.manifest", SearchOption.AllDirectories))
+                foreach (var manifestFile in Directory.EnumerateFiles(_discoveryPath, "module.manifest", SearchOption.AllDirectories))
                 {
-                    // Exclude manifests from the builded modules
+                    // Exclude manifests from the built modules
                     // starting from the relative module directory, excluding the discovery modules path
                     // particularly "artifacts" folder
-                    if (!manifestFile.Substring(_options.DiscoveryPath.Length).Contains("artifacts"))
+                    if (!manifestFile.Substring(_discoveryPath.Length).Contains("artifacts"))
                     {
                         var manifest = ManifestReader.Read(manifestFile);
                         result.Add(manifestFile, manifest);
                     }
                 }
             }
+
             return result;
         }
 
@@ -203,11 +208,11 @@ namespace VirtoCommerce.Platform.Modules
             {
                 if (x != DistributedLockCondition.Delayed)
                 {
-                    CopyAssemblies(_discoveryPath, _options.ProbingPath); // Copy platform files if needed
+                    CopyAssemblies(_discoveryPath, _probingPath); // Copy platform files if needed
                     foreach (var pair in manifests)
                     {
                         var modulePath = Path.GetDirectoryName(pair.Key);
-                        CopyAssemblies(modulePath, _options.ProbingPath); // Copy module files if needed
+                        CopyAssemblies(modulePath, _probingPath); // Copy module files if needed
                     }
                 }
                 else // Delayed lock acquire, do nothing here with a notice logging
@@ -224,97 +229,96 @@ namespace VirtoCommerce.Platform.Modules
         /// <returns></returns>
         private string GetSourceMark()
         {
-            var markerFilePath = Path.Combine(_options.ProbingPath, "storage.mark");
+            var markerFilePath = Path.Combine(_probingPath, "storage.mark");
             var marker = Guid.NewGuid().ToString();
+
             try
             {
                 if (File.Exists(markerFilePath))
                 {
-                    using (var stream = File.OpenText(markerFilePath))
-                    {
-                        marker = stream.ReadToEnd();
-                    }
+                    using var stream = File.OpenText(markerFilePath);
+                    marker = stream.ReadToEnd();
                 }
                 else
                 {
                     // Non-marked storage, mark by placing a file with resource id.                    
-                    using (var stream = File.CreateText(markerFilePath))
-                    {
-                        stream.Write(marker);
-                    }
+                    using var stream = File.CreateText(markerFilePath);
+                    stream.Write(marker);
                 }
             }
             catch (IOException exc)
             {
-                throw new PlatformException($"An IO error occurred while marking local modules storage.", exc);
+                throw new PlatformException("An IO error occurred while marking local modules storage.", exc);
             }
-            return $@"{nameof(LocalStorageModuleCatalog)}-{marker}";
+
+            return $"{nameof(LocalStorageModuleCatalog)}-{marker}";
         }
 
-        private void CopyAssemblies(string sourceParentPath, string targetDirectoryPath)
+        private void CopyAssemblies(string sourceDirectoryPath, string targetDirectoryPath)
         {
-            if (sourceParentPath != null)
+            if (sourceDirectoryPath is null)
             {
-                var sourceDirectoryPath = _fileSystem.Path.Combine(sourceParentPath, "bin");
-
-                if (_fileSystem.Directory.Exists(sourceDirectoryPath))
-                {
-                    foreach (var sourceFilePath in _fileSystem.Directory.EnumerateFiles(sourceDirectoryPath, "*.*", SearchOption.AllDirectories))
-                    {
-                        // Copy all assembly related files except assemblies that are included in TPA list & reference assemblies
-                        if (IsAssemblyRelatedFile(sourceFilePath) && !(IsAssemblyFile(sourceFilePath) &&
-                                                                       (IsReferenceAssemblyFile(sourceFilePath) || TPA.ContainsAssembly(Path.GetFileName(sourceFilePath)))))
-                        {
-                            // Copy localization resource files to related subfolders
-                            var targetFilePath = _fileSystem.Path.Combine(
-                                IsLocalizationFile(sourceFilePath)
-                                    ? GetLocalizationDirectory(targetDirectoryPath, sourceFilePath)
-                                    : targetDirectoryPath,
-                                _fileSystem.Path.GetFileName(sourceFilePath));
-
-                            CopyAssembly(sourceFilePath, targetFilePath, targetDirectoryPath);
-                        }
-                    }
-                }
+                return;
             }
-        }
 
-        private void CopyAssembly(string sourceFilePath, string targetFilePath, string targetDirectoryPath)
-        {
-            var architecture = RuntimeInformation.OSArchitecture;
-            var policyResult =
-                _copyAssemblyRequirementValidator.RequireCopy(architecture, sourceFilePath, targetFilePath);
-
-            if (policyResult.CopyRequired)
+            var sourceBinPath = Path.Combine(sourceDirectoryPath, "bin");
+            if (!Directory.Exists(sourceBinPath))
             {
-                _fileSystem.Directory.CreateDirectory(targetDirectoryPath);
-
-                try
-                {
-                    _fileSystem.File.Copy(sourceFilePath, targetFilePath, true);
-                }
-                catch (IOException)
-                {
-                    // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
-                    // We should not fail platform start in that case - just add warning into the log. In case of inability to place newer version - should fail platform start.
-                    if (policyResult.IsSourceNewByDate == AssemblyCopyRequirement.Required)
-                    {
-                        _logger.LogWarning($"File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process");
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                return;
             }
 
+            foreach (var sourceFilePath in Directory.EnumerateFiles(sourceBinPath, "*.*", SearchOption.AllDirectories))
+            {
+                var fileName = Path.GetFileName(sourceFilePath);
+
+                // Copy assembly related files except assemblies that are included in TPA list & reference assemblies
+                if (IsAssemblyRelatedFile(sourceFilePath) &&
+                    !(IsAssemblyFile(sourceFilePath) && (IsReferenceAssemblyFile(sourceFilePath) || TPA.ContainsAssembly(fileName))))
+                {
+                    // Copy localization resource files to related subfolders
+                    var targetParentPath = IsLocalizationFile(sourceFilePath)
+                        ? GetTargetLocalizationDirectoryPath(targetDirectoryPath, sourceFilePath)
+                        : targetDirectoryPath;
+
+                    var targetFilePath = Path.Combine(targetParentPath, fileName);
+
+                    CopyFile(sourceFilePath, targetFilePath, targetParentPath);
+                }
+            }
         }
 
-        private string GetLocalizationDirectory(string targetDirectoryPath, string sourceFilePath)
+        private void CopyFile(string sourceFilePath, string targetFilePath, string targetDirectoryPath)
         {
-            var localizationDirectory = _fileSystem.Path.GetDirectoryName(sourceFilePath);
-            var localizationPath = _fileSystem.Path.GetFileName(localizationDirectory);
-            return _fileSystem.Path.Combine(targetDirectoryPath, localizationPath);
+            if (!_fileCopyPolicy.IsCopyRequired(RuntimeInformation.OSArchitecture, sourceFilePath, targetFilePath, out var result))
+            {
+                return;
+            }
+
+            Directory.CreateDirectory(targetDirectoryPath);
+
+            try
+            {
+                File.Copy(sourceFilePath, targetFilePath, true);
+            }
+            catch (IOException)
+            {
+                // VP-3719: Need to catch to avoid possible problem when different instances are trying to update the same file with the same version but different dates in the probing folder.
+                // We should not fail platform start in that case - just add warning into the log. In case of inability to place newer version - should fail platform start.
+                if (result.NewDate)
+                {
+                    _logger.LogWarning("File '{targetFilePath}' was not updated by '{sourceFilePath}' of the same version but later modified date, because probably it was used by another process", targetFilePath, sourceFilePath);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        private static string GetTargetLocalizationDirectoryPath(string targetDirectoryPath, string sourceFilePath)
+        {
+            var directoryName = GetLastDirectoryName(sourceFilePath);
+            return Path.Combine(targetDirectoryPath, directoryName);
         }
 
         private bool IsAssemblyRelatedFile(string path)
@@ -333,8 +337,13 @@ namespace VirtoCommerce.Platform.Modules
             // We need to rewrite platform initialization code
             // to use correct solution with MetadataLoadContext
             // TODO: PT-6241
-            var lastFolderName = Path.GetFileName(Path.GetDirectoryName(path));
-            return _options.ReferenceAssemblyFolders.Any(x => lastFolderName.Equals(x, StringComparison.OrdinalIgnoreCase));
+            var directoryName = GetLastDirectoryName(path);
+            return _options.ReferenceAssemblyFolders.Any(directoryName.EqualsIgnoreCase);
+        }
+
+        private static string GetLastDirectoryName(string filePath)
+        {
+            return Path.GetFileName(Path.GetDirectoryName(filePath));
         }
 
         private bool IsLocalizationFile(string path)

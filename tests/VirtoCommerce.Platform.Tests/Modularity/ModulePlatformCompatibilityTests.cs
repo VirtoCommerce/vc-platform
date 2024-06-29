@@ -1,4 +1,3 @@
-using System.IO.Abstractions.TestingHelpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -25,10 +24,10 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         {
             var catalogOptionsMock = new Mock<IOptions<LocalStorageModuleCatalogOptions>>();
             catalogOptionsMock.Setup(x => x.Value).Returns(new LocalStorageModuleCatalogOptions() { DiscoveryPath = string.Empty });
-            var catalog = new LocalStorageModuleCatalog(catalogOptionsMock.Object,
+            var catalog = new LocalStorageModuleCatalog(
+                catalogOptionsMock.Object,
                 new Mock<IInternalDistributedLockService>().Object,
-            new MockFileSystem(),
-                new Mock<ICopyAssemblyRequirementValidator>().Object,
+                new Mock<IFileCopyPolicy>().Object,
                 new Mock<ILogger<LocalStorageModuleCatalog>>().Object);
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(runningPlatformVersion);
             var module = new ManifestModuleInfo().LoadFromManifest(new ModuleManifest() { PlatformVersion = targetPlatformVersion, Id = "Fake", Version = "0.0.0" /*Does not matter (not used in test)*/ });
