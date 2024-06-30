@@ -201,7 +201,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         [InlineData(false, null, true)]
         [InlineData(true, false, false)]
         [InlineData(true, true, true)]
-        public void CopyNonExecutableFilePolicyTests(
+        public void NonExecutableFilesCopyTest(
             bool targetExists,
             bool? isSourceNewByDate,
             bool expectedCopyRequired)
@@ -239,7 +239,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         [InlineData("1.0.0.0", true, "1.0.0.1", true, false)]
         [InlineData("1.0.0.2", true, "1.0.0.1", false, true)]
         [InlineData("1.0.0.2", true, "1.0.0.1", true, true)]
-        public void CopyManagedFilePolicyTests(
+        public void ExecutableFilesWithDifferentVersionsCopyTest(
             string sourceVersion,
             bool targetExists,
             string targetVersion,
@@ -248,8 +248,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         {
             //Arrange
             var metadataProvider = new Mock<IFileMetadataProvider>();
-            var sourcePath = @"c:\source\managed.dll";
-            var targetPath = @"c:\target\managed.dll";
+            var sourcePath = @"c:\source\assembly.dll";
+            var targetPath = @"c:\target\assembly.dll";
             var targetDate = DateTime.UtcNow;
             var sourceDate = isSourceNewByDate == true ? targetDate.AddDays(1) : targetDate;
 
@@ -295,7 +295,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X86, true, false)]
         [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X64, true, true)]
         [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X86, true, true)]
-        public void CopyUnmanagedFilePolicyTests(
+        public void ExecutableFilesWithDifferentArchitectureCopyTest(
             Architecture environment,
             Architecture? sourceArchitecture,
             bool targetExists,
@@ -305,8 +305,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         {
             //Arrange
             var metadataProvider = new Mock<IFileMetadataProvider>();
-            var sourcePath = @"c:\source\unmanaged.dll";
-            var targetPath = @"c:\target\unmanaged.dll";
+            var sourcePath = @"c:\source\assembly.dll";
+            var targetPath = @"c:\target\assembly.dll";
             var targetDate = DateTime.UtcNow;
             var sourceDate = isSourceNewByDate == true ? targetDate.AddDays(1) : targetDate;
 
