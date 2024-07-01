@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Abstractions;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Options;
@@ -12,34 +11,32 @@ namespace VirtoCommerce.Platform.Modules.Local;
 public class FileMetadataProvider : IFileMetadataProvider
 {
     private readonly LocalStorageModuleCatalogOptions _options;
-    private readonly IFileSystem _fileSystem;
 
-    public FileMetadataProvider(IOptions<LocalStorageModuleCatalogOptions> options, IFileSystem fileSystem)
+    public FileMetadataProvider(IOptions<LocalStorageModuleCatalogOptions> options)
     {
         _options = options.Value;
-        _fileSystem = fileSystem;
     }
 
     public bool Exists(string filePath)
     {
-        return _fileSystem.File.Exists(filePath);
+        return File.Exists(filePath);
     }
 
     public DateTime? GetDate(string filePath)
     {
-        if (!_fileSystem.File.Exists(filePath))
+        if (!File.Exists(filePath))
         {
             return null;
         }
 
-        var fileInfo = _fileSystem.FileInfo.New(filePath);
+        var fileInfo = new FileInfo(filePath);
 
         return fileInfo.LastWriteTimeUtc;
     }
 
     public Version GetVersion(string filePath)
     {
-        if (!_fileSystem.File.Exists(filePath))
+        if (!File.Exists(filePath))
         {
             return null;
         }
@@ -63,13 +60,13 @@ public class FileMetadataProvider : IFileMetadataProvider
         const int startPosition = 0x3C;
         const int peSignature = 0x00004550;
 
-        var fileInfo = _fileSystem.FileInfo.New(filePath);
+        var fileInfo = new FileInfo(filePath);
         if (!fileInfo.Exists || fileInfo.Length < startPosition + sizeof(uint))
         {
             return null;
         }
 
-        using var stream = _fileSystem.FileStream.New(filePath, FileMode.Open, FileAccess.Read);
+        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
         using var reader = new BinaryReader(stream);
 
         stream.Seek(startPosition, SeekOrigin.Begin);
