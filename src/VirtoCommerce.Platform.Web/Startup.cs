@@ -52,6 +52,7 @@ using VirtoCommerce.Platform.Data.SqlServer;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
+using VirtoCommerce.Platform.Modules.Local;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
@@ -120,6 +121,9 @@ namespace VirtoCommerce.Platform.Web
             });
             //Get platform version from GetExecutingAssembly
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
+
+            services.AddSingleton<IFileCopyPolicy, FileCopyPolicy>();
+            services.AddSingleton<IFileMetadataProvider, FileMetadataProvider>();
 
             services.AddDbContext<PlatformDbContext>((provider, options) =>
             {
