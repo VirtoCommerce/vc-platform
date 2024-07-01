@@ -222,7 +222,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
             //Act
             var copyFilePolicy = new FileCopyPolicy(metadataProvider.Object);
-            var actualCopyRequired = copyFilePolicy.IsCopyRequired(true, sourcePath, targetPath, out _);
+            var actualCopyRequired = copyFilePolicy.IsCopyRequired(Architecture.X64, sourcePath, targetPath, out _);
 
             //Assert
             Assert.Equal(expectedCopyRequired, actualCopyRequired);
@@ -262,41 +262,41 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
             //Act
             var copyFilePolicy = new FileCopyPolicy(metadataProvider.Object);
-            var actualCopyRequired = copyFilePolicy.IsCopyRequired(true, sourcePath, targetPath, out _);
+            var actualCopyRequired = copyFilePolicy.IsCopyRequired(Architecture.X64, sourcePath, targetPath, out _);
 
             //Assert
             Assert.Equal(expectedCopyRequired, actualCopyRequired);
         }
 
         [Theory]
-        [InlineData(true, null, false, null, null, true)]
-        [InlineData(true, null, true, null, true, true)]
-        [InlineData(true, null, true, null, false, false)]
-        [InlineData(true, null, true, Architecture.X64, true, false)]
-        [InlineData(true, null, true, Architecture.X86, true, false)]
-        [InlineData(true, Architecture.X64, false, null, null, true)]
-        [InlineData(true, Architecture.X86, false, null, null, true)]
-        [InlineData(true, Architecture.X86, false, null, null, true)]
-        [InlineData(true, Architecture.X64, false, null, null, true)]
-        [InlineData(true, Architecture.X64, true, null, true, true)]
-        [InlineData(true, Architecture.X64, true, Architecture.X64, false, false)]
-        [InlineData(true, Architecture.X64, true, Architecture.X86, false, true)]
-        [InlineData(true, Architecture.X86, true, Architecture.X64, false, false)]
-        [InlineData(true, Architecture.X86, true, Architecture.X86, false, false)]
-        [InlineData(true, Architecture.X64, true, Architecture.X64, true, true)]
-        [InlineData(true, Architecture.X64, true, Architecture.X86, true, true)]
-        [InlineData(true, Architecture.X86, true, Architecture.X64, true, false)]
-        [InlineData(true, Architecture.X86, true, Architecture.X86, true, true)]
-        [InlineData(false, Architecture.X64, true, Architecture.X64, false, false)]
-        [InlineData(false, Architecture.X64, true, Architecture.X86, false, false)]
-        [InlineData(false, Architecture.X86, true, Architecture.X64, false, true)]
-        [InlineData(false, Architecture.X86, true, Architecture.X86, false, false)]
-        [InlineData(false, Architecture.X64, true, Architecture.X64, true, true)]
-        [InlineData(false, Architecture.X64, true, Architecture.X86, true, false)]
-        [InlineData(false, Architecture.X86, true, Architecture.X64, true, true)]
-        [InlineData(false, Architecture.X86, true, Architecture.X86, true, true)]
+        [InlineData(Architecture.X64, null, false, null, null, true)]
+        [InlineData(Architecture.X64, null, true, null, true, true)]
+        [InlineData(Architecture.X64, null, true, null, false, false)]
+        [InlineData(Architecture.X64, null, true, Architecture.X64, true, false)]
+        [InlineData(Architecture.X64, null, true, Architecture.X86, true, false)]
+        [InlineData(Architecture.X64, Architecture.X64, false, null, null, true)]
+        [InlineData(Architecture.X64, Architecture.X86, false, null, null, true)]
+        [InlineData(Architecture.X86, Architecture.X86, false, null, null, true)]
+        [InlineData(Architecture.X86, Architecture.X64, false, null, null, false)]
+        [InlineData(Architecture.X64, Architecture.X64, true, null, true, true)]
+        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X64, false, false)]
+        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X86, false, true)]
+        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X64, false, false)]
+        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X86, false, false)]
+        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X64, true, true)]
+        [InlineData(Architecture.X64, Architecture.X64, true, Architecture.X86, true, true)]
+        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X64, true, false)]
+        [InlineData(Architecture.X64, Architecture.X86, true, Architecture.X86, true, true)]
+        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X64, false, false)]
+        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X86, false, false)]
+        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X64, false, true)]
+        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X86, false, false)]
+        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X64, true, true)]
+        [InlineData(Architecture.X86, Architecture.X64, true, Architecture.X86, true, false)]
+        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X64, true, true)]
+        [InlineData(Architecture.X86, Architecture.X86, true, Architecture.X86, true, true)]
         public void ExecutableFilesWithDifferentArchitectureCopyTest(
-            bool is64process,
+            Architecture environment,
             Architecture? sourceArchitecture,
             bool targetExists,
             Architecture? targetArchitecture,
@@ -319,7 +319,7 @@ namespace VirtoCommerce.Platform.Tests.Modularity
 
             //Act
             var copyFilePolicy = new FileCopyPolicy(metadataProvider.Object);
-            var actualCopyRequired = copyFilePolicy.IsCopyRequired(is64process, sourcePath, targetPath, out _);
+            var actualCopyRequired = copyFilePolicy.IsCopyRequired(environment, sourcePath, targetPath, out _);
 
             //Assert
             Assert.Equal(expectedCopyRequired, actualCopyRequired);

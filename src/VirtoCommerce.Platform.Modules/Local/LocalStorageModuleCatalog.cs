@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
@@ -289,7 +290,8 @@ namespace VirtoCommerce.Platform.Modules
 
         private void CopyFile(string sourceFilePath, string targetFilePath, string targetDirectoryPath)
         {
-            if (!_fileCopyPolicy.IsCopyRequired(Environment.Is64BitProcess, sourceFilePath, targetFilePath, out var result))
+            var environment = Environment.Is64BitProcess ? Architecture.X64 : Architecture.X86;
+            if (!_fileCopyPolicy.IsCopyRequired(environment, sourceFilePath, targetFilePath, out var result))
             {
                 return;
             }
