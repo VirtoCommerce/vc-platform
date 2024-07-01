@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
@@ -68,7 +67,6 @@ namespace VirtoCommerce.Platform.Modules
 
             if (needToCopyAssemblies)
             {
-                _logger.LogInformation($"Current Architecture is {RuntimeInformation.OSArchitecture}");
                 CopyAssembliesSynchronized(manifests);
             }
 
@@ -291,7 +289,7 @@ namespace VirtoCommerce.Platform.Modules
 
         private void CopyFile(string sourceFilePath, string targetFilePath, string targetDirectoryPath)
         {
-            if (!_fileCopyPolicy.IsCopyRequired(RuntimeInformation.OSArchitecture, sourceFilePath, targetFilePath, out var result))
+            if (!_fileCopyPolicy.IsCopyRequired(Environment.Is64BitProcess, sourceFilePath, targetFilePath, out var result))
             {
                 return;
             }

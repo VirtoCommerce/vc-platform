@@ -12,7 +12,7 @@ public class FileCopyPolicy : IFileCopyPolicy
         _metadataProvider = metadataProvider;
     }
 
-    public bool IsCopyRequired(Architecture environment, string sourceFilePath, string targetFilePath, out FileCompareResult result)
+    public bool IsCopyRequired(bool is64process, string sourceFilePath, string targetFilePath, out FileCompareResult result)
     {
         result = new FileCompareResult
         {
@@ -21,7 +21,7 @@ public class FileCopyPolicy : IFileCopyPolicy
 
         CompareDates(sourceFilePath, targetFilePath, result);
         CompareVersions(sourceFilePath, targetFilePath, result);
-        CompareArchitecture(sourceFilePath, targetFilePath, environment, result);
+        CompareArchitecture(sourceFilePath, targetFilePath, is64process, result);
 
         return result.NewFile && result.CompatibleArchitecture ||
                result.NewVersion && result.SameOrNewArchitecture ||
@@ -46,10 +46,12 @@ public class FileCopyPolicy : IFileCopyPolicy
         result.NewVersion = targetVersion is not null && sourceVersion > targetVersion;
     }
 
-    private void CompareArchitecture(string sourceFilePath, string targetFilePath, Architecture environment, FileCompareResult result)
+    private void CompareArchitecture(string sourceFilePath, string targetFilePath, bool is64Process, FileCompareResult result)
     {
         var sourceArchitecture = _metadataProvider.GetArchitecture(sourceFilePath);
         var targetArchitecture = _metadataProvider.GetArchitecture(targetFilePath);
+
+        var environment = is64Process ? Architecture.X64 : Architecture.X86;
 
         result.CompatibleArchitecture = sourceArchitecture == targetArchitecture ||
                                         sourceArchitecture == environment ||
