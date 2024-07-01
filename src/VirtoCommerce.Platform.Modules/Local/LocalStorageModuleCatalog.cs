@@ -68,6 +68,7 @@ namespace VirtoCommerce.Platform.Modules
 
             if (needToCopyAssemblies)
             {
+                _logger.LogInformation($"Current Architecture is {RuntimeInformation.OSArchitecture}");
                 CopyAssembliesSynchronized(manifests);
             }
 
