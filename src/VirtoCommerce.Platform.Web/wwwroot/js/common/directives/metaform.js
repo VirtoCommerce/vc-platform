@@ -21,7 +21,7 @@ angular.module('platformWebApp')
             },
             unregisterMetaField: function (metaFormName, metaFieldToFind, metaFieldDescription) {
                 let metaFieldIndex;
-                let metaFields = registeredMetaFields[metaFormName];
+                const metaFields = registeredMetaFields[metaFormName];
 
                 // metaFieldToFind can be a search filter, a metaField name or the metaField object itself (which is the previous way of unregistering a metaField)
                 if (_.isFunction(metaFieldToFind)) {
