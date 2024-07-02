@@ -42,7 +42,7 @@ namespace VirtoCommerce.Platform.Modules.AssemblyLoading
             {
                 NativeLibraryPrefixes = new[] { "", "lib" };
                 NativeLibraryExtensions = new[] { ".so", ".so.1" };
-                NuGetPackagesCache = Path.Combine("~", ".nuget", "packages");
+                NuGetPackagesCache = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".nuget", "packages");
                 DirectorySeparator = Path.AltDirectorySeparatorChar;
             }
             else
