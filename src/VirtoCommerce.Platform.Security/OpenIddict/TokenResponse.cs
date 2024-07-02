@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
 
-namespace VirtoCommerce.Platform.Security.Model
+namespace VirtoCommerce.Platform.Security.OpenIddict
 {
-    public class TokenLoginResponse : OpenIddictResponse
+    public class TokenResponse : OpenIddictResponse
     {
         public string UserId { get; set; }
 
