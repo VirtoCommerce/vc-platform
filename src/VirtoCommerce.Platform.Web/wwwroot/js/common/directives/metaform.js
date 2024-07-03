@@ -33,7 +33,7 @@ angular.module('platformWebApp')
                     metaFieldIndex = _.findIndex(metaFields, metaFieldToFind);
                 }
 
-                if (metaFieldIndex <= 0) {
+                if (metaFieldIndex < 0) {
                     throw new Error(metaFieldDescription
                         ? `The metaForm '${metaFormName}' doesn't contain a field with ${metaFieldDescription}, the field could not be removed.`
                         : `The metaForm '${metaFormName}' doesn't contain the field to be removed.`);
