@@ -151,6 +151,9 @@ TestableIO.System.IO.Abstractions.Wrappers.dll
 VirtoCommerce.Platform.Caching.dll
 VirtoCommerce.Platform.Core.dll
 VirtoCommerce.Platform.Data.dll
+VirtoCommerce.Platform.Data.MySql.dll
+VirtoCommerce.Platform.Data.PostgreSql.dll
+VirtoCommerce.Platform.Data.SqlServer.dll
 VirtoCommerce.Platform.DistributedLock.dll
 VirtoCommerce.Platform.Hangfire.dll
 VirtoCommerce.Platform.Modules.dll
