@@ -168,6 +168,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 var alreadyExistDbSettings = (await repository.Settings
                     .Include(s => s.SettingValues)
                     .Where(x => settingNames.Contains(x.Name))
+                    .AsSplitQuery()
                     .ToListAsync());
 
                 var validator = new ObjectSettingEntryValidator();

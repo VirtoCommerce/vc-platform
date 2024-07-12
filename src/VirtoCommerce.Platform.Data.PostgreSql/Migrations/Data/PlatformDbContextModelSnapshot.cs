@@ -17,7 +17,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Data
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.13")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -372,7 +372,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Data
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("DecimalValue")
-                        .HasColumnType("numeric(18,5)");
+                        .HasColumnType("decimal(18,5)");
 
                     b.Property<int>("IntegerValue")
                         .HasColumnType("integer");
@@ -388,6 +388,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Data
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("SettingId")
+                        .IsRequired()
                         .HasColumnType("character varying(128)");
 
                     b.Property<string>("ShortTextValue")
@@ -441,7 +442,8 @@ namespace VirtoCommerce.Platform.Data.PostgreSql.Migrations.Data
                     b.HasOne("VirtoCommerce.Platform.Data.Model.SettingEntity", "Setting")
                         .WithMany("SettingValues")
                         .HasForeignKey("SettingId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Setting");
                 });
