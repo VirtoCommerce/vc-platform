@@ -50,7 +50,7 @@
         },
         "imageTag": {
             "type": "string",
-            "defaultValue": "linux-latest",
+            "defaultValue": "virtostart-linux-latest",
             "metadata": {
                 "description": "The image tag of the image."
             }
