@@ -6,7 +6,7 @@
 
 [![Documentation](https://img.shields.io/badge/docs-read-brightgreen.svg)](https://docs.virtocommerce.org)&nbsp; [![Commnunity](https://img.shields.io/badge/community-read-brightgreen.svg)](https://www.virtocommerce.org)&nbsp; [![Contributors](https://img.shields.io/github/contributors/VirtoCommerce/vc-platform.svg)](https://github.com/VirtoCommerce/vc-platform/graphs/contributors)
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fdev%2FazureDeployWebAppForContainer.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FVirtoCommerce%2Fvc-platform%2Fdev%2FazureDeployPlatformAndFrontend.json)
 
 Virto Commerce is an open-source platform for building extensible ecommerce applications. This includes complex digital commerce solutions for B2B, B2C, or B2B2C businesses, [marketplaces](https://virtocommerce.com/solutions/marketplace), and derived SaaS commerce platforms.
 
@@ -68,6 +68,7 @@ In our work, we make every effort to always use advanced technologies. We picked
 ## References
 * Documentation: https://docs.virtocommerce.com
 * Home: https://virtocommerce.com
+* Virto Commerce Frontend: https://docs.virtocommerce.org/storefront/
 * Youtube Videos: https://www.youtube.com/c/Virtocommerce/videos
 * Community: https://www.virtocommerce.org
 
