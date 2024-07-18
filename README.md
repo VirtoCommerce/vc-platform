@@ -21,8 +21,8 @@ The main principle is to help the development teams focus on the implementation 
 * **[CLOUD NATIVE](https://virtocommerce.com/cloud-ecommerce)**: Ecommerce service is delivered in line with the SaaS model. This adds significant benefits for your business: 
     1. *On-demand*: Use the ecommerce service as a whole or its separate components as needed.
     1. *Scalability*: In the cloud, it can be easily scaled to support peak demand and long-term business growth. 
-    1. *Reliability*: Leverage a solution deployed across multiple data centers and availability zones to maximize uptime and reduce potential revenue losses.
-* **[HEADLESS](https://virtocommerce.com/headless-ecommerce)**: Allows an enterprise to support omnichannel journeys across traditional and digital touchpoints as well as new business models.
+    1. *Reliability*: Leverage a solution deployed across multiple data centres and availability zones to maximize uptime and reduce potential revenue losses.
+* **[HEADLESS](https://virtocommerce.com/b2b-headless-ecommerce-solution)**: Allows an enterprise to support omnichannel journeys across traditional and digital touchpoints as well as new business models.
 * **EXTENSIBILITY AND [COMPOSABILITY](https://virtocommerce.com/composable-ecommerce)**: API model, persistence model, and business logic can be extended as needed without deploying or re-deploying the solution. This provides superior business agility and keeps you and your service up to date.
 
 ## Overview
@@ -32,24 +32,24 @@ The following chart illustrates the high-level architecture and main areas of th
 
 **[Virto Commerce Platform](https://virtocommerce.com/b2b-ecommerce-platform)**: Launches the ecommerce applications in the public, hybrid, and private [cloud](https://virtocommerce.com/virto-commerce-cloud) environments. 
 
-**Commerce Applications**: API-based, modular and extensible logical set of one or more headless microservices (modules) with focus on the implementation of the business feature, such as Digital Catalog, Order Management, Content Management, Marketing, etc.
+**Commerce Applications**: API-based, modular and extensible logical set of one or more headless microservices (modules) with a focus on the implementation of the business feature, such as Digital Catalog, Order Management, Content Management, Marketing, etc.
 
-**Custom Extensions**: Virto Commerce Module that enables extending API model, persistent model, business logic, and admin UI withing the commerce applications.
+**Custom Extensions**: Virto Commerce Module that enables extending API model, persistent model, business logic, and admin UI within the commerce applications.
 
-**External Commerce Applications**: Third party ecommerce applications and services. 
+**External Commerce Applications**: Third-party ecommerce applications and services. 
 
-**Touchpoints**: Sell your products on the website, through mobile application, chatbot or any third party services: marketplace, dropshipping, or any other option you create. Virto Commerce Storefront Kit allows you to manage various brands and stores under the same environment and with the same features.
+**Touchpoints**: Sell your products on the website, through a mobile application, chatbot or any third-party services: marketplace, dropshipping, or any other option you create. Virto Commerce Storefront Kit allows you to manage various brands and stores in the same environment and with the same features.
 
 **Admin SPA**: Virto Commerce has an extensible and intuitive admin user interface, which allows you to manage data within your commerce applications across all channels.
 
 **[Integration](https://virtocommerce.com/integrations/key-ecommerce-integrations) middleware**: Asynchronous integration middleware for declarative integration with non-real-time and legacy services.
 
 ## Introduction to Virto Commerce
-These Virto Commerce docs will help you in learning and using the Virto Commerce platform, from your local solution to optimizing complex enterprise builds: 
+These Virto Commerce docs will help you learn and use the Virto Commerce platform, from your local solution to optimizing complex enterprise builds: 
 
-* [Quick Start](https://docs.virtocommerce.org/platform/developer-guide/Getting-Started/Installation-Guide/windows)
+* [Quick Start](https://docs.virtocommerce.org/platform/developer-guide/)
 * [User Guide](https://docs.virtocommerce.org/platform/user-guide/)
-* [What’s New: News Digest](https://www.virtocommerce.org/c/news-digest/15)
+* [News Digest](https://www.virtocommerce.org/c/news-digest/15)
 
 ## Technology Stack Used
 
@@ -59,14 +59,14 @@ In our work, we make every effort to always use advanced technologies. We picked
 * EF Core as primary ORM
 * ASP.NET Core Identity for authentication and authorization
 * OpenIddict for OAuth authentication
-* WebPack as primary design/runtime bundler and minifier
+* WebPack as primary design/runtime bundler and minified
 * Swashbuckle.AspNetCore.SwaggerGen for Swagger docs and UI
 * SignalR Core for push notifications
 * AngularJS as a primary framework for SPA
 * HangFire for running background tasks
 
 ## References
-* Documentation: https://docs.virtocommerce.com
+* Documentation: https://docs.virtocommerce.org
 * Home: https://virtocommerce.com
 * Virto Commerce Frontend: https://docs.virtocommerce.org/storefront/
 * Youtube Videos: https://www.youtube.com/c/Virtocommerce/videos
