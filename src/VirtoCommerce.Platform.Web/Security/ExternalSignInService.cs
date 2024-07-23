@@ -49,18 +49,11 @@ namespace VirtoCommerce.Platform.Web.Security
         [Obsolete("Not being called. Use SignInAsync()", DiagnosticId = "VC0009", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
         public virtual async Task<string> ProcessCallbackAsync(string returnUrl, IUrlHelper urlHelper)
         {
-            var homeUrl = urlHelper.Action("Index", "Home") ?? "/";
-
-            if (!urlHelper.IsLocalUrl(returnUrl))
-            {
-                return homeUrl;
-            }
-
             var signInResult = await SignInAsync();
 
-            return signInResult.Success
+            return signInResult.Success && urlHelper.IsLocalUrl(returnUrl)
                 ? returnUrl
-                : homeUrl;
+                : urlHelper.Action("Index", "Home") ?? "/";
         }
 
         public virtual async Task<ExternalSignInResult> SignInAsync()

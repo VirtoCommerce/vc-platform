@@ -117,16 +117,13 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
-            if (!Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(GetHomeUrl());
-            }
-
             var signInResult = await _externalSignInService.SignInAsync();
 
-            return signInResult.Success
-                ? Redirect(returnUrl)
-                : Redirect(GetHomeUrl());
+            var redirectUrl = signInResult.Success && Url.IsLocalUrl(returnUrl)
+                ? returnUrl
+                : GetHomeUrl();
+
+            return Redirect(redirectUrl);
         }
 
         [HttpGet]
