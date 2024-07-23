@@ -9,6 +9,7 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Web.Model.Security;
 
@@ -18,41 +19,70 @@ namespace VirtoCommerce.Platform.Web.Controllers
     public class ExternalSignInController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IExternalSigninService _externalSigninService;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IExternalSignInService _externalSignInService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
+        private readonly IList<IExternalSignInValidator> _externalSignInValidators;
 
         public ExternalSignInController(SignInManager<ApplicationUser> signInManager,
-            IExternalSigninService externalSigninService,
+            IExternalSignInService externalSignInService,
             IEventPublisher eventPublisher,
-            IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs)
+            IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs,
+            IEnumerable<IExternalSignInValidator> externalSignInValidators)
         {
             _signInManager = signInManager;
-            _externalSigninService = externalSigninService;
+            _userManager = _signInManager.UserManager;
+            _externalSignInService = externalSignInService;
             _eventPublisher = eventPublisher;
             _externalSigninProviderConfigs = externalSigninProviderConfigs;
+            _externalSignInValidators = externalSignInValidators.ToList();
         }
 
         [HttpGet]
         [Route("")]
         [AllowAnonymous]
-        public ActionResult SignIn(string authenticationType, string returnUrl = null)
+        public async Task<ActionResult> SignIn([FromQuery] ExternalSignInRequest request)
         {
-            if (string.IsNullOrEmpty(authenticationType))
+            if (string.IsNullOrEmpty(request.AuthenticationType))
             {
                 return BadRequest();
             }
 
-            if (string.IsNullOrEmpty(returnUrl))
+            if (string.IsNullOrEmpty(request.ReturnUrl))
             {
-                returnUrl = Url.Action("Index", "Home");
+                request.ReturnUrl = GetHomeUrl();
             }
-            var callbackUrl = Url.Action("SignInCallback", "ExternalSignIn", new { returnUrl });
 
-            var authenticationProperties = new AuthenticationProperties { RedirectUri = callbackUrl };
-            authenticationProperties.Items["LoginProvider"] = authenticationType;
+            var authenticationProperties = new AuthenticationProperties
+            {
+                Items = { ["LoginProvider"] = request.AuthenticationType },
+                RedirectUri = Url.Action("SignInCallback", "ExternalSignIn", new { request.ReturnUrl }),
+            };
 
-            return Challenge(authenticationProperties, authenticationType);
+            // Validate and apply front-end parameters
+            if (!string.IsNullOrEmpty(request.StoreId) && !string.IsNullOrEmpty(request.OidcUrl) && !string.IsNullOrEmpty(request.CallbackUrl))
+            {
+                if (_externalSignInValidators.Count == 0)
+                {
+                    return BadRequest();
+                }
+
+                foreach (var validator in _externalSignInValidators)
+                {
+                    if (!await validator.ValidateAsync(request))
+                    {
+                        return BadRequest();
+                    }
+                }
+
+                authenticationProperties.SetStoreId(request.StoreId);
+                authenticationProperties.SetOidcUrl(request.OidcUrl);
+                authenticationProperties.SetNewUserType(UserType.Customer.ToString());
+                authenticationProperties.RedirectUri = request.CallbackUrl;
+            }
+
+            return Challenge(authenticationProperties, request.AuthenticationType);
         }
 
         [HttpGet]
@@ -64,12 +94,12 @@ namespace VirtoCommerce.Platform.Web.Controllers
                 return BadRequest();
             }
 
-            var userName = User?.Identity?.Name;
+            var userName = User.Identity?.Name;
 
             // sign out the current user
             if (!string.IsNullOrEmpty(userName))
             {
-                var user = await _signInManager.UserManager.FindByNameAsync(User?.Identity?.Name);
+                var user = await _userManager.FindByNameAsync(userName);
                 if (user != null)
                 {
                     await _signInManager.SignOutAsync();
@@ -87,9 +117,16 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SignInCallback(string returnUrl)
         {
-            var redirectUrl = await _externalSigninService.ProcessCallbackAsync(returnUrl, Url);
+            if (!Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(GetHomeUrl());
+            }
 
-            return Redirect(redirectUrl);
+            var signInResult = await _externalSignInService.SignInAsync();
+
+            return signInResult.Success
+                ? Redirect(returnUrl)
+                : Redirect(GetHomeUrl());
         }
 
         [HttpGet]
@@ -97,18 +134,23 @@ namespace VirtoCommerce.Platform.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<ExternalSignInProviderInfo[]>> GetExternalLoginProviders()
         {
-            var externalLoginProviders = (await _signInManager.GetExternalAuthenticationSchemesAsync())
-                .Select(authenticationDescription => new ExternalSignInProviderInfo
+            var providers = (await _signInManager.GetExternalAuthenticationSchemesAsync())
+                .Select(scheme => new ExternalSignInProviderInfo
                 {
-                    AuthenticationType = authenticationDescription.Name,
-                    DisplayName = authenticationDescription.DisplayName,
-                    LogoUrl = _externalSigninProviderConfigs?
-                                .FirstOrDefault(x => x.AuthenticationType.EqualsInvariant(authenticationDescription.Name))?
-                                .LogoUrl,
+                    AuthenticationType = scheme.Name,
+                    DisplayName = scheme.DisplayName,
+                    LogoUrl = _externalSigninProviderConfigs
+                        ?.FirstOrDefault(x => x.AuthenticationType.EqualsIgnoreCase(scheme.Name))
+                        ?.LogoUrl,
                 })
                 .ToArray();
 
-            return Ok(externalLoginProviders);
+            return Ok(providers);
+        }
+
+        private string GetHomeUrl()
+        {
+            return Url.Action("Index", "Home") ?? "/";
         }
     }
 }

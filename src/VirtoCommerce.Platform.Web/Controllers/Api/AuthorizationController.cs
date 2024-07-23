@@ -19,11 +19,11 @@ using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Security.Authorization;
 using VirtoCommerce.Platform.Security.Extensions;
 using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.Extensions;
-using VirtoCommerce.Platform.Web.Model.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace VirtoCommerce.Platform.Web.Controllers.Api
@@ -40,31 +40,31 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
         private readonly OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> _tokenManager;
         private readonly IAuthorizationService _authorizationService;
-
-        private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
+        private readonly IExternalSignInService _externalSignInService;
 
         public AuthorizationController(
             OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> applicationManager,
             IOptions<IdentityOptions> identityOptions,
             SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
             IEventPublisher eventPublisher,
             IEnumerable<ITokenRequestValidator> requestValidators,
             IEnumerable<ITokenClaimProvider> claimProviders,
             OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> tokenManager,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IExternalSignInService externalSignInService)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
             _passwordLoginOptions = passwordLoginOptions.Value;
             _signInManager = signInManager;
-            _userManager = userManager;
+            _userManager = _signInManager.UserManager;
             _eventPublisher = eventPublisher;
             _requestValidators = requestValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList();
             _claimProviders = claimProviders;
             _tokenManager = tokenManager;
             _authorizationService = authorizationService;
+            _externalSignInService = externalSignInService;
         }
 
         [HttpPost("~/revoke/token")]
@@ -122,7 +122,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True. 
                 if (user is null && _identityOptions.User.RequireUniqueEmail)
                 {
-                    user = await UserManager.FindByEmailAsync(openIdConnectRequest.Username);
+                    user = await _userManager.FindByEmailAsync(openIdConnectRequest.Username);
                 }
 
                 if (user is null)
@@ -200,6 +200,39 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 return SignIn(ticket.Principal, ticket.AuthenticationScheme);
             }
 
+            if (openIdConnectRequest.GrantType == PlatformConstants.Security.GrantTypes.ExternalSignIn)
+            {
+                var signInResult = await _externalSignInService.SignInAsync();
+
+                // Remove identity cookies regardless of the result
+                await _signInManager.SignOutAsync();
+
+                if (!signInResult.Success)
+                {
+                    return BadRequest(SecurityErrorDescriber.LoginFailed());
+                }
+
+                if (!await _signInManager.CanSignInAsync(signInResult.User))
+                {
+                    return BadRequest(SecurityErrorDescriber.SignInNotAllowed());
+                }
+
+                context.User = signInResult.User.CloneTyped();
+
+                foreach (var requestValidator in _requestValidators)
+                {
+                    var errors = await requestValidator.ValidateAsync(context);
+                    if (errors.Count > 0)
+                    {
+                        return BadRequest(errors.First());
+                    }
+                }
+
+                var ticket = await CreateTicketAsync(signInResult.User, context);
+
+                return SignIn(ticket.Principal, ticket.AuthenticationScheme);
+            }
+
             if (openIdConnectRequest.IsClientCredentialsGrantType())
             {
                 // Note: the client credentials are automatically validated by OpenIddict:
@@ -248,12 +281,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 if (!string.IsNullOrEmpty(userId))
                 {
                     // Find impersonated user by id
-                    impersonatedUser = await _signInManager.UserManager.FindByIdAsync(userId);
+                    impersonatedUser = await _userManager.FindByIdAsync(userId);
                 }
                 else
                 {
                     // Reset impersonation to operator
-                    impersonatedUser = await _signInManager.UserManager.FindByIdAsync(operatorUserId);
+                    impersonatedUser = await _userManager.FindByIdAsync(operatorUserId);
                     operatorUserId = string.Empty;
                     operatorUserName = string.Empty;
                 }
@@ -388,7 +421,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private Task<IdentityResult> SetLastLoginDate(ApplicationUser user)
         {
             user.LastLoginDate = DateTime.UtcNow;
-            return _signInManager.UserManager.UpdateAsync(user);
+            return _userManager.UpdateAsync(user);
         }
     }
 }

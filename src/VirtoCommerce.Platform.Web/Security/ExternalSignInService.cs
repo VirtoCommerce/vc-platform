@@ -6,19 +6,20 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Security.ExternalSignIn;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace VirtoCommerce.Platform.Web.Security
 {
-    public class ExternalSigninService : IExternalSigninService
+    public class ExternalSignInService : IExternalSignInService, IExternalSigninService
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -26,39 +27,53 @@ namespace VirtoCommerce.Platform.Web.Security
         private readonly IdentityOptions _identityOptions;
         private readonly ISettingsManager _settingsManager;
         private readonly IEnumerable<ExternalSignInProviderConfiguration> _externalSigninProviderConfigs;
+        private readonly IEnumerable<IExternalSignInUserBuilder> _userBuilders;
 
-        private IUrlHelper _urlHelper;
-
-        [ActivatorUtilitiesConstructor]
-        public ExternalSigninService(SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager,
+        public ExternalSignInService(
+            SignInManager<ApplicationUser> signInManager,
             IEventPublisher eventPublisher,
             IOptions<IdentityOptions> identityOptions,
             ISettingsManager settingsManager,
-            IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs)
+            IEnumerable<ExternalSignInProviderConfiguration> externalSigninProviderConfigs,
+            IEnumerable<IExternalSignInUserBuilder> userBuilders)
         {
             _signInManager = signInManager;
-            _userManager = userManager;
+            _userManager = signInManager.UserManager;
             _eventPublisher = eventPublisher;
             _identityOptions = identityOptions.Value;
             _settingsManager = settingsManager;
             _externalSigninProviderConfigs = externalSigninProviderConfigs;
+            _userBuilders = userBuilders;
         }
 
+        [Obsolete("Not being called. Use SignInAsync()", DiagnosticId = "VC0009", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
         public virtual async Task<string> ProcessCallbackAsync(string returnUrl, IUrlHelper urlHelper)
         {
-            _urlHelper = urlHelper;
+            var homeUrl = urlHelper.Action("Index", "Home") ?? "/";
 
-            if (!_urlHelper.IsLocalUrl(returnUrl))
+            if (!urlHelper.IsLocalUrl(returnUrl))
             {
-                return _urlHelper.Action("index", "Home");
+                return homeUrl;
             }
 
-            var externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
+            var signInResult = await SignInAsync();
 
-            if (!TryGetUserInfo(externalLoginInfo, out var userName, out var userEmail, out var redirectUrl))
+            return signInResult.Success
+                ? returnUrl
+                : homeUrl;
+        }
+
+        public virtual async Task<ExternalSignInResult> SignInAsync()
+        {
+            var externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
+            if (externalLoginInfo is null)
             {
-                return redirectUrl;
+                return ExternalSignInResult.Fail();
+            }
+
+            if (!TryGetUserInfo(externalLoginInfo, out var userName, out var userEmail))
+            {
+                return ExternalSignInResult.Fail();
             }
 
             var platformUser = await GetOrCreatePlatformUser(externalLoginInfo, userName, userEmail);
@@ -69,119 +84,106 @@ namespace VirtoCommerce.Platform.Web.Security
 
             await _eventPublisher.Publish(new BeforeUserLoginEvent(platformUser, externalLoginInfo));
 
-            var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, false);
+            var externalLoginResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, isPersistent: false);
 
             if (externalLoginResult == SignInResult.Failed)
             {
                 throw new AuthenticationException($"The requested provider {externalLoginInfo.ProviderDisplayName} has not been linked to an account, the provider must be linked from the back office.");
             }
-            else if (externalLoginResult == SignInResult.LockedOut)
+
+            if (externalLoginResult == SignInResult.LockedOut)
             {
                 throw new AuthenticationException($"The user {externalLoginInfo.Principal.Identity?.Name} for the external provider {externalLoginInfo.ProviderDisplayName} is locked out.");
             }
-            else if (externalLoginResult == SignInResult.TwoFactorRequired)
+
+            if (externalLoginResult == SignInResult.TwoFactorRequired)
             {
                 throw new NotImplementedException();
-            }
-
-            var validationResult = await ValidateUserAsync(platformUser, externalLoginResult, returnUrl);
-            if (!validationResult.Item1)
-            {
-                return validationResult.Item2;
             }
 
             await SetLastLoginDate(platformUser);
             await _eventPublisher.Publish(new UserLoginEvent(platformUser, externalLoginInfo));
 
-            return returnUrl;
+            return ExternalSignInResult.Succeed(platformUser);
         }
 
-        private Task SetLastLoginDate(ApplicationUser user)
+        private Task<IdentityResult> SetLastLoginDate(ApplicationUser user)
         {
             user.LastLoginDate = DateTime.UtcNow;
-            return _signInManager.UserManager.UpdateAsync(user);
+            return _userManager.UpdateAsync(user);
         }
 
-        protected virtual Task<(bool, string)> ValidateUserAsync(ApplicationUser platformUser, SignInResult externalLoginResult, string returnUrl)
-        {
-            return Task.FromResult((true, returnUrl));
-        }
-
-        protected virtual async Task<ApplicationUser> GetOrCreatePlatformUser(ExternalLoginInfo externalLoginInfo, string userName, string userEmail)
+        private async Task<ApplicationUser> GetOrCreatePlatformUser(ExternalLoginInfo externalLoginInfo, string userName, string userEmail)
         {
             //Need handle the two cases
             //first - when the VC platform user account already exists, it is just missing an external login info and
             //second - when user does not have an account, then create a new account for them
-            var platformUser = await _userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByNameAsync(userName);
 
-            if (_identityOptions.User.RequireUniqueEmail && platformUser == null)
+            if (user == null && _identityOptions.User.RequireUniqueEmail && !string.IsNullOrEmpty(userEmail))
             {
-                platformUser = await FindUserByEmail(userEmail);
+                user = await _userManager.FindByEmailAsync(userEmail);
             }
 
-            var providerConfig = GetExternalSigninProviderConfiguration(externalLoginInfo);
-            if (platformUser == null)
+            if (user == null && AllowCreateNewUser(externalLoginInfo))
             {
-                if (providerConfig?.Provider.AllowCreateNewUser == true)
+                user = AbstractTypeFactory<ApplicationUser>.TryCreateInstance();
+                user.UserName = userName;
+                user.Email = userEmail;
+                user.EmailConfirmed = true;
+                user.UserType = await GetDefaultUserType(externalLoginInfo);
+                user.StoreId = externalLoginInfo.AuthenticationProperties.GetStoreId();
+
+                foreach (var userBuilder in _userBuilders)
                 {
-                    platformUser = new ApplicationUser
-                    {
-                        UserName = userName,
-                        Email = userEmail,
-                        UserType = await GetDefaultUserType(externalLoginInfo)
-                    };
+                    await userBuilder.BuildNewUser(user, externalLoginInfo);
+                }
 
-                    var result = await _userManager.CreateAsync(platformUser);
-                    if (!result.Succeeded)
-                    {
-                        var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
-                        throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
-                    }
+                var result = await _userManager.CreateAsync(user);
+                if (!result.Succeeded)
+                {
+                    var joinedErrors = string.Join(Environment.NewLine, result.Errors.Select(x => x.Description));
+                    throw new InvalidOperationException("Failed to save a VC platform account due the errors: " + joinedErrors);
+                }
 
-                    var roles = GetDefaultUserRoles(externalLoginInfo);
+                var roles = GetDefaultUserRoles(externalLoginInfo);
 
-                    if (roles is { Length: > 0 })
-                    {
-                        await _userManager.AddToRolesAsync(platformUser, roles);
-                    }
+                if (roles is { Length: > 0 })
+                {
+                    await _userManager.AddToRolesAsync(user, roles);
                 }
             }
 
-            var user = await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey);
-            if (user == null)
+            if (user != null && await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey) == null)
             {
                 // Register a new external login
                 var newExternalLogin = new UserLoginInfo(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey, externalLoginInfo.ProviderDisplayName);
-                await _userManager.AddLoginAsync(platformUser, newExternalLogin);
+                await _userManager.AddLoginAsync(user, newExternalLogin);
             }
 
-
-            return platformUser;
+            return user;
         }
 
-        protected virtual async Task<ApplicationUser> FindUserByEmail(string email)
+        private bool AllowCreateNewUser(ExternalLoginInfo externalLoginInfo)
         {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return null;
-            }
-
-            return await _userManager.FindByEmailAsync(email);
-        }
-
-
-        protected virtual async Task<string> GetDefaultUserType(ExternalLoginInfo externalLoginInfo)
-        {
-            var userType = "Manager";
-
             var providerConfig = GetExternalSigninProviderConfiguration(externalLoginInfo);
-            if (providerConfig?.Provider is not null)
+            return providerConfig?.Provider.AllowCreateNewUser == true;
+        }
+
+        private async Task<string> GetDefaultUserType(ExternalLoginInfo externalLoginInfo)
+        {
+            var userType = externalLoginInfo.AuthenticationProperties?.GetNewUserType();
+
+            if (string.IsNullOrEmpty(userType))
             {
-                userType = providerConfig.Provider.GetUserType();
+                var providerConfig = GetExternalSigninProviderConfiguration(externalLoginInfo);
+
+                userType = providerConfig?.Provider is not null
+                    ? providerConfig.Provider.GetUserType()
+                    : "Manager";
             }
 
-            var userTypesSetting = await _settingsManager.GetObjectSettingAsync("VirtoCommerce.Platform.Security.AccountTypes");
-
+            var userTypesSetting = await _settingsManager.GetObjectSettingAsync(PlatformConstants.Settings.Security.SecurityAccountTypes.Name);
             var userTypes = userTypesSetting.AllowedValues.Select(x => x.ToString()).ToList();
 
             if (!userTypes.Contains(userType))
@@ -191,14 +193,14 @@ namespace VirtoCommerce.Platform.Web.Security
 
                 using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync())
                 {
-                    await _settingsManager.SaveObjectSettingsAsync(new[] { userTypesSetting });
+                    await _settingsManager.SaveObjectSettingsAsync([userTypesSetting]);
                 }
             }
 
             return userType;
         }
 
-        protected virtual string[] GetDefaultUserRoles(ExternalLoginInfo externalLoginInfo)
+        private string[] GetDefaultUserRoles(ExternalLoginInfo externalLoginInfo)
         {
             var userRoles = Array.Empty<string>();
             var providerConfig = GetExternalSigninProviderConfiguration(externalLoginInfo);
@@ -210,17 +212,10 @@ namespace VirtoCommerce.Platform.Web.Security
             return userRoles;
         }
 
-        protected virtual bool TryGetUserInfo(ExternalLoginInfo externalLoginInfo, out string userName, out string userEmail, out string redirectUrl)
+        private bool TryGetUserInfo(ExternalLoginInfo externalLoginInfo, out string userName, out string userEmail)
         {
             userName = string.Empty;
             userEmail = string.Empty;
-            redirectUrl = string.Empty;
-
-            if (externalLoginInfo == null)
-            {
-                redirectUrl = _urlHelper.Action("index", "Home");
-                return false;
-            }
 
             var providerConfig = GetExternalSigninProviderConfiguration(externalLoginInfo);
             if (providerConfig?.Provider is not null)
@@ -238,9 +233,9 @@ namespace VirtoCommerce.Platform.Web.Security
             return true;
         }
 
-        protected virtual ExternalSignInProviderConfiguration GetExternalSigninProviderConfiguration(ExternalLoginInfo externalLoginInfo)
+        private ExternalSignInProviderConfiguration GetExternalSigninProviderConfiguration(ExternalLoginInfo externalLoginInfo)
         {
-            return _externalSigninProviderConfigs.FirstOrDefault(x => x.AuthenticationType.EqualsInvariant(externalLoginInfo.LoginProvider));
+            return _externalSigninProviderConfigs.FirstOrDefault(x => x.AuthenticationType.EqualsIgnoreCase(externalLoginInfo.LoginProvider));
         }
     }
 }
