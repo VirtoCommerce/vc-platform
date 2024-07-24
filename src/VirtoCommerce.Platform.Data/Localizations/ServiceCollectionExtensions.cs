@@ -5,7 +5,7 @@ namespace VirtoCommerce.Platform.Data.Localizations
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddLocalization(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddVcLocalization(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<ILocalizedItemService, LocalizedItemService>();
             serviceCollection.AddSingleton<ILocalizedItemSearchService, LocalizedItemSearchService>();
