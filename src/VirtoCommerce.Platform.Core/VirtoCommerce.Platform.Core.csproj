@@ -19,29 +19,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Messages\" />
-    <Folder Include="Specifications\" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel" Version="2.22.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.7" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Serilog" Version="3.1.1" />
-    <PackageReference Include="System.IO.Abstractions" Version="20.0.4" />
-  </ItemGroup>
-
-  <!--Workaround for vulnerable transitive packages-->
-  <ItemGroup>
-    <PackageReference Include="System.Text.Encodings.Web" Version="4.5.1" />
+    <PackageReference Include="Serilog" Version="4.0.1" />
+    <PackageReference Include="System.IO.Abstractions" Version="21.0.26" />
   </ItemGroup>
 
 </Project>

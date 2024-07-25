@@ -34,7 +34,7 @@ namespace VirtoCommerce.Platform.Data.Extensions
             services.AddTransient<Func<IPlatformRepository>>(provider => () => provider.CreateScope().ServiceProvider.GetService<IPlatformRepository>());
 
             services.AddSettings();
-            services.AddLocalization();
+            services.AddLocalizedItems();
             services.AddDynamicProperties();
 
             services.AddSingleton<InProcessBus>();

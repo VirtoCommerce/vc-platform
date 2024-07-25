@@ -67,7 +67,7 @@ namespace VirtoCommerce.Platform.Caching.Tests
         }
 
         [Fact]
-        public async void NotInheritedSetAfterAsyncMethodStartsInAnotherAsyncMethod()
+        public async Task NotInheritedSetAfterAsyncMethodStartsInAnotherAsyncMethod()
         {
             Assert.False(CacheDisabler.CacheDisabled,
                 "CacheDisabler shouldn't be active in this thread before test.");
