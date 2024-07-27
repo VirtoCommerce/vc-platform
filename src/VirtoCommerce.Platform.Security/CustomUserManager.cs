@@ -43,82 +43,82 @@ namespace VirtoCommerce.Platform.Security
             _passwordHasher = passwordHasher;
         }
 
-        public override async Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey)
+        public override Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(FindByLoginAsync), loginProvider, providerKey);
-            var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
                 var user = await base.FindByLoginAsync(loginProvider, providerKey);
-                if (user != null)
+                if (user is not null)
                 {
                     await LoadUserDetailsAsync(user);
-                    cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
+                    ConfigureCache(cacheEntry, user);
                 }
                 return user;
             }, cacheNullValue: false);
-
-            return result;
         }
 
-        public override async Task<ApplicationUser> FindByEmailAsync(string email)
+        public override Task<ApplicationUser> FindByEmailAsync(string email)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(FindByEmailAsync), email);
-            var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
                 var user = await base.FindByEmailAsync(email);
-                if (user != null)
+                if (user is not null)
                 {
                     await LoadUserDetailsAsync(user);
-                    cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
+                    ConfigureCache(cacheEntry, user);
                 }
                 return user;
             }, cacheNullValue: false);
-            return result;
         }
 
-        public override async Task<ApplicationUser> FindByNameAsync(string userName)
+        public override Task<ApplicationUser> FindByNameAsync(string userName)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(FindByNameAsync), userName);
-            var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
                 var user = await base.FindByNameAsync(userName);
-                if (user != null)
+                if (user is not null)
                 {
                     await LoadUserDetailsAsync(user);
-                    cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
+                    ConfigureCache(cacheEntry, user);
                 }
                 return user;
             }, cacheNullValue: false);
-            return result;
         }
 
-        public override async Task<ApplicationUser> FindByIdAsync(string userId)
+        public override Task<ApplicationUser> FindByIdAsync(string userId)
         {
             var cacheKey = CacheKey.With(GetType(), nameof(FindByIdAsync), userId);
-            var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            return _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
                 var user = await base.FindByIdAsync(userId);
-                if (user != null)
+                if (user is not null)
                 {
                     await LoadUserDetailsAsync(user);
-                    cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
+                    ConfigureCache(cacheEntry, user);
                 }
                 return user;
             }, cacheNullValue: false);
-            return result;
+        }
+
+        protected virtual void ConfigureCache(MemoryCacheEntryOptions cacheEntry, ApplicationUser user)
+        {
+            cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
         }
 
         public override Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword)
         {
             return UpdatePasswordAsync(user, newPassword,
-                (user, newPassword) => base.ResetPasswordAsync(user, token, newPassword),
+                (appUser, password) => base.ResetPasswordAsync(appUser, token, password),
                 (userId, customPasswordHash) => new UserResetPasswordEvent(userId, customPasswordHash));
         }
 
         public override Task<IdentityResult> ChangePasswordAsync(ApplicationUser user, string currentPassword, string newPassword)
         {
             return UpdatePasswordAsync(user, newPassword,
-                (user, newPassword) => base.ChangePasswordAsync(user, currentPassword, newPassword),
+                (appUser, password) => base.ChangePasswordAsync(appUser, currentPassword, password),
                 (userId, customPasswordHash) => new UserChangedPasswordEvent(userId, customPasswordHash));
         }
 
@@ -171,9 +171,10 @@ namespace VirtoCommerce.Platform.Security
         {
             var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
             {
-                new GenericChangedEntry<ApplicationUser>(user, EntryState.Deleted)
+                new(user, EntryState.Deleted),
             };
             await _eventPublisher.Publish(new UserChangingEvent(changedEntries));
+
             var result = await base.DeleteAsync(user);
             if (result.Succeeded)
             {
@@ -185,18 +186,18 @@ namespace VirtoCommerce.Platform.Security
 
         protected override async Task<IdentityResult> UpdateUserAsync(ApplicationUser user)
         {
-            var newUser = (ApplicationUser)user.Clone();
+            var newUser = user.CloneTyped();
             var existentUser = await LoadExistingUser(user);
 
             //We cant update not existing user
-            if (existentUser == null)
+            if (existentUser is null)
             {
                 return IdentityResult.Failed(ErrorDescriber.DefaultError());
             }
 
             var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
             {
-                new(newUser, (ApplicationUser)existentUser.Clone(), EntryState.Modified)
+                new(newUser, existentUser.CloneTyped(), EntryState.Modified),
             };
 
             await _eventPublisher.Publish(new UserChangingEvent(changedEntries));
@@ -233,7 +234,7 @@ namespace VirtoCommerce.Platform.Security
 
         protected virtual async Task UpdateUserRolesAsync(ApplicationUser user)
         {
-            if (user.Roles == null)
+            if (user.Roles is null)
             {
                 return;
             }
@@ -256,7 +257,7 @@ namespace VirtoCommerce.Platform.Security
 
         protected virtual async Task UpdateUserLoginsAsync(ApplicationUser user)
         {
-            if (user.Logins == null)
+            if (user.Logins is null)
             {
                 return;
             }
@@ -279,13 +280,14 @@ namespace VirtoCommerce.Platform.Security
         {
             var changedEntries = new List<GenericChangedEntry<ApplicationUser>>
             {
-                new GenericChangedEntry<ApplicationUser>(user, EntryState.Added)
+                new(user, EntryState.Added),
             };
             await _eventPublisher.Publish(new UserChangingEvent(changedEntries));
+
             var result = await base.CreateAsync(user);
             if (result.Succeeded)
             {
-                if (!user.Roles.IsNullOrEmpty())
+                if (user.Roles?.Count > 0)
                 {
                     //Add
                     foreach (var newRole in user.Roles)
@@ -295,7 +297,7 @@ namespace VirtoCommerce.Platform.Security
                 }
 
                 // add external logins
-                if (!user.Logins.IsNullOrEmpty())
+                if (user.Logins?.Length > 0)
                 {
                     foreach (var login in user.Logins)
                     {
@@ -306,6 +308,7 @@ namespace VirtoCommerce.Platform.Security
                 SecurityCacheRegion.ExpireUser(user);
                 await _eventPublisher.Publish(new UserChangedEvent(changedEntries));
             }
+
             return result;
         }
 
@@ -319,7 +322,6 @@ namespace VirtoCommerce.Platform.Security
             }
 
             return result;
-
         }
 
         public override async Task<IdentityResult> AddToRoleAsync(ApplicationUser user, string role)
@@ -329,6 +331,7 @@ namespace VirtoCommerce.Platform.Security
             {
                 await _eventPublisher.Publish(new UserRoleAddedEvent(user, role));
             }
+
             return result;
         }
 
@@ -339,6 +342,7 @@ namespace VirtoCommerce.Platform.Security
             {
                 await _eventPublisher.Publish(new UserRoleRemovedEvent(user, role));
             }
+
             return result;
         }
 
@@ -350,10 +354,7 @@ namespace VirtoCommerce.Platform.Security
         /// <returns></returns>
         protected virtual async Task LoadUserDetailsAsync(ApplicationUser user)
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
+            ArgumentNullException.ThrowIfNull(user);
 
             // check password expiry policy and mark password as expired, if needed
             var lastPasswordChangeDate = user.LastPasswordChangedDate ?? user.CreatedDate;
@@ -369,7 +370,7 @@ namespace VirtoCommerce.Platform.Security
             foreach (var roleName in await base.GetRolesAsync(user))
             {
                 var role = await _roleManager.FindByNameAsync(roleName);
-                if (role != null)
+                if (role is not null)
                 {
                     user.Roles.Add(role);
                 }
@@ -397,13 +398,13 @@ namespace VirtoCommerce.Platform.Security
                 //It is important to call base.FindByIdAsync method to avoid of update a cached user.
                 result = await base.FindByIdAsync(user.Id);
             }
-            if (result == null)
+            if (result is null)
             {
                 //It is important to call base.FindByNameAsync method to avoid of update a cached user.
                 result = await base.FindByNameAsync(user.UserName);
             }
 
-            if (result != null)
+            if (result is not null)
             {
                 await LoadUserDetailsAsync(result);
             }
