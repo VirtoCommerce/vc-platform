@@ -45,4 +45,40 @@ public static class CrudServiceExtensions
     {
         return crudService.GetAsync(ids, responseGroup, clone);
     }
+
+    /// <summary>
+    /// Returns data from the database without using cache.
+    /// </summary>
+    public static Task<IList<TModel>> GetNoCacheAsync<TModel>(this ICrudService<TModel> crudService, IList<string> ids, string responseGroup = null, bool clone = true)
+        where TModel : Entity
+    {
+        return crudService.AsNoCache().GetNoCacheAsync(ids, responseGroup, clone);
+    }
+
+    /// <summary>
+    /// Returns data from the database without using cache.
+    /// </summary>
+    public static async Task<TModel> GetNoCacheAsync<TModel>(this ICrudService<TModel> crudService, string id, string responseGroup = null, bool clone = true)
+        where TModel : Entity
+    {
+        if (id is null)
+        {
+            return null;
+        }
+
+        var entities = await crudService.AsNoCache().GetNoCacheAsync([id], responseGroup, clone);
+
+        return entities?.FirstOrDefault();
+    }
+
+    public static INoCacheCrudService<TModel> AsNoCache<TModel>(this ICrudService<TModel> crudService)
+        where TModel : Entity
+    {
+        if (crudService is not INoCacheCrudService<TModel> noCacheService)
+        {
+            throw new NotSupportedException("Underlying service does not support no cache search.");
+        }
+
+        return noCacheService;
+    }
 }

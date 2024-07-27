@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     /// <typeparam name="TEntity">The type of data access layer entity (EF) </typeparam>
     /// <typeparam name="TChangeEvent">The type of *change event</typeparam>
     /// <typeparam name="TChangedEvent">The type of *changed event</typeparam>
-    public abstract class CrudService<TModel, TEntity, TChangeEvent, TChangedEvent> : ICrudService<TModel>
+    public abstract class CrudService<TModel, TEntity, TChangeEvent, TChangedEvent> : ICrudService<TModel>, INoCacheCrudService<TModel>
         where TModel : Entity, ICloneable
         where TEntity : Entity, IDataEntity<TEntity, TModel>
         where TChangeEvent : GenericChangedEntryEvent<TModel>
@@ -60,21 +60,28 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
                 missingIds => GetByIdsNoCache(missingIds, responseGroup),
                 ConfigureCache);
 
-            if (!clone)
-            {
-                return models;
-            }
+            return !clone ? models : models.Select(x => x.CloneTyped()).ToList();
+        }
 
-            return models
-                .Select(x => x.CloneTyped())
-                .ToList();
+        /// <summary>
+        /// Returns a list of model instances for specified IDs without using cache.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="responseGroup"></param>
+        /// <param name="clone">If false, returns data without cloning. This consumes less memory, but the returned data must not be modified.</param>
+        /// <returns></returns>
+        public virtual async Task<IList<TModel>> GetNoCacheAsync(IList<string> ids, string responseGroup = null, bool clone = true)
+        {
+            var models = await GetByIdsNoCache(ids, responseGroup);
+
+            return !clone ? models : models.Select(x => x.CloneTyped()).ToList();
         }
 
         protected virtual async Task<IList<TModel>> GetByIdsNoCache(IList<string> ids, string responseGroup)
         {
             using var repository = _repositoryFactory();
 
-            // Disable DBContext change tracking for better performance 
+            // Disable DBContext change tracking for better performance
             repository.DisableChangesTracking();
 
             var entities = await LoadEntities(repository, ids, responseGroup);
@@ -341,7 +348,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
         protected virtual GenericChangedEntryEvent<TModel> EventFactory<TEvent>(IList<GenericChangedEntry<TModel>> changedEntries)
         {
-            return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor(new[] { typeof(IEnumerable<GenericChangedEntry<TModel>>) }).Invoke(new object[] { changedEntries });
+            return (GenericChangedEntryEvent<TModel>)typeof(TEvent).GetConstructor([typeof(IEnumerable<GenericChangedEntry<TModel>>)])?.Invoke([changedEntries]);
         }
     }
 }
