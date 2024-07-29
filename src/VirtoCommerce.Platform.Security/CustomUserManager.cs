@@ -103,9 +103,9 @@ namespace VirtoCommerce.Platform.Security
             }, cacheNullValue: false);
         }
 
-        protected virtual void ConfigureCache(MemoryCacheEntryOptions cacheEntry, ApplicationUser user)
+        protected virtual void ConfigureCache(MemoryCacheEntryOptions cacheOptions, ApplicationUser user)
         {
-            cacheEntry.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
+            cacheOptions.AddExpirationToken(SecurityCacheRegion.CreateChangeTokenForUser(user));
         }
 
         public override Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string token, string newPassword)
