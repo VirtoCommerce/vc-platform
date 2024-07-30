@@ -549,7 +549,6 @@ namespace VirtoCommerce.Platform.Web
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
-                app.UseBrowserLink();
             }
             else
             {

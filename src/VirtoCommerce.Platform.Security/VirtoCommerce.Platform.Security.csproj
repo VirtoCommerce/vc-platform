@@ -18,10 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.7" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.10.1" />
   </ItemGroup>
