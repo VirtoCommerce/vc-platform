@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Hangfire;
@@ -231,8 +230,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             //Discovery mode
             var manifestUrl = sampleDataUrl + "\\manifest.json";
-            using var client = _httpClientFactory.CreateClient();
-            await using var stream = await client.GetStreamAsync(new Uri(manifestUrl));
+            var httpClient = _httpClientFactory.CreateClient();
+            await using var stream = await httpClient.GetStreamAsync(new Uri(manifestUrl));
             //Add empty template
             var result = new List<SampleDataInfo>
             {
@@ -289,16 +288,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 var tmpFilePath = Path.Combine(tmpPath, Path.GetFileName(url.ToString()));
-                using (var client = new WebClient())
+
+                await DownloadFileAsync(url, tmpFilePath, async (bytesReceived, bytesTotal) =>
                 {
-                    client.DownloadProgressChanged += async (sender, args) =>
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var message = $"Sample data {bytesReceived.ToHumanReadableSize()} of {bytesTotal.ToHumanReadableSize()} downloading...";
+                    if (message != pushNotification.Description)
                     {
-                        pushNotification.Description = string.Format("Sample data {0} of {1} downloading...", args.BytesReceived.ToHumanReadableSize(), args.TotalBytesToReceive.ToHumanReadableSize());
+                        pushNotification.Description = message;
                         await _pushNotifier.SendAsync(pushNotification);
-                    };
-                    var task = client.DownloadFileTaskAsync(url, tmpFilePath);
-                    task.Wait();
-                }
+                    }
+                });
+
                 using (var stream = new FileStream(tmpFilePath, FileMode.Open))
                 {
                     var manifest = _platformExportManager.ReadExportManifest(stream);
@@ -418,6 +419,46 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 pushNotification.Description = "Export finished";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
+            }
+        }
+
+        private async Task DownloadFileAsync(Uri uri, string filePath, Func<long, long, Task> progress)
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+
+            var response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+
+            var contentLength = response.Content.Headers.ContentLength ?? -1L;
+            var bytesReceived = 0L;
+            var bytesTotal = contentLength < 0 ? 0L : contentLength;
+
+            const int defaultBufferSize = 65536;
+            var bufferSize = contentLength < 0 || contentLength > defaultBufferSize ? defaultBufferSize : (int)contentLength;
+            var buffer = new byte[bufferSize];
+
+            await using var readStream = await response.Content.ReadAsStreamAsync();
+            await using var writeStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, FileOptions.Asynchronous);
+
+            while (true)
+            {
+                var bytesRead = await readStream.ReadAsync(new Memory<byte>(buffer)).ConfigureAwait(false);
+
+                if (bytesRead == 0)
+                {
+                    break;
+                }
+
+                bytesReceived += bytesRead;
+
+                if (contentLength < 0)
+                {
+                    bytesTotal = bytesReceived;
+                }
+
+                await writeStream.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead)).ConfigureAwait(false);
+
+                await progress(bytesReceived, bytesTotal);
             }
         }
     }

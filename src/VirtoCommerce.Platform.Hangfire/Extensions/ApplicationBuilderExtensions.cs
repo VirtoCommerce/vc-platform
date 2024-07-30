@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
 
             // This is an important workaround of Hangfire initialization issues
             // The standard database schema initialization way described at the page https://docs.hangfire.io/en/latest/configuration/using-sql-server.html works on an existing database only.
-            // Therefore we create SqlServerStorage for Hangfire manually here.
+            // Therefore, we create SqlServerStorage for Hangfire manually here.
             // This way we ensure Hangfire schema will be applied to storage AFTER platform database creation.
             var hangfireOptions = appBuilder.ApplicationServices.GetRequiredService<IOptions<HangfireOptions>>().Value;
             if (hangfireOptions.JobStorageType == HangfireJobStorageType.SqlServer ||
@@ -40,19 +40,20 @@ namespace VirtoCommerce.Platform.Hangfire.Extensions
                 switch (databaseProvider)
                 {
                     case "PostgreSql":
-                        storage = new PostgreSqlStorage(connectionString, hangfireOptions.PostgreSqlStorageOptions);
+                        hangfireGlobalConfiguration.UsePostgreSqlStorage(options =>
+                            options.UseNpgsqlConnection(connectionString), hangfireOptions.PostgreSqlStorageOptions);
                         break;
                     case "MySql":
                         storage = new MySqlStorage(connectionString, hangfireOptions.MySqlStorageOptions);
+                        hangfireGlobalConfiguration.UseStorage(storage);
                         break;
                     default:
                         storage = new SqlServerStorage(connectionString, hangfireOptions.SqlServerStorageOptions);
+                        hangfireGlobalConfiguration.UseStorage(storage);
                         break;
                 }
 
-                hangfireGlobalConfiguration.UseStorage(storage);
                 hangfireGlobalConfiguration.UseConsole();
-
             }
 
             appBuilder.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthorizationHandler() } });

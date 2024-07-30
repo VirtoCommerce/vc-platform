@@ -93,12 +93,16 @@ public class RecurringJobService : IRecurringJobService, IEventHandler<ObjectSet
         {
             var cronExpression = await _settingsManager.GetValueAsync<string>(settingCronJob.CronSetting);
 
+            var options = new RecurringJobOptions
+            {
+                TimeZone = settingCronJob.TimeZone,
+            };
+
             _recurringJobManager.AddOrUpdate(
                 settingCronJob.RecurringJobId,
                 settingCronJob.Job,
                 cronExpression,
-                settingCronJob.TimeZone,
-                settingCronJob.Queue);
+                options);
         }
         else
         {

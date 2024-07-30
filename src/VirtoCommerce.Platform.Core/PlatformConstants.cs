@@ -437,21 +437,6 @@ namespace VirtoCommerce.Platform.Core
                 }
             }
 
-            public static class Other
-            {
-                [Obsolete("Use PlatformConstants.Settings.Security.AccountStatuses", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-                public static SettingDescriptor AccountStatuses => Security.AccountStatuses;
-
-                [Obsolete("Use PlatformConstants.Settings.Security.AllSettings", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-                public static IEnumerable<SettingDescriptor> AllSettings
-                {
-                    get
-                    {
-                        yield return AccountStatuses;
-                    }
-                }
-            }
-
             public static IEnumerable<SettingDescriptor> AllSettings =>
                 General.AllGeneralSettings
                 .Concat(Security.AllSettings)

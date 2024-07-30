@@ -120,18 +120,6 @@ namespace VirtoCommerce.Platform.Core.Settings
             await manager.RemoveObjectSettingsAsync(foDeleteSettings);
         }
 
-        [Obsolete("Use GetValue<>(SettingDescriptor)")]
-        public static TValue GetValueByDescriptor<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
-        {
-            return manager.GetValueAsync<TValue>(descriptor).GetAwaiter().GetResult();
-        }
-
-        [Obsolete("Use GetValueAsync<>(SettingDescriptor)")]
-        public static Task<TValue> GetValueByDescriptorAsync<TValue>(this ISettingsManager manager, SettingDescriptor descriptor)
-        {
-            return manager.GetValueAsync<TValue>(descriptor);
-        }
-
         /// <summary>
         /// Takes default value from the setting descriptor
         /// </summary>
@@ -153,18 +141,6 @@ namespace VirtoCommerce.Platform.Core.Settings
             }
 
             return manager.GetValueInternalAsync(descriptor.Name, defaultValue);
-        }
-
-        [Obsolete("Use GetValue<>(SettingDescriptor)")]
-        public static T GetValue<T>(this ISettingsManager manager, string name, T defaultValue)
-        {
-            return manager.GetValueInternalAsync(name, defaultValue).GetAwaiter().GetResult();
-        }
-
-        [Obsolete("Use GetValueAsync<>(SettingDescriptor)")]
-        public static Task<T> GetValueAsync<T>(this ISettingsManager manager, string name, T defaultValue)
-        {
-            return manager.GetValueInternalAsync(name, defaultValue);
         }
 
         private static async Task<T> GetValueInternalAsync<T>(this ISettingsManager manager, string name, T defaultValue)
@@ -209,12 +185,6 @@ namespace VirtoCommerce.Platform.Core.Settings
             }
 
             return objectSettings.GetValueInternal(descriptor.Name, defaultValue);
-        }
-
-        [Obsolete("Use GetValue<>(SettingDescriptor)", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-        public static T GetSettingValue<T>(this IEnumerable<ObjectSettingEntry> objectSettings, string settingName, T defaultValue)
-        {
-            return objectSettings.GetValueInternal(settingName, defaultValue);
         }
 
         private static T GetValueInternal<T>(this IEnumerable<ObjectSettingEntry> objectSettings, string settingName, T defaultValue)

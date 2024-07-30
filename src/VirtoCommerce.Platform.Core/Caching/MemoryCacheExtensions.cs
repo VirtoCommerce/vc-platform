@@ -29,7 +29,7 @@ namespace VirtoCommerce.Platform.Core.Caching
 
             if (!TryGetByIds<TItem>(memoryCache, keyPrefix, ids, out var result))
             {
-                using (await AsyncLock.GetLockByKey(keyPrefix).GetReleaserAsync())
+                using (await AsyncLock.GetLockByKey(keyPrefix).LockAsync())
                 {
                     if (!TryGetByIds(memoryCache, keyPrefix, ids, out result))
                     {
@@ -96,7 +96,7 @@ namespace VirtoCommerce.Platform.Core.Caching
         {
             if (!cache.TryGetValue(key, out var result))
             {
-                using (await AsyncLock.GetLockByKey(key).GetReleaserAsync())
+                using (await AsyncLock.GetLockByKey(key).LockAsync())
                 {
                     if (!cache.TryGetValue(key, out result))
                     {

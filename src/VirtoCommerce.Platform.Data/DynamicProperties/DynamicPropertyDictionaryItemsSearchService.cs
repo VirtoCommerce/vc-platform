@@ -24,12 +24,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             _dynamicPropertyDictionaryItemsService = dynamicPropertyDictionaryItemsService;
         }
 
-        [Obsolete("Use SearchAsync()", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-        public virtual Task<DynamicPropertyDictionaryItemSearchResult> SearchDictionaryItemsAsync(DynamicPropertyDictionaryItemSearchCriteria criteria)
-        {
-            return SearchAsync(criteria, clone: true);
-        }
-
         public virtual async Task<DynamicPropertyDictionaryItemSearchResult> SearchAsync(DynamicPropertyDictionaryItemSearchCriteria criteria, bool clone = true)
         {
             var cacheKey = CacheKey.With(GetType(), "SearchDictionaryItemsAsync", criteria.GetHashCode().ToString());
