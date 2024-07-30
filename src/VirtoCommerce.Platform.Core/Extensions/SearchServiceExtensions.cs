@@ -35,6 +35,24 @@ namespace VirtoCommerce.Platform.Core.Common
         }
 
         /// <summary>
+        /// Returns data from the database without using cache.
+        /// </summary>
+        public static async Task<IList<TModel>> SearchAllNoCacheAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria)
+            where TCriteria : SearchCriteriaBase
+            where TResult : GenericSearchResult<TModel>
+            where TModel : IEntity
+        {
+            var result = new List<TModel>();
+
+            await foreach (var searchResult in searchService.SearchBatchesNoCacheAsync(searchCriteria))
+            {
+                result.AddRange(searchResult.Results);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.
         /// </summary>
         public static Task<TResult> SearchNoCloneAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria)
@@ -71,10 +89,26 @@ namespace VirtoCommerce.Platform.Core.Common
             where TResult : GenericSearchResult<TModel>
             where TModel : IEntity
         {
-            return searchService.SearchBatchesAsync(searchCriteria, clone: false);
+            return SearchBatchesInternalAsync(searchService, searchCriteria, false);
         }
 
-        public static async IAsyncEnumerable<TResult> SearchBatchesAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria, bool clone = true)
+        public static IAsyncEnumerable<TResult> SearchBatchesAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria, bool clone = true)
+            where TCriteria : SearchCriteriaBase
+            where TResult : GenericSearchResult<TModel>
+            where TModel : IEntity
+        {
+            return SearchBatchesInternalAsync(searchService, searchCriteria, clone);
+        }
+
+        public static IAsyncEnumerable<TResult> SearchBatchesNoCacheAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria)
+            where TCriteria : SearchCriteriaBase
+            where TResult : GenericSearchResult<TModel>
+            where TModel : IEntity
+        {
+            return SearchBatchesInternalAsync(searchService, searchCriteria, noCache: true);
+        }
+
+        private static async IAsyncEnumerable<TResult> SearchBatchesInternalAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria, bool clone = true, bool noCache = false)
             where TCriteria : SearchCriteriaBase
             where TResult : GenericSearchResult<TModel>
             where TModel : IEntity
@@ -84,10 +118,12 @@ namespace VirtoCommerce.Platform.Core.Common
 
             do
             {
-                var searchResult = await searchService.SearchAsync(searchCriteria, clone);
+                var searchTask = noCache
+                    ? searchService.SearchNoCacheAsync(searchCriteria)
+                    : searchService.SearchAsync(searchCriteria, clone);
+                var searchResult = await searchTask;
 
-                if (searchCriteria.Take == 0 ||
-                    searchResult.Results.Any())
+                if (searchCriteria.Take == 0 || searchResult.Results.Count > 0)
                 {
                     yield return searchResult;
                 }
@@ -101,76 +137,6 @@ namespace VirtoCommerce.Platform.Core.Common
                 searchCriteria.Skip += searchCriteria.Take;
             }
             while (searchCriteria.Skip < totalCount);
-        }
-
-        /// <summary>
-        /// Returns data from the database without using cache.
-        /// </summary>
-        public static Task<TResult> SearchNoCacheAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria, bool clone = true)
-            where TCriteria : SearchCriteriaBase
-            where TResult : GenericSearchResult<TModel>
-            where TModel : IEntity
-        {
-            return searchService.AsNoCache().SearchNoCacheAsync(searchCriteria, clone);
-        }
-
-        /// <summary>
-        /// Returns data from the database without using cache.
-        /// </summary>
-        public static async Task<IList<TModel>> SearchAllNoCacheAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria, bool clone = true)
-            where TCriteria : SearchCriteriaBase
-            where TResult : GenericSearchResult<TModel>
-            where TModel : IEntity
-        {
-            var result = new List<TModel>();
-
-            await foreach (var searchResult in searchService.SearchBatchesNoCacheAsync(searchCriteria, clone))
-            {
-                result.AddRange(searchResult.Results);
-            }
-
-            return result;
-        }
-
-        public static async IAsyncEnumerable<TResult> SearchBatchesNoCacheAsync<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria, bool clone = true)
-            where TCriteria : SearchCriteriaBase
-            where TResult : GenericSearchResult<TModel>
-            where TModel : IEntity
-        {
-            int totalCount;
-            searchCriteria = searchCriteria.CloneTyped();
-
-            do
-            {
-                var searchResult = await searchService.AsNoCache().SearchNoCacheAsync(searchCriteria, clone);
-
-                if (searchCriteria.Take == 0 || searchResult.Results?.Count > 0)
-                {
-                    yield return searchResult;
-                }
-
-                if (searchCriteria.Take == 0)
-                {
-                    yield break;
-                }
-
-                totalCount = searchResult.TotalCount;
-                searchCriteria.Skip += searchCriteria.Take;
-            }
-            while (searchCriteria.Skip < totalCount);
-        }
-
-        public static INoCacheSearchService<TCriteria, TResult, TModel> AsNoCache<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService)
-            where TCriteria : SearchCriteriaBase
-            where TResult : GenericSearchResult<TModel>
-            where TModel : IEntity
-        {
-            if (searchService is not INoCacheSearchService<TCriteria, TResult, TModel> noCacheService)
-            {
-                throw new NotSupportedException("Underlying service does not support no cache search.");
-            }
-
-            return noCacheService;
         }
     }
 }

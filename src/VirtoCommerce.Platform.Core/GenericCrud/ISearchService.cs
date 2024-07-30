@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 
@@ -21,5 +22,15 @@ namespace VirtoCommerce.Platform.Core.GenericCrud
         /// <param name="clone">If false, returns data from the cache without cloning. This consumes less memory, but the returned data must not be modified.</param>
         /// <returns></returns>
         Task<TResult> SearchAsync(TCriteria criteria, bool clone = true);
+
+        /// <summary>
+        /// Returns model instances that meet specified criteria without using cache.
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        Task<TResult> SearchNoCacheAsync(TCriteria criteria)
+        {
+            throw new NotSupportedException("Underlying service does not support no cache search.");
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     /// <typeparam name="TEntity">The type of data access layer entity (EF) </typeparam>
     /// <typeparam name="TChangeEvent">The type of *change event</typeparam>
     /// <typeparam name="TChangedEvent">The type of *changed event</typeparam>
-    public abstract class CrudService<TModel, TEntity, TChangeEvent, TChangedEvent> : ICrudService<TModel>, INoCacheCrudService<TModel>
+    public abstract class CrudService<TModel, TEntity, TChangeEvent, TChangedEvent> : ICrudService<TModel>
         where TModel : Entity, ICloneable
         where TEntity : Entity, IDataEntity<TEntity, TModel>
         where TChangeEvent : GenericChangedEntryEvent<TModel>
@@ -68,13 +68,10 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// </summary>
         /// <param name="ids"></param>
         /// <param name="responseGroup"></param>
-        /// <param name="clone">If false, returns data without cloning. This consumes less memory, but the returned data must not be modified.</param>
         /// <returns></returns>
-        public virtual async Task<IList<TModel>> GetNoCacheAsync(IList<string> ids, string responseGroup = null, bool clone = true)
+        public virtual Task<IList<TModel>> GetNoCacheAsync(IList<string> ids, string responseGroup = null)
         {
-            var models = await GetByIdsNoCache(ids, responseGroup);
-
-            return !clone ? models : models.Select(x => x.CloneTyped()).ToList();
+            return GetByIdsNoCache(ids, responseGroup);
         }
 
         protected virtual async Task<IList<TModel>> GetByIdsNoCache(IList<string> ids, string responseGroup)

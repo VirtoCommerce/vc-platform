@@ -23,7 +23,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
     /// <typeparam name="TResult">Search result (<see cref="GenericSearchResult{TModel}"/>)</typeparam>
     /// <typeparam name="TModel">The type of service layer model</typeparam>
     /// <typeparam name="TEntity">The type of data access layer entity (EF) </typeparam>
-    public abstract class SearchService<TCriteria, TResult, TModel, TEntity> : ISearchService<TCriteria, TResult, TModel>, INoCacheSearchService<TCriteria, TResult, TModel>
+    public abstract class SearchService<TCriteria, TResult, TModel, TEntity> : ISearchService<TCriteria, TResult, TModel>
         where TCriteria : SearchCriteriaBase
         where TResult : GenericSearchResult<TModel>
         where TModel : Entity, ICloneable
@@ -87,9 +87,8 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
         /// Returns model instances that meet specified criteria without using cache.
         /// </summary>
         /// <param name="criteria"></param>
-        /// <param name="clone">If false, returns data without cloning. This consumes less memory, but the returned data must not be modified.</param>
         /// <returns></returns>
-        public virtual async Task<TResult> SearchNoCacheAsync(TCriteria criteria, bool clone = true)
+        public virtual async Task<TResult> SearchNoCacheAsync(TCriteria criteria)
         {
             ValidateSearchCriteria(criteria);
 
@@ -100,7 +99,7 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
 
             if (idsResult.Results?.Count > 0)
             {
-                var models = await _crudService.GetNoCacheAsync(idsResult.Results, criteria.ResponseGroup, clone);
+                var models = await _crudService.GetNoCacheAsync(idsResult.Results, criteria.ResponseGroup);
                 result.Results.AddRange(models.OrderBy(x => idsResult.Results.IndexOf(x.Id)));
             }
 
