@@ -18,7 +18,7 @@ angular.module('platformWebApp')
         $stateProvider.state('setupWizard.sampleDataInstallation', {
             url: '/sampleDataInstallation',
             templateUrl: '$(Platform)/Scripts/app/exportImport/templates/sampleDataInstallation.tpl.html',
-            controller: ['$scope', '$state', '$stateParams', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($scope, $state, $stateParams, exportImportResourse, setupWizard) {
+            controller: ['$scope', '$state', '$stateParams', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($scope, $state, $stateParams, exportImportResource, setupWizard) {
                 $scope.notification = {};
                 if ($stateParams.notification) {
                     $scope.notification = $stateParams.notification;
@@ -43,7 +43,7 @@ angular.module('platformWebApp')
 
                 $scope.importData = function (sampleData) {
                     if (sampleData.url) {
-                        exportImportResourse.importSampleData({ url: sampleData.url }, function (data) {
+                        exportImportResource.importSampleData({ name: sampleData.name }, function (data) {
                             //need check notification.created because not exist any way to check empty response
                             if (data && data.created) {
                                 angular.copy(data, $scope.notification);
@@ -60,7 +60,7 @@ angular.module('platformWebApp')
 
                 function discoverSampleData() {
                     $scope.loading = true;
-                    exportImportResourse.sampleDataDiscover({}, function (sampleDataInfos) {
+                    exportImportResource.sampleDataDiscover({}, function (sampleDataInfos) {
                         $scope.loading = false;
                         //run obvious sample data installation
                         if (angular.isArray(sampleDataInfos) && sampleDataInfos.length > 0) {
@@ -83,7 +83,7 @@ angular.module('platformWebApp')
         });
     }])
     .run(
-        ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'platformWebApp.exportImport.resource', 'platformWebApp.setupWizard', function ($rootScope, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, exportImportResourse, setupWizard) {
+        ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'platformWebApp.setupWizard', function ($rootScope, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, setupWizard) {
             var menuItem = {
                 path: 'configuration/exportImport',
                 icon: 'fa fa-database',

@@ -36,7 +36,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly PlatformOptions _platformOptions;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        private static readonly object _lockObject = new object();
+        private static readonly object _lockObject = new();
 
         public PlatformExportImportController(
             IPlatformExportImportManager platformExportManager,
@@ -57,9 +57,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("sampledata/discover")]
         [AllowAnonymous]
-        public async Task<ActionResult<SampleDataInfo[]>> DiscoverSampleData()
+        public async Task<ActionResult<IList<SampleDataInfo>>> DiscoverSampleData()
         {
-            return Ok((await InnerDiscoverSampleDataAsync()).ToArray());
+            return Ok(await InnerDiscoverSampleDataAsync());
         }
 
         [HttpPost]
@@ -70,7 +70,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var sampleData = (await InnerDiscoverSampleDataAsync()).FirstOrDefault(x => !x.Url.IsNullOrEmpty());
             if (sampleData != null)
             {
-                return ImportSampleData(sampleData.Url);
+                return Ok(StartImportSampleData(sampleData.Name));
             }
 
             return Ok();
@@ -79,27 +79,38 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/import")]
         [Authorize(Permissions.PlatformImport)]
-        public ActionResult<SampleDataImportPushNotification> ImportSampleData([FromQuery] string url = null)
+        public async Task<ActionResult<SampleDataImportPushNotification>> ImportSampleData([FromQuery] string name)
         {
-            lock (_lockObject)
+            var sampleData = (await InnerDiscoverSampleDataAsync()).FirstOrDefault(x => x.Name == name);
+            if (sampleData != null)
             {
-                var sampleDataState = EnumUtility.SafeParse(_settingsManager.GetValue<string>(PlatformConstants.Settings.Setup.SampleDataState), SampleDataState.Undefined);
-                if (sampleDataState == SampleDataState.Undefined && Uri.IsWellFormedUriString(url, UriKind.Absolute))
-                {
-                    _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Processing);
-
-                    var pushNotification = new SampleDataImportPushNotification(User.Identity.Name);
-                    pushNotification.Title = "Sample data import process";
-
-                    _pushNotifier.Send(pushNotification);
-                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(new Uri(url), pushNotification, JobCancellationToken.Null, null));
-                    pushNotification.JobId = jobId;
-
-                    return Ok(pushNotification);
-                }
+                return Ok(StartImportSampleData(sampleData.Name));
             }
 
             return Ok();
+        }
+
+        private SampleDataImportPushNotification StartImportSampleData(string name)
+        {
+            SampleDataImportPushNotification pushNotification = null;
+
+            lock (_lockObject)
+            {
+                var sampleDataState = EnumUtility.SafeParse(_settingsManager.GetValue<string>(PlatformConstants.Settings.Setup.SampleDataState), SampleDataState.Undefined);
+                if (sampleDataState == SampleDataState.Undefined)
+                {
+                    _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Processing);
+
+                    pushNotification = new SampleDataImportPushNotification(User.Identity?.Name);
+                    pushNotification.Title = "Sample data import process";
+
+                    _pushNotifier.Send(pushNotification);
+                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, JobCancellationToken.Null, null));
+                    pushNotification.JobId = jobId;
+                }
+            }
+
+            return pushNotification;
         }
 
         /// <summary>
@@ -200,7 +211,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var localPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
 
             //Load source data only from local file system
-            using (var stream = System.IO.File.Open(localPath, FileMode.Open))
+            using (System.IO.File.Open(localPath, FileMode.Open))
             {
                 var provider = new FileExtensionContentTypeProvider();
                 if (!provider.TryGetContentType(localPath, out var contentType))
@@ -211,12 +222,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private async Task<IEnumerable<SampleDataInfo>> InnerDiscoverSampleDataAsync()
+        private async Task<IList<SampleDataInfo>> InnerDiscoverSampleDataAsync()
         {
             var sampleDataUrl = _platformOptions.SampleDataUrl;
             if (string.IsNullOrEmpty(sampleDataUrl))
             {
-                return Enumerable.Empty<SampleDataInfo>();
+                return [];
             }
 
             //Direct file mode
@@ -224,18 +235,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return new List<SampleDataInfo>
                 {
-                    new SampleDataInfo { Url = sampleDataUrl }
+                    new() { Url = sampleDataUrl }
                 };
             }
 
             //Discovery mode
-            var manifestUrl = sampleDataUrl + "\\manifest.json";
+            var manifestUrl = sampleDataUrl + "/manifest.json";
             var httpClient = _httpClientFactory.CreateClient();
             await using var stream = await httpClient.GetStreamAsync(new Uri(manifestUrl));
             //Add empty template
             var result = new List<SampleDataInfo>
             {
-                new SampleDataInfo { Name = "Empty" }
+                new() { Name = "Empty" }
             };
 
             //Need filter unsupported versions and take one most new sample data
@@ -266,7 +277,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return result;
         }
 
-        public async Task SampleDataImportBackgroundAsync(Uri url, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
         {
             void progressCallback(ExportImportProgressInfo x)
             {
@@ -277,6 +288,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             try
             {
+                var url = (await InnerDiscoverSampleDataAsync()).FirstOrDefault(x => x.Name == name)?.Url;
+                if (url is null)
+                {
+                    return;
+                }
+
                 pushNotification.Description = "Start downloading from " + url;
 
                 await _pushNotifier.SendAsync(pushNotification);
@@ -287,9 +304,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     Directory.CreateDirectory(tmpPath);
                 }
 
-                var tmpFilePath = Path.Combine(tmpPath, Path.GetFileName(url.ToString()));
+                var tmpFilePath = Path.Combine(tmpPath, Path.GetFileName(url));
 
-                await DownloadFileAsync(url, tmpFilePath, async (bytesReceived, bytesTotal) =>
+                await DownloadFileAsync(new Uri(url), tmpFilePath, async (bytesReceived, bytesTotal) =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     var message = $"Sample data {bytesReceived.ToHumanReadableSize()} of {bytesTotal.ToHumanReadableSize()} downloading...";
@@ -319,7 +336,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             finally
             {
-                _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Completed);
+                await _settingsManager.SetValueAsync(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Completed);
                 pushNotification.Description = "Import finished";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
