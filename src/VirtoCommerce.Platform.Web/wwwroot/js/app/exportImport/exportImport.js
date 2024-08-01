@@ -83,7 +83,11 @@ angular.module('platformWebApp')
         });
     }])
     .run(
-        ['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.pushNotificationTemplateResolver', 'platformWebApp.bladeNavigationService', 'platformWebApp.setupWizard', function ($rootScope, mainMenuService, widgetService, $state, pushNotificationTemplateResolver, bladeNavigationService, setupWizard) {
+        [
+            '$rootScope', '$state',
+            'platformWebApp.mainMenuService', 'platformWebApp.widgetService', 'platformWebApp.bladeNavigationService',
+            'platformWebApp.setupWizard', 'platformWebApp.pushNotificationTemplateResolver',
+            function ($rootScope, $state, mainMenuService, widgetService, bladeNavigationService, setupWizard, pushNotificationTemplateResolver) {
             var menuItem = {
                 path: 'configuration/exportImport',
                 icon: 'fa fa-database',

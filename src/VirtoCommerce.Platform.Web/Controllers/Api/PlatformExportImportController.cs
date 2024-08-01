@@ -143,13 +143,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 throw new ArgumentNullException(nameof(fileUrl));
             }
 
-            var uploadFolderPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
-
-            var localPath = Path.Combine(uploadFolderPath, fileUrl);
-            if (!localPath.StartsWith(uploadFolderPath))
-            {
-                throw new PlatformException($"Invalid path {localPath}");
-            }
+            var localPath = GetSafeFullPath(_platformOptions.LocalUploadFolderPath, fileUrl);
 
             PlatformExportManifest retVal;
             using (var stream = new FileStream(localPath, FileMode.Open))
@@ -207,8 +201,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(Permissions.PlatformExport)]
         public ActionResult DownloadExportFile([FromRoute] string fileName)
         {
-            var localTmpFolder = Path.GetFullPath(Path.Combine(_platformOptions.DefaultExportFolder));
-            var localPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
+            var localPath = GetSafeFullPath(_platformOptions.DefaultExportFolder, fileName);
 
             //Load source data only from local file system
             using (System.IO.File.Open(localPath, FileMode.Open))
@@ -357,14 +350,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
 
-                var uploadFolderFullPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
-                // VP-5353: Checking that the file is inside LocalUploadFolderPath
-                var localPath = Path.Combine(uploadFolderFullPath, importRequest.FileUrl);
-
-                if (!localPath.StartsWith(uploadFolderFullPath))
-                {
-                    throw new PlatformException($"Invalid path {localPath}");
-                }
+                var localPath = GetSafeFullPath(_platformOptions.LocalUploadFolderPath, importRequest.FileUrl);
 
                 //Load source data only from local file system
                 using (var stream = new FileStream(localPath, FileMode.Open))
@@ -437,6 +423,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
             }
+        }
+
+        private static string GetSafeFullPath(string basePath, string relativePath)
+        {
+            var baseFullPath = Path.GetFullPath(basePath);
+            var result = Path.GetFullPath(Path.Combine(baseFullPath, relativePath));
+
+            if (!result.StartsWith(baseFullPath + Path.DirectorySeparatorChar))
+            {
+                throw new PlatformException($"Invalid path {relativePath}");
+            }
+
+            return result;
         }
 
         private async Task DownloadFileAsync(Uri uri, string filePath, Func<long, long, Task> progress)
