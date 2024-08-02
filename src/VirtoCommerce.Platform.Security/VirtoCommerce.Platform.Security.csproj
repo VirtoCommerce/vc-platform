@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <noWarn>1591</noWarn>
+    <noWarn>1591;NU5048</noWarn>
     <OutputType>Library</OutputType>
     <IsPackable>True</IsPackable>
     <UserSecretsId>ebac378d-6c55-4b03-aa82-57643b6e7a0f</UserSecretsId>
