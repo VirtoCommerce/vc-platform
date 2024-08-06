@@ -219,7 +219,7 @@ jobs:
       with:
         artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
         repoOrg: ${{ github.repository_owner }}
-        downloadComment: 'Artifact URL:'
+        downloadComment: 'Image tag:'
 
     - name: Publish Github Release
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
