@@ -21,6 +21,15 @@ on:
       - '**/argoDeploy.json'
       - '**/cloudDeploy.json'
     branches: [ master, dev ]
+  pull_request:
+    paths-ignore:
+      #- '.github/**' # enable before merge
+      - 'docs/**'
+      - 'build/**'
+      - 'README.md'
+      - 'LICENSE'
+      - '**/argoDeploy.json'
+      - '**/cloudDeploy.json'
 
 jobs:
   ci:
