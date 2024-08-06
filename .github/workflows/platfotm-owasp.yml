@@ -18,28 +18,28 @@ jobs:
 
     steps:
 
-      - name: Install VirtoCommerce.GlobalTool
-        uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
+      # - name: Install VirtoCommerce.GlobalTool
+      #   uses: VirtoCommerce/vc-github-actions/setup-vcbuild@master
 
-      - name: Docker Login
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: $GITHUB_ACTOR
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Docker Login
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: $GITHUB_ACTOR
+      #     password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker Env
-        uses: VirtoCommerce/vc-github-actions/docker-env@master
-        with:
-          githubUser: ${{ env.GITHUB_ACTOR }}
-          githubToken: ${{ env.GITHUB_TOKEN }}
-          platformImage: ghcr.io/virtocommerce/platform
-          storefrontImage: ghcr.io/virtocommerce/storefront
-          validateSwagger: 'false'
+      # - name: Docker Env
+      #   uses: VirtoCommerce/vc-github-actions/docker-env@master
+      #   with:
+      #     githubUser: ${{ env.GITHUB_ACTOR }}
+      #     githubToken: ${{ env.GITHUB_TOKEN }}
+      #     platformImage: ghcr.io/virtocommerce/platform
+      #     storefrontImage: ghcr.io/virtocommerce/storefront
+      #     validateSwagger: 'false'
 
       - name: OWASP ZAP Full Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target: 'http://localhost:8090'
+          target: 'https://vcptcore-dev.govirto.com'
           cmd_options: '-a -d'
