@@ -63,18 +63,18 @@ namespace VirtoCommerce.Platform.Web.Controllers
             // Validate and apply front-end parameters
             if (!string.IsNullOrEmpty(request.StoreId) && !string.IsNullOrEmpty(request.OidcUrl) && !string.IsNullOrEmpty(request.CallbackUrl))
             {
-                //if (_externalSignInValidators.Count == 0)
-                //{
-                //    return BadRequest();
-                //}
+                if (_externalSignInValidators.Count == 0)
+                {
+                    return BadRequest();
+                }
 
-                //foreach (var validator in _externalSignInValidators)
-                //{
-                //    if (!await validator.ValidateAsync(request))
-                //    {
-                //        return BadRequest();
-                //    }
-                //}
+                foreach (var validator in _externalSignInValidators)
+                {
+                    if (!await validator.ValidateAsync(request))
+                    {
+                        return BadRequest();
+                    }
+                }
 
                 authenticationProperties.SetStoreId(request.StoreId);
                 authenticationProperties.SetOidcUrl(request.OidcUrl);
