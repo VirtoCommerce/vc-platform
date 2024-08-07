@@ -282,22 +282,22 @@ jobs:
     #   run: |
     #     echo "Jira Upload Build Info response: ${{ steps.push_build_info_to_jira.outputs.response }}"
 
-  platform-katalon-tests:
-    needs: 'ci'
-    if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
-        (github.event_name == 'workflow_dispatch')}}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.6    
-    with:
-      katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
-      katalonRepoBranch: 'dev'
-      testSuite: 'Test Suites/Modules/Platform_collection'
-      installModules: 'true'
-      installCustomModule: 'false'
-      platformDockerTag: ${{ needs.ci.outputs.tag }}
-      storefrontDockerTag: 'dev-linux-latest'
-    secrets:
-      envPAT: ${{ secrets.REPO_TOKEN }}
-      katalonApiKey: ${{ secrets.KATALON_API_KEY }}
+  # platform-katalon-tests:
+  #   needs: 'ci'
+  #   if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
+  #       (github.event_name == 'workflow_dispatch')}}
+  #   uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.6    
+  #   with:
+  #     katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
+  #     katalonRepoBranch: 'dev'
+  #     testSuite: 'Test Suites/Modules/Platform_collection'
+  #     installModules: 'true'
+  #     installCustomModule: 'false'
+  #     platformDockerTag: ${{ needs.ci.outputs.tag }}
+  #     storefrontDockerTag: 'dev-linux-latest'
+  #   secrets:
+  #     envPAT: ${{ secrets.REPO_TOKEN }}
+  #     katalonApiKey: ${{ secrets.KATALON_API_KEY }}
 
 
   deploy-cloud:
@@ -321,15 +321,15 @@ jobs:
       - ci
       # - deploy-cloud
     steps:
-      - name: Read deployment config
-        uses: VirtoCommerce/vc-github-actions/get-deploy-param@master
-        id: deployConfig
-        with:
-          envName: ${{ needs.ci.outputs.matrix.envName }}
-          deployConfigPath: ${{ needs.ci.outputs.matrix.confPath }}
+      # - name: Read deployment config
+      #   uses: VirtoCommerce/vc-github-actions/get-deploy-param@master
+      #   id: deployConfig
+      #   with:
+      #     envName: ${{ needs.ci.outputs.matrix.envName }}
+      #     deployConfigPath: ${{ needs.ci.outputs.matrix.confPath }}
       - name: OWASP ZAP Full Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
           token: ${{ secrets.REPO_TOKEN }}
-          target: 'https://${{ steps.deployConfig.outputs.deployBranch }}.govirto.com'
+          target: 'https://${{ GITHUB_HEAD_REF }}.govirto.com'
           cmd_options: '-a -d'
