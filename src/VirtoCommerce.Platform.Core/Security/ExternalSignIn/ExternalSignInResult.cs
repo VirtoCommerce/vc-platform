@@ -3,6 +3,7 @@ namespace VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 public class ExternalSignInResult
 {
     public bool Success { get; set; }
+    public string LoginProvider { get; set; }
     public ApplicationUser User { get; set; }
 
     public static ExternalSignInResult Fail()
@@ -14,11 +15,12 @@ public class ExternalSignInResult
         };
     }
 
-    public static ExternalSignInResult Succeed(ApplicationUser user)
+    public static ExternalSignInResult Succeed(string loginProvider, ApplicationUser user)
     {
         return new ExternalSignInResult
         {
             Success = true,
+            LoginProvider = loginProvider,
             User = user,
         };
     }

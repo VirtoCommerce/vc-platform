@@ -97,7 +97,7 @@ namespace VirtoCommerce.Platform.Web.Security
             await SetLastLoginDate(platformUser);
             await _eventPublisher.Publish(new UserLoginEvent(platformUser, externalLoginInfo));
 
-            return ExternalSignInResult.Succeed(platformUser);
+            return ExternalSignInResult.Succeed(externalLoginInfo.LoginProvider, platformUser);
         }
 
         private Task<IdentityResult> SetLastLoginDate(ApplicationUser user)

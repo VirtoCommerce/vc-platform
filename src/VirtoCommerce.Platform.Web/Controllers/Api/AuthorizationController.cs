@@ -196,6 +196,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
                 var ticket = await CreateTicketAsync(user, context);
+                ticket.Principal.SetAuthenticationMethod(info.Principal.GetAuthenticationMethod(), [Destinations.AccessToken]);
 
                 return SignIn(ticket.Principal, ticket.AuthenticationScheme);
             }
@@ -229,6 +230,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 }
 
                 var ticket = await CreateTicketAsync(signInResult.User, context);
+                ticket.Principal.SetAuthenticationMethod(signInResult.LoginProvider, [Destinations.AccessToken]);
 
                 return SignIn(ticket.Principal, ticket.AuthenticationScheme);
             }

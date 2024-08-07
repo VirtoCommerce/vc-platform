@@ -6,14 +6,19 @@ namespace VirtoCommerce.Platform.Security.Extensions
 {
     public static class ClaimsPrincipalExtensions
     {
+        public static bool IsSsoAuthenticationMethod(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal?.GetAuthenticationMethod() != null;
+        }
+
         public static string GetAuthenticationMethod(this ClaimsPrincipal claimsPrincipal)
         {
             return claimsPrincipal?.GetClaim(ClaimTypes.AuthenticationMethod);
         }
 
-        public static bool IsSsoAuthenticationMethod(this ClaimsPrincipal claimsPrincipal)
+        public static ClaimsPrincipal SetAuthenticationMethod(this ClaimsPrincipal claimsPrincipal, string value, IList<string> destinations)
         {
-            return claimsPrincipal?.GetClaim(ClaimTypes.AuthenticationMethod) != null;
+            return claimsPrincipal?.SetClaimWithDestinations(ClaimTypes.AuthenticationMethod, value, destinations);
         }
 
         public static ClaimsPrincipal SetClaimWithDestinations(this ClaimsPrincipal claimsPrincipal, string type, string value, IList<string> destinations)
