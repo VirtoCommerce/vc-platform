@@ -126,6 +126,7 @@ namespace VirtoCommerce.Platform.Web.Security
                 user.EmailConfirmed = true;
                 user.UserType = await GetDefaultUserType(externalLoginInfo);
                 user.StoreId = externalLoginInfo.AuthenticationProperties.GetStoreId();
+                user.Status = await _settingsManager.GetValueAsync<string>(PlatformConstants.Settings.Security.DefaultExternalAccountStatus);
 
                 foreach (var userBuilder in _userBuilders)
                 {
