@@ -331,5 +331,5 @@ jobs:
         uses: zaproxy/action-baseline@v0.12.0
         with:
           token: ${{ secrets.REPO_TOKEN }}
-          target: 'https://${{ GITHUB_HEAD_REF }}.govirto.com'
+          target: 'https://${{ github.head.ref }}.govirto.com'
           cmd_options: '-a -d'
