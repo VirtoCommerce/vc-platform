@@ -323,21 +323,19 @@ jobs:
     secrets: inherit
 
   owasp:
-    # if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
+    if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     needs: 
-      - ci
-      # - deploy-cloud
+      - deploy-cloud
     steps:
-      # - name: Read deployment config
-      #   uses: VirtoCommerce/vc-github-actions/get-deploy-param@master
-      #   id: deployConfig
-      #   with:
-      #     envName: ${{ needs.ci.outputs.matrix.envName }}
-      #     deployConfigPath: ${{ needs.ci.outputs.matrix.confPath }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: OWASP ZAP Full Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
           token: ${{ secrets.REPO_TOKEN }}
           target: 'https://vcptcore-dev.govirto.com'
           cmd_options: '-a -d'
+          allow_issue_writing: false
+          rules_file_name: ./.owaspignore
