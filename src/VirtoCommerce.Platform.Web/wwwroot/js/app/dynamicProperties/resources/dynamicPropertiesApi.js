@@ -1,13 +1,15 @@
 angular.module('platformWebApp')
 .factory('platformWebApp.dynamicProperties.api', ['$resource', function ($resource) {
-    return $resource('api/platform/dynamic/types/:id/properties/:propertyId', {}, {
+    return $resource('api/platform/dynamic/properties', {}, {
         queryTypes: { url: 'api/platform/dynamic/types', isArray: true },
         update: { method: 'PUT' },
         search: { method: 'POST', url: 'api/platform/dynamic/properties/search' },
     });
 }])
 .factory('platformWebApp.dynamicProperties.dictionaryItemsApi', ['$resource', function ($resource) {
-    return $resource('api/platform/dynamic/types/:id/properties/:propertyId/dictionaryitems');
+    return $resource('api/platform/dynamic/dictionaryitems', {}, {
+        search: { method: 'POST', url: 'api/platform/dynamic/dictionaryitems/search' },
+    });
 }])
 .factory('platformWebApp.dynamicProperties.valueTypesService', function () {
     var propertyTypes = [

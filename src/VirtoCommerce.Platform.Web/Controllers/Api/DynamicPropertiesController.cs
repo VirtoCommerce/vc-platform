@@ -57,7 +57,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [Route("properties/search")]
-
         public async Task<ActionResult<DynamicPropertySearchResult>> SearchDynamicProperties([FromBody] DynamicPropertySearchCriteria criteria)
         {
             var result = await _dynamicPropertySearchService.SearchNoCloneAsync(criteria);
@@ -138,6 +137,22 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
 
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("dictionaryitems")]
+        public async Task<ActionResult<DynamicPropertyDictionaryItem[]>> GetDictionaryItems([FromQuery] string propertyId)
+        {
+            if (string.IsNullOrEmpty(propertyId))
+            {
+                return Ok(Array.Empty<DynamicPropertyDictionaryItem>());
+            }
+
+            var criteria = AbstractTypeFactory<DynamicPropertyDictionaryItemSearchCriteria>.TryCreateInstance();
+            criteria.PropertyId = propertyId;
+
+            var result = await _dynamicPropertyDictionaryItemsSearchService.SearchAllNoCloneAsync(criteria);
+            return Ok(result);
         }
 
         /// <summary>
