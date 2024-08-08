@@ -333,7 +333,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: script
-          run: find -name .owaspignore
+        run: find -name .owaspignore
       - name: OWASP ZAP Full Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
