@@ -325,7 +325,8 @@ jobs:
   owasp:
     # if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
-    needs: 
+    needs:
+      - ci
       # - deploy-cloud
     steps:
       - uses: actions/checkout@v4
