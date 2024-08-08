@@ -32,39 +32,39 @@ on:
       - '**/cloudDeploy.json'
 
 jobs:
-  ci:
-    if: ${{ github.actor != 'dependabot[bot]' &&
-         (github.event.pull_request.head.repo.full_name == github.repository ||
-         github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
-    runs-on: ubuntu-20.04
-    env:
-      CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
-      CLIENT_ID: ${{secrets.CLIENT_ID}}
-      CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
-      SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
-      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-      NUGET_KEY: ${{ secrets.NUGET_KEY }}
-      BLOB_SAS: ${{ secrets.BLOB_TOKEN }}
-      PUBLISH_TO_DOCKER: 'true'
-      UPDATE_LATEST_TAG: 'true'
-      VERSION_SUFFIX: ''
-      IMAGE_NAME: 'platform'
-      PACKAGE_SERVER: 'ghcr.io'
-      BUILD_STATE: 'failed'
-      RELEASE_STATUS: 'false'
-      BUILD_DOCKER: 'false'
-      DOCKER_TAG: 'dev-linux-latest'
-      MSBuildEnableWorkloadResolver: 'false'
+  # ci:
+  #   if: ${{ github.actor != 'dependabot[bot]' &&
+  #        (github.event.pull_request.head.repo.full_name == github.repository ||
+  #        github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
+  #   runs-on: ubuntu-20.04
+  #   env:
+  #     CLOUD_INSTANCE_BASE_URL: ${{secrets.CLOUD_INSTANCE_BASE_URL}}
+  #     CLIENT_ID: ${{secrets.CLIENT_ID}}
+  #     CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+  #     SONAR_TOKEN: ${{secrets.SONAR_TOKEN}}
+  #     GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+  #     NUGET_KEY: ${{ secrets.NUGET_KEY }}
+  #     BLOB_SAS: ${{ secrets.BLOB_TOKEN }}
+  #     PUBLISH_TO_DOCKER: 'true'
+  #     UPDATE_LATEST_TAG: 'true'
+  #     VERSION_SUFFIX: ''
+  #     IMAGE_NAME: 'platform'
+  #     PACKAGE_SERVER: 'ghcr.io'
+  #     BUILD_STATE: 'failed'
+  #     RELEASE_STATUS: 'false'
+  #     BUILD_DOCKER: 'false'
+  #     DOCKER_TAG: 'dev-linux-latest'
+  #     MSBuildEnableWorkloadResolver: 'false'
 
-    outputs:
-      artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
-      jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
-      version: ${{ steps.image.outputs.shortVersion }}
-      tag: ${{ env.DOCKER_TAG }}
-      matrix: ${{ steps.deployment-matrix.outputs.matrix }}
-      run-e2e: ${{ steps.run-e2e.outputs.result }}
+  #   outputs:
+  #     artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
+  #     jira-keys: ${{ steps.jira_keys.outputs.jira-keys }}
+  #     version: ${{ steps.image.outputs.shortVersion }}
+  #     tag: ${{ env.DOCKER_TAG }}
+  #     matrix: ${{ steps.deployment-matrix.outputs.matrix }}
+  #     run-e2e: ${{ steps.run-e2e.outputs.result }}
 
-    steps:
+  #   steps:
 
     # - name: Set up Node 20
     #   uses: actions/setup-node@v4
@@ -228,13 +228,13 @@ jobs:
     #     organization: ${{ github.repository_owner }}
     #   uses: VirtoCommerce/vc-github-actions/publish-github-release@master
 
-    - name: Create deployment matrix
-      if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/VCST-1235' }}
-      uses: VirtoCommerce/vc-github-actions/cloud-create-deploy-matrix@master
-      id: deployment-matrix
-      with:
-        deployConfigPath: 'cloudDeploy.json'
-        releaseBranch: 'master'
+    # - name: Create deployment matrix
+    #   if: ${{ github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/VCST-1235' }}
+    #   uses: VirtoCommerce/vc-github-actions/cloud-create-deploy-matrix@master
+    #   id: deployment-matrix
+    #   with:
+    #     deployConfigPath: 'cloudDeploy.json'
+    #     releaseBranch: 'master'
 
     # - name: Check commit message for version number
     #   id: run-e2e
@@ -325,8 +325,7 @@ jobs:
   owasp:
     # if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
-    needs:
-      - ci
+    # needs:
       # - deploy-cloud
     steps:
       - uses: actions/checkout@v4
@@ -339,6 +338,6 @@ jobs:
         with:
           token: ${{ secrets.REPO_TOKEN }}
           target: 'https://vcptcore-dev.govirto.com'
-          cmd_options: '-a -d'
+          cmd_options: '-a -d -l INFO'
           allow_issue_writing: false
           rules_file_name: './.owaspignore'
