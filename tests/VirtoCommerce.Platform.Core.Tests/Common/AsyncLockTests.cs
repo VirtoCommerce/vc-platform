@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
 using Xunit;
@@ -14,9 +10,9 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
     public class AsyncLockTests
     {
         [Fact]
-        public Task AsyncLockExlusiveAccess()
+        public Task AsyncLockExclusiveAccess()
         {
-            int counter = 0;
+            var counter = 0;
             var tasks = new List<Task>();
             for (var threadNumber = 0; threadNumber < 3; threadNumber++)
             {
@@ -24,7 +20,7 @@ namespace VirtoCommerce.Platform.Core.Tests.Common
                {
                    for (var i = 0; i < 10; i++)
                    {
-                       using (await AsyncLock.GetLockByKey("test-key").GetReleaserAsync())
+                       using (await AsyncLock.GetLockByKey("test-key").LockAsync())
                        {
                            Debug.WriteLine($"{i} enter");
                            counter += i;

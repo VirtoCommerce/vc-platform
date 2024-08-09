@@ -16,9 +16,9 @@ namespace VirtoCommerce.Platform.Core.Common
             _key = key;
         }
 
-        private static readonly Dictionary<string, RefCounted<SemaphoreSlim>> _semaphoreSlims = new Dictionary<string, RefCounted<SemaphoreSlim>>();
+        private static readonly Dictionary<string, RefCounted<SemaphoreSlim>> _semaphoreSlims = new();
 
-        private SemaphoreSlim GetOrCreate(string key)
+        private static SemaphoreSlim GetOrCreate(string key)
         {
             RefCounted<SemaphoreSlim> item;
             lock (_semaphoreSlims)
@@ -41,22 +41,19 @@ namespace VirtoCommerce.Platform.Core.Common
             return new AsyncLock(key);
         }
 
-        // TODO: Rename to LockAsync after resolving problem with backward compatibility
-        // in the modules (look on this ticket https://virtocommerce.atlassian.net/browse/PT-3548)
-        public async Task<IDisposable> GetReleaserAsync()
+        [Obsolete("Use LockAsync()", DiagnosticId = "VC0009", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions")]
+        public Task<IDisposable> GetReleaserAsync()
+        {
+            return LockAsync();
+        }
+
+        public async Task<IDisposable> LockAsync()
         {
             await GetOrCreate(_key).WaitAsync().ConfigureAwait(false);
             return new Releaser(_key);
         }
 
-        [Obsolete("Left for backward compatibility. Use GetReleaserAsync")]
-        public async Task<Releaser> LockAsync()
-        {
-            await GetOrCreate(_key).WaitAsync().ConfigureAwait(false);
-            return new Releaser(_key);
-        }
-
-        public struct Releaser : IDisposable
+        public readonly struct Releaser : IDisposable
         {
             private readonly string _key;
 
@@ -90,7 +87,7 @@ namespace VirtoCommerce.Platform.Core.Common
             }
 
             public int RefCount { get; set; }
-            public T Value { get; private set; }
+            public T Value { get; }
         }
     }
 }

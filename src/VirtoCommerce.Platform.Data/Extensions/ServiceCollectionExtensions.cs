@@ -10,7 +10,6 @@ using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.ExportImport;
 using VirtoCommerce.Platform.Core.GenericCrud;
 using VirtoCommerce.Platform.Core.Localizations;
-using VirtoCommerce.Platform.Core.Notifications;
 using VirtoCommerce.Platform.Core.TransactionFileManager;
 using VirtoCommerce.Platform.Core.ZipFile;
 using VirtoCommerce.Platform.Data.ChangeLog;
@@ -51,9 +50,6 @@ namespace VirtoCommerce.Platform.Data.Extensions
 
             services.AddScoped<IPlatformExportImportManager, PlatformExportImportManager>();
             services.AddSingleton<ITransactionFileManager, TransactionFileManager.TransactionFileManager>();
-
-            services.AddTransient<IEmailSender, DefaultEmailSender>();
-
 
             //Register dependencies for translation
             services.AddSingleton<ITranslationDataProvider, PlatformTranslationDataProvider>();

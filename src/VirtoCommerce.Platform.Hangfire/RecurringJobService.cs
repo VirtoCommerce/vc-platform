@@ -93,12 +93,20 @@ public class RecurringJobService : IRecurringJobService, IEventHandler<ObjectSet
         {
             var cronExpression = await _settingsManager.GetValueAsync<string>(settingCronJob.CronSetting);
 
+            var options = new RecurringJobOptions
+            {
+                TimeZone = settingCronJob.TimeZone,
+#pragma warning disable CS0618 // Type or member is obsolete
+                // Remove when Hangfire.MySqlStorage will be updated to support JobStorageFeatures.JobQueueProperty
+                QueueName = settingCronJob.Queue,
+#pragma warning restore CS0618 // Type or member is obsolete
+            };
+
             _recurringJobManager.AddOrUpdate(
                 settingCronJob.RecurringJobId,
                 settingCronJob.Job,
                 cronExpression,
-                settingCronJob.TimeZone,
-                settingCronJob.Queue);
+                options);
         }
         else
         {

@@ -15,6 +15,10 @@
     <NoWarn>$(NoWarn);S3875;S4457</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
     <!-- Nuget Package Details -->
     <PackageVersion>$(VersionPrefix)</PackageVersion>

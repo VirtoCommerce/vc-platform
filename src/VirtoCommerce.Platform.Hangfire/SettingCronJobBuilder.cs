@@ -58,7 +58,8 @@ namespace VirtoCommerce.Platform.Hangfire
 
         public SettingCronJobBuilder ToJob<T>(Expression<Func<T, Task>> methodCall)
         {
-            _settingCronJob.Job = Job.FromExpression(methodCall);
+            // Uncomment when Hangfire.MySqlStorage will be updated to support JobStorageFeatures.JobQueueProperty
+            _settingCronJob.Job = Job.FromExpression(methodCall/*, _settingCronJob.Queue*/);
             _settingCronJob.RecurringJobId ??= $"{_settingCronJob.Job.Type.Name}.{_settingCronJob.Job.Method.Name}";
             return this;
         }

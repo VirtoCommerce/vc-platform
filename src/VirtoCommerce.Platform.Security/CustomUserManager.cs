@@ -376,9 +376,6 @@ namespace VirtoCommerce.Platform.Security
                 }
             }
 
-            // Read claims and convert to permissions (compatibility with v2)
-            user.Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray();
-
             // Read associated logins
             var logins = await base.GetLoginsAsync(user);
             user.Logins = logins.Select(x => new ApplicationUserLogin { LoginProvider = x.LoginProvider, ProviderKey = x.ProviderKey }).ToArray();

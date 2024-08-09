@@ -6,11 +6,10 @@ using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Modules;
 using Xunit;
-using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
-    [Collection("Modularity"), Order(5)]
+    [Collection("Modularity")]
     public class ModulePlatformCompatibilityTests
     {
         [Theory]

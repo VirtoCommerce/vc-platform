@@ -12,7 +12,7 @@ angular.module('platformWebApp').controller('platformWebApp.propertyDictionaryCo
         blade.selectedAll = false;
 
         if (blade.isApiSave) {
-            dictionaryItemsApi.query({ id: blade.currentEntity.objectType, propertyId: blade.currentEntity.id },
+            dictionaryItemsApi.query({ propertyId: blade.currentEntity.id },
                 initializeBlade,
                 function (error) { bladeNavigationService.setError('Error ' + error.status, blade); });
         } else {
@@ -140,8 +140,11 @@ angular.module('platformWebApp').controller('platformWebApp.propertyDictionaryCo
         if (blade.isApiSave) {
             blade.isLoading = true;
 
-            dictionaryItemsApi.save({ id: blade.currentEntity.objectType, propertyId: blade.currentEntity.id },
-                blade.currentEntities,
+            blade.currentEntities.forEach(function (x) {
+                x.propertyId = blade.currentEntity.id;
+            });
+
+            dictionaryItemsApi.save({}, blade.currentEntities,
                 function () {
                     refresh();
                     if (blade.onChangesConfirmedFn)
@@ -210,7 +213,7 @@ angular.module('platformWebApp').controller('platformWebApp.propertyDictionaryCo
             callback: function (remove) {
                 if (remove) {
                     blade.isLoading = true;
-                    dictionaryItemsApi.delete({ id: blade.currentEntity.objectType, propertyId: blade.currentEntity.id, ids: ids }, null,
+                    dictionaryItemsApi.delete({ ids: ids }, null,
                         function () {
                             refresh();
                             if (blade.onChangesConfirmedFn)

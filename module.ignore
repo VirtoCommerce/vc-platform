@@ -20,13 +20,6 @@ Hangfire.SqlServer.dll
 Humanizer.dll
 MessagePack.Annotations.dll
 MessagePack.dll
-Microsoft.AI.DependencyCollector.dll
-Microsoft.AI.EventCounterCollector.dll
-Microsoft.AI.PerfCounterCollector.dll
-Microsoft.AI.ServerTelemetryChannel.dll
-Microsoft.AI.WindowsServer.dll
-Microsoft.ApplicationInsights.AspNetCore.dll
-Microsoft.ApplicationInsights.dll
 Microsoft.AspNetCore.Authentication.JwtBearer.dll
 Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
 Microsoft.AspNetCore.Authorization.dll
@@ -84,7 +77,6 @@ Microsoft.Extensions.Http.Polly.dll
 Microsoft.Extensions.Identity.Core.dll
 Microsoft.Extensions.Identity.Stores.dll
 Microsoft.Extensions.Logging.Abstractions.dll
-Microsoft.Extensions.Logging.ApplicationInsights.dll
 Microsoft.Extensions.Logging.AzureAppServices.dll
 Microsoft.Extensions.Options.dll
 Microsoft.Extensions.PlatformAbstractions.dll
@@ -165,7 +157,6 @@ System.Composition.Runtime.dll
 System.Composition.TypedParts.dll
 System.Configuration.ConfigurationManager.dll
 System.Data.SqlClient.dll
-System.Diagnostics.PerformanceCounter.dll
 System.Drawing.Common.dll
 System.IdentityModel.Tokens.Jwt.dll
 System.IO.Abstractions.dll

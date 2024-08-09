@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using VirtoCommerce.Platform.Core.Security;
@@ -22,7 +17,8 @@ namespace VirtoCommerce.Platform.Data.SqlServer
         protected virtual string GetConnectionString()
         {
             return _configuration["Auth:ConnectionString"] ??
-                _configuration.GetConnectionString("VirtoCommerce");
+                _configuration.GetConnectionString("VirtoCommerce") ??
+                string.Empty;
         }
 
         /// <summary>
@@ -36,7 +32,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer
             var dbName = builder.InitialCatalog; // Catch database name to search from the connection string
             builder.Remove("Initial Catalog"); // Initial catalog should be removed from connection string, otherwise the connection could not be opened
             const string cmdCheckDb =
-                @"select 1 from [sys].[databases] where name=@dbname";
+                "select 1 from [sys].[databases] where name=@dbname";
             var connectionString = builder.ConnectionString;
 
             using var conn = new SqlConnection(connectionString);
@@ -61,7 +57,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer
             if (CheckDatabaseExist(connectionString))
             {
                 const string cmdCheckMigration =
-                    @"select 1 from [sys].[tables] where name='ServerCertificate'";
+                    "select 1 from [sys].[tables] where name='ServerCertificate'";
 
                 const string cmdServerCert =
                     @"SELECT TOP (1) [Id]
@@ -106,7 +102,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer
 
                 // If there is no certificate in DB and certificate is present in files
                 // then load from files.
-                // Otherwise left it empty with default virto-cert number.
+                // Otherwise, left it empty with default virto-cert number.
                 // Default certificate will be replaced later by self-signed
                 if (!result.StoredInDb &&
                     !string.IsNullOrEmpty(publicCertPath) &&

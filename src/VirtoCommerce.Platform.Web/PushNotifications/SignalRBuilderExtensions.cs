@@ -4,6 +4,7 @@ using Microsoft.Azure.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.PushNotifications;
 using VirtoCommerce.Platform.Web.PushNotifications.Scalability;
@@ -25,7 +26,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
             if (scalabilityMode != null && !scalabilityMode.EqualsInvariant("None"))
             {
 
-                //Enable to store in the json the full type information to be able deserialize a push notifications types on the other instances
+                // Store full type information in JSON to deserialize push notifications on other instances
                 builder.AddNewtonsoftJsonProtocol(jsonOptions =>
                 {
                     jsonOptions.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
@@ -40,23 +41,23 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
                     var azureSignalRConnectionString = configuration["PushNotifications:AzureSignalRService:ConnectionString"];
                     if (string.IsNullOrEmpty(azureSignalRConnectionString))
                     {
-                        throw new InvalidOperationException($"PushNotifications:AzureSignalRService:ConnectionString must be set");
+                        throw new InvalidOperationException("PushNotifications:AzureSignalRService:ConnectionString must be set");
                     }
                     builder.AddAzureSignalR(o =>
                     {
-                        o.Endpoints = new[] { new ServiceEndpoint(azureSignalRConnectionString) };
+                        o.Endpoints = [new ServiceEndpoint(azureSignalRConnectionString)];
                     });
                 }
                 else
                 {
                     var redisConnectionString = configuration.GetConnectionString("RedisConnectionString");
-                    var redisChannelName = configuration["PushNotifications:RedisBackplane:ChannelName"];
-                    redisChannelName = string.IsNullOrEmpty(redisChannelName) ? "VirtoCommerceChannel" : redisChannelName;
                     if (string.IsNullOrEmpty(redisConnectionString))
                     {
-                        throw new InvalidOperationException($"RedisConnectionString must be set");
+                        throw new InvalidOperationException("RedisConnectionString must be set");
                     }
-                    builder.AddStackExchangeRedis(redisConnectionString, o => o.Configuration.ChannelPrefix = redisChannelName);
+
+                    var redisChannelName = configuration["PushNotifications:RedisBackplane:ChannelName"].EmptyToNull() ?? "VirtoCommerceChannel";
+                    builder.AddStackExchangeRedis(redisConnectionString, o => o.Configuration.ChannelPrefix = RedisChannel.Literal(redisChannelName));
                 }
             }
             else
@@ -66,7 +67,5 @@ namespace VirtoCommerce.Platform.Web.PushNotifications
 
             return builder;
         }
-
-
     }
 }

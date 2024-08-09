@@ -17,7 +17,8 @@ namespace VirtoCommerce.Platform.Data.PostgreSql
         protected virtual string GetConnectionString()
         {
             return _configuration["Auth:ConnectionString"] ??
-                _configuration.GetConnectionString("VirtoCommerce");
+                _configuration.GetConnectionString("VirtoCommerce") ??
+                string.Empty;
         }
 
         /// <summary>

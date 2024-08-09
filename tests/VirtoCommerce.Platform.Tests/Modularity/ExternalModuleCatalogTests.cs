@@ -14,12 +14,10 @@ using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.External;
 using VirtoCommerce.Platform.Modules.Local;
 using Xunit;
-using Xunit.Extensions.Ordering;
 
 namespace VirtoCommerce.Platform.Tests.Modularity
 {
-    //the Order is needed for running separate UnitTests where static Platform.CurrentVersion is used
-    [Collection("Modularity"), Order(1)]
+    [Collection("Modularity")]
     public class ExternalModuleCatalogTests
     {
         private static Mutex _mutex = new Mutex();
