@@ -1,15 +1,15 @@
 # v1.2
 name: Platform OWASP ZAP
 on:
-  push:
-    paths-ignore:
-      - '.github/**'
-      - 'docs/**'
-      - 'build/**'
-      - 'README.md'
-      - 'LICENSE'
-      - '**/argoDeploy.json'
-    branches: [ dev ]
+  # push:
+  #   paths-ignore:
+  #     - '.github/**'
+  #     - 'docs/**'
+  #     - 'build/**'
+  #     - 'README.md'
+  #     - 'LICENSE'
+  #     - '**/argoDeploy.json'
+  #   branches: [ dev ]
   workflow_dispatch:
 
 jobs:
