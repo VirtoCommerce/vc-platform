@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
@@ -20,7 +21,19 @@ namespace VirtoCommerce.Platform.Core.GenericCrud
         /// <returns></returns>
         Task<IList<T>> GetAsync(IList<string> ids, string responseGroup = null, bool clone = true);
 
+        /// <summary>
+        /// Returns a list of model instances for specified IDs without using cache.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="responseGroup"></param>
+        /// <returns></returns>
+        Task<IList<T>> GetNoCacheAsync(IList<string> ids, string responseGroup = null)
+        {
+            throw new NotSupportedException("Underlying service does not support no cache search.");
+        }
+
         Task SaveChangesAsync(IList<T> models);
+
         Task DeleteAsync(IList<string> ids, bool softDelete = false);
     }
 }
