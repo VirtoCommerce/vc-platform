@@ -37,12 +37,12 @@ using OpenIddict.Abstractions;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Logger;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.MySql;
@@ -58,7 +58,6 @@ using VirtoCommerce.Platform.Modules;
 using VirtoCommerce.Platform.Modules.Local;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
-using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Extensions;
@@ -68,7 +67,6 @@ using VirtoCommerce.Platform.Web.Json;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Migrations;
-using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
@@ -365,7 +363,8 @@ namespace VirtoCommerce.Platform.Web
                     options.AllowPasswordFlow()
                         .AllowRefreshTokenFlow()
                         .AllowClientCredentialsFlow()
-                        .AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate);
+                        .AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate)
+                        .AllowCustomFlow(PlatformConstants.Security.GrantTypes.ExternalSignIn);
 
                     options.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
                     options.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
@@ -460,23 +459,8 @@ namespace VirtoCommerce.Platform.Web
             //Platform authorization handler for policies based on permissions
             services.AddSingleton<IAuthorizationHandler, DefaultPermissionAuthorizationHandler>();
 
-            // register ExternalSigninService using non-obsolete constructor
-            services.AddTransient<IExternalSigninService>(provider =>
-            {
-                var signInManager = provider.GetRequiredService<SignInManager<ApplicationUser>>();
-                var userManager = provider.GetRequiredService<UserManager<ApplicationUser>>();
-                var eventPublisher = provider.GetRequiredService<IEventPublisher>();
-                var identityOptions = provider.GetRequiredService<IOptions<IdentityOptions>>();
-                var settingsManager = provider.GetRequiredService<ISettingsManager>();
-                var externalSigninProviderConfigs = provider.GetRequiredService<IEnumerable<ExternalSignInProviderConfiguration>>();
-
-                return new ExternalSigninService(signInManager,
-                    userManager,
-                    eventPublisher,
-                    identityOptions,
-                    settingsManager,
-                    externalSigninProviderConfigs);
-            });
+            services.AddTransient<IExternalSignInService, ExternalSignInService>();
+            services.AddTransient<IExternalSigninService, ExternalSignInService>();
 
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
