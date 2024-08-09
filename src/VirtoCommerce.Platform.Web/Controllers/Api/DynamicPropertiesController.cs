@@ -51,6 +51,23 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(_dynamicPropertyRegistrar.AllRegisteredTypeNames);
         }
 
+        [HttpGet]
+        [Route("properties")]
+        public async Task<ActionResult<DynamicProperty[]>> GetAllDynamicProperties([FromQuery] string id)
+        {
+            // The argument name is 'id' for compatibility with existing modules
+            if (string.IsNullOrEmpty(id))
+            {
+                return Ok(Array.Empty<DynamicProperty>());
+            }
+
+            var criteria = AbstractTypeFactory<DynamicPropertySearchCriteria>.TryCreateInstance();
+            criteria.ObjectType = id;
+
+            var result = await _dynamicPropertySearchService.SearchAllNoCloneAsync(criteria);
+            return Ok(result);
+        }
+
         /// <summary>
         /// Get dynamic properties registered for object type
         /// </summary>
@@ -141,7 +158,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
         [HttpGet]
         [Route("dictionaryitems")]
-        public async Task<ActionResult<DynamicPropertyDictionaryItem[]>> GetDictionaryItems([FromQuery] string propertyId)
+        public async Task<ActionResult<DynamicPropertyDictionaryItem[]>> GetAllDictionaryItems([FromQuery] string propertyId)
         {
             if (string.IsNullOrEmpty(propertyId))
             {
