@@ -14,6 +14,7 @@ namespace VirtoCommerce.Platform.Core
             public static class GrantTypes
             {
                 public const string Impersonate = "impersonate";
+                public const string ExternalSignIn = "external_sign_in";
             }
 
             public static class Claims
@@ -162,6 +163,14 @@ namespace VirtoCommerce.Platform.Core
                     DefaultValue = AccountStatuses.DefaultValue,
                 };
 
+                public static SettingDescriptor DefaultExternalAccountStatus { get; } = new()
+                {
+                    Name = "VirtoCommerce.Platform.Security.DefaultExternalAccountStatus",
+                    GroupName = "Platform|Security",
+                    ValueType = SettingValueType.ShortText,
+                    DefaultValue = "Approved",
+                };
+
                 public static readonly SettingDescriptor EnablePruneExpiredTokensJob = new SettingDescriptor
                 {
                     Name = "VirtoCommerce.Platform.Security.EnablePruneExpiredTokensJob",
@@ -250,6 +259,7 @@ namespace VirtoCommerce.Platform.Core
                         yield return DefaultAccountType;
                         yield return AccountStatuses;
                         yield return DefaultAccountStatus;
+                        yield return DefaultExternalAccountStatus;
                         yield return EnablePruneExpiredTokensJob;
                         yield return CronPruneExpiredTokensJob;
                         yield return FileExtensionsBlackList;

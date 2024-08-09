@@ -177,7 +177,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 DaysTillPasswordExpiry = PasswordExpiryHelper.ContDaysTillPasswordExpiry(user, _userOptionsExtended),
                 Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray(),
                 AuthenticationMethod = HttpContext.User.GetAuthenticationMethod(),
-                IsSsoAuthenticationMethod = HttpContext.User.IsSsoAuthenticationMethod()
+                IsSsoAuthenticationMethod = HttpContext.User.IsExternalSignIn(),
             };
 
             // Password never expired with SSO
@@ -425,7 +425,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize]
         public async Task<ActionResult<SecurityResult>> ChangeCurrentUserPassword([FromBody] ChangePasswordRequest changePassword)
         {
-            if (HttpContext.User.IsSsoAuthenticationMethod())
+            if (HttpContext.User.IsExternalSignIn())
             {
                 return BadRequest(new SecurityResult { Errors = new[] { $"Could not change password for {HttpContext.User.GetAuthenticationMethod()} authentication method" } });
             }
