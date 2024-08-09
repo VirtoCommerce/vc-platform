@@ -79,9 +79,21 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/import")]
         [Authorize(Permissions.PlatformImport)]
-        public async Task<ActionResult<SampleDataImportPushNotification>> ImportSampleData([FromQuery] string name)
+        public async Task<ActionResult<SampleDataImportPushNotification>> ImportSampleData([FromQuery] string name = null, [FromQuery] string url = null)
         {
-            var sampleData = (await InnerDiscoverSampleDataAsync()).FirstOrDefault(x => x.Name == name);
+            var sampleDataList = await InnerDiscoverSampleDataAsync();
+
+            SampleDataInfo sampleData = null;
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                sampleData = sampleDataList.FirstOrDefault(x => x.Name == name);
+            }
+            else if (!string.IsNullOrEmpty(url))
+            {
+                sampleData = sampleDataList.FirstOrDefault(x => x.Url == url);
+            }
+
             if (sampleData != null)
             {
                 return Ok(StartImportSampleData(sampleData.Name));
