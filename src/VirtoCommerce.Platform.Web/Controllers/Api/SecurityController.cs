@@ -158,8 +158,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// Get current user details
         /// </summary>
         [HttpGet]
-        [Route("currentuser")]
+        [Authorize]
         [AllowAnonymous]
+        [Route("currentuser")]
         public async Task<ActionResult<UserDetail>> GetCurrentUser()
         {
             if (User.Identity?.IsAuthenticated != true)
