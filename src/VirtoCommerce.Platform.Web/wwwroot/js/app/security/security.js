@@ -52,10 +52,10 @@ angular.module('platformWebApp')
                                 $scope.loginProgress = true;
                                 // Try to login
                                 authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
-                                    function (loggedIn) {
-                                        if (!loggedIn) {
-                                            $scope.loginProgress = false;
-                                            $scope.authError = 'invalidCredentials';
+                                    function (result) {
+                                        $scope.loginProgress = false;
+                                        if (!result || !result.succeeded) {
+                                            $scope.authError = 'The login or password is incorrect.';
                                         }
                                     },
                                     function (x) {
@@ -72,7 +72,7 @@ angular.module('platformWebApp')
                                     });
                             };
 
-                            $scope.togglePassword = function() {
+                            $scope.togglePassword = function () {
                                 $scope.showPassword = !$scope.showPassword;
                             }
                         });
