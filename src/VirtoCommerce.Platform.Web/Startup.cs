@@ -414,16 +414,17 @@ namespace VirtoCommerce.Platform.Web
                     {
                         privateKey = new X509Certificate2(ServerCertificate.PrivateKeyCertBytes, ServerCertificate.PrivateKeyCertPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.EphemeralKeySet);
                     }
+
                     options.AddSigningCertificate(privateKey);
                     options.AddEncryptionCertificate(privateKey);
                 })
-                 .AddValidation(options =>
-                 {
-                     // Import the configuration from the local OpenIddict server instance.
-                     options.UseLocalServer();
-                     // Register the ASP.NET Core host.
-                     options.UseAspNetCore();
-                 });
+                .AddValidation(options =>
+                {
+                    // Import the configuration from the local OpenIddict server instance.
+                    options.UseLocalServer();
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
+                });
 
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
             services.Configure<PasswordOptionsExtended>(Configuration.GetSection("IdentityOptions:Password"));
@@ -437,9 +438,9 @@ namespace VirtoCommerce.Platform.Web
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/";
-                //TODO: Temporary comment return status codes instead of redirection. It is requred for
+                //TODO: Temporary comment return status codes instead of redirection. It is required for
                 //normal authorization code flow. We should implement  login form as server side view.
-                //This logic is used to handle 401 errors when token is expired to force redirect to angular  to force redirection to angular login form
+                //This logic is used to handle 401 errors when token is expired to force redirect to angular login form
                 //in case we have server side login form, this logic is no longer needed and can be removed. 
                 //options.Events.OnRedirectToLogin = context =>
                 //{
