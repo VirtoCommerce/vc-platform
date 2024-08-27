@@ -83,6 +83,29 @@ namespace VirtoCommerce.Platform.Data.GenericCrud
             return await ProcessSearchResultAsync(result, criteria);
         }
 
+        /// <summary>
+        /// Returns model instances that meet specified criteria without using cache.
+        /// </summary>
+        /// <param name="criteria"></param>
+        /// <returns></returns>
+        public virtual async Task<TResult> SearchNoCacheAsync(TCriteria criteria)
+        {
+            ValidateSearchCriteria(criteria);
+
+            var idsResult = await SearchIdsNoCacheAsync(criteria);
+
+            var result = AbstractTypeFactory<TResult>.TryCreateInstance();
+            result.TotalCount = idsResult.TotalCount;
+
+            if (idsResult.Results?.Count > 0)
+            {
+                var models = await _crudService.GetNoCacheAsync(idsResult.Results, criteria.ResponseGroup);
+                result.Results.AddRange(models.OrderBy(x => idsResult.Results.IndexOf(x.Id)));
+            }
+
+            return await ProcessSearchResultAsync(result, criteria);
+        }
+
 
         protected virtual void ValidateSearchCriteria(TCriteria criteria)
         {

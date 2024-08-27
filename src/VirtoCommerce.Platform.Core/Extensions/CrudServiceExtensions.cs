@@ -45,4 +45,20 @@ public static class CrudServiceExtensions
     {
         return crudService.GetAsync(ids, responseGroup, clone);
     }
+
+    /// <summary>
+    /// Returns data from the database without using cache.
+    /// </summary>
+    public static async Task<TModel> GetNoCacheAsync<TModel>(this ICrudService<TModel> crudService, string id, string responseGroup = null)
+        where TModel : Entity
+    {
+        if (id is null)
+        {
+            return null;
+        }
+
+        var entities = await crudService.GetNoCacheAsync([id], responseGroup);
+
+        return entities?.FirstOrDefault();
+    }
 }
