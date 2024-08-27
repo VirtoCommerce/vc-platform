@@ -17,7 +17,8 @@ namespace VirtoCommerce.Platform.Data.MySql
         protected virtual string GetConnectionString()
         {
             return _configuration["Auth:ConnectionString"] ??
-                _configuration.GetConnectionString("VirtoCommerce");
+                _configuration.GetConnectionString("VirtoCommerce") ??
+                string.Empty;
         }
 
         /// <summary>

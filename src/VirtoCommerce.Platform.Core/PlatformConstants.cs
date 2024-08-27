@@ -24,10 +24,12 @@ namespace VirtoCommerce.Platform.Core
                 public const string UserNameClaimType = "username";
                 public const string LimitedPermissionsClaimType = "limited_permissions";
                 public const string MemberIdClaimType = "memberId";
+
                 /// <summary>
-                /// Represents Operator User Id after impersonation 
+                /// Represents Operator User ID after impersonation 
                 /// </summary>
                 public const string OperatorUserId = "vc_operator_user_id";
+
                 /// <summary>
                 /// Represents Operator User Name after impersonation
                 /// </summary>
@@ -45,42 +47,42 @@ namespace VirtoCommerce.Platform.Core
             {
                 public const string ResetCache = "cache:reset";
 
-                public const string AssetAccess = "platform:asset:access",
-                                    AssetDelete = "platform:asset:delete",
-                                    AssetUpdate = "platform:asset:update",
-                                    AssetCreate = "platform:asset:create",
-                                    AssetRead = "platform:asset:read";
+                public const string AssetAccess = "platform:asset:access";
+                public const string AssetDelete = "platform:asset:delete";
+                public const string AssetUpdate = "platform:asset:update";
+                public const string AssetCreate = "platform:asset:create";
+                public const string AssetRead = "platform:asset:read";
 
-                public const string ModuleQuery = "platform:module:read",
-                                    ModuleAccess = "platform:module:access",
-                                    ModuleManage = "platform:module:manage";
+                public const string ModuleQuery = "platform:module:read";
+                public const string ModuleAccess = "platform:module:access";
+                public const string ModuleManage = "platform:module:manage";
 
-                public const string SettingQuery = "platform:setting:read",
-                                    SettingAccess = "platform:setting:access",
-                                    SettingUpdate = "platform:setting:update";
+                public const string SettingQuery = "platform:setting:read";
+                public const string SettingAccess = "platform:setting:access";
+                public const string SettingUpdate = "platform:setting:update";
 
-                public const string DynamicPropertiesQuery = "platform:dynamic_properties:read",
-                                    DynamicPropertiesCreate = "platform:dynamic_properties:create",
-                                    DynamicPropertiesAccess = "platform:dynamic_properties:access",
-                                    DynamicPropertiesUpdate = "platform:dynamic_properties:update",
-                                    DynamicPropertiesDelete = "platform:dynamic_properties:delete";
+                public const string DynamicPropertiesQuery = "platform:dynamic_properties:read";
+                public const string DynamicPropertiesCreate = "platform:dynamic_properties:create";
+                public const string DynamicPropertiesAccess = "platform:dynamic_properties:access";
+                public const string DynamicPropertiesUpdate = "platform:dynamic_properties:update";
+                public const string DynamicPropertiesDelete = "platform:dynamic_properties:delete";
 
-                public const string SecurityQuery = "platform:security:read",
-                                    SecurityCreate = "platform:security:create",
-                                    SecurityAccess = "platform:security:access",
-                                    SecurityUpdate = "platform:security:update",
-                                    SecurityDelete = "platform:security:delete",
-                                    SecurityVerifyEmail = "platform:security:verifyEmail",
-                                    SecurityLoginOnBehalf = "platform:security:loginOnBehalf",
-                                    SecurityConfirmEmail = "platform:security:confirmEmail",
-                                    SecurityGenerateToken = "platform:security:generateToken",
-                                    SecurityVerifyToken = "platform:security:verifyToken";
+                public const string SecurityQuery = "platform:security:read";
+                public const string SecurityCreate = "platform:security:create";
+                public const string SecurityAccess = "platform:security:access";
+                public const string SecurityUpdate = "platform:security:update";
+                public const string SecurityDelete = "platform:security:delete";
+                public const string SecurityVerifyEmail = "platform:security:verifyEmail";
+                public const string SecurityLoginOnBehalf = "platform:security:loginOnBehalf";
+                public const string SecurityConfirmEmail = "platform:security:confirmEmail";
+                public const string SecurityGenerateToken = "platform:security:generateToken";
+                public const string SecurityVerifyToken = "platform:security:verifyToken";
 
                 public const string BackgroundJobsManage = "background_jobs:manage";
 
-                public const string PlatformExportImportAccess = "platform:exportImport:access",
-                                    PlatformImport = "platform:import",
-                                    PlatformExport = "platform:export";
+                public const string PlatformExportImportAccess = "platform:exportImport:access";
+                public const string PlatformImport = "platform:import";
+                public const string PlatformExport = "platform:export";
 
                 public static string[] AllPermissions { get; } = new[] { ResetCache, AssetAccess, AssetDelete, AssetUpdate, AssetCreate, AssetRead, ModuleQuery, ModuleAccess, ModuleManage,
                                               SettingQuery, SettingAccess, SettingUpdate, DynamicPropertiesQuery, DynamicPropertiesCreate, DynamicPropertiesAccess, DynamicPropertiesUpdate, DynamicPropertiesDelete,
@@ -443,21 +445,6 @@ namespace VirtoCommerce.Platform.Core
                     get
                     {
                         yield return Customization;
-                    }
-                }
-            }
-
-            public static class Other
-            {
-                [Obsolete("Use PlatformConstants.Settings.Security.AccountStatuses", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-                public static SettingDescriptor AccountStatuses => Security.AccountStatuses;
-
-                [Obsolete("Use PlatformConstants.Settings.Security.AllSettings", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-                public static IEnumerable<SettingDescriptor> AllSettings
-                {
-                    get
-                    {
-                        yield return AccountStatuses;
                     }
                 }
             }

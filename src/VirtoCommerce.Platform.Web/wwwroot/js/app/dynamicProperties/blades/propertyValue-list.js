@@ -145,7 +145,7 @@ angular.module('platformWebApp')
         ];
 
         $scope.getDictionaryValues = function (property, callback) {
-            dictionaryItemsApi.query({ id: property.objectType, propertyId: property.id }, callback);
+            dictionaryItemsApi.query({ propertyId: property.id }, callback);
         }
 
         $scope.switchPropertiesVisibility = function () {
@@ -184,7 +184,7 @@ angular.module('platformWebApp')
                         }
                     });
                 }
-            })
+            });
 
             _.each(blade.currentEntities, function (property) {
                 // required properties and switchers can’t be hidden
@@ -192,7 +192,7 @@ angular.module('platformWebApp')
                     property.valueType !== 'Boolean' &&
                     allPropertiesEmpty(property.values)
                 ) {
-                    blade.emptyProperties.push(property)
+                    blade.emptyProperties.push(property);
                 }
             });
         }

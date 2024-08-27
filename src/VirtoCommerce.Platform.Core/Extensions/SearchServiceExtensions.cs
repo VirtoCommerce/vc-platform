@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,24 +42,6 @@ namespace VirtoCommerce.Platform.Core.Common
             where TModel : IEntity
         {
             return searchService.SearchAsync(searchCriteria, clone: false);
-        }
-
-        [Obsolete("Use SearchBatchesNoCloneAsync()", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-        public static IAsyncEnumerable<TResult> SearchBatchesNoClone<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria)
-                where TCriteria : SearchCriteriaBase
-                where TResult : GenericSearchResult<TModel>
-                where TModel : Entity, ICloneable
-        {
-            return searchService.SearchBatchesNoCloneAsync(searchCriteria);
-        }
-
-        [Obsolete("Use SearchBatchesAsync()", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-        public static IAsyncEnumerable<TResult> SearchBatches<TCriteria, TResult, TModel>(this ISearchService<TCriteria, TResult, TModel> searchService, TCriteria searchCriteria, bool clone = true)
-                where TCriteria : SearchCriteriaBase
-                where TResult : GenericSearchResult<TModel>
-                where TModel : Entity, ICloneable
-        {
-            return searchService.SearchBatchesAsync(searchCriteria, clone);
         }
 
         /// <summary>

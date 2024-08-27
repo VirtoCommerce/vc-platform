@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Hangfire;
@@ -37,7 +36,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         private readonly PlatformOptions _platformOptions;
         private readonly IHttpClientFactory _httpClientFactory;
 
-        private static readonly object _lockObject = new object();
+        private static readonly object _lockObject = new();
 
         public PlatformExportImportController(
             IPlatformExportImportManager platformExportManager,
@@ -58,9 +57,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpGet]
         [Route("sampledata/discover")]
         [AllowAnonymous]
-        public async Task<ActionResult<SampleDataInfo[]>> DiscoverSampleData()
+        public async Task<ActionResult<IList<SampleDataInfo>>> DiscoverSampleData()
         {
-            return Ok((await InnerDiscoverSampleDataAsync()).ToArray());
+            return Ok(await InnerDiscoverSampleDataAsync());
         }
 
         [HttpPost]
@@ -71,7 +70,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             var sampleData = (await InnerDiscoverSampleDataAsync()).FirstOrDefault(x => !x.Url.IsNullOrEmpty());
             if (sampleData != null)
             {
-                return ImportSampleData(sampleData.Url);
+                return Ok(StartImportSampleData(sampleData.Name));
             }
 
             return Ok();
@@ -80,27 +79,50 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [HttpPost]
         [Route("sampledata/import")]
         [Authorize(Permissions.PlatformImport)]
-        public ActionResult<SampleDataImportPushNotification> ImportSampleData([FromQuery] string url = null)
+        public async Task<ActionResult<SampleDataImportPushNotification>> ImportSampleData([FromQuery] string name = null, [FromQuery] string url = null)
         {
-            lock (_lockObject)
+            var sampleDataList = await InnerDiscoverSampleDataAsync();
+
+            SampleDataInfo sampleData = null;
+
+            if (!string.IsNullOrEmpty(name))
             {
-                var sampleDataState = EnumUtility.SafeParse(_settingsManager.GetValue<string>(PlatformConstants.Settings.Setup.SampleDataState), SampleDataState.Undefined);
-                if (sampleDataState == SampleDataState.Undefined && Uri.IsWellFormedUriString(url, UriKind.Absolute))
-                {
-                    _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Processing);
+                sampleData = sampleDataList.FirstOrDefault(x => x.Name == name);
+            }
+            else if (!string.IsNullOrEmpty(url))
+            {
+                sampleData = sampleDataList.FirstOrDefault(x => x.Url == url);
+            }
 
-                    var pushNotification = new SampleDataImportPushNotification(User.Identity.Name);
-                    pushNotification.Title = "Sample data import process";
-
-                    _pushNotifier.Send(pushNotification);
-                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(new Uri(url), pushNotification, JobCancellationToken.Null, null));
-                    pushNotification.JobId = jobId;
-
-                    return Ok(pushNotification);
-                }
+            if (sampleData != null)
+            {
+                return Ok(StartImportSampleData(sampleData.Name));
             }
 
             return Ok();
+        }
+
+        private SampleDataImportPushNotification StartImportSampleData(string name)
+        {
+            SampleDataImportPushNotification pushNotification = null;
+
+            lock (_lockObject)
+            {
+                var sampleDataState = EnumUtility.SafeParse(_settingsManager.GetValue<string>(PlatformConstants.Settings.Setup.SampleDataState), SampleDataState.Undefined);
+                if (sampleDataState == SampleDataState.Undefined)
+                {
+                    _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Processing);
+
+                    pushNotification = new SampleDataImportPushNotification(User.Identity?.Name);
+                    pushNotification.Title = "Sample data import process";
+
+                    _pushNotifier.Send(pushNotification);
+                    var jobId = BackgroundJob.Enqueue(() => SampleDataImportBackgroundAsync(name, pushNotification, JobCancellationToken.Null, null));
+                    pushNotification.JobId = jobId;
+                }
+            }
+
+            return pushNotification;
         }
 
         /// <summary>
@@ -133,13 +155,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 throw new ArgumentNullException(nameof(fileUrl));
             }
 
-            var uploadFolderPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
-
-            var localPath = Path.Combine(uploadFolderPath, fileUrl);
-            if (!localPath.StartsWith(uploadFolderPath))
-            {
-                throw new PlatformException($"Invalid path {localPath}");
-            }
+            var localPath = GetSafeFullPath(_platformOptions.LocalUploadFolderPath, fileUrl);
 
             PlatformExportManifest retVal;
             using (var stream = new FileStream(localPath, FileMode.Open))
@@ -197,11 +213,10 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize(Permissions.PlatformExport)]
         public ActionResult DownloadExportFile([FromRoute] string fileName)
         {
-            var localTmpFolder = Path.GetFullPath(Path.Combine(_platformOptions.DefaultExportFolder));
-            var localPath = Path.Combine(localTmpFolder, Path.GetFileName(fileName));
+            var localPath = GetSafeFullPath(_platformOptions.DefaultExportFolder, fileName);
 
             //Load source data only from local file system
-            using (var stream = System.IO.File.Open(localPath, FileMode.Open))
+            using (System.IO.File.Open(localPath, FileMode.Open))
             {
                 var provider = new FileExtensionContentTypeProvider();
                 if (!provider.TryGetContentType(localPath, out var contentType))
@@ -212,12 +227,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
         }
 
-        private async Task<IEnumerable<SampleDataInfo>> InnerDiscoverSampleDataAsync()
+        private async Task<IList<SampleDataInfo>> InnerDiscoverSampleDataAsync()
         {
             var sampleDataUrl = _platformOptions.SampleDataUrl;
             if (string.IsNullOrEmpty(sampleDataUrl))
             {
-                return Enumerable.Empty<SampleDataInfo>();
+                return [];
             }
 
             //Direct file mode
@@ -225,18 +240,18 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 return new List<SampleDataInfo>
                 {
-                    new SampleDataInfo { Url = sampleDataUrl }
+                    new() { Url = sampleDataUrl }
                 };
             }
 
             //Discovery mode
-            var manifestUrl = sampleDataUrl + "\\manifest.json";
-            using var client = _httpClientFactory.CreateClient();
-            await using var stream = await client.GetStreamAsync(new Uri(manifestUrl));
+            var manifestUrl = sampleDataUrl + "/manifest.json";
+            var httpClient = _httpClientFactory.CreateClient();
+            await using var stream = await httpClient.GetStreamAsync(new Uri(manifestUrl));
             //Add empty template
             var result = new List<SampleDataInfo>
             {
-                new SampleDataInfo { Name = "Empty" }
+                new() { Name = "Empty" }
             };
 
             //Need filter unsupported versions and take one most new sample data
@@ -267,7 +282,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return result;
         }
 
-        public async Task SampleDataImportBackgroundAsync(Uri url, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
+        public async Task SampleDataImportBackgroundAsync(string name, SampleDataImportPushNotification pushNotification, IJobCancellationToken cancellationToken, PerformContext context)
         {
             void progressCallback(ExportImportProgressInfo x)
             {
@@ -278,6 +293,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             try
             {
+                var url = (await InnerDiscoverSampleDataAsync()).FirstOrDefault(x => x.Name == name)?.Url;
+                if (url is null)
+                {
+                    return;
+                }
+
                 pushNotification.Description = "Start downloading from " + url;
 
                 await _pushNotifier.SendAsync(pushNotification);
@@ -288,17 +309,19 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     Directory.CreateDirectory(tmpPath);
                 }
 
-                var tmpFilePath = Path.Combine(tmpPath, Path.GetFileName(url.ToString()));
-                using (var client = new WebClient())
+                var tmpFilePath = Path.Combine(tmpPath, Path.GetFileName(url));
+
+                await DownloadFileAsync(new Uri(url), tmpFilePath, async (bytesReceived, bytesTotal) =>
                 {
-                    client.DownloadProgressChanged += async (sender, args) =>
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var message = $"Sample data {bytesReceived.ToHumanReadableSize()} of {bytesTotal.ToHumanReadableSize()} downloading...";
+                    if (message != pushNotification.Description)
                     {
-                        pushNotification.Description = string.Format("Sample data {0} of {1} downloading...", args.BytesReceived.ToHumanReadableSize(), args.TotalBytesToReceive.ToHumanReadableSize());
+                        pushNotification.Description = message;
                         await _pushNotifier.SendAsync(pushNotification);
-                    };
-                    var task = client.DownloadFileTaskAsync(url, tmpFilePath);
-                    task.Wait();
-                }
+                    }
+                });
+
                 using (var stream = new FileStream(tmpFilePath, FileMode.Open))
                 {
                     var manifest = _platformExportManager.ReadExportManifest(stream);
@@ -318,7 +341,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             }
             finally
             {
-                _settingsManager.SetValue(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Completed);
+                await _settingsManager.SetValueAsync(PlatformConstants.Settings.Setup.SampleDataState.Name, SampleDataState.Completed);
                 pushNotification.Description = "Import finished";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
@@ -339,14 +362,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 var cancellationTokenWrapper = new JobCancellationTokenWrapper(cancellationToken);
 
-                var uploadFolderFullPath = Path.GetFullPath(_platformOptions.LocalUploadFolderPath);
-                // VP-5353: Checking that the file is inside LocalUploadFolderPath
-                var localPath = Path.Combine(uploadFolderFullPath, importRequest.FileUrl);
-
-                if (!localPath.StartsWith(uploadFolderFullPath))
-                {
-                    throw new PlatformException($"Invalid path {localPath}");
-                }
+                var localPath = GetSafeFullPath(_platformOptions.LocalUploadFolderPath, importRequest.FileUrl);
 
                 //Load source data only from local file system
                 using (var stream = new FileStream(localPath, FileMode.Open))
@@ -418,6 +434,59 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 pushNotification.Description = "Export finished";
                 pushNotification.Finished = DateTime.UtcNow;
                 await _pushNotifier.SendAsync(pushNotification);
+            }
+        }
+
+        private static string GetSafeFullPath(string basePath, string relativePath)
+        {
+            var baseFullPath = Path.GetFullPath(basePath);
+            var result = Path.GetFullPath(Path.Combine(baseFullPath, relativePath));
+
+            if (!result.StartsWith(baseFullPath + Path.DirectorySeparatorChar))
+            {
+                throw new PlatformException($"Invalid path {relativePath}");
+            }
+
+            return result;
+        }
+
+        private async Task DownloadFileAsync(Uri uri, string filePath, Func<long, long, Task> progress)
+        {
+            var httpClient = _httpClientFactory.CreateClient();
+
+            var response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+
+            var contentLength = response.Content.Headers.ContentLength ?? -1L;
+            var bytesReceived = 0L;
+            var bytesTotal = contentLength < 0 ? 0L : contentLength;
+
+            const int defaultBufferSize = 65536;
+            var bufferSize = contentLength < 0 || contentLength > defaultBufferSize ? defaultBufferSize : (int)contentLength;
+            var buffer = new byte[bufferSize];
+
+            await using var readStream = await response.Content.ReadAsStreamAsync();
+            await using var writeStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, FileOptions.Asynchronous);
+
+            while (true)
+            {
+                var bytesRead = await readStream.ReadAsync(new Memory<byte>(buffer)).ConfigureAwait(false);
+
+                if (bytesRead == 0)
+                {
+                    break;
+                }
+
+                bytesReceived += bytesRead;
+
+                if (contentLength < 0)
+                {
+                    bytesTotal = bytesReceived;
+                }
+
+                await writeStream.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead)).ConfigureAwait(false);
+
+                await progress(bytesReceived, bytesTotal);
             }
         }
     }

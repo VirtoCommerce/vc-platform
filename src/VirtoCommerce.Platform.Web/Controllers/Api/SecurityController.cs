@@ -342,20 +342,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Old SearchAsync users by keyword
-        /// </summary>
-        /// <param name="criteria">Search criteria.</param>
-        /// <remarks>Obsolete, only for backward compatibility with V2</remarks>
-        [HttpPost]
-        [Route("users")]
-        [Authorize(PlatformPermissions.SecurityQuery)]
-        [Obsolete("PT-789 Left only for backward compatibility with V2")]
-        public Task<ActionResult<UserSearchResult>> SearchUsersOld([FromBody] UserSearchCriteria criteria)
-        {
-            return SearchUsers(criteria);
-        }
-
-        /// <summary>
         /// Get user details by user name
         /// </summary>
         /// <param name="userName"></param>
@@ -1066,19 +1052,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             return Ok(success);
         }
-
-        #region PT-788 Obsolete methods
-
-        [Obsolete("use /roles/search instead")]
-        [HttpPost]
-        [Route("roles")]
-        [Authorize(PlatformPermissions.SecurityQuery)]
-        public Task<ActionResult<RoleSearchResult>> SearchRolesObsolete([FromBody] RoleSearchCriteria request)
-        {
-            return SearchRoles(request);
-        }
-
-        #endregion PT-788 Obsolete methods
 
         private bool IsUserEditable(string userName)
         {

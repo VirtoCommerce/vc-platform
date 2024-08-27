@@ -73,10 +73,7 @@ namespace VirtoCommerce.Platform.Security.Repositories
             builder.Entity<Role>().Ignore(x => x.Permissions);
             builder.Entity<ApplicationUser>().Ignore(x => x.Password);
             builder.Entity<ApplicationUser>().Ignore(x => x.Roles);
-            builder.Entity<ApplicationUser>().Ignore(x => x.LockoutEndDateUtc);
-            builder.Entity<ApplicationUser>().Ignore(x => x.Permissions);
             builder.Entity<ApplicationUser>().Ignore(x => x.Logins);
-            builder.Entity<ApplicationUser>().Ignore(x => x.UserState);
             builder.Entity<ApplicationUser>().Property(x => x.UserType).HasMaxLength(stringShort);
             builder.Entity<ApplicationUser>().Property(x => x.Status).HasMaxLength(stringShort);
             builder.Entity<ApplicationUser>().Property(x => x.PhotoUrl).HasMaxLength(stringLong);

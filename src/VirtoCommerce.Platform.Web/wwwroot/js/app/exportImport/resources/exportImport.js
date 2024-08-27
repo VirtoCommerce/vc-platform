@@ -8,8 +8,9 @@ angular.module('platformWebApp')
 
             loadExportManifest: { url: 'api/platform/export/manifest/load' },
             runImport: { method: 'POST', url: 'api/platform/import' },
+
             sampleDataDiscover: { url: 'api/platform/sampledata/discover', isArray: true },
-            importSampleData: { method: 'POST', url: 'api/platform/sampledata/import', params: { url: '@url' } },
+            importSampleData: { method: 'POST', url: 'api/platform/sampledata/import', params: { name: '@name' } },
 
             taskCancel: { method: 'POST', url: 'api/platform/exortimport/tasks/:jobId/cancel'}
         });

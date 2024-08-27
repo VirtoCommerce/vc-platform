@@ -76,7 +76,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [ProducesResponseType(typeof(void), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> UpdateAsync([FromBody] ObjectSettingEntry[] objectSettings)
         {
-            using (await AsyncLock.GetLockByKey("settings").GetReleaserAsync())
+            using (await AsyncLock.GetLockByKey("settings").LockAsync())
             {
                 await _settingsManager.SaveObjectSettingsAsync(objectSettings);
             }

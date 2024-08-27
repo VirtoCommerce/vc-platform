@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
@@ -13,12 +12,6 @@ namespace VirtoCommerce.Platform.Data.Settings
         public SettingsSearchService(ISettingsManager settingsManager)
         {
             _settingsManager = settingsManager;
-        }
-
-        [Obsolete("Use SearchAsync()", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-        public async Task<GenericSearchResult<ObjectSettingEntry>> SearchSettingsAsync(SettingsSearchCriteria criteria)
-        {
-            return await SearchAsync(criteria, clone: true);
         }
 
         public async Task<SettingsSearchResult> SearchAsync(SettingsSearchCriteria criteria, bool clone = true)
