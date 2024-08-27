@@ -11,6 +11,7 @@ using VirtoCommerce.Platform.Core.Security.Search;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Exceptions;
 using VirtoCommerce.Platform.Security.Handlers;
+using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 
@@ -47,10 +48,9 @@ namespace VirtoCommerce.Platform.Web.Security
             services.AddSingleton<Func<RoleManager<Role>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<RoleManager<Role>>());
             services.AddSingleton<Func<UserManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<UserManager<ApplicationUser>>());
             services.AddSingleton<Func<SignInManager<ApplicationUser>>>(provider => () => provider.CreateScope().ServiceProvider.GetService<SignInManager<ApplicationUser>>());
-            services.AddSingleton<IUserPasswordHasher, DefaultUserPasswordHasher>();
             //Use custom ClaimsPrincipalFactory to add system roles claims for user principal
             services.TryAddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomUserClaimsPrincipalFactory>();
-            services.AddTransient<IUserSignInValidator, BaseUserSignInValidator>();
+            services.AddTransient<ITokenRequestValidator, BaseUserSignInValidator>();
 
             if (setupAction != null)
             {

@@ -19,10 +19,9 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
             IOptionsMonitor<BasicAuthenticationOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
-            ISystemClock clock,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
-            : base(options, logger, encoder, clock)
+            : base(options, logger, encoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -73,7 +72,7 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
                 var headerValue = values.ToString();
                 const string scheme = "Basic ";
 
-                if (headerValue != null && headerValue.StartsWith(scheme, StringComparison.OrdinalIgnoreCase))
+                if (headerValue.StartsWith(scheme, StringComparison.OrdinalIgnoreCase))
                 {
                     encodedCredentials = headerValue.Substring(scheme.Length).Trim();
                 }

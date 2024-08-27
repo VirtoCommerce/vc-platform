@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,12 +36,5 @@ public static class CrudServiceExtensions
         var entities = await crudService.GetAsync(new[] { id }, responseGroup, clone);
 
         return entities?.FirstOrDefault();
-    }
-
-    [Obsolete("Use GetAsync() or GetNoCloneAsync()")]
-    public static Task<IList<TModel>> GetByIdsAsync<TModel>(this ICrudService<TModel> crudService, IList<string> ids, string responseGroup = null, bool clone = true)
-        where TModel : Entity
-    {
-        return crudService.GetAsync(ids, responseGroup, clone);
     }
 }

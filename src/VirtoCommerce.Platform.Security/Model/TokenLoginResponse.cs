@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
 
 namespace VirtoCommerce.Platform.Security.Model
 {
+    [Obsolete("Use VirtoCommerce.Platform.Security.OpenIddict.TokenResponse", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
     public class TokenLoginResponse : OpenIddictResponse
     {
         public string UserId { get; set; }

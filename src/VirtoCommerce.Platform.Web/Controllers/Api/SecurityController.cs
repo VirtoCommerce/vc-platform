@@ -159,9 +159,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         /// </summary>
         [HttpGet]
         [Authorize]
+        [AllowAnonymous]
         [Route("currentuser")]
         public async Task<ActionResult<UserDetail>> GetCurrentUser()
         {
+            if (User.Identity?.IsAuthenticated != true)
+            {
+                return Ok(new { });
+            }
+
             var user = await UserManager.FindByNameAsync(CurrentUserName);
             if (user == null)
             {
@@ -177,7 +183,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 DaysTillPasswordExpiry = PasswordExpiryHelper.ContDaysTillPasswordExpiry(user, _userOptionsExtended),
                 Permissions = user.Roles.SelectMany(x => x.Permissions).Select(x => x.Name).Distinct().ToArray(),
                 AuthenticationMethod = HttpContext.User.GetAuthenticationMethod(),
-                IsSsoAuthenticationMethod = HttpContext.User.IsSsoAuthenticationMethod()
+                IsSsoAuthenticationMethod = HttpContext.User.IsExternalSignIn(),
             };
 
             // Password never expired with SSO
@@ -336,20 +342,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Old SearchAsync users by keyword
-        /// </summary>
-        /// <param name="criteria">Search criteria.</param>
-        /// <remarks>Obsolete, only for backward compatibility with V2</remarks>
-        [HttpPost]
-        [Route("users")]
-        [Authorize(PlatformPermissions.SecurityQuery)]
-        [Obsolete("PT-789 Left only for backward compatibility with V2")]
-        public Task<ActionResult<UserSearchResult>> SearchUsersOld([FromBody] UserSearchCriteria criteria)
-        {
-            return SearchUsers(criteria);
-        }
-
-        /// <summary>
         /// Get user details by user name
         /// </summary>
         /// <param name="userName"></param>
@@ -439,7 +431,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [Authorize]
         public async Task<ActionResult<SecurityResult>> ChangeCurrentUserPassword([FromBody] ChangePasswordRequest changePassword)
         {
-            if (HttpContext.User.IsSsoAuthenticationMethod())
+            if (HttpContext.User.IsExternalSignIn())
             {
                 return BadRequest(new SecurityResult { Errors = new[] { $"Could not change password for {HttpContext.User.GetAuthenticationMethod()} authentication method" } });
             }
@@ -1060,19 +1052,6 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             return Ok(success);
         }
-
-        #region PT-788 Obsolete methods
-
-        [Obsolete("use /roles/search instead")]
-        [HttpPost]
-        [Route("roles")]
-        [Authorize(PlatformPermissions.SecurityQuery)]
-        public Task<ActionResult<RoleSearchResult>> SearchRolesObsolete([FromBody] RoleSearchCriteria request)
-        {
-            return SearchRoles(request);
-        }
-
-        #endregion PT-788 Obsolete methods
 
         private bool IsUserEditable(string userName)
         {

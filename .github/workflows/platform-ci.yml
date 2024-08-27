@@ -1,5 +1,5 @@
-# v3.800.6
-# https://virtocommerce.atlassian.net/browse/VCST-915
+# v3.800.8
+# https://virtocommerce.atlassian.net/browse/VCST-1109
 name: Platform CI
 
 on:
@@ -21,6 +21,16 @@ on:
       - '**/argoDeploy.json'
       - '**/cloudDeploy.json'
     branches: [ master, dev ]
+
+  pull_request:
+    paths-ignore:
+      - '.github/**'
+      - 'docs/**'
+      - 'build/**'
+      - 'README.md'
+      - 'LICENSE'
+      - '**/argoDeploy.json'
+      - '**/cloudDeploy.json'
 
 jobs:
   ci:
@@ -210,7 +220,7 @@ jobs:
       with:
         artifactUrl: ${{ steps.artifactUrl.outputs.DOCKER_URL }}
         repoOrg: ${{ github.repository_owner }}
-        downloadComment: 'Artifact URL:'
+        downloadComment: 'Image tag:'
 
     - name: Publish Github Release
       if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
@@ -286,7 +296,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch')}}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.6    
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.8    
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -303,7 +313,7 @@ jobs:
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.6    
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.8    
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
@@ -312,3 +322,17 @@ jobs:
       argoServer: 'argo.virtocommerce.cloud'
       matrix: '{"include":${{ needs.ci.outputs.matrix }}}'
     secrets: inherit
+
+  owasp-scan:
+    if: ${{ github.ref == 'refs/heads/dev' && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    needs: 
+      - deploy-cloud
+    steps:
+      - name: OWASP ZAP Full Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          token: ${{ secrets.REPO_TOKEN }}
+          target: 'https://vcptcore-dev.govirto.com'
+          cmd_options: '-a -d'
+          # allow_issue_writing: false

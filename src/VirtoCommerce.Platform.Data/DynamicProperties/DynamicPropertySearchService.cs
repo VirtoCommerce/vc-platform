@@ -24,16 +24,6 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
             _memoryCache = memoryCache;
         }
 
-
-        #region IDynamicPropertySearchService members
-
-
-        [Obsolete("Use SearchAsync()", DiagnosticId = "VC0005", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
-        public virtual Task<DynamicPropertySearchResult> SearchDynamicPropertiesAsync(DynamicPropertySearchCriteria criteria)
-        {
-            return SearchAsync(criteria, clone: true);
-        }
-
         public Task<DynamicPropertySearchResult> SearchAsync(DynamicPropertySearchCriteria criteria, bool clone = true)
         {
             var cacheKey = CacheKey.With(GetType(), "SearchDynamicPropertiesAsync", criteria.GetCacheKey());
@@ -86,6 +76,5 @@ namespace VirtoCommerce.Platform.Data.DynamicProperties
                 return result;
             });
         }
-        #endregion
     }
 }

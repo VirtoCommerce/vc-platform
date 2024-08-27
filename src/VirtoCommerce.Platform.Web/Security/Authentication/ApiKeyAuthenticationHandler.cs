@@ -22,11 +22,10 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
             IOptionsMonitor<ApiKeyAuthenticationOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
-            ISystemClock clock,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IUserApiKeyService userApiKeyService)
-            : base(options, logger, encoder, clock)
+            : base(options, logger, encoder)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -37,13 +36,13 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
         //The logic goes something like this:
         //If no ApiKey is present on query string -> Return no result, let other handlers (if present) handle the request.
         //If the api_key is present but null or empty -> Return no result.
-        //If the provided key does not exists -> Fail the authentication.
+        //If the provided key does not exist -> Fail the authentication.
         //If the key is valid, create a new identity based on associated with key user
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             //This line is important to correct working the multiple authentication schemes when only cookies are being sent in request
             //see Authorization:LimitedCookiePermissions setting
-            if (Context.User?.Identity?.IsAuthenticated ?? false)
+            if (Context.User.Identity?.IsAuthenticated ?? false)
             {
                 return AuthenticateResult.Success(new AuthenticationTicket(Context.User, "context.User"));
             }
@@ -73,11 +72,11 @@ namespace VirtoCommerce.Platform.Web.Security.Authentication
             }
             if (!await _signInManager.CanSignInAsync(user))
             {
-                return AuthenticateResult.Fail($"User { user.UserName } is not allowed to login.");
+                return AuthenticateResult.Fail($"User {user.UserName} is not allowed to login.");
             }
             if (_userManager.SupportsUserLockout && await _userManager.IsLockedOutAsync(user))
             {
-                return AuthenticateResult.Fail($"User { user.UserName } is currently locked out.");
+                return AuthenticateResult.Fail($"User {user.UserName} is currently locked out.");
             }
             var claimsPrincipal = await _signInManager.CreateUserPrincipalAsync(user);
             var ticket = new AuthenticationTicket(claimsPrincipal, Options.Scheme);

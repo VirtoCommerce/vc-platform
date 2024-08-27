@@ -16,20 +16,20 @@ using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
 using OpenIddict.Server.AspNetCore;
 using VirtoCommerce.Platform.Core;
+using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.Security;
 using VirtoCommerce.Platform.Core.Security.Events;
+using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Helpers;
-using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
-using VirtoCommerce.Platform.Security.Model;
-using VirtoCommerce.Platform.Security.Services;
+using VirtoCommerce.Platform.Security.Extensions;
+using VirtoCommerce.Platform.Security.OpenIddict;
 using VirtoCommerce.Platform.Web.Extensions;
 using VirtoCommerce.Platform.Web.Model;
-using VirtoCommerce.Platform.Web.Model.Security;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace Mvc.Server
+namespace VirtoCommerce.Platform.Web.Controllers.Api
 {
     public class AuthorizationController : Controller
     {
@@ -39,42 +39,46 @@ namespace Mvc.Server
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly PasswordLoginOptions _passwordLoginOptions;
         private readonly IEventPublisher _eventPublisher;
-        private readonly IEnumerable<IUserSignInValidator> _userSignInValidators;
+        private readonly List<ITokenRequestValidator> _requestValidators;
+        private readonly IEnumerable<ITokenClaimProvider> _claimProviders;
         private readonly OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> _tokenManager;
         private readonly IAuthorizationService _authorizationService;
+        private readonly IExternalSignInService _externalSignInService;
         private readonly IOpenIddictAuthorizationManager _authorizationManager;
         private readonly IOpenIddictScopeManager _scopeManager;
-        private UserManager<ApplicationUser> UserManager => _signInManager.UserManager;
 
         public AuthorizationController(
-            IOpenIddictAuthorizationManager authorizationManager,
-            IOpenIddictScopeManager scopeManager,
             OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> applicationManager,
             IOptions<IdentityOptions> identityOptions,
             SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager,
             IOptions<PasswordLoginOptions> passwordLoginOptions,
             IEventPublisher eventPublisher,
-            IEnumerable<IUserSignInValidator> userSignInValidators,
+            IEnumerable<ITokenRequestValidator> requestValidators,
+            IEnumerable<ITokenClaimProvider> claimProviders,
             OpenIddictTokenManager<OpenIddictEntityFrameworkCoreToken> tokenManager,
-            IAuthorizationService authorizationService)
+            IAuthorizationService authorizationService,
+            IExternalSignInService externalSignInService,
+            IOpenIddictAuthorizationManager authorizationManager,
+            IOpenIddictScopeManager scopeManager)
         {
             _applicationManager = applicationManager;
             _identityOptions = identityOptions.Value;
-            _passwordLoginOptions = passwordLoginOptions.Value ?? new PasswordLoginOptions();
+            _passwordLoginOptions = passwordLoginOptions.Value;
             _signInManager = signInManager;
-            _userManager = userManager;
+            _userManager = _signInManager.UserManager;
             _eventPublisher = eventPublisher;
-            _userSignInValidators = userSignInValidators;
+            _requestValidators = requestValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name).ToList();
+            _claimProviders = claimProviders;
             _tokenManager = tokenManager;
             _authorizationService = authorizationService;
+            _externalSignInService = externalSignInService;
             _authorizationManager = authorizationManager;
             _scopeManager = scopeManager;
         }
 
         // GET: /api/userinfo
-        [Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
         [HttpGet("~/connect/userinfo"), HttpPost("~/connect/userinfo"), Produces("application/json")]
+        [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Userinfo()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -86,7 +90,7 @@ namespace Mvc.Server
                     {
                         [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidToken,
                         [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
-                            "The specified access token is bound to an account that no longer exists."
+                            "The specified access token is bound to an account that no longer exists.",
                     }));
             }
 
@@ -120,7 +124,6 @@ namespace Mvc.Server
 
             return Ok(claims);
         }
-
 
         [HttpGet("~/connect/authorize")]
         [HttpPost("~/connect/authorize")]
@@ -250,20 +253,21 @@ namespace Mvc.Server
                     });
             }
         }
-        [Microsoft.AspNetCore.Authorization.Authorize, FormValueRequired("submit.Deny")]
+
         [HttpPost("~/connect/authorize")]
+        [Authorize, FormValueRequired("submit.Deny")]
         // Notify OpenIddict that the authorization grant has been denied by the resource owner
         // to redirect the user agent to the client application using the appropriate response_mode.
         public IActionResult Deny() => Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
-        [Microsoft.AspNetCore.Authorization.Authorize, FormValueRequired("submit.Accept")]
         [HttpPost("~/connect/authorize"),]
+        [Authorize, FormValueRequired("submit.Accept")]
         public async Task<IActionResult> Accept()
         {
             var request = HttpContext.GetOpenIddictServerRequest() ??
                 throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
-            // Retrieve the profile of the logged in user.
+            // Retrieve the profile of the logged-in user.
             var user = await _userManager.GetUserAsync(User) ??
                 throw new InvalidOperationException("The user details cannot be retrieved.");
 
@@ -326,7 +330,6 @@ namespace Mvc.Server
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
-
         [HttpPost("~/revoke/token")]
         public async Task<ActionResult> RevokeCurrentUserToken()
         {
@@ -368,28 +371,24 @@ namespace Mvc.Server
         {
             var openIdConnectRequest = HttpContext.GetOpenIddictServerRequest();
 
+            var context = new TokenRequestContext
+            {
+                AuthenticationScheme = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                Request = openIdConnectRequest,
+                DetailedErrors = _passwordLoginOptions.DetailedErrors,
+            };
+
             if (openIdConnectRequest.IsPasswordGrantType())
             {
-                var userName = openIdConnectRequest.Username;
+                var user = await _userManager.FindByNameAsync(openIdConnectRequest.Username);
 
                 // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True. 
-                if (_identityOptions.User.RequireUniqueEmail)
+                if (user is null && _identityOptions.User.RequireUniqueEmail)
                 {
-                    var userByName = await UserManager.FindByNameAsync(userName);
-
-                    if (userByName == null)
-                    {
-                        var userByEmail = await UserManager.FindByEmailAsync(userName);
-                        if (userByEmail != null)
-                        {
-                            userName = userByEmail.UserName;
-                        }
-                    }
+                    user = await _userManager.FindByEmailAsync(openIdConnectRequest.Username);
                 }
 
-                var user = await _userManager.FindByNameAsync(userName);
-
-                if (user == null)
+                if (user is null)
                 {
                     return BadRequest(SecurityErrorDescriber.LoginFailed());
                 }
@@ -400,43 +399,30 @@ namespace Mvc.Server
                 }
 
                 // Validate the username/password parameters and ensure the account is not locked out.
-                var result = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
+                context.SignInResult = await _signInManager.CheckPasswordSignInAsync(user, openIdConnectRequest.Password, lockoutOnFailure: true);
+                context.User = user.CloneTyped();
 
-                var context = new SignInValidatorContext
+                foreach (var requestValidator in _requestValidators)
                 {
-                    User = user.Clone() as ApplicationUser,
-                    DetailedErrors = _passwordLoginOptions.DetailedErrors,
-                    IsSucceeded = result.Succeeded,
-                    IsLockedOut = result.IsLockedOut,
-                };
-
-                var storeIdParameter = openIdConnectRequest.GetParameter("storeId");
-                if (storeIdParameter != null)
-                {
-                    context.StoreId = (string)storeIdParameter.GetValueOrDefault();
-                }
-
-                foreach (var loginValidation in _userSignInValidators.OrderByDescending(x => x.Priority).ThenBy(x => x.GetType().Name))
-                {
-                    var validationErrors = await loginValidation.ValidateUserAsync(context);
-                    var error = validationErrors.FirstOrDefault();
-                    if (error != null)
+                    var errors = await requestValidator.ValidateAsync(context);
+                    if (errors.Count > 0)
                     {
-                        return BadRequest(error);
+                        return BadRequest(errors.First());
                     }
                 }
 
                 await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
 
                 // Create a new authentication ticket.
-                var ticket = await CreateTicketAsync(openIdConnectRequest, user);
+                var ticket = await CreateTicketAsync(user, context);
 
                 await SetLastLoginDate(user);
                 await _eventPublisher.Publish(new UserLoginEvent(user));
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
-            else if (openIdConnectRequest.IsRefreshTokenGrantType())
+
+            if (openIdConnectRequest.IsRefreshTokenGrantType())
             {
                 // Retrieve the claims principal stored in the authorization code/refresh token.
                 var info = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
@@ -457,12 +443,62 @@ namespace Mvc.Server
                     return BadRequest(SecurityErrorDescriber.SignInNotAllowed());
                 }
 
+                context.User = user;
+                context.Principal = info.Principal;
+                context.Properties = info.Properties;
+
+                foreach (var requestValidator in _requestValidators)
+                {
+                    var errors = await requestValidator.ValidateAsync(context);
+                    if (errors.Count > 0)
+                    {
+                        return BadRequest(errors.First());
+                    }
+                }
+
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
-                var ticket = await CreateTicketAsync(openIdConnectRequest, user, info.Properties);
+                var ticket = await CreateTicketAsync(user, context);
+                ticket.Principal.SetAuthenticationMethod(info.Principal.GetAuthenticationMethod(), [Destinations.AccessToken]);
+
                 return SignIn(ticket.Principal, ticket.AuthenticationScheme);
             }
-            else if (openIdConnectRequest.IsClientCredentialsGrantType())
+
+            if (openIdConnectRequest.GrantType == PlatformConstants.Security.GrantTypes.ExternalSignIn)
+            {
+                var signInResult = await _externalSignInService.SignInAsync();
+
+                // Remove identity cookies regardless of the result
+                await _signInManager.SignOutAsync();
+
+                if (!signInResult.Success)
+                {
+                    return BadRequest(SecurityErrorDescriber.LoginFailed());
+                }
+
+                if (!await _signInManager.CanSignInAsync(signInResult.User))
+                {
+                    return BadRequest(SecurityErrorDescriber.SignInNotAllowed());
+                }
+
+                context.User = signInResult.User.CloneTyped();
+
+                foreach (var requestValidator in _requestValidators)
+                {
+                    var errors = await requestValidator.ValidateAsync(context);
+                    if (errors.Count > 0)
+                    {
+                        return BadRequest(errors.First());
+                    }
+                }
+
+                var ticket = await CreateTicketAsync(signInResult.User, context);
+                ticket.Principal.SetAuthenticationMethod(signInResult.LoginProvider, [Destinations.AccessToken]);
+
+                return SignIn(ticket.Principal, ticket.AuthenticationScheme);
+            }
+
+            if (openIdConnectRequest.IsClientCredentialsGrantType())
             {
                 // Note: the client credentials are automatically validated by OpenIddict:
                 // if client_id or client_secret are invalid, this action won't be invoked.
@@ -474,11 +510,13 @@ namespace Mvc.Server
 
                 // Create a new authentication ticket.
                 var ticket = CreateTicket(application);
+
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
-            else if (openIdConnectRequest.IsImpersonateGrantType())
+
+            if (openIdConnectRequest.IsImpersonateGrantType())
             {
-                // Only Authorized User has access for impersonaiton
+                // Only Authorized User has access for impersonation
                 var user = await _userManager.GetUserAsync(User);
                 if (user == null)
                 {
@@ -503,17 +541,17 @@ namespace Mvc.Server
                     user.UserName : User.FindFirstValue(PlatformConstants.Security.Claims.OperatorUserName);
 
                 var userId = openIdConnectRequest.GetParameter("user_id")?.Value?.ToString();
-                ApplicationUser impersonatedUser = null;
+                ApplicationUser impersonatedUser;
 
                 if (!string.IsNullOrEmpty(userId))
                 {
                     // Find impersonated user by id
-                    impersonatedUser = await _signInManager.UserManager.FindByIdAsync(userId);
+                    impersonatedUser = await _userManager.FindByIdAsync(userId);
                 }
                 else
                 {
                     // Reset impersonation to operator
-                    impersonatedUser = await _signInManager.UserManager.FindByIdAsync(operatorUserId);
+                    impersonatedUser = await _userManager.FindByIdAsync(operatorUserId);
                     operatorUserId = string.Empty;
                     operatorUserName = string.Empty;
                 }
@@ -523,19 +561,31 @@ namespace Mvc.Server
                     return BadRequest(SecurityErrorDescriber.TokenInvalid());
                 }
 
+                context.User = impersonatedUser.CloneTyped();
+
+                foreach (var requestValidator in _requestValidators)
+                {
+                    var errors = await requestValidator.ValidateAsync(context);
+                    if (errors.Count > 0)
+                    {
+                        return BadRequest(errors.First());
+                    }
+                }
+
                 // Create a new authentication ticket, but reuse the properties stored in the
                 // authorization code/refresh token, including the scopes originally granted.
-                var ticket = await CreateTicketAsync(openIdConnectRequest, impersonatedUser);
+                var ticket = await CreateTicketAsync(impersonatedUser, context);
 
                 // Extend Token with custom claim for XAPI vc_xapi_impersonated_customerid
-                ticket.Principal.SetClaim(PlatformConstants.Security.Claims.OperatorUserId, operatorUserId)
-                    .SetDestinations(c => [Destinations.AccessToken]);
-                ticket.Principal.SetClaim(PlatformConstants.Security.Claims.OperatorUserName, operatorUserName)
-                    .SetDestinations(c => [Destinations.AccessToken]);
+                var destinations = new[] { Destinations.AccessToken };
+                ticket.Principal
+                    .SetClaimWithDestinations(PlatformConstants.Security.Claims.OperatorUserId, operatorUserId, destinations)
+                    .SetClaimWithDestinations(PlatformConstants.Security.Claims.OperatorUserName, operatorUserName, destinations);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
-            else if (openIdConnectRequest.IsAuthorizationCodeGrantType())
+
+            if (openIdConnectRequest.IsAuthorizationCodeGrantType())
             {
                 // Retrieve the claims principal stored in the refresh token.
                 var info = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
@@ -612,13 +662,11 @@ namespace Mvc.Server
 
             return claim.Type switch
             {
-                Claims.Name or
-                Claims.Subject
-                    => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
-
+                Claims.Name or Claims.Subject => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
                 _ => ImmutableArray.Create(Destinations.AccessToken),
             };
         }
+
         private IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)
         {
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
@@ -631,7 +679,9 @@ namespace Mvc.Server
                     yield return Destinations.AccessToken;
 
                     if (principal.HasScope(Scopes.Profile))
+                    {
                         yield return Destinations.IdentityToken;
+                    }
 
                     yield break;
 
@@ -639,7 +689,9 @@ namespace Mvc.Server
                     yield return Destinations.AccessToken;
 
                     if (principal.HasScope(Scopes.Email))
+                    {
                         yield return Destinations.IdentityToken;
+                    }
 
                     yield break;
 
@@ -647,7 +699,9 @@ namespace Mvc.Server
                     yield return Destinations.AccessToken;
 
                     if (principal.HasScope(Scopes.Roles))
+                    {
                         yield return Destinations.IdentityToken;
+                    }
 
                     yield break;
 
@@ -683,7 +737,7 @@ namespace Mvc.Server
 
             principal.SetResources("resource_server");
 
-            identity.SetDestinations(static claim => new[] { Destinations.AccessToken, Destinations.IdentityToken });
+            identity.SetDestinations(static _ => [Destinations.AccessToken, Destinations.IdentityToken]);
 
             // Create a new authentication ticket holding the user identity.
             var ticket = new AuthenticationTicket(
@@ -694,13 +748,13 @@ namespace Mvc.Server
             return ticket;
         }
 
-        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIddictRequest request, ApplicationUser user, AuthenticationProperties properties = null)
+        private async Task<AuthenticationTicket> CreateTicketAsync(ApplicationUser user, TokenRequestContext context)
         {
             // Create a new ClaimsPrincipal containing the claims that
             // will be used to create an id_token, a token or a code.
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
-            if (!request.IsAuthorizationCodeGrantType() && !request.IsRefreshTokenGrantType())
+            if (!context.Request.IsAuthorizationCodeGrantType() && !context.Request.IsRefreshTokenGrantType())
             {
                 // Set the list of scopes granted to the client application.
                 // Note: the offline_access scope must be granted
@@ -712,7 +766,7 @@ namespace Mvc.Server
                     Scopes.Profile,
                     Scopes.OfflineAccess,
                     Scopes.Roles
-                }.Intersect(request.GetScopes()));
+                }.Intersect(context.Request.GetScopes()));
             }
 
             principal.SetResources("resource_server");
@@ -745,18 +799,19 @@ namespace Mvc.Server
                 claim.SetDestinations(destinations);
             }
 
+            foreach (var claimProvider in _claimProviders)
+            {
+                await claimProvider.SetClaimsAsync(principal, context);
+            }
+
             // Create a new authentication ticket holding the user identity.
-            var ticket = new AuthenticationTicket(
-                principal,
-                properties,
-                OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-            return ticket;
+            return new AuthenticationTicket(principal, context.Properties, context.AuthenticationScheme);
         }
 
-        private Task SetLastLoginDate(ApplicationUser user)
+        private Task<IdentityResult> SetLastLoginDate(ApplicationUser user)
         {
             user.LastLoginDate = DateTime.UtcNow;
-            return _signInManager.UserManager.UpdateAsync(user);
+            return _userManager.UpdateAsync(user);
         }
     }
 }

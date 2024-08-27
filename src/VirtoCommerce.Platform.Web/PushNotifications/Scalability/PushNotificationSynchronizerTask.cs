@@ -52,7 +52,7 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
             {
                 if (_hubConnection.State == HubConnectionState.Disconnected)
                 {
-                    //Wait until the platform being started to be able connect to the SignalR hub
+                    // Wait until the platform is started to be able to connect to the SignalR hub
                     try
                     {
                         await _hubConnection.StartAsync(stoppingToken);
@@ -61,8 +61,8 @@ namespace VirtoCommerce.Platform.Web.PushNotifications.Scalability
                     }
                     catch (Exception ex)
                     {
-                        //Wait until platform is started
-                        _logger.LogError(ex, "Could not starts connection to the server {HubUrl}", _options.HubUrl);
+                        // Raise the error to the log
+                        _logger.LogError(ex, "Could not start the connection to the server {HubUrl}", _options.HubUrl);
                     }
                 }
                 await Task.Delay(1000);

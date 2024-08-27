@@ -954,6 +954,10 @@
             "title": "Default account status",
             "description": "Default value for account status when creating a new account"
           },
+          "DefaultExternalAccountStatus": {
+            "title": "Default external account status",
+            "description": "Default value for account status when creating a new account during external sign in"
+          },
           "EnablePruneExpiredTokensJob": {
             "description": "Enables prune expired and invalid tokens/authorizations",
             "title": "Prune expired tokens"

@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Security;
 
 namespace VirtoCommerce.Platform.Security.Model
 {
+    [Obsolete("Use VirtoCommerce.Platform.Security.OpenIddict.TokenRequestContext", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
     public class SignInValidatorContext
     {
         public ApplicationUser User { get; set; }

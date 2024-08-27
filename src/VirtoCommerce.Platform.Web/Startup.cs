@@ -3,14 +3,11 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -33,17 +30,16 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using VirtoCommerce.Platform.Core;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.DynamicProperties;
-using VirtoCommerce.Platform.Core.Events;
 using VirtoCommerce.Platform.Core.JsonConverters;
 using VirtoCommerce.Platform.Core.Localizations;
 using VirtoCommerce.Platform.Core.Logger;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
+using VirtoCommerce.Platform.Core.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Core.Settings;
 using VirtoCommerce.Platform.Data.Extensions;
 using VirtoCommerce.Platform.Data.MySql;
@@ -56,9 +52,9 @@ using VirtoCommerce.Platform.Data.SqlServer.HealthCheck;
 using VirtoCommerce.Platform.DistributedLock;
 using VirtoCommerce.Platform.Hangfire.Extensions;
 using VirtoCommerce.Platform.Modules;
+using VirtoCommerce.Platform.Modules.Local;
 using VirtoCommerce.Platform.Security;
 using VirtoCommerce.Platform.Security.Authorization;
-using VirtoCommerce.Platform.Security.ExternalSignIn;
 using VirtoCommerce.Platform.Security.Repositories;
 using VirtoCommerce.Platform.Security.Services;
 using VirtoCommerce.Platform.Web.Extensions;
@@ -68,7 +64,6 @@ using VirtoCommerce.Platform.Web.Json;
 using VirtoCommerce.Platform.Web.Licensing;
 using VirtoCommerce.Platform.Web.Middleware;
 using VirtoCommerce.Platform.Web.Migrations;
-using VirtoCommerce.Platform.Web.Model.Security;
 using VirtoCommerce.Platform.Web.PushNotifications;
 using VirtoCommerce.Platform.Web.Redis;
 using VirtoCommerce.Platform.Web.Security;
@@ -77,7 +72,6 @@ using VirtoCommerce.Platform.Web.Security.Authorization;
 using VirtoCommerce.Platform.Web.Swagger;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using JsonSerializer = Newtonsoft.Json.JsonSerializer;
-using MsTokens = Microsoft.IdentityModel.Tokens;
 
 
 namespace VirtoCommerce.Platform.Web
@@ -130,6 +124,9 @@ namespace VirtoCommerce.Platform.Web
 
             //Get platform version from GetExecutingAssembly
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion);
+
+            services.AddSingleton<IFileCopyPolicy, FileCopyPolicy>();
+            services.AddSingleton<IFileMetadataProvider, FileMetadataProvider>();
 
             services.AddDbContext<PlatformDbContext>((provider, options) =>
             {
@@ -352,16 +349,16 @@ namespace VirtoCommerce.Platform.Web
                     // Note: if you don't call this method, you won't be able to
                     // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
                     var builder = options.UseAspNetCore()
-                            .EnableAuthorizationEndpointPassthrough()
-                             .EnableLogoutEndpointPassthrough()
-                             .EnableTokenEndpointPassthrough()
-                             .EnableUserinfoEndpointPassthrough()
-                             .EnableStatusCodePagesIntegration();
+                        .EnableAuthorizationEndpointPassthrough()
+                        .EnableLogoutEndpointPassthrough()
+                        .EnableTokenEndpointPassthrough()
+                        .EnableUserinfoEndpointPassthrough()
+                        .EnableStatusCodePagesIntegration();
                     // Enable the authorization, logout, token and userinfo endpoints.
                     options.SetTokenEndpointUris("/connect/token")
-                         .SetUserinfoEndpointUris("/connect/userinfo")
-                         .SetAuthorizationEndpointUris("/connect/authorize")
-                         .SetLogoutEndpointUris("/connect/logout");
+                        .SetUserinfoEndpointUris("/connect/userinfo")
+                        .SetAuthorizationEndpointUris("/connect/authorize")
+                        .SetLogoutEndpointUris("/connect/logout");
 
                     // Note: the Mvc.Client sample only uses the code flow and the password flow, but you
                     // can enable the other flows if you need to support implicit or client credentials.
@@ -370,7 +367,8 @@ namespace VirtoCommerce.Platform.Web
                         .AllowRefreshTokenFlow()
                         .AllowClientCredentialsFlow()
                         .AllowAuthorizationCodeFlow()
-                        .AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate);
+                        .AllowCustomFlow(PlatformConstants.Security.GrantTypes.Impersonate)
+                        .AllowCustomFlow(PlatformConstants.Security.GrantTypes.ExternalSignIn);
 
                     options.SetRefreshTokenLifetime(authorizationOptions?.RefreshTokenLifeTime);
                     options.SetAccessTokenLifetime(authorizationOptions?.AccessTokenLifeTime);
@@ -475,23 +473,8 @@ namespace VirtoCommerce.Platform.Web
             //Platform authorization handler for policies based on permissions
             services.AddSingleton<IAuthorizationHandler, DefaultPermissionAuthorizationHandler>();
 
-            // register ExternalSigninService using non-obsolete constructor
-            services.AddTransient<IExternalSigninService>(provider =>
-            {
-                var signInManager = provider.GetRequiredService<SignInManager<ApplicationUser>>();
-                var userManager = provider.GetRequiredService<UserManager<ApplicationUser>>();
-                var eventPublisher = provider.GetRequiredService<IEventPublisher>();
-                var identityOptions = provider.GetRequiredService<IOptions<IdentityOptions>>();
-                var settingsManager = provider.GetRequiredService<ISettingsManager>();
-                var externalSigninProviderConfigs = provider.GetRequiredService<IEnumerable<ExternalSignInProviderConfiguration>>();
-
-                return new ExternalSigninService(signInManager,
-                    userManager,
-                    eventPublisher,
-                    identityOptions,
-                    settingsManager,
-                    externalSigninProviderConfigs);
-            });
+            services.AddTransient<IExternalSignInService, ExternalSignInService>();
+            services.AddTransient<IExternalSigninService, ExternalSignInService>();
 
             services.AddOptions<LocalStorageModuleCatalogOptions>().Bind(Configuration.GetSection("VirtoCommerce"))
                     .PostConfigure(options =>
@@ -580,7 +563,6 @@ namespace VirtoCommerce.Platform.Web
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
-                app.UseBrowserLink();
             }
             else
             {

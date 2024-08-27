@@ -9,10 +9,14 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>3.837.0</VersionPrefix>
+    <VersionPrefix>3.851.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <VersionSuffix Condition=" '$(VersionSuffix)' != '' AND '$(BuildNumber)' != '' ">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
     <NoWarn>$(NoWarn);S3875;S4457</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">

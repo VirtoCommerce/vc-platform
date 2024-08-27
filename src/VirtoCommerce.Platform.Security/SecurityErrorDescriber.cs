@@ -1,9 +1,11 @@
+using System;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Security.Model;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace VirtoCommerce.Platform.Security
 {
+    [Obsolete("Use VirtoCommerce.Platform.Security.OpenIddict.SecurityErrorDescriber", DiagnosticId = "VC0008", UrlFormat = "https://docs.virtocommerce.org/products/products-virto3-versions/")]
     public static class SecurityErrorDescriber
     {
         public static TokenLoginResponse LoginFailed() => new()
