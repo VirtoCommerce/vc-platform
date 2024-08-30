@@ -174,8 +174,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 // Retrieve the user profile corresponding to the authorization code/refresh token.
                 // Note: if you want to automatically invalidate the authorization code/refresh token
-                // when the user password/roles change, use the following line instead:
-                // var user = _signInManager.ValidateSecurityStampAsync(info.Principal);
+                // when the user password/roles change, use _signInManager.ValidateSecurityStampAsync(info.Principal) instead.
                 var user = await _userManager.GetUserAsync(info.Principal);
                 if (user == null)
                 {
@@ -337,8 +336,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 // Retrieve the user profile corresponding to the refresh token.
                 // Note: if you want to automatically invalidate the refresh token
-                // when the user password/roles change, use the following line instead:
-                // var user = _signInManager.ValidateSecurityStampAsync(info.Principal);
+                // when the user password/roles change, use _signInManager.ValidateSecurityStampAsync(info.Principal) instead.
                 var user = await _userManager.GetUserAsync(info.Principal);
                 if (user == null)
                 {
@@ -489,7 +487,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             {
                 // If the consent is external (e.g. when authorizations are granted by a sysadmin),
                 // immediately return an error if no authorization can be found in the database.
-                case ConsentTypes.External when !authorizations.Any():
+                case ConsentTypes.External when authorizations.Count == 0:
                     return Forbid(
                         authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
                         properties: new AuthenticationProperties(new Dictionary<string, string>
@@ -502,8 +500,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 // If the consent is implicit or if an authorization was found,
                 // return an authorization response without displaying the consent form.
                 case ConsentTypes.Implicit:
-                case ConsentTypes.External when authorizations.Any():
-                case ConsentTypes.Explicit when authorizations.Any() && !request.HasPrompt(Prompts.Consent):
+                case ConsentTypes.External when authorizations.Count != 0:
+                case ConsentTypes.Explicit when authorizations.Count != 0 && !request.HasPrompt(Prompts.Consent):
                     var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
                     // Note: in this sample, the granted scopes match the requested scope,
@@ -588,7 +586,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // Note: the same check is already made in the other action but is repeated
             // here to ensure a malicious user can't abuse this POST-only endpoint and
             // force it to return a valid response without the external authorization.
-            if (!authorizations.Any() && await _applicationManager.HasConsentTypeAsync(application, ConsentTypes.External))
+            if (authorizations.Count == 0 && await _applicationManager.HasConsentTypeAsync(application, ConsentTypes.External))
             {
                 return Forbid(
                     authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
