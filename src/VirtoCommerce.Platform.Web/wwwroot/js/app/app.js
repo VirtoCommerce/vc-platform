@@ -15,9 +15,9 @@ angular.lowercase = function (text) {
 
 angular.module('platformWebApp', AppDependencies).controller('platformWebApp.appCtrl', ['$rootScope', '$scope', 'platformWebApp.mainMenuService',
     'platformWebApp.i18n', 'platformWebApp.modules', 'platformWebApp.moduleHelper', '$state', 'platformWebApp.bladeNavigationService', 'platformWebApp.userProfile',
-    'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps', 'platformWebApp.urlHelper',
+    'platformWebApp.settings', 'platformWebApp.common', 'THEME_SETTINGS', 'platformWebApp.webApps',
     function ($rootScope, $scope, mainMenuService,
-        i18n, modules, moduleHelper, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps, urlHelper) {
+        i18n, modules, moduleHelper, $state, bladeNavigationService, userProfile, settings, common, THEME_SETTINGS, webApps) {
 
         $scope.closeError = function () {
             $scope.platformError = undefined;
@@ -50,7 +50,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 modules.query().$promise.then(function (results) {
                     moduleHelper.modules = results;
                     moduleHelper.onLoaded();
-                    
+
                     var modulesWithErrors = _.filter(results, function (x) { return _.any(x.validationErrors) && x.isInstalled; });
                     if (_.any(modulesWithErrors)) {
                         $scope.platformError = {
@@ -61,7 +61,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             var moduleErrors = "<br/><br/><b>" + x.id + "</b> " + x.version + "<br/>" + x.validationErrors.join("<br/>");
                             $scope.platformError.detail += moduleErrors;
                         });
-                        var returnUrl = urlHelper.getUrlParameter('ReturnUrl');
+                        var query = new URLSearchParams(window.location.search);
+                        var returnUrl = query.get('ReturnUrl');
                         if (returnUrl) {
                             window.location.href = returnUrl;
                         }
@@ -342,8 +343,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
             // Comment the following line while debugging or execute this in browser console: angular.reloadWithDebugInfo();
             $compileProvider.debugInfoEnabled(false);
         }])
-    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.loginOfBehalfUrlResolver', 'platformWebApp.urlHelper',
-        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, loginOfBehalfUrlResolver, urlHelper) {
+    .run(['$location', '$rootScope', '$state', '$stateParams', 'platformWebApp.authService', 'platformWebApp.mainMenuService', 'platformWebApp.pushNotificationService', 'platformWebApp.dialogService', '$window', '$animate', '$templateCache', 'gridsterConfig', 'taOptions', '$timeout', '$templateRequest', '$compile', 'platformWebApp.toolbarService', 'platformWebApp.loginOfBehalfUrlResolver',
+        function ($location, $rootScope, $state, $stateParams, authService, mainMenuService, pushNotificationService, dialogService, $window, $animate, $templateCache, gridsterConfig, taOptions, $timeout, $templateRequest, $compile, toolbarService, loginOfBehalfUrlResolver) {
 
             //Disable animation
             $animate.enabled(false);
@@ -445,7 +446,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             }
                         });
                     } else if (!currentState.name || currentState.name === 'loginDialog') {
-                        var returnUrl = urlHelper.getUrlParameter('ReturnUrl');
+                        var query = new URLSearchParams(window.location.search);
+                        var returnUrl = query.get('ReturnUrl');
                         if (returnUrl) {
                             window.location.href = returnUrl;
                         }
