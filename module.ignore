@@ -1,6 +1,7 @@
 Azure.Core.dll
 Azure.Data.AppConfiguration.dll
 Azure.Identity.dll
+Azure.Messaging.EventGrid.dll
 Azure.Security.KeyVault.Secrets.dll
 Dapper.dll
 DnsClient.dll
