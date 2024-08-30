@@ -67,7 +67,6 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                             window.location.href = returnUrl;
                         }
                         else {
-
                             $state.go('workspace.modularity');
                         }
                     }
