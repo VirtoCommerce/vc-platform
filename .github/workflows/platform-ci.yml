@@ -1,5 +1,5 @@
-# v3.800.8
-# https://virtocommerce.atlassian.net/browse/VCST-1109
+# v3.800.9
+# https://virtocommerce.atlassian.net/browse/VCST-1260
 name: Platform CI
 
 on:
@@ -296,7 +296,7 @@ jobs:
     needs: 'ci'
     if: ${{ ((github.ref == 'refs/heads/dev') && (github.event_name == 'push') && (needs.ci.outputs.run-e2e == 'true')) ||
         (github.event_name == 'workflow_dispatch')}}
-    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.8    
+    uses: VirtoCommerce/.github/.github/workflows/e2e.yml@v3.800.9    
     with:
       katalonRepo: 'VirtoCommerce/vc-quality-gate-katalon'
       katalonRepoBranch: 'dev'
@@ -313,7 +313,7 @@ jobs:
   deploy-cloud:
     if: ${{ (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
     needs: ci
-    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.8    
+    uses: VirtoCommerce/.github/.github/workflows/deploy-cloud.yml@v3.800.9    
     with:
       releaseSource: platform
       platformVer: ${{ needs.ci.outputs.version }}
