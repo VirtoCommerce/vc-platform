@@ -198,6 +198,14 @@ angular.module('platformWebApp')
                     onClose: null
                 },
                 controller: 'platformWebApp.changePasswordDialog'
+            })
+
+            .state('contact-admin', {
+                url: '/contact-admin',
+                templateUrl: '$(Platform)/Scripts/app/security/dialogs/contact-admin.tpl.html',
+                controller: ['$scope', 'platformWebApp.authService', function ($scope, authService) {
+                    $scope.logout = authService.logout;
+                }]
             });
     }])
 
