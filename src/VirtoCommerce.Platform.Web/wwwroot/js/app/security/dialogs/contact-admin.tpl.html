@@ -5,12 +5,12 @@
             <h1 class="auth__title">{{ 'platform.blades.access-denied.title' | translate }}</h1>
         </div>
         <div class="auth__content">
-          <div class="forgot-password">
+          <div class="contact-admin">
             <div class="vc-input">
               {{ 'platform.blades.access-denied.labels.message' | translate }}
             </div>
-            <div class="forgot-password__buttons">
-              <button type="button" ng-click="logout()" class="vc-button forgot-password__button">{{ 'platform.blades.access-denied.labels.button' | translate }}</button>
+            <div class="contact-admin__buttons">
+              <button type="button" ng-click="logout()" class="vc-button contact-admin__button">{{ 'platform.blades.access-denied.labels.button' | translate }}</button>
             </div>
           </div>
           <div class="vc-loader" ng-if="isLoading">
