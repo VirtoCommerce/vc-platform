@@ -50,7 +50,7 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                 modules.query().$promise.then(function (results) {
                     moduleHelper.modules = results;
                     moduleHelper.onLoaded();
-                    
+
                     var modulesWithErrors = _.filter(results, function (x) { return _.any(x.validationErrors) && x.isInstalled; });
                     if (_.any(modulesWithErrors)) {
                         $scope.platformError = {
