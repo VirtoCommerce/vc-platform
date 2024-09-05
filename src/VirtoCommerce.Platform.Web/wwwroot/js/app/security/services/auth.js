@@ -108,12 +108,12 @@ angular.module('platformWebApp')
             externalSignInStorage.remove();
             changeAuth({});
             var url = 'externalsignin/signout?authenticationType=' + extenralSignInData.providerType;
-            $window.location.href = url
+            $window.location.href = url;
         }
         else {
             authDataStorage.clearStoredData();
-            $http.get(serviceBase + 'logout');
             changeAuth({});
+            $http.get(serviceBase + 'logout');
         }
     };
 

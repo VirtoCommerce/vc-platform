@@ -29,53 +29,53 @@ angular.module('platformWebApp')
                                     });
                                     $scope.loginProviders = response.data;
                                 });
-
-                            $scope.user = {};
-                            $scope.authError = null;
-                            $scope.authReason = false;
-                            $scope.loginProgress = false;
-
-                            $scope.externalLogin = function (provider) {
-                                // set external signIn data
-                                var signInData = {
-                                    providerType: provider.authenticationType
-                                };
-                                externalSignInStorage.set(signInData);
-
-                                var url = 'externalsignin?authenticationType=' + provider.authenticationType;
-                                $window.location.href = url
-                            };
-
-                            $scope.ok = function () {
-                                // Clear any previous security errors
-                                $scope.authError = null;
-                                $scope.loginProgress = true;
-                                // Try to login
-                                authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
-                                    function (result) {
-                                        $scope.loginProgress = false;
-                                        if (!result || !result.succeeded) {
-                                            $scope.authError = 'The login or password is incorrect.';
-                                        }
-                                    },
-                                    function (x) {
-                                        $scope.loginProgress = false;
-                                        if (angular.isDefined(x.status)) {
-                                            if (x.status === 401) {
-                                                $scope.authError = 'The login or password is incorrect.';
-                                            } else {
-                                                $scope.authError = 'Authentication error (code: ' + x.status + ').';
-                                            }
-                                        } else {
-                                            $scope.authError = 'Authentication error ' + x;
-                                        }
-                                    });
-                            };
-
-                            $scope.togglePassword = function () {
-                                $scope.showPassword = !$scope.showPassword;
-                            }
                         });
+
+                        $scope.user = {};
+                        $scope.authError = null;
+                        $scope.authReason = false;
+                        $scope.loginProgress = false;
+
+                        $scope.externalLogin = function (provider) {
+                            // set external signIn data
+                            var signInData = {
+                                providerType: provider.authenticationType
+                            };
+                            externalSignInStorage.set(signInData);
+
+                            var url = 'externalsignin?authenticationType=' + provider.authenticationType;
+                            $window.location.href = url;
+                        };
+
+                        $scope.ok = function () {
+                            // Clear any previous security errors
+                            $scope.authError = null;
+                            $scope.loginProgress = true;
+                            // Try to login
+                            authService.login($scope.user.email, $scope.user.password, $scope.user.remember).then(
+                                function (result) {
+                                    $scope.loginProgress = false;
+                                    if (!result || !result.succeeded) {
+                                        $scope.authError = 'The login or password is incorrect.';
+                                    }
+                                },
+                                function (x) {
+                                    $scope.loginProgress = false;
+                                    if (angular.isDefined(x.status)) {
+                                        if (x.status === 401) {
+                                            $scope.authError = 'The login or password is incorrect.';
+                                        } else {
+                                            $scope.authError = 'Authentication error (code: ' + x.status + ').';
+                                        }
+                                    } else {
+                                        $scope.authError = 'Authentication error ' + x;
+                                    }
+                                });
+                        };
+
+                        $scope.togglePassword = function () {
+                            $scope.showPassword = !$scope.showPassword;
+                        };
                     }
                 ]
             });
@@ -152,7 +152,7 @@ angular.module('platformWebApp')
                 authService.validatepasswordresettoken($scope.viewModel).then(function (retVal) {
                     $scope.isValidToken = retVal;
                     $scope.isLoading = false;
-                    $scope.viewModel = { userId: $scope.viewModel.userId, code: $scope.viewModel.code, newPassword: '', newPassword2: '' }
+                    $scope.viewModel = { userId: $scope.viewModel.userId, code: $scope.viewModel.code, newPassword: '', newPassword2: '' };
                 }, function (response) {
                     $scope.isLoading = false;
                     $scope.errors = response.data.errors;
