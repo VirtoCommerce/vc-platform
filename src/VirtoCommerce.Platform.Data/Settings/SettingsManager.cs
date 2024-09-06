@@ -172,16 +172,12 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .ToListAsync());
 
                 var validator = new ObjectSettingEntryValidator();
+
                 foreach (var setting in objectSettings.Where(x => x.ItHasValues))
                 {
                     if (!validator.Validate(setting).IsValid)
                     {
                         throw new PlatformException($"Setting with name {setting.Name} is invalid");
-                    }
-
-                    if (_fixedSettingsDict.ContainsKey(setting.Name))
-                    {
-                        throw new PlatformException($"Setting with name {setting.Name} is read only");
                     }
 
                     // Skip when Setting is not registered
@@ -201,16 +197,31 @@ namespace VirtoCommerce.Platform.Data.Settings
                     {
                         var oldEntry = originalEntity.ToModel(new ObjectSettingEntry(settingDescriptor));
 
+                        if (!originalEntity.CompareSettingValues(modifiedEntity) && _fixedSettingsDict.ContainsKey(setting.Name))
+                        {
+                            throw new PlatformException($"Setting with name {setting.Name} is read only");
+                        }
+
                         modifiedEntity.Patch(originalEntity);
 
                         var newEntry = originalEntity.ToModel(new ObjectSettingEntry(settingDescriptor));
+
                         changedEntries.Add(new GenericChangedEntry<ObjectSettingEntry>(newEntry, oldEntry, EntryState.Modified));
                     }
                     else
                     {
-                        repository.Add(modifiedEntity);
-                        changedEntries.Add(new GenericChangedEntry<ObjectSettingEntry>(setting, EntryState.Added));
+                        if (!_fixedSettingsDict.ContainsKey(setting.Name))
+                        {
+                            repository.Add(modifiedEntity);
+                            changedEntries.Add(new GenericChangedEntry<ObjectSettingEntry>(setting, EntryState.Added));
+                        }
+                        else
+                        {
+                            throw new PlatformException($"Setting with name {setting.Name} is read only");
+                        }
                     }
+
+
                 }
 
                 await repository.UnitOfWork.CommitAsync();

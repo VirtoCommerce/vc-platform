@@ -85,5 +85,35 @@ namespace VirtoCommerce.Platform.Data.Model
                 SettingValues.Patch(target.SettingValues, comparer, (sourceSetting, targetSetting) => { });
             }
         }
+
+        public bool CompareSettingValues(SettingEntity modifiedEntity)
+        {
+            if (this.SettingValues.Count != modifiedEntity.SettingValues.Count)
+            {
+                return false;
+            }
+
+            var currentEntitySortedValues = SettingValues.OrderBy(sv => sv.SettingId).ToList();
+            var modifiedEntitySortedValues2 = modifiedEntity.SettingValues.OrderBy(sv => sv.SettingId).ToList();
+
+            for (var i = 0; i < currentEntitySortedValues.Count; i++)
+            {
+                var currentValue = currentEntitySortedValues[i];
+                var modifiedValue = modifiedEntitySortedValues2[i];
+
+                if (currentValue.ValueType != modifiedValue.ValueType ||
+                    currentValue.ShortTextValue != modifiedValue.ShortTextValue ||
+                    currentValue.LongTextValue != modifiedValue.LongTextValue ||
+                    currentValue.DecimalValue != modifiedValue.DecimalValue ||
+                    currentValue.IntegerValue != modifiedValue.IntegerValue ||
+                    currentValue.BooleanValue != modifiedValue.BooleanValue ||
+                    currentValue.DateTimeValue != modifiedValue.DateTimeValue)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
