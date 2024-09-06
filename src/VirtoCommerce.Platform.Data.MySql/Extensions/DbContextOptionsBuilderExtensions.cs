@@ -14,14 +14,14 @@ public static class DbContextOptionsBuilderExtensions
         string? connectionString,
         Type migrationsAssemblyMarkerType,
         IConfiguration configuration,
-        Action<MySqlDbContextOptionsBuilder>? mySqlOptionsAction = null)
+        Action<MySqlDbContextOptionsBuilder, IConfiguration>? mySqlOptionsAction = null)
     {
         return optionsBuilder.UseMySql(connectionString,
             ServerVersion.AutoDetect(connectionString),
             mySqlDbContextOptionsBuilder =>
             {
                 mySqlDbContextOptionsBuilder.MigrationsAssembly(migrationsAssemblyMarkerType.Assembly.GetName().Name);
-                mySqlOptionsAction?.Invoke(mySqlDbContextOptionsBuilder);
+                mySqlOptionsAction?.Invoke(mySqlDbContextOptionsBuilder, configuration);
             });
     }
 }

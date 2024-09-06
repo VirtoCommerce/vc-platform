@@ -14,13 +14,13 @@ public static class DbContextOptionsBuilderExtensions
         string? connectionString,
         Type migrationsAssemblyMarkerType,
         IConfiguration configuration,
-        Action<NpgsqlDbContextOptionsBuilder>? npgsqlOptionsAction = null)
+        Action<NpgsqlDbContextOptionsBuilder, IConfiguration>? npgsqlOptionsAction = null)
     {
         return optionsBuilder.UseNpgsql(connectionString,
             npgsqlDbContextOptionsBuilder =>
             {
                 npgsqlDbContextOptionsBuilder.MigrationsAssembly(migrationsAssemblyMarkerType.Assembly.GetName().Name);
-                npgsqlOptionsAction?.Invoke(npgsqlDbContextOptionsBuilder);
+                npgsqlOptionsAction?.Invoke(npgsqlDbContextOptionsBuilder, configuration);
             });
     }
 }

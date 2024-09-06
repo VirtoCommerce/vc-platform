@@ -14,7 +14,7 @@ public static class DbContextOptionsBuilderExtensions
         string? connectionString,
         Type migrationsAssemblyMarkerType,
         IConfiguration configuration,
-        Action<SqlServerDbContextOptionsBuilder>? sqlServerOptionsAction = null)
+        Action<SqlServerDbContextOptionsBuilder, IConfiguration>? sqlServerOptionsAction = null)
     {
         return optionsBuilder.UseSqlServer(connectionString,
             sqlServerOptionsBuilder =>
@@ -26,7 +26,7 @@ public static class DbContextOptionsBuilderExtensions
                 }
 
                 sqlServerOptionsBuilder.MigrationsAssembly(migrationsAssemblyMarkerType.Assembly.GetName().Name);
-                sqlServerOptionsAction?.Invoke(sqlServerOptionsBuilder);
+                sqlServerOptionsAction?.Invoke(sqlServerOptionsBuilder, configuration);
             });
     }
 }
