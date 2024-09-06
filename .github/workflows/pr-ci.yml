@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [ master, dev ]
     paths-ignore:
-      - '.github/**'
+      # - '.github/**'
       - 'docs/**'
       - 'build/**'
       - 'README.md'
@@ -31,11 +31,11 @@ jobs:
   publish-tag:
     needs: build
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
     env:
       GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
     steps:
-    - name: publish-tag  
-      if: ${{ github.event_name == 'pull_request' }}
+    - name: publish-tag
       uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
       with:
         artifactUrl: ${{ needs.build.outputs.imageTag}}
