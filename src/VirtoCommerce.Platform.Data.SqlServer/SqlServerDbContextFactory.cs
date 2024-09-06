@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer
 
             builder.UseSqlServer(
                 connectionString,
-                db => db.MigrationsAssembly(typeof(SqlServerDbContextFactory).Assembly.GetName().Name));
+                db => db.MigrationsAssembly(typeof(SqlServerDataAssemblyMarker).Assembly.GetName().Name));
 
             return new PlatformDbContext(builder.Options);
         }
@@ -27,7 +27,7 @@ namespace VirtoCommerce.Platform.Data.SqlServer
 
             builder.UseSqlServer(
                 connectionString,
-                db => db.MigrationsAssembly(typeof(SqlServerDbContextFactory).Assembly.GetName().Name));
+                db => db.MigrationsAssembly(typeof(SqlServerDataAssemblyMarker).Assembly.GetName().Name));
 
             builder.UseOpenIddict();
 
