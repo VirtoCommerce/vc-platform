@@ -9,7 +9,8 @@ public static class DbContextOptionsBuilderExtensions
     /// <summary>
     /// Configures the context to use PostgreSql.
     /// </summary>
-    public static DbContextOptionsBuilder UsePostgreSqlDatabase(this DbContextOptionsBuilder optionsBuilder,
+    public static DbContextOptionsBuilder UsePostgreSqlDatabase(
+        this DbContextOptionsBuilder optionsBuilder,
         string? connectionString,
         Type migrationsAssemblyMarkerType,
         IConfiguration configuration,

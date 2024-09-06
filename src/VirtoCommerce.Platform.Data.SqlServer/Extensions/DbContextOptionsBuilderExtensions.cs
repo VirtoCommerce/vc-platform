@@ -9,7 +9,8 @@ public static class DbContextOptionsBuilderExtensions
     /// <summary>
     /// Configures the context to use SqlServer.
     /// </summary>
-    public static DbContextOptionsBuilder UseSqlServerDatabase(this DbContextOptionsBuilder optionsBuilder,
+    public static DbContextOptionsBuilder UseSqlServerDatabase(
+        this DbContextOptionsBuilder optionsBuilder,
         string? connectionString,
         Type migrationsAssemblyMarkerType,
         IConfiguration configuration,

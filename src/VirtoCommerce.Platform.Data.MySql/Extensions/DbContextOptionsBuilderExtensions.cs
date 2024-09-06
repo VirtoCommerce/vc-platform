@@ -9,7 +9,8 @@ public static class DbContextOptionsBuilderExtensions
     /// <summary>
     /// Configures the context to use MySql.
     /// </summary>
-    public static DbContextOptionsBuilder UseMySqlDatabase(this DbContextOptionsBuilder optionsBuilder,
+    public static DbContextOptionsBuilder UseMySqlDatabase(
+        this DbContextOptionsBuilder optionsBuilder,
         string? connectionString,
         Type migrationsAssemblyMarkerType,
         IConfiguration configuration,
