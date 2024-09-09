@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.Platform.Core.Common;
@@ -26,5 +27,7 @@ namespace VirtoCommerce.Platform.Data.Repositories
         Task<SettingEntity[]> GetObjectSettingsByNamesAsync(string[] names, string objectType, string objectId);
 
         Task<OperationLogEntity[]> GetOperationLogsByIdsAsync(string[] ids);
+
+        IEnumerable<string> GetModifiedProperties<T>(T item) where T : class;
     }
 }
