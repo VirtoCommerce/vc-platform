@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using VirtoCommerce.Platform.Core.Common;
@@ -18,7 +20,7 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
             // Mitigations the breaking changes with cascade deletion introduced in EF Core 3.0
             // https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-3.0/breaking-changes#cascade
             // The new CascadeTiming.Immediate that is used by default in EF Core 3.0 is lead wrong track as Added  for Deleted dependent/child entities during
-            // work of Patch method for data entities  
+            // work of Patch method for data entities
             DbContext.ChangeTracker.CascadeDeleteTiming = CascadeTiming.OnSaveChanges;
             DbContext.ChangeTracker.DeleteOrphansTiming = CascadeTiming.OnSaveChanges;
 
@@ -80,6 +82,17 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         public void Remove<T>(T item) where T : class
         {
             DbContext.Remove(item);
+        }
+
+        /// <summary>
+        /// Gets the enumeration of modified property names for the specified item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>The item.</returns>
+        public IEnumerable<string> GetModifiedProperties<T>(T item) where T : class
+        {
+            return DbContext.Entry(item).Properties.Where(x => x.IsModified).Select(x => x.Metadata.Name);
         }
 
         // Dispose() calls Dispose(true)
