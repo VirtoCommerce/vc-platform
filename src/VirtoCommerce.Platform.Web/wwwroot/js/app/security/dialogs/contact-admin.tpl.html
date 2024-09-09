@@ -1,0 +1,21 @@
+<div class="auth" ng-style="{ 'background-image': 'url('+uiCustomization.pattern.url+'), url('+(uiCustomization.background.url || 'images/login.webp') +')' }">
+  <div class="auth__container">
+    <div class="auth__head">
+      <img class="auth__logo" ng-src="{{ uiCustomization.loginScreenLogo_custom.url || uiCustomization.loginScreenLogo_default.url }}" fallback-src="{{ uiCustomization.loginScreenLogo_default.url }}" alt="Login screen logo image">
+      <h1 class="auth__title">{{ 'platform.blades.access-denied.title' | translate }}</h1>
+    </div>
+    <div class="auth__content">
+      <div class="contact-admin">
+        <div class="vc-input">
+          {{ 'platform.blades.access-denied.labels.message' | translate }}
+        </div>
+        <div class="contact-admin__buttons">
+          <button type="button" ng-click="logout()" class="vc-button contact-admin__button">{{ 'platform.blades.access-denied.labels.button' | translate }}</button>
+        </div>
+      </div>
+      <div class="vc-loader" ng-if="isLoading">
+        <div class="vc-loader__line"></div>
+      </div>
+    </div>
+  </div>
+</div>

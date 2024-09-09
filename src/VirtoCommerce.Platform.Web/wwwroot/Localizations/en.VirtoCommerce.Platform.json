@@ -566,6 +566,13 @@
           "login-or-email": "Please enter login or email"
         }
       },
+      "access-denied": {
+        "title": "Access denied",
+        "labels": {
+          "message": "You don't have access to this resource. Please contact your administrator.",
+          "button": "Login with another credentials"
+        }
+      },
       "resetpassword": {
         "title": "Password reset",
         "labels": {
