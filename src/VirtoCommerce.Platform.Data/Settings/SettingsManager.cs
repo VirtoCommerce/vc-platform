@@ -197,12 +197,12 @@ namespace VirtoCommerce.Platform.Data.Settings
                     {
                         var oldEntry = originalEntity.ToModel(new ObjectSettingEntry(settingDescriptor));
 
-                        if (!originalEntity.CompareSettingValues(modifiedEntity) && _fixedSettingsDict.ContainsKey(setting.Name))
+                        modifiedEntity.Patch(originalEntity);
+
+                        if (_fixedSettingsDict.ContainsKey(setting.Name) && repository.GetModifiedProperties(modifiedEntity).Any(name => name.EqualsInvariant(setting.Name)))
                         {
                             throw new PlatformException($"Setting with name {setting.Name} is read only");
                         }
-
-                        modifiedEntity.Patch(originalEntity);
 
                         var newEntry = originalEntity.ToModel(new ObjectSettingEntry(settingDescriptor));
 
