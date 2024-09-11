@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 {
     /// <summary>
     /// Provide next functionality to working with settings
-    /// - Load setting metainformation from module manifest and database
+    /// - Load settings meta information from module manifest and database
     /// - Deep load all settings for entity
     /// - Mass update all entity settings
     /// </summary>
@@ -157,10 +157,15 @@ namespace VirtoCommerce.Platform.Data.Settings
 
             var changedEntries = new List<GenericChangedEntry<ObjectSettingEntry>>();
 
-            var settingEntries = objectSettings as ObjectSettingEntry[] ?? objectSettings.ToArray();
+            // Ignore settings without values and fixed settings
+            var settings = objectSettings
+                .Where(x => x.ItHasValues && !_fixedSettingsDict.ContainsKey(x.Name))
+                .ToArray();
+
             using (var repository = _repositoryFactory())
             {
-                var settingNames = settingEntries.Select(x => x.Name).Distinct().ToArray();
+                var settingNames = settings.Select(x => x.Name).Distinct().ToArray();
+
                 var alreadyExistDbSettings = await repository.Settings
                     .Include(s => s.SettingValues)
                     .Where(x => settingNames.Contains(x.Name))
@@ -168,13 +173,9 @@ namespace VirtoCommerce.Platform.Data.Settings
                     .ToListAsync();
 
                 var validator = new ObjectSettingEntryValidator();
-                foreach (var setting in settingEntries.Where(x => x.ItHasValues))
-                {
-                    if (!(await validator.ValidateAsync(setting)).IsValid)
-                    {
-                        throw new PlatformException($"Setting with name {setting.Name} is invalid");
-                    }
 
+                foreach (var setting in settings)
+                {
                     // Skip when Setting is not registered
                     var settingDescriptor = _registeredSettingsByNameDict[setting.Name];
                     if (settingDescriptor == null)
@@ -182,9 +183,15 @@ namespace VirtoCommerce.Platform.Data.Settings
                         continue;
                     }
 
+                    if (!(await validator.ValidateAsync(setting)).IsValid)
+                    {
+                        throw new PlatformException($"Setting with name {setting.Name} is invalid");
+                    }
+
                     // We need to convert resulting DB entities to model. Use ValueObject.Equals to find already saved setting entity from passed setting
-                    var originalEntity = alreadyExistDbSettings
-                        .FirstOrDefault(x => x.Name.EqualsInvariant(setting.Name) && x.ToModel(new ObjectSettingEntry(settingDescriptor)).Equals(setting));
+                    var originalEntity = alreadyExistDbSettings.FirstOrDefault(x =>
+                        x.Name.EqualsIgnoreCase(setting.Name) &&
+                        x.ToModel(new ObjectSettingEntry(settingDescriptor)).Equals(setting));
 
                     var modifiedEntity = AbstractTypeFactory<SettingEntity>.TryCreateInstance().FromModel(setting);
 
@@ -193,13 +200,6 @@ namespace VirtoCommerce.Platform.Data.Settings
                         var oldEntry = originalEntity.ToModel(new ObjectSettingEntry(settingDescriptor));
 
                         modifiedEntity.Patch(originalEntity);
-
-                        if (_fixedSettingsDict.ContainsKey(setting.Name) &&
-                            (repository.GetModifiedProperties(originalEntity).Any() ||
-                             originalEntity.SettingValues.SelectMany(x => repository.GetModifiedProperties(x)).Any()))
-                        {
-                            throw new PlatformException($"Setting with name {setting.Name} is read only");
-                        }
 
                         var newEntry = originalEntity.ToModel(new ObjectSettingEntry(settingDescriptor));
                         changedEntries.Add(new GenericChangedEntry<ObjectSettingEntry>(newEntry, oldEntry, EntryState.Modified));
@@ -214,7 +214,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 await repository.UnitOfWork.CommitAsync();
             }
 
-            ClearCache(settingEntries);
+            ClearCache(settings);
 
             await _eventPublisher.Publish(new ObjectSettingChangedEvent(changedEntries));
         }
@@ -243,7 +243,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 ObjectType = objectType,
                 ObjectId = objectId
             };
-            var dbSetting = dbStoredSettings.FirstOrDefault(x => x.Name.EqualsInvariant(name));
+            var dbSetting = dbStoredSettings.FirstOrDefault(x => x.Name.EqualsIgnoreCase(name));
             if (dbSetting != null)
             {
                 objectSetting = dbSetting.ToModel(objectSetting);

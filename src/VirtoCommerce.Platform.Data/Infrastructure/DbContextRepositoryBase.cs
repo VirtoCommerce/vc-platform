@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using VirtoCommerce.Platform.Core.Common;
@@ -82,17 +80,6 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
         public void Remove<T>(T item) where T : class
         {
             DbContext.Remove(item);
-        }
-
-        /// <summary>
-        /// Gets the enumeration of modified property names for the specified item.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns>The item.</returns>
-        public IEnumerable<string> GetModifiedProperties<T>(T item) where T : class
-        {
-            return DbContext.Entry(item).Properties.Where(x => x.IsModified).Select(x => x.Metadata.Name);
         }
 
         // Dispose() calls Dispose(true)

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using VirtoCommerce.Platform.Core.Domain;
 
 namespace VirtoCommerce.Platform.Core.Common
@@ -44,13 +43,5 @@ namespace VirtoCommerce.Platform.Core.Common
         /// <typeparam name="T"></typeparam>
         /// <param name="item">The item.</param>
         void Remove<T>(T item) where T : class;
-
-        /// <summary>
-        /// Gets the enumeration of modified property names for the specified item.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns>The item.</returns>
-        IEnumerable<string> GetModifiedProperties<T>(T item) where T : class;
     }
 }
