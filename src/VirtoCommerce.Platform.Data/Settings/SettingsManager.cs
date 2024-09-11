@@ -157,9 +157,11 @@ namespace VirtoCommerce.Platform.Data.Settings
 
             var changedEntries = new List<GenericChangedEntry<ObjectSettingEntry>>();
 
-            // Ignore settings without values and fixed settings
+            // Ignore unregistered settings, fixed settings, and settings without values
             var settings = objectSettings
-                .Where(x => x.ItHasValues && !_fixedSettingsDict.ContainsKey(x.Name))
+                .Where(x => _registeredSettingsByNameDict.ContainsKey(x.Name) &&
+                            !_fixedSettingsDict.ContainsKey(x.Name) &&
+                            x.ItHasValues)
                 .ToArray();
 
             using (var repository = _repositoryFactory())
@@ -176,12 +178,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 
                 foreach (var setting in settings)
                 {
-                    // Skip when Setting is not registered
                     var settingDescriptor = _registeredSettingsByNameDict[setting.Name];
-                    if (settingDescriptor == null)
-                    {
-                        continue;
-                    }
 
                     if (!(await validator.ValidateAsync(setting)).IsValid)
                     {
