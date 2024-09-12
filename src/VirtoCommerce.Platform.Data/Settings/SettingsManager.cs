@@ -21,7 +21,7 @@ namespace VirtoCommerce.Platform.Data.Settings
 {
     /// <summary>
     /// Provide next functionality to working with settings
-    /// - Load setting metainformation from module manifest and database
+    /// - Load settings meta information from module manifest and database
     /// - Deep load all settings for entity
     /// - Mass update all entity settings
     /// </summary>
@@ -32,7 +32,7 @@ namespace VirtoCommerce.Platform.Data.Settings
         private readonly IDictionary<string, SettingDescriptor> _registeredSettingsByNameDict = new Dictionary<string, SettingDescriptor>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
         private readonly IDictionary<string, IEnumerable<SettingDescriptor>> _registeredTypeSettingsByNameDict = new Dictionary<string, IEnumerable<SettingDescriptor>>(StringComparer.OrdinalIgnoreCase).WithDefaultValue(null);
         private readonly IEventPublisher _eventPublisher;
-        private readonly IDictionary<string, ObjectSettingEntry> _fixedSettingsDict;
+        private readonly Dictionary<string, ObjectSettingEntry> _fixedSettingsDict;
 
         public SettingsManager(Func<IPlatformRepository> repositoryFactory,
             IPlatformMemoryCache memoryCache,
@@ -51,10 +51,8 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         public void RegisterSettingsForType(IEnumerable<SettingDescriptor> settings, string typeName)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            ArgumentNullException.ThrowIfNull(settings);
+
             var existTypeSettings = _registeredTypeSettingsByNameDict[typeName];
             if (existTypeSettings != null)
             {
@@ -65,17 +63,15 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         public IEnumerable<SettingDescriptor> GetSettingsForType(string typeName)
         {
-            return _registeredTypeSettingsByNameDict[typeName] ?? Enumerable.Empty<SettingDescriptor>();
+            return _registeredTypeSettingsByNameDict[typeName] ?? [];
         }
 
         public IEnumerable<SettingDescriptor> AllRegisteredSettings => _registeredSettingsByNameDict.Values;
 
         public void RegisterSettings(IEnumerable<SettingDescriptor> settings, string moduleId = null)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            ArgumentNullException.ThrowIfNull(settings);
+
             foreach (var setting in settings)
             {
                 setting.ModuleId = moduleId;
@@ -89,21 +85,18 @@ namespace VirtoCommerce.Platform.Data.Settings
 
         public virtual async Task<ObjectSettingEntry> GetObjectSettingAsync(string name, string objectType = null, string objectId = null)
         {
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-            return (await GetObjectSettingsAsync(new[] { name }, objectType, objectId)).FirstOrDefault();
+            ArgumentException.ThrowIfNullOrWhiteSpace(name);
+
+            return (await GetObjectSettingsAsync([name], objectType, objectId)).FirstOrDefault();
         }
 
         public virtual async Task<IEnumerable<ObjectSettingEntry>> GetObjectSettingsAsync(IEnumerable<string> names, string objectType = null, string objectId = null)
         {
-            if (names == null)
-            {
-                throw new ArgumentNullException(nameof(names));
-            }
-            var cacheKey = CacheKey.With(GetType(), "GetSettingByNamesAsync", string.Join(";", names), objectType, objectId);
-            var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async (cacheEntry) =>
+            ArgumentNullException.ThrowIfNull(names);
+
+            var settingNames = names as string[] ?? names.ToArray();
+            var cacheKey = CacheKey.With(GetType(), "GetSettingByNamesAsync", string.Join(";", settingNames), objectType, objectId);
+            var result = await _memoryCache.GetOrCreateExclusiveAsync(cacheKey, async cacheEntry =>
             {
                 var resultObjectSettings = new List<ObjectSettingEntry>();
                 var dbStoredSettings = new List<SettingEntity>();
@@ -113,87 +106,89 @@ namespace VirtoCommerce.Platform.Data.Settings
                 {
                     repository.DisableChangesTracking();
                     //try to load setting from db
-                    dbStoredSettings.AddRange(await repository.GetObjectSettingsByNamesAsync(names.ToArray(), objectType, objectId));
+                    dbStoredSettings.AddRange(await repository.GetObjectSettingsByNamesAsync(settingNames, objectType, objectId));
                 }
 
-                foreach (var name in names)
+                foreach (var name in settingNames)
                 {
-                    var objectSetting = _fixedSettingsDict.ContainsKey(name) ?
-                        GetFixedSetting(name) :
-                        GetRegularSetting(name, dbStoredSettings, objectType, objectId);
+                    var objectSetting = _fixedSettingsDict.ContainsKey(name)
+                        ? GetFixedSetting(name)
+                        : GetRegularSetting(name, dbStoredSettings, objectType, objectId);
 
                     resultObjectSettings.Add(objectSetting);
 
                     //Add cache  expiration token for setting
                     cacheEntry.AddExpirationToken(SettingsCacheRegion.CreateChangeToken(objectSetting));
                 }
+
                 return resultObjectSettings;
             });
+
             return result;
         }
 
         public virtual async Task RemoveObjectSettingsAsync(IEnumerable<ObjectSettingEntry> objectSettings)
         {
-            if (objectSettings == null)
-            {
-                throw new ArgumentNullException(nameof(objectSettings));
-            }
+            ArgumentNullException.ThrowIfNull(objectSettings);
+
+            var settingEntries = objectSettings as ObjectSettingEntry[] ?? objectSettings.ToArray();
             using (var repository = _repositoryFactory())
             {
-                foreach (var objectSetting in objectSettings)
+                foreach (var objectSetting in settingEntries)
                 {
-                    var dbSetting = repository.Settings.FirstOrDefault(x => x.Name == objectSetting.Name && x.ObjectType == objectSetting.ObjectType && x.ObjectId == objectSetting.ObjectId);
+                    var dbSetting = repository.Settings.FirstOrDefault(x =>
+                        x.Name == objectSetting.Name && x.ObjectType == objectSetting.ObjectType &&
+                        x.ObjectId == objectSetting.ObjectId);
                     if (dbSetting != null)
                     {
                         repository.Remove(dbSetting);
                     }
                 }
+
                 await repository.UnitOfWork.CommitAsync();
-                ClearCache(objectSettings);
             }
+
+            ClearCache(settingEntries);
         }
 
         public virtual async Task SaveObjectSettingsAsync(IEnumerable<ObjectSettingEntry> objectSettings)
         {
-            if (objectSettings == null)
-            {
-                throw new ArgumentNullException(nameof(objectSettings));
-            }
+            ArgumentNullException.ThrowIfNull(objectSettings);
 
             var changedEntries = new List<GenericChangedEntry<ObjectSettingEntry>>();
 
+            // Ignore unregistered settings, fixed settings, and settings without values
+            var settings = objectSettings
+                .Where(x => _registeredSettingsByNameDict.ContainsKey(x.Name) &&
+                            !_fixedSettingsDict.ContainsKey(x.Name) &&
+                            x.ItHasValues)
+                .ToArray();
+
             using (var repository = _repositoryFactory())
             {
-                var settingNames = objectSettings.Select(x => x.Name).Distinct().ToArray();
-                var alreadyExistDbSettings = (await repository.Settings
+                var settingNames = settings.Select(x => x.Name).Distinct().ToArray();
+
+                var alreadyExistDbSettings = await repository.Settings
                     .Include(s => s.SettingValues)
                     .Where(x => settingNames.Contains(x.Name))
                     .AsSplitQuery()
-                    .ToListAsync());
+                    .ToListAsync();
 
                 var validator = new ObjectSettingEntryValidator();
-                foreach (var setting in objectSettings.Where(x => x.ItHasValues))
+
+                foreach (var setting in settings)
                 {
-                    if (!validator.Validate(setting).IsValid)
+                    var settingDescriptor = _registeredSettingsByNameDict[setting.Name];
+
+                    if (!(await validator.ValidateAsync(setting)).IsValid)
                     {
                         throw new PlatformException($"Setting with name {setting.Name} is invalid");
                     }
 
-                    if (_fixedSettingsDict.ContainsKey(setting.Name))
-                    {
-                        throw new PlatformException($"Setting with name {setting.Name} is read only");
-                    }
-
-                    // Skip when Setting is not registered
-                    var settingDescriptor = _registeredSettingsByNameDict[setting.Name];
-                    if (settingDescriptor == null)
-                    {
-                        continue;
-                    }
-
                     // We need to convert resulting DB entities to model. Use ValueObject.Equals to find already saved setting entity from passed setting
-                    var originalEntity = alreadyExistDbSettings.Where(x => x.Name.EqualsInvariant(setting.Name))
-                                                               .FirstOrDefault(x => x.ToModel(new ObjectSettingEntry(settingDescriptor)).Equals(setting));
+                    var originalEntity = alreadyExistDbSettings.FirstOrDefault(x =>
+                        x.Name.EqualsIgnoreCase(setting.Name) &&
+                        x.ToModel(new ObjectSettingEntry(settingDescriptor)).Equals(setting));
 
                     var modifiedEntity = AbstractTypeFactory<SettingEntity>.TryCreateInstance().FromModel(setting);
 
@@ -216,7 +211,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 await repository.UnitOfWork.CommitAsync();
             }
 
-            ClearCache(objectSettings);
+            ClearCache(settings);
 
             await _eventPublisher.Publish(new ObjectSettingChangedEvent(changedEntries));
         }
@@ -245,7 +240,7 @@ namespace VirtoCommerce.Platform.Data.Settings
                 ObjectType = objectType,
                 ObjectId = objectId
             };
-            var dbSetting = dbStoredSettings.FirstOrDefault(x => x.Name.EqualsInvariant(name));
+            var dbSetting = dbStoredSettings.FirstOrDefault(x => x.Name.EqualsIgnoreCase(name));
             if (dbSetting != null)
             {
                 objectSetting = dbSetting.ToModel(objectSetting);
