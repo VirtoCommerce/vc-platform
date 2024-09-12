@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using VirtoCommerce.Platform.Data.Repositories;
@@ -20,7 +15,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql
 
             builder.UseNpgsql(
                 connectionString,
-                db => db.MigrationsAssembly(typeof(PostgreSqlDbContextFactory).Assembly.GetName().Name));
+                db => db.MigrationsAssembly(typeof(PostgreSqlDataAssemblyMarker).Assembly.GetName().Name));
 
             return new PlatformDbContext(builder.Options);
         }
@@ -32,7 +27,7 @@ namespace VirtoCommerce.Platform.Data.PostgreSql
 
             builder.UseNpgsql(
                 connectionString,
-                db => db.MigrationsAssembly(typeof(PostgreSqlDbContextFactory).Assembly.GetName().Name));
+                db => db.MigrationsAssembly(typeof(PostgreSqlDataAssemblyMarker).Assembly.GetName().Name));
 
             builder.UseOpenIddict();
 
