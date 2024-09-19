@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using Microsoft.Extensions.Options;
 using VirtoCommerce.Platform.Core.Common;
 using VirtoCommerce.Platform.Core.Modularity.Exceptions;
 
@@ -30,13 +31,17 @@ namespace VirtoCommerce.Platform.Core.Modularity
         private readonly ModuleCatalogItemCollection items;
         private bool isLoaded;
 
+        private readonly ModuleSequenceBoostOptions _boostOptions;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ModuleCatalog"/> class.
         /// </summary>
-        public ModuleCatalog()
+        public ModuleCatalog(IOptions<ModuleSequenceBoostOptions> boostOptions)
         {
-            this.items = new ModuleCatalogItemCollection();
-            this.items.CollectionChanged += this.ItemsCollectionChanged;
+            items = new ModuleCatalogItemCollection();
+            items.CollectionChanged += ItemsCollectionChanged;
+
+            _boostOptions = boostOptions.Value;
         }
 
         /// <summary>
@@ -44,14 +49,15 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// initial list of <see cref="ModuleInfo"/>s.
         /// </summary>
         /// <param name="modules">The initial list of modules.</param>
-        public ModuleCatalog(IEnumerable<ModuleInfo> modules)
-            : this()
+        /// <param name="boostOptions">Module boost options</param>
+        public ModuleCatalog(IEnumerable<ModuleInfo> modules, IOptions<ModuleSequenceBoostOptions> boostOptions)
+            : this(boostOptions)
         {
-            if (modules == null)
-                throw new System.ArgumentNullException("modules");
-            foreach (ModuleInfo moduleInfo in modules)
+            ArgumentNullException.ThrowIfNull(modules);
+
+            foreach (var moduleInfo in modules)
             {
-                this.Items.Add(moduleInfo);
+                Items.Add(moduleInfo);
             }
         }
 
@@ -331,14 +337,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// </summary>
         /// <param name="modules">the.</param>
         /// <returns></returns>
-        protected static string[] SolveDependencies(IEnumerable<ModuleInfo> modules)
+        protected string[] SolveDependencies(IEnumerable<ModuleInfo> modules)
         {
-            if (modules == null)
-            {
-                throw new System.ArgumentNullException("modules");
-            }
+            ArgumentNullException.ThrowIfNull(modules);
 
-            var solver = new ModuleDependencySolver();
+            var solver = new ModuleDependencySolver(_boostOptions);
 
             foreach (var data in modules.ToArray())
             {
@@ -363,7 +366,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 return solver.Solve();
             }
 
-            return new string[0];
+            return [];
         }
 
         /// <summary>
