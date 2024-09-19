@@ -15,7 +15,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
         private readonly ListDictionary<string, string> _dependencyMatrix = [];
         private readonly List<string> _knownModules = [];
 
-        private readonly List<string> _boostedModulesIds = [];
+        private readonly List<string> _boostedModulesIds;
         private readonly ListDictionary<string, string> _boostedModulesMarix = [];
 
         public ModuleDependencySolver(ModuleSequenceBoostOptions boostOptions)
