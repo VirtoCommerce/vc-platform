@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.Platform.Web.Controllers.Api;
+namespace VirtoCommerce.Platform.Core.Security;
 
 // This class allows to measure the duration of successful sign in and delay the failed response to prevent timing attacks.
 public class SecurityStopwatch
