@@ -97,40 +97,43 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<ActionResult<SignInResult>> Login([FromBody] LoginRequest request)
         {
-            var userName = request.UserName;
+            // Measure the duration of successful sign in and delay the failed response to prevent timing attacks
+            var securityStopwatch = SecurityStopwatch.StartNew(nameof(SecurityController), nameof(Login));
+
+            var user = await UserManager.FindByNameAsync(request.UserName);
 
             // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True. 
-            if (_identityOptions.User.RequireUniqueEmail)
+            if (user == null && _identityOptions.User.RequireUniqueEmail)
             {
-                var userByName = await UserManager.FindByNameAsync(userName);
-
-                if (userByName == null)
-                {
-                    var userByEmail = await UserManager.FindByEmailAsync(userName);
-                    if (userByEmail != null)
-                    {
-                        userName = userByEmail.UserName;
-                    }
-                }
+                user = await UserManager.FindByEmailAsync(request.UserName);
             }
 
-            var user = await UserManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                await securityStopwatch.DelayAsync();
+                return Ok(SignInResult.Failed);
+            }
 
             await _eventPublisher.Publish(new BeforeUserLoginEvent(user));
 
-            var loginResult = await _signInManager.PasswordSignInAsync(userName, request.Password, request.RememberMe, true);
+            var loginResult = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, lockoutOnFailure: true);
 
-            if (loginResult.Succeeded)
+            if (!loginResult.Succeeded)
             {
-                await SetLastLoginDate(user);
-                await _eventPublisher.Publish(new UserLoginEvent(user));
-
-                //Do not allow login to admin customers and rejected users
-                if (await UserManager.IsInRoleAsync(user, PlatformConstants.Security.SystemRoles.Customer))
-                {
-                    return Ok(SignInResult.NotAllowed);
-                }
+                await securityStopwatch.DelayAsync();
+                return Ok(loginResult);
             }
+
+            await SetLastLoginDate(user);
+            await _eventPublisher.Publish(new UserLoginEvent(user));
+
+            //Do not allow login to admin customers and rejected users
+            if (await UserManager.IsInRoleAsync(user, PlatformConstants.Security.SystemRoles.Customer))
+            {
+                loginResult = SignInResult.NotAllowed;
+            }
+
+            securityStopwatch.Stop();
 
             return Ok(loginResult);
         }
@@ -611,8 +614,12 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<ActionResult> RequestPasswordReset(string loginOrEmail)
         {
+            // Measure the duration of successful request and delay the failed response to prevent timing attacks
+            var securityStopwatch = SecurityStopwatch.StartNew(nameof(SecurityController), nameof(RequestPasswordReset));
+
             var user = await UserManager.FindByNameAsync(loginOrEmail);
-            if (user == null)
+
+            if (user == null && _identityOptions.User.RequireUniqueEmail)
             {
                 user = await UserManager.FindByEmailAsync(loginOrEmail);
             }
@@ -620,16 +627,15 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // Return 200 to prevent potential user name/email harvesting
             if (user == null)
             {
+                await securityStopwatch.DelayAsync();
                 return Ok();
             }
 
             var nextRequestDate = user.LastPasswordChangeRequestDate + _passwordOptions.RepeatedResetPasswordTimeLimit;
             if (nextRequestDate != null && nextRequestDate > DateTime.UtcNow)
             {
-                return Ok(new
-                {
-                    NextRequestAt = nextRequestDate,
-                });
+                await securityStopwatch.DelayAsync();
+                return Ok(new { NextRequestAt = nextRequestDate });
             }
 
             //Do not permit rejected users and customers
@@ -651,6 +657,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 user.LastPasswordChangeRequestDate = DateTime.UtcNow;
                 await UserManager.UpdateAsync(user);
             }
+
+            securityStopwatch.Stop();
 
             return Ok();
         }
