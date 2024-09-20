@@ -15,12 +15,12 @@ namespace VirtoCommerce.Platform.Core.Modularity
         private readonly ListDictionary<string, string> _dependencyMatrix = [];
         private readonly List<string> _knownModules = [];
 
-        private readonly List<string> _boostedModulesIds;
-        private readonly ListDictionary<string, string> _boostedModulesMarix = [];
+        private readonly List<string> _boostedModules;
+        private readonly ListDictionary<string, string> _boostedDependencyMatrix = [];
 
         public ModuleDependencySolver(ModuleSequenceBoostOptions boostOptions)
         {
-            _boostedModulesIds = boostOptions.ModuleSequenceBoost.ToList();
+            _boostedModules = boostOptions.ModuleSequenceBoost.ToList();
         }
 
         /// <summary>
@@ -37,9 +37,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
             AddToDependencyMatrix(name);
             AddToKnownModules(name);
 
-            if (_boostedModulesIds.Contains(name))
+            if (_boostedModules.Contains(name))
             {
-                AddToBoostedModulesMatrix(name);
+                AddToBoostedDependencyMatrix(name);
             }
         }
 
@@ -70,12 +70,12 @@ namespace VirtoCommerce.Platform.Core.Modularity
             AddToDependencyMatrix(dependentModule);
             _dependencyMatrix.Add(dependentModule, dependingModule);
 
-            if (_boostedModulesIds.Contains(dependingModule))
+            if (_boostedModules.Contains(dependingModule))
             {
-                var index = _boostedModulesIds.IndexOf(dependingModule);
-                _boostedModulesIds.Insert(index, dependentModule);
+                var index = _boostedModules.IndexOf(dependingModule);
+                _boostedModules.Insert(index, dependentModule);
 
-                _boostedModulesMarix.Add(dependentModule, dependingModule);
+                _boostedDependencyMatrix.Add(dependentModule, dependingModule);
             }
         }
 
@@ -95,11 +95,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
             }
         }
 
-        private void AddToBoostedModulesMatrix(string module)
+        private void AddToBoostedDependencyMatrix(string module)
         {
-            if (!_boostedModulesMarix.ContainsKey(module))
+            if (!_boostedDependencyMatrix.ContainsKey(module))
             {
-                _boostedModulesMarix.Add(module);
+                _boostedDependencyMatrix.Add(module);
             }
         }
 
@@ -124,7 +124,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
             }
             skip.Reverse();
 
-            if (_boostedModulesMarix.Count > 0)
+            if (_boostedDependencyMatrix.Count > 0)
             {
                 var boostedModules = GetBoostedSortedModules();
 
@@ -150,9 +150,9 @@ namespace VirtoCommerce.Platform.Core.Modularity
         private List<string> GetBoostedSortedModules()
         {
             var result = new List<string>();
-            while (result.Count < _boostedModulesMarix.Count)
+            while (result.Count < _boostedDependencyMatrix.Count)
             {
-                var leaves = FindLeaves(result, _boostedModulesMarix);
+                var leaves = FindLeaves(result, _boostedDependencyMatrix);
                 result.AddRange(leaves);
             }
             result.Reverse();
@@ -168,11 +168,11 @@ namespace VirtoCommerce.Platform.Core.Modularity
             get { return _dependencyMatrix.Count; }
         }
 
-        private static List<string> FindLeaves(List<string> skip, ListDictionary<string, string> dependecies)
+        private static List<string> FindLeaves(List<string> skip, ListDictionary<string, string> dependencies)
         {
             var result = new List<string>();
 
-            foreach (var precedent in dependecies.Keys)
+            foreach (var precedent in dependencies.Keys)
             {
                 if (skip.Contains(precedent))
                 {
@@ -180,7 +180,7 @@ namespace VirtoCommerce.Platform.Core.Modularity
                 }
 
                 var count = 0;
-                foreach (var dependent in dependecies[precedent])
+                foreach (var dependent in dependencies[precedent])
                 {
                     if (skip.Contains(dependent))
                     {

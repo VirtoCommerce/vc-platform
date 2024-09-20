@@ -28,20 +28,19 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// </summary>
     public class ModuleCatalog : IModuleCatalog
     {
+        private readonly ModuleSequenceBoostOptions _boostOptions;
         private readonly ModuleCatalogItemCollection items;
         private bool isLoaded;
-
-        private readonly ModuleSequenceBoostOptions _boostOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModuleCatalog"/> class.
         /// </summary>
         public ModuleCatalog(IOptions<ModuleSequenceBoostOptions> boostOptions)
         {
+            _boostOptions = boostOptions.Value;
+
             items = new ModuleCatalogItemCollection();
             items.CollectionChanged += ItemsCollectionChanged;
-
-            _boostOptions = boostOptions.Value;
         }
 
         /// <summary>

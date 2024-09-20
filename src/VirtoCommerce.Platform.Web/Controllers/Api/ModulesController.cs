@@ -376,14 +376,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             EnsureModulesCatalogInitialized();
 
             var modules = _externalModuleCatalog.Modules
-                            .OfType<ManifestModuleInfo>()
-                            .Where(x => x.IsInstalled)
-                            .ToArray();
+                .OfType<ManifestModuleInfo>()
+                .Where(x => x.IsInstalled)
+                .ToArray();
 
             var loadingOrder = _externalModuleCatalog.CompleteListWithDependencies(modules)
-                                .OfType<ManifestModuleInfo>()
-                                .Select(x => x.Id)
-                                .ToArray();
+                .OfType<ManifestModuleInfo>()
+                .Select(x => x.Id)
+                .ToArray();
 
             return Ok(loadingOrder);
         }
