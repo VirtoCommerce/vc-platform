@@ -117,8 +117,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (openIdConnectRequest.IsPasswordGrantType())
             {
-                // Measure the duration of successful sign in and delay the failed response to prevent timing attacks
-                var securityStopwatch = SecurityStopwatch.StartNew(nameof(AuthorizationController), nameof(Exchange), "Password");
+                // Measure the duration of a succeeded response and delay subsequent failed responses to prevent timing attacks
+                var delayedResponse = DelayedResponse.Create(nameof(AuthorizationController), nameof(Exchange), "Password");
 
                 var user = await _userManager.FindByNameAsync(openIdConnectRequest.Username);
 
@@ -130,13 +130,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (user is null)
                 {
-                    await securityStopwatch.DelayAsync();
+                    await delayedResponse.FailAsync();
                     return BadRequest(SecurityErrorDescriber.LoginFailed());
                 }
 
                 if (!_passwordLoginOptions.Enabled && !user.IsAdministrator)
                 {
-                    await securityStopwatch.DelayAsync();
+                    await delayedResponse.FailAsync();
                     return BadRequest(SecurityErrorDescriber.PasswordLoginDisabled());
                 }
 
@@ -149,7 +149,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     var errors = await requestValidator.ValidateAsync(context);
                     if (errors.Count > 0)
                     {
-                        await securityStopwatch.DelayAsync();
+                        await delayedResponse.FailAsync();
                         return BadRequest(errors.First());
                     }
                 }
@@ -162,7 +162,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await SetLastLoginDate(user);
                 await _eventPublisher.Publish(new UserLoginEvent(user));
 
-                securityStopwatch.Stop();
+                await delayedResponse.SucceedAsync();
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }

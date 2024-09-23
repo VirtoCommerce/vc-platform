@@ -4,42 +4,41 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Platform.Core.Security;
 
-// This class allows to measure the duration of successful sign in and delay the failed response to prevent timing attacks.
-public class SecurityStopwatch
+// This class allows to measure the duration of a succeeded response and delay subsequent failed responses to prevent timing attacks.
+public class DelayedResponse
 {
     private static readonly ConcurrentDictionary<string, long> _delaysByName = new();
 
-    public static SecurityStopwatch StartNew(params string[] nameParts)
-    {
-        return new SecurityStopwatch(string.Join(".", nameParts));
-    }
-
-    private bool _isRunning;
     private readonly string _name;
     private readonly Stopwatch _stopwatch;
     private readonly Task _delayTask;
 
-    private SecurityStopwatch(string name)
+    public static DelayedResponse Create(params string[] nameParts)
     {
-        _isRunning = true;
+        return new DelayedResponse(string.Join(".", nameParts));
+    }
+
+    public DelayedResponse(string name)
+    {
         _name = name;
         _stopwatch = Stopwatch.StartNew();
         _delaysByName.TryAdd(name, 0L);
         _delayTask = Task.Delay((int)_delaysByName[name]);
     }
 
-    public Task DelayAsync()
+    public Task FailAsync()
     {
         return _delayTask;
     }
 
-    public void Stop()
+    public Task SucceedAsync()
     {
-        if (_isRunning)
+        if (_stopwatch.IsRunning)
         {
             _stopwatch.Stop();
             _delaysByName[_name] = _stopwatch.ElapsedMilliseconds;
-            _isRunning = false;
         }
+
+        return Task.CompletedTask;
     }
 }

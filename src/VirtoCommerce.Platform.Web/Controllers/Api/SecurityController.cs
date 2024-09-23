@@ -97,8 +97,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<ActionResult<SignInResult>> Login([FromBody] LoginRequest request)
         {
-            // Measure the duration of successful sign in and delay the failed response to prevent timing attacks
-            var securityStopwatch = SecurityStopwatch.StartNew(nameof(SecurityController), nameof(Login));
+            // Measure the duration of a succeeded response and delay subsequent failed responses to prevent timing attacks
+            var delayedResponse = DelayedResponse.Create(nameof(SecurityController), nameof(Login));
 
             var user = await UserManager.FindByNameAsync(request.UserName);
 
@@ -110,7 +110,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (user == null)
             {
-                await securityStopwatch.DelayAsync();
+                await delayedResponse.FailAsync();
                 return Ok(SignInResult.Failed);
             }
 
@@ -120,7 +120,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (!loginResult.Succeeded)
             {
-                await securityStopwatch.DelayAsync();
+                await delayedResponse.FailAsync();
                 return Ok(loginResult);
             }
 
@@ -133,7 +133,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 loginResult = SignInResult.NotAllowed;
             }
 
-            securityStopwatch.Stop();
+            await delayedResponse.SucceedAsync();
 
             return Ok(loginResult);
         }
@@ -614,8 +614,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
         [AllowAnonymous]
         public async Task<ActionResult> RequestPasswordReset(string loginOrEmail)
         {
-            // Measure the duration of successful request and delay the failed response to prevent timing attacks
-            var securityStopwatch = SecurityStopwatch.StartNew(nameof(SecurityController), nameof(RequestPasswordReset));
+            // Measure the duration of a succeeded response and delay subsequent failed responses to prevent timing attacks
+            var delayedResponse = DelayedResponse.Create(nameof(SecurityController), nameof(RequestPasswordReset));
 
             var user = await UserManager.FindByNameAsync(loginOrEmail);
 
@@ -627,14 +627,14 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             // Return 200 to prevent potential user name/email harvesting
             if (user == null)
             {
-                await securityStopwatch.DelayAsync();
+                await delayedResponse.FailAsync();
                 return Ok();
             }
 
             var nextRequestDate = user.LastPasswordChangeRequestDate + _passwordOptions.RepeatedResetPasswordTimeLimit;
             if (nextRequestDate != null && nextRequestDate > DateTime.UtcNow)
             {
-                await securityStopwatch.DelayAsync();
+                await delayedResponse.FailAsync();
                 return Ok(new { NextRequestAt = nextRequestDate });
             }
 
@@ -658,7 +658,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 await UserManager.UpdateAsync(user);
             }
 
-            securityStopwatch.Stop();
+            await delayedResponse.SucceedAsync();
 
             return Ok();
         }
