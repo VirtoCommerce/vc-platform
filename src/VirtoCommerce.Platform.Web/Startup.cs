@@ -471,6 +471,8 @@ namespace VirtoCommerce.Platform.Web
                     })
                     .ValidateDataAnnotations();
 
+            services.AddOptions<ModuleSequenceBoostOptions>().Bind(Configuration.GetSection("VirtoCommerce"));
+
             services.AddModules(mvcBuilder);
 
             services.AddOptions<ExternalModuleCatalogOptions>().Bind(Configuration.GetSection("ExternalModules")).ValidateDataAnnotations();

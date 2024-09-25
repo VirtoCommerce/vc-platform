@@ -341,7 +341,8 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var logger = new Mock<ILogger<ExternalModuleCatalog>>();
 
             var options = Options.Create(new ExternalModuleCatalogOptions() { ModulesManifestUrl = new Uri("http://nowhere.mock"), IncludePrerelease = includePrerelease });
-            var result = new ExternalModuleCatalog(localModulesCatalog.Object, client.Object, options, logger.Object);
+            var boostOptions = Options.Create(new ModuleSequenceBoostOptions());
+            var result = new ExternalModuleCatalog(localModulesCatalog.Object, client.Object, options, logger.Object, boostOptions);
             return result;
         }
 

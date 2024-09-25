@@ -27,7 +27,9 @@ namespace VirtoCommerce.Platform.Modules
             IOptions<LocalStorageModuleCatalogOptions> options,
             IInternalDistributedLockService distributedLockProvider,
             IFileCopyPolicy fileCopyPolicy,
-            ILogger<LocalStorageModuleCatalog> logger)
+            ILogger<LocalStorageModuleCatalog> logger,
+            IOptions<ModuleSequenceBoostOptions> boostOptions)
+            : base(boostOptions)
         {
             _options = options.Value;
             _probingPath = _options.ProbingPath is null ? null : Path.GetFullPath(_options.ProbingPath);
