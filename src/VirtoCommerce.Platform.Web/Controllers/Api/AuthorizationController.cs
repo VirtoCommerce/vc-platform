@@ -117,6 +117,9 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
             if (openIdConnectRequest.IsPasswordGrantType())
             {
+                // Measure the duration of a succeeded response and delay subsequent failed responses to prevent timing attacks
+                var delayedResponse = DelayedResponse.Create(nameof(AuthorizationController), nameof(Exchange), "Password");
+
                 var user = await _userManager.FindByNameAsync(openIdConnectRequest.Username);
 
                 // Allows signin to back office by either username (login) or email if IdentityOptions.User.RequireUniqueEmail is True. 
@@ -127,11 +130,13 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 if (user is null)
                 {
+                    await delayedResponse.FailAsync();
                     return BadRequest(SecurityErrorDescriber.LoginFailed());
                 }
 
                 if (!_passwordLoginOptions.Enabled && !user.IsAdministrator)
                 {
+                    await delayedResponse.FailAsync();
                     return BadRequest(SecurityErrorDescriber.PasswordLoginDisabled());
                 }
 
@@ -144,6 +149,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                     var errors = await requestValidator.ValidateAsync(context);
                     if (errors.Count > 0)
                     {
+                        await delayedResponse.FailAsync();
                         return BadRequest(errors.First());
                     }
                 }
@@ -155,6 +161,8 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
 
                 await SetLastLoginDate(user);
                 await _eventPublisher.Publish(new UserLoginEvent(user));
+
+                await delayedResponse.SucceedAsync();
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
