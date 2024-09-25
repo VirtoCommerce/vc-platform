@@ -19,7 +19,13 @@ namespace VirtoCommerce.Platform.Modules
 
         private static readonly object _lockObject = new object();
 
-        public ExternalModuleCatalog(ILocalModuleCatalog otherCatalog, IExternalModulesClient externalClient, IOptions<ExternalModuleCatalogOptions> options, ILogger<ExternalModuleCatalog> logger)
+        public ExternalModuleCatalog(
+            ILocalModuleCatalog otherCatalog,
+            IExternalModulesClient externalClient,
+            IOptions<ExternalModuleCatalogOptions> options,
+            ILogger<ExternalModuleCatalog> logger,
+            IOptions<ModuleSequenceBoostOptions> boostOptions)
+            : base(boostOptions)
         {
             _externalClient = externalClient;
             _installedModules = otherCatalog.Modules;

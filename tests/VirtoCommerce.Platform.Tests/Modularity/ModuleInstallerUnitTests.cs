@@ -104,8 +104,9 @@ namespace VirtoCommerce.Platform.Tests.Modularity
             var externalModulesClientMock = new Mock<IExternalModulesClient>();
             var options = Options.Create(new Mock<ExternalModuleCatalogOptions>().Object);
             var loggerMock = new Mock<ILogger<ExternalModuleCatalog>>();
+            var boostOptions = Options.Create(new ModuleSequenceBoostOptions());
 
-            var externalModuleCatalog = new ExternalModuleCatalog(localCatalogModulesMock.Object, externalModulesClientMock.Object, options, loggerMock.Object);
+            var externalModuleCatalog = new ExternalModuleCatalog(localCatalogModulesMock.Object, externalModulesClientMock.Object, options, loggerMock.Object, boostOptions);
 
             foreach (var module in installedModules)
             {

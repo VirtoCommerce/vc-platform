@@ -12,8 +12,16 @@ namespace VirtoCommerce.Platform.Core.Modularity
     /// </summary>
     public class ModuleDependencySolver
     {
-        private readonly ListDictionary<string, string> dependencyMatrix = new ListDictionary<string, string>();
-        private readonly List<string> knownModules = new List<string>();
+        private readonly ListDictionary<string, string> _dependencyMatrix = [];
+        private readonly List<string> _knownModules = [];
+
+        private readonly List<string> _boostedModules;
+        private readonly ListDictionary<string, string> _boostedDependencyMatrix = [];
+
+        public ModuleDependencySolver(ModuleSequenceBoostOptions boostOptions)
+        {
+            _boostedModules = boostOptions.ModuleSequenceBoost.ToList();
+        }
 
         /// <summary>
         /// Adds a module to the solver.
@@ -21,11 +29,18 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// <param name="name">The name that uniquely identifies the module.</param>
         public void AddModule(string name)
         {
-            if (String.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
+            {
                 throw new ArgumentNullException(nameof(name));
+            }
 
             AddToDependencyMatrix(name);
             AddToKnownModules(name);
+
+            if (_boostedModules.Contains(name))
+            {
+                AddToBoostedDependencyMatrix(name);
+            }
         }
 
         /// <summary>
@@ -37,32 +52,54 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// depends on.</param>
         public void AddDependency(string dependingModule, string dependentModule)
         {
-            if (String.IsNullOrEmpty(dependingModule))
+            if (string.IsNullOrEmpty(dependingModule))
+            {
                 throw new ArgumentNullException(nameof(dependingModule));
+            }
 
-            if (String.IsNullOrEmpty(dependentModule))
+            if (string.IsNullOrEmpty(dependentModule))
+            {
                 throw new ArgumentNullException(nameof(dependentModule));
+            }
 
-            if (!knownModules.Contains(dependingModule))
+            if (!_knownModules.Contains(dependingModule))
+            {
                 throw new ArgumentException($"Cannot add dependency for unknown module {dependingModule}");
+            }
 
             AddToDependencyMatrix(dependentModule);
-            dependencyMatrix.Add(dependentModule, dependingModule);
+            _dependencyMatrix.Add(dependentModule, dependingModule);
+
+            if (_boostedModules.Contains(dependingModule))
+            {
+                var index = _boostedModules.IndexOf(dependingModule);
+                _boostedModules.Insert(index, dependentModule);
+
+                _boostedDependencyMatrix.Add(dependentModule, dependingModule);
+            }
         }
 
         private void AddToDependencyMatrix(string module)
         {
-            if (!dependencyMatrix.ContainsKey(module))
+            if (!_dependencyMatrix.ContainsKey(module))
             {
-                dependencyMatrix.Add(module);
+                _dependencyMatrix.Add(module);
             }
         }
 
         private void AddToKnownModules(string module)
         {
-            if (!knownModules.Contains(module))
+            if (!_knownModules.Contains(module))
             {
-                knownModules.Add(module);
+                _knownModules.Add(module);
+            }
+        }
+
+        private void AddToBoostedDependencyMatrix(string module)
+        {
+            if (!_boostedDependencyMatrix.ContainsKey(module))
+            {
+                _boostedDependencyMatrix.Add(module);
             }
         }
 
@@ -72,14 +109,14 @@ namespace VirtoCommerce.Platform.Core.Modularity
         /// </summary>
         /// <returns>The resulting ordered list of modules.</returns>
         /// <exception cref="CyclicDependencyFoundException">This exception is thrown
-        /// when a cycle is found in the defined depedency graph.</exception>
+        /// when a cycle is found in the defined dependency graph.</exception>
         public string[] Solve()
         {
-            List<string> skip = new List<string>();
-            while (skip.Count < dependencyMatrix.Count)
+            var skip = new List<string>();
+            while (skip.Count < _dependencyMatrix.Count)
             {
-                List<string> leaves = this.FindLeaves(skip);
-                if (leaves.Count == 0 && skip.Count < dependencyMatrix.Count)
+                var leaves = FindLeaves(skip, _dependencyMatrix);
+                if (leaves.Count == 0 && skip.Count < _dependencyMatrix.Count)
                 {
                     throw new CyclicDependencyFoundException($"At least one cyclic dependency has been found in the module catalog. Cycles in the module dependencies must be avoided.");
                 }
@@ -87,11 +124,20 @@ namespace VirtoCommerce.Platform.Core.Modularity
             }
             skip.Reverse();
 
-            if (skip.Count > knownModules.Count)
+            if (_boostedDependencyMatrix.Count > 0)
             {
-                var missedDependencies = skip.Except(knownModules).ToList();
+                var boostedModules = GetBoostedSortedModules();
+
+                // Remove boosted modules and add them to the start of the list
+                skip.RemoveAll(boostedModules.Contains);
+                skip = boostedModules.Concat(skip).ToList();
+            }
+
+            if (skip.Count > _knownModules.Count)
+            {
+                var missedDependencies = skip.Except(_knownModules).ToList();
                 // Create missed module matrix (key: missed module, value: module that miss it) and reverse it (keys to values, values to keys; key: module that miss other module, value: missed module)
-                var missedDependenciesMatrix = missedDependencies.ToDictionary(md => md, md => dependencyMatrix[md])
+                var missedDependenciesMatrix = missedDependencies.ToDictionary(md => md, md => _dependencyMatrix[md])
                     .SelectMany(p => p.Value.Select(m => new KeyValuePair<string, string>(m, p.Key)))
                     .GroupBy(p => p.Key)
                     .ToDictionary(g => g.Key, g => g.Select(p => p.Value));
@@ -101,28 +147,40 @@ namespace VirtoCommerce.Platform.Core.Modularity
             return skip.ToArray();
         }
 
+        private List<string> GetBoostedSortedModules()
+        {
+            var result = new List<string>();
+            while (result.Count < _boostedDependencyMatrix.Count)
+            {
+                var leaves = FindLeaves(result, _boostedDependencyMatrix);
+                result.AddRange(leaves);
+            }
+            result.Reverse();
+            return result;
+        }
+
         /// <summary>
         /// Gets the number of modules added to the solver.
         /// </summary>
         /// <value>The number of modules.</value>
         public int ModuleCount
         {
-            get { return dependencyMatrix.Count; }
+            get { return _dependencyMatrix.Count; }
         }
 
-        private List<string> FindLeaves(List<string> skip)
+        private static List<string> FindLeaves(List<string> skip, ListDictionary<string, string> dependencies)
         {
-            List<string> result = new List<string>();
+            var result = new List<string>();
 
-            foreach (string precedent in dependencyMatrix.Keys)
+            foreach (var precedent in dependencies.Keys)
             {
                 if (skip.Contains(precedent))
                 {
                     continue;
                 }
 
-                int count = 0;
-                foreach (string dependent in dependencyMatrix[precedent])
+                var count = 0;
+                foreach (var dependent in dependencies[precedent])
                 {
                     if (skip.Contains(dependent))
                     {

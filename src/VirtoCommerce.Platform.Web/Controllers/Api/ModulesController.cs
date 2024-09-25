@@ -368,6 +368,26 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
             return Ok(state);
         }
 
+        [HttpGet]
+        [Route("loading-order")]
+        [Authorize(PlatformConstants.Security.Permissions.ModuleManage)]
+        public ActionResult<string[]> GetModulesLoadingOrder()
+        {
+            EnsureModulesCatalogInitialized();
+
+            var modules = _externalModuleCatalog.Modules
+                .OfType<ManifestModuleInfo>()
+                .Where(x => x.IsInstalled)
+                .ToArray();
+
+            var loadingOrder = _externalModuleCatalog.CompleteListWithDependencies(modules)
+                .OfType<ManifestModuleInfo>()
+                .Select(x => x.Id)
+                .ToArray();
+
+            return Ok(loadingOrder);
+        }
+
         [ApiExplorerSettings(IgnoreApi = true)]
         public void ModuleBackgroundJob(ModuleBackgroundJobOptions options, ModulePushNotification notification)
         {
