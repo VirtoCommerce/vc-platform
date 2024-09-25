@@ -8,7 +8,7 @@ namespace VirtoCommerce.Platform.Core.Security;
 // This class allows to measure the duration of a succeeded response and delay subsequent failed responses to prevent timing attacks.
 public class DelayedResponse
 {
-    private const int _minDelay = 200; // milliseconds
+    private const int _minDelay = 150; // milliseconds
     private static readonly ConcurrentDictionary<string, int> _delaysByName = new();
 
     private readonly string _name;
