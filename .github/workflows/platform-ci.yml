@@ -110,7 +110,7 @@ jobs:
 
     - name: Get changelog
       id: changelog
-      uses: VirtoCommerce/vc-github-actions/changelog-generator@master
+      uses: VirtoCommerce/vc-github-actions/changelog-generator@VCST-1835
 
     - name: Set VERSION_SUFFIX variable
       run: |
