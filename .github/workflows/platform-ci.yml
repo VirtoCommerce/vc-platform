@@ -110,7 +110,7 @@ jobs:
 
     - name: Get changelog
       id: changelog
-      uses: VirtoCommerce/vc-github-actions/changelog-generator@VCST-1835
+      uses: VirtoCommerce/vc-github-actions/changelog-generator@master #VCST-1835
 
     - name: Set VERSION_SUFFIX variable
       run: |
@@ -337,4 +337,3 @@ jobs:
           cmd_options: '-a -d'
           # allow_issue_writing: false
 
-          
