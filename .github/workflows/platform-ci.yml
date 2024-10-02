@@ -24,7 +24,7 @@ on:
 
   pull_request:
     paths-ignore:
-      - '.github/**'
+      # - '.github/**'
       - 'docs/**'
       - 'build/**'
       - 'README.md'
