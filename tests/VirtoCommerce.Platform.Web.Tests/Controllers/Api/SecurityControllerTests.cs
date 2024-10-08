@@ -141,7 +141,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             var user = _fixture.Create<ApplicationUser>();
             var request = _fixture.Create<LoginRequest>();
             _signInManagerMock
-                .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
                 .ReturnsAsync(SignInResult.Success);
             _userManagerMock
                 .Setup(x => x.FindByNameAsync(It.IsAny<string>()))
@@ -168,7 +168,7 @@ namespace VirtoCommerce.Platform.Web.Tests.Controllers.Api
             var user = _fixture.Create<ApplicationUser>();
             var request = _fixture.Create<LoginRequest>();
             _signInManagerMock
-                .Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .Setup(x => x.PasswordSignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<bool>()))
                 .ReturnsAsync(SignInResult.Success);
             _userManagerMock
                 .Setup(x => x.FindByNameAsync(It.IsAny<string>()))

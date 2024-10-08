@@ -22,12 +22,14 @@ namespace VirtoCommerce.Platform.Tests.Modularity
         public void Module(string targetPlatformVersion, string runningPlatformVersion, bool violation)
         {
             var catalogOptionsMock = new Mock<IOptions<LocalStorageModuleCatalogOptions>>();
+            var boostOptions = Options.Create(new ModuleSequenceBoostOptions());
             catalogOptionsMock.Setup(x => x.Value).Returns(new LocalStorageModuleCatalogOptions() { DiscoveryPath = string.Empty });
             var catalog = new LocalStorageModuleCatalog(
                 catalogOptionsMock.Object,
                 new Mock<IInternalDistributedLockService>().Object,
                 new Mock<IFileCopyPolicy>().Object,
-                new Mock<ILogger<LocalStorageModuleCatalog>>().Object);
+                new Mock<ILogger<LocalStorageModuleCatalog>>().Object,
+                boostOptions);
             PlatformVersion.CurrentVersion = SemanticVersion.Parse(runningPlatformVersion);
             var module = new ManifestModuleInfo().LoadFromManifest(new ModuleManifest() { PlatformVersion = targetPlatformVersion, Id = "Fake", Version = "0.0.0" /*Does not matter (not used in test)*/ });
             catalog.AddModule(module);

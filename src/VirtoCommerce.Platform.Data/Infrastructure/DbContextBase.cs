@@ -9,6 +9,8 @@ namespace VirtoCommerce.Platform.Data.Infrastructure
     /// </summary>
     public class DbContextBase : DbContextWithTriggers
     {
+        public const int IdLength = 128;
+
         public DbContextBase()
         {
         }

@@ -444,6 +444,8 @@ angular.module('platformWebApp', AppDependencies).controller('platformWebApp.app
                                 }
                             }
                         });
+                    } else if (!authContext.isAdministrator && !authContext.permissions?.length) {
+                        $state.go('contact-admin');
                     } else if (!currentState.name || currentState.name === 'loginDialog') {
                         var query = new URLSearchParams(window.location.search);
                         var returnUrl = query.get('ReturnUrl');

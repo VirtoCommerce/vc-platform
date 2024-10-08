@@ -87,7 +87,7 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
         [HttpGet]
         [Route("signout")]
-        public async Task<ActionResult> SignOut(string authenticationType)
+        public async Task<ActionResult> SignOut(string authenticationType, string returnUrl = null)
         {
             if (string.IsNullOrEmpty(authenticationType))
             {
@@ -109,6 +109,12 @@ namespace VirtoCommerce.Platform.Web.Controllers
 
             var authenticationProperties = new AuthenticationProperties();
             authenticationProperties.Items["LoginProvider"] = authenticationType;
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                authenticationProperties.RedirectUri = returnUrl;
+            }
+
             return SignOut(authenticationProperties, authenticationType);
         }
 
