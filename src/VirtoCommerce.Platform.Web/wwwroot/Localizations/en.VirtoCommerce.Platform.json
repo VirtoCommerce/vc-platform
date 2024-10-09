@@ -287,7 +287,7 @@
         "title": "Modules",
         "labels": {
           "updates": "Updates",
-          "available": "Available",
+          "browse": "Browse",
           "installed": "Installed",
           "withErrors": "Errors",
           "advanced": "Advanced"
@@ -299,7 +299,7 @@
           "grouping": "Show Module bundles",
           "ungrouped": "Other",
           "no-updates": "No updates found.",
-          "no-modules-part1": "No new Modules to install.",
+          "no-modules": "No Modules to install.",
           "no-installed-modules": "No installed Modules found.",
           "icon": "Icon",
           "up-to-date": "Module is up to date",

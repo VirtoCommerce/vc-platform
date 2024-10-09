@@ -1,7 +1,7 @@
 angular.module('platformWebApp')
     .controller('platformWebApp.modulesMainController', ['$scope', 'platformWebApp.bladeNavigationService', 'platformWebApp.modules', 'platformWebApp.moduleHelper', function ($scope, bladeNavigationService, modules, moduleHelper) {
         var blade = $scope.blade;
-        var nodeUpdate, nodeAvailable, nodeInstalled;
+        var nodeUpdate, nodeExisting, nodeInstalled;
         $scope.selectedNodeId = null;
 
         blade.reload = function () {
@@ -30,22 +30,26 @@ angular.module('platformWebApp')
                 var grouped = _.groupBy(results, 'id');
                 _.each(grouped, function (vals, key) {
                     var latest = _.last(vals);
-                    newResults.push(latest);
+                    var installed = _.last(_.where(vals, { isInstalled: true }));
+                    if (installed)
+                        newResults.push(installed);
+                    else
+                        newResults.push(latest);
 
-                    // pre-calculate $alternativeVersion: set latest OR installed version here
+                    // pre-calculate $alternativeVersion: set latest /*OR installed */version here
                     var foundInstalledModule;
                     if (foundInstalledModule = _.findWhere(vals, { isInstalled: true })) {
                         _.each(vals, function (m) {
                             if (m === foundInstalledModule) {
                                 if (m !== latest)
                                     m.$alternativeVersion = latest.version;
-                            } else {
+                            }/* else {
                                 m.$alternativeVersion = foundInstalledModule.version;
-                            }
+                            }*/
                         });
                     }
 
-                    // prepare bundled (grouped) data source of available modules
+                    // prepare bundled (grouped) data source of existing modules
                     if (!latest.isInstalled && !latest.$alternativeVersion) {
                         if (_.any(latest.groups)) {
                             _.each(latest.groups, function (x, index) {
@@ -61,10 +65,11 @@ angular.module('platformWebApp')
                     }
                 });
 
-                nodeUpdate.entities = _.filter(newResults, function (x) { return !x.isInstalled && x.$alternativeVersion; });
-                nodeAvailable.entities = moduleHelper.availableModules = _.filter(newResults, function (x) { return !x.isInstalled && !x.$alternativeVersion; });
+                nodeExisting.entities = moduleHelper.existingModules = newResults;
                 nodeInstalled.entities = _.where(results, { isInstalled: true });
+                nodeUpdate.entities = _.filter(results, function (x) { return x.isInstalled && x.$alternativeVersion; });
                 nodeWithErrors.entities = _.filter(results, function (x) { return x.isInstalled && _.any(x.validationErrors); });
+
                 if (_.any(nodeWithErrors.entities) && !nodeWithErrors.isAddedToList) {
                     nodeWithErrors.isAddedToList = true;
                     blade.currentEntities.splice(3, 0, nodeWithErrors);
@@ -120,9 +125,9 @@ angular.module('platformWebApp')
         blade.headIcon = 'fa fa-cubes';
 
         blade.currentEntities = [
-            nodeUpdate = { name: 'platform.blades.modules-main.labels.updates', mode: 'update' },
-            nodeAvailable = { name: 'platform.blades.modules-main.labels.available', mode: 'available' },
+            nodeExisting = { name: 'platform.blades.modules-main.labels.browse', mode: 'browse' },
             nodeInstalled = { name: 'platform.blades.modules-main.labels.installed', mode: 'installed' },
+            nodeUpdate = { name: 'platform.blades.modules-main.labels.updates', mode: 'update' },
             { name: 'platform.blades.modules-main.labels.advanced', mode: 'advanced' }
         ];
 

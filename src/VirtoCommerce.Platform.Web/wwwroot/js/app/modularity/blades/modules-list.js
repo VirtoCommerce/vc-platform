@@ -40,7 +40,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                 permission: 'platform:module:manage'
             }];
             break;
-        case 'available':
+        case 'browse':
             blade.toolbarCommands = [{
                 name: "platform.commands.install", icon: 'fas fa-plus',
                 executeMethod: function () { $scope.confirmActionInDialog('install', $scope.gridApi.selection.getSelectedRows()); },
@@ -122,7 +122,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                     showTreeRowHeader: false
                 });
                 break;
-            case 'available':
+            case 'browse':
                 _.extend(gridOptions, {
                     enableGroupHeaderSelection: true
                 });
@@ -132,7 +132,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
         uiGridHelper.initialize($scope, gridOptions, function (gridApi) {
             gridApi.grid.registerRowsProcessor($scope.singleFilter, 90);
 
-            if (blade.mode === 'available') {
+            if (blade.mode === 'browse') {
                 $scope.$watch('blade.isGrouped', function (isGrouped) {
                     if (isGrouped) {
                         blade.currentEntities = moduleHelper.moduleBundles;
@@ -141,7 +141,7 @@ function ($scope, bladeNavigationService, dialogService, modules, uiGridConstant
                         }
                         $timeout(gridApi.treeBase.expandAllRows);
                     } else {
-                        blade.currentEntities = moduleHelper.availableModules;
+                        blade.currentEntities = moduleHelper.existingModules;
                         gridApi.grouping.clearGrouping();
                     }
                 });
