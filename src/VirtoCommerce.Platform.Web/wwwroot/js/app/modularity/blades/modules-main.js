@@ -36,7 +36,6 @@ angular.module('platformWebApp')
                     var foundInstalledModule;
                     if (foundInstalledModule = _.findWhere(vals, { isInstalled: true })) {
                         newResults.push(foundInstalledModule);
-
                         _.each(vals, function (m) {
                             if (m === foundInstalledModule) {
                                 if (m !== latest) {
@@ -49,22 +48,22 @@ angular.module('platformWebApp')
                             }
                         });
                     }
-                    else
+                    else {
                         newResults.push(latest);
+                    }
 
                     // prepare bundled (grouped) data source of existing modules
-                    if (!latest.isInstalled && !latest.$alternativeVersion) {
-                        if (_.any(latest.groups)) {
-                            _.each(latest.groups, function (x, index) {
-                                var clone = angular.copy(latest);
-                                clone.$group = x;
-                                moduleHelper.moduleBundles.push(clone);
-                            });
-                        } else {
-                            var clone = angular.copy(latest);
-                            clone.$group = 'platform.blades.modules-list.labels.ungrouped';
+                    var newLatest = newResults.at(-1);
+                    if (_.any(newLatest.groups)) {
+                        _.each(newLatest.groups, function (x, index) {
+                            var clone = angular.copy(newLatest);
+                            clone.$group = x;
                             moduleHelper.moduleBundles.push(clone);
-                        }
+                        });
+                    } else {
+                        var clone = angular.copy(newLatest);
+                        clone.$group = 'platform.blades.modules-list.labels.ungrouped';
+                        moduleHelper.moduleBundles.push(clone);
                     }
                 });
 
