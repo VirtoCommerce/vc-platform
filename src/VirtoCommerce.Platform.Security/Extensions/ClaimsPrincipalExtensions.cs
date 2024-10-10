@@ -14,7 +14,7 @@ namespace VirtoCommerce.Platform.Security.Extensions
 
         public static string GetAuthenticationMethod(this ClaimsPrincipal claimsPrincipal)
         {
-            return claimsPrincipal?.GetClaim(ClaimTypes.AuthenticationMethod);
+            return claimsPrincipal?.FindFirst(ClaimTypes.AuthenticationMethod)?.Value;
         }
 
         public static ClaimsPrincipal SetAuthenticationMethod(this ClaimsPrincipal claimsPrincipal, string value, IList<string> destinations)
