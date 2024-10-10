@@ -28,26 +28,29 @@ angular.module('platformWebApp')
 
                 var newResults = [];
                 var grouped = _.groupBy(results, 'id');
+
                 _.each(grouped, function (vals, key) {
                     var latest = _.last(vals);
-                    var installed = _.last(_.where(vals, { isInstalled: true }));
-                    if (installed)
-                        newResults.push(installed);
-                    else
-                        newResults.push(latest);
 
-                    // pre-calculate $alternativeVersion: set latest /*OR installed */version here
+                    // pre-calculate $alternativeVersion: set latest OR installed version here
                     var foundInstalledModule;
                     if (foundInstalledModule = _.findWhere(vals, { isInstalled: true })) {
+                        newResults.push(foundInstalledModule);
+
                         _.each(vals, function (m) {
                             if (m === foundInstalledModule) {
-                                if (m !== latest)
+                                if (m !== latest) {
+                                    // to display the new available version of the installed module
                                     m.$alternativeVersion = latest.version;
-                            }/* else {
-                                m.$alternativeVersion = foundInstalledModule.version;
-                            }*/
+                                }
+                            } else {
+                                // It is necessary to detect the update on the module details page (the latest non-installed version contains the current installed version here)
+                                m.$installedVersion = foundInstalledModule.version;
+                            }
                         });
                     }
+                    else
+                        newResults.push(latest);
 
                     // prepare bundled (grouped) data source of existing modules
                     if (!latest.isInstalled && !latest.$alternativeVersion) {

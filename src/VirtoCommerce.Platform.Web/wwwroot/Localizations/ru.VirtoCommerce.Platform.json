@@ -343,7 +343,8 @@
           "dependencies": "Зависимости",
           "tags": "Теги",
           "install-version": "Установленная версия",
-          "errors": "Ошибки"
+          "errors": "Ошибки",
+          "update-version": "Обновить {{id}} до"
         }
       },
       "modules-main": {

@@ -280,7 +280,8 @@
           "optional-dependencies": "Optional dependencies",
           "tags": "Tags",
           "install-version": "Install version",
-          "errors": "Errors"
+          "errors": "Errors",
+          "update-version": "Update {{id}} to"
         }
       },
       "modules-main": {

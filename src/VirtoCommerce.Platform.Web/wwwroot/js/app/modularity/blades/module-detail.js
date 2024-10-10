@@ -52,7 +52,7 @@ angular.module('platformWebApp')
             });
         } else {
             blade.toolbarCommands = [];
-            blade.mode = blade.currentEntity.$alternativeVersion ? 'update' : 'install';
+            blade.mode = blade.currentEntity.$installedVersion ? 'update' : 'install';
             $scope.availableVersions = _.where(moduleHelper.allmodules, { id: blade.currentEntity.id, isInstalled: false });
             blade.isLoading = false;
         }
@@ -151,6 +151,7 @@ angular.module('platformWebApp')
     };
 
     blade.headIcon = 'fa fa-cubes';
+    blade.fallbackIconSrc = '/images/module-logo.png';
 
     if (blade.mode === 'advanced') {
         // the uploader

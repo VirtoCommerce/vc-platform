@@ -251,7 +251,8 @@
           "dependencies": "Abhängigkeiten",
           "tags": "Tags",
           "install-version": "Installieren Sie version",
-          "errors": "Fehler"
+          "errors": "Fehler",
+          "update-version": "{{id}} auf aktualisieren"
         }
       },
       "modules-main": {
