@@ -106,7 +106,6 @@ angular.module('platformWebApp')
         var externalSignInData = externalSignInStorage.get();
         if (externalSignInData && externalSignInData.providerType) {
             externalSignInStorage.remove();
-            changeAuth({});
             var url = 'externalsignin/signout?authenticationType=' + externalSignInData.providerType;
             $window.location.href = url;
         }
