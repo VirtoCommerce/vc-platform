@@ -1,0 +1,188 @@
+{
+  "platform": {
+    "commands": {
+      "add": "Ajouter",
+      "activate": "Activer",
+      "assign": "Assigner",
+      "cancel": "Annuler",
+      "clear": "Effacer",
+      "clear-all": "Tout effacer",
+      "clone": "Cloner",
+      "close": "Fermer",
+      "confirm": "Confirmer",
+      "copy-link": "Copier le lien",
+      "copy": "Copier",
+      "create": "Créer",
+      "cut": "Couper",
+      "delete": "Supprimer",
+      "add-all": "Tout ajouter",
+      "remove-all": "Tout supprimer",
+      "download": "Télécharger",
+      "edit": "Modifier",
+      "export": "Exporter",
+      "generate": "Générer",
+      "import": "Importer",
+      "import-sample-data": "Importer des données d'exemple",
+      "install": "Installer",
+      "manage": "Gérer",
+      "more": "Plus",
+      "no": "Non",
+      "new-folder": "Nouveau dossier",
+      "new-license": "Renouveler la licence",
+      "ok": "OK",
+      "paste": "Coller",
+      "pick-selected": "Sélectionner",
+      "preview": "Aperçu",
+      "open-browser": "Ouvrir dans le navigateur",
+      "redo": "Rétablir",
+      "refresh": "Actualiser",
+      "remove": "Supprimer",
+      "reset": "Réinitialiser",
+      "restart": "Redémarrer",
+      "save": "Enregistrer",
+      "send": "Envoyer",
+      "select-all": "Tout sélectionner",
+      "set-to-default": "Rétablir par défaut",
+      "start-export": "Démarrer l'exportation",
+      "settings": "Paramètres",
+      "sign-out": "Se déconnecter",
+      "undo": "Annuler",
+      "uninstall": "Désinstaller",
+      "unselect-all": "Tout désélectionner",
+      "update": "Mettre à jour",
+      "upload": "Téléverser",
+      "yes": "Oui",
+      "add-new-property": "Ajouter une nouvelle propriété",
+      "manage-type-properties": "Types de propriétés",
+      "manage-profile": "Gérer le profil",
+      "minimize": "Réduire",
+      "maximize": "Agrandir",
+      "stop-sending": "Arrêter l'envoi",
+      "set-active": "Définir comme actif",
+      "reject-user": "Rejeter l'utilisateur",
+      "change-password": "Changer le mot de passe",
+      "unlock-account": "Débloquer le compte",
+      "lock-account": "Verrouiller le compte",
+      "today": "Aujourd'hui",
+      "time": "Heure",
+      "now": "Maintenant",
+      "date": "Date",
+      "see-details": "Voir les détails",
+      "dismiss": "Ignorer",
+      "hide-empty-property-values": "Masquer les valeurs vides",
+      "show-empty-property-values": "Afficher les valeurs vides",
+      "titles": {
+        "refresh": "Actualiser",
+        "new-folder": "Nouveau dossier",
+        "upload": "Téléverser"
+      }
+    },
+    "list": {
+      "no-data": "Aucune donnée",
+      "count": "Nombre",
+      "loading": "Chargement...",
+      "item-not-found": "Erreur : Non trouvé"
+    },
+    "placeholders": {
+      "n-a": "N/A",
+      "no-file": "Choisir un fichier",
+      "search-keyword": "Rechercher un mot-clé...",
+      "select-value": "Sélectionner une valeur",
+      "select-values": "Sélectionner une valeur"
+    },
+    "dialogs": {
+      "delete": {
+        "title": "Confirmation de suppression",
+        "message": "Êtes-vous sûr de vouloir supprimer les entrées sélectionnées ?"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "Texte court",
+        "description": "Valeurs de texte de moins de 1024 caractères"
+      },
+      "long-text": {
+        "title": "Texte long",
+        "description": "Texte illimité sans restriction de taille"
+      },
+      "integer": {
+        "title": "Entier",
+        "description": "Nombre entier"
+      },
+      "decimal": {
+        "title": "Nombre décimal",
+        "description": "Nombre décimal avec une précision de 18 et une échelle de 4"
+      },
+      "date-time": {
+        "title": "Date et heure",
+        "description": "Sélectionner une date"
+      },
+      "boolean": {
+        "title": "Booléen",
+        "description": "Type interrupteur"
+      },
+      "html": {
+        "title": "HTML",
+        "description": "Balisage HTML"
+      },
+      "undefined": {
+        "title": "Non défini"
+      },
+      "image": {
+        "title": "Image",
+        "description": "Type image"
+      }
+    },
+    "genericValueInput": {
+      "placeholders": {
+        "short-text": "Entrez un texte court",
+        "secure-string": "Entrez un texte secret",
+        "email": "Entrez un email",
+        "url": "Entrez une URL",
+        "long-text": "Entrez un texte long",
+        "integer": "Entrez un nombre entier",
+        "number": "Entrez un nombre décimal",
+        "date-time": "Choisissez une date",
+        "short-text-multivalue": "Ajouter une valeur",
+        "integer-multivalue": "Ajouter un entier",
+        "number-multivalue": "Ajouter un décimal",
+        "short-text-dictionary": "Sélectionner une valeur",
+        "short-text-dictionary-multivalue": "Sélectionner une valeur",
+        "short-text-multilang": "Entrez une valeur",
+        "long-text-multilang": "Entrez une valeur",
+        "short-text-multivalue-multilang": "Ajouter une valeur",
+        "short-text-dictionary-multilang": "Sélectionner une valeur",
+        "short-text-dictionary-multivalue-multilang": "Sélectionner une valeur",
+        "long-text-dictionary-multivalue-multilang": "Sélectionner une valeur"
+      }
+    },
+    "short-text-input": {
+      "placeholder": "Entrez une valeur",
+      "required": "Ce champ est obligatoire",
+      "maxLength": "Ce champ ne doit pas contenir plus de {{number}} caractères"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "Format d'URI invalide. Assurez-vous que l'URI n'a pas de paramètres de requête"
+      }
+    },
+    "errors": {
+      "generic-error": "Erreur",
+      "400": "Mauvaise requête",
+      "401": "Non autorisé",
+      "403": "Interdit",
+      "404": "Non trouvé",
+      "405": "Méthode non autorisée",
+      "406": "Non acceptable",
+      "407": "Authentification proxy requise",
+      "408": "Délai de requête dépassé",
+      "409": "Conflit",
+      "429": "Trop de requêtes",
+      "500": "Erreur interne du serveur",
+      "501": "Non implémenté",
+      "502": "Mauvaise passerelle",
+      "503": "Service indisponible",
+      "504": "Délai de passerelle dépassé"
+    }
+  }
+}

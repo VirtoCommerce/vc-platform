@@ -1,0 +1,188 @@
+{
+  "platform": {
+    "commands": {
+      "add": "Añadir",
+      "activate": "Activar",
+      "assign": "Asignar",
+      "cancel": "Cancelar",
+      "clear": "Limpiar",
+      "clear-all": "Limpiar todo",
+      "clone": "Clonar",
+      "close": "Cerrar",
+      "confirm": "Confirmar",
+      "copy-link": "Copiar enlace",
+      "copy": "Copiar",
+      "create": "Crear",
+      "cut": "Cortar",
+      "delete": "Eliminar",
+      "add-all": "Añadir todo",
+      "remove-all": "Eliminar todo",
+      "download": "Descargar",
+      "edit": "Editar",
+      "export": "Exportar",
+      "generate": "Generar",
+      "import": "Importar",
+      "import-sample-data": "Importar datos de muestra",
+      "install": "Instalar",
+      "manage": "Gestionar",
+      "more": "Más",
+      "no": "No",
+      "new-folder": "Nueva carpeta",
+      "new-license": "Renovar licencia",
+      "ok": "Aceptar",
+      "paste": "Pegar",
+      "pick-selected": "Seleccionar elegidos",
+      "preview": "Vista previa",
+      "open-browser": "Abrir en el navegador",
+      "redo": "Rehacer",
+      "refresh": "Actualizar",
+      "remove": "Eliminar",
+      "reset": "Restablecer",
+      "restart": "Reiniciar",
+      "save": "Guardar",
+      "send": "Enviar",
+      "select-all": "Seleccionar todo",
+      "set-to-default": "Establecer por defecto",
+      "start-export": "Iniciar exportación",
+      "settings": "Configuración",
+      "sign-out": "Cerrar sesión",
+      "undo": "Deshacer",
+      "uninstall": "Desinstalar",
+      "unselect-all": "Deseleccionar todo",
+      "update": "Actualizar",
+      "upload": "Subir",
+      "yes": "Sí",
+      "add-new-property": "Añadir nueva propiedad",
+      "manage-type-properties": "Tipos de propiedades",
+      "manage-profile": "Gestionar perfil",
+      "minimize": "Minimizar",
+      "maximize": "Maximizar",
+      "stop-sending": "Detener envío",
+      "set-active": "Establecer como activo",
+      "reject-user": "Rechazar usuario",
+      "change-password": "Cambiar contraseña",
+      "unlock-account": "Desbloquear cuenta",
+      "lock-account": "Bloquear cuenta",
+      "today": "Hoy",
+      "time": "Hora",
+      "now": "Ahora",
+      "date": "Fecha",
+      "see-details": "Ver detalles",
+      "dismiss": "Descartar",
+      "hide-empty-property-values": "Ocultar valores vacíos",
+      "show-empty-property-values": "Mostrar valores vacíos",
+      "titles": {
+        "refresh": "Actualizar",
+        "new-folder": "Nueva carpeta",
+        "upload": "Subir"
+      }
+    },
+    "list": {
+      "no-data": "Sin datos",
+      "count": "Cantidad",
+      "loading": "Cargando...",
+      "item-not-found": "Error: No encontrado"
+    },
+    "placeholders": {
+      "n-a": "N/A",
+      "no-file": "Elegir archivo",
+      "search-keyword": "Buscar palabra clave...",
+      "select-value": "Seleccionar valor",
+      "select-values": "Seleccionar valores"
+    },
+    "dialogs": {
+      "delete": {
+        "title": "Confirmación de eliminación",
+        "message": "¿Estás seguro de que quieres eliminar las entradas seleccionadas?"
+      }
+    },
+    "properties": {
+      "short-text": {
+        "title": "Texto corto",
+        "description": "Valores de texto de menos de 1024 caracteres"
+      },
+      "long-text": {
+        "title": "Texto largo",
+        "description": "Texto ilimitado sin restricción de tamaño"
+      },
+      "integer": {
+        "title": "Entero",
+        "description": "Número entero"
+      },
+      "decimal": {
+        "title": "Número decimal",
+        "description": "Número decimal con una precisión de 18 y una escala de 4"
+      },
+      "date-time": {
+        "title": "Fecha y hora",
+        "description": "Seleccionar fecha"
+      },
+      "boolean": {
+        "title": "Booleano",
+        "description": "Tipo interruptor"
+      },
+      "html": {
+        "title": "HTML",
+        "description": "Marcado HTML"
+      },
+      "undefined": {
+        "title": "Indefinido"
+      },
+      "image": {
+        "title": "Imagen",
+        "description": "Tipo de imagen"
+      }
+    },
+    "genericValueInput": {
+      "placeholders": {
+        "short-text": "Introducir texto corto",
+        "secure-string": "Introducir texto secreto",
+        "email": "Introducir correo electrónico",
+        "url": "Introducir URL",
+        "long-text": "Introducir texto largo",
+        "integer": "Introducir número entero",
+        "number": "Introducir número decimal",
+        "date-time": "Elegir fecha",
+        "short-text-multivalue": "Añadir valor",
+        "integer-multivalue": "Añadir entero",
+        "number-multivalue": "Añadir decimal",
+        "short-text-dictionary": "Seleccionar valor",
+        "short-text-dictionary-multivalue": "Seleccionar valor",
+        "short-text-multilang": "Introducir valor",
+        "long-text-multilang": "Introducir valor",
+        "short-text-multivalue-multilang": "Añadir valor",
+        "short-text-dictionary-multilang": "Seleccionar valor",
+        "short-text-dictionary-multivalue-multilang": "Seleccionar valor",
+        "long-text-dictionary-multivalue-multilang": "Seleccionar valor"
+      }
+    },
+    "short-text-input": {
+      "placeholder": "Introducir valor",
+      "required": "Este campo es obligatorio",
+      "maxLength": "Este campo no debe contener más de {{number}} caracteres"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "Formato de URI no válido. Asegúrese de que la URI no tenga parámetros de consulta"
+      }
+    },
+    "errors": {
+      "generic-error": "Error",
+      "400": "Solicitud incorrecta",
+      "401": "No autorizado",
+      "403": "Prohibido",
+      "404": "No encontrado",
+      "405": "Método no permitido",
+      "406": "No aceptable",
+      "407": "Autenticación de proxy requerida",
+      "408": "Tiempo de espera de la solicitud",
+      "409": "Conflicto",
+      "429": "Demasiadas solicitudes",
+      "500": "Error interno del servidor",
+      "501": "No implementado",
+      "502": "Puerta de enlace incorrecta",
+      "503": "Servicio no disponible",
+      "504": "Tiempo de espera de la puerta de enlace"
+    }
+  }
+}

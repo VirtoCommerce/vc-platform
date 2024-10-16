@@ -4,65 +4,73 @@
       "add": "Добавить",
       "activate": "Активировать",
       "assign": "Назначить",
-      "cancel": "Закрыть",
+      "cancel": "Отменить",
       "clear": "Очистить",
       "clear-all": "Очистить все",
-      "clone": "Скопировать",
+      "clone": "Клонировать",
       "close": "Закрыть",
       "confirm": "Подтвердить",
-      "copy-link": "Скопировать ссылку",
+      "copy-link": "Копировать ссылку",
+      "copy": "Копировать",
       "create": "Создать",
       "cut": "Вырезать",
       "delete": "Удалить",
+      "add-all": "Добавить все",
+      "remove-all": "Удалить все",
       "download": "Скачать",
       "edit": "Редактировать",
       "export": "Экспортировать",
-      "generate": "Создать",
+      "generate": "Сгенерировать",
       "import": "Импортировать",
+      "import-sample-data": "Импортировать примеры данных",
       "install": "Установить",
       "manage": "Управлять",
-      "more": "Больше",
+      "more": "Ещё",
       "no": "Нет",
       "new-folder": "Новая папка",
       "new-license": "Продлить лицензию",
-      "ok": "Ок",
+      "ok": "ОК",
       "paste": "Вставить",
-      "pick-selected": "Выбрать выделенные",
-      "preview": "Предварительный просмотр",
+      "pick-selected": "Выбрать выделенное",
+      "preview": "Предпросмотр",
       "open-browser": "Открыть в браузере",
-      "redo": "Переделать",
+      "redo": "Повторить",
       "refresh": "Обновить",
       "remove": "Удалить",
       "reset": "Сбросить",
-      "restart": "Перезагрузить",
+      "restart": "Перезапустить",
       "save": "Сохранить",
       "send": "Отправить",
-      "select-all": "Выбрать Все",
+      "select-all": "Выбрать все",
+      "set-to-default": "Установить по умолчанию",
       "start-export": "Начать экспорт",
       "settings": "Настройки",
-      "sign-out": "Выход",
+      "sign-out": "Выйти",
       "undo": "Отменить",
-      "uninstall": "Деинсталлировать",
-      "unselect-all": "Отменить выделение Всех",
+      "uninstall": "Удалить",
+      "unselect-all": "Снять выделение со всех",
       "update": "Обновить",
       "upload": "Загрузить",
       "yes": "Да",
       "add-new-property": "Добавить новое свойство",
-      "manage-type-properties": "Управление типом свойств",
+      "manage-type-properties": "Типы свойств",
       "manage-profile": "Управление профилем",
-      "minimize": "Минимизировать",
-      "maximize": "Максимизировать",
+      "minimize": "Свернуть",
+      "maximize": "Развернуть",
       "stop-sending": "Остановить отправку",
-      "set-active": "Сделать Активным",
+      "set-active": "Сделать активным",
       "reject-user": "Отклонить пользователя",
       "change-password": "Изменить пароль",
-      "unlock-account": "Разблокировать учетную запись",
+      "unlock-account": "Разблокировать аккаунт",
+      "lock-account": "Заблокировать аккаунт",
       "today": "Сегодня",
       "time": "Время",
       "now": "Сейчас",
       "date": "Дата",
-      "see-details": "Подробнее",
-      "dismiss": "Пропустить",
+      "see-details": "Посмотреть детали",
+      "dismiss": "Закрыть",
+      "hide-empty-property-values": "Скрыть пустые значения",
+      "show-empty-property-values": "Показать пустые значения",
       "titles": {
         "refresh": "Обновить",
         "new-folder": "Новая папка",
@@ -73,12 +81,14 @@
       "no-data": "Нет данных",
       "count": "Количество",
       "loading": "Загрузка...",
-      "item-not-found": "Ошибка: не найден"
+      "item-not-found": "Ошибка: Не найдено"
     },
     "placeholders": {
-      "n-a": "N/A",
-      "no-file": "Выбрать файл",
-      "search-keyword": "Поиск по ключевому слову..."
+      "n-a": "Н/Д",
+      "no-file": "Выберите файл",
+      "search-keyword": "Поиск по ключевому слову...",
+      "select-value": "Выберите значение",
+      "select-values": "Выберите значение"
     },
     "dialogs": {
       "delete": {
@@ -89,45 +99,45 @@
     "properties": {
       "short-text": {
         "title": "Короткий текст",
-        "description": "Текстовые значения менее 1024 символов."
+        "description": "Текстовые значения до 1024 символов"
       },
       "long-text": {
-        "title": "Длинный текст.",
-        "description": "Текст без ограничения размера."
+        "title": "Длинный текст",
+        "description": "Текст без ограничения размера"
       },
       "integer": {
-        "title": "Целое",
-        "description": "Целое число."
+        "title": "Целое число",
+        "description": "Целое число"
       },
       "decimal": {
-        "title": "Десятичное Число",
-        "description": "Десятичное число с точностью 18 и шкалой 4."
+        "title": "Десятичное число",
+        "description": "Десятичное число с точностью 18 и масштабом 4"
       },
       "date-time": {
         "title": "Дата и время",
-        "description": "Выбрать дату."
+        "description": "Выберите дату"
       },
       "boolean": {
-        "title": "Логический тип данных",
-        "description": "Тип переключения."
+        "title": "Логическое значение",
+        "description": "Тип переключателя"
       },
       "html": {
         "title": "HTML",
-        "description": "Разметка HTML."
+        "description": "HTML-разметка"
       },
       "undefined": {
         "title": "Не определено"
       },
       "image": {
         "title": "Изображение",
-        "description": "Тип изображения."
+        "description": "Тип изображения"
       }
     },
     "genericValueInput": {
       "placeholders": {
         "short-text": "Введите короткий текст",
         "secure-string": "Введите секретный текст",
-        "email": "Введите адрес электронной почты",
+        "email": "Введите email",
         "url": "Введите URL",
         "long-text": "Введите длинный текст",
         "integer": "Введите целое число",
@@ -136,20 +146,43 @@
         "short-text-multivalue": "Добавить значение",
         "integer-multivalue": "Добавить целое число",
         "number-multivalue": "Добавить десятичное число",
-        "short-text-dictionary": "Выбрать значение",
-        "short-text-dictionary-multivalue": "Выбрать значение",
-        "short-text-multilang": "Ввести значение",
-        "long-text-multilang": "Ввести значение",
+        "short-text-dictionary": "Выберите значение",
+        "short-text-dictionary-multivalue": "Выберите значение",
+        "short-text-multilang": "Введите значение",
+        "long-text-multilang": "Введите значение",
         "short-text-multivalue-multilang": "Добавить значение",
-        "short-text-dictionary-multilang": "Выбрать значение",
-        "short-text-dictionary-multivalue-multilang": "Выбрать значение",
-        "long-text-dictionary-multivalue-multilang": "Выбрать значение"
-      },
-      "short-text-input": {
-        "placeholder": "Введите значение",
-        "required": "Обязательное поле",
-        "maxLength": "Значение в данном поле не должно превышать {{number}} символов"
+        "short-text-dictionary-multilang": "Выберите значение",
+        "short-text-dictionary-multivalue-multilang": "Выберите значение",
+        "long-text-dictionary-multivalue-multilang": "Выберите значение"
       }
+    },
+    "short-text-input": {
+      "placeholder": "Введите значение",
+      "required": "Это поле обязательно для заполнения",
+      "maxLength": "Это поле не должно содержать более {{number}} символов"
+    },
+    "validators": {
+      "uriWithoutQuery": {
+        "error": "Неверный формат URI. Убедитесь, что URI не содержит параметров запроса"
+      }
+    },
+    "errors": {
+      "generic-error": "Ошибка",
+      "400": "Неверный запрос",
+      "401": "Не авторизован",
+      "403": "Доступ запрещен",
+      "404": "Не найдено",
+      "405": "Метод не разрешен",
+      "406": "Неприемлемо",
+      "407": "Требуется аутентификация прокси",
+      "408": "Время ожидания запроса истекло",
+      "409": "Конфликт",
+      "429": "Слишком много запросов",
+      "500": "Внутренняя ошибка сервера",
+      "501": "Не реализовано",
+      "502": "Плохой шлюз",
+      "503": "Сервис недоступен",
+      "504": "Время ожидания шлюза истекло"
     }
   }
 }

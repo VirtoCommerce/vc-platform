@@ -41,14 +41,14 @@
       "restart": "Restart",
       "save": "Save",
       "send": "Send",
-      "select-all": "Select All",
+      "select-all": "Select all",
       "set-to-default": "Set to default",
       "start-export": "Start export",
       "settings": "Settings",
       "sign-out": "Sign out",
       "undo": "Undo",
       "uninstall": "Uninstall",
-      "unselect-all": "Unselect All",
+      "unselect-all": "Unselect all",
       "update": "Update",
       "upload": "Upload",
       "yes": "Yes",
@@ -67,7 +67,7 @@
       "time": "Time",
       "now": "Now",
       "date": "Date",
-      "see-details": "See details",
+      "see-details": "View details",
       "dismiss": "Dismiss",
       "hide-empty-property-values": "Hide empty values",
       "show-empty-property-values": "Show empty values",
@@ -81,7 +81,7 @@
       "no-data": "No data",
       "count": "Count",
       "loading": "Loading...",
-      "item-not-found": "Error: Not Found"
+      "item-not-found": "Error: Not found"
     },
     "placeholders": {
       "n-a": "N/A",
@@ -98,39 +98,39 @@
     },
     "properties": {
       "short-text": {
-        "title": "Short Text",
-        "description": "Text values less than 1024 chars."
+        "title": "Short text",
+        "description": "Text values under 1024 characters"
       },
       "long-text": {
-        "title": "Long Text",
-        "description": "Huge amount text without size limit."
+        "title": "Long text",
+        "description": "Unlimited text with no size restriction"
       },
       "integer": {
         "title": "Integer",
-        "description": "Integer number."
+        "description": "Integer number"
       },
       "decimal": {
         "title": "Decimal Number",
-        "description": "Decimal number with precision 18 and scale 4."
+        "description": "Decimal number with a precision of 18 and a scale of 4"
       },
       "date-time": {
         "title": "Date time",
-        "description": "Select date."
+        "description": "Select date"
       },
       "boolean": {
         "title": "Boolean",
-        "description": "Switch type."
+        "description": "Switch type"
       },
       "html": {
         "title": "HTML",
-        "description": "HTML markup."
+        "description": "HTML markup"
       },
       "undefined": {
         "title": "Undefined"
       },
       "image": {
         "title": "Image",
-        "description": "Image type."
+        "description": "Image type"
       }
     },
     "genericValueInput": {
@@ -163,26 +163,26 @@
     },
     "validators": {
       "uriWithoutQuery": {
-        "error": "Invalid uri format. Make shure uri dosn't have query params."
+        "error": "Invalid URI format. Ensure the URI doesn't have query parameters"
       }
     },
     "errors": {
       "generic-error": "Error",
-      "400": "Bad Request",
+      "400": "Bad request",
       "401": "Unauthorized",
       "403": "Forbidden",
-      "404": "Not Found",
-      "405": "Method Not Allowed",
-      "406": "Not Acceptable",
-      "407": "Proxy Authentication Required",
-      "408": "Request Timeout",
+      "404": "Not found",
+      "405": "Method not allowed",
+      "406": "Not acceptable",
+      "407": "Proxy authentication required",
+      "408": "Request timeout",
       "409": "Conflict",
-      "429": "Too Many Requests",
-      "500": "Internal Server Error",
-      "501": "Not Implemented",
-      "502": "Bad Gateway",
-      "503": "Service Unavailable",
-      "504": "Gateway Timeout"
+      "429": "Too many requests",
+      "500": "Internal server error",
+      "501": "Not implemented",
+      "502": "Bad gateway",
+      "503": "Service unavailable",
+      "504": "Gateway timeout"
     }
   }
 }
