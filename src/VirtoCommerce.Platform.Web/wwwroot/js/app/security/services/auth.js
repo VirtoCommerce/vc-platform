@@ -103,12 +103,10 @@ angular.module('platformWebApp')
     };
 
     authContext.logout = function () {
-        var extenralSignInData = externalSignInStorage.get();
-        if (extenralSignInData && extenralSignInData.providerType) {
+        var externalSignInData = externalSignInStorage.get();
+        if (externalSignInData && externalSignInData.providerType) {
             externalSignInStorage.remove();
-            changeAuth({});
-            var url = 'externalsignin/signout?authenticationType=' + extenralSignInData.providerType;
-            $window.location.href = url;
+            $window.location.href = 'externalsignin/signout?authenticationType=' + externalSignInData.providerType;
         }
         else {
             authDataStorage.clearStoredData();
