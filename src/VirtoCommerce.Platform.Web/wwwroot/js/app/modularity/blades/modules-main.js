@@ -56,14 +56,14 @@ angular.module('platformWebApp')
                     var newLatest = newResults.at(-1);
                     if (_.any(newLatest.groups)) {
                         _.each(newLatest.groups, function (x, index) {
-                            var clone = angular.copy(newLatest);
-                            clone.$group = x;
-                            moduleHelper.moduleBundles.push(clone);
+                            var groupClone = angular.copy(newLatest);
+                            groupClone.$group = x;
+                            moduleHelper.moduleBundles.push(groupClone);
                         });
                     } else {
-                        var clone = angular.copy(newLatest);
-                        clone.$group = 'platform.blades.modules-list.labels.ungrouped';
-                        moduleHelper.moduleBundles.push(clone);
+                        var ungroupClone = angular.copy(newLatest);
+                        ungroupClone.$group = 'platform.blades.modules-list.labels.ungrouped';
+                        moduleHelper.moduleBundles.push(ungroupClone);
                     }
                 });
 

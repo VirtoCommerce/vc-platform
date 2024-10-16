@@ -189,18 +189,22 @@ namespace VirtoCommerce.Platform.Core.Modularity
         private bool ExistsIcon(string iconUrl)
         {
             if (string.IsNullOrEmpty(iconUrl))
+            {
                 return false;
+            }
 
             // Skip check for http resources
             if (Uri.IsWellFormedUriString(iconUrl, UriKind.Absolute))
+            {
                 return true;
+            }
 
             var platformDirectory = !string.IsNullOrEmpty(AppDomain.CurrentDomain.BaseDirectory)
                 ? AppDomain.CurrentDomain.BaseDirectory
                 : Directory.GetCurrentDirectory();
 
             var iconFile = Path.Combine(platformDirectory, iconUrl.Replace('/', Path.DirectorySeparatorChar).Replace("$(", "").Replace(")", ""));
-            
+
             return File.Exists(iconFile);
         }
     }
