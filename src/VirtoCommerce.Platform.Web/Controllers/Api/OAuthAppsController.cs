@@ -41,7 +41,7 @@ namespace VirtoCommerce.Platform.Web.Controllers.Api
                 DisplayName = "New application",
                 ClientId = Guid.NewGuid().ToString(),
                 ClientSecret = Guid.NewGuid().ToString(),
-                Type = OpenIddictConstants.ClientTypes.Confidential
+                ClientType = OpenIddictConstants.ClientTypes.Confidential,
             };
 
             app.Permissions.AddRange(_defaultPermissions);
